@@ -29,7 +29,7 @@ class AbilityType extends AbstractType
         $builder
             ->add('name', 'textarea', [
                 'label' => 'description',
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('level', 'entity', [
                 'label' => 'level_',
@@ -44,7 +44,7 @@ class AbilityType extends AbstractType
                 'label' => 'ability.min_activity_count',
                 'translation_domain' => 'competency',
                 'attr' => ['min' => 0, 'max' => 1000],
-                'data' => $options['data']->getMinActivityCount()
+                'data' => $options['data']->getMinActivityCount(),
             ]);
     }
 
@@ -58,7 +58,7 @@ class AbilityType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'platform',
             'data_class' => 'HeVinci\CompetencyBundle\Entity\Ability',
-            'competency' => null
+            'competency' => null,
         ]);
     }
 }

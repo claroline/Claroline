@@ -38,7 +38,7 @@ class TicketTypeChangeType extends AbstractType
                 'property' => 'name',
                 'expanded' => false,
                 'multiple' => false,
-                'required' => true
+                'required' => true,
             )
         );
     }

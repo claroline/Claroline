@@ -67,16 +67,16 @@ class LocaleListener extends TranslatableListener
 
     private function isTranslatable($translated, $config, $field)
     {
-        return (
+        return
             $translated ||
             (!$this->getTranslationFallback() && (!isset($config['fallback'][$field]) ||
             !$config['fallback'][$field])) || ($this->getTranslationFallback() &&
             isset($config['fallback'][$field]) && !$config['fallback'][$field])
-        );
+        ;
     }
 
     /**
-     * Override the locale for the term of services
+     * Override the locale for the term of services.
      *
      * @todo it's not very pretty so we should find an other way to do it.
      */

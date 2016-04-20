@@ -20,8 +20,8 @@ class EditSubjectEvent extends AbstractLogResourceEvent
 
     /**
      * @param \Claroline\ForumBundle\Entity\Subject $subject
-     * @param string $oldTitle
-     * @param string $newTitle
+     * @param string                                $oldTitle
+     * @param string                                $newTitle
      */
     public function __construct(Subject $subject, $oldTitle, $newTitle)
     {
@@ -29,14 +29,14 @@ class EditSubjectEvent extends AbstractLogResourceEvent
             'subject' => array(
                 'id' => $subject->getId(),
                 'old_title' => $oldTitle,
-                'new_title' => $newTitle
+                'new_title' => $newTitle,
             ),
             'category' => array(
-                'id' => $subject->getCategory()->getId()
+                'id' => $subject->getCategory()->getId(),
             ),
             'forum' => array(
-                'id' => $subject->getCategory()->getForum()->getId()
-            )
+                'id' => $subject->getCategory()->getForum()->getId(),
+            ),
         );
 
         parent::__construct($subject->getCategory()->getForum()->getResourceNode(), $details);

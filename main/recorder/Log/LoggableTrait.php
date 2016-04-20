@@ -12,9 +12,11 @@ trait LoggableTrait
     public function log($message, $logLevel = null)
     {
         if ($this->logger) {
-            $time = date("m-d-y h:i:s") . ': ';
-            if (!$logLevel) $logLevel = LogLevel::INFO;
-            $this->logger->log($logLevel, $time . $message);
+            $time = date('m-d-y h:i:s').': ';
+            if (!$logLevel) {
+                $logLevel = LogLevel::INFO;
+            }
+            $this->logger->log($logLevel, $time.$message);
         }
     }
 }

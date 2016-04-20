@@ -19,8 +19,7 @@ class MultipleChoiceQuestionRepository extends EntityRepository
     public function findMultipleChoiceQuestionByQuestion(
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT q
             FROM Claroline\SurveyBundle\Entity\MultipleChoiceQuestion q

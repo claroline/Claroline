@@ -80,7 +80,6 @@ class OauthManager
      */
     private $userManager;
 
-
     private $authenticationHandler;
 
     private $authenticator;
@@ -100,15 +99,15 @@ class OauthManager
      *      "authenticator"         = @DI\Inject("claroline.authenticator")
      * })
      *
-     * @param EntityManager $entityManager
-     * @param CacheManager $cacheManager
+     * @param EntityManager                $entityManager
+     * @param CacheManager                 $cacheManager
      * @param PlatformConfigurationHandler $platformConfigHandler
-     * @param LocaleManager $localeManager
-     * @param TermsOfServiceManager $termsManager
-     * @param FacetManager $facetManager
-     * @param FormFactory $formFactory
-     * @param TokenStorage $tokenStorage
-     * @param UserManager $userManager
+     * @param LocaleManager                $localeManager
+     * @param TermsOfServiceManager        $termsManager
+     * @param FacetManager                 $facetManager
+     * @param FormFactory                  $formFactory
+     * @param TokenStorage                 $tokenStorage
+     * @param UserManager                  $userManager
      * @param $authenticationHandler
      * @param Authenticator $authenticator
      */
@@ -124,23 +123,23 @@ class OauthManager
         UserManager $userManager,
         $authenticationHandler,
         Authenticator $authenticator
-    )
-    {
-        $this->em                       = $entityManager;
-        $this->cacheManager             = $cacheManager;
-        $this->platformConfigHandler    = $platformConfigHandler;
-        $this->localeManager            = $localeManager;
-        $this->termsManager             = $termsManager;
-        $this->facetManager             = $facetManager;
-        $this->formFactory              = $formFactory;
-        $this->tokenStorage             = $tokenStorage;
-        $this->userManager              = $userManager;
-        $this->authenticationHandler    = $authenticationHandler;
-        $this->authenticator            = $authenticator;
+    ) {
+        $this->em = $entityManager;
+        $this->cacheManager = $cacheManager;
+        $this->platformConfigHandler = $platformConfigHandler;
+        $this->localeManager = $localeManager;
+        $this->termsManager = $termsManager;
+        $this->facetManager = $facetManager;
+        $this->formFactory = $formFactory;
+        $this->tokenStorage = $tokenStorage;
+        $this->userManager = $userManager;
+        $this->authenticationHandler = $authenticationHandler;
+        $this->authenticator = $authenticator;
     }
 
     /**
      * @DI\Observe("refresh_cache")
+     *
      * @param RefreshCacheEvent $event
      */
     public function refreshCache(RefreshCacheEvent $event)
@@ -170,7 +169,8 @@ class OauthManager
             return array('error' => $service.'_application_validation_error');
         }
         $serviceMethodName = str_replace(' ', '', ucwords(str_replace('_', ' ', $service)));
-        return call_user_func(array($this, "validate".$serviceMethodName), $appId, $secret);
+
+        return call_user_func(array($this, 'validate'.$serviceMethodName), $appId, $secret);
     }
 
     public function getConfiguration($service)
@@ -256,8 +256,8 @@ class OauthManager
 
     public function linkAccount(Request $request, $service)
     {
-        $username = $request->get("_username");
-        $password = $request->get("_password");
+        $username = $request->get('_username');
+        $password = $request->get('_password');
         $isAuthenticated = $this->authenticator->authenticate($username, $password);
         if ($isAuthenticated) {
             $user = $this->userManager->getUserByUsername($username);
@@ -272,7 +272,8 @@ class OauthManager
         }
     }
 
-    public function unlinkAccount($userId) {
+    public function unlinkAccount($userId)
+    {
         $this->em->getRepository("Icap\OAuthBundle\Entity\OauthUser")->unlinkOAuthUser($userId);
     }
 
@@ -322,22 +323,22 @@ class OauthManager
         // step 1.3 - base64-encode bearer token
         $base64_encoded_bearer_token = base64_encode($bearer_token);
         // step 2
-        $secretUrl = "https://api.twitter.com/oauth2/token"; // url to send data to for authentication
+        $secretUrl = 'https://api.twitter.com/oauth2/token'; // url to send data to for authentication
         $headers = array(
-            "POST /oauth2/token HTTP/1.1",
-            "Host: api.twitter.com",
-            "User-Agent: ClarolineConnect Twitter Application-only OAuth App v.1",
-            "Authorization: Basic ".$base64_encoded_bearer_token,
-            "Content-Type: application/x-www-form-urlencoded;charset=UTF-8"
+            'POST /oauth2/token HTTP/1.1',
+            'Host: api.twitter.com',
+            'User-Agent: ClarolineConnect Twitter Application-only OAuth App v.1',
+            'Authorization: Basic '.$base64_encoded_bearer_token,
+            'Content-Type: application/x-www-form-urlencoded;charset=UTF-8',
         );
         $curlHandle = curl_init();
         curl_setopt($curlHandle, CURLOPT_URL, $secretUrl);
         curl_setopt($curlHandle, CURLOPT_HTTPHEADER, $headers); // set custom headers
         curl_setopt($curlHandle, CURLOPT_POST, 1); // send as post
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true); // return output
-        curl_setopt($curlHandle, CURLOPT_POSTFIELDS, "grant_type=client_credentials");
+        curl_setopt($curlHandle, CURLOPT_POSTFIELDS, 'grant_type=client_credentials');
         curl_setopt($curlHandle, CURLOPT_HEADER, 1); // send custom headers
-        $retrievedhtml = curl_exec ($curlHandle); // execute the curl
+        $retrievedhtml = curl_exec($curlHandle); // execute the curl
         $respInfo = curl_getinfo($curlHandle);
         curl_close($curlHandle);
         if ($respInfo['http_code'] !== 200) {

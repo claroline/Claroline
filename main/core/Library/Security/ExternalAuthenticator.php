@@ -41,14 +41,12 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
      *     "authenticationManager"  = @Inject("claroline.common.authentication_manager"),
      *     "userManager"            = @Inject("claroline.manager.user_manager")
      * })
-     *
      */
     public function __construct(
         EncoderFactoryInterface $encoderFactory,
         AuthenticationManager $authenticationManager,
         UserManager $userManager
-    )
-    {
+    ) {
         $this->encoderFactory = $encoderFactory;
         $this->authenticationManager = $authenticationManager;
         $this->userManager = $userManager;
@@ -58,6 +56,7 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
     {
         try {
             $user = $userProvider->loadUserByUsername($token->getUsername());
+
             return $this->authenticate($user, $token, $providerKey);
         } catch (UsernameNotFoundException $e) {
             return $this->getFromProviders($token, $providerKey);

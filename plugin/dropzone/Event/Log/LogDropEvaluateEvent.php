@@ -7,8 +7,8 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 
-class LogDropEvaluateEvent extends AbstractLogResourceEvent {
-
+class LogDropEvaluateEvent extends AbstractLogResourceEvent
+{
     const ACTION = 'resource-icap_dropzone-drop_evaluate';
 
     /**
@@ -24,10 +24,10 @@ class LogDropEvaluateEvent extends AbstractLogResourceEvent {
         }
 
         $details = array(
-            'dropzone'  => array(
+            'dropzone' => array(
                 'id' => $dropzone->getId(),
             ),
-            'drop'  => array(
+            'drop' => array(
                 'id' => $drop->getId(),
                 'documents' => $documentsDetails,
                 'owner' => array(
@@ -35,10 +35,10 @@ class LogDropEvaluateEvent extends AbstractLogResourceEvent {
                     'lastName' => $drop->getUser()->getLastName(),
                     'firstName' => $drop->getUser()->getFirstName(),
                     'username' => $drop->getUser()->getUsername(),
-                )
+                ),
             ),
             'result' => $grade,
-            'resultMax' => 20
+            'resultMax' => 20,
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

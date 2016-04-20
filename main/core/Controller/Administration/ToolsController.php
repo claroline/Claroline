@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -42,18 +41,16 @@ class ToolsController extends Controller
      *     "router"      = @DI\Inject("router")
      * })
      */
-    public function __construct
-    (
+    public function __construct(
         Request $request,
         ToolManager $toolManager,
         FormFactory $formFactory,
         UrlGeneratorInterface $router
-    )
-    {
-        $this->request          = $request;
-        $this->toolManager      = $toolManager;
-        $this->formFactory      = $formFactory;
-        $this->router           = $router;
+    ) {
+        $this->request = $request;
+        $this->toolManager = $toolManager;
+        $this->formFactory = $formFactory;
+        $this->router = $router;
     }
 
     /**
@@ -78,11 +75,11 @@ class ToolsController extends Controller
 
         return array(
             'forms' => $forms,
-            'tools' => $tools
+            'tools' => $tools,
         );
     }
 
-     /**
+    /**
      * @EXT\Route(
      *     "/modify/{id}",
      *     name="claro_admin_tool_modify"

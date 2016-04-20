@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Translatable\Translatable;
 
 /**
- * Content
+ * Content.
  *
  * @ORM\Entity()
  * @ORM\Table(name="claro_content")
@@ -25,7 +25,7 @@ use Gedmo\Translatable\Translatable;
 class Content implements Translatable
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -84,9 +84,9 @@ class Content implements Translatable
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -94,9 +94,10 @@ class Content implements Translatable
     }
 
     /**
-     * Set title
+     * Set title.
      *
-     * @param  string  $title
+     * @param string $title
+     *
      * @return Content
      */
     public function setTitle($title)
@@ -109,7 +110,7 @@ class Content implements Translatable
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -119,9 +120,10 @@ class Content implements Translatable
     }
 
     /**
-     * Set content
+     * Set content.
      *
-     * @param  string  $content
+     * @param string $content
+     *
      * @return Content
      */
     public function setContent($content)
@@ -134,7 +136,7 @@ class Content implements Translatable
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
@@ -144,9 +146,10 @@ class Content implements Translatable
     }
 
     /**
-     * Set title
+     * Set title.
      *
-     * @param  string  $title
+     * @param string $title
+     *
      * @return Content
      */
     public function setType($type)
@@ -159,7 +162,7 @@ class Content implements Translatable
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -169,9 +172,10 @@ class Content implements Translatable
     }
 
     /**
-     * Set created
+     * Set created.
      *
-     * @param  \DateTime $created
+     * @param \DateTime $created
+     *
      * @return Content
      */
     public function setCreated($created)
@@ -182,7 +186,7 @@ class Content implements Translatable
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -202,9 +206,10 @@ class Content implements Translatable
     }
 
     /**
-     * Set modified
+     * Set modified.
      *
-     * @param  \DateTime $modified
+     * @param \DateTime $modified
+     *
      * @return Content
      */
     public function setModified($modified = null)
@@ -219,7 +224,7 @@ class Content implements Translatable
     }
 
     /**
-     * Get modified
+     * Get modified.
      *
      * @return \DateTime
      */

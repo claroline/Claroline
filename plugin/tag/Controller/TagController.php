@@ -54,8 +54,7 @@ class TagController extends Controller
         RouterInterface $router,
         TagManager $tagManager,
         TokenStorageInterface $tokenStorage
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
@@ -82,7 +81,7 @@ class TagController extends Controller
             'form' => $form->createView(),
             'resourceNode' => $resourceNode,
             'tags' => $tags,
-            'resourceTags' => $resourceTags
+            'resourceTags' => $resourceTags,
         );
     }
 
@@ -113,7 +112,7 @@ class TagController extends Controller
                 'form' => $form->createView(),
                 'resourceNode' => $resourceNode,
                 'tags' => $tags,
-                'resourceTags' => $resourceTags
+                'resourceTags' => $resourceTags,
             );
         }
     }
@@ -137,7 +136,7 @@ class TagController extends Controller
             'form' => $form->createView(),
             'group' => $group,
             'tags' => $tags,
-            'groupTags' => $groupTags
+            'groupTags' => $groupTags,
         );
     }
 
@@ -169,7 +168,7 @@ class TagController extends Controller
                 'form' => $form->createView(),
                 'group' => $group,
                 'tags' => $tags,
-                'groupTags' => $groupTags
+                'groupTags' => $groupTags,
             );
         }
     }
@@ -193,7 +192,7 @@ class TagController extends Controller
             'form' => $form->createView(),
             'user' => $user,
             'tags' => $tags,
-            'userTags' => $userTags
+            'userTags' => $userTags,
         );
     }
 
@@ -225,7 +224,7 @@ class TagController extends Controller
                 'form' => $form->createView(),
                 'user' => $user,
                 'tags' => $tags,
-                'userTags' => $userTags
+                'userTags' => $userTags,
             );
         }
     }
@@ -249,7 +248,7 @@ class TagController extends Controller
             'form' => $form->createView(),
             'workspace' => $workspace,
             'tags' => $tags,
-            'workspaceTags' => $workspaceTags
+            'workspaceTags' => $workspaceTags,
         );
     }
 
@@ -281,7 +280,7 @@ class TagController extends Controller
                 'form' => $form->createView(),
                 'workspace' => $workspace,
                 'tags' => $tags,
-                'workspaceTags' => $workspaceTags
+                'workspaceTags' => $workspaceTags,
             );
         }
     }
@@ -334,7 +333,7 @@ class TagController extends Controller
             }
             $tags[$tagId]['objects'][] = array(
                 'id' => $taggedObject->getObjectId(),
-                'name' => $taggedObject->getObjectName()
+                'name' => $taggedObject->getObjectName(),
             );
         }
         // Sort all tags by number of tagged objects
@@ -351,18 +350,15 @@ class TagController extends Controller
         $index = 0;
         // Keep X ($nbTags) most used tags
         foreach ($sorted as $contents) {
-
             if ($index === $nbTags) {
                 break;
             } else {
-
                 foreach ($contents as $content) {
-
                     if ($index === $nbTags) {
                         break;
                     } else {
                         $datas[] = $content;
-                        $index++;
+                        ++$index;
                     }
                 }
             }
@@ -371,7 +367,7 @@ class TagController extends Controller
         return array(
             'widgetInstance' => $widgetInstance,
             'nbTags' => $nbTags,
-            'datas' => $datas
+            'datas' => $datas,
         );
     }
 
@@ -421,7 +417,6 @@ class TagController extends Controller
 
             return new JsonResponse('success', 204);
         } else {
-
             return new JsonResponse('success', 204);
         }
     }
@@ -442,11 +437,11 @@ class TagController extends Controller
                 'claro_workspace_open_tool',
                 array(
                     'toolName' => 'resource_manager',
-                    'workspaceId' => $resourceNode->getWorkspace()->getId()
+                    'workspaceId' => $resourceNode->getWorkspace()->getId(),
                 )
             );
-            $route .= '?#resources/' . $resourceNode->getId();
-            
+            $route .= '?#resources/'.$resourceNode->getId();
+
             return new RedirectResponse($route);
         } else {
             $route = $this->router->generate(

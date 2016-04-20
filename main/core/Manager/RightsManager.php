@@ -22,8 +22,6 @@ use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -79,8 +77,7 @@ class RightsManager
         RoleManager $roleManager,
         MaskManager $maskManager,
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->rightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
@@ -98,11 +95,11 @@ class RightsManager
     /**
      * Create a new ResourceRight. If the ResourceRight already exists, it's edited instead.
      *
-     * @param array|integer $permissions
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param array|int                                          $permissions
+     * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param boolean $isRecursive
-     * @param array $creations
+     * @param bool                                               $isRecursive
+     * @param array                                              $creations
      */
     public function create(
         $permissions,
@@ -110,8 +107,7 @@ class RightsManager
         ResourceNode $node,
         $isRecursive,
         array $creations = array()
-    )
-    {
+    ) {
         $rights = $this->rightsRepo->findBy(array('role' => $role, 'resourceNode' => $node));
 
         if (count($rights) === 0) {
@@ -124,12 +120,12 @@ class RightsManager
     }
 
     /**
-     * @param integer                                            $permissions the permission mask
+     * @param int                                                $permissions the permission mask
      * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param boolean                                            $isRecursive
+     * @param bool                                               $isRecursive
      * @param array                                              $creations
-     * @param boolean                                            $mergePerm do we want to merge the permissions (only work for integers perm)
+     * @param bool                                               $mergePerm   do we want to merge the permissions (only work for integers perm)
      *
      * @return array|\Claroline\CoreBundle\Entity\Resource\ResourceRights[]
      */
@@ -140,19 +136,17 @@ class RightsManager
         $isRecursive = false,
         $creations = array(),
         $mergePerms = false
-    )
-    {
+    ) {
         $this->log('Editing permissions...');
         $this->om->startFlushSuite();
 
         $arRights = $isRecursive ?
-            $this->updateRightsTree($role, $node):
+            $this->updateRightsTree($role, $node) :
             array($this->getOneByRoleAndResource($role, $node));
 
-        $this->log('Encoding masks for ' . count($arRights) . ' elements...');
+        $this->log('Encoding masks for '.count($arRights).' elements...');
 
         foreach ($arRights as $toUpdate) {
-
             if ($isRecursive) {
                 $resourceType = $toUpdate->getResourceNode()->getResourceType();
                 if (!is_int($permissions)) {
@@ -161,11 +155,13 @@ class RightsManager
                 } else {
                     $permissions = $this->mergeTypePermissions($permissions, $toUpdate->getMask(), $resourceType);
                 }
-                $this->log('Editing ' . $toUpdate->getResourceNode()->getName() . ': old mask = ' . $toUpdate->getMask() . ' | new mask = ' . $permissions);
+                $this->log('Editing '.$toUpdate->getResourceNode()->getName().': old mask = '.$toUpdate->getMask().' | new mask = '.$permissions);
             }
 
             if (is_int($permissions)) {
-                if ($mergePerms) $permissions = $permissions | $toUpdate->getMask();
+                if ($mergePerms) {
+                    $permissions = $permissions | $toUpdate->getMask();
+                }
                 $toUpdate->setMask($permissions);
             } else {
                 $this->setPermissions($toUpdate, $permissions);
@@ -177,7 +173,7 @@ class RightsManager
             //well, nowadays I think we can do this.
             //if (!$isRecursive) {
                 $this->logChangeSet($toUpdate);
-                $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', array($node, $toUpdate));
+            $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', array($node, $toUpdate));
             //}
         }
 
@@ -200,7 +196,7 @@ class RightsManager
      * @param array                                              $resourceTypes
      * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param boolean                                            $isRecursive
+     * @param bool                                               $isRecursive
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceRight[] $arRights
      */
@@ -209,14 +205,13 @@ class RightsManager
         Role $role,
         ResourceNode $node,
         $isRecursive
-    )
-    {
+    ) {
         //Bugfix: If the flushSuite is uncommented, doctrine returns an error
         //(ResourceRights duplicata)
 //        $this->om->startFlushSuite();
 
         $arRights = ($isRecursive) ?
-            $this->updateRightsTree($role, $node):
+            $this->updateRightsTree($role, $node) :
             array($this->getOneByRoleAndResource($role, $node));
 
         foreach ($arRights as $toUpdate) {
@@ -299,7 +294,7 @@ class RightsManager
     /**
      * Set the permission for a resource right.
      * The array of permissions should be defined that way:
-     * array('open' => true, 'edit' => false, ...)
+     * array('open' => true, 'edit' => false, ...).
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceRights $rights
      * @param array                                                $permissions
@@ -318,7 +313,7 @@ class RightsManager
      * Takes an array of Role.
      * Parse each key of the $perms array
      * and add the entry 'role' where it is needed.
-     * It's used when a workspace is imported
+     * It's used when a workspace is imported.
      *
      * @param array $baseRoles
      * @param array $perms
@@ -344,7 +339,7 @@ class RightsManager
     /**
      * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param boolean                                            $fetchUOW
+     * @param bool                                               $fetchUOW
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights $resourceRights
      */
@@ -384,7 +379,7 @@ class RightsManager
     }
 
     /**
-     * @param integer|array                                      $permissions
+     * @param int|array                                          $permissions
      * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param array                                              $creations
@@ -394,14 +389,13 @@ class RightsManager
         Role $role,
         ResourceNode $node,
         array $creations = array()
-    )
-    {
+    ) {
         $this->om->startFlushSuite();
         //will create every rights with the role and the resource already set.
         $resourceRights = $this->updateRightsTree($role, $node);
 
         foreach ($resourceRights as $rights) {
-            is_int($permissions) ? $rights->setMask($permissions): $this->setPermissions($rights, $permissions);
+            is_int($permissions) ? $rights->setMask($permissions) : $this->setPermissions($rights, $permissions);
             $rights->setCreatableResourceTypes($creations);
             $this->om->persist($rights);
         }
@@ -410,7 +404,7 @@ class RightsManager
     }
 
     /**
-     * @param integer|array                                      $permissions
+     * @param int|array                                          $permissions
      * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param array                                              $creations
@@ -420,13 +414,12 @@ class RightsManager
         Role $role,
         ResourceNode $node,
         array $creations = array()
-    )
-    {
+    ) {
         $rights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $rights->setRole($role);
         $rights->setResourceNode($node);
         $rights->setCreatableResourceTypes($creations);
-        is_int($permissions) ? $rights->setMask($permissions): $this->setPermissions($rights, $permissions);
+        is_int($permissions) ? $rights->setMask($permissions) : $this->setPermissions($rights, $permissions);
         $this->om->persist($rights);
         $this->om->flush();
     }
@@ -451,7 +444,7 @@ class RightsManager
     }
 
     /**
-     * Returns every ResourceRights of a resource on 1 level if the role linked is not 'ROLE_ADMIN'
+     * Returns every ResourceRights of a resource on 1 level if the role linked is not 'ROLE_ADMIN'.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      *
@@ -497,8 +490,9 @@ class RightsManager
      * forum) with a directory mask. This allows directory permissions to be
      * applied recursively without losing particular permissions.
      *
-     * @param int $dirMask          A directory mask
-     * @param int $resourceMask     A specific resource mask
+     * @param int $dirMask      A directory mask
+     * @param int $resourceMask A specific resource mask
+     *
      * @return int
      */
     private function mergeTypePermissions($dirMask, $resourceMask, ResourceType $resourceType)
@@ -510,18 +504,19 @@ class RightsManager
             $baseArray[$action] = true;
         }
 
-        $basePerms = $this->maskManager->encodeMask($baseArray, $resourceType); 
+        $basePerms = $this->maskManager->encodeMask($baseArray, $resourceType);
 
         //a little bit of magic goes here.
         $all = $resourceMask | $basePerms; //merge
         $typeMask = $all ^ $basePerms; //extract perm from type
-        $this->log('resource mask is ' .  $resourceMask . '  | basePerms is ' . $basePerms . ' | base mask is ' . $typeMask);
+        $this->log('resource mask is '.$resourceMask.'  | basePerms is '.$basePerms.' | base mask is '.$typeMask);
 
         return $dirMask | $typeMask; // merge perm from type and new perms
     }
 
     /**
      * Return the resource rights as a readable array. This array can be used for the resource creation.
+     *
      * @param ResourceNode $node
      *
      * @return array
@@ -549,7 +544,7 @@ class RightsManager
      * Directories are excluded.
      *
      * @param ResourceNode[] $nodes
-     * @param Role[] $roles
+     * @param Role[]         $roles
      */
     public function initializePermissions(array $nodes, array $roles)
     {
@@ -574,7 +569,10 @@ class RightsManager
     {
         $res = null;
         $res = $this->getRightsFromIdentityMap($roleName, $resourceNode);
-        if ($res) return $res;
+        if ($res) {
+            return $res;
+        }
+
         return $this->getRightsScheduledForInsert($roleName, $resourceNode);
     }
 
@@ -587,7 +585,6 @@ class RightsManager
             if (get_class($entity) === 'Claroline\CoreBundle\Entity\Resource\ResourceRights') {
                 if ($entity->getRole()->getName() === $roleName &&
                     $entity->getResourceNode() === $resourceNode) {
-
                     return $res = $entity;
                 }
             }
@@ -601,13 +598,14 @@ class RightsManager
         $map = $this->om->getUnitOfWork()->getIdentityMap();
         $result = null;
 
-        if (!array_key_exists('Claroline\CoreBundle\Entity\Resource\ResourceRights', $map)) return null;
+        if (!array_key_exists('Claroline\CoreBundle\Entity\Resource\ResourceRights', $map)) {
+            return;
+        }
 
         //so it was in the identityMap hey !
         foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $right) {
             if ($right->getRole()->getName() === $roleName &&
                 $right->getResourceNode() === $resourceNode) {
-
                 $result = $right;
             }
         }
@@ -619,8 +617,7 @@ class RightsManager
         ResourceNode $resource,
         array $keys,
         $executeQuery = true
-    )
-    {
+    ) {
         return count($keys) > 0 ?
             $this->rightsRepo
                 ->findUserRolesResourceRights($resource, $keys, $executeQuery) :
@@ -669,7 +666,9 @@ class RightsManager
      */
     public function canEditPwsPerm(TokenInterface $token)
     {
-        if ($this->container->get('security.context')->isGranted('ROLE_ADMIN')) return true;
+        if ($this->container->get('security.context')->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
 
         $roles = $this->roleManager->getStringRolesFromToken($token);
         $accesses = $this->om
@@ -677,7 +676,9 @@ class RightsManager
             ->findByRoles($roles);
 
         foreach ($accesses as $access) {
-            if ($access->isAccessible()) return true;
+            if ($access->isAccessible()) {
+                return true;
+            }
         }
 
         return false;
@@ -692,7 +693,7 @@ class RightsManager
         $i = 0;
 
         foreach ($workspaces as $workspace) {
-            $this->log('Checking ' . $workspace->getCode() . '...');
+            $this->log('Checking '.$workspace->getCode().'...');
             $roles = $workspace->getRoles();
             $root = $this->container->get('claroline.manager.resource_manager')->getWorkspaceRoot($workspace);
             $collaboratorRole = $this->roleManager->getCollaboratorRole($workspace);
@@ -707,10 +708,10 @@ class RightsManager
                 }
 
                 if (!$collaboratorFound) {
-                    $this->log('Adding missing right on root for ' . $workspace->getCode() . '.', LogLevel::DEBUG);
+                    $this->log('Adding missing right on root for '.$workspace->getCode().'.', LogLevel::DEBUG);
                     $collaboratorRole = $this->roleManager->getCollaboratorRole($workspace);
                     $this->editPerms(5, $collaboratorRole, $root, true, array(), true);
-                    $i++;
+                    ++$i;
 
                     if ($i % 3 === 0) {
                         $this->log('flushing...');

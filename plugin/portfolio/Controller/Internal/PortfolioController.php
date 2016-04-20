@@ -93,11 +93,11 @@ class PortfolioController extends BaseController
         $portfolioManager = $this->getPortfolioManager();
 
         $portfolioGuideManager = $this->getPortfolioGuideManager();
-        $portfolioGuide        = $portfolioGuideManager->getByPortfolioAndGuide($portfolio, $loggedUser);
+        $portfolioGuide = $portfolioGuideManager->getByPortfolioAndGuide($portfolio, $loggedUser);
 
         if ($portfolio->getUser() === $loggedUser) {
             $portfolioManager->updateCommentsViewDate($portfolio);
-        } else if (null !== $portfolioGuide) {
+        } elseif (null !== $portfolioGuide) {
             $portfolioGuideManager->updateCommentsViewDate($portfolioGuide);
         } else {
             throw new NotFoundHttpException();
@@ -115,4 +115,3 @@ class PortfolioController extends BaseController
         return $response;
     }
 }
- 

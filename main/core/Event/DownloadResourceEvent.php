@@ -27,7 +27,7 @@ class DownloadResourceEvent extends Event
     /**
      * Constructor.
      *
-     * @param integer $resourceId
+     * @param int $resourceId
      */
     public function __construct(AbstractResource $resource)
     {
@@ -37,7 +37,7 @@ class DownloadResourceEvent extends Event
     /**
      * Returns the id of the resource on which the action is to be taken.
      *
-     * @return integer
+     * @return int
      */
     public function getResource()
     {

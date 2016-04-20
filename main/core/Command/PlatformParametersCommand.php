@@ -11,14 +11,10 @@
 
 namespace Claroline\CoreBundle\Command;
 
-use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 class PlatformParametersCommand extends ContainerAwareCommand
@@ -34,7 +30,7 @@ class PlatformParametersCommand extends ContainerAwareCommand
                 $param,
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Set a value for the parameter ' . $param . '.'
+                'Set a value for the parameter '.$param.'.'
             );
         }
     }

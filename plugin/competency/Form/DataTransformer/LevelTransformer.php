@@ -14,6 +14,7 @@ class LevelTransformer implements DataTransformerInterface
      * multi-line string showing the level names.
      *
      * @param Collection $levels
+     *
      * @return string
      */
     public function transform($levels)
@@ -21,12 +22,11 @@ class LevelTransformer implements DataTransformerInterface
         $serialized = '';
 
         if (!$levels instanceof Collection || $levels->count() === 0) {
-
             return $serialized;
         }
 
         foreach ($levels as $level) {
-            $serialized .= $level->getName() . "\n";
+            $serialized .= $level->getName()."\n";
         }
 
         return $serialized;
@@ -37,6 +37,7 @@ class LevelTransformer implements DataTransformerInterface
      * ArrayCollection of Level entities.
      *
      * @param string $levels
+     *
      * @return ArrayCollection
      */
     public function reverseTransform($levels)
@@ -51,7 +52,7 @@ class LevelTransformer implements DataTransformerInterface
                 $level->setName($trimmedName);
                 $level->setValue($value);
                 $collection->add($level);
-                $value++;
+                ++$value;
             }
         }
 

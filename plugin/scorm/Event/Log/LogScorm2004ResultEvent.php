@@ -23,8 +23,7 @@ class LogScorm2004ResultEvent extends LogGenericEvent
         Scorm2004Resource $scormResource,
         User $user,
         array $details
-    )
-    {
+    ) {
         parent::__construct(
             self::ACTION,
             $details,

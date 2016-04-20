@@ -12,13 +12,13 @@ class DropzoneCommonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $defaultDateTimeOptions = array(
-            'required'      => false,
-            'read_only'     => false,
-            'component'     => true,
-            'autoclose'     => true,
-            'language'      => $options['language'],
-            'date_format'   => $options['date_format'],
-            'format'        => $options['date_format'],
+            'required' => false,
+            'read_only' => false,
+            'component' => true,
+            'autoclose' => true,
+            'language' => $options['language'],
+            'date_format' => $options['date_format'],
+            'format' => $options['date_format'],
         );
 
         $builder
@@ -26,7 +26,7 @@ class DropzoneCommonType extends AbstractType
                 'mapped' => false,
             ))
             ->add('autoCloseForManualStates', 'hidden', array(
-                "mapped" => false,
+                'mapped' => false,
             ))
             ->add('instruction', 'tinymce', array(
                 'required' => false,
@@ -61,16 +61,14 @@ class DropzoneCommonType extends AbstractType
             ->add('startAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
             ->add('endAllowDrop', 'datetimepicker', $defaultDateTimeOptions);
 
-
         $builder
             // Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV
-            ->add('published', 'checkbox', 
+            ->add('published', 'checkbox',
                 array(
                     'attr' => array(),
                     'mapped' => false,
-                    'required' => false)
+                    'required' => false, )
                      );
-      
 
         // $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
         //     $dropzone = $event->getData();
@@ -94,16 +92,12 @@ class DropzoneCommonType extends AbstractType
         //                  );
         // });
 
-
-
-
         // $builder->addEventListener(
         // FormEvents::POST_SUBMIT,
         // function (FormEvent $event) {
         //     $dropzone = $event->getData();
         //     $form = $event->getForm();
         //     $publishedAttr = array();
-
 
         //     // check if the Product object is "new"
         //     // If no data is passed to the form, the data is "null".
@@ -123,28 +117,27 @@ class DropzoneCommonType extends AbstractType
         //     }
         // );
 
-
         $builder
             // Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('returnReceipt', 'checkbox',
                  array(
 //                     'attr' => array('checked' => 'checked'),
-                     'required' => false)
+                     'required' => false, )
                       )
             // Evaluation. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('evaluation', 'checkbox',
                  array(
-                     'required' => false)
+                     'required' => false, )
                       )
             // Picture. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('picture', 'checkbox',
                  array(
-                     'required' => false)
+                     'required' => false, )
                       )
             // Username. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('username', 'checkbox',
                  array(
-                     'required' => false)
+                     'required' => false, )
                       )
             ;
     }
@@ -158,7 +151,7 @@ class DropzoneCommonType extends AbstractType
             array(
                 'language' => 'fr',
                 'translation_domain' => 'innova_collecticiel',
-                'date_format'     => DateType::HTML5_FORMAT,
+                'date_format' => DateType::HTML5_FORMAT,
             )
         );
     }

@@ -20,4 +20,3 @@ class ClarolineWebResourceBundle extends PluginBundle
         return false;
     }
 }
-

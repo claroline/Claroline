@@ -13,7 +13,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @DI\FormType(alias="badge_form_workspace")
@@ -38,25 +37,23 @@ class BadgeType extends AbstractType
      */
     public function __construct(BadgeRuleType $badgeRuleType, LocaleManager $localeManager, PlatformConfigurationHandler $platformConfigHandler)
     {
-        $this->badgeRuleType         = $badgeRuleType;
-        $this->localeManager         = $localeManager;
+        $this->badgeRuleType = $badgeRuleType;
+        $this->localeManager = $localeManager;
         $this->platformConfigHandler = $platformConfigHandler;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $platformLanguage = $this->platformConfigHandler->getParameter('locale_language');
-        $languages        = array_values($this->localeManager->getAvailableLocales());
-        $sortedLanguages  = array();
+        $languages = array_values($this->localeManager->getAvailableLocales());
+        $sortedLanguages = array();
 
-        usort($languages, function ($language1, $language2) use($platformLanguage) {
+        usort($languages, function ($language1, $language2) use ($platformLanguage) {
             if ($language1 === $platformLanguage) {
                 return -1;
-            }
-            else if ($language2 === $platformLanguage) {
+            } elseif ($language2 === $platformLanguage) {
                 return 1;
-            }
-            else {
+            } else {
                 return 0;
             }
         });
@@ -73,20 +70,19 @@ class BadgeType extends AbstractType
             ->add('automatic_award', 'checkbox', array('required' => false))
             ->add('file', 'file', array('label' => 'badge_form_image'))
             ->add('is_expiring', 'checkbox', array('required' => false))
-            ->add('expire_duration', 'integer', array('attr' =>
-                array(
+            ->add('expire_duration', 'integer', array('attr' => array(
                       'class' => 'input-sm',
-                      'min'   => 1
-                )
+                      'min' => 1,
+                ),
             ))
             ->add('expire_period', 'choice',
                 array(
-                    'choices'     => Badge::getExpirePeriodLabels(),
-                    'attr'        => array('class' => 'input-sm')
+                    'choices' => Badge::getExpirePeriodLabels(),
+                    'attr' => array('class' => 'input-sm'),
                 )
             );
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             /** @var \Icap\BadgeBundle\Entity\Badge $badge */
             $badge = $event->getData();
 
@@ -95,19 +91,19 @@ class BadgeType extends AbstractType
                     ->setWorkspaceId($badge->getWorkspace()->getId())
                     ->setBadgeId($badge->getId());
 
-                $form  = $event->getForm();
+                $form = $event->getForm();
                 $form
                     ->add(
                         'rules',
                         'collection',
                         array(
-                            'type'          => $this->badgeRuleType,
-                            'by_reference'  => false,
-                            'attr'          => array('class' => 'rule-collections'),
+                            'type' => $this->badgeRuleType,
+                            'by_reference' => false,
+                            'attr' => array('class' => 'rule-collections'),
                             'theme_options' => array('label_width' => 'col-md-3'),
-                            'prototype'     => true,
-                            'allow_add'     => true,
-                            'allow_delete'  => true
+                            'prototype' => true,
+                            'allow_add' => true,
+                            'allow_delete' => true,
                         )
                     );
             }
@@ -124,11 +120,11 @@ class BadgeType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\BadgeBundle\Entity\Badge',
+                'data_class' => 'Icap\BadgeBundle\Entity\Badge',
                 'translation_domain' => 'icap_badge',
-                'language'           => 'en',
-                'date_format'        => DateType::HTML5_FORMAT,
-                'cascade_validation' => true
+                'language' => 'en',
+                'date_format' => DateType::HTML5_FORMAT,
+                'cascade_validation' => true,
             )
         );
     }

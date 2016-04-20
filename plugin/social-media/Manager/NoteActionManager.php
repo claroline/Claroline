@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,7 +8,6 @@
  * 
  * Date: 5/7/15
  */
-
 namespace Icap\SocialmediaBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
@@ -17,12 +16,11 @@ use Icap\SocialmediaBundle\Entity\NoteAction;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class NoteActionManager
- * @package Icap\SocialmediaBundle\Manager
+ * Class NoteActionManager.
  *
  * @DI\Service("icap_socialmedia.manager.note_action")
  */
-class NoteActionManager 
+class NoteActionManager
 {
     /**
      * @var EntityManager
@@ -43,6 +41,7 @@ class NoteActionManager
      * @DI\InjectParams({
      *      "em"                = @DI\Inject("doctrine.orm.entity_manager")
      * })
+     *
      * @param EntityManager $em
      */
     public function __construct(EntityManager $em)
@@ -55,14 +54,15 @@ class NoteActionManager
     public function getNote($noteId, User $user)
     {
         return $this->noteActionRepository->findOneBy(array(
-            "id"    => $noteId,
-            "user"  => $user
+            'id' => $noteId,
+            'user' => $user,
         ));
     }
 
     /**
      * @param $resourceId
      * @param User $user
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     public function getNotesForPagination($resourceId, User $user)

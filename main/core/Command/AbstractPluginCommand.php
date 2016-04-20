@@ -59,7 +59,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
         }
 
         $detector = new Detector();
-        $bundles = $detector->detectBundles($kernel->getRootDir() . '/../vendor');
+        $bundles = $detector->detectBundles($kernel->getRootDir().'/../vendor');
 
         foreach ($bundles as $bundleFqcn) {
             $parts = explode('\\', $bundleFqcn);
@@ -85,8 +85,8 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
         $installer = $this->getContainer()->get('claroline.plugin.installer');
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         );
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
         $installer->setLogger($consoleLogger);
@@ -127,13 +127,13 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
      */
     protected function installAssets(OutputInterface $output)
     {
-        $webDir = $this->getContainer()->getParameter('kernel.root_dir') . '/../web';
+        $webDir = $this->getContainer()->getParameter('kernel.root_dir').'/../web';
         $command = $this->getApplication()->find('assets:install');
         $input = new ArrayInput(
             array(
                 'command' => 'assets:install',
                 'target' => realpath($webDir),
-                '--symlink' => true
+                '--symlink' => true,
             )
         );
         $command->run($input, $output);

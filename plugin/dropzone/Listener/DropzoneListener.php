@@ -9,8 +9,6 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\DropzoneBundle\Entity\Criterion;
 use Icap\DropzoneBundle\Entity\Dropzone;
@@ -28,7 +26,7 @@ class DropzoneListener extends ContainerAware
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'icap_dropzone'
+                'resourceType' => 'icap_dropzone',
             )
         );
 
@@ -50,7 +48,7 @@ class DropzoneListener extends ContainerAware
                 'ClarolineCoreBundle:Resource:createForm.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'resourceType' => 'icap_dropzone'
+                    'resourceType' => 'icap_dropzone',
                 )
             );
             $event->setErrorFormContent($content);
@@ -76,7 +74,6 @@ class DropzoneListener extends ContainerAware
                     array('resourceId' => $event->getResource()->getId())
                 );
         }
-
 
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
@@ -106,7 +103,6 @@ class DropzoneListener extends ContainerAware
         $event->stopPropagation();
     }
 
-
     public function onList(CustomActionResourceEvent $event)
     {
         $route = $this->container
@@ -127,14 +123,14 @@ class DropzoneListener extends ContainerAware
         foreach ($resource->getDrops() as $drop) {
             $em->remove($drop);
         }
-        
+
         $em->remove($event->getResource());
         $event->stopPropagation();
     }
 
     public function onAdministrate(PluginOptionsEvent $event)
     {
-//        $referenceOptionsList = $this->container
+        //        $referenceOptionsList = $this->container
 //            ->get('doctrine.orm.entity_manager')
 //            ->getRepository('IcapReferenceBundle:ReferenceBankOptions')
 //            ->findAll();

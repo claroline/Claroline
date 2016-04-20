@@ -22,7 +22,7 @@ class MimeTypeGuesser extends MimeTypeExtensionGuesser
     public function __construct()
     {
         $this->defaultExtensions['image/jpeg'] = 'jpg';
-        $this->defaultExtensions['audio/mp3'] = "mp3";
+        $this->defaultExtensions['audio/mp3'] = 'mp3';
     }
 
     /**
@@ -34,5 +34,4 @@ class MimeTypeGuesser extends MimeTypeExtensionGuesser
 
         return isset($mimeArray[$extension]) ? $mimeArray[$extension] : null;
     }
-
 }

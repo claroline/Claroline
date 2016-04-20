@@ -17,10 +17,10 @@ class IntToBlogTransformer implements DataTransformerInterface
     private $entityManager;
 
     /**
-    * @DI\InjectParams({
-    *    "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
-    * })
-    */
+     * @DI\InjectParams({
+     *    "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
+     * })
+     */
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -37,15 +37,16 @@ class IntToBlogTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param integer $blogId
+     * @param int $blogId
      *
      * @return Blog|null
+     *
      * @throws \Symfony\Component\Form\Exception\TransformationFailedException
      */
     public function reverseTransform($blogId)
     {
         if (!$blogId) {
-            return null;
+            return;
         }
 
         $badge = $this->entityManager->getRepository('IcapBlogBundle:Blog')->find($blogId);

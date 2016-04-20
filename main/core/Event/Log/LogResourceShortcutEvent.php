@@ -20,7 +20,7 @@ class LogResourceShortcutEvent extends LogGenericEvent
     /**
      * Constructor.
      * $resource is the final shortcut object
-     * while $source is the original object
+     * while $source is the original object.
      */
     public function __construct(ResourceNode $node, ResourceNode $source)
     {
@@ -29,26 +29,26 @@ class LogResourceShortcutEvent extends LogGenericEvent
             array(
                 'resource' => array(
                     'name' => $node->getName(),
-                    'path' => $node->getPathForDisplay()
+                    'path' => $node->getPathForDisplay(),
                 ),
                 'workspace' => array(
-                    'name' => $node->getWorkspace()->getName()
+                    'name' => $node->getWorkspace()->getName(),
                 ),
                 'owner' => array(
                     'lastName' => $node->getCreator()->getLastName(),
-                    'firstName' => $node->getCreator()->getFirstName()
+                    'firstName' => $node->getCreator()->getFirstName(),
                 ),
                 'source' => array(
                     'resource' => array(
                         'id' => $source->getId(),
                         'name' => $source->getName(),
-                        'path' => $source->getPathForDisplay()
+                        'path' => $source->getPathForDisplay(),
                     ),
                     'workspace' => array(
                         'id' => $source->getWorkspace()->getId(),
-                        'name' => $source->getWorkspace()->getName()
+                        'name' => $source->getWorkspace()->getName(),
                     ),
-                )
+                ),
             ),
             null,
             null,
@@ -64,6 +64,6 @@ class LogResourceShortcutEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 }

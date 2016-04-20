@@ -31,4 +31,4 @@ class RefreshCacheEvent extends Event
     {
         return $this->parameters;
     }
-} 
+}

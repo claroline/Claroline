@@ -30,8 +30,7 @@ class CourseSessionEditType extends AbstractType
         CourseSession $session,
         CursusManager $cursusManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->cursusManager = $cursusManager;
         $this->session = $session;
         $this->translator = $translator;
@@ -59,7 +58,7 @@ class CourseSessionEditType extends AbstractType
                 'format' => 'dd-MM-yyyy',
                 'widget' => 'single_text',
                 'attr' => $attr,
-                'input' => 'datetime'
+                'input' => 'datetime',
             )
         );
         $builder->add(
@@ -70,7 +69,7 @@ class CourseSessionEditType extends AbstractType
                 'format' => 'dd-MM-yyyy',
                 'widget' => 'single_text',
                 'attr' => $attr,
-                'input' => 'datetime'
+                'input' => 'datetime',
             )
         );
         $builder->add(
@@ -78,11 +77,11 @@ class CourseSessionEditType extends AbstractType
             'choice',
             array(
                 'required' => true,
-                'choices' => array (
+                'choices' => array(
                     0 => 'session_not_started',
                     1 => 'session_open',
-                    2 => 'session_closed'
-                )
+                    2 => 'session_closed',
+                ),
             )
         );
         $builder->add(
@@ -117,7 +116,7 @@ class CourseSessionEditType extends AbstractType
                             ->orderBy('r.translationKey', 'ASC');
                     },
                     'property' => 'translationKey',
-                    'choice_translation_domain' => true
+                    'choice_translation_domain' => true,
                 )
             );
             $builder->add(
@@ -135,7 +134,7 @@ class CourseSessionEditType extends AbstractType
                             ->orderBy('r.translationKey', 'ASC');
                     },
                     'property' => 'translationKey',
-                    'choice_translation_domain' => true
+                    'choice_translation_domain' => true,
                 )
             );
         }
@@ -153,7 +152,7 @@ class CourseSessionEditType extends AbstractType
                 },
                 'property' => 'title',
                 'multiple' => true,
-                'expanded' => true
+                'expanded' => true,
             )
         );
         $builder->add(
@@ -162,10 +161,10 @@ class CourseSessionEditType extends AbstractType
             array(
                 'required' => false,
                 'constraints' => array(
-                    new Range(array('min' => 0))
+                    new Range(array('min' => 0)),
                 ),
                 'attr' => array('min' => 0),
-                'label' => 'max_users'
+                'label' => 'max_users',
             )
         );
         $builder->add(
@@ -173,7 +172,7 @@ class CourseSessionEditType extends AbstractType
             'checkbox',
             array(
                 'required' => true,
-                'label' => 'user_validation'
+                'label' => 'user_validation',
             )
         );
         $builder->add(
@@ -181,7 +180,7 @@ class CourseSessionEditType extends AbstractType
             'checkbox',
             array(
                 'required' => true,
-                'label' => 'organization_validation'
+                'label' => 'organization_validation',
             )
         );
         $builder->add(
@@ -199,7 +198,7 @@ class CourseSessionEditType extends AbstractType
                 'multiple' => true,
                 'attach_name' => false,
                 'forced_roles' => $validatorsRoles,
-                'label' => $this->translator->trans('validators', array(), 'cursus')
+                'label' => $this->translator->trans('validators', array(), 'cursus'),
             )
         );
     }

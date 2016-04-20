@@ -37,12 +37,11 @@ class GeneralType extends AbstractType
         $dateFormat,
         $language,
         array $lockedParams = array()
-    )
-    {
+    ) {
         $this->role = $role;
         $this->description = $description;
-        $this->dateFormat  = $dateFormat;
-        $this->language    = $language;
+        $this->dateFormat = $dateFormat;
+        $this->language = $language;
 
         if (!empty($langs)) {
             $this->langs = $langs;
@@ -61,7 +60,7 @@ class GeneralType extends AbstractType
                 array(
                     'required' => false,
                     'disabled' => isset($this->lockedParams['name']),
-                    'label' => 'name'
+                    'label' => 'name',
                 )
             )
             ->add(
@@ -72,7 +71,7 @@ class GeneralType extends AbstractType
                     'mapped' => false,
                     'required' => false,
                     'label' => 'description',
-                    'theme_options' => array('contentTitle' => false, 'tinymce' => false)
+                    'theme_options' => array('contentTitle' => false, 'tinymce' => false),
                 )
             )
             ->add(
@@ -80,7 +79,7 @@ class GeneralType extends AbstractType
                 'email',
                 array(
                     'label' => 'support_email',
-                    'disabled' => isset($this->lockedParams['support_email'])
+                    'disabled' => isset($this->lockedParams['support_email']),
                 )
             )
             ->add(
@@ -88,7 +87,7 @@ class GeneralType extends AbstractType
                 'text',
                 array(
                     'label' => 'domain_name',
-                    'disabled' => isset($this->lockedParams['domain_name'])
+                    'disabled' => isset($this->lockedParams['domain_name']),
                 )
             )
             ->add(
@@ -97,7 +96,7 @@ class GeneralType extends AbstractType
                 array(
                     'required' => false,
                     'disabled' => isset($this->lockedParams['allow_self_registration']),
-                    'label' => 'self_registration'
+                    'label' => 'self_registration',
                 )
             )
             ->add(
@@ -106,7 +105,7 @@ class GeneralType extends AbstractType
                 array(
                     'required' => false,
                     'disabled' => isset($this->lockedParams['register_button_at_login']),
-                    'label' => 'show_register_button_in_login_page'
+                    'label' => 'show_register_button_in_login_page',
                 )
             )
             ->add(
@@ -122,11 +121,11 @@ class GeneralType extends AbstractType
                     'property' => 'translationKey',
                     'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
                         return $er->createQueryBuilder('r')
-                                ->where("r.type = " . Role::PLATFORM_ROLE)
+                                ->where('r.type = '.Role::PLATFORM_ROLE)
                                 ->andWhere("r.name != 'ROLE_ANONYMOUS'");
                     },
                     'disabled' => isset($this->lockedParams['default_role']),
-                    'label' => 'default_role'
+                    'label' => 'default_role',
                 )
             )
             ->add(
@@ -135,7 +134,7 @@ class GeneralType extends AbstractType
                 array(
                     'choices' => $this->langs,
                     'disabled' => isset($this->lockedParams['locale_language']),
-                    'label' => 'default_language'
+                    'label' => 'default_language',
                 )
             )
             ->add(
@@ -144,7 +143,7 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'display_captcha',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['form_captcha'])
+                    'disabled' => isset($this->lockedParams['form_captcha']),
                 )
             )
             ->add(
@@ -153,7 +152,7 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'redirect_after_login',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['redirect_after_login'])
+                    'disabled' => isset($this->lockedParams['redirect_after_login']),
                 )
             )
             ->add(
@@ -162,7 +161,7 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'account_duration_label',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['account_duration'])
+                    'disabled' => isset($this->lockedParams['account_duration']),
                 )
             )
             ->add(
@@ -171,7 +170,7 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'show_profile_for_anonymous',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['anonymous_public_profile'])
+                    'disabled' => isset($this->lockedParams['anonymous_public_profile']),
                 )
             )
             ->add(
@@ -180,7 +179,7 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'portfolio_url',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['portfolio_url'])
+                    'disabled' => isset($this->lockedParams['portfolio_url']),
                 )
             )
             ->add(
@@ -189,7 +188,7 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'activate_notifications',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['is_notification_active'])
+                    'disabled' => isset($this->lockedParams['is_notification_active']),
                 )
             )
             ->add(
@@ -199,7 +198,7 @@ class GeneralType extends AbstractType
                     'required' => false,
                     'label' => 'max_storage_size',
                     'constraints' => array(new FileSize()),
-                    'disabled' => isset($this->lockedParams['max_storage_size'])
+                    'disabled' => isset($this->lockedParams['max_storage_size']),
                 )
             )
             ->add(
@@ -208,7 +207,7 @@ class GeneralType extends AbstractType
                 array(
                     'required' => false,
                     'label' => 'count_resources',
-                    'disabled' => isset($this->lockedParams['max_upload_resources'])
+                    'disabled' => isset($this->lockedParams['max_upload_resources']),
                 )
             )
             ->add(
@@ -217,7 +216,7 @@ class GeneralType extends AbstractType
                 array(
                     'required' => false,
                     'label' => 'workspace_max_users',
-                    'disabled' => isset($this->lockedParams['max_workspace_users'])
+                    'disabled' => isset($this->lockedParams['max_workspace_users']),
                 )
             )
             ->add(
@@ -226,7 +225,7 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'show_help_button',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['show_help_button'])
+                    'disabled' => isset($this->lockedParams['show_help_button']),
                 )
             )
             ->add(
@@ -235,7 +234,7 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'help_url',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['help_url'])
+                    'disabled' => isset($this->lockedParams['help_url']),
                 )
             )
             ->add(
@@ -244,7 +243,7 @@ class GeneralType extends AbstractType
                 array(
                     'required' => false,
                     'disabled' => isset($this->lockedParams['send_mail_at_workspace_registration']),
-                    'label' => 'send_mail_at_workspace_registration'
+                    'label' => 'send_mail_at_workspace_registration',
                 )
             )
             ->add(
@@ -255,8 +254,8 @@ class GeneralType extends AbstractType
                     'label' => 'registration_mail_validation',
                     'choices' => array(
                         PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL => 'send_mail_info',
-                        PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_FULL => 'force_mail_validation'
-                    )
+                        PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_FULL => 'force_mail_validation',
+                    ),
                 )
             )
             ->add(
@@ -265,7 +264,7 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'default_workspace_tag',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['default_workspace_tag'])
+                    'disabled' => isset($this->lockedParams['default_workspace_tag']),
                 )
             )
             ->add(
@@ -274,11 +273,11 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'activate_pdf_export',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['is_pdf_export_active'])
+                    'disabled' => isset($this->lockedParams['is_pdf_export_active']),
                 )
             );
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfiguration $generalParameters */
             $generalParameters = $event->getData();
             $form = $event->getForm();
@@ -288,28 +287,28 @@ class GeneralType extends AbstractType
                     'platform_init_date',
                     'datepicker',
                     array(
-                        'input'       => 'timestamp',
-                        'label'       => 'platform_init_date',
-                        'required'    => false,
-                        'format'      => $this->dateFormat,
-                        'language'    => $this->language,
-                        'disabled' => isset($this->lockedParams['platform_init_date'])
+                        'input' => 'timestamp',
+                        'label' => 'platform_init_date',
+                        'required' => false,
+                        'format' => $this->dateFormat,
+                        'language' => $this->language,
+                        'disabled' => isset($this->lockedParams['platform_init_date']),
                     )
                 )
                 ->add(
                     'platform_limit_date',
                     'datepicker',
                     array(
-                        'input'       => 'timestamp',
-                        'label'       => 'platform_expiration_date',
-                        'required'    => false,
-                        'format'      => $this->dateFormat,
-                        'language'    => $this->language,
-                        'disabled' => isset($this->lockedParams['platform_limit_date'])
+                        'input' => 'timestamp',
+                        'label' => 'platform_expiration_date',
+                        'required' => false,
+                        'format' => $this->dateFormat,
+                        'language' => $this->language,
+                        'disabled' => isset($this->lockedParams['platform_limit_date']),
                     )
                 );
         });
-   }
+    }
 
     public function getName()
     {
@@ -320,7 +319,7 @@ class GeneralType extends AbstractType
     {
         $resolver->setDefaults(array(
                 'translation_domain' => 'platform',
-                'date_format'        => DateType::HTML5_FORMAT
+                'date_format' => DateType::HTML5_FORMAT,
             )
         );
     }

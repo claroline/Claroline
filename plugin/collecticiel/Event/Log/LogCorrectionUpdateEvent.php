@@ -8,8 +8,8 @@ use Innova\CollecticielBundle\Entity\Correction;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
 
-class LogCorrectionUpdateEvent extends AbstractLogResourceEvent implements PotentialEvaluationEndInterface {
-
+class LogCorrectionUpdateEvent extends AbstractLogResourceEvent implements PotentialEvaluationEndInterface
+{
     const ACTION = 'resource-innova_collecticiel-correction_update';
 
     private $correction;
@@ -29,10 +29,10 @@ class LogCorrectionUpdateEvent extends AbstractLogResourceEvent implements Poten
         }
 
         $details = array(
-            'dropzone'  => array(
+            'dropzone' => array(
                 'id' => $dropzone->getId(),
             ),
-            'drop'  => array(
+            'drop' => array(
                 'id' => $drop->getId(),
                 'documents' => $documentsDetails,
                 'owner' => array(
@@ -40,9 +40,9 @@ class LogCorrectionUpdateEvent extends AbstractLogResourceEvent implements Poten
                     'lastName' => $drop->getUser()->getLastName(),
                     'firstName' => $drop->getUser()->getFirstName(),
                     'username' => $drop->getUser()->getUsername(),
-                )
+                ),
             ),
-            'correction' => $correction->toArray(true)
+            'correction' => $correction->toArray(true),
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

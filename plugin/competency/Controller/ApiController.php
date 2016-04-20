@@ -58,6 +58,7 @@ class ApiController
      * )
      *
      * @param Competency $framework
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function frameworkAction(Competency $framework)
@@ -76,7 +77,9 @@ class ApiController
      *     description="Create a new competency framework. Sent data must be a valid JSON representation of the framework.",
      *     views={"competencies"}
      * )
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function createFrameworkAction(Request $request)

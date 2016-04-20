@@ -45,10 +45,10 @@ class BadgePickerType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['multiple']    = $options['multiple'];
-        $view->vars['mode']        = $options['mode'];
-        $view->vars['workspace']   = $options['workspace'];
-        $view->vars['blacklist']   = $options['blacklist'];
+        $view->vars['multiple'] = $options['multiple'];
+        $view->vars['mode'] = $options['mode'];
+        $view->vars['workspace'] = $options['workspace'];
+        $view->vars['blacklist'] = $options['blacklist'];
     }
 
     /**
@@ -58,10 +58,10 @@ class BadgePickerType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'multiple'     => false,
-                'mode'         => BadgeManager::BADGE_PICKER_DEFAULT_MODE,
-                'workspace'    => null,
-                'blacklist'    => array()
+                'multiple' => false,
+                'mode' => BadgeManager::BADGE_PICKER_DEFAULT_MODE,
+                'workspace' => null,
+                'blacklist' => array(),
             )
         );
     }

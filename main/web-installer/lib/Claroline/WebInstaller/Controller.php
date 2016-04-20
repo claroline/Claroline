@@ -32,10 +32,10 @@ class Controller
         $this->request = $this->container->getRequest();
         $this->parameters = $this->container->getParameterBag();
         $ds = DIRECTORY_SEPARATOR;
-        $configFile = $container->getAppDirectory() .
-            $ds . 'config' . $ds . 'platform_options.yml';
-        $lockedFile = $container->getAppDirectory() .
-            $ds . 'config' . $ds . 'locked_platform_options.yml';
+        $configFile = $container->getAppDirectory().
+            $ds.'config'.$ds.'platform_options.yml';
+        $lockedFile = $container->getAppDirectory().
+            $ds.'config'.$ds.'locked_platform_options.yml';
         $this->configHandler = new PlatformConfigurationHandler($configFile, $lockedFile);
     }
 
@@ -46,7 +46,7 @@ class Controller
             'welcome',
             array(
                 'install_language' => $this->parameters->getInstallationLanguage(),
-                'country' => $this->parameters->getCountry()
+                'country' => $this->parameters->getCountry(),
             )
         );
     }
@@ -71,7 +71,7 @@ class Controller
             array(
                 'setting_categories' => $settingChecker->getSettingCategories(),
                 'has_failed_recommendation' => $settingChecker->hasFailedRecommendation(),
-                'has_failed_requirement' => $settingChecker->hasFailedRequirement()
+                'has_failed_requirement' => $settingChecker->hasFailedRequirement(),
             )
         );
     }
@@ -84,7 +84,7 @@ class Controller
             array(
                 'settings' => $this->parameters->getDatabaseSettings(),
                 'global_error' => $this->parameters->getDatabaseGlobalError(),
-                'validation_errors' => $this->parameters->getDatabaseValidationErrors()
+                'validation_errors' => $this->parameters->getDatabaseValidationErrors(),
             )
         );
     }
@@ -128,7 +128,7 @@ class Controller
             'platform_parameters',
             array(
                 'platform_settings' => $platformSettings,
-                'errors' => $this->parameters->getPlatformValidationErrors()
+                'errors' => $this->parameters->getPlatformValidationErrors(),
             )
         );
     }
@@ -155,7 +155,7 @@ class Controller
             'admin_user',
             array(
                 'first_admin_settings' => $this->parameters->getFirstAdminSettings(),
-                'errors' => $this->parameters->getFirstAdminValidationErrors()
+                'errors' => $this->parameters->getFirstAdminValidationErrors(),
             )
         );
     }
@@ -183,7 +183,7 @@ class Controller
             array(
                 'mailing_settings' => $this->parameters->getMailingSettings(),
                 'global_error' => $this->parameters->getMailingGlobalError(),
-                'validation_errors' => $this->parameters->getMailingValidationErrors()
+                'validation_errors' => $this->parameters->getMailingValidationErrors(),
             )
         );
     }
@@ -255,7 +255,7 @@ class Controller
         $this->request->getSession()->invalidate();
 
         if (!$installer->hasSucceeded()) {
-            return $this->redirect('/error/' . $installer->getLogFilename());
+            return $this->redirect('/error/'.$installer->getLogFilename());
         }
 
         if ($sendDatasConfirmed) {
@@ -267,7 +267,7 @@ class Controller
 
     public function installStatusStep($timestamp = null)
     {
-        $logDir = $this->container->getAppDirectory() . '/logs';
+        $logDir = $this->container->getAppDirectory().'/logs';
         $logFile = null;
 
         if (!$timestamp) {
@@ -283,20 +283,20 @@ class Controller
                 }
             }
         } else {
-            $logFile = $logDir . '/install-' . $timestamp . '.log';
+            $logFile = $logDir.'/install-'.$timestamp.'.log';
         }
 
         return new JsonResponse(
             array(
                 'timestamp' => $timestamp,
-                'content' => file_get_contents($logFile)
+                'content' => file_get_contents($logFile),
             )
         );
     }
 
     public function failedInstallStep($logFilename)
     {
-        $logFile = $this->container->getAppDirectory() . '/logs/' . $logFilename;
+        $logFile = $this->container->getAppDirectory().'/logs/'.$logFilename;
         $logContent = file_exists($logFile) ? file_get_contents($logFile) : null;
 
         return $this->renderStep(
@@ -304,7 +304,7 @@ class Controller
             'failed_install',
             array(
                 'log' => $logContent,
-                'log_filename' => $logFilename
+                'log_filename' => $logFilename,
             )
         );
     }
@@ -317,7 +317,7 @@ class Controller
                 array(
                     'stepTitle' => $titleKey,
                     'stepTemplate' => $template,
-                    'stepVariables' => $variables
+                    'stepVariables' => $variables,
                 )
             )
         );
@@ -327,7 +327,7 @@ class Controller
     {
         $path = $path === '/' ? '' : $path;
 
-        return new RedirectResponse($this->request->getBaseUrl() . $path);
+        return new RedirectResponse($this->request->getBaseUrl().$path);
     }
 
     private function getTransportId($transport)
@@ -360,7 +360,7 @@ class Controller
         $datas['type'] = 0;
         $datas['token'] = $this->parameters->getToken();
 
-        $currentUrl = $this->request->getHttpHost() .
+        $currentUrl = $this->request->getHttpHost().
             $this->request->getRequestUri();
         $datas['platformUrl'] = str_replace('install.php/install', 'app.php', $currentUrl);
 
@@ -383,18 +383,18 @@ class Controller
         $type = $datas['type'];
         $token = $datas['token'];
         $this->configHandler->setParameter('platform_url', $platformUrl);
-        
-        $postDatas = "ip=$ip" .
-            "&name=$name" .
-            "&url=$platformUrl" .
-            "&lang=$lang" .
-            "&country=$country" .
-            "&email=$supportEmail" .
-            "&version=$version" .
-            "&workspaces=$nbWorkspaces" .
-            "&personal_workspaces=$nbPersonalWorkspaces" .
-            "&users=$nbUsers" .
-            "&stats_type=$type" .
+
+        $postDatas = "ip=$ip".
+            "&name=$name".
+            "&url=$platformUrl".
+            "&lang=$lang".
+            "&country=$country".
+            "&email=$supportEmail".
+            "&version=$version".
+            "&workspaces=$nbWorkspaces".
+            "&personal_workspaces=$nbPersonalWorkspaces".
+            "&users=$nbUsers".
+            "&stats_type=$type".
             "&token=$token";
 
         $curl = curl_init($url);
@@ -408,7 +408,7 @@ class Controller
 
     private function generateToken($length)
     {
-        $chars = array_merge(range(0,9), range('a', 'z'), range('A', 'Z'));
+        $chars = array_merge(range(0, 9), range('a', 'z'), range('A', 'Z'));
         $charsSize = count($chars);
         $token = uniqid();
 

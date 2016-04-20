@@ -58,7 +58,7 @@ class UserMessage
      */
     protected $isSent;
 
-        /**
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="last_open_date", type="datetime", nullable=true)

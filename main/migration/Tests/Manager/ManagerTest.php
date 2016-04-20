@@ -123,16 +123,16 @@ class ManagerTest extends MockeryTestCase
             array(
                 array(
                     Generator::QUERIES_UP => array('up queries'),
-                    Generator::QUERIES_DOWN => array('down queries')
+                    Generator::QUERIES_DOWN => array('down queries'),
                 ),
-                false
+                false,
             ),
             array(
                 array(
                     Generator::QUERIES_UP => array(),
-                    Generator::QUERIES_DOWN => array()
+                    Generator::QUERIES_DOWN => array(),
                 ),
-                true
+                true,
             ),
         );
     }
@@ -141,7 +141,7 @@ class ManagerTest extends MockeryTestCase
     {
         return array(
             array(Migrator::DIRECTION_UP, 'upgradeBundle'),
-            array(Migrator::DIRECTION_DOWN, 'downgradeBundle')
+            array(Migrator::DIRECTION_DOWN, 'downgradeBundle'),
         );
     }
 }

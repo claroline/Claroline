@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Activity parameters
- * Defines the context of the Activity
+ * Defines the context of the Activity.
  *
  * @ORM\Entity
  * @ORM\Table(name="claro_activity_parameters")
@@ -27,8 +27,9 @@ use Doctrine\ORM\Mapping as ORM;
 class ActivityParameters extends Rulable
 {
     /**
-     * Unique identifier of the parameters
-     * @var integer
+     * Unique identifier of the parameters.
+     *
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -37,7 +38,8 @@ class ActivityParameters extends Rulable
     protected $id;
 
     /**
-     * Activity
+     * Activity.
+     *
      * @var \Claroline\CoreBundle\Entity\Resource\Activity
      *
      * @ORM\OneToOne(
@@ -49,23 +51,26 @@ class ActivityParameters extends Rulable
     protected $activity;
 
     /**
-     * Max duration allowed
-     * @var integer
+     * Max duration allowed.
+     *
+     * @var int
      *
      * @ORM\Column(name="max_duration", type="integer", nullable=true)
      */
     protected $maxDuration;
 
     /**
-     * Max attempts allowed
-     * @var integer
+     * Max attempts allowed.
+     *
+     * @var int
      *
      * @ORM\Column(name="max_attempts", type="integer", nullable=true)
      */
     protected $maxAttempts;
 
     /**
-     * By who the activity must be done
+     * By who the activity must be done.
+     *
      * @var string
      *
      * @ORM\Column(name="who", type="string", nullable=true)
@@ -73,7 +78,8 @@ class ActivityParameters extends Rulable
     protected $who;
 
     /**
-     * Where the Activity must be done
+     * Where the Activity must be done.
+     *
      * @var string
      *
      * @ORM\Column(name="activity_where", type="string", nullable=true)
@@ -82,14 +88,16 @@ class ActivityParameters extends Rulable
 
     /**
      * Is this activity need a tutor ?
-     * @var boolean
+     *
+     * @var bool
      *
      * @ORM\Column(name="with_tutor", type="boolean", nullable=true)
      */
     protected $withTutor;
 
     /**
-     * Secondary resources
+     * Secondary resources.
+     *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(
@@ -100,7 +108,8 @@ class ActivityParameters extends Rulable
     protected $secondaryResources;
 
     /**
-     * Type of evaluation
+     * Type of evaluation.
+     *
      * @var string
      *
      * @ORM\Column(name="evaluation_type", nullable=true)
@@ -108,7 +117,8 @@ class ActivityParameters extends Rulable
     protected $evaluationType;
 
     /**
-     * Rules for the Activity
+     * Rules for the Activity.
+     *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(
@@ -119,17 +129,18 @@ class ActivityParameters extends Rulable
     protected $rules;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
         $this->secondaryResources = new ArrayCollection();
-        $this->rules              = new ArrayCollection();
+        $this->rules = new ArrayCollection();
     }
 
     /**
-     * Get id
-     * @return integer
+     * Get id.
+     *
+     * @return int
      */
     public function getId()
     {
@@ -137,8 +148,10 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Set id
-     * @param  integer $id
+     * Set id.
+     *
+     * @param int $id
+     *
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
     public function setId($id)
@@ -149,7 +162,8 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Get activity
+     * Get activity.
+     *
      * @return \Claroline\CoreBundle\Entity\Resource\Activity
      */
     public function getActivity()
@@ -158,8 +172,10 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Set activity
-     * @param  \Claroline\CoreBundle\Entity\Resource\Activity $activity
+     * Set activity.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\Activity $activity
+     *
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
     public function setActivity(Activity $activity = null)
@@ -170,8 +186,9 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Get max duration
-     * @return integer
+     * Get max duration.
+     *
+     * @return int
      */
     public function getMaxDuration()
     {
@@ -179,8 +196,10 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Set max duration
-     * @param  integer $maxDuration
+     * Set max duration.
+     *
+     * @param int $maxDuration
+     *
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
     public function setMaxDuration($maxDuration)
@@ -191,8 +210,9 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Get max attempts
-     * @return integer
+     * Get max attempts.
+     *
+     * @return int
      */
     public function getMaxAttempts()
     {
@@ -200,8 +220,10 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Set max attempts
-     * @param  integer $maxAttempts
+     * Set max attempts.
+     *
+     * @param int $maxAttempts
+     *
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
     public function setMaxAttempts($maxAttempts)
@@ -212,7 +234,8 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Get who
+     * Get who.
+     *
      * @return string
      */
     public function getWho()
@@ -221,8 +244,10 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Set who
+     * Set who.
+     *
      * @param string $who
+     *
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
     public function setWho($who)
@@ -233,7 +258,8 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Get where
+     * Get where.
+     *
      * @return string
      */
     public function getWhere()
@@ -242,8 +268,10 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Set where
+     * Set where.
+     *
      * @param string $where
+     *
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
     public function setWhere($where)
@@ -255,7 +283,8 @@ class ActivityParameters extends Rulable
 
     /**
      * Is with tutor ?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isWithTutor()
     {
@@ -263,8 +292,10 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Set with tutor
-     * @param  boolean $withTutor
+     * Set with tutor.
+     *
+     * @param bool $withTutor
+     *
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
     public function setWithTutor($withTutor)
@@ -275,7 +306,8 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Get secondary resources
+     * Get secondary resources.
+     *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getSecondaryResources()
@@ -284,8 +316,10 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Add a secondary resource
+     * Add a secondary resource.
+     *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     *
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
     public function addSecondaryResource(ResourceNode $resource)
@@ -298,8 +332,10 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Remove a secondary resource
-     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     * Remove a secondary resource.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     *
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
     public function removeSecondaryResource(ResourceNode $resource)
@@ -312,7 +348,8 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Get evaluation type
+     * Get evaluation type.
+     *
      * @return string
      */
     public function getEvaluationType()
@@ -321,8 +358,10 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Set evaluation type
-     * @param  string $evaluationType
+     * Set evaluation type.
+     *
+     * @param string $evaluationType
+     *
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
     public function setEvaluationType($evaluationType)
@@ -333,8 +372,10 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Set rules
-     * @param  \Claroline\CoreBundle\Rule\Entity\Rule[]|\Doctrine\Common\Collections\ArrayCollection $rules
+     * Set rules.
+     *
+     * @param \Claroline\CoreBundle\Rule\Entity\Rule[]|\Doctrine\Common\Collections\ArrayCollection $rules
+     *
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
     public function setRules($rules)
@@ -345,7 +386,8 @@ class ActivityParameters extends Rulable
     }
 
     /**
-     * Get rules
+     * Get rules.
+     *
      * @return \Claroline\CoreBundle\Rule\Entity\Rule[]|\Doctrine\Common\Collections\ArrayCollection
      */
     public function getRules()

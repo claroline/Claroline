@@ -1,7 +1,7 @@
 <?php
+
 namespace Icap\PortfolioBundle\Installation\Updater;
 
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 
 class Updater000103
@@ -18,9 +18,10 @@ class Updater000103
         $this->UpdateWidgetType();
     }
 
-    public function UpdateWidgetType() {
+    public function UpdateWidgetType()
+    {
         /** @var \Icap\PortfolioBundle\Entity\Widget\WidgetType|null $widgetType */
-        $widgetType = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\\WidgetType")->findOneBy(array('name' => 'presentation'));
+        $widgetType = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\\WidgetType')->findOneBy(array('name' => 'presentation'));
 
         if (null !== $widgetType) {
             $widgetType
@@ -32,5 +33,4 @@ class Updater000103
             $this->entityManager->flush();
         }
     }
-
 }

@@ -102,7 +102,7 @@ class Refresher
             $event->getComposer()->getPackage()->getExtra()
         );
 
-        $cacheDir = $options['symfony-app-dir'] . '/cache';
+        $cacheDir = $options['symfony-app-dir'].'/cache';
         $event->getIO()->write('Clearing the cache...');
         static::removeContentFrom($cacheDir);
     }

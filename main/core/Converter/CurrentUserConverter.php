@@ -38,7 +38,7 @@ class CurrentUserConverter implements ParamConverterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidConfigurationException if the parameter name is missing
      * @throws AccessDeniedHttpException     if the current request is anonymous
@@ -61,11 +61,10 @@ class CurrentUserConverter implements ParamConverterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supports(ParamConverter $configuration)
     {
         return $configuration->getConverter() === 'current_user';
     }
 }
-

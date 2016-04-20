@@ -24,7 +24,7 @@ class LogWorkspaceDeleteEvent extends LogGenericEvent
             self::ACTION,
             array(
                 'workspace' => array(
-                    'name' => $workspace->getName()
+                    'name' => $workspace->getName(),
                 ),
             ),
             null,

@@ -76,8 +76,7 @@ class ResourceManagerListener
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager,
         MaskManager $maskManager
-    )
-    {
+    ) {
         $this->em = $em;
         $this->ed = $ed;
         $this->templating = $templating;
@@ -127,10 +126,11 @@ class ResourceManagerListener
     /**
      * Renders the resources page with its layout.
      *
-     * @param integer $workspaceId
+     * @param int $workspaceId
      *
      * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      * @throws \Exception
+     *
      * @return string
      */
     public function resourceWorkspace($workspaceId)
@@ -173,7 +173,7 @@ class ResourceManagerListener
                 'resourceActions' => $resourceActions,
                 'jsonPath' => $jsonPath,
                 'maxPostSize' => ini_get('post_max_size'),
-                'resourceZoom' => $this->getZoom()
+                'resourceZoom' => $this->getZoom(),
              )
         );
     }
@@ -195,7 +195,7 @@ class ResourceManagerListener
                 'resourceTypes' => $resourceTypes,
                 'resourceActions' => $resourceActions,
                 'maxPostSize' => ini_get('post_max_size'),
-                'resourceZoom' => $this->getZoom()
+                'resourceZoom' => $this->getZoom(),
             )
         );
     }
@@ -242,7 +242,7 @@ class ResourceManagerListener
                 'workspaceRoles' => $datas['workspaceRoles'],
                 'mask' => $mask,
                 'wsMax' => $wsMax,
-                'wsSearch' => ''
+                'wsSearch' => '',
             )
         );
     }

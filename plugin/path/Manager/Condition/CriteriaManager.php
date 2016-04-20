@@ -9,18 +9,20 @@ use Innova\PathBundle\Entity\Criterion;
 
 /**
  * CriteriaManager
- * Manages CriteriaGroup and Criterion of a StepCondition
+ * Manages CriteriaGroup and Criterion of a StepCondition.
  */
 class CriteriaManager
 {
     /**
-     * Object manager
-     * @var \Doctrine\Common\Persistence\ObjectManager $om
+     * Object manager.
+     *
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
     protected $om;
 
     /**
-     * Class constructor
+     * Class constructor.
+     *
      * @param \Doctrine\Common\Persistence\ObjectManager $om
      */
     public function __construct(ObjectManager $om)
@@ -29,12 +31,14 @@ class CriteriaManager
     }
 
     /**
-     * Create a new Group of Criteria
+     * Create a new Group of Criteria.
+     *
      * @param StepCondition $condition
-     * @param int $level
+     * @param int           $level
      * @param Criteriagroup $parent
-     * @param int $order
-     * @param \stdClass $groupStructure
+     * @param int           $order
+     * @param \stdClass     $groupStructure
+     *
      * @return Criteriagroup
      */
     public function createGroup(StepCondition $condition, $level = 0, Criteriagroup $parent = null, $order = 0, \stdClass $groupStructure)
@@ -45,13 +49,15 @@ class CriteriaManager
     }
 
     /**
-     * Update an existing group of criteria
+     * Update an existing group of criteria.
+     *
      * @param StepCondition $condition
-     * @param int $level
+     * @param int           $level
      * @param Criteriagroup $parent
-     * @param int $order
-     * @param \stdClass $groupStructure
+     * @param int           $order
+     * @param \stdClass     $groupStructure
      * @param Criteriagroup $group
+     *
      * @return Criteriagroup
      */
     public function editGroup(StepCondition $condition, $level = 0, Criteriagroup $parent = null, $order = 0, \stdClass $groupStructure, Criteriagroup $group)
@@ -80,9 +86,11 @@ class CriteriaManager
     }
 
     /**
-     * Update the Criteria of a CriteriaGroup
+     * Update the Criteria of a CriteriaGroup.
+     *
      * @param Criteriagroup $group
-     * @param array $criteria
+     * @param array         $criteria
+     *
      * @return array
      */
     public function updateCriteria(Criteriagroup $group, array $criteria = array())
@@ -108,10 +116,12 @@ class CriteriaManager
     }
 
     /**
-     * Clean Criteria which no longer exist in the current Group
+     * Clean Criteria which no longer exist in the current Group.
+     *
      * @param \Innova\PathBundle\Entity\Criteriagroup $group
-     * @param  array $neededCriteria
-     * @param  array $existingCriteria
+     * @param array                                   $neededCriteria
+     * @param array                                   $existingCriteria
+     *
      * @return \Innova\PathBundle\Manager\Condition\CriteriaManager
      */
     public function cleanCriteria(Criteriagroup $group, array $neededCriteria = array(), array $existingCriteria = array())
@@ -137,9 +147,11 @@ class CriteriaManager
     }
 
     /**
-     * Create a new Criterion
+     * Create a new Criterion.
+     *
      * @param Criteriagroup $group
-     * @param \stdClass $criterionStructure
+     * @param \stdClass     $criterionStructure
+     *
      * @return Criterion
      */
     public function createCriterion(Criteriagroup $group, \stdClass $criterionStructure)
@@ -150,10 +162,12 @@ class CriteriaManager
     }
 
     /**
-     * Update an existing Criterion
+     * Update an existing Criterion.
+     *
      * @param Criteriagroup $group
-     * @param \stdClass $criterionStructure
-     * @param Criterion $criterion
+     * @param \stdClass     $criterionStructure
+     * @param Criterion     $criterion
+     *
      * @return Criterion
      */
     public function editCriterion(Criteriagroup $group, \stdClass $criterionStructure, Criterion $criterion)

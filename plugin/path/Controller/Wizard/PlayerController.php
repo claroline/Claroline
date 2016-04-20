@@ -5,13 +5,12 @@ namespace Innova\PathBundle\Controller\Wizard;
 use Innova\PathBundle\Manager\PathManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Innova\PathBundle\Entity\Path\Path;
 
 /**
- * Player controller
+ * Player controller.
+ *
  * @author Innovalangues <contact@innovalangues.net>
  * 
  * @Route(
@@ -23,19 +22,22 @@ use Innova\PathBundle\Entity\Path\Path;
 class PlayerController
 {
     /**
-     * Object manager
+     * Object manager.
+     *
      * @var \Doctrine\Common\Persistence\ObjectManager
      */
     protected $om;
 
     /**
-     * Path manager
+     * Path manager.
+     *
      * @var \Innova\PathBundle\Manager\PathManager
      */
     protected $pathManager;
 
     /**
-     * Class constructor
+     * Class constructor.
+     *
      * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
      * @param \Innova\PathBundle\Manager\PathManager     $pathManager
      */
@@ -43,13 +45,15 @@ class PlayerController
         ObjectManager $objectManager,
         PathManager   $pathManager)
     {
-        $this->om          = $objectManager;
+        $this->om = $objectManager;
         $this->pathManager = $pathManager;
     }
 
     /**
-     * Display path player
-     * @param  \Innova\PathBundle\Entity\Path\Path $path
+     * Display path player.
+     *
+     * @param \Innova\PathBundle\Entity\Path\Path $path
+     *
      * @return array
      *
      * @Route(
@@ -67,12 +71,12 @@ class PlayerController
 
         $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
-        return array (
-            '_resource'       => $path,
-            'workspace'       => $path->getWorkspace(),
+        return array(
+            '_resource' => $path,
+            'workspace' => $path->getWorkspace(),
             'userProgression' => $this->pathManager->getUserProgression($path),
-            'resourceIcons'   => $resourceIcons,
-            'editEnabled'     => $this->pathManager->isAllow('EDIT', $path),
+            'resourceIcons' => $resourceIcons,
+            'editEnabled' => $this->pathManager->isAllow('EDIT', $path),
         );
     }
 }

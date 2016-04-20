@@ -19,9 +19,10 @@ use JMS\DiExtraBundle\Annotation as DI;
 class HomeService
 {
     /**
-     * Verify if a twig template exists, If the template does not exists a default path will be return;
+     * Verify if a twig template exists, If the template does not exists a default path will be return;.
      *
-     * @param  string $path The path of the twig template separated by : just as the path for $this->render(...)
+     * @param string $path The path of the twig template separated by : just as the path for $this->render(...)
+     *
      * @return string
      */
     public function defaultTemplate($path)
@@ -31,10 +32,10 @@ class HomeService
         $controller = preg_split('/(?=[A-Z])/', $dir[0]);
         $controller = array_slice($controller, (count($controller) - 2));
         $controller = implode('', $controller);
-        $base = __DIR__ . "/../../Resources/views/";
+        $base = __DIR__.'/../../Resources/views/';
 
         if ($dir[1] === '') {
-            $dir[0] = $dir[0] . ':';
+            $dir[0] = $dir[0].':';
             $tmp = array_slice($dir, 2);
         } else {
             $tmp = array_slice($dir, 1);
@@ -45,15 +46,15 @@ class HomeService
         }
 
         if (file_exists($base.implode('/', $tmp))) {
-            return $dir[0] . ':' . implode(':', $tmp);
+            return $dir[0].':'.implode(':', $tmp);
         } else {
             $file = explode('.', $tmp[count($tmp) - 1]);
 
             $file[0] = 'default';
             $tmp[count($tmp) - 1] = implode('.', $file);
 
-            if (file_exists($base . implode('/', $tmp))) {
-                return $dir[0] . ':' . implode(':', $tmp);
+            if (file_exists($base.implode('/', $tmp))) {
+                return $dir[0].':'.implode(':', $tmp);
             }
         }
 
@@ -61,7 +62,7 @@ class HomeService
     }
 
     /**
-     *  Reduce some "overall complexity"
+     *  Reduce some "overall complexity".
      */
     public function isDefinedPush($array, $name, $variable, $method = null)
     {

@@ -71,7 +71,7 @@ class ResultControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $this->request('POST', "/results/{$result->getId()}/users/{$john->getId()}", $jane, [
-            'mark' => 12
+            'mark' => 12,
         ]);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -93,7 +93,7 @@ class ResultControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $this->request('POST', "/results/{$result->getId()}/users/{$john->getId()}", $john, [
-            'mark' => 123
+            'mark' => 123,
         ]);
         $this->assertEquals(422, $this->client->getResponse()->getStatusCode());
     }
@@ -105,7 +105,7 @@ class ResultControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $this->request('POST', "/results/{$result->getId()}/users/{$john->getId()}", $john, [
-            'mark' => 12
+            'mark' => 12,
         ]);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
@@ -149,7 +149,7 @@ class ResultControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $this->request('PUT', "/results/marks/{$mark->getId()}", $jane, [
-            'value' => 19
+            'value' => 19,
         ]);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(16, $mark->getValue());
@@ -175,7 +175,7 @@ class ResultControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $this->request('PUT', "/results/marks/{$mark->getId()}", $john, [
-            'value' => 18
+            'value' => 18,
         ]);
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(18, $mark->getValue());
@@ -189,7 +189,7 @@ class ResultControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $this->request('PUT', "/results/marks/{$mark->getId()}", $john, [
-            'mark' => 123
+            'mark' => 123,
         ]);
         $this->assertEquals(422, $this->client->getResponse()->getStatusCode());
     }

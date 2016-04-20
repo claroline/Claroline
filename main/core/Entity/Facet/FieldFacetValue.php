@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
@@ -145,7 +144,7 @@ class FieldFacetValue
             case FieldFacet::FLOAT_TYPE: return $this->getFloatValue();
             case FieldFacet::DATE_TYPE: return $this->getDateValue();
             case FieldFacet::STRING_TYPE: return $this->getStringValue();
-            default: return "error";
+            default: return 'error';
         }
     }
-} 
+}

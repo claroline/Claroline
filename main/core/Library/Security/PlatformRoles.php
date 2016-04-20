@@ -22,7 +22,7 @@ class PlatformRoles
         self::USER,
         self::WS_CREATOR,
         self::ADMIN,
-        self::ANONYMOUS
+        self::ANONYMOUS,
     );
 
     public static function contains($roleName)

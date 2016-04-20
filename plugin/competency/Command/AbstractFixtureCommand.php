@@ -12,12 +12,12 @@ abstract class AbstractFixtureCommand extends ContainerAwareCommand
         $file = realpath($fixtureFile);
 
         if (!$file) {
-            if (false === $file = realpath(getcwd() . '/' . $fixture)) {
+            if (false === $file = realpath(getcwd().'/'.$fixture)) {
                 throw new \Exception("Cannot found fixture '{$fixture}'");
             }
         }
 
-        require_once($file);
+        require_once $file;
 
         $classes = get_declared_classes();
         $fixtureClass = end($classes); // should check type with reflection

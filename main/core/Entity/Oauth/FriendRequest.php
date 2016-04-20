@@ -31,7 +31,6 @@ class FriendRequest
      *
      * @ORM\Column(name="host", type="string", nullable=false)
      */
-
     protected $host;
 
     /**
@@ -43,21 +42,21 @@ class FriendRequest
     protected $name;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_activated", type="boolean")
      */
     protected $isActivated = false;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="allow_authentication", type="boolean", nullable=false)
      */
     protected $allowAuthentication = false;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="create_user_if_missing", type="boolean", nullable=false)
      */

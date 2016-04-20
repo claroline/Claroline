@@ -16,6 +16,7 @@ class DataConstraintValidator
      * JSON schema.
      *
      * @param \stdClass $framework
+     *
      * @return string[] An array of error messages
      */
     public function validate(\stdClass $framework)

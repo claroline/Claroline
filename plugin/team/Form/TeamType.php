@@ -37,8 +37,8 @@ class TeamType extends AbstractType
                 'mapped' => false,
                 'label' => 'default_resource',
                 'attr' => array(
-                    'data-restrict-for-owner' => 1
-                )
+                    'data-restrict-for-owner' => 1,
+                ),
             )
         );
         $builder->add(
@@ -46,7 +46,7 @@ class TeamType extends AbstractType
             'integer',
             array(
                 'attr' => array('min' => 0),
-                'required' => false
+                'required' => false,
             )
         );
         $builder->add(
@@ -55,10 +55,10 @@ class TeamType extends AbstractType
             array(
                 'choices' => array(
                     true => 'public',
-                    false => 'private'
+                    false => 'private',
                 ),
                 'required' => true,
-                'attr' => array('class' => 'advanced-param')
+                'attr' => array('class' => 'advanced-param'),
             )
         );
         $builder->add(
@@ -66,7 +66,7 @@ class TeamType extends AbstractType
             'checkbox',
             array(
                 'required' => true,
-                'attr' => array('class' => 'advanced-param')
+                'attr' => array('class' => 'advanced-param'),
             )
         );
         $builder->add(
@@ -74,7 +74,7 @@ class TeamType extends AbstractType
             'checkbox',
             array(
                 'required' => true,
-                'attr' => array('class' => 'advanced-param')
+                'attr' => array('class' => 'advanced-param'),
             )
         );
         $builder->add(
@@ -89,7 +89,7 @@ class TeamType extends AbstractType
                 'label' => 'user_creatable_resources',
                 'class' => 'ClarolineCoreBundle:Resource\ResourceType',
                 'property' => 'name',
-                'attr' => array('class' => 'advanced-param')
+                'attr' => array('class' => 'advanced-param'),
             )
         );
     }

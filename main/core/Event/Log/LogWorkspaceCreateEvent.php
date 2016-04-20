@@ -24,7 +24,7 @@ class LogWorkspaceCreateEvent extends LogGenericEvent
             self::ACTION,
             array(
                 'workspace' => array(
-                    'name' => $workspace->getName()
+                    'name' => $workspace->getName(),
                 ),
             ),
             null,
@@ -40,6 +40,6 @@ class LogWorkspaceCreateEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 }

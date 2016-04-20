@@ -24,7 +24,7 @@ class LogUserUpdateEvent extends LogGenericEvent implements MandatoryEventInterf
      *      'propertyName1' => ['property old value 1', 'property new value 1'],
      *      'propertyName2' => ['property old value 2', 'property new value 2'],
      *      etc.
-     * )
+     * ).
      *
      * Please respect lower caml case naming convention for property names
      */
@@ -36,8 +36,8 @@ class LogUserUpdateEvent extends LogGenericEvent implements MandatoryEventInterf
                 'receiverUser' => array(
                     'firstName' => $receiver->getFirstName(),
                     'lastName' => $receiver->getLastName(),
-                    'changeSet' => $changeSet
-                )
+                    'changeSet' => $changeSet,
+                ),
             ),
             $receiver
         );

@@ -85,10 +85,10 @@ class Updater030800 extends Updater
         $rows = $this->connection->query($query);
         $value = ToolMaskDecoder::$defaultValues['open'];
         $count = 0;
-        $insertQuery = "
+        $insertQuery = '
             INSERT INTO claro_tool_rights (role_id, ordered_tool_id, mask)
             VALUES
-        ";
+        ';
 
         foreach ($rows as $row) {
             $rights = $this->toolRightsManager->getRightsByRoleIdAndOrderedToolId(
@@ -97,13 +97,12 @@ class Updater030800 extends Updater
             );
 
             if (is_null($rights)) {
-
                 if ($count === 0) {
                     $insertQuery .= "({$row['role_id']}, {$row['orderedtool_id']}, {$value})";
                 } else {
                     $insertQuery .= ", ({$row['role_id']}, {$row['orderedtool_id']}, {$value})";
                 }
-                $count++;
+                ++$count;
             }
         }
 

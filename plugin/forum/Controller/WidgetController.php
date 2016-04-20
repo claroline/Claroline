@@ -2,7 +2,6 @@
 
 namespace Claroline\ForumBundle\Controller;
 
-
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig;
 use Claroline\ForumBundle\Form\Widget\LastMessageWidgetConfigType;
@@ -26,7 +25,7 @@ class WidgetController extends Controller
             throw new AccessDeniedException();
         }
 
-        $lastMessageWidgetConfig = $this->get("claroline.manager.forum_widget")->getConfig($widgetInstance);
+        $lastMessageWidgetConfig = $this->get('claroline.manager.forum_widget')->getConfig($widgetInstance);
 
         /** @var Form $form */
         $form = $this->get('form.factory')->create(new LastMessageWidgetConfigType(), $lastMessageWidgetConfig);
@@ -45,7 +44,7 @@ class WidgetController extends Controller
             'ClarolineForumBundle:Widget:lastMessageWidgetConfig.html.twig',
             array(
                 'form' => $form->createView(),
-                'widgetInstance' => $widgetInstance
+                'widgetInstance' => $widgetInstance,
             )
         );
     }

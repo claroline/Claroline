@@ -21,7 +21,7 @@ class MailingSettings extends AbstractValidator
         'password' => null,
         'auth_mode' => null,
         'encryption' => null,
-        'port' => null
+        'port' => null,
     );
 
     public function setTransport($transport)
@@ -64,7 +64,7 @@ class MailingSettings extends AbstractValidator
             return $this->transportOptions[$option];
         }
 
-        return null;
+        return;
     }
 
     protected function doValidate()

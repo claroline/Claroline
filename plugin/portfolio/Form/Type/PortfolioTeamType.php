@@ -2,7 +2,6 @@
 
 namespace Icap\PortfolioBundle\Form\Type;
 
-use Doctrine\ORM\EntityRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,9 +17,9 @@ class PortfolioTeamType extends AbstractType
         $builder
             ->add('team', 'zenstruck_ajax_entity',
                 array(
-                    'class'          => 'ClarolineTeamBundle:Team',
+                    'class' => 'ClarolineTeamBundle:Team',
                     'use_controller' => true,
-                    'property'       => 'name'
+                    'property' => 'name',
                 )
             );
     }
@@ -34,8 +33,8 @@ class PortfolioTeamType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\PortfolioTeam',
-                'translation_domain' => 'icap_portfolio'
+                'data_class' => 'Icap\PortfolioBundle\Entity\PortfolioTeam',
+                'translation_domain' => 'icap_portfolio',
             )
         );
     }

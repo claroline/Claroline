@@ -2,9 +2,8 @@
 /**
  * Created by : Vincent SAISSET
  * Date: 21/08/13
- * Time: 16:26
+ * Time: 16:26.
  */
-
 namespace Icap\DropzoneBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Icap\DropzoneBundle\Repository\GradeRepository")
  * @ORM\Table(name="icap__dropzonebundle_grade", uniqueConstraints={@ORM\UniqueConstraint(name="unique_grade_for_criterion_and_correction", columns={"criterion_id", "correction_id"})})
  */
-class Grade {
+class Grade
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -103,5 +103,4 @@ class Grade {
     {
         $this->correction = $correction;
     }
-
 }

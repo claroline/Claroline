@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class HasImage extends Constraint
 {
-    public $message = "badge_need_image";
+    public $message = 'badge_need_image';
 
     public function getTargets()
     {

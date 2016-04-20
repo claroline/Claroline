@@ -48,27 +48,27 @@ class BlogManager
         $data = [];
 
         $data['options'] = [
-            'authorize_comment'                 => $object->getOptions()->getAuthorizeComment(),
-            'authorize_anonymous_comment'       => $object->getOptions()->getAuthorizeAnonymousComment(),
-            'post_per_page'                     => $object->getOptions()->getPostPerPage(),
-            'auto_publish_post'                 => $object->getOptions()->getAutoPublishPost(),
-            'auto_publish_comment'              => $object->getOptions()->getAutoPublishComment(),
-            'display_title'                     => $object->getOptions()->getDisplayTitle(),
-            'banner_activate'                   => $object->getOptions()->isBannerActivate(),
-            'display_post_view_counter'         => $object->getOptions()->getDisplayPostViewCounter(),
-            'banner_background_color'           => $object->getOptions()->getBannerBackgroundColor(),
-            'banner_height'                     => $object->getOptions()->getBannerHeight(),
-            'banner_background_image'           => $object->getOptions()->getBannerBackgroundImage(),
-            'banner_background_image_position'  => $object->getOptions()->getBannerBackgroundImagePosition(),
-            'banner_background_image_repeat'    => $object->getOptions()->getBannerBackgroundImageRepeat(),
-            'tag_cloud'                         => (null === $object->getOptions()->getTagCloud()) ? 0 : $object->getOptions()->getTagCloud()
+            'authorize_comment' => $object->getOptions()->getAuthorizeComment(),
+            'authorize_anonymous_comment' => $object->getOptions()->getAuthorizeAnonymousComment(),
+            'post_per_page' => $object->getOptions()->getPostPerPage(),
+            'auto_publish_post' => $object->getOptions()->getAutoPublishPost(),
+            'auto_publish_comment' => $object->getOptions()->getAutoPublishComment(),
+            'display_title' => $object->getOptions()->getDisplayTitle(),
+            'banner_activate' => $object->getOptions()->isBannerActivate(),
+            'display_post_view_counter' => $object->getOptions()->getDisplayPostViewCounter(),
+            'banner_background_color' => $object->getOptions()->getBannerBackgroundColor(),
+            'banner_height' => $object->getOptions()->getBannerHeight(),
+            'banner_background_image' => $object->getOptions()->getBannerBackgroundImage(),
+            'banner_background_image_position' => $object->getOptions()->getBannerBackgroundImagePosition(),
+            'banner_background_image_repeat' => $object->getOptions()->getBannerBackgroundImageRepeat(),
+            'tag_cloud' => (null === $object->getOptions()->getTagCloud()) ? 0 : $object->getOptions()->getTagCloud(),
         ];
 
         $data['posts'] = [];
 
         foreach ($object->getPosts() as $post) {
-            $postUid = uniqid() . '.txt';
-            $postTemporaryPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $postUid;
+            $postUid = uniqid().'.txt';
+            $postTemporaryPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$postUid;
             file_put_contents($postTemporaryPath, $post->getContent());
             $files[$postUid] = $postTemporaryPath;
 
@@ -76,38 +76,38 @@ class BlogManager
 
             foreach ($post->getTags() as $tag) {
                 $tags[] = [
-                    'name' => $tag->getName()
+                    'name' => $tag->getName(),
                 ];
             }
 
             $comments = [];
 
             foreach ($post->getComments() as $comment) {
-                $commentUid = uniqid() . '.txt';
-                $commentTemporaryPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $commentUid;
+                $commentUid = uniqid().'.txt';
+                $commentTemporaryPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$commentUid;
                 file_put_contents($commentTemporaryPath, $comment->getMessage());
                 $files[$commentUid] = $commentTemporaryPath;
 
                 $comments[] = [
-                    'message'           => $commentUid,
-                    'author'            => $comment->getAuthor()->getMail(),
-                    'creation_date'     => $comment->getCreationDate()->format(\DateTime::ATOM),
-                    'update_date'       => (null !== $comment->getUpdateDate()) ? $comment->getUpdateDate()->format(\DateTime::ATOM) : null,
-                    'publication_date'  => (null !== $comment->getPublicationDate()) ? $comment->getPublicationDate()->format(\DateTime::ATOM) : null,
-                    'status'            => $comment->getStatus(),
+                    'message' => $commentUid,
+                    'author' => $comment->getAuthor()->getMail(),
+                    'creation_date' => $comment->getCreationDate()->format(\DateTime::ATOM),
+                    'update_date' => (null !== $comment->getUpdateDate()) ? $comment->getUpdateDate()->format(\DateTime::ATOM) : null,
+                    'publication_date' => (null !== $comment->getPublicationDate()) ? $comment->getPublicationDate()->format(\DateTime::ATOM) : null,
+                    'status' => $comment->getStatus(),
                 ];
             }
 
             $postArray = [
-                'title'             => $post->getTitle(),
-                'content'           => $postUid,
-                'author'            => $post->getAuthor()->getMail(),
-                'status'            => $post->getStatus(),
-                'creation_date'     => $post->getCreationDate()->format(\DateTime::ATOM),
+                'title' => $post->getTitle(),
+                'content' => $postUid,
+                'author' => $post->getAuthor()->getMail(),
+                'status' => $post->getStatus(),
+                'creation_date' => $post->getCreationDate()->format(\DateTime::ATOM),
                 'modification_date' => (null !== $post->getModificationDate()) ? $post->getModificationDate()->format(\DateTime::ATOM) : null,
-                'publication_date'  => (null !== $post->getPublicationDate()) ? $post->getPublicationDate()->format(\DateTime::ATOM) : null,
-                'tags'              => $tags,
-                'comments'          => $comments
+                'publication_date' => (null !== $post->getPublicationDate()) ? $post->getPublicationDate()->format(\DateTime::ATOM) : null,
+                'tags' => $tags,
+                'comments' => $comments,
             ];
 
             $data['posts'][] = $postArray;
@@ -125,7 +125,7 @@ class BlogManager
      */
     public function importBlog(array $data, $rootPath, User $owner)
     {
-        $blogDatas   = $data['data'];
+        $blogDatas = $data['data'];
         $optionsData = $blogDatas['options'];
 
         $blogOptions = new BlogOptions();
@@ -165,7 +165,7 @@ class BlogManager
             $comments = new ArrayCollection();
             foreach ($commentsDatas as $commentsData) {
                 $comment = new Comment();
-                $commentMessage = file_get_contents($rootPath . DIRECTORY_SEPARATOR . $commentsData['message']);
+                $commentMessage = file_get_contents($rootPath.DIRECTORY_SEPARATOR.$commentsData['message']);
                 $comment
                     ->setMessage($commentMessage)
                     ->setAuthor($this->retrieveUser($commentsData['author'], $owner))
@@ -177,7 +177,7 @@ class BlogManager
                 $comments->add($comment);
             }
 
-            $postContent = file_get_contents($rootPath . DIRECTORY_SEPARATOR . $postsData['content']);
+            $postContent = file_get_contents($rootPath.DIRECTORY_SEPARATOR.$postsData['content']);
 
             $post
                 ->setTitle($postsData['title'])
@@ -235,14 +235,14 @@ class BlogManager
 
     /**
      * @param UploadedFile $file
-     * @param BlogOptions $options
+     * @param BlogOptions  $options
      */
     public function updateBanner(UploadedFile $file = null, BlogOptions $options)
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        if (file_exists($this->uploadDir . $ds . $options->getBannerBackgroundImage()) || $file === null) {
-            @unlink($this->uploadDir . $ds . $options->getBannerBackgroundImage());
+        if (file_exists($this->uploadDir.$ds.$options->getBannerBackgroundImage()) || $file === null) {
+            @unlink($this->uploadDir.$ds.$options->getBannerBackgroundImage());
         }
 
         if ($file) {
@@ -266,8 +266,7 @@ class BlogManager
             'tagcloud',
             'redactor',
             'calendar',
-            'archives'
+            'archives',
         );
     }
-
 }

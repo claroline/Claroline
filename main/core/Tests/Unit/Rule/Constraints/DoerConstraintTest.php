@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Rule\Constraints;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;

@@ -36,8 +36,7 @@ class Installer
         Writer $writer,
         $kernelFile,
         $kernelClass
-    )
-    {
+    ) {
         $this->adminSettings = $adminSettings;
         $this->writer = $writer;
         $this->kernelFile = $kernelFile;
@@ -47,8 +46,8 @@ class Installer
 
     public function install()
     {
-        $this->logFilename = 'install-' . time() . '.log';
-        $logFile = $this->appDir . '/logs/' . $this->logFilename;
+        $this->logFilename = 'install-'.time().'.log';
+        $logFile = $this->appDir.'/logs/'.$this->logFilename;
         $output = new StreamOutput(fopen($logFile, 'a'));
 
         try {
@@ -72,8 +71,8 @@ class Installer
             $this->hasSucceeded = true;
         } catch (\Exception $ex) {
             $output->writeln('[ERROR] An exception has been thrown during installation');
-            $output->writeln('Message: ' . $ex->getMessage());
-            $output->writeln('Trace: ' . $ex->getTraceAsString());
+            $output->writeln('Message: '.$ex->getMessage());
+            $output->writeln('Trace: '.$ex->getTraceAsString());
         }
     }
 
@@ -91,7 +90,7 @@ class Installer
     {
         $output->writeln('Clearing the cache...');
 
-        if (is_dir($directory = $this->appDir . '/cache')) {
+        if (is_dir($directory = $this->appDir.'/cache')) {
             $fileSystem = new Filesystem();
             $cacheIterator = new \DirectoryIterator($directory);
 
@@ -110,13 +109,24 @@ class Installer
         $installer->setOutput($output);
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         );
         $logger = new ConsoleLogger($output, $verbosityLevelMap);
         $installer->setLogger($logger);
         $output->writeln('Installing the platform from composer...');
-        $installer->updateFromComposerInfo();
+
+        //$kernel = $this->getContainer()->get('kernel');
+        /*
+        $rootDir = $kernel->getRootDir();
+        $iniBupFile = $rootDir . '/config/bundles.bup.ini';
+        @unlink($iniBupFile);
+        $previous = $rootDir . '/config/previous-installed.json';
+        @unlink($previous);
+        file_put_contents($previous, '[]');
+        */
+
+        $installer->installFromKernel(false);
     }
 
     private function createAdminUser(ContainerInterface $container, OutputInterface $output)

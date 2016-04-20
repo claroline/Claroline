@@ -122,9 +122,9 @@ class RolesControllerTest extends MockeryTestCase
                 'export' => true,
                 'create' => array(
                     array('name' => 'directory'),
-                    array('name' => 'file')
+                    array('name' => 'file'),
                 ),
-                'role' => $newRole
+                'role' => $newRole,
             ),
             'ROLE_WS_MANAGER' => array(
                 'open' => true,
@@ -134,10 +134,10 @@ class RolesControllerTest extends MockeryTestCase
                 'export' => true,
                 'create' => array(
                     array('name' => 'directory'),
-                    array('name' => 'file')
+                    array('name' => 'file'),
                 ),
-                'role' => $managerRole
-            )
+                'role' => $managerRole,
+            ),
         );
 
         $this->resourceManager->shouldReceive('create')->once()->with(
@@ -164,8 +164,8 @@ class RolesControllerTest extends MockeryTestCase
 
     public function testEditRoleFormAction()
     {
-        $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
+        $role = new \Claroline\CoreBundle\Entity\Role();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $formView = $this->mock('Symfony\Component\Form\FormView');
         $form = $this->mock('Symfony\Component\Form\FormInterface');
         $this->checkAccess($workspace);
@@ -175,7 +175,7 @@ class RolesControllerTest extends MockeryTestCase
         $expected = array(
             'workspace' => $workspace,
             'form' => $formView,
-            'role' => $role
+            'role' => $role,
         );
         $this->assertEquals($expected, $this->controller->editRoleFormAction($role, $workspace));
     }
@@ -211,9 +211,9 @@ class RolesControllerTest extends MockeryTestCase
 
     public function testRemoveUserFromRoleAction()
     {
-        $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
-        $user = new \Claroline\CoreBundle\Entity\User;
+        $role = new \Claroline\CoreBundle\Entity\Role();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
+        $user = new \Claroline\CoreBundle\Entity\User();
         $this->checkAccess($workspace);
         $this->roleManager->shouldReceive('dissociateWorkspaceRole')->once()
             ->with($user, $workspace, $role);
@@ -222,9 +222,9 @@ class RolesControllerTest extends MockeryTestCase
 
     public function testAddUsersToRoleAction()
     {
-        $user = new \Claroline\CoreBundle\Entity\User;
-        $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
+        $user = new \Claroline\CoreBundle\Entity\User();
+        $role = new \Claroline\CoreBundle\Entity\Role();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $this->roleManager->shouldReceive('associateRolesToSubjects')->with(array($user), array($role))->once();
         $this->checkAccess($workspace);
         $this->controller->addUsersToRolesAction(array($user), array($role), $workspace);
@@ -232,9 +232,9 @@ class RolesControllerTest extends MockeryTestCase
 
     public function testRemoveGroupFromRoleAction()
     {
-        $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
-        $group = new \Claroline\CoreBundle\Entity\Group;
+        $role = new \Claroline\CoreBundle\Entity\Role();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
+        $group = new \Claroline\CoreBundle\Entity\Group();
         $this->checkAccess($workspace);
         $this->roleManager->shouldReceive('dissociateWorkspaceRole')->once()
             ->with($group, $workspace, $role);
@@ -243,9 +243,9 @@ class RolesControllerTest extends MockeryTestCase
 
     public function testAddGroupsToRolesAction()
     {
-        $group = new \Claroline\CoreBundle\Entity\Group;
-        $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
+        $group = new \Claroline\CoreBundle\Entity\Group();
+        $role = new \Claroline\CoreBundle\Entity\Role();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $this->roleManager->shouldReceive('associateRolesToSubjects')->with(array($group), array($role))->once();
         $this->checkAccess($workspace);
         $this->controller->addGroupsToRolesAction(array($group), array($role), $workspace);
@@ -253,12 +253,13 @@ class RolesControllerTest extends MockeryTestCase
 
     /**
      * @dataProvider userListProvider
+     *
      * @todo test the $call method parameters
      */
     public function testUsersListAction($search, $call)
     {
-        $wsRole = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
+        $wsRole = new \Claroline\CoreBundle\Entity\Role();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
 
         $this->security
             ->shouldReceive('isGranted')
@@ -276,7 +277,7 @@ class RolesControllerTest extends MockeryTestCase
             'search' => $search,
             'wsRoles' => $wsRoles,
             'max' => 50,
-            'order' => 'id'
+            'order' => 'id',
         );
         $this->assertEquals(
             $expected,
@@ -286,13 +287,14 @@ class RolesControllerTest extends MockeryTestCase
 
     /**
      * @dataProvider groupListProvider
+     *
      * @todo test the $call method parameters
      */
     public function testRegisteredGroupsListAction($search, $call)
     {
-        $wsRole = new \Claroline\CoreBundle\Entity\Role;
-        $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
+        $wsRole = new \Claroline\CoreBundle\Entity\Role();
+        $role = new \Claroline\CoreBundle\Entity\Role();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $wsRoles = array($wsRole);
         $roles = array($role);
         $page = 1;
@@ -311,7 +313,7 @@ class RolesControllerTest extends MockeryTestCase
             'search' => $search,
             'wsRoles' => $wsRoles,
             'max' => 50,
-            'order' => 'id'
+            'order' => 'id',
         );
         $this->assertEquals(
             $expected,
@@ -328,7 +330,7 @@ class RolesControllerTest extends MockeryTestCase
     {
         return array(
             array('search' => '', 'call' => 'getByRolesIncludingGroups'),
-            array('search' => 'zorglub', 'call' => 'getByRolesAndNameIncludingGroups')
+            array('search' => 'zorglub', 'call' => 'getByRolesAndNameIncludingGroups'),
         );
     }
 
@@ -336,7 +338,7 @@ class RolesControllerTest extends MockeryTestCase
     {
         return array(
             array('search' => '', 'call' => 'getGroupsByRoles'),
-            array('search' => 'zorglub', 'call' => 'getGroupsByRolesAndName')
+            array('search' => 'zorglub', 'call' => 'getGroupsByRolesAndName'),
         );
     }
 }

@@ -22,63 +22,17 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
 
     public function getRequiredFixturesDirectory($environment)
     {
-        return null;
+        return;
     }
 
     public function getOptionalFixturesDirectory($environment)
     {
-        return null;
+        return;
     }
 
     public function getAdditionalInstaller()
     {
-        return null;
-    }
-
-    public function getVersion()
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $path = realpath($this->getPath() . $ds . 'VERSION.txt');
-        if ($path) return trim(file_get_contents($path));
-
-        return "0.0.0.0";
-    }
-
-    public function getClarolineName()
-    {
-        $parts = explode('\\', get_class($this));
-
-        return isset($parts[1]) ? $parts[1] : end($parts);
-    }
-
-    public function getType()
-    {
-        return $this->getComposerParameter('type', 'symfony-bundle');
-    }
-
-    public function getAuthors()
-    {
-        return $this->getComposerParameter('authors', []);
-    }
-
-    public function getDescription()
-    {
-        return $this->getComposerParameter('description');
-    }
-
-    public function getLicense()
-    {
-        return $this->getComposerParameter('license', '');
-    }
-
-    public function getTargetDir()
-    {
-        return $this->getComposerParameter('target-dir', '');
-    }
-
-    public function getBasePath()
-    {
-        return $this->getComposerParameter('name', $this->getName());
+        return;
     }
 
     public function getComposer()
@@ -87,11 +41,41 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
 
         if (!$data) {
             $ds = DIRECTORY_SEPARATOR;
-            $path = realpath($this->getPath() . $ds . 'composer.json');
+            $path = realpath($this->getPath().$ds.'composer.json');
+            //metapackage are 2 directories above
+            if (!$path) {
+                $path = realpath($this->getPath()."{$ds}..{$ds}..{$ds}composer.json");
+            }
             $data = json_decode(file_get_contents($path));
         }
 
         return $data;
+    }
+
+    public function getVersion()
+    {
+        $installed = $this->getInstalled();
+
+        foreach ($installed as $package) {
+            if ($package['name'] === $this->getComposerParameter('name')) {
+                return $package['version'];
+            }
+        }
+    }
+
+    public function getOrigin()
+    {
+        return $this->getComposerParameter('name');
+    }
+
+    public function getDescription()
+    {
+        return file_exists($this->getPath().'/DESCRIPTION.md') ? file_get_contents($this->getPath().'/DESCRIPTION.md') : '';
+    }
+
+    public function getRequirements()
+    {
+        return file_exists($this->getPath().'/require.json') ? json_decode(file_get_contents($this->getPath().'/require.json'), true) : array();
     }
 
     private function getComposerParameter($parameter, $default = null)
@@ -103,5 +87,23 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
         }
 
         return $default;
+    }
+
+    public function getInstalled()
+    {
+        static $installed;
+
+        if (!$installed) {
+            $up = DIRECTORY_SEPARATOR.'..';
+            //usual package
+            $path = realpath($this->getPath().$up.$up.$up.$up.'/vendor/composer/installed.json');
+            //meta package
+            if (!$path) {
+                $path = realpath($this->getPath().$up.$up.$up.$up.$up.'/vendor/composer/installed.json');
+            }
+            $data = json_decode(file_get_contents($path), true);
+
+            return $data;
+        }
     }
 }

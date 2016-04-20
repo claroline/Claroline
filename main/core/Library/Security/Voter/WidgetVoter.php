@@ -20,7 +20,7 @@ use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * This voter is involved in access decisions for WidgetInstances
+ * This voter is involved in access decisions for WidgetInstances.
  *
  * @DI\Service
  * @DI\Tag("security.voter")
@@ -42,8 +42,7 @@ class WidgetVoter implements VoterInterface
         EntityManager $em,
         TranslatorInterface $translator,
         WorkspaceManager $wm
-    )
-    {
+    ) {
         $this->em = $em;
         $this->translator = $translator;
         $this->wm = $wm;
@@ -56,7 +55,6 @@ class WidgetVoter implements VoterInterface
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
-
     }
 
     private function canUpdate(TokenInterface $token, $object, $attributes)
@@ -78,12 +76,12 @@ class WidgetVoter implements VoterInterface
             if (!in_array('home_tabs', $allowedTools)) {
                 return VoterInterface::ACCESS_DENIED;
             }
-            return VoterInterface::ACCESS_GRANTED;
 
+            return VoterInterface::ACCESS_GRANTED;
         } else {
             if ($workspace = $object->getWorkspace()) {
                 //if manager: always granted
-                if (in_array('ROLE_WS_MANAGER_' . $workspace->getGuid(), $roleStrings)) {
+                if (in_array('ROLE_WS_MANAGER_'.$workspace->getGuid(), $roleStrings)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
                 //if we have access to the parameters, always granted aswell

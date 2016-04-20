@@ -2,7 +2,6 @@
 
 namespace Icap\BadgeBundle\Manager;
 
-use Claroline\CoreBundle\Repository\UserRepository;
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Entity\BadgeClaim;
 use Icap\BadgeBundle\Entity\BadgeRule;
@@ -16,8 +15,6 @@ use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -25,10 +22,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class BadgeManager
 {
-    const BADGE_PICKER_MODE_USER      = 'user';
-    const BADGE_PICKER_MODE_PLATFORM  = 'platform';
+    const BADGE_PICKER_MODE_USER = 'user';
+    const BADGE_PICKER_MODE_PLATFORM = 'platform';
     const BADGE_PICKER_MODE_WORKSPACE = 'workspace';
-    const BADGE_PICKER_DEFAULT_MODE    = self::BADGE_PICKER_MODE_PLATFORM;
+    const BADGE_PICKER_DEFAULT_MODE = self::BADGE_PICKER_MODE_PLATFORM;
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -52,12 +49,12 @@ class BadgeManager
      */
     public function __construct(EntityManager $entityManager, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage)
     {
-        $this->entityManager   = $entityManager;
+        $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->tokenStorage    = $tokenStorage;
+        $this->tokenStorage = $tokenStorage;
     }
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return Badge
      */
@@ -65,12 +62,13 @@ class BadgeManager
     {
         /** @var \Icap\BadgeBundle\Entity\Badge $badge */
         $badge = $this->entityManager->getRepository('IcapBadgeBundle:Badge')->find($id);
+
         return $badge;
     }
     /**
-     * @param Badge  $badge
-     * @param User[] $users
-     * @param string $comment
+     * @param Badge     $badge
+     * @param User[]    $users
+     * @param string    $comment
      * @param User|null $issuer
      *
      * @return int
@@ -80,18 +78,20 @@ class BadgeManager
         $addedBadge = 0;
         foreach ($users as $user) {
             if ($this->addBadgeToUser($badge, $user, $comment, $issuer)) {
-                $addedBadge++;
+                ++$addedBadge;
             }
         }
+
         return $addedBadge;
     }
     /**
-     * @param Badge  $badge
-     * @param User   $user
-     * @param string $comment
+     * @param Badge     $badge
+     * @param User      $user
+     * @param string    $comment
      * @param User|null $issuer
      *
      * @throws \Exception
+     *
      * @return bool
      */
     public function addBadgeToUser(Badge $badge, User $user, $comment = null, $issuer = null)
@@ -116,17 +116,17 @@ class BadgeManager
                 $this->entityManager->persist($badge);
                 $this->entityManager->flush();
                 $this->dispatchBadgeAwardingEvent($badge, $user, $issuer);
-            } catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 throw $exception;
             }
         }
+
         return $badgeAwarded;
     }
     /**
-     * @param \Icap\BadgeBundle\Entity\Badge    $badge
-     * @param \Claroline\CoreBundle\Entity\User $receiver
-     *
-     * @param \Claroline\CoreBundle\Entity\User|null   $doer
+     * @param \Icap\BadgeBundle\Entity\Badge         $badge
+     * @param \Claroline\CoreBundle\Entity\User      $receiver
+     * @param \Claroline\CoreBundle\Entity\User|null $doer
      *
      * @return Controller
      */
@@ -153,7 +153,8 @@ class BadgeManager
         if (null === $currentDate) {
             $currentDate = new \DateTime();
         }
-        $modifier = sprintf("+%d %s", $badge->getExpireDuration(), $badge->getExpirePeriodTypeLabel($badge->getExpirePeriod()));
+        $modifier = sprintf('+%d %s', $badge->getExpireDuration(), $badge->getExpirePeriodTypeLabel($badge->getExpirePeriod()));
+
         return $currentDate->modify($modifier);
     }
     /**
@@ -171,8 +172,7 @@ class BadgeManager
             // Check if there are new rules
             if (null === $newRule->getId()) {
                 $isRulesChanged = true;
-            }
-            else {
+            } else {
                 // Check if existed rules have been changed
                 $changeSet = $unitOfWork->getEntityChangeSet($newRule);
                 if (0 < count($changeSet)) {
@@ -188,6 +188,7 @@ class BadgeManager
         if (0 < count($originalRules)) {
             $isRulesChanged = true;
         }
+
         return $isRulesChanged;
     }
 
@@ -208,7 +209,7 @@ class BadgeManager
         try {
             $this->entityManager->persist($badgeClaim);
             $this->entityManager->flush();
-        } catch(\Exception $exception){
+        } catch (\Exception $exception) {
             throw new \Exception('badge_claim_error_message', 0, $exception);
         }
     }
@@ -223,7 +224,8 @@ class BadgeManager
     {
         /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
         $userBadgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
-        $lastAwardedBadges   = $userBadgeRepository->findWorkspaceLastAwardedBadges($workspace, $limit);
+        $lastAwardedBadges = $userBadgeRepository->findWorkspaceLastAwardedBadges($workspace, $limit);
+
         return $lastAwardedBadges;
     }
     /**
@@ -237,7 +239,7 @@ class BadgeManager
         $loggedUser = $this->tokenStorage->getToken()->getUser();
         /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
         $userBadgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
-        $lastAwardedBadges   = $userBadgeRepository->findWorkspaceLastAwardedBadgesToUser($workspace, $loggedUser, $limit);
+        $lastAwardedBadges = $userBadgeRepository->findWorkspaceLastAwardedBadgesToUser($workspace, $loggedUser, $limit);
 
         return $lastAwardedBadges;
     }
@@ -251,7 +253,8 @@ class BadgeManager
     {
         /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
         $userBadgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
-        $lastAwardedBadges   = $userBadgeRepository->findWorkspaceMostAwardedBadges($workspace, $limit);
+        $lastAwardedBadges = $userBadgeRepository->findWorkspaceMostAwardedBadges($workspace, $limit);
+
         return $lastAwardedBadges;
     }
     /**
@@ -267,7 +270,7 @@ class BadgeManager
         $badgeQueryBuilder = $badgeRepository->createQueryBuilder($rootAlias = 'badge');
         $badgeQueryBuilder = $badgeRepository->orderByName($badgeQueryBuilder, $rootAlias, $parameters['locale']);
         $badgeQueryBuilder = $badgeRepository->filterByBlacklist($badgeQueryBuilder, $rootAlias, $parameters['blacklist']);
-        switch($parameters['mode']) {
+        switch ($parameters['mode']) {
             case self::BADGE_PICKER_MODE_USER:
                 $badgeQueryBuilder = $badgeRepository->filterByUser($badgeQueryBuilder, $rootAlias, $parameters['user']);
                 break;
@@ -282,13 +285,14 @@ class BadgeManager
             default:
                 throw new \InvalidArgumentException('Unknown mode for opening the badge picker.');
         }
+
         return $badgeQueryBuilder->getQuery()->getResult();
     }
     /**
      * @param Pagerfanta     $userPager
      * @param Workspace|null $workspace
-     * @param integer        $page
-     * @param integer        $maxResult
+     * @param int            $page
+     * @param int            $maxResult
      *
      * @return Badge[]
      */
@@ -308,6 +312,7 @@ class BadgeManager
                 $badges[$userBadgeResult->getUser()->getId()][] = $badge;
             }
         }
+
         return $badges;
     }
     /**
@@ -323,7 +328,7 @@ class BadgeManager
         /** @var \Icap\BadgeBundle\Entity\Badge[] $workspaceBadges */
         $workspaceBadges = $badgeRepository->findByWorkspace($workspace);
 
-        $availableBadges=false;
+        $availableBadges = false;
 
         $user = $this->tokenStorage->getToken()->getUser();
 

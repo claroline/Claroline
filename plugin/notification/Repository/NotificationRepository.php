@@ -8,22 +8,22 @@ class NotificationRepository extends EntityRepository
 {
     public function deleteNotificationsBeforeDate(\DateTime $date)
     {
-        $qb = $this->createQueryBuilder("notification");
+        $qb = $this->createQueryBuilder('notification');
         $qb
             ->delete()
-            ->andWhere("notification.creationDate < :limitDate")
-            ->setParameter("limitDate", $date);
+            ->andWhere('notification.creationDate < :limitDate')
+            ->setParameter('limitDate', $date);
 
         $qb->getQuery()->execute();
     }
 
     public function findAllDistinctIconKeys()
     {
-        $qb = $this->createQueryBuilder("notification");
-            $qb
-                ->select("notification.iconKey")
-                ->where($qb->expr()->isNotNull("notification.iconKey"))
-                ->orderBy("notification.iconKey")
+        $qb = $this->createQueryBuilder('notification');
+        $qb
+                ->select('notification.iconKey')
+                ->where($qb->expr()->isNotNull('notification.iconKey'))
+                ->orderBy('notification.iconKey')
                 ->distinct();
 
         return $qb->getQuery()->getResult();

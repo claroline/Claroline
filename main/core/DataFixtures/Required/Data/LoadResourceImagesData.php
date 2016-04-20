@@ -25,12 +25,12 @@ class LoadResourceImagesData implements RequiredFixture
      */
     public function load(ObjectManager $manager)
     {
-        $coreIconWebDirRelativePath = "bundles/clarolinecore/images/resources/icons/";
+        $coreIconWebDirRelativePath = 'bundles/clarolinecore/images/resources/icons/';
         $resourceImages = $this->container->get('claroline.manager.icon_manager')->getDefaultIconMap();
 
         foreach ($resourceImages as $resourceImage) {
             $rimg = new ResourceIcon();
-            $rimg->setRelativeUrl($coreIconWebDirRelativePath . $resourceImage[0]);
+            $rimg->setRelativeUrl($coreIconWebDirRelativePath.$resourceImage[0]);
             $rimg->setMimeType($resourceImage[1]);
             $rimg->setShortcut(false);
             $manager->persist($rimg);

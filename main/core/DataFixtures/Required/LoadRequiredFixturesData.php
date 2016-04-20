@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class LoadRequiredFixturesData extends AbstractFixture implements ContainerAwareInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -27,11 +27,11 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
-        $fixturesDir = __DIR__ . DIRECTORY_SEPARATOR . 'Data';
+        $fixturesDir = __DIR__.DIRECTORY_SEPARATOR.'Data';
         $om = $this->container->get('claroline.persistence.object_manager');
         //$om->startFlushSuite();
 
@@ -62,16 +62,15 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
                     'Claroline\CoreBundle\DataFixtures\Required\RequiredFixture',
                     $reflClass->getInterfaceNames()
                 )
-            ) { 
-                $fixture = new $className;
+            ) {
+                $fixture = new $className();
 
                 if (method_exists($fixture, 'getOrder')) {
                     $order = $fixture->getOrder();
-                    
+
                     if (!isset($orderedClassNames[$order])) {
                         $orderedClassNames[$order] = $className;
-                    }
-                    else {
+                    } else {
                         $orderedClassNames[] = $className;
                     }
                 } else {
@@ -80,13 +79,13 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
             }
         }
         ksort($orderedClassNames);
-        
+
         foreach ($unorderedClassNames as $className) {
             $orderedClassNames[] = $className;
         }
-        
+
         foreach ($orderedClassNames as $className) {
-            $fixture = new $className;
+            $fixture = new $className();
             $fixture->setContainer($this->container);
             $fixture->load($om);
             $om->flush();
@@ -95,7 +94,7 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
         //$om->endFlushSuite();
 
         //create the default workspace template.
-        $destinationPath = $this->container->getParameter('claroline.param.templates_directory'). '/default.zip';
+        $destinationPath = $this->container->getParameter('claroline.param.templates_directory').'/default.zip';
         $sourcePath = $this->container->getParameter('claroline.param.default_template');
         @unlink($destinationPath);
         copy($sourcePath, $destinationPath);

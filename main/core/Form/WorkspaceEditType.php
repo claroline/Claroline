@@ -39,8 +39,7 @@ class WorkspaceEditType extends AbstractType
         $countResources = null,
         $isAdmin = false,
         $expirationDate = null
-    )
-    {
+    ) {
         $this->username = $username;
         $this->creationDate = $creationDate;
         $this->number = $number;
@@ -49,7 +48,6 @@ class WorkspaceEditType extends AbstractType
         $this->isAdmin = $isAdmin;
         $this->expirationDate = $expirationDate;
     }
-
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -65,7 +63,7 @@ class WorkspaceEditType extends AbstractType
                 array(
                     'disabled' => 'disabled',
                     'data' => $this->creationDate,
-                    'label' => 'creation_date'
+                    'label' => 'creation_date',
                 )
             );
         if ($this->expirationDate) {
@@ -77,8 +75,8 @@ class WorkspaceEditType extends AbstractType
                 'attr' => array(
                     'class' => 'datepicker input-small',
                     'data-date-format' => 'dd-mm-yyyy',
-                    'autocomplete' => 'off'
-                )
+                    'autocomplete' => 'off',
+                ),
             );
 
             if (!$this->isAdmin) {
@@ -129,7 +127,6 @@ class WorkspaceEditType extends AbstractType
         }
 
         $builder->add('number', 'text', array('disabled' => 'disabled', 'data' => $this->number, 'mapped' => false, 'label' => 'registered_user_amount'));
-
     }
 
     public function getName()
@@ -142,7 +139,7 @@ class WorkspaceEditType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
                 )
         );
     }

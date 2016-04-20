@@ -308,17 +308,17 @@ class Scorm12ScoTracking
         if ($hours < 10) {
             $formattedTime .= '0';
         }
-        $formattedTime .= $hours . ':';
+        $formattedTime .= $hours.':';
 
         if ($minutes < 10) {
             $formattedTime .= '0';
         }
-        $formattedTime .= $minutes . ':';
+        $formattedTime .= $minutes.':';
 
         if ($seconds < 10) {
             $formattedTime .= '0';
         }
-        $formattedTime .= $seconds . '.';
+        $formattedTime .= $seconds.'.';
 
         if ($remainingTime < 10) {
             $formattedTime .= '0';

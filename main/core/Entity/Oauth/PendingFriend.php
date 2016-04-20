@@ -38,7 +38,6 @@ class PendingFriend
      *
      * @ORM\Column(name="host", type="string", nullable=false)
      */
-
     protected $host;
 
     /**

@@ -1,31 +1,28 @@
 <?php
 /**
  * Created by : VINCENT Eric
- * Date: 10/05/2015
+ * Date: 10/05/2015.
 */
-
 namespace Innova\CollecticielBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\User;
 use Innova\CollecticielBundle\Entity\Document;
 
-class CommentRepository extends EntityRepository {
-
+class CommentRepository extends EntityRepository
+{
     /**
-     *
      *  Fonctions créées pour InnovaCollecticielBundle.
      *  InnovaERV.
-     *
-    */
+     */
 
     /**
-     * Pour compter les commentaires non lus pour l'utilisateur indiqué
+     * Pour compter les commentaires non lus pour l'utilisateur indiqué.
+     *
      * @param $user
-    */
+     */
     public function countCommentNotRead(User $user)
     {
-
         $qb = $this->createQueryBuilder('comment')
             ->select('comment')
             ->leftJoin('comment.comments', 'comment_read')
@@ -42,10 +39,11 @@ class CommentRepository extends EntityRepository {
     }
 
     /**
-     * Ajout pour savoir si le document a un commentaire lu par l'enseignant
+     * Ajout pour savoir si le document a un commentaire lu par l'enseignant.
+     *
      * @param $userId
      * @param $docId
-    */
+     */
     public function commentReadForATeacherOrNot(User $user, $documentId)
     {
 
@@ -58,19 +56,18 @@ class CommentRepository extends EntityRepository {
             ->andWhere('comment_read.user = :user')
             ->setParameter('document', $documentId)
             ->setParameter('user', $user);
-            ;
 
         $numberCommentRead = count($qb->getQuery()->getResult());
 
         return $numberCommentRead;
-
     }
 
     /**
-     * Ajout pour savoir si le document a un commentaire lu par l'enseignant
+     * Ajout pour savoir si le document a un commentaire lu par l'enseignant.
+     *
      * @param $userId
      * @param $docId
-    */
+     */
     public function commentReadForATeacherOrNot2(User $user, $documentId)
     {
 
@@ -81,19 +78,18 @@ class CommentRepository extends EntityRepository {
             ->andWhere('comment.user = :user')
             ->setParameter('document', $documentId)
             ->setParameter('user', $user);
-            ;
 
         $numberCommentRead = count($qb->getQuery()->getResult());
 
         return $numberCommentRead;
-
     }
 
     /**
-     * Ajout pour savoir si le document a un commentaire lu par l'enseignant
+     * Ajout pour savoir si le document a un commentaire lu par l'enseignant.
+     *
      * @param $userId
      * @param $docId
-    */
+     */
     public function commentReadForATeacherOrNot3(User $user, $documentId)
     {
 
@@ -106,18 +102,17 @@ class CommentRepository extends EntityRepository {
             ->andWhere('comment_read.user = :user')
             ->setParameter('document', $documentId)
             ->setParameter('user', $user);
-            ;
 
         $numberCommentRead = count($qb->getQuery()->getResult());
 
         return $numberCommentRead;
-
     }
 
     /**
-     *  Pour savoir le type d'accusé de réception pour l'utilisateur indiqué et le dropzone indiqué
+     *  Pour savoir le type d'accusé de réception pour l'utilisateur indiqué et le dropzone indiqué.
+     *
      * @param $documentId
-    */
+     */
     public function teacherCommentDocArray(Document $document)
     {
 
@@ -128,9 +123,7 @@ class CommentRepository extends EntityRepository {
             ->setParameter('document', $document)
             ->addOrderBy('comment.commentDate', 'ASC')
             ;
+
         return $qb->getQuery()->getResult();
-
     }
-
-
 }

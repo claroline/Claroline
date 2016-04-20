@@ -2,7 +2,6 @@
 
 namespace HeVinci\CompetencyBundle\Transfer\Validator;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
 class DataImportValidatorTest extends RepositoryTestCase
@@ -25,12 +24,13 @@ class DataImportValidatorTest extends RepositoryTestCase
         $this->assertContains(
             "There's already a framework named 'Civil service competency framework'",
             $errors,
-            "Validation errors:\n" . print_r($errors, true)
+            "Validation errors:\n".print_r($errors, true)
         );
     }
 
     /**
      * @dataProvider scaleLevelsProvider
+     *
      * @param array $scaleLevels
      */
     public function testValidateChecksForScaleReferenceCorrectness(array $scaleLevels)
@@ -44,7 +44,7 @@ class DataImportValidatorTest extends RepositoryTestCase
         $this->om->flush();
 
         $errors = $this->validator->validate($this->getValidData('minimal-1.json'));
-        $printedErrors = "Validation errors:\n" . print_r($errors, true);
+        $printedErrors = "Validation errors:\n".print_r($errors, true);
 
         $this->assertContains("Framework scale levels don't match those of already existing scale 'Civil service levels'", $errors, $printedErrors);
     }
@@ -61,13 +61,13 @@ class DataImportValidatorTest extends RepositoryTestCase
             [['Level 1', 'Level 2']],
             [['Level 1', 'Level 2', 'Level 3', 'Level 4']],
             [['Level 2', 'Level 1', 'Level 3']],
-            [['A', 'Level 2', 'Level 3']]
+            [['A', 'Level 2', 'Level 3']],
         ];
     }
 
     private function getValidData($fileName)
     {
-        $file = __DIR__ . '/../../../Resources/format/valid/' . $fileName;
+        $file = __DIR__.'/../../../Resources/format/valid/'.$fileName;
 
         return json_decode(file_get_contents($file));
     }

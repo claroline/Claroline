@@ -65,13 +65,13 @@ class ClaroUtilities
             if ($key - $saveKey != 0) {
                 while ($key - $saveKey >= 1) {
                     $filledArray[$saveKey] = array_shift($array);
-                    $saveKey++;
+                    ++$saveKey;
                 }
                 $filledArray[$key] = $value;
             } else {
                 $filledArray[$key] = $value;
             }
-            $saveKey++;
+            ++$saveKey;
         }
 
         if (count($array) > 0) {
@@ -84,9 +84,9 @@ class ClaroUtilities
     }
 
     /**
-     * From http://php.net/manual/en/function.time.php
+     * From http://php.net/manual/en/function.time.php.
      *
-     * @param integer $secs
+     * @param int $secs
      *
      * @return string
      */
@@ -102,16 +102,16 @@ class ClaroUtilities
             'd' => $secs / 86400 % 7,
             'h' => $secs / 3600 % 24,
             'm' => $secs / 60 % 60,
-            's' => $secs % 60
+            's' => $secs % 60,
             );
 
         foreach ($bit as $k => $v) {
             if ($v > 0) {
-                $ret[] = $v . $k;
+                $ret[] = $v.$k;
             }
         }
 
-        return join(' ', $ret);
+        return implode(' ', $ret);
     }
 
     /**
@@ -202,20 +202,20 @@ class ClaroUtilities
         }
 
         if ($fileSize < 1024) {
-            return $fileSize . ' B';
+            return $fileSize.' B';
         } elseif ($fileSize < 1048576) {
-            return round($fileSize / 1024, 2) . ' KB';
+            return round($fileSize / 1024, 2).' KB';
         } elseif ($fileSize < 1073741824) {
-            return round($fileSize / 1048576, 2) . ' MB';
+            return round($fileSize / 1048576, 2).' MB';
         } elseif ($fileSize < 1099511627776) {
-            return round($fileSize / 1073741824, 2) . ' GB';
+            return round($fileSize / 1073741824, 2).' GB';
         }
 
-        return round($fileSize / 1099511627776, 2) . ' TB';
+        return round($fileSize / 1099511627776, 2).' TB';
     }
 
     /**
-     * Take a formatted file size and returns the number of bytes
+     * Take a formatted file size and returns the number of bytes.
      */
     public function getRealFileSize($fileSize)
     {
@@ -229,7 +229,7 @@ class ClaroUtilities
 
         foreach ($validUnits as $unit) {
             if (strpos($fileSize, $unit)) {
-                switch($unit) {
+                switch ($unit) {
                     case 'B':
                         return $data[0] * pow(1024, 0);
                     case 'KB':

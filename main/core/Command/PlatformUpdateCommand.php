@@ -38,7 +38,6 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     {
         parent::configure();
         $this->setName('claroline:update')
-            ->setAliases(array('claroline:install'))
             ->setDescription(
                 'Updates, installs or uninstalls the platform packages brought by composer.'
             );
@@ -54,8 +53,8 @@ class PlatformUpdateCommand extends ContainerAwareCommand
 
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         );
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
 

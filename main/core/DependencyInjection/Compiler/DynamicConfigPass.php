@@ -34,7 +34,7 @@ class DynamicConfigPass implements CompilerPassInterface
         $transport->setClass('Swift_Transport');
         $transport->setFactory(array(
             new Reference('claroline.mailing.transport_factory'),
-            'getTransport')
+            'getTransport', )
         );
         $container->removeDefinition('swiftmailer.mailer.default.transport');
         $container->setDefinition('swiftmailer.mailer.default.transport', $transport);
@@ -44,7 +44,7 @@ class DynamicConfigPass implements CompilerPassInterface
         $handler->setClass('SessionHandlerInterface');
         $handler->setFactory(array(
             new Reference('claroline.session.handler_factory'),
-            'getHandler')
+            'getHandler', )
         );
         $container->setDefinition('session.handler', $handler);
 
@@ -58,7 +58,7 @@ class DynamicConfigPass implements CompilerPassInterface
         $container->setAlias('icap.notification.orm.entity_manager', 'claroline.persistence.object_manager');
 
         //oauth
-        
+
         $container
             ->getDefinition('fos_oauth_server.security.authentication.provider')
             ->setClass('Claroline\CoreBundle\Library\Security\Provider\OAuthProvider');

@@ -15,14 +15,12 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\HttpFoundation\File\File as SfFile;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-
 
 /**
  * @DI\Service("claroline.tool.resources.activity_importer")
@@ -68,7 +66,7 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
                                     ->ifTrue(
                                         function ($v) use ($rootPath) {
                                             return call_user_func_array(
-                                                __CLASS__ . '::fileNotExists',
+                                                __CLASS__.'::fileNotExists',
                                                 array($v, $rootPath)
                                             );
                                         }
@@ -98,7 +96,7 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
 
     public function supports($type)
     {
-        return $type == 'yml' ? true: false;
+        return $type == 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -112,11 +110,11 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
         $ds = DIRECTORY_SEPARATOR;
 
         foreach ($array['data'] as $item) {
-            $description = file_get_contents($this->getRootPath() . $ds . $item['activity']['description']);
+            $description = file_get_contents($this->getRootPath().$ds.$item['activity']['description']);
             $activity = new Activity();
             $activity->setTitle($item['activity']['title']);
             $primaryResource = !empty($item['activity']['primary_resource']) && isset($created[$item['activity']['primary_resource']]) && $created[$item['activity']['primary_resource']] ?
-                $created[$item['activity']['primary_resource']]->getResourceNode():
+                $created[$item['activity']['primary_resource']]->getResourceNode() :
                 null;
             $activity->setPrimaryResource($primaryResource);
             $activity->setDescription($description);
@@ -144,7 +142,7 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
     public function export(Workspace $workspace, array &$_files, $object)
     {
         // we need to add things that aren't here first...
-        $_data =& $this->getExtendedData();
+        $_data = &$this->getExtendedData();
 
         // Get primary resource
         $primaryResource = $object->getPrimaryResource() ? $object->getPrimaryResource()->getId() : null;
@@ -166,8 +164,8 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
         }
 
         // Process rich text description
-        $uid = uniqid() . '.txt';
-        $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
+        $uid = uniqid().'.txt';
+        $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$uid;
         $content = $object->getDescription();
         file_put_contents($tmpPath, $content);
         $_files[$uid] = $tmpPath;
@@ -175,16 +173,16 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
         $data = array(
             array(
                 'activity' => array(
-                    'description'         => $uid,
-                    'title'               => $object->getTitle(),
-                    'primary_resource'    => $primaryResource,
-                    'max_duration'        => $parameters->getMaxDuration(),
-                    'who'                 => $parameters->getWho(),
-                    'where'               => $parameters->getWhere(),
-                    'evaluation_type'     => $parameters->getEvaluationType(),
-                    'secondary_resources' => $secondaryResources
-                )
-            )
+                    'description' => $uid,
+                    'title' => $object->getTitle(),
+                    'primary_resource' => $primaryResource,
+                    'max_duration' => $parameters->getMaxDuration(),
+                    'who' => $parameters->getWho(),
+                    'where' => $parameters->getWhere(),
+                    'evaluation_type' => $parameters->getEvaluationType(),
+                    'secondary_resources' => $secondaryResources,
+                ),
+            ),
         );
 
         return $data;
@@ -204,15 +202,17 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        return !file_exists($rootpath . $ds . $v);;
+        return !file_exists($rootpath.$ds.$v);
     }
 
     public function format($data)
     {
-        if (!isset($data[0])) return;
+        if (!isset($data[0])) {
+            return;
+        }
 
         if ($path = $data[0]['activity']['description']) {
-            $description = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
+            $description = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$path);
             $entities = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findByDescription($description);
 
             foreach ($entities as $entity) {
@@ -226,32 +226,38 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
 
     private function createActivityFolder(array &$_data)
     {
-        if ($this->activityFolderExists($_data)) return null;
+        if ($this->activityFolderExists($_data)) {
+            return;
+        }
 
         $roles = array();
-        $roles[] = array('role' =>array(
-            'name'   => 'ROLE_USER',
-            'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('directory'))
+        $roles[] = array('role' => array(
+            'name' => 'ROLE_USER',
+            'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('directory')),
         ));
 
         $parentId = $_data['root']['uid'];
 
         $_data['directories'][] = array('directory' => array(
-            'name'      => 'activity_folder',
-            'creator'   => null,
-            'parent'    => $parentId,
+            'name' => 'activity_folder',
+            'creator' => null,
+            'parent' => $parentId,
             'published' => true,
-            'uid'       => 'activity_folder',
-            'roles'     => $roles,
-            'index'     => null
+            'uid' => 'activity_folder',
+            'roles' => $roles,
+            'index' => null,
         ));
     }
 
     private function activityFolderExists(array $data)
     {
-        if (!isset($data['directories'])) return false;
+        if (!isset($data['directories'])) {
+            return false;
+        }
         foreach ($data['directories'] as $directory) {
-            if ($directory['directory']['uid'] === 'activity_folder') return true;
+            if ($directory['directory']['uid'] === 'activity_folder') {
+                return true;
+            }
         }
 
         return false;
@@ -269,8 +275,8 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
             );
         $el['item']['parent'] = 'activity_folder';
         $el['item']['roles'] = array(array('role' => array(
-            'name'   => 'ROLE_USER',
-            'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('activity'))
+            'name' => 'ROLE_USER',
+            'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('activity')),
         )));
         $_data['items'][] = $el;
     }

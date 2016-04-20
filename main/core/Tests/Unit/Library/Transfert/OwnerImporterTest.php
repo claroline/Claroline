@@ -59,7 +59,7 @@ class OwnerImporterTest extends MockeryTestCase
                 'usernames' => array(),
                 'emails' => array(),
                 'codes' => array(),
-                'isExceptionThrow' => false
+                'isExceptionThrow' => false,
             ),
             //username exists
             array(
@@ -67,7 +67,7 @@ class OwnerImporterTest extends MockeryTestCase
                 'usernames' => array(array('username' => 'ezs')),
                 'emails' => array(),
                 'codes' => array(),
-                'isExceptionThrow' => true
+                'isExceptionThrow' => true,
             ),
             //email exists
             array(
@@ -75,7 +75,7 @@ class OwnerImporterTest extends MockeryTestCase
                 'usernames' => array(),
                 'emails' => array(array('mail' => 'owner@owner.com')),
                 'codes' => array(),
-                'isExceptionThrow' => true
+                'isExceptionThrow' => true,
             ),
             //code exists
             array(
@@ -83,7 +83,7 @@ class OwnerImporterTest extends MockeryTestCase
                 'usernames' => array(),
                 'emails' => array(),
                 'codes' => array(array('code' => 'OWNER')),
-                'isExceptionThrow' => true
+                'isExceptionThrow' => true,
             ),
             //code exists
             array(
@@ -91,8 +91,8 @@ class OwnerImporterTest extends MockeryTestCase
                 'usernames' => array(),
                 'emails' => array(),
                 'codes' => array(),
-                'isExceptionThrow' => true
+                'isExceptionThrow' => true,
             ),
         );
     }
-} 
+}

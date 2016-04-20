@@ -11,15 +11,12 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\CacheWarmerInterface;
 use Claroline\CoreBundle\Event\RefreshCacheEvent;
 use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
 
@@ -54,8 +51,7 @@ class MailManager
         ContainerInterface $container,
         CacheManager $cacheManager,
         ContentManager $contentManager
-    )
-    {
+    ) {
         $this->router = $router;
         $this->mailer = $mailer;
         $this->translator = $translator;
@@ -65,9 +61,8 @@ class MailManager
         $this->contentManager = $contentManager;
     }
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isMailerAvailable()
     {
@@ -77,7 +72,7 @@ class MailManager
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
      *
-     * @return boolean
+     * @return bool
      */
     public function sendForgotPassword(User $user)
     {
@@ -125,7 +120,7 @@ class MailManager
         $users = $this->container->get('claroline.manager.user_manager')->getByEmailValidationHash($hash);
         $url =
             $this->container->get('request')->getSchemeAndHttpHost()
-            . $this->router->generate('claro_security_validate_email', array('hash' => $hash));
+            .$this->router->generate('claro_security_validate_email', array('hash' => $hash));
         $body = $this->translator->trans('email_validation_url_display', array('%url%' => $url), 'platform');
         $subject = $this->translator->trans('email_validation', array(), 'platform');
 
@@ -135,7 +130,7 @@ class MailManager
     /**
      * @param User $user
      *
-     * @return boolean
+     * @return bool
      */
     public function sendCreationMessage(User $user)
     {
@@ -146,7 +141,7 @@ class MailManager
         $subject = $content[$displayedLocale]['title'];
         $url =
             $this->container->get('request')->getSchemeAndHttpHost()
-            . $this->router->generate('claro_security_validate_email', array('hash' => $user->getEmailValidationHash()));
+            .$this->router->generate('claro_security_validate_email', array('hash' => $user->getEmailValidationHash()));
         $validationLink = $this->translator->trans('email_validation_url_display', array('%url%' => $url), 'platform');
 
         $body = str_replace('%first_name%', $user->getFirstName(), $body);
@@ -177,7 +172,7 @@ class MailManager
      * @param array  $extra
      * @param bool   $force
      *
-     * @return boolean
+     * @return bool
      */
     public function send($subject, $body, array $users, $from = null, array $extra = array(), $force = false)
     {
@@ -238,7 +233,7 @@ class MailManager
             }
 
             if (isset($extra['attachment'])) {
-                $message->attach(\Swift_Attachment::fromPath($extra['attachment'], "application/octet-stream"));
+                $message->attach(\Swift_Attachment::fromPath($extra['attachment'], 'application/octet-stream'));
             }
 
             return $this->mailer->send($message) ? true : false;
@@ -247,9 +242,8 @@ class MailManager
         return false;
     }
 
-
     /**
-     * Validate a variable (placeholder) in a translated content
+     * Validate a variable (placeholder) in a translated content.
      *
      * @param $translatedContents An array containing translated content
      * @param $mailVariable thevariable to validate
@@ -265,10 +259,10 @@ class MailManager
         foreach ($languages as $language) {
             if ($translatedContents[$language]['content'] !== '') {
                 if (!strpos($translatedContents[$language]['content'], $mailVariable)) {
-                    $errors[$language]['content'][] = 'missing_' . $mailVariable;
+                    $errors[$language]['content'][] = 'missing_'.$mailVariable;
                 }
             } else {
-                $voidCount++;
+                ++$voidCount;
             }
 
             if ($voidCount === count($languages)) {
@@ -301,7 +295,7 @@ class MailManager
         }
 
         if ($this->ch->getParameter('domain_name') && trim($this->ch->getParameter('domain_name')) !== '') {
-            return 'noreply@' . $this->ch->getParameter('domain_name');
+            return 'noreply@'.$this->ch->getParameter('domain_name');
         }
 
         return $this->ch->getParameter('support_email');
@@ -320,7 +314,7 @@ class MailManager
                 $url = $match[2];
 
                 if (strpos($url, 'http:') === false && strpos($url, 'https:') === false) {
-                    $newUrl = $request->getSchemeAndHttpHost() . $url;
+                    $newUrl = $request->getSchemeAndHttpHost().$url;
                     $body = str_replace($url, $newUrl, $body);
                 }
             }

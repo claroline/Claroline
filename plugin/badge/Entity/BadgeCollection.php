@@ -4,7 +4,6 @@ namespace Icap\BadgeBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -16,7 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class BadgeCollection
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -33,7 +32,7 @@ class BadgeCollection
     protected $name;
 
     /**
-     * @var string $slug
+     * @var string
      *
      * @Gedmo\Slug(fields={"name"}, updatable=false)
      * @ORM\Column(type="string", length=128, nullable=false)
@@ -186,4 +185,3 @@ class BadgeCollection
         return $this->isShared;
     }
 }
- 

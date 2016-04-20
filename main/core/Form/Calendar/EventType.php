@@ -42,7 +42,9 @@ class EventType extends AngularType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $default = array('translation_domain' => 'platform');
-        if ($this->forApi) $default['csrf_protection'] = false;
+        if ($this->forApi) {
+            $default['csrf_protection'] = false;
+        }
         $default['ng-model'] = 'event';
 
         $resolver->setDefaults($default);

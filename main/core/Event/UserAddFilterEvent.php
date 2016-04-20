@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 
 class UserAddFilterEvent extends Event
@@ -30,7 +29,7 @@ class UserAddFilterEvent extends Event
 
     public function removeFilter($filter)
     {
-       if (($key = array_search($filter, $this->filters)) !== false) {
+        if (($key = array_search($filter, $this->filters)) !== false) {
             unset($filters[$key]);
         }
     }

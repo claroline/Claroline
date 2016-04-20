@@ -46,8 +46,7 @@ class ContactController extends Controller
         FormFactory $formFactory,
         RequestStack $requestStack,
         UserManager $userManager
-    )
-    {
+    ) {
         $this->contactManager = $contactManager;
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
@@ -71,8 +70,7 @@ class ContactController extends Controller
         $max = 50,
         $orderedBy = 'lastName',
         $order = 'ASC'
-    )
-    {
+    ) {
         $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
         $allContacts = $this->contactManager->getUserContacts(
             $authenticatedUser,
@@ -103,7 +101,7 @@ class ContactController extends Controller
                 'search' => $search,
                 'max' => $max,
                 'orderedBy' => $orderedBy,
-                'order' => $order
+                'order' => $order,
             );
         } else {
             $contacts = $this->contactManager->getUserContactsWithPager(
@@ -121,7 +119,7 @@ class ContactController extends Controller
                 'search' => $search,
                 'max' => $max,
                 'orderedBy' => $orderedBy,
-                'order' => $order
+                'order' => $order,
             );
         }
         $users = $this->userManager->getUsersForUserPicker($authenticatedUser);
@@ -146,8 +144,7 @@ class ContactController extends Controller
         $max = 50,
         $orderedBy = 'lastName',
         $order = 'ASC'
-    )
-    {
+    ) {
         $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
         $contacts = $this->contactManager->getUserContactsWithPager(
             $authenticatedUser,
@@ -163,7 +160,7 @@ class ContactController extends Controller
             'contacts' => $contacts,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
         );
     }
 
@@ -184,8 +181,7 @@ class ContactController extends Controller
         $max = 50,
         $orderedBy = 'lastName',
         $order = 'ASC'
-    )
-    {
+    ) {
         $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
         $contacts = $this->contactManager->getUserContactsByCategoryWithPager(
             $authenticatedUser,
@@ -202,7 +198,7 @@ class ContactController extends Controller
             'contacts' => $contacts,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
         );
     }
 
@@ -222,8 +218,7 @@ class ContactController extends Controller
         $max = 50,
         $orderedBy = 'lastName',
         $order = 'ASC'
-    )
-    {
+    ) {
         $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
         $users = $this->userManager->getUsersForUserPicker(
             $authenticatedUser,
@@ -243,7 +238,7 @@ class ContactController extends Controller
             'users' => $users,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
         );
     }
 
@@ -306,8 +301,7 @@ class ContactController extends Controller
         User $authenticatedUser,
         Category $category,
         array $users
-    )
-    {
+    ) {
         $this->contactManager->addContactsToUserAndCategory(
             $authenticatedUser,
             $category,
@@ -357,14 +351,13 @@ class ContactController extends Controller
                 'show_username' => $form['showUsername']->getData(),
                 'show_mail' => $form['showMail']->getData(),
                 'show_phone' => $form['showPhone']->getData(),
-                'show_picture' => $form['showPicture']->getData()
+                'show_picture' => $form['showPicture']->getData(),
             );
             $options->setOptions($values);
             $this->contactManager->persistOptions($options);
 
             return new JsonResponse('success', 200);
         } else {
-
             return array('form' => $form->createView());
         }
     }
@@ -418,7 +411,6 @@ class ContactController extends Controller
                 200
             );
         } else {
-
             return array('form' => $form->createView());
         }
     }
@@ -464,7 +456,6 @@ class ContactController extends Controller
                 200
             );
         } else {
-
             return array('form' => $form->createView(), 'category' => $category);
         }
     }
@@ -518,17 +509,14 @@ class ContactController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-
             if (!is_null($contact)) {
                 $this->contactManager->persistContact($contact);
             }
 
             return new JsonResponse('success', 200);
         } else {
-
             return array('form' => $form->createView(), 'contact' => $user);
         }
-
     }
 
     /**
@@ -543,8 +531,7 @@ class ContactController extends Controller
         User $authenticatedUser,
         User $user,
         Category $category
-    )
-    {
+    ) {
         $contact = $this->contactManager->getContactByUserAndContact(
             $authenticatedUser,
             $user
@@ -560,7 +547,6 @@ class ContactController extends Controller
     private function checkUserAccessForCategory(Category $category, User $user)
     {
         if ($category->getUser()->getId() !== $user->getId()) {
-
             throw new AccessDeniedException();
         }
     }

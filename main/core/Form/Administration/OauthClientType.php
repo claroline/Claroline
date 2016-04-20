@@ -34,13 +34,13 @@ class OauthClientType extends AbstractType
                     'password' => '_password',
                     'refresh_token' => '_refresh_token',
                     'token' => '_token',
-                    'client_credentials' => '_client_credentials'
+                    'client_credentials' => '_client_credentials',
                 ),
                 'disabled' => isset($this->lockedParams['mailer_transport']),
                 'label' => 'grant_type',
                 'multiple' => true,
                 'constraints' => new NotBlank(),
-                'expanded' => true
+                'expanded' => true,
             )
         );
         $builder->add(

@@ -25,7 +25,7 @@ class LogEditResourceTextEvent extends LogGenericEvent implements NotifiableInte
      *      'propertyName1' => ['property old value 1', 'property new value 1'],
      *      'propertyName2' => ['property old value 2', 'property new value 2'],
      *      etc.
-     * )
+     * ).
      *
      * Please respect lower caml case naming convention for property names
      */
@@ -39,17 +39,17 @@ class LogEditResourceTextEvent extends LogGenericEvent implements NotifiableInte
             array(
                 'resource' => array(
                     'name' => $node->getName(),
-                    'path' => $node->getPathForDisplay()
+                    'path' => $node->getPathForDisplay(),
                 ),
                 'workspace' => array(
                     'name' => $node->getWorkspace()->getName(),
-                    'id'   => $node->getWorkspace()->getId(),
-                    'guid' => $node->getWorkspace()->getGuid()
+                    'id' => $node->getWorkspace()->getId(),
+                    'guid' => $node->getWorkspace()->getGuid(),
                 ),
                 'owner' => array(
                     'lastName' => $node->getCreator()->getLastName(),
-                    'firstName' => $node->getCreator()->getFirstName()
-                )
+                    'firstName' => $node->getCreator()->getFirstName(),
+                ),
             ),
             null,
             null,
@@ -65,9 +65,8 @@ class LogEditResourceTextEvent extends LogGenericEvent implements NotifiableInte
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
-
 
     public function setUsersToNotify(array $usersToNotify)
     {
@@ -77,7 +76,7 @@ class LogEditResourceTextEvent extends LogGenericEvent implements NotifiableInte
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -128,11 +127,11 @@ class LogEditResourceTextEvent extends LogGenericEvent implements NotifiableInte
     public function getIconKey()
     {
         //Icon key is null here because we need default icon for platform notifications
-        return null;
+        return;
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -144,9 +143,9 @@ class LogEditResourceTextEvent extends LogGenericEvent implements NotifiableInte
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

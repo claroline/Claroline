@@ -27,15 +27,15 @@ class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableIn
             array(
                 'resource' => array(
                     'name' => $node->getName(),
-                    'path' => $node->getPathForDisplay()
+                    'path' => $node->getPathForDisplay(),
                 ),
                 'workspace' => array(
-                    'name' => $node->getWorkspace() ? $node->getWorkspace()->getName(): ' - '
+                    'name' => $node->getWorkspace() ? $node->getWorkspace()->getName() : ' - ',
                 ),
                 'owner' => array(
                     'lastName' => $node->getCreator()->getLastName(),
-                    'firstName' => $node->getCreator()->getFirstName()
-                )
+                    'firstName' => $node->getCreator()->getFirstName(),
+                ),
             ),
             null,
             null,
@@ -56,6 +56,6 @@ class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableIn
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 }

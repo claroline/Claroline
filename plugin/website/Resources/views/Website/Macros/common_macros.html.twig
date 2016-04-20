@@ -1,0 +1,22 @@
+{% macro buildMenu(siteRoot, websiteId) %}
+    <ul>
+        {% for page in siteRoot.children %}
+            <li class="{{ page.isSection?'section':'' }}">
+                <a href="{{ path('icap_website_page_view', {'pageId':page.id, 'websiteId':websiteId}) }}">{{ page.title }}</a>
+                {% if (page.children is defined and page.children is not empty) %}
+                    {{ _self.buildMenu(page, websiteId) }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro getImagePath(path) %}
+    {% spaceless %}
+    {% if('http://' in path or 'https://' in path) %}
+        {{ path }}
+    {% else %}
+        {{ app.request.basePath ~ path }}
+    {% endif %}
+    {% endspaceless %}
+{% endmacro %}

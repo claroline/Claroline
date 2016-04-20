@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use \Mockery as m;
+use Mockery as m;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\Widget;
@@ -333,7 +333,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
         $this->assertEquals(
             array(
                 'homeTab' => $homeTab,
-                'widgetDisplayConfigs' => $widgetDisplayConfigs
+                'widgetDisplayConfigs' => $widgetDisplayConfigs,
             ),
             $this->getController()->listAddableWidgetsAction($homeTab)
         );
@@ -364,7 +364,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
         $this->assertEquals(
             array(
                 'homeTab' => $homeTab,
-                'widgetDisplayConfigs' => $widgetDisplayConfigs
+                'widgetDisplayConfigs' => $widgetDisplayConfigs,
             ),
             $this->getController()->listAddableWidgetsAction($homeTab)
         );
@@ -543,12 +543,12 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\CoreBundle\Controller\AdministrationHomeTabController' . $stringMocked,
+            'Claroline\CoreBundle\Controller\AdministrationHomeTabController'.$stringMocked,
             array(
                 $this->formFactory,
                 $this->homeTabManager,
                 $this->request,
-                $this->widgetManager
+                $this->widgetManager,
             )
         );
     }

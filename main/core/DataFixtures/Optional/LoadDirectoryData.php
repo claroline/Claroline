@@ -41,7 +41,7 @@ class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -49,7 +49,7 @@ class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {

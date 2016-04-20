@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use \Mockery as m;
+use Mockery as m;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
@@ -73,7 +73,7 @@ class HomeControllerTest extends MockeryTestCase
             array(
                 'workspace' => $workspace,
                 'configs' => $configs,
-                'tool' => 'tool'
+                'tool' => 'tool',
             ),
             $controller->workspaceWidgetsPropertiesAction($workspace)
         );
@@ -161,7 +161,7 @@ class HomeControllerTest extends MockeryTestCase
                 array(
                     'content' => 'content',
                     'workspace' => $workspace,
-                    'tool' => 'tool'
+                    'tool' => 'tool',
                 )
             )
             ->once()
@@ -209,7 +209,7 @@ class HomeControllerTest extends MockeryTestCase
                 array(
                     'content' => 'content',
                     'workspace' => $workspace,
-                    'tool' => 'tool'
+                    'tool' => 'tool',
                 )
             )
             ->once()
@@ -249,7 +249,7 @@ class HomeControllerTest extends MockeryTestCase
             array(
                 'configs' => $configs,
                 'user' => $user,
-                'tool' => 'tool'
+                'tool' => 'tool',
             ),
             $controller->desktopWidgetPropertiesAction()
         );
@@ -337,7 +337,7 @@ class HomeControllerTest extends MockeryTestCase
                 'ClarolineCoreBundle:Tool\desktop\home:widgetConfigurationForm.html.twig',
                 array(
                     'content' => 'content',
-                    'tool' => 'tool'
+                    'tool' => 'tool',
                 )
             )
             ->once()
@@ -385,7 +385,7 @@ class HomeControllerTest extends MockeryTestCase
                 'ClarolineCoreBundle:Tool\desktop\home:widgetConfiguration.html.twig',
                 array(
                     'content' => 'content',
-                    'tool' => 'tool'
+                    'tool' => 'tool',
                 )
             )
             ->once()
@@ -422,7 +422,7 @@ class HomeControllerTest extends MockeryTestCase
             1 => 5,
             2 => 4,
             3 => 2,
-            4 => 0
+            4 => 0,
         );
 
         $this->securityContext
@@ -506,7 +506,7 @@ class HomeControllerTest extends MockeryTestCase
                 'adminHomeTabConfigs' => $adminHomeTabConfigs,
                 'homeTabConfigs' => $homeTabConfigs,
                 'tool' => 'tool',
-                'nbWidgets' => $nbWidgets
+                'nbWidgets' => $nbWidgets,
             ),
             $controller->desktopHomeTabPropertiesAction()
         );
@@ -541,7 +541,7 @@ class HomeControllerTest extends MockeryTestCase
         $this->assertEquals(
             array(
                 'form' => 'view',
-                'tool' => 'tool'
+                'tool' => 'tool',
             ),
             $controller->userDesktopHomeTabCreateFormAction()
         );
@@ -670,7 +670,7 @@ class HomeControllerTest extends MockeryTestCase
                 'tool' => 'tool',
                 'homeTabConfig' => $homeTabConfig,
                 'homeTab' => $homeTab,
-                'homeTabName' => 'name'
+                'homeTabName' => 'name',
             ),
             $controller->userDesktopHomeTabEditFormAction($homeTabConfig)
         );
@@ -683,7 +683,7 @@ class HomeControllerTest extends MockeryTestCase
                 'checkUserAccess',
                 'checkUserAccessForHomeTab',
                 'generateUrl',
-                'redirect'
+                'redirect',
             )
         );
         $homeTabConfig = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
@@ -804,7 +804,7 @@ class HomeControllerTest extends MockeryTestCase
             1 => 3,
             2 => 2,
             3 => 2,
-            4 => 0
+            4 => 0,
         );
         $roleManager = $this->mock('Claroline\CoreBundle\Entity\Role');
 
@@ -879,7 +879,7 @@ class HomeControllerTest extends MockeryTestCase
                 'adminHomeTabConfigs' => $adminHomeTabConfigs,
                 'homeTabConfigs' => $homeTabConfigs,
                 'tool' => 'tool',
-                'nbWidgets' => $nbWidgets
+                'nbWidgets' => $nbWidgets,
             ),
             $controller->workspaceHomeTabPropertiesAction($workspace)
         );
@@ -911,7 +911,7 @@ class HomeControllerTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\CoreBundle\Controller\Tool\HomeController' . $stringMocked,
+            'Claroline\CoreBundle\Controller\Tool\HomeController'.$stringMocked,
             array(
                 $this->em,
                 $this->eventDispatcher,
@@ -921,7 +921,7 @@ class HomeControllerTest extends MockeryTestCase
                 $this->roleManager,
                 $this->securityContext,
                 $this->toolManager,
-                $this->widgetManager
+                $this->widgetManager,
             )
         );
     }

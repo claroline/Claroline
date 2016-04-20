@@ -16,7 +16,7 @@ class CommentType extends AbstractType
             array(
                 'required' => true,
                 'label' => 'content',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
     }

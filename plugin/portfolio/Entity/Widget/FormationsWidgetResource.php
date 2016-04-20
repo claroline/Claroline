@@ -3,8 +3,6 @@
 namespace Icap\PortfolioBundle\Entity\Widget;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="icap__portfolio_widget_formations_resource")
@@ -13,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class FormationsWidgetResource implements SubWidgetInterface
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -148,11 +146,10 @@ class FormationsWidgetResource implements SubWidgetInterface
 
         return array(
             'resource' => $resource ? $resource->getId() : null,
-            'id'       => $resource ? $resource->getId() : null,
-            'name'     => $resource ? $resource->getPathForDisplay() : null,
-            'uri'      => $this->getUri(),
-            'uriLabel' => $this->getUriLabel()
+            'id' => $resource ? $resource->getId() : null,
+            'name' => $resource ? $resource->getPathForDisplay() : null,
+            'uri' => $this->getUri(),
+            'uriLabel' => $this->getUriLabel(),
         );
     }
 }
- 

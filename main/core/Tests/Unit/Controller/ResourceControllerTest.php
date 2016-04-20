@@ -70,7 +70,7 @@ class ResourceControllerTest extends MockeryTestCase
         $this->dispatcher->shouldReceive('dispatch')->once()
             ->with('action_type', 'CustomActionResource', array($res))
             ->andReturn($customActionEvent);
-        $response = new \Symfony\Component\HttpFoundation\Response;
+        $response = new \Symfony\Component\HttpFoundation\Response();
         $customActionEvent->shouldReceive('getResponse')->andReturn($response);
         $this->assertEquals($response->getContent(), $controller->customAction('action', $node)->getContent());
         $this->assertInstanceOf(
@@ -106,7 +106,7 @@ class ResourceControllerTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\CoreBundle\Controller\ResourceController' . $stringMocked,
+            'Claroline\CoreBundle\Controller\ResourceController'.$stringMocked,
             array(
                 $this->sc,
                 $this->resourceManager,
@@ -117,7 +117,7 @@ class ResourceControllerTest extends MockeryTestCase
                 $this->dispatcher,
                 $this->maskManager,
                 $this->twigEngine,
-                $this->logManager
+                $this->logManager,
             )
         );
     }

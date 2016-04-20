@@ -32,14 +32,14 @@ class BadgeHandler
 
     public function __construct(FormInterface $form, Request $request, EntityManager $entityManager, BadgeManager $badgeManager)
     {
-        $this->form          = $form;
-        $this->request       = $request;
+        $this->form = $form;
+        $this->request = $request;
         $this->entityManager = $entityManager;
-        $this->badgeManager  = $badgeManager;
+        $this->badgeManager = $badgeManager;
     }
 
     /**
-     * @param  Badge $badge
+     * @param Badge $badge
      *
      * @return bool True on successfull processing, false otherwise
      */
@@ -62,7 +62,7 @@ class BadgeHandler
     }
 
     /**
-     * @param  Badge $badge
+     * @param Badge $badge
      *
      * @return bool True on successfull processing, false otherwise
      */
@@ -93,8 +93,7 @@ class BadgeHandler
                     $badge->setDeletedAt(new \DateTime());
 
                     $this->entityManager->persist($newBadge);
-                }
-                else {
+                } else {
                     // Compute which rules was deleted
                     foreach ($badgeRules as $rule) {
                         if ($originalRules->contains($rule)) {
@@ -118,4 +117,3 @@ class BadgeHandler
         return false;
     }
 }
- 

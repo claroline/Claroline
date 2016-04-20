@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use Symfony\Component\HttpKernel\KernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
@@ -35,7 +34,7 @@ class DateFormatterExtension extends \Twig_Extension
     }
 
     /**
-     * Get filters of the service
+     * Get filters of the service.
      *
      * @return \Twig_Filter_Method
      */

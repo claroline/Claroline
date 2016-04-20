@@ -2,14 +2,10 @@
 
 namespace Icap\BadgeBundle\Form\Type;
 
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Doctrine\ORM\EntityRepository;
-use Icap\BadgeBundle\Repository\BadgeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service("icap_badge.form.user_badge")
@@ -33,7 +29,7 @@ class UserBadgeType extends AbstractType
             array(
                 'data_class' => 'Icap\BadgeBundle\Entity\UserBadge',
                 'translation_domain' => 'icap_badge',
-                'csrf_protection' => false
+                'csrf_protection' => false,
             )
         );
     }

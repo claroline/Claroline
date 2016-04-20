@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Form\Handler\FormHandler;
 use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Manager\ResultManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -47,11 +46,11 @@ class ResultListener
      *     "context"    = @DI\Inject("security.context")
      * })
      *
-     * @param RequestStack          $stack
-     * @param HttpKernelInterface   $kernel
-     * @param ResultManager         $manager
-     * @param FormHandler           $handler
-     * @param SecurityContext       $context
+     * @param RequestStack        $stack
+     * @param HttpKernelInterface $kernel
+     * @param ResultManager       $manager
+     * @param FormHandler         $handler
+     * @param SecurityContext     $context
      */
     public function __construct(
         RequestStack $stack,
@@ -59,8 +58,7 @@ class ResultListener
         ResultManager $manager,
         FormHandler $handler,
         SecurityContext $context
-    )
-    {
+    ) {
         $this->request = $stack->getCurrentRequest();
         $this->kernel = $kernel;
         $this->manager = $manager;
@@ -116,7 +114,7 @@ class ResultListener
     {
         $subRequest = $this->request->duplicate([], null, [
             '_controller' => 'ClarolineResultBundle:Result:result',
-            'id' => $event->getResource()->getId()
+            'id' => $event->getResource()->getId(),
         ]);
         $event->setResponse($this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST));
         $event->stopPropagation();

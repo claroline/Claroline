@@ -17,17 +17,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PdfPlayerListener extends ContainerAware
 {
-    public function onOpenPdf (PlayFileEvent $event)
+    public function onOpenPdf(PlayFileEvent $event)
     {
         $path = $this->container->getParameter('claroline.param.files_directory')
-            . DIRECTORY_SEPARATOR
-            . $event->getResource()->getHashName();
+            .DIRECTORY_SEPARATOR
+            .$event->getResource()->getHashName();
         $content = $this->container->get('templating')->render(
             'ClarolinePdfPlayerBundle::pdf.html.twig',
             array(
                 'path' => $path,
                 'pdf' => $event->getResource(),
-                '_resource' => $event->getResource()
+                '_resource' => $event->getResource(),
             )
         );
         $response = new Response($content);

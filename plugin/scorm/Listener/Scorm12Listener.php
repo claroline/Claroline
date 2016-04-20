@@ -75,11 +75,10 @@ class Scorm12Listener
         UrlGeneratorInterface $router,
         TwigEngine $templating,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->container = $container;
         $this->filePath = $this->container
-            ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
+            ->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR;
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
         $this->om = $om;
@@ -87,7 +86,7 @@ class Scorm12Listener
         $this->router = $router;
         $this->scormResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm12Resource');
         $this->scormResourcesPath = $this->container
-            ->getParameter('claroline.param.uploads_directory') . '/scormresources/';
+            ->getParameter('claroline.param.uploads_directory').'/scormresources/';
         $this->scorm12ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12ScoTracking');
         $this->templating = $templating;
         $this->translator = $translator;
@@ -108,7 +107,7 @@ class Scorm12Listener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'claroline_scorm_12'
+                'resourceType' => 'claroline_scorm_12',
             )
         );
         $event->setResponseContent($content);
@@ -156,7 +155,7 @@ class Scorm12Listener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => $event->getResourceType()
+                'resourceType' => $event->getResourceType(),
             )
         );
         $event->setErrorFormContent($content);
@@ -196,13 +195,12 @@ class Scorm12Listener
     public function onDelete(DeleteResourceEvent $event)
     {
         $hashName = $event->getResource()->getHashName();
-        $scormArchiveFile = $this->filePath . $hashName;
-        $scormResourcesPath = $this->scormResourcesPath . $hashName;
+        $scormArchiveFile = $this->filePath.$hashName;
+        $scormResourcesPath = $this->scormResourcesPath.$hashName;
 
-        $nbScorm = (int)($this->scormResourceRepo->getNbScormWithHashName($hashName));
+        $nbScorm = (int) ($this->scormResourceRepo->getNbScormWithHashName($hashName));
 
         if ($nbScorm === 1) {
-
             if (file_exists($scormArchiveFile)) {
                 $event->setFiles(array($scormArchiveFile));
             }
@@ -230,7 +228,6 @@ class Scorm12Listener
         $scos = $resource->getScos();
 
         foreach ($scos as $sco) {
-
             if (is_null($sco->getScoParent())) {
                 $this->copySco($sco, $copy);
             }
@@ -247,7 +244,7 @@ class Scorm12Listener
      */
     public function onDownload(DownloadResourceEvent $event)
     {
-        $event->setItem($this->filePath . $event->getResource()->getHashName());
+        $event->setItem($this->filePath.$event->getResource()->getHashName());
         $event->setExtension('zip');
         $event->stopPropagation();
     }
@@ -266,7 +263,7 @@ class Scorm12Listener
         $openValue = $zip->open($file);
 
         $isScormArchive = ($openValue === true)
-            && $zip->getStream("imsmanifest.xml");
+            && $zip->getStream('imsmanifest.xml');
 
         if (!$isScormArchive) {
             throw new InvalidScormArchiveException('invalid_scorm_archive_message');
@@ -282,8 +279,7 @@ class Scorm12Listener
      */
     private function deleteFiles($dirPath)
     {
-        foreach (glob($dirPath . '/*') as $content) {
-
+        foreach (glob($dirPath.'/*') as $content) {
             if (is_dir($content)) {
                 $this->deleteFiles($content);
             } else {
@@ -294,18 +290,17 @@ class Scorm12Listener
     }
 
     /**
-     * Copy given sco and its children
+     * Copy given sco and its children.
      *
-     * @param Scorm12Sco $sco
+     * @param Scorm12Sco      $sco
      * @param Scorm12Resource $resource
-     * @param Scorm12Sco $scoParent
+     * @param Scorm12Sco      $scoParent
      */
     private function copySco(
         Scorm12Sco $sco,
         Scorm12Resource $resource,
         Scorm12Sco $scoParent = null
-    )
-    {
+    ) {
         $scoCopy = new Scorm12Sco();
         $scoCopy->setScormResource($resource);
         $scoCopy->setScoParent($scoParent);

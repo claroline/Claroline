@@ -21,8 +21,8 @@ class FrameworkImportType extends AbstractType
             'label' => 'file',
             'constraints' => [
                 new NotBlank(),
-                new ImportableFramework()
-            ]
+                new ImportableFramework(),
+            ],
         ]);
     }
 

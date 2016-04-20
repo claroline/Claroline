@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,9 +8,7 @@
  * 
  * Date: 4/14/15
  */
-
 namespace Icap\NotificationBundle\Manager;
-
 
 use Doctrine\ORM\EntityManager;
 use Icap\NotificationBundle\Entity\NotificationPluginConfiguration;
@@ -20,8 +18,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class NotificationPluginConfigurationManager
- * @package Icap\NotificationBundle\Manager
+ * Class NotificationPluginConfigurationManager.
  *
  * @DI\Service("icap.notification.manager.plugin_configuration")
  */
@@ -53,7 +50,7 @@ class NotificationPluginConfigurationManager
         $this->em = $em;
         $this->formFactory = $formFactory;
         $this->notificationPluginConfigurationRepository =
-            $em->getRepository("IcapNotificationBundle:NotificationPluginConfiguration");
+            $em->getRepository('IcapNotificationBundle:NotificationPluginConfiguration');
     }
 
     /**
@@ -74,11 +71,14 @@ class NotificationPluginConfigurationManager
 
     /**
      * @param NotificationPluginConfiguration $config
+     *
      * @return \Symfony\Component\Form\FormInterface
      */
     public function getForm(NotificationPluginConfiguration $config = null)
     {
-        if ($config === null) $config = $this->getConfigOrEmpty();
+        if ($config === null) {
+            $config = $this->getConfigOrEmpty();
+        }
         $form = $this->formFactory->create(
             'icap_notification_type_pluginConfiguration',
             $config
@@ -101,5 +101,4 @@ class NotificationPluginConfigurationManager
 
         throw new InvalidNotificationFormException('invalid_parameters', $form);
     }
-
-} 
+}

@@ -13,17 +13,14 @@ namespace Claroline\CoreBundle\Entity\Facet;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Claroline\CoreBundle\Entity\Role;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\PanelFacetRepository")
  * @ORM\Table(name="claro_panel_facet")
  */
-class PanelFacet {
-
+class PanelFacet
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -133,6 +130,6 @@ class PanelFacet {
 
     public function isCollapsed()
     {
-        return $this->isDefaultCollapsed ? 'true': 'false';
+        return $this->isDefaultCollapsed ? 'true' : 'false';
     }
 }

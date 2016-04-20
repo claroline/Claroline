@@ -4,7 +4,6 @@ namespace Icap\PortfolioBundle\Form\Handler;
 
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Manager\PortfolioManager;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -39,8 +38,8 @@ class PortfolioHandler
      */
     public function __construct(FormFactory $formFactory, RequestStack $requestStack, PortfolioManager $portfolioManager)
     {
-        $this->formFactory      = $formFactory;
-        $this->requestStack     = $requestStack;
+        $this->formFactory = $formFactory;
+        $this->requestStack = $requestStack;
         $this->portfolioManager = $portfolioManager;
     }
 
@@ -83,7 +82,7 @@ class PortfolioHandler
     }
 
     /**
-     * @param  Portfolio $portfolio
+     * @param Portfolio $portfolio
      *
      * @return bool True on successfull processing, false otherwise
      */
@@ -130,7 +129,7 @@ class PortfolioHandler
     }
 
     /**
-     * @param  Portfolio $portfolio
+     * @param Portfolio $portfolio
      *
      * @return bool True on successfull processing, false otherwise
      */
@@ -146,10 +145,10 @@ class PortfolioHandler
      */
     public function handleVisibility(Portfolio $portfolio)
     {
-        $originalPortfolioUsers  = $portfolio->getPortfolioUsers();
+        $originalPortfolioUsers = $portfolio->getPortfolioUsers();
         $originalPortfolioGroups = $portfolio->getPortfolioGroups();
-        $originalPortfolioTeams  = $portfolio->getPortfolioTeams();
-        $form                    = $this->getVisibilityForm($portfolio);
+        $originalPortfolioTeams = $portfolio->getPortfolioTeams();
+        $form = $this->getVisibilityForm($portfolio);
 
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
@@ -173,7 +172,7 @@ class PortfolioHandler
     public function handleGuides(Portfolio $portfolio)
     {
         $originalPortfolioGuides = $portfolio->getPortfolioGuides();
-        $form                    = $this->getGuidesForm($portfolio);
+        $form = $this->getGuidesForm($portfolio);
 
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
@@ -189,4 +188,3 @@ class PortfolioHandler
         return false;
     }
 }
- 

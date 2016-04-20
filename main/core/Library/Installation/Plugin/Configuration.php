@@ -69,12 +69,12 @@ class Configuration implements ConfigurationInterface
                     ->ifTrue(
                         function ($v) use ($plugin) {
                             return !call_user_func_array(
-                                __CLASS__ . '::isIconValid',
+                                __CLASS__.'::isIconValid',
                                 array($v, $plugin)
                             );
                         }
                     )
-                    ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}%s)")
+                    ->thenInvalid($pluginFqcn." : this file was not found ({$imgFolder}{$ds}%s)")
                 ->end()
             ->end()
         ->end();
@@ -99,12 +99,12 @@ class Configuration implements ConfigurationInterface
                                     ->ifTrue(
                                         function ($v) use ($listNames, $updateMode) {
                                             return !$updateMode && !call_user_func_array(
-                                                __CLASS__ . '::isNameAlreadyExist',
+                                                __CLASS__.'::isNameAlreadyExist',
                                                 array($v, $listNames)
                                             );
                                         }
                                     )
-                                    ->thenInvalid($pluginFqcn . " : the ressource type name already exists")
+                                    ->thenInvalid($pluginFqcn.' : the ressource type name already exists')
                                 ->end()
                             ->end()
                        ->scalarNode('class')
@@ -113,25 +113,25 @@ class Configuration implements ConfigurationInterface
                                     ->ifTrue(
                                         function ($v) use ($plugin) {
                                             return !call_user_func_array(
-                                                __CLASS__ . '::isResourceClassLoadable',
+                                                __CLASS__.'::isResourceClassLoadable',
                                                 array($v, $plugin)
                                             );
                                         }
                                     )
-                                    ->thenInvalid($pluginFqcn . " : %s (declared in {$resourceFile}) was not found.")
+                                    ->thenInvalid($pluginFqcn." : %s (declared in {$resourceFile}) was not found.")
                                 ->end()
                                 ->validate()
                                     ->ifTrue(
                                         function ($v) {
                                             return !call_user_func_array(
-                                                __CLASS__ . '::isAbstractResourceExtended',
+                                                __CLASS__.'::isAbstractResourceExtended',
                                                 array($v)
                                             );
                                         }
                                     )
                                     ->thenInvalid(
-                                        $pluginFqcn . " : %s (declared in {$resourceFile}) must extend  "
-                                        . "'Claroline\\CoreBundle\\Entity\\Resource\\AbstractResource'."
+                                        $pluginFqcn." : %s (declared in {$resourceFile}) must extend  "
+                                        ."'Claroline\\CoreBundle\\Entity\\Resource\\AbstractResource'."
                                     )
                                 ->end()
                             ->end()
@@ -143,12 +143,12 @@ class Configuration implements ConfigurationInterface
                                 ->ifTrue(
                                     function ($v) use ($plugin) {
                                         return !call_user_func_array(
-                                            __CLASS__ . '::isResourceIconValid',
+                                            __CLASS__.'::isResourceIconValid',
                                             array($v, $plugin)
                                         );
                                     }
                                 )
-                                ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}%s)")
+                                ->thenInvalid($pluginFqcn." : this file was not found ({$imgFolder}%s)")
                            ->end()
                        ->end()
                        ->arrayNode('actions')
@@ -201,7 +201,7 @@ class Configuration implements ConfigurationInterface
                                         return !$updateMode && in_array($v, $listResourceActions);
                                     }
                                 )
-                                ->thenInvalid($pluginFqcn . ' : the resource action name already exists')
+                                ->thenInvalid($pluginFqcn.' : the resource action name already exists')
                             ->end()
                         ->end()
                         ->booleanNode('is_form')->defaultFalse()->end()
@@ -230,12 +230,12 @@ class Configuration implements ConfigurationInterface
                                 ->ifTrue(
                                     function ($v) use ($pluginFqcn, $widgets, $updateMode) {
                                         return !$updateMode && !call_user_func_array(
-                                            __CLASS__ . '::isNameAlreadyExist',
-                                            array($pluginFqcn . '-' .$v, $widgets)
+                                            __CLASS__.'::isNameAlreadyExist',
+                                            array($pluginFqcn.'-'.$v, $widgets)
                                         );
                                     }
                                 )
-                                ->thenInvalid($pluginFqcn . " : the widget name already exists")
+                                ->thenInvalid($pluginFqcn.' : the widget name already exists')
                             ->end()
                         ->end()
                         ->booleanNode('is_configurable')->isRequired()->end()
@@ -249,12 +249,12 @@ class Configuration implements ConfigurationInterface
                             ->ifTrue(
                                 function ($v) use ($plugin) {
                                     return !call_user_func_array(
-                                        __CLASS__ . '::isIconValid',
+                                        __CLASS__.'::isIconValid',
                                         array($v, $plugin)
                                     );
                                 }
                             )
-                            ->thenInvalid($pluginFqcn . " : this file was not found ({$imgFolder}{$ds}%s)")
+                            ->thenInvalid($pluginFqcn." : this file was not found ({$imgFolder}{$ds}%s)")
                             ->end()
                         ->end()
                     ->end()
@@ -279,12 +279,12 @@ class Configuration implements ConfigurationInterface
                                 ->ifTrue(
                                     function ($v) use ($pluginFqcn, $tools, $updateMode) {
                                         return !$updateMode && !call_user_func_array(
-                                            __CLASS__ . '::isNameAlreadyExist',
-                                            array($pluginFqcn . '-' .$v, $tools)
+                                            __CLASS__.'::isNameAlreadyExist',
+                                            array($pluginFqcn.'-'.$v, $tools)
                                         );
                                     }
                                 )
-                                ->thenInvalid($pluginFqcn . " : the tool name already exists")
+                                ->thenInvalid($pluginFqcn.' : the tool name already exists')
                             ->end()
                         ->end()
                         ->booleanNode('is_displayable_in_workspace')->isRequired()->end()
@@ -362,14 +362,14 @@ class Configuration implements ConfigurationInterface
 
     public static function isAbstractResourceExtended($v)
     {
-        return (new $v) instanceof AbstractResource;
+        return (new $v()) instanceof AbstractResource;
     }
 
     public static function isResourceIconValid($v, $plugin)
     {
         $ds = DIRECTORY_SEPARATOR;
         $imgFolder = $plugin->getImgFolder();
-        $expectedImgLocation = $imgFolder . $ds . $ds . $v;
+        $expectedImgLocation = $imgFolder.$ds.$ds.$v;
 
         return file_exists($expectedImgLocation);
     }
@@ -378,7 +378,7 @@ class Configuration implements ConfigurationInterface
     {
         $ds = DIRECTORY_SEPARATOR;
         $imgFolder = $plugin->getImgFolder();
-        $expectedImgLocation = $imgFolder . $ds . 'small' . $ds . $v;
+        $expectedImgLocation = $imgFolder.$ds.'small'.$ds.$v;
 
         return file_exists($expectedImgLocation);
     }
@@ -394,7 +394,7 @@ class Configuration implements ConfigurationInterface
 
     public static function isNameAlreadyExist($v, $listNames)
     {
-        return (!in_array($v, $listNames));
+        return !in_array($v, $listNames);
     }
 
     /**

@@ -57,8 +57,7 @@ class HomeManager
         $persistence,
         $formFactory,
         $configHandler
-    )
-    {
+    ) {
         $this->graph = $graph;
         $this->manager = $persistence;
         $this->contentManager = $contentManager;
@@ -74,7 +73,7 @@ class HomeManager
     }
 
     /**
-     * Get Content
+     * Get Content.
      *
      * @return array
      */
@@ -142,7 +141,6 @@ class HomeManager
         $type = $this->type->findOneBy(array('name' => $type));
 
         if ($type) {
-
             if ($father) {
                 $father = $this->content->find($father);
                 $first = $this->subContent->findOneBy(
@@ -155,7 +153,7 @@ class HomeManager
             }
 
             if ($first) {
-                for ($i = 0; $i < $type->getMaxContentPage() and $first != null; $i++) {
+                for ($i = 0; $i < $type->getMaxContentPage() and $first != null; ++$i) {
                     $variables = array();
                     $variables['content'] = $first->getContent();
                     $variables['size'] = $first->getSize();
@@ -203,7 +201,7 @@ class HomeManager
                     'size' => $first->getSize(),
                     'menu' => '',
                     'type' => $type,
-                    'region' => $region->getName()
+                    'region' => $region->getName(),
                 );
 
                 $first = $first->getNext();
@@ -226,7 +224,7 @@ class HomeManager
     }
 
     /**
-     * Get the types
+     * Get the types.
      *
      * @return array An array of Type entity.
      */
@@ -236,7 +234,7 @@ class HomeManager
     }
 
     /**
-     * Get the open graph contents of a web page by his URL
+     * Get the open graph contents of a web page by his URL.
      *
      * @return array
      */
@@ -286,10 +284,10 @@ class HomeManager
      */
     public function updateContent($content, $translatedContent = null, $size = null, $type = null)
     {
-        if (isset($translatedContent['content' . $content->getId()]) and
-            is_array($translatedContent['content' . $content->getId()])
+        if (isset($translatedContent['content'.$content->getId()]) and
+            is_array($translatedContent['content'.$content->getId()])
         ) {
-            $this->contentManager->updateContent($content, $translatedContent['content' . $content->getId()]);
+            $this->contentManager->updateContent($content, $translatedContent['content'.$content->getId()]);
         }
 
         if ($size and $type) {
@@ -334,7 +332,7 @@ class HomeManager
     }
 
     /**
-     * Get content node (type or sub content object)
+     * Get content node (type or sub content object).
      */
     public function getNode($type, $content = null, $father = null)
     {
@@ -354,7 +352,7 @@ class HomeManager
     }
 
     /**
-     * Move a content from a type to another
+     * Move a content from a type to another.
      *
      * @param content The content to move
      * @param page The page type where move the content
@@ -408,7 +406,7 @@ class HomeManager
     }
 
     /**
-     * Rename a type
+     * Rename a type.
      *
      * @return Type
      */
@@ -459,11 +457,11 @@ class HomeManager
     }
 
     /**
-     * Publish content type page
+     * Publish content type page.
      *
      * @param $type a content type
      *
-     * @return boolean
+     * @return bool
      */
     public function publishType($type)
     {
@@ -501,7 +499,6 @@ class HomeManager
             $this->manager->remove($entity);
             $this->manager->flush();
         }
-
     }
 
     /**
@@ -577,19 +574,19 @@ class HomeManager
     }
 
     /**
-     * Check if a string is a valid URL
+     * Check if a string is a valid URL.
      *
      * @param $url the string to validate
      *
-     * @return boolean
+     * @return bool
      */
     public function isValidUrl($url)
     {
-        return (filter_var($url, FILTER_VALIDATE_URL) !== false);
+        return filter_var($url, FILTER_VALIDATE_URL) !== false;
     }
 
     /**
-     * Get the home parameters
+     * Get the home parameters.
      */
     public function getHomeParameters()
     {
@@ -597,12 +594,12 @@ class HomeManager
             'homeMenu' => $this->configHandler->getParameter('home_menu'),
             'footerLogin' => $this->configHandler->getParameter('footer_login'),
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
-            'headerLocale' => $this->configHandler->getParameter('header_locale')
+            'headerLocale' => $this->configHandler->getParameter('header_locale'),
         );
     }
 
     /**
-     * Save the home parameters
+     * Save the home parameters.
      */
     public function saveHomeParameters($homeMenu, $footerLogin, $footerWorkspaces, $headerLocale)
     {
@@ -611,7 +608,7 @@ class HomeManager
                 'home_menu' => is_numeric($homeMenu) ? intval($homeMenu) : null,
                 'footer_login' => ($footerLogin === 'true'),
             'footer_workspaces' => ($footerWorkspaces === 'true'),
-                'header_locale' => ($headerLocale === 'true')
+                'header_locale' => ($headerLocale === 'true'),
             )
         );
     }

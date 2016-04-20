@@ -11,7 +11,6 @@
 namespace Claroline\CoreBundle\Library;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Mockery as m;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesImporter;
 use Symfony\Component\Yaml\Yaml;
 
@@ -48,13 +47,13 @@ class RolesImporterTest extends MockeryTestCase
             //valid
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
-                'isExceptionExpected' => false
+                'isExceptionExpected' => false,
             ),
             //roles have the same name twice
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/roles/existing_name.yml',
-                'isExceptionExpected' => true
-            )
+                'isExceptionExpected' => true,
+            ),
         );
     }
 }

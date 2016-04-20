@@ -5,7 +5,6 @@ namespace Icap\PortfolioBundle\Controller\Internal;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Controller\Controller as BaseController;
 use Icap\PortfolioBundle\Entity\Portfolio;
-use Icap\PortfolioBundle\Entity\Widget;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -86,7 +85,7 @@ class PortfolioWidgetController extends BaseController
         $portfolioWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:PortfolioWidget')->findOneBy([
             'id' => $portfolioWidgetId,
             'widgetType' => $type,
-            'portfolio' => $portfolio
+            'portfolio' => $portfolio,
         ]);
 
         $data = $this->getWidgetsManager()->handlePortfolioWidget($portfolioWidget, $request->request->all(), $this->get('kernel')->getEnvironment());
@@ -111,19 +110,17 @@ class PortfolioWidgetController extends BaseController
         $portfolioWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:PortfolioWidget')->findOneBy([
             'id' => $portfolioWidgetId,
             'widgetType' => $type,
-            'portfolio' => $portfolio
+            'portfolio' => $portfolio,
         ]);
 
         $response = new JsonResponse();
 
         try {
             $this->getWidgetsManager()->deletePortfolioWidget($portfolioWidget);
-
-        } catch(\Exception $exception){
+        } catch (\Exception $exception) {
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;
     }
 }
- 

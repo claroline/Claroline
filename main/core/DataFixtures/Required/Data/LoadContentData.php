@@ -24,12 +24,12 @@ class LoadContentData implements RequiredFixture
         //mails
         $frTitle = 'Inscription à %platform_name%';
         $frContent = "<div>Votre nom d'utilisateur est %username%</div></br>";
-        $frContent .= "<div>Votre mot de passe est %password%</div>";
-        $frContent .= "<div>%validation_mail%</div>";
+        $frContent .= '<div>Votre mot de passe est %password%</div>';
+        $frContent .= '<div>%validation_mail%</div>';
         $enTitle = 'Registration to %platform_name%';
-        $enContent = "<div>You username is %username%</div></br>";
-        $enContent .= "<div>Your password is %password%</div>";
-        $enContent .= "<div>%validation_mail%</div>";
+        $enContent = '<div>You username is %username%</div></br>';
+        $enContent .= '<div>Your password is %password%</div>';
+        $enContent .= '<div>%validation_mail%</div>';
         $type = 'claro_mail_registration';
         $content = new Content();
         $content->setTitle($enTitle);

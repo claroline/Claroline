@@ -22,11 +22,11 @@ use Symfony\Component\Config\FileLocator;
 class ClarolineInstallationExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $locator = new FileLocator(__DIR__ . '/../Resources/config');
+        $locator = new FileLocator(__DIR__.'/../Resources/config');
         $loader = new XmlFileLoader($container, $locator);
         $loader->load('services.xml');
     }

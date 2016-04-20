@@ -24,8 +24,8 @@ class LogWorkspaceToolReadEvent extends LogGenericEvent implements LogNotRepeata
             self::ACTION,
             array(
                 'workspace' => array(
-                    'name' => $workspace->getName()
-                )
+                    'name' => $workspace->getName(),
+                ),
             ),
             null,
             null,
@@ -47,6 +47,6 @@ class LogWorkspaceToolReadEvent extends LogGenericEvent implements LogNotRepeata
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 }

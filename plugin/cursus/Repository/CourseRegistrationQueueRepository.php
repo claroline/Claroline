@@ -50,8 +50,7 @@ class CourseRegistrationQueueRepository extends EntityRepository
         Course $course,
         User $user,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT q
             FROM Claroline\CursusBundle\Entity\CourseRegistrationQueue q

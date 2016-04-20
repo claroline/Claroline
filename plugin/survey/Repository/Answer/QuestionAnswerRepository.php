@@ -22,8 +22,7 @@ class QuestionAnswerRepository extends EntityRepository
         SurveyAnswer $surveyAnswer,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT qa
             FROM Claroline\SurveyBundle\Entity\Answer\QuestionAnswer qa
@@ -41,8 +40,7 @@ class QuestionAnswerRepository extends EntityRepository
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT COUNT(qa) AS nb_answers
             FROM Claroline\SurveyBundle\Entity\Answer\QuestionAnswer qa
@@ -61,8 +59,7 @@ class QuestionAnswerRepository extends EntityRepository
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT qa.comment AS comment
             FROM Claroline\SurveyBundle\Entity\Answer\QuestionAnswer qa

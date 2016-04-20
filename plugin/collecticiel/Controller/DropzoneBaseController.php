@@ -3,16 +3,15 @@
  * Created by : Vincent SAISSET
  * Modified by : Eric VINCENT (mars 2015)
  * Date: 22/08/13
- * Time: 09:30
+ * Time: 09:30.
  */
-
 namespace Innova\CollecticielBundle\Controller;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-/** Partie log créé pour Innova */
+/* Partie log créé pour Innova */
 use Innova\CollecticielBundle\Event\Log\LogCommentCreateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCommentReadCreateEvent;
-/** Fin partie log créé pour Innova */
+/* Fin partie log créé pour Innova */
 use Innova\CollecticielBundle\Event\Log\LogCorrectionDeleteEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionStartEvent;
@@ -41,15 +40,14 @@ class DropzoneBaseController extends Controller
 
     protected function dispatch($event)
     {
-
         if (
             $event instanceof LogResourceReadEvent or
             $event instanceof LogDropzoneConfigureEvent or
-/** Partie log créé pour Innova */
+/* Partie log créé pour Innova */
             $event instanceof LogCommentReadCreateEvent or
             $event instanceof LogCommentCreateEvent or
             $event instanceof LogDropzoneManualRequestSentEvent or
-/** Fin partie log créé pour Innova */
+/* Fin partie log créé pour Innova */
             $event instanceof LogCriterionCreateEvent or
             $event instanceof LogCriterionUpdateEvent or
             $event instanceof LogCriterionDeleteEvent or

@@ -105,7 +105,7 @@ class FirstAdminSettings extends AbstractValidator
     public function bindData(array $settings)
     {
         foreach ($settings as $name => $value) {
-            if (method_exists($this, $method = 'set' . ucfirst($name))) {
+            if (method_exists($this, $method = 'set'.ucfirst($name))) {
                 $this->{$method}($value);
             }
         }

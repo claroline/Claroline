@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Rule\Constraints;
 
 use Claroline\CoreBundle\Rule\Entity\Rule;
-use Claroline\CoreBundle\Entity\Log\Log;
 
 abstract class AbstractConstraint implements ConstraintInterface
 {
@@ -28,12 +27,13 @@ abstract class AbstractConstraint implements ConstraintInterface
 
     /**
      * @throws \RuntimeException
+     *
      * @return \Claroline\CoreBundle\Rule\Entity\Rule
      */
     public function getRule()
     {
         if (null === $this->rule) {
-            throw new \RuntimeException("No rule given to the constraint. How can it validate something without rule to validate?");
+            throw new \RuntimeException('No rule given to the constraint. How can it validate something without rule to validate?');
         }
 
         return $this->rule;
@@ -53,12 +53,13 @@ abstract class AbstractConstraint implements ConstraintInterface
 
     /**
      * @throws \RuntimeException
+     *
      * @return \Claroline\CoreBundle\Entity\Log\Log[]
      */
     public function getAssociatedLogs()
     {
         if (null === $this->associatedLogs) {
-            throw new \RuntimeException("No associated logs given to the constraint. How can it validate something without something to validate?");
+            throw new \RuntimeException('No associated logs given to the constraint. How can it validate something without something to validate?');
         }
 
         return $this->associatedLogs;

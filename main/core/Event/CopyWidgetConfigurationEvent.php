@@ -12,9 +12,7 @@
 namespace Claroline\CoreBundle\Event;
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Symfony\Component\EventDispatcher\Event;
-use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 
 class CopyWidgetConfigurationEvent extends Event implements DataConveyorEventInterface
 {
@@ -28,8 +26,7 @@ class CopyWidgetConfigurationEvent extends Event implements DataConveyorEventInt
         WidgetInstance $widgetInstanceCopy,
         $resourceInfos = array(),
         $tabsInfos = array()
-    )
-    {
+    ) {
         $this->widgetInstanceCopy = $widgetInstanceCopy;
         $this->widgetInstance = $widgetInstance;
         $this->resourceInfos = $resourceInfos;
@@ -55,12 +52,12 @@ class CopyWidgetConfigurationEvent extends Event implements DataConveyorEventInt
     {
         return $this->isPopulated;
     }
-    
+
     public function getResourceInfos()
     {
         return $this->resourceInfos;
     }
-    
+
     public function getTabsInfos()
     {
         return $this->tabsInfos;

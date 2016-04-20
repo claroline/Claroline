@@ -6,7 +6,6 @@ use Icap\BlogBundle\Form\DataTransformer\IntToBlogTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zenstruck\Bundle\FormBundle\Form\DataTransformer\AjaxEntityTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -34,16 +33,16 @@ class WidgetListBlogType extends AbstractType
     {
         $builder->add('resourceNode', 'resourcePicker', array(
             'theme_options' => array(
-                'label_width'   => 'col-md-6',
-                'control_width' => 'col-md-6'
+                'label_width' => 'col-md-6',
+                'control_width' => 'col-md-6',
             ),
             'attr' => array(
                 'data-is-picker-multi-select-allowed' => 0,
                 'data-is-directory-selection-allowed' => 0,
-                'data-type-white-list' => 'icap_blog'
+                'data-type-white-list' => 'icap_blog',
             ),
             'display_browse_button' => false,
-            'display_download_button' => false
+            'display_download_button' => false,
         ));
     }
 
@@ -56,8 +55,8 @@ class WidgetListBlogType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\BlogBundle\Entity\WidgetListBlog',
-                'translation_domain' => 'icap_blog'
+                'data_class' => 'Icap\BlogBundle\Entity\WidgetListBlog',
+                'translation_domain' => 'icap_blog',
             )
         );
     }

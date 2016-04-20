@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 class ApiTestCommand extends ContainerAwareCommand
 {
@@ -34,7 +33,7 @@ class ApiTestCommand extends ContainerAwareCommand
     {
         $params = array(
             'platform_name' => 'the friend request name',
-            'url'           => 'the url'
+            'url' => 'the url',
         );
 
         foreach ($params as $argument => $argumentName) {

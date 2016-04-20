@@ -38,6 +38,7 @@ class ActivityManager
      * by the "type" key.
      *
      * @param Activity $activity
+     *
      * @return array
      */
     public function loadLinkedCompetencies(Activity $activity)
@@ -62,9 +63,11 @@ class ActivityManager
      * If the link already exists, the method returns false. Otherwise, it
      * returns an array representation of the ability/competency.
      *
-     * @param Activity              $activity
-     * @param Ability|Competency    $target
+     * @param Activity           $activity
+     * @param Ability|Competency $target
+     *
      * @return array|bool
+     *
      * @throws \InvalidArgumentException if the target isn't an instance of Ability or Competency
      */
     public function createLink(Activity $activity, $target)
@@ -90,10 +93,11 @@ class ActivityManager
     /**
      * Removes a link between an activity and an ability or a competency.
      *
-     * @param Activity $activity
+     * @param Activity           $activity
      * @param Ability|Competency $target
+     *
      * @throws \InvalidArgumentException if the target isn't an instance of Ability or Competency
-     * @throws \LogicException if the link doesn't exists
+     * @throws \LogicException           if the link doesn't exists
      */
     public function removeLink(Activity $activity, $target)
     {
@@ -126,7 +130,7 @@ class ActivityManager
                         return $step->getName();
                     }, $this->competencyRepo->getPath($link->getCompetency())),
                 ];
-            }, $ability->getCompetencyAbilities()->toArray())
+            }, $ability->getCompetencyAbilities()->toArray()),
         ];
     }
 
@@ -140,8 +144,8 @@ class ActivityManager
                 'level' => '-',
                 'steps' => array_map(function ($step) {
                     return $step->getName();
-                }, $this->competencyRepo->getPath($competency))
-            ]]
+                }, $this->competencyRepo->getPath($competency)),
+            ]],
         ];
     }
 }

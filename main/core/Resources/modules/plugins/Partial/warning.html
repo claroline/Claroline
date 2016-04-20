@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="$close()">&times;</button>
+  <h3 class="modal-title" align="center">{{ 'requirement_warning'|trans:'platform' }}</h3>
+</div>
+<div class="modal-body">
+    <div ng-if="cwpc.plugin.required_by.length > 0">
+        <h4> {{ 'required_by'|trans:{}:'platform' }} </h4>
+        <ul>
+            <li ng-repeat="(key, plugin) in cwpc.plugin.required_by"> {{ plugin }} </li>
+        </ul>
+    </div>
+    <div ng-if="cwpc.plugin.require.extension.length > 0 || cwpc.plugin.require.plugin.length">
+        <h4> {{ 'require'|trans:{}:'platform' }} </h4>
+        <ul>
+            <li ng-repeat="(key, requirement) in cwpc.plugin.require.extension"> php5-{{ requirement }} </li>
+            <li ng-repeat="(key, requirement) in cwpc.plugin.require.plugin"> {{ requirement }} </li>
+        </ul>
+    </div>
+</div>

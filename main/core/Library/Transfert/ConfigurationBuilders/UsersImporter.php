@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Transfert\Merger;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
@@ -39,11 +38,11 @@ class UsersImporter extends Importer implements ConfigurationInterface
      */
     public function __construct(ObjectManager $om, $container)
     {
-        $this->om        = $om;
+        $this->om = $om;
         $this->container = $container;
     }
 
-    public function  getConfigTreeBuilder()
+    public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('users');
@@ -54,10 +53,9 @@ class UsersImporter extends Importer implements ConfigurationInterface
 
     public function addUsersSection($rootNode)
     {
-         $usernames = array();
+        $usernames = array();
 
-        foreach($this->om->getRepository('Claroline\CoreBundle\Entity\User')->findUsernames() as $username)
-        {
+        foreach ($this->om->getRepository('Claroline\CoreBundle\Entity\User')->findUsernames() as $username) {
             $usernames[] = $username['username'];
         }
 
@@ -73,7 +71,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
         //add platform roles
         $existingRoles = $this->om->getRepository('ClarolineCoreBundle:Role')->findAllPlatformRoles();
 
-        foreach($existingRoles as $existingRole) {
+        foreach ($existingRoles as $existingRole) {
             $availableRoleName[] = $existingRole->getName();
         }
 
@@ -92,12 +90,12 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                     ->ifTrue(
                                         function ($v) use ($usernames) {
                                             return call_user_func_array(
-                                                __CLASS__ . '::usernameMissingInDatabase',
+                                                __CLASS__.'::usernameMissingInDatabase',
                                                 array($v, $usernames)
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The username %s does not exists")
+                                    ->thenInvalid('The username %s does not exists')
                                 ->end()
                             ->end()
                             ->arrayNode('roles')
@@ -108,7 +106,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                             ->ifTrue(
                                                 function ($v) use ($availableRoleName) {
                                                     return call_user_func_array(
-                                                        __CLASS__ . '::roleNameExists',
+                                                        __CLASS__.'::roleNameExists',
                                                         array($v, $availableRoleName)
                                                     );
                                                 }
@@ -133,6 +131,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
      * Validate the workspace properties.
      *
      * @todo show the expected array
+     *
      * @param array $data
      */
     public function validate(array $data)
@@ -163,7 +162,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
 
     public static function usernameMissingInDatabase($v, $usernames)
     {
-        return self::isStrict() ? !in_array($v, $usernames): false;
+        return self::isStrict() ? !in_array($v, $usernames) : false;
     }
 
     private static function setData($data)
@@ -183,7 +182,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
 
     public static function ownerAlreadyExists($v, $owner)
     {
-        return $owner === $v ? true: false;
+        return $owner === $v ? true : false;
     }
 
     public function export(Workspace $workspace, array &$files, $object)

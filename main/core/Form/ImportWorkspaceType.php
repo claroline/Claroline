@@ -28,12 +28,12 @@ class ImportWorkspaceType extends AbstractType
         $builder->add(
             'code',
             'text',
-            array('label' => 'code','constraints' => array(new NotBlank()))
+            array('label' => 'code', 'constraints' => array(new NotBlank()))
         );
         $builder->add(
             'workspace',
             'file',
-            array('label' => 'file','constraints' => array(new NotBlank()))
+            array('label' => 'file', 'constraints' => array(new NotBlank()))
         );
         $builder->add(
             'description',

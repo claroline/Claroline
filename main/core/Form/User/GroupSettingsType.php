@@ -12,8 +12,6 @@
 namespace Claroline\CoreBundle\Form\User;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\AbstractType;
-use Claroline\CoreBundle\Form\User\GroupType;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,7 +23,7 @@ class GroupSettingsType extends GroupType
         parent::__construct();
         $this->isAdmin = $isAdmin;
         $this->ngAlias = $ngAlias;
-        $this->roles   = $roles ? $roles: new ArrayCollection();
+        $this->roles = $roles ? $roles : new ArrayCollection();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -45,9 +43,9 @@ class GroupSettingsType extends GroupType
                 'multiple' => true,
                 'property' => 'translationKey',
                 'disabled' => false,
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($isAdmin){
+                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($isAdmin) {
                     $query = $er->createQueryBuilder('r')
-                        ->where("r.type = " . Role::PLATFORM_ROLE)
+                        ->where('r.type = '.Role::PLATFORM_ROLE)
                         ->andWhere("r.name != 'ROLE_ANONYMOUS'")
                         ->andWhere("r.name != 'ROLE_USER'");
 
@@ -56,7 +54,7 @@ class GroupSettingsType extends GroupType
                     }
 
                     return $query;
-                }
+                },
             )
         );
 
@@ -68,7 +66,7 @@ class GroupSettingsType extends GroupType
                 'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
                 'expanded' => true,
                 'multiple' => true,
-                'property' => 'name'
+                'property' => 'name',
             )
         );
     }
@@ -81,7 +79,9 @@ class GroupSettingsType extends GroupType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $default = array('translation_domain' => 'platform');
-        if ($this->forApi) $default['csrf_protection'] = false;
+        if ($this->forApi) {
+            $default['csrf_protection'] = false;
+        }
         $default['ng-model'] = 'group';
         $default['ng-controllerAs'] = $this->ngAlias;
 

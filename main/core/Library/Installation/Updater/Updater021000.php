@@ -45,7 +45,7 @@ class Updater021000 extends Updater
             array('logs', false, true),
             array('analytics', false, true),
             array('users', false, true),
-            array('badges', false, true)
+            array('badges', false, true),
         );
 
         $this->log('updating tools...');
@@ -101,7 +101,6 @@ class Updater021000 extends Updater
         $resourceNodes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findAll();
         $roleUser = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
 
-
         $this->om->startFlushSuite();
         $i = 0;
 
@@ -109,7 +108,7 @@ class Updater021000 extends Updater
             $rightsManager = $this->container->get('claroline.manager.rights_manager');
 
             $rightsManager->create(0, $roleUser, $resourceNode, false);
-            $i++;
+            ++$i;
 
             if ($i % 200 === 0) {
                 $this->om->endFlushSuite();
@@ -123,19 +122,19 @@ class Updater021000 extends Updater
     public function updateIcons()
     {
         $this->log('updating icons...');
-        $coreIconWebDirRelativePath = "bundles/clarolinecore/images/resources/icons/";
+        $coreIconWebDirRelativePath = 'bundles/clarolinecore/images/resources/icons/';
         $resourceImages = array(
             array('res_vector.png', 'application/postscript'),
             array('res_vector.png', 'image/svg+xml'),
             array('res_zip.png', 'application/zip'),
             array('res_zip.png', 'application/x-rar-compressed'),
             array('res_archive.png', 'application/x-gtar'),
-            array('res_archive.png', 'application/x-7z-compressed')
+            array('res_archive.png', 'application/x-7z-compressed'),
         );
 
         foreach ($resourceImages as $resourceImage) {
             $icon = new ResourceIcon();
-            $icon->setRelativeUrl($coreIconWebDirRelativePath . $resourceImage[0]);
+            $icon->setRelativeUrl($coreIconWebDirRelativePath.$resourceImage[0]);
             $icon->setMimeType($resourceImage[1]);
             $icon->setShortcut(false);
             $this->om->persist($icon);

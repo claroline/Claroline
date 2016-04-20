@@ -27,11 +27,11 @@ class FieldFacetType extends AbstractType
                 'choices' => array(
                     FieldFacet::STRING_TYPE => 'text',
                     FieldFacet::FLOAT_TYPE => 'number',
-                    FieldFacet::DATE_TYPE => 'date'
+                    FieldFacet::DATE_TYPE => 'date',
                 ),
                 'multiple' => false,
                 'expanded' => false,
-                'label' => 'type'
+                'label' => 'type',
             )
         );
         $builder->add(
@@ -40,7 +40,7 @@ class FieldFacetType extends AbstractType
                 'choices' => array('1' => 'yes', '0' => 'no'),
                 'label' => 'visible',
                 'expanded' => false,
-                'multiple' => false
+                'multiple' => false,
             )
         );
         $builder->add(
@@ -49,7 +49,7 @@ class FieldFacetType extends AbstractType
                 'choices' => array('1' => 'yes', '0' => 'no'),
                 'label' => 'editable',
                 'expanded' => false,
-                'multiple' => false
+                'multiple' => false,
             )
         );
     }

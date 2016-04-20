@@ -23,7 +23,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -59,8 +58,7 @@ class DesktopAgendaController extends Controller
         TranslatorInterface $translator,
         AgendaManager $agendaManager,
         RouterInterface $router
-    )
-    {
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
         $this->request = $request;
@@ -101,7 +99,7 @@ class DesktopAgendaController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'action' => $this->router->generate('claro_desktop_agenda_add')
+            'action' => $this->router->generate('claro_desktop_agenda_add'),
         );
     }
 
@@ -126,7 +124,7 @@ class DesktopAgendaController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'action' => $this->router->generate('claro_desktop_agenda_add', array())
+            'action' => $this->router->generate('claro_desktop_agenda_add', array()),
         );
     }
 
@@ -151,7 +149,7 @@ class DesktopAgendaController extends Controller
             'action' => $this->router->generate(
                 'claro_desktop_agenda_update', array('event' => $event->getId())
             ),
-            'event' => $event
+            'event' => $event,
         );
     }
 
@@ -187,7 +185,7 @@ class DesktopAgendaController extends Controller
             'action' => $this->router->generate(
                 'claro_desktop_agenda_update', array('event' => $event->getId())
             ),
-            'event' => $event
+            'event' => $event,
         );
     }
 
@@ -218,7 +216,7 @@ class DesktopAgendaController extends Controller
                 'claro_desktop_agenda_guest_update', array('event' => $event->getId())
             ),
             'event' => $event,
-            'isGuest' => true
+            'isGuest' => true,
         );
     }
 
@@ -249,14 +247,13 @@ class DesktopAgendaController extends Controller
      */
     public function widgetAction($order = null)
     {
-        $em = $this-> get('doctrine.orm.entity_manager');
+        $em = $this->get('doctrine.orm.entity_manager');
         $usr = $this->tokenStorage->getToken()->getUser();
         $listEventsDesktop = $em->getRepository('ClarolineAgendaBundle:Event')->findDesktop($usr, false);
         $listEvents = $em->getRepository('ClarolineAgendaBundle:Event')->findByUserWithoutAllDay($usr, 5, $order);
 
         return array('listEvents' => array_merge($listEvents, $listEventsDesktop));
     }
-
 
     /**
      * @EXT\Route(
@@ -299,7 +296,7 @@ class DesktopAgendaController extends Controller
     {
         $eventInvitation = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findOneBy([
             'event' => $event,
-            'user' => $this->tokenStorage->getToken()->getUser()
+            'user' => $this->tokenStorage->getToken()->getUser(),
         ]);
 
         if (!$eventInvitation) {

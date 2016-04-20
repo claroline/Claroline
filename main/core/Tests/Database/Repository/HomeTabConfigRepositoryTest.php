@@ -24,7 +24,7 @@ class HomeTabConfigRepositoryTest extends RepositoryTestCase
         self::createUser('user_a');
         self::createWorkspace('wsa');
 
-        /**
+        /*
          *  Create admin Home tabs :
          *   _______________________________________________
          *  |  Name  |       Type        | User | Workspace |
@@ -49,7 +49,7 @@ class HomeTabConfigRepositoryTest extends RepositoryTestCase
         self::createAdminHomeTab('awht_3', 'admin_workspace');
         self::createAdminHomeTab('awht_4', 'admin_workspace');
 
-        /**
+        /*
          *  Create admin Home tab configs :
          *   _____________________________________________________________________________________
          *  |   Name  | HomeTab |       Type        | User | Workspace | Visible | Locked | Order |
@@ -74,7 +74,7 @@ class HomeTabConfigRepositoryTest extends RepositoryTestCase
         self::createAdminHomeTabConfig('awhtc_3', self::get('awht_3'), 'admin_workspace', false, false, 3);
         self::createAdminHomeTabConfig('awhtc_4', self::get('awht_4'), 'admin_workspace', false, false, 4);
 
-        /**
+        /*
          *  Create Home tabs for user_a :
          *   ______________________________________
          *  | Name  |  Type   |  User  | Workspace |
@@ -87,7 +87,7 @@ class HomeTabConfigRepositoryTest extends RepositoryTestCase
         self::createDesktopHomeTab('dht_1', self::get('user_a'));
         self::createDesktopHomeTab('dht_2', self::get('user_a'));
 
-        /**
+        /*
          *  Create Home tabs for wsa :
          *   ________________________________________________
          *  | Name  |   Type    | User | Workspace |
@@ -100,7 +100,7 @@ class HomeTabConfigRepositoryTest extends RepositoryTestCase
         self::createWorkspaceHomeTab('wht_1', self::get('wsa'));
         self::createWorkspaceHomeTab('wht_2', self::get('wsa'));
 
-        /**
+        /*
          *  Create Home tab configs for user_a :
          *   ___________________________________________________________________________
          *  |   Name   | HomeTab |     Type      |  User  | Workspace | Visible | Order |
@@ -149,7 +149,7 @@ class HomeTabConfigRepositoryTest extends RepositoryTestCase
             4
         );
 
-        /**
+        /*
          *  Create Home tab configs for wsa :
          *   ___________________________________________________________________________
          *  |   Name   | HomeTab |      Type       | User | Workspace | Visible | Order |

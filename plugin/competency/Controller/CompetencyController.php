@@ -37,8 +37,7 @@ class CompetencyController
     public function __construct(
         CompetencyManager $manager,
         FormHandler $handler
-    )
-    {
+    ) {
         $this->manager = $manager;
         $this->formHandler = $handler;
     }
@@ -56,7 +55,7 @@ class CompetencyController
     {
         return [
             'frameworks' => $this->manager->listFrameworks(),
-            'hasScales' => $this->manager->hasScales()
+            'hasScales' => $this->manager->hasScales(),
         ];
     }
 
@@ -84,6 +83,7 @@ class CompetencyController
      * @EXT\Template("HeVinciCompetencyBundle:Competency:frameworkForm.html.twig")
      *
      * @param Request $request
+     *
      * @return array|JsonResponse
      */
     public function createFrameworkAction(Request $request)
@@ -118,6 +118,7 @@ class CompetencyController
      * @EXT\Template("HeVinciCompetencyBundle:Competency:frameworkImportForm.html.twig")
      *
      * @param Request $request
+     *
      * @return array|JsonResponse
      */
     public function importFrameworkAction(Request $request)
@@ -139,6 +140,7 @@ class CompetencyController
      * @EXT\Route("/frameworks/{id}/export", name="hevinci_export_framework")
      *
      * @param Competency $framework
+     *
      * @return JsonResponse
      */
     public function exportFrameworkAction(Competency $framework)
@@ -163,6 +165,7 @@ class CompetencyController
      * @EXT\Template
      *
      * @param Competency $framework
+     *
      * @return array
      */
     public function frameworkAction(Competency $framework)
@@ -177,6 +180,7 @@ class CompetencyController
      * @EXT\Template
      *
      * @param Competency $framework
+     *
      * @return array
      */
     public function activitiesAction(Competency $framework)
@@ -191,6 +195,7 @@ class CompetencyController
      * @EXT\Template("HeVinciCompetencyBundle:Competency:frameworkEditForm.html.twig")
      *
      * @param Competency $framework
+     *
      * @return array
      */
     public function frameworkEditionFormAction(Competency $framework)
@@ -199,7 +204,7 @@ class CompetencyController
 
         return [
             'form' => $this->formHandler->getView('hevinci_form_framework', $framework),
-            'framework' => $framework
+            'framework' => $framework,
         ];
     }
 
@@ -210,8 +215,9 @@ class CompetencyController
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Competency:frameworkEditForm.html.twig")
      *
-     * @param Request       $request
-     * @param Competency    $framework
+     * @param Request    $request
+     * @param Competency $framework
+     *
      * @return array
      */
     public function editFrameworkAction(Request $request, Competency $framework)
@@ -231,6 +237,7 @@ class CompetencyController
      * @EXT\Route("/{id}/delete", name="hevinci_delete_competency")
      *
      * @param Competency $competency
+     *
      * @return JsonResponse
      */
     public function deleteCompetencyAction(Competency $competency)
@@ -245,13 +252,14 @@ class CompetencyController
      * @EXT\Template("HeVinciCompetencyBundle:Competency:competencyForm.html.twig")
      *
      * @param Competency $parent
+     *
      * @return array
      */
     public function newSubCompetencyAction(Competency $parent)
     {
         return [
             'form' => $this->formHandler->getView('hevinci_form_competency', null, ['parent_competency' => $parent]),
-            'parentId' => $parent->getId()
+            'parentId' => $parent->getId(),
         ];
     }
 
@@ -262,8 +270,9 @@ class CompetencyController
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Competency:competencyForm.html.twig")
      *
-     * @param Request $request
+     * @param Request    $request
      * @param Competency $parent
+     *
      * @return array|JsonResponse
      */
     public function createSubCompetencyAction(Request $request, Competency $parent)
@@ -284,13 +293,14 @@ class CompetencyController
      * @EXT\Template("HeVinciCompetencyBundle:Competency:competencyEditForm.html.twig")
      *
      * @param Competency $competency
+     *
      * @return array
      */
     public function competencyAction(Competency $competency)
     {
         return [
             'form' => $this->formHandler->getView('hevinci_form_competency', $competency),
-            'id' => $competency->getId()
+            'id' => $competency->getId(),
         ];
     }
 
@@ -301,8 +311,9 @@ class CompetencyController
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Competency:competencyEditForm.html.twig")
      *
-     * @param Request       $request
-     * @param Competency    $competency
+     * @param Request    $request
+     * @param Competency $competency
+     *
      * @return array
      */
     public function editCompetencyAction(Request $request, Competency $competency)
@@ -321,13 +332,14 @@ class CompetencyController
      * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityForm.html.twig")
      *
      * @param Competency $parent
+     *
      * @return array
      */
     public function newAbilityAction(Competency $parent)
     {
         return [
             'form' => $this->formHandler->getView('hevinci_form_ability', null, ['competency' => $parent]),
-            'competency' => $parent
+            'competency' => $parent,
         ];
     }
 
@@ -338,8 +350,9 @@ class CompetencyController
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityForm.html.twig")
      *
-     * @param Request       $request
-     * @param Competency    $parent
+     * @param Request    $request
+     * @param Competency $parent
+     *
      * @return array
      */
     public function createAbilityAction(Request $request, Competency $parent)
@@ -362,7 +375,8 @@ class CompetencyController
      * @EXT\ParamConverter("ability", options={"id"= "abilityId"})
      *
      * @param Competency $parent
-     * @param Ability $ability
+     * @param Ability    $ability
+     *
      * @return JsonResponse
      */
     public function deleteAbilityAction(Competency $parent, Ability $ability)
@@ -377,8 +391,9 @@ class CompetencyController
      * @EXT\ParamConverter("ability", options={"id"= "abilityId"})
      * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityEditForm.html.twig")
      *
-     * @param Competency    $parent
-     * @param Ability       $ability
+     * @param Competency $parent
+     * @param Ability    $ability
+     *
      * @return array
      */
     public function abilityAction(Competency $parent, Ability $ability)
@@ -388,7 +403,7 @@ class CompetencyController
         return [
             'form' => $this->formHandler->getView('hevinci_form_ability', $ability, ['competency' => $parent]),
             'competency' => $parent,
-            'ability' => $ability
+            'ability' => $ability,
         ];
     }
 
@@ -400,9 +415,10 @@ class CompetencyController
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityEditForm.html.twig")
      *
-     * @param Request $request
+     * @param Request    $request
      * @param Competency $parent
-     * @param Ability $ability
+     * @param Ability    $ability
+     *
      * @return array|JsonResponse
      */
     public function editAbilityAction(Request $request, Competency $parent, Ability $ability)
@@ -418,7 +434,7 @@ class CompetencyController
         return [
             'form' => $this->formHandler->getView(),
             'competency' => $parent,
-            'ability' => $ability
+            'ability' => $ability,
         ];
     }
 
@@ -429,13 +445,14 @@ class CompetencyController
      * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityAddForm.html.twig")
      *
      * @param Competency $parent
+     *
      * @return array
      */
     public function addAbilityFormAction(Competency $parent)
     {
         return [
             'form' => $this->formHandler->getView('hevinci_form_ability_import', null, ['competency' => $parent]),
-            'competency' => $parent
+            'competency' => $parent,
         ];
     }
 
@@ -446,8 +463,9 @@ class CompetencyController
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityAddForm.html.twig")
      *
-     * @param Request $request
+     * @param Request    $request
      * @param Competency $parent
+     *
      * @return array|JsonResponse
      */
     public function addAbilityAction(Request $request, Competency $parent)
@@ -468,8 +486,9 @@ class CompetencyController
      *
      * @EXT\Route("/{id}/ability/suggest/{query}", name="hevinci_suggest_ability")
      *
-     * @param Competency    $parent
-     * @param string        $query
+     * @param Competency $parent
+     * @param string     $query
+     *
      * @return JsonResponse
      */
     public function suggestAbilityAction(Competency $parent, $query)

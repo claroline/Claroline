@@ -44,4 +44,4 @@ class Updater021100 extends Updater
 
         $this->om->flush();
     }
-} 
+}

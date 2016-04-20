@@ -90,7 +90,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
             array('Invalid\UnloadableBundleClass1\InvalidUnloadableBundleClass1'),
             array('Invalid\UnloadableBundleClass2\InvalidUnloadableBundleClass2'),
             array('Invalid\UnloadableBundleClass3\InvalidUnloadableBundleClass3'),
-            array('Invalid\UnloadableBundleClass4\InvalidUnloadableBundleClass4')
+            array('Invalid\UnloadableBundleClass4\InvalidUnloadableBundleClass4'),
         );
     }
 
@@ -98,14 +98,14 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array('Invalid\UnloadableBundleClass5\InvalidUnloadableBundleClass5'),
-            array('Invalid\UnloadableBundleClass6\InvalidUnloadableBundleClass6')
+            array('Invalid\UnloadableBundleClass6\InvalidUnloadableBundleClass6'),
         );
     }
 
     public function unexpectedBundleTypeProvider()
     {
         return array(
-            array('Invalid\UnexpectedBundleType\InvalidUnexpectedBundleType')
+            array('Invalid\UnexpectedBundleType\InvalidUnexpectedBundleType'),
         );
     }
 }

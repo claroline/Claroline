@@ -46,8 +46,7 @@ class ToolMaskDecoderRepository extends EntityRepository
         Tool $tool,
         $name,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT tmd
             FROM Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder tmd

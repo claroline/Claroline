@@ -35,22 +35,21 @@ class TagListener
     private $translator;
 
     /**
-    * @DI\InjectParams({
-    *     "httpKernel"   = @DI\Inject("http_kernel"),
-    *     "requestStack" = @DI\Inject("request_stack"),
-    *     "router"       = @DI\Inject("router"),
-    *     "tagManager"   = @DI\Inject("claroline.manager.tag_manager"),
-    *     "translator"   = @DI\Inject("translator")
-    * })
-    */
+     * @DI\InjectParams({
+     *     "httpKernel"   = @DI\Inject("http_kernel"),
+     *     "requestStack" = @DI\Inject("request_stack"),
+     *     "router"       = @DI\Inject("router"),
+     *     "tagManager"   = @DI\Inject("claroline.manager.tag_manager"),
+     *     "translator"   = @DI\Inject("translator")
+     * })
+     */
     public function __construct(
         HttpKernelInterface $httpKernel,
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
         TagManager $tagManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
@@ -116,7 +115,6 @@ class TagListener
                     $order
                 );
             } else {
-
                 foreach ($objects as $object) {
                     $datas = array();
                     $datas['class'] = $object->getObjectClass();

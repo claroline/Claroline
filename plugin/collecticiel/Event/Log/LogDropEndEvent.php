@@ -4,21 +4,19 @@ namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 
 class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
-
     const ACTION = 'resource-innova_collecticiel-drop_end';
     protected $dropzone;
     private $role_manager;
 
     /**
      * @param Dropzone $dropzone
-     * @param Drop $drop
+     * @param Drop     $drop
      * @param $roleManager
      */
     public function __construct(Dropzone $dropzone, Drop $drop, $roleManager)
@@ -32,13 +30,13 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
         }
 
         $details = array(
-            'dropzone'  => array(
+            'dropzone' => array(
                 'id' => $dropzone->getId(),
             ),
-            'drop'  => array(
+            'drop' => array(
                 'id' => $drop->getId(),
-                'documents' => $documentsDetails
-            )
+                'documents' => $documentsDetails,
+            ),
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);
@@ -55,7 +53,7 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -84,6 +82,7 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
         foreach ($users as $user) {
             array_push($ids, $user->getId());
         }
+
         return $ids;
     }
 
@@ -114,11 +113,11 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
      */
     public function getIconKey()
     {
-        return "dropzone";
+        return 'dropzone';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -128,16 +127,16 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
         $notificationDetails['resource'] = array(
             'id' => $this->dropzone->getId(),
             'name' => $this->resource->getName(),
-            'type' => $this->resource->getResourceType()->getName()
+            'type' => $this->resource->getResourceType()->getName(),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {
@@ -145,6 +144,7 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
         if ($this->dropzone != null && $this->dropzone->getNotifyOnDrop()) {
             $allowed = true;
         }
+
         return $allowed;
     }
 }

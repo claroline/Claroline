@@ -4,9 +4,7 @@ namespace Icap\BadgeBundle\Entity\Portfolio;
 
 use Icap\BadgeBundle\Entity\Badge;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Icap\PortfolioBundle\Entity\Widget\SubWidgetInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="icap__portfolio_widget_badges_badge")
@@ -15,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class BadgesWidgetBadge implements SubWidgetInterface
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -106,9 +104,8 @@ class BadgesWidgetBadge implements SubWidgetInterface
     {
         return array(
             'badge' => $this->badge->getId(),
-            'name'  => $this->badge->getName(),
-            'img'   => $this->badge->getWebPath()
+            'name' => $this->badge->getName(),
+            'img' => $this->badge->getWebPath(),
         );
     }
 }
- 

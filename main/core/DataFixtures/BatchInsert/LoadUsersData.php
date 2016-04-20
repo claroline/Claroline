@@ -32,7 +32,7 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -40,14 +40,14 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
         $start = time();
         $countUser = $this->container->get('claroline.persistence.object_manager')->count('Claroline\CoreBundle\Entity\User');
 
-        for ($i = 0; $i < $this->numberUsers; $i++) {
+        for ($i = 0; $i < $this->numberUsers; ++$i) {
             $totalUsers = $countUser + $i;
             $mandatoryFieldValue = "user_{$totalUsers}";
             $users[] = array(
@@ -55,16 +55,15 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
                 $mandatoryFieldValue,
                 $mandatoryFieldValue,
                 $mandatoryFieldValue,
-                $mandatoryFieldValue
+                $mandatoryFieldValue,
             );
         }
 
         $this->container->get('claroline.manager.user_manager')->importUsers($users, false);
         $end = time();
         $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
-        $this->log("Time elapsed for the user creation: " . $duration);
+        $this->log('Time elapsed for the user creation: '.$duration);
 
         return $duration;
     }
-
 }

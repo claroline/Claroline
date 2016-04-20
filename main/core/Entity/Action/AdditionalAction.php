@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Entity\Action;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Additonal actions wich will be able to trigger events.

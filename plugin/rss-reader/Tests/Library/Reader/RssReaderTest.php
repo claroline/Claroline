@@ -11,7 +11,7 @@
 
 namespace Claroline\RssReaderBundle\Library\Reader;
 
-use \SimpleXMLElement;
+use SimpleXMLElement;
 
 class RssReaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class RssReaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->reader = new RssReader();
         $this->reader->setFeed(
-            new SimpleXMLElement(file_get_contents(__DIR__ . '/../../Stub/files/soir.rss'))
+            new SimpleXMLElement(file_get_contents(__DIR__.'/../../Stub/files/soir.rss'))
         );
     }
 

@@ -32,12 +32,11 @@ class BaseProfileType extends AbstractType
         TermsOfServiceManager $termsOfService,
         TranslatorInterface $translator,
         array $facets = array()
-    )
-    {
-        $this->langs          = $localeManager->retrieveAvailableLocales();
+    ) {
+        $this->langs = $localeManager->retrieveAvailableLocales();
         $this->termsOfService = $termsOfService;
-        $this->facets         = $facets;
-        $this->translator     = $translator;
+        $this->facets = $facets;
+        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -50,10 +49,10 @@ class BaseProfileType extends AbstractType
         $builder->add('firstName', 'text', array('label' => 'first_name'))
             ->add('lastName', 'text', array('label' => 'last_name'))
             ->add('username', 'text', array(
-                'label' =>  'username',
-                'attr'  =>  array(
-                    'placeholder' => 'your_platform_id'
-                )
+                'label' => 'username',
+                'attr' => array(
+                    'placeholder' => 'your_platform_id',
+                ),
             ))
             ->add(
                 'plainPassword',
@@ -63,10 +62,10 @@ class BaseProfileType extends AbstractType
                     'first_options' => array('label' => 'password'),
                     'second_options' => array(
                         'label' => 'verification',
-                        'attr'  =>  array(
-                            'placeholder' => 'verify_your_password'
-                        )
-                    )
+                        'attr' => array(
+                            'placeholder' => 'verify_your_password',
+                        ),
+                    ),
                 )
             )
             ->add('mail', 'email', array('label' => 'email'))
@@ -75,13 +74,12 @@ class BaseProfileType extends AbstractType
         $content = $this->termsOfService->getTermsOfService(false);
 
         if ($this->termsOfService->isActive() and $content instanceof Content) {
-
             $builder->add(
                 'scroll',
                 'scroll',
                 array(
                     'label' => 'term_of_service',
-                    'data' => $content->getContent()
+                    'data' => $content->getContent(),
                 )
             )
             ->add('accepted_terms', 'checkbox', array('label' => 'terms_of_service_acceptance'));
@@ -90,16 +88,16 @@ class BaseProfileType extends AbstractType
         foreach ($this->facets as $facet) {
             foreach ($facet->getPanelFacets() as $panel) {
                 foreach ($panel->getFieldsFacet() as $field) {
-                    switch($field->getType()) {
+                    switch ($field->getType()) {
                         case FieldFacet::STRING_TYPE:
                             $builder->add(
                                 $field->getName(),
                                 'text',
                                 array(
-                                    'label'  => $this->translator->trans($field->getName(), array(), 'platform'),
+                                    'label' => $this->translator->trans($field->getName(), array(), 'platform'),
                                     'mapped' => false,
                                     'required' => false,
-                                    'attr' => array('facet' => $facet->getName())
+                                    'attr' => array('facet' => $facet->getName()),
                                 )
                             );
                             break;
@@ -108,14 +106,14 @@ class BaseProfileType extends AbstractType
                                 $field->getName(),
                                 'datepicker',
                                 array(
-                                    'label'     => $this->translator->trans($field->getName(), array(), 'platform'),
-                                    'required'  => false,
-                                    'widget'    => 'single_text',
-                                    'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
-                                    'attr'      => $attr,
+                                    'label' => $this->translator->trans($field->getName(), array(), 'platform'),
+                                    'required' => false,
+                                    'widget' => 'single_text',
+                                    'format' => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
+                                    'attr' => $attr,
                                     'autoclose' => true,
-                                    'mapped'    => false,
-                                    'attr' => array('facet' => $facet->getName())
+                                    'mapped' => false,
+                                    'attr' => array('facet' => $facet->getName()),
                                 )
                             );
                             break;
@@ -124,10 +122,10 @@ class BaseProfileType extends AbstractType
                                 $field->getName(),
                                 'number',
                                 array(
-                                    'label'  => $this->translator->trans($field->getName(), array(), 'platform'),
+                                    'label' => $this->translator->trans($field->getName(), array(), 'platform'),
                                     'mapped' => false,
                                     'required' => false,
-                                    'attr' => array('facet' => $facet->getName())
+                                    'attr' => array('facet' => $facet->getName()),
                                 )
                             );
                             break;
@@ -149,7 +147,7 @@ class BaseProfileType extends AbstractType
         ->setDefaults(
             array(
                 'translation_domain' => 'platform',
-                'validation_groups' => array('registration', 'Default')
+                'validation_groups' => array('registration', 'Default'),
             )
         );
     }

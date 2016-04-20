@@ -19,7 +19,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\ProfilePropertyManager;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\ProfileProperty;
@@ -61,13 +60,12 @@ class FacetController extends Controller
         FormFactoryInterface $formFactory,
         Request $request,
         ProfilePropertyManager $profilePropertyManager
-    )
-    {
-        $this->facetManager           = $facetManager;
-        $this->formFactory            = $formFactory;
-        $this->request                = $request;
-        $this->roleManager            = $roleManager;
-        $this->router                 = $router;
+    ) {
+        $this->facetManager = $facetManager;
+        $this->formFactory = $formFactory;
+        $this->request = $request;
+        $this->roleManager = $roleManager;
+        $this->router = $router;
         $this->profilePropertyManager = $profilePropertyManager;
     }
 
@@ -101,7 +99,7 @@ class FacetController extends Controller
         return array(
             'facets' => $facets,
             'platformRoles' => $platformRoles,
-            'profilePreferences' => $profilePreferences
+            'profilePreferences' => $profilePreferences,
         );
     }
 
@@ -121,8 +119,8 @@ class FacetController extends Controller
 
         return array(
             'platformRoles' => $platformRoles,
-            'labels'        => $labels,
-            'properties'     => $properties
+            'labels' => $labels,
+            'properties' => $properties,
         );
     }
 
@@ -131,7 +129,6 @@ class FacetController extends Controller
      *      name="claro_admin_invert_user_properties_edition",
      *      options = {"expose"=true}
      * )
-     *
      */
     public function invertPropertiesEditableAction(ProfileProperty $property)
     {
@@ -141,7 +138,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Returns the facet creation form in a modal
+     * Returns the facet creation form in a modal.
      *
      * @EXT\Route("/form",
      *      name="claro_admin_facet_form",
@@ -157,7 +154,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Returns the facet field creation form in a modal
+     * Returns the facet field creation form in a modal.
      *
      * @EXT\Route("/panel/{panelFacet}/field/form",
      *      name="claro_admin_facet_field_form",
@@ -173,7 +170,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Returns the facet creation form in a modal
+     * Returns the facet creation form in a modal.
      *
      * @EXT\Route("/create",
      *      name="claro_admin_facet_create",
@@ -193,14 +190,14 @@ class FacetController extends Controller
             );
         }
 
-       return $this->render(
+        return $this->render(
            'ClarolineCoreBundle:Administration\Facet:facetForm.html.twig',
            array('form' => $form->createView())
        );
     }
 
     /**
-     * Returns the facet creation form in a modal
+     * Returns the facet creation form in a modal.
      *
      * @EXT\Route("/create/field/panel/{panelFacet}",
      *      name="claro_admin_field_facet_create",
@@ -225,7 +222,7 @@ class FacetController extends Controller
                     'position' => $field->getPosition(),
                     'typeTranslationKey' => $field->getTypeTranslationKey(),
                     'id' => $field->getId(),
-                    'panelId' => $panelFacet->getId()
+                    'panelId' => $panelFacet->getId(),
                 )
             );
         }
@@ -237,7 +234,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Removes a facet
+     * Removes a facet.
      *
      * @EXT\Route("/{facet}/remove",
      *      name="claro_admin_facet_remove",
@@ -252,7 +249,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Returns the facet form edition in a modal
+     * Returns the facet form edition in a modal.
      *
      * @EXT\Route("/{facet}/edit/form",
      *      name="claro_admin_facet_edit_form",
@@ -268,7 +265,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Returns the facet form edition in a modal
+     * Returns the facet form edition in a modal.
      *
      * @EXT\Route("/{facet}/edit",
      *      name="claro_admin_facet_edit",
@@ -287,7 +284,7 @@ class FacetController extends Controller
             return new JsonResponse(
                 array(
                     'id' => $facet->getId(),
-                    'name' => $facet->getName()
+                    'name' => $facet->getName(),
                 )
             );
         }
@@ -299,7 +296,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Ajax method for removing a field facet
+     * Ajax method for removing a field facet.
      *
      * @EXT\Route("/field/remove/{fieldFacet}",
      *      name="claro_admin_remove_field_facet",
@@ -307,7 +304,8 @@ class FacetController extends Controller
      * )
      */
     public function removeFieldFacetAction(FieldFacet $fieldFacet)
-    {;
+    {
+        ;
         $this->facetManager->removeField($fieldFacet);
 
         return new Response('success', 204);
@@ -375,7 +373,7 @@ class FacetController extends Controller
                 array(
                     'id' => $fieldFacet->getId(),
                     'name' => $fieldFacet->getName(),
-                    'typeTranslationKey' => $fieldFacet->getTypeTranslationKey()
+                    'typeTranslationKey' => $fieldFacet->getTypeTranslationKey(),
                 )
             );
         }
@@ -387,7 +385,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Ajax method for ordering fields
+     * Ajax method for ordering fields.
      *
      * @EXT\Route("/{panel}/fields/order",
      *      name="claro_admin_field_facet_order",
@@ -409,7 +407,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Returns the facet role edition in a modal
+     * Returns the facet role edition in a modal.
      *
      * @EXT\Route("/{facet}/roles/form",
      *      name="claro_admin_facet_role_form",
@@ -441,7 +439,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Returns the field role edition in a modal
+     * Returns the field role edition in a modal.
      *
      * @EXT\Route("/field/{field}/roles/form",
      *      name="claro_admin_field_role_form",
@@ -505,7 +503,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Returns the panel creation form in a modal
+     * Returns the panel creation form in a modal.
      *
      * @EXT\Route("/create/panel/facet/{facet}/form",
      *      name="claro_admin_panel_facet_create_form",
@@ -521,7 +519,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Returns the panel creation form in a modal
+     * Returns the panel creation form in a modal.
      *
      * @EXT\Route("/create/panel/facet/{facet}",
      *      name="claro_admin_panel_facet_create",
@@ -544,7 +542,7 @@ class FacetController extends Controller
                 array(
                     'id' => $panel->getId(),
                     'name' => $panel->getName(),
-                    'facet_id' => $facet->getId()
+                    'facet_id' => $facet->getId(),
                 )
             );
         }
@@ -556,7 +554,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Returns the panel creation edition in a modal
+     * Returns the panel creation edition in a modal.
      *
      * @EXT\Route("/edit/panel/facet/{panelFacet}/form",
      *      name="claro_admin_panel_facet_edit_form",
@@ -573,7 +571,7 @@ class FacetController extends Controller
     }
 
     /**
-     * Returns the panel creation edition in a modal
+     * Returns the panel creation edition in a modal.
      *
      * @EXT\Route("/edit/panel/facet/{panelFacet}",
      *      name="claro_admin_panel_facet_edit",
@@ -592,7 +590,7 @@ class FacetController extends Controller
                 array(
                     'id' => $panelFacet->getId(),
                     'name' => $panelFacet->getName(),
-                    'facet_id' => $panelFacet->getId()
+                    'facet_id' => $panelFacet->getId(),
                 )
             );
         }
@@ -625,7 +623,6 @@ class FacetController extends Controller
      *      name="claro_admin_panel_facet_order",
      *      options = {"expose" = true}
      * )
-     *
      */
     public function orderPanels(Facet $facet)
     {
@@ -647,10 +644,10 @@ class FacetController extends Controller
         $roleIds = [];
 
         foreach ($params as $key => $value) {
-            $key = '_' . $key;
+            $key = '_'.$key;
             if (strpos($key, $prefix)) {
                 if ('on' === $value) {
-                    $roleIds[] = (int) str_replace('_' . $prefix, '', $key);
+                    $roleIds[] = (int) str_replace('_'.$prefix, '', $key);
                 }
             }
         }

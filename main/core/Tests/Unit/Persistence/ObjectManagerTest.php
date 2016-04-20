@@ -158,7 +158,7 @@ class ObjectManagerTest extends MockeryTestCase
             array('Doctrine\Common\Persistence\ObjectManager', 'supportsTransactions', false),
             array('Doctrine\Common\Persistence\ObjectManager', 'hasEventManager', false),
             array('Doctrine\ORM\EntityManagerInterface', 'supportsTransactions', true),
-            array('Doctrine\ORM\EntityManagerInterface', 'hasEventManager', true)
+            array('Doctrine\ORM\EntityManagerInterface', 'hasEventManager', true),
         );
     }
 
@@ -169,7 +169,7 @@ class ObjectManagerTest extends MockeryTestCase
             array('commit'),
             array('rollBack'),
             array('getEventManager'),
-            array('getUnitOfWork')
+            array('getUnitOfWork'),
         );
     }
 

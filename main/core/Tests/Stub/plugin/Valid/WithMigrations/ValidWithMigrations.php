@@ -15,5 +15,4 @@ use Claroline\CoreBundle\Library\PluginBundle;
 
 class ValidWithMigrations extends PluginBundle
 {
-
 }

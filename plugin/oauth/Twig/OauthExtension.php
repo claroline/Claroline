@@ -39,7 +39,7 @@ class OauthExtension extends \Twig_Extension
     {
         return array(
             'is_service_available' => new \Twig_Function_Method($this, 'isServiceAvailable'),
-            'get_oauth_app_id' => new \Twig_Function_Method($this, 'getAppIp')
+            'get_oauth_app_id' => new \Twig_Function_Method($this, 'getAppIp'),
         );
     }
 

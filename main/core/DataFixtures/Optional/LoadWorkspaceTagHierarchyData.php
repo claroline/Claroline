@@ -34,8 +34,8 @@ class LoadWorkspaceTagHierarchyData extends LoggableFixture implements Container
     public function load(ObjectManager $manager)
     {
         foreach ($this->tagHierarchies as $data) {
-            $child = $this->getReference('tag/' . $data['child']);
-            $parent = $this->getReference('tag/' . $data['parent']);
+            $child = $this->getReference('tag/'.$data['child']);
+            $parent = $this->getReference('tag/'.$data['parent']);
 
             $this->container->get('claroline.manager.workspace_tag_manager')->createTagHierarchy(
                 $child,

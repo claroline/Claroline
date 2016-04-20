@@ -22,7 +22,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -65,7 +64,6 @@ class ContentType extends AbstractType
         }
 
         if (!empty($this->langs)) {
-
             foreach ($this->langs as $lang) {
                 if (isset($translatedContent[$lang])) {
                     $builder->add(
@@ -73,7 +71,7 @@ class ContentType extends AbstractType
                         'base_content',
                         array(
                             'theme_options' => array('tinymce' => $this->tinymce),
-                            'data' => $translatedContent[$lang]
+                            'data' => $translatedContent[$lang],
                         )
                     );
                 } else {
@@ -106,7 +104,7 @@ class ContentType extends AbstractType
             'contentTitle' => true,
             'contentText' => true,
             'titlePlaceHolder' => 'optional_title',
-            'textPlaceHolder' => 'create_content'
+            'textPlaceHolder' => 'create_content',
         );
 
         foreach ($themeOptions as $option => $defaultValue) {

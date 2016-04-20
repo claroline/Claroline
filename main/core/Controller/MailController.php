@@ -56,8 +56,7 @@ class MailController extends Controller
         RouterInterface $router,
         TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $ch
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->request = $request;
         $this->mailManager = $mailManager;
@@ -88,7 +87,7 @@ class MailController extends Controller
     {
         return array(
             'form' => $this->formFactory->create(FormFactory::TYPE_EMAIL)->createView(),
-            'userId' => $user->getId()
+            'userId' => $user->getId(),
         );
     }
 

@@ -5,7 +5,6 @@ namespace Icap\BadgeBundle\Repository;
 use Icap\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 
 class BadgeRuleRepository extends EntityRepository
 {
@@ -20,9 +19,8 @@ class BadgeRuleRepository extends EntityRepository
         $actiontype = $log->getAction();
 
         if ($log->getResourceType()) {
-            $actiontype = '[[' . $log->getResourceType()->getName() . ']]' . $log->getAction();
+            $actiontype = '[['.$log->getResourceType()->getName().']]'.$log->getAction();
         }
-
 
         $query = $this->getEntityManager()
             ->createQuery(
@@ -36,6 +34,6 @@ class BadgeRuleRepository extends EntityRepository
             ->setParameter('action', $log->getAction())
             ->setParameter('action2', $actiontype);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

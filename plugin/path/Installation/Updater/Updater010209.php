@@ -5,7 +5,7 @@ namespace Innova\PathBundle\Installation\Updater;
 use Claroline\InstallationBundle\Updater\Updater;
 
 /**
- * Update the entity namespace in BD
+ * Update the entity namespace in BD.
  */
 class Updater010209 extends Updater
 {

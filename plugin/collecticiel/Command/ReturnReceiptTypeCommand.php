@@ -1,18 +1,14 @@
 <?php
+
 namespace Innova\CollecticielBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
-
 use Innova\CollecticielBundle\Entity\ReturnReceiptType;
 
 class ReturnReceiptTypeCommand extends ContainerAwareCommand
 {
-
     protected function configure()
     {
         $this
@@ -23,17 +19,17 @@ class ReturnReceiptTypeCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-            $start = time();
-            $em = $this->getContainer()->get('doctrine')->getEntityManager('default');
+        $start = time();
+        $em = $this->getContainer()->get('doctrine')->getEntityManager('default');
 
             /* RETURN RECEIPT TYPE ARRAY */
             $returnreceipttypesArray = array(
-                array("0", "NO RETURN RECEIPT"),
-                array("1", "DOUBLOON"), 
-                array("2", "DOCUMENT RECEIVED"),
-                array("3", "DOCUMENT UNREADABLE"),
-                array("4", "INCOMPLETE DOCUMENT"),
-                array("5", "ERROR DOCUMENT")
+                array('0', 'NO RETURN RECEIPT'),
+                array('1', 'DOUBLOON'),
+                array('2', 'DOCUMENT RECEIVED'),
+                array('3', 'DOCUMENT UNREADABLE'),
+                array('4', 'INCOMPLETE DOCUMENT'),
+                array('5', 'ERROR DOCUMENT'),
                 )
             ;
 
@@ -49,20 +45,19 @@ class ReturnReceiptTypeCommand extends ContainerAwareCommand
                     $returnReceiptTypeAdd->setTypeName($typeName);
 
                     $em->persist($returnReceiptTypeAdd);
-                    $output->writeln("Add new Return Receipt Type (" . $returnReceiptTypeAdd->getTypeName() . ")");
-                }
-                else {
+                    $output->writeln('Add new Return Receipt Type ('.$returnReceiptTypeAdd->getTypeName().')');
+                } else {
                     /* MISE A JOUR */
                     $returnreceipttype->setTypeName($typeName);
                     $em->persist($returnreceipttype);
-                    $output->writeln("Update Return Receipt Type (" . $returnreceipttype->getTypeName() . ")");
+                    $output->writeln('Update Return Receipt Type ('.$returnreceipttype->getTypeName().')');
                 }
             }
-            $em->flush();
+        $em->flush();
 
-            $now = time();
-            $duration = $now - $start;
+        $now = time();
+        $duration = $now - $start;
 
-            $output->writeln("Fixtures exécutées en ".$duration." sec.");
+        $output->writeln('Fixtures exécutées en '.$duration.' sec.');
     }
 }

@@ -4,7 +4,6 @@ namespace Icap\OAuthBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\BundleBundle\Installation\AdditionalInstaller;
 use Icap\OAuthBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -27,7 +26,8 @@ class IcapOAuthBundle extends PluginBundle  implements AutoConfigurableInterface
     public function getConfiguration($environment)
     {
         $config = new ConfigurationBuilder();
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, null);
+
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, null);
     }
 
     public function getRequiredFixturesDirectory($environment)
@@ -48,6 +48,6 @@ class IcapOAuthBundle extends PluginBundle  implements AutoConfigurableInterface
 
     private function buildPath($file, $folder = 'suggested')
     {
-        return __DIR__ . "/Resources/config/{$folder}/{$file}.yml";
+        return __DIR__."/Resources/config/{$folder}/{$file}.yml";
     }
 }

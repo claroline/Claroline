@@ -29,12 +29,12 @@ class WidgetHomeTabConfigType extends AbstractType
         $builder->add('visible', 'choice', array(
             'choices' => array(
                 'yes' => true,
-                'no'  => false
+                'no' => false,
             ),
             'label' => 'visible',
             'required' => 'false',
             // *this line is important*
-            'choices_as_values' => true
+            'choices_as_values' => true,
         ));
 
         if ($this->withLock) {

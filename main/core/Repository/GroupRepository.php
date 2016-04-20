@@ -24,7 +24,7 @@ class GroupRepository extends EntityRepository
      * Returns the groups which are not member of a workspace.
      *
      * @param Workspace $workspace
-     * @param boolean           $executeQuery
+     * @param bool      $executeQuery
      *
      * @return array[Group]|Query
      */
@@ -56,8 +56,8 @@ class GroupRepository extends EntityRepository
      * their name.
      *
      * @param Workspace $workspace
-     * @param string            $search
-     * @param boolean           $executeQuery
+     * @param string    $search
+     * @param bool      $executeQuery
      *
      * @return array[Group]|Query
      */
@@ -91,7 +91,7 @@ class GroupRepository extends EntityRepository
      * Returns the groups which are member of a workspace.
      *
      * @param Workspace $workspace
-     * @param boolean           $executeQuery
+     * @param bool      $executeQuery
      *
      * @return array[Group]|Query
      */
@@ -116,8 +116,8 @@ class GroupRepository extends EntityRepository
     /**
      * Returns the groups which are member of a workspace.
      *
-     * @param array   $workspace
-     * @param boolean $executeQuery
+     * @param array $workspace
+     * @param bool  $executeQuery
      *
      * @return array[Group]|Query
      */
@@ -178,8 +178,8 @@ class GroupRepository extends EntityRepository
      * their name.
      *
      * @param Workspace $workspace
-     * @param string            $search
-     * @param boolean           $executeQuery
+     * @param string    $search
+     * @param bool      $executeQuery
      *
      * @return array[Group]|Query
      */
@@ -212,8 +212,8 @@ class GroupRepository extends EntityRepository
     /**
      * Returns all the groups.
      *
-     * @param boolean $executeQuery
-     * @param string  $orderedBy
+     * @param bool   $executeQuery
+     * @param string $orderedBy
      *
      * @return array[Group]|Query
      */
@@ -261,10 +261,10 @@ class GroupRepository extends EntityRepository
     /**
      * Returns all the groups whose name match a search string.
      *
-     * @param string  $search
-     * @param boolean $executeQuery
-     * @param string  $orderedBy
-     * @param string  $order ( ascending , descending )
+     * @param string $search
+     * @param bool   $executeQuery
+     * @param string $orderedBy
+     * @param string $order        ( ascending , descending )
      *
      * @return \Claroline\CoreBundle\Entity\Group[]|Query
      */
@@ -294,12 +294,12 @@ class GroupRepository extends EntityRepository
     public function findByNameForAjax($search)
     {
         $resultArray = array();
-        $groups      = $this->findByName($search);
+        $groups = $this->findByName($search);
 
         foreach ($groups as $group) {
             $resultArray[] = array(
-                'id'   => $group->getId(),
-                'text' => $group->getName()
+                'id' => $group->getId(),
+                'text' => $group->getName(),
             );
         }
 
@@ -307,14 +307,14 @@ class GroupRepository extends EntityRepository
     }
 
     /**
-     * @param  array           $params
+     * @param array $params
+     *
      * @return ArrayCollection
      */
     public function extract($params)
     {
         $search = $params['search'];
         if ($search !== null) {
-
             $query = $this->findByName($search, false);
 
             return $query
@@ -339,7 +339,7 @@ class GroupRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
 
-        return ($getQuery) ? $query: $query->getResult();
+        return ($getQuery) ? $query : $query->getResult();
     }
 
     public function findByRolesAndName(array $roles, $name, $getQuery = false, $orderedBy = 'id')
@@ -358,7 +358,7 @@ class GroupRepository extends EntityRepository
         $query->setParameter('roles', $roles);
         $query->setParameter('search', "%{$search}%");
 
-        return ($getQuery) ? $query: $query->getResult();
+        return ($getQuery) ? $query : $query->getResult();
     }
 
     /**
@@ -401,8 +401,7 @@ class GroupRepository extends EntityRepository
         $name,
         Workspace $workspace,
         $getQuery = false
-    )
-    {
+    ) {
         //feel free to make this request easier if you can
         $search = strtoupper($name);
 
@@ -469,8 +468,10 @@ class GroupRepository extends EntityRepository
 
     /**
      * @todo Make the correct sql request
+     *
      * @param WorkspaceModel $model
-     * @param bool $executeQuery
+     * @param bool           $executeQuery
+     *
      * @return array|\Doctrine\ORM\Query
      */
     public function findGroupsNotSharingModel(WorkspaceModel $model, $executeQuery = true)
@@ -478,14 +479,16 @@ class GroupRepository extends EntityRepository
         $dql = 'SELECT g FROM Claroline\CoreBundle\Entity\Group g';
         $query = $this->_em->createQuery($dql);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
      * @todo Make the correct sql request
+     *
      * @param WorkspaceModel $model
      * @param $search
      * @param bool $executeQuery
+     *
      * @return array|\Doctrine\ORM\Query
      */
     public function findGroupsNotSharingModelBySearch(WorkspaceModel $model, $search, $executeQuery = true)
@@ -501,14 +504,14 @@ class GroupRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%$search%");
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
      * Returns a group by its name.
      *
      * @param string $name
-     * @param boolean $executeQuery
+     * @param bool   $executeQuery
      *
      * @return Group|null
      */

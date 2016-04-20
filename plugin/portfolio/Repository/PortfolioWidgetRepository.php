@@ -2,7 +2,6 @@
 
 namespace Icap\PortfolioBundle\Repository;
 
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Icap\PortfolioBundle\Entity\Portfolio;
 
@@ -23,6 +22,6 @@ class PortfolioWidgetRepository extends EntityRepository
             ->addOrderBy('pw.col', 'ASC')
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder->getQuery();
     }
 }

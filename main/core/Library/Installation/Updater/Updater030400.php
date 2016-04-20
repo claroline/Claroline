@@ -12,8 +12,6 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Widget\Widget;
 
 class Updater030400 extends Updater
 {
@@ -37,7 +35,7 @@ class Updater030400 extends Updater
 
     private function replaceDefaultZip()
     {
-        $destinationPath = $this->container->getParameter('claroline.param.templates_directory'). '/default.zip';
+        $destinationPath = $this->container->getParameter('claroline.param.templates_directory').'/default.zip';
         $sourcePath = $this->container->getParameter('claroline.param.default_template');
         @unlink($destinationPath);
         copy($sourcePath, $destinationPath);
@@ -52,4 +50,4 @@ class Updater030400 extends Updater
             $this->log('claro_workspace_model_resource already removed.');
         }
     }
-} 
+}

@@ -12,13 +12,11 @@
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use FOS\OAuthServerBundle\Entity\ClientManager;
 use Claroline\CoreBundle\Entity\Oauth\Client;
 use Claroline\CoreBundle\Entity\Oauth\ClarolineAccess;
 use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
 use Claroline\CoreBundle\Entity\Oauth\PendingFriend;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -77,9 +75,9 @@ class OauthManager extends ClientManager
 
     public function connect($host, $id, $secret, FriendRequest $friendRequest)
     {
-        $url = $host . '/oauth/v2/token?client_id=' .
-            $id . '&client_secret=' .
-            $secret . '&grant_type=client_credentials';
+        $url = $host.'/oauth/v2/token?client_id='.
+            $id.'&client_secret='.
+            $secret.'&grant_type=client_credentials';
 
         $serverOutput = $this->curlManager->exec($url);
         $json = json_decode($serverOutput);
@@ -93,18 +91,17 @@ class OauthManager extends ClientManager
             );
         }
 
-        throw new \Exception('The oauth connection for id ' . $id . ' could not be initialized');
+        throw new \Exception('The oauth connection for id '.$id.' could not be initialized');
     }
 
     public function createFriendRequest(FriendRequest $friend, $master)
     {
         $this->om->persist($friend);
         $this->om->flush();
-        $url = $friend->getHost() . '/admin/oauth/request/friend/name/' . $friend->getName() . '?host=' . urlencode($master);
+        $url = $friend->getHost().'/admin/oauth/request/friend/name/'.$friend->getName().'?host='.urlencode($master);
         $data = $this->curlManager->exec($url);
 
         if (!json_decode($data)) {
-
             $this->om->remove($friend);
             $this->om->flush();
 
@@ -150,23 +147,23 @@ class OauthManager extends ClientManager
             'password',
             'refresh_token',
             'token',
-            'client_credentials'
+            'client_credentials',
         );
 
         $client = $this->createClient();
         $client->setAllowedGrantTypes($grantTypes);
         $client->setName($friend->getName());
-        $client->setRedirectUris(array($friend->getHost() . '/oauth/v2/log/' . $friend->getName()));
+        $client->setRedirectUris(array($friend->getHost().'/oauth/v2/log/'.$friend->getName()));
         $this->updateClient($client);
-        $url = $friend->getHost() . '/admin/oauth/id/' . $client->getId() . '_' . $client->getRandomId() .
-            '/secret/' . $client->getSecret() . '/name/' . $friend->getName();
+        $url = $friend->getHost().'/admin/oauth/id/'.$client->getId().'_'.$client->getRandomId().
+            '/secret/'.$client->getSecret().'/name/'.$friend->getName();
         $data = $this->curlManager->exec($url);
 
         if (!json_decode($data)) {
             $this->om->remove($client);
             $this->om->remove($friend);
             $this->om->flush();
-            throw new \Exception('The friend request host was not found for the url ' . $url);
+            throw new \Exception('The friend request host was not found for the url '.$url);
         } else {
             $this->om->remove($friend);
             $this->om->flush();
@@ -184,7 +181,9 @@ class OauthManager extends ClientManager
         $access = $this->om->getRepository('Claroline\CoreBundle\Entity\Oauth\ClarolineAccess')
             ->findOneByRandomId($randomId);
 
-        if ($access === null) $access = new ClarolineAccess();
+        if ($access === null) {
+            $access = new ClarolineAccess();
+        }
 
         $access->setRandomId($randomId);
         $access->setSecret($secret);
@@ -210,12 +209,15 @@ class OauthManager extends ClientManager
         $file = $this->container->getParameter('claroline.param.oauth_master_platforms');
 
         if (file_exists($file)) {
-
             $data = Yaml::parse($file);
 
             foreach ($data as $authorization) {
-                if ($authorization === $host) return true;
-                if (ip2long($authorization) === ip2long($_SERVER['REMOTE_ADDR'])) return true;
+                if ($authorization === $host) {
+                    return true;
+                }
+                if (ip2long($authorization) === ip2long($_SERVER['REMOTE_ADDR'])) {
+                    return true;
+                }
             }
         }
 
@@ -227,5 +229,4 @@ class OauthManager extends ClientManager
         $this->om->persist($request);
         $this->om->flush();
     }
-
 }

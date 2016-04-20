@@ -121,9 +121,8 @@ class Controller extends BaseController
             $portfolioGuide = $this->getPortfolioGuideManager()->getByPortfolioAndGuide($portfolio, $user);
 
             if (null === $portfolioGuide) {
-                 throw $this->createNotFoundException();
-             }
+                throw $this->createNotFoundException();
+            }
         }
-
     }
 }

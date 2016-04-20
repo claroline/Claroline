@@ -19,7 +19,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\VideoPlayerBundle\Form\PlayersType;
 
-//todo use sf2.2 BinaryFileResponse
 class VideoPlayerController extends Controller
 {
     /**
@@ -32,8 +31,8 @@ class VideoPlayerController extends Controller
     {
         $video = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
         $path = $this->container->getParameter('claroline.param.files_directory')
-            . DIRECTORY_SEPARATOR
-            . $video->getHashName();
+            .DIRECTORY_SEPARATOR
+            .$video->getHashName();
 
         $response = new BinaryFileResponse($path);
         $response->headers->set('Content-Type', $node->getMimeType());
@@ -53,7 +52,9 @@ class VideoPlayerController extends Controller
     {
         $player = $this->get('claroline.config.platform_config_handler')
             ->getParameter('video_player');
-        if ($player === null) $player = 'mediaelement';
+        if ($player === null) {
+            $player = 'mediaelement';
+        }
 
         $form = $this->get('form.factory')->create(new PlayersType($player));
 

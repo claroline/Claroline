@@ -16,7 +16,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use Claroline\CoreBundle\Persistence\MissingObjectException;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -43,7 +42,7 @@ class MultipleIdsConverter implements ParamConverterInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidConfigurationException if the name or class parameters are missing
      * @throws NotFoundHttpException         if one or more entities cannot be retreived
@@ -60,7 +59,7 @@ class MultipleIdsConverter implements ParamConverterInterface
         }
 
         $options = $configuration->getOptions();
-        $paramName = (isset($options['name'])) ? $options['name']: 'ids';
+        $paramName = (isset($options['name'])) ? $options['name'] : 'ids';
 
         if ($request->query->has($paramName)) {
             if (is_array($ids = $request->query->get($paramName))) {
@@ -82,7 +81,7 @@ class MultipleIdsConverter implements ParamConverterInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function supports(ParamConverter $configuration)
     {

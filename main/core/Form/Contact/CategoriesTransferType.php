@@ -47,7 +47,7 @@ class CategoriesTransferType extends AbstractType
                 'property' => 'name',
                 'expanded' => true,
                 'multiple' => true,
-                'required' => false
+                'required' => false,
             )
         );
     }

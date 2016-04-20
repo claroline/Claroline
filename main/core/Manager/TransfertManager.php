@@ -12,11 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Claroline\CoreBundle\Library\Transfert\ManifestConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsConfigurationBuilder;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesConfigurationBuilder;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\ToolsConfigurationBuilder;
 use Symfony\Component\Config\Definition\Dumper\YamlReferenceDumper;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -27,7 +23,6 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
-use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
 
@@ -66,15 +61,15 @@ class TransfertManager
     }
 
     /**
-     * Import a workspace
+     * Import a workspace.
      */
     public function validate(array $data, $validateProperties = true)
     {
         $groupsImporter = $this->getImporterByName('groups');
-        $rolesImporter  = $this->getImporterByName('roles');
-        $toolsImporter  = $this->getImporterByName('tools');
-        $importer       = $this->getImporterByName('workspace_properties');
-        $usersImporter  = $this->getImporterByName('user');
+        $rolesImporter = $this->getImporterByName('roles');
+        $toolsImporter = $this->getImporterByName('tools');
+        $importer = $this->getImporterByName('workspace_properties');
+        $usersImporter = $this->getImporterByName('user');
 
         //properties
         if ($validateProperties) {
@@ -89,11 +84,10 @@ class TransfertManager
             $rolesImporter->validate($roles);
         }
 
-        if (isset ($data['tools'])) {
+        if (isset($data['tools'])) {
             $tools['tools'] = $data['tools'];
             $toolsImporter->validate($tools);
         }
-
     }
 
     public function import(Configuration $configuration)
@@ -120,12 +114,12 @@ class TransfertManager
      * This will set the $this->data var
      * This will set the $this->workspace var
      *
-     * @param Workspace $workspace
+     * @param Workspace     $workspace
      * @param Confuguration $configuration
-     * @param Directory $root
-     * @param array $entityRoles
-     * @param bool $isValidated
-     * @param bool $importRoles
+     * @param Directory     $root
+     * @param array         $entityRoles
+     * @param bool          $isValidated
+     * @param bool          $importRoles
      */
     public function populateWorkspace(
         Workspace $workspace,
@@ -134,8 +128,7 @@ class TransfertManager
         array $entityRoles,
         $isValidated = false,
         $importRoles = true
-    )
-    {
+    ) {
         $this->om->startFlushSuite();
         $data = $configuration->getData();
         $data = $this->reorderData($data);
@@ -167,10 +160,11 @@ class TransfertManager
 
     /**
      * @param Configuration $configuration
-     * @param User $owner
-     * @param bool $isValidated
+     * @param User          $owner
+     * @param bool          $isValidated
      *
      * @throws InvalidConfigurationException
+     *
      * @return SimpleWorkbolspace
      *
      * The template doesn't need to be validated anymore if
@@ -181,8 +175,7 @@ class TransfertManager
         Configuration $configuration,
         User $owner,
         $isValidated = false
-    )
-    {
+    ) {
         $configuration->setOwner($owner);
         $data = $configuration->getData();
         $this->data = $data;
@@ -220,7 +213,7 @@ class TransfertManager
             true
         );
 
-        $defaultZip = $this->container->getParameter('claroline.param.templates_directory') . 'default.zip';
+        $defaultZip = $this->container->getParameter('claroline.param.templates_directory').'default.zip';
 
         //batch import with default template shouldn't be flushed
         if ($configuration->getArchive() !== $defaultZip) {
@@ -242,7 +235,6 @@ class TransfertManager
             ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS');
         $entityRoles['ROLE_USER'] = $this->om
             ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
-
 
         $dir = new Directory();
         $dir->setName($workspace->getName());
@@ -309,11 +301,11 @@ class TransfertManager
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Full workspace export
+     * Full workspace export.
      */
     public function export(Workspace $workspace)
     {
@@ -340,10 +332,10 @@ class TransfertManager
         //generate the archive in a temp dir
         $content = Yaml::dump($data, 10);
         //zip and returns the archive
-        $archDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
-        $archPath = $archDir . DIRECTORY_SEPARATOR . 'archive.zip';
+        $archDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid();
+        $archPath = $archDir.DIRECTORY_SEPARATOR.'archive.zip';
         mkdir($archDir);
-        $manifestPath = $archDir . DIRECTORY_SEPARATOR . 'manifest.yml';
+        $manifestPath = $archDir.DIRECTORY_SEPARATOR.'manifest.yml';
         file_put_contents($manifestPath, $content);
         $archive = new \ZipArchive();
         $success = $archive->open($archPath, \ZipArchive::CREATE);
@@ -357,14 +349,14 @@ class TransfertManager
 
             $archive->close();
         } else {
-            throw new \Exception('Unable to create archive . ' . $archPath . ' (error ' . $success . ')');
+            throw new \Exception('Unable to create archive . '.$archPath.' (error '.$success.')');
         }
 
         return $archPath;
     }
 
     /**
-     * Partial export for ressources
+     * Partial export for ressources.
      */
     public function exportResources(Workspace $workspace, array $resourceNodes, $parseAndReplace = true)
     {
@@ -376,7 +368,7 @@ class TransfertManager
         $tool = array(
             'type' => 'resource_manager',
             'translation' => 'resource_manager',
-            'roles' => array()
+            'roles' => array(),
         );
         $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
         $tool['data'] = $resourceImporter->exportResources($workspace, $resourceNodes, $files, null);
@@ -398,10 +390,10 @@ class TransfertManager
         //generate the archive in a temp dir
         $content = Yaml::dump($data, 10);
         //zip and returns the archive
-        $archDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
-        $archPath = $archDir . DIRECTORY_SEPARATOR . 'archive.zip';
+        $archDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid();
+        $archPath = $archDir.DIRECTORY_SEPARATOR.'archive.zip';
         mkdir($archDir);
-        $manifestPath = $archDir . DIRECTORY_SEPARATOR . 'manifest.yml';
+        $manifestPath = $archDir.DIRECTORY_SEPARATOR.'manifest.yml';
         file_put_contents($manifestPath, $content);
         $archive = new \ZipArchive();
         $success = $archive->open($archPath, \ZipArchive::CREATE);
@@ -415,17 +407,17 @@ class TransfertManager
 
             $archive->close();
         } else {
-            throw new \Exception('Unable to create archive . ' . $archPath . ' (error ' . $success . ')');
+            throw new \Exception('Unable to create archive . '.$archPath.' (error '.$success.')');
         }
 
         return $archPath;
     }
 
     /**
-     * Inject the rootPath
+     * Inject the rootPath.
      *
      * @param \Claroline\CoreBundle\Library\Workspace\Configuration $configuration
-     * @param array $data
+     * @param array                                                 $data
      * @param $isStrict
      */
     private function setImporters(Configuration $configuration, array $data)
@@ -440,7 +432,9 @@ class TransfertManager
             $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);
 
-            if ($this->logger) $importer->setLogger($this->logger);
+            if ($this->logger) {
+                $importer->setLogger($this->logger);
+            }
         }
     }
 
@@ -469,14 +463,13 @@ class TransfertManager
 
     /**
      * @param Configuration $configuration
-     * @param User $owner
+     * @param User          $owner
      */
     public function importResources(
         Configuration $configuration,
         User $owner,
         ResourceNode $directory
-    )
-    {
+    ) {
         $configuration->setOwner($owner);
         $data = $configuration->getData();
         $data = $this->reorderData($data);
@@ -488,7 +481,6 @@ class TransfertManager
         $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
 
         if (isset($data['tools']) && is_array($data['tools'])) {
-
             foreach ($data['tools'] as $dataTool) {
                 $tool = $dataTool['tool'];
 
@@ -512,7 +504,9 @@ class TransfertManager
         $resManager = null;
 
         foreach ($data['tools'] as $dataTool) {
-            if ($dataTool['tool']['type'] === 'resource_manager') $resManager = $dataTool;
+            if ($dataTool['tool']['type'] === 'resource_manager') {
+                $resManager = $dataTool;
+            }
         }
 
         $priorities = array();
@@ -521,7 +515,9 @@ class TransfertManager
         if (isset($resManager['tool']['data']['items'])) {
             foreach ($resManager['tool']['data']['items'] as $item) {
                 $importer = $this->getImporterByName($item['item']['type']);
-                if ($importer) $priorities[$importer->getPriority()][] = $item;
+                if ($importer) {
+                    $priorities[$importer->getPriority()][] = $item;
+                }
             }
         }
 

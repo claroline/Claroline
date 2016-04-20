@@ -52,7 +52,7 @@ class Client extends BaseClient
     protected $refreshTokens;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_hidden", type="boolean")
      */
@@ -71,8 +71,8 @@ class Client extends BaseClient
     {
         parent::__construct();
 
-        $this->accessTokens  = new ArrayCollection();
-        $this->authCodes     = new ArrayCollection();
+        $this->accessTokens = new ArrayCollection();
+        $this->authCodes = new ArrayCollection();
         $this->refreshTokens = new ArrayCollection();
     }
 
@@ -158,7 +158,7 @@ class Client extends BaseClient
 
     public function getConcatRandomId()
     {
-        return $this->id . '_' . $this->getRandomId();
+        return $this->id.'_'.$this->getRandomId();
     }
 
     public function hide()
@@ -174,7 +174,7 @@ class Client extends BaseClient
 
     public function getUri()
     {
-        return (isset($this->redirectUris[0])) ? $this->redirectUris[0]: null;
+        return (isset($this->redirectUris[0])) ? $this->redirectUris[0] : null;
     }
 
     public function setFriendRequest(FriendRequest $request)

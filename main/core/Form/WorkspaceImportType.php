@@ -32,8 +32,8 @@ class WorkspaceImportType extends AbstractType
                 'constraints' => array(
                     new NotBlank(),
                     new File(),
-                    new CsvWorkspace()
-                )
+                    new CsvWorkspace(),
+                ),
             )
         );
     }
@@ -48,7 +48,7 @@ class WorkspaceImportType extends AbstractType
         $resolver
             ->setDefaults(
                 array(
-                    'translation_domain' => 'platform'
+                    'translation_domain' => 'platform',
                 )
             );
     }

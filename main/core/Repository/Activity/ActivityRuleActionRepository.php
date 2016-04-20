@@ -19,8 +19,7 @@ class ActivityRuleActionRepository extends EntityRepository
     public function findRuleActionsByResourceType(
         ResourceType $resourceType = null,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT ara
             FROM Claroline\CoreBundle\Entity\Activity\ActivityRuleAction ara
@@ -30,7 +29,7 @@ class ActivityRuleActionRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('resourceType', $resourceType);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findRuleActionsWithNoResourceType($executeQuery = true)
@@ -43,7 +42,7 @@ class ActivityRuleActionRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findAllDistinctActivityRuleActions($executeQuery = true)
@@ -56,15 +55,14 @@ class ActivityRuleActionRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findRuleActionByActionAndResourceType(
         $action,
         ResourceType $resourceType,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT ara
             FROM Claroline\CoreBundle\Entity\Activity\ActivityRuleAction ara
@@ -76,14 +74,13 @@ class ActivityRuleActionRepository extends EntityRepository
         $query->setParameter('action', $action);
         $query->setParameter('resourceType', $resourceType);
 
-        return $executeQuery ? $query->getOneOrNullResult(): $query;
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
     public function findRuleActionByActionWithNoResourceType(
         $action,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT ara
             FROM Claroline\CoreBundle\Entity\Activity\ActivityRuleAction ara
@@ -94,6 +91,6 @@ class ActivityRuleActionRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('action', $action);
 
-        return $executeQuery ? $query->getOneOrNullResult(): $query;
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 }

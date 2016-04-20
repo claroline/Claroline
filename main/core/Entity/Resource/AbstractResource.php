@@ -36,7 +36,7 @@ abstract class AbstractResource
     protected $mimeType;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -60,7 +60,7 @@ abstract class AbstractResource
     }
 
     /**
-     * For forms (otherwise name won't exist)
+     * For forms (otherwise name won't exist).
      *
      * TODO: this should be removed
      *

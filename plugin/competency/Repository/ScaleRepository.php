@@ -9,7 +9,7 @@ class ScaleRepository extends EntityRepository
 {
     /**
      * Returns an array representation of registered scales, including
-     * information about linked frameworks and abilities
+     * information about linked frameworks and abilities.
      *
      * @return array
      */
@@ -45,7 +45,8 @@ class ScaleRepository extends EntityRepository
      * Returns the number of competency frameworks linked to a scale.
      *
      * @param Scale $scale
-     * @return integer
+     *
+     * @return int
      */
     public function findCompetencyCount(Scale $scale)
     {
@@ -63,7 +64,8 @@ class ScaleRepository extends EntityRepository
      * Returns the number of abilities linked to the levels of a scale.
      *
      * @param Scale $scale
-     * @return integer
+     *
+     * @return int
      */
     public function findAbilityCount(Scale $scale)
     {

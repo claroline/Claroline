@@ -33,16 +33,15 @@ class CompetencyManager
      *     "converter"  = @DI\Inject("hevinci.competency.transfer_converter")
      * })
      *
-     * @param ObjectManager         $om
-     * @param TranslatorInterface   $translator
-     * @param Converter             $converter
+     * @param ObjectManager       $om
+     * @param TranslatorInterface $translator
+     * @param Converter           $converter
      */
     public function __construct(
         ObjectManager $om,
         TranslatorInterface $translator,
         Converter $converter
-    )
-    {
+    ) {
         $this->om = $om;
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
         $this->scaleRepo = $om->getRepository('HeVinciCompetencyBundle:Scale');
@@ -56,6 +55,7 @@ class CompetencyManager
      * Returns the list of registered frameworks.
      *
      * @param bool $shortArrays Whether full entities or minimal arrays should be returned
+     *
      * @return array
      */
     public function listFrameworks($shortArrays = false)
@@ -68,7 +68,7 @@ class CompetencyManager
                 return [
                     'id' => $framework->getId(),
                     'name' => $framework->getName(),
-                    'description' => $framework->getDescription()
+                    'description' => $framework->getDescription(),
                 ];
             }, $frameworks);
     }
@@ -87,6 +87,7 @@ class CompetencyManager
      * Persists a scale in the database.
      *
      * @param Scale $scale
+     *
      * @return Scale
      */
     public function createScale(Scale $scale)
@@ -101,7 +102,9 @@ class CompetencyManager
      * Updates an existing scale.
      *
      * @param Scale $scale
+     *
      * @return Scale
+     *
      * @throws \LogicException if the scale is already bound to an ability
      */
     public function updateScale(Scale $scale)
@@ -131,6 +134,7 @@ class CompetencyManager
      * Deletes a scale.
      *
      * @param Scale $scale
+     *
      * @throws \LogicException is the scale is bound to a framework
      */
     public function deleteScale(Scale $scale)
@@ -170,6 +174,7 @@ class CompetencyManager
      * Persists a competency framework.
      *
      * @param Competency $framework
+     *
      * @return Competency
      */
     public function persistFramework(Competency $framework)
@@ -184,6 +189,7 @@ class CompetencyManager
      * Imports a competency framework described in a JSON string.
      *
      * @param string $frameworkData
+     *
      * @return Competency
      */
     public function importFramework($frameworkData)
@@ -197,6 +203,7 @@ class CompetencyManager
      * Returns the JSON representation of a competency framework.
      *
      * @param Competency $framework
+     *
      * @return string
      */
     public function exportFramework(Competency $framework)
@@ -212,8 +219,9 @@ class CompetencyManager
      * "__children" and "__abilities" keys of their corresponding competency
      * array.
      *
-     * @param Competency    $competency     The competency to be loaded
-     * @param bool          $loadAbilities  Whether linked abilities should be included
+     * @param Competency $competency    The competency to be loaded
+     * @param bool       $loadAbilities Whether linked abilities should be included
+     *
      * @return array
      */
     public function loadCompetency(Competency $competency, $loadAbilities = true)
@@ -244,6 +252,7 @@ class CompetencyManager
      * Ensures a competency is the root of the framework.
      *
      * @param Competency $competency
+     *
      * @throws \LogicException
      */
     public function ensureIsRoot(Competency $competency)
@@ -270,7 +279,9 @@ class CompetencyManager
      *
      * @param Competency $parent
      * @param Competency $child
+     *
      * @return Competency
+     *
      * @throws \LogicException if the competency already has abilities
      */
     public function createSubCompetency(Competency $parent, Competency $child)
@@ -278,7 +289,7 @@ class CompetencyManager
         if ($this->competencyAbilityRepo->countByCompetency($parent) > 0) {
             throw new \LogicException(
                 "Cannot create sub-competency: competency {$parent->getId()}"
-                . ' is already associated with abilities'
+                .' is already associated with abilities'
             );
         }
 
@@ -293,6 +304,7 @@ class CompetencyManager
      * Updates a competency.
      *
      * @param Competency $competency
+     *
      * @return Competency
      */
     public function updateCompetency(Competency $competency)
@@ -305,10 +317,12 @@ class CompetencyManager
     /**
      * Creates an ability and links it to a given competency.
      *
-     * @param Competency    $parent
-     * @param Ability       $ability
-     * @param Level         $level
+     * @param Competency $parent
+     * @param Ability    $ability
+     * @param Level      $level
+     *
      * @return \HeVinci\CompetencyBundle\Entity\Ability
+     *
      * @throws \LogicException if the parent competency is not a leaf node
      */
     public function createAbility(Competency $parent, Ability $ability, Level $level)
@@ -316,7 +330,7 @@ class CompetencyManager
         if ($parent->getRight() - $parent->getLeft() > 1) {
             throw new \LogicException(
                 "Cannot associate an ability with competency '{$parent->getName()}'"
-                . ': competency must be a leaf node'
+                .': competency must be a leaf node'
             );
         }
 
@@ -337,8 +351,9 @@ class CompetencyManager
      * the ability is not linked to any other competency, it is deleted
      * as well.
      *
-     * @param Competency    $parent
-     * @param Ability       $ability
+     * @param Competency $parent
+     * @param Ability    $ability
+     *
      * @throws \Exception if ability is not linked to competency
      */
     public function removeAbility(Competency $parent, Ability $ability)
@@ -357,10 +372,12 @@ class CompetencyManager
     /**
      * Updates an ability.
      *
-     * @param Competency    $parent
-     * @param Ability       $ability
-     * @param Level         $level
+     * @param Competency $parent
+     * @param Ability    $ability
+     * @param Level      $level
+     *
      * @return Ability
+     *
      * @throws \Exception if ability is not linked to competency
      */
     public function updateAbility(Competency $parent, Ability $ability, Level $level)
@@ -376,7 +393,7 @@ class CompetencyManager
      * Sets the level temporary attribute of an ability.
      *
      * @param Competency $parent
-     * @param Ability $ability
+     * @param Ability    $ability
      */
     public function loadAbility(Competency $parent, Ability $ability)
     {
@@ -390,8 +407,9 @@ class CompetencyManager
      *
      * @see HeVinci\CompetencyBundle\Repository\AbilityRepository::findByFirstName
      *
-     * @param Competency    $parent
-     * @param string        $search
+     * @param Competency $parent
+     * @param string     $search
+     *
      * @return Ability[]
      */
     public function suggestAbilities(Competency $parent, $search)
@@ -403,16 +421,18 @@ class CompetencyManager
      * Creates a link between a competency and an existing ability.
      *
      * @param Competency $parent
-     * @param Ability $ability
-     * @param Level $level
+     * @param Ability    $ability
+     * @param Level      $level
+     *
      * @return Ability
+     *
      * @throws \LogicException if a link already exists
      */
     public function linkAbilityToCompetency(Competency $parent, Ability $ability, Level $level)
     {
         $link = $this->competencyAbilityRepo->findOneBy([
             'competency' => $parent,
-            'ability' => $ability
+            'ability' => $ability,
         ]);
 
         if ($link) {
@@ -437,6 +457,7 @@ class CompetencyManager
      * last name or username include a given string.
      *
      * @param string $search
+     *
      * @return array
      */
     public function suggestUsers($search)
@@ -449,6 +470,7 @@ class CompetencyManager
      * includes a given string.
      *
      * @param string $search
+     *
      * @return array
      */
     public function suggestGroups($search)
@@ -464,8 +486,9 @@ class CompetencyManager
      * - the result is a *copy* of the original collection
      * - all the nodes are visited, not only the leafs
      *
-     * @param mixed     $collection
-     * @param callable  $callback
+     * @param mixed    $collection
+     * @param callable $callback
+     *
      * @return mixed
      */
     public function walkCollection($collection, \Closure $callback)

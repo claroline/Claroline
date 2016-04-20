@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,17 +15,17 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Portfolio
 {
-    const VISIBILITY_NOBODY              = 0;
-    const VISIBILITY_NOBODY_LABEL        = 'visibile_to_me';
-    const VISIBILITY_USER                = 1;
-    const VISIBILITY_USER_LABEL          = 'visible_for_some_users';
-    const VISIBILITY_PLATFORM_USER       = 2;
+    const VISIBILITY_NOBODY = 0;
+    const VISIBILITY_NOBODY_LABEL = 'visibile_to_me';
+    const VISIBILITY_USER = 1;
+    const VISIBILITY_USER_LABEL = 'visible_for_some_users';
+    const VISIBILITY_PLATFORM_USER = 2;
     const VISIBILITY_PLATFORM_USER_LABEL = 'visible_for_platform_user';
-    const VISIBILITY_EVERYBODY           = 3;
-    const VISIBILITY_EVERYBODY_LABEL     = 'visible_for_everybody';
+    const VISIBILITY_EVERYBODY = 3;
+    const VISIBILITY_EVERYBODY_LABEL = 'visible_for_everybody';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -177,7 +176,7 @@ class Portfolio
     }
 
     /**
-     * @param boolean $visibility
+     * @param bool $visibility
      *
      * @return Portfolio
      */
@@ -189,7 +188,7 @@ class Portfolio
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getVisibility()
     {
@@ -202,10 +201,10 @@ class Portfolio
     public static function getVisibilityLabels()
     {
         return array(
-            self::VISIBILITY_NOBODY        => self::VISIBILITY_NOBODY_LABEL,
-            self::VISIBILITY_USER          => self::VISIBILITY_USER_LABEL,
+            self::VISIBILITY_NOBODY => self::VISIBILITY_NOBODY_LABEL,
+            self::VISIBILITY_USER => self::VISIBILITY_USER_LABEL,
             self::VISIBILITY_PLATFORM_USER => self::VISIBILITY_PLATFORM_USER_LABEL,
-            self::VISIBILITY_EVERYBODY     => self::VISIBILITY_EVERYBODY_LABEL
+            self::VISIBILITY_EVERYBODY => self::VISIBILITY_EVERYBODY_LABEL,
         );
     }
 
@@ -215,6 +214,7 @@ class Portfolio
     public function getVisibilityLabel()
     {
         $visibilityLabels = self::getVisibilityLabels();
+
         return $visibilityLabels[$this->getVisibility()];
     }
 
@@ -452,8 +452,8 @@ class Portfolio
         }
 
         foreach ($this->getComments() as $comment) {
-            if($commentsViewAt < $comment->getSendingDate()) {
-                $countUnreadComments++;
+            if ($commentsViewAt < $comment->getSendingDate()) {
+                ++$countUnreadComments;
             }
         }
 

@@ -34,7 +34,7 @@ class HomeContentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->type === "menu" and !$this->father) {
+        if ($this->type === 'menu' and !$this->father) {
             $builder->add(
                 $this->name,
                 'content',
@@ -43,11 +43,11 @@ class HomeContentType extends AbstractType
                     'theme_options' => array(
                         'titlePlaceHolder' => 'menu_title',
                         'contentText' => false,
-                        'tinymce' => false
-                    )
+                        'tinymce' => false,
+                    ),
                 )
             );
-        } else if($this->type === "menu") {
+        } elseif ($this->type === 'menu') {
             $builder->add(
                 $this->name,
                 'content',
@@ -56,8 +56,8 @@ class HomeContentType extends AbstractType
                     'theme_options' => array(
                         'titlePlaceHolder' => 'link_title',
                         'textPlaceHolder' => 'link_address',
-                        'tinymce' => false
-                    )
+                        'tinymce' => false,
+                    ),
                 )
             );
         } else {
@@ -73,7 +73,7 @@ class HomeContentType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array('translation_domain' => 'platform','validation_groups' => array('registration', 'Default'))
+            array('translation_domain' => 'platform', 'validation_groups' => array('registration', 'Default'))
         );
     }
 }

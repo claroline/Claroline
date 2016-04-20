@@ -75,11 +75,10 @@ class Scorm2004Listener
         UrlGeneratorInterface $router,
         TwigEngine $templating,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->container = $container;
         $this->filePath = $this->container
-            ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
+            ->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR;
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
         $this->om = $om;
@@ -87,7 +86,7 @@ class Scorm2004Listener
         $this->router = $router;
         $this->scormResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm2004Resource');
         $this->scormResourcesPath = $this->container
-            ->getParameter('claroline.param.uploads_directory') . '/scormresources/';
+            ->getParameter('claroline.param.uploads_directory').'/scormresources/';
         $this->scorm2004ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm2004ScoTracking');
         $this->templating = $templating;
         $this->translator = $translator;
@@ -108,7 +107,7 @@ class Scorm2004Listener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'claroline_scorm_2004'
+                'resourceType' => 'claroline_scorm_2004',
             )
         );
         $event->setResponseContent($content);
@@ -132,7 +131,7 @@ class Scorm2004Listener
             if ($form->isValid()) {
                 $tmpFile = $form->get('file')->getData();
                 $workspace = $event->getParent()->getWorkspace();
-                $prefix = 'WORKSPACE_' . $workspace->getId();
+                $prefix = 'WORKSPACE_'.$workspace->getId();
 
                 if ($this->isScormArchive($tmpFile)) {
                     $scormResource = $this->container
@@ -157,7 +156,7 @@ class Scorm2004Listener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => $event->getResourceType()
+                'resourceType' => $event->getResourceType(),
             )
         );
         $event->setErrorFormContent($content);
@@ -197,13 +196,12 @@ class Scorm2004Listener
     public function onDelete(DeleteResourceEvent $event)
     {
         $hashName = $event->getResource()->getHashName();
-        $scormArchiveFile = $this->filePath . $hashName;
-        $scormResourcesPath = $this->scormResourcesPath . $hashName;
+        $scormArchiveFile = $this->filePath.$hashName;
+        $scormResourcesPath = $this->scormResourcesPath.$hashName;
 
-        $nbScorm = (int)($this->scormResourceRepo->getNbScormWithHashName($hashName));
+        $nbScorm = (int) ($this->scormResourceRepo->getNbScormWithHashName($hashName));
 
         if ($nbScorm === 1) {
-
             if (file_exists($scormArchiveFile)) {
                 $event->setFiles(array($scormArchiveFile));
             }
@@ -231,7 +229,6 @@ class Scorm2004Listener
         $scos = $resource->getScos();
 
         foreach ($scos as $sco) {
-
             if (is_null($sco->getScoParent())) {
                 $this->copySco($sco, $copy);
             }
@@ -248,7 +245,7 @@ class Scorm2004Listener
      */
     public function onDownload(DownloadResourceEvent $event)
     {
-        $event->setItem($this->filePath . $event->getResource()->getHashName());
+        $event->setItem($this->filePath.$event->getResource()->getHashName());
         $event->setExtension('zip');
         $event->stopPropagation();
     }
@@ -267,7 +264,7 @@ class Scorm2004Listener
         $openValue = $zip->open($file);
 
         $isScormArchive = ($openValue === true)
-            && $zip->getStream("imsmanifest.xml");
+            && $zip->getStream('imsmanifest.xml');
 
         if (!$isScormArchive) {
             throw new InvalidScormArchiveException('invalid_scorm_archive_message');
@@ -283,8 +280,7 @@ class Scorm2004Listener
      */
     private function deleteFiles($dirPath)
     {
-        foreach (glob($dirPath . '/*') as $content) {
-
+        foreach (glob($dirPath.'/*') as $content) {
             if (is_dir($content)) {
                 $this->deleteFiles($content);
             } else {
@@ -300,15 +296,13 @@ class Scorm2004Listener
      * this method is call recursively when an element is an array.
      *
      * @param Scorm2004Resource $scormResource
-     * @param array $scos Array of Scorm2004Sco
+     * @param array             $scos          Array of Scorm2004Sco
      */
     private function persistScos(
         Scorm2004Resource $scormResource,
         array $scos
-    )
-    {
+    ) {
         foreach ($scos as $sco) {
-
             if (is_array($sco)) {
                 $this->persistScos($scormResource, $sco);
             } else {
@@ -319,12 +313,14 @@ class Scorm2004Listener
     }
 
     /**
-     * Looks for the organization to use
+     * Looks for the organization to use.
      *
      * @param \DOMDocument $dom
+     *
      * @return array of Scorm2004Sco
+     *
      * @throws InvalidScormArchiveException If a default organization
-     *         is defined and not found
+     *                                      is defined and not found
      */
     private function parseOrganizationsNode(\DOMDocument $dom)
     {
@@ -337,39 +333,32 @@ class Scorm2004Listener
 
             if (!is_null($organizations->attributes)
                 && !is_null($organizations->attributes->getNamedItem('default'))) {
-
                 $defaultOrganization = $organizations->attributes->getNamedItem('default')->nodeValue;
             } else {
                 $defaultOrganization = null;
             }
             // No default organization is defined
             if (is_null($defaultOrganization)) {
-
                 while (!is_null($organization)
                     && $organization->nodeName !== 'organization') {
-
                     $organization = $organization->nextSibling;
                 }
 
                 if (is_null($organization)) {
-
                     return $this->parseResourceNodes($resources);
                 }
             }
             // A default organization is defined
             // Look for it
             else {
-
                 while (!is_null($organization)
                     && ($organization->nodeName !== 'organization'
                     || is_null($organization->attributes->getNamedItem('identifier'))
                     || $organization->attributes->getNamedItem('identifier')->nodeValue !== $defaultOrganization)) {
-
                     $organization = $organization->nextSibling;
                 }
 
                 if (is_null($organization)) {
-
                     throw new InvalidScormArchiveException('default_organization_not_found_message');
                 }
             }
@@ -379,24 +368,24 @@ class Scorm2004Listener
     }
 
     /**
-     * Creates defined structure of SCOs
+     * Creates defined structure of SCOs.
      *
-     * @param \DOMNode $source
+     * @param \DOMNode     $source
      * @param \DOMNodeList $resources
+     *
      * @return array of Scorm2004Sco
+     *
      * @throws InvalidScormArchiveException
      */
     private function parseItemNodes(
         \DOMNode $source,
         \DOMNodeList $resources,
         Scorm2004Sco $parentSco = null
-    )
-    {
+    ) {
         $item = $source->firstChild;
         $scos = array();
 
         while (!is_null($item)) {
-
             if ($item->nodeName === 'item') {
                 $sco = new Scorm2004Sco();
                 $scos[] = $sco;
@@ -419,7 +408,6 @@ class Scorm2004Listener
         $scos = array();
 
         foreach ($resources as $resource) {
-
             if (!is_null($resource->attributes)) {
                 $scormType = $resource->attributes->getNamedItemNS(
                     $resource->lookupNamespaceUri('adlcp'),
@@ -431,11 +419,9 @@ class Scorm2004Listener
                     $href = $resource->attributes->getNamedItem('href');
 
                     if (is_null($identifier)) {
-
                         throw new InvalidScormArchiveException('sco_with_no_identifier_message');
                     }
                     if (is_null($href)) {
-
                         throw new InvalidScormArchiveException('sco_resource_without_href_message');
                     }
                     $sco = new Scorm2004Sco();
@@ -457,16 +443,16 @@ class Scorm2004Listener
      * It also look for the associated resource if it is a SCO and not a block.
      *
      * @param Scorm2004Sco $sco
-     * @param \DOMNode $item
+     * @param \DOMNode     $item
      * @param \DOMNodeList $resources
+     *
      * @throws InvalidScormArchiveException
      */
     private function findAttrParams(
         Scorm2004Sco $sco,
         \DOMNode $item,
         \DOMNodeList $resources
-    )
-    {
+    ) {
         $identifier = $item->attributes->getNamedItem('identifier');
         $isVisible = $item->attributes->getNamedItem('isvisible');
         $identifierRef = $item->attributes->getNamedItem('identifierref');
@@ -503,15 +489,14 @@ class Scorm2004Listener
     }
 
     /**
-     * Initializes parameters of the SCO defined in children nodes
+     * Initializes parameters of the SCO defined in children nodes.
      *
      * @param Scorm2004Sco $sco
-     * @param \DOMNode $item
+     * @param \DOMNode     $item
      */
     private function findNodeParams(Scorm2004Sco $sco, \DOMNode $item)
     {
         while (!is_null($item)) {
-
             switch ($item->nodeName) {
                 case 'title':
                     $sco->setTitle($item->nodeValue);
@@ -523,7 +508,6 @@ class Scorm2004Listener
                         || $action === 'exit,no message'
                         || $action === 'continue,message'
                         || $action === 'continue,no message') {
-
                         $sco->setTimeLimitAction($action);
                     }
                     break;
@@ -547,9 +531,11 @@ class Scorm2004Listener
     /**
      * Searches for the resource with the given id and retrieve URL to its content.
      *
-     * @param string $identifierref id of the resource associated to the SCO
+     * @param string       $identifierref id of the resource associated to the SCO
      * @param \DOMNodeList $resources
+     *
      * @return string URL to the resource associated to the SCO
+     *
      * @throws InvalidScormArchiveException
      */
     public function findEntryUrl($identifierref, \DOMNodeList $resources)
@@ -564,7 +550,6 @@ class Scorm2004Listener
                     $href = $resource->attributes->getNamedItem('href');
 
                     if (is_null($href)) {
-
                         throw new InvalidScormArchiveException('sco_resource_without_href_message');
                     }
 
@@ -576,18 +561,17 @@ class Scorm2004Listener
     }
 
     /**
-     * Copy given sco and its children
+     * Copy given sco and its children.
      *
-     * @param Scorm2004Sco $sco
+     * @param Scorm2004Sco      $sco
      * @param Scorm2004Resource $resource
-     * @param Scorm2004Sco $scoParent
+     * @param Scorm2004Sco      $scoParent
      */
     private function copySco(
         Scorm2004Sco $sco,
         Scorm2004Resource $resource,
         Scorm2004Sco $scoParent = null
-    )
-    {
+    ) {
         $scoCopy = new Scorm2004Sco();
         $scoCopy->setScormResource($resource);
         $scoCopy->setScoParent($scoParent);

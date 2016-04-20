@@ -22,11 +22,11 @@ class LogGroupRemoveUserEvent extends LogGenericEvent
             array(
                 'receiverUser' => array(
                     'lastName' => $receiver->getLastName(),
-                    'firstName' => $receiver->getFirstName()
+                    'firstName' => $receiver->getFirstName(),
                 ),
                 'receiverGroup' => array(
-                    'name' => $receiverGroup->getName()
-                )
+                    'name' => $receiverGroup->getName(),
+                ),
             ),
             $receiver,
             $receiverGroup

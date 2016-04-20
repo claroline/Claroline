@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
-use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -38,8 +37,7 @@ class ToolRightsManager
     public function __construct(
         ObjectManager $om,
         ToolMaskDecoderManager $maskManager
-    )
-    {
+    ) {
         $this->maskManager = $maskManager;
         $this->om = $om;
         $this->toolRightsRepo = $om->getRepository('ClarolineCoreBundle:Tool\ToolRights');
@@ -59,8 +57,7 @@ class ToolRightsManager
         OrderedTool $orderedTool,
         Role $role,
         $action
-    )
-    {
+    ) {
         $tool = $orderedTool->getTool();
         $maskDecoder = $this->maskManager
             ->getMaskDecoderByToolAndName($tool, $action);
@@ -81,14 +78,12 @@ class ToolRightsManager
         }
     }
 
-
     /***** ToolRightsRepository access methods *****/
 
     public function getRightsByOrderedTool(
         OrderedTool $orderedTool,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->toolRightsRepo->findRightsByOrderedTool(
             $orderedTool,
             $executeQuery
@@ -99,8 +94,7 @@ class ToolRightsManager
         Role $role,
         OrderedTool $orderedTool,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->toolRightsRepo->findRightsByRoleAndOrderedTool(
             $role,
             $orderedTool,
@@ -111,16 +105,15 @@ class ToolRightsManager
     public function getRightsForOrderedTools(
         array $orderedTools,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->toolRightsRepo->findRightsForOrderedTools(
             $orderedTools,
             $executeQuery
         );
     }
 
-    public function getRightsByRoleIdAndOrderedToolId($roleId, $orderedToolId) {
-
+    public function getRightsByRoleIdAndOrderedToolId($roleId, $orderedToolId)
+    {
         return $this->toolRightsRepo->findOneBy(
             array('role' => $roleId, 'orderedTool' => $orderedToolId)
         );

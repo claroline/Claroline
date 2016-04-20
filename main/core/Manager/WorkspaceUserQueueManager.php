@@ -15,8 +15,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -24,7 +22,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 /**
  * @DI\Service("claroline.manager.workspace_user_queue_manager")
  */
-class WorkspaceUserQueueManager 
+class WorkspaceUserQueueManager
 {
     private $dispatcher;
     private $objectManager;
@@ -50,8 +48,7 @@ class WorkspaceUserQueueManager
         PagerFactory $pagerFactory,
         RoleManager $roleManager,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->dispatcher = $dispatcher;
         $this->objectManager = $objectManager;
         $this->pagerFactory = $pagerFactory;

@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Entity\Calendar\Period;
 /**
  * @DI\Service("claroline.manager.calendar.time_slot_manager")
  */
-class TimeSlotManager 
+class TimeSlotManager
 {
     private $om;
     private $repo;

@@ -70,8 +70,7 @@ class AnnouncementController extends Controller
         TranslatorInterface $translator,
         Utilities $utils,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->announcementManager = $announcementManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
@@ -99,6 +98,7 @@ class AnnouncementController extends Controller
      *
      * @param AnnouncementAggregate $aggregate
      * @param $page
+     *
      * @return Response
      */
     public function announcementsListAction(AnnouncementAggregate $aggregate, $page = 1)
@@ -108,8 +108,7 @@ class AnnouncementController extends Controller
         try {
             $this->checkAccess('EDIT', $aggregate);
             $announcements = $this->announcementManager->getAllAnnouncementsByAggregate($aggregate);
-        }
-        catch(AccessDeniedException $e) {
+        } catch (AccessDeniedException $e) {
             $this->checkAccess('OPEN', $aggregate);
             $announcements = $this->announcementManager->getVisibleAnnouncementsByAggregate($aggregate);
         }
@@ -118,7 +117,7 @@ class AnnouncementController extends Controller
         return array(
             '_resource' => $aggregate,
             'announcements' => $pager,
-            'resourceCollection' => $collection
+            'resourceCollection' => $collection,
         );
     }
 
@@ -150,7 +149,7 @@ class AnnouncementController extends Controller
         return array(
             'form' => $form->createView(),
             'type' => 'create',
-            '_resource' => $aggregate
+            '_resource' => $aggregate,
         );
     }
 
@@ -199,7 +198,7 @@ class AnnouncementController extends Controller
                 return array(
                     'form' => $form->createView(),
                     'type' => 'create',
-                    '_resource' => $aggregate
+                    '_resource' => $aggregate,
                 );
             }
 
@@ -209,8 +208,7 @@ class AnnouncementController extends Controller
             if ($announcement->isVisible()) {
                 if (is_null($visibleFrom) || $visibleFrom < $now) {
                     $announcement->setPublicationDate($now);
-                }
-                else {
+                } else {
                     $announcement->setPublicationDate($visibleFrom);
                 }
             }
@@ -218,7 +216,7 @@ class AnnouncementController extends Controller
             $this->announcementManager->insertAnnouncement($announcement);
 
             if ($form->get('notify_user')->getData()) {
-               $this->announcementManager->sendMessage($announcement);
+                $this->announcementManager->sendMessage($announcement);
             }
 
             $this->eventDispatcher->dispatch(
@@ -237,7 +235,7 @@ class AnnouncementController extends Controller
         return array(
             'form' => $form->createView(),
             'type' => 'create',
-            '_resource' => $aggregate
+            '_resource' => $aggregate,
         );
     }
 
@@ -269,7 +267,7 @@ class AnnouncementController extends Controller
             'form' => $form->createView(),
             'type' => 'edit',
             'announcement' => $announcement,
-            '_resource' => $resource
+            '_resource' => $resource,
         );
     }
 
@@ -315,18 +313,16 @@ class AnnouncementController extends Controller
                     'form' => $form->createView(),
                     'type' => 'edit',
                     'announcement' => $announcement,
-                    '_resource' => $resource
+                    '_resource' => $resource,
                 );
             }
 
             if (!$announcement->isVisible()) {
                 $announcement->setPublicationDate(null);
-            }
-            else {
+            } else {
                 if (is_null($visibleFrom) || $visibleFrom < $now) {
                     $announcement->setPublicationDate($now);
-                }
-                else {
+                } else {
                     $announcement->setPublicationDate($visibleFrom);
                 }
             }
@@ -356,7 +352,7 @@ class AnnouncementController extends Controller
             'form' => $form->createView(),
             'type' => 'edit',
             'announcement' => $announcement,
-            '_resource' => $resource
+            '_resource' => $resource,
         );
     }
 
@@ -424,7 +420,7 @@ class AnnouncementController extends Controller
         return array(
             'datas' => $pager,
             'widgetType' => 'workspace',
-            'workspaceId' => $workspace->getId()
+            'workspaceId' => $workspace->getId(),
         );
     }
 
@@ -465,10 +461,10 @@ class AnnouncementController extends Controller
      * - for MOVE / COPY $collection->setAttributes(array('parent' => $parent))
      *  where $parent is the new parent entity.
      *
-     * @param string $permission
+     * @param string                                                 $permission
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     private function checkAccess($permission, AbstractResource $resource)
     {

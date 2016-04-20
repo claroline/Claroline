@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,9 +8,7 @@
  * 
  * Date: 3/9/15
  */
-
 namespace Icap\WikiBundle\Transfert;
-
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
@@ -29,14 +27,12 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
  */
 class WikiImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
-
     /**
      * @var \Icap\WikiBundle\Manager\WikiManager
      */
     private $wikiManager;
     private $container;
     private $om;
-
 
     /**
      * @DI\InjectParams({
@@ -46,11 +42,10 @@ class WikiImporter extends Importer implements ConfigurationInterface, RichTextI
      * })
      */
     public function __construct(
-        WikiManager $wikiManager, 
+        WikiManager $wikiManager,
         ContainerInterface $container,
         ObjectManager $om
-    )
-    {
+    ) {
         $this->wikiManager = $wikiManager;
         $this->container = $container;
         $this->om = $om;
@@ -129,8 +124,8 @@ class WikiImporter extends Importer implements ConfigurationInterface, RichTextI
 
     /**
      * @param Workspace $workspace
-     * @param array $files
-     * @param mixed $object
+     * @param array     $files
+     * @param mixed     $object
      *
      * @return array
      */
@@ -138,24 +133,24 @@ class WikiImporter extends Importer implements ConfigurationInterface, RichTextI
     {
         return $this->wikiManager->exportWiki($workspace, $files, $object);
     }
-    
+
     public function format($data)
     {
         foreach ($data['sections'] as $section) {
             foreach ($section['contributions'] as $contribution) {
-                 //look for the text with the exact same content (it's really bad I know but at least it works
-                 $text = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $contribution['contribution']['path']);
-                 $entities = $this->om->getRepository('Icap\WikiBundle\Entity\Contribution')->findByText($text);
+                //look for the text with the exact same content (it's really bad I know but at least it works
+                 $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$contribution['contribution']['path']);
+                $entities = $this->om->getRepository('Icap\WikiBundle\Entity\Contribution')->findByText($text);
                  //avoid circulary dependency
                  $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
-                 
-                 foreach ($entities as $entity) {
-                     $entity->setText($text);
-                     $this->om->persist($entity);
+
+                foreach ($entities as $entity) {
+                    $entity->setText($text);
+                    $this->om->persist($entity);
                 }
             }
         }
-        
+
         //this could be bad, but the corebundle can use a transaction and force flush itself anyway
         $this->om->flush();
     }

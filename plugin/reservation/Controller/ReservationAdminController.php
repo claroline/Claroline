@@ -4,9 +4,7 @@ namespace FormaLibre\ReservationBundle\Controller;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Ddeboer\DataImport\Reader\ArrayReader;
 use Ddeboer\DataImport\Reader\CsvReader;
-use Ddeboer\DataImport\Writer\CsvWriter;
 use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Entity\Resource;
 use FormaLibre\ReservationBundle\Entity\ResourceType;
@@ -54,8 +52,7 @@ class ReservationAdminController extends Controller
         Request $request,
         ReservationManager $reservationManager,
         StrictDispatcher $eventDispatcher
-    )
-    {
+    ) {
         $this->em = $em;
         $this->om = $om;
         $this->router = $router;
@@ -79,7 +76,7 @@ class ReservationAdminController extends Controller
     {
         return [
             'resourcesType' => $this->resourceTypeRepo->findAll(),
-            'resourcesRights' => $this->resourceRightsRepo->findAll()
+            'resourcesRights' => $this->resourceRightsRepo->findAll(),
         ];
     }
 
@@ -97,13 +94,13 @@ class ReservationAdminController extends Controller
     {
         if (empty($name)) {
             return new jsonResponse(array(
-                'error' => 'empty_string'
+                'error' => 'empty_string',
             ));
         }
 
         if ($this->resourceTypeRepo->findOneBy(array('name' => $name))) {
             return new jsonResponse(array(
-                'error' => 'resource_type_exists'
+                'error' => 'resource_type_exists',
             ));
         }
 
@@ -114,7 +111,7 @@ class ReservationAdminController extends Controller
 
         return new JsonResponse(array(
             'id' => $resourceType->getId(),
-            'name' => $resourceType->getName()
+            'name' => $resourceType->getName(),
         ));
     }
 
@@ -136,13 +133,13 @@ class ReservationAdminController extends Controller
 
             return new JsonResponse([
                 'name' => $resourceType->getName(),
-                'id' => $resourceType->getId()
+                'id' => $resourceType->getId(),
             ]);
         }
 
         return $this->render('FormaLibreReservationBundle:Admin:resourceTypeForm.html.twig', [
             'form' => $form->createView(),
-            'action' => $this->router->generate('formalibre_modify_resource_type_name', [ 'id' => $resourceType->getId() ])
+            'action' => $this->router->generate('formalibre_modify_resource_type_name', ['id' => $resourceType->getId()]),
         ]);
     }
 
@@ -164,13 +161,13 @@ class ReservationAdminController extends Controller
         return new JsonResponse();
     }
 
-    /**
-     * @EXT\Route(
-     *     "/add/resource/{id}",
-     *     name="formalibre_add_new_resource",
-     *     options={"expose"=true}
-     * )
-     */
+/**
+ * @EXT\Route(
+ *     "/add/resource/{id}",
+ *     name="formalibre_add_new_resource",
+ *     options={"expose"=true}
+ * )
+ */
     //The resourceRights are handled by the updateResourceRolesAction() action. This function is executed by an ajax query -> See Resources/public/js/admin.js updateResourceRoles() method. We do this like that for a better form design and user experience
     public function addResourceAction(ResourceType $resourceType)
     {
@@ -189,8 +186,8 @@ class ReservationAdminController extends Controller
                 'resourceTypeId' => $resourceType->getId(),
                 'resource' => [
                     'id' => $resource->getId(),
-                    'name' => $resource->getName()
-                ]
+                    'name' => $resource->getName(),
+                ],
             ]);
         }
 
@@ -198,17 +195,17 @@ class ReservationAdminController extends Controller
             'form' => $form->createView(),
             'action' => $this->router->generate('formalibre_add_new_resource', array('id' => $resourceType->getId())),
             'editMode' => false,
-            'roles' => $this->roleRepo->findBy(['type' => 1])
+            'roles' => $this->roleRepo->findBy(['type' => 1]),
         ));
     }
 
-    /**
-     * @EXT\Route(
-     *      "/modify/resource/{id}",
-     *      name="formalibre_modification_resource",
-     *      options={"expose"=true}
-     * )
-     */
+/**
+ * @EXT\Route(
+ *      "/modify/resource/{id}",
+ *      name="formalibre_modification_resource",
+ *      options={"expose"=true}
+ * )
+ */
     //The resourceRights are handled by the updateResourceRolesAction() action. This function is executed by an ajax query -> See Resources/public/js/admin.js updateResourceRoles() method. We do this like that for a better form design and user experience
     public function modifyResourceAction(Resource $resource)
     {
@@ -222,7 +219,7 @@ class ReservationAdminController extends Controller
 
             return new JsonResponse([
                 'id' => $resource->getId(),
-                'name' => $resource->getName()
+                'name' => $resource->getName(),
             ]);
         }
 
@@ -240,7 +237,7 @@ class ReservationAdminController extends Controller
             'action' => $this->router->generate('formalibre_modification_resource', ['id' => $resource->getId()]),
             'editMode' => true,
             'roles' => $roles,
-            'resourcesRights' => $resourcesRightsArray
+            'resourcesRights' => $resourcesRightsArray,
         ));
     }
 
@@ -270,15 +267,15 @@ class ReservationAdminController extends Controller
      *      options={"expose"=true}
      * )
      */
-    public function updateResourceRolesAction(Resource $resource, $rolesList = "")
+    public function updateResourceRolesAction(Resource $resource, $rolesList = '')
     {
-        $tempMaskByRole= explode(',', $rolesList);
+        $tempMaskByRole = explode(',', $rolesList);
 
         $maskByRole = array();
-        
+
         foreach ($tempMaskByRole as $oneMaskByRole) {
-            $insideOneMaskByRole=explode(':',$oneMaskByRole);
-            $maskByRole[intval($insideOneMaskByRole[0])]=  intval($insideOneMaskByRole[1]);
+            $insideOneMaskByRole = explode(':', $oneMaskByRole);
+            $maskByRole[intval($insideOneMaskByRole[0])] = intval($insideOneMaskByRole[1]);
         }
         $roles = $this->roleRepo->findBy(['type' => 1]);
 
@@ -295,6 +292,7 @@ class ReservationAdminController extends Controller
         }
 
         $this->em->flush();
+
         return new JsonResponse();
     }
 
@@ -312,12 +310,13 @@ class ReservationAdminController extends Controller
 
         if ($form->isValid()) {
             $data = $this->importResourcesAction($form->get('file')->getData());
+
             return new JsonResponse($data);
         }
 
         return $this->render('FormaLibreReservationBundle:Admin:importForm.html.twig', [
                 'form' => $form->createView(),
-                'action' => $this->generateUrl('formalibre_reservation_import_resources_form')
+                'action' => $this->generateUrl('formalibre_reservation_import_resources_form'),
             ]
         );
     }
@@ -330,7 +329,7 @@ class ReservationAdminController extends Controller
 
         $data = [
             'resourcesTypes' => [],
-            'resources' => []
+            'resources' => [],
         ];
 
         foreach ($reader as $row) {
@@ -351,7 +350,7 @@ class ReservationAdminController extends Controller
 
                 $data['resourcesTypes'][] = [
                     'id' => $resourceType->getId(),
-                    'name' => $resourceType->getName()
+                    'name' => $resourceType->getName(),
                 ];
             }
 
@@ -374,7 +373,7 @@ class ReservationAdminController extends Controller
                     'id' => $resource->getId(),
                     'name' => $resourceName,
 
-                ]
+                ],
             ];
         }
 
@@ -388,7 +387,7 @@ class ReservationAdminController extends Controller
      *      options={"expose"=true}
      * )
      */
-    public  function exportResourcesAction()
+    public function exportResourcesAction()
     {
         header('Content-Type: application/csv');
         header('Content-Disposition: attachment; filename="resources.csv";');
@@ -402,7 +401,7 @@ class ReservationAdminController extends Controller
             'description',
             'localisation',
             'quantity',
-            'color'
+            'color',
         ], ',', '"');
 
         $resourcesTypes = $this->resourceTypeRepo->findAll();
@@ -415,7 +414,7 @@ class ReservationAdminController extends Controller
                     $resource->getDescription(),
                     $resource->getLocalisation(),
                     $resource->getQuantity(),
-                    $resource->getColor()
+                    $resource->getColor(),
                 ];
 
                 fputcsv($file, $data, ',', '"');

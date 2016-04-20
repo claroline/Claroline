@@ -3,10 +3,8 @@
 namespace Icap\BadgeBundle\Form\Type;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\BadgeManager;
 use Claroline\CoreBundle\Manager\EventManager;
 use Icap\BadgeBundle\Entity\BadgeRule;
-use Icap\BadgeBundle\Repository\BadgeRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -60,7 +58,7 @@ class BadgeRuleType extends AbstractType
         /** @var \Claroline\CoreBundle\Entity\User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $locale = (null === $user->getLocale()) ? $this->platformConfigHandler->getParameter("locale_language") : $user->getLocale();
+        $locale = (null === $user->getLocale()) ? $this->platformConfigHandler->getParameter('locale_language') : $user->getLocale();
 
         $builder
             ->add(
@@ -70,14 +68,14 @@ class BadgeRuleType extends AbstractType
                     'translation_domain' => 'log',
                     'attr' => array('class' => 'input-sm'),
                     'choices' => $actionChoices,
-                    'choices_as_values' => true
+                    'choices_as_values' => true,
                 )
             )
             ->add('isUserReceiver', 'checkbox')
             ->add('occurrence', 'integer', array('attr' => array('class' => 'input-sm')))
             ->add('result', 'text')
             ->add('resource', 'resourcePicker', array(
-                    'required' => false
+                    'required' => false,
                 )
             )
             ->add(
@@ -89,8 +87,9 @@ class BadgeRuleType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
     }
 
-    public function onPreSetData(FormEvent $event){
-        $form  = $event->getForm();
+    public function onPreSetData(FormEvent $event)
+    {
+        $form = $event->getForm();
 
         $blacklist = array();
 
@@ -100,7 +99,7 @@ class BadgeRuleType extends AbstractType
 
         $form
             ->add('badge', 'badgepicker', array(
-                'blacklist' => $blacklist
+                'blacklist' => $blacklist,
             )
         );
     }
@@ -126,9 +125,9 @@ class BadgeRuleType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\BadgeBundle\Entity\BadgeRule',
+                'data_class' => 'Icap\BadgeBundle\Entity\BadgeRule',
                 'translation_domain' => 'icap_badge',
-                'language'           => 'en'
+                'language' => 'en',
             )
         );
     }

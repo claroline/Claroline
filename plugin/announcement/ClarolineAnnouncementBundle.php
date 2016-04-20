@@ -23,6 +23,6 @@ class ClarolineAnnouncementBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'announcement');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'announcement');
     }
 }

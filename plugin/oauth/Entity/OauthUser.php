@@ -6,12 +6,12 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class OauthUser
+ * Class OauthUser.
  *
  * @ORM\Table(name="icap__oauth_user")
  * @ORM\Entity(repositoryClass="Icap\OAuthBundle\Repository\OauthUserRepository")
  */
-class OauthUser 
+class OauthUser
 {
     /**
      * @ORM\Id
@@ -31,7 +31,7 @@ class OauthUser
     protected $service;
 
     /**
-     * @var User $user
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
@@ -40,9 +40,9 @@ class OauthUser
 
     public function __construct($service, $oauthId, User $user)
     {
-        $this->service  = $service;
-        $this->oauthId  = $oauthId;
-        $this->user     = $user;
+        $this->service = $service;
+        $this->oauthId = $oauthId;
+        $this->user = $user;
     }
 
     /**
@@ -63,6 +63,7 @@ class OauthUser
 
     /**
      * @param mixed $service
+     *
      * @return $this
      */
     public function setService($service)
@@ -82,6 +83,7 @@ class OauthUser
 
     /**
      * @param mixed $oauthId
+     *
      * @return $this
      */
     public function setOauthId($oauthId)
@@ -101,6 +103,7 @@ class OauthUser
 
     /**
      * @param User $user
+     *
      * @return $this
      */
     public function setUser($user)

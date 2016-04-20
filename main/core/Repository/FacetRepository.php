@@ -30,18 +30,17 @@ class FacetRepository extends EntityRepository
             SELECT facet FROM Claroline\CoreBundle\Entity\Facet\Facet facet
             ORDER BY facet.position
         ";
-        $query = $this->_em->createQuery($dql);
+            $query = $this->_em->createQuery($dql);
         } else {
-
-        $dql = "
+            $dql = "
             SELECT facet FROM Claroline\CoreBundle\Entity\Facet\Facet facet
             JOIN facet.roles role
             WHERE role.name IN (:rolenames)
             ORDER BY facet.position
         ";
 
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('rolenames', $roleNames);
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('rolenames', $roleNames);
         }
         if ($max != null) {
             $query->setMaxResults($max);
@@ -49,4 +48,4 @@ class FacetRepository extends EntityRepository
 
         return $query->getResult();
     }
-} 
+}

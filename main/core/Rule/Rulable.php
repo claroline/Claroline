@@ -18,7 +18,7 @@ abstract class Rulable implements RulableInterface
      */
     public function hasRules()
     {
-        return (0 < count($this->getRules()));
+        return 0 < count($this->getRules());
     }
 
     /**

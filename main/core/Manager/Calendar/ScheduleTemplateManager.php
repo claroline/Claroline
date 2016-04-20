@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Entity\Calendar\ScheduleTemplate;
 /**
  * @DI\Service("claroline.manager.calendar.schedule_template_manager")
  */
-class ScheduleTemplateManager 
+class ScheduleTemplateManager
 {
     private $om;
     private $repo;

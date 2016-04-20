@@ -28,7 +28,7 @@ class Updater050000 extends Updater
     {
         $this->log('Updating migration versions...');
         $conn = $this->om->getConnection();
-        $stmt = $conn->query("SELECT * from doctrine_clarolinecorebundle_versions where version=20150428152724");
+        $stmt = $conn->query('SELECT * from doctrine_clarolinecorebundle_versions where version=20150428152724');
         $found = false;
 
         while ($row = $stmt->fetch()) {
@@ -37,10 +37,9 @@ class Updater050000 extends Updater
 
         if (!$found) {
             $this->log('Inserting migration 20150428152724.');
-            $conn->query("INSERT INTO doctrine_clarolinecorebundle_versions (version) VALUES (20150428152724)");
+            $conn->query('INSERT INTO doctrine_clarolinecorebundle_versions (version) VALUES (20150428152724)');
         } else {
             $this->log('Migrations found.');
         }
-
     }
 }

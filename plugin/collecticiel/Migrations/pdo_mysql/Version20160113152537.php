@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2016/01/13 03:25:41
  */
@@ -23,10 +23,10 @@ class Version20160113152537 extends AbstractMigration
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE innova_collecticielbundle_dropzone 
             DROP picture, 
             DROP username
-        ");
+        ');
     }
 }

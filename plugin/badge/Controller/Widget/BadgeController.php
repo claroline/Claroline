@@ -4,7 +4,6 @@ namespace Icap\BadgeBundle\Controller\Widget;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +22,7 @@ class BadgeController extends Controller
         }
 
         /** @var \Icap\BadgeBundle\Manager\BadgeWidgetManager $badgeWidgetManager */
-        $badgeWidgetManager = $this->get("icap_badge.manager.badge_widget");
+        $badgeWidgetManager = $this->get('icap_badge.manager.badge_widget');
         $badgeUsageWidgetConfig = $badgeWidgetManager->getBadgeUsageConfigForInstance($widgetInstance);
 
         $form = $this->get('icap_badge.widget.form.badge_usage');
@@ -40,4 +39,3 @@ class BadgeController extends Controller
         return new Response('success', 204);
     }
 }
-

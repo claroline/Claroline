@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Workspace;
 
-use \RuntimeException;
+use RuntimeException;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Entity\User;
 
@@ -36,7 +36,7 @@ class Configuration
         //Therefore we don't want to extract it every time.
         if (strpos($path, 'default.zip')) {
             $rootPath = str_replace('default.zip', '', $path);
-            $extractPath = $rootPath . "default";
+            $extractPath = $rootPath.'default';
 
             if (!is_dir($this->extractPath)) {
                 $archive = new \ZipArchive();
@@ -47,7 +47,7 @@ class Configuration
         } else {
             $archive = new \ZipArchive();
             if (true === $code = $archive->open($path)) {
-                $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+                $extractPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid();
                 $this->extract($extractPath, $archive);
                 //set the default properties of the workspace here if we can find them.
             } else {

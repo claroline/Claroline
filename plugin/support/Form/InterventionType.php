@@ -28,7 +28,7 @@ class InterventionType extends AbstractType
                 'disabled' => true,
                 'mapped' => false,
                 'label' => 'intervenant',
-                'data' => $this->user->getFirstName() . ' ' . $this->user->getLastName()
+                'data' => $this->user->getFirstName().' '.$this->user->getLastName(),
             )
         );
         $builder->add(
@@ -44,7 +44,7 @@ class InterventionType extends AbstractType
 //                'format' => 'dd-MM-yyyy H:m',
                 'date_format' => DateType::HTML5_FORMAT,
                 'translation_domain' => 'platform',
-                'label' => 'start_date'
+                'label' => 'start_date',
             )
         );
         $builder->add(
@@ -60,7 +60,7 @@ class InterventionType extends AbstractType
 //                'format' => 'dd-MM-yyyy H:m',
                 'date_format' => DateType::HTML5_FORMAT,
                 'translation_domain' => 'platform',
-                'label' => 'end_date'
+                'label' => 'end_date',
             )
         );
         $builder->add(
@@ -80,8 +80,8 @@ class InterventionType extends AbstractType
                 'label' => 'compute_time_mode',
                 'choices' => array(
                     0 => 'compute_time_from_end_date',
-                    1 => 'compute_time_from_duration'
-                )
+                    1 => 'compute_time_from_duration',
+                ),
             )
         );
         $builder->add(
@@ -99,7 +99,7 @@ class InterventionType extends AbstractType
                 'property' => 'name',
                 'expanded' => false,
                 'multiple' => false,
-                'required' => true
+                'required' => true,
             )
         );
         $builder->add(
@@ -107,7 +107,7 @@ class InterventionType extends AbstractType
             'tinymce',
             array(
                 'required' => true,
-                'label' => 'client_message'
+                'label' => 'client_message',
             )
         );
         $builder->add(
@@ -115,7 +115,7 @@ class InterventionType extends AbstractType
             'tinymce',
             array(
                 'required' => true,
-                'label' => 'internal_message'
+                'label' => 'internal_message',
             )
         );
     }

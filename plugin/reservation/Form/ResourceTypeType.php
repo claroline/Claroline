@@ -28,7 +28,7 @@ class ResourceTypeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array(
-                'label' => 'form.name'
+                'label' => 'form.name',
             )
         );
     }
@@ -43,7 +43,7 @@ class ResourceTypeType extends AbstractType
         $resolver->setDefaults(
             array(
                 'class' => 'FormaLibre\ReservationBundle\Entity\ResourceType',
-                'translation_domain' => 'reservation'
+                'translation_domain' => 'reservation',
             )
         );
     }

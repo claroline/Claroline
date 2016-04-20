@@ -6,28 +6,29 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Innova\PathBundle\Entity\Step;
 
 /**
- * Path
+ * Path.
  *
  * @ORM\Table(name="innova_path")
  * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\PathRepository")
  */
 class Path extends AbstractResource implements PathInterface, \JsonSerializable
-{   
+{
     /**
-     * Name of the path (only for forms)
+     * Name of the path (only for forms).
+     *
      * @var string
      * 
      * @Assert\NotBlank
      */
     protected $name;
-    
+
     /**
-     * JSON structure of the path
+     * JSON structure of the path.
+     *
      * @var string
      *
      * @ORM\Column(name="structure", type="text")
@@ -35,8 +36,9 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     protected $structure;
 
     /**
-     * Display a breadcrumbs for navigation into the Path
-     * @var boolean
+     * Display a breadcrumbs for navigation into the Path.
+     *
+     * @var bool
      *
      * @ORM\Column(name="breadcrumbs", type="boolean")
      */
@@ -44,14 +46,16 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
 
     /**
      * Is the summary displayed when open the Player ?
-     * @var boolean
+     *
+     * @var bool
      *
      * @ORM\Column(name="summary_displayed", type="boolean")
      */
     protected $summaryDisplayed = true;
 
     /**
-     * Steps linked to the path
+     * Steps linked to the path.
+     *
      * @var \Doctrine\Common\Collections\ArrayCollection
      * 
      * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", indexBy="id", cascade={"persist", "remove"})
@@ -60,14 +64,15 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     protected $steps;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="modified", type="boolean")
      */
     protected $modified;
 
     /**
-     * Description of the path
+     * Description of the path.
+     *
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
@@ -75,17 +80,19 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     protected $description;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
-        $this->steps    = new ArrayCollection();
+        $this->steps = new ArrayCollection();
         $this->modified = false;
     }
-    
+
     /**
-     * Set json structure
-     * @param  string $structure
+     * Set json structure.
+     *
+     * @param string $structure
+     *
      * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function setStructure($structure)
@@ -96,7 +103,8 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
-     * Get a JSON version of the Path
+     * Get a JSON version of the Path.
+     *
      * @return string
      */
     public function getStructure()
@@ -115,8 +123,9 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
-     * Is path already published
-     * @return boolean
+     * Is path already published.
+     *
+     * @return bool
      */
     public function isPublished()
     {
@@ -125,7 +134,6 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         } else {
             return false;
         }
-
     }
 
     public function setPublished($published)
@@ -136,8 +144,10 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
-     * Set modified
-     * @param  boolean $modified
+     * Set modified.
+     *
+     * @param bool $modified
+     *
      * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function setModified($modified)
@@ -148,8 +158,9 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
-     * Is path modified since the last deployment
-     * @return boolean
+     * Is path modified since the last deployment.
+     *
+     * @return bool
      */
     public function isModified()
     {
@@ -157,8 +168,10 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
-     * Set summary displayed
-     * @param boolean $displayed
+     * Set summary displayed.
+     *
+     * @param bool $displayed
+     *
      * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function setSummaryDisplayed($displayed)
@@ -170,7 +183,8 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
 
     /**
      * Is summary displayed when open Player ?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isSummaryDisplayed()
     {
@@ -178,8 +192,10 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
-     * Add step
-     * @param  \Innova\PathBundle\Entity\Step $step
+     * Add step.
+     *
+     * @param \Innova\PathBundle\Entity\Step $step
+     *
      * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function addStep(Step $step)
@@ -187,13 +203,15 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         if (!$this->steps->contains($step)) {
             $this->steps->add($step);
         }
-        
+
         return $this;
     }
 
     /**
-     * Remove step
+     * Remove step.
+     *
      * @param \Innova\PathBundle\Entity\Step $step
+     *
      * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function removeStep(Step $step)
@@ -201,12 +219,13 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         if ($this->steps->contains($step)) {
             $this->steps->removeElement($step);
         }
-        
+
         return $this;
     }
 
     /**
-     * Get steps
+     * Get steps.
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getSteps()
@@ -215,29 +234,34 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
-     * Get description
+     * Get description.
+     *
      * @return string
      */
     public function getDescription()
     {
         return $this->description;
     }
-    
+
     /**
-     * Set description
+     * Set description.
+     *
      * @param string $description
+     *
      * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function setDescription($description)
     {
         $this->description = $description;
-        
+
         return $this;
     }
 
     /**
-     * Set breadcrumbs
-     * @param  boolean $breadcrumbs
+     * Set breadcrumbs.
+     *
+     * @param bool $breadcrumbs
+     *
      * @return \Innova\PathBundle\Entity\Path\AbstractPath
      */
     public function setBreadcrumbs($breadcrumbs)
@@ -249,7 +273,8 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
 
     /**
      * Does Path have a breadcrumbs ?
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasBreadcrumbs()
     {
@@ -257,8 +282,10 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
-     * Get root step of the path
+     * Get root step of the path.
+     *
      * @throws \Exception
+     *
      * @return \Innova\PathBundle\Entity\Step
      */
     public function getRootStep()
@@ -274,31 +301,33 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
                 }
             }
         }
-        
+
         return $root;
     }
 
     /**
-     * Initialize JSON structure
+     * Initialize JSON structure.
+     *
      * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function initializeStructure()
     {
-        $structure = array (
-            'name'             => $this->getName(),
-            'description'      => $this->getDescription(),
-            'breadcrumbs'      => $this->breadcrumbs,
+        $structure = array(
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+            'breadcrumbs' => $this->breadcrumbs,
             'summaryDisplayed' => $this->summaryDisplayed,
-            'steps'            => array (),
+            'steps' => array(),
         );
 
         $this->setStructure(json_encode($structure));
-        
+
         return $this;
     }
 
     /**
-     * Wrapper to access workspace of the Path
+     * Wrapper to access workspace of the Path.
+     *
      * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
      */
     public function getWorkspace()
@@ -312,7 +341,8 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
-     * Wrapper to access creator of the Path
+     * Wrapper to access creator of the Path.
+     *
      * @return \Claroline\CoreBundle\Entity\User
      */
     public function getCreator()
@@ -327,19 +357,19 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
 
     public function jsonSerialize()
     {
-        $steps = array ();
+        $steps = array();
 
         $rootStep = $this->getRootStep();
         if (!empty($rootStep)) {
             $steps[] = $rootStep;
         }
 
-        return array (
-            'name'             => $this->getResourceNode()->getName(),
-            'description'      => $this->description,
-            'breadcrumbs'      => $this->breadcrumbs,
+        return array(
+            'name' => $this->getResourceNode()->getName(),
+            'description' => $this->description,
+            'breadcrumbs' => $this->breadcrumbs,
             'summaryDisplayed' => $this->summaryDisplayed,
-            'steps'            => $steps,
+            'steps' => $steps,
         );
     }
 }

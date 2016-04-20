@@ -62,7 +62,7 @@ class ForumWidgetListener
      *     "templatingEngine" = @DI\Inject("templating")
      * })
      */
-    public function __construct(RequestStack $requestStack,HttpKernelInterface $httpKernel,
+    public function __construct(RequestStack $requestStack, HttpKernelInterface $httpKernel,
         ForumWidgetManager $forumWidgetManager, FormFactoryInterface $formFactory, EngineInterface $templatingEngine)
     {
         $this->request = $requestStack->getCurrentRequest();
@@ -76,6 +76,7 @@ class ForumWidgetListener
      * @DI\Observe("widget_claroline_forum_widget")
      *
      * @param DisplayWidgetEvent $event
+     *
      * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onDisplay(DisplayWidgetEvent $event)
@@ -97,7 +98,7 @@ class ForumWidgetListener
             $templatePath,
             array(
                 'widgetType' => $widgetType,
-                'messages' => $this->forumWidgetManager->getLastMessages($event->getInstance(), $workspace)
+                'messages' => $this->forumWidgetManager->getLastMessages($event->getInstance(), $workspace),
             )
         ));
         $event->stopPropagation();
@@ -121,7 +122,7 @@ class ForumWidgetListener
             'ClarolineForumBundle:Widget:lastMessageWidgetConfig.html.twig',
             array(
                 'form' => $form->createView(),
-                'widgetInstance' => $widgetInstance
+                'widgetInstance' => $widgetInstance,
             )
         );
         $event->setContent($content);

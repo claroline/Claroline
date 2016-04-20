@@ -3,21 +3,17 @@
  * Created by PhpStorm.
  * User: Aurelien
  * Date: 06/10/14
- * Time: 11:05
+ * Time: 11:05.
  */
-
 namespace Icap\DropzoneBundle\Form;
-
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Claroline\CoreBundle\Form\DatePickerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DropsDownloadBetweenDatesType extends AbstractType
+class dropsDownloadBetweenDatesType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $defaultDateTimeOptions = array(
@@ -33,8 +29,6 @@ class DropsDownloadBetweenDatesType extends AbstractType
         $builder
             ->add('drop_period_begin_date', 'datepicker', $defaultDateTimeOptions)
             ->add('drop_period_end_date', 'datepicker', $defaultDateTimeOptions);
-
-
     }
 
     public function getName()
@@ -52,4 +46,4 @@ class DropsDownloadBetweenDatesType extends AbstractType
             )
         );
     }
-} 
+}

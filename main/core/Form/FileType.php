@@ -39,9 +39,9 @@ class FileType extends AbstractType
                 'mapped' => false,
                 'constraints' => array(
                     new NotBlank(),
-                    new File()
+                    new File(),
                 ),
-                'label' => 'file'
+                'label' => 'file',
            )
         );
         if ($this->uncompress) {
@@ -62,7 +62,7 @@ class FileType extends AbstractType
                 'required' => true,
                 'mapped' => false,
                 'attr' => array('checked' => 'checked'),
-                'label' => 'publish_resource'
+                'label' => 'publish_resource',
            )
         );
     }
@@ -80,7 +80,9 @@ class FileType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $default = array('translation_domain' => 'platform');
-        if ($this->forApi) $default['csrf_protection'] = false;
+        if ($this->forApi) {
+            $default['csrf_protection'] = false;
+        }
         $resolver->setDefaults($default);
     }
 }

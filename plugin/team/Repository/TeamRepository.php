@@ -23,8 +23,7 @@ class TeamRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM Claroline\TeamBundle\Entity\Team t
@@ -42,8 +41,7 @@ class TeamRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM Claroline\TeamBundle\Entity\Team t
@@ -61,8 +59,7 @@ class TeamRepository extends EntityRepository
         Workspace $workspace,
         $teamName,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT t
             FROM Claroline\TeamBundle\Entity\Team t
@@ -79,8 +76,7 @@ class TeamRepository extends EntityRepository
     public function findTeamsWithUsersByWorkspace(
         Workspace $workspace,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT t AS team, COUNT(u) AS nb_users
             FROM Claroline\TeamBundle\Entity\Team t
@@ -98,8 +94,7 @@ class TeamRepository extends EntityRepository
         User $user,
         Workspace $workspace,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT t
             FROM Claroline\TeamBundle\Entity\Team t
@@ -119,8 +114,7 @@ class TeamRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -190,7 +184,7 @@ class TeamRepository extends EntityRepository
         $query->setParameter('team', $team);
         $query->setParameter(
             'workspaceManagerName',
-            'ROLE_WS_MANAGER_' . $workspace->getGuid()
+            'ROLE_WS_MANAGER_'.$workspace->getGuid()
         );
 
         return $executeQuery ? $query->getResult() : $query;
@@ -202,8 +196,7 @@ class TeamRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -279,7 +272,7 @@ class TeamRepository extends EntityRepository
         $query->setParameter('team', $team);
         $query->setParameter(
             'workspaceManagerName',
-            'ROLE_WS_MANAGER_' . $workspace->getGuid()
+            'ROLE_WS_MANAGER_'.$workspace->getGuid()
         );
         $upperSearch = strtoupper($search);
         $query->setParameter('search', "%{$upperSearch}%");
@@ -292,8 +285,7 @@ class TeamRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -350,7 +342,7 @@ class TeamRepository extends EntityRepository
         $query->setParameter('workspace', $workspace);
         $query->setParameter(
             'workspaceManagerName',
-            'ROLE_WS_MANAGER_' . $workspace->getGuid()
+            'ROLE_WS_MANAGER_'.$workspace->getGuid()
         );
 
         return $executeQuery ? $query->getResult() : $query;
@@ -362,8 +354,7 @@ class TeamRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -426,7 +417,7 @@ class TeamRepository extends EntityRepository
         $query->setParameter('workspace', $workspace);
         $query->setParameter(
             'workspaceManagerName',
-            'ROLE_WS_MANAGER_' . $workspace->getGuid()
+            'ROLE_WS_MANAGER_'.$workspace->getGuid()
         );
         $upperSearch = strtoupper($search);
         $query->setParameter('search', "%{$upperSearch}%");
@@ -439,8 +430,7 @@ class TeamRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -482,8 +472,7 @@ class TeamRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -531,8 +520,7 @@ class TeamRepository extends EntityRepository
         Workspace $workspace,
         array $users,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT COUNT(t.id) AS nb_teams, u.id AS user_id
             FROM Claroline\TeamBundle\Entity\Team t
@@ -551,8 +539,7 @@ class TeamRepository extends EntityRepository
         Workspace $workspace,
         array $teams,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -619,7 +606,7 @@ class TeamRepository extends EntityRepository
         $query->setParameter('workspace', $workspace);
         $query->setParameter(
             'workspaceManagerName',
-            'ROLE_WS_MANAGER_' . $workspace->getGuid()
+            'ROLE_WS_MANAGER_'.$workspace->getGuid()
         );
         $query->setParameter('teams', $teams);
 
@@ -632,8 +619,7 @@ class TeamRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM Claroline\TeamBundle\Entity\Team t

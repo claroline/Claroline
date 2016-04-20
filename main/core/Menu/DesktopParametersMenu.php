@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -16,8 +16,8 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\Renderer\ListRenderer;
 
 /**
- * Class DesktopParametersMenu
- * @package Claroline\CoreBundle\Menu
+ * Class DesktopParametersMenu.
+ *
  * @DI\Service("claroline.menu.desktop_parameters_renderer")
  * @DI\Tag("knp_menu.renderer", attributes = {"name" = "knp_menu.renderer", "alias"="desktop_parameters"})
  */
@@ -34,15 +34,14 @@ class DesktopParametersMenu extends ListRenderer
         $matcher,
         $defaultOptions,
         $charset
-    )
-    {
-        $defaultOptions['leaf_class'] = $defaultOptions["branch_class"] = "list-group-item";
+    ) {
+        $defaultOptions['leaf_class'] = $defaultOptions['branch_class'] = 'list-group-item';
         parent::__construct($matcher, $defaultOptions, $charset);
     }
 
     protected function renderLinkElement(ItemInterface $item, array $options)
     {
-        $uri = $item->getExtra('href') ? $item->getExtra('href'): $item->getUri();
+        $uri = $item->getExtra('href') ? $item->getExtra('href') : $item->getUri();
 
         return sprintf(
             '<a href="%s">%s</a>',
@@ -55,4 +54,4 @@ class DesktopParametersMenu extends ListRenderer
     {
         return $this->renderLinkElement($item, $options);
     }
-} 
+}

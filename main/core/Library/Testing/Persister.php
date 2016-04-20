@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -18,8 +17,8 @@ use JMS\DiExtraBundle\Annotation\Service;
 /**
  * @service("claroline.library.testing.persister")
  */
-class Persister {
-
+class Persister
+{
     /**
      * @var ObjectManager
      */
@@ -38,39 +37,36 @@ class Persister {
      *     "container" = @Inject("service_container")
      * })
      */
-    public function __construct(ObjectManager $om, $container) {
+    public function __construct(ObjectManager $om, $container)
+    {
         $this->om = $om;
         $this->container = $container;
     }
 
     /**
      * @param string $username
+     *
      * @return User
      */
-    public function user($username) 
+    public function user($username)
     {
-
         $roleUser = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
-
-        if (!$roleUser) {
-            $this->role('ROLE_USER');
-            $this->om->flush(); //we really need it
-        }
 
         $user = new User();
         $user->setFirstName($username);
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPassword($username);
-        $user->setMail($username . '@mail.com');
-
-        //much better
-        $this->container->get('claroline.manager.user_manager')->createUser($user, false);
+        $user->setMail($username.'@mail.com');
+        $user->setGuid(uniqid());
+        $user->addRole($roleUser);
+        $this->container->get('claroline.manager.role_manager')->createUserRole($user);
+        $this->om->persist($user);
 
         return $user;
     }
 
-    public function group($name) 
+    public function group($name)
     {
         $group = new Group();
         $group->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
@@ -82,12 +78,13 @@ class Persister {
 
     /**
      * @param string $name
+     *
      * @return Role
      */
-    public function role($name) 
+    public function role($name)
     {
         $role = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName($name);
-        
+
         if (!$role) {
             $role = new Role();
             $role->setName($name);
@@ -98,7 +95,7 @@ class Persister {
         return $role;
     }
 
-    public function maskDecoder(ResourceType $type, $permission, $value) 
+    public function maskDecoder(ResourceType $type, $permission, $value)
     {
         $decoder = new MaskDecoder();
         $decoder->setResourceType($type);
@@ -112,7 +109,7 @@ class Persister {
     public function organization($name)
     {
         $organization = new Organization();
-        $organization->setEmail($name . '@gmail.com');
+        $organization->setEmail($name.'@gmail.com');
         $organization->setName($name);
         $this->om->persist($organization);
 
@@ -137,7 +134,7 @@ class Persister {
     }
 
     /**
-     * shortcut for persisting (if we don't want/need to add the object manager for our tests)
+     * shortcut for persisting (if we don't want/need to add the object manager for our tests).
      */
     public function persist($entity)
     {
@@ -145,7 +142,7 @@ class Persister {
     }
 
     /**
-     * shortcut for flushing (if we don't want/need to add the object manager for our tests)
+     * shortcut for flushing (if we don't want/need to add the object manager for our tests).
      */
     public function flush()
     {

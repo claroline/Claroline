@@ -11,7 +11,7 @@
 
 namespace Claroline\RssReaderBundle\Library;
 
-use \SimpleXMLElement;
+use SimpleXMLElement;
 
 /**
  * Provides a reader for a feed, choosing amongst a set of predefined readers.
@@ -34,7 +34,9 @@ class ReaderProvider
      * Returns a reader object for the given feed.
      *
      * @param string $feedContent
+     *
      * @return FeedReaderInterface
+     *
      * @throws UnknownFormatException if the feed format is not supported by any reader
      */
     public function getReaderFor($feedContent)

@@ -26,13 +26,15 @@ class WidgetFormViewEvent extends Event
 
     /**
      * @return string
+     *
      * @throws \Exception
      */
     public function getFormView()
     {
         if (null === $this->formView) {
-            throw new \Exception("Empty form view");
+            throw new \Exception('Empty form view');
         }
+
         return $this->formView;
     }
 

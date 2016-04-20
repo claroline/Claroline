@@ -26,9 +26,9 @@ class AdminAnalyticsConnectionsType extends AbstractType
                     'attr' => array('class' => 'input-sm'),
                     'choices' => array(
                         'false' => 'connections',
-                        'true' => 'unique_connections'
+                        'true' => 'unique_connections',
                     ),
-                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3')
+                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3'),
                 )
             )
             ->add(
@@ -38,7 +38,7 @@ class AdminAnalyticsConnectionsType extends AbstractType
                     'label' => 'for_period',
                     'required' => false,
                     'attr' => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3')
+                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3'),
                 )
             );
     }
@@ -54,7 +54,7 @@ class AdminAnalyticsConnectionsType extends AbstractType
         ->setDefaults(
             array(
                 'translation_domain' => 'platform',
-                'csrf_protection'   => false
+                'csrf_protection' => false,
             )
         );
     }

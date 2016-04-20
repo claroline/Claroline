@@ -3,13 +3,12 @@
 namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Document;
 
-class LogDropzoneReturnReceiptEvent extends AbstractLogResourceEvent implements NotifiableInterface {
-
+class LogDropzoneReturnReceiptEvent extends AbstractLogResourceEvent implements NotifiableInterface
+{
     const ACTION = 'resource-innova_collecticiel-dropzone_return_receipt';
 
     protected $dropzone;
@@ -18,25 +17,20 @@ class LogDropzoneReturnReceiptEvent extends AbstractLogResourceEvent implements 
     private $userIds = array();
 
     /**
-     * @param Wiki $wiki
-     * @param Section $section
+     * @param Wiki         $wiki
+     * @param Section      $section
      * @param Contribution $contribution
-    */
+     */
     public function __construct(Document $document, Dropzone $dropzone, $userIds)
     {
-
         $this->document = $document;
 
         // Traitement du paramètre "type" : gestion du cas spécifique du type URL.
         if ($document->getType() == 'url') {
             $this->type = $document->getUrl();
-        }
-        elseif (strlen($document->getTitle())>0)
-        {
+        } elseif (strlen($document->getTitle()) > 0) {
             $this->type = $document->getTitle();
-        }
-        else
-        {
+        } else {
             $this->type = $document->getResourceNode()->getName();
         }
         $this->userIds = $userIds;
@@ -68,7 +62,7 @@ class LogDropzoneReturnReceiptEvent extends AbstractLogResourceEvent implements 
     /**
      * Get sendToFollowers boolean.
      * 
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -77,12 +71,13 @@ class LogDropzoneReturnReceiptEvent extends AbstractLogResourceEvent implements 
 
     /**
      * Get includeUsers array of user ids.
-     * Reports are only reported to user witch have the manager role
+     * Reports are only reported to user witch have the manager role.
+     *
      * @return array
      */
     public function getIncludeUserIds()
     {
-       return $this->userIds; 
+        return $this->userIds;
     }
 
     /**
@@ -112,32 +107,31 @@ class LogDropzoneReturnReceiptEvent extends AbstractLogResourceEvent implements 
      */
     public function getIconKey()
     {
-        return "dropzone";
+        return 'dropzone';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
     public function getNotificationDetails()
     {
-
         $notificationDetails = array_merge($this->details, array());
 
         $notificationDetails['resource'] = array(
             'id' => $this->document->getId(),
-            'name' => $this->firstName . " " . $this->lastName, // $this->resource->getName(),
-            'type' => $this->type
+            'name' => $this->firstName.' '.$this->lastName, // $this->resource->getName(),
+            'type' => $this->type,
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

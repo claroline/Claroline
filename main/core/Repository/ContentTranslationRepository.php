@@ -30,7 +30,7 @@ class ContentTranslationRepository extends TranslationRepository
         $query = $this->_em->createQueryBuilder()
             ->select('content.content', 'content.title')
             ->from('ClarolineCoreBundle:Content', 'content')
-            ->where('content.id = ' . $id)
+            ->where('content.id = '.$id)
             ->getQuery()
             ->execute(
                 compact('entityId', 'entityClass'),

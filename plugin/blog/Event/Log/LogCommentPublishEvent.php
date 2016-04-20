@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,9 +8,7 @@
  * 
  * Date: 4/21/15
  */
-
 namespace Icap\BlogBundle\Event\Log;
-
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
@@ -37,17 +35,17 @@ class LogCommentPublishEvent extends AbstractLogResourceEvent implements Notifia
 
         $this->details = array(
             'post' => array(
-                'blog'  => $this->blog->getId(),
+                'blog' => $this->blog->getId(),
                 'title' => $post->getTitle(),
-                'slug'  => $post->getSlug()
+                'slug' => $post->getSlug(),
             ),
             'comment' => array(
-                'id'        => $comment->getId(),
-                'content'   => $comment->getMessage(),
+                'id' => $comment->getId(),
+                'content' => $comment->getMessage(),
                 'published' => $comment->isPublished(),
-                'author'    => $comment->getAuthor()->getFirstName()." ".$post->getAuthor()->getLastName(),
-                'authorId'  => $comment->getAuthor()->getId()
-            )
+                'author' => $comment->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName(),
+                'authorId' => $comment->getAuthor()->getId(),
+            ),
         );
 
         parent::__construct($this->blog->getResourceNode(), $this->details);
@@ -64,7 +62,7 @@ class LogCommentPublishEvent extends AbstractLogResourceEvent implements Notifia
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -110,11 +108,11 @@ class LogCommentPublishEvent extends AbstractLogResourceEvent implements Notifia
      */
     public function getIconKey()
     {
-        return "blog";
+        return 'blog';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -124,19 +122,19 @@ class LogCommentPublishEvent extends AbstractLogResourceEvent implements Notifia
         $notificationDetails['resource'] = array(
             'id' => $this->blog->getId(),
             'name' => $this->resource->getName(),
-            'type' => $this->resource->getResourceType()->getName()
+            'type' => $this->resource->getResourceType()->getName(),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {
         return true;
     }
-} 
+}

@@ -11,12 +11,12 @@
 
 namespace Claroline\ActivityToolBundle\Listener;
 
-use \Mockery as m;
+use Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class ToolListenerTest extends MockeryTestCase
 {
-//    private $container;
+    //    private $container;
     private $toolListener;
     private $em;
     private $activityRepo;
@@ -78,8 +78,8 @@ class ToolListenerTest extends MockeryTestCase
                         'type' => 'activity',
                         'previous_id' => 3,
                         'next_id' => 4,
-                        'large_icon' => 'no_icon'
-                    )
+                        'large_icon' => 'no_icon',
+                    ),
                 )
             );
         $this->resourceManager
@@ -91,8 +91,8 @@ class ToolListenerTest extends MockeryTestCase
                     array(
                         'id' => 1,
                         'code' => 'workspace_code',
-                        'name' => 'workspace_name'
-                    )
+                        'name' => 'workspace_name',
+                    ),
                 )
             );
         $this->activityRepo
@@ -105,8 +105,8 @@ class ToolListenerTest extends MockeryTestCase
                         'nodeId' => 1,
                         'instructions' => 'my_instructions',
                         'startDate' => $startDate,
-                        'endDate' => null
-                    )
+                        'endDate' => null,
+                    ),
                 )
             );
         $startDate->shouldReceive('format')
@@ -126,23 +126,23 @@ class ToolListenerTest extends MockeryTestCase
                         'type' => 'activity',
                         'previous_id' => 3,
                         'next_id' => 4,
-                        'large_icon' => 'no_icon'
-                    )
+                        'large_icon' => 'no_icon',
+                    ),
                 ),
                 'activityInfos' => array(
                     1 => array(
                         'instructions' => 'my_instructions',
                         'startDate' => '2013-06-18 10:49:00',
-                        'endDate' => '-'
-                    )
+                        'endDate' => '-',
+                    ),
                 ),
                 'workspaceInfos' => array(
                     'workspace_code' => array(
                         'code' => 'workspace_code',
                         'name' => 'workspace_name',
-                        'nodes' => array(1)
-                    )
-                )
+                        'nodes' => array(1),
+                    ),
+                ),
             ),
             $this->toolListener->fetchActivitiesDatas(true, null)
         );
@@ -187,8 +187,8 @@ class ToolListenerTest extends MockeryTestCase
                         'type' => 'activity',
                         'previous_id' => 3,
                         'next_id' => 4,
-                        'large_icon' => 'no_icon'
-                    )
+                        'large_icon' => 'no_icon',
+                    ),
                 )
             );
         $this->activityRepo
@@ -201,8 +201,8 @@ class ToolListenerTest extends MockeryTestCase
                         'nodeId' => 1,
                         'instructions' => 'my_instructions',
                         'startDate' => $startDate,
-                        'endDate' => null
-                    )
+                        'endDate' => null,
+                    ),
                 )
             );
         $startDate->shouldReceive('format')
@@ -222,16 +222,16 @@ class ToolListenerTest extends MockeryTestCase
                         'type' => 'activity',
                         'previous_id' => 3,
                         'next_id' => 4,
-                        'large_icon' => 'no_icon'
-                    )
+                        'large_icon' => 'no_icon',
+                    ),
                 ),
                 'activityInfos' => array(
                     1 => array(
                         'instructions' => 'my_instructions',
                         'startDate' => '2013-06-18 10:49:00',
-                        'endDate' => '-'
-                    )
-                )
+                        'endDate' => '-',
+                    ),
+                ),
             ),
             $this->toolListener->fetchActivitiesDatas(false, $workspace)
         );

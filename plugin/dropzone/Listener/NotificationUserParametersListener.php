@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,15 +8,13 @@
  * 
  * Date: 4/13/15
  */
-
 namespace Icap\DropzoneBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class NotificationUserParametersListener
- * @package Claroline\CoreBundle\Listener\Notification
+ * Class NotificationUserParametersListener.
  *
  * @DI\Service()
  */
@@ -29,6 +27,6 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
-        $event->addTypes("icap_dropzone");
+        $event->addTypes('icap_dropzone');
     }
-} 
+}

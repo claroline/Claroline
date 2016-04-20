@@ -2,12 +2,6 @@
 
 namespace Icap\WikiBundle\Listener;
 
-use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
-use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
-use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
-use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
-use Icap\BlogBundle\Event\Log\LogPostReadEvent;
-use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
 use Icap\WikiBundle\Event\Log\LogContributionCreateEvent;
 use Icap\WikiBundle\Event\Log\LogSectionCreateEvent;
 use Icap\WikiBundle\Event\Log\LogSectionDeleteEvent;
@@ -49,30 +43,29 @@ class BadgeListener
     public function onBagdeCreateValidationLink($event)
     {
         $content = null;
-        $log     = $event->getLog();
+        $log = $event->getLog();
 
-        switch($log->getAction())
-        {
+        switch ($log->getAction()) {
             case LogSectionCreateEvent::ACTION:
             case LogSectionDeleteEvent::ACTION:
             case LogSectionMoveEvent::ACTION:
             case LogSectionRemoveEvent::ACTION:
             case LogSectionRestoreEvent::ACTION:
             case LogSectionUpdateEvent::ACTION:
-                $logDetails    = $event->getLog()->getDetails();
-                $parameters    = array('wikiId' => $logDetails['section']['wiki']);
-                $sectionAnchor = sprintf("#section-%s", $logDetails['section']['id']);
-                $url           = $this->router->generate('icap_wiki_view', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
-                $title         = $logDetails['section']['title'];
-                $content       = sprintf('<a href="%s%s" title="%s">%s</a>', $url, $sectionAnchor, $title, $title);
+                $logDetails = $event->getLog()->getDetails();
+                $parameters = array('wikiId' => $logDetails['section']['wiki']);
+                $sectionAnchor = sprintf('#section-%s', $logDetails['section']['id']);
+                $url = $this->router->generate('icap_wiki_view', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+                $title = $logDetails['section']['title'];
+                $content = sprintf('<a href="%s%s" title="%s">%s</a>', $url, $sectionAnchor, $title, $title);
                 break;
             case LogContributionCreateEvent::ACTION:
-                $logDetails    = $event->getLog()->getDetails();
-                $parameters    = array('wikiId' => $logDetails['contribution']['wiki']);
-                $sectionAnchor = sprintf("#section-%s", $logDetails['contribution']['section']);
-                $url           = $this->router->generate('icap_wiki_view', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
-                $title         = $logDetails['contribution']['title'];
-                $content       = sprintf('<a href="%s%s" title="%s">%s</a>', $url, $sectionAnchor, $title, $title);
+                $logDetails = $event->getLog()->getDetails();
+                $parameters = array('wikiId' => $logDetails['contribution']['wiki']);
+                $sectionAnchor = sprintf('#section-%s', $logDetails['contribution']['section']);
+                $url = $this->router->generate('icap_wiki_view', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+                $title = $logDetails['contribution']['title'];
+                $content = sprintf('<a href="%s%s" title="%s">%s</a>', $url, $sectionAnchor, $title, $title);
                 break;
         }
 

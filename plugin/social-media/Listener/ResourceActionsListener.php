@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,7 +8,6 @@
  * 
  * Date: 4/24/15
  */
-
 namespace Icap\SocialmediaBundle\Listener;
 
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
@@ -16,11 +15,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
- * Class ResourceActionsListener
- * @package Icap\SocialmediaBundle\Listener
+ * Class ResourceActionsListener.
  *
  * @DI\Service
  */
@@ -56,8 +53,8 @@ class ResourceActionsListener
     {
         $this->redirect(
             [
-                '_controller'   => 'IcapSocialmediaBundle:LikeAction:form',
-                'resourceId'    => $event->getResource()->getResourceNode()->getId()
+                '_controller' => 'IcapSocialmediaBundle:LikeAction:form',
+                'resourceId' => $event->getResource()->getResourceNode()->getId(),
             ],
             $event
         );
@@ -70,8 +67,8 @@ class ResourceActionsListener
     {
         $this->redirect(
             [
-                '_controller'   => 'IcapSocialmediaBundle:ShareAction:form',
-                'resourceId'    => $event->getResource()->getResourceNode()->getId()
+                '_controller' => 'IcapSocialmediaBundle:ShareAction:form',
+                'resourceId' => $event->getResource()->getResourceNode()->getId(),
             ],
             $event
         );
@@ -84,8 +81,8 @@ class ResourceActionsListener
     {
         $this->redirect(
             [
-                '_controller'   => 'IcapSocialmediaBundle:CommentAction:form',
-                'resourceId'    => $event->getResource()->getResourceNode()->getId()
+                '_controller' => 'IcapSocialmediaBundle:CommentAction:form',
+                'resourceId' => $event->getResource()->getResourceNode()->getId(),
             ],
             $event
         );
@@ -98,8 +95,8 @@ class ResourceActionsListener
     {
         $this->redirect(
             [
-                '_controller'   => 'IcapSocialmediaBundle:NoteAction:form',
-                'resourceId'    => $event->getResource()->getResourceNode()->getId()
+                '_controller' => 'IcapSocialmediaBundle:NoteAction:form',
+                'resourceId' => $event->getResource()->getResourceNode()->getId(),
             ],
             $event
         );
@@ -112,4 +109,4 @@ class ResourceActionsListener
         $event->setResponse($response);
         $event->stopPropagation();
     }
-} 
+}

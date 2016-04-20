@@ -76,7 +76,7 @@ class AnnouncementControllerTest extends MockeryTestCase
             array(
                 '_resource' => $aggregate,
                 'announcements' => 'pager',
-                'resourceCollection' => $collection
+                'resourceCollection' => $collection,
             ),
             $controller->announcementsListAction($aggregate, 1)
         );
@@ -120,7 +120,7 @@ class AnnouncementControllerTest extends MockeryTestCase
             array(
                 '_resource' => $aggregate,
                 'announcements' => 'pager',
-                'resourceCollection' => $collection
+                'resourceCollection' => $collection,
             ),
             $controller->announcementsListAction($aggregate, 1)
         );
@@ -154,7 +154,7 @@ class AnnouncementControllerTest extends MockeryTestCase
             array(
                 'form' => 'view',
                 'type' => 'create',
-                '_resource' => $aggregate
+                '_resource' => $aggregate,
             ),
             $controller->createFormAction($aggregate)
         );
@@ -194,7 +194,7 @@ class AnnouncementControllerTest extends MockeryTestCase
                 'form' => 'view',
                 'type' => 'edit',
                 'announcement' => $announcement,
-                '_resource' => $aggregate
+                '_resource' => $aggregate,
             ),
             $controller->announcementEditFormAction($announcement)
         );
@@ -244,7 +244,7 @@ class AnnouncementControllerTest extends MockeryTestCase
         $announcementB = new Announcement();
         $datas = array(
             array('announcement' => $announcementA),
-            array('announcement' => $announcementB)
+            array('announcement' => $announcementB),
         );
 
         $this->securityContext
@@ -275,7 +275,7 @@ class AnnouncementControllerTest extends MockeryTestCase
             array(
                 'datas' => 'pager',
                 'widgetType' => 'workspace',
-                'workspaceId' => 1
+                'workspaceId' => 1,
             ),
             $controller->announcementsWorkspaceWidgetPagerAction($workspace, 1)
         );
@@ -295,7 +295,7 @@ class AnnouncementControllerTest extends MockeryTestCase
         $announcementB = new Announcement();
         $datas = array(
             array('announcement' => $announcementA),
-            array('announcement' => $announcementB)
+            array('announcement' => $announcementB),
         );
 
         $this->securityContext
@@ -326,7 +326,7 @@ class AnnouncementControllerTest extends MockeryTestCase
         $this->assertEquals(
             array(
                 'datas' => 'pager',
-                'widgetType' => 'desktop'
+                'widgetType' => 'desktop',
             ),
             $controller->announcementsDesktopWidgetPagerAction(1)
         );
@@ -335,7 +335,6 @@ class AnnouncementControllerTest extends MockeryTestCase
     private function getController(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
-
             return new AnnouncementController(
                 $this->announcementManager,
                 $this->formFactory,
@@ -358,7 +357,7 @@ class AnnouncementControllerTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\AnnouncementBundle\Controller\AnnouncementController' . $stringMocked,
+            'Claroline\AnnouncementBundle\Controller\AnnouncementController'.$stringMocked,
             array(
                 $this->announcementManager,
                 $this->formFactory,
@@ -367,7 +366,7 @@ class AnnouncementControllerTest extends MockeryTestCase
                 $this->dispatcher,
                 $this->translator,
                 $this->utils,
-                $this->workspaceManager
+                $this->workspaceManager,
             )
         );
     }

@@ -112,7 +112,7 @@ class Team
     protected $isPublic;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
@@ -250,8 +250,10 @@ class Team
     }
 
     /**
-     * Adds an user to team
+     * Adds an user to team.
+     *
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return \Claroline\TeamBundle\Entity\Team
      */
     public function addUser(User $user)
@@ -264,8 +266,10 @@ class Team
     }
 
     /**
-     * Removes an user to team
+     * Removes an user to team.
+     *
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return \Claroline\TeamBundle\Entity\Team
      */
     public function removeUser(User $user)

@@ -4,7 +4,9 @@
 
         <?php $errors = $var('errors'); ?>
         <hr>
-        <div class="form-group <?php if (isset($errors['firstName'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['firstName'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <span class="required">*</span>
                 <?php echo $trans('first_name') ?>
@@ -22,7 +24,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['lastName'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['lastName'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <span class="required">*</span>
                 <?php echo $trans('last_name') ?>
@@ -40,7 +44,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['username'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['username'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <span class="required">*</span>
                 <?php echo $trans('username') ?>
@@ -58,7 +64,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['password'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['password'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <span class="required">*</span>
                 <?php echo $trans('password') ?>
@@ -76,7 +84,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['email'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['email'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <span class="required">*</span>
                 <?php echo $trans('email') ?>

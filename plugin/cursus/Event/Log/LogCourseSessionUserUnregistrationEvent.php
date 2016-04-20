@@ -27,7 +27,7 @@ class LogCourseSessionUserUnregistrationEvent extends LogGenericEvent
         $details['username'] = $user->getUsername();
         $details['firsName'] = $user->getFirstName();
         $details['lastName'] = $user->getLastName();
-        $details['sessionId']= $session->getId();
+        $details['sessionId'] = $session->getId();
         $details['sessionName'] = $session->getName();
         $details['sessionCreationDate'] = $session->getCreationDate()->format('d/m/Y H:i:s');
         $details['userType'] = $sessionUser->getUserType();
@@ -35,7 +35,6 @@ class LogCourseSessionUserUnregistrationEvent extends LogGenericEvent
         $details['courseTitle'] = $course->getTitle();
         $details['courseCode'] = $course->getCode();
         $details['registrationDate'] = $sessionUser->getRegistrationDate()->format('d/m/Y H:i:s');
-
 
         parent::__construct(
             self::ACTION,

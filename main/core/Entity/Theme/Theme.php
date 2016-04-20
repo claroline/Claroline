@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Theme
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")

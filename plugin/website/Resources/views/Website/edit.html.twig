@@ -1,0 +1,112 @@
+{% extends 'IcapWebsiteBundle::edit_layout.html.twig' %}
+{% import 'IcapWebsiteBundle:Website:Macros/common_macros.html.twig' as commonMacros %}
+{% import 'IcapWebsiteBundle:Website:Macros/edit_macros.html.twig' as editMacros %}
+
+{% set optionTabs = {'structure':'fa-sitemap', 'general':'fa-th-large', 'menu':'fa-list', 'banner':'fa-angle-up', 'footer':'fa-angle-down'} %}
+{% block content %}
+    <uib-alert ng-repeat="alert in alerts" dismiss-on-timeout="{{'{{ alert.duration }}'}}" type="{{ '{{ alert.type}}' }}" close="alert.close($index)"><b>{{ '{{alert.title}}' }}</b> {{ '{{alert.content}}' }}</uib-alert>
+    <div class="website-container">
+        <div class="website-body" data-ng-controller="MainController as vm">
+            <div class="panel admin-bar">
+                <ul class="nav nav-tabs admin-tab-options" role="tablist">
+                    {% for option, icon in optionTabs %}
+                        <li class="{{ option }}-options" ng-class="{'active':optionWindow=='{{ option }}'}"><a href="#/{{ option }}"><span class="icon-bg"></span><span class="option-text"><i class="fa {{ icon }}"></i> <span class="visible-md-inline visible-lg-inline">{{ option|trans({}, 'icap_website') }}</span></span></a></li>
+                    {% endfor %}
+                    <li class="pull-right"><a target="_blank" class="btn btn-default view-website-btn" href="{{ path('icap_website_force_view', {'websiteId': _resource.id}) }}"><i class="fa fa-eye"></i> <span class="visible-md-inline visible-lg-inline"> {{ 'view_website'|trans({}, 'icap_website') }}</span></a></li>
+                    <li class="pull-right" data-ng-hide="optionWindow=='structure'"><button class="btn btn-primary save-options-btn" data-ng-click="vm.options.save()"><i class="fa fa-floppy-o"></i> <span class="visible-md-inline visible-lg-inline"> {{ 'save_all_options'|trans({}, 'icap_website') }}</span></button></li>
+                </ul>
+                <div class="admin-tabs">
+                    {% include 'IcapWebsiteBundle:Website:Edit/general_options.html.twig' %}
+                    {% include 'IcapWebsiteBundle:Website:Edit/menu_options.html.twig' %}
+                    {% include 'IcapWebsiteBundle:Website:Edit/banner_footer_options.html.twig' with {'tag':'banner'} %}
+                    {% include 'IcapWebsiteBundle:Website:Edit/banner_footer_options.html.twig' with {'tag':'footer'} %}
+                    {% include 'IcapWebsiteBundle:Website:Edit/structure.html.twig' with {'pageTypes': pageTypes} %}
+                </div>
+            </div>
+            <div class="website-preview" data-ng-show="optionWindow!='structure'" data-ng-style="vm.websitePreviewStyle()">
+                <div class="website-preview-inner" data-ng-style="vm.websitePreviewInnerStyle()">
+                    <div class="banner resizeable-bottom" ng-style="vm.bannerStyle" data-ng-show="vm.options.data.bannerEnabled">
+                        <div data-ng-show="!vm.options.data.bannerEditorActive" data-ng-bind-html="vm.options.data.bannerText|trustAsHtml"></div>
+                        <div data-ng-show="vm.options.data.bannerEditorActive" data-ng-style="{'height':vm.options.data.bannerHeight+'px'}"><textarea id="banner-text" data-ng-style="{'height':vm.options.data.bannerHeight}" class="form-control" data-ui-tinymce="vm.tinymceConfig" data-ng-model="vm.options.data.bannerText"></textarea></div>
+                    </div>
+                    <div class="horizontal-resizer" resizer-bottom resizer="vm.options.data.bannerHeight" resizer-max="200" resizer-min="0" data-ng-show="vm.options.data.bannerEnabled">
+                        <div class="resizer-box-left"></div>
+                        <div class="resizer-box-center"></div>
+                        <div class="resizer-box-right"></div>
+                    </div>
+                    <div class="website-container">
+
+                        <div class="horizontal-menu" ng-show="vm.options.data.menuOrientation=='horizontal'">
+                            <ui-flexnav menu="vm.website.pages[0]" style-options="vm.options.data" options="vm.flexnavOptions"></ui-flexnav>
+                        </div>
+                        <div class="container-content" ng-style="{height: vm.contentHeight}">
+                            <div class="vertical-menu resizeable-right float-left" ng-show="vm.options.data.menuOrientation=='vertical'" ng-style="vm.menuVerticalStyle()">
+                                <wxy-push-menu menu="vm.website.pages[0]" menu-style="vm.options.data" options="vm.pushMenuOptions" menu-width="vm.options.data.menuWidth"></wxy-push-menu>
+                            </div>
+                            <div class="vertical-resizer float-left" ng-show="vm.options.data.menuOrientation=='vertical'" data-ng-mousedown="vm.optionWindow='menu'" resizer-right resizer="vm.options.data.menuWidth" data-ng-style="vm.menuResizerStyle()" resizer-max="200" resizer-min="50">
+                                <div class="resizer-box-top"></div>
+                                <div class="resizer-box-middle"></div>
+                                <div class="resizer-box-bottom"></div>
+                            </div>
+                            <div class="content" change-height="vm.contentHeight" style="min-height: 200px;" ng-style="{'margin-left':((vm.options.data.menuOrientation=='vertical')?(vm.options.data.menuWidth+15):0)+'px', 'background-color': vm.options.data.bgContentColor}">
+                                <div>
+                                    <div data-ng-if="vm.currentClickedItem.type=='{{ pageTypes.blank }}'" ng-bind-html="vm.currentClickedItem.richText|trustAsHtml"></div>
+                                    <iframe width="100%" iframe-height-on-load data-ng-if="vm.currentClickedItem.type=='{{ pageTypes.url }}'" data-ng-src="{{ '{{ vm.currentClickedItem.url|trustAsResourceUrl }}' }}"></iframe>
+                                    <iframe width="100%" iframe-height-on-load data-ng-if="vm.currentClickedItem.type=='{{ pageTypes.resource }}'" data-ng-src="{{ '{{ vm.currentPageUrl|trustAsResourceUrl }}' }}"></iframe>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="footer resizeable-bottom" data-ng-style="vm.footerStyle" data-ng-show="vm.options.data.footerEnabled">
+                        <div data-ng-show="!vm.options.data.footerEditorActive" data-ng-bind-html="vm.options.data.footerText|trustAsHtml"></div>
+                        <div data-ng-show="vm.options.data.footerEditorActive" data-ng-style="{'height':vm.options.data.footerHeight+'px'}"><textarea id="footer-text" ng-style="{'height':vm.options.data.footerHeight}" class="form-control" ui-tinymce="vm.tinymceConfig" data-ng-model="vm.options.data.footerText"></textarea></div>
+                        <div class="copyright-text" data-ng-if="vm.options.data.copyrightEnabled&&!vm.options.data.footerEditorActive" data-ng-style="{'color':vm.options.data.menuFontColor}">© Copyright {{ '{{ vm.options.data.copyrightText }}' }}</div>
+                    </div>
+                    <div class="horizontal-resizer" resizer-bottom resizer="vm.options.data.footerHeight" resizer-max="200" resizer-min="0" data-ng-show="vm.options.data.footerEnabled">
+                        <div class="resizer-box-left"></div>
+                        <div class="resizer-box-center"></div>
+                        <div class="resizer-box-right"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ editMacros.getStylesheets() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ hotAsset("dist/claroline-distribution-plugin-website-edit-app.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("packages/angular-ui-resource-picker/angular-resource-picker.js") }}"></script>
+    <script type="text/javascript">
+        (function() {
+            'use strict';
+            angular
+                .module('website.constants', [])
+                .constant('website.data', {
+                    'id': {{ _resource.id }},
+                    'options': {{ _resource.options|serialize('json', serialization_context().setSerializeNull(true))|raw }},
+                    'basePath': "{{ app.request.basePath }}",
+                    'path': "{{ path('icap_website_view',{'websiteId': _resource.id}) }}",
+                    'optionTabs': [{% for option, icon in optionTabs  %} "{{ option }}"{% if not loop.last %},{% endif %} {% endfor %}],
+                    'pages': {{ _resource.pages|serialize('json', serialization_context().setSerializeNull(true))|raw }},
+                    'resourceTypes': {
+                        {% for resourceType in resourceTypes %}
+                        "{{ resourceType.getName() }}": {
+                            "name": "{{ resourceType.getName()|trans({}, 'resource') }}"
+                        }{% if loop.last != true %},{% endif %}
+                        {% endfor %}
+                    }
+                });
+        })();
+    </script>
+
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_website' }) }}"></script>
+{% endblock %}

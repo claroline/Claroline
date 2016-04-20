@@ -3,13 +3,11 @@
 namespace Icap\DropzoneBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\DropzoneBundle\Entity\Dropzone;
 
-
-class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implements NotifiableInterface {
-
+class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implements NotifiableInterface
+{
     const ACTION = 'resource-icap_dropzone-dropzone_manual_state_changed';
     protected $dropzone;
     protected $newState;
@@ -17,17 +15,17 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
     private $userIds = array();
 
     /**
-     * @param Wiki $wiki
-     * @param Section $section
+     * @param Wiki         $wiki
+     * @param Section      $section
      * @param Contribution $contribution
-    */
-    public function __construct(Dropzone $dropzone,$newstate,$userIds)
+     */
+    public function __construct(Dropzone $dropzone, $newstate, $userIds)
     {
         $this->dropzone = $dropzone;
         $this->newState = $newstate;
         $this->userIds = $userIds;
         $this->details = array(
-                'newState'=> $newstate
+                'newState' => $newstate,
         );
 
         parent::__construct($dropzone->getResourceNode(), $this->details);
@@ -48,7 +46,7 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
     /**
      * Get sendToFollowers boolean.
      * 
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -57,12 +55,13 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
 
     /**
      * Get includeUsers array of user ids.
-     * Reports are only reported to user witch have the manager role
+     * Reports are only reported to user witch have the manager role.
+     *
      * @return array
      */
     public function getIncludeUserIds()
     {
-       return $this->userIds; 
+        return $this->userIds;
     }
 
     /**
@@ -92,11 +91,11 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
      */
     public function getIconKey()
     {
-        return "dropzone";
+        return 'dropzone';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -106,16 +105,16 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
         $notificationDetails['resource'] = array(
             'id' => $this->dropzone->getId(),
             'name' => $this->resource->getName(),
-            'type' => $this->resource->getResourceType()->getName()
+            'type' => $this->resource->getResourceType()->getName(),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

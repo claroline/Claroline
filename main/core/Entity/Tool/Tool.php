@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\CoreBundle\Entity\Plugin;
-use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -98,7 +97,7 @@ class Tool
     /**
      * Unmapped var used for the tool configuration.
      *
-     * @var boolean
+     * @var bool
      */
     private $isVisible = true;
 
@@ -135,7 +134,7 @@ class Tool
 
     public function __construct()
     {
-        $this->maskDecoders  = new ArrayCollection();
+        $this->maskDecoders = new ArrayCollection();
         $this->pwsToolConfig = new ArrayCollection();
     }
 

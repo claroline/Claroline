@@ -31,7 +31,7 @@ class ProfileType extends AbstractType
      * Constructor.
      *
      * @param Role[]   $platformRoles
-     * @param boolean  $isAdmin
+     * @param bool     $isAdmin
      * @param string[] $langs
      */
     public function __construct(
@@ -41,8 +41,7 @@ class ProfileType extends AbstractType
         $isGrantedUserAdministration,
         $accesses,
         $authenticationDrivers = null
-    )
-    {
+    ) {
         $this->accesses = $accesses;
         $this->platformRoles = $platformRoles;
         $this->isAdmin = $isAdmin;
@@ -57,7 +56,7 @@ class ProfileType extends AbstractType
         if (php_sapi_name() === 'cli') {
             $this->isAdmin = true;
         }
-        
+
         parent::buildForm($builder, $options);
 
         $builder
@@ -79,15 +78,15 @@ class ProfileType extends AbstractType
                     'required' => false,
                     'constraints' => new Image(
                         array(
-                            'minWidth'  => 50,
-                            'maxWidth'  => 800,
+                            'minWidth' => 50,
+                            'maxWidth' => 800,
                             'minHeight' => 50,
                             'maxHeight' => 800,
                         )
                     ),
                     'label' => 'picture_profile',
                     'read_only' => !$this->accesses['picture'],
-                    'disabled' => !$this->accesses['picture']
+                    'disabled' => !$this->accesses['picture'],
                 )
             )
             ->add(
@@ -105,7 +104,7 @@ class ProfileType extends AbstractType
                     'multiple' => true,
                     'property' => 'name',
                     'read_only' => true,
-                    'disabled' => true
+                    'disabled' => true,
                 )
             );
 
@@ -125,7 +124,7 @@ class ProfileType extends AbstractType
                     array(
                         'choices' => $this->authenticationDrivers,
                         'required' => false,
-                        'label' => 'authentication'
+                        'label' => 'authentication',
                     )
                 )
                 ->add(
@@ -141,7 +140,7 @@ class ProfileType extends AbstractType
                         'property' => 'translationKey',
                         'query_builder' => function (RoleRepository $roleRepository) use ($isAdmin) {
                             $query = $roleRepository->createQueryBuilder('r')
-                                    ->where("r.type = " . Role::PLATFORM_ROLE)
+                                    ->where('r.type = '.Role::PLATFORM_ROLE)
                                     ->andWhere("r.name != 'ROLE_ANONYMOUS'")
                                     ->andWhere("r.name != 'ROLE_USER'");
                             if (!$isAdmin) {
@@ -150,7 +149,7 @@ class ProfileType extends AbstractType
 
                             return $query;
                         },
-                        'label' => 'roles'
+                        'label' => 'roles',
                     )
                 )
                 ->add(
@@ -160,13 +159,13 @@ class ProfileType extends AbstractType
                         'required' => false,
                         'constraints' => new Image(
                             array(
-                                'minWidth'  => 50,
-                                'maxWidth'  => 800,
+                                'minWidth' => 50,
+                                'maxWidth' => 800,
                                 'minHeight' => 50,
                                 'maxHeight' => 800,
                             )
                         ),
-                        'label' => 'picture_profile'
+                        'label' => 'picture_profile',
                     )
                 )
                 ->add(
@@ -182,10 +181,9 @@ class ProfileType extends AbstractType
                         'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
                         'expanded' => true,
                         'multiple' => true,
-                        'property' => 'name'
+                        'property' => 'name',
                     )
                 );
-
         }
     }
 
@@ -197,10 +195,12 @@ class ProfileType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $default = array(
-            'data_class'         => 'Claroline\CoreBundle\Entity\User',
-            'translation_domain' => 'platform'
+            'data_class' => 'Claroline\CoreBundle\Entity\User',
+            'translation_domain' => 'platform',
         );
-        if ($this->forApi) $default['csrf_protection'] = false;
+        if ($this->forApi) {
+            $default['csrf_protection'] = false;
+        }
 
         $resolver->setDefaults($default);
     }

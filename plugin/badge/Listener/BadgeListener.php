@@ -75,8 +75,7 @@ class BadgeListener
         PagerFactory $pagerFactory,
         TokenStorageInterface $tokenStorage,
         Registry $doctrine
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->badgeManager = $badgeManager;
         $this->templateingEngine = $templatingEngine;
@@ -99,8 +98,7 @@ class BadgeListener
         $badges = $badgeRuleRepository->findBadgeAutomaticallyAwardedFromAction($event->getLog());
 
         if (0 < count($badges)) {
-
-            $doer     = $event->getLog()->getDoer();
+            $doer = $event->getLog()->getDoer();
             $receiver = $event->getLog()->getReceiver();
 
             foreach ($badges as $badge) {
@@ -109,7 +107,7 @@ class BadgeListener
                 if (null !== $doer && !$this->userHasBadge($doer, $badge)) {
                     $resources = $this->ruleValidator->validate($badge, $doer);
 
-                    if(0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
+                    if (0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
                         $this->badgeManager->addBadgeToUser($badge, $doer);
                     }
                 }
@@ -117,7 +115,7 @@ class BadgeListener
                 if (null !== $receiver && !$this->userHasBadge($receiver, $badge)) {
                     $resources = $this->ruleValidator->validate($badge, $receiver);
 
-                    if(0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
+                    if (0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
                         $this->badgeManager->addBadgeToUser($badge, $receiver);
                     }
                 }
@@ -172,7 +170,8 @@ class BadgeListener
      * @DI\Observe("list_all_my_badges")
      *
      * @param DisplayToolEvent $event
-     * @return String (content)
+     *
+     * @return string (content)
      */
     public function onListAllMyBadges(DisplayToolEvent $event)
     {
@@ -199,34 +198,34 @@ class BadgeListener
         /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
         $userBadgeRepository = $this->doctrine->getRepository('IcapBadgeBundle:UserBadge');
 
-        $totalBadges       = $badgeRepository->countByWorkspace($workspace);
+        $totalBadges = $badgeRepository->countByWorkspace($workspace);
         $totalBadgeAwarded = $userBadgeRepository->countAwardedBadgeByWorkspace($workspace);
         $mostAwardedBadges = $userBadgeRepository->findWorkspaceMostAwardedBadges($workspace);
-        $countBadgesPerUser= $userBadgeRepository->countBadgesPerUser($workspace);
+        $countBadgesPerUser = $userBadgeRepository->countBadgesPerUser($workspace);
 
         $parameters = array(
-            'badgePage'    => 1,
-            'claimPage'    => 1,
-            'userPage'    => 1,
-            'workspace'    => $workspace,
+            'badgePage' => 1,
+            'claimPage' => 1,
+            'userPage' => 1,
+            'workspace' => $workspace,
             'mostAwardedBadges' => $mostAwardedBadges,
             'badges_per_user' => $countBadgesPerUser,
-            'add_link'     => 'icap_badge_workspace_tool_badges_add',
-            'edit_link'    => array(
-                'url'    => 'icap_badge_workspace_tool_badges_edit',
-                'suffix' => '#!edit'
+            'add_link' => 'icap_badge_workspace_tool_badges_add',
+            'edit_link' => array(
+                'url' => 'icap_badge_workspace_tool_badges_edit',
+                'suffix' => '#!edit',
             ),
-            'delete_link'      => 'icap_badge_workspace_tool_badges_delete',
-            'view_link'        => 'icap_badge_workspace_tool_badges_edit',
-            'current_link'     => 'icap_badge_workspace_tool_badges',
-            'claim_link'       => 'icap_badge_workspace_tool_manage_claim',
-            'statistics_link'  => 'icap_badge_workspace_tool_badges_statistics',
-            'totalBadges'          => $totalBadges,
-            'totalAwarding'        => $userBadgeRepository->countAwardingByWorkspace($workspace),
-            'totalBadgeAwarded'    => $totalBadgeAwarded,
+            'delete_link' => 'icap_badge_workspace_tool_badges_delete',
+            'view_link' => 'icap_badge_workspace_tool_badges_edit',
+            'current_link' => 'icap_badge_workspace_tool_badges',
+            'claim_link' => 'icap_badge_workspace_tool_manage_claim',
+            'statistics_link' => 'icap_badge_workspace_tool_badges_statistics',
+            'totalBadges' => $totalBadges,
+            'totalAwarding' => $userBadgeRepository->countAwardingByWorkspace($workspace),
+            'totalBadgeAwarded' => $totalBadgeAwarded,
             'totalBadgeNotAwarded' => $totalBadges - $totalBadgeAwarded,
             'route_parameters' => array(
-                'workspaceId' => $workspace->getId()
+                'workspaceId' => $workspace->getId(),
             ),
         );
 
@@ -249,7 +248,7 @@ class BadgeListener
             'IcapBadgeBundle:Tool:MyWorkspace\toolList.html.twig',
             array(
                 'workspace' => $workspace,
-                'user'      => $user
+                'user' => $user,
             )
         );
     }
@@ -271,7 +270,7 @@ class BadgeListener
             array(
                 'userBadges' => $userBadges,
                 'badgeClaims' => $badgeClaims,
-                'badgeCollections' => $badgeCollections
+                'badgeCollections' => $badgeCollections,
             )
         );
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,22 +8,17 @@
  * 
  * Date: 4/8/15
  */
-
 namespace Icap\NotificationBundle\Manager;
 
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Icap\NotificationBundle\Entity\NotificationUserParameters;
 use JMS\DiExtraBundle\Annotation as DI;
-use JMS\Serializer\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class NotificationUserParametersManager
- * @package Icap\NotificationBundle\Manager
+ * Class NotificationUserParametersManager.
  *
  * @DI\Service("icap.notification.manager.notification_user_parameters")
  */
@@ -61,10 +56,9 @@ class NotificationUserParametersManager
     public function getParametersByUserId($userId)
     {
         $parameters = null;
-        try{
+        try {
             $parameters = $this->notificationUserParametersRepository->findParametersByUserId($userId);
-        }catch (NoResultException $nre)
-        {
+        } catch (NoResultException $nre) {
             $parameters = $this->createEmptyParameters($userId);
         }
 
@@ -102,8 +96,8 @@ class NotificationUserParametersManager
         $visibleTypes = $parameters->getDisplayEnabledTypes();
         $rssVisibleTypes = $parameters->getRssEnabledTypes();
         foreach ($allTypes as $key => $type) {
-            $allTypes[$key]["visible"] = (isset($visibleTypes[$type["name"]]))?$visibleTypes[$type["name"]]:true;
-            $allTypes[$key]["rssVisible"] = (isset($rssVisibleTypes[$type["name"]]))?$rssVisibleTypes[$type["name"]]:false;
+            $allTypes[$key]['visible'] = (isset($visibleTypes[$type['name']])) ? $visibleTypes[$type['name']] : true;
+            $allTypes[$key]['rssVisible'] = (isset($rssVisibleTypes[$type['name']])) ? $rssVisibleTypes[$type['name']] : false;
         }
 
         return $allTypes;
@@ -117,12 +111,12 @@ class NotificationUserParametersManager
         $visibleTypes = array();
         $rssVisibleTypes = array();
         foreach ($allParameterTypes as $type) {
-            if (isset($newParameters[$type["name"]])) {
-                $options = $newParameters[$type["name"]];
-                $visibleTypes[$type["name"]] = in_array("visible", $options);
-                $rssVisibleTypes[$type["name"]] = in_array("rss", $options);
+            if (isset($newParameters[$type['name']])) {
+                $options = $newParameters[$type['name']];
+                $visibleTypes[$type['name']] = in_array('visible', $options);
+                $rssVisibleTypes[$type['name']] = in_array('rss', $options);
             } else {
-                $visibleTypes[$type["name"]] = $rssVisibleTypes[$type["name"]] = false;
+                $visibleTypes[$type['name']] = $rssVisibleTypes[$type['name']] = false;
             }
         }
         $userParameters->setDisplayEnabledTypes($visibleTypes);
@@ -149,4 +143,4 @@ class NotificationUserParametersManager
     {
         return md5(uniqid());
     }
-} 
+}

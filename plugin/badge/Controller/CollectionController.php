@@ -23,20 +23,19 @@ class CollectionController extends Controller
         $request->setLocale($locale);
 
         if (!$collection->isIsShared()) {
-            throw $this->createNotFoundException("Collection not shared.");
+            throw $this->createNotFoundException('Collection not shared.');
         }
 
         if (!$this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $showBanner = false;
-        }
-        else {
+        } else {
             $showBanner = ($this->getUser() === $collection->getUser());
         }
 
         return array(
             'collection' => $collection,
-            'user'       => $collection->getUser(),
-            'showBanner' => $showBanner
+            'user' => $collection->getUser(),
+            'showBanner' => $showBanner,
         );
     }
 }

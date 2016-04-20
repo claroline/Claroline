@@ -37,8 +37,7 @@ class Authenticator
         ObjectManager $om,
         TokenStorageInterface $tokenStorage,
         EncoderFactoryInterface $encodeFactory
-    )
-    {
+    ) {
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->tokenStorage = $tokenStorage;
         $this->encodeFactory = $encodeFactory;
@@ -73,5 +72,4 @@ class Authenticator
 
         return true;
     }
-
 }

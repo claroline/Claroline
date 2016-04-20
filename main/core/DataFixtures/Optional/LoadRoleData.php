@@ -32,7 +32,7 @@ class LoadRoleData extends AbstractFixture implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -40,15 +40,15 @@ class LoadRoleData extends AbstractFixture implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
         $roleManager = $this->container->get('claroline.manager.role_manager');
 
         foreach ($this->roles as $role) {
-            $entityRole = $roleManager->createCustomRole('ROLE_' . $role, $role);
-            $this->addReference('role/' . $role, $entityRole);
+            $entityRole = $roleManager->createCustomRole('ROLE_'.$role, $role);
+            $this->addReference('role/'.$role, $entityRole);
         }
 
         $manager->flush();

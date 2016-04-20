@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Form\Administration;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -32,7 +31,7 @@ class MailServerType extends AbstractType
                 'password' => false,
                 'auth_mode' => false,
                 'encryption' => false,
-                'port' => false
+                'port' => false,
             ),
             'gmail' => array(
                 'host' => false,
@@ -40,7 +39,7 @@ class MailServerType extends AbstractType
                 'password' => true,
                 'auth_mode' => false,
                 'encryption' => false,
-                'port' => false
+                'port' => false,
             ),
             'smtp' => array(
                 'host' => true,
@@ -48,8 +47,8 @@ class MailServerType extends AbstractType
                 'password' => true,
                 'auth_mode' => true,
                 'encryption' => true,
-                'port' =>true
-            )
+                'port' => true,
+            ),
         );
         $this->lockedParams = $lockedParams;
     }
@@ -63,7 +62,7 @@ class MailServerType extends AbstractType
                 array(
                     'choices' => array('sendmail' => 'sendmail', 'smtp' => 'smtp', 'gmail' => 'gmail'),
                     'disabled' => isset($this->lockedParams['mailer_transport']),
-                    'label' => 'transport'
+                    'label' => 'transport',
                 )
             )
             ->add(
@@ -73,7 +72,7 @@ class MailServerType extends AbstractType
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['host']),
                     'disabled' => isset($this->lockedParams['mailer_host']),
-                    'label' => 'host'
+                    'label' => 'host',
                 )
             )
             ->add(
@@ -83,7 +82,7 @@ class MailServerType extends AbstractType
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['username']),
                     'disabled' => isset($this->lockedParams['mailer_username']),
-                    'label' => 'username'
+                    'label' => 'username',
                 )
             )
             ->add(
@@ -93,7 +92,7 @@ class MailServerType extends AbstractType
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['password']),
                     'disabled' => isset($this->lockedParams['mailer_password']),
-                    'label' => 'password'
+                    'label' => 'password',
                 )
             )
             ->add(
@@ -104,18 +103,18 @@ class MailServerType extends AbstractType
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['auth_mode']),
                     'disabled' => isset($this->lockedParams['mailer_auth_mode']),
-                    'label' => 'auth_mode'
+                    'label' => 'auth_mode',
                 )
             )
             ->add(
                 'mailer_encryption',
                 'choice',
                 array(
-                    'choices' => array(null => '', 'tls' => 'tls', 'ssl' => 'ssl' ),
+                    'choices' => array(null => '', 'tls' => 'tls', 'ssl' => 'ssl'),
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['encryption']),
                     'disabled' => isset($this->lockedParams['mailer_encryption']),
-                    'label' => 'encryption'
+                    'label' => 'encryption',
                 )
             )
             ->add(
@@ -125,7 +124,7 @@ class MailServerType extends AbstractType
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['port']),
                     'disabled' => isset($this->lockedParams['mailer_port']),
-                    'label' => 'port'
+                    'label' => 'port',
                 )
             );
     }

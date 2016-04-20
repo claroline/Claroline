@@ -45,14 +45,14 @@ class Updater020200 extends Updater
                 $em->persist($trackingMenuAction);
                 $this->log(
                     "Adding 'open-tracking' menu for resource type '"
-                    . $resourceType->getName()
-                    . "'"
+                    .$resourceType->getName()
+                    ."'"
                 );
             } else {
                 $this->log(
                     "The 'open-tracking' permissions for resource type '"
-                    . $resourceType->getName()
-                    . "' already exists"
+                    .$resourceType->getName()
+                    ."' already exists"
                 );
             }
         }

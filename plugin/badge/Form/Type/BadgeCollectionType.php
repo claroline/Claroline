@@ -49,7 +49,7 @@ class BadgeCollectionType extends AbstractType
             ->add('userBadges', 'entity',
                 array(
                      'class' => 'IcapBadgeBundle:UserBadge',
-                     'query_builder' => function(EntityRepository $entityRepository) use($user) {
+                     'query_builder' => function (EntityRepository $entityRepository) use ($user) {
                         return $entityRepository->createQueryBuilder('u')
                             ->where('u.user = :user')
                             ->setParameter('user', $user);
@@ -57,7 +57,7 @@ class BadgeCollectionType extends AbstractType
                      'empty_value' => '',
                      'property' => 'badge.name',
                      'multiple' => true,
-                     'expanded' => true
+                     'expanded' => true,
                 )
             )
             ->add('is_shared', 'checkbox');
@@ -74,7 +74,7 @@ class BadgeCollectionType extends AbstractType
             array(
                 'data_class' => 'Icap\BadgeBundle\Entity\BadgeCollection',
                 'translation_domain' => 'icap_badge',
-                'csrf_protection' => false
+                'csrf_protection' => false,
             )
         );
     }

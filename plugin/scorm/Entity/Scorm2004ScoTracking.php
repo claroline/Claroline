@@ -208,12 +208,12 @@ class Scorm2004ScoTracking
             if ($hours < 10) {
                 $formattedTime .= '0';
             }
-            $formattedTime .= $hours . ':';
+            $formattedTime .= $hours.':';
 
             if ($minutes < 10) {
                 $formattedTime .= '0';
             }
-            $formattedTime .= $minutes . ':';
+            $formattedTime .= $minutes.':';
 
             if ($timeInSecond < 10) {
                 $formattedTime .= '0';

@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
 class ProfilePropertyRepository extends EntityRepository
 {
     /**
-     * Returns the accesses for a list of roles
+     * Returns the accesses for a list of roles.
      */
     public function findAccessesByRoles(array $roles)
     {

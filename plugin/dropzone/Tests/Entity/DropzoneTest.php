@@ -3,19 +3,15 @@
  * Created by PhpStorm.
  * User: Aurelien
  * Date: 29/09/14
- * Time: 11:24
+ * Time: 11:24.
  */
-
 namespace Icap\DropzoneBundle\Tests\Entity;
 
-
 use Icap\DropzoneBundle\Entity\Dropzone;
-use DateTime;
-
+use \DateTime;
 
 class DropzoneTest extends \PHPUnit_Framework_TestCase
 {
-
     private function createFixturesDropzones()
     {
         $dz0 = new Dropzone();
@@ -45,7 +41,7 @@ class DropzoneTest extends \PHPUnit_Framework_TestCase
 
         $dz5 = new Dropzone();
         $dz5->setManualPlanning(false);
-        $dz5->setStartAllowDrop(new \DateTime());
+        $dz5->setStartAllowDrop(new DateTime());
         $dateEnd6 = DateTime::createFromFormat('d-m-Y', '15-02-2019');
         $dz5->setEndAllowDrop($dateEnd6);
         $dz5->setPeerReview(true);
@@ -71,8 +67,6 @@ class DropzoneTest extends \PHPUnit_Framework_TestCase
 
     public function testisNotStarted()
     {
-
-        echo "testing DROPZONE->isNotStarted\n";
         $dzs = $this->createFixturesDropzones();
         $this->assertEquals(true, $dzs[0]->isNotStarted());
         $this->assertEquals(false, $dzs[1]->isNotStarted());
@@ -86,7 +80,6 @@ class DropzoneTest extends \PHPUnit_Framework_TestCase
 
     public function testisAllowDrop()
     {
-        echo "testing DROPZONE->isAllowDrop\n";
         $dzs = $this->createFixturesDropzones();
         $this->assertEquals(false, $dzs[0]->isAllowDrop());
         $this->assertEquals(true, $dzs[1]->isAllowDrop());
@@ -100,7 +93,6 @@ class DropzoneTest extends \PHPUnit_Framework_TestCase
 
     public function testIsPeerReview()
     {
-        echo "testing DROPZONE->isPeerReview\n";
         $dzs = $this->createFixturesDropzones();
         $this->assertEquals(false, $dzs[0]->isPeerReview());
         $this->assertEquals(false, $dzs[1]->isPeerReview());
@@ -110,7 +102,6 @@ class DropzoneTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $dzs[5]->isPeerReview());
         $this->assertEquals(false, $dzs[6]->isPeerReview());
         $this->assertEquals(false, $dzs[7]->isPeerReview());
-
 
         $dz2 = new Dropzone();
         $dz2->setManualState(Dropzone::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW);
@@ -122,7 +113,6 @@ class DropzoneTest extends \PHPUnit_Framework_TestCase
 
     public function testIsFinished()
     {
-        echo "testing DROPZONE->isFinished\n";
         $dzs = $this->createFixturesDropzones();
 
         $this->assertEquals(false, $dzs[0]->isFinished());
@@ -134,5 +124,4 @@ class DropzoneTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $dzs[6]->isFinished());
         $this->assertEquals(false, $dzs[7]->isFinished());
     }
-
-} 
+}

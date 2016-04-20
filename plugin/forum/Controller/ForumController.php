@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Claroline\ForumBundle\Controller;
 
 use Claroline\ForumBundle\Entity\Message;
@@ -36,7 +37,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * ForumController
+ * ForumController.
  */
 class ForumController extends Controller
 {
@@ -57,8 +58,7 @@ class ForumController extends Controller
         Manager $manager,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization
-    )
-    {
+    ) {
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -72,7 +72,7 @@ class ForumController extends Controller
      * @Template("ClarolineForumBundle::index.html.twig")
      *
      * @param Forum $forum
-     * @param User $user
+     * @param User  $user
      */
     public function openAction(Forum $forum)
     {
@@ -94,7 +94,7 @@ class ForumController extends Controller
             'isModerator' => $isModerator,
             'categories' => $categories,
             'hasSubscribed' => $hasSubscribed,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -108,8 +108,8 @@ class ForumController extends Controller
      * @Template()
      *
      * @param Category $category
-     * @param integer $page
-     * @param integer $max
+     * @param int      $page
+     * @param int      $max
      */
     public function subjectsAction(Category $category, $page, $max)
     {
@@ -165,7 +165,7 @@ class ForumController extends Controller
             'lastMessages' => $lastMessages,
             'workspace' => $forum->getResourceNode()->getWorkspace(),
             'lastAccessDates' => $lastAccessDates,
-            'isAnon' => $isAnon
+            'isAnon' => $isAnon,
         );
     }
 
@@ -194,7 +194,7 @@ class ForumController extends Controller
             '_resource' => $forum,
             'form' => $formSubject->createView(),
             'category' => $category,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -221,7 +221,7 @@ class ForumController extends Controller
         return array(
             '_resource' => $forum,
             'form' => $formCategory->createView(),
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -232,6 +232,7 @@ class ForumController extends Controller
      * )
      * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @Template()
+     *
      * @param Forum $forum
      */
     public function createCategoryAction(Forum $forum)
@@ -264,9 +265,12 @@ class ForumController extends Controller
      * )
      * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @Template("ClarolineForumBundle:Forum:subjectForm.html.twig")
+     *
      * @param Category $category
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      * @throws \Exception
+     *
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function createSubjectAction(Category $category)
@@ -278,14 +282,14 @@ class ForumController extends Controller
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
-        $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
+        $form = $this->get('form.factory')->create(new SubjectType(), new Subject());
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
             $user = $this->tokenStorage->getToken()->getUser();
             $subject = $form->getData();
             $subject->setCreator($user);
-            $subject->setAuthor($user->getFirstName() . ' ' . $user->getLastName());
+            $subject->setAuthor($user->getFirstName().' '.$user->getLastName());
             //instantiation of the new resources
             $subject->setCategory($category);
             $this->manager->createSubject($subject);
@@ -295,7 +299,7 @@ class ForumController extends Controller
                 $message = new Message();
                 $message->setContent($dataMessage['content']);
                 $message->setCreator($user);
-                $message->setAuthor($user->getFirstName() . ' ' . $user->getLastName());
+                $message->setAuthor($user->getFirstName().' '.$user->getLastName());
                 $message->setSubject($subject);
                 $this->manager->createMessage($message, $subject);
 
@@ -312,7 +316,7 @@ class ForumController extends Controller
         return array(
             'form' => $form->createView(),
             '_resource' => $forum,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -326,8 +330,8 @@ class ForumController extends Controller
      * @Template()
      *
      * @param Subject $subject
-     * @param integer $page
-     * @param integer $max
+     * @param int     $page
+     * @param int     $max
      */
     public function messagesAction(Subject $subject, $page, $max)
     {
@@ -363,7 +367,7 @@ class ForumController extends Controller
             'category' => $subject->getCategory(),
             'max' => $max,
             'canPost' => $canPost,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -378,9 +382,8 @@ class ForumController extends Controller
      */
     public function createMessageAction(Subject $subject)
     {
-        $form = $this->container->get('form.factory')->create(new MessageType, new Message());
+        $form = $this->container->get('form.factory')->create(new MessageType(), new Message());
         $form->handleRequest($this->get('request'));
-
 
         if ($form->isValid()) {
             $message = $form->getData();
@@ -398,6 +401,7 @@ class ForumController extends Controller
      *     name="claro_forum_edit_message_form"
      * )
      * @Template()
+     *
      * @param Message $message
      */
     public function editMessageFormAction(Message $message)
@@ -417,7 +421,7 @@ class ForumController extends Controller
             'form' => $form->createView(),
             'message' => $message,
             '_resource' => $forum,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -428,6 +432,7 @@ class ForumController extends Controller
      * )
      *
      * @Template("ClarolineForumBundle:Forum:editMessageForm.html.twig")
+     *
      * @param Message $message
      */
     public function editMessageAction(Message $message)
@@ -441,7 +446,7 @@ class ForumController extends Controller
         }
 
         $oldContent = $message->getContent();
-        $form = $this->container->get('form.factory')->create(new MessageType, new Message());
+        $form = $this->container->get('form.factory')->create(new MessageType(), new Message());
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
@@ -458,7 +463,7 @@ class ForumController extends Controller
             'form' => $form->createView(),
             'message' => $message,
             '_resource' => $forum,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -468,6 +473,7 @@ class ForumController extends Controller
      *     name="claro_forum_edit_category_form"
      * )
      * @Template()
+     *
      * @param Category $category
      */
     public function editCategoryFormAction(Category $category)
@@ -479,14 +485,14 @@ class ForumController extends Controller
             throw new AccessDeniedException();
         }
 
-        $form = $this->container->get('form.factory')->create(new CategoryType, $category);
+        $form = $this->container->get('form.factory')->create(new CategoryType(), $category);
         $form->handleRequest($this->get('request'));
 
         return array(
             'category' => $category,
             'form' => $form->createView(),
             '_resource' => $forum,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -495,6 +501,7 @@ class ForumController extends Controller
      *     "/edit/category/{category}",
      *     name="claro_forum_edit_category"
      * )
+     *
      * @param Category $category
      */
     public function editCategoryAction(Category $category)
@@ -507,7 +514,7 @@ class ForumController extends Controller
         }
 
         $oldName = $category->getName();
-        $form = $this->container->get('form.factory')->create(new CategoryType, $category);
+        $form = $this->container->get('form.factory')->create(new CategoryType(), $category);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
@@ -533,7 +540,6 @@ class ForumController extends Controller
         $forum = $category->getForum();
 
         if ($this->authorization->isGranted('moderate', new ResourceCollection(array($category->getForum()->getResourceNode())))) {
-
             $this->manager->deleteCategory($category);
 
             return new RedirectResponse(
@@ -552,8 +558,9 @@ class ForumController extends Controller
      *     options={"expose"=true}
      * )
      * @Template("ClarolineForumBundle::searchResults.html.twig")
-     * @param Forum $forum
-     * @param integer $page
+     *
+     * @param Forum  $forum
+     * @param int    $page
      * @param string $search
      */
     public function searchAction(Forum $forum, $page, $search)
@@ -565,11 +572,11 @@ class ForumController extends Controller
             '_resource' => $forum,
             'search' => $search,
             'page' => $page,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
-     /**
+    /**
      * @Route(
      *     "/edit/subject/{subjectId}/form",
      *     name="claro_forum_edit_subject_form"
@@ -580,6 +587,7 @@ class ForumController extends Controller
      *      options={"id" = "subjectId", "strictId" = true}
      * )
      * @Template()
+     *
      * @param Subject $subject
      */
     public function editSubjectFormAction(Subject $subject)
@@ -598,7 +606,7 @@ class ForumController extends Controller
             'subject' => $subject,
             'forumId' => $forum->getId(),
             '_resource' => $forum,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -613,6 +621,7 @@ class ForumController extends Controller
      *      options={"id" = "subjectId", "strictId" = true}
      * )
      * @Template("ClarolineForumBundle:Forum:editSubjectForm.html.twig")
+     *
      * @param Subject $subject
      */
     public function editSubjectAction(Subject $subject)
@@ -644,7 +653,7 @@ class ForumController extends Controller
             'subjectId' => $subject->getId(),
             'forumId' => $forum->getId(),
             '_resource' => $forum,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -677,7 +686,7 @@ class ForumController extends Controller
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param Forum $forum
-     * @param User $user
+     * @param User  $user
      */
     public function subscribeAction(Forum $forum, User $user)
     {
@@ -696,7 +705,7 @@ class ForumController extends Controller
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param Forum $forum
-     * @param User $user
+     * @param User  $user
      */
     public function unsubscribeAction(Forum $forum, User $user)
     {
@@ -718,7 +727,6 @@ class ForumController extends Controller
     public function deleteSubjectAction(Subject $subject)
     {
         if ($this->authorization->isGranted('moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode())))) {
-
             $this->manager->deleteSubject($subject);
 
             return new RedirectResponse(
@@ -731,6 +739,7 @@ class ForumController extends Controller
 
     /**
      * @param \Claroline\ForumBundle\Entity\Forum $forum
+     *
      * @throws AccessDeniedHttpException
      */
     private function checkAccess(Forum $forum)
@@ -757,6 +766,7 @@ class ForumController extends Controller
      * )
      * @EXT\Method("GET")
      * @EXT\Template()
+     *
      * @param Subject $subject
      */
     public function moveSubjectFormAction(Subject $subject)
@@ -771,7 +781,7 @@ class ForumController extends Controller
             'categories' => $categories,
             'category' => $category,
             'subject' => $subject,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -784,8 +794,9 @@ class ForumController extends Controller
      * )
      * @EXT\Method("GET")
      * @EXT\Template()
+     *
      * @param Message $message
-     * @param integer $page
+     * @param int     $page
      */
     public function moveMessageFormAction(Message $message, $page)
     {
@@ -801,7 +812,7 @@ class ForumController extends Controller
             'subject' => $subject,
             'pager' => $pager,
             'message' => $message,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 
@@ -835,7 +846,7 @@ class ForumController extends Controller
      * )
      * @EXT\Method("GET")
      *
-     * @param Subject $subject
+     * @param Subject  $subject
      * @param Category $newCategory
      */
     public function moveSubjectAction(Subject $subject, Category $newCategory)
@@ -933,43 +944,42 @@ class ForumController extends Controller
         );
     }
 
-    /**
-     * @Route(
-     *     "/reply/message/{message}",
-     *     name="claro_forum_reply_message_form"
-     * )
-     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     *
-     * @Template("ClarolineForumBundle:Forum:replyMessageForm.html.twig")
-     * @param Message $message
-     */
+     /**
+      * @Route(
+      *     "/reply/message/{message}",
+      *     name="claro_forum_reply_message_form"
+      * )
+      * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+      *
+      * @Template("ClarolineForumBundle:Forum:replyMessageForm.html.twig")
+      *
+      * @param Message $message
+      */
      public function replyMessageAction(Message $message)
      {
-        $subject = $message->getSubject();
-        $forum = $subject->getCategory()->getForum();
-        $reply = new Message();
-        $form = $this->container->get('form.factory')->create(new MessageType, $reply);
-        $form->handleRequest($this->get('request'));
+         $subject = $message->getSubject();
+         $forum = $subject->getCategory()->getForum();
+         $reply = new Message();
+         $form = $this->container->get('form.factory')->create(new MessageType(), $reply);
+         $form->handleRequest($this->get('request'));
 
-        if ($form->isValid()) {
-            $newMsg = $form->getData();
-            $this->manager->createMessage($newMsg, $subject);
+         if ($form->isValid()) {
+             $newMsg = $form->getData();
+             $this->manager->createMessage($newMsg, $subject);
 
-            return new RedirectResponse(
+             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
             );
-        }
+         }
 
-        return array(
+         return array(
             'subject' => $subject,
             'form' => $form->createView(),
             'message' => $message,
             '_resource' => $forum,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
-
      }
-
 
     /**
      * @Route(
@@ -979,6 +989,7 @@ class ForumController extends Controller
      * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @Template("ClarolineForumBundle:Forum:quoteMessageForm.html.twig")
+     *
      * @param Message $message
      */
     public function quoteMessageAction(Message $message)
@@ -987,7 +998,7 @@ class ForumController extends Controller
         $forum = $subject->getCategory()->getForum();
         $reply = new Message();
         $reply->setContent($this->manager->getMessageQuoteHTML($message));
-        $form = $this->container->get('form.factory')->create(new MessageType, $reply);
+        $form = $this->container->get('form.factory')->create(new MessageType(), $reply);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
@@ -1004,7 +1015,7 @@ class ForumController extends Controller
             'form' => $form->createView(),
             'message' => $message,
             '_resource' => $forum,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
         );
     }
 

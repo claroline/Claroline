@@ -22,11 +22,11 @@ class RssManager
 {
     private $om;
 
-   /**
-    * @DI\InjectParams({
-    *    "om" = @DI\Inject("claroline.persistence.object_manager")
-    * })
-    */
+    /**
+     * @DI\InjectParams({
+     *    "om" = @DI\Inject("claroline.persistence.object_manager")
+     * })
+     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;

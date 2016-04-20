@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Content;
 
 /**
- * Content2Region
+ * Content2Region.
  *
  * @ORM\Entity()
  * @ORM\Table(name="claro_content2region")
@@ -23,7 +23,7 @@ use Claroline\CoreBundle\Entity\Content;
 class Content2Region
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -33,7 +33,7 @@ class Content2Region
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Content")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $content;
 
@@ -84,9 +84,9 @@ class Content2Region
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -94,9 +94,10 @@ class Content2Region
     }
 
     /**
-     * Set size
+     * Set size.
      *
-     * @param  string         $size
+     * @param string $size
+     *
      * @return Content2Region
      */
     public function setSize($size)
@@ -107,7 +108,7 @@ class Content2Region
     }
 
     /**
-     * Get size
+     * Get size.
      *
      * @return string
      */
@@ -117,9 +118,10 @@ class Content2Region
     }
 
     /**
-     * Set content
+     * Set content.
      *
-     * @param  \Claroline\CoreBundle\Entity\Content $content
+     * @param \Claroline\CoreBundle\Entity\Content $content
+     *
      * @return Content2Region
      */
     public function setContent(Content $content)
@@ -130,7 +132,7 @@ class Content2Region
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return \Claroline\CoreBundle\Entity\Content
      */
@@ -140,9 +142,10 @@ class Content2Region
     }
 
     /**
-     * Set region
+     * Set region.
      *
-     * @param  \Claroline\CoreBundle\Entity\Home\Region $region
+     * @param \Claroline\CoreBundle\Entity\Home\Region $region
+     *
      * @return Content2Region
      */
     public function setRegion(Region $region)
@@ -153,7 +156,7 @@ class Content2Region
     }
 
     /**
-     * Get region
+     * Get region.
      *
      * @return \Claroline\CoreBundle\Entity\Home\Region
      */
@@ -163,9 +166,10 @@ class Content2Region
     }
 
     /**
-     * Set next
+     * Set next.
      *
-     * @param  \Claroline\CoreBundle\Entity\Home\Content2Region $next
+     * @param \Claroline\CoreBundle\Entity\Home\Content2Region $next
+     *
      * @return Content2Region
      */
     public function setNext(Content2Region $next = null)
@@ -176,7 +180,7 @@ class Content2Region
     }
 
     /**
-     * Get next
+     * Get next.
      *
      * @return \Claroline\CoreBundle\Entity\Home\Content2Region
      */
@@ -186,9 +190,10 @@ class Content2Region
     }
 
     /**
-     * Set back
+     * Set back.
      *
-     * @param  \Claroline\CoreBundle\Entity\Home\Content2Region $back
+     * @param \Claroline\CoreBundle\Entity\Home\Content2Region $back
+     *
      * @return Content2Region
      */
     public function setBack(Content2Region $back = null)
@@ -199,7 +204,7 @@ class Content2Region
     }
 
     /**
-     * Get back
+     * Get back.
      *
      * @return \Claroline\CoreBundle\Entity\Home\Content2Region
      */

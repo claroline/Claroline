@@ -26,14 +26,14 @@ use JMS\DiExtraBundle\Annotation as DI;
 class AjaxAuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         if ($request->isXmlHttpRequest()) {
             $json = array(
                 'has_error' => true,
-                'error' => $exception->getMessage()
+                'error' => $exception->getMessage(),
             );
 
             return new JsonResponse($json);

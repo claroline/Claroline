@@ -48,9 +48,8 @@ class TinymceType extends TextareaType
             array(
                 'attr' => function (Options $options, $value) {
                     return array_merge($this->defaultAttributes, $value);
-                }
+                },
             )
         );
-
     }
 }

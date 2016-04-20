@@ -45,4 +45,4 @@ class OpenAdministrationToolEvent extends Event implements DataConveyorEventInte
     {
         return $this->toolName;
     }
-} 
+}

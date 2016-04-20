@@ -18,7 +18,7 @@ class Version00000000000002 extends BundleMigration
 {
     public function up(Schema $schema)
     {
-        $table = $schema->getTable($this->getTablePrefix() . '_stuffs');
+        $table = $schema->getTable($this->getTablePrefix().'_stuffs');
         $table->addColumn(
             'last_modified',
             'datetime'
@@ -27,7 +27,7 @@ class Version00000000000002 extends BundleMigration
 
     public function down(Schema $schema)
     {
-        $table = $schema->getTable($this->getTablePrefix() . '_stuffs');
+        $table = $schema->getTable($this->getTablePrefix().'_stuffs');
         $table->dropColumn('last_modified');
     }
 }

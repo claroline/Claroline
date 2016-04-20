@@ -150,7 +150,7 @@ class Reservation
             $dateTime = \DateTime::createFromFormat('d/m/Y H:i', $end);
             if (!$dateTime) {
                 $this->end = null;
-            }else {
+            } else {
                 $this->end = $dateTime->getTimestamp();
             }
         } else {
@@ -173,7 +173,7 @@ class Reservation
     }
 
     /**
-     * Set lastModification
+     * Set lastModification.
      *
      * @param \DateTime $lastModification
      *
@@ -187,7 +187,7 @@ class Reservation
     }
 
     /**
-     * Get lastModification
+     * Get lastModification.
      *
      * @return \DateTime
      */

@@ -4,9 +4,8 @@
  * Date: 21/08/13
  * Time: 15:58
  * InnovaERV : vu avec Axel car souci lors de la suppression
- * ajout de "cascade= {"remove", "persist"} pour resourceNode. Voir également deleteDocumentAction
+ * ajout de "cascade= {"remove", "persist"} pour resourceNode. Voir également deleteDocumentAction.
  */
-
 namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -18,7 +17,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\DocumentRepository")
  * @ORM\Table(name="innova_collecticielbundle_document")
  */
-class Document {
+class Document
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -66,7 +66,6 @@ class Document {
      */
     protected $documentDate;
 
-
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Innova\CollecticielBundle\Entity\Drop",
@@ -74,7 +73,7 @@ class Document {
      * )
      */
     protected $drop;
-    
+
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
@@ -192,7 +191,7 @@ class Document {
         $json = array(
             'id' => $this->getId(),
             'type' => $this->getType(),
-            'url' => $this->getUrl()
+            'url' => $this->getUrl(),
         );
         if ($this->getResourceNode() !== null) {
             $json['resourceNode'] = array(
@@ -204,7 +203,7 @@ class Document {
         return $json;
     }
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -212,9 +211,10 @@ class Document {
     }
 
     /**
-     * Add comments
+     * Add comments.
      *
      * @param \Innova\CollecticielBundle\Entity\Comment $comments
+     *
      * @return Document
      */
     public function addComment(\Innova\CollecticielBundle\Entity\Comment $comments)
@@ -225,7 +225,7 @@ class Document {
     }
 
     /**
-     * Remove comments
+     * Remove comments.
      *
      * @param \Innova\CollecticielBundle\Entity\Comment $comments
      */
@@ -235,9 +235,9 @@ class Document {
     }
 
     /**
-     * Get comments
+     * Get comments.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getComments()
     {
@@ -245,7 +245,7 @@ class Document {
     }
 
     /**
-     * Set documentDate
+     * Set documentDate.
      *
      * @param \DateTime $documentDate
      *
@@ -259,7 +259,7 @@ class Document {
     }
 
     /**
-     * Get documentDate
+     * Get documentDate.
      *
      * @return \DateTime
      */
@@ -307,9 +307,8 @@ class Document {
         $this->sender = $sender;
     }
 
-
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -323,7 +322,7 @@ class Document {
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */

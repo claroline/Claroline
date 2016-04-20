@@ -2,10 +2,7 @@
 
 namespace Icap\PortfolioBundle\Entity\Widget;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="icap__portfolio_widget_experience")
@@ -192,7 +189,7 @@ class ExperienceWidget extends AbstractWidget
             'startDate' => $this->getStartDate() ? $this->getStartDate()->format('Y/m/d') : null,
             'endDate' => $this->getEndDate() ? $this->getEndDate()->format('Y/m/d') : null,
             'description' => $this->getDescription(),
-            'website' => $this->getWebsite()
+            'website' => $this->getWebsite(),
         );
 
         return $data;
@@ -209,7 +206,7 @@ class ExperienceWidget extends AbstractWidget
             'startDate' => null,
             'endDate' => null,
             'description' => null,
-            'website' => null
+            'website' => null,
         );
     }
 }

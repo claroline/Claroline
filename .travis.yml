@@ -13,6 +13,9 @@ mysql:
   encoding: utf8
 
 before_script:
+  # keep a list of files impacted by the PR
+  - git diff-tree --no-commit-id --diff-filter=ACM --name-only -r ${TRAVIS_COMMIT_RANGE/.../ } > git_diff_files.txt
+
   # leave build/repo dir
   - cd ../..
 
@@ -34,10 +37,9 @@ before_script:
   - php scripts/configure.php --default
 
   # override platform composer.json with build/repo local reference
-  - mkdir -p travis/local/pkg && mv ../$TRAVIS_REPO_SLUG/* travis/local/pkg
+  - mkdir -p travis/local/pkg && mv ../$TRAVIS_REPO_SLUG/* ../$TRAVIS_REPO_SLUG/.[!.]* travis/local/pkg
   - rm -rf travis/local/pkg/.git
-  - curl -O https://raw.githubusercontent.com/claroline/DevBundle/monolith/Resources/travis/pre-composer.php
-  - php pre-composer.php claroline/distribution ./travis/local/pkg
+  - php travis/local/pkg/main/dev/Resources/travis/pre-composer.php claroline/distribution travis/local/pkg
 
   # fetch dependencies and build
   - composer self-update
@@ -45,7 +47,8 @@ before_script:
   - npm install
   - npm run bower
   - composer build
-  - php app/console doctrine:database:create --env=test
-  - php app/console claroline:init_test_schema --env=test
+  - php app/console claroline:install --env=test
 
-script: SYMFONY_DEPRECATIONS_HELPER=weak bin/phpunit -c vendor/claroline/distribution
+script:
+  - bin/php-cs-fixer fix --dry-run --diff --config-file=vendor/claroline/distribution/main/dev/Resources/travis/php-cs.php -vvv
+  - SYMFONY_DEPRECATIONS_HELPER=weak bin/phpunit -c vendor/claroline/distribution

@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Library\Utilities;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
  * @DI\Service("claroline.utilities.thumbnail_creator")
@@ -46,10 +45,10 @@ class ThumbnailCreator
     /**
      * Create an thumbnail from a video. Returns null if the creation failed.
      *
-     * @param string  $originalPath    the path of the orignal video
-     * @param string  $destinationPath the path were the thumbnail will be copied
-     * @param integer $newWidth        the width of the thumbnail
-     * @param integer $newHeight       the width of the thumbnail
+     * @param string $originalPath    the path of the orignal video
+     * @param string $destinationPath the path were the thumbnail will be copied
+     * @param int    $newWidth        the width of the thumbnail
+     * @param int    $newHeight       the width of the thumbnail
      *
      * @return string
      */
@@ -86,17 +85,17 @@ class ThumbnailCreator
     /**
      * Create an thumbnail from an image. Returns null if the creation failed.
      *
-     * @param string  $originalPath    the path of the orignal image
-     * @param string  $destinationPath the path were the thumbnail will be copied
-     * @param integer $newWidth        the width of the thumbnail
-     * @param integer $newHeight       the width of the thumbnail
+     * @param string $originalPath    the path of the orignal image
+     * @param string $destinationPath the path were the thumbnail will be copied
+     * @param int    $newWidth        the width of the thumbnail
+     * @param int    $newHeight       the width of the thumbnail
      *
      * @return string
      */
     public function fromImage($originalPath, $destinationPath, $newWidth, $newHeight)
     {
         if (!$this->isGdLoaded) {
-             throw new UnloadedExtensionException('The GD extension is missing \n');
+            throw new UnloadedExtensionException('The GD extension is missing \n');
         }
 
         if (file_exists($originalPath)) {
@@ -165,13 +164,13 @@ class ThumbnailCreator
     public function shortcutThumbnail($srcImg, Workspace $workspace = null)
     {
         if (!$this->isGdLoaded) {
-             throw new UnloadedExtensionException('The GD extension is missing \n');
+            throw new UnloadedExtensionException('The GD extension is missing \n');
         }
 
         $ds = DIRECTORY_SEPARATOR;
         $stampPath = "{$this->webDir}{$ds}bundles{$ds}"
-            . "clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-black.png";
-        $extension = (pathinfo($srcImg, PATHINFO_EXTENSION) == 'jpg') ? 'jpeg': pathinfo($srcImg, PATHINFO_EXTENSION);
+            ."clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-black.png";
+        $extension = (pathinfo($srcImg, PATHINFO_EXTENSION) == 'jpg') ? 'jpeg' : pathinfo($srcImg, PATHINFO_EXTENSION);
         if (function_exists($funcname = "imagecreatefrom{$extension}")) {
             $im = $funcname($srcImg);
         } else {
@@ -185,9 +184,9 @@ class ThumbnailCreator
         $name = "{$this->ut->generateGuid()}.{$extension}";
 
         if (!is_null($workspace)) {
-            $dir = $this->thumbnailDir . $ds . $workspace->getCode(). $ds . $name;
+            $dir = $this->thumbnailDir.$ds.$workspace->getCode().$ds.$name;
         } else {
-            $dir = $this->thumbnailDir . $ds . $name;
+            $dir = $this->thumbnailDir.$ds.$name;
         }
         imagepng($im, $dir);
         imagedestroy($im);

@@ -25,7 +25,7 @@ class DirectoryType extends AbstractType
             'text',
             array(
                 'constraints' => new NotBlank(),
-                'label' => 'name'
+                'label' => 'name',
             )
         );
         $builder->add(
@@ -35,7 +35,7 @@ class DirectoryType extends AbstractType
                 'required' => true,
                 'mapped' => false,
                 'attr' => array('checked' => 'checked'),
-                'label' => 'publish_resource'
+                'label' => 'publish_resource',
             )
         );
     }

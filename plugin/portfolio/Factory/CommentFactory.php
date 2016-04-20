@@ -5,8 +5,6 @@ namespace Icap\PortfolioBundle\Factory;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioComment;
-use Icap\PortfolioBundle\Manager\WidgetTypeManager;
-use Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -31,4 +29,3 @@ class CommentFactory
         return $comment;
     }
 }
- 

@@ -28,7 +28,7 @@ class LogRepository extends EntityRepository
     public function countByDayThroughConfigs($configs, $range)
     {
         if ($configs === null || count($configs) == 0) {
-            return null;
+            return;
         }
 
         $queryBuilder = $this
@@ -52,8 +52,7 @@ class LogRepository extends EntityRepository
         $unique = false,
         $resourceType = null,
         $resourceNodeIds = null
-    )
-    {
+    ) {
         $queryBuilder = $this
             ->createQueryBuilder('log')
             ->orderBy('shortDate', 'ASC')
@@ -89,7 +88,7 @@ class LogRepository extends EntityRepository
     public function findLogsThroughConfigs($configs, $maxResult = -1)
     {
         if ($configs === null || count($configs) == 0) {
-            return null;
+            return;
         }
 
         $queryBuilder = $this
@@ -115,8 +114,7 @@ class LogRepository extends EntityRepository
         $maxResult = -1,
         $resourceType = null,
         $resourceNodeIds = null
-    )
-    {
+    ) {
         $queryBuilder = $this
             ->createQueryBuilder('log')
             ->orderBy('log.dateLog', 'DESC');
@@ -163,8 +161,7 @@ class LogRepository extends EntityRepository
         $groupId = null,
         $toolName = null,
         $userType = null
-    )
-    {
+    ) {
         $queryBuilder = $this
             ->createQueryBuilder('log')
             ->orderBy('log.dateLog', 'DESC')
@@ -312,15 +309,14 @@ class LogRepository extends EntityRepository
         $page = null,
         $orderBy = null,
         $order = 'DESC'
-    )
-    {
+    ) {
         $queryBuilder = $this
             ->createQueryBuilder('log')
             ->select(
                 'doer.id, '
-                . "CONCAT(CONCAT(doer.firstName, ' '), doer.lastName) AS name, "
-                . "CONCAT(CONCAT(doer.lastName, ' '), doer.firstName) AS sortingName, "
-                . 'doer.username, count(log.id) AS actions'
+                ."CONCAT(CONCAT(doer.firstName, ' '), doer.lastName) AS name, "
+                ."CONCAT(CONCAT(doer.lastName, ' '), doer.firstName) AS sortingName, "
+                .'doer.username, count(log.id) AS actions'
             )
             ->groupBy('doer');
         if ($orderBy == 'name') {
@@ -329,7 +325,7 @@ class LogRepository extends EntityRepository
         if ($orderBy == null) {
             $orderBy = 'actions';
         }
-        $queryBuilder ->orderBy($orderBy, $order);
+        $queryBuilder->orderBy($orderBy, $order);
         $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, $actionsRestriction);
         $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
         if ($userSearch !== null && $userSearch !== '') {
@@ -354,11 +350,10 @@ class LogRepository extends EntityRepository
         if ($maxResult > 0) {
             $queryBuilder->setMaxResults($maxResult);
             if ($page !== null) {
-                $page = max(0, $page-1);
-                $queryBuilder->setFirstResult($page*$maxResult);
+                $page = max(0, $page - 1);
+                $queryBuilder->setFirstResult($page * $maxResult);
             }
         }
-
 
         return $queryBuilder->getQuery();
     }
@@ -372,8 +367,7 @@ class LogRepository extends EntityRepository
         $resourceType = null,
         $resourceNodeIds = null,
         $enableAnonymous = true
-    )
-    {
+    ) {
         $queryBuilder = $this->createQueryBuilder('log');
         $queryBuilder->select($queryBuilder->expr()->countDistinct('log.doer'));
         $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, $actionsRestriction);
@@ -397,8 +391,7 @@ class LogRepository extends EntityRepository
         return intval($result);
     }
 
-    public function findUserActionsByDay
-    (
+    public function findUserActionsByDay(
         $action,
         $range,
         $actionsRestriction,
@@ -406,18 +399,17 @@ class LogRepository extends EntityRepository
         $resourceType = null,
         $resourceNodeIds = null,
         $userIds
-    )
-    {
+    ) {
         $queryBuilder = $this
             ->createQueryBuilder('log')
             ->select(
-                "doer.id, "
-                . "log.shortDateLog as shortDate, "
-                . "CONCAT(CONCAT(doer.id, '#'), log.shortDateLog) as criteria, "
-                . "count(log.id) as total"
+                'doer.id, '
+                .'log.shortDateLog as shortDate, '
+                ."CONCAT(CONCAT(doer.id, '#'), log.shortDateLog) as criteria, "
+                .'count(log.id) as total'
             )
             ->leftJoin('log.doer', 'doer')
-            ->groupBy("criteria")
+            ->groupBy('criteria')
             ->addOrderBy('doer.id', 'ASC')
             ->addOrderBy('shortDate', 'ASC');
 
@@ -464,8 +456,8 @@ class LogRepository extends EntityRepository
 
         if (null !== $action && $action !== 'all') {
             $queryBuilder
-                ->andWhere("log.action LIKE :action")
-                ->setParameter('action', '%' . $action . '%');
+                ->andWhere('log.action LIKE :action')
+                ->setParameter('action', '%'.$action.'%');
         }
 
         return $queryBuilder;
@@ -489,8 +481,8 @@ class LogRepository extends EntityRepository
             $endDate->setTime(23, 59, 59);
 
             $queryBuilder
-                ->andWhere("log.dateLog >= :startDate")
-                ->andWhere("log.dateLog <= :endDate")
+                ->andWhere('log.dateLog >= :startDate')
+                ->andWhere('log.dateLog <= :endDate')
                 ->setParameter('startDate', $startDate)
                 ->setParameter('endDate', $endDate);
         }
@@ -528,7 +520,7 @@ class LogRepository extends EntityRepository
                 )
             );
 
-            $queryBuilder->setParameter('userSearch', '%' . $upperUserSearch . '%');
+            $queryBuilder->setParameter('userSearch', '%'.$upperUserSearch.'%');
         }
 
         return $queryBuilder;
@@ -664,7 +656,7 @@ class LogRepository extends EntityRepository
     public function addOwnerFilterToQueryBuilder(QueryBuilder $queryBuilder, User $owner)
     {
         $queryBuilder
-            ->andWhere("log.owner = :owner")
+            ->andWhere('log.owner = :owner')
             ->setParameter('owner', $owner);
 
         return $queryBuilder;
@@ -672,14 +664,14 @@ class LogRepository extends EntityRepository
 
     /**
      * @param QueryBuilder $queryBuilder
-     * @param integer      $otherElementId
+     * @param int          $otherElementId
      *
      * @return QueryBuilder
      */
     public function addOtherElementIdFilterToQueryBuilder(QueryBuilder $queryBuilder, $otherElementId)
     {
         $queryBuilder
-            ->andWhere("log.otherElementId = :otherElementId")
+            ->andWhere('log.otherElementId = :otherElementId')
             ->setParameter('otherElementId', $otherElementId);
 
         return $queryBuilder;

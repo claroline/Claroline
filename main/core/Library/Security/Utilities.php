@@ -44,7 +44,7 @@ class Utilities
             'edit',
             'copy',
             'create',
-            'export'
+            'export',
         );
         $this->expectedKeysForWorkspace = array('canView', 'canDelete', 'canEdit');
     }
@@ -52,7 +52,7 @@ class Utilities
     /**
      * Takes the array of checked ids from the rights form (ie rights_form.html.twig) and
      * transforms them into a easy to use permission array.
-
+     
      * @param array  $checks
      * @param string $typeOfRight
      *

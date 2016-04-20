@@ -9,7 +9,6 @@ use Doctrine\DBAL\Connection;
 
 class Updater020200 extends Updater
 {
-
     private $container;
     /** @var  Connection */
     private $conn;
@@ -58,7 +57,6 @@ class Updater020200 extends Updater
             }
         }
 
-
         if ($process) {
             $this->log('restoring the subjects...');
             $forums = $em->getRepository('ClarolineForumBundle:Forum')->findAll();
@@ -69,7 +67,7 @@ class Updater020200 extends Updater
                 $category->setForum($forum);
                 $em->persist($category);
                 $em->flush();
-                $rowsSubjects = $this->conn->query('SELECT * FROM claro_forum_subject_temp WHERE forum_id = ' . $forum->getId());
+                $rowsSubjects = $this->conn->query('SELECT * FROM claro_forum_subject_temp WHERE forum_id = '.$forum->getId());
 
                 foreach ($rowsSubjects as $rowsSubject) {
                     $this->conn->query("INSERT INTO claro_forum_subject VALUES (

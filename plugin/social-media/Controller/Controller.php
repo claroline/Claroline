@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,7 +8,6 @@
  * 
  * Date: 4/22/15
  */
-
 namespace Icap\SocialmediaBundle\Controller;
 
 use Icap\SocialmediaBundle\Entity\CommentAction;
@@ -29,7 +28,7 @@ class Controller extends BaseController
      */
     protected function getLikeActionManager()
     {
-        return $this->get("icap_socialmedia.manager.like_action");
+        return $this->get('icap_socialmedia.manager.like_action');
     }
 
     /**
@@ -37,7 +36,7 @@ class Controller extends BaseController
      */
     protected function getShareActionManager()
     {
-        return $this->get("icap_socialmedia.manager.share_action");
+        return $this->get('icap_socialmedia.manager.share_action');
     }
 
     /**
@@ -45,7 +44,7 @@ class Controller extends BaseController
      */
     protected function getCommentActionManager()
     {
-        return $this->get("icap_socialmedia.manager.comment_action");
+        return $this->get('icap_socialmedia.manager.comment_action');
     }
 
     /**
@@ -53,7 +52,7 @@ class Controller extends BaseController
      */
     protected function getNoteActionManager()
     {
-        return $this->get("icap_socialmedia.manager.note_action");
+        return $this->get('icap_socialmedia.manager.note_action');
     }
 
     /**
@@ -61,7 +60,7 @@ class Controller extends BaseController
      */
     protected function getWallItemManager()
     {
-        return $this->get("icap_socialmedia.manager.wall_item");
+        return $this->get('icap_socialmedia.manager.wall_item');
     }
 
     protected function paginateQuery($queryBuilder, $page)
@@ -116,4 +115,4 @@ class Controller extends BaseController
             return $this->dispatch($event);
         }
     }
-} 
+}

@@ -12,6 +12,7 @@ class CompetencyRepository extends NestedTreeRepository
      * Returns the competency roots by name (used by validator).
      *
      * @param string $name
+     *
      * @return array
      */
     public function findRootsByName($name)
@@ -23,6 +24,7 @@ class CompetencyRepository extends NestedTreeRepository
      * Returns the competencies associated with an activity.
      *
      * @param Activity $activity
+     *
      * @return array
      */
     public function findByActivity(Activity $activity)
@@ -43,6 +45,7 @@ class CompetencyRepository extends NestedTreeRepository
      * Note: this should definitely not be here
      *
      * @param string $search
+     *
      * @return array
      */
     public function findFirstUsersByName($search)
@@ -68,6 +71,7 @@ class CompetencyRepository extends NestedTreeRepository
      * Note: this should definitely not be here
      *
      * @param string $search
+     *
      * @return array
      */
     public function findFirstGroupsByName($search)
@@ -89,6 +93,7 @@ class CompetencyRepository extends NestedTreeRepository
      * and parent, and the parent's siblings and parent, and so on.
      *
      * @param Competency $startNode
+     *
      * @return array
      */
     public function findForProgressComputing(Competency $startNode)

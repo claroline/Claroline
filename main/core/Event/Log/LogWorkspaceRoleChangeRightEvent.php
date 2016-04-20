@@ -27,7 +27,7 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
      *      'propertyName1' => ['property old value 1', 'property new value 1'],
      *      'propertyName2' => ['property old value 2', 'property new value 2'],
      *      etc.
-     * )
+     * ).
      *
      * Please respect lower caml case naming convention for property names
      */
@@ -38,17 +38,17 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
         $this->details = array(
             'role' => array(
                 'name' => $role->getTranslationKey(),
-                'changeSet' => $changeSet
+                'changeSet' => $changeSet,
             ),
             'workspace' => array(
-                'name' => $resource->getWorkspace() ? $resource->getWorkspace()->getName(): ' - '
+                'name' => $resource->getWorkspace() ? $resource->getWorkspace()->getName() : ' - ',
             ),
             'resource' => array(
                 'name' => $resource->getName(),
                 'path' => $resource->getPathForDisplay(),
                 'id' => $resource->getId(),
-                'resourceType' => $resource->getResourceType()->getName()
-            )
+                'resourceType' => $resource->getResourceType()->getName(),
+            ),
         );
 
         parent::__construct(
@@ -67,13 +67,13 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -128,18 +128,22 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
      */
     public function getIconKey()
     {
-        return null;
+        return;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {
-        if (!$this->changeSet || !isset($this->changeSet['mask'])) return false;
-        if ($this->role->getName() === 'ROLE_ANONYMOUS' || $this->role->getName() === 'ROLE_USER') return false;
+        if (!$this->changeSet || !isset($this->changeSet['mask'])) {
+            return false;
+        }
+        if ($this->role->getName() === 'ROLE_ANONYMOUS' || $this->role->getName() === 'ROLE_USER') {
+            return false;
+        }
 
         $oldState = $this->changeSet['mask'][0];
         $newState = $this->changeSet['mask'][1];
@@ -148,7 +152,7 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */

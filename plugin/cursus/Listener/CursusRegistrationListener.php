@@ -48,8 +48,7 @@ class CursusRegistrationListener
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->cursusManager = $cursusManager;
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
@@ -82,7 +81,7 @@ class CursusRegistrationListener
     {
         $log = $event->getLog();
         $action = $log->getAction();
-        $user =  $log->getReceiver();
+        $user = $log->getReceiver();
         $group = $log->getReceiverGroup();
         $sessions = array('learner' => array(), 'tutor' => array());
 

@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\Resource\Activity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Bridge\Doctrine\Validator\Constraints as BR;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -120,7 +119,7 @@ class Competency implements \JsonSerializable
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -176,8 +175,8 @@ class Competency implements \JsonSerializable
     }
 
     /**
-     * @param Competency    $parent     The parent competency
-     * @param boolean       $isImport   Whether we're in a framework import context
+     * @param Competency $parent   The parent competency
+     * @param bool       $isImport Whether we're in a framework import context
      */
     public function setParent(Competency $parent = null, $isImport = false)
     {
@@ -209,7 +208,7 @@ class Competency implements \JsonSerializable
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getRoot()
     {
@@ -217,7 +216,7 @@ class Competency implements \JsonSerializable
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getLevel()
     {
@@ -225,7 +224,7 @@ class Competency implements \JsonSerializable
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getLeft()
     {
@@ -233,7 +232,7 @@ class Competency implements \JsonSerializable
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getRight()
     {
@@ -242,6 +241,7 @@ class Competency implements \JsonSerializable
 
     /**
      * @param Activity $activity
+     *
      * @return bool
      */
     public function isLinkedToActivity(Activity $activity)
@@ -258,7 +258,7 @@ class Competency implements \JsonSerializable
     {
         if (!$this->isLinkedToActivity($activity)) {
             $this->activities->add($activity);
-            $this->activityCount++;
+            ++$this->activityCount;
         }
     }
 
@@ -271,7 +271,7 @@ class Competency implements \JsonSerializable
     {
         if ($this->isLinkedToActivity($activity)) {
             $this->activities->removeElement($activity);
-            $this->activityCount--;
+            --$this->activityCount;
         }
     }
 
@@ -299,7 +299,7 @@ class Competency implements \JsonSerializable
             'description' => $this->description,
             'scale' => $this->scale ? $this->scale->getName() : null,
             'level' => $this->lvl,
-            'activityCount' => $this->activityCount
+            'activityCount' => $this->activityCount,
         ];
     }
 }

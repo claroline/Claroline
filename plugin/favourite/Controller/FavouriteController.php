@@ -23,7 +23,7 @@ class FavouriteController extends Controller
      *     "manager" = @DI\Inject("claroline.manager.resource_manager")
      * })
      */
-    public function __construct (ResourceManager $manager)
+    public function __construct(ResourceManager $manager)
     {
         $this->manager = $manager;
     }
@@ -47,7 +47,7 @@ class FavouriteController extends Controller
 
         return array(
             'isFavourite' => $isFavourite ? true : false,
-            '_resource' => $resource
+            '_resource' => $resource,
         );
     }
 
@@ -71,7 +71,7 @@ class FavouriteController extends Controller
         if ($favourite) {
             return array(
                 'nodeId' => $node->getId(),
-                'error' => 'resource_already_in_favourites'
+                'error' => 'resource_already_in_favourites',
             );
         }
 
@@ -105,7 +105,7 @@ class FavouriteController extends Controller
         if (!$favourite) {
             return array(
                 'nodeId' => $node->getId(),
-                'error' => 'resource_not_in_favourites.'
+                'error' => 'resource_not_in_favourites.',
             );
         }
 

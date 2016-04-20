@@ -52,9 +52,9 @@ class Notification
     protected $iconColor = null;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -62,7 +62,7 @@ class Notification
     }
 
     /**
-     * Get creationDate
+     * Get creationDate.
      *
      * @return string
      */
@@ -72,9 +72,10 @@ class Notification
     }
 
     /**
-     * Set userId
+     * Set userId.
      *
-     * @param integer $userId
+     * @param int $userId
+     *
      * @return Notification
      */
     public function setUserId($userId)
@@ -85,9 +86,9 @@ class Notification
     }
 
     /**
-     * Get userId
+     * Get userId.
      *
-     * @return integer
+     * @return int
      */
     public function getUserId()
     {
@@ -95,9 +96,10 @@ class Notification
     }
 
     /**
-     * Set resourceId
+     * Set resourceId.
      *
-     * @param integer $resourceId
+     * @param int $resourceId
+     *
      * @return Notification
      */
     public function setResourceId($resourceId)
@@ -108,9 +110,9 @@ class Notification
     }
 
     /**
-     * Get resourceId
+     * Get resourceId.
      *
-     * @return integer
+     * @return int
      */
     public function getResourceId()
     {
@@ -118,9 +120,10 @@ class Notification
     }
 
     /**
-     * Set iconKey
+     * Set iconKey.
      *
      * @param string $iconKey
+     *
      * @return Notification
      */
     public function setIconKey($iconKey)
@@ -131,7 +134,7 @@ class Notification
     }
 
     /**
-     * Get $iconKey
+     * Get $iconKey.
      *
      * @return string
      */
@@ -141,9 +144,10 @@ class Notification
     }
 
     /**
-     * Set actionKey
+     * Set actionKey.
      *
      * @param string $actionKey
+     *
      * @return Notification
      */
     public function setActionKey($actionKey)
@@ -154,7 +158,7 @@ class Notification
     }
 
     /**
-     * Get $actionKey
+     * Get $actionKey.
      *
      * @return string
      */
@@ -164,7 +168,7 @@ class Notification
     }
 
     /**
-     * Get $iconColor
+     * Get $iconColor.
      *
      * @return string
      */
@@ -174,9 +178,10 @@ class Notification
     }
 
     /**
-     * Set $iconColor
+     * Set $iconColor.
      *
      * @param string iconColor
+     *
      * @return notification
      */
     public function setIconColor($iconColor)
@@ -200,9 +205,10 @@ class Notification
     }
 
     /**
-     * Set details
+     * Set details.
      *
-     * @param  array $details
+     * @param array $details
+     *
      * @return Log
      */
     public function setDetails($details)
@@ -213,7 +219,7 @@ class Notification
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */

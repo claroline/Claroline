@@ -2,8 +2,6 @@
 
 namespace Icap\PortfolioBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\TeamBundle\Entity\Team;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PortfolioTeam
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -48,7 +46,6 @@ class PortfolioTeam
     public function setPortfolio(Portfolio $portfolio)
     {
         $this->portfolio = $portfolio;
-
 
         return $this;
     }

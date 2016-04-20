@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -9,6 +9,7 @@
  *
  * Date: 11/18/15
  */
+
 namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
@@ -29,7 +30,7 @@ class VarTypeExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'is_int' => new \Twig_Function_Method($this, 'isInt')
+            'is_int' => new \Twig_Function_Method($this, 'isInt'),
         );
     }
 

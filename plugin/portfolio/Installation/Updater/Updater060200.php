@@ -4,12 +4,7 @@ namespace Icap\PortfolioBundle\Installation\Updater;
 
 use AppKernel;
 use Claroline\InstallationBundle\Updater\Updater;
-use Doctrine\DBAL\Migrations\Configuration\Configuration;
-use Doctrine\DBAL\Migrations\Version;
-use Doctrine\ORM\EntityManager;
-use Icap\PortfolioBundle\Entity\Widget\WidgetType;
 use Doctrine\DBAL\Connection;
-use Psr\Log\LoggerInterface;
 
 class Updater060200 extends Updater
 {

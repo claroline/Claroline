@@ -21,8 +21,7 @@ class WidgetDisplayConfigRepository extends EntityRepository
         User $user,
         array $widgetInstances,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT wdc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig wdc
@@ -40,8 +39,7 @@ class WidgetDisplayConfigRepository extends EntityRepository
     public function findAdminWidgetDisplayConfigsByWidgets(
         array $widgetInstances,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT wdc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig wdc
@@ -59,8 +57,7 @@ class WidgetDisplayConfigRepository extends EntityRepository
         Workspace $workspace,
         array $widgetInstances,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT wdc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig wdc
@@ -78,8 +75,7 @@ class WidgetDisplayConfigRepository extends EntityRepository
     public function findWidgetDisplayConfigsByWidgetsForAdmin(
         array $widgetInstances,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT wdc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig wdc
@@ -97,8 +93,7 @@ class WidgetDisplayConfigRepository extends EntityRepository
         Workspace $workspace,
         array $widgetHomeTabConfigs,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT wdc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig wdc

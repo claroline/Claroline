@@ -43,8 +43,7 @@ class ReservationToolListener
         EntityManager $em,
         ReservationManager $reservationManager,
         TokenStorageInterface $tokenStorage
-    )
-    {
+    ) {
         $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
         $this->templating = $templating;

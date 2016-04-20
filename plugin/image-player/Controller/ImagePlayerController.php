@@ -38,7 +38,7 @@ class ImagePlayerController extends Controller
             }
         );
         $response->headers->set('Content-Type', $node->getMimeType());
-        
+
         return $response->send();
     }
 }

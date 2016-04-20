@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Created by : Vincent SAISSET
  * Date: 21/08/13
- * Time: 15:00
+ * Time: 15:00.
  */
 
 namespace Icap\DropzoneBundle;
@@ -13,6 +14,11 @@ class IcapDropzoneBundle extends PluginBundle
 {
     public function getRoutingPrefix()
     {
-        return "dropzone";
+        return 'dropzone';
+    }
+
+    public function getRequiredPlugins()
+    {
+        return ['Claroline\\AgendaBundle\\ClarolineAgendaBundle', 'Icap\\NotificationBundle\\IcapNotificationBundle'];
     }
 }

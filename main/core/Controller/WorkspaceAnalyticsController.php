@@ -66,8 +66,7 @@ class WorkspaceAnalyticsController extends Controller
         TwigEngine $templating,
         UserManager $userManager,
         Utilities $utils
-    )
-    {
+    ) {
         $this->activityManager = $activityManager;
         $this->analyticsManager = $analyticsManager;
         $this->resourceManager = $resourceManager;
@@ -94,7 +93,9 @@ class WorkspaceAnalyticsController extends Controller
      * Displays activities evaluations home tab of analytics tool
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     *
      * @return Response
      */
     public function showTrafficAction(Workspace $workspace)
@@ -113,7 +114,7 @@ class WorkspaceAnalyticsController extends Controller
         return array(
             'analyticsTab' => 'traffic',
             'workspace' => $workspace,
-            'chartData' => $chartData
+            'chartData' => $chartData,
         );
     }
 
@@ -132,6 +133,7 @@ class WorkspaceAnalyticsController extends Controller
      * Displays workspace analytics resource page.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     *
      * @return Response
      */
     public function showResourcesAction(Workspace $workspace)
@@ -141,7 +143,7 @@ class WorkspaceAnalyticsController extends Controller
         return array(
             'analyticsTab' => 'resources',
             'workspace' => $workspace,
-            'resourceCount' => $typeCount
+            'resourceCount' => $typeCount,
         );
     }
 
@@ -159,7 +161,7 @@ class WorkspaceAnalyticsController extends Controller
      *
      * Displays activities evaluations home tab of analytics tool
      *
-     * @param User $currentUser
+     * @param User      $currentUser
      * @param Workspace $workspace
      *
      * @return Response
@@ -169,8 +171,7 @@ class WorkspaceAnalyticsController extends Controller
     public function workspaceActivitiesEvaluationsShowAction(
         User $currentUser,
         Workspace $workspace
-    )
-    {
+    ) {
         if (!$this->authorization->isGranted('analytics', $workspace)) {
             throw new AccessDeniedException();
         }
@@ -190,11 +191,11 @@ class WorkspaceAnalyticsController extends Controller
 
             return new Response(
                 $this->templating->render(
-                    "ClarolineCoreBundle:Tool/workspace/analytics:workspaceManagerActivitiesEvaluations.html.twig",
+                    'ClarolineCoreBundle:Tool/workspace/analytics:workspaceManagerActivitiesEvaluations.html.twig',
                     array(
                         'analyticsTab' => 'activities',
                         'workspace' => $workspace,
-                        'activities' => $activities
+                        'activities' => $activities,
                     )
                 )
             );
@@ -263,7 +264,7 @@ class WorkspaceAnalyticsController extends Controller
                             $ruleScore = $score;
 
                             if (!is_null($scoreMax)) {
-                                $ruleScore .= ' / ' . $scoreMax;
+                                $ruleScore .= ' / '.$scoreMax;
                             }
 
                             $rulesScores[$activity->getId()] = $ruleScore;
@@ -275,7 +276,7 @@ class WorkspaceAnalyticsController extends Controller
 
                 if ($status === AbstractEvaluation::STATUS_COMPLETED
                     || $status === AbstractEvaluation::STATUS_PASSED) {
-                    $nbSuccess++;
+                    ++$nbSuccess;
                 }
             }
 
@@ -285,14 +286,14 @@ class WorkspaceAnalyticsController extends Controller
 
             return new Response(
                 $this->templating->render(
-                    "ClarolineCoreBundle:Tool/workspace/analytics:workspaceActivitiesEvaluations.html.twig",
+                    'ClarolineCoreBundle:Tool/workspace/analytics:workspaceActivitiesEvaluations.html.twig',
                     array(
                         'analyticsTab' => 'activities',
                         'workspace' => $workspace,
                         'activities' => $activities,
                         'evaluations' => $evaluationsAssoc,
                         'rulesScores' => $rulesScores,
-                        'progress' => $progress
+                        'progress' => $progress,
                     )
                 )
             );
@@ -335,17 +336,14 @@ class WorkspaceAnalyticsController extends Controller
         Workspace $workspace,
         ActivityParameters $activityParameters,
         $displayType
-    )
-    {
+    ) {
         if (!$this->authorization->isGranted('analytics', $workspace)) {
-
             throw new AccessDeniedException();
         }
         $roleNames = $currentUser->getRoles();
         $isWorkspaceManager = $this->isWorkspaceManager($workspace, $roleNames);
 
         if (!$isWorkspaceManager && ($currentUser->getId() !== $user->getId())) {
-
             throw new AccessDeniedException();
         }
         $activity = $activityParameters->getActivity();
@@ -362,7 +360,7 @@ class WorkspaceAnalyticsController extends Controller
                 $ruleScore = $score;
 
                 if (!is_null($scoreMax)) {
-                    $ruleScore .= ' / ' . $scoreMax;
+                    $ruleScore .= ' / '.$scoreMax;
                 }
 
                 $ruleResultVisible = $rule->getIsResultVisible();
@@ -383,7 +381,7 @@ class WorkspaceAnalyticsController extends Controller
             'displayType' => $displayType,
             'isWorkspaceManager' => $isWorkspaceManager,
             'ruleScore' => $ruleScore,
-            'isResultVisible' => $isResultVisible
+            'isResultVisible' => $isResultVisible,
         );
     }
 
@@ -411,8 +409,7 @@ class WorkspaceAnalyticsController extends Controller
         User $currentUser,
         Activity $activity,
         $page
-    )
-    {
+    ) {
         $roleNames = $currentUser->getRoles();
         $workspace = $activity->getResourceNode()->getWorkspace();
         $isWorkspaceManager = $this->isWorkspaceManager($workspace, $roleNames);
@@ -454,7 +451,7 @@ class WorkspaceAnalyticsController extends Controller
 
             if ($status === AbstractEvaluation::STATUS_COMPLETED
                 || $status === AbstractEvaluation::STATUS_PASSED) {
-                $nbSuccess++;
+                ++$nbSuccess;
             }
         }
         $progress = count($users) > 0 ?
@@ -473,7 +470,7 @@ class WorkspaceAnalyticsController extends Controller
                 $ruleScore = $score;
 
                 if (!is_null($scoreMax)) {
-                    $ruleScore .= ' / ' . $scoreMax;
+                    $ruleScore .= ' / '.$scoreMax;
                 }
             }
         }
@@ -487,18 +484,17 @@ class WorkspaceAnalyticsController extends Controller
             'page' => $page,
             'evaluations' => $evaluations,
             'ruleScore' => $ruleScore,
-            'progress' => $progress
+            'progress' => $progress,
         );
     }
 
     private function isWorkspaceManager(Workspace $workspace, array $roleNames)
     {
         $isWorkspaceManager = false;
-        $managerRole = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
+        $managerRole = 'ROLE_WS_MANAGER_'.$workspace->getGuid();
 
         if (in_array('ROLE_ADMIN', $roleNames) ||
             in_array($managerRole, $roleNames)) {
-
             $isWorkspaceManager = true;
         }
 

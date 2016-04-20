@@ -43,30 +43,30 @@ class WorkspaceLogFilterType extends AbstractType
         $builder
             ->add(
                 'action', 'twolevelselect', array(
-                    'label'              => 'Show actions for',
+                    'label' => 'Show actions for',
                     'translation_domain' => 'log',
-                    'attr'               => array('class' => 'input-sm'),
-                    'choices'            => $actionChoices,
-                    'choices_as_values'  => true,
-                    'empty_value'        => 'all',
-                    'empty_data'         => null
+                    'attr' => array('class' => 'input-sm'),
+                    'choices' => $actionChoices,
+                    'choices_as_values' => true,
+                    'empty_value' => 'all',
+                    'empty_data' => null,
                 )
             )
             ->add(
                 'range', 'daterange', array(
-                    'label'    => 'for_period',
+                    'label' => 'for_period',
                     'required' => false,
-                    'attr'     => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')
+                    'attr' => array('class' => 'input-sm'),
+                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
                 )
             )
             ->add(
                 'user', 'simpleautocomplete', array(
-                    'label'            => 'for user',
+                    'label' => 'for user',
                     'entity_reference' => 'user',
-                    'required'         => false,
-                    'attr'             => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')
+                    'required' => false,
+                    'attr' => array('class' => 'input-sm'),
+                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
                 )
             );
     }
@@ -82,7 +82,7 @@ class WorkspaceLogFilterType extends AbstractType
         ->setDefaults(
             array(
                 'translation_domain' => 'log',
-                'csrf_protection' => false
+                'csrf_protection' => false,
             )
         );
     }

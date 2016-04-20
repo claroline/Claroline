@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Entity\Home;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Type
+ * Type.
  *
  * @ORM\Entity()
  * @ORM\Table(name="claro_type")
@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Type
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(name="id", type="integer")
@@ -38,14 +38,14 @@ class Type
     private $name;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="max_content_page", type="integer")
      */
     private $maxContentPage;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="publish", type="boolean", nullable=true)
      */
@@ -69,9 +69,9 @@ class Type
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -79,9 +79,10 @@ class Type
     }
 
     /**
-     * Set name
+     * Set name.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return Type
      */
     public function setName($name)
@@ -92,7 +93,7 @@ class Type
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -102,9 +103,10 @@ class Type
     }
 
     /**
-     * Set max_content_page
+     * Set max_content_page.
      *
-     * @param  integer $maxContentPage
+     * @param int $maxContentPage
+     *
      * @return Type
      */
     public function setMaxContentPage($maxContentPage)
@@ -115,19 +117,20 @@ class Type
     }
 
     /**
-     * Get max_content_page
+     * Get max_content_page.
      *
-     * @return integer
+     * @return int
      */
     public function getMaxContentPage()
     {
         return $this->maxContentPage;
     }
 
-     /**
-     * Set publish
+    /**
+     * Set publish.
      *
-     * @param boolean publish
+     * @param bool publish
+     *
      * @return Type
      */
     public function setPublish($publish)
@@ -138,9 +141,9 @@ class Type
     }
 
     /**
-     * Get publish
+     * Get publish.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPublish()
     {

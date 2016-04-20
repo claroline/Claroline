@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Library;
 
 use Claroline\InstallationBundle\Bundle\InstallableBundle;
-use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 /**
@@ -43,7 +42,7 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     {
         $config = new ConfigurationBuilder();
 
-        if (file_exists($routingFile = $this->getPath() . '/Resources/config/routing.yml')) {
+        if (file_exists($routingFile = $this->getPath().'/Resources/config/routing.yml')) {
             $config->addRoutingResource($routingFile, null, strtolower($this->getName()));
         }
 
@@ -51,14 +50,14 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     }
 
     /**
-     * Deprecated: use getConfiguration instead
+     * Deprecated: use getConfiguration instead.
      *
      * @deprecated
      */
     public function getRoutingResourcesPaths()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $path = $this->getPath() . $ds . 'Resources' . $ds . 'config' . $ds . 'routing.yml';
+        $path = $this->getPath().$ds.'Resources'.$ds.'config'.$ds.'routing.yml';
 
         if (file_exists($path)) {
             return array($path);
@@ -68,7 +67,7 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     }
 
     /**
-     * Deprecated: use getConfiguration instead
+     * Deprecated: use getConfiguration instead.
      *
      * @deprecated
      */
@@ -90,7 +89,7 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     public function getConfigFile()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $defaultFilePath = $this->getPath() . $ds . 'Resources' . $ds . 'config' . $ds . 'config.yml';
+        $defaultFilePath = $this->getPath().$ds.'Resources'.$ds.'config'.$ds.'config.yml';
 
         if (file_exists($defaultFilePath)) {
             return $defaultFilePath;
@@ -110,5 +109,15 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     public function getAssetsFolder()
     {
         return strtolower(str_replace('Bundle', '', $this->getVendorName().$this->getBundleName()));
+    }
+
+    public function getRequiredPhpExtensions()
+    {
+        return array();
+    }
+
+    public function getRequiredPlugins()
+    {
+        return array();
     }
 }

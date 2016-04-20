@@ -10,10 +10,6 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -34,7 +30,7 @@ class Updater060000 extends Updater
     private function updateTemplate()
     {
         $this->log('Updating template file');
-        $destinationPath = $this->container->getParameter('claroline.param.templates_directory'). '/personal.zip';
+        $destinationPath = $this->container->getParameter('claroline.param.templates_directory').'/personal.zip';
         @unlink($destinationPath);
         copy($this->container->getParameter('claroline.param.personal_template'), $destinationPath);
     }

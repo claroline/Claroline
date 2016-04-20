@@ -65,9 +65,8 @@ class TokenUpdaterTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\CoreBundle\Controller\AdministrationController' . $stringMocked,
+            'Claroline\CoreBundle\Controller\AdministrationController'.$stringMocked,
             array($this->sc, $this->om)
         );
     }
-
 }

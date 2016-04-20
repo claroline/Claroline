@@ -33,11 +33,11 @@ class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements No
         $details = array('role' => array('name' => $this->role->getTranslationKey()));
         $details['workspace'] = array(
             'name' => $this->workspace->getName(),
-            'id' => $this->workspace->getId()
+            'id' => $this->workspace->getId(),
         );
         $details['receiverUser'] = array(
             'firstName' => $this->user->getFirstName(),
-            'lastName' => $this->user->getLastName()
+            'lastName' => $this->user->getLastName(),
         );
         $this->details = $details;
 
@@ -57,7 +57,7 @@ class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements No
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 
     public function getActionKey()
@@ -72,7 +72,7 @@ class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements No
 
     public function getIconKey()
     {
-        return null;
+        return;
     }
 
     public function getIncludeUserIds()

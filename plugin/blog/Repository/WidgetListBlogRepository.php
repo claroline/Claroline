@@ -24,6 +24,6 @@ class WidgetListBlogRepository extends EntityRepository
             ->getQuery()
         ;
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -43,8 +42,7 @@ class LocaleManager
         PlatformConfigurationHandler $configHandler,
         UserManager $userManager,
         TokenStorageInterface $tokenStorage
-    )
-    {
+    ) {
         $this->configHandler = $configHandler;
         $this->userManager = $userManager;
         $this->defaultLocale = $configHandler->getParameter('locale_language');
@@ -57,7 +55,7 @@ class LocaleManager
      *
      * @param $path The path of translations files
      *
-     * @return Array
+     * @return array
      */
     public function retrieveAvailableLocales($path = '/../Resources/translations/')
     {
@@ -76,7 +74,7 @@ class LocaleManager
      *
      * @param $path The path of translations files
      *
-     * @return Array
+     * @return array
      */
     public function getImplementedLocales($path = '/../Resources/translations/')
     {
@@ -94,7 +92,7 @@ class LocaleManager
     /**
      * Get a list of available languages in the platform.
      *
-     * @return Array
+     * @return array
      */
     public function getAvailableLocales()
     {
@@ -106,7 +104,7 @@ class LocaleManager
     }
 
     /**
-     * Set locale setting for current user if this locale is present in the platform
+     * Set locale setting for current user if this locale is present in the platform.
      *
      * @param string $locale The locale string as en, fr, es, etc.
      */
@@ -121,6 +119,7 @@ class LocaleManager
      * language or the browser language if it is present in translations.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return string The locale string as en, fr, es, etc.
      */
     public function getUserLocale(Request $request)
@@ -148,7 +147,7 @@ class LocaleManager
     }
 
     /**
-     * Get Current User
+     * Get Current User.
      *
      * @return mixed Claroline\CoreBundle\Entity\User or null
      */

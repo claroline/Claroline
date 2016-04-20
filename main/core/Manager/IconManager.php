@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Buzz\Message\Response;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
@@ -64,8 +63,7 @@ class IconManager
         ClaroUtilities $ut,
         ObjectManager $om,
         $basepath
-    )
-    {
+    ) {
         $this->creator = $creator;
         $this->repo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon');
         $this->fileDir = $fileDir;
@@ -77,7 +75,7 @@ class IconManager
     }
 
     /**
-     * Create (if possible) and|or returns an icon for a resource
+     * Create (if possible) and|or returns an icon for a resource.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      *
@@ -92,7 +90,7 @@ class IconManager
         if (($mimeElements[0] === 'video' || $mimeElements[0] === 'image')) {
             $this->om->startFlushSuite();
             $thumbnailPath = $this->createFromFile(
-                $this->fileDir. $ds . $resource->getHashName(),
+                $this->fileDir.$ds.$resource->getHashName(),
                 $mimeElements[0],
                 $workspace
             );
@@ -101,12 +99,12 @@ class IconManager
                 $thumbnailName = pathinfo($thumbnailPath, PATHINFO_BASENAME);
 
                 if (is_null($workspace)) {
-                    $relativeUrl = $this->basepath . "/{$thumbnailName}";
+                    $relativeUrl = $this->basepath."/{$thumbnailName}";
                 } else {
-                    $relativeUrl = $this->basepath .
-                        $ds .
-                        $workspace->getCode() .
-                        $ds .
+                    $relativeUrl = $this->basepath.
+                        $ds.
+                        $workspace->getCode().
+                        $ds.
                         $thumbnailName;
                 }
                 $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
@@ -177,14 +175,13 @@ class IconManager
         $this->om->endFlushSuite();
 
         return $shortcutIcon;
-
     }
 
     /**
      * Creates a custom ResourceIcon entity from a File (wich should contain an image).
-     * (for instance if the thumbnail of a resource is changed)
+     * (for instance if the thumbnail of a resource is changed).
      *
-     * @param File $file
+     * @param File      $file
      * @param Workspace $workspace (for the storage directory...)
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
@@ -196,13 +193,13 @@ class IconManager
 
         if (is_null($workspace)) {
             $dest = $this->thumbDir;
-            $hashName = $this->ut->generateGuid() . "." . $extension;
+            $hashName = $this->ut->generateGuid().'.'.$extension;
         } else {
-            $dest = $this->thumbDir . DIRECTORY_SEPARATOR . $workspace->getCode();
-            $hashName = $workspace->getCode() .
-                DIRECTORY_SEPARATOR .
-                $this->ut->generateGuid() .
-                "." .
+            $dest = $this->thumbDir.DIRECTORY_SEPARATOR.$workspace->getCode();
+            $hashName = $workspace->getCode().
+                DIRECTORY_SEPARATOR.
+                $this->ut->generateGuid().
+                '.'.
                 $extension;
         }
         $file->move($dest, $hashName);
@@ -233,13 +230,13 @@ class IconManager
         if (is_null($workspace)) {
             $prefix = $this->thumbDir;
         } else {
-            $prefix = $this->thumbDir . $ds . $workspace->getCode();
+            $prefix = $this->thumbDir.$ds.$workspace->getCode();
 
             if (!is_dir($prefix)) {
                 @mkdir($prefix);
             }
         }
-        $newPath = $prefix . $ds . $this->ut->generateGuid() . ".png";
+        $newPath = $prefix.$ds.$this->ut->generateGuid().'.png';
 
         $thumbnailPath = null;
         if ($baseMime === 'video') {
@@ -325,13 +322,13 @@ class IconManager
     public function removeImageFromThumbDir(ResourceIcon $icon, Workspace $workspace = null)
     {
         if (preg_match('#^thumbnails#', $icon->getRelativeUrl())) {
-            $pathName = $this->rootDir . '/../web/' . $icon->getRelativeUrl();
+            $pathName = $this->rootDir.'/../web/'.$icon->getRelativeUrl();
 
             if (file_exists($pathName)) {
                 unlink($pathName);
 
                 if (!is_null($workspace)) {
-                    $dir = $this->thumbDir . DIRECTORY_SEPARATOR . $workspace->getCode();
+                    $dir = $this->thumbDir.DIRECTORY_SEPARATOR.$workspace->getCode();
 
                     if (is_dir($dir) && $this->isDirectoryEmpty($dir)) {
                         rmdir($dir);
@@ -456,19 +453,17 @@ class IconManager
 
             array('res_rtf.png', 'application/rtf'),
             array('res_rtf.png', 'application/x-rtf'),
-            array('res_rtf.png', 'text/richtext')
+            array('res_rtf.png', 'text/richtext'),
         );
     }
 
     private function isDirectoryEmpty($dirName)
     {
-        $files = array ();
+        $files = array();
         $dirHandle = opendir($dirName);
 
         if ($dirHandle) {
-
             while ($file = readdir($dirHandle)) {
-
                 if ($file !== '.' && $file !== '..') {
                     $files[] = $file;
                     break;
@@ -489,11 +484,11 @@ class IconManager
             $shortcutLocation = $this->creator->shortcutThumbnail($originalIconLocation, $workspace);
         } catch (\Exception $e) {
             $shortcutLocation = "{$this->rootDir}{$ds}.."
-                . "{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-default.png";
+                ."{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-default.png";
         }
 
-        if (strstr($shortcutLocation, "bundles")) {
-            $tmpRelativeUrl = strstr($shortcutLocation, "bundles");
+        if (strstr($shortcutLocation, 'bundles')) {
+            $tmpRelativeUrl = strstr($shortcutLocation, 'bundles');
         } else {
             $tmpRelativeUrl = strstr($shortcutLocation, $this->basepath);
         }

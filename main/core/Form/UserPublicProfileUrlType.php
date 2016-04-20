@@ -2,11 +2,8 @@
 
 namespace Claroline\CoreBundle\Form;
 
-use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class UserPublicProfileUrlType extends AbstractType
@@ -16,10 +13,10 @@ class UserPublicProfileUrlType extends AbstractType
         $builder
             ->add('public_url', 'text', array(
                 'required' => true,
-                'attr'     => array(
+                'attr' => array(
                     'maxlength' => 30,
-                    'class'     => 'check-ok'
-                )
+                    'class' => 'check-ok',
+                ),
             ));
     }
 
@@ -32,9 +29,9 @@ class UserPublicProfileUrlType extends AbstractType
     {
         $resolver->setDefaults(array(
             'translation_domain' => 'platform',
-            'data_class'         => 'Claroline\CoreBundle\Entity\User',
-            'csrf_protection'    => true,
-            'intention'          => 'configure_public_profile_url'
+            'data_class' => 'Claroline\CoreBundle\Entity\User',
+            'csrf_protection' => true,
+            'intention' => 'configure_public_profile_url',
         ));
     }
 }

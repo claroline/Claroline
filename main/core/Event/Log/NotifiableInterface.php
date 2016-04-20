@@ -7,7 +7,7 @@ interface NotifiableInterface
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers();
 
@@ -47,23 +47,23 @@ interface NotifiableInterface
     public function getIconKey();
 
     /**
-     * Get resource Object
+     * Get resource Object.
      *
      * @return resource
      */
     public function getResource();
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
     public function getNotificationDetails();
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify();
 }

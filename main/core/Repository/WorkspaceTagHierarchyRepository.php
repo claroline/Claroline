@@ -18,7 +18,7 @@ use Doctrine\ORM\EntityRepository;
 class WorkspaceTagHierarchyRepository extends EntityRepository
 {
     /**
-     * Returns all admin relations where given workspaceTag is parent
+     * Returns all admin relations where given workspaceTag is parent.
      */
     public function findAdminHierarchiesByParent(WorkspaceTag $workspaceTag)
     {
@@ -35,13 +35,12 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
     }
 
     /**
-     * Returns all relations where given workspaceTag is parent
+     * Returns all relations where given workspaceTag is parent.
      */
     public function findHierarchiesByParent(
         User $user,
         WorkspaceTag $workspaceTag
-    )
-    {
+    ) {
         $dql = '
             SELECT h
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
@@ -56,7 +55,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
     }
 
     /**
-     * Returns all relations where parentId is in the param array
+     * Returns all relations where parentId is in the param array.
      */
     public function findAdminHierarchiesByParents(array $parents)
     {
@@ -71,7 +70,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
         foreach ($parents as $parent) {
             $parentsTest .= $index > 0 ? '    OR ' : '    ';
             $parentsTest .= "p.id = {$parent}{$eol}";
-            $index++;
+            ++$index;
         }
         $parentsTest .= "){$eol}";
 
@@ -88,7 +87,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
     }
 
     /**
-     * Returns all relations where parentId is in the param array
+     * Returns all relations where parentId is in the param array.
      */
     public function findHierarchiesByParents(User $user, array $parents)
     {
@@ -103,7 +102,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
         foreach ($parents as $parent) {
             $parentsTest .= $index > 0 ? '    OR ' : '    ';
             $parentsTest .= "p.id = {$parent}{$eol}";
-            $index++;
+            ++$index;
         }
         $parentsTest .= "){$eol}";
 
@@ -122,7 +121,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
 
     /**
      * Find all admin hierarchies (with level > 0) where
-     * parents and children ids are in the given arrays
+     * parents and children ids are in the given arrays.
      */
     public function findAdminHierarchiesByParentsAndChildren(array $parents, array $children)
     {
@@ -137,7 +136,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
         foreach ($parents as $parent) {
             $parentsTest .= $parentIndex > 0 ? '    OR ' : '    ';
             $parentsTest .= "p.id = {$parent}{$eol}";
-            $parentIndex++;
+            ++$parentIndex;
         }
         $parentsTest .= "){$eol}";
 
@@ -147,7 +146,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
         foreach ($children as $child) {
             $childrenTest .= $childrenIndex > 0 ? '    OR ' : '    ';
             $childrenTest .= "t.id = {$child}{$eol}";
-            $childrenIndex++;
+            ++$childrenIndex;
         }
         $childrenTest .= "){$eol}";
 
@@ -168,7 +167,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
 
     /**
      * Find all hierarchies (with level > 0) where
-     * parents and children ids are in the given arrays
+     * parents and children ids are in the given arrays.
      */
     public function findHierarchiesByParentsAndChildren(User $user, array $parents, array $children)
     {
@@ -183,7 +182,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
         foreach ($parents as $parent) {
             $parentsTest .= $parentIndex > 0 ? '    OR ' : '    ';
             $parentsTest .= "p.id = {$parent}{$eol}";
-            $parentIndex++;
+            ++$parentIndex;
         }
         $parentsTest .= "){$eol}";
 
@@ -193,7 +192,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
         foreach ($children as $child) {
             $childrenTest .= $childrenIndex > 0 ? '    OR ' : '    ';
             $childrenTest .= "t.id = {$child}{$eol}";
-            $childrenIndex++;
+            ++$childrenIndex;
         }
         $childrenTest .= "){$eol}";
 

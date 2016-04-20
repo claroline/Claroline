@@ -264,7 +264,6 @@ class ToolManagerTest extends MockeryTestCase
         }
 
         $this->getManager()->addDesktopTool($tool, $user, $position, 'name');
-
     }
 
     public function testMove()
@@ -308,8 +307,8 @@ class ToolManagerTest extends MockeryTestCase
                 'visibility' => array(1 => false, 2 => false),
                 'position' => 3,
                 'workspace' => $workspace,
-                'displayedName' => 'displayedName'
-            )
+                'displayedName' => 'displayedName',
+            ),
         );
 
         $this->roleManager->shouldReceive('getWorkspaceRoles')
@@ -350,8 +349,8 @@ class ToolManagerTest extends MockeryTestCase
                 'visibility' => array(1 => true, 2 => false),
                 'position' => 1,
                 'workspace' => $workspace,
-                'displayedName' => 'displayedName'
-            )
+                'displayedName' => 'displayedName',
+            ),
         );
 
         $this->orderedToolRepo->shouldReceive('findBy')->andReturn(array($ot))->once();
@@ -451,7 +450,7 @@ class ToolManagerTest extends MockeryTestCase
     public function testAddRequiredToolsUser()
     {
         $manager = $this->getManager(array('addDesktopTool'));
-        $user = new \Claroline\CoreBundle\Entity\User;
+        $user = new \Claroline\CoreBundle\Entity\User();
         $home = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $resmanager = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $parameters = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
@@ -476,7 +475,6 @@ class ToolManagerTest extends MockeryTestCase
         $this->om->shouldReceive('endFlushSuite')->once()->with($user);
 
         $manager->addRequiredToolsToUser($user);
-
     }
 
     public function testGetOneToolByName()
@@ -513,7 +511,7 @@ class ToolManagerTest extends MockeryTestCase
     {
         return array(
             array('name' => 'toolname', 'isExceptionExpected' => false),
-            array('name' => 'parameters', 'isExceptionExpected' => true)
+            array('name' => 'parameters', 'isExceptionExpected' => true),
         );
     }
 
@@ -523,7 +521,7 @@ class ToolManagerTest extends MockeryTestCase
 
         return array(
             array('switchTool' => $switchTool, 'isExceptionExpected' => true),
-            array('switchTool' => null, 'isExceptionExpected' => false)
+            array('switchTool' => null, 'isExceptionExpected' => false),
         );
     }
 
@@ -533,7 +531,7 @@ class ToolManagerTest extends MockeryTestCase
 
         return array(
             array('switchTool' => $switchTool, 'isExceptionExpected' => true),
-            array('switchTool' => null, 'isExceptionExpected' => false)
+            array('switchTool' => null, 'isExceptionExpected' => false),
         );
     }
 
@@ -556,7 +554,7 @@ class ToolManagerTest extends MockeryTestCase
             );
         } else {
             $stringMocked = '[';
-                $stringMocked .= array_pop($mockedMethods);
+            $stringMocked .= array_pop($mockedMethods);
 
             foreach ($mockedMethods as $mockedMethod) {
                 $stringMocked .= ",{$mockedMethod}";
@@ -565,13 +563,13 @@ class ToolManagerTest extends MockeryTestCase
             $stringMocked .= ']';
 
             return $this->mock(
-                'Claroline\CoreBundle\Manager\ToolManager' . $stringMocked,
+                'Claroline\CoreBundle\Manager\ToolManager'.$stringMocked,
                 array(
                     $this->ed,
                     $this->utilities,
                     $this->translator,
                     $this->om,
-                    $this->roleManager
+                    $this->roleManager,
                 )
             );
         }

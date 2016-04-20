@@ -36,7 +36,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
     public function testValidate($path, $isExceptionExpected, $isUserInDatabase, $isFull, $codeExists)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
+        $data = Yaml::parse(file_get_contents($path.$ds.'manifest.yml'));
         $properties['properties'] = $data['properties'];
 
         if ($isExceptionExpected) {
@@ -91,7 +91,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
                 'isExceptionExpected' => false,
                 'isUserInDatabase' => false,
                 'isFull' => true,
-                'codeExists' => false
+                'codeExists' => false,
             ),
             //full correct configuration, owner is already in the database
             array(
@@ -99,7 +99,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
                 'isExceptionExpected' => false,
                 'isUserInDatabase' => true,
                 'isFull' => true,
-                'codeExists' => false
+                'codeExists' => false,
             ),
             //minimal correct configuration, owner is already in the database
             array(
@@ -107,7 +107,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
                 'isExceptionExpected' => false,
                 'isUserInDatabase' => true,
                 'isFull' => false,
-                'codeExists' => false
+                'codeExists' => false,
             ),
             //minimal configuration, no owner section, owner not in database
             array(
@@ -115,7 +115,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
                 'isExceptionExpected' => true,
                 'isUserInDatabase' => false,
                 'isFull' => false,
-                'codeExists' => false
+                'codeExists' => false,
             ),
             //full configuration, workspace owner and member owner missmatch
             array(
@@ -123,7 +123,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
                 'isExceptionExpected' => true,
                 'isUserInDatabase' => true,
                 'isFull' => true,
-                'codeExists' => false
+                'codeExists' => false,
             ),
             //minimal configuration, workspace code already exists
             array(
@@ -131,8 +131,8 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
                 'isExceptionExpected' => true,
                 'isUserInDatabase' => true,
                 'isFull' => false,
-                'codeExists' => true
-            )
+                'codeExists' => true,
+            ),
         );
     }
 }

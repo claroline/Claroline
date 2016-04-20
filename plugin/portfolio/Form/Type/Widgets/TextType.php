@@ -3,7 +3,6 @@
 namespace Icap\PortfolioBundle\Form\Type\Widgets;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,9 +27,9 @@ class TextType extends AbstractWidgetType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\TextWidget',
+                'data_class' => 'Icap\PortfolioBundle\Entity\Widget\TextWidget',
                 'translation_domain' => 'icap_portfolio',
-                'csrf_protection'    => false,
+                'csrf_protection' => false,
             )
         );
     }

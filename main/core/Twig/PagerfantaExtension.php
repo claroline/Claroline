@@ -59,7 +59,7 @@ class PagerfantaExtension extends P
                 'routeName' => null,
                 'routeParams' => array(),
                 'pageParameter' => '[page]',
-                'queryString' => null
+                'queryString' => null,
             ),
             $options
         );
@@ -91,7 +91,7 @@ class PagerfantaExtension extends P
             $url = $router->generate($routeName, $routeParams);
 
             if ($options['queryString']) {
-                $url .= '?' . $options['queryString'];
+                $url .= '?'.$options['queryString'];
             }
 
             return $url;

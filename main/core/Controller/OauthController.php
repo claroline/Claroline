@@ -23,11 +23,9 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use OAuth2\OAuth2RedirectException;
-use OAuth2\OAuth2ServerException;
 
 /**
- * Controller handling basic authorization
+ * Controller handling basic authorization.
  */
 class OauthController extends BaseAuthorizeController
 {
@@ -43,15 +41,17 @@ class OauthController extends BaseAuthorizeController
     public function oauthLoginAction(Request $request)
     {
         $lastUsername = $request->getSession()->get(SecurityContext::LAST_USERNAME);
-        $user         = $this->container->get('claroline.manager.user_manager')->getUserByUsername($lastUsername);
-        $clientId     = $this->container->get('request')->get('client_id');
-        if ($clientId) $this->container->get('session')->set('client_id', $clientId);
+        $user = $this->container->get('claroline.manager.user_manager')->getUserByUsername($lastUsername);
+        $clientId = $this->container->get('request')->get('client_id');
+        if ($clientId) {
+            $this->container->get('session')->set('client_id', $clientId);
+        }
 
         if ($user && !$user->isAccountNonExpired()) {
             return array(
                 'last_username' => $lastUsername,
-                'error'         => false,
-                'is_expired'    => true
+                'error' => false,
+                'is_expired' => true,
             );
         }
 
@@ -63,8 +63,8 @@ class OauthController extends BaseAuthorizeController
 
         return array(
             'last_username' => $lastUsername,
-            'error'         => $error,
-            'is_expired'    => false
+            'error' => $error,
+            'is_expired' => false,
         );
     }
 
@@ -104,8 +104,8 @@ class OauthController extends BaseAuthorizeController
         return $this->container->get('templating')->renderResponse(
             'ClarolineCoreBundle:Authentication:oauth_authorize.html.twig',
             array(
-                'form'      => $form->createView(),
-                'client'    => $this->getClient(),
+                'form' => $form->createView(),
+                'client' => $this->getClient(),
             )
         );
     }
@@ -194,13 +194,13 @@ class OauthController extends BaseAuthorizeController
         $curlManager = $this->container->get('claroline.manager.curl_manager');
         $friendRequest = $this->container->get('claroline.manager.oauth_manager')->findFriendRequestByName($name);
         $access = $friendRequest->getClarolineAccess();
-        $redirect = $this->container->get('request')->getSchemeAndHttpHost() .
-            $this->container->get('router')->getContext()->getBaseUrl() . '/oauth/v2/log/' . $name;
+        $redirect = $this->container->get('request')->getSchemeAndHttpHost().
+            $this->container->get('router')->getContext()->getBaseUrl().'/oauth/v2/log/'.$name;
 
         //request the token
-        $url = $friendRequest->getHost() . '/oauth/v2/token?client_id=' . urlencode($access->getRandomId()) . '&client_secret='
-            . urlencode($access->getSecret()) . '&grant_type=authorization_code&redirect_uri=' . urlencode($redirect)
-            . '&code=' . urlencode($authCode);
+        $url = $friendRequest->getHost().'/oauth/v2/token?client_id='.urlencode($access->getRandomId()).'&client_secret='
+            .urlencode($access->getSecret()).'&grant_type=authorization_code&redirect_uri='.urlencode($redirect)
+            .'&code='.urlencode($authCode);
 
         $data = json_decode($curlManager->exec($url), true);
 
@@ -211,7 +211,7 @@ class OauthController extends BaseAuthorizeController
         $accessToken = $data['access_token'];
         //maybe store the user token one way or an other ?
 
-        $url = $friendRequest->getHost() . '/api/connected_user?access_token=' . $accessToken;
+        $url = $friendRequest->getHost().'/api/connected_user?access_token='.$accessToken;
         $data = $curlManager->exec($url);
         $data = json_decode($data, true);
         $email = $data['mail'];
@@ -244,13 +244,15 @@ class OauthController extends BaseAuthorizeController
     }
 
     /**
-     * @return ClientInterface
+     * @return ClientInterface.
      */
     protected function getClient()
     {
         if (null === $this->client) {
             $clientId = $this->container->get('request')->get('client_id');
-            if ($clientId === null) $clientId = $this->container->get('session')->get('client_id');
+            if ($clientId === null) {
+                $clientId = $this->container->get('session')->get('client_id');
+            }
 
             $client = $this->container
                 ->get('fos_oauth_server.client_manager')

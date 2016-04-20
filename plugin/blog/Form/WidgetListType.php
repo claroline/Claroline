@@ -2,11 +2,9 @@
 
 namespace Icap\BlogBundle\Form;
 
-use Icap\BlogBundle\Form\DataTransformer\IntToBlogTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zenstruck\Bundle\FormBundle\Form\DataTransformer\AjaxEntityTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -17,7 +15,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class WidgetListType extends AbstractType
 {
     //Voir controleur pour passer en partametre les options, 3eme param pour utiliser translator
-    
+
     protected $translator;
 
     /**
@@ -39,21 +37,21 @@ class WidgetListType extends AbstractType
 
         $builder
             ->add('widgetListBlogs', 'collection', array(
-                'type'          => 'blog_widget_list_blog_form',
-                'by_reference'  => false,
-                'prototype'     => true,
-                'allow_add'     => true,
-                'allow_delete'  => true
+                'type' => 'blog_widget_list_blog_form',
+                'by_reference' => false,
+                'prototype' => true,
+                'allow_add' => true,
+                'allow_delete' => true,
             ))
             ->add('widgetDisplayListBlogs', 'choice', array(
-                'choices'   => array(
+                'choices' => array(
                     'b' => $displayBlockLabel,
-                    'l' => $displayInlineLabel
+                    'l' => $displayInlineLabel,
                 ),
-                'required'      => true,
-                'expanded'      => true,
-                'multiple'      => false,
-                'empty_value'   => false
+                'required' => true,
+                'expanded' => true,
+                'multiple' => false,
+                'empty_value' => false,
             ));
     }
 
@@ -66,8 +64,8 @@ class WidgetListType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\BlogBundle\Entity\WidgetBlogList',
-                'translation_domain' => 'icap_blog'
+                'data_class' => 'Icap\BlogBundle\Entity\WidgetBlogList',
+                'translation_domain' => 'icap_blog',
             )
         );
     }

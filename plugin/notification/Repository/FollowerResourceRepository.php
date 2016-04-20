@@ -13,8 +13,8 @@ class FollowerResourceRepository extends EntityRepository
             ->select('followerResource.followerId AS id')
             ->andWhere('followerResource.resourceId = :resourceId')
             ->andWhere('followerResource.resourceClass = :resourceClass')
-            ->setParameter("resourceId", $resourceId)
-            ->setParameter("resourceClass", $resourceClass);
+            ->setParameter('resourceId', $resourceId)
+            ->setParameter('resourceClass', $resourceClass);
 
         return $queryBuilder->getQuery()->getArrayResult();
     }

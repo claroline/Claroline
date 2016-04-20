@@ -13,5 +13,4 @@ namespace Claroline\CoreBundle\Library\Security;
 
 class UnavailablePlatformException extends \Exception
 {
-
-} 
+}

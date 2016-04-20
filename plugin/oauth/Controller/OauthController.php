@@ -2,7 +2,6 @@
 
 namespace Icap\OAuthBundle\Controller;
 
-use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -35,6 +34,7 @@ class OauthController extends Controller
      * @EXT\Template("IcapOAuthBundle::admin_form.html.twig")
      *
      * @param $service
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function formAction($service)
@@ -54,6 +54,7 @@ class OauthController extends Controller
      *
      * @param Request $request
      * @param $service
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function submitFormAction(Request $request, $service)
@@ -66,7 +67,7 @@ class OauthController extends Controller
             $data = array(
                 $service.'_client_id' => $form['client_id']->getData(),
                 $service.'_client_secret' => $form['client_secret']->getData(),
-                $service.'_client_active' => $form['client_active']->getData()
+                $service.'_client_active' => $form['client_active']->getData(),
             );
 
             $errors = $this->oauthManager->validateService(
@@ -78,6 +79,7 @@ class OauthController extends Controller
             if (count($errors) === 0) {
                 $this->configHandler->setParameters($data);
                 $this->cacheManager->refresh();
+
                 return $this->redirectToRoute('claro_admin_parameters_oauth_index');
             } else {
                 foreach ($errors as $error) {

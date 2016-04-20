@@ -36,7 +36,7 @@ class ResourceConstraint extends AbstractConstraint
      */
     public function isApplicableTo(Rule $rule)
     {
-        return (null !== $rule->getResource());
+        return null !== $rule->getResource();
     }
 
     /**

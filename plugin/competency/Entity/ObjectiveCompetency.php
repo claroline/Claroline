@@ -116,7 +116,7 @@ class ObjectiveCompetency implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id' => $this->id
+            'id' => $this->id,
         ];
     }
 }

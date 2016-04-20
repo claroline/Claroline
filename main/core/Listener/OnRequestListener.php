@@ -24,10 +24,9 @@ class OnRequestListener
      */
     public function __construct(
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->container = $container;
-        $this->storage =  $container->get('security.token_storage');
+        $this->storage = $container->get('security.token_storage');
     }
 
     /**

@@ -38,8 +38,7 @@ class ImportUsersInGroupValidator extends ConstraintValidator
         UserManager $userManager,
         TranslatorInterface $translator,
         ClaroUtilities $ut
-    )
-    {
+    ) {
         $this->userManager = $userManager;
         $this->translator = $translator;
         $this->ut = $ut;
@@ -51,16 +50,15 @@ class ImportUsersInGroupValidator extends ConstraintValidator
         $usernames = str_getcsv($data, PHP_EOL);
 
         foreach ($usernames as $username) {
-
             if ($this->userManager->getUserByUsername(trim($username)) === null) {
                 $msg = $this->translator->trans(
-                    "username_doesnt_exist",
+                    'username_doesnt_exist',
                     array('%username%' => $username),
                     'validators'
-                ) . ' ';
+                ).' ';
 
                 $this->context->addViolation($msg);
             }
         }
     }
-} 
+}

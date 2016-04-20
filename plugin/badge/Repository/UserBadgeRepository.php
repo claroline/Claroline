@@ -23,7 +23,6 @@ class UserBadgeRepository extends EntityRepository
 
     /**
      * @param User $user
-     *
      * @param bool $executeQuery
      *
      * @return Query|array
@@ -40,13 +39,12 @@ class UserBadgeRepository extends EntityRepository
             )
             ->setParameter('userId', $user->getId());
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
-     * @param integer[] $userIds
-     *
-     * @param bool $executeQuery
+     * @param int[] $userIds
+     * @param bool  $executeQuery
      *
      * @return \Doctrine\ORM\Query|\Icap\BadgeBundle\Entity\UserBadge[]
      */
@@ -62,13 +60,13 @@ class UserBadgeRepository extends EntityRepository
             )
             ->setParameter('userIds', $userIds);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
      * @param Workspace $workspace
      *
-     * @return integer
+     * @return int
      */
     public function countAwardingByWorkspace(Workspace $workspace)
     {
@@ -87,7 +85,7 @@ class UserBadgeRepository extends EntityRepository
     /**
      * @param Workspace $workspace
      *
-     * @return integer
+     * @return int
      */
     public function countAwardedBadgeByWorkspace(Workspace $workspace)
     {
@@ -128,8 +126,9 @@ class UserBadgeRepository extends EntityRepository
 
     /**
      * @param Workspace $workspace
-     * @param User $user
-     * @param int $limit
+     * @param User      $user
+     * @param int       $limit
+     *
      * @return \Icap\BadgeBundle\Entity\Badge[]
      */
     public function findWorkspaceLastAwardedBadgesToUser(Workspace $workspace, User $user, $limit = 10)
@@ -175,7 +174,6 @@ class UserBadgeRepository extends EntityRepository
                 ->getResult();
     }
 
-
     /**
      * @param Workspace $workspace
      *
@@ -183,19 +181,19 @@ class UserBadgeRepository extends EntityRepository
      */
     public function countBadgesPerUser(Workspace $workspace)
     {
-        $sql = "SELECT qr1.nb_badge AS nb_badge, COUNT(qr1.id) AS nb_user
+        $sql = 'SELECT qr1.nb_badge AS nb_badge, COUNT(qr1.id) AS nb_user
                 FROM (SELECT userBadge.user_id AS id, COUNT(userBadge.id) AS nb_badge
                 FROM claro_user_badge AS userBadge
                 LEFT JOIN claro_badge AS badge ON userBadge.badge_id = badge.id
                 WHERE badge.workspace_id = :workspaceId
                 GROUP BY userBadge.user_id) AS qr1
                 GROUP BY qr1.nb_badge
-                ORDER BY qr1.nb_badge";
+                ORDER BY qr1.nb_badge';
 
         $rsm = new ResultSetMapping();
         $rsm
-            ->addScalarResult("nb_user","nb_user")
-            ->addScalarResult("nb_badge", "nb_badge");
+            ->addScalarResult('nb_user', 'nb_user')
+            ->addScalarResult('nb_badge', 'nb_badge');
 
         $query = $this->getEntityManager()
             ->createNativeQuery($sql, $rsm)
@@ -204,11 +202,9 @@ class UserBadgeRepository extends EntityRepository
         return $query->getResult('PairHydrator');
     }
 
-
     /**
      * @param Badge $badge
-     *
-     * @param bool $executeQuery
+     * @param bool  $executeQuery
      *
      * @return Query|array
      */
@@ -222,13 +218,12 @@ class UserBadgeRepository extends EntityRepository
             )
             ->setParameter('badgeId', $badge->getId());
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
      * @param string $badgeSlug
-     *
-     * @param bool $executeQuery
+     * @param bool   $executeQuery
      *
      * @return Query|array
      */
@@ -244,14 +239,13 @@ class UserBadgeRepository extends EntityRepository
             ')
             ->setParameter('badgeSlug', $badgeSlug);
 
-        return $executeQuery ? $query->getOneOrNullResult(): $query;
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
     /**
      * @param string $username
      * @param string $badgeSlug
-     *
-     * @param bool $executeQuery
+     * @param bool   $executeQuery
      *
      * @return Query|array
      */
@@ -270,6 +264,6 @@ class UserBadgeRepository extends EntityRepository
             ->setParameter('badgeSlug', $badgeSlug)
             ->setParameter('username', $username);
 
-        return $executeQuery ? $query->getOneOrNullResult(): $query;
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 }
