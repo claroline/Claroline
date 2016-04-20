@@ -3,14 +3,12 @@
  * Created by PhpStorm.
  * User: ptsavdar
  * Date: 16/03/16
- * Time: 16:39
+ * Time: 16:39.
  */
 
 namespace Icap\WebsiteBundle\Testing;
 
-
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -34,10 +32,14 @@ class Persister
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+        $this->websiteType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneByName('icap_website');
+        $this->userRole = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
     }
 
     /**
      * @param $username
+     *
      * @return User
      */
     public function user($username)
@@ -47,15 +49,9 @@ class Persister
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPassword($username);
-        $user->setMail($username . '@mail.com');
+        $user->setMail($username.'@mail.com');
         $user->setGuid($username);
         $this->om->persist($user);
-        if (!$this->userRole) {
-            $this->userRole = new Role();
-            $this->userRole->setName('ROLE_USER');
-            $this->userRole->setTranslationKey('user');
-            $this->om->persist($this->userRole);
-        }
         $user->addRole($this->userRole);
         $workspace = new Workspace();
         $workspace->setName($username);
@@ -70,7 +66,8 @@ class Persister
 
     /**
      * @param Workspace $workspace
-     * @param User $user
+     * @param User      $user
+     *
      * @return User
      */
     public function workspaceUser(Workspace $workspace, User $user)
@@ -89,17 +86,12 @@ class Persister
     /**
      * @param $title
      * @param User $creator
+     *
      * @return Website
      */
     public function website($title, User $creator)
     {
         $website = new Website(true);
-        if (!$this->websiteType) {
-            $this->websiteType = new ResourceType();
-            $this->websiteType->setName('icap_website');
-            $this->om->persist($this->websiteType);
-        }
-
         $node = new ResourceNode();
         $node->setName($title);
         $node->setCreator($creator);

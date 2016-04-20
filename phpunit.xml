@@ -38,6 +38,7 @@
             <directory>plugin/dropzone/Tests/</directory>
             <directory>plugin/favourite/Tests/</directory>
             <directory>plugin/forum/Tests/</directory>
+            <directory>plugin/website/Tests/</directory>
             <!-- <directory>plugin/portfolio/Tests/</directory> -->
             <directory>plugin/result/Tests/</directory>
             <directory>plugin/rss-reader/Tests/</directory>
