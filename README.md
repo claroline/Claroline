@@ -1,6 +1,7 @@
 # Distribution
 
 [![Build Status](https://travis-ci.org/claroline/Distribution.svg?branch=master)](https://travis-ci.org/claroline/Distribution)
+[![Join the chat at https://gitter.im/claroline/Claroline](https://img.shields.io/badge/GITTER-join%20chat-green.svg)](https://gitter.im/claroline/Claroline)
 
 This is the official distribution package of the Claroline Connect learning
 management system. It is intended to be installed within the
@@ -16,18 +17,10 @@ This repository is still a work in progress.
 
 ## TODO
 
-- [x] update
-- [x] upgrade from previous packages
 - [ ] add LessonBundle
-- [ ] add WebsiteBundle
 - [ ] add ExoBundle
-- [ ] add FormulaPluginBundle
-- [ ] add PdfGeneratorBundle
 - [ ] check if PdfGeneratorBundle is usable before activation (requires wkhtmltopdf)
-- [ ] check if LdapBundle is usable before activation (requires ext5-ldap)
-- [ ] migrate contents from DevBundle
 - [ ] remove the innova/angular bundles (required by portfolio)
 - [ ] remove the "innova/angular-ui-pageslide-bundle" (for path)
 - [ ] remove the front-end-bundle (required by icapbadge for jqplot and by core/Resouces/less/layout.less)
 - [ ] add install and doc sections (require claroline/Claroline to be updated as well)
-- [ ] fetch mathjax with bower and remove it from sources (required by formula)
