@@ -100,7 +100,6 @@ export default class ResultsService {
         response => onFail(response.data),
         event => {
           const progress = parseInt(100.0 * event.loaded / event.total)
-          console.log(`progress: ${progress}% ${event.config.data.file.name}`)
         }
       )
   }
