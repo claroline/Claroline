@@ -11,7 +11,7 @@
 </pre>
 
 <pre>
-{{ vm.learningCards }}
+{{ vm.learningCards.length }}
 </pre>
 
 <hr/>
@@ -22,7 +22,6 @@
     <thead>
       <tr>
         <th>{{ 'new_cards'|trans:'flashcard' }}</th>
-        <th>{{ 'card_failed'|trans:'flashcard' }}</th>
         <th>{{ 'card_to_review'|trans:'flashcard' }}</th>
         <!--
         <th colspan="2" data-ng-if="!vm.isReadOnly"></th>
@@ -32,7 +31,6 @@
     <tbody>
       <tr>
         <td>{{ vm.newCards.length }}</td>
-        <td></td>
         <td>{{ vm.learningCards.length }}</td>
         <!--
         <td style="text-align: center" data-ng-if="!vm.isReadOnly">
