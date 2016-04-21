@@ -71,57 +71,6 @@ export default class FlashCardService {
     return this.$http.get(url)
   }
 
-  deleteMark (mark, onFail) {
-    const url = Routing.generate('claro_delete_mark', {
-      id: mark.markId
-    })
-
-    this._deleteMark(mark)
-
-    this.$http
-      .delete(url)
-      .then(null, () => {
-        this._marks.push(mark)
-        onFail()
-      })
-  }
-
-  editMark (originalMark, newValue, onFail) {
-    if (originalMark.mark === newValue) {
-      return
-    }
-
-    const originalValue = originalMark.mark
-    const url = Routing.generate('claro_edit_mark', {
-      id: originalMark.markId
-    })
-
-    originalMark.mark = newValue
-
-    this.$http
-      .put(url, { value: newValue })
-      .then(null, () => {
-        originalMark.mark = originalValue
-        onFail()
-      })
-  }
-
-  importMarks (file, onFail) {
-    const url = Routing.generate('claro_import_marks', {
-      id: this._resultId
-    })
-    this.uploader
-      .upload({ url, data: { file } })
-      .then(
-        response => this._marks.push(...response.data),
-        response => onFail(response.data),
-        event => {
-          const progress = parseInt(100.0 * event.loaded / event.total)
-          console.log(`progress: ${progress}% ${event.config.data.file.name}`)
-        }
-      )
-  }
-
   static _getGlobal (name) {
     if (typeof window[name] === 'undefined') {
       throw new Error(
@@ -130,9 +79,5 @@ export default class FlashCardService {
     }
 
     return window[name]
-  }
-
-  _deleteMark (mark) {
-    this._marks.splice(this._marks.indexOf(mark), 1)
   }
 }
