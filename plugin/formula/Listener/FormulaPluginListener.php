@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,6 +8,7 @@
  *
  * Date: 11/16/15
  */
+
 namespace Icap\FormulaPluginBundle\Listener;
 
 use Claroline\CoreBundle\Event\InjectJavascriptEvent;
@@ -21,10 +22,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FormulaPluginListener extends ContainerAware
 {
     private $templating;
+
     /**
      * @DI\Observe("inject_javascript_layout")
      *
      * @param InjectJavascriptEvent $event
+     *
      * @return string
      */
     public function onInjectJs(InjectJavascriptEvent $event)
