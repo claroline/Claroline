@@ -53,4 +53,16 @@ class CardManager
         $repoCard = $this->om->getRepository('ClarolineFlashCardBundle:Card');
         return $repoCard->findNewCardToLearn($deck, $user, $maxResults);
     }
+
+    /**
+     * @param Deck $deck
+     * @param User $user
+     * @param \DateTime $date
+     * @return array
+     */
+    public function getCardToReview(Deck $deck, User $user, \DateTime $date, $maxResults=-1)
+    {
+        $repoCard = $this->om->getRepository('ClarolineFlashCardBundle:Card');
+        return $repoCard->findCardToReview($deck, $user, $date, $maxResults);
+    }
 }

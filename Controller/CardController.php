@@ -31,7 +31,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})
  * @EXT\Method("GET")
  */
-class CardLearningController
+class CardController
 {
     private $cardMgr;
     private $cardLearningMgr;
@@ -80,7 +80,10 @@ class CardLearningController
     }
 
     /**
-     * @EXT\Route("/card/new_to_learn/deck/{deck}", name="claroline_new_card_to_learn")
+     * @EXT\Route(
+     *     "/card/new_card_to_learn/deck/{deck}", 
+     *     name="claroline_new_card_to_learn"
+     * )
      *
      * @param Deck $deck
      * @return JsonResponse
@@ -92,22 +95,18 @@ class CardLearningController
 
         $cards = $this->cardMgr->getNewCardToLearn($deck, $user);
 
-        $cardLearnings = [];
-        foreach($cards as $card) {
-            $cardLearning = new CardLearning();
-            $cardLearning->setCard($card);
-            $cardLearnings[] = $cardLearning;
-        }
-
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_card');
         return new JsonResponse(json_decode(
-            $this->serializer->serialize($cardLearnings, 'json', $context)
+            $this->serializer->serialize($cards, 'json', $context)
         ));
     }
 
     /**
-     * @EXT\Route("/card/card_to_review/deck/{deck}", name="claroline_card_to_review")
+     * @EXT\Route(
+     *     "/card/card_to_review/deck/{deck}", 
+     *     name="claroline_card_to_review"
+     * )
      *
      * @param Deck $deck
      * @return JsonResponse
@@ -118,12 +117,12 @@ class CardLearningController
         $user = $this->tokenStorage->getToken()->getUser();
         $date = new \DateTime();
 
-        $cardLearnings = $this->cardLearningMgr->getCardToReview($deck, $user, $date);
+        $cards = $this->cardMgr->getCardToReview($deck, $user, $date);
 
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_card');
         return new JsonResponse(json_decode(
-            $this->serializer->serialize($cardLearnings, 'json', $context)
+            $this->serializer->serialize($cards, 'json', $context)
         ));
     }
 

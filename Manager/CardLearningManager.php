@@ -80,16 +80,4 @@ class CardLearningManager
             )
         );
     }
-
-    /**
-     * @param Deck $deck
-     * @param User $user
-     * @param \DateTime $date
-     * @return array
-     */
-    public function getCardToReview(Deck $deck, User $user, \DateTime $date)
-    {
-        $repoCardLearning = $this->om->getRepository('ClarolineFlashCardBundle:CardLearning');
-        return $repoCardLearning->findCardToReview($deck, $user, $date);
-    }
 }

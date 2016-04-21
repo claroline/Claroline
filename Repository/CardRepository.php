@@ -45,11 +45,49 @@ class CardRepository extends EntityRepository
             'user' => $user,
             'deck' => $deck
         ]);
+
         if($maxResults >= 0) {
             $query->setMaxResults($maxResults);
         }
 
         return $query->getResult();
-        //return $query->getArrayCard();
+    }
+
+    /**
+     * Return the cards that must be studied at a given date for a given
+     * user and a given deck.
+     *
+     * @param Deck $deck
+     * @param User $user
+     * @param \DateTime $date
+     * @param integer $maxResults
+     * @return array
+     */
+    public function findCardToReview(Deck $deck, User $user, \DateTime $date, $maxResults=-1)
+    {
+        $dql = '
+            SELECT c
+            FROM Claroline\FlashCardBundle\Entity\Card c
+            JOIN c.note n
+            JOIN Claroline\FlashCardBundle\Entity\CardLearning cl
+            WITH cl.card = c.id
+            WHERE cl.user = :user
+            AND n.deck = :deck
+            AND cl.dueDate <= :date
+            AND cl.painfull != 1
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters([
+            'user' => $user,
+            'deck' => $deck,
+            'date' => $date
+        ]);
+
+        if($maxResults >= 0) {
+            $query->setMaxResults($maxResults);
+        }
+
+        return $query->getResult();
     }
 }
