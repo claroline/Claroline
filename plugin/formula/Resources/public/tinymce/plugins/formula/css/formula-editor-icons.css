@@ -1,0 +1,2231 @@
+.math {
+    background-image: url("../img/formula-editor-icons.png");
+    background-repeat: no-repeat;
+    display: inline-block;
+}
+
+.math-alef {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5px;
+}
+
+.math-aligned-equations {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -37px;
+}
+
+.math-almost-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -80px;
+}
+
+.math-alpha {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -112px;
+}
+
+.math-angle {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -144px;
+}
+
+.math-angle-brackets {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -176px;
+}
+
+.math-angle-brackets-bar {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -208px;
+}
+
+.math-aproximately-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -251px;
+}
+
+.math-arccosine {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -283px;
+}
+
+.math-arcsine {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -326px;
+}
+
+.math-arctangent {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -369px;
+}
+
+.math-arrow-accent {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -412px;
+}
+
+.math-arrows-btn {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -444px;
+}
+
+.math-asterisk {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -487px;
+}
+
+.math-asymptotically-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -519px;
+}
+
+.math-back-space {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -551px;
+}
+
+.math-bar-accent {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -594px;
+}
+
+.math-because {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -626px;
+}
+
+.math-beta {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -658px;
+}
+
+.math-bevelled-fraction {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -690px;
+}
+
+.math-bevelled-small-fraction {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -733px;
+}
+
+.math-big-intersection {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -776px;
+}
+
+.math-big-operator-subscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -819px;
+}
+
+.math-big-operator-subsuperscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -862px;
+}
+
+.math-big-operator-underoverscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -905px;
+}
+
+.math-big-operator-underscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -948px;
+}
+
+.math-big-operators-btn {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -991px;
+}
+
+.math-big-square-cap {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -1034px;
+}
+
+.math-big-square-cup {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -1077px;
+}
+
+.math-big-union {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -1120px;
+}
+
+.math-bottom-curly-bracket {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1163px;
+}
+
+.math-bottom-parenthesis {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1195px;
+}
+
+.math-bullet {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1227px;
+}
+
+.math-capital-alpha {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1259px;
+}
+
+.math-capital-beta {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1291px;
+}
+
+.math-capital-chi {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1323px;
+}
+
+.math-capital-delta {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1355px;
+}
+
+.math-capital-epsilon {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1387px;
+}
+
+.math-capital-eta {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1419px;
+}
+
+.math-capital-gamma {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1451px;
+}
+
+.math-capital-iota {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1483px;
+}
+
+.math-capital-kappa {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1515px;
+}
+
+.math-capital-lambda {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1547px;
+}
+
+.math-capital-mu {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1579px;
+}
+
+.math-capital-nu {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1611px;
+}
+
+.math-capital-omega {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1643px;
+}
+
+.math-capital-omicron {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1675px;
+}
+
+.math-capital-phi {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1707px;
+}
+
+.math-capital-pi {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1739px;
+}
+
+.math-capital-psi {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1771px;
+}
+
+.math-capital-rho {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1803px;
+}
+
+.math-capital-sigma {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1835px;
+}
+
+.math-capital-tau {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1867px;
+}
+
+.math-capital-theta {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1899px;
+}
+
+.math-capital-upsilon {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1931px;
+}
+
+.math-capital-xi {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1963px;
+}
+
+.math-capital-zeta {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -1995px;
+}
+
+.math-ceeling {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2027px;
+}
+
+.math-chi {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2059px;
+}
+
+.math-circle {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2091px;
+}
+
+.math-circled-asterisk {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2123px;
+}
+
+.math-circled-dash {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2155px;
+}
+
+.math-circled-division {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2187px;
+}
+
+.math-circled-dot {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2219px;
+}
+
+.math-circled-plus {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2251px;
+}
+
+.math-circled-times {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2283px;
+}
+
+.math-complex-numbers {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2315px;
+}
+
+.math-contains-as-member {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2347px;
+}
+
+.math-contains-normal-subgroup {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2379px;
+}
+
+.math-contour-integral {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -2411px;
+}
+
+.math-coproduct {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -2454px;
+}
+
+.math-cosecant {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -2497px;
+}
+
+.math-cosine {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -2540px;
+}
+
+.math-cotangent {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -2583px;
+}
+
+.math-cube-root {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -2626px;
+}
+
+.math-curl {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -2669px;
+}
+
+.math-curly-brackets {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2712px;
+}
+
+.math-decorations-btn {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -2744px;
+}
+
+.math-definite-integral {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -2787px;
+}
+
+.math-definite-integral-differential {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -2830px;
+}
+
+.math-degree-sign {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2873px;
+}
+
+.math-delta {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2905px;
+}
+
+.math-derivative {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -2937px;
+}
+
+.math-diaeresis-accent {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -2980px;
+}
+
+.math-diamond {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3012px;
+}
+
+.math-differential {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3044px;
+}
+
+.math-digit-space {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -3076px;
+}
+
+.math-divergence {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -3119px;
+}
+
+.math-division-sign {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3162px;
+}
+
+.math-does-not-contain-member {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3194px;
+}
+
+.math-dot-accent {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3226px;
+}
+
+.math-double-apostrophe {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3258px;
+}
+
+.math-double-integral {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -3290px;
+}
+
+.math-double-vertical-bars {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3333px;
+}
+
+.math-down-diagonal-strike {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3365px;
+}
+
+.math-down-right-diagonal-ellipsis {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3397px;
+}
+
+.math-downward-left-corner-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3429px;
+}
+
+.math-downwards-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3461px;
+}
+
+.math-downwards-arrow-left-upwards-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3493px;
+}
+
+.math-downwards-double-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3525px;
+}
+
+.math-downwards-harpoon-left-upwards-harpoon {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3557px;
+}
+
+.math-east-west-diagonal-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3589px;
+}
+
+.math-element-of {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3621px;
+}
+
+.math-element-over {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -3653px;
+}
+
+.math-element-under {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -3696px;
+}
+
+.math-element-underover {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -3739px;
+}
+
+.math-ell {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3782px;
+}
+
+.math-empty-set {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3814px;
+}
+
+.math-enclose-actuarial {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3846px;
+}
+
+.math-enclose-bottom {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3878px;
+}
+
+.math-enclose-box {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3910px;
+}
+
+.math-enclose-circle {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -3942px;
+}
+
+.math-enclose-double-left {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -3985px;
+}
+
+.math-enclose-double-right {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4017px;
+}
+
+.math-enclose-left {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4049px;
+}
+
+.math-enclose-right {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4081px;
+}
+
+.math-enclose-rounded-box {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4113px;
+}
+
+.math-enclose-top {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4145px;
+}
+
+.math-epsilon {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4177px;
+}
+
+.math-equal-operator {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4209px;
+}
+
+.math-eta {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4241px;
+}
+
+.math-euler-number {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4273px;
+}
+
+.math-exp {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -4305px;
+}
+
+.math-exponential {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -4348px;
+}
+
+.math-final-sigma {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4391px;
+}
+
+.math-floor {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4423px;
+}
+
+.math-for-all {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4455px;
+}
+
+.math-forward-slash {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4487px;
+}
+
+.math-fraction {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -4519px;
+}
+
+.math-function-btn {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -4562px;
+}
+
+.math-gamma {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4605px;
+}
+
+.math-gradient {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -4637px;
+}
+
+.math-greater-than-not-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4680px;
+}
+
+.math-greater-than-or-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4712px;
+}
+
+.math-greater-than-or-slanted-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4744px;
+}
+
+.math-greater-than-sign {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4776px;
+}
+
+.math-greek-letters-btn {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -4808px;
+}
+
+.math-hat-accent {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4851px;
+}
+
+.math-horizontal-ellipsis {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4883px;
+}
+
+.math-horizontal-strike {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4915px;
+}
+
+.math-horizontal-vertical-strikes {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4947px;
+}
+
+.math-identical-operator {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -4979px;
+}
+
+.math-imaginary-numbers {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5011px;
+}
+
+.math-imaginary-part {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5043px;
+}
+
+.math-imaginary-unit-i {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5075px;
+}
+
+.math-increment {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5107px;
+}
+
+.math-infinity {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5139px;
+}
+
+.math-integer-numbers {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5171px;
+}
+
+.math-integral {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5203px;
+}
+
+.math-integral-subscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5246px;
+}
+
+.math-integral-subscript-differential {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5289px;
+}
+
+.math-integrals-limit-btn {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5332px;
+}
+
+.math-intersection {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5375px;
+}
+
+.math-inverse-cosecant {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5407px;
+}
+
+.math-inverse-cosine {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5450px;
+}
+
+.math-inverse-cotangent {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5493px;
+}
+
+.math-inverse-secant {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5536px;
+}
+
+.math-inverse-sine {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5579px;
+}
+
+.math-inverse-tangent {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5622px;
+}
+
+.math-iota {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5665px;
+}
+
+.math-kappa {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5697px;
+}
+
+.math-lambda {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5729px;
+}
+
+.math-laplacian {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5761px;
+}
+
+.math-left-angle {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5804px;
+}
+
+.math-left-arrow-over-right-arrow-overscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5836px;
+}
+
+.math-left-arrow-over-right-arrow-underoverscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5868px;
+}
+
+.math-left-arrow-over-right-arrow-underscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5911px;
+}
+
+.math-left-arrow-overscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -5943px;
+}
+
+.math-left-arrow-underoverscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -5975px;
+}
+
+.math-left-arrow-underscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6018px;
+}
+
+.math-left-curly-bracket {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6050px;
+}
+
+.math-left-harpoon-over-right-harpoon-overscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6082px;
+}
+
+.math-left-harpoon-over-right-harpoon-underoverscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -6114px;
+}
+
+.math-left-harpoon-over-right-harpoon-underscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6157px;
+}
+
+.math-left-parenthesis {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6189px;
+}
+
+.math-left-right-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6221px;
+}
+
+.math-left-right-arrow-accent {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6253px;
+}
+
+.math-left-right-arrow-underoverscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -6285px;
+}
+
+.math-left-right-double-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6328px;
+}
+
+.math-left-square-bracket {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6360px;
+}
+
+.math-left-subscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -6392px;
+}
+
+.math-left-superscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -6435px;
+}
+
+.math-left-superscript-subscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -6478px;
+}
+
+.math-leftwards-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6521px;
+}
+
+.math-leftwards-arrow-from-bar {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6553px;
+}
+
+.math-leftwards-arrow-hook {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6585px;
+}
+
+.math-leftwards-arrow-over-rightwards-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6617px;
+}
+
+.math-leftwards-double-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6649px;
+}
+
+.math-leftwards-harpoon-barb-downwards {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6681px;
+}
+
+.math-leftwards-harpoon-barb-upwards {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6713px;
+}
+
+.math-leftwards-harpoon-over-dash {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6745px;
+}
+
+.math-leftwards-harpoon-over-rightwards-harpoon {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6777px;
+}
+
+.math-less-than-not-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6809px;
+}
+
+.math-less-than-or-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6841px;
+}
+
+.math-less-than-or-slanted-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6873px;
+}
+
+.math-less-than-sign {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -6905px;
+}
+
+.math-limit-infinity {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -6937px;
+}
+
+.math-limit-underscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -6980px;
+}
+
+.math-logarithm {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -7023px;
+}
+
+.math-logarithm-base-n {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -7066px;
+}
+
+.math-logical-and {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7109px;
+}
+
+.math-logical-or {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7141px;
+}
+
+.math-matrices-btn {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -7173px;
+}
+
+.math-matrix-parenthesis {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -7216px;
+}
+
+.math-matrix-square-brackets {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -7259px;
+}
+
+.math-matrix-vertical-bars {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -7302px;
+}
+
+.math-measured-angle {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7345px;
+}
+
+.math-middle-dot {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7377px;
+}
+
+.math-minus-plus-sign {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7409px;
+}
+
+.math-minus-sign {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7441px;
+}
+
+.math-mu {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7473px;
+}
+
+.math-much-greater-than {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7505px;
+}
+
+.math-much-less-than {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7537px;
+}
+
+.math-multiplication-sign {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7569px;
+}
+
+.math-nabla {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7601px;
+}
+
+.math-natural-logarithm {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -7633px;
+}
+
+.math-natural-numbers {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7676px;
+}
+
+.math-normal-space {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -7708px;
+}
+
+.math-normal-subgroup-of {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7751px;
+}
+
+.math-north-east-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7783px;
+}
+
+.math-north-west-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7815px;
+}
+
+.math-not-almost-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7847px;
+}
+
+.math-not-aproximateley-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7879px;
+}
+
+.math-not-element-of {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7911px;
+}
+
+.math-not-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7943px;
+}
+
+.math-not-identical {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -7975px;
+}
+
+.math-not-parallel-to {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8007px;
+}
+
+.math-not-sign {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8039px;
+}
+
+.math-not-tilde {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8071px;
+}
+
+.math-nu {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8103px;
+}
+
+.math-omega {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8135px;
+}
+
+.math-omicron {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8167px;
+}
+
+.math-overscript-brace {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -8199px;
+}
+
+.math-parallel-to {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8242px;
+}
+
+.math-parallelogram {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8274px;
+}
+
+.math-parenthesis {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8306px;
+}
+
+.math-partial-derivative {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -8338px;
+}
+
+.math-partial-differential {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8381px;
+}
+
+.math-perpendicular {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8413px;
+}
+
+.math-phi {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8445px;
+}
+
+.math-phi-alt {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8477px;
+}
+
+.math-pi {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8509px;
+}
+
+.math-pi-alt {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8541px;
+}
+
+.math-pi-number {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8573px;
+}
+
+.math-piecewise-function {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -8605px;
+}
+
+.math-plus-minus-sign {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8648px;
+}
+
+.math-plus-sign {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8680px;
+}
+
+.math-precedes {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8712px;
+}
+
+.math-prime-numbers {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8744px;
+}
+
+.math-product {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -8776px;
+}
+
+.math-product-subscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -8819px;
+}
+
+.math-product-subscript-superscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -8862px;
+}
+
+.math-product-underoverscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -8905px;
+}
+
+.math-product-underscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -8948px;
+}
+
+.math-proportional-to {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -8991px;
+}
+
+.math-psi {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9023px;
+}
+
+.math-quantity-j {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9055px;
+}
+
+.math-radial-script-fraction-btn {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -9087px;
+}
+
+.math-rational-numbers {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9130px;
+}
+
+.math-real-numbers {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9162px;
+}
+
+.math-real-part {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9194px;
+}
+
+.math-reverse-set-minus {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9226px;
+}
+
+.math-reverse-slash {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9258px;
+}
+
+.math-reversed-prime {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9290px;
+}
+
+.math-rho {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9322px;
+}
+
+.math-right-angle {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9354px;
+}
+
+.math-right-arrow-over-left-arrow-overscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9386px;
+}
+
+.math-right-arrow-over-left-arrow-underoverscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -9418px;
+}
+
+.math-right-arrow-over-left-arrow-underscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9461px;
+}
+
+.math-right-arrow-overscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9493px;
+}
+
+.math-right-arrow-subscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9525px;
+}
+
+.math-right-arrow-underoverscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -9557px;
+}
+
+.math-right-curly-bracket {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9600px;
+}
+
+.math-right-harpoon-over-left-harpoon-overscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9632px;
+}
+
+.math-right-harpoon-over-left-harpoon-underoverscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -9664px;
+}
+
+.math-right-harpoon-over-left-harpoon-underscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9707px;
+}
+
+.math-right-left-arrow-overscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9739px;
+}
+
+.math-right-left-arrow-underscript {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9771px;
+}
+
+.math-right-parenthesis {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9803px;
+}
+
+.math-right-square-bracket {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9835px;
+}
+
+.math-rightwards-arrow-from-bar {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9867px;
+}
+
+.math-rightwards-arrow-hook {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9899px;
+}
+
+.math-rightwards-arrow-over-leftwards-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9931px;
+}
+
+.math-rightwards-double-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9963px;
+}
+
+.math-rightwards-harpoon-barb-downwards {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -9995px;
+}
+
+.math-rightwards-harpoon-below-dash {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10027px;
+}
+
+.math-rightwards-harpoon-over-leftwards-harpoon {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10059px;
+}
+
+.math-righwards-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10091px;
+}
+
+.math-righwards-harpoon-barb-upwards {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10123px;
+}
+
+.math-ring-operator {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10155px;
+}
+
+.math-root {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -10187px;
+}
+
+.math-script-capital-f {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10230px;
+}
+
+.math-script-capital-l {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10262px;
+}
+
+.math-script-capital-p {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10294px;
+}
+
+.math-secant {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -10326px;
+}
+
+.math-set-minus {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10369px;
+}
+
+.math-sigma {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10401px;
+}
+
+.math-sine {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -10433px;
+}
+
+.math-single-apostrophe {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10476px;
+}
+
+.math-small-fraction {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -10508px;
+}
+
+.math-south-east-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10551px;
+}
+
+.math-south-west-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10583px;
+}
+
+.math-spherical-angle {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10615px;
+}
+
+.math-square {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10647px;
+}
+
+.math-square-brackets {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10679px;
+}
+
+.math-square-cap {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10711px;
+}
+
+.math-square-cup {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10743px;
+}
+
+.math-square-root {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -10775px;
+}
+
+.math-square-subset-of {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10818px;
+}
+
+.math-square-subset-or-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10850px;
+}
+
+.math-square-superset-of {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10882px;
+}
+
+.math-square-superset-or-equal {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10914px;
+}
+
+.math-subscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -10946px;
+}
+
+.math-subset-of {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -10989px;
+}
+
+.math-subset-of-or-equal-to {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11021px;
+}
+
+.math-succeedes {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11053px;
+}
+
+.math-sum {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11085px;
+}
+
+.math-sum-subscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11128px;
+}
+
+.math-sum-subscript-superscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11171px;
+}
+
+.math-sum-underoverscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11214px;
+}
+
+.math-sum-underscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11257px;
+}
+
+.math-superscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11300px;
+}
+
+.math-superscript-subscript {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11343px;
+}
+
+.math-superset-of {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11386px;
+}
+
+.math-superset-of-or-equal-to {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11418px;
+}
+
+.math-surface-integral {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11450px;
+}
+
+.math-symbols-btn {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11493px;
+}
+
+.math-table {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11536px;
+}
+
+.math-tangent {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11579px;
+}
+
+.math-tau {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11622px;
+}
+
+.math-there-exists {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11654px;
+}
+
+.math-there-not-exists {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11686px;
+}
+
+.math-therefore {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11718px;
+}
+
+.math-theta {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11750px;
+}
+
+.math-theta-alt {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11782px;
+}
+
+.math-thinner-space {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11814px;
+}
+
+.math-three-column-row {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11857px;
+}
+
+.math-three-row-column {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -11900px;
+}
+
+.math-tilde-accent {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11943px;
+}
+
+.math-tilde-operator {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -11975px;
+}
+
+.math-top-curly-bracket {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12007px;
+}
+
+.math-top-parenthesis {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12039px;
+}
+
+.math-triangle {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12071px;
+}
+
+.math-triple-integral {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -12103px;
+}
+
+.math-two-column-row-parenthesis {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -12146px;
+}
+
+.math-two-column-row-square-bracket {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -12189px;
+}
+
+.math-two-row-column-left-curly-bracket {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -12232px;
+}
+
+.math-two-row-column-parenthesis {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -12275px;
+}
+
+.math-two-row-column-square-brackets {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -12318px;
+}
+
+.math-two-rows-column-right-curly-brackets {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -12361px;
+}
+
+.math-underscript-brace {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -12404px;
+}
+
+.math-union {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12447px;
+}
+
+.math-up-diagonal-strike {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12479px;
+}
+
+.math-up-down-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12511px;
+}
+
+.math-up-down-diagonal-strike {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12543px;
+}
+
+.math-up-down-double-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12575px;
+}
+
+.math-up-right-diagonal-ellipsis {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12607px;
+}
+
+.math-upsilon {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12639px;
+}
+
+.math-upwards-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12671px;
+}
+
+.math-upwards-arrow-left-downwards-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12703px;
+}
+
+.math-upwards-double-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12735px;
+}
+
+.math-upwards-harpoon-left-downwards-harpoon {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12767px;
+}
+
+.math-vector-accent {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12799px;
+}
+
+.math-vertical-bars {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12831px;
+}
+
+.math-vertical-ellipsis {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12863px;
+}
+
+.math-vertical-strike {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12895px;
+}
+
+.math-volume-integral {
+    width: 33px;
+    height: 33px;
+    background-position: -5px -12927px;
+}
+
+.math-west-east-diagonal-arrow {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -12970px;
+}
+
+.math-xi {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -13002px;
+}
+
+.math-z-transform {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -13034px;
+}
+
+.math-zeta {
+    width: 22px;
+    height: 22px;
+    background-position: -5px -13066px;
+}
