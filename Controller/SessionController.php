@@ -79,6 +79,8 @@ class SessionController
         $response = new JsonResponse();
 
         $session = new Session();
+        $session->setDeck($deck);
+        $session->setUser($user);
 
         $session = $this->manager->save($session);
 

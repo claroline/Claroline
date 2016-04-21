@@ -9,13 +9,18 @@
   </pre>
 
   <pre>
-  {{ vm.sessions }}
+  {{ vm.sessionId }}
   </pre>
+
+  <pre>
+    {{ vm.currentCard }}
+  </pre>
+
+  Answer quality : {{ vm.answerQuality }}
 
   <hr/>
 
   <div class="text-center">
-    {{ vm.currentCard }}
     <div ng-repeat="question in vm.questions">
       <span class="h2">{{ question.field_label.name }} : </span>
       <span class="h2">{{ question.value }}</span>
@@ -35,13 +40,34 @@
   </div>
 </div>
 
-<div class="panel-footer" data-ng-if="!vm.isReadOnly">
-  <a class="btn btn-primary"
+<div class="panel-footer text-center" data-ng-if="!vm.isReadOnly">
+  <a class="btn btn-default"
      href="#/">
     {{ 'study.stop'|trans:'flashcard' }}
   </a>
   <button class="btn btn-primary"
-          data-ng-click="vm.showAnswers()">
-    {{ 'show_answer'|trans:'flashcard' }}
+          data-ng-click="vm.showAnswers()"
+          data-ng-if="vm.answers.length == 0">
+    {{ 'answer.show'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-danger"
+          data-ng-click="vm.validAnswer(0)"
+          data-ng-if="vm.answers.length > 0">
+    {{ 'answer.again'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-warning"
+          data-ng-click="vm.validAnswer(1)"
+          data-ng-if="vm.answers.length > 0">
+    {{ 'answer.hard'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-success"
+          data-ng-click="vm.validAnswer(2)"
+          data-ng-if="vm.answers.length > 0">
+    {{ 'answer.good'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-info"
+          data-ng-click="vm.validAnswer(3)"
+          data-ng-if="vm.answers.length > 0">
+    {{ 'answer.easy'|trans:'flashcard' }}
   </button>
 </div>

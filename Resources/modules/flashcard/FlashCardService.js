@@ -61,6 +61,16 @@ export default class FlashCardService {
     return this.$http.get(url)
   }
 
+  studyCard (deck, sessionId, card, answerQuality) {
+    const url = Routing.generate('claroline_study_card', {
+      deck: deck.id,
+      sessionId: sessionId,
+      card: card.id,
+      result: answerQuality,
+    })
+    return this.$http.get(url)
+  }
+
   deleteMark (mark, onFail) {
     const url = Routing.generate('claro_delete_mark', {
       id: mark.markId

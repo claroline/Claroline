@@ -12,16 +12,16 @@ export default class StudyCtrl {
   constructor (service, $http) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
-    this.fieldValues = []
     this.newCards = []
-    this.againCards = []
     this.learningCards = []
-    this.session = {}
+    this.sessionId = 0
     this.currentCard = {}
+    this.currentCardIsNew = 0
     this.questions = []
     this.answers = []
     this.answerQuality = -1
 
+    this._service = service
 
     service.findNewCardToLearn(this.deck).then(d => {this.newCards = d.data; this.chooseCard()})
     service.findCardToLearn(this.deck).then(d => this.learningCards = d.data)
@@ -32,21 +32,17 @@ export default class StudyCtrl {
   }
 
   chooseCard () {
-    // An integer value in range [0; 2[
-    let rand = Math.floor(Math.random() * 3)
+    // An integer value in range [0; 1[
+    let rand = Math.floor(Math.random() * 2)
+
+    this.questions = []
+    this.answers = []
     
-    if (rand == 1) {
+    if (rand == 0) {
       if (this.newCards.length > 0) {
         rand = Math.floor(Math.random() * this.newCards.length)
-        this.currentCard = this.newCards.slice(rand, rand+1)[0]
-        this.showQuestions()
-      } else {
-        this.chooseCard()
-      }
-    } else if (rand == 2) {
-      if (this.againCards.length > 0) {
-        rand = Math.floor(Math.random() * this.againCards.length)
-        this.currentCard = this.againCards.slice(rand, rand+1)[0]
+        this.currentCard = this.newCards.splice(rand, 1)[0]
+        this.currentCardIsNew = 1
         this.showQuestions()
       } else {
         this.chooseCard()
@@ -54,7 +50,8 @@ export default class StudyCtrl {
     } else {
       if (this.learningCards.length > 0) {
         rand = Math.floor(Math.random() * this.learningCards.length)
-        this.currentCard = this.learningCards.slice(rand, rand+1)[0]
+        this.currentCard = this.learningCards.splice(rand, 1)[0]
+        this.currentCardIsNew = 0
         this.showQuestions()
       } else {
         this.chooseCard()
@@ -86,5 +83,16 @@ export default class StudyCtrl {
         }
       //}
     }
+  }
+
+  validAnswer (answerQuality) {
+    this.answerQuality = answerQuality
+    // We need to treat the case where this request doesn't work
+    this._service.studyCard(
+        this.deck, 
+        this.sessionId, 
+        this.currentCard.card, 
+        answerQuality).then(d => this.sessionId = d.data);
+    this.chooseCard()
   }
 }

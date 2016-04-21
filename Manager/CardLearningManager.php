@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\FlashCardBundle\Entity\CardLearning;
 use Claroline\FlashCardBundle\Entity\Deck;
+use Claroline\FlashCardBundle\Entity\Card;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Form\FormView;
@@ -72,7 +73,7 @@ class CardLearningManager
     public function getCardLearning(Card $card, User $user)
     {
         $repo = $this->om->getRepository('ClarolineFlashCardBundle:CardLearning');
-        return $cardLearning = $repo->findOneBy(
+        return $repo->findOneBy(
             array(
                 'user' => $user,
                 'card' => $card,

@@ -111,7 +111,7 @@ class CardLearning
         $this->factor = 1.3;
         $this->painfull = false;
         $this->numberRepeated = 0;
-        $this->dueDate = null;
+        $this->dueDate = new \DateTime();
     }
 
     /**

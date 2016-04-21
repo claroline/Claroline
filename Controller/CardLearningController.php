@@ -14,6 +14,8 @@ namespace Claroline\FlashCardBundle\Controller;
 use Claroline\CoreBundle\Form\Handler\FormHandler;
 use Claroline\FlashCardBundle\Entity\CardLearning;
 use Claroline\FlashCardBundle\Entity\Deck;
+use Claroline\FlashCardBundle\Entity\Card;
+use Claroline\FlashCardBundle\Entity\Session;
 use Claroline\FlashCardBundle\Manager\CardLearningManager;
 use Claroline\FlashCardBundle\Manager\CardManager;
 use Claroline\FlashCardBundle\Manager\SessionManager;
@@ -127,37 +129,54 @@ class CardLearningController
 
     /**
      * @EXT\Route(
-     *     "/study_card/session/{session}/card/{card}/result/{result}",
+     *     "/study_card/deck/{deck}/session/{sessionId}/card/{card}/result/{result}",
      *     name="claroline_study_card"
      * )
      *
-     * @param Session $session
+     * @param Deck $deck
+     * @param int $sessionId
      * @param Card $card
      * @param $result
      * @return JsonResponse
      */
-    public function studyCardAction(Session $session, Card $card, $result)
+    public function studyCardAction(Deck $deck, $sessionId, Card $card, $result)
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $cardLearning = $this->cardLearingMgr->getCardLearning($card, $user);
+        $cardLearning = $this->cardLearningMgr->getCardLearning($card, $user);
+
+        $isNewCard = $cardLearning == null;
+
+        if($isNewCard) {
+            $cardLearning = new cardLearning();
+            $cardLearning->setCard($card);
+            $cardLearning->setUser($user);
+        }
 
         $cardLearning->study($result);
 
         $this->cardLearningMgr->save($cardLearning);
 
         // Save the session
-        $session->addCard($card);
+        if($sessionId > 0) {
+            $session = $this->sessionMgr->get($sessionId);
+        } else {
+            $session = new Session();
+            $session->setDeck($deck);
+            $session->setUser($user);
+        }
+
+        if($isNewCard) {
+            $session->addNewCard($card);
+        } else {
+            $session->addOldCard($card);
+        }
 
         $now = new \DateTime();
         $interval = $now->getTimestamp() - $session->getDate()->getTimestamp();
         $session->setDuration($session->getDuration() + $interval);
 
-        $this->sessionMgr->save($session);
+        $session = $this->sessionMgr->save($session);
 
-        $context = new SerializationContext();
-        $context->setGroups('api_flashcard_card');
-        return new JsonResponse(json_decode(
-            $this->serializer->serialize($cardLearnings, 'json', $context)
-        ));
+        return new JsonResponse($session->getId());
     }
 }

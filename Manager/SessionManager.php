@@ -62,4 +62,13 @@ class SessionManager
         $this->om->remove($session);
         $this->om->flush();
     }
+
+    /**
+     * @param int $id
+     * @return Session
+     */
+    public function get($id) {
+        $repo = $this->om->getRepository('ClarolineFlashCardBundle:Session');
+        return $repo->find($id);
+    }
 }

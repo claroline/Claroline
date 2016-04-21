@@ -62,9 +62,17 @@ class Session
 
     /**
      * @ORM\ManyToMany(targetEntity="Card")
+     * @ORM\JoinTable(name="session_card_new")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $cards;
+    private $newCards;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Card")
+     * @ORM\JoinTable(name="session_card_old")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $oldCards;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -82,7 +90,8 @@ class Session
     {
         $this->date = new \DateTime();
         $this->duration = 0;
-        $this->cards = new ArrayCollection();
+        $this->newCards = new ArrayCollection();
+        $this->oldCards = new ArrayCollection();
     }
 
     /**
@@ -140,21 +149,21 @@ class Session
      *
      * @return boolean
      */
-    public function addCard(Card $obj)
+    public function addNewCard(Card $obj)
     {
-        if($this->cards->contains($obj)) {
+        if($this->newCards->contains($obj)) {
             return false;
         } else {
-            return $this->cards->add($obj);
+            return $this->newCards->add($obj);
         }
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getCards()
+    public function getNewCards()
     {
-        return $this->cards;
+        return $this->newCards;
     }
 
     /**
@@ -162,9 +171,43 @@ class Session
      *
      * @return Session
      */
-    public function setCards(ArrayCollection $obj)
+    public function setNewCards(ArrayCollection $obj)
     {
-        $this->cards = $obj;
+        $this->newCards = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @param Card
+     *
+     * @return boolean
+     */
+    public function addOldCard(Card $obj)
+    {
+        if($this->oldCards->contains($obj)) {
+            return false;
+        } else {
+            return $this->oldCards->add($obj);
+        }
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOldCards()
+    {
+        return $this->oldCards;
+    }
+
+    /**
+     * @param ArrayCollection $obj
+     *
+     * @return Session
+     */
+    public function setOldCards(ArrayCollection $obj)
+    {
+        $this->oldCards = $obj;
 
         return $this;
     }
