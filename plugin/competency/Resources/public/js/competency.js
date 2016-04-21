@@ -104,8 +104,6 @@
             $(this).text(trans('expand_all'));
         }
 
-        console.log(this)
-
         $(this).removeClass('active');
     });
 
