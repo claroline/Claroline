@@ -1,59 +1,54 @@
 <div ng-if="crc.chatRoomConfig['roomType'] === 'video'">
-    <div id="chat-room-main" ng-controller="ChatRoomVideoCtrl">
-        <div id="chat-room-video-row" class="row">
-            <div class="col-md-8">
-                <div id="main-video-container">
-                    <video id="main-video" autoplay="autoplay"></video>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <chat-room-messages></chat-room-messages>
-                <chat-room-input></chat-room-input>
-            </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div id='participants-video-container'>
-                <div id='my-video-container' class="participant-stream">
-                    <div ng-class="streamClassName(myUsername)">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                {{ 'me'|trans:{}:'chat' }}
-                                <span class="pull-right">
-                                    <i ng-if="myMicroEnabled" class="fa fa-microphone pointer-hand" ng-click="manageMicrophone(myUsername)"></i>
-                                    <i ng-if="!myMicroEnabled" class="fa fa-microphone-slash pointer-hand" ng-click="manageMicrophone(myUsername)"></i>
-                                    <i ng-if="myCameraEnabled" class="fa fa-video-camera pointer-hand" ng-click="manageCamera()"></i>
-                                    <i ng-if="!myCameraEnabled" class="fa fa-eye-slash pointer-hand" ng-click="manageCamera()"></i>
-                                </span>
-                            </h3>
-                        </div>
-                        <div class="panel-body participant-video-panel" ng-click="updateMainVideoSrc(myUsername)">
-                            <video id="my-video" autoplay="autoplay" class="participant-video"></video>
-                            <div id="ownvolume"></div>
-                        </div>
+    <div ng-if="crc.chatRoomConfig['roomStatus'] === 'open'">
+        <div ng-if="crc.chatRoomConfig['connected']">
+            <button class="btn btn-default" ng-click="crc.goBack()">
+                {{ 'back'|trans:{}:'platform' }}
+            </button>
+
+            <div id="chat-room-video-row" class="row">
+                <div class="col-md-8">
+                    <span class="pull-left">
+                        <i class="fa fa-car btn btn-default" ng-click="crc.switchCamera()"></i>
+                        <i class="fa fa-video-camera btn btn-default" ng-click="crc.switchVideo()"></i>
+                        <i class="fa btn btn-default"
+                           ng-class="crc.videoConfig['myAudioEnabled'] ? 'fa-microphone' : 'fa-microphone-slash'"
+                           ng-click="crc.switchAudio()"
+                        >
+                        </i>
+                    </span>
+                    <div id="main-video-container">
+                        <video id="main-video" autoplay="autoplay" ng-src="{{ crc.videoConfig['sourceStreams'][crc.videoConfig['mainStreamUsername']] }}"></video>
                     </div>
                 </div>
-                <div ng-repeat="stream in streams" id="participant-stream-{{ stream['sid'] }}" class="participant-stream">
-                    <!--<div class="panel panel-default participant-panel">-->
-                    <div ng-class="streamClassName(stream['username'])">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                {{ stream['name'] }}
-                                <span class="pull-right">
-                                    <i ng-if="stream['micro']" class="fa fa-microphone pointer-hand" ng-click="manageMicrophone(stream['username'])"></i>
-                                    <i ng-if="!stream['micro']" class="fa fa-microphone-slash pointer-hand" ng-click="manageMicrophone(stream['username'])"></i>
-                                </span>
-                            </h3>
-                        </div>
-                        <div class="panel-body participant-video-panel" ng-click="updateMainVideoSrc(stream['username'])">
-                        </div>
-                    </div>
+                <div class="col-md-4">
+                    <chat-room-messages></chat-room-messages>
+                    <chat-room-input></chat-room-input>
                 </div>
             </div>
+            <hr>
+            <div class="row">
+                <chat-room-videos></chat-room-videos>
+            </div>
         </div>
-        <div class="hidden">
-            <chat-room-users></chat-room-users>
+        <div ng-if="!crc.chatRoomConfig['connected']">
+            <div class="alert alert-{{ crc.chatRoomConfig['messageType'] }}" ng-if="crc.chatRoomConfig['message']">
+                {{ crc.chatRoomConfig['message'] }}
+            </div>
+            <div class="alert alert-danger" ng-if="!crc.chatRoomConfig['message']">
+                {{ 'not_connected'|trans:{}:'chat' }}
+            </div>
+            <button class="btn btn-default" ng-click="crc.goBack()">
+                {{ 'back'|trans:{}:'platform' }}
+            </button>
         </div>
+    </div>
+    <div ng-if="crc.chatRoomConfig['roomStatus'] !== 'open'">
+        <div class="alert alert-danger">
+            {{ 'chat_room_status'|trans:{}:'chat' }} : {{ crc.chatRoomConfig['roomStatus']|trans:{}:'chat' }}
+        </div>
+        <button class="btn btn-default" ng-click="crc.goBack()">
+            {{ 'back'|trans:{}:'platform' }}
+        </button>
     </div>
 </div>
 <div ng-if="crc.chatRoomConfig['roomType'] !== 'video'">

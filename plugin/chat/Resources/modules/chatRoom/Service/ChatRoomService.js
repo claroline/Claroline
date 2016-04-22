@@ -46,6 +46,7 @@ export default class ChatRoomService {
     this._onIQStanza = this._onIQStanza.bind(this)
 
     this._fullConnection = this._fullConnection.bind(this)
+    this._connectedCallBack = () => {}
   }
 
   getConfig () {
@@ -72,8 +73,12 @@ export default class ChatRoomService {
     return this.MessageService.getOldMessages()
   }
 
+  setConnectedCallBack (callback) {
+    this._connectedCallBack = callback
+  }
+
   connect () {
-    this.XmppService.connect()
+    this.XmppService.connectWithAdmin()
   }
 
   connectToRoom () {
@@ -83,7 +88,7 @@ export default class ChatRoomService {
     } else {
       console.log('Not connected to XMPP')
       this.XmppService.setConnectedCallBack(this._fullConnection)
-      this.XmppService.connect()
+      this.XmppService.connectWithAdmin()
     }
   }
 
@@ -123,26 +128,12 @@ export default class ChatRoomService {
 
   disconnectFromRoom () {
     if (this.config['connected']) {
-      //const presence = $pres({
-      //  from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}`,
-      //  to: `${this.config['room']}/${this.config['myUsername']}`,
-      //  type: 'unavailable'
-      //})
-      //const presence = $pres({
-      //    to: this.config['room'] + "/" + this.config['myUsername'],
-      //    from: this.xmppConfig['username'] + "@" + this.xmppConfig['xmppHost'] + '/' + this.config['roomName'],
-      //    type: "unavailable"
-      //})
-      this.xmppConfig['connection'].send(
-        $pres({from: this.xmppConfig['username'] + "@" + this.xmppConfig['xmppHost'] + "/" + this.config['roomName'], to: this.config['room'] + "/" + this.config['myUsername'], type: "unavailable"})
-      )
-      console.log( `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`)
-      console.log( `${this.config['room']}/${this.config['myUsername']}`)
-                        //$pres({
-                        //    to: room + "/" + XmppService.getUsername(),
-                        //    from: XmppService.getUsername() + "@" + XmppService.getXmppHost() + '/' + roomName,
-                        //    type: "unavailable"
-                        //})
+      const presence = $pres({
+        from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
+        to: `${this.config['room']}/${this.config['myUsername']}`,
+        type: 'unavailable'
+      })
+      this.xmppConfig['connection'].send(presence)
       //this.xmppConfig['connection'].flush()
       //this.xmppConfig['connection'].disconnect()
     }
@@ -623,6 +614,7 @@ export default class ChatRoomService {
               if (this.config['canEdit'] && this.config['myAffiliation'] === 'admin') {
                 this.requestOutcastList()
               }
+              this._connectedCallBack()
               this.refreshScope()
             }
           } else if (statusCode === '301') {
@@ -644,17 +636,9 @@ export default class ChatRoomService {
 
         if (type === 'unavailable') {
           this.UserService.removeUser(username, statusCode)
-
-          if (statusCode !== '301' && statusCode === '307') {
-            this.MessageService.addPresenceMessage(name, 'disconnection')
-          }
           this.refreshScope()
         } else {
-          const added = this.UserService.addUser(username, name, color, affiliation, role)
-
-          if (added) {
-            this.MessageService.addPresenceMessage(name, 'connection')
-          }
+          this.UserService.addUser(username, name, color, affiliation, role)
           this.refreshScope()
         }
       }

@@ -12,14 +12,14 @@
                     </div>
                     <div ng-switch-when="presence">
                         <b ng-switch="oldMessage['content']">
-                            <span ng-switch-when="connection">
-                                {{ oldMessage['name'] }}
-                                {{ 'has_joined_the_chat_room'|trans:{}:'chat' }}
-                            </span>
-                            <span ng-switch-when="disconnection">
-                                {{ oldMessage['name'] }}
-                                {{ 'has_left_the_chat_room'|trans:{}:'chat' }}
-                            </span>
+                            <!--<span ng-switch-when="connection">-->
+                                <!--{{ oldMessage['name'] }}-->
+                                <!--{{ 'has_joined_the_chat_room'|trans:{}:'chat' }}-->
+                            <!--</span>-->
+                            <!--<span ng-switch-when="disconnection">-->
+                                <!--{{ oldMessage['name'] }}-->
+                                <!--{{ 'has_left_the_chat_room'|trans:{}:'chat' }}-->
+                            <!--</span>-->
                             <span ng-switch-when="kicked">
                                 {{ oldMessage['name'] }}
                                 {{ 'has_been_kicked_from_the_chat_room'|trans:{}:'chat' }}

@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-export default class ChatRoomVideoDirective {
+export default class ChatRoomVideosDirective {
 
   constructor() {
     this.restrict = 'E'
     this.replace = true
-    this.template = require('../Partial/chatRoomText.html')
+    this.template = require('../Partial/chatRoomVideos.html')
   }
 }

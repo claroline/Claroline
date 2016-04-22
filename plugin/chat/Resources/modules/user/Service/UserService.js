@@ -99,4 +99,8 @@ export default class UserService {
   emptyBannedUsers () {
     this.bannedUsers.splice(0, this.bannedUsers.length)
   }
+
+  getUserIndex (username) {
+    return this.users.findIndex(u => u['username'] === username)
+  }
 }

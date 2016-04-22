@@ -75,10 +75,6 @@ export default class ChatRoomTextCtrl {
     )
   }
 
-  disconnect () {
-    this.ChatRoomService.disconnectFromRoom()
-  }
-
   sendMessage () {
     this.ChatRoomService.sendMessage(this.input)
     this.input = ''
