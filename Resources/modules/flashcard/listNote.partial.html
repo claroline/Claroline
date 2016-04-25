@@ -1,0 +1,133 @@
+<div class="panel-body" >
+<h1>Débug</h1>
+{{ vm.deck.id }}
+{{ vm.deckNode.name }}
+<pre>
+{{ vm.deck }}
+</pre>
+
+<pre>
+{{ vm.sortedNotes }}
+</pre>
+
+<pre>
+</pre>
+
+<hr/>
+
+  <div data-ng-repeat="(i, notes) in vm.sortedNotes">
+    <table class="table table-condensed table-bordered"
+           data-ng-if="notes.length > 0">
+      <thead>
+        <tr>
+          <th class="col-xs-{{ vm.colWidth[i][f] }}"
+              data-ng-repeat="(f, fieldValue) in notes[0].field_values">
+            {{ fieldValue.field_label.name }}
+          </th>
+          <th class="col-xs-2"
+              data-ng-if="!vm.isReadOnly">
+            {{ 'actions'|trans }}
+          </th>
+        </tr>
+      </thead>
+    </table>
+    <div data-ng-repeat="(j, note) in notes">
+      <table class="col-md-12 table table-condensed table-bordered">
+        <tbody>
+          <tr> 
+            <td class="col-xs-{{ vm.colWidth[i][f] }}"
+                data-ng-repeat="(f, fieldValue) in note.field_values">
+              {{ fieldValue.value }}
+            </td>
+            <td style="text-align: center"
+                class="col-xs-2"
+                data-ng-if="!vm.isReadOnly">
+              <a href="#"
+                 class="btn btn-default"
+                 aria-label="{{ 'edit'|trans }}"
+                 data-uib-tooltip="{{ 'edit'|trans }}"
+                 data-ng-click="">
+                <i class="fa fa-pencil"></i>
+              </a>
+              <button class="btn btn-default"
+                      aria-label="{{ 'delete'|trans }}"
+                      data-uib-tooltip="{{ 'delete'|trans }}"
+                      data-ng-click="vm.confirmDeleteNote(note)">
+                <i class="fa fa-trash-o"></i>
+              </button>
+              <button class="btn btn-default"
+                      aria-label="{{ 'show'|trans }}"
+                      data-uib-tooltip="{{ 'show'|trans }}"
+                      data-ng-click="
+                        vm.isCardShown[i][j] = !vm.isCardShown[i][j]">
+                <i class="fa fa-list"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="col-md-offset-1 col-md-11 table-condensed table-bordered"
+             style="margin-bottom: 20px"
+             data-ng-if="vm.isCardShown[i][j]">
+        <thead>
+          <tr>
+            <th class="col-xs-5"
+                colspan="
+                  {{ vm.getQuestionsFromCard(note, card).lengt }}">
+              {{ 'questions'|trans:'flashcard' }}
+            </th>
+            <th class="col-xs-5"
+                colspan="
+                  {{ vm.getAnswersFromCard(note, card).lengt }}">
+              {{ 'answers'|trans:'flashcard' }}
+            </th>
+            <th class="col-xs-2"
+                data-ng-if="!vm.isReadOnly">
+              {{ 'actions'|trans }}
+            </th>
+        </thead>
+        <tbody>
+          <tr data-ng-repeat="card in note.cards">
+            <td data-ng-repeat="
+                question in vm.getQuestionsFromCard(note, card)">
+              {{ question.value }}
+            </td>
+            <td data-ng-repeat="
+                answer in vm.getAnswersFromCard(note, card)">
+              {{ answer.value }}
+            </td>
+            <td style="text-align: center;width: 20%"
+                data-ng-if="!vm.isReadOnly">
+              <button class="btn btn-default"
+                      aria-label="{{ 'suspend'|trans }}"
+                      data-uib-tooltip="{{ 'suspend'|trans }}"
+                      data-ng-click="
+                        vm.isCardShown[i][j] = !vm.isCardShown[i][j]">
+                <i class="fa fa-hand-stop-o"></i>
+              </button>
+              <button class="btn btn-default"
+                      aria-label="{{ 'repeat'|trans:'flashcard' }}"
+                      data-uib-tooltip="{{ 'repeat'|trans:'flashcard' }}"
+                      data-ng-click="vm.isCardShown[i] = !vm.isCardShown[i]">
+                <i class="fa fa-repeat"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="alert alert-info"
+       data-ng-if="vm.deck.notes.length == 0">
+    <i class="fa fa-info-circle"></i>
+    {{ 'deck.empty'|trans:'flashcard' }}
+  </div>
+</div>
+
+<div class="panel-footer" data-ng-if="!vm.isReadOnly">
+  <a href="#/"
+     class="btn btn-default">
+    {{ 'back'|trans }}
+  </a>
+</div>

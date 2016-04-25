@@ -77,16 +77,16 @@
           data-ng-click="">
     {{ 'parameters'|trans:'flashcard' }}
   </button>
-  <button class="btn btn-primary"
-          data-ng-click="">
-    {{ 'cards.show'|trans:'flashcard' }}
-  </button>
+  <a class="btn btn-primary"
+     href="#/list_notes">
+    {{ 'cards.list'|trans:'flashcard' }}
+  </a>
   <a class="btn btn-primary"
      href="#/study">
     {{ 'study.begin'|trans:'flashcard' }}
   </a>
-  <button class="btn btn-primary"
-          data-ng-click="vm.displayNoteCreationForm()">
+  <a class="btn btn-primary"
+     href="#/create_note">
     {{ 'cards.add'|trans:'flashcard' }}
-  </button>
+  </a>
 </div>

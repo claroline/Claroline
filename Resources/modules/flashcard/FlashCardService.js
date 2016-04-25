@@ -56,6 +56,15 @@ export default class FlashCardService {
       .post(url, { fields: fields})
   }
 
+  findNoteByNoteType (noteType) {
+    const url = Routing.generate('claroline_list_notes', {
+      deck: this._deck.id,
+      noteType: noteType.id
+    })
+
+    return this.$http.get(url)
+  }
+
   createSession () {
     const url = Routing.generate('claroline_create_session')
     return this.$http.get(url)
