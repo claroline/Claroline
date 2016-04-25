@@ -28,7 +28,7 @@
         "doctrine/dbal": "~2.4",
         "doctrine/doctrine-bundle": "~1.3",
         "doctrine/migrations": "~1.3",
-        "doctrine/orm": "~2.5",
+        "doctrine/orm": "~2.4",
         "friendsofsymfony/jsrouting-bundle": "~1.5",
         "friendsofsymfony/oauth-server-bundle": "~1.4",
         "friendsofsymfony/rest-bundle": "~1.4",
@@ -178,6 +178,7 @@
             "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator",
             "Claroline\\DevBundle\\": "main/dev",
             "Claroline\\WebInstaller\\": "main/web-installer/",
+            "Icap\\WebsiteBundle\\": "plugin/website",
             "UJM\\ExoBundle\\": "plugin/exo"
         }
     },
@@ -223,6 +224,7 @@
             "Claroline\\ResultBundle\\ClarolineResultBundle",
             "Innova\\PathBundle\\InnovaPathBundle",
             "Claroline\\DevBundle\\ClarolineDevBundle",
+            "Icap\\WebsiteBundle\\IcapWebsiteBundle",
             "UJM\\ExoBundle\\UJMExoBundle"
         ]
     }

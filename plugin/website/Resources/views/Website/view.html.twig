@@ -1,0 +1,126 @@
+{% extends 'IcapWebsiteBundle::view_layout.html.twig' %}
+{% import 'IcapWebsiteBundle:Website:Macros/common_macros.html.twig' as commonMacros %}
+{% import 'IcapWebsiteBundle:Website:Macros/view_macros.html.twig' as viewMacros %}
+
+{% set options = _resource.options %}
+
+{% block content %}
+    <div class="website-container" ng-controller="MainController as vm">
+        <div class="loading text-center" ng-if="!pageLoaded" >
+            {{ 'loading'|trans({},'icap_website') }}
+        </div>
+        <div class="website-body">
+            {% if options.bannerEnabled %}
+                <header>
+                    <div class="banner">
+                        {% if options.bannerText is not empty %}
+                            <div class="bannerContent">{{ options.bannerText|raw }}</div>
+                        {% endif %}
+                    </div>
+                </header>
+            {% endif %}
+            {% if options.menuOrientation == 'horizontal' %}
+                <nav ng-if="false">
+                    {{commonMacros.buildMenu(_resource.pages[0], _resource.id)}}
+                </nav>
+                <ui-flexnav menu="vm.menu" style-options="vm.options" options="vm.flexnavOptions"></ui-flexnav>
+            {% endif %}
+            <div class="website-content" ng-style="{'min-height': contentHeight+'px'}">
+                {% if options.menuOrientation == 'vertical' %}
+                    <wxy-push-menu menu="vm.menu" menu-style="vm.options" options="vm.pushMenuOptions" menu-width="vm.options.menuWidth"></wxy-push-menu>
+                {% endif %}
+                <div class="website-page-content" change-height="vm.contentHeight" style="min-height: 400px;">
+                    <div>
+                        {% if currentPage is defined and currentPage is not empty %}
+                            {% if currentPage.type == pageTypes.blank %}
+                                <div>{{ currentPage.richText|raw }}</div>
+                            {% elseif currentPage.type == pageTypes.url %}
+                                <iframe width="100%" iframe-height-on-load="vm.contentHeight" src="{{ currentPage.url }}"></iframe>
+                            {% elseif currentPage.type == pageTypes.resource %}
+                                <iframe width="100%" iframe-height-on-load="vm.contentHeight" src="{{ path('claro_resource_open', {
+                                'resourceType': currentPage.resourceNodeType,
+                                'node': currentPage.resourceNode.id
+                                }) }}"></iframe>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div style="clear: both"></div>
+            </div>
+            {% if options.footerEnabled %}
+                <footer>
+                    <div class="footer">
+                        {% if options.footerText is not empty %}
+                            <div class="footerContent">{{ options.footerText|raw }}</div>
+                        {% endif %}
+                        {% if options.copyrightEnabled is not empty %}
+                            <div class="copyright-text">© Copyright {{ options.copyrightText }}</div>
+                        {% endif %}
+                    </div>
+                </footer>
+            {% endif %}
+            {% if options.analyticsProvider=="xiti" and options.analyticsId is not empty %}
+                <a href="http://www.xiti.com/xiti.asp?s=<%=webSite.options.analyticsAccountId%>" title="WebAnalytics" target="_top">
+                    <script type="text/javascript">
+                        //<!--
+                        Xt_param = 's={{ options.analyticsId }}&p={{ _resource.name~" - "~currentPage.title }}';
+                        try {Xt_r = top.document.referrer;}
+                        catch(e) {Xt_r = document.referrer; }
+                        Xt_h = new Date();
+                        Xt_i = '<img width="39" height="25" border="0" alt="" ';
+                        Xt_i += 'src="http://logv17.xiti.com/hit.xiti?'+Xt_param;
+                        Xt_i += '&hl='+Xt_h.getHours()+'x'+Xt_h.getMinutes()+'x'+Xt_h.getSeconds();
+                        if(parseFloat(navigator.appVersion)>=4)
+                        {Xt_s=screen;Xt_i+='&r='+Xt_s.width+'x'+Xt_s.height+'x'+Xt_s.pixelDepth+'x'+Xt_s.colorDepth;}
+                        document.write(Xt_i+'&ref='+Xt_r.replace(/[<>"]/g, '').replace(/&/g, '$')+'" title="Internet Audience">');
+                        //-->
+                    </script>
+                    <noscript>
+                        <img width="39" height="25" src="http://logv17.xiti.com/hit.xiti?s={{ options.analyticsId }}&p={{ _resource.name~" - "~currentPage.title }}" alt="WebAnalytics" />
+                    </noscript></a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {% if options.menuOrientation == 'horizontal' %}
+        <script src="{{ hotAsset("dist/claroline-distribution-plugin-website-view-app-horizontal.js") }}"></script>
+    {% else %}
+        <script src="{{ hotAsset("dist/claroline-distribution-plugin-website-view-app-vertical.js") }}"></script>
+    {% endif %}
+    <script type="text/javascript">
+        (function() {
+            'use strict';
+            angular
+                .module('website.constants', [])
+                .constant('website.data', {
+                    'id': {{ _resource.id }},
+                    'currentPage': {{ currentPage.id }},
+                    'options': {{ _resource.options|serialize('json', serialization_context().setSerializeNull(true))|raw }},
+                    'path': "{{ path('icap_website_view',{'websiteId': _resource.id}) }}",
+                    'pages': {{ _resource.pages|serialize('json', serialization_context().setSerializeNull(true))|raw }}
+                });
+
+        })();
+    </script>
+
+    {% if options.analyticsProvider=="google" and options.analyticsId is not empty %}
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', '{{ options.analyticsId }}', 'auto');
+            ga('send', 'pageview');
+        </script>
+    {% endif %}
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ viewMacros.getStylesheets(options.menuOrientation) }}
+    {% include 'IcapWebsiteBundle:Website:View/view.css.twig' with {'options': _resource.options, 'commonMacros': commonMacros} %}
+{% endblock %}

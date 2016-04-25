@@ -1,0 +1,13 @@
+{% macro getStylesheets() %}
+    {% stylesheets debug=false filter='less, cssmin' output='bundles/icapwebsite/css/edit-style.css'
+    '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.css'
+    '@IcapWebsiteBundle/Resources/public/css/angular/angular-motion.min.css'
+    '@IcapWebsiteBundle/Resources/views/less/edit.less'
+    '@IcapWebsiteBundle/Resources/public/css/angular/pushmenu.css'
+    '@IcapWebsiteBundle/Resources/views/less/flexnav.less'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}"/>
+{% endmacro %}
+
