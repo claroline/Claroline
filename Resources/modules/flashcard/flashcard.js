@@ -15,9 +15,11 @@ import ClarolineAPI from '../../../../core-bundle/Resources/modules/services/mod
 import mainTemplate from './main.partial.html'
 import studyTemplate from './study.partial.html'
 import createNoteTemplate from './createNote.partial.html'
+import editNoteTemplate from './editNote.partial.html'
 import listNoteTemplate from './listNote.partial.html'
 import FlashCardCtrl from './FlashCardCtrl.js'
 import CreateNoteCtrl from './CreateNoteCtrl.js'
+import EditNoteCtrl from './EditNoteCtrl.js'
 import ListNoteCtrl from './ListNoteCtrl.js'
 import StudyCtrl from './StudyCtrl.js'
 import FlashCardService from './FlashCardService.js'
@@ -50,6 +52,12 @@ angular
     'FlashCardService',
     CreateNoteCtrl
   ])
+  .controller('EditNoteCtrl', [
+    'FlashCardService',
+    '$routeParams',
+    '$location',
+    EditNoteCtrl
+  ])
   .controller('ListNoteCtrl', [
     'FlashCardService',
     'ClarolineAPIService',
@@ -77,6 +85,12 @@ angular
           template: createNoteTemplate,
           bindToController: true,
           controller: 'CreateNoteCtrl',
+          controllerAs: 'vm'
+        })
+        .when('/edit_note/:id', {
+          template: editNoteTemplate,
+          bindToController: true,
+          controller: 'EditNoteCtrl',
           controllerAs: 'vm'
         })
         .when('/list_notes', {

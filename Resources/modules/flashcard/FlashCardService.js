@@ -56,6 +56,22 @@ export default class FlashCardService {
       .post(url, { fields: fields})
   }
 
+  editNote (note, fieldValues) {
+    const url = Routing.generate('claroline_edit_note', {
+      note: note.id,
+    })
+
+    return this.$http.post(url, { fieldValues: fieldValues })
+  }
+
+  findNote (id) {
+    const url = Routing.generate('claroline_get_note', {
+      note: id
+    })
+
+    return this.$http.get(url)
+  }
+
   findNoteByNoteType (noteType) {
     const url = Routing.generate('claroline_list_notes', {
       deck: this._deck.id,
