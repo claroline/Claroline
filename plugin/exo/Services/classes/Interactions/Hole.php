@@ -6,7 +6,10 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use Symfony\Component\HttpFoundation\Request;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use UJM\ExoBundle\Entity\InteractionHole;
 
 /**
  * @DI\Service("ujm.exo.hole_service")
@@ -23,7 +26,7 @@ class Hole extends Interaction
      *
      * @return mixed[]
      */
-    public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
+    public function response(Request $request, $paperID = 0)
     {
         $em = $this->doctrine->getManager();
         $interactionHoleID = $request->request->get('interactionHoleToValidated');
@@ -52,48 +55,46 @@ class Hole extends Interaction
      * implement the abstract method
      * To calculate the score.
      *
-     * @param \UJM\ExoBundle\Entity\InteractionHole     $interHole
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param InteractionHole     $interHole
+     * @param $request
      * @param float                                     $penalty   penalty if the user showed hints
      *
      * @return string userScore/scoreMax
      */
-    public function mark(
-        \UJM\ExoBundle\Entity\InteractionHole $interHole = null,
-        $request = null,
-        $penalty = null
-    ) {
+    public function mark(InteractionHole $interHole = null, $request = null, $penalty = null)
+    {
         $score = 0;
-        $scoreMax = $this->maxScore($interHole);
-
-        $i = 1;
         foreach ($interHole->getHoles() as $hole) {
-            if (is_array($request)) {
-                $response = $request[$i];
-                ++$i;
-            } else {
-                $response = $request->get('blank_'.$hole->getPosition());
+            $response = null;
+
+            // Loop through Request to find response for the current Hole
+            foreach ($request as $responseData) {
+                if ($responseData['holeId'] == $hole->getId()) {
+                    // Response for the current hole found
+                    if (!empty($responseData['answerText'])) {
+                        // Clean response text for DB comparison
+                        $response = trim($responseData['answerText']);
+                        $response = preg_replace('/\s+/', ' ', $response);
+                    }
+                }
             }
-            $response = trim($response);
-            $response = preg_replace('/\s+/', ' ', $response);
+
             $score += $this->getScoreHole($hole, $response);
         }
 
-        $score -= $penalty;
+        if ($penalty) {
+            $score -= $penalty;
+        }
 
         if ($score < 0) {
             $score = 0;
         }
 
-        $score .= '/'.$scoreMax;
-
         return $score;
     }
 
     /**
-     * implement the abstract method
      * Get score max possible for a question with holes question.
-     *
      *
      * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
      *
@@ -103,13 +104,13 @@ class Hole extends Interaction
     {
         $scoreMax = 0;
         foreach ($interHole->getHoles() as $hole) {
-            $scoretemp = 0;
+            $scoreTemp = 0;
             foreach ($hole->getWordResponses() as $wr) {
-                if ($wr->getScore() > $scoretemp) {
-                    $scoretemp = $wr->getScore();
+                if ($wr->getScore() > $scoreTemp) {
+                    $scoreTemp = $wr->getScore();
                 }
             }
-            $scoreMax += $scoretemp;
+            $scoreMax += $scoreTemp;
         }
 
         return $scoreMax;
@@ -135,12 +136,12 @@ class Hole extends Interaction
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
      * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
-     * @param Symfony\Component\HttpFoundation\Session\SessionInterface    $session
+     * @param SessionInterface    $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
      */
-    public function getResponseGiven($interactionToDisplay, $session, $interactionX)
+    public function getResponseGiven($interactionToDisplay, SessionInterface $session, $interactionX)
     {
         $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
 
@@ -155,6 +156,8 @@ class Hole extends Interaction
      */
     private function getJsonResponse($interHole, $request)
     {
+        $tabResp = [];
+
         $em = $this->doctrine->getManager();
         foreach ($interHole->getHoles() as $hole) {
             $response = $request->get('blank_'.$hole->getPosition());
