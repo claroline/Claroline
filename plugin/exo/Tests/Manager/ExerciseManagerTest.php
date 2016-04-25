@@ -20,8 +20,8 @@ class ExerciseManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->validator = $this->mock('UJM\ExoBundle\Transfer\Json\Validator');
-        $questionManager = $this->mock('UJM\ExoBundle\Manager\QuestionManager');
-        $this->manager = new ExerciseManager($this->om, $this->validator, $questionManager);
+        $stepManager = $this->mock('UJM\ExoBundle\Manager\StepManager');
+        $this->manager = new ExerciseManager($this->om, $this->validator, $stepManager);
     }
 
     /**
