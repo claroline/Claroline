@@ -69,6 +69,7 @@ class NoteController
      * @EXT\Method("POST")
      *
      * @param Request   $request
+     * @param Deck $deck
      * @param NoteType  $noteType
      * @return JsonResponse
      */
@@ -110,5 +111,43 @@ class NoteController
         }
 
         return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/note/list/deck/{deck}/note_type/{noteType}", 
+     *     name="claroline_list_notes"
+     * )
+     *
+     * @param Deck $deck
+     * @param NoteType $noteType
+     * @return JsonResponse
+     */
+    public function listNotesAction(Deck $deck, NoteType $noteType)
+    {
+        $notes = $this->manager->findByNoteType($deck, $noteType);
+
+        $response = new JsonResponse();
+        $context = new SerializationContext();
+        $context->setGroups('api_flashcard_deck');
+        return $response->setData(json_decode(
+            $this->serializer->serialize($notes, 'json', $context)
+        ));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/note/delete/{note}", 
+     *     name="claroline_delete_note"
+     * )
+     *
+     * @param Note $note
+     * @return JsonResponse
+     */
+    public function deleteNoteAction(Note $note)
+    {
+        $noteId = $note->getId();
+        $this->manager->delete($note);
+        return new JsonResponse($noteId);
     }
 }

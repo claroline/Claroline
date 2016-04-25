@@ -15,6 +15,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\FlashCardBundle\Entity\Note;
+use Claroline\FlashCardBundle\Entity\NoteType;
+use Claroline\FlashCardBundle\Entity\Deck;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Form\FormView;
@@ -67,7 +69,28 @@ class NoteManager
      */
     public function delete(Note $note)
     {
+        foreach($note->getCards() as $card) {
+            $this->om->remove($card);
+        }
+
         $this->om->remove($note);
         $this->om->flush();
+    }
+
+    /**
+     * @param Deck $deck
+     * @param NoteType $noteType
+     * @return Array
+     */
+    public function findByNoteType(Deck $deck, NoteType $noteType)
+    {
+        $repo = $this->om->getRepository('ClarolineFlashCardBundle:Note');
+        return $repo->findBy(
+            array(
+                'deck' => $deck->getId(),
+                'noteType' => $noteType->getId()
+            ),
+            array('id' => 'ASC')
+        );
     }
 }
