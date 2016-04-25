@@ -79,7 +79,7 @@ class HoleHandler implements QuestionHandlerInterface
             if (!in_array($solution->id, $holeIds)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->id} doesn't match any choice id",
+                    'message' => "id {$solution->id} doesn't match any hole id",
                 ];
             }
         }
