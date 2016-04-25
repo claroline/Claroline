@@ -6,6 +6,8 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -23,7 +25,7 @@ class Qcm extends Interaction
      *
      * @return mixed[]
      */
-    public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
+    public function response(Request $request, $paperID = 0)
     {
         $interactionQCMID = $request->request->get('interactionQCMToValidated');
 
@@ -125,12 +127,12 @@ class Qcm extends Interaction
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
      * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
-     * @param Symfony\Component\HttpFoundation\Session\SessionInterface    $session
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface    $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
      */
-    public function getResponseGiven($interactionToDisplay, $session, $interactionX)
+    public function getResponseGiven($interactionToDisplay, SessionInterface $session, $interactionX)
     {
         $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
 
@@ -274,6 +276,7 @@ class Qcm extends Interaction
         } else {
             $score = $interQCM->getScoreFalseResponse() - $penalty;
         }
+
         if ($score < 0) {
             $score = 0;
         }

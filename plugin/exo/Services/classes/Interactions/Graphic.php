@@ -1,14 +1,13 @@
 <?php
 
-/**
- * Services for the graphic.
- */
-
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
+ * Services for the graphic.
  * @DI\Service("ujm.exo.graphic_service")
  */
 class Graphic extends Interaction
@@ -23,7 +22,7 @@ class Graphic extends Interaction
      *
      * @return mixed[]
      */
-    public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
+    public function response(Request $request, $paperID = 0)
     {
         $answers = $request->request->get('answers'); // Answer of the student
         $graphId = $request->request->get('graphId'); // Id of the graphic interaction
@@ -48,7 +47,7 @@ class Graphic extends Interaction
 
         $score = $point - $penalty; // Score of the student with penalty
 
-        // Not negatif score
+        // Not negative score
         if ($score < 0) {
             $score = 0;
         }
@@ -81,14 +80,14 @@ class Graphic extends Interaction
      *
      * @param string                                             $answers
      * @param \Symfony\Component\HttpFoundation\Request          $request
-     * @param doctrineCollection of \UJM\ExoBundle\Entity\Coords $rightCoords
+     * @param \UJM\ExoBundle\Entity\Coords[] $rightCoords
      * @param array [string]                                     $coords
      *
      * @return float
      */
     public function mark($answers = null, $request = null, $rightCoords = null, $coords = null)
     {
-        // differenciate the exercise of the bank of questions
+        // differentiate the exercise of the bank of questions
         if (is_int($request)) {
             $max = $request;
             $coords = preg_split('[,]', $answers); // Divide the answer zones into cells
@@ -170,12 +169,12 @@ class Graphic extends Interaction
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
      * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
-     * @param Symfony\Component\HttpFoundation\Session\SessionInterface    $session
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface    $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
      */
-    public function getResponseGiven($interactionToDisplay, $session, $interactionX)
+    public function getResponseGiven($interactionToDisplay, SessionInterface $session, $interactionX)
     {
         $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
 

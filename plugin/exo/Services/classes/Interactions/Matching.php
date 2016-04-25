@@ -6,6 +6,8 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -23,7 +25,7 @@ class Matching extends Interaction
      *
      * @return mixed[]
      */
-    public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
+    public function response(Request $request, $paperID = 0)
     {
         $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
         $response = $request->request->get('jsonResponse');
@@ -59,7 +61,7 @@ class Matching extends Interaction
      *
      *
      * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
-     * @param float                                     $penality         penalty if the user showed hints
+     * @param float                                     $penalty         penalty if the user showed hints
      * @param array                                     $tabRightResponse
      * @param array                                     $tabResponseIndex
      *
@@ -71,8 +73,7 @@ class Matching extends Interaction
         $tabResponseIndex = null
     ) {
         $em = $this->doctrine->getManager();
-        $scoretmp = 0;
-        $scoreMax = $this->maxScore($interMatching);
+        $scoreTmp = 0;
 
         foreach ($tabRightResponse as $labelId => $value) {
             if (isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
@@ -80,20 +81,22 @@ class Matching extends Interaction
             ) {
                 $label = $em->getRepository('UJMExoBundle:Label')
                     ->find($labelId);
-                $scoretmp += $label->getScoreRightResponse();
+                $scoreTmp += $label->getScoreRightResponse();
             }
             if ($tabRightResponse[$labelId] == null && !isset($tabResponseIndex[$labelId])) {
                 $label = $em->getRepository('UJMExoBundle:Label')
                     ->find($labelId);
-                $scoretmp += $label->getScoreRightResponse();
+                $scoreTmp += $label->getScoreRightResponse();
             }
         }
 
-        $score = $scoretmp - $penalty;
+        if ($penalty) {
+            $score = $scoreTmp - $penalty;
+        }
+
         if ($score < 0) {
             $score = 0;
         }
-        $score .= '/'.$scoreMax;
 
         return $score;
     }
@@ -138,12 +141,12 @@ class Matching extends Interaction
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
      * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
-     * @param Symfony\Component\HttpFoundation\Session\SessionInterface    $session
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface    $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
      */
-    public function getResponseGiven($interactionToDisplay, $session, $interactionX)
+    public function getResponseGiven($interactionToDisplay, SessionInterface $session, $interactionX)
     {
         $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
 
@@ -186,7 +189,7 @@ class Matching extends Interaction
      *
      *
      * @param string                                          $response
-     * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
+     * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
      *
      * @return array of arrays
      */
@@ -214,7 +217,7 @@ class Matching extends Interaction
      * init array of rights responses indexed by labelId.
      *
      *
-     * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
+     * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
      *
      * @return mixed[]
      */
@@ -257,7 +260,7 @@ class Matching extends Interaction
      */
     private function getTabResponseIndex($response)
     {
-        // in attempte of angular for the question bank
+        // in attempt of angular for the question bank
         if (is_array($response)) {
             $tabResponse = $response;
         } else {

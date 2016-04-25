@@ -7,6 +7,8 @@
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 abstract class Interaction
@@ -68,7 +70,7 @@ abstract class Interaction
      *
      * @return float
      */
-    protected function getPenalty($question, \Symfony\Component\HttpFoundation\Session\SessionInterface $session, $paperID)
+    protected function getPenalty($question, SessionInterface $session, $paperID)
     {
         $penalty = 0;
         if ($paperID == 0) {
@@ -115,8 +117,8 @@ abstract class Interaction
      /**
       * Find if exist already an answer.
       *
-      * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
-      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+      * @param \UJM\ExoBundle\Entity\AbstractInteraction $interactionToDisplay interaction (question) to displayed
+      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
       *
       * @return \UJM\ExoBundle\Entity\Response
       */
@@ -160,7 +162,7 @@ abstract class Interaction
       *
       * @return array
       */
-     abstract public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0);
+     abstract public function response(Request $request, $paperID = 0);
 
      /**
       * abstract method
@@ -193,8 +195,8 @@ abstract class Interaction
       * abstract method.
       *
       * @param int $interId id of inetraction
-      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
       * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
       */
-     abstract public function getResponseGiven($interId, $session, $interactionX);
+     abstract public function getResponseGiven($interId, SessionInterface $session, $interactionX);
 }
