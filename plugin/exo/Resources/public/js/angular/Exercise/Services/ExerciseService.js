@@ -267,6 +267,40 @@ ExerciseService.prototype.removeStep = function removeStep(step) {
     return deferred.promise;
 };
 
+ExerciseService.prototype.removeItem = function removeItem(step, item) {
+    // Store a copy of the item if something goes wrong
+    var itemBack = angular.copy(item, {});
+
+    // Remove item from Step
+    var pos = step.items.indexOf(item);
+    if (-1 !== pos) {
+        step.items.splice(pos, 1);
+    }
+
+    var deferred = this.$q.defer();
+    this.$http
+        .delete(
+            Routing.generate('ujm_exercise_question_delete', { id: this.exercise.id, qid: item.id })
+        )
+        // Success callback
+        .success(function (response) {
+            // TODO : display success message
+
+            deferred.resolve(response);
+        })
+        // Error callback
+        .error(function (data, status) {
+            // Restore item
+            step.items.push(itemBack);
+
+            // TODO : display error message
+
+            deferred.reject({});
+        }.bind(this));
+
+    return deferred.promise;
+};
+
 /**
  * Publish the current Exercise
  * @returns {ExerciseService}
