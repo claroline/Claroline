@@ -8,7 +8,7 @@ const isDebug = false;
 if (isDebug) {
   console.log(isFirefox ? 'firefox' : 'chrome');
 }
-let mediaRecorder;
+let recorder;
 let recordedBlobs; // array of chunk video blobs
 
 // audio input volume visualisation
@@ -18,13 +18,14 @@ let meter;
 
 let maxTime = 0;
 let currentTime = 0;
-let countdown = 0;
 
 let intervalID;
 
 // avoid the recorded file to be chunked by setting a slight timeout
 const recordEndTimeOut = 1000;
+// video element
 const preview = document.getElementById('preview');
+// gum constraints
 const constraints = {
   audio: true,
   video: true
@@ -108,12 +109,7 @@ function gumSuccess(stream) {
   }
   preview.muted = true;
   preview.play();
-
-  registerEvents();
-  initDomElements();
-  createVolumeMeter();
-
-  $('#video-record-start').prop('disabled', '');
+  init();
 }
 
 // getUserMedia Error Callback
@@ -125,7 +121,7 @@ function gumError(error) {
   }
 }
 
-function registerEvents() {
+function init() {
   // file name check and change
   $("#resource-name-input").on("change paste keyup", function() {
     if ($(this).val() === '') { // name is blank
@@ -140,18 +136,16 @@ function registerEvents() {
     });
   });
 
+  $('#video-record-start').prop('disabled', '');
+  preview.controls = false;
+  maxTime = parseInt($('#maxTime').val());
+
   $('#video-record-start').on('click', recordStream);
   $('#video-record-stop').on('click', stopRecording);
   $('#btn-video-download').on('click', downloadVideo);
   $('#submitButton').on('click', uploadVideo);
-  $('#retry').on('click', reinitRecording);
-
-
-}
-
-function initDomElements() {
-  preview.controls = false;
-  maxTime = parseInt($('#maxTime').val());
+  $('#retry').on('click', reinitRecording);  
+  createVolumeMeter();
 }
 
 function recordStream() {
@@ -179,7 +173,7 @@ function recordStream() {
 
   recordedBlobs = [];
   try {
-    mediaRecorder = new MediaRecorder(window.stream, options);
+    recorder = new MediaRecorder(window.stream, options);
   } catch (e) {
     const msg = 'Unable to create MediaRecorder with options Object.';
     if (isDebug) {
@@ -187,10 +181,10 @@ function recordStream() {
     }
   }
 
-  mediaRecorder.ondataavailable = handleDataAvailable;
-  mediaRecorder.start(10); // collect 10ms of data
+  recorder.ondataavailable = handleDataAvailable;
+  recorder.start(10); // collect 10ms of data
   if (isDebug) {
-    console.log('MediaRecorder started', mediaRecorder);
+    console.log('MediaRecorder started', recorder);
   }
 
 }
@@ -210,7 +204,14 @@ function resetData() {
 
 function reinitRecording(){
 
+  if (maxTime > 0) {
+    currentTime = 0;
+    let hms = secondsTohhmmss(currentTime);
+    $('.current-time').text(hms);
+  }
+
   $('#retry').prop('disabled', true);
+  $('#retry').hide();
   $('#submitButton').prop('disabled', true);
   $('#video-record-start').show();
   $(".alert").hide();
@@ -227,19 +228,14 @@ function stopRecording() {
 
   window.setTimeout(function() {
 
-    if (maxTime > 0) {
-      currentTime = 0;
-      let hms = secondsTohhmmss(currentTime);
-      $('.current-time').text(hms);
-    }
 
     window.clearInterval(intervalID);
-    mediaRecorder.stop();
+    recorder.stop();
 
     $('#video-record-stop').hide();
     $('#retry').prop('disabled', false);
+    $('#retry').show();
     $(".alert").show();
-    //$(".alert").alert();
     $('#submitButton').prop('disabled', false);
     if (isDebug) {
       console.log(recordedBlobs);
@@ -286,9 +282,6 @@ function uploadVideo() {
 
 function xhr(url, data, progress, callback) {
 
-  const message = Translator.trans('creating_resource', {}, 'innova_video_recorder');
-  // tell the user that his action has been taken into account
-  $('#submitButton').text(message);
   $('#submitButton').attr('disabled', true);
   let request = new XMLHttpRequest();
   request.onreadystatechange = function() {
@@ -305,7 +298,6 @@ function xhr(url, data, progress, callback) {
       if (isDebug) {
         console.log('xhr error');
       }
-      //$('#spinner').remove();
       const msg = Translator.trans('resource_creation_error', {}, 'innova_video_recorder');
       $('.progress-row').hide();
       $('.error-row').show();

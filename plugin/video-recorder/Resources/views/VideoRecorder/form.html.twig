@@ -1,9 +1,8 @@
 {% block stylesheets %}
-  {% stylesheets debug = false output = '/bundles/innovavideorecorder/css/app.css'
-  "@InnovaVideoRecorderBundle/Resources/public/css/app.css"
+  {% stylesheets debug = false output = 'vendors/claroline/plugin/videorecorder/css/video-recorder.css'
+  "@InnovaVideoRecorderBundle/Resources/style/app.css"
  %}
   <link rel="stylesheet" href="{{ asset_url }}" screen="media"/>
-  <link href="{{asset('/bundles/innovavideorecorder/css/app.css')}}" rel="stylesheet" media="screen"/>
   {% endstylesheets %}
 {% endblock %}
 
@@ -37,14 +36,6 @@
                 <input required="required" id="resource-name-input" type="text" value="recorded-video-{{'now'|date('YmdHs')}}" class="form-control" name="resourceName" placeholder="">
             </div>
           </div>
-          <!-- Max Recording time -->
-          {% if maxTime > 0 %}
-            <div class="row">
-              <div class="col-md-12 text-right">
-                  {{ 'max_recording_time'|trans({}, 'innova_video_recorder') }}&nbsp;{{maxTime | hmsTime}}
-              </div>
-            </div>
-          {% endif %}
           <hr/>
           <!-- video preview -->
           <div class="row">
@@ -58,6 +49,16 @@
               <canvas id="db-meter" title="{{ 'db_meter'|trans({}, 'innova_video_recorder') }}"></canvas>
             </div>
           </div>
+          <!-- recorder buttons -->
+          <div class="row recorder-buttons-row">
+            <div class="col-md-12 text-center">
+              <button type="button" role="button" class="btn btn-primary" id="video-record-start" title="{{ 'start_recording'|trans({}, 'innova_video_recorder') }}" disabled="disabled">{{ 'start'|trans({}, 'innova_video_recorder') }}</button>
+              <button type="button" role="button" style="display:none" class="btn btn-warning" id="video-record-stop" title="{{ 'stop_recording'|trans({}, 'innova_video_recorder') }}">{{ 'stop'|trans({}, 'innova_video_recorder') }}</button>
+              <button type="button" role="button" style="display:none" id="retry" disabled="disabled" class="btn btn-success">
+                {{ 'retry'|trans({}, 'innova_video_recorder') }}
+              </button>
+            </div>
+          </div>
           <!-- timer -->
           <div class="row current-time-row">
             <div class="col-md-12 text-center">
@@ -69,17 +70,10 @@
               {% endif %}
             </div>
           </div>
-          <!-- recorder buttons -->
-          <div class="row recorder-buttons-row">
-            <div class="col-md-12 text-center">
-              <button type="button" role="button" class="btn btn-default" id="video-record-start" title="{{ 'start_recording'|trans({}, 'innova_video_recorder') }}" disabled="disabled">{{ 'start'|trans({}, 'innova_video_recorder') }}</button>
-              <button type="button" role="button" style="display:none" class="btn btn-warning" id="video-record-stop" title="{{ 'stop_recording'|trans({}, 'innova_video_recorder') }}">{{ 'stop'|trans({}, 'innova_video_recorder') }}</button>
-            </div>
-          </div>
           <!-- warning message -->
           <div class="row">
             <div class="col-md-12">
-              <div class="alert alert-warning text-center" style="display:none;" role="alert">
+              <div class="alert alert-info text-center" style="display:none;" role="alert">
                 {{ 'warning_message_record_end'|trans({}, 'innova_video_recorder')|raw }}
               </div>
             </div>
@@ -105,10 +99,6 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" role="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
-        <button type="button" role="button" id="retry" disabled="disabled" class="btn btn-success">
-          {{ 'retry'|trans({}, 'innova_video_recorder') }}
-        </button>
         <button type="button" role="button" id="submitButton" disabled="disabled" class="btn btn-primary">
           {{ 'ok'|trans({}, 'innova_video_recorder') }}
         </button>
