@@ -14,9 +14,9 @@ use Innova\VideoRecorderBundle\Form\Type\VideoRecorderConfigurationType;
  */
 class VideoRecorderToolListener
 {
-  private $templating;
-  private $container;
-  private $manager;
+    private $templating;
+    private $container;
+    private $manager;
 
   /**
    * @DI\InjectParams({

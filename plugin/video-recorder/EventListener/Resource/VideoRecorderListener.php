@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
  */
 class VideoRecorderListener
 {
-
     private $container;
     private $manager;
 
@@ -60,6 +59,7 @@ class VideoRecorderListener
 
     /**
      * @DI\Observe("create_innova_video_recorder")
+     *
      * @param CreateResourceEvent $event
      */
     public function onCreate(CreateResourceEvent $event)
@@ -95,7 +95,7 @@ class VideoRecorderListener
                 'InnovaVideoRecorderBundle:VideoRecorder:form.html.twig',
                 array(
                   'resourceType' => 'innova_video_recorder',
-                  'maxTime' => $config->getMaxRecordingTime()
+                  'maxTime' => $config->getMaxRecordingTime(),
                 )
         );
         $event->setResponseContent($content);
@@ -109,8 +109,8 @@ class VideoRecorderListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $pathName = $this->container->getParameter('claroline.param.files_directory') .
-                DIRECTORY_SEPARATOR .
+        $pathName = $this->container->getParameter('claroline.param.files_directory').
+                DIRECTORY_SEPARATOR.
                 $event->getResource()->getHashName();
 
         if (file_exists($pathName)) {
@@ -147,16 +147,16 @@ class VideoRecorderListener
         $newFile->setSize($resource->getSize());
         $newFile->setName($resource->getName());
         $newFile->setMimeType($resource->getMimeType());
-        $hashName = 'WORKSPACE_' . $workspace->getId() .
-                $ds .
-                $this->container->get('claroline.utilities.misc')->generateGuid() .
-                '.' .
+        $hashName = 'WORKSPACE_'.$workspace->getId().
+                $ds.
+                $this->container->get('claroline.utilities.misc')->generateGuid().
+                '.'.
                 pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
         $newFile->setHashName($hashName);
         $fileDir = $this->container->getParameter('claroline.param.files_directory');
-        $filePath = $fileDir . $ds . $resource->getHashName();
-        $newPath = $fileDir . $ds . $hashName;
-        $workspaceDir = $fileDir . $ds . 'WORKSPACE_' . $workspace->getId();
+        $filePath = $fileDir.$ds.$resource->getHashName();
+        $newPath = $fileDir.$ds.$hashName;
+        $workspaceDir = $fileDir.$ds.'WORKSPACE_'.$workspace->getId();
 
         if (!is_dir($workspaceDir)) {
             mkdir($workspaceDir);
@@ -173,12 +173,10 @@ class VideoRecorderListener
      */
     public function onDownload(DownloadResourceEvent $event)
     {
-
         $event->setItem(
                 $this->container
-                        ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $event->getResource()->getHashName()
+                        ->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$event->getResource()->getHashName()
         );
         $event->stopPropagation();
     }
-
 }

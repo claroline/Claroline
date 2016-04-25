@@ -5,7 +5,6 @@ namespace Innova\VideoRecorderBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Innova\VideoRecorderBundle\Manager\VideoRecorderManager;
 use Innova\VideoRecorderBundle\Entity\VideoRecorderConfiguration;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -14,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class VideoRecorderController extends Controller
 {
-
     protected $manager;
 
     /**
@@ -48,6 +46,4 @@ class VideoRecorderController extends Controller
             return $this->redirectToRoute('claro_desktop_open_tool', array('toolName' => 'home'));
         }
     }
-
-
 }

@@ -24,6 +24,4 @@ class AdditionalInstaller extends BaseInstaller
         $this->container->get('claroline.manager.plugin_manager')->disable($plugin);
       }
   }
-
-
 }
