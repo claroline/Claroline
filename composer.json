@@ -178,7 +178,7 @@
             "Claroline\\DevBundle\\": "main/dev",
             "Claroline\\WebInstaller\\": "main/web-installer/",
             "Icap\\WebsiteBundle\\": "plugin/website",
-	"Innova\\VideoRecorderBundle\\": "plugin/video-recorder",
+	          "Innova\\VideoRecorderBundle\\": "plugin/video-recorder"
         }
     },
     "extra": {
@@ -225,7 +225,7 @@
             "Innova\\PathBundle\\InnovaPathBundle",
             "Claroline\\DevBundle\\ClarolineDevBundle",
             "Icap\\WebsiteBundle\\IcapWebsiteBundle",
-     "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle"
+            "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle"
         ]
     }
 }
