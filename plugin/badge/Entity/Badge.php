@@ -715,53 +715,19 @@ class Badge extends Rulable
     {
         return $this->file;
     }
-    /**
-     * @return null|string
-     */
-    public function getAbsolutePath()
-    {
-        return (null === $this->imagePath) ? null : $this->getUploadRootDir().DIRECTORY_SEPARATOR.$this->imagePath;
-    }
 
     /**
      * @return null|string
      */
     public function getWebPath()
     {
-        return (null === $this->imagePath) ? null : $this->getUploadDir().DIRECTORY_SEPARATOR.$this->imagePath;
-    }
-
-    /**
-     * @throws \Exception
-     *
-     * @return string
-     */
-    protected function getUploadRootDir()
-    {
-        $ds = DIRECTORY_SEPARATOR;
-
-        $uploadRootDir = sprintf(
-            '%s%s..%s..%s..%s..%sweb%s%s',
-            __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()
-        );
-        $realpathUploadRootDir = realpath($uploadRootDir);
-
-        if (false === $realpathUploadRootDir) {
-            throw new \Exception(
-                sprintf(
-                    "Invalid upload root dir '%s'for uploading badge images.",
-                    $uploadRootDir
-                )
-            );
-        }
-
-        return $realpathUploadRootDir;
+        return (null === $this->imagePath) ? null : self::getUploadDir().DIRECTORY_SEPARATOR.$this->imagePath;
     }
 
     /**
      * @return string
      */
-    protected function getUploadDir()
+    public static function getUploadDir()
     {
         return sprintf('uploads%sbadges', DIRECTORY_SEPARATOR);
     }
@@ -807,9 +773,6 @@ class Badge extends Rulable
     public function prePersist(LifecycleEventArgs $event)
     {
         $this->dealWithAtLeastOneTranslation($event->getObjectManager());
-        if (null !== $this->file) {
-            $this->imagePath = $this->file->getClientOriginalName();
-        }
     }
 
     /**
@@ -818,53 +781,6 @@ class Badge extends Rulable
     public function preUpdate(PreUpdateEventArgs $event)
     {
         $this->dealWithAtLeastOneTranslation($event->getObjectManager());
-        if (null !== $this->file) {
-            $this->imagePath = $this->file->getClientOriginalName();
-        }
-    }
-
-    /**
-     * @ORM\PostUpdate()
-     */
-    public function postUpdate()
-    {
-        if (null === $this->file) {
-            return;
-        }
-
-        $this->file->move($this->getUploadRootDir(), $this->imagePath);
-
-        if (null !== $this->olfFileName && is_file($this->olfFileName)) {
-            unlink($this->getUploadRootDir().DIRECTORY_SEPARATOR.$this->olfFileName);
-            $this->olfFileName = null;
-        }
-
-        $this->file = null;
-    }
-
-    /**
-     * @ORM\PostPersist()
-     */
-    public function postPersist()
-    {
-        if (null === $this->file) {
-            return;
-        }
-
-        $this->file->move($this->getUploadRootDir(), $this->imagePath);
-
-        unset($this->file);
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function postRemove()
-    {
-        $filePath = $this->getAbsolutePath();
-        if (null !== $filePath && is_file($filePath)) {
-            unlink($filePath);
-        }
     }
 
     /**

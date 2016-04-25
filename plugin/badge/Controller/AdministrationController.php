@@ -163,11 +163,8 @@ class AdministrationController extends Controller
         /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->get('translator');
         try {
-            /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
-            $entityManager = $this->getDoctrine()->getManager();
-
-            $entityManager->remove($badge);
-            $entityManager->flush();
+            /* @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
+            $this->get('icap_badge.form_handler.badge')->handleDelete($badge);
 
             $this->get('session')
                 ->getFlashBag()
