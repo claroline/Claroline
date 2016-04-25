@@ -248,7 +248,7 @@ class QuestionRepository extends EntityRepository
             $stepQuestionsQuery = $this->createQueryBuilder('q1')
                 ->join('q1.stepQuestions', 'sq')
                 ->join('sq.step', 's')
-                ->where('s.execise = :exercise');
+                ->where('s.exercise = :exercise');
             $qb->andWhere(
                 $qb->expr()->notIn('q', $stepQuestionsQuery->getDQL())
             );
