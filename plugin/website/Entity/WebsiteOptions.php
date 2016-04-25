@@ -1003,18 +1003,23 @@ class WebsiteOptions
 
     /**
      * @param $imgStr
+     * @param $webDir
+     *
+     * @return string
      */
-    public function getAbsolutePath($imgStr)
+    protected function getAbsolutePath($webDir, $imgStr)
     {
         if ($this->$imgStr === null || filter_var($this->$imgStr, FILTER_VALIDATE_URL)) {
             return $this->$imgStr;
         } else {
-            return $this->getUploadRootDir().DIRECTORY_SEPARATOR.$this->$imgStr;
+            return $webDir.DIRECTORY_SEPARATOR.$this->getUploadDir().DIRECTORY_SEPARATOR.$this->$imgStr;
         }
     }
 
     /**
      * @param $imgStr
+     *
+     * @return string
      */
     public function getWebPath($imgStr)
     {
@@ -1026,64 +1031,19 @@ class WebsiteOptions
     }
 
     /**
-     * @throws \Exception
-     *
-     * @return string
-     */
-    public function getUploadRootDir()
-    {
-        $ds = DIRECTORY_SEPARATOR;
-
-        $uploadRootDir = sprintf(
-            '%s%s..%s..%s..%s..%s..%s..%sweb%s%s',
-            __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()
-        );
-        if (!file_exists($uploadRootDir)) {
-            mkdir($uploadRootDir, 0777, true);
-        }
-        $realpathUploadRootDir = realpath($uploadRootDir);
-        if (false === $realpathUploadRootDir) {
-            throw new \Exception(
-                sprintf(
-                    "Invalid upload root dir '%s'for uploading website images.",
-                    $uploadRootDir
-                )
-            );
-        }
-
-        return $realpathUploadRootDir;
-    }
-
-    /**
      * @return string
      */
     public function getUploadDir()
     {
-        $uploadDir = sprintf('uploads%swebsites%s', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
+        $uploadDir = sprintf('uploads%swebsites', DIRECTORY_SEPARATOR);
         if ($this->getWebsite()->isTest()) {
-            return $uploadDir.'tests';
+            return $uploadDir.DIRECTORY_SEPARATOR.'tests';
         }
 
-        return $uploadDir.$this->getWebsite()->getId();
+        return $uploadDir.DIRECTORY_SEPARATOR.$this->getWebsite()->getId();
     }
 
-    /**
-     * @ORM\PreRemove
-     */
-    public function removeFilesAndFolder()
-    {
-        $uploadRootDir = $this->getUploadRootDir();
-        try {
-            foreach (glob($uploadRootDir.DIRECTORY_SEPARATOR.'*.*') as $filename) {
-                unlink($filename);
-            }
-            rmdir($uploadRootDir);
-        } catch (\Exception $e) {
-            echo 'Exception: '.$e->getMessage();
-        }
-    }
-
-    public function exportToArray(&$files = null)
+    public function exportToArray($webDir, &$files = null)
     {
         $tmpFilePath = sys_get_temp_dir().DIRECTORY_SEPARATOR;
         $bgImageUid = $this->bgImage;
@@ -1129,17 +1089,17 @@ class WebsiteOptions
         if (isset($files) && $files !== null) {
             //Create bgImage file
             if ($bgImageUid !== null && !filter_var($bgImageUid, FILTER_VALIDATE_URL)) {
-                copy($this->getAbsolutePath('bgImage'), $tmpFilePath.$bgImageUid);
+                copy($this->getAbsolutePath($webDir, 'bgImage'), $tmpFilePath.$bgImageUid);
                 $files[$bgImageUid] = $tmpFilePath.$bgImageUid;
             }
             //Create bannerBgImage file
             if ($bannerBgImageUid !== null && !filter_var($bannerBgImageUid, FILTER_VALIDATE_URL)) {
-                copy($this->getAbsolutePath('bannerBgImage'), $tmpFilePath.$bannerBgImageUid);
+                copy($this->getAbsolutePath($webDir, 'bannerBgImage'), $tmpFilePath.$bannerBgImageUid);
                 $files[$bannerBgImageUid] = $tmpFilePath.$bannerBgImageUid;
             }
             //Create footerBgImage file
             if ($footerBgImageUid !== null && !filter_var($footerBgImageUid, FILTER_VALIDATE_URL)) {
-                copy($this->getAbsolutePath('footerBgImage'), $tmpFilePath.$footerBgImageUid);
+                copy($this->getAbsolutePath($webDir, 'footerBgImage'), $tmpFilePath.$footerBgImageUid);
                 $files[$footerBgImageUid] = $tmpFilePath.$footerBgImageUid;
             }
 
@@ -1176,9 +1136,9 @@ class WebsiteOptions
         return $optionsArray;
     }
 
-    public function importFromArray(array $optionsArray, $rootPath = null)
+    public function importFromArray($webDir, array $optionsArray, $rootPath = null)
     {
-        $uploadedDir = $this->getUploadRootDir();
+        $uploadedDir = $webDir.DIRECTORY_SEPARATOR.$this->getUploadDir();
         $this->copyrightEnabled = $optionsArray['copyright_enabled'];
         $this->copyrightText = $optionsArray['copyright_text'];
         $this->analyticsProvider = $optionsArray['analytics_provider'];
