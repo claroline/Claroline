@@ -211,7 +211,7 @@ class Persister
          $exercise->setTitle($title);
 
          if ($user) {
-             if (!$this->exoType) {
+             if (!isset($this->exoType)) {
                  $this->exoType = new ResourceType();
                  $this->exoType->setName('exercise');
                  $this->om->persist($this->exoType);

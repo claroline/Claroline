@@ -76,20 +76,35 @@ class HoleHandler implements QuestionHandlerInterface
         }, $questionData->holes);
 
         foreach ($questionData->solutions as $index => $solution) {
-            if (!in_array($solution->id, $holeIds)) {
+            if (empty($solution->holeId)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->id} doesn't match any hole id",
+                    'message' => 'a holeId property is required',
+                ];
+            }
+
+            if (empty($solution->answers)) {
+                $errors[] = [
+                    'path' => "solutions[{$index}]",
+                    'message' => 'a answers property is required',
+                ];
+            }
+
+            if (!in_array($solution->holeId, $holeIds)) {
+                $errors[] = [
+                    'path' => "solutions[{$index}]",
+                    'message' => "id {$solution->holeId} doesn't match any hole id",
                 ];
             }
         }
 
         // check there is a positive score solution
         $maxScore = -1;
-
         foreach ($questionData->solutions as $solution) {
-            if ($solution->score > $maxScore) {
-                $maxScore = $solution->score;
+            foreach ($solution->answers as $answer) {
+                if ($answer->score > $maxScore) {
+                    $maxScore = $answer->score;
+                }
             }
         }
 
@@ -158,8 +173,7 @@ class HoleHandler implements QuestionHandlerInterface
             $exportData->solution = $holeQuestion->getHtml();
             $exportData->solutions = array_map(function ($hole) {
                 $solutionData = new \stdClass();
-                $solutionData->id = (string) $hole->getId();
-
+                $solutionData->holeId = (string) $hole->getId();
                 $wordResponses = $hole->getWordResponses()->toArray();
                 $expectedWord = null;
                 array_walk($wordResponses, function ($wr) use (&$expectedWord) {
@@ -168,10 +182,10 @@ class HoleHandler implements QuestionHandlerInterface
                     }
                 });
 
-                $solutionData->wordResponses = array_map(function ($wr) use ($expectedWord) {
+                $solutionData->answers = array_map(function ($wr) use ($expectedWord) {
                     $wrData = new \stdClass();
                     $wrData->id = (string) $wr->getId();
-                    $wrData->response = (string) $wr->getResponse();
+                    $wrData->text = (string) $wr->getResponse();
                     $wrData->caseSensitive = $wr->getCaseSensitive();
                     $wrData->score = $wr->getScore();
                     $wrData->feedback = $wr->getFeedback();
@@ -204,35 +218,33 @@ class HoleHandler implements QuestionHandlerInterface
 
         $holes = $holeQuestion->getHoles()->toArray();
         $exportData->solutions = array_map(function ($hole) {
-                $solutionData = new \stdClass();
-                $solutionData->id = (string) $hole->getId();
-                $solutionData->type = 'text/html';
-                $solutionData->selector = $hole->getSelector();
-                $solutionData->position = (string) $hole->getPosition();
+            $solutionData = new \stdClass();
+            $solutionData->holeId = (string) $hole->getId();
 
-                $wordResponses = $hole->getWordResponses()->toArray();
-                $expectedWord = null;
-                array_walk($wordResponses, function ($wr) use (&$expectedWord) {
-                    if (empty($expectedWord) || ($wr->getScore() > $expectedWord->getScore())) {
-                        $expectedWord = $wr;
-                    }
-                });
+            $wordResponses = $hole->getWordResponses()->toArray();
+            $expectedWord = null;
+            array_walk($wordResponses, function ($wr) use (&$expectedWord) {
+                if (empty($expectedWord) || ($wr->getScore() > $expectedWord->getScore())) {
+                    $expectedWord = $wr;
+                }
+            });
 
-                $solutionData->wordResponses = array_map(function ($wr) use ($expectedWord) {
-                    $wrData = new \stdClass();
-                    $wrData->id = (string) $wr->getId();
-                    $wrData->response = (string) $wr->getResponse();
-                    $wrData->score = $wr->getScore();
-                    $wrData->rightResponse = $expectedWord->getId() === $wr->getId();
-                    if ($wr->getFeedback()) {
-                        $wrData->feedback = $wr->getFeedback();
-                    }
+            $solutionData->answers = array_map(function ($wr) use ($expectedWord) {
+                $wrData = new \stdClass();
+                $wrData->id = (string) $wr->getId();
+                $wrData->text = (string) $wr->getResponse();
+                $wrData->caseSensitive = $wr->getCaseSensitive();
+                $wrData->score = $wr->getScore();
+                $wrData->rightResponse = $expectedWord->getId() === $wr->getId();
+                if ($wr->getFeedback()) {
+                    $wrData->feedback = $wr->getFeedback();
+                }
 
-                    return $wrData;
-                }, $hole->getWordResponses()->toArray());
+                return $wrData;
+            }, $hole->getWordResponses()->toArray());
 
-                return $solutionData;
-            }, $holes);
+            return $solutionData;
+        }, $holes);
 
         return $exportData;
     }

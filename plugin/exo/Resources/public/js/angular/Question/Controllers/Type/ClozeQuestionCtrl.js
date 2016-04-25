@@ -39,12 +39,10 @@ ClozeQuestionCtrl.prototype.isHoleValid = function isHoleValid(hole) {
         if (expected) {
             // The right response has been found, we can check the User answer
             if (hole.selector) {
-                // <select>
                 return answer.answerText === expected.id;
             } else {
-                // <input>
-                return !!((expected.caseSensitive && expected.response === answer.answerText)
-                || (!expected.caseSensitive && expected.response.toLowerCase() === answer.answerText.toLowerCase()));
+                return !!((expected.caseSensitive && expected.text === answer.answerText)
+                || (!expected.caseSensitive && expected.text.toLowerCase() === answer.answerText.toLowerCase()));
             }
         }
     }
@@ -83,15 +81,15 @@ ClozeQuestionCtrl.prototype.getHoleAnswer = function getHoleAnswer(hole) {
  * Get the complete solution for a Hole
  * @param   {Object} hole
  * @returns {{
- *      id            : String
- *      wordResponses : Array
+ *      id      : String
+ *      answers : Array
  * }}
  */
 ClozeQuestionCtrl.prototype.getHoleSolution = function getHoleSolution(hole) {
     var solution = null;
     if (this.question.solutions) {
         for (var i = 0; i < this.question.solutions.length; i++) {
-            if (this.question.solutions[i].id == hole.id) {
+            if (this.question.solutions[i].holeId == hole.id) {
                 solution = this.question.solutions[i];
                 break; // Stop searching
             }
@@ -125,8 +123,7 @@ ClozeQuestionCtrl.prototype.getHoleFeedback = function getHoleFeedback(hole) {
  * @param   {Object} hole
  * @param   {Object} solution
  * @returns {{
- *      id            : String,
- *      word          : String,
+ *      text          : String,
  *      caseSensitive : Boolean,
  *      score         : Number,
  *      feedback      : String,
@@ -138,15 +135,15 @@ ClozeQuestionCtrl.prototype.getHoleExpectedAnswer = function getHoleExpectedAnsw
     if (hole.selector) {
         // The hole is a <select>
         // Find the expected word in the solution list
-        for (var i = 0; i < solution.wordResponses.length; i++) {
-            if (solution.wordResponses[i].rightResponse) {
-                expectedWord = solution.wordResponses[i];
+        for (var i = 0; i < solution.answers.length; i++) {
+            if (solution.answers[i].rightResponse) {
+                expectedWord = solution.answers[i];
                 break; // stop searching
             }
         }
     } else {
         // The hole is a <input>
-        expectedWord = solution.wordResponses && solution.wordResponses.length > 0 ? solution.wordResponses[0] : null;
+        expectedWord = solution.answers && solution.answers.length > 0 ? solution.answers[0] : null;
     }
 
     return expectedWord;
