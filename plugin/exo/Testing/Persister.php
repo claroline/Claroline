@@ -234,17 +234,17 @@ class Persister
              $step = new Step();
              $step->setText('step');
              $step->setOrder($i);
-             $step->setExercise($exercise);
+
+             // Add step to the exercise
+             $exercise->addStep($step);
+
              $this->om->persist($step);
+
              $stepQuestion = new StepQuestion();
              $stepQuestion->setStep($step);
              $stepQuestion->setQuestion($questions[$i]);
              $stepQuestion->setOrdre(0);
              $this->om->persist($stepQuestion);
-
-             /*$link = new ExerciseQuestion($exercise, $questions[$i]);
-             $link->setOrdre($i);
-             $this->om->persist($link);*/
          }
 
          return $exercise;
