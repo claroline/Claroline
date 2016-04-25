@@ -33,10 +33,13 @@ class WebsiteOptionsTest extends TransactionalTestCase
     private $image;
     private $websiteOptionParams;
 
+    private $webDir;
+
     protected function setUp()
     {
         parent::setUp();
         $container = $this->client->getContainer();
+        $this->webDir = $container->getParameter('claroline.param.web_directory');
         $this->websiteOptionsManager = $container->get('icap.website.options.manager');
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->persist = new Persister($this->om);
@@ -74,7 +77,7 @@ class WebsiteOptionsTest extends TransactionalTestCase
 
     protected function tearDown()
     {
-        $this->persist->deleteWebsiteTestsFolder($this->website);
+        $this->persist->deleteWebsiteTestsFolder($this->website, $this->webDir);
         parent::tearDown();
         if (file_exists($this->file)) {
             unlink($this->file);

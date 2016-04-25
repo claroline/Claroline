@@ -66,9 +66,7 @@ class WebsiteListener extends ContainerAware
     }
     public function onDelete(DeleteResourceEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $em->remove($event->getResource());
-        $em->flush();
+        $this->container->get('icap.website.manager')->deleteWebsite($event->getResource());
         $event->stopPropagation();
     }
     public function onCopy(CopyResourceEvent $event)

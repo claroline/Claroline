@@ -34,10 +34,13 @@ class WebsiteManagerTest extends TransactionalTestCase
 
     private $websitePageParams;
 
+    private $webDir;
+
     protected function setUp()
     {
         parent::setUp();
         $container = $this->client->getContainer();
+        $this->webDir = $container->getParameter('claroline.param.web_directory');
         $this->pageManager = $container->get('icap.website.page.manager');
         $this->websiteManager = $container->get('icap.website.manager');
         $this->om = $container->get('claroline.persistence.object_manager');
@@ -87,7 +90,7 @@ class WebsiteManagerTest extends TransactionalTestCase
 
     protected function tearDown()
     {
-        $this->persist->deleteWebsiteTestsFolder($this->website);
+        $this->persist->deleteWebsiteTestsFolder($this->website, $this->webDir);
         parent::tearDown();
     }
 }
