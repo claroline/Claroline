@@ -83,7 +83,7 @@ class ResourcePropertiesType extends AbstractType
         $builder->add('accessibleFrom', 'datepicker', $accessibleFromParams);
         $accessibleUntilParams = $dateParams;
         $accessibleUntilParams['label'] = 'accessible_until';
-        $builder->add('accessibleUntil', 'datepicker', $accessibleFromParams);
+        $builder->add('accessibleUntil', 'datepicker', $accessibleUntilParams);
         $builder->add(
             'resourceType',
             'entity',
