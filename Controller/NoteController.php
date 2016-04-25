@@ -78,7 +78,7 @@ class NoteController
         $fields = $request->request->get('fields', false);
         $response = new JsonResponse();
 
-        if($fields !== false) {
+        if($fields) {
             $note = new Note();
             $note->setDeck($deck);
             $note->setNoteType($noteType);
@@ -106,11 +106,65 @@ class NoteController
                 $this->serializer->serialize($note, 'json', $context)
             ));
         } else {
-            $response->setData('Field "fieldValues" is missing');
+            $response->setData('Field "fields" is missing');
             $response->setStatusCode(422);
         }
 
         return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/note/edit/{note}", 
+     *     name="claroline_edit_note"
+     * )
+     * @EXT\Method("POST")
+     *
+     * @param Request   $request
+     * @param Note $note
+     * @return JsonResponse
+     */
+    public function editNoteAction(Request $request, Note $note)
+    {
+        $fieldValues = $request->request->get('fieldValues', false);
+        $response = new JsonResponse();
+
+        if($fieldValues) {
+            foreach($fieldValues as $f) {
+                $note->setFieldValue($f['id'], $f['value']);
+            }
+
+            $note = $this->manager->create($note);
+
+            $context = new SerializationContext();
+            $context->setGroups('api_flashcard_deck');
+            $response->setData(json_decode(
+                $this->serializer->serialize($note, 'json', $context)
+            ));
+        } else {
+            $response->setData('Field "fieldValues" is missing');
+            $response->setStatusCode(422);
+        }
+        return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/note/get/{note}", 
+     *     name="claroline_get_note"
+     * )
+     *
+     * @param Note $note
+     * @return JsonResponse
+     */
+    public function findNote(Note $note)
+    {
+        $response = new JsonResponse();
+        $context = new SerializationContext();
+        $context->setGroups('api_flashcard_deck');
+        return $response->setData(json_decode(
+            $this->serializer->serialize($note, 'json', $context)
+        ));
     }
 
     /**

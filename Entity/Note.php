@@ -152,6 +152,23 @@ class Note
     }
 
     /**
+     * @param $fieldId
+     * @param $value
+     *
+     * @return boolean
+     */
+    public function setFieldValue($fieldId, $value)
+    {
+        foreach($this->fieldValues as $f) {
+            if($f->getId() == $fieldId) {
+                $f->setValue($value);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @param ArrayCollection $obj
      *
      * @return Note
