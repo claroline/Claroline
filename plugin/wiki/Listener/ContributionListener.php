@@ -52,15 +52,15 @@ class ContributionListener
                     'id' => $contribution->getId(),
                     'title' => $contribution->getTitle(),
                     'text' => $contribution->getText(),
-                    'contributor' => $contribution->getContributor()->getFirstName() .
-                        ' ' .
-                        $contribution->getContributor()->getLastName()
+                    'contributor' => $contribution->getContributor()->getFirstName().
+                        ' '.
+                        $contribution->getContributor()->getLastName(),
                 ),
                 'resource' => array(
                     'id' => $wiki->getId(),
                     'name' => $wiki->getResourceNode()->getName(),
-                    'type' => $wiki->getResourceNode()->getResourceType()->getName()
-                )
+                    'type' => $wiki->getResourceNode()->getResourceType()->getName(),
+                ),
             );
             $notification = $this->notificationManager->createNotification(
                 'resource-icap_wiki-user_tagged',

@@ -20,7 +20,7 @@ use Icap\OAuthBundle\Model\Configuration;
 class LoadParametersData extends AbstractFixture implements ContainerAwareInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -28,7 +28,7 @@ class LoadParametersData extends AbstractFixture implements ContainerAwareInterf
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
@@ -39,6 +39,5 @@ class LoadParametersData extends AbstractFixture implements ContainerAwareInterf
             $configHandler->setParameter($resourceOwnerStr.'_client_secret', null);
             $configHandler->setParameter($resourceOwnerStr.'_client_active', null);
         }
-
     }
 }

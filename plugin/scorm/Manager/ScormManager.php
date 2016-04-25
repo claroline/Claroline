@@ -60,8 +60,7 @@ class ScormManager
         ContainerInterface $container,
         Scorm12 $libsco12,
         Scorm2004 $libsco2004
-    )
-    {
+    ) {
         $this->om = $om;
         $this->container = $container;
         $this->libsco12 = $libsco12;
@@ -75,18 +74,18 @@ class ScormManager
         $this->scorm2004ScoTrackingRepo =
             $om->getRepository('ClarolineScormBundle:Scorm2004ScoTracking');
         $this->scormResourcesPath = $this->container
-            ->getParameter('claroline.param.uploads_directory') . '/scormresources/';
+            ->getParameter('claroline.param.uploads_directory').'/scormresources/';
         $this->filePath = $this->container
-            ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
+            ->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR;
     }
 
     public function createScorm($tmpFile, $name, $version, Workspace $workspace = null)
     {
         //use the workspace as a prefix tor the uploadpath later
-        $scormResource = ($version === '1.2') ?  new Scorm12Resource(): new Scorm2004Resource();
+        $scormResource = ($version === '1.2') ?  new Scorm12Resource() : new Scorm2004Resource();
         $scormResource->setName($name);
         $hashName = $this->container->get('claroline.utilities.misc')
-                ->generateGuid() . '.zip';
+                ->generateGuid().'.zip';
         $scormResource->setHashName($hashName);
         $scos = $this->generateScosFromScormArchive($tmpFile, $version);
 
@@ -192,7 +191,6 @@ class ScormManager
         $this->om->flush();
     }
 
-
     /***********************************************
      * Access to Scorm12ResourceRepository methods *
      ***********************************************/
@@ -202,7 +200,6 @@ class ScormManager
         return $this->scorm12ResourceRepo->getNbScormWithHashName($hashName);
     }
 
-
     /**************************************************
      * Access to Scorm12ScoTrackingRepository methods *
      **************************************************/
@@ -210,8 +207,7 @@ class ScormManager
     public function getAllScorm12ScoTrackingsByUserAndResource(
         User $user,
         Scorm12Resource $resource
-    )
-    {
+    ) {
         return $this->scorm12ScoTrackingRepo
             ->findAllTrackingsByUserAndResource($user, $resource);
     }
@@ -219,13 +215,11 @@ class ScormManager
     public function getScorm12ScoTrackingByUserAndSco(
         User $user,
         Scorm12Sco $sco
-    )
-    {
+    ) {
         return $this->scorm12ScoTrackingRepo->findOneBy(
             array('user' => $user->getId(), 'sco' => $sco->getId())
         );
     }
-
 
     /*************************************************
      * Access to Scorm2004ResourceRepository methods *
@@ -236,7 +230,6 @@ class ScormManager
         return $this->scorm2004ResourceRepo->getNbScormWithHashName($hashName);
     }
 
-
     /****************************************************
      * Access to Scorm2004ScoTrackingRepository methods *
      ****************************************************/
@@ -244,8 +237,7 @@ class ScormManager
     public function getAllScorm2004ScoTrackingsByUserAndResource(
         User $user,
         Scorm2004Resource $resource
-    )
-    {
+    ) {
         return $this->scorm2004ScoTrackingRepo
             ->findAllTrackingsByUserAndResource($user, $resource);
     }
@@ -253,8 +245,7 @@ class ScormManager
     public function getScorm2004ScoTrackingByUserAndSco(
         User $user,
         Scorm2004Sco $sco
-    )
-    {
+    ) {
         return $this->scorm2004ScoTrackingRepo->findOneBy(
             array('user' => $user->getId(), 'sco' => $sco->getId())
         );
@@ -263,7 +254,7 @@ class ScormManager
     public function generateScosFromScormArchive(\SplFileInfo $file, $version)
     {
         return $version === '1.2' ?
-            $this->generateScos12FromScormArchive($file):
+            $this->generateScos12FromScormArchive($file) :
             $this->generateScos2004FromScormArchive($file);
     }
 
@@ -281,7 +272,7 @@ class ScormManager
         $zip = new \ZipArchive();
 
         $zip->open($file);
-        $stream = $zip->getStream("imsmanifest.xml");
+        $stream = $zip->getStream('imsmanifest.xml');
 
         while (!feof($stream)) {
             $contents .= fread($stream, 2);
@@ -289,7 +280,6 @@ class ScormManager
         $dom = new \DOMDocument();
 
         if (!$dom->loadXML($contents)) {
-
             throw new InvalidScormArchiveException('cannot_load_imsmanifest_message');
         }
 
@@ -297,7 +287,6 @@ class ScormManager
 
         if ($scormVersionElements->length > 0
             && $scormVersionElements->item(0)->textContent !== '1.2') {
-
             throw new InvalidScormArchiveException('invalid_scorm_version_12_message');
         }
 
@@ -319,7 +308,7 @@ class ScormManager
         $contents = '';
         $zip = new \ZipArchive();
         $zip->open($file);
-        $stream = $zip->getStream("imsmanifest.xml");
+        $stream = $zip->getStream('imsmanifest.xml');
         while (!feof($stream)) {
             $contents .= fread($stream, 2);
         }
@@ -340,22 +329,19 @@ class ScormManager
         return $scos;
     }
 
-
     /**
      * Associates SCORM resource to SCOs and persists them.
      * As array $scos can also contain an array of scos
      * this method is call recursively when an element is an array.
      *
      * @param Scorm12Resource $scormResource
-     * @param array $scos Array of Scorm12Sco
+     * @param array           $scos          Array of Scorm12Sco
      */
     private function persistScos(
         ScormResource $scormResource,
         array $scos
-    )
-    {
+    ) {
         foreach ($scos as $sco) {
-
             if (is_array($sco)) {
                 $this->persistScos($scormResource, $sco);
             } else {
@@ -366,7 +352,7 @@ class ScormManager
     }
 
     /**
-     * Unzip a given ZIP file into the web resources directory
+     * Unzip a given ZIP file into the web resources directory.
      *
      * @param UploadedFile $file
      * @param $hashName name of the destination directory
@@ -375,7 +361,7 @@ class ScormManager
     {
         $zip = new \ZipArchive();
         $zip->open($file);
-        $destinationDir = $this->scormResourcesPath . $hashName;
+        $destinationDir = $this->scormResourcesPath.$hashName;
         if (!file_exists($destinationDir)) {
             mkdir($destinationDir, 0777, true);
         }

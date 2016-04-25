@@ -27,7 +27,7 @@ class Updater021200 extends Updater
 
     public function __construct($container)
     {
-        $this->container     = $container;
+        $this->container = $container;
         $this->objectManager = $container->get('claroline.persistence.object_manager');
     }
 
@@ -74,25 +74,25 @@ class Updater021200 extends Updater
         /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
         $userRepository = $this->objectManager->getRepository('ClarolineCoreBundle:User');
 
-        $this->log('User to update - ' . date('Y/m/d H:i:s'));
+        $this->log('User to update - '.date('Y/m/d H:i:s'));
         $this->log('It may take a while to process, go grab a coffee.');
 
         /** @var \Claroline\CoreBundle\Manager\UserManager $userManager */
         $userManager = $this->container->get('claroline.manager.user_manager');
-        $nbUsers     = 0;
+        $nbUsers = 0;
 
         /** @var \Claroline\CoreBundle\Entity\User $user */
         $user = $userRepository->findOneByPublicUrl(null);
-        while(null !== $user) {
+        while (null !== $user) {
             $publicUrl = $userManager->generatePublicUrl($user);
 
             $user->setPublicUrl($publicUrl);
             $this->objectManager->persist($user);
             $this->objectManager->flush();
 
-            $nbUsers++;
+            ++$nbUsers;
             if (100 === $nbUsers) {
-                $this->log('    ' . $nbUsers . ' updated users - ' . date('Y/m/d H:i:s'));
+                $this->log('    '.$nbUsers.' updated users - '.date('Y/m/d H:i:s'));
                 $nbUsers = 0;
             }
 

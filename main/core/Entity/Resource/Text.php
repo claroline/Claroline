@@ -70,7 +70,7 @@ class Text extends AbstractResource
     }
 
     /**
-     * Required for the formtype
+     * Required for the formtype.
      *
      * @param string $text
      */
@@ -80,7 +80,7 @@ class Text extends AbstractResource
     }
 
     /**
-     * Required for the formtype
+     * Required for the formtype.
      *
      * @return string
      */

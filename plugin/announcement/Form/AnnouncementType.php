@@ -27,7 +27,7 @@ class AnnouncementType extends AbstractType
             'checkbox',
             array(
                 'required' => false,
-                'attr' => array('class' => 'visible-chk')
+                'attr' => array('class' => 'visible-chk'),
             )
         );
 
@@ -44,7 +44,7 @@ class AnnouncementType extends AbstractType
                 'format' => 'dd-MM-yyyy',
                 'widget' => 'single_text',
                 'attr' => $attr,
-                'input' => 'datetime'
+                'input' => 'datetime',
             )
         );
         $builder->add(
@@ -55,14 +55,14 @@ class AnnouncementType extends AbstractType
                 'format' => 'dd-MM-yyyy',
                 'widget' => 'single_text',
                 'attr' => $attr,
-                'input' => 'datetime'
+                'input' => 'datetime',
             )
         );
         $builder->add(
             'notify_user', 'checkbox', array(
                 'label' => 'notify_user',
                 'required' => false,
-                'mapped' => false
+                'mapped' => false,
             )
         );
     }
@@ -76,7 +76,7 @@ class AnnouncementType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'translation_domain' => 'announcement'
+                'translation_domain' => 'announcement',
             )
         );
     }

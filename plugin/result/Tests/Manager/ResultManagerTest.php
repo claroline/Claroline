@@ -72,14 +72,14 @@ class ResultManagerTest extends TransactionalTestCase
                 'id' => $bill->getId(),
                 'name' => 'bill bill',
                 'mark' => 12,
-                'markId' => $billMark->getId()
+                'markId' => $billMark->getId(),
             ],
             [
                 'id' => $jane->getId(),
                 'name' => 'jane jane',
                 'mark' => 14,
-                'markId' => $janeMark->getId()
-            ]
+                'markId' => $janeMark->getId(),
+            ],
         ];
         $actual = $this->manager->getMarks($result, $bob, true);
         $this->assertEquals($expected, $actual);
@@ -87,7 +87,7 @@ class ResultManagerTest extends TransactionalTestCase
 
     public function testImportExpectsNonEmptyFile()
     {
-        $john = $this->persist->user('john');;
+        $john = $this->persist->user('john');
         $result = $this->persist->result('Result 1', $john);
         $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);
         $this->om->flush();
@@ -176,7 +176,7 @@ class ResultManagerTest extends TransactionalTestCase
 
     private function stubCsv($name, $extension = '.csv')
     {
-        $path = __DIR__ . '/../Stub/csv/'. $name . $extension;
+        $path = __DIR__.'/../Stub/csv/'.$name.$extension;
         $file = new UploadedFile($path, $name);
 
         return $file;

@@ -12,19 +12,19 @@ class FormaLibrePresenceBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'presence');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'presence');
     }
-    
+
     public function hasMigrations()
     {
         return true;
     }
-    
+
     public function getRequiredFixturesDirectory($environment)
     {
         return 'DataFixtures';
     }
-    
+
     public function getAdditionalInstaller()
     {
         return new AdditionalInstaller();

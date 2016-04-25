@@ -35,6 +35,7 @@ class NotEmptyValidatorTest extends UnitTestCase
 
     /**
      * @dataProvider validValueProvider
+     *
      * @param mixed $value
      */
     public function testValidate($value)
@@ -47,7 +48,7 @@ class NotEmptyValidatorTest extends UnitTestCase
     {
         return [
             [['foo', 'bar']],
-            [new ArrayCollection(['foo', 'bar'])]
+            [new ArrayCollection(['foo', 'bar'])],
         ];
     }
 }

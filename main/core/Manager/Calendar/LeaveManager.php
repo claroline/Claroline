@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Entity\Calendar\Year;
 /**
  * @DI\Service("claroline.manager.calendar.leave_manager")
  */
-class LeaveManager 
+class LeaveManager
 {
     private $om;
     private $repo;

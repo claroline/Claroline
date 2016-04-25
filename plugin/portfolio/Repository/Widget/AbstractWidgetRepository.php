@@ -25,14 +25,14 @@ class AbstractWidgetRepository extends EntityRepository
             ->setParameter('portfolio', $portfolio)
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getOneOrNullResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getOneOrNullResult() : $queryBuilder->getQuery();
     }
     /**
      * @param Portfolio $portfolio
-     * @param integer   $col
+     * @param int       $col
      * @param bool      $executeQuery
      *
-     * @return Query|integer
+     * @return Query|int
      */
     public function findMaxRow(Portfolio $portfolio, $col, $executeQuery = true)
     {
@@ -44,7 +44,7 @@ class AbstractWidgetRepository extends EntityRepository
             ->setParameter('col', $col)
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getOneOrNullResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getOneOrNullResult() : $queryBuilder->getQuery();
     }
 
     /**
@@ -59,16 +59,17 @@ class AbstractWidgetRepository extends EntityRepository
             ->andWhere($this->getWigetInstanceString($type))
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder->getQuery();
     }
 
     /**
      * @param string $type
-     * @param integer $id
-     * @param User $user
-     * @param bool $executeQuery
+     * @param int    $id
+     * @param User   $user
+     * @param bool   $executeQuery
      *
      * @return \Doctrine\ORM\QueryBuilder|mixed
+     *
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
@@ -80,11 +81,11 @@ class AbstractWidgetRepository extends EntityRepository
             ->andWhere('w.user = :user')
             ->setParameters([
                 'id' => $id,
-                'user' => $user
+                'user' => $user,
             ])
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getSingleResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getSingleResult() : $queryBuilder->getQuery();
     }
 
     /**
@@ -102,7 +103,7 @@ class AbstractWidgetRepository extends EntityRepository
             ->setParameter('user', $user)
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder->getQuery();
     }
 
     private function getWigetInstanceString($widgetType)

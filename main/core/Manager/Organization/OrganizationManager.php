@@ -84,7 +84,9 @@ class OrganizationManager
 
     public function createDefault()
     {
-        if (count($this->getDefault()) > 0) return;
+        if (count($this->getDefault()) > 0) {
+            return;
+        }
         $this->log('Adding default organization...');
         $orga = new Organization();
         $orga->setName('default');
@@ -104,4 +106,4 @@ class OrganizationManager
     {
         return $this->logger;
     }
-} 
+}

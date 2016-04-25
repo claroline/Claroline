@@ -47,8 +47,7 @@ class ViewAsListener
         EntityManager $em,
         RoleManager $roleManager,
         TokenUpdater $tokenUpdater
-    )
-    {
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->em = $em;

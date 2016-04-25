@@ -13,16 +13,22 @@
             </label>
             <div class="col-sm-10">
                 <select name="language" class="form-control">
-                    <option value="en" <?php if ($var('platform_settings')->getLanguage() === 'en') echo 'selected' ?>>
+                    <option value="en" <?php if ($var('platform_settings')->getLanguage() === 'en') {
+    echo 'selected';
+} ?>>
                         English
                     </option>
-                    <option value="fr" <?php if ($var('platform_settings')->getLanguage() === 'fr') echo 'selected' ?>>
+                    <option value="fr" <?php if ($var('platform_settings')->getLanguage() === 'fr') {
+    echo 'selected';
+} ?>>
                         Français
                     </option>
                 </select>
             </div>
         </div>
-        <div class="form-group <?php if (isset($errors['name'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['name'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <span class="required">*</span>
                 <?php echo $trans('name') ?>
@@ -40,7 +46,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['supportEmail'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['supportEmail'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <span class="required">*</span>
                 <?php echo $trans('support_email') ?>
@@ -58,7 +66,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['organization'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['organization'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <?php echo $trans('organization') ?>
             </label>
@@ -75,7 +85,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['organizationUrl'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['organizationUrl'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <?php echo $trans('organization_url') ?>
             </label>

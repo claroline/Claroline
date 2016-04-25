@@ -11,10 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Form\FileType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\File;
@@ -34,7 +33,7 @@ class FileController extends Controller
      *     options={"expose"=true}
      * )
      *
-     * @param integer $id
+     * @param int $id
      *
      * @return Response
      */
@@ -42,23 +41,19 @@ class FileController extends Controller
     {
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('OPEN', $collection);
-        $file = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
-        $path = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR
-            . $file->getHashName();
 
-        $response = new StreamedResponse();
-        $response->setCallBack(
-            function () use ($path) {
-                readfile($path);
-            }
-        );
-        
+        // free the session as soon as possible
+        // see https://github.com/claroline/CoreBundle/commit/7cee6de85bbc9448f86eb98af2abb1cb072c7b6b
         $this->get('session')->save();
 
-        $response->headers->set('Content-Type', $node->getMimeType());
-        $response->send();
+        $file = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
+        $path = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR
+            .$file->getHashName();
 
-        return new Response();
+        $response = new BinaryFileResponse($path);
+        $response->headers->set('Content-Type', $node->getMimeType());
+
+        return $response;
     }
 
     /**
@@ -71,9 +66,10 @@ class FileController extends Controller
      *
      * Creates a resource from uploaded file.
      *
-     * @param integer $parentId the parent id
+     * @param int $parentId the parent id
      *
      * @throws \Exception
+     *
      * @return Response
      */
     public function uploadWithAjaxAction(ResourceNode $parent, User $user)
@@ -89,15 +85,15 @@ class FileController extends Controller
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $size = filesize($tmpFile);
         $mimeType = $tmpFile->getClientMimeType();
-        $hashName = 'WORKSPACE_' .
-            $parent->getWorkspace()->getId() .
-            DIRECTORY_SEPARATOR .
-            $this->container->get('claroline.utilities.misc')->generateGuid() .
-            '.' .
+        $hashName = 'WORKSPACE_'.
+            $parent->getWorkspace()->getId().
+            DIRECTORY_SEPARATOR.
+            $this->container->get('claroline.utilities.misc')->generateGuid().
+            '.'.
             $extension;
-        $destination = $this->container->getParameter('claroline.param.files_directory') .
-            DIRECTORY_SEPARATOR .
-            'WORKSPACE_' .
+        $destination = $this->container->getParameter('claroline.param.files_directory').
+            DIRECTORY_SEPARATOR.
+            'WORKSPACE_'.
             $parent->getWorkspace()->getId();
         $tmpFile->move($destination, $hashName);
         $file->setSize($size);
@@ -128,15 +124,16 @@ class FileController extends Controller
      *
      * Creates a resource from uploaded file.
      *
-     * @param integer $parentId the parent id
+     * @param int $parentId the parent id
      *
      * @throws \Exception
+     *
      * @return Response
      */
     public function uploadWithTinyMceAction($parent, User $user)
     {
         $parent = $this->get('claroline.manager.resource_manager')->getById($parent);
-        $workspace = $parent ? $parent->getWorkspace(): null;
+        $workspace = $parent ? $parent->getWorkspace() : null;
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => 'file'));
         $this->checkAccess('CREATE', $collection);
@@ -176,8 +173,8 @@ class FileController extends Controller
             $rights = array(
                 'ROLE_ANONYMOUS' => array(
                     'open' => true, 'export' => true, 'create' => array(),
-                    'role' => $this->container->get('claroline.manager.role_manager')->getRoleByName('ROLE_ANONYMOUS')
-                )
+                    'role' => $this->container->get('claroline.manager.role_manager')->getRoleByName('ROLE_ANONYMOUS'),
+                ),
             );
         }
 
@@ -209,7 +206,7 @@ class FileController extends Controller
         $destinations = $this->get('claroline.manager.resource_manager')->getDefaultUploadDestinations();
 
         return array(
-            'form' => $this->get('form.factory')->create(new TinyMceUploadModalType($destinations))->createView()
+            'form' => $this->get('form.factory')->create(new TinyMceUploadModalType($destinations))->createView(),
         );
     }
 
@@ -228,7 +225,7 @@ class FileController extends Controller
             'form' => $form->createView(),
             'resourceType' => 'file',
             'file' => $file,
-            '_resource' => $file
+            '_resource' => $file,
         );
     }
 
@@ -256,7 +253,7 @@ class FileController extends Controller
                     'claro_workspace_open_tool',
                     array(
                         'toolName' => 'resource_manager',
-                        'workspaceId' => $file->getResourceNode()->getWorkspace()->getId()
+                        'workspaceId' => $file->getResourceNode()->getWorkspace()->getId(),
                     )
                 );
             }
@@ -268,7 +265,7 @@ class FileController extends Controller
             'form' => $form->createView(),
             'resourceType' => 'file',
             'file' => $file,
-            '_resource' => $file
+            '_resource' => $file,
         );
     }
 
@@ -294,7 +291,7 @@ class FileController extends Controller
     }
 
     /**
-     * Get Current User
+     * Get Current User.
      *
      * @return mixed Claroline\CoreBundle\Entity\User or null
      */

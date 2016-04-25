@@ -11,7 +11,8 @@ use Symfony\Component\Form\FormFactoryInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Manages Path widgets
+ * Manages Path widgets.
+ *
  * @DI\Service()
  */
 class PathWidgetListener
@@ -50,10 +51,10 @@ class PathWidgetListener
         PathManager          $pathManager,
         TagManager           $tagManager)
     {
-        $this->twig        = $twig;
+        $this->twig = $twig;
         $this->formFactory = $formFactory;
         $this->pathManager = $pathManager;
-        $this->tagManager  = $tagManager;
+        $this->tagManager = $tagManager;
     }
 
     /**
@@ -68,10 +69,10 @@ class PathWidgetListener
 
         $config = $this->pathManager->getWidgetConfig($widgetInstance);
 
-        $content = $this->twig->render('InnovaPathBundle:Widget:list.html.twig', array (
+        $content = $this->twig->render('InnovaPathBundle:Widget:list.html.twig', array(
             'workspace' => $workspace,
             'isDesktop' => $widgetInstance->isDesktop(),
-            'paths'     => $this->pathManager->getWidgetPaths($config, $workspace),
+            'paths' => $this->pathManager->getWidgetPaths($config, $workspace),
         ));
 
         $event->setContent($content);
@@ -88,13 +89,13 @@ class PathWidgetListener
         $instance = $event->getInstance();
         $config = $this->pathManager->getWidgetConfig($instance);
 
-        $form    = $this->formFactory->create('innova_path_widget_config', $config);
+        $form = $this->formFactory->create('innova_path_widget_config', $config);
         $content = $this->twig->render(
             'InnovaPathBundle:Widget:config.html.twig',
             array(
-                'form'     => $form->createView(),
+                'form' => $form->createView(),
                 'instance' => $instance,
-                'tags'     => $this->tagManager->getPlatformTags(),
+                'tags' => $this->tagManager->getPlatformTags(),
             )
         );
 

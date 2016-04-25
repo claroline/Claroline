@@ -19,6 +19,7 @@ class FormHandlerTest extends UnitTestCase
     /**
      * @expectedException LogicException
      * @dataProvider currentFormMethodProvider
+     *
      * @param string $method
      */
     public function testAccessToCurrentFormRequiresPreviousFetch($method)
@@ -79,7 +80,7 @@ class FormHandlerTest extends UnitTestCase
     {
         return [
             ['getData'],
-            ['getView']
+            ['getView'],
         ];
     }
 }

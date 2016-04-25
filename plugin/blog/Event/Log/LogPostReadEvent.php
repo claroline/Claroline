@@ -2,7 +2,6 @@
 
 namespace Icap\BlogBundle\Event\Log;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
 use Icap\BlogBundle\Entity\Blog;
@@ -21,10 +20,10 @@ class LogPostReadEvent extends AbstractLogResourceEvent implements LogNotRepeata
 
         $details = array(
             'post' => array(
-                'blog'  => $blog->getId(),
+                'blog' => $blog->getId(),
                 'title' => $post->getTitle(),
-                'slug'  => $post->getSlug()
-            )
+                'slug' => $post->getSlug(),
+            ),
         );
 
         parent::__construct($blog->getResourceNode(), $details);
@@ -32,7 +31,7 @@ class LogPostReadEvent extends AbstractLogResourceEvent implements LogNotRepeata
 
     public function getLogSignature()
     {
-        return self::ACTION. '_' . $this->resource->getId();
+        return self::ACTION.'_'.$this->resource->getId();
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace Icap\DropzoneBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -15,7 +16,6 @@ use Icap\DropzoneBundle\Form\DocumentDeleteType;
 use Icap\DropzoneBundle\Form\DocumentType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -51,7 +51,7 @@ class DocumentController extends DropzoneBaseController
                 null,
                 array(
                     'ROLE_WS_MANAGER' => array('open' => true, 'export' => true, 'create' => array(),
-                        'role' => $role)
+                        'role' => $role, ),
                 )
             );
 
@@ -74,11 +74,11 @@ class DocumentController extends DropzoneBaseController
             $slugify = new Slugify();
 
             $user = $drop->getUser();
-            $str = $user->getFirstName() . "-" . $user->getLastName();
+            $str = $user->getFirstName().'-'.$user->getLastName();
             $str = $slugify->slugify($str, ' ');
 
             $name = $this->get('translator')->trans('Copy n°%number%', array('%number%' => $drop->getNumber()), 'icap_dropzone');
-            $name .= " - " . $str;
+            $name .= ' - '.$str;
             $hiddenDropDirectory->setName($name);
 
             $parent = $this->getDropZoneHiddenDirectory($dropzone);
@@ -97,7 +97,7 @@ class DocumentController extends DropzoneBaseController
                 null,
                 array(
                     'ROLE_WS_MANAGER' => array('open' => true, 'export' => true, 'create' => array(),
-                        'role' => $role)
+                        'role' => $role, ),
                 )
             );
 
@@ -119,7 +119,7 @@ class DocumentController extends DropzoneBaseController
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $size = filesize($tmpFile);
         $mimeType = $tmpFile->getClientMimeType();
-        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
+        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid().'.'.$extension;
         $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
         $file->setSize($size);
         $file->setName($fileName);
@@ -195,13 +195,13 @@ class DocumentController extends DropzoneBaseController
             $data = $form->getData();
             $url = $data['document'];
             $document->setUrl($url);
-        } else if ($documentType == 'file') {
+        } elseif ($documentType == 'file') {
             $file = $form['document'];
             $node = $this->createFile($dropzone, $drop, $file->getData());
-        } else if ($documentType == 'text') {
+        } elseif ($documentType == 'text') {
             $data = $form->getData();
             $node = $this->createText($dropzone, $drop, $data['document']);
-        } else if ($documentType == 'resource') {
+        } elseif ($documentType == 'resource') {
             $data = $form->getData();
             $node = $this->createResource($dropzone, $drop, $data['document']);
         } else {
@@ -237,15 +237,15 @@ class DocumentController extends DropzoneBaseController
             if (!$dropzone->getAllowUrl()) {
                 throw new AccessDeniedException();
             }
-        } else if ($documentType == 'file') {
+        } elseif ($documentType == 'file') {
             if (!$dropzone->getAllowUpload()) {
                 throw new AccessDeniedException();
             }
-        } else if ($documentType == 'resource') {
+        } elseif ($documentType == 'resource') {
             if (!$dropzone->getAllowWorkspaceResource()) {
                 throw new AccessDeniedException();
             }
-        } else if ($documentType == 'text') {
+        } elseif ($documentType == 'text') {
             if (!$dropzone->getAllowRichText()) {
                 throw new AccessDeniedException();
             }
@@ -262,7 +262,7 @@ class DocumentController extends DropzoneBaseController
                     $this->generateUrl(
                         'icap_dropzone_drop',
                         array(
-                            'resourceId' => $dropzone->getId()
+                            'resourceId' => $dropzone->getId(),
                         )
                     )
                 );
@@ -328,7 +328,7 @@ class DocumentController extends DropzoneBaseController
                     $this->generateUrl(
                         'icap_dropzone_drop',
                         array(
-                            'resourceId' => $dropzone->getId()
+                            'resourceId' => $dropzone->getId(),
                         )
                     )
                 );
@@ -382,7 +382,7 @@ class DocumentController extends DropzoneBaseController
 
             if ($document->getResourceNode()->getResourceType()->getName() == 'file') {
                 return $this->redirect(
-                    $this->generateUrl('claro_resource_download') . '?ids[]=' . $document->getResourceNode()->getId()
+                    $this->generateUrl('claro_resource_download').'?ids[]='.$document->getResourceNode()->getId()
                 );
             } else {
                 return $this->redirect(
@@ -390,7 +390,7 @@ class DocumentController extends DropzoneBaseController
                         'claro_resource_open',
                         array(
                             'resourceType' => $document->getResourceNode()->getResourceType()->getName(),
-                            'node' => $document->getResourceNode()->getId()
+                            'node' => $document->getResourceNode()->getId(),
                         )
                     )
                 );

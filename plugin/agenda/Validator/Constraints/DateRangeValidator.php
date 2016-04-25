@@ -29,7 +29,7 @@ class DateRangeValidator extends ConstraintValidator
             }
         }
         // If isAllDay and isTask are unchecked
-        else if (!$object->isAllDay() && !$object->isTask()) {
+        elseif (!$object->isAllDay() && !$object->isTask()) {
             if ($object->getStart() === null) {
                 $this->context->addViolation('valid_start_date_required');
             }
@@ -40,7 +40,7 @@ class DateRangeValidator extends ConstraintValidator
                 }
             }
 
-            if ($object->getEndInTimestamp() - $object->getStartInTimestamp() < 60*15) {
+            if ($object->getEndInTimestamp() - $object->getStartInTimestamp() < 60 * 15) {
                 $this->context->addViolation('date_range_too_small');
             }
         }

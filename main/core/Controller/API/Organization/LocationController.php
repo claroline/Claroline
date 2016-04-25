@@ -49,15 +49,13 @@ class LocationController extends FOSRestController
         ApiManager           $apiManager,
         ObjectManager        $om,
         Request              $request
-    )
-    {
-        $this->formFactory     = $formFactory;
+    ) {
+        $this->formFactory = $formFactory;
         $this->locationManager = $locationManager;
-        $this->om              = $om;
-        $this->request         = $request;
-        $this->apiManager      = $apiManager;
+        $this->om = $om;
+        $this->request = $request;
+        $this->apiManager = $apiManager;
     }
-
 
     /**
      * @View(serializerGroups={"api_location"})
@@ -86,7 +84,6 @@ class LocationController extends FOSRestController
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\createLocationForm.html.twig', $form);
     }
-
 
     /**
      * @View(serializerGroups={"api_location"})
@@ -131,7 +128,7 @@ class LocationController extends FOSRestController
         $options = array(
             'http_code' => $httpCode,
             'extra_parameters' => $location,
-            'serializer_group' => 'api_location'
+            'serializer_group' => 'api_location',
         );
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\createLocationForm.html.twig', $form, $options);
@@ -162,7 +159,7 @@ class LocationController extends FOSRestController
         $options = array(
             'http_code' => $httpCode,
             'extra_parameters' => $location,
-            'serializer_group' => 'api_location'
+            'serializer_group' => 'api_location',
         );
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editLocationForm.html.twig', $form, $options);

@@ -45,12 +45,12 @@ class LogWorkspaceWidgetConfigType extends AbstractType
                 'restrictions',
                 'select2',
                 array(
-                    'choices'               => $actionChoices,
-                    'required'              => false,
-                    'multiple'              => true,
-                    'expanded'              => false,
-                    'translation_domain'    => 'log',
-                    'attr'                  => array('placeholder' => 'click_to_choose')
+                    'choices' => $actionChoices,
+                    'required' => false,
+                    'multiple' => true,
+                    'expanded' => false,
+                    'translation_domain' => 'log',
+                    'attr' => array('placeholder' => 'click_to_choose'),
                 )
             )
             ->add(
@@ -58,13 +58,13 @@ class LogWorkspaceWidgetConfigType extends AbstractType
                 'choice',
                 array(
                     'choices' => array(
-                        '1'     => '1',
-                        '5'     => '5',
-                        '10'    => '10',
-                        '15'    => '15',
-                        '20'    => '20'
+                        '1' => '1',
+                        '5' => '5',
+                        '10' => '10',
+                        '15' => '15',
+                        '20' => '20',
                     ),
-                    'required' => true
+                    'required' => true,
                 )
             );
     }
@@ -77,9 +77,9 @@ class LogWorkspaceWidgetConfigType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'translation_domain'    => 'log',
-            'csrf_protection'       => true,
-            'csrf_field_name'       => '_token'
+            'translation_domain' => 'log',
+            'csrf_protection' => true,
+            'csrf_field_name' => '_token',
         ));
     }
 }

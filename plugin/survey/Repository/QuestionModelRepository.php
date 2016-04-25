@@ -21,8 +21,7 @@ class QuestionModelRepository extends EntityRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT qm
             FROM Claroline\SurveyBundle\Entity\QuestionModel qm

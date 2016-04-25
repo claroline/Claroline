@@ -13,8 +13,8 @@ class LastMessageWidgetConfigType extends AbstractType
         $builder->add('display_my_last_messages', 'checkbox', array(
             'theme_options' => array(
                 'control_width' => 'col-md-6',
-                'label_width'   => 'col-md-6'
-            )
+                'label_width' => 'col-md-6',
+            ),
         ));
     }
 
@@ -27,8 +27,8 @@ class LastMessageWidgetConfigType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig',
-                'translation_domain' => 'forum'
+                'data_class' => 'Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig',
+                'translation_domain' => 'forum',
             )
         );
     }

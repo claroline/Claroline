@@ -39,31 +39,31 @@ class ResourceLogFilterType extends AbstractType
                 'action',
                 'choice',
                 array(
-                    'label'         => 'Show actions for',
-                    'attr'          => array('class' => 'input-sm'),
+                    'label' => 'Show actions for',
+                    'attr' => array('class' => 'input-sm'),
                     'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
-                    'choices'       => $actionChoices
+                    'choices' => $actionChoices,
                 )
             )
             ->add(
                 'range',
                 'daterange',
                 array(
-                    'label'         => 'for_period',
-                    'required'      => false,
-                    'attr'          => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')
+                    'label' => 'for_period',
+                    'required' => false,
+                    'attr' => array('class' => 'input-sm'),
+                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
                 )
             )
             ->add(
                 'user',
                 'simpleautocomplete',
                 array(
-                    'label'            => 'for user',
+                    'label' => 'for user',
                     'entity_reference' => 'user',
-                    'required'         => false,
-                    'attr'             => array('class' => 'input-sm'),
-                    'theme_options'    => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')
+                    'required' => false,
+                    'attr' => array('class' => 'input-sm'),
+                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
                 )
             );
     }

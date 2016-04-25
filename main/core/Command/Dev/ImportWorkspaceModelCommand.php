@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Console\Logger\ConsoleLogger;
@@ -35,7 +34,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
                 new InputArgument('archive_path', InputArgument::REQUIRED, 'The absolute path to the zip file.'),
                 new InputArgument('owner_username', InputArgument::REQUIRED, 'The owner username'),
                 new InputArgument('code', InputArgument::REQUIRED, 'The workspace code'),
-                new InputArgument('name', InputArgument::REQUIRED, 'The workspace name')
+                new InputArgument('name', InputArgument::REQUIRED, 'The workspace name'),
             )
         );
     }
@@ -47,7 +46,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
             'archive_path' => 'Absolute path to the zip file: ',
             'owner_username' => 'The workspace owner username: ',
             'code' => 'The workspace code: ',
-            'name' => 'The workspace name: '
+            'name' => 'The workspace name: ',
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -80,8 +79,8 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
     {
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         );
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
 

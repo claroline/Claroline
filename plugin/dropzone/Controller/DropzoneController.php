@@ -1,10 +1,8 @@
 <?php
+
 namespace Icap\DropzoneBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
@@ -15,17 +13,14 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Claroline\AgendaBundle\Entity\Event;
 use Pagerfanta\Pagerfanta;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormError;
 use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DropzoneController extends DropzoneBaseController
 {
@@ -95,9 +90,7 @@ class DropzoneController extends DropzoneBaseController
                 $form->get('allowRichText')->addError(new FormError('Choose at least one type of document'));
             }
 
-
             if (!$dropzone->getManualPlanning()) {
-
                 $form_array = $request->request->get('icap_dropzone_common_form');
 
                 if (is_array($form_array)) {
@@ -134,7 +127,7 @@ class DropzoneController extends DropzoneBaseController
                     $AgendaManager = $this->get('claroline.manager.agenda_manager');
                     $workspace = $dropzone->getResourceNode()->getWorkspace();
                     //Set the Agenda Drop Events.
-                    if ($dropzone->getStartAllowDrop() != NULL && $dropzone->getEndAllowDrop() != NULL) {
+                    if ($dropzone->getStartAllowDrop() != null && $dropzone->getEndAllowDrop() != null) {
 
                         //if event already exist
                         if ($dropzone->getEventDrop() != null) {
@@ -145,7 +138,6 @@ class DropzoneController extends DropzoneBaseController
                             $eventDrop->setEnd($dropzone->getEndAllowDrop()->getTimeStamp());
 
                             $AgendaManager->updateEvent($eventDrop);
-
                         } else {
                             //if event doesn't exist
                             // create event
@@ -155,11 +147,10 @@ class DropzoneController extends DropzoneBaseController
                             // link btween the event and the dropzone
                             $dropzone->setEventDrop($eventDrop);
                         }
-
                     }
 
                     //Set the Agenda Review Events.
-                    if ($dropzone->getStartReview() != NULL && $dropzone->getEndReview() != NULL) {
+                    if ($dropzone->getStartReview() != null && $dropzone->getEndReview() != null) {
 
                         // if event is already linked.
                         if ($dropzone->getEventCorrection() != null) {
@@ -220,16 +211,15 @@ class DropzoneController extends DropzoneBaseController
                 if ($dropzone->getEventDrop() != null) {
                     $event = $dropzone->getEventDrop();
                     $AgendaManager->deleteEvent($event);
-                    $dropzone->setEventDrop(NULL);
+                    $dropzone->setEventDrop(null);
                 }
 
                 if ($dropzone->getEventCorrection() != null) {
                     $event = $dropzone->getEventCorrection();
                     $AgendaManager->deleteEvent($event);
-                    $dropzone->setEventCorrection(NULL);
+                    $dropzone->setEventCorrection(null);
                 }
             }
-
 
             if ($form->isValid()) {
                 //getting the dropzoneManager
@@ -245,7 +235,6 @@ class DropzoneController extends DropzoneBaseController
                 $manualStateChanged = false;
                 $newManualState = null;
                 if ($dropzone->getManualPlanning() == true) {
-
                     if ($oldManualPlanning == false || $oldManualPlanningOption != $dropzone->getManualState()) {
                         $manualStateChanged = true;
                         $newManualState = $dropzone->getManualState();
@@ -254,7 +243,6 @@ class DropzoneController extends DropzoneBaseController
                     if ($form->get('autoCloseForManualStates')->getData() == 1) {
                         $dropzoneManager->closeDropzoneOpenedDrops($dropzone, true);
                     }
-
                 } else {
                     if ($oldEndDropDate != $dropzone->getEndAllowDrop()) {
                         $dropzone->setAutoCloseState(Dropzone::AUTO_CLOSED_STATE_WAITING);
@@ -271,7 +259,6 @@ class DropzoneController extends DropzoneBaseController
                 $em->persist($dropzone);
                 $em->flush();
 
-
                 // check if manual state has changed
                 if ($manualStateChanged) {
                     // send notification.
@@ -279,14 +266,11 @@ class DropzoneController extends DropzoneBaseController
                     $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
                     $event = new LogDropzoneManualStateChangedEvent($dropzone, $newManualState, $usersIds);
                     $this->get('event_dispatcher')->dispatch('log', $event);
-
-
                 }
                 $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
                 $this->dispatch($event);
 
                 if ($dropzone->getPeerReview()) {
-
                     $stayHere = $form->get('stayHere')->getData();
 
                     if ($stayHere == 1) {
@@ -306,7 +290,7 @@ class DropzoneController extends DropzoneBaseController
                             $this->generateUrl(
                                 'icap_dropzone_edit_criteria',
                                 array(
-                                    'resourceId' => $dropzone->getId()
+                                    'resourceId' => $dropzone->getId(),
                                 )
                             )
                         );
@@ -324,7 +308,7 @@ class DropzoneController extends DropzoneBaseController
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         );
     }
 
@@ -370,7 +354,7 @@ class DropzoneController extends DropzoneBaseController
                         'icap_dropzone_edit_criteria_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
-                            'page' => $pager->getNbPages()
+                            'page' => $pager->getNbPages(),
                         )
                     )
                 );
@@ -388,13 +372,10 @@ class DropzoneController extends DropzoneBaseController
         $form = $this->createForm(new DropzoneCriteriaType(), $dropzone);
         $add_criteria_after = false;
         if ($request->isMethod('POST')) {
-
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-
                 $add_criteria_after = $request->request->get('addCriteria') == 'add-criterion' ? true : false;
-
 
                 $dropzone = $form->getData();
                 if ($dropzone->getEditionState() < 3) {
@@ -409,7 +390,6 @@ class DropzoneController extends DropzoneBaseController
                 $em->persist($dropzone);
                 $em->flush();
 
-
                 if ($form->get('recalculateGrades')->getData() == 1) {
                     $this->get('icap.manager.dropzone_manager')->recalculateScoreByDropzone($dropzone);
                     $request->getSession()->getFlashBag()->add(
@@ -421,7 +401,6 @@ class DropzoneController extends DropzoneBaseController
                 $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
                 $this->dispatch($event);
 
-
                 if ($dropzone->hasCriteria() === false) {
                     $request->getSession()->getFlashBag()->add(
                         'warning',
@@ -429,10 +408,8 @@ class DropzoneController extends DropzoneBaseController
                     );
                 }
                 if ($add_criteria_after) {
-
                     return new JsonResponse(array('success' => true));
                     //$this->generateUrl('icap_dropzone_edit_add_criterion',array('resourceId'=>$dropzone->getId(),'page'=>$page));
-
                 }
 
                 $goBack = $form->get('goBack')->getData();
@@ -446,7 +423,7 @@ class DropzoneController extends DropzoneBaseController
                         $this->generateUrl(
                             'icap_dropzone_edit_common',
                             array(
-                                'resourceId' => $dropzone->getId()
+                                'resourceId' => $dropzone->getId(),
                             )
                         )
                     );
@@ -461,7 +438,7 @@ class DropzoneController extends DropzoneBaseController
             'pager' => $pager,
             'form' => $form->createView(),
             'nbCorrection' => $nbCorrection,
-            'add_criteria_after' => $add_criteria_after
+            'add_criteria_after' => $add_criteria_after,
         );
     }
 
@@ -503,7 +480,6 @@ class DropzoneController extends DropzoneBaseController
             ->hasCopyToCorrect($dropzone, $user);
         $hasUnfinishedCorrection = $em->getRepository('IcapDropzoneBundle:Correction')->getNotFinished($dropzone, $user) != null;
 
-
         // get progression of the evaluation ( current state, all states available and needed infos to the view).
         $dropzoneProgress = $dropzoneManager->getDrozponeProgress($dropzone, $drop, $nbCorrections);
 
@@ -524,8 +500,10 @@ class DropzoneController extends DropzoneBaseController
 
     /**
      * Check if user date format is OK.
+     *
      * @param $date
      * @param string $format
+     *
      * @return bool
      */
     private function validateDate($date, $format = 'Y-m-d H:i:s')
@@ -533,8 +511,7 @@ class DropzoneController extends DropzoneBaseController
         return DateTime::createFromFormat($format, $date);
     }
 
-
-    private function createAgendaEventDrop($startDate, $endDate, $user, Dropzone $dropzone, $type = "drop")
+    private function createAgendaEventDrop($startDate, $endDate, $user, Dropzone $dropzone, $type = 'drop')
     {
         $event = new Event();
         $event->setStart($startDate->getTimeStamp());
@@ -558,6 +535,7 @@ class DropzoneController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $em->persist($event);
         $em->flush();
+
         return $event;
     }
 
@@ -623,17 +601,16 @@ class DropzoneController extends DropzoneBaseController
         if ($request->isMethod('POST')) {
             $date_format = $this->get('translator')->trans('date_form_datepicker_php', array(), 'platform');
             $date_format = str_replace('-', '/', $date_format);
-            $date_format .= " H:i:s"; // adding hours in order to have full day possibility ( day1 0h00 to day1 23h59 )
+            $date_format .= ' H:i:s'; // adding hours in order to have full day possibility ( day1 0h00 to day1 23h59 )
             $form_array = $request->request->get('icap_dropzone_date_download_between_date_form');
             if (array_key_exists('drop_period_begin_date', $form_array)) {
-                $beginDate = DateTime::createFromFormat($date_format, $form_array['drop_period_begin_date'] . " 00:00:00");
+                $beginDate = DateTime::createFromFormat($date_format, $form_array['drop_period_begin_date'].' 00:00:00');
                 // begin so day start at 00:00:00
             }
             if (array_key_exists('drop_period_end_date', $form_array)) {
-                $endDate = DateTime::createFromFormat($date_format, $form_array['drop_period_end_date'] . " 23:59:59");
+                $endDate = DateTime::createFromFormat($date_format, $form_array['drop_period_end_date'].' 23:59:59');
                 // end date so day end at 23:59:59
             }
-
         }
 
         $idsToDL = $this->get('icap.manager.dropzone_manager')->getResourcesNodeIdsForDownload($dropzone, $beginDate, $endDate);
@@ -648,18 +625,18 @@ class DropzoneController extends DropzoneBaseController
                 'warning',
                 $this->get('translator')->trans($message, array(), 'icap_dropzone')
             );
+
             return $this->redirect($this->generateUrl('icap_dropzone_drops', array('resourceId' => $dropzone->getId())));
         }
+
         return $this->redirect(
             $this->generateUrl(
                 'claro_resource_download',
                 array(
                     'ids[]' => $idsToDL,
-                    'forceArchive' => '1'
+                    'forceArchive' => '1',
                 )
             )
         );
-
     }
-
 }

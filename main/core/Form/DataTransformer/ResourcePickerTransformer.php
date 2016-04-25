@@ -43,13 +43,13 @@ class ResourcePickerTransformer implements DataTransformerInterface
             return $resourceNode->getId();
         }
 
-        return "";
+        return '';
     }
 
     public function reverseTransform($id)
     {
         if (!$id) {
-            return null;
+            return;
         }
 
         $resourceNode = $this->resourceManager->getById($id);

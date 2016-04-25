@@ -3,7 +3,6 @@
 namespace Icap\PortfolioBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PortfolioGroup
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

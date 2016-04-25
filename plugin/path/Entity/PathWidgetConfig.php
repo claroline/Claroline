@@ -4,20 +4,21 @@ namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
- * Configuration of Widgets Path
+ * Configuration of Widgets Path.
+ *
  * @ORM\Table(name="innova_path_widget_config")
  * @ORM\Entity()
  */
 class PathWidgetConfig
 {
     /**
-     * Unique identified of the Configuration
-     * @var integer
+     * Unique identified of the Configuration.
+     *
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -26,7 +27,8 @@ class PathWidgetConfig
     protected $id;
 
     /**
-     * Status
+     * Status.
+     *
      * @var string
      *
      * @ORM\Column(type="simple_array", nullable=true)
@@ -34,7 +36,7 @@ class PathWidgetConfig
     protected $status;
 
     /**
-     * Tags
+     * Tags.
      *
      * @ORM\ManyToMany(targetEntity="Claroline\TagBundle\Entity\Tag", cascade={"persist", "merge"})
      * @ORM\JoinTable(
@@ -57,7 +59,8 @@ class PathWidgetConfig
     }
 
     /**
-     * Get ID
+     * Get ID.
+     *
      * @return int
      */
     public function getId()
@@ -66,7 +69,8 @@ class PathWidgetConfig
     }
 
     /**
-     * Get status
+     * Get status.
+     *
      * @return string
      */
     public function getStatus()
@@ -75,8 +79,10 @@ class PathWidgetConfig
     }
 
     /**
-     * Set status
+     * Set status.
+     *
      * @param $status
+     *
      * @return $this
      */
     public function setStatus($status)
@@ -87,7 +93,8 @@ class PathWidgetConfig
     }
 
     /**
-     * Get the list of Tags displayed in the Widget
+     * Get the list of Tags displayed in the Widget.
+     *
      * @return ArrayCollection
      */
     public function getTags()
@@ -96,8 +103,10 @@ class PathWidgetConfig
     }
 
     /**
-     * Add a Tag
+     * Add a Tag.
+     *
      * @param \Claroline\TagBundle\Entity\Tag $tag
+     *
      * @return $this
      */
     public function addTag(Tag $tag)
@@ -110,8 +119,10 @@ class PathWidgetConfig
     }
 
     /**
-     * Remove a Tag
+     * Remove a Tag.
+     *
      * @param \Claroline\TagBundle\Entity\Tag $tag
+     *
      * @return $this
      */
     public function removeTag(Tag $tag)

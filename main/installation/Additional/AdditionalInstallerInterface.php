@@ -11,7 +11,6 @@
 
 namespace Claroline\InstallationBundle\Additional;
 
-use Claroline\InstallationBundle\Bundle\BundleVersion;
 use Psr\Log\LoggerInterface;
 
 interface AdditionalInstallerInterface

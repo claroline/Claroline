@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Base entity for all resources.
@@ -220,7 +219,7 @@ class ResourceNode
     /**
      * Returns the resource id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -229,9 +228,9 @@ class ResourceNode
 
     /**
      * Sets the resource id.
-     * Required by the ResourceController when it creates a fictionnal root
+     * Required by the ResourceController when it creates a fictionnal root.
      *
-     * @param integer $id
+     * @param int $id
      */
     public function setId($id)
     {
@@ -400,7 +399,7 @@ class ResourceNode
     /**
      * Return the lvl value of the resource in the tree.
      *
-     * @return integer
+     * @return int
      */
     public function getLvl()
     {
@@ -410,7 +409,8 @@ class ResourceNode
     /**
      * Returns the "raw" path of the resource
      * (the path merge names and ids of all items).
-     * Eg.: "Root-1/subdir-2/file.txt-3/"
+     * Eg.: "Root-1/subdir-2/file.txt-3/".
+     *
      * @return string
      */
     public function getPath()
@@ -420,7 +420,8 @@ class ResourceNode
 
     /**
      * Returns the path cleaned from its ids.
-     * Eg.: "Root/subdir/file.txt"
+     * Eg.: "Root/subdir/file.txt".
+     *
      * @return
      */
     public function getPathForDisplay()
@@ -431,14 +432,15 @@ class ResourceNode
     /**
      * Sets the resource name.
      *
-     * @param  string $name
-     * @throws an     exception if the name contains the path separator ('/').
+     * @param string $name
+     *
+     * @throws an exception if the name contains the path separator ('/').
      */
     public function setName($name)
     {
         if (strpos(self::PATH_SEPARATOR, $name) !== false) {
             throw new \InvalidArgumentException(
-                'Invalid character "' . self::PATH_SEPARATOR . '" in resource name.'
+                'Invalid character "'.self::PATH_SEPARATOR.'" in resource name.'
             );
         }
 
@@ -464,10 +466,10 @@ class ResourceNode
      */
     public static function convertPathForDisplay($path)
     {
-        $pathForDisplay = preg_replace('/-\d+' . self::PATH_SEPARATOR . '/', ' / ', $path);
+        $pathForDisplay = preg_replace('/-\d+'.self::PATH_SEPARATOR.'/', ' / ', $path);
 
         if ($pathForDisplay !== null && strlen($pathForDisplay) > 0) {
-            $pathForDisplay = substr_replace($pathForDisplay, "", -3);
+            $pathForDisplay = substr_replace($pathForDisplay, '', -3);
         }
 
         return $pathForDisplay;
@@ -598,7 +600,7 @@ class ResourceNode
 
     /**
      * toString method.
-     * used to display the no path in forms
+     * used to display the no path in forms.
      */
     public function __toString()
     {

@@ -33,7 +33,8 @@ class LogWidgetConfig
     protected $amount = 5;
 
     /**
-     * for the workspace
+     * for the workspace.
+     *
      * @ORM\Column(type="simple_array", nullable=true)
      */
     protected $restrictions = array();
@@ -45,9 +46,9 @@ class LogWidgetConfig
     protected $widgetInstance;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -55,7 +56,8 @@ class LogWidgetConfig
     }
 
     /**
-     * @param  string                    $amount
+     * @param string $amount
+     *
      * @return SimpleTextWorkspaceConfig
      */
     public function setAmount($amount)
@@ -113,7 +115,7 @@ class LogWidgetConfig
     }
 
     /**
-     * @param integer $maxRestrictions
+     * @param int $maxRestrictions
      *
      * @return bool
      */

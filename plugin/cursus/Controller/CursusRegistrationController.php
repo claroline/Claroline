@@ -57,8 +57,7 @@ class CursusRegistrationController extends Controller
         SessionInterface $session,
         ToolManager $toolManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->authorization = $authorization;
         $this->cursusManager = $cursusManager;
         $this->platformConfigHandler = $platformConfigHandler;
@@ -107,15 +106,13 @@ class CursusRegistrationController extends Controller
             $courseCode = $course->getCode();
 
             if ($type == 0) {
-
                 if (!isset($learnerSessions[$courseCode])) {
                     $learnerSessions[$courseCode] = array();
                     $learnerSessions[$courseCode]['course'] = $course;
                     $learnerSessions[$courseCode]['sessions'] = array();
                 }
                 $learnerSessions[$courseCode]['sessions'][] = $sessionUser;
-            } else if ($type == 1) {
-
+            } elseif ($type == 1) {
                 if (!isset($tutorSessions[$courseCode])) {
                     $tutorSessions[$courseCode] = array();
                     $tutorSessions[$courseCode]['course'] = $course;
@@ -128,7 +125,7 @@ class CursusRegistrationController extends Controller
         return array(
             'user' => $user,
             'tutorSessions' => $tutorSessions,
-            'learnerSessions' => $learnerSessions
+            'learnerSessions' => $learnerSessions,
         );
     }
 
@@ -150,7 +147,7 @@ class CursusRegistrationController extends Controller
         return array(
             'user' => $user,
             'type' => $type,
-            'sessions' => $sessions
+            'sessions' => $sessions,
         );
     }
 
@@ -177,15 +174,13 @@ class CursusRegistrationController extends Controller
             $courseCode = $course->getCode();
 
             if ($type == 0) {
-
                 if (!isset($learnerSessions[$courseCode])) {
                     $learnerSessions[$courseCode] = array();
                     $learnerSessions[$courseCode]['course'] = $course;
                     $learnerSessions[$courseCode]['sessions'] = array();
                 }
                 $learnerSessions[$courseCode]['sessions'][] = $sessionGroup;
-            } else if ($type == 1) {
-
+            } elseif ($type == 1) {
                 if (!isset($tutorSessions[$courseCode])) {
                     $tutorSessions[$courseCode] = array();
                     $tutorSessions[$courseCode]['course'] = $course;
@@ -198,7 +193,7 @@ class CursusRegistrationController extends Controller
         return array(
             'group' => $group,
             'tutorSessions' => $tutorSessions,
-            'learnerSessions' => $learnerSessions
+            'learnerSessions' => $learnerSessions,
         );
     }
 
@@ -220,7 +215,7 @@ class CursusRegistrationController extends Controller
         return array(
             'group' => $group,
             'type' => $type,
-            'sessions' => $sessions
+            'sessions' => $sessions,
         );
     }
 
@@ -243,7 +238,7 @@ class CursusRegistrationController extends Controller
             'sessionsDatas' => $sessionsDatas,
             'search' => $search,
             'page' => $page,
-            'max' => $max
+            'max' => $max,
         );
     }
 
@@ -352,12 +347,10 @@ class CursusRegistrationController extends Controller
     public function courseRegistrationQueueUserValidateAction(
         User $authenticatedUser,
         CourseRegistrationQueue $queue
-    )
-    {
+    ) {
         $user = $queue->getUser();
 
         if ($authenticatedUser->getId() !== $user->getId()) {
-
             throw new AccessDeniedException();
         }
         $this->cursusManager->validateUserCourseRegistrationQueue($queue);
@@ -388,12 +381,10 @@ class CursusRegistrationController extends Controller
     public function sessionRegistrationQueueUserValidateAction(
         User $authenticatedUser,
         CourseSessionRegistrationQueue $queue
-    )
-    {
+    ) {
         $user = $queue->getUser();
 
         if ($authenticatedUser->getId() !== $user->getId()) {
-
             throw new AccessDeniedException();
         }
         $this->cursusManager->validateUserSessionRegistrationQueue($queue);
@@ -420,7 +411,6 @@ class CursusRegistrationController extends Controller
 
         if (is_null($cursusTool) ||
             !$this->authorization->isGranted('OPEN', $cursusTool)) {
-
             throw new AccessDeniedException();
         }
     }

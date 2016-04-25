@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Entity\Home;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Region
+ * Region.
  *
  * @ORM\Entity()
  * @ORM\Table(name="claro_region")
@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Region
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -38,9 +38,9 @@ class Region
     private $name;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -48,9 +48,10 @@ class Region
     }
 
     /**
-     * Set name
+     * Set name.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return Region
      */
     public function setName($name)
@@ -61,7 +62,7 @@ class Region
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */

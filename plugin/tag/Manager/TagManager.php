@@ -49,13 +49,13 @@ class TagManager
         $this->taggedObjectRepo = $om->getRepository('ClarolineTagBundle:TaggedObject');
         $this->tagRepo = $om->getRepository('ClarolineTagBundle:Tag');
     }
-    
+
     public function persistTag(Tag $tag)
     {
         $this->om->persist($tag);
         $this->om->flush();
     }
-    
+
     public function deleteTag(Tag $tag)
     {
         $this->om->remove($tag);
@@ -111,7 +111,7 @@ class TagManager
     public function tagObject(array $tags, $object, User $user = null)
     {
         $uniqueTags = array();
-        
+
         foreach ($tags as $tag) {
             $value = trim($tag);
 
@@ -146,7 +146,7 @@ class TagManager
                     $taggedObject->setObjectClass($objectClass);
 
                     if (method_exists($object, '__toString')) {
-                        $taggedObject->setObjectName((string)$object);
+                        $taggedObject->setObjectName((string) $object);
                     }
                     $this->persistTaggedObject($taggedObject);
                 }
@@ -172,8 +172,7 @@ class TagManager
         $tag,
         $orderedBy = 'id',
         $order = 'ASC'
-    )
-    {
+    ) {
         $roles = $user->getEntityRoles();
 
         return count($roles) > 0 ?
@@ -223,7 +222,6 @@ class TagManager
         $this->om->flush();
     }
 
-
     /***********************************
      * Access to TagRepository methods *
      ***********************************/
@@ -238,8 +236,7 @@ class TagManager
         $page = 1,
         $max = 50,
         $strictSearch = false
-    )
-    {
+    ) {
         $tags = is_null($user) ?
             $this->getPlatformTags(
                 $search,
@@ -273,8 +270,7 @@ class TagManager
         $page = 1,
         $max = 50,
         $strictSearch = false
-    )
-    {
+    ) {
         $tags = empty($search) ?
             $this->tagRepo->findAllPlatformTags($orderedBy, $order) :
             $this->tagRepo->findSearchedPlatformTags($search, $orderedBy, $order, $strictSearch);
@@ -294,8 +290,7 @@ class TagManager
         $page = 1,
         $max = 50,
         $strictSearch = false
-    )
-    {
+    ) {
         $tags = empty($search) ?
             $this->tagRepo->findAllUserTags(
                 $user,
@@ -333,8 +328,7 @@ class TagManager
         $withPlatform = false,
         $orderedBy = 'name',
         $order = 'ASC'
-    )
-    {
+    ) {
         return $this->tagRepo->findTagsByObject(
             $object,
             $user,
@@ -343,7 +337,6 @@ class TagManager
             $order
         );
     }
-
 
     /******************************************
      * Access to TaggedObjectRepository methods *
@@ -360,8 +353,7 @@ class TagManager
         $withPager = false,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $objects = empty($search) ?
             $this->taggedObjectRepo->findAllTaggedObjects(
                 $user,
@@ -401,8 +393,7 @@ class TagManager
         $withPager = false,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $objects = count($tags) > 0 ?
             $this->taggedObjectRepo->findTaggedObjectsByTags(
                 $tags,
@@ -420,8 +411,7 @@ class TagManager
         Workspace $workspace,
         $user = 'anon.',
         array $roleNames = array('ROLE_ANONYMOUS')
-    )
-    {
+    ) {
         return $this->taggedObjectRepo->findTaggedResourcesByWorkspace(
             $workspace,
             $user,

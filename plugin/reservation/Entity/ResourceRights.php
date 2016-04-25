@@ -42,11 +42,10 @@ class ResourceRights
      */
     private $role;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -54,9 +53,9 @@ class ResourceRights
     }
 
     /**
-     * Set mask
+     * Set mask.
      *
-     * @param integer $mask
+     * @param int $mask
      *
      * @return ResourceRights
      */
@@ -68,9 +67,9 @@ class ResourceRights
     }
 
     /**
-     * Get mask
+     * Get mask.
      *
-     * @return integer
+     * @return int
      */
     public function getMask()
     {
@@ -78,7 +77,7 @@ class ResourceRights
     }
 
     /**
-     * Set resource
+     * Set resource.
      *
      * @param \FormaLibre\ReservationBundle\Entity\Resource $resource
      *
@@ -92,7 +91,7 @@ class ResourceRights
     }
 
     /**
-     * Get resource
+     * Get resource.
      *
      * @return \FormaLibre\ReservationBundle\Entity\Resource
      */
@@ -102,7 +101,7 @@ class ResourceRights
     }
 
     /**
-     * Set role
+     * Set role.
      *
      * @param \Claroline\CoreBundle\Entity\Role $role
      *
@@ -116,7 +115,7 @@ class ResourceRights
     }
 
     /**
-     * Get role
+     * Get role.
      *
      * @return \Claroline\CoreBundle\Entity\Role
      */

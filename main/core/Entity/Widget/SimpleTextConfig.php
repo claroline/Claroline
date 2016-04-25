@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Widget;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
  * @ORM\Entity
@@ -39,9 +38,9 @@ class SimpleTextConfig
     protected $widgetInstance;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -49,9 +48,10 @@ class SimpleTextConfig
     }
 
     /**
-     * Set amount
+     * Set amount.
      *
-     * @param  string                    $content
+     * @param string $content
+     *
      * @return SimpleTextWorkspaceConfig
      */
     public function setContent($content)
@@ -62,7 +62,7 @@ class SimpleTextConfig
     }
 
     /**
-     * Get amount
+     * Get amount.
      *
      * @return string
      */
@@ -80,5 +80,4 @@ class SimpleTextConfig
     {
         return $this->widgetInstance;
     }
-
 }

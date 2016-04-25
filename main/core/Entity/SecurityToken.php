@@ -34,7 +34,7 @@ class SecurityToken
      * @Assert\NotBlank()
      */
     protected $clientName;
-    
+
     /**
      * @ORM\Column()
      * @Assert\NotBlank()

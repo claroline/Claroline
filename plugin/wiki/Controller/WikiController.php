@@ -6,31 +6,23 @@
  * Time: 15:33
  * To change this template use File | Settings | File Templates.
  */
-
 namespace Icap\WikiBundle\Controller;
-
 
 use Claroline\CoreBundle\Entity\User;
 use Icap\WikiBundle\Entity\Wiki;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Form\WikiOptionsType;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
 
-class WikiController extends Controller{
-
+class WikiController extends Controller
+{
     /**
      * @Route(
      *      "/{wikiId}.{_format}",
@@ -42,8 +34,8 @@ class WikiController extends Controller{
      */
     public function viewAction(Wiki $wiki, Request $request)
     {
-        $this->checkAccess("OPEN", $wiki);
-        $isAdmin = $this->isUserGranted("EDIT", $wiki);
+        $this->checkAccess('OPEN', $wiki);
+        $isAdmin = $this->isUserGranted('EDIT', $wiki);
         $user = $this->getLoggedUser();
         $sectionRepository = $this->get('icap.wiki.section_repository');
         $tree = $sectionRepository->buildSectionTree($wiki, $isAdmin);
@@ -54,9 +46,9 @@ class WikiController extends Controller{
             'tree' => $tree,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
             'isAdmin' => $isAdmin,
-            'user' => $user
+            'user' => $user,
         ), $response);
-        if ($format == "pdf") {
+        if ($format == 'pdf') {
             return new Response(
                 $this->get('knp_snappy.pdf')->getOutputFromHtml(
                     $response->getContent(),
@@ -64,17 +56,16 @@ class WikiController extends Controller{
                         'outline' => true,
                         'footer-right' => '[page]/[toPage]',
                         'footer-spacing' => 3,
-                        'footer-font-size' => 8
+                        'footer-font-size' => 8,
                     ),
                     true
                 ),
                 200,
                 array(
-                    'Content-Type'          => 'application/pdf',
-                    'Content-Disposition'   => 'inline; filename="'.$wiki->getResourceNode()->getName()
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="'.$wiki->getResourceNode()->getName(),
                 )
             );
-
         }
 
         return $response;
@@ -98,30 +89,31 @@ class WikiController extends Controller{
      */
     public function configureAction(Request $request, Wiki $wiki, $user, $page)
     {
-        $this->checkAccess("EDIT", $wiki);
+        $this->checkAccess('EDIT', $wiki);
 
         return $this->persistWikiOptions($request, $wiki, $user, $page);
     }
 
-    private function persistWikiOptions (Request $request, Wiki $wiki, User $user, $page) {
+    private function persistWikiOptions(Request $request, Wiki $wiki, User $user, $page)
+    {
         $form = $this->createForm(new WikiOptionsType(), $wiki);
         $sectionRepository = $this->get('icap.wiki.section_repository');
         $query = $sectionRepository->findDeletedSectionsQuery($wiki);
         $adapter = new DoctrineORMAdapter($query);
-        $pager   = new PagerFanta($adapter);
+        $pager = new PagerFanta($adapter);
         $pager->setMaxPerPage(20);
         try {
             $pager->setCurrentPage($page);
         } catch (NotValidCurrentPageException $exception) {
             throw new NotFoundHttpException();
         }
-        if ("POST" === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $flashBag = $this->get('session')->getFlashBag();
                 $translator = $this->get('translator');
 
-                try{
+                try {
                     $em = $this->getDoctrine()->getManager();
                     $unitOfWork = $em->getUnitOfWork();
                     $unitOfWork->computeChangeSets();
@@ -140,7 +132,7 @@ class WikiController extends Controller{
                     $this->generateUrl(
                         'icap_wiki_view',
                         array(
-                            'wikiId' => $wiki->getId()
+                            'wikiId' => $wiki->getId(),
                         )
                     )
                 );
@@ -151,7 +143,7 @@ class WikiController extends Controller{
             '_resource' => $wiki,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
             'pager' => $pager,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         );
     }
 }

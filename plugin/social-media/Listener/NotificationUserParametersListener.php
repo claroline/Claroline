@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,19 +8,17 @@
  * 
  * Date: 5/18/15
  */
-
 namespace Icap\SocialmediaBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class NotificationUserParametersListener
- * @package Icap\SocialmediaBundle\Listener
+ * Class NotificationUserParametersListener.
  *
  * @DI\Service()
  */
-class NotificationUserParametersListener 
+class NotificationUserParametersListener
 {
     /**
      * @param NotificationUserParametersEvent $event
@@ -29,6 +27,6 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
-        $event->addTypes("icap_socialmedia");
+        $event->addTypes('icap_socialmedia');
     }
 }

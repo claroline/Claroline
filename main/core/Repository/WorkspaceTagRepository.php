@@ -67,7 +67,7 @@ class WorkspaceTagRepository extends EntityRepository
         foreach ($workspaces as $workspace) {
             $dql .= $index > 0 ? '    OR ' : '    ';
             $dql .= "w.id = {$workspace->getId()}{$eol}";
-            $index++;
+            ++$index;
         }
         $dql .= '
             )
@@ -156,8 +156,7 @@ class WorkspaceTagRepository extends EntityRepository
         User $user,
         WorkspaceTag $tag,
         $search
-    )
-    {
+    ) {
         $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
@@ -229,7 +228,7 @@ class WorkspaceTagRepository extends EntityRepository
     }
 
     /**
-     * Find all admin tags that don't have any parents
+     * Find all admin tags that don't have any parents.
      */
     public function findAdminRootTags()
     {
@@ -252,7 +251,7 @@ class WorkspaceTagRepository extends EntityRepository
     }
 
     /**
-     * Find all tags that don't have any parents
+     * Find all tags that don't have any parents.
      */
     public function findRootTags(User $user)
     {
@@ -277,7 +276,7 @@ class WorkspaceTagRepository extends EntityRepository
 
     /**
      * Find all admin tags that are children of given tag
-     * Given admin tag is included
+     * Given admin tag is included.
      */
     public function findAdminChildrenFromTag(WorkspaceTag $workspaceTag)
     {
@@ -302,7 +301,7 @@ class WorkspaceTagRepository extends EntityRepository
 
     /**
      * Find all admin tags that are children of given tags id
-     * Given admin tags are included
+     * Given admin tags are included.
      */
     public function findAdminChildrenFromTags(array $tags)
     {
@@ -317,7 +316,7 @@ class WorkspaceTagRepository extends EntityRepository
         foreach ($tags as $tag) {
             $tagsTest .= $index > 0 ? '    OR ' : '    ';
             $tagsTest .= "p.id = {$tag}{$eol}";
-            $index++;
+            ++$index;
         }
         $tagsTest .= "){$eol}";
 
@@ -342,7 +341,7 @@ class WorkspaceTagRepository extends EntityRepository
 
     /**
      * Find all tags that are children of given tag
-     * Given tag is included
+     * Given tag is included.
      */
     public function findChildrenFromTag(User $user, WorkspaceTag $workspaceTag)
     {
@@ -368,7 +367,7 @@ class WorkspaceTagRepository extends EntityRepository
 
     /**
      * Find all tags that are children of given tags id
-     * Given tags are included
+     * Given tags are included.
      */
     public function findChildrenFromTags(User $user, array $tags)
     {
@@ -383,7 +382,7 @@ class WorkspaceTagRepository extends EntityRepository
         foreach ($tags as $tag) {
             $tagsTest .= $index > 0 ? '    OR ' : '    ';
             $tagsTest .= "p.id = {$tag}{$eol}";
-            $index++;
+            ++$index;
         }
         $tagsTest .= "){$eol}";
 
@@ -408,7 +407,7 @@ class WorkspaceTagRepository extends EntityRepository
     }
 
     /**
-     * Find all admin tags that is parent of the given tag
+     * Find all admin tags that is parent of the given tag.
      */
     public function findAdminParentsFromTag(WorkspaceTag $tag)
     {
@@ -432,7 +431,7 @@ class WorkspaceTagRepository extends EntityRepository
     }
 
     /**
-     * Find all admin tags that is parent of the given tag
+     * Find all admin tags that is parent of the given tag.
      */
     public function findParentsFromTag(User $user, WorkspaceTag $tag)
     {
@@ -469,7 +468,7 @@ class WorkspaceTagRepository extends EntityRepository
         foreach ($tagIds as $tagId) {
             $tagIdsTest .= $index > 0 ? '    OR ' : '    ';
             $tagIdsTest .= "t.id = {$tagId}{$eol}";
-            $index++;
+            ++$index;
         }
         $tagIdsTest .= "){$eol}";
 

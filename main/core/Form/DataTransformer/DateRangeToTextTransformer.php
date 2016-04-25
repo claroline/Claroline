@@ -25,7 +25,8 @@ class DateRangeToTextTransformer implements DataTransformerInterface
     /**
      * Transforms dateArray (2 dates) to a string.
      *
-     * @param  Array|null $dateArray
+     * @param array|null $dateArray
+     *
      * @return string
      */
     public function transform($dateArray)
@@ -42,7 +43,7 @@ class DateRangeToTextTransformer implements DataTransformerInterface
 
             $format = $this->translator->trans('date_range.format', array(), 'platform');
             $separator = $this->translator->trans('date_range.separator', array(), 'platform');
-            $outputValue = date($format, $startDate).' '. $separator .' '.date($format, $endDate);
+            $outputValue = date($format, $startDate).' '.$separator.' '.date($format, $endDate);
             if ($startDate == $endDate) {
                 $outputValue = date($format, $startDate);
             }
@@ -54,8 +55,9 @@ class DateRangeToTextTransformer implements DataTransformerInterface
     /**
      * Transforms a string to an array of 2 dates.
      *
-     * @param  string $string
-     * @return array  of strings (names for tags)
+     * @param string $string
+     *
+     * @return array of strings (names for tags)
      */
     public function reverseTransform($string)
     {
@@ -64,7 +66,7 @@ class DateRangeToTextTransformer implements DataTransformerInterface
         $separator = $this->translator->trans('date_range.separator', array(), 'platform');
 
         if ($string != null) {
-            $array = explode(' '. $separator .' ', $string);
+            $array = explode(' '.$separator.' ', $string);
 
             if (array_key_exists(0, $array)) {
                 $dateFormat = $this->translator->trans('date_range.format', array(), 'platform');

@@ -34,8 +34,7 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
         $creator,
         $parent,
         $primaryResource = null
-    )
-    {
+    ) {
         $this->creator = $creator;
         $this->parent = $parent;
         $this->name = $name;
@@ -45,7 +44,7 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -53,7 +52,7 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
@@ -73,7 +72,7 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
         $activityParameters->setActivity($activity);
         $activity->setParameters($activityParameters);
 
-        $parent = $this->getReference('directory/' . $this->parent);
+        $parent = $this->getReference('directory/'.$this->parent);
         $workspace = $parent->getWorkspace();
         $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneByName('activity');
@@ -81,7 +80,7 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
         $resourceManager->create(
             $activity,
             $resourceType,
-            $this->getReference('user/' . $this->creator),
+            $this->getReference('user/'.$this->creator),
             $workspace,
             $parent
         );
@@ -90,4 +89,4 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
             $activityManager->addResource($activity, $this->getReference($secondaryResource)->getResourceNode());
         }
     }
-} 
+}

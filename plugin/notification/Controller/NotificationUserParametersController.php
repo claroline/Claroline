@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,7 +8,6 @@
  *
  * Date: 4/8/15
  */
-
 namespace Icap\NotificationBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
@@ -19,7 +18,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-
 
 class NotificationUserParametersController extends Controller
 {
@@ -48,7 +46,7 @@ class NotificationUserParametersController extends Controller
     {
         $this->getParametersManager()->processUpdate($request->request->all(), $user->getId());
 
-        return new RedirectResponse($this->generateUrl("claro_desktop_parameters_menu"));
+        return new RedirectResponse($this->generateUrl('claro_desktop_parameters_menu'));
     }
 
     /**
@@ -70,6 +68,6 @@ class NotificationUserParametersController extends Controller
      */
     private function getParametersManager()
     {
-        return $this->get("icap.notification.manager.notification_user_parameters");
+        return $this->get('icap.notification.manager.notification_user_parameters');
     }
-} 
+}

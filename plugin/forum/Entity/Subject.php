@@ -101,7 +101,7 @@ class Subject
     /**
      * Returns the resource id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

@@ -15,7 +15,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Claroline\CoreBundle\Manager\Calendar\LeaveManager;
@@ -45,13 +44,12 @@ class LeaveController extends FOSRestController
         ApiManager           $apiManager,
         ObjectManager        $om,
         Request              $request
-    )
-    {
-        $this->formFactory     = $formFactory;
-        $this->leaveManager    = $leaveManager;
-        $this->om              = $om;
-        $this->request         = $request;
-        $this->apiManager      = $apiManager;
+    ) {
+        $this->formFactory = $formFactory;
+        $this->leaveManager = $leaveManager;
+        $this->om = $om;
+        $this->request = $request;
+        $this->apiManager = $apiManager;
     }
 
     /**
@@ -68,7 +66,7 @@ class LeaveController extends FOSRestController
         $form = $this->createForm($formType);
 
         return $this->apiManager->handleFormView(
-            'ClarolineCoreBundle:API:Calendar\createLeaveForm.html.twig', 
+            'ClarolineCoreBundle:API:Calendar\createLeaveForm.html.twig',
             $form
         );
     }

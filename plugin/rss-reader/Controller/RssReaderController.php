@@ -33,44 +33,44 @@ class RssReaderController extends Controller
             throw new AccessDeniedException();
         }
 
-       $rssConfig = $this->get('claroline.manager.rss_manager')->getConfig($widget);
-       $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
-       $form->bind($this->getRequest());
+        $rssConfig = $this->get('claroline.manager.rss_manager')->getConfig($widget);
+        $form = $this->container->get('form.factory')->create(new ConfigType(), new Config());
+        $form->bind($this->getRequest());
 
-       if ($rssConfig) {
-          if ($form->isValid()) {
-            $rssConfig->setUrl($form->get('url')->getData());
-          } else {
-              return $this->render(
+        if ($rssConfig) {
+            if ($form->isValid()) {
+                $rssConfig->setUrl($form->get('url')->getData());
+            } else {
+                return $this->render(
                   'ClarolineRssReaderBundle::formRss.html.twig',
                   array(
                       'form' => $form->createView(),
                       'isAdmin' => $widget->isAdmin(),
-                      'config' => $widget
+                      'config' => $widget,
                 )
              );
-          }
-       } else {
-           if ($form->isValid()) {
-               $rssConfig = new Config();
-               $rssConfig->setWidgetInstance($widget);
-               $rssConfig->setUrl($form->get('url')->getData());
-           } else {
-               return $this->render(
+            }
+        } else {
+            if ($form->isValid()) {
+                $rssConfig = new Config();
+                $rssConfig->setWidgetInstance($widget);
+                $rssConfig->setUrl($form->get('url')->getData());
+            } else {
+                return $this->render(
                   'ClarolineRssReaderBundle::formRss.html.twig',
                   array(
                       'form' => $form->createView(),
                       'isAdmin' => $widget->isAdmin(),
-                      'config' => $widget
+                      'config' => $widget,
                   )
                );
-           }
-       }
+            }
+        }
 
-       $em = $this->get('doctrine.orm.entity_manager');
-       $em->persist($rssConfig);
-       $em->flush();
+        $em = $this->get('doctrine.orm.entity_manager');
+        $em->persist($rssConfig);
+        $em->flush();
 
-       return new Response('', 204);
+        return new Response('', 204);
     }
 }

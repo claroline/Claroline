@@ -4,7 +4,6 @@ namespace Icap\BadgeBundle\Controller;
 
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Entity\BadgeClaim;
-use Icap\BadgeBundle\Entity\BadgeRule;
 use Icap\BadgeBundle\Entity\BadgeTranslation;
 use Claroline\CoreBundle\Entity\User;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -17,8 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use JMS\SecurityExtraBundle\Annotation as SEC;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -43,24 +40,24 @@ class AdministrationController extends Controller
         $this->checkOpen();
 
         $parameters = array(
-            'badgePage'        => $badgePage,
-            'claimPage'        => $claimPage,
-            'userPage'         => $userPage,
-            'add_link'         => 'icap_badge_admin_badges_add',
-            'edit_link'        => array(
-                'url'    => 'icap_badge_admin_badges_edit',
-                'suffix' => '#!edit'
+            'badgePage' => $badgePage,
+            'claimPage' => $claimPage,
+            'userPage' => $userPage,
+            'add_link' => 'icap_badge_admin_badges_add',
+            'edit_link' => array(
+                'url' => 'icap_badge_admin_badges_edit',
+                'suffix' => '#!edit',
             ),
-            'delete_link'      => 'icap_badge_admin_badges_delete',
-            'view_link'        => 'icap_badge_admin_badges_edit',
-            'current_link'     => 'icap_badge_admin_badges',
-            'claim_link'       => 'icap_badge_admin_manage_claim',
-            'statistics_link'  => 'icap_badge_admin_badges_statistics',
-            'route_parameters' => array()
+            'delete_link' => 'icap_badge_admin_badges_delete',
+            'view_link' => 'icap_badge_admin_badges_edit',
+            'current_link' => 'icap_badge_admin_badges',
+            'claim_link' => 'icap_badge_admin_manage_claim',
+            'statistics_link' => 'icap_badge_admin_badges_statistics',
+            'route_parameters' => array(),
         );
 
         return array(
-            'parameters'  => $parameters
+            'parameters' => $parameters,
         );
     }
 
@@ -100,8 +97,8 @@ class AdministrationController extends Controller
         }
 
         return array(
-            'form'  => $this->get('icap_badge.form.badge')->createView(),
-            'badge' => $badge
+            'form' => $this->get('icap_badge.form.badge')->createView(),
+            'badge' => $badge,
         );
     }
 
@@ -114,9 +111,9 @@ class AdministrationController extends Controller
     public function editAction(Request $request, Badge $badge, $page = 1)
     {
         $this->checkOpen();
-        $query   = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findByBadge($badge, false);
+        $query = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findByBadge($badge, false);
         $adapter = new DoctrineORMAdapter($query);
-        $pager   = new Pagerfanta($adapter);
+        $pager = new Pagerfanta($adapter);
 
         try {
             $pager->setCurrentPage($page);
@@ -143,9 +140,9 @@ class AdministrationController extends Controller
         }
 
         return array(
-            'form'  => $this->get('icap_badge.form.badge')->createView(),
+            'form' => $this->get('icap_badge.form.badge')->createView(),
             'badge' => $badge,
-            'pager' => $pager
+            'pager' => $pager,
         );
     }
 
@@ -160,7 +157,7 @@ class AdministrationController extends Controller
         $this->checkOpen();
 
         if (null !== $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
@@ -196,7 +193,7 @@ class AdministrationController extends Controller
         $this->checkOpen();
 
         if (null !== $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         $form = $this->createForm($this->get('icap_badge.form.badge.award'));
@@ -209,8 +206,8 @@ class AdministrationController extends Controller
                 try {
                     $doctrine = $this->getDoctrine();
 
-                    $group   = $form->get('group')->getData();
-                    $user    = $form->get('user')->getData();
+                    $group = $form->get('group')->getData();
+                    $user = $form->get('user')->getData();
                     $comment = $form->get('comment')->getData();
 
                     /** @var \Claroline\CoreBundle\Entity\User[] $users */
@@ -258,8 +255,8 @@ class AdministrationController extends Controller
         }
 
         return array(
-            'badge'  => $badge,
-            'form'   => $form->createView()
+            'badge' => $badge,
+            'form' => $form->createView(),
         );
     }
 
@@ -275,7 +272,7 @@ class AdministrationController extends Controller
         $this->checkOpen();
 
         if (null !== $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
@@ -321,7 +318,7 @@ class AdministrationController extends Controller
         $this->checkOpen();
 
         if (null !== $badgeClaim->getBadge()->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
@@ -332,7 +329,7 @@ class AdministrationController extends Controller
         try {
             if ($validate) {
                 $successMessage = $translator->trans('badge_validate_award_success_message', array(), 'icap_badge');
-                $errorMessage   = $translator->trans('badge_validate_award_error_message', array(), 'icap_badge');
+                $errorMessage = $translator->trans('badge_validate_award_error_message', array(), 'icap_badge');
 
                 /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
                 $badgeManager = $this->get('icap_badge.manager.badge');

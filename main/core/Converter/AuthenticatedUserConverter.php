@@ -15,10 +15,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\User;
 
@@ -41,12 +39,12 @@ class AuthenticatedUserConverter implements ParamConverterInterface
      */
     public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
     {
-        $this->tokenStorage  = $tokenStorage;
-        $this->translator       = $translator;
+        $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidConfigurationException if the parameter name is missing
      * @throws AccessDeniedException         if the current request is anonymous
@@ -94,7 +92,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function supports(ParamConverter $configuration)
     {

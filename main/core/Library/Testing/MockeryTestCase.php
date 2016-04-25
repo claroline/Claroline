@@ -21,7 +21,7 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
     private static $mocks = array();
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function setUp()
     {
@@ -29,7 +29,7 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function tearDown()
     {

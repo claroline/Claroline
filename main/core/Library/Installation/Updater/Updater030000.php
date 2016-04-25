@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Updater\Updater;
 
 class Updater030000 extends Updater
@@ -62,7 +61,7 @@ class Updater030000 extends Updater
             }
 
             $conn->query("DELETE FROM claro_resource_node WHERE resource_type_id = {$id}");
-            $conn->query("DELETE FROM claro_activity");
+            $conn->query('DELETE FROM claro_activity');
             $this->om->flush();
         }
     }
@@ -114,11 +113,11 @@ class Updater030000 extends Updater
     public function updateActivityIcon()
     {
         $this->log('updating activity icon...');
-        $path = "bundles/clarolinecore/images/resources/icons/";
+        $path = 'bundles/clarolinecore/images/resources/icons/';
 
         $icon = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
                 ->findOneBy(array('mimeType' => 'custom/activity'));
-        $icon->setRelativeUrl($path . 'res_activity.png');
+        $icon->setRelativeUrl($path.'res_activity.png');
         $this->om->persist($icon);
 
         $this->container->get('claroline.manager.icon_manager')->createShortcutIcon($icon);
@@ -170,8 +169,8 @@ class Updater030000 extends Updater
         $webDir = $this->container->getParameter('claroline.param.web_dir');
 
         //remove the old maintenance file
-        if (file_exists($webDir . DIRECTORY_SEPARATOR . 'maintenance.html')) {
-            unlink($webDir . DIRECTORY_SEPARATOR . 'maintenance.html');
+        if (file_exists($webDir.DIRECTORY_SEPARATOR.'maintenance.html')) {
+            unlink($webDir.DIRECTORY_SEPARATOR.'maintenance.html');
         }
     }
 
@@ -579,7 +578,7 @@ class Updater030000 extends Updater
             'icon-youtube-sign' => 'youtube-square',
             'icon-youtube' => 'youtube',
             'icon-zoom-in' => 'search-plus',
-            'icon-zoom-out' => 'search-minus'
+            'icon-zoom-out' => 'search-minus',
         );
     }
 }

@@ -10,7 +10,6 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -31,7 +30,7 @@ class Updater060400 extends Updater
         $classes = array(
             'Claroline\CoreBundle\Entity\User',
             'Claroline\CoreBundle\Entity\Group',
-            'Claroline\CoreBundle\Entity\Resource\ResourceNode'
+            'Claroline\CoreBundle\Entity\Resource\ResourceNode',
         );
 
         foreach ($classes as $class) {
@@ -51,7 +50,7 @@ class Updater060400 extends Updater
                 $entity->setGuid($this->ut->generateGuid());
                 $this->om->persist($entity);
             }
-            $i++;
+            ++$i;
 
             if ($i % 300 === 0) {
                 $this->log("Flushing [{$i}/{$totalObjects}]");
@@ -66,4 +65,3 @@ class Updater060400 extends Updater
         $this->log('done !');
     }
 }
-

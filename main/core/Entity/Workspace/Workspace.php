@@ -27,7 +27,7 @@ use JMS\Serializer\Annotation\SerializedName;
  */
 class Workspace
 {
-    const DEFAULT_MAX_STORAGE_SIZE = "1 TB";
+    const DEFAULT_MAX_STORAGE_SIZE = '1 TB';
     const DEFAULT_MAX_FILE_COUNT = 10000;
     const DEFAULT_MAX_USERS = 10000;
 
@@ -73,7 +73,7 @@ class Workspace
      * @Groups({"api"})
      * @SerializedName("maxStorageSize")
      */
-    protected $maxStorageSize = "1 TB";
+    protected $maxStorageSize = '1 TB';
 
     /**
      * @ORM\Column(type="integer", nullable=false)
@@ -231,9 +231,9 @@ class Workspace
 
     public function __construct()
     {
-        $this->roles        = new ArrayCollection();
+        $this->roles = new ArrayCollection();
         $this->orderedTools = new ArrayCollection();
-        $this->events       = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function getId()
@@ -385,7 +385,7 @@ class Workspace
     }
 
     /**
-     * Sets how many MB can be stored in the workspace
+     * Sets how many MB can be stored in the workspace.
      *
      * @param $maxSize
      */
@@ -397,7 +397,7 @@ class Workspace
     /**
      * Returns how many MB can be stored in the workspace.
      *
-     * @return integer
+     * @return int
      */
     public function getMaxStorageSize()
     {
@@ -428,7 +428,7 @@ class Workspace
     {
         $return = array(
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
         );
 
         return $return;
@@ -486,7 +486,7 @@ class Workspace
 
     public function getNameAndCode()
     {
-        return $this->name . ' [' . $this->code . ']';
+        return $this->name.' ['.$this->code.']';
     }
 
     /**
@@ -523,15 +523,17 @@ class Workspace
 
     public function __toString()
     {
-        return $this->name . ' [' . $this->code . ']';
+        return $this->name.' ['.$this->code.']';
     }
 
     public function getManagerRole()
     {
         foreach ($this->roles as $role) {
-            if (strpos('_' . $role->getName(), 'ROLE_WS_MANAGER') === 1) return $role;
+            if (strpos('_'.$role->getName(), 'ROLE_WS_MANAGER') === 1) {
+                return $role;
+            }
         }
 
-        return null;
+        return;
     }
 }

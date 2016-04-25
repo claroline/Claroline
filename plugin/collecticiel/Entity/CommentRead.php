@@ -1,9 +1,8 @@
 <?php
 /**
  * Created by : VINCENT Eric
- * Date: 10/05/2015
+ * Date: 10/05/2015.
 */
-
 namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -13,7 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\CommentReadRepository")
  * @ORM\Table(name="innova_collecticielbundle_comment_read")
  */
-class CommentRead {
+class CommentRead
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -22,8 +22,8 @@ class CommentRead {
     protected $id;
 
     /**
-     * Lien avec la table Comment
-    */
+     * Lien avec la table Comment.
+     */
     /**
      * @ORM\ManyToOne(
      *      targetEntity="Innova\CollecticielBundle\Entity\Comment",
@@ -40,7 +40,6 @@ class CommentRead {
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     protected $user;
-
 
     /**
      * @return mixed
@@ -146,7 +145,7 @@ class CommentRead {
         $json = array(
             'id' => $this->getId(),
             'type' => $this->getType(),
-            'url' => $this->getUrl()
+            'url' => $this->getUrl(),
         );
         if ($this->getResourceNode() !== null) {
             $json['resourceNode'] = array(
@@ -159,9 +158,10 @@ class CommentRead {
     }
 
     /**
-     * Set comment
+     * Set comment.
      *
      * @param \Innova\CollecticielBundle\Entity\Comment $comment
+     *
      * @return CommentRead
      */
     public function setComment(\Innova\CollecticielBundle\Entity\Comment $comment)
@@ -172,9 +172,9 @@ class CommentRead {
     }
 
     /**
-     * Get comment
+     * Get comment.
      *
-     * @return \Innova\CollecticielBundle\Entity\Comment 
+     * @return \Innova\CollecticielBundle\Entity\Comment
      */
     public function getComment()
     {
@@ -182,9 +182,10 @@ class CommentRead {
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return CommentRead
      */
     public function setUser(\Claroline\CoreBundle\Entity\User $user)
@@ -195,9 +196,9 @@ class CommentRead {
     }
 
     /**
-     * Get user
+     * Get user.
      *
-     * @return \Claroline\CoreBundle\Entity\User 
+     * @return \Claroline\CoreBundle\Entity\User
      */
     public function getUser()
     {

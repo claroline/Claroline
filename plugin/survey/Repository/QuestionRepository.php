@@ -34,8 +34,7 @@ class QuestionRepository extends EntityRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT q
             FROM Claroline\SurveyBundle\Entity\Question q
@@ -55,8 +54,7 @@ class QuestionRepository extends EntityRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT q
             FROM Claroline\SurveyBundle\Entity\Question q

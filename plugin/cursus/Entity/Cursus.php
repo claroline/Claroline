@@ -13,7 +13,6 @@ namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CursusBundle\Entity\Course;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -38,14 +37,14 @@ class Cursus
      * @Groups({"api_cursus"})
      */
     protected $id;
-    
+
     /**
      * @ORM\Column(unique=true, nullable=true)
      * @Groups({"api_cursus"})
      * @SerializedName("code")
      */
     protected $code;
-    
+
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
@@ -209,22 +208,22 @@ class Cursus
     }
 
     public function getTitle()
-    {   
+    {
         return $this->title;
     }
 
     public function setTitle($title)
-    {   
+    {
         $this->title = $title;
     }
 
     public function getDescription()
-    {   
+    {
         return $this->description;
     }
 
     public function setDescription($description)
-    {   
+    {
         $this->description = $description;
     }
 
@@ -381,7 +380,7 @@ class Cursus
         $result = $this->title;
 
         if (!is_null($this->code)) {
-            $result .= ' [' . $this->code . ']';
+            $result .= ' ['.$this->code.']';
         }
 
         return $result;

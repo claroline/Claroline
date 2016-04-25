@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Validator\Constraints;
 
-
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -45,7 +44,7 @@ class RoleNameValidator extends ConstraintValidator
         if ($constraint->wsGuid === null) {
             $roles = $roleRepo->findByName('ROLE_'.$value);
         } else {
-            $roles = $roleRepo->findByName('ROLE_WS_' . $value . '_' . $constraint->wsGuid);
+            $roles = $roleRepo->findByName('ROLE_WS_'.$value.'_'.$constraint->wsGuid);
         }
 
         if (trim($value) === '') {

@@ -38,7 +38,7 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -46,17 +46,17 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
-        $personalWsTemplateFile = $this->container->getParameter('claroline.param.templates_directory')."default.zip";
+        $personalWsTemplateFile = $this->container->getParameter('claroline.param.templates_directory').'default.zip';
 
         foreach ($this->workspaces as $name => $username) {
             $config = new Configuration($personalWsTemplateFile);
             $config->setWorkspaceName($name);
-            $config->setWorkspaceCode(substr($name, 0, 1) . self::$codeDiscrCount);
+            $config->setWorkspaceCode(substr($name, 0, 1).self::$codeDiscrCount);
             $config->setDisplayable(true);
             $workspace = $workspaceManager->create($config, $this->getReference('user/'.$username));
             $this->setReference("workspace/{$name}", $workspace);

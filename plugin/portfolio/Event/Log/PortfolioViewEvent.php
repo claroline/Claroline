@@ -28,14 +28,14 @@ class PortfolioViewEvent extends LogGenericEvent implements LogNotRepeatableInte
             self::ACTION,
             array(
                 'owner' => array(
-                    'lastName'  => $user->getLastName(),
-                    'firstName' => $user->getFirstName()
+                    'lastName' => $user->getLastName(),
+                    'firstName' => $user->getFirstName(),
                 ),
                 'portfolio' => array(
-                    'id'    => $this->portfolio->getId(),
+                    'id' => $this->portfolio->getId(),
                     'title' => $this->portfolio->getTitle(),
-                    'slug'  => $this->portfolio->getSlug()
-                )
+                    'slug' => $this->portfolio->getSlug(),
+                ),
             ),
             null,
             null,
@@ -51,7 +51,7 @@ class PortfolioViewEvent extends LogGenericEvent implements LogNotRepeatableInte
 
     public function getLogSignature()
     {
-        return self::ACTION . '_' . $this->portfolio->getId();
+        return self::ACTION.'_'.$this->portfolio->getId();
     }
 
     /**
@@ -62,4 +62,3 @@ class PortfolioViewEvent extends LogGenericEvent implements LogNotRepeatableInte
         return array(self::DISPLAYED_ADMIN);
     }
 }
- 

@@ -38,7 +38,7 @@ class TextController extends Controller
      *
      * Displays the text edition form.
      *
-     * @param integer $textId
+     * @param int $textId
      *
      * @return Response
      */
@@ -52,7 +52,7 @@ class TextController extends Controller
 
         return array(
             'text' => $revisionRepo->getLastRevision($text)->getContent(),
-            '_resource' => $text
+            '_resource' => $text,
         );
     }
 
@@ -64,7 +64,7 @@ class TextController extends Controller
      *
      * Handles the text edition form submission.
      *
-     * @param integer $textId
+     * @param int $textId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -89,7 +89,7 @@ class TextController extends Controller
         $workspace = $old->getResourceNode()->getWorkspace();
         $usersToNotify = $workspace ?
             $this->container->get('claroline.manager.user_manager')
-                ->getUsersByWorkspaces(array($workspace), null, null, false):
+                ->getUsersByWorkspaces(array($workspace), null, null, false) :
             array();
 
         $this->get('claroline.event.event_dispatcher')
@@ -98,7 +98,6 @@ class TextController extends Controller
                 'Log\LogEditResourceText',
                 array('node' => $old->getResourceNode(), 'usersToNotify' => $usersToNotify)
             );
-
 
         $route = $this->get('router')->generate(
             'claro_resource_open',
@@ -116,7 +115,7 @@ class TextController extends Controller
      *
      * Handles the text edition form submission.
      *
-     * @param integer $textId
+     * @param int $textId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -132,7 +131,7 @@ class TextController extends Controller
             array(
                 'text' => $revisionRepo->getLastRevision($text)->getContent(),
                 '_resource' => $text,
-                'isEditGranted' => $isGranted
+                'isEditGranted' => $isGranted,
             )
         );
     }

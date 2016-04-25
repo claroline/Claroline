@@ -17,10 +17,8 @@ use FormaLibre\ReservationBundle\Entity\ResourceType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
  * @DI\Service("formalibre.manager.reservation_manager")
@@ -50,8 +48,7 @@ class ReservationManager
         TranslatorInterface $translator,
         EntityManager $em,
         StrictDispatcher $eventDispatcher
-    )
-    {
+    ) {
         $this->rootDir = $rootDir;
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
@@ -72,7 +69,7 @@ class ReservationManager
     {
         $event->setStart($reservation->getStartInTimestamp());
         $event->setEnd($reservation->getEndInTimestamp());
-        $event->setTitle($this->translator->trans('reservation', [], 'reservation') .' - '. $reservation->getResource()->getName());
+        $event->setTitle($this->translator->trans('reservation', [], 'reservation').' - '.$reservation->getResource()->getName());
         $event->setIsEditable(false);
 
         return $event;
@@ -93,7 +90,7 @@ class ReservationManager
                 'resourceId' => $reservation->getResource()->getId(),
                 'reservationId' => $reservation->getId(),
                 'editable' => $this->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::BOOK),
-                'durationEditable' => $this->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::BOOK)
+                'durationEditable' => $this->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::BOOK),
             ]
         );
     }
@@ -121,7 +118,7 @@ class ReservationManager
     {
         $resourceRights = $this->em->getRepository('FormaLibreReservationBundle:ResourceRights')->findOneBy([
             'resource' => $resource,
-            'role' => $role
+            'role' => $role,
         ]);
 
         if (!$resourceRights) {

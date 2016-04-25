@@ -22,5 +22,4 @@ use Gedmo\Translatable\Entity\MappedSuperclass\AbstractTranslation;
  */
 class ContentTranslation extends AbstractTranslation
 {
-
 }

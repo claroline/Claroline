@@ -23,8 +23,7 @@ class MultipleChoiceQuestionAnswerRepository extends EntityRepository
     public function deleteMultipleChoiceAnswersByQuestionAnswer(
         QuestionAnswer $questionAnswer,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             DELETE Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer mcqa
             WHERE mcqa.questionAnswer = :questionAnswer
@@ -40,8 +39,7 @@ class MultipleChoiceQuestionAnswerRepository extends EntityRepository
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT mcqa
             FROM Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer mcqa
@@ -63,8 +61,7 @@ class MultipleChoiceQuestionAnswerRepository extends EntityRepository
         Survey $survey,
         Choice $choice,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT COUNT(mcqa) AS nb_answers
             FROM Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer mcqa
@@ -83,8 +80,7 @@ class MultipleChoiceQuestionAnswerRepository extends EntityRepository
     public function findAnswersByChoice(
         Choice $choice,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT mcqa
             FROM Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer mcqa
@@ -99,8 +95,7 @@ class MultipleChoiceQuestionAnswerRepository extends EntityRepository
     public function findMultipleChoiceAnswersByQuestionAnswer(
         QuestionAnswer $questionAnswer,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT mcqa
             FROM Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer mcqa

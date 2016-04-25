@@ -3,7 +3,6 @@
 namespace Icap\PortfolioBundle\Form\Type\Widgets;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,11 +18,11 @@ class SkillsType extends AbstractWidgetType
         $builder
             ->add('children', 'collection',
                 array(
-                    'type'          => 'icap_portfolio_widget_form_skills_skill',
-                    'by_reference'  => false,
-                    'allow_add'     => true,
-                    'allow_delete'  => true,
-                    'property_path' => 'skills'
+                    'type' => 'icap_portfolio_widget_form_skills_skill',
+                    'by_reference' => false,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'property_path' => 'skills',
                 )
             );
     }
@@ -37,9 +36,9 @@ class SkillsType extends AbstractWidgetType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\SkillsWidget',
+                'data_class' => 'Icap\PortfolioBundle\Entity\Widget\SkillsWidget',
                 'translation_domain' => 'icap_portfolio',
-                'csrf_protection'    => false,
+                'csrf_protection' => false,
             )
         );
     }

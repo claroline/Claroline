@@ -59,7 +59,9 @@
             </a>
         <?php endif ?>
         <a href="<?php echo $path('/database') ?>"
-           class="btn btn-primary <?php if ($var('has_failed_requirement')) echo 'disabled' ?>">
+           class="btn btn-primary <?php if ($var('has_failed_requirement')) {
+    echo 'disabled';
+} ?>">
             <?php echo $trans('next_step') ?>
         </a>
     </div>

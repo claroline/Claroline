@@ -36,4 +36,4 @@ class Scorm12Importer extends ScormImporter implements ConfigurationInterface
     {
         return 'claroline_scorm_12';
     }
-} 
+}

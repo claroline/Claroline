@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class LoadRequiredData extends AbstractFixture implements ContainerAwareInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -28,17 +28,17 @@ class LoadRequiredData extends AbstractFixture implements ContainerAwareInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $om)
     {
         $contentTransRepo = $om->getRepository('Claroline\CoreBundle\Entity\ContentTranslation');
 
         $frTitle = 'Confirmation de votre inscription';
-        $frContent = "<div>Vous avez bien été inscrit au cours %course% pour la session %session% du %start_date% au %end_date%.</div>";
+        $frContent = '<div>Vous avez bien été inscrit au cours %course% pour la session %session% du %start_date% au %end_date%.</div>';
 
         $enTitle = 'Registration confirmation';
-        $enContent = "<div>You have been registered to course %course% in session %session% from %start_date% to %end_date%.</div>";
+        $enContent = '<div>You have been registered to course %course% in session %session% from %start_date% to %end_date%.</div>';
 
         $content = new Content();
         $content->setTitle($enTitle);

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,9 +8,7 @@
  * 
  * Date: 4/22/15
  */
-
 namespace Icap\SocialmediaBundle\Repository;
-
 
 use Doctrine\ORM\EntityRepository;
 
@@ -18,10 +16,10 @@ class LikeActionRepository extends EntityRepository
 {
     public function countLikes(array $criteria)
     {
-        $qb = $this->createQueryBuilder("likeAction");
-        $qb->select("COUNT(likeAction.id)");
+        $qb = $this->createQueryBuilder('likeAction');
+        $qb->select('COUNT(likeAction.id)');
         foreach ($criteria as $key => $value) {
-            $qb->andWhere("likeAction.".$key." = :".$key);
+            $qb->andWhere('likeAction.'.$key.' = :'.$key);
             $qb->setParameter($key, $value);
         }
 
@@ -30,14 +28,14 @@ class LikeActionRepository extends EntityRepository
 
     public function findLikesForPagination(array $criteria)
     {
-        $qb = $this->createQueryBuilder("likeAction");
-        $qb->select("likeAction");
+        $qb = $this->createQueryBuilder('likeAction');
+        $qb->select('likeAction');
         foreach ($criteria as $key => $value) {
-            $qb->andWhere("likeAction.".$key." = :".$key);
+            $qb->andWhere('likeAction.'.$key.' = :'.$key);
             $qb->setParameter($key, $value);
         }
-        $qb->orderBy("likeAction.creationDate", "DESC");
+        $qb->orderBy('likeAction.creationDate', 'DESC');
 
         return $qb;
     }
-} 
+}

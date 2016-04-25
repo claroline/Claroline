@@ -51,13 +51,15 @@ class WidgetFormEvent extends Event
 
     /**
      * @return Form
+     *
      * @throws \Exception
      */
     public function getForm()
     {
         if (null === $this->form) {
-            throw new \Exception("Empty form");
+            throw new \Exception('Empty form');
         }
+
         return $this->form;
     }
 

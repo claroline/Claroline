@@ -20,7 +20,8 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Resolver
 {
-    public function __construct($path, $rootFile = 'manifest.yml') {
+    public function __construct($path, $rootFile = 'manifest.yml')
+    {
         $this->path = $path;
         $this->rootFile = $rootFile;
     }
@@ -28,7 +29,7 @@ class Resolver
     public function resolve()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $data = Yaml::parse(file_get_contents($this->path . $ds . $this->rootFile));
+        $data = Yaml::parse(file_get_contents($this->path.$ds.$this->rootFile));
         $this->parse($data);
         //parse all the include path and inject them into a single array
 
@@ -43,7 +44,7 @@ class Resolver
             foreach ($data as $key => &$value) {
                 if ($key === 'import') {
                     foreach ($value as $path) {
-                        $inject = Yaml::parse(file_get_contents($this->path . $ds . $path['path']));
+                        $inject = Yaml::parse(file_get_contents($this->path.$ds.$path['path']));
 
                         foreach ($inject as $el) {
                             foreach ($el as $item) {
@@ -60,4 +61,4 @@ class Resolver
 
         return $data;
     }
-} 
+}

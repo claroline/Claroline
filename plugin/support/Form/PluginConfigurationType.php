@@ -24,7 +24,7 @@ class PluginConfigurationType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'label' => 'with_credits',
-                'data' => isset($this->config['with_credits']) ? $this->config['with_credits'] : false
+                'data' => isset($this->config['with_credits']) ? $this->config['with_credits'] : false,
             )
         );
     }

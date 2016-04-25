@@ -39,22 +39,22 @@ class DatePickerType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['component'] = $options['component'];
-        $view->vars['options']   = array(
+        $view->vars['options'] = array(
             'autoclose' => $options['autoclose'],
-            'language'  => $options['language']
+            'language' => $options['language'],
         );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $lang = (php_sapi_name() === 'cli') ? 'en': $this->localeManager->getUserLocale($this->container->get('request'));
+        $lang = (php_sapi_name() === 'cli') ? 'en' : $this->localeManager->getUserLocale($this->container->get('request'));
         $resolver->setDefaults(
             array(
-                'input'              => 'datetime',
-                'widget'             => 'single_text',
-                'component'          => false,
-                'autoclose'          => false,
-                'language'           => $lang
+                'input' => 'datetime',
+                'widget' => 'single_text',
+                'component' => false,
+                'autoclose' => false,
+                'language' => $lang,
             )
         );
     }

@@ -31,19 +31,19 @@ class EventInvitationType extends AbstractType
         $builder
             ->add('title', 'text', [
                 'label' => 'form.title',
-                'required' => true
+                'required' => true,
             ])
 
             ->add('description', 'tinymce', [
-                'label' => 'form.description'
+                'label' => 'form.description',
             ])
 
             ->add('status', 'choice', [
                 'choices' => [
                     EventInvitation::JOIN => $this->trans->trans('invitation_join_label', [], 'agenda'),
-                    EventInvitation::MAYBE => $this->trans->trans('invitation_maybe_label', [], 'agenda')
+                    EventInvitation::MAYBE => $this->trans->trans('invitation_maybe_label', [], 'agenda'),
                 ],
-                'label' => 'form.status'
+                'label' => 'form.status',
             ])
         ;
     }
@@ -58,7 +58,7 @@ class EventInvitationType extends AbstractType
         $resolver->setDefaults(
             array(
                 'class' => 'Claroline\AgendaBundle\Entity\Event',
-                'translation_domain' => 'agenda'
+                'translation_domain' => 'agenda',
             )
         );
     }

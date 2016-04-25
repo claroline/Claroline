@@ -82,7 +82,7 @@ class Question
     {
         return $this->question;
     }
-    
+
     public function getType()
     {
         return $this->type;

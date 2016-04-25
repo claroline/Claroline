@@ -2,7 +2,6 @@
 
 namespace Icap\BlogBundle\Event\Log;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
@@ -19,26 +18,25 @@ class LogCommentDeleteEvent extends AbstractLogResourceEvent
     public function __construct(Post $post, Comment $comment)
     {
         $author = $comment->getAuthor();
-        $blog   = $post->getBlog();
+        $blog = $post->getBlog();
 
         if (null === $author) {
-            $author = "Anonyme";
-        }
-        else {
-            $author = $comment->getAuthor()->getFirstName() . ' ' . $comment->getAuthor()->getLastName();
+            $author = 'Anonyme';
+        } else {
+            $author = $comment->getAuthor()->getFirstName().' '.$comment->getAuthor()->getLastName();
         }
 
         $details = array(
             'post' => array(
-                'blog'  => $blog->getId(),
+                'blog' => $blog->getId(),
                 'title' => $post->getTitle(),
-                'slug'  => $post->getSlug()
+                'slug' => $post->getSlug(),
             ),
             'comment' => array(
-                'id'      => $comment->getId(),
-                'author'  => $author,
-                'content' => $comment->getMessage()
-            )
+                'id' => $comment->getId(),
+                'author' => $author,
+                'content' => $comment->getMessage(),
+            ),
         );
 
         parent::__construct($blog->getResourceNode(), $details);

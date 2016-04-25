@@ -132,8 +132,7 @@ class WorkspaceController extends Controller
         TwigEngine $templating,
         TranslatorInterface $translator,
         SessionInterface $session
-    )
-    {
+    ) {
         $this->homeTabManager = $homeTabManager;
         $this->workspaceManager = $workspaceManager;
         $this->workspaceModelManager = $workspaceModelManager;
@@ -172,11 +171,12 @@ class WorkspaceController extends Controller
      *
      * @param $currentUser
      * @param $search
+     *
      * @return Response
      */
     public function listAction($currentUser, $search = '')
     {
-//        $user = $currentUser instanceof User ? $currentUser : null;
+        //        $user = $currentUser instanceof User ? $currentUser : null;
 
         return $this->tagManager->getDatasForWorkspaceList(false, $search);
     }
@@ -244,7 +244,7 @@ class WorkspaceController extends Controller
             foreach ($workspaces as $workspace) {
                 array_push($workspacesData, $workspace->serializeForWidgetPicker());
             }
-            $data = array('items'=>$workspacesData);
+            $data = array('items' => $workspacesData);
             $response->setData($data)->setStatusCode(200);
         }
 
@@ -262,9 +262,9 @@ class WorkspaceController extends Controller
      * @EXT\Template()
      *
      * Renders the displayable workspace list.
-
+     
      * @param $search
-
+     
      * @return Response
      */
     public function listWorkspacesWithSelfRegistrationAction($search = '')
@@ -290,7 +290,7 @@ class WorkspaceController extends Controller
      * Renders the displayable workspace list with self-unregistration.
      *
      * @param \Claroline\CoreBundle\Entity\User $currentUser
-     * @param int $page
+     * @param int                               $page
      *
      * @return array
      */
@@ -304,7 +304,7 @@ class WorkspaceController extends Controller
 
         return array(
             'user' => $currentUser,
-            'workspaces' => $workspacesPager
+            'workspaces' => $workspacesPager,
         );
     }
 
@@ -349,7 +349,7 @@ class WorkspaceController extends Controller
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
-        $modelLog = $this->container->getParameter('kernel.root_dir') . '/logs/models.log';
+        $modelLog = $this->container->getParameter('kernel.root_dir').'/logs/models.log';
         $logger = FileLogger::get($modelLog);
         $this->workspaceManager->setLogger($logger);
 
@@ -360,7 +360,7 @@ class WorkspaceController extends Controller
                 $this->createWorkspaceFromModel($model, $form);
             } else {
                 $config = Configuration::fromTemplate(
-                    $this->templateDir . $ds . 'default.zip'
+                    $this->templateDir.$ds.'default.zip'
                 );
                 $config->setWorkspaceName($form->get('name')->getData());
                 $config->setWorkspaceCode($form->get('code')->getData());
@@ -437,7 +437,7 @@ class WorkspaceController extends Controller
      * Renders the left tool bar. Not routed.
      *
      * @param Workspace $workspace
-     * @param integer[] $_breadcrumbs
+     * @param int[]     $_breadcrumbs
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      *
@@ -497,7 +497,7 @@ class WorkspaceController extends Controller
             'orderedTools' => $orderedTools,
             'workspace' => $workspace,
             'roleHasAccess' => $roleHasAccess,
-            'hideToolsMenu' => $hideToolsMenu
+            'hideToolsMenu' => $hideToolsMenu,
         );
     }
 
@@ -526,7 +526,7 @@ class WorkspaceController extends Controller
         $this->assertIsGranted($toolName, $workspace);
 
         $event = $this->eventDispatcher->dispatch(
-            'open_tool_workspace_' . $toolName,
+            'open_tool_workspace_'.$toolName,
             'DisplayTool',
             array($workspace)
         );
@@ -565,19 +565,18 @@ class WorkspaceController extends Controller
      * Returns a list with all visible registered widgets for a homeTab of a workspace.
      *
      * @param Workspace $workspace
-     * @param integer           $homeTabId
+     * @param int       $homeTabId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listWidgetsForPickerAction(
         Workspace $workspace,
         $homeTabId
-    )
-    {
+    ) {
         $response = new JsonResponse('', 401);
         $isGranted = $this->authorization->isGranted('OPEN', $workspace);
 
-        if ($isGranted===true) {
+        if ($isGranted === true) {
             $widgetData = array();
             $widgetHomeTabConfigs = $this->homeTabManager
                 ->getVisibleWidgetConfigsByTabIdAndWorkspace($homeTabId, $workspace);
@@ -585,7 +584,7 @@ class WorkspaceController extends Controller
                 array_push($widgetData, $widgetHomeTabConfig->getWidgetInstance()->serializeForWidgetPicker());
             }
             $data = array(
-                'items' => $widgetData
+                'items' => $widgetData,
             );
 
             $response->setData($data)->setStatusCode(200);
@@ -603,9 +602,9 @@ class WorkspaceController extends Controller
      *
      * Returns the html iframe to embed a widget
      *
-     * @param integer   $workspaceId
-     * @param integer   $homeTabId
-     * @param integer   $widgetId
+     * @param int $workspaceId
+     * @param int $homeTabId
+     * @param int $widgetId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -613,11 +612,10 @@ class WorkspaceController extends Controller
         $workspaceId,
         $homeTabId,
         $widgetId
-    )
-    {
+    ) {
         return new Response(
             $this->templating->render(
-                "ClarolineCoreBundle:Widget:embed/iframe.html.twig",
+                'ClarolineCoreBundle:Widget:embed/iframe.html.twig',
                 array(
                     'widgetId' => $widgetId,
                     'workspaceId' => $workspaceId,
@@ -643,8 +641,8 @@ class WorkspaceController extends Controller
      * Returns the widget's html content
      *
      * @param Workspace $workspace
-     * @param integer   $homeTabId
-     * @param integer   $widgetId
+     * @param int       $homeTabId
+     * @param int       $widgetId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -652,8 +650,7 @@ class WorkspaceController extends Controller
         Workspace $workspace,
         $homeTabId,
         $widgetId
-    )
-    {
+    ) {
         $this->assertIsGranted('OPEN', $workspace);
 
         $widgetConfig = $this->homeTabManager
@@ -671,15 +668,15 @@ class WorkspaceController extends Controller
 
             $widget = array(
                 'title' => $widgetInstance->getName(),
-                'content' => $event->getContent()
+                'content' => $event->getContent(),
             );
         }
 
         return new Response(
             $this->templating->render(
-                "ClarolineCoreBundle:Widget:embed/widget.html.twig",
+                'ClarolineCoreBundle:Widget:embed/widget.html.twig',
                 array(
-                    'widget' => $widget
+                    'widget' => $widget,
                 )
             )
         );
@@ -700,8 +697,7 @@ class WorkspaceController extends Controller
         Workspace $workspace,
         $homeTabId,
         $valid
-    )
-    {
+    ) {
         $this->assertIsGranted('home', $workspace);
         $canEdit = $this->authorization->isGranted(array('home', 'edit'), $workspace);
         $widgets = array();
@@ -730,7 +726,6 @@ class WorkspaceController extends Controller
         );
 
         foreach ($wdcs as $wdc) {
-
             if ($wdc->getRow() === -1 || $wdc->getColumn() === -1) {
                 $initWidgetsPosition = true;
                 break;
@@ -758,7 +753,7 @@ class WorkspaceController extends Controller
             'homeTabId' => $homeTabId,
             'canEdit' => $canEdit,
             'isHomeTab' => $isHomeTab,
-            'initWidgetsPosition' => $initWidgetsPosition
+            'initWidgetsPosition' => $initWidgetsPosition,
         );
     }
 
@@ -778,7 +773,9 @@ class WorkspaceController extends Controller
      * Open the first tool of a workspace.
      *
      * @param Workspace $workspace
+     *
      * @throws AccessDeniedException
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function openAction(Workspace $workspace)
@@ -792,7 +789,6 @@ class WorkspaceController extends Controller
                 $details['use_workspace_opening_resource'] &&
                 isset($details['workspace_opening_resource']) &&
                 !empty($details['workspace_opening_resource'])) {
-
                 $resourceNode = $this->resourceManager->getById($details['workspace_opening_resource']);
 
                 if (!is_null($resourceNode)) {
@@ -801,7 +797,7 @@ class WorkspaceController extends Controller
                         'claro_resource_open',
                         array(
                             'node' => $resourceNode->getId(),
-                            'resourceType' => $resourceNode->getResourceType()->getName()
+                            'resourceType' => $resourceNode->getResourceType()->getName(),
                         )
                     );
 
@@ -817,7 +813,7 @@ class WorkspaceController extends Controller
                 'claro_workspace_open_tool',
                 array(
                     'workspaceId' => $workspace->getId(),
-                    'toolName' => $tool->getName()
+                    'toolName' => $tool->getName(),
                 )
             );
 
@@ -844,7 +840,7 @@ class WorkspaceController extends Controller
                 'name' => $role->getName(),
                 'translation_key' => $role->getTranslationKey(),
                 'id' => $role->getId(),
-                'workspace' => $role->getWorkspace()->getName()
+                'workspace' => $role->getWorkspace()->getName(),
             );
         }
 
@@ -863,7 +859,7 @@ class WorkspaceController extends Controller
      * Adds a user to a workspace.
      *
      * @param Workspace $workspace
-     * @param User              $user
+     * @param User      $user
      *
      * @return Response
      */
@@ -886,7 +882,7 @@ class WorkspaceController extends Controller
      * Adds a user to a workspace.
      *
      * @param Workspace $workspace
-     * @param User              $user
+     * @param User      $user
      *
      * @return Response
      */
@@ -896,7 +892,6 @@ class WorkspaceController extends Controller
 
         return new JsonResponse(array('true'));
     }
-
 
     /**
      * @EXT\Route(
@@ -909,7 +904,7 @@ class WorkspaceController extends Controller
      * Removes user from Workspace registration queue.
      *
      * @param Workspace $workspace
-     * @param User $user
+     * @param User      $user
      *
      * @return Response
      */
@@ -919,7 +914,6 @@ class WorkspaceController extends Controller
             ->removeUserFromWorkspaceQueue($workspace, $user);
 
         return new Response('success', 204);
-
     }
 
     /** @EXT\Route(
@@ -939,7 +933,7 @@ class WorkspaceController extends Controller
      * Renders the workspace list associate to a tag in a pager.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $workspaceTag
-     * @param integer $page
+     * @param int                                                 $page
      *
      * @return array
      */
@@ -949,7 +943,7 @@ class WorkspaceController extends Controller
 
         return array(
             'workspaceTagId' => $workspaceTag->getId(),
-            'relations' => $relations
+            'relations' => $relations,
         );
     }
 
@@ -970,21 +964,20 @@ class WorkspaceController extends Controller
      * Renders the workspace list with self-registration associate to a tag in a pager.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $workspaceTag
-     * @param integer $page
+     * @param int                                                 $page
      *
      * @return array
      */
     public function workspaceListWithSelfRegByTagPagerAction(
         WorkspaceTag $workspaceTag,
         $page = 1
-    )
-    {
+    ) {
         $relations = $this->tagManager
             ->getPagerRelationByTagForSelfReg($workspaceTag, $page);
 
         return array(
             'workspaceTagId' => $workspaceTag->getId(),
-            'relations' => $relations
+            'relations' => $relations,
         );
     }
 
@@ -997,7 +990,7 @@ class WorkspaceController extends Controller
      * )
      * @EXT\Template()
      *
-     * @param integer $page
+     * @param int $page
      *
      * @return array
      */
@@ -1017,7 +1010,7 @@ class WorkspaceController extends Controller
      * )
      * @EXT\Template()
      *
-     * @param integer $page
+     * @param int $page
      *
      * @return array
      */
@@ -1025,15 +1018,14 @@ class WorkspaceController extends Controller
         $page = 1,
         $max = 20,
         $search = ''
-    )
-    {
+    ) {
         $nonPersonalWs = $this->workspaceManager
             ->getDisplayableNonPersonalWorkspaces($page, $max, $search);
 
         return array(
             'nonPersonalWs' => $nonPersonalWs,
             'max' => $max,
-            'search' => $search
+            'search' => $search,
         );
     }
 
@@ -1046,7 +1038,7 @@ class WorkspaceController extends Controller
      * )
      * @EXT\Template()
      *
-     * @param integer $page
+     * @param int $page
      *
      * @return array
      */
@@ -1054,15 +1046,14 @@ class WorkspaceController extends Controller
         $page = 1,
         $max = 20,
         $search = ''
-    )
-    {
+    ) {
         $personalWs = $this->workspaceManager
             ->getDisplayablePersonalWorkspaces($page, $max, $search);
 
         return array(
             'personalWs' => $personalWs,
             'max' => $max,
-            'search' => $search
+            'search' => $search,
         );
     }
 
@@ -1115,7 +1106,7 @@ class WorkspaceController extends Controller
      *
      * Removes an user from a workspace.
      *
-     * @param Workspace                 $workspace
+     * @param Workspace                         $workspace
      * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return Response
@@ -1179,7 +1170,7 @@ class WorkspaceController extends Controller
 
         return array(
             'workspaceTagId' => $workspaceTag->getId(),
-            'relations' => $relations
+            'relations' => $relations,
         );
     }
 
@@ -1215,7 +1206,7 @@ class WorkspaceController extends Controller
      * )
      * @EXT\Template()
      *
-     * @param integer $page
+     * @param int $page
      *
      * @return array
      */
@@ -1223,15 +1214,14 @@ class WorkspaceController extends Controller
         $page = 1,
         $max = 20,
         $search = ''
-    )
-    {
+    ) {
         $nonPersonalWs = $this->workspaceManager
             ->getDisplayableNonPersonalWorkspaces($page, $max, $search);
 
         return array(
             'nonPersonalWs' => $nonPersonalWs,
             'max' => $max,
-            'search' => $search
+            'search' => $search,
         );
     }
 
@@ -1244,7 +1234,7 @@ class WorkspaceController extends Controller
      * )
      * @EXT\Template()
      *
-     * @param integer $page
+     * @param int $page
      *
      * @return array
      */
@@ -1252,15 +1242,14 @@ class WorkspaceController extends Controller
         $page = 1,
         $max = 20,
         $search = ''
-    )
-    {
+    ) {
         $personalWs = $this->workspaceManager
             ->getDisplayablePersonalWorkspaces($page, $max, $search);
 
         return array(
             'personalWs' => $personalWs,
             'max' => $max,
-            'search' => $search
+            'search' => $search,
         );
     }
 
@@ -1299,7 +1288,7 @@ class WorkspaceController extends Controller
      * Displays the workspace home tab.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param integer $tabId
+     * @param int                                              $tabId
      *
      * @return array
      */
@@ -1309,7 +1298,7 @@ class WorkspaceController extends Controller
         $canEdit = $this->authorization->isGranted(array('home', 'edit'), $workspace);
         $roleNames = $this->utils->getRoles($this->tokenStorage->getToken());
         $workspaceHomeTabConfigs = $canEdit ?
-            $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($workspace):
+            $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($workspace) :
             $this->homeTabManager->getVisibleWorkspaceHomeTabConfigsByWorkspaceAndRoles(
                 $workspace,
                 $roleNames
@@ -1319,9 +1308,7 @@ class WorkspaceController extends Controller
         $firstElement = true;
 
         if ($homeTabId !== -1) {
-
             foreach ($workspaceHomeTabConfigs as $workspaceHomeTabConfig) {
-
                 if ($homeTabId === $workspaceHomeTabConfig->getHomeTab()->getId()) {
                     $firstElement = false;
                     $isHomeTab = true;
@@ -1346,7 +1333,7 @@ class WorkspaceController extends Controller
             'tabId' => $homeTabId,
             'canEdit' => $canEdit,
             'isHomeTab' => $isHomeTab,
-            'isAnonymous' => $isAnonymous
+            'isAnonymous' => $isAnonymous,
         );
     }
 
@@ -1370,8 +1357,7 @@ class WorkspaceController extends Controller
      */
     public function listWorkspaceVisibleHomeTabsForPickerAction(
         Workspace $workspace
-    )
-    {
+    ) {
         $response = new JsonResponse('', 401);
         $isGranted = $this->authorization->isGranted('OPEN', $workspace);
         if ($isGranted === true) {
@@ -1382,7 +1368,7 @@ class WorkspaceController extends Controller
             foreach ($workspaceHomeTabConfigs as $workspaceHomeTabConfig) {
                 array_push($tabsData, $workspaceHomeTabConfig->getHomeTab()->serializeForWidgetPicker());
             }
-            $data = array('items'=>$tabsData);
+            $data = array('items' => $tabsData);
             $response->setData($data)->setStatusCode(200);
         }
 
@@ -1456,7 +1442,7 @@ class WorkspaceController extends Controller
     {
         $archive = $this->container->get('claroline.manager.transfert_manager')->export($workspace);
 
-        $fileName = $workspace->getCode() . '.zip';
+        $fileName = $workspace->getCode().'.zip';
         $mimeType = 'application/zip';
         $response = new StreamedResponse();
 
@@ -1468,7 +1454,7 @@ class WorkspaceController extends Controller
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($fileName));
+        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($fileName));
         $response->headers->set('Content-Length', filesize($archive));
         $response->headers->set('Content-Type', $mimeType);
         $response->headers->set('Connection', 'close');
@@ -1525,7 +1511,7 @@ class WorkspaceController extends Controller
         } else {
             return new Response(
                 $this->templating->render(
-                    "ClarolineCoreBundle:Workspace:importForm.html.twig",
+                    'ClarolineCoreBundle:Workspace:importForm.html.twig',
                     array('form' => $form->createView())
                 )
             );
@@ -1546,9 +1532,9 @@ class WorkspaceController extends Controller
      * @EXT\Template()
      *
      * @param ResourceNode $resource
-     * @param integer $page
-     * @param integer $wsMax
-     * @param string $wsSearch
+     * @param int          $page
+     * @param int          $wsMax
+     * @param string       $wsSearch
      *
      * @return array
      */
@@ -1557,8 +1543,7 @@ class WorkspaceController extends Controller
         $page = 1,
         $wsMax = 10,
         $wsSearch = ''
-    )
-    {
+    ) {
         if ($wsSearch === '') {
             $workspaces = $this->workspaceManager
                 ->getDisplayableWorkspacesPager($page, $wsMax);
@@ -1590,7 +1575,7 @@ class WorkspaceController extends Controller
             'wsMax' => $wsMax,
             'wsSearch' => $wsSearch,
             'workspaceRoles' => $workspaceRoles,
-            'resource' => $resource
+            'resource' => $resource,
         );
     }
 
@@ -1613,9 +1598,9 @@ class WorkspaceController extends Controller
         foreach ($errors['widgetConfigErrors'] as $widgetConfigError) {
             $widgetName = $widgetConfigError['widgetName'];
             $widgetInstanceName = $widgetConfigError['widgetInstanceName'];
-            $msg = '[' .
-                $this->translator->trans($widgetName, array(), 'widget') .
-                '] ' .
+            $msg = '['.
+                $this->translator->trans($widgetName, array(), 'widget').
+                '] '.
                 $this->translator->trans(
                     'widget_configuration_copy_warning',
                     array('%widgetInstanceName%' => $widgetInstanceName),
@@ -1629,8 +1614,8 @@ class WorkspaceController extends Controller
             $resourceType = $resourceError['resourceType'];
             $isCopy = $resourceError['type'] === 'copy';
 
-            $msg = '[' .
-                $this->translator->trans($resourceType, array(), 'resource') .
+            $msg = '['.
+                $this->translator->trans($resourceType, array(), 'resource').
                 '] ';
 
             if ($isCopy) {
@@ -1655,7 +1640,9 @@ class WorkspaceController extends Controller
     private function assertIsGranted($attributes, $object = null)
     {
         if (false === $this->authorization->isGranted($attributes, $object)) {
-            if ($object instanceof Workspace) $this->throwWorkspaceDeniedException($object);
+            if ($object instanceof Workspace) {
+                $this->throwWorkspaceDeniedException($object);
+            }
         }
     }
 

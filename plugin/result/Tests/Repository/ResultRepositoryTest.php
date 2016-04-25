@@ -37,9 +37,9 @@ class ResultRepositoryTest extends TransactionalTestCase
         $john = $this->persist->user('john');
         $jane = $this->persist->user('jane');
 
-        $res1  = $this->persist->result('Res 1', $john);
-        $res2  = $this->persist->result('Res 2', $john);
-        $res3  = $this->persist->result('Res 3', $jane);
+        $res1 = $this->persist->result('Res 1', $john);
+        $res2 = $this->persist->result('Res 2', $john);
+        $res3 = $this->persist->result('Res 3', $jane);
 
         $mark1 = $this->persist->mark($res1, $jane, 12);
         $mark2 = $this->persist->mark($res2, $jane, 15);

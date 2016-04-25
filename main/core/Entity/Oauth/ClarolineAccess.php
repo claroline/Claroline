@@ -43,11 +43,11 @@ class ClarolineAccess
      */
     protected $secret;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="access_token", type="string", nullable=true)
-     */
+/**
+ * @var string
+ *
+ * @ORM\Column(name="access_token", type="string", nullable=true)
+ */
     //token used by the platform. It's pretty much the admin one.
     protected $accessToken;
 

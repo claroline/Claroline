@@ -12,7 +12,7 @@ class IcapNotificationBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        if (file_exists($routingFile = $this->getPath() . '/Resources/config/routing.yml')) {
+        if (file_exists($routingFile = $this->getPath().'/Resources/config/routing.yml')) {
             $config->addRoutingResource($routingFile, null, 'icap_notification');
         }
 

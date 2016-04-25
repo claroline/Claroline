@@ -6,13 +6,11 @@ use Claroline\CoreBundle\Entity\User;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Blog;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
-
 
 class CommentController extends BaseController
 {
@@ -26,11 +24,11 @@ class CommentController extends BaseController
      */
     public function deleteAction(Blog $blog, Post $post, Comment $comment)
     {
-        $this->checkAccess("EDIT", $blog);
+        $this->checkAccess('EDIT', $blog);
 
         $entityManager = $this->getDoctrine()->getManager();
-        $translator    = $this->get('translator');
-        $flashBag      = $this->get('session')->getFlashBag();
+        $translator = $this->get('translator');
+        $flashBag = $this->get('session')->getFlashBag();
 
         try {
             $entityManager->remove($comment);
@@ -60,9 +58,9 @@ class CommentController extends BaseController
 
         $translator = $this->get('translator');
 
-        $messages   = array(
+        $messages = array(
             'success' => $translator->trans('icap_blog_comment_publish_success', array(), 'icap_blog'),
-            'error'   => $translator->trans('icap_blog_comment_publish_error', array(), 'icap_blog')
+            'error' => $translator->trans('icap_blog_comment_publish_error', array(), 'icap_blog'),
         );
 
         return $this->changePublishStatus($blog, $post, $comment, $messages);
@@ -82,9 +80,9 @@ class CommentController extends BaseController
 
         $translator = $this->get('translator');
 
-        $messages   = array(
+        $messages = array(
             'success' => $translator->trans('icap_blog_comment_unpublish_success', array(), 'icap_blog'),
-            'error'   => $translator->trans('icap_blog_comment_unpublish_error', array(), 'icap_blog')
+            'error' => $translator->trans('icap_blog_comment_unpublish_error', array(), 'icap_blog'),
         );
 
         return $this->changePublishStatus($blog, $post, $comment, $messages);
@@ -100,10 +98,10 @@ class CommentController extends BaseController
      */
     protected function changePublishStatus(Blog $blog, Post $post, Comment $comment, array $messages)
     {
-        $this->checkAccess("EDIT", $blog);
+        $this->checkAccess('EDIT', $blog);
 
         $entityManager = $this->getDoctrine()->getManager();
-        $flashBag      = $this->get('session')->getFlashBag();
+        $flashBag = $this->get('session')->getFlashBag();
 
         try {
             $entityManager->persist($comment);
@@ -130,10 +128,10 @@ class CommentController extends BaseController
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $translator = $this->get('translator');
-        if($user!=null && $user->getId()==$comment->getAuthor()->getId()){
-            $messages   = array(
+        if ($user != null && $user->getId() == $comment->getAuthor()->getId()) {
+            $messages = array(
                 'success' => $translator->trans('icap_blog_comment_edit_success', array(), 'icap_blog'),
-                'error'   => $translator->trans('icap_blog_comment_edit_error', array(), 'icap_blog')
+                'error' => $translator->trans('icap_blog_comment_edit_error', array(), 'icap_blog'),
             );
 
             return $this->persistCommentUpdate($request, $blog, $post, $comment, $user, $messages);
@@ -153,11 +151,10 @@ class CommentController extends BaseController
                     'post' => $post,
                     'comment' => $comment,
                     'workspace' => $blog->getResourceNode()->getWorkspace(),
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
                 )
             );
-        }
-        else if ("POST" === $request->getMethod()) {
+        } elseif ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $flashBag = $this->get('session')->getFlashBag();
@@ -179,18 +176,18 @@ class CommentController extends BaseController
 
                 return $this->redirect($this->generateUrl('icap_blog_post_view', array(
                     'blogId' => $blog->getId(),
-                    'postSlug' => $post->getSlug()
+                    'postSlug' => $post->getSlug(),
                 )));
             }
         }
 
         return array(
-            '_resource'  => $blog,
+            '_resource' => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
-            'user'       => $user,
-            'post'       => $post,
-            'comment'    => $comment,
-            'form'       => $form->createView()
+            'user' => $user,
+            'post' => $post,
+            'comment' => $comment,
+            'form' => $form->createView(),
         );
     }
 }

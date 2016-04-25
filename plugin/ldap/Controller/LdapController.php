@@ -23,7 +23,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Templating\EngineInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -54,8 +53,7 @@ class LdapController extends Controller
         RequestStack $request,
         TranslatorInterface $translator,
         EngineInterface $templating
-    )
-    {
+    ) {
         $this->ldap = $ldap;
         $this->request = $request->getMasterRequest();
         $this->formFactory = $formFactory;
@@ -161,7 +159,6 @@ class LdapController extends Controller
         $password = isset($server['password']) ? $server['password'] : null;
 
         if ($this->ldap->connect($server, $user, $password)) {
-
             $classes = $this->ldap->getClasses($server);
             $users = $this->ldap->getUsers($server);
             $this->ldap->close();
@@ -170,7 +167,7 @@ class LdapController extends Controller
                 'server' => $server,
                 'users' => $users,
                 'usersJSON' => json_encode($users),
-                'classes' => $classes
+                'classes' => $classes,
             );
         }
 
@@ -190,7 +187,6 @@ class LdapController extends Controller
         $password = isset($server['password']) ? $server['password'] : null;
 
         if ($this->ldap->connect($server, $user, $password)) {
-
             $classes = $this->ldap->getClasses($server);
             $groups = $this->ldap->getGroups($server);
             $this->ldap->close();
@@ -199,7 +195,7 @@ class LdapController extends Controller
                 'server' => $server,
                 'groups' => $groups,
                 'groupsJSON' => json_encode($groups),
-                'classes' => $classes
+                'classes' => $classes,
             );
         }
 
@@ -231,7 +227,6 @@ class LdapController extends Controller
         $password = isset($server['password']) ? $server['password'] : null;
 
         if ($this->ldap->connect($server, $user, $password)) {
-
             $users = $this->ldap->getUsers($server);
             $this->ldap->close();
 
@@ -239,7 +234,7 @@ class LdapController extends Controller
                 'mapping' => $this->ldap->userMapping($server),
                 'type' => $type,
                 'users' => $users,
-                'server' => $server
+                'server' => $server,
             );
         }
 
@@ -260,13 +255,12 @@ class LdapController extends Controller
         $password = isset($server['password']) ? $server['password'] : null;
 
         if ($this->ldap->userMapping($server) and $this->ldap->connect($server, $user, $password)) {
-
             $users = $this->ldap->getUsers($server);
             $this->ldap->close();
 
             $response = new response(
                 $this->templating->render(
-                    'ClarolineLdapBundle:export:' . $type . '.html.twig',
+                    'ClarolineLdapBundle:export:'.$type.'.html.twig',
                     array('users' => $users, 'server' => $server)
                 )
             );
@@ -276,14 +270,14 @@ class LdapController extends Controller
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $name . '.' . $type);
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$name.'.'.$type);
         //$response->headers->set('Content-Type', $mimeType);
         $response->headers->set('Connection', 'close');
 
         return $response;
     }
 
-     /**
+    /**
      * @Route("/config/save/settings", name="claro_admin_ldap_save_settings", options = {"expose"=true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -310,7 +304,7 @@ class LdapController extends Controller
         $password = isset($server['password']) ? $server['password'] : null;
 
         if ($this->ldap->connect($server, $user, $password)) {
-            if ($search = $this->ldap->search($this->ldap->get($name), '(&(objectClass=' . $objectClass . '))')) {
+            if ($search = $this->ldap->search($this->ldap->get($name), '(&(objectClass='.$objectClass.'))')) {
                 $entries = $this->ldap->getEntries($search);
             }
 

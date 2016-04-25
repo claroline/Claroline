@@ -14,7 +14,7 @@ class ClarolineTextPlayerBundle extends PluginBundle
     public function getConfiguration($environment)
     {
         $config = new ConfigurationBuilder();
-        
+
         return $config;
     }
 

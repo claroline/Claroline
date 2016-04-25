@@ -72,13 +72,13 @@ class Translator
 
     private function buildCatalogue()
     {
-        if (!file_exists($fallbackFile = $this->translationDirectory . '/' . $this->fallbackLanguage . '.php')) {
+        if (!file_exists($fallbackFile = $this->translationDirectory.'/'.$this->fallbackLanguage.'.php')) {
             throw new \Exception("Fallback language '{$this->fallbackLanguage}' is not available");
         }
 
         $translations = require $fallbackFile;
 
-        if (file_exists($languageFile = $this->translationDirectory . '/' . $this->language . '.php')) {
+        if (file_exists($languageFile = $this->translationDirectory.'/'.$this->language.'.php')) {
             $translations = array_merge($translations, require $languageFile);
         }
 

@@ -30,7 +30,7 @@ class BadgeCreateValidationLinkEvent extends Event
     }
 
     /**
-     * Returns the response content (creation form as string)
+     * Returns the response content (creation form as string).
      *
      * @return string
      */
@@ -47,4 +47,3 @@ class BadgeCreateValidationLinkEvent extends Event
         return $this->log;
     }
 }
- 

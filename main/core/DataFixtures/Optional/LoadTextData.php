@@ -28,10 +28,10 @@ class LoadTextData extends AbstractFixture implements ContainerAwareInterface
     /**
      * Creates a resource text.
      *
-     * @param integer $words   the numbre of words
-     * @param string  $creator the creator reference (without user/)
-     * @param string  $parent  the parent reference (without directory/)
-     * @param array   $texts   an array of text name
+     * @param int    $words   the numbre of words
+     * @param string $creator the creator reference (without user/)
+     * @param string $parent  the parent reference (without directory/)
+     * @param array  $texts   an array of text name
      */
     public function __construct($creator, $parent, $words, array $texts)
     {
@@ -42,7 +42,7 @@ class LoadTextData extends AbstractFixture implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -50,7 +50,7 @@ class LoadTextData extends AbstractFixture implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {

@@ -40,8 +40,7 @@ class MyWorkspacesWidgetController extends Controller
         Utilities $utils,
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager
-    )
-    {
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->utils = $utils;
         $this->workspaceManager = $workspaceManager;

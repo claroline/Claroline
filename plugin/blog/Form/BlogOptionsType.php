@@ -30,23 +30,23 @@ class BlogOptionsType extends AbstractType
                 'required' => false,
             ))
             ->add('post_per_page', 'choice', array(
-                'choices'       => array("5" => 5, "10" => 10, "20" => 20),
-                'required'      => false,
+                'choices' => array('5' => 5, '10' => 10, '20' => 20),
+                'required' => false,
                 'theme_options' => array('control_width' => 'col-md-2'),
             ))
             ->add('tag_cloud', 'choice', array(
-                'choices'       => array("0" => "classic", "1" => "3D", "2" => "advanced"),
-                'required'      => false,
-                'expanded'      => true,
-                'multiple'      => false,
-                'empty_value'   => false
+                'choices' => array('0' => 'classic', '1' => '3D', '2' => 'advanced'),
+                'required' => false,
+                'expanded' => true,
+                'multiple' => false,
+                'empty_value' => false,
             ))
             ->add('tag_top_mode', 'checkbox', array(
                 'required' => false,
             ))
             ->add('max_tag', 'integer')
             ->add('listWidgetBlog', 'listWidgetBlog', array(
-                'label' => 'Trier les rubriques'
+                'label' => 'Trier les rubriques',
             ))
         ;
     }
@@ -60,9 +60,9 @@ class BlogOptionsType extends AbstractType
     {
         $resolver->setDefaults(array(
            'translation_domain' => 'icap_blog',
-            'data_class'      => 'Icap\BlogBundle\Entity\BlogOptions',
+            'data_class' => 'Icap\BlogBundle\Entity\BlogOptions',
             'csrf_protection' => true,
-            'intention'       => 'configure_blog'
+            'intention' => 'configure_blog',
         ));
     }
 }

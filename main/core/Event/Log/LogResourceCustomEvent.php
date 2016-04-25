@@ -23,20 +23,20 @@ class LogResourceCustomEvent extends LogGenericEvent
     public function __construct(ResourceNode $node, $action)
     {
         parent::__construct(
-            self::ACTION . '_' . $action,
+            self::ACTION.'_'.$action,
             array(
                 'resource' => array(
                     'name' => $node->getName(),
-                    'path' => $node->getPathForCreationLog()
+                    'path' => $node->getPathForCreationLog(),
                 ),
                 'workspace' => array(
-                    'name' => $node->getWorkspace()->getName()
+                    'name' => $node->getWorkspace()->getName(),
                 ),
                 'owner' => array(
                     'lastName' => $node->getCreator()->getLastName(),
-                    'firstName' => $node->getCreator()->getFirstName()
+                    'firstName' => $node->getCreator()->getFirstName(),
                 ),
-                'action' => $action
+                'action' => $action,
             ),
             null,
             null,
@@ -52,6 +52,6 @@ class LogResourceCustomEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 }

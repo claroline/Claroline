@@ -19,10 +19,10 @@ class Setting
     private $isRequired;
 
     /**
-     * @param string  $description
-     * @param array   $descriptionParameters
-     * @param boolean $isCorrect
-     * @param boolean $isRequired
+     * @param string $description
+     * @param array  $descriptionParameters
+     * @param bool   $isCorrect
+     * @param bool   $isRequired
      */
     public function __construct($description, array $descriptionParameters, $isCorrect, $isRequired)
     {
@@ -63,7 +63,7 @@ class Setting
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCorrect()
     {
@@ -71,7 +71,7 @@ class Setting
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isRequired()
     {

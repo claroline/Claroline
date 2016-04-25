@@ -20,8 +20,7 @@ class CursusUserRepository extends EntityRepository
     public function findCursusUsersByCursus(
         Cursus $cursus,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT cu
             FROM Claroline\CursusBundle\Entity\CursusUser cu
@@ -38,8 +37,7 @@ class CursusUserRepository extends EntityRepository
         Cursus $cursus,
         User $user,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT cu
             FROM Claroline\CursusBundle\Entity\CursusUser cu
@@ -56,8 +54,7 @@ class CursusUserRepository extends EntityRepository
     public function findCursusUsersFromCursusAndUsers(
         array $cursus,
         array $users
-    )
-    {
+    ) {
         $dql = '
             SELECT cu
             FROM Claroline\CursusBundle\Entity\CursusUser cu
@@ -75,8 +72,7 @@ class CursusUserRepository extends EntityRepository
         Cursus $cursus,
         User $user,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT cu
             FROM Claroline\CursusBundle\Entity\CursusUser cu
@@ -98,8 +94,7 @@ class CursusUserRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -124,8 +119,7 @@ class CursusUserRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -157,8 +151,7 @@ class CursusUserRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -183,8 +176,7 @@ class CursusUserRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u

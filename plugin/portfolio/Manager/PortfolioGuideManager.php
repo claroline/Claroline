@@ -13,9 +13,9 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class PortfolioGuideManager
 {
-    const PORTFOLIO_OPENING_MODE_VIEW     = 'view';
+    const PORTFOLIO_OPENING_MODE_VIEW = 'view';
     const PORTFOLIO_OPENING_MODE_EVALUATE = 'evaluate';
-    const PORTFOLIO_OPENING_MODE_EDIT     = 'edit';
+    const PORTFOLIO_OPENING_MODE_EDIT = 'edit';
 
     /**
      * @var \Doctrine\ORM\EntityManager

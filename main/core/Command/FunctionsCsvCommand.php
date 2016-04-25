@@ -28,7 +28,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
                     'functions_csv_path',
                     InputArgument::REQUIRED,
                     'The absolute path to the csv file.'
-                )
+                ),
             )
         );
     }
@@ -36,11 +36,10 @@ class FunctionsCsvCommand extends ContainerAwareCommand
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $params = array(
-            'functions_csv_path' => 'Absolute path to the csv file: '
+            'functions_csv_path' => 'Absolute path to the csv file: ',
         );
 
         foreach ($params as $argument => $argumentName) {
-
             if (!$input->getArgument($argument)) {
                 $input->setArgument(
                     $argument, $this->askArgument($output, $argumentName)
@@ -68,7 +67,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
     }
 
     /**
-     * All actions defined in CSV files are group by type and executed in the following order
+     * All actions defined in CSV files are group by type and executed in the following order.
      *
      * Functions order :
      *     - Deletes users --> claro_delete_user
@@ -133,7 +132,6 @@ class FunctionsCsvCommand extends ContainerAwareCommand
      *
      *     - Unregisters groups from workspaces (unregisters from workspace role) :
      *         [group name];[workspace code];[role name];claro_unregister_group_from_workspace
-     *
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

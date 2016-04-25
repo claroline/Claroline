@@ -14,7 +14,7 @@ namespace Claroline\CursusBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CursusBundle\Entity\CourseSession;
 
-class CreateCourseSessionEvent extends Event 
+class CreateCourseSessionEvent extends Event
 {
     private $courseSession;
 

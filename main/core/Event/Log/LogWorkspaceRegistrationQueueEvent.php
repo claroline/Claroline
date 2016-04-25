@@ -34,11 +34,11 @@ class LogWorkspaceRegistrationQueueEvent extends LogGenericEvent implements Noti
         $details = array('role' => array('name' => $this->role->getTranslationKey()));
         $details['workspace'] = array(
             'name' => $this->workspace->getName(),
-            'id' => $this->workspace->getId()
+            'id' => $this->workspace->getId(),
         );
         $details['receiverUser'] = array(
             'firstName' => $this->user->getFirstName(),
-            'lastName' => $this->user->getLastName()
+            'lastName' => $this->user->getLastName(),
         );
         $this->details = $details;
 
@@ -60,7 +60,7 @@ class LogWorkspaceRegistrationQueueEvent extends LogGenericEvent implements Noti
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 
     public function getActionKey()
@@ -75,7 +75,7 @@ class LogWorkspaceRegistrationQueueEvent extends LogGenericEvent implements Noti
 
     public function getIconKey()
     {
-        return null;
+        return;
     }
 
     public function getIncludeUserIds()

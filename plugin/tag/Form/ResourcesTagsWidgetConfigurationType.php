@@ -42,9 +42,9 @@ class ResourcesTagsWidgetConfigurationType extends AbstractType
                 'data' => $nbTags,
                 'constraints' => array(
                     new NotBlank(),
-                    new Range(array('min' => 0))
+                    new Range(array('min' => 0)),
                 ),
-                'attr' => array('min' => 0)
+                'attr' => array('min' => 0),
             )
         );
     }

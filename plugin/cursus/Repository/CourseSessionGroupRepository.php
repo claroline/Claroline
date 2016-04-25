@@ -22,8 +22,7 @@ class CourseSessionGroupRepository extends EntityRepository
         Group $group,
         $groupType,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT csg
             FROM Claroline\CursusBundle\Entity\CourseSessionGroup csg
@@ -42,8 +41,7 @@ class CourseSessionGroupRepository extends EntityRepository
     public function findSessionGroupsBySession(
         CourseSession $session,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT csg
             FROM Claroline\CursusBundle\Entity\CourseSessionGroup csg
@@ -61,8 +59,7 @@ class CourseSessionGroupRepository extends EntityRepository
         Group $group,
         $groupType,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT csg
             FROM Claroline\CursusBundle\Entity\CourseSessionGroup csg
@@ -82,8 +79,7 @@ class CourseSessionGroupRepository extends EntityRepository
     public function findSessionGroupsByGroup(
         Group $group,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT csg
             FROM Claroline\CursusBundle\Entity\CourseSessionGroup csg
@@ -102,8 +98,7 @@ class CourseSessionGroupRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT g
             FROM Claroline\CoreBundle\Entity\Group g
@@ -130,8 +125,7 @@ class CourseSessionGroupRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT g
             FROM Claroline\CoreBundle\Entity\Group g

@@ -13,10 +13,6 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
-use Claroline\CoreBundle\Manager\GroupManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -52,8 +48,7 @@ class ImportCsvManager
         RoleManager $roleManager,
         UserManager $userManager,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->om = $om;
         $this->translator = $translator;
         $this->groupManager = $groupManager;
@@ -95,7 +90,7 @@ class ImportCsvManager
 
                         if ($nbLineDatas === 7) {
                             $infos[] = trim($lineDatas[5]);
-                        } elseif ($nbLineDatas === 8)  {
+                        } elseif ($nbLineDatas === 8) {
                             $infos[] = trim($lineDatas[6]);
                         } elseif ($nbLineDatas === 9) {
                             $infos[] = trim($lineDatas[7]);
@@ -207,7 +202,6 @@ class ImportCsvManager
         $this->om->startFlushSuite();
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $error = $lineDatas['error'];
                 $logs[] = "[$lineNb] $error";
@@ -252,16 +246,13 @@ class ImportCsvManager
 
         // Checks for double entries
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (!isset($lineDatas['error'])) {
                 $groupName = strtolower($lineDatas['name']);
 
                 foreach ($datas as $lineNbBis => $lineDatasBis) {
-
                     if ($lineNb !== $lineNbBis &&
                         !isset($lineDatasBis['error']) &&
                         $groupName === strtolower($lineDatasBis['name'])) {
-
                         $groupNameBis = $lineDatasBis['name'];
                         $datas[$lineNb]['error'] =
                             "[$lineNb] $identicalGroupTxt [$groupName]";
@@ -273,7 +264,6 @@ class ImportCsvManager
         }
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {
@@ -313,7 +303,6 @@ class ImportCsvManager
         $this->om->startFlushSuite();
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {
@@ -351,7 +340,6 @@ class ImportCsvManager
         $this->om->startFlushSuite();
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {
@@ -390,7 +378,6 @@ class ImportCsvManager
         $this->om->startFlushSuite();
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {
@@ -400,7 +387,6 @@ class ImportCsvManager
                 $group = $this->groupManager->getGroupByName($groupName);
 
                 if (is_null($user) || is_null($group)) {
-
                     if (is_null($user)) {
                         $logs[] = "[$lineNb] $userTxt [$username] $nonExistentTxt";
                     }
@@ -446,7 +432,6 @@ class ImportCsvManager
         $this->om->startFlushSuite();
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {
@@ -456,7 +441,6 @@ class ImportCsvManager
                 $group = $this->groupManager->getGroupByName($groupName);
 
                 if (is_null($user) || is_null($group)) {
-
                     if (is_null($user)) {
                         $logs[] = "[$lineNb] $userTxt [$username] $nonExistentTxt";
                     }
@@ -527,18 +511,15 @@ class ImportCsvManager
 
         // Checks for double entries
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (!isset($lineDatas['error'])) {
                 $wsCode = strtolower($lineDatas['ws_code']);
                 $roleName = strtolower($lineDatas['role_name']);
 
                 foreach ($datas as $lineNbBis => $lineDatasBis) {
-
                     if ($lineNb !== $lineNbBis &&
                         !isset($lineDatasBis['error']) &&
                         $wsCode === strtolower($lineDatasBis['ws_code']) &&
                         $roleName === strtolower($lineDatasBis['role_name'])) {
-
                         $roleNameBis = $lineDatasBis['role_name'];
                         $datas[$lineNb]['error'] =
                             "[$lineNb] $identicalRoleTxt [$roleName]";
@@ -550,7 +531,6 @@ class ImportCsvManager
         }
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {
@@ -570,7 +550,7 @@ class ImportCsvManager
 
                     if (is_null($role)) {
                         $this->roleManager->createWorkspaceRole(
-                            'ROLE_WS_' . strtoupper($roleName) . '_' . $workspace->getGuid(),
+                            'ROLE_WS_'.strtoupper($roleName).'_'.$workspace->getGuid(),
                             $roleName,
                             $workspace
                         );
@@ -610,7 +590,6 @@ class ImportCsvManager
         $this->om->startFlushSuite();
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {
@@ -673,7 +652,6 @@ class ImportCsvManager
         $this->om->startFlushSuite();
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {
@@ -684,7 +662,6 @@ class ImportCsvManager
                 $workspace = $this->workspaceManager->getWorkspaceByCode($wsCode);
 
                 if (is_null($user) || is_null($workspace)) {
-
                     if (is_null($user)) {
                         $logs[] = "[$lineNb] $userTxt [$username] $nonExistentTxt";
                     }
@@ -745,7 +722,6 @@ class ImportCsvManager
         $this->om->startFlushSuite();
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs = $lineDatas['error'];
             } else {
@@ -756,7 +732,6 @@ class ImportCsvManager
                 $workspace = $this->workspaceManager->getWorkspaceByCode($wsCode);
 
                 if (is_null($user) || is_null($workspace)) {
-
                     if (is_null($user)) {
                         $logs[] = "[$lineNb] $userTxt [$username] $nonExistentTxt";
                     }
@@ -817,7 +792,6 @@ class ImportCsvManager
         $this->om->startFlushSuite();
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {
@@ -828,7 +802,6 @@ class ImportCsvManager
                 $workspace = $this->workspaceManager->getWorkspaceByCode($wsCode);
 
                 if (is_null($group) || is_null($workspace)) {
-
                     if (is_null($group)) {
                         $logs[] = "[$lineNb] $groupTxt [$groupName] $nonExistentTxt";
                     }
@@ -890,7 +863,6 @@ class ImportCsvManager
         $this->om->startFlushSuite();
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {
@@ -901,7 +873,6 @@ class ImportCsvManager
                 $workspace = $this->workspaceManager->getWorkspaceByCode($wsCode);
 
                 if (is_null($group) || is_null($workspace)) {
-
                     if (is_null($group)) {
                         $logs[] = "[$lineNb] $groupTxt [$groupName] $nonExistentTxt";
                     }
@@ -954,7 +925,6 @@ class ImportCsvManager
         );
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {
@@ -996,7 +966,6 @@ class ImportCsvManager
         );
 
         foreach ($datas as $lineNb => $lineDatas) {
-
             if (isset($lineDatas['error'])) {
                 $logs[] = $lineDatas['error'];
             } else {

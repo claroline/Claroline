@@ -2,17 +2,15 @@
 
 namespace FormaLibre\PresenceBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class Releves
 {
     private $releves;
-   
+
     public function __construct()
     {
         $this->releves = new ArrayCollection();
-        
     }
     /**
      * @param \FormaLibre\PresenceBundle\Entity\Releves $releves
@@ -28,6 +26,4 @@ class Releves
     {
         return $this->releves;
     }
-  
 }
-

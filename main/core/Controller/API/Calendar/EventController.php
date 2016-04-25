@@ -15,7 +15,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Claroline\CoreBundle\Manager\Calendar\EventManager;
@@ -45,13 +44,12 @@ class EventController extends FOSRestController
         ApiManager           $apiManager,
         ObjectManager        $om,
         Request              $request
-    )
-    {
-        $this->formFactory     = $formFactory;
-        $this->eventManager    = $eventManager;
-        $this->om              = $om;
-        $this->request         = $request;
-        $this->apiManager      = $apiManager;
+    ) {
+        $this->formFactory = $formFactory;
+        $this->eventManager = $eventManager;
+        $this->om = $om;
+        $this->request = $request;
+        $this->apiManager = $apiManager;
     }
 
     /**
@@ -68,7 +66,7 @@ class EventController extends FOSRestController
         $form = $this->createForm($formType);
 
         return $this->apiManager->handleFormView(
-            'ClarolineCoreBundle:API:Calendar\createEventForm.html.twig', 
+            'ClarolineCoreBundle:API:Calendar\createEventForm.html.twig',
             $form
         );
     }

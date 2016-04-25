@@ -1,0 +1,95 @@
+icap_website_type_name: Name
+save_all_options: Save all options
+'bg_color': Background color
+'bg_content_color': Content background color
+'site_width': Website's width
+'full_scr': Full screen
+'fix_scr': Fix
+'bg_image': Background image
+'upload_image': Upload
+'paste_url': URL
+'no_image': None
+'apply': Apply
+'reset': Reset
+'bg_repeat': Background repeat
+'bg_position': Background position
+'none': None
+'horizontal': Horizontal
+'vertical': Vertical
+'width': Width
+'height': Height
+'hover_color': Hover color
+'border_color': Border color
+'section_color': Section color
+'font_color': Font color
+'section_font_color': Section font color
+'font_size': Font size
+'font_family': Font
+'banner': Banner
+'footer': Footer
+'structure': Structure
+'menu': Menu
+'general': General
+'default': Default
+'enable_copyright': Display copyright on footer
+'enable_analytics': Activate analytics (using external tools)
+'css_code': Apply css rules to website's content
+'analytics_info': Example: 'UA-XXXXX-Y' for Google Analytics or 'xxxxxxx' for XiTi.
+'rich_content': Add rich content :
+'rich_content_explain': Add rich content by making visible the editor inside the object
+'horizontally': Horiz.
+'vertically': Verti.
+'both': Both
+'activate': Enable
+'disable': Disable
+'save_options': Save options
+'editor_enable': Show editor
+'editor_disable': Hide editor
+'add_new_page': Add new page
+'title': Title
+'description': Description
+'visible': Make this page visible on the site
+'section': This is a section page
+'section_info': Has a different style on menu
+'type': Type
+'content': Content
+'resource': Resource
+'save': Save
+'save_page': Save and create page
+'save_changes': Save changes
+'url': URL
+'blank_page': Rich text page
+'url_page': External URL page
+'target': Open page
+'embedded': inside the website
+'new_window': in a new tab
+'resource_page': Platfrom resource page
+'confirm': Confirm
+'cancel': Cancel
+'confirm_delete_message': Are you sure you want to permanently delete '%title%' and all it's children?
+'add_resource': Add resource
+'change_resource': Change resource
+'error': Error
+'error_500': Your action has not been processed because of a server's internal error. If the error persists please contact our support team.
+'error_511': This action needs authentication. If you were authenticated before then your session has timed out. Please log in to platform and try again.
+'error_401': You don't have sufficient permissions to proceed to this action.
+'error_417': The action failed because a required parameter was missing or was invalid.
+'success': Success
+'success_message': Your request was processed successfully
+'loading': loading...
+'title_limit_message': Less than 70 characters, as this is the limit Google displays in search results.
+'description_limit_message': Maximum 160 characters. Capitalize the first letter of an important word or the whole word.
+'chars': characters
+'edit_page': Edit page properties
+'create_page': Create a new page
+'create_sub_page': Create a sub page
+'page_list': Page list
+empty_site_message: Your website is currently empty. You need to create some pages. The first page to create will be set as homepage. You can change this option anytime by clicking 'Set as homepage' inside the edit panel of the currently selected page.
+'set_as_homepage': Set as homepage
+'menu_orientation': Menu orientation
+'change_bg_image_attention_text': Attention! If you change this option the current option (image) will be deleted.
+'view_website': View website
+'no_pages': No pages
+
+
+

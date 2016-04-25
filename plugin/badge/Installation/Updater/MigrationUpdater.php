@@ -129,13 +129,13 @@ class MigrationUpdater extends Updater
         if ($previous = $this->findWithNoPlugin($type, $name)) {
             $this->log("Re-using previous {$name} {$type}...");
             $current = $this->find($type, $name);
-            $current->setName($name . '_tmp');
+            $current->setName($name.'_tmp');
             $this->entityManager->persist($current);
             $this->entityManager->flush();
             $previous->setPlugin($current->getPlugin());
             $this->entityManager->persist($previous);
             $this->entityManager->flush();
-            $this->delete($type, $name . '_tmp');
+            $this->delete($type, $name.'_tmp');
         }
     }
 
@@ -168,7 +168,7 @@ class MigrationUpdater extends Updater
     {
         $class = '';
 
-        switch($type) {
+        switch ($type) {
             case 'admintool':
                 $class = 'Claroline\CoreBundle\Entity\Tool\AdminTool';
                 break;
@@ -176,7 +176,7 @@ class MigrationUpdater extends Updater
                 $class = 'Claroline\CoreBundle\Entity\Tool\Tool';
                 break;
             case 'widget':
-                $class= 'Claroline\CoreBundle\Entity\Widget\Widget';
+                $class = 'Claroline\CoreBundle\Entity\Widget\Widget';
                 break;
         }
 
@@ -207,7 +207,7 @@ class MigrationUpdater extends Updater
 
             if (null === $badgeWidgetType) {
                 $this->entityManager->persist($this->widgetFactory->createBadgeWidgetType());
-                $this->log("Badge widget type created for portfolio.");
+                $this->log('Badge widget type created for portfolio.');
             }
         }
 

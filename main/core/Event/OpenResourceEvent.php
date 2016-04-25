@@ -12,12 +12,10 @@
 namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Claroline\CoreBundle\Event\DataConveyorEventInterface;
-use Claroline\CoreBundle\Event\MandatoryEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
- * Event dispatched by the resource controller when a resource is open
+ * Event dispatched by the resource controller when a resource is open.
  */
 class OpenResourceEvent extends Event implements MandatoryEventInterface, DataConveyorEventInterface
 {

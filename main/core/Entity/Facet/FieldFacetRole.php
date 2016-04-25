@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Facet;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Role;
 
 /**

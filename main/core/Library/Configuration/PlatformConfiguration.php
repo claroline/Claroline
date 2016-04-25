@@ -401,7 +401,7 @@ class PlatformConfiguration
     }
 
     /**
-     * @param boolean $nameActive
+     * @param bool $nameActive
      */
     public function setNameActive($nameActive)
     {
@@ -409,7 +409,7 @@ class PlatformConfiguration
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isNameActive()
     {
@@ -603,7 +603,7 @@ class PlatformConfiguration
 
     public function getRegistrationMailValidation()
     {
-        return $this->registrationMailValidation ;
+        return $this->registrationMailValidation;
     }
 
     public function setShowHelpButton($showHelpButton)

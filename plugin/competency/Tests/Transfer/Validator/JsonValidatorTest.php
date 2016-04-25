@@ -15,11 +15,12 @@ class JsonValidatorTest extends UnitTestCase
 
     /**
      * @dataProvider validDataProvider
+     *
      * @param string
      */
     public function testValidateWithValidData($dataFilename)
     {
-        $file = __DIR__ . '/../../../Resources/format/valid/' . $dataFilename;
+        $file = __DIR__.'/../../../Resources/format/valid/'.$dataFilename;
         $data = json_decode(file_get_contents($file));
         $errors = $this->validator->validate($data);
         $this->assertEquals([], $errors);
@@ -27,13 +28,14 @@ class JsonValidatorTest extends UnitTestCase
 
     /**
      * @dataProvider invalidDataProvider
+     *
      * @param string
      * @param string
      * @param string
      */
     public function testValidateWithInvalidData($dataFilename, $expectedError, $expectedPath)
     {
-        $file = __DIR__ . '/../../../Resources/format/invalid/' . $dataFilename;
+        $file = __DIR__.'/../../../Resources/format/invalid/'.$dataFilename;
         $data = json_decode(file_get_contents($file));
         $errors = $this->validator->validate($data);
         $this->assertHasValidationError($errors, $expectedPath, $expectedError);
@@ -46,7 +48,7 @@ class JsonValidatorTest extends UnitTestCase
             ['minimal-2.json'],
             ['intermediate-1.json'],
             ['intermediate-2.json'],
-            ['full.json']
+            ['full.json'],
         ];
     }
 
@@ -85,7 +87,7 @@ class JsonValidatorTest extends UnitTestCase
             ['ability-level-is-not-a-string.json', 'instance must be of type string', '/abilities/0/level'],
             ['ability-level-is-empty.json', 'should be greater than or equal to 1 characters', '/abilities/0/level'],
             ['ability-level-is-too-long.json', 'should be lesser than or equal to 255 characters', '/abilities/0/level'],
-            ['duplicate-ability.json', 'elements must be unique', '/abilities']
+            ['duplicate-ability.json', 'elements must be unique', '/abilities'],
         ];
     }
 

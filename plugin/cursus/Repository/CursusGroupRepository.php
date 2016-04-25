@@ -20,8 +20,7 @@ class CursusGroupRepository extends EntityRepository
     public function findCursusGroupsByCursus(
         Cursus $cursus,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT cg
             FROM Claroline\CursusBundle\Entity\CursusGroup cg
@@ -38,8 +37,7 @@ class CursusGroupRepository extends EntityRepository
         Cursus $cursus,
         Group $group,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT cg
             FROM Claroline\CursusBundle\Entity\CursusGroup cg
@@ -56,8 +54,7 @@ class CursusGroupRepository extends EntityRepository
     public function findCursusGroupsFromCursusAndGroups(
         array $cursus,
         array $groups
-    )
-    {
+    ) {
         $dql = '
             SELECT cg
             FROM Claroline\CursusBundle\Entity\CursusGroup cg
@@ -75,8 +72,7 @@ class CursusGroupRepository extends EntityRepository
         Cursus $cursus,
         Group $group,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT cg
             FROM Claroline\CursusBundle\Entity\CursusGroup cg
@@ -98,8 +94,7 @@ class CursusGroupRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT g
             FROM Claroline\CoreBundle\Entity\Group g
@@ -123,8 +118,7 @@ class CursusGroupRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT g
             FROM Claroline\CoreBundle\Entity\Group g
@@ -150,8 +144,7 @@ class CursusGroupRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT g
             FROM Claroline\CoreBundle\Entity\Group g
@@ -175,8 +168,7 @@ class CursusGroupRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT g
             FROM Claroline\CoreBundle\Entity\Group g

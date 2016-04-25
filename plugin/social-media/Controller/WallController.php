@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,9 +8,7 @@
  * 
  * Date: 5/6/15
  */
-
 namespace Icap\SocialmediaBundle\Controller;
-
 
 use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -18,7 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class WallController extends Controller
 {
@@ -32,14 +29,16 @@ class WallController extends Controller
      *      class="ClarolineCoreBundle:User",
      *      options={"publicUrl" = "publicUrl"}
      * )
+     *
      * @param $loggedUser
      * @param $profileUser
+     *
      * @return array
      */
     public function viewAction(User $loggedUser, User $profileUser)
     {
         $wallList = $this->itemListAction($profileUser->getId(), 1, $loggedUser);
-        $wallList["user"] = $profileUser;
+        $wallList['user'] = $profileUser;
 
         return $wallList;
     }
@@ -49,9 +48,11 @@ class WallController extends Controller
      * @Method({"GET"})
      * @Template()
      * @ParamConverter("user", options={"authenticatedUser" = true})
+     *
      * @param $userId
      * @param $page
      * @param $user
+     *
      * @return array
      */
     public function itemListAction($userId, $page, $user)
@@ -64,17 +65,19 @@ class WallController extends Controller
         $pager = $this->paginateQuery($likesQB, $page);
 
         return array(
-            "pager" => $pager,
-            "userId" => $userId,
-            "isOwner" => $isOwner);
+            'pager' => $pager,
+            'userId' => $userId,
+            'isOwner' => $isOwner, );
     }
 
     /**
      * @Route("/wall/item/{id}", name="icap_socialmedia_wall_item_delete", requirements={"id" : "\d+"})
      * @Method({"DELETE"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
+     *
      * @param $id
      * @param User $user
+     *
      * @return array
      */
     public function deleteWallItemAction($id, User $user)

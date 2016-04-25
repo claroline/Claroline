@@ -101,7 +101,7 @@ class SettingChecker
         $category->addRequirement(
             'Parameter %parameter% should be equal or greater than %value% in your php.ini',
             array('parameter' => 'max_execution_time', 'value' => 300),
-            (ini_get('max_execution_time') >= 300 || ini_get('max_execution_time') == 0) ? true: false
+            (ini_get('max_execution_time') >= 300 || ini_get('max_execution_time') == 0) ? true : false
         );
 
         $category->addRecommendation(
@@ -115,7 +115,7 @@ class SettingChecker
             'magic_quotes_gpc' => false,
             'register_globals' => false,
             'session.auto_start' => false,
-            'file_uploads' => true
+            'file_uploads' => true,
         );
 
         foreach ($recommendedSettings as $parameter => $value) {
@@ -169,7 +169,7 @@ class SettingChecker
             'XML' => function_exists('utf8_decode'),
             'gd' => extension_loaded('gd'),
             'ffmpeg' => extension_loaded('ffmpeg'),
-            'ldap' => extension_loaded('ldap')
+            'ldap' => extension_loaded('ldap'),
         );
 
         foreach ($recommendedExtensions as $extension => $isEnabled) {
@@ -221,7 +221,7 @@ class SettingChecker
     private function checkFilePermissions()
     {
         $category = new SettingCategory('File permissions');
-        $rootDir = __DIR__ . '/../../../../../..';
+        $rootDir = __DIR__.'/../../../../../..';
         $writableElements = array(
             'app/cache' => 'directory',
             'app/sessions' => 'directory',
@@ -236,14 +236,14 @@ class SettingChecker
             'files/templates' => 'directory',
             'web' => 'directory',
             'web/uploads' => 'directory',
-            'web/js' =>  'directory'
+            'web/js' => 'directory',
         );
 
         foreach ($writableElements as $element => $type) {
             $category->addRequirement(
                 "The {$type} %{$type}% must be writable",
                 array($type => $element),
-                is_writable($rootDir . '/' . $element)
+                is_writable($rootDir.'/'.$element)
             );
         }
 

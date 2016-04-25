@@ -44,16 +44,15 @@ class ResultManager
      *     "utils"      = @DI\Inject("claroline.utilities.misc")
      * })
      *
-     * @param ObjectManager     $om
-     * @param EngineInterface   $templating
-     * @param ClaroUtilities    $utils
+     * @param ObjectManager   $om
+     * @param EngineInterface $templating
+     * @param ClaroUtilities  $utils
      */
     public function __construct(
         ObjectManager $om,
         EngineInterface $templating,
         ClaroUtilities $utils
-    )
-    {
+    ) {
         $this->om = $om;
         $this->templating = $templating;
         $this->utils = $utils;
@@ -63,6 +62,7 @@ class ResultManager
      * Creates a result resource.
      *
      * @param Result $result
+     *
      * @return Result
      */
     public function create(Result $result)
@@ -89,6 +89,7 @@ class ResultManager
      *
      * @param Workspace $workspace
      * @param User      $user
+     *
      * @return string
      */
     public function getWidgetContent(Workspace $workspace, User $user)
@@ -97,7 +98,7 @@ class ResultManager
             ->findByUserAndWorkspace($user, $workspace);
 
         return $this->templating->render('ClarolineResultBundle:Result:widget.html.twig', [
-            'results' => $results
+            'results' => $results,
         ]);
     }
 
@@ -105,15 +106,16 @@ class ResultManager
      * Returns the content of the result resource form.
      *
      * @param FormView $view
+     *
      * @return string
      */
     public function getResultFormContent(FormView $view)
     {
-         return $this->templating->render(
+        return $this->templating->render(
              'ClarolineCoreBundle:Resource:createForm.html.twig',
              [
                  'form' => $view,
-                 'resourceType' => 'claroline_result'
+                 'resourceType' => 'claroline_result',
              ]
          );
     }
@@ -123,9 +125,10 @@ class ResultManager
      * result. If the user passed in has the permission to edit the result,
      * all the marks are returned, otherwise only his mark is returned.
      *
-     * @param Result    $result
-     * @param User      $user
-     * @param bool      $canEdit
+     * @param Result $result
+     * @param User   $user
+     * @param bool   $canEdit
+     *
      * @return array
      */
     public function getMarks(Result $result, User $user, $canEdit)
@@ -142,8 +145,9 @@ class ResultManager
      * in which the given result lives. If the edit flag is set to false,
      * an empty array is returned.
      *
-     * @param Result    $result
-     * @param bool      $canEdit
+     * @param Result $result
+     * @param bool   $canEdit
+     *
      * @return array
      */
     public function getUsers(Result $result, $canEdit)
@@ -159,7 +163,7 @@ class ResultManager
         return array_map(function ($user) {
             return [
                 'id' => $user->getId(),
-                'name' => "{$user->getFirstName()} {$user->getLastName()}"
+                'name' => "{$user->getFirstName()} {$user->getLastName()}",
             ];
         }, $users);
     }
@@ -167,8 +171,9 @@ class ResultManager
     /**
      * Returns whether a mark is valid.
      *
-     * @param Result    $result
-     * @param mixed     $mark
+     * @param Result $result
+     * @param mixed  $mark
+     *
      * @return bool
      */
     public function isValidMark(Result $result, $mark)
@@ -182,9 +187,10 @@ class ResultManager
     /**
      * Creates a new mark.
      *
-     * @param Result    $result
-     * @param User      $user
-     * @param string    $mark
+     * @param Result $result
+     * @param User   $user
+     * @param string $mark
+     *
      * @return mark
      */
     public function createMark(Result $result, User $user, $mark)
@@ -210,8 +216,8 @@ class ResultManager
     /**
      * Updates a mark.
      *
-     * @param Mark      $mark
-     * @param string    $value
+     * @param Mark   $mark
+     * @param string $value
      */
     public function updateMark(Mark $mark, $value)
     {
@@ -222,9 +228,9 @@ class ResultManager
     /**
      * Import marks from a CSV file into a result resource.
      *
-     * @param Result        $result
-     * @param UploadedFile  $csvFile
-     * @param string        $importType Either "fullname", "code" or "username"
+     * @param Result       $result
+     * @param UploadedFile $csvFile
+     * @param string       $importType Either "fullname", "code" or "username"
      */
     public function importMarksFromCsv(Result $result, UploadedFile $csvFile, $importType = 'fullname')
     {
@@ -234,7 +240,7 @@ class ResultManager
 
         $data = [
             'marks' => [],
-            'errors' => []
+            'errors' => [],
         ];
 
         $fileData = file_get_contents($csvFile);
@@ -245,7 +251,7 @@ class ResultManager
             $data['errors'][] = [
                 'code' => self::ERROR_EMPTY_CSV,
                 'message' => 'errors.csv_empty',
-                'line' => null
+                'line' => null,
             ];
 
             return $data;
@@ -261,25 +267,25 @@ class ResultManager
                 $data['errors'][] = [
                     'code' => self::ERROR_MISSING_VALUES,
                     'message' => 'errors.csv_missing_values',
-                    'line' => $lineNumber
+                    'line' => $lineNumber,
                 ];
             } elseif (in_array('', $values)) {
                 $data['errors'][] = [
                     'code' => self::ERROR_EMPTY_VALUES,
                     'message' => 'errors.csv_empty_values',
-                    'line' => $lineNumber
+                    'line' => $lineNumber,
                 ];
             } elseif (!$this->isValidMark($result, $values[$countRowEl - 1])) {
                 $data['errors'][] = [
                     'code' => self::ERROR_INVALID_MARK,
                     'message' => 'errors.invalid_mark',
-                    'line' => $lineNumber
+                    'line' => $lineNumber,
                 ];
             } else {
                 $matchedUser = false;
 
                 foreach ($users as $user) {
-                    switch($importType) {
+                    switch ($importType) {
                         case 'fullname':
                             if ($user->getFirstName() === $values[0] && $user->getLastName() === $values[1]) {
                                 $matchedUser = $user;
@@ -302,7 +308,7 @@ class ResultManager
                     $data['errors'][] = [
                         'code' => self::ERROR_EXTRA_USERS,
                         'message' => 'errors.csv_extra_users',
-                        'line' => $lineNumber
+                        'line' => $lineNumber,
                     ];
                 } else {
                     $mark = new Mark($result, $user, $values[$countRowEl - 1]);

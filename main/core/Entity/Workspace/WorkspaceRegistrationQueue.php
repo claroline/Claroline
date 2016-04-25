@@ -27,7 +27,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  */
 class WorkspaceRegistrationQueue
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

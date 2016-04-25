@@ -11,7 +11,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
-use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdditionalActionUpdater extends Updater

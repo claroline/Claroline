@@ -3,19 +3,15 @@
  * Created by PhpStorm.
  * User: Aurelien
  * Date: 17/06/14
- * Time: 09:47
+ * Time: 09:47.
  */
-
 namespace Icap\DropzoneBundle\Voter;
 
-
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Entity;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -24,7 +20,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class DropzoneVoter
 {
-
     private $container;
     private $maskManager;
 
@@ -43,6 +38,7 @@ class DropzoneVoter
     /**
      * @param Dropzone $dropzone
      * @param $actionName
+     *
      * @throws AccessDeniedException
      */
     protected function isAllow(Dropzone $dropzone, $actionName)
@@ -50,9 +46,7 @@ class DropzoneVoter
         $collection = new ResourceCollection(array($dropzone->getResourceNode()));
 
         if (false === $this->container->get('security.authorization_checker')->isGranted($actionName, $collection)) {
-
             throw new AccessDeniedException();
-
         }
     }
 
@@ -74,4 +68,4 @@ class DropzoneVoter
         $event = new LogResourceReadEvent($dropzone->getResourceNode());
         $this->container->get('event_dispatcher')->dispatch('log', $event);
     }
-} 
+}

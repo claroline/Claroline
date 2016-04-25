@@ -47,8 +47,7 @@ class SimpleTextWidgetListener
         TwigEngine $templating,
         ObjectManager $om,
         $router
-    )
-    {
+    ) {
         $this->simpleTextManager = $simpleTextManager;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
@@ -94,7 +93,7 @@ class SimpleTextWidgetListener
             'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'config' => $instance
+                'config' => $instance,
             )
         );
         $event->setContent($content);
@@ -130,36 +129,35 @@ class SimpleTextWidgetListener
 
         foreach ($resourceInfos['copies'] as $resource) {
             $type = $resource['original']->getResourceType()->getName();
- 
+
             $content = str_replace(
-                '/file/resource/media/' . $resource['original']->getId(),
-                '/file/resource/media/' . $resource['copy']->getId(),
+                '/file/resource/media/'.$resource['original']->getId(),
+                '/file/resource/media/'.$resource['copy']->getId(),
                 $content
             );
 
             $content = str_replace(
-                "/resource/open/{$type}/" . $resource['original']->getId(),
-                "/resource/open/{$type}/" . $resource['copy']->getId(),
+                "/resource/open/{$type}/".$resource['original']->getId(),
+                "/resource/open/{$type}/".$resource['copy']->getId(),
                 $content
             );
-            
         }
 
         return $content;
     }
-    
+
     private function replaceTabsLinks($content, $tabsInfos)
     {
         foreach ($tabsInfos as $tabInfo) {
             $oldWsId = $tabInfo['original']->getWorkspace()->getId();
             $newWsId = $tabInfo['copy']->getWorkspace()->getId();
             $content = str_replace(
-                '/workspaces/' . $oldWsId . '/open/tool/home/tab/' . $tabInfo['original']->getId(),
-                '/workspaces/' . $newWsId . '/open/tool/home/tab/' . $tabInfo['copy']->getId(),
+                '/workspaces/'.$oldWsId.'/open/tool/home/tab/'.$tabInfo['original']->getId(),
+                '/workspaces/'.$newWsId.'/open/tool/home/tab/'.$tabInfo['copy']->getId(),
                 $content
             );
         }
-        
+
         return $content;
     }
 }

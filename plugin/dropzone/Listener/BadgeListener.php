@@ -3,12 +3,6 @@
 namespace Icap\DropzoneBundle\Listener;
 
 use Doctrine\ORM\EntityManager;
-use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
-use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
-use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
-use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
-use Icap\BlogBundle\Event\Log\LogPostReadEvent;
-use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionDeleteEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
@@ -25,11 +19,6 @@ use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
-use Icap\LessonBundle\Event\Log\LogChapterCreateEvent;
-use Icap\LessonBundle\Event\Log\LogChapterDeleteEvent;
-use Icap\LessonBundle\Event\Log\LogChapterMoveEvent;
-use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
-use Icap\LessonBundle\Event\Log\LogChapterUpdateEvent;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -53,7 +42,7 @@ class BadgeListener
      */
     public function __construct(Router $router, EntityManager $entityManager)
     {
-        $this->router        = $router;
+        $this->router = $router;
         $this->entityManager = $entityManager;
     }
 
@@ -77,10 +66,9 @@ class BadgeListener
     public function onBagdeCreateValidationLink($event)
     {
         $content = null;
-        $log     = $event->getLog();
+        $log = $event->getLog();
 
-        switch($log->getAction())
-        {
+        switch ($log->getAction()) {
             case LogCorrectionDeleteEvent::ACTION:
             case LogCorrectionEndEvent::ACTION:
             case LogCorrectionStartEvent::ACTION:
@@ -98,11 +86,11 @@ class BadgeListener
             case LogDropzoneConfigureEvent::ACTION:
                 $logDetails = $event->getLog()->getDetails();
                 $parameters = array('resourceId' => $logDetails['dropzone']['id']);
-                $url        = $this->router->generate('icap_dropzone_open', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+                $url = $this->router->generate('icap_dropzone_open', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
 
                 /** @var Dropzone $dropzone */
-                $dropzone = $this->entityManager->getRepository("IcapDropzoneBundle:Dropzone")->findOneById($logDetails['dropzone']['id']);
-                $title    = $dropzone->getResourceNode()->getName();
+                $dropzone = $this->entityManager->getRepository('IcapDropzoneBundle:Dropzone')->findOneById($logDetails['dropzone']['id']);
+                $title = $dropzone->getResourceNode()->getName();
                 $content = sprintf('<a href="%s" title="%s">%s</a>', $url, $title, $title);
                 break;
         }

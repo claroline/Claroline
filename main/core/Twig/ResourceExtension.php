@@ -15,8 +15,6 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Tag;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
@@ -42,7 +40,7 @@ class ResourceExtension extends \Twig_Extension
     {
         return array(
             'isMenuActionImplemented' => new \Twig_Function_Method($this, 'isMenuActionImplemented'),
-            'getCurrentUrl' => new \Twig_Function_Method($this, 'getCurrentUrl')
+            'getCurrentUrl' => new \Twig_Function_Method($this, 'getCurrentUrl'),
         );
     }
 
@@ -60,4 +58,4 @@ class ResourceExtension extends \Twig_Extension
     {
         return '';
     }
-} 
+}

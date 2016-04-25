@@ -49,8 +49,7 @@ class ResourceVoterTest extends MockeryTestCase
         $parameters,
         $decoderValue,
         $maskValue
-    )
-    {
+    ) {
         $this->markTestSkipped();
         $nodes = $collection->getResources();
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
@@ -80,19 +79,19 @@ class ResourceVoterTest extends MockeryTestCase
 
         return array(
             array(
-                'collection'   => new ResourceCollection(array($node)),
-                'voterResult'  => VoterInterface::ACCESS_DENIED,
-                'parameters'   => array('custom'),
+                'collection' => new ResourceCollection(array($node)),
+                'voterResult' => VoterInterface::ACCESS_DENIED,
+                'parameters' => array('custom'),
                 'decoderValue' => 1,
-                'maskValue'    => 0
+                'maskValue' => 0,
             ),
             array(
-                'collection'   => new ResourceCollection(array($node)),
-                'voterResult'  => VoterInterface::ACCESS_GRANTED,
-                'parameters'   => array('custom'),
+                'collection' => new ResourceCollection(array($node)),
+                'voterResult' => VoterInterface::ACCESS_GRANTED,
+                'parameters' => array('custom'),
                 'decoderValue' => 1,
-                'maskValue'    => 1
-            )
+                'maskValue' => 1,
+            ),
         );
     }
 
@@ -109,8 +108,7 @@ class ResourceVoterTest extends MockeryTestCase
         $countErrors,
         $mask,
         $decoder
-    )
-    {
+    ) {
         $voter = $this->getVoter(array('isWorkspaceManager', 'getRoleActionDeniedMessage'));
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $token->shouldReceive('getUser')->andReturn($userToken);
@@ -153,8 +151,7 @@ class ResourceVoterTest extends MockeryTestCase
         $countErrors,
         $isWorkspaceManager,
         $creationRights
-    )
-    {
+    ) {
         $voter = $this->getVoter(array('isWorkspaceManager'));
         $voter->shouldReceive('isWorkspaceManager')->andReturn($isWorkspaceManager);
 
@@ -170,7 +167,7 @@ class ResourceVoterTest extends MockeryTestCase
         $this->repository->shouldReceive('findCreationRights')->andReturn($creationRights);
 
         $this->assertEquals(
-            count($voter->checkCreation($type , $node, $token, $workspace)),
+            count($voter->checkCreation($type, $node, $token, $workspace)),
             $countErrors
         );
     }
@@ -183,8 +180,7 @@ class ResourceVoterTest extends MockeryTestCase
         $createErrors,
         $copyErrors,
         $deleteErrors
-    )
-    {
+    ) {
         $workspace = new Workspace();
         $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $resourceType->shouldReceive('getName')->andReturn('type');
@@ -212,8 +208,7 @@ class ResourceVoterTest extends MockeryTestCase
         $countErrors,
         $createErrors,
         $copyErrors
-    )
-    {
+    ) {
         $workspace = new Workspace();
         $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $resourceType->shouldReceive('getName')->andReturn('type');
@@ -240,20 +235,20 @@ class ResourceVoterTest extends MockeryTestCase
             array(
                 'countErrors' => 0,
                 'copyErrors' => array(),
-                'createErrors' => array()
+                'createErrors' => array(),
             ),
             //cannot copy
             array(
                 'countErrors' => 2,
                 'copyErrors' => array('error'),
-                'createErrors' => array()
+                'createErrors' => array(),
             ),
             //cannot create
             array(
                 'countErrors' => 1,
                 'copyErrors' => array(),
-                'createErrors' => array('error')
-            )
+                'createErrors' => array('error'),
+            ),
         );
     }
 
@@ -265,28 +260,28 @@ class ResourceVoterTest extends MockeryTestCase
                 'countErrors' => 0,
                 'copyErrors' => array(),
                 'createErrors' => array(),
-                'deleteErrors' => array()
+                'deleteErrors' => array(),
             ),
             //cannot copy
             array(
                 'countErrors' => 2,
                 'copyErrors' => array('error'),
                 'createErrors' => array(),
-                'deleteErrors' => array()
+                'deleteErrors' => array(),
             ),
             //cannot create
             array(
                 'countErrors' => 1,
                 'copyErrors' => array(),
                 'createErrors' => array('error'),
-                'deleteErrors' => array()
+                'deleteErrors' => array(),
             ),
             //delete errors
             array(
                 'countErrors' => 1,
                 'copyErrors' => array(),
                 'createErrors' => array(),
-                'deleteErrors' => array('error')
+                'deleteErrors' => array('error'),
             ),
         );
     }
@@ -298,26 +293,26 @@ class ResourceVoterTest extends MockeryTestCase
             array(
                 'countErrors' => 0,
                 'isWorkspaceManager' => true,
-                'creationRights' => array()
+                'creationRights' => array(),
             ),
             //There is no creationRights
             array(
                 'countErrors' => 1,
                 'isWorkspaceManager' => false,
-                'creationRights' => array()
+                'creationRights' => array(),
             ),
             //wrong creationRights
             array(
                 'countErrors' => 1,
                 'isWorkspaceManager' => false,
-                'creationRights' => array(array('name' => 'invalid'), array('name' => 'notworking'))
+                'creationRights' => array(array('name' => 'invalid'), array('name' => 'notworking')),
             ),
             //that one should work
             array(
                 'countErrors' => 0,
                 'isWorkspaceManager' => false,
-                'creationRights' =>  array(array('name' => 'invalid'), array('name' => 'validType'))
-            )
+                'creationRights' => array(array('name' => 'invalid'), array('name' => 'validType')),
+            ),
         );
     }
 
@@ -340,7 +335,7 @@ class ResourceVoterTest extends MockeryTestCase
                 'userToken' => null,
                 'countErrors' => 0,
                 'mask' => 31,
-                'decoder' => null
+                'decoder' => null,
             ),
             //the resourceCreator can do w/e he wants
             array(
@@ -352,7 +347,7 @@ class ResourceVoterTest extends MockeryTestCase
                 'userToken' => $firstUser,
                 'countErrors' => 0,
                 'mask' => 31,
-                'decoder' => null
+                'decoder' => null,
             ),
             //there is no decoder
             array(
@@ -364,7 +359,7 @@ class ResourceVoterTest extends MockeryTestCase
                 'userToken' => $firstUser,
                 'countErrors' => 1,
                 'mask' => 31,
-                'decoder' => null
+                'decoder' => null,
             ),
             //the access is granted
             array(
@@ -376,7 +371,7 @@ class ResourceVoterTest extends MockeryTestCase
                 'userToken' => $firstUser,
                 'countErrors' => 0,
                 'mask' => 31,
-                'decoder' => $decoder
+                'decoder' => $decoder,
             ),
             //the access is not granted
             array(
@@ -388,7 +383,7 @@ class ResourceVoterTest extends MockeryTestCase
                 'userToken' => $firstUser,
                 'countErrors' => 2,
                 'mask' => 0,
-                'decoder' => $decoder
+                'decoder' => $decoder,
             ),
         );
     }
@@ -409,7 +404,7 @@ class ResourceVoterTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\CoreBundle\Library\Security\Voter\ResourceVoter' . $stringMocked,
+            'Claroline\CoreBundle\Library\Security\Voter\ResourceVoter'.$stringMocked,
             array($this->em, $this->translator, $this->ut, $this->maskManager)
         );
     }

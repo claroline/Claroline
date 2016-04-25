@@ -38,7 +38,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
         $this->om = $om;
     }
 
-    public function  getConfigTreeBuilder()
+    public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('groups');
@@ -53,12 +53,11 @@ class GroupsImporter extends Importer implements ConfigurationInterface
         $names = $this->om->getRepository('Claroline\CoreBundle\Entity\Group')->findNames();
         $availableUsernames = array();
 
-        foreach ($this->om->getRepository('Claroline\CoreBundle\Entity\User')->findUsernames() as $username)
-        {
+        foreach ($this->om->getRepository('Claroline\CoreBundle\Entity\User')->findUsernames() as $username) {
             $availableUsernames[] = $username['username'];
         }
 
-        if (isset ($configuration['members']['users'])) {
+        if (isset($configuration['members']['users'])) {
             $mergedUsers = $configuration['members']['users'];
 
             foreach ($mergedUsers as $el) {
@@ -88,23 +87,23 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                     ->ifTrue(
                                         function ($v) use ($names) {
                                             return call_user_func_array(
-                                                __CLASS__ . '::nameAlreadyExistsInDatabase',
+                                                __CLASS__.'::nameAlreadyExistsInDatabase',
                                                 array($v, $names)
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The name %s already exists in the database")
+                                    ->thenInvalid('The name %s already exists in the database')
                                 ->end()
                                     ->validate()
                                     ->ifTrue(
                                         function ($v) use ($names) {
                                             return call_user_func_array(
-                                                __CLASS__ . '::nameAlreadyExistsInConfig',
+                                                __CLASS__.'::nameAlreadyExistsInConfig',
                                                 array($v, $names)
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The name %s already exists in the configuration")
+                                    ->thenInvalid('The name %s already exists in the configuration')
                                 ->end()
                            ->end()
                            ->arrayNode('users')
@@ -115,7 +114,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                                 ->ifTrue(
                                                     function ($v) use ($availableUsernames) {
                                                         return call_user_func_array(
-                                                            __CLASS__ . '::usernameExists',
+                                                            __CLASS__.'::usernameExists',
                                                             array($v, $availableUsernames)
                                                         );
                                                     }
@@ -134,7 +133,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                             ->ifTrue(
                                                 function ($v) use ($availableRoleName) {
                                                     return call_user_func_array(
-                                                        __CLASS__ . '::roleNameExists',
+                                                        __CLASS__.'::roleNameExists',
                                                         array($v, $availableRoleName)
                                                     );
                                                 }
@@ -203,7 +202,6 @@ class GroupsImporter extends Importer implements ConfigurationInterface
 
     public function import(array $data)
     {
-
     }
 
     public static function nameAlreadyExistsInDatabase($v, $groups)

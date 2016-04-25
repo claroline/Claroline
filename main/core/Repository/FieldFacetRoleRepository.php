@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class FieldFacetRoleRepository extends EntityRepository
 {
@@ -27,7 +26,7 @@ class FieldFacetRoleRepository extends EntityRepository
                 1 as canEdit
                 FROM Claroline\CoreBundle\Entity\Facet\FieldFacet field
             ";
-        } else{
+        } else {
             $dql = "
                 SELECT
                   field.id as id,
@@ -45,9 +44,9 @@ class FieldFacetRoleRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         if (!in_array('ROLE_ADMIN', $roles)) {
-        $query->setParameter('rolenames', $roles);
+            $query->setParameter('rolenames', $roles);
         }
 
         return $query->getArrayResult();
     }
-} 
+}

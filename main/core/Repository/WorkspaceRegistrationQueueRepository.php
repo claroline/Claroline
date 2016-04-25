@@ -31,7 +31,7 @@ class WorkspaceRegistrationQueueRepository extends EntityRepository
 
     public function findByUser(User $user)
     {
-        $dql ="
+        $dql = "
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue w
             WHERE w.user = :user
         ";

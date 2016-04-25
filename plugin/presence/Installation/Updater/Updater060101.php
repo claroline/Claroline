@@ -22,54 +22,54 @@ class Updater060101 extends Updater
         $presences = $om->getRepository('FormaLibrePresenceBundle:Presence')->findAll();
         $count = count($presences);
         $i = 0;
-        
+
         foreach ($presences as $presence) {
-            $i++;
+            ++$i;
             $date = $presence->getDate();
             $newDate = $this->invertDate($date);
             $presence->setDate($newDate);
             $om->persist($presence);
-            
+
             if ($i % self::MAX_BATCH_SIZE === 0) {
-                $this->log('Flushing ' . $i . '/' . $count . ' presences');
+                $this->log('Flushing '.$i.'/'.$count.' presences');
                 $om->flush();
             }
         }
-        
+
         $this->log('Done !');
         $om->flush();
-        
+
         $this->log('Setting course session to null before the 13/10/2015...');
         $i = 0;
-        $criticalDate = \DateTime::createFromFormat("d/m/y", '13/10/15');
+        $criticalDate = \DateTime::createFromFormat('d/m/y', '13/10/15');
         $criticalDate->setTime(0, 0);
-        
+
         foreach ($presences as $presence) {
             if ($presence->getDate() <= $criticalDate) {
-                $i++;
+                ++$i;
                 $presence->setCourseSession(null);
                 $om->persist($presence);
 
                 if ($i % self::MAX_BATCH_SIZE === 0) {
-                    $this->log('Flushing ' . $i . '/' . $count . ' presences');
+                    $this->log('Flushing '.$i.'/'.$count.' presences');
                     $om->flush();
                 }
             }
         }
-        
+
         $this->log('Done !');
         $om->flush();
     }
-    
+
     private function invertDate(\DateTime $date)
     {
         $y = $date->format('y');
         $m = $date->format('m');
         $d = $date->format('d');
 
-        $newDate = \DateTime::createFromFormat("d-m-y", $y . '-' . $m . '-' . $d);
+        $newDate = \DateTime::createFromFormat('d-m-y', $y.'-'.$m.'-'.$d);
         $newDate->setTime(0, 0);
-        
+
         return $newDate;
     }
 }

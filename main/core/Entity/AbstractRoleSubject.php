@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Role;
 
 abstract class AbstractRoleSubject
 {
@@ -63,7 +62,7 @@ abstract class AbstractRoleSubject
      *
      * @param string $roleName
      *
-     * @return boolean
+     * @return bool
      */
     public function hasRole($roleName)
     {
@@ -75,7 +74,7 @@ abstract class AbstractRoleSubject
     }
 
     /**
-     * Returns the subject roles as an array of sting values
+     * Returns the subject roles as an array of sting values.
      */
     public function getRoles()
     {

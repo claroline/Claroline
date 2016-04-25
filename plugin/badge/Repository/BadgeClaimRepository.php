@@ -2,7 +2,6 @@
 
 namespace Icap\BadgeBundle\Repository;
 
-use Claroline\CoreBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
@@ -12,7 +11,6 @@ class BadgeClaimRepository extends EntityRepository
 {
     /**
      * @param User $user
-     *
      * @param bool $getQuery
      *
      * @return Query|array
@@ -29,7 +27,7 @@ class BadgeClaimRepository extends EntityRepository
             )
             ->setParameter('userId', $user->getId());
 
-        return ($getQuery) ? $query: $query->getResult();
+        return ($getQuery) ? $query : $query->getResult();
     }
 
     /**
@@ -60,8 +58,7 @@ class BadgeClaimRepository extends EntityRepository
 
     /**
      * @param Workspace $workspace
-     *
-     * @param bool $executedQuery
+     * @param bool      $executedQuery
      *
      * @return \Doctrine\ORM\Query|array
      */
@@ -79,13 +76,13 @@ class BadgeClaimRepository extends EntityRepository
                 FROM IcapBadgeBundle:BadgeClaim bc
                 JOIN bc.badge b
                 JOIN b.translations bt
-                WHERE ' . $workspaceConstraint
+                WHERE '.$workspaceConstraint
             );
 
         if (null !== $workspace) {
             $query->setParameter('workspace', $workspace);
         }
 
-        return ($executedQuery) ? $query->getResult(): $query;
+        return ($executedQuery) ? $query->getResult() : $query;
     }
 }

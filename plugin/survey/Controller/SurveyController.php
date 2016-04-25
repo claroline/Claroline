@@ -79,8 +79,7 @@ class SurveyController extends Controller
         TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
@@ -101,6 +100,7 @@ class SurveyController extends Controller
      * @EXT\Template()
      *
      * @param Survey $survey
+     *
      * @return array
      */
     public function indexAction(Survey $survey)
@@ -139,7 +139,7 @@ class SurveyController extends Controller
             'status' => $status,
             'currentDate' => $currentDate,
             'hasAnswered' => $hasAnswered,
-            'isAnon' => $isAnon
+            'isAnon' => $isAnon,
         );
     }
 
@@ -151,6 +151,7 @@ class SurveyController extends Controller
      * @EXT\Template()
      *
      * @param Survey $survey
+     *
      * @return array
      */
     public function surveyEditionMainMenuAction(Survey $survey)
@@ -161,7 +162,7 @@ class SurveyController extends Controller
 
         return array(
             'survey' => $survey,
-            'status' => $status
+            'status' => $status,
         );
     }
 
@@ -184,7 +185,7 @@ class SurveyController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'survey' => $survey
+            'survey' => $survey,
         );
     }
 
@@ -219,7 +220,7 @@ class SurveyController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'survey' => $survey
+            'survey' => $survey,
         );
     }
 
@@ -253,7 +254,7 @@ class SurveyController extends Controller
             'survey' => $survey,
             'questionRelations' => $questionRelations,
             'status' => $status,
-            'questionResult' => $questionResult
+            'questionResult' => $questionResult,
         );
     }
 
@@ -282,7 +283,7 @@ class SurveyController extends Controller
                     $this->typedQuestionDisplayAction($survey, $question)->getContent();
             } else {
                 $questionViews[] = $this->templating->render(
-                    "ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig",
+                    'ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig',
                     array('question' => $question)
                 );
             }
@@ -291,7 +292,7 @@ class SurveyController extends Controller
         return array(
             'survey' => $survey,
             'questionRelations' => $questionRelations,
-            'questionViews' => $questionViews
+            'questionViews' => $questionViews,
         );
     }
 
@@ -362,8 +363,7 @@ class SurveyController extends Controller
         $order,
         $page = 1,
         $max = 20
-    )
-    {
+    ) {
         $this->checkSurveyRight($survey, 'EDIT');
         $questions = $this->surveyManager->getQuestionsByWorkspace(
             $survey->getResourceNode()->getWorkspace(),
@@ -378,7 +378,7 @@ class SurveyController extends Controller
             'questions' => $questions,
             'orderedBy' => $orderedBy,
             'order' => $order,
-            'max' => $max
+            'max' => $max,
         );
     }
 
@@ -405,7 +405,7 @@ class SurveyController extends Controller
             'survey' => $survey,
             'models' => $models,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
         );
     }
 
@@ -426,7 +426,6 @@ class SurveyController extends Controller
         $workspaceIdB = $model->getWorkspace()->getId();
 
         if (!$canEdit || ($workspaceIdA !== $workspaceIdB)) {
-
             throw new AccessDeniedException();
         }
         $this->surveyManager->deleteQuestionModel($model);
@@ -441,7 +440,7 @@ class SurveyController extends Controller
                     'survey' => $survey->getId(),
                     'models' => $models,
                     'orderedBy' => 'title',
-                    'order' => 'ASC'
+                    'order' => 'ASC',
                 )
             )
         );
@@ -464,8 +463,7 @@ class SurveyController extends Controller
         $order = 'ASC',
         $page = 1,
         $max = 20
-    )
-    {
+    ) {
         $this->checkSurveyRight($survey, 'EDIT');
         $relations = $survey->getQuestionRelations();
         $exclusions = array();
@@ -488,7 +486,7 @@ class SurveyController extends Controller
             'questions' => $questions,
             'orderedBy' => $orderedBy,
             'order' => $order,
-            'max' => $max
+            'max' => $max,
         );
     }
 
@@ -517,7 +515,7 @@ class SurveyController extends Controller
             'form' => $form->createView(),
             'survey' => $survey,
             'source' => $source,
-            'models' => $models
+            'models' => $models,
         );
     }
 
@@ -534,7 +532,7 @@ class SurveyController extends Controller
     public function questionCreateAction(Survey $survey, $source)
     {
         $this->checkSurveyRight($survey, 'EDIT');
-        $question  = new Question();
+        $question = new Question();
         $form = $this->formFactory->create(
             new QuestionType(),
             $question
@@ -574,14 +572,13 @@ class SurveyController extends Controller
                     )
                 );
             } else {
-
                 return new RedirectResponse(
                     $this->router->generate(
                         'claro_survey_questions_management',
                         array(
                             'survey' => $survey->getId(),
                             'orderedBy' => 'title',
-                            'order' => 'ASC'
+                            'order' => 'ASC',
                         )
                     )
                 );
@@ -595,7 +592,7 @@ class SurveyController extends Controller
             'form' => $form->createView(),
             'survey' => $survey,
             'source' => $source,
-            'models' => $models
+            'models' => $models,
         );
     }
 
@@ -613,8 +610,7 @@ class SurveyController extends Controller
         Question $question,
         Survey $survey,
         $source
-    )
-    {
+    ) {
         $this->checkQuestionRight($survey, $question, 'EDIT');
         $form = $this->formFactory->create(
             new QuestionType(),
@@ -629,7 +625,7 @@ class SurveyController extends Controller
             'question' => $question,
             'survey' => $survey,
             'source' => $source,
-            'models' => $models
+            'models' => $models,
         );
     }
 
@@ -647,8 +643,7 @@ class SurveyController extends Controller
         Question $question,
         Survey $survey,
         $source
-    )
-    {
+    ) {
         $this->checkQuestionRight($survey, $question, 'EDIT');
         $form = $this->formFactory->create(
             new QuestionType(),
@@ -678,7 +673,6 @@ class SurveyController extends Controller
             }
 
             if ($source === 'survey') {
-
                 return new RedirectResponse(
                     $this->router->generate(
                         'claro_survey_management',
@@ -686,18 +680,17 @@ class SurveyController extends Controller
                     )
                 );
             } else {
-
                 return new RedirectResponse(
                     $this->router->generate(
                         'claro_survey_questions_management',
                         array(
                             'survey' => $survey->getId(),
                             'orderedBy' => 'title',
-                            'order' => 'ASC'
+                            'order' => 'ASC',
                         )
                     )
                 );
-                }
+            }
         }
         $models = $this->surveyManager->getQuestionModelsByWorkspace(
             $survey->getResourceNode()->getWorkspace()
@@ -708,7 +701,7 @@ class SurveyController extends Controller
             'question' => $question,
             'survey' => $survey,
             'source' => $source,
-            'models' => $models
+            'models' => $models,
         );
     }
 
@@ -733,7 +726,7 @@ class SurveyController extends Controller
                 array(
                     'survey' => $survey->getId(),
                     'orderedBy' => 'title',
-                    'order' => 'ASC'
+                    'order' => 'ASC',
                 )
             )
         );
@@ -758,7 +751,7 @@ class SurveyController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'survey' => $survey
+            'survey' => $survey,
         );
     }
 
@@ -774,7 +767,7 @@ class SurveyController extends Controller
     public function questionTitleCreateAction(Survey $survey)
     {
         $this->checkSurveyRight($survey, 'EDIT');
-        $question  = new Question();
+        $question = new Question();
         $question->setTitle('TITLE');
         $form = $this->formFactory->create(
             new QuestionTitleType(),
@@ -800,7 +793,7 @@ class SurveyController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'survey' => $survey
+            'survey' => $survey,
         );
     }
 
@@ -824,7 +817,7 @@ class SurveyController extends Controller
         return array(
             'form' => $form->createView(),
             'question' => $question,
-            'survey' => $survey
+            'survey' => $survey,
         );
     }
 
@@ -860,7 +853,7 @@ class SurveyController extends Controller
         return array(
             'form' => $form->createView(),
             'question' => $question,
-            'survey' => $survey
+            'survey' => $survey,
         );
     }
 
@@ -869,6 +862,7 @@ class SurveyController extends Controller
      *     "/survey/{survey}/question/{question}/title/delete",
      *     name="claro_survey_question_title_delete"
      * )
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function questionTitleDeleteAction(Question $question, Survey $survey)
@@ -967,13 +961,13 @@ class SurveyController extends Controller
      *     name="claro_survey_typed_question_create_form",
      *     options={"expose"=true}
      * )
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function typedQuestionCreateFormAction(
         Survey $survey,
         $questionType
-    )
-    {
+    ) {
         $this->checkSurveyRight($survey, 'EDIT');
 
         switch ($questionType) {
@@ -994,14 +988,14 @@ class SurveyController extends Controller
      *     name="claro_survey_typed_question_edit_form",
      *     options={"expose"=true}
      * )
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function typedQuestionEditFormAction(
         Question $question,
         Survey $survey,
         $questionType
-    )
-    {
+    ) {
         $this->checkQuestionRight($survey, $question, 'EDIT');
 
         switch ($questionType) {
@@ -1030,8 +1024,7 @@ class SurveyController extends Controller
      */
     public function surveyQuestionRelationMandatorySwitchAction(
         SurveyQuestionRelation $relation
-    )
-    {
+    ) {
         $survey = $relation->getSurvey();
         $this->checkSurveyRight($survey, 'EDIT');
 
@@ -1093,7 +1086,6 @@ class SurveyController extends Controller
                     }
                 } elseif ($question->getType() === 'multiple_choice_single' ||
                         $question->getType() === 'multiple_choice_multiple') {
-
                     $choiceAnswers = $this->surveyManager
                         ->getMultipleChoiceAnswersByUserAndSurveyAndQuestion(
                             $user,
@@ -1131,7 +1123,7 @@ class SurveyController extends Controller
                 )->getContent();
             } else {
                 $questionViews[$relation->getId()] = $this->templating->render(
-                    "ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig",
+                    'ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig',
                     array('question' => $question)
                 );
             }
@@ -1143,7 +1135,7 @@ class SurveyController extends Controller
             'questionViews' => $questionViews,
             'canEdit' => $canEdit,
             'errors' => $errors,
-            'isAnon' => $isAnon
+            'isAnon' => $isAnon,
         );
     }
 
@@ -1176,20 +1168,17 @@ class SurveyController extends Controller
                 $answersDatas = array();
 
                 foreach ($postDatas as $questionId => $questionDatas) {
-
                     if (isset($questionDatas['comment'])) {
                         $answersDatas[$questionId]['comment'] = $questionDatas['comment'];
                     }
 
                     if (isset($questionDatas['answer']) &&
                         !empty($questionDatas['answer'])) {
-
                         $answersDatas[$questionId]['answer'] = $questionDatas['answer'];
                     }
 
                     if (isset($questionDatas['choice']) &&
                         !empty($questionDatas['choice'])) {
-
                         $choiceId = $questionDatas['choice'];
                         $answersDatas[$questionId][$choiceId] = $choiceId;
                     }
@@ -1199,7 +1188,6 @@ class SurveyController extends Controller
                     }
 
                     foreach ($questionDatas as $key => $value) {
-
                         if (is_int($key)) {
                             $answersDatas[$questionId][$key] = $value;
                         }
@@ -1224,7 +1212,7 @@ class SurveyController extends Controller
                         )->getContent();
                     } else {
                         $questionViews[$relation->getId()] = $this->templating->render(
-                            "ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig",
+                            'ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig',
                             array('question' => $question)
                         );
                     }
@@ -1236,7 +1224,7 @@ class SurveyController extends Controller
                     'questionViews' => $questionViews,
                     'canEdit' => $canEdit,
                     'errors' => $errors,
-                    'isAnon' => $isAnon
+                    'isAnon' => $isAnon,
                 );
             }
 
@@ -1274,7 +1262,6 @@ class SurveyController extends Controller
 
                         if (isset($questionResponse['comment']) &&
                             !empty($questionResponse['comment'])) {
-
                             $questionAnswer->setComment($questionResponse['comment']);
                         }
                         $this->surveyManager->persistQuestionAnswer($questionAnswer);
@@ -1282,25 +1269,19 @@ class SurveyController extends Controller
                         if ($questionType === 'open_ended' &&
                             isset($questionResponse['answer']) &&
                             !empty($questionResponse['answer'])) {
-
                             $openEndedAnswer = new OpenEndedQuestionAnswer();
                             $openEndedAnswer->setQuestionAnswer($questionAnswer);
                             $openEndedAnswer->setContent($questionResponse['answer']);
                             $this->surveyManager
                                 ->persistOpenEndedQuestionAnswer($openEndedAnswer);
-
                         } elseif ($questionType === 'multiple_choice_single' ||
                                 $questionType === 'multiple_choice_multiple') {
-
                             $multipleChoiceQuestion = $this->surveyManager
                                 ->getMultipleChoiceQuestionByQuestion($question);
 
                             if (!is_null($multipleChoiceQuestion)) {
-
                                 if ($questionType === 'multiple_choice_multiple') {
-
-                                    foreach($questionResponse as $choiceId => $response) {
-
+                                    foreach ($questionResponse as $choiceId => $response) {
                                         if ($choiceId !== 'comment' && $choiceId !== 'other') {
                                             $choice = $this->surveyManager->getChoiceById($choiceId);
                                             $choiceAnswer = new MultipleChoiceQuestionAnswer();
@@ -1317,8 +1298,7 @@ class SurveyController extends Controller
                                 } elseif ($questionType === 'multiple_choice_single' &&
                                     isset($questionResponse['choice']) &&
                                     !empty($questionResponse['choice'])) {
-
-                                    $choiceId = (int)$questionResponse['choice'];
+                                    $choiceId = (int) $questionResponse['choice'];
                                     $choice = $this->surveyManager->getChoiceById($choiceId);
                                     $choiceAnswer = new MultipleChoiceQuestionAnswer();
                                     $choiceAnswer->setQuestionAnswer($questionAnswer);
@@ -1332,7 +1312,6 @@ class SurveyController extends Controller
                                 }
                             }
                         }
-
                     } elseif ($survey->getAllowAnswerEdition()) {
                         $questionAnswer = $this->surveyManager
                             ->getQuestionAnswerBySurveyAnswerAndQuestion(
@@ -1349,7 +1328,6 @@ class SurveyController extends Controller
 
                         if (isset($questionResponse['comment']) &&
                             !empty($questionResponse['comment'])) {
-
                             $questionAnswer->setComment($questionResponse['comment']);
                             $this->surveyManager->persistQuestionAnswer($questionAnswer);
                         }
@@ -1357,7 +1335,6 @@ class SurveyController extends Controller
                         if ($questionType === 'open_ended' &&
                             isset($questionResponse['answer']) &&
                             !empty($questionResponse['answer'])) {
-
                             $openEndedAnswer = $this->surveyManager
                                 ->getOpenEndedAnswerByQuestionAnswer($questionAnswer);
 
@@ -1368,22 +1345,17 @@ class SurveyController extends Controller
                             $openEndedAnswer->setContent($questionResponse['answer']);
                             $this->surveyManager
                                 ->persistOpenEndedQuestionAnswer($openEndedAnswer);
-
                         } elseif ($questionType === 'multiple_choice_single' ||
                                 $questionType === 'multiple_choice_multiple') {
-
                             $multipleChoiceQuestion = $this->surveyManager
                                 ->getMultipleChoiceQuestionByQuestion($question);
 
                             if (!is_null($multipleChoiceQuestion)) {
-
                                 if ($questionType === 'multiple_choice_multiple') {
-
                                     $this->surveyManager
                                         ->deleteMultipleChoiceAnswersByQuestionAnswer($questionAnswer);
 
-                                    foreach($questionResponse as $choiceId => $response) {
-
+                                    foreach ($questionResponse as $choiceId => $response) {
                                         if ($choiceId !== 'comment' && $choiceId !== 'other') {
                                             $choice = $this->surveyManager->getChoiceById($choiceId);
                                             $choiceAnswer = new MultipleChoiceQuestionAnswer();
@@ -1400,11 +1372,10 @@ class SurveyController extends Controller
                                 } elseif ($questionType === 'multiple_choice_single' &&
                                     isset($questionResponse['choice']) &&
                                     !empty($questionResponse['choice'])) {
-
                                     $this->surveyManager
                                         ->deleteMultipleChoiceAnswersByQuestionAnswer($questionAnswer);
 
-                                    $choiceId = (int)$questionResponse['choice'];
+                                    $choiceId = (int) $questionResponse['choice'];
                                     $choice = $this->surveyManager->getChoiceById($choiceId);
                                     $choiceAnswer = new MultipleChoiceQuestionAnswer();
                                     $choiceAnswer->setQuestionAnswer($questionAnswer);
@@ -1452,12 +1423,10 @@ class SurveyController extends Controller
         Question $question,
         $page = 1,
         $max = 20
-    )
-    {
+    ) {
         $canEdit = $this->hasSurveyRight($survey, 'EDIT');
 
         if (!$canEdit && !$survey->getHasPublicResult()) {
-
             throw new AccessDeniedException();
         }
         $questionRelations = $this->surveyManager
@@ -1485,7 +1454,7 @@ class SurveyController extends Controller
             'currentQuestion' => $question,
             'results' => $results,
             'nbComments' => count($comments),
-            'max' => $max
+            'max' => $max,
         );
     }
 
@@ -1505,12 +1474,10 @@ class SurveyController extends Controller
         Question $question,
         $page = 1,
         $max = 20
-    )
-    {
+    ) {
         $canEdit = $this->hasSurveyRight($survey, 'EDIT');
 
         if (!$canEdit && !$survey->getHasPublicResult()) {
-
             throw new AccessDeniedException();
         }
         $comments = $this->surveyManager->getCommentsFromQuestionBySurveyAndQuestion(
@@ -1524,7 +1491,7 @@ class SurveyController extends Controller
             'survey' => $survey,
             'question' => $question,
             'max' => $max,
-            'comments' => $comments
+            'comments' => $comments,
         );
     }
 
@@ -1545,12 +1512,10 @@ class SurveyController extends Controller
         Choice $choice,
         $page = 1,
         $max = 20
-    )
-    {
+    ) {
         $canEdit = $this->hasSurveyRight($survey, 'EDIT');
 
         if (!$canEdit && !$survey->getHasPublicResult()) {
-
             throw new AccessDeniedException();
         }
         $answers = $this->surveyManager->getMultipleChoiceAnswersByChoice(
@@ -1564,7 +1529,7 @@ class SurveyController extends Controller
             'question' => $question,
             'choice' => $choice,
             'otherMax' => $max,
-            'answers' => $answers
+            'answers' => $answers,
         );
     }
 
@@ -1584,7 +1549,6 @@ class SurveyController extends Controller
         $workspaceIdB = $model->getWorkspace()->getId();
 
         if (!$canEdit || ($workspaceIdA !== $workspaceIdB)) {
-
             throw new AccessDeniedException();
         }
 
@@ -1605,8 +1569,7 @@ class SurveyController extends Controller
         SurveyQuestionRelation $relation,
         SurveyQuestionRelation $otherRelation,
         $mode
-    )
-    {
+    ) {
         $this->checkSurveyRight($survey, 'EDIT');
 
         if ($relation->getSurvey()->getId() === $survey->getId() &&
@@ -1623,7 +1586,6 @@ class SurveyController extends Controller
 
             return new Response('success', 204);
         } else {
-
             return new Response('Forbidden', 403);
         }
     }
@@ -1642,7 +1604,6 @@ class SurveyController extends Controller
         $canEdit = $this->hasSurveyRight($survey, 'EDIT');
 
         if (!$canEdit && !$survey->getHasPublicResult()) {
-
             throw new AccessDeniedException();
         }
         $questionRelations = $this->surveyManager
@@ -1669,19 +1630,19 @@ class SurveyController extends Controller
         }
         $response = new Response(
             $this->templating->render(
-                "ClarolineSurveyBundle:Survey:surveyResultsExport.html.twig",
+                'ClarolineSurveyBundle:Survey:surveyResultsExport.html.twig',
                 array(
                     'survey' => $survey,
                     'questions' => $questions,
                     'results' => $results,
-                    'comments' => $comments
+                    'comments' => $comments,
                 )
             )
         );
         $fileName = $this->translator->trans('results', array(), 'platform');
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $fileName . '.xls');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$fileName.'.xls');
         $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
 
         return $response;
@@ -1701,7 +1662,6 @@ class SurveyController extends Controller
         $canEdit = $this->hasSurveyRight($survey, 'EDIT');
 
         if (!$canEdit && !$survey->getHasPublicResult()) {
-
             throw new AccessDeniedException();
         }
         $results = array();
@@ -1711,19 +1671,19 @@ class SurveyController extends Controller
 
         $response = new Response(
             $this->templating->render(
-                "ClarolineSurveyBundle:Survey:surveyResultsExport.html.twig",
+                'ClarolineSurveyBundle:Survey:surveyResultsExport.html.twig',
                 array(
                     'survey' => $survey,
                     'questions' => array($question),
                     'results' => $results,
-                    'comments' => $comments
+                    'comments' => $comments,
                 )
             )
         );
         $fileName = $this->translator->trans('results', array(), 'platform');
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $fileName . '.xls');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$fileName.'.xls');
         $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
 
         return $response;
@@ -1751,10 +1711,10 @@ class SurveyController extends Controller
         foreach ($questionRelations as $relation) {
             $question = $relation->getQuestion();
             $questionId = $question->getId();
-            
+
             // Create mapping between question id and position in the exported line
             $mapping[$questionId] = $index;
-            $index ++;
+            ++$index;
             $line[] = $question->getQuestion();
 
             if ($question->isCommentAllowed()) {
@@ -1763,7 +1723,7 @@ class SurveyController extends Controller
                     $this->translator->trans('comment', array(), 'survey')
                     : $commentLabel;
                 $line[] = $label;
-                $index++;
+                ++$index;
             }
         }
         $exportingArray[] = $line;
@@ -1771,7 +1731,7 @@ class SurveyController extends Controller
         foreach ($surveyAnswers as $surveyAnswer) {
             $line = array();
 
-            for ($i = 0; $i < $index; $i++) {
+            for ($i = 0; $i < $index; ++$i) {
                 $line[] = '';
             }
             $answers = $surveyAnswer->getQuestionsAnswers();
@@ -1783,7 +1743,6 @@ class SurveyController extends Controller
                 $position = isset($mapping[$questionId]) ? $mapping[$questionId] : null;
 
                 if (!is_null($position)) {
-
                     switch ($questionType) {
                         case 'open_ended':
                             $openEndedQuestion = $this->surveyManager
@@ -1828,14 +1787,14 @@ class SurveyController extends Controller
             $rawTxt = implode('[;]', $exportingLine);
             $cleanerTxt = html_entity_decode($rawTxt);
             $txt = strip_tags($cleanerTxt);
-            $content .= $txt . PHP_EOL;
+            $content .= $txt.PHP_EOL;
         }
 
-        $filename = $this->translator->trans('answers', array(), 'survey') . '.txt';
+        $filename = $this->translator->trans('answers', array(), 'survey').'.txt';
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
         $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
         $response->headers->set('Connection', 'close');
         $response->setContent($content);
@@ -1849,8 +1808,7 @@ class SurveyController extends Controller
         $page = 1,
         $max = 20,
         $forExport = false
-    )
-    {
+    ) {
         $questionType = $question->getType();
 
         switch ($questionType) {
@@ -1885,8 +1843,7 @@ class SurveyController extends Controller
         Question $question,
         $otherMax = 20,
         $forExport = false
-    )
-    {
+    ) {
         $choices = $this->surveyManager->getChoicesByQuestion($question);
         $choicesCount = array();
         $choicesRatio = array();
@@ -1926,7 +1883,7 @@ class SurveyController extends Controller
 
         return new Response(
             $this->templating->render(
-                "ClarolineSurveyBundle:Survey:showMultipleChoiceQuestionResults.html.twig",
+                'ClarolineSurveyBundle:Survey:showMultipleChoiceQuestionResults.html.twig',
                 array(
                     'survey' => $survey,
                     'question' => $question,
@@ -1936,7 +1893,7 @@ class SurveyController extends Controller
                     'choicesRatio' => $choicesRatio,
                     'otherChoice' => $otherChoice,
                     'otherMax' => $otherMax,
-                    'forExport' => $forExport
+                    'forExport' => $forExport,
                 )
             )
         );
@@ -1948,8 +1905,7 @@ class SurveyController extends Controller
         $page = 1,
         $max = 20,
         $forExport = false
-    )
-    {
+    ) {
         $answers = $forExport ?
             $this->surveyManager->getOpenEndedAnswersBySurveyAndQuestionWithoutPager(
                 $survey,
@@ -1964,13 +1920,13 @@ class SurveyController extends Controller
 
         return new Response(
             $this->templating->render(
-                "ClarolineSurveyBundle:Survey:showOpenEndedQuestionResults.html.twig",
+                'ClarolineSurveyBundle:Survey:showOpenEndedQuestionResults.html.twig',
                 array(
                     'survey' => $survey,
                     'question' => $question,
                     'answers' => $answers,
                     'max' => $max,
-                    'forExport' => $forExport
+                    'forExport' => $forExport,
                 )
             )
         );
@@ -1981,8 +1937,7 @@ class SurveyController extends Controller
         Question $question,
         array $answers,
         $canEdit = true
-    )
-    {
+    ) {
         $this->checkQuestionRight($survey, $question, 'OPEN');
         $questionType = $question->getType();
 
@@ -2013,8 +1968,7 @@ class SurveyController extends Controller
     private function multipleChoiceQuestionForm(
         Survey $survey,
         Question $question = null
-    )
-    {
+    ) {
         $multipleChoiceQuestion = is_null($question) ?
             null :
             $this->surveyManager->getMultipleChoiceQuestionByQuestion($question);
@@ -2028,11 +1982,11 @@ class SurveyController extends Controller
 
         return new Response(
             $this->templating->render(
-                "ClarolineSurveyBundle:Survey:multipleChoiceQuestionForm.html.twig",
+                'ClarolineSurveyBundle:Survey:multipleChoiceQuestionForm.html.twig',
                 array(
                     'survey' => $survey,
                     'horizontal' => $horizontal,
-                    'choices' => $choices
+                    'choices' => $choices,
                 )
             )
         );
@@ -2042,13 +1996,11 @@ class SurveyController extends Controller
         Question $question,
         array $answers = null,
         $canEdit = true
-    )
-    {
+    ) {
         $multipleChoiceQuestion = $this->surveyManager
             ->getMultipleChoiceQuestionByQuestion($question);
 
         if (is_null($multipleChoiceQuestion)) {
-
             throw new \Exception('Cannot find multiple choice question');
         }
 
@@ -2057,13 +2009,13 @@ class SurveyController extends Controller
 
         return new Response(
             $this->templating->render(
-                "ClarolineSurveyBundle:Survey:displayMultipleChoiceQuestion.html.twig",
+                'ClarolineSurveyBundle:Survey:displayMultipleChoiceQuestion.html.twig',
                 array(
                     'question' => $question,
                     'choices' => $choices,
                     'answers' => $answersDatas,
                     'canEdit' => $canEdit,
-                    'horizontal' => $multipleChoiceQuestion->getHorizontal()
+                    'horizontal' => $multipleChoiceQuestion->getHorizontal(),
                 )
             )
         );
@@ -2073,17 +2025,16 @@ class SurveyController extends Controller
         Question $question,
         array $answers = null,
         $canEdit = true
-    )
-    {
+    ) {
         $answersDatas = is_null($answers) ? array() : $answers;
 
         return new Response(
             $this->templating->render(
-                "ClarolineSurveyBundle:Survey:displayOpenEndedQuestion.html.twig",
+                'ClarolineSurveyBundle:Survey:displayOpenEndedQuestion.html.twig',
                 array(
                     'question' => $question,
                     'answers' => $answersDatas,
-                    'canEdit' => $canEdit
+                    'canEdit' => $canEdit,
                 )
             )
         );
@@ -2092,8 +2043,7 @@ class SurveyController extends Controller
     private function updateMultipleChoiceQuestion(
         Question $question,
         array $datas
-    )
-    {
+    ) {
         $horizontal = isset($datas['choice-display']) &&
             ($datas['choice-display'] === 'horizontal');
         $choices = isset($datas['choice']) ?
@@ -2123,7 +2073,6 @@ class SurveyController extends Controller
         if ($hasChoiceOther &&
             isset($datas['choice-other']['content']) &&
             !empty($datas['choice-other']['content'])) {
-
             $otherChoice = new Choice();
             $otherChoice->setChoiceQuestion($multipleChoiceQuestion);
             $otherChoice->setOther(true);
@@ -2151,7 +2100,6 @@ class SurveyController extends Controller
         $errors = array();
 
         foreach ($relations as $relation) {
-
             if ($relation->getMandatory()) {
                 $question = $relation->getQuestion();
                 $questionId = $question->getId();
@@ -2164,7 +2112,6 @@ class SurveyController extends Controller
                         if (!isset($datas[$questionId]) ||
                             !isset($datas[$questionId]['answer']) ||
                             empty($datas[$questionId]['answer'])) {
-
                             $errors[$questionId] = $questionId;
                         }
                         break;
@@ -2173,7 +2120,6 @@ class SurveyController extends Controller
                         if (!isset($datas[$questionId]) ||
                             !isset($datas[$questionId]['choice']) ||
                             empty($datas[$questionId]['choice'])) {
-
                             $errors[$questionId] = $questionId;
                         }
                         break;
@@ -2212,7 +2158,6 @@ class SurveyController extends Controller
         $collection = new ResourceCollection(array($survey->getResourceNode()));
 
         if (!$this->authorization->isGranted($right, $collection)) {
-
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
@@ -2231,7 +2176,6 @@ class SurveyController extends Controller
         $questionWorkspaceId = $question->getWorkspace()->getId();
 
         if ($surveyWorkspaceId !== $questionWorkspaceId) {
-
             throw new AccessDeniedException();
         }
     }

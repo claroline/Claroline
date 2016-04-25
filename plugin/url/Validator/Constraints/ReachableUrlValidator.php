@@ -10,7 +10,6 @@ use Symfony\Component\Validator\Constraints\UrlValidator;
 use Guzzle\Http\Client;
 use JMS\DiExtraBundle\Annotation as DI;
 
-
 /**
  * @DI\Validator("url_validator")
  */
@@ -36,12 +35,12 @@ class ReachableUrlValidator extends UrlValidator
 
             if (!$response->isSuccessful()) {
                 $this->context->addViolation($constraint->clientError, array(
-                    '%errorCode%' => $response->getStatusCode()
+                    '%errorCode%' => $response->getStatusCode(),
                 ));
             }
         } catch (CurlException $e) {
             $this->context->addViolation($constraint->websiteDoesntExist, array(
-                '%url' => $value
+                '%url' => $value,
             ));
         } catch (ClientErrorResponseException $e) {
             $errorCode = $e->getResponse()->getStatusCode();
@@ -57,12 +56,12 @@ class ReachableUrlValidator extends UrlValidator
                 }
             } else {
                 $this->context->addViolation($constraint->clientError, array(
-                    '%errorCode%' => $errorCode
+                    '%errorCode%' => $errorCode,
                 ));
             }
         } catch (ServerErrorResponseException $e) {
             $this->context->addViolation($constraint->serverError, array(
-                '%errorCode%' => $e->getResponse()->getStatusCode()
+                '%errorCode%' => $e->getResponse()->getStatusCode(),
             ));
         }
     }

@@ -2,7 +2,6 @@
 
 namespace Icap\PortfolioBundle\Form\Type;
 
-use Doctrine\ORM\EntityRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,10 +17,10 @@ class PortfolioUserType extends AbstractType
         $builder
             ->add('user', 'zenstruck_ajax_entity',
                 array(
-                    'class'          => 'ClarolineCoreBundle:User',
+                    'class' => 'ClarolineCoreBundle:User',
                     'use_controller' => true,
-                    'property'       => 'username',
-                    'repo_method'    => 'findByNameForAjax'
+                    'property' => 'username',
+                    'repo_method' => 'findByNameForAjax',
                 )
             );
     }
@@ -35,8 +34,8 @@ class PortfolioUserType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\PortfolioUser',
-                'translation_domain' => 'icap_portfolio'
+                'data_class' => 'Icap\PortfolioBundle\Entity\PortfolioUser',
+                'translation_domain' => 'icap_portfolio',
             )
         );
     }

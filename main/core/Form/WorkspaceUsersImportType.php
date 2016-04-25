@@ -39,8 +39,8 @@ class WorkspaceUsersImportType extends AbstractType
                 'constraints' => array(
                     new NotBlank(),
                     new File(),
-                    new CsvWorkspaceUserImport($this->workspace)
-                )
+                    new CsvWorkspaceUserImport($this->workspace),
+                ),
             )
         );
     }

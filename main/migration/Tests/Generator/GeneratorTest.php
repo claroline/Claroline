@@ -41,7 +41,7 @@ class GeneratorTest extends MockeryTestCase
         $schemas = array(
             'metadata' => $this->metadata,
             'toSchema' => $this->toSchema,
-            'fromSchema' => $this->fromSchema
+            'fromSchema' => $this->fromSchema,
         );
         $generator = m::mock(
             'Claroline\MigrationBundle\Generator\Generator[getSchemas]',
@@ -81,7 +81,7 @@ class GeneratorTest extends MockeryTestCase
         $this->assertEquals(
             array(
                 Generator::QUERIES_UP => array('CREATE TABLE table_b'),
-                Generator::QUERIES_DOWN => array('DROP TABLE table_b')
+                Generator::QUERIES_DOWN => array('DROP TABLE table_b'),
             ),
             $generator->generateMigrationQueries($bundle, $platform)
         );

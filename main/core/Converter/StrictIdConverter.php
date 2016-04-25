@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\EntityManager;
 
@@ -42,7 +41,7 @@ class StrictIdConverter implements ParamConverterInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidConfigurationException if the parameter name, class or id option are missing
      * @throws NotFoundHttpException         if the id doesn't matche an existing entity
@@ -81,7 +80,7 @@ class StrictIdConverter implements ParamConverterInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function supports(ParamConverter $configuration)
     {

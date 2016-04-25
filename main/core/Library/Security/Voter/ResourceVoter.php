@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\EntityManager;
@@ -40,7 +39,7 @@ class ResourceVoter implements VoterInterface
     private $em;
     private $repository;
     private $translator;
-    private $specialActions ;
+    private $specialActions;
     private $ut;
     private $maskManager;
     private $resourceManager;
@@ -63,8 +62,7 @@ class ResourceVoter implements VoterInterface
         MaskManager $maskManager,
         ResourceManager $resourceManager,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->em = $em;
         $this->repository = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->translator = $translator;
@@ -77,7 +75,7 @@ class ResourceVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        $object = $object instanceof AbstractResource ? $object->getResourceNode(): $object;
+        $object = $object instanceof AbstractResource ? $object->getResourceNode() : $object;
 
         if ($object instanceof ResourceCollection) {
             $errors = array();
@@ -121,9 +119,7 @@ class ResourceVoter implements VoterInterface
             $object->setErrors($errors);
 
             return VoterInterface::ACCESS_DENIED;
-
         } elseif ($object instanceof ResourceNode) {
-
             if (in_array($attributes[0], $this->specialActions)) {
                 throw new \Exception('A ResourceCollection class must be used for this action.');
             }
@@ -133,7 +129,6 @@ class ResourceVoter implements VoterInterface
             return count($errors) === 0 && $object->isActive() ?
                 VoterInterface::ACCESS_GRANTED :
                 VoterInterface::ACCESS_DENIED;
-
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
@@ -156,7 +151,7 @@ class ResourceVoter implements VoterInterface
      * @param array  $rightsCreation
      * @param string $resourceType
      *
-     * @return boolean
+     * @return bool
      */
     private function canCreate(array $rightsCreation, $resourceType)
     {
@@ -171,9 +166,11 @@ class ResourceVoter implements VoterInterface
 
     /**
      * @param $action
-     * @param array $nodes
+     * @param array          $nodes
      * @param TokenInterface $token
+     *
      * @return array
+     *
      * @throws \Exception
      */
     public function checkAction($action, array $nodes, TokenInterface $token)
@@ -198,7 +195,7 @@ class ResourceVoter implements VoterInterface
 
         foreach ($nodes as $node) {
             if ($node->getCreator() === $token->getUser()) {
-                $timesCreator++;
+                ++$timesCreator;
             }
         }
 
@@ -220,17 +217,16 @@ class ResourceVoter implements VoterInterface
                 (is_null($accessibleUntil) || $currentDate <= $accessibleUntil) &&
                 $node->isPublished() &&
                 $node->isActive()) {
-
                 $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
                 $type = $node->getResourceType();
                 $decoder = $this->maskManager->getDecoder($type, $action);
 
                 //gotta check
                 if (!$decoder) {
-                    return array('The permission ' . $action . ' does not exists for the type ' . $type->getName());
+                    return array('The permission '.$action.' does not exists for the type '.$type->getName());
                 }
 
-                $grant = $decoder ? $mask & $decoder->getValue(): 0;
+                $grant = $decoder ? $mask & $decoder->getValue() : 0;
 
                 if ($decoder && $grant === 0) {
                     $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
@@ -245,11 +241,11 @@ class ResourceVoter implements VoterInterface
 
     /**
      * Checks if a resource whose type is $type
-     * can be created in the directory $resource by the $token
+     * can be created in the directory $resource by the $token.
      *
      * @param $type
-     * @param ResourceNode $node
-     * @param TokenInterface $token
+     * @param ResourceNode                                     $node
+     * @param TokenInterface                                   $token
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return array
@@ -259,8 +255,7 @@ class ResourceVoter implements VoterInterface
         ResourceNode $node,
         TokenInterface $token,
         Workspace $workspace
-    )
-    {
+    ) {
         $errors = array();
 
         //even the workspace manager can't break the file limit.
@@ -294,7 +289,7 @@ class ResourceVoter implements VoterInterface
                         '%path%' => $node->getPathForDisplay(),
                         '%type%' => $this->translator->trans(
                             strtolower($type), array(), 'resource'
-                        )
+                        ),
                     ),
                     'platform'
                 );
@@ -365,7 +360,7 @@ class ResourceVoter implements VoterInterface
                 'resource_action_denied_message',
                 array(
                     '%path%' => $path,
-                    '%action%' => $action
+                    '%action%' => $action,
                     ),
                 'platform'
             );
@@ -373,9 +368,9 @@ class ResourceVoter implements VoterInterface
 
     public function isWorkspaceManager(Workspace $workspace, TokenInterface $token)
     {
-        $managerRoleName = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
+        $managerRoleName = 'ROLE_WS_MANAGER_'.$workspace->getGuid();
 
-        return in_array($managerRoleName, $this->ut->getRoles($token)) ? true: false;
+        return in_array($managerRoleName, $this->ut->getRoles($token)) ? true : false;
     }
 
     public function isUsurpatingWorkspaceRole(TokenInterface $token)

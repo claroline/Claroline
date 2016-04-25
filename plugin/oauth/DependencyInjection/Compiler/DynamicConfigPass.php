@@ -37,7 +37,7 @@ class DynamicConfigPass implements CompilerPassInterface
             $conf->setClass($resourceOwnerNoSpaces.'ResourceOwner');
             $conf->setFactory(array(
                 $factory,
-                "get{$resourceOwnerNoSpaces}ResourceOwner"
+                "get{$resourceOwnerNoSpaces}ResourceOwner",
             ));
             $container->removeDefinition(
                 'hwi_oauth.resource_owner.'.str_replace(' ', '_', strtolower($resourceOwner))

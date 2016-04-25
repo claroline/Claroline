@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -10,7 +10,6 @@
  */
 
 namespace Claroline\CoreBundle\Form\Field;
-
 
 use Symfony\Component\Form\AbstractType;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -29,7 +28,7 @@ class Select2Type extends AbstractType
      */
     public function getName()
     {
-        return "select2";
+        return 'select2';
     }
 
     public function getParent()
@@ -42,7 +41,7 @@ class Select2Type extends AbstractType
         $resolver
             ->setDefaults(
                 array(
-                    'translation_domain' => 'platform'
+                    'translation_domain' => 'platform',
                 )
             );
     }

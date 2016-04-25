@@ -32,8 +32,8 @@ class ProfilePicsImportType extends AbstractType
                 'constraints' => array(
                     new NotBlank(),
                     new File(),
-                    new ProfilePicsFile()
-                )
+                    new ProfilePicsFile(),
+                ),
            )
         );
     }
@@ -48,7 +48,7 @@ class ProfilePicsImportType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
                 )
         );
     }

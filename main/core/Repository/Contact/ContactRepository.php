@@ -22,8 +22,7 @@ class ContactRepository extends EntityRepository
         $orderedBy = 'lastName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CoreBundle\Entity\Contact\Contact c
@@ -45,8 +44,7 @@ class ContactRepository extends EntityRepository
         $orderedBy = 'lastName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT c
             FROM Claroline\CoreBundle\Entity\Contact\Contact c
@@ -58,7 +56,7 @@ class ContactRepository extends EntityRepository
                 OR CONCAT(UPPER(cc.firstName), CONCAT(\' \', UPPER(cc.lastName))) LIKE :search
                 OR CONCAT(UPPER(cc.lastName), CONCAT(\' \', UPPER(cc.firstName))) LIKE :search
         ';
-            
+
         if ($withUsername) {
             $dql .= '
                 OR UPPER(cc.username) LIKE :search
@@ -88,8 +86,7 @@ class ContactRepository extends EntityRepository
         User $user,
         User $contact,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT c
             FROM Claroline\CoreBundle\Entity\Contact\Contact c
@@ -109,8 +106,7 @@ class ContactRepository extends EntityRepository
         $orderedBy = 'lastName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CoreBundle\Entity\Contact\Contact c

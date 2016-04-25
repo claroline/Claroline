@@ -72,8 +72,7 @@ class CursusController extends Controller
         RouterInterface $router,
         ToolManager $toolManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->authorization = $authorization;
         $this->cursusManager = $cursusManager;
         $this->formFactory = $formFactory;
@@ -83,7 +82,6 @@ class CursusController extends Controller
         $this->toolManager = $toolManager;
         $this->translator = $translator;
     }
-
 
     /******************
      * Cursus methods *
@@ -108,7 +106,7 @@ class CursusController extends Controller
 
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
-            'displayedWords' => $displayedWords
+            'displayedWords' => $displayedWords,
         );
     }
 
@@ -133,7 +131,7 @@ class CursusController extends Controller
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
-            'allRootCursus' => $allRootCursus
+            'allRootCursus' => $allRootCursus,
         );
     }
 
@@ -184,7 +182,7 @@ class CursusController extends Controller
             $this->cursusManager->persistCursus($cursus);
 
             $message = $this->translator->trans(
-                'cursus_creation_confirm_msg' ,
+                'cursus_creation_confirm_msg',
                 array(),
                 'cursus'
             );
@@ -193,7 +191,6 @@ class CursusController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-
             return array('form' => $form->createView());
         }
     }
@@ -219,7 +216,7 @@ class CursusController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'cursus' => $cursus
+            'cursus' => $cursus,
         );
     }
 
@@ -256,7 +253,7 @@ class CursusController extends Controller
             $this->cursusManager->persistCursus($cursus);
 
             $message = $this->translator->trans(
-                'cursus_edition_confirm_msg' ,
+                'cursus_edition_confirm_msg',
                 array(),
                 'cursus'
             );
@@ -265,10 +262,9 @@ class CursusController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-
             return array(
                 'form' => $form->createView(),
-                'cursus' => $cursus
+                'cursus' => $cursus,
             );
         }
     }
@@ -340,7 +336,7 @@ class CursusController extends Controller
         $this->cursusManager->deleteCursus($cursus);
 
         $message = $this->translator->trans(
-            'cursus_deletion_confirm_msg' ,
+            'cursus_deletion_confirm_msg',
             array(),
             'cursus'
         );
@@ -378,7 +374,6 @@ class CursusController extends Controller
      * @EXT\Template()
      *
      * @param Cursus $cursus
-     *
      */
     public function cursusManagementAction(Cursus $cursus)
     {
@@ -408,7 +403,7 @@ class CursusController extends Controller
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
             'cursus' => $cursus,
-            'hierarchy' => $hierarchy
+            'hierarchy' => $hierarchy,
         );
     }
 
@@ -428,7 +423,7 @@ class CursusController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'parent' => $parent
+            'parent' => $parent,
         );
     }
 
@@ -466,15 +461,14 @@ class CursusController extends Controller
                 array(
                     'parent_id' => $parent->getId(),
                     'id' => $cursus->getId(),
-                    'title' => $cursus->getTitle()
+                    'title' => $cursus->getTitle(),
                 ),
                 200
             );
         } else {
-
             return array(
                 'form' => $form->createView(),
-                'parent' => $parent
+                'parent' => $parent,
             );
         }
     }
@@ -492,11 +486,11 @@ class CursusController extends Controller
      * Displays the list of courses.
      *
      * @param Cursus $cursus
-     * @param string  $search
-     * @param integer $page
-     * @param integer $max
-     * @param string  $orderedBy
-     * @param string  $order
+     * @param string $search
+     * @param int    $page
+     * @param int    $max
+     * @param string $orderedBy
+     * @param string $order
      */
     public function cursusAddCoursesListAction(
         Cursus $cursus,
@@ -505,8 +499,7 @@ class CursusController extends Controller
         $max = 50,
         $orderedBy = 'title',
         $order = 'ASC'
-    )
-    {
+    ) {
         $this->checkToolAccess();
 
         $courses = $this->cursusManager->getUnmappedCoursesByCursus(
@@ -526,7 +519,7 @@ class CursusController extends Controller
             'page' => $page,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
         );
     }
 
@@ -605,7 +598,7 @@ class CursusController extends Controller
      *      options={"multipleIds" = true, "name" = "courseIds"}
      * )
      *
-     * @param Cursus $cursus
+     * @param Cursus   $cursus
      * @param Course[] $courses
      */
     public function cursusCoursesAddAction(Cursus $cursus, array $courses)
@@ -650,7 +643,7 @@ class CursusController extends Controller
      *      options={"multipleIds" = true, "name" = "courseIds"}
      * )
      *
-     * @param Cursus $cursus
+     * @param Cursus   $cursus
      * @param Course[] $courses
      */
     public function cursusCoursesRemoveAction(Cursus $cursus, array $courses)
@@ -680,7 +673,7 @@ class CursusController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'cursus' => $cursus
+            'cursus' => $cursus,
         );
     }
 
@@ -720,16 +713,15 @@ class CursusController extends Controller
                     'title' => $created->getTitle(),
                     'course_id' => $course->getId(),
                     'code' => $course->getCode(),
-                    'root' => $cursus->getRoot()
+                    'root' => $cursus->getRoot(),
                 );
             }
 
             return new JsonResponse($results, 200);
         } else {
-
             return array(
                 'form' => $form->createView(),
-                'cursus' => $cursus
+                'cursus' => $cursus,
             );
         }
     }
@@ -746,8 +738,7 @@ class CursusController extends Controller
         Cursus $cursus,
         Cursus $otherCursus,
         $mode
-    )
-    {
+    ) {
         $this->checkToolAccess();
 
         if ($cursus->getParent() === $otherCursus->getParent()) {
@@ -762,7 +753,6 @@ class CursusController extends Controller
 
             return new JsonResponse('success', 204);
         } else {
-
             return new JsonResponse('Forbidden', 403);
         }
     }
@@ -780,8 +770,7 @@ class CursusController extends Controller
         Cursus $cursus,
         Cursus $parent,
         $nextCursusId = -1
-    )
-    {
+    ) {
         $this->checkToolAccess();
 
         if ($nextCursusId === -1) {
@@ -795,11 +784,9 @@ class CursusController extends Controller
         return new JsonResponse('success', 204);
     }
 
-
     /********************************
      * Plugin configuration methods *
      ********************************/
-
 
     /**
      * @EXT\Route(
@@ -826,7 +813,7 @@ class CursusController extends Controller
         return array(
             'form' => $form->createView(),
             'defaultWords' => CursusDisplayedWord::$defaultKey,
-            'displayedWords' => $displayedWords
+            'displayedWords' => $displayedWords,
         );
     }
 
@@ -863,7 +850,7 @@ class CursusController extends Controller
         return array(
             'form' => $form->createView(),
             'defaultWords' => CursusDisplayedWord::$defaultKey,
-            'displayedWords' => $displayedWords
+            'displayedWords' => $displayedWords,
         );
     }
 
@@ -889,19 +876,18 @@ class CursusController extends Controller
         $this->cursusManager->persistCursusDisplayedWord($displayedWord);
 
         $sessionFlashBag = $this->get('session')->getFlashBag();
-        $msg = $this->translator->trans('the_displayed_word_for', array(), 'cursus') .
-            ' [' .
-            $key .
-            '] ' .
-            $this->translator->trans('will_be', array(), 'cursus') .
+        $msg = $this->translator->trans('the_displayed_word_for', array(), 'cursus').
+            ' ['.
+            $key.
+            '] '.
+            $this->translator->trans('will_be', array(), 'cursus').
             ' ['
-            . $value .
+            .$value.
             ']';
         $sessionFlashBag->add('success', $msg);
 
         return new Response('success', 200);
     }
-
 
     /******************
      * Widget methods *
@@ -939,8 +925,7 @@ class CursusController extends Controller
         $max = 20,
         $orderedBy = 'title',
         $order = 'ASC'
-    )
-    {
+    ) {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $configCursus = $config->getCursus();
 
@@ -981,7 +966,6 @@ class CursusController extends Controller
             $status = $courseSession->getSessionStatus();
 
             if ($status === 0 || $status === 1) {
-
                 if (!isset($sessions[$courseId])) {
                     $sessions[$courseId] = array();
                 }
@@ -1023,7 +1007,7 @@ class CursusController extends Controller
             'sessions' => $sessions,
             'registeredSessions' => $registeredSessions,
             'pendingSessions' => $pendingSessions,
-            'courseQueues' => $courseQueues
+            'courseQueues' => $courseQueues,
         );
     }
 
@@ -1039,12 +1023,10 @@ class CursusController extends Controller
     public function courseSessionSelfRegisterAction(
         CourseSession $session,
         User $authenticatedUser
-    )
-    {
+    ) {
         $results = null;
 
         if ($session->getPublicRegistration()) {
-
             if ($session->hasValidation()) {
                 $this->cursusManager->addUserToSessionQueue($authenticatedUser, $session);
             } else {
@@ -1070,8 +1052,7 @@ class CursusController extends Controller
     public function courseQueueRegisterAction(
         Course $course,
         User $authenticatedUser
-    )
-    {
+    ) {
         $this->cursusManager->addUserToCourseQueue($authenticatedUser, $course);
 
         return new JsonResponse('success', 200);
@@ -1088,8 +1069,7 @@ class CursusController extends Controller
     public function courseQueueCancelAction(
         Course $course,
         User $authenticatedUser
-    )
-    {
+    ) {
         $this->cursusManager->removeUserFromCourseQueue($authenticatedUser, $course);
 
         return new JsonResponse('success', 200);
@@ -1115,7 +1095,7 @@ class CursusController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'config' => $config
+            'config' => $config,
         );
     }
 
@@ -1141,10 +1121,9 @@ class CursusController extends Controller
 
             return new JsonResponse('success', 204);
         } else {
-
             return array(
                 'form' => $form->createView(),
-                'config' => $config
+                'config' => $config,
             );
         }
     }
@@ -1181,8 +1160,7 @@ class CursusController extends Controller
         $max = 20,
         $orderedBy = 'title',
         $order = 'ASC'
-    )
-    {
+    ) {
         $courses = $this->cursusManager->getCoursesByUser(
             $authenticatedUser,
             $search,
@@ -1213,7 +1191,7 @@ class CursusController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
-            'workspacesList' => $workspacesList
+            'workspacesList' => $workspacesList,
         );
     }
 
@@ -1231,7 +1209,7 @@ class CursusController extends Controller
         $cursus = $this->cursusManager->getAllCursus();
         $zipName = 'cursus.zip';
         $mimeType = 'application/zip';
-        $file = $this->cursusManager->zipDatas($cursus, 'cursus');;
+        $file = $this->cursusManager->zipDatas($cursus, 'cursus');
 
         $response = new StreamedResponse();
         $response->setCallBack(
@@ -1241,7 +1219,7 @@ class CursusController extends Controller
         );
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($zipName));
+        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($zipName));
         $response->headers->set('Content-Type', $mimeType);
         $response->headers->set('Connection', 'close');
         $response->send();
@@ -1283,11 +1261,10 @@ class CursusController extends Controller
         $file = $form->get('archive')->getData();
         $zip = new \ZipArchive();
 
-        if (empty($file) || 
-            !$zip->open($file)||
+        if (empty($file) ||
+            !$zip->open($file) ||
             !$zip->getStream('cursus.json') ||
             !$zip->getStream('courses.json')) {
-
             $form->get('archive')->addError(
                 new FormError($this->translator->trans('invalid_file', array(), 'cursus'))
             );
@@ -1304,15 +1281,15 @@ class CursusController extends Controller
             $courses = json_decode($coursesContents, true);
             $importedCourses = $this->cursusManager->importCourses($courses);
 
-            $iconsDir = $this->container->getParameter('claroline.param.thumbnails_directory') . '/';
+            $iconsDir = $this->container->getParameter('claroline.param.thumbnails_directory').'/';
 
-            for ($i = 0; $i < $zip->numFiles; $i++) {
+            for ($i = 0; $i < $zip->numFiles; ++$i) {
                 $name = $zip->getNameIndex($i);
 
                 if (strpos($name, 'icons/') !== 0) {
                     continue;
                 }
-                $iconFileName = $iconsDir . substr($name, 6);
+                $iconFileName = $iconsDir.substr($name, 6);
                 $stream = $zip->getStream($name);
                 $destStream = fopen($iconFileName, 'w');
 
@@ -1336,10 +1313,8 @@ class CursusController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-
             return array('form' => $form->createView());
         }
-
     }
 
     private function checkToolAccess()
@@ -1348,7 +1323,6 @@ class CursusController extends Controller
 
         if (is_null($cursusTool) ||
             !$this->authorization->isGranted('OPEN', $cursusTool)) {
-
             throw new AccessDeniedException();
         }
     }

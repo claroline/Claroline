@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,11 +8,9 @@
  * 
  * Date: 5/7/15
  */
-
 namespace Icap\SocialmediaBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Icap\SocialmediaBundle\Entity\CommentAction;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -20,9 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class CommentActionController extends Controller
 {
@@ -35,8 +31,10 @@ class CommentActionController extends Controller
      *      options={"id" = "resourceId"}
      * )
      * @Template()
+     *
      * @param ResourceNode $resource
-     * @param User $user
+     * @param User         $user
+     *
      * @return array
      */
     public function viewAction(ResourceNode $resource, User $user)
@@ -52,31 +50,35 @@ class CommentActionController extends Controller
      * @Route("/comment/form/{resourceId}", name="icap_socialmedia_comment_form", )
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
-     * @param int $resourceId
+     *
+     * @param int  $resourceId
      * @param User $user
+     *
      * @return array
      */
     public function formAction($resourceId, User $user)
     {
         $commentManager = $this->getCommentActionManager();
-        $criteria = array("resource" => $resourceId);
+        $criteria = array('resource' => $resourceId);
         $commentsQB = $commentManager->getCommentsForPagination($resourceId);
         $pager = $this->paginateQuery($commentsQB, 1);
 
-        return array("resourceId" => $resourceId, "pager" => $pager);
+        return array('resourceId' => $resourceId, 'pager' => $pager);
     }
 
     /**
      * @Route("/comment/{resourceId}", name="icap_socialmedia_comment")
      * @Method({"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
+     *
      * @param $resourceId
      * @param User $user
+     *
      * @return bool
      */
     public function commentAction(Request $request, $resourceId, User $user)
     {
-        $text = $request->get("social_media_comment_text");
+        $text = $request->get('social_media_comment_text');
 
         if ($text !== null) {
             $comment = new CommentAction();
@@ -90,7 +92,7 @@ class CommentActionController extends Controller
         if ($request->isXmlHttpRequest()) {
             $response = new JsonResponse(true);
         } else {
-            $response = $this->redirectToRoute("icap_socialmedia_comments_view", array("resourceId"=> $resourceId));
+            $response = $this->redirectToRoute('icap_socialmedia_comments_view', array('resourceId' => $resourceId));
         }
 
         return $response;
@@ -98,8 +100,10 @@ class CommentActionController extends Controller
 
     /**
      * @Route("/comment/list/{resourceId}/{page}", name="icap_socialmedia_commentlist", defaults={"page" = "1"})
+     *
      * @param $resourceId
      * @param $page
+     *
      * @return array
      * @Template()
      */
@@ -108,15 +112,17 @@ class CommentActionController extends Controller
         $commentsQB = $this->getCommentActionManager()->getCommentsForPagination($resourceId);
         $pager = $this->paginateQuery($commentsQB, $page);
 
-        return array("pager" => $pager, "resourceId" => $resourceId);
+        return array('pager' => $pager, 'resourceId' => $resourceId);
     }
 
     /**
      * @Route("/comment/item/{id}", name="icap_socialmedia_comment_delete", requirements={"id" : "\d+"})
      * @Method({"DELETE"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
+     *
      * @param $id
      * @param User $user
+     *
      * @return JsonResponse
      */
     public function deleteWallItemAction($id, User $user)

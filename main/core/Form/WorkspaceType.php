@@ -48,7 +48,7 @@ class WorkspaceType extends AbstractType
                 'text',
                 array(
                     'label' => 'name',
-                    'constraints' => new NotBlank()
+                    'constraints' => new NotBlank(),
                 )
             )
             ->add(
@@ -56,7 +56,7 @@ class WorkspaceType extends AbstractType
                 'text',
                 array(
                     'constraints' => $codeConstraints,
-                    'label' => 'code'
+                    'label' => 'code',
                 )
             )
             ->add(
@@ -67,8 +67,8 @@ class WorkspaceType extends AbstractType
                 array('required' => false, 'label' => 'description')
             );
 
-            if (!$this->forApi) {
-                $builder->add(
+        if (!$this->forApi) {
+            $builder->add(
                     'model',
                     'entity',
                     array(
@@ -83,11 +83,11 @@ class WorkspaceType extends AbstractType
                         },
                         'property' => 'nameAndWorkspace',
                         'required' => false,
-                        'label' => 'model'
+                        'label' => 'model',
                     )
                 );
-            }
-            $builder
+        }
+        $builder
                 ->add('displayable', 'checkbox', array('required' => false, 'label' => 'displayable_in_workspace_list'))
                 ->add('selfRegistration', 'checkbox', array('required' => false, 'label' => 'public_registration'))
                 ->add('registrationValidation', 'checkbox', array('required' => false, 'label' => 'registration_validation'))
@@ -99,7 +99,7 @@ class WorkspaceType extends AbstractType
                 'text',
                 array(
                     'label' => 'max_storage_size',
-                    'constraints' => array(new NotBlank())
+                    'constraints' => array(new NotBlank()),
                 )
             );
             $builder->add(
@@ -107,7 +107,7 @@ class WorkspaceType extends AbstractType
                 'text',
                 array(
                     'label' => 'max_amount_resources',
-                    'constraints' => array(new NotBlank())
+                    'constraints' => array(new NotBlank()),
                 )
             );
             $builder->add(
@@ -115,7 +115,7 @@ class WorkspaceType extends AbstractType
                 'text',
                 array(
                     'label' => 'workspace_max_users',
-                    'constraints' => array(new NotBlank())
+                    'constraints' => array(new NotBlank()),
                 )
             );
             $params = array(
@@ -126,11 +126,11 @@ class WorkspaceType extends AbstractType
                 'attr' => array(
                     'class' => 'datepicker input-small',
                     'data-date-format' => 'dd-mm-yyyy',
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'off',
                 ),
-                'constraints' => array(new NotBlank())
+                'constraints' => array(new NotBlank()),
             );
-            
+
             $builder->add('endDate', 'datepicker', $params);
         }
     }
@@ -148,7 +148,9 @@ class WorkspaceType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $default = array('translation_domain' => 'platform');
-        if ($this->forApi) $default['csrf_protection'] = false;
+        if ($this->forApi) {
+            $default['csrf_protection'] = false;
+        }
 
         $resolver->setDefaults($default);
     }

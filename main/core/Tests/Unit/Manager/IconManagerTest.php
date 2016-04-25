@@ -11,10 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use \Mockery as m;
+use Mockery as m;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Manager\IconManager;
 
 class IconManagerTest extends MockeryTestCase
 {
@@ -69,7 +68,7 @@ class IconManagerTest extends MockeryTestCase
         $icon->shouldReceive('setRelativeUrl')->once()->with('thumbnails/thumbnail');
         $icon->shouldReceive('setShortcut')->once()->with(false);
         $manager->shouldReceive('createFromFile')->once()
-            ->with($this->fileDir . DIRECTORY_SEPARATOR . 'ABCDEFG.mp4', 'video')
+            ->with($this->fileDir.DIRECTORY_SEPARATOR.'ABCDEFG.mp4', 'video')
             ->andReturn('path/to/thumbnail');
         $manager->shouldReceive('createShortcutIcon')->once()->with($icon);
         $this->om->shouldReceive('startFlushSuite')->once();
@@ -137,7 +136,7 @@ class IconManagerTest extends MockeryTestCase
         $this->ut->shouldReceive('generateGuid')->andReturn('ABCDEF')->once();
         $file->shouldReceive('move')->once()->with($this->thumbDir, 'ABCDEF.ext');
         $icon->shouldReceive('setRelativeUrl')->once()
-            ->with('thumbnails' . DIRECTORY_SEPARATOR . 'ABCDEF.ext');
+            ->with('thumbnails'.DIRECTORY_SEPARATOR.'ABCDEF.ext');
         $icon->shouldReceive('setMimeType')->once()->with('custom');
         $icon->shouldReceive('setShortcut')->once()->with(false);
         $manager->shouldReceive('createShortcutIcon')->once()->with($icon);
@@ -159,7 +158,7 @@ class IconManagerTest extends MockeryTestCase
         $baseMime = 'video';
         $this->ut->shouldReceive('generateGuid')->once()->andReturn('GUID');
         $this->thumbnailCreator->shouldReceive('fromVideo')->once()
-            ->with($filePath, $this->thumbDir . DIRECTORY_SEPARATOR . 'GUID.png', 100, 100)
+            ->with($filePath, $this->thumbDir.DIRECTORY_SEPARATOR.'GUID.png', 100, 100)
             ->andReturn('path/to/thumbnail');
 
         $this->assertEquals('path/to/thumbnail', $this->getManager()->createFromFile($filePath, $baseMime));
@@ -174,7 +173,7 @@ class IconManagerTest extends MockeryTestCase
         $baseMime = 'image';
         $this->ut->shouldReceive('generateGuid')->once()->andReturn('GUID');
         $this->thumbnailCreator->shouldReceive('fromImage')->once()
-            ->with($filePath, $this->thumbDir . DIRECTORY_SEPARATOR . 'GUID.png', 100, 100)
+            ->with($filePath, $this->thumbDir.DIRECTORY_SEPARATOR.'GUID.png', 100, 100)
             ->andReturn('path/to/thumbnail');
 
         $this->assertEquals('path/to/thumbnail', $this->getManager()->createFromFile($filePath, $baseMime));
@@ -233,7 +232,7 @@ class IconManagerTest extends MockeryTestCase
             );
         } else {
             $stringMocked = '[';
-                $stringMocked .= array_pop($mockedMethods);
+            $stringMocked .= array_pop($mockedMethods);
 
             foreach ($mockedMethods as $mockedMethod) {
                 $stringMocked .= ",{$mockedMethod}";
@@ -242,14 +241,14 @@ class IconManagerTest extends MockeryTestCase
             $stringMocked .= ']';
 
             return $this->mock(
-                'Claroline\CoreBundle\Manager\IconManager' . $stringMocked,
+                'Claroline\CoreBundle\Manager\IconManager'.$stringMocked,
                 array(
                     $this->thumbnailCreator,
                     $this->fileDir,
                     $this->thumbDir,
                     $this->rootDir,
                     $this->ut,
-                    $this->om
+                    $this->om,
                 )
             );
         }

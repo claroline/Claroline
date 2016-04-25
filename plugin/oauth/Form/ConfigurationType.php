@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Icap\OAuthBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -29,10 +28,10 @@ class ConfigurationType extends AbstractType
                 array(
                     'constraints' => array(
                         new NotBlank(),
-                        new GreaterThanOrEqual(array('value' => 0))
+                        new GreaterThanOrEqual(array('value' => 0)),
                     ),
                     'attr' => array('min' => 0),
-                    'label' => 'client_id'
+                    'label' => 'client_id',
                 )
             )
             ->add(
@@ -40,7 +39,7 @@ class ConfigurationType extends AbstractType
                 'text',
                 array(
                     'constraints' => new NotBlank(),
-                    'label' => 'client_secret'
+                    'label' => 'client_secret',
                 )
             )
             ->add('client_active', 'checkbox', array('label' => 'client_active', 'required' => false));
@@ -56,7 +55,7 @@ class ConfigurationType extends AbstractType
         $resolver->setDefaults(array(
             'translation_domain' => 'icap_oauth',
             'csrf_protection' => true,
-            'csrf_field_name' => '_token'
+            'csrf_field_name' => '_token',
         ));
     }
 }

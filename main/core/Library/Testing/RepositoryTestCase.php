@@ -118,7 +118,7 @@ abstract class RepositoryTestCase extends WebTestCase
     /**
      * Increases the test case internal time by a number of seconds.
      *
-     * @param integer $seconds
+     * @param int $seconds
      */
     protected static function sleep($seconds)
     {
@@ -128,11 +128,11 @@ abstract class RepositoryTestCase extends WebTestCase
     protected static function createUser($name, array $roles = array(), Workspace $personalWorkspace = null)
     {
         $user = new User();
-        $user->setFirstName($name . 'FirstName');
-        $user->setLastName($name . 'LastName');
-        $user->setUsername($name . 'Username');
-        $user->setPlainPassword($name . 'Password');
-        $user->setMail($name . '@claroline.net');
+        $user->setFirstName($name.'FirstName');
+        $user->setLastName($name.'LastName');
+        $user->setUsername($name.'Username');
+        $user->setPlainPassword($name.'Password');
+        $user->setMail($name.'@claroline.net');
         $user->setCreationDate(self::$time);
 
         foreach ($roles as $role) {
@@ -181,7 +181,7 @@ abstract class RepositoryTestCase extends WebTestCase
     {
         $workspace = new Workspace();
         $workspace->setName($name);
-        $workspace->setCode($name . 'Code');
+        $workspace->setCode($name.'Code');
         $workspace->setGuid(self::$client->getContainer()->get('claroline.utilities.misc')->generateGuid());
         self::create($name, $workspace);
     }
@@ -190,7 +190,7 @@ abstract class RepositoryTestCase extends WebTestCase
     {
         $workspace = new Workspace();
         $workspace->setName($name);
-        $workspace->setCode($name . 'Code');
+        $workspace->setCode($name.'Code');
         $workspace->setDisplayable(true);
         $workspace->setSelfRegistration($selfRegistration);
         $workspace->setGuid(self::$client->getContainer()->get('claroline.utilities.misc')->generateGuid());
@@ -216,8 +216,7 @@ abstract class RepositoryTestCase extends WebTestCase
         User $creator,
         Workspace $workspace,
         Directory $parent = null
-    )
-    {
+    ) {
         if ($parent) {
             $parent = $parent->getResourceNode();
         }
@@ -256,8 +255,7 @@ abstract class RepositoryTestCase extends WebTestCase
         ResourceType $type,
         User $creator,
         Directory $parent
-    )
-    {
+    ) {
         $text = self::prepareResource(
             new Text(),
             $type,
@@ -271,7 +269,7 @@ abstract class RepositoryTestCase extends WebTestCase
 
         $revision = new Revision();
         $revision->setVersion($revisionNumber);
-        $revision->setContent($name . 'Content');
+        $revision->setContent($name.'Content');
         $revision->setText($text);
         self::create("revision/{$text->getName()}-{$revisionNumber}", $revision);
     }
@@ -282,8 +280,7 @@ abstract class RepositoryTestCase extends WebTestCase
         AbstractResource $target,
         User $creator,
         Directory $parent
-    )
-    {
+    ) {
         $shortcut = self::prepareResource(
             new ResourceShortcut(),
             $type, $creator,
@@ -301,8 +298,7 @@ abstract class RepositoryTestCase extends WebTestCase
         AbstractResource $resource,
         $mask,
         array $creatableResourceTypes = array()
-    )
-    {
+    ) {
         $rights = new ResourceRights();
         $rights->setRole($role);
         $rights->setResourceNode($resource->getResourceNode());
@@ -320,7 +316,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $tool = new Tool();
         $tool->setName($name);
         $tool->setDisplayName($name);
-        $tool->setClass($name . 'Class');
+        $tool->setClass($name.'Class');
         self::create($name, $tool);
     }
 
@@ -329,8 +325,7 @@ abstract class RepositoryTestCase extends WebTestCase
         Workspace $workspace,
         array $roles,
         $position
-    )
-    {
+    ) {
         $orderedTool = new OrderedTool();
         $orderedTool->setName($tool->getName());
         $orderedTool->setTool($tool);
@@ -348,8 +343,7 @@ abstract class RepositoryTestCase extends WebTestCase
         Tool $tool,
         User $user,
         $position
-    )
-    {
+    ) {
         $orderedTool = new OrderedTool();
         $orderedTool->setName($tool->getName());
         $orderedTool->setTool($tool);
@@ -366,7 +360,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $plugin->setBundleName($bundle);
         $plugin->setHasOptions(false);
         $plugin->setIcon('default');
-        self::create($vendor . $bundle, $plugin);
+        self::create($vendor.$bundle, $plugin);
     }
 
     protected static function createLog(User $doer, $action, Workspace $workspace = null)
@@ -409,8 +403,7 @@ abstract class RepositoryTestCase extends WebTestCase
         WorkspaceTag $child,
         $level,
         User $user = null
-    )
-    {
+    ) {
         $tagHierarchy = new WorkspaceTagHierarchy();
         $tagHierarchy->setParent($parent);
         $tagHierarchy->setTag($child);
@@ -445,8 +438,7 @@ abstract class RepositoryTestCase extends WebTestCase
     protected static function createWorkspaceHomeTab(
         $name,
         Workspace $workspace
-    )
-    {
+    ) {
         $homeTab = new HomeTab();
         $homeTab->setName($name);
         $homeTab->setType('workspace');
@@ -463,8 +455,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $visible,
         $locked,
         $tabOrder
-    )
-    {
+    ) {
         $homeTabConfig = new HomeTabConfig();
         $homeTabConfig->setHomeTab($homeTab);
         $homeTabConfig->setType($type);
@@ -484,8 +475,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $visible,
         $locked,
         $tabOrder
-    )
-    {
+    ) {
         $homeTabConfig = new HomeTabConfig();
         $homeTabConfig->setHomeTab($homeTab);
         $homeTabConfig->setUser($user);
@@ -506,8 +496,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $visible,
         $locked,
         $tabOrder
-    )
-    {
+    ) {
         $homeTabConfig = new HomeTabConfig();
         $homeTabConfig->setHomeTab($homeTab);
         $homeTabConfig->setWorkspace($workspace);
@@ -527,8 +516,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $visible,
         $locked,
         $widgetOrder
-    )
-    {
+    ) {
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
         $widgetHomeTabConfig->setWidget($widget);
         $widgetHomeTabConfig->setHomeTab($homeTab);
@@ -550,8 +538,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $visible,
         $locked,
         $widgetOrder
-    )
-    {
+    ) {
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
         $widgetHomeTabConfig->setWidget($widget);
         $widgetHomeTabConfig->setHomeTab($homeTab);
@@ -573,8 +560,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $visible,
         $locked,
         $widgetOrder
-    )
-    {
+    ) {
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
         $widgetHomeTabConfig->setWidget($widget);
         $widgetHomeTabConfig->setHomeTab($homeTab);
@@ -608,8 +594,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $widget,
         $isAdmin,
         $isDesktop
-    )
-    {
+    ) {
         $instance = new WidgetInstance();
         $instance->setIsAdmin($isAdmin);
         $instance->setIsDesktop($isDesktop);
@@ -624,11 +609,11 @@ abstract class RepositoryTestCase extends WebTestCase
     /**
      * Sets the common properties of a resource.
      *
-     * @param AbstractResource  $resource
-     * @param ResourceType      $type
-     * @param User              $creator
-     * @param Workspace $workspace
-     * @param ResourceNode      $parent
+     * @param AbstractResource $resource
+     * @param ResourceType     $type
+     * @param User             $creator
+     * @param Workspace        $workspace
+     * @param ResourceNode     $parent
      *
      * @return AbstractResource
      */
@@ -640,9 +625,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $name,
         $mimeType,
         $parent = null
-    )
-    {
-
+    ) {
         $node = new ResourceNode();
         $node->setResourceType($type);
         $node->setCreator($creator);

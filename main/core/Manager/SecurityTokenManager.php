@@ -49,7 +49,6 @@ class SecurityTokenManager
         $this->om->flush();
     }
 
-
     /********************************************
      *  SecurityTokenRepository access methods  *
      ********************************************/
@@ -63,8 +62,7 @@ class SecurityTokenManager
         $clientName,
         $token,
         $ip
-    )
-    {
+    ) {
         return $this->securityTokenRepo
             ->findSecurityTokenByClientNameAndTokenAndIp($clientName, $token, $ip);
     }

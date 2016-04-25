@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -12,14 +12,14 @@ namespace Icap\SocialmediaBundle\Library\SocialShare\Networks;
 
 class Twitter implements NetworkInterface
 {
-    const NAME = "twitter";
-    const SHARE_URL = "https://twitter.com/intent/tweet?%s";
-    const API_URL = "http://urls.api.twitter.com/1/urls/count.json?url=%s";
-    const COLOR = "#00aced";
-    const ICON = "twitter";
+    const NAME = 'twitter';
+    const SHARE_URL = 'https://twitter.com/intent/tweet?%s';
+    const API_URL = 'http://urls.api.twitter.com/1/urls/count.json?url=%s';
+    const COLOR = '#00aced';
+    const ICON = 'twitter';
 
     /**
-     * Gets networks's name
+     * Gets networks's name.
      *
      * @return string
      */
@@ -29,7 +29,7 @@ class Twitter implements NetworkInterface
     }
 
     /**
-     * Gets the share link for provided URL
+     * Gets the share link for provided URL.
      *
      * @param $url
      * @param array $options
@@ -44,7 +44,7 @@ class Twitter implements NetworkInterface
     }
 
     /**
-     * Gets the number of shares of the URL
+     * Gets the number of shares of the URL.
      *
      * @param $url
      *
@@ -54,17 +54,17 @@ class Twitter implements NetworkInterface
     {
         $api_url = sprintf(self::API_URL, urlencode($url));
         $data = null;
-        try{
+        try {
             $data = json_decode(file_get_contents($api_url));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $data = null;
         }
 
-        return ($data !== null && isset($data->count))?intval($data->count):0;
+        return ($data !== null && isset($data->count)) ? intval($data->count) : 0;
     }
 
     /**
-     * Gets networks's bg color
+     * Gets networks's bg color.
      *
      * @return string
      */
@@ -74,7 +74,7 @@ class Twitter implements NetworkInterface
     }
 
     /**
-     * Gets network's icon class
+     * Gets network's icon class.
      *
      * @return string
      */

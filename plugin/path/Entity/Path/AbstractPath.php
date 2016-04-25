@@ -6,14 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /** 
- * Abstract path
+ * Abstract path.
  *  
  * @ORM\MappedSuperclass 
  */
 class AbstractPath
 {
     /**
-     * Name of the path
+     * Name of the path.
+     *
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
@@ -22,35 +23,40 @@ class AbstractPath
     protected $name;
 
     /**
-     * Display a breadcrumbs for navigation into the Path
-     * @var boolean
+     * Display a breadcrumbs for navigation into the Path.
+     *
+     * @var bool
      *
      * @ORM\Column(name="breadcrumbs", type="boolean")
      */
     protected $breadcrumbs = false;
 
     /**
-     * JSON structure of the path
+     * JSON structure of the path.
+     *
      * @var string
      *
      * @ORM\Column(name="structure", type="text")
      */
     protected $structure;
-    
+
     /**
-     * Set name
-     * @param  string $name
+     * Set name.
+     *
+     * @param string $name
+     *
      * @return \Innova\PathBundle\Entity\Path\AbstractPath
      */
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
-    
+
     /**
-     * Get name
+     * Get name.
+     *
      * @return string
      */
     public function getName()
@@ -59,8 +65,10 @@ class AbstractPath
     }
 
     /**
-     * Set breadcrumbs
-     * @param  boolean $breadcrumbs
+     * Set breadcrumbs.
+     *
+     * @param bool $breadcrumbs
+     *
      * @return \Innova\PathBundle\Entity\Path\AbstractPath
      */
     public function setBreadcrumbs($breadcrumbs)
@@ -72,7 +80,8 @@ class AbstractPath
 
     /**
      * Does Path have a breadcrumbs ?
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasBreadcrumbs()
     {
@@ -80,8 +89,10 @@ class AbstractPath
     }
 
     /**
-     * Set structure
-     * @param  string $structure
+     * Set structure.
+     *
+     * @param string $structure
+     *
      * @return \Innova\PathBundle\Entity\Path\AbstractPath
      */
     public function setStructure($structure)
@@ -92,7 +103,8 @@ class AbstractPath
     }
 
     /**
-     * Get structure
+     * Get structure.
+     *
      * @return string
      */
     public function getStructure()

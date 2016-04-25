@@ -39,7 +39,7 @@ class NoDuplicateValidator extends ConstraintValidator
                 $item = $element;
             }
 
-            if (in_array($item , $items)) {
+            if (in_array($item, $items)) {
                 $this->context->addViolation($constraint->message);
                 break;
             }

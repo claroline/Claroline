@@ -1,0 +1,10 @@
+parameters:
+    icap_website.page.class:             Icap\WebsiteBundle\Entity\WebsitePage
+    icap_website.repository.page.class:  Icap\WebsiteBundle\Repository\WebsitePageRepository
+
+services:
+    icap_website.repository.page:
+        class: "%icap_website.repository.page.class%"
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - "%icap_website.page.class%"

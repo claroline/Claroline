@@ -34,8 +34,7 @@ class AnnouncementWidgetListener
     public function __construct(
         RequestStack $requestStack,
         HttpKernelInterface $httpKernel
-    )
-    {
+    ) {
         $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
@@ -44,6 +43,7 @@ class AnnouncementWidgetListener
      * @DI\Observe("widget_claroline_announcement_widget")
      *
      * @param DisplayWidgetEvent $event
+     *
      * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onDisplay(DisplayWidgetEvent $event)

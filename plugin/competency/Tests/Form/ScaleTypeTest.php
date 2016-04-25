@@ -19,7 +19,7 @@ class ScaleTypeTest extends FormTestCase
     {
         $formData = [
             'name' => 'Foo',
-            'levels' => "A\nB"
+            'levels' => "A\nB",
         ];
 
         $form = $this->factory->create(new ScaleType());

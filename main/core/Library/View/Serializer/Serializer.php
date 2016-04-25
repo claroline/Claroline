@@ -35,8 +35,7 @@ class Serializer
         ObjectManager $om,
         TranslatorInterface $trans,
         $container
-    )
-    {
+    ) {
         $this->om = $om;
         $this->trans = $trans;
         $this->container = $container;
@@ -44,7 +43,7 @@ class Serializer
 
     /**
      * This function will export properties from the class $class whose typing hint is
-     * "string", "integer", "\DateTime"
+     * "string", "integer", "\DateTime".
      *
      * @param $class a class entity class to be exported
      * @param $exporter the exporter object to use
@@ -65,7 +64,7 @@ class Serializer
     }
 
     /**
-     * We add the facets to the user export
+     * We add the facets to the user export.
      */
     private function exportUsers($users, $format)
     {
@@ -103,7 +102,7 @@ class Serializer
             if ($exportFacets) {
                 foreach ($fieldFacetsName as $fieldFacetName) {
                     $found = false;
-                    foreach($user->getFieldsFacetValue() as $fieldFacetValue) {
+                    foreach ($user->getFieldsFacetValue() as $fieldFacetValue) {
                         if ($fieldFacetValue->getFieldFacet()->getName() === $fieldFacetName) {
                             $found = true;
                             $data[$user->getId()][$fieldFacetName] = $this->formatValue($fieldFacetValue->getValue());
@@ -123,7 +122,7 @@ class Serializer
             }
         }
 
-        $exporter = $this->container->get('claroline.library.view.serializer.' . $format);
+        $exporter = $this->container->get('claroline.library.view.serializer.'.$format);
 
         return $exporter->export($fields, $data);
     }
@@ -169,16 +168,16 @@ class Serializer
             }
         }
 
-        return null;
+        return;
     }
 
     private function findPossibleGettersForVar($varname)
     {
         return [
-            'get' . ucfirst($varname),
-            'has' . ucfirst($varname),
-            'is' . ucfirst($varname),
-            $varname
+            'get'.ucfirst($varname),
+            'has'.ucfirst($varname),
+            'is'.ucfirst($varname),
+            $varname,
         ];
     }
 

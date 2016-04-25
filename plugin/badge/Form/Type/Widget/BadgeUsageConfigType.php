@@ -18,23 +18,22 @@ class BadgeUsageConfigType extends AbstractType
             ->add('number_last_awarded_badge', 'integer', array(
                 'theme_options' => array(
                     'label_width' => 'col-md-7',
-                    'control_width' => 'col-md-2'
-                )
+                    'control_width' => 'col-md-2',
+                ),
             ))
             ->add('number_most_awarded_badge', 'integer', array(
                 'theme_options' => array(
                     'label_width' => 'col-md-7',
-                    'control_width' => 'col-md-2'
-                )
+                    'control_width' => 'col-md-2',
+                ),
             ))
             ->add('simple_view', 'checkbox', array(
                 'required' => false,
                 'theme_options' => array(
                     'label_width' => 'col-md-7',
-                    'control_width' => 'col-md-2'
-                )
+                    'control_width' => 'col-md-2',
+                ),
             ));
-
     }
 
     public function getName()
@@ -46,9 +45,9 @@ class BadgeUsageConfigType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\BadgeBundle\Entity\Widget\BadgeUsageConfig',
+                'data_class' => 'Icap\BadgeBundle\Entity\Widget\BadgeUsageConfig',
                 'translation_domain' => 'icap_badge',
-                'language'           => 'en'
+                'language' => 'en',
             )
         );
     }

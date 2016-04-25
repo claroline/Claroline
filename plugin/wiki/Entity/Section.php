@@ -25,7 +25,7 @@ class Section
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
-    protected $visible=true;
+    protected $visible = true;
 
     /**
      * @ORM\Column(type="datetime", name="creation_date")
@@ -34,7 +34,7 @@ class Section
     protected $creationDate;
 
     /**
-     * @var User $author
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -56,7 +56,7 @@ class Section
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    protected $deleted=false;
+    protected $deleted = false;
 
     /**
      * @ORM\Column(type="datetime", name="deletion_date", nullable=true)
@@ -83,7 +83,7 @@ class Section
 
     /*
      * Variable used in section edit form to define move section properties
-     */     
+     */
     private $position;
 
     /*
@@ -100,7 +100,7 @@ class Section
      * Variable used is section edit to define if user has admin rights
      */
     private $isWikiAdmin = false;
-    
+
     /**
      * @Gedmo\TreeRoot
      * @ORM\Column(type="integer", nullable=true)
@@ -115,9 +115,9 @@ class Section
     protected $parent;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -165,9 +165,10 @@ class Section
     }
 
     /**
-     * Set author
+     * Set author.
      *
      * @param User $author
+     *
      * @return Post
      */
     public function setAuthor(User $author = null)
@@ -178,7 +179,7 @@ class Section
     }
 
     /**
-     * Get author
+     * Get author.
      *
      * @return User
      */
@@ -188,9 +189,10 @@ class Section
     }
 
     /**
-     * Set last editor
+     * Set last editor.
      *
      * @param User $lastEditor
+     *
      * @return Post
      */
     public function setLastEditor(User $lastEditor = null)
@@ -201,7 +203,7 @@ class Section
     }
 
     /**
-     * Get last editor
+     * Get last editor.
      *
      * @return User
      */
@@ -211,9 +213,10 @@ class Section
     }
 
     /**
-     * Set contribution
+     * Set contribution.
      *
      * @param \Icap\WikiBundle\Entity\Contribution $contribution
+     *
      * @return section
      */
     public function setActiveContribution(\Icap\WikiBundle\Entity\Contribution $contribution)
@@ -224,7 +227,7 @@ class Section
     }
 
     /**
-     * Get contribution
+     * Get contribution.
      *
      * @return \Icap\WikiBundle\Entity\Contribution
      */
@@ -234,9 +237,10 @@ class Section
     }
 
     /**
-     * Set wiki
+     * Set wiki.
      *
      * @param \Icap\WikiBundle\Entity\Wiki $wiki
+     *
      * @return section
      */
     public function setWiki(\Icap\WikiBundle\Entity\Wiki $wiki)
@@ -247,7 +251,7 @@ class Section
     }
 
     /**
-     * Get wiki
+     * Get wiki.
      *
      * @return \Icap\WikiBundle\Entity\Wiki
      */
@@ -261,7 +265,7 @@ class Section
      */
     public function getDeleted()
     {
-        return ($this->deleted === null)?false:$this->deleted;
+        return ($this->deleted === null) ? false : $this->deleted;
     }
 
     /**
@@ -357,7 +361,7 @@ class Section
     }
 
     /**
-     * @param integer $position
+     * @param int $position
      */
     public function setPosition($position)
     {
@@ -365,7 +369,7 @@ class Section
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getPosition()
     {
@@ -373,67 +377,69 @@ class Section
     }
 
     /**
-     * @param boolean $brother
+     * @param bool $brother
      */
     public function setBrother($brother)
     {
-        $this->brother = (bool)$brother;
+        $this->brother = (bool) $brother;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getBrother()
     {
-        return (bool)$this->brother;
+        return (bool) $this->brother;
     }
 
     /**
-     * @param boolean $hasChangedActiveContribution
+     * @param bool $hasChangedActiveContribution
      */
     public function setHasChangedActiveContribution($hasChangedActiveContribution)
     {
-        $this->hasChangedActiveContribution = (bool)$hasChangedActiveContribution;
+        $this->hasChangedActiveContribution = (bool) $hasChangedActiveContribution;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasChangedActiveContribution()
     {
-        return (bool)$this->hasChangedActiveContribution;
+        return (bool) $this->hasChangedActiveContribution;
     }
 
     /**
-     * @param boolean $brother
+     * @param bool $brother
      */
     public function setIsWikiAdmin($isAdmin)
     {
-        $this->isWikiAdmin = (bool)$isAdmin;
+        $this->isWikiAdmin = (bool) $isAdmin;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsWikiAdmin()
     {
-        return (bool)$this->isWikiAdmin;
+        return (bool) $this->isWikiAdmin;
     }
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param \Icap\WikiBundle\Entity\Section $section
+     *
      * @return section
      */
     public function setParent(\Icap\WikiBundle\Entity\Section $section)
     {
         $this->section = $section;
+
         return $this;
     }
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return \Icap\WikiBundle\Entity\Section
      */
@@ -443,9 +449,9 @@ class Section
     }
 
     /**
-     * Test if section is rootsection
+     * Test if section is rootsection.
      *
-     * @return boolean
+     * @return bool
      */
     public function isRoot()
     {
@@ -453,20 +459,21 @@ class Section
     }
 
     /**
-     * Test if section has children
+     * Test if section has children.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasChildren()
     {
         $difference = $this->getRight() - $this->getLeft();
+
         return $difference > 1;
     }
 
     /**
-     * Test if section has to be moved
+     * Test if section has to be moved.
      *
-     * @return boolean
+     * @return bool
      */
     public function checkMoveSection()
     {
@@ -474,19 +481,20 @@ class Section
     }
 
     /**
-     * Creates a new non persisted contribution and sets it as section's active contribution
+     * Creates a new non persisted contribution and sets it as section's active contribution.
+     *
      * @param \Claroline\CoreBundle\Entity\User $user
      */
-    public function setNewActiveContributionToSection(User $user=null) {
+    public function setNewActiveContributionToSection(User $user = null)
+    {
         $oldActiveContribution = $this->getActiveContribution();
         $newActiveContribution = new Contribution();
-        $newActiveContribution->setSection($this);        
+        $newActiveContribution->setSection($this);
         if ($oldActiveContribution === null) {
             if ($user === null) {
                 $user = $this->getAuthor();
             }
-        }
-        else {
+        } else {
             if ($user === null) {
                 $user = $oldActiveContribution->getContributor();
             }
@@ -497,20 +505,21 @@ class Section
             $newActiveContribution->setText($oldActiveContribution->getText());
         }
         $newActiveContribution->setContributor($user);
-        $this->setActiveContribution($newActiveContribution);        
+        $this->setActiveContribution($newActiveContribution);
     }
 
     /**
-     * Returns the changeSet data when a section has been moved
+     * Returns the changeSet data when a section has been moved.
+     *
      * @param Section $oldParent
-     * @param integer $oldLeft
+     * @param int     $oldLeft
      * @param Section $newParent
      *
      * @return array $changeSet
      */
-    public function getMoveEventChangeSet (Section $oldParent, $oldLeft, Section $newParent)
+    public function getMoveEventChangeSet(Section $oldParent, $oldLeft, Section $newParent)
     {
-        /** Create change set for move log event
+        /* Create change set for move log event
          * If section's parent has changed, return old and new parent
          * Otherwise return old and new left to mark move up or down in the same parent
          */
@@ -519,15 +528,16 @@ class Section
             'parentId' => array($oldParent->getId(), $newParent->getId()),
             'parentName' => array($oldParent->getActiveContribution()->getTitle(), $newParent->getActiveContribution()->getTitle()),
             'isParentRoot' => array($oldParent->isRoot(), $newParent->isRoot()),
-            'left' => array($oldLeft, $newLeft)
+            'left' => array($oldLeft, $newLeft),
         );
-        
+
         return $changeSet;
     }
 
     /**
-     * Returns the changeSet data when a section has been moved
-     * @param Contribution  $oldActiveContribution
+     * Returns the changeSet data when a section has been moved.
+     *
+     * @param Contribution $oldActiveContribution
      */
     public function isActiveContributionChanged($oldActiveContribution)
     {
@@ -535,12 +545,11 @@ class Section
 
         $oldText = trim($oldActiveContribution->getText());
         $oldTitle = trim($oldActiveContribution->getTitle());
-        
+
         $newTitle = trim($activeContribution->getTitle());
         $newText = trim($activeContribution->getText());
 
-        if ($oldText == $newText && $oldTitle == $newTitle)
-        {
+        if ($oldText == $newText && $oldTitle == $newTitle) {
             unset($activeContribution);
             $this->setActiveContribution($oldActiveContribution);
             $this->setHasChangedActiveContribution(false);
@@ -550,7 +559,8 @@ class Section
     /**
      * @ORM\PostPersist
      */
-    public function createActiveContribution(LifecycleEventArgs $event){
+    public function createActiveContribution(LifecycleEventArgs $event)
+    {
         if ($this->getActiveContribution() == null) {
             $em = $event->getEntityManager();
             $activeContribution = new Contribution();
@@ -559,7 +569,7 @@ class Section
             $this->setActiveContribution($activeContribution);
 
             $em->persist($activeContribution);
-            $em->flush();            
+            $em->flush();
         }
     }
 }

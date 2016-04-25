@@ -19,10 +19,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MaskDecoder
 {
-    const OPEN   = 1;
-    const COPY   = 2;
+    const OPEN = 1;
+    const COPY = 2;
     const EXPORT = 4;
-    const EDIT   = 8;
+    const EDIT = 8;
     const DELETE = 16;
 
     /**
@@ -67,7 +67,6 @@ class MaskDecoder
         $this->value = $position;
 
         return $this;
-
     }
     public function getValue()
     {

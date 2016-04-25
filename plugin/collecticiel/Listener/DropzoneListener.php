@@ -9,8 +9,6 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Innova\CollecticielBundle\Entity\Criterion;
 use Innova\CollecticielBundle\Entity\Dropzone;
@@ -23,14 +21,13 @@ class DropzoneListener extends ContainerAware
 {
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-
         $form = $this->container->get('form.factory')->create(new DropzoneType(), new Dropzone());
-        
+
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'innova_collecticiel'
+                'resourceType' => 'innova_collecticiel',
             )
         );
 
@@ -52,7 +49,7 @@ class DropzoneListener extends ContainerAware
                 'ClarolineCoreBundle:Resource:createForm.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'resourceType' => 'innova_collecticiel'
+                    'resourceType' => 'innova_collecticiel',
                 )
             );
             $event->setErrorFormContent($content);
@@ -62,7 +59,6 @@ class DropzoneListener extends ContainerAware
 
     public function onOpen(OpenResourceEvent $event)
     {
-
 
         // Modification ERV (août 2015) InnovaERV
         // suite demande JJQ, voir son document de référence d'août 2015
@@ -76,16 +72,14 @@ class DropzoneListener extends ContainerAware
                     'innova_collecticiel_drop',
                     array('resourceId' => $event->getResource()->getId())
                 );
-        }
-        else
-        {
-        // Modification ERV (août 2015) InnovaERV
+        } else {
+            // Modification ERV (août 2015) InnovaERV
         // suite demande JJQ, voir son document de référence d'août 2015
         // il faut venir sur l'onglet "Demandes adressées" et non plus sur "Paramètres"
         // Point 3 du document
-            
+
             $em = $this->container->get('doctrine.orm.entity_manager');
-            
+
             $dropzone = $em->getRepository('InnovaCollecticielBundle:Dropzone')
             ->find($event->getResource()->getId());
 
@@ -99,9 +93,7 @@ class DropzoneListener extends ContainerAware
                         'innova_collecticiel_drops_awaiting',
                         array('resourceId' => $event->getResource()->getId())
                 );
-            }
-            else 
-            {
+            } else {
                 $route = $this->container
                     ->get('router')
                     ->generate(
@@ -117,16 +109,15 @@ class DropzoneListener extends ContainerAware
 
     public function onOpenCustom(CustomActionResourceEvent $event)
     {
-
         $em = $this->container->get('doctrine.orm.entity_manager');
-            
+
         $dropzone = $em->getRepository('InnovaCollecticielBundle:Dropzone')
             ->find($event->getResource()->getId());
 
         $dropzoneVoter = $this->container->get('innova.manager.dropzone_voter');
 
         $canEdit = $dropzoneVoter->checkEditRight($dropzone);
-        
+
         if (!$canEdit) {
             $route = $this->container
                 ->get('router')
@@ -134,16 +125,13 @@ class DropzoneListener extends ContainerAware
                     'innova_collecticiel_drop',
                     array('resourceId' => $event->getResource()->getId())
                 );
-        }
-        else
-        {
-        $route = $this->container
+        } else {
+            $route = $this->container
                 ->get('router')
                 ->generate(
                     'innova_collecticiel_shared_spaces',
                     array('resourceId' => $event->getResource()->getId())
                 );
-
         }
 
         $event->setResponse(new RedirectResponse($route));
@@ -162,10 +150,8 @@ class DropzoneListener extends ContainerAware
         $event->stopPropagation();
     }
 
-
     public function onList(CustomActionResourceEvent $event)
     {
- 
         $route = $this->container
             ->get('router')
             ->generate(
@@ -186,7 +172,7 @@ class DropzoneListener extends ContainerAware
 
     public function onAdministrate(PluginOptionsEvent $event)
     {
-//        $referenceOptionsList = $this->container
+        //        $referenceOptionsList = $this->container
 //            ->get('doctrine.orm.entity_manager')
 //            ->getRepository('IcapReferenceBundle:ReferenceBankOptions')
 //            ->findAll();

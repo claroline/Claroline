@@ -32,12 +32,12 @@ class LogBadgeAwardEvent extends LogGenericEvent implements NotifiableInterface
             self::ACTION,
             array(
                 'badge' => array(
-                    'id' => $badge->getId()
+                    'id' => $badge->getId(),
                 ),
                 'receiverUser' => array(
-                    'lastName'  => $receiver->getLastName(),
-                    'firstName' => $receiver->getFirstName()
-                )
+                    'lastName' => $receiver->getLastName(),
+                    'firstName' => $receiver->getFirstName(),
+                ),
             ),
             $receiver,
             null,
@@ -58,7 +58,7 @@ class LogBadgeAwardEvent extends LogGenericEvent implements NotifiableInterface
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -102,11 +102,11 @@ class LogBadgeAwardEvent extends LogGenericEvent implements NotifiableInterface
      */
     public function getIconKey()
     {
-        return "badge";
+        return 'badge';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -117,26 +117,26 @@ class LogBadgeAwardEvent extends LogGenericEvent implements NotifiableInterface
 
         $notificationDetails = array(
             'workspace' => $workspace,
-            'badge'     => array(
-                'id'   => $this->badge->getId(),
+            'badge' => array(
+                'id' => $this->badge->getId(),
                 'name' => $this->badge->getName(),
-                'slug' => $this->badge->getSlug()
+                'slug' => $this->badge->getSlug(),
             ),
-            'receiver'  => array(
-                'id'        => $receiver->getId(),
+            'receiver' => array(
+                'id' => $receiver->getId(),
                 'publicUrl' => $receiver->getPublicUrl(),
-                'lastName'  => $receiver->getLastName(),
-                'firstName' => $receiver->getFirstName()
-            )
+                'lastName' => $receiver->getLastName(),
+                'firstName' => $receiver->getFirstName(),
+            ),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

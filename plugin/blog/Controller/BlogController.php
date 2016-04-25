@@ -3,10 +3,7 @@
 namespace Icap\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\BlogBundle\Entity\Blog;
-use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
 use Icap\BlogBundle\Exception\TooMuchResultException;
@@ -18,7 +15,6 @@ use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -38,7 +34,7 @@ class BlogController extends BaseController
      */
     public function viewAction(Request $request, Blog $blog, $page, $filter = null)
     {
-        $this->checkAccess("OPEN", $blog);
+        $this->checkAccess('OPEN', $blog);
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -50,9 +46,9 @@ class BlogController extends BaseController
         /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->get('icap.blog.post_repository');
 
-        $tag    = null;
+        $tag = null;
         $author = null;
-        $date   = null;
+        $date = null;
 
         if (null !== $filter) {
             $tag = $this->get('icap.blog.tag_repository')->findOneBySlug($filter);
@@ -74,21 +70,21 @@ class BlogController extends BaseController
             ->andWhere('post.blog = :blogId')
         ;
 
-        if (!$this->isUserGranted("EDIT", $blog)) {
+        if (!$this->isUserGranted('EDIT', $blog)) {
             $query = $postRepository->filterByPublishPost($query);
         }
 
         $criterias = array(
-            'tag'    => $tag,
+            'tag' => $tag,
             'author' => $author,
-            'date'   => $date,
-            'blogId' => $blog->getId()
+            'date' => $date,
+            'blogId' => $blog->getId(),
         );
 
         $query = $postRepository->createCriteriaQueryBuilder($criterias, $query);
 
         $adapter = new DoctrineORMAdapter($query, false);
-        $pager   = new PagerFanta($adapter);
+        $pager = new PagerFanta($adapter);
 
         $pager->setMaxPerPage($blog->getOptions()->getPostPerPage());
 
@@ -99,13 +95,13 @@ class BlogController extends BaseController
         }
 
         return array(
-            '_resource'  => $blog,
+            '_resource' => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
-            'user'       => $user,
-            'pager'      => $pager,
-            'tag'        => $tag,
-            'author'     => $author,
-            'date'       => $date
+            'user' => $user,
+            'pager' => $pager,
+            'tag' => $tag,
+            'author' => $author,
+            'date' => $date,
         );
     }
 
@@ -116,7 +112,7 @@ class BlogController extends BaseController
      */
     public function viewSearchAction(Blog $blog, $page, $search)
     {
-        $this->checkAccess("OPEN", $blog);
+        $this->checkAccess('OPEN', $blog);
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -127,7 +123,7 @@ class BlogController extends BaseController
             /** @var \Doctrine\ORM\QueryBuilder $query */
             $query = $postRepository->searchByBlog($blog, $search, false);
 
-            if (!$this->isUserGranted("EDIT", $blog)) {
+            if (!$this->isUserGranted('EDIT', $blog)) {
                 $query
                     ->andWhere('post.publicationDate IS NOT NULL')
                     ->andWhere('post.status = :publishedStatus')
@@ -136,7 +132,7 @@ class BlogController extends BaseController
             }
 
             $adapter = new DoctrineORMAdapter($query);
-            $pager   = new PagerFanta($adapter);
+            $pager = new PagerFanta($adapter);
 
             $pager
                 ->setMaxPerPage($blog->getOptions()->getPostPerPage())
@@ -147,17 +143,17 @@ class BlogController extends BaseController
         } catch (TooMuchResultException $exception) {
             $this->get('session')->getFlashBag()->add('error', $this->get('translator')->trans('icap_blog_post_search_too_much_result', array(), 'icap_blog'));
             $adapter = new ArrayAdapter(array());
-            $pager   = new PagerFanta($adapter);
+            $pager = new PagerFanta($adapter);
 
             $pager->setCurrentPage($page);
         }
 
         return array(
-            '_resource'  => $blog,
+            '_resource' => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
-            'user'       => $user,
-            'pager'      => $pager,
-            'search'     => $search
+            'user' => $user,
+            'pager' => $pager,
+            'search' => $search,
         );
     }
 
@@ -167,7 +163,7 @@ class BlogController extends BaseController
      */
     public function viewPdfAction(Blog $blog)
     {
-        $this->checkAccess("OPEN", $blog);
+        $this->checkAccess('OPEN', $blog);
 
         /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->get('icap.blog.post_repository');
@@ -177,7 +173,7 @@ class BlogController extends BaseController
         $content = $this->renderView('IcapBlogBundle:Blog:view.pdf.twig',
             array(
                 '_resource' => $blog,
-                'posts'     => $posts
+                'posts' => $posts,
             )
         );
 
@@ -188,14 +184,14 @@ class BlogController extends BaseController
                     'outline' => true,
                     'footer-right' => '[page]/[toPage]',
                     'footer-spacing' => 3,
-                    'footer-font-size' => 8
+                    'footer-font-size' => 8,
                 ),
                 true
             ),
             200,
             array(
-                'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'inline; filename="'.$blog->getResourceNode()->getName()
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.$blog->getResourceNode()->getName(),
             )
         );
     }
@@ -208,13 +204,13 @@ class BlogController extends BaseController
      */
     public function configureAction(Request $request, Blog $blog, User $user)
     {
-        $this->checkAccess("ADMINISTRATE", $blog);
+        $this->checkAccess('ADMINISTRATE', $blog);
 
         $blogOptions = $blog->getOptions();
 
         $form = $this->createForm(new BlogOptionsType(), $blogOptions);
 
-        if ("POST" === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             $form->submit($request);
             if ($form->isValid()) {
                 $entityManager = $this->getDoctrine()->getManager();
@@ -241,10 +237,10 @@ class BlogController extends BaseController
         }
 
         return array(
-            '_resource'  => $blog,
+            '_resource' => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
-            'form'       => $form->createView(),
-            'user'       => $user
+            'form' => $form->createView(),
+            'user' => $user,
         );
     }
 
@@ -256,7 +252,7 @@ class BlogController extends BaseController
      */
     public function configureBannerAction(Request $request, Blog $blog)
     {
-        $this->checkAccess("ADMINISTRATE", $blog);
+        $this->checkAccess('ADMINISTRATE', $blog);
 
         $blogOptions = $blog->getOptions();
 
@@ -275,7 +271,7 @@ class BlogController extends BaseController
             try {
                 $unitOfWork = $entityManager->getUnitOfWork();
                 $unitOfWork->computeChangeSets();
-                $changeSet  = $unitOfWork->getEntityChangeSet($blogOptions);
+                $changeSet = $unitOfWork->getEntityChangeSet($blogOptions);
 
                 $entityManager->persist($blogOptions);
                 $entityManager->flush();
@@ -299,11 +295,11 @@ class BlogController extends BaseController
      */
     public function editAction(Request $request, Blog $blog, User $user)
     {
-        $this->checkAccess("ADMINISTRATE", $blog);
+        $this->checkAccess('ADMINISTRATE', $blog);
 
         $form = $this->createForm(new BlogInfosType(), $blog);
 
-        if ("POST" === $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             $form->submit($request);
             if ($form->isValid()) {
                 $entityManager = $this->getDoctrine()->getManager();
@@ -330,10 +326,10 @@ class BlogController extends BaseController
         }
 
         return array(
-            '_resource'  => $blog,
+            '_resource' => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
-            'form'       => $form->createView(),
-            'user'       => $user
+            'form' => $form->createView(),
+            'user' => $user,
         );
     }
 
@@ -346,33 +342,33 @@ class BlogController extends BaseController
         $baseUrl = $this->get('request')->getSchemeAndHttpHost();
 
         $feed = array(
-            'title'       => $blog->getResourceNode()->getName(),
+            'title' => $blog->getResourceNode()->getName(),
             'description' => $blog->getInfos(),
-            'siteUrl'     => $baseUrl . $this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())),
-            'feedUrl'     => $baseUrl . $this->generateUrl('icap_blog_rss', array('blogId' => $blog->getId())),
-            'lang'        => $this->get("claroline.config.platform_config_handler")->getParameter('locale_language')
+            'siteUrl' => $baseUrl.$this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())),
+            'feedUrl' => $baseUrl.$this->generateUrl('icap_blog_rss', array('blogId' => $blog->getId())),
+            'lang' => $this->get('claroline.config.platform_config_handler')->getParameter('locale_language'),
         );
 
         /** @var \Icap\BlogBundle\Entity\Post[] $posts */
-        $posts = $this->getDoctrine()->getRepository('IcapBlogBundle:Post')->findRssDatas($blog);;
+        $posts = $this->getDoctrine()->getRepository('IcapBlogBundle:Post')->findRssDatas($blog);
 
         $items = array();
         foreach ($posts as $post) {
             $items[] = array(
-                'title'  => $post->getTitle(),
-                'url'    => $baseUrl . $this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug())),
-                'date'   => $post->getPublicationDate()->format("d/m/Y h:i:s"),
-                'intro'  => $post->getContent(),
-                'author' => $post->getAuthor()->getFirstName() - $post->getAuthor()->getLastName()
+                'title' => $post->getTitle(),
+                'url' => $baseUrl.$this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug())),
+                'date' => $post->getPublicationDate()->format('d/m/Y h:i:s'),
+                'intro' => $post->getContent(),
+                'author' => $post->getAuthor()->getFirstName() - $post->getAuthor()->getLastName(),
             );
         }
 
-        return new Response($this->renderView("IcapBlogBundle:Blog:rss.html.twig", array(
-                'feed'  => $feed,
-                'items' => $items
+        return new Response($this->renderView('IcapBlogBundle:Blog:rss.html.twig', array(
+                'feed' => $feed,
+                'items' => $items,
             )), 200, array(
-                "Content-Type" => "application/rss+xml",
-                "charset"      => "utf-8"
+                'Content-Type' => 'application/rss+xml',
+                'charset' => 'utf-8',
             ));
     }
 
@@ -383,9 +379,9 @@ class BlogController extends BaseController
     public function calendarDatas(Request $request, Blog $blog)
     {
         $requestParameters = $request->query->all();
-        $startDate         = $requestParameters['start'];
-        $endDate           = $requestParameters['end'];
-        $calendarDatas     = array();
+        $startDate = $requestParameters['start'];
+        $endDate = $requestParameters['end'];
+        $calendarDatas = array();
         $calendarDatasTemp = array();
 
         /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
@@ -399,17 +395,17 @@ class BlogController extends BaseController
 
             if (!isset($calendarDatasTemp[$publicationDate])) {
                 $calendarDatasTemp[$publicationDate] = array(
-                    'id'    => '12',
+                    'id' => '12',
                     'start' => $publicationDate,
                     'title' => '1',
-                    'url'   => $this->generateUrl(
+                    'url' => $this->generateUrl(
                         'icap_blog_view_filter',
                         array('blogId' => $blog->getId(), 'filter' => $publicationDateForSort)
-                    )
+                    ),
                 );
             } else {
                 $title = intval($calendarDatasTemp[$publicationDate]['title']);
-                $title++;
+                ++$title;
                 $calendarDatasTemp[$publicationDate]['title'] = "$title";
             }
         }

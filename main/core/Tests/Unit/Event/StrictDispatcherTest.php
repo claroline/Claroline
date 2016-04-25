@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 
-class DispatcherTest extends MockeryTestCase
+class StrictDispatcherTest extends MockeryTestCase
 {
     /**
      * @expectedException Claroline\CoreBundle\Event\MissingEventClassException

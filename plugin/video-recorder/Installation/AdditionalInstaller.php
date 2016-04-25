@@ -15,13 +15,14 @@ class AdditionalInstaller extends BaseInstaller
       $default = new DefaultData();
       $default->load($om);
       // check libav-tools is installed
-      $cmd = 'avconv -i';
+      $cmd = 'avconv -version';
       exec($cmd, $output, $return);
-      if(count($output) === 0 || $return !== -1){
-        $plugin = $om->getRepository('ClarolineCoreBundle:Plugin')->findOneByName('VideoRecorderBundle');
+      // if error
+      if(count($output) === 0 || $return !== 0){
+        echo 'libav-tools not found... disable InnovaVideoRecorderPlugin';
+        $plugin = $om->getRepository('ClarolineCoreBundle:Plugin')->findPluginByShortName('InnovaVideoRecorderBundle');
         $this->container->get('claroline.manager.plugin_manager')->disable($plugin);
       }
-
   }
 
 

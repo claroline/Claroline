@@ -22,8 +22,7 @@ class CourseSessionUserRepository extends EntityRepository
         User $user,
         $userType,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT csu
             FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
@@ -42,8 +41,7 @@ class CourseSessionUserRepository extends EntityRepository
     public function findSessionUsersByUser(
         User $user,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT csu
             FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
@@ -61,8 +59,7 @@ class CourseSessionUserRepository extends EntityRepository
     public function findSessionUsersBySession(
         CourseSession $session,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT csu
             FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
@@ -82,8 +79,7 @@ class CourseSessionUserRepository extends EntityRepository
         array $users,
         $userType,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT csu
             FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
@@ -105,8 +101,7 @@ class CourseSessionUserRepository extends EntityRepository
         array $users,
         $userType,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT csu
             FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
@@ -129,8 +124,7 @@ class CourseSessionUserRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -158,8 +152,7 @@ class CourseSessionUserRepository extends EntityRepository
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u

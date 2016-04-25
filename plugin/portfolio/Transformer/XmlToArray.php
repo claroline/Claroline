@@ -8,6 +8,7 @@ class XmlToArray implements TransformerInterface
      * @param string $string
      *
      * @return array
+     *
      * @throws \Exception
      */
     public function transform($string)
@@ -15,33 +16,34 @@ class XmlToArray implements TransformerInterface
         $xml = simplexml_load_string($string);
 
         if (false === $xml) {
-            throw new \Exception("Unable to parse xml string.");
+            throw new \Exception('Unable to parse xml string.');
         }
+
         return  $this->xmlToArray($xml)['feed'];
     }
 
     /**
-     * Method found here http://outlandish.com/blog/xml-to-json/
+     * Method found here http://outlandish.com/blog/xml-to-json/.
      *
      * @param \SimpleXMLElement $xml
      * @param array             $options
      *
      * @return array
      */
-    function xmlToArray(\SimpleXMLElement $xml, $options = array())
+    public function xmlToArray(\SimpleXMLElement $xml, $options = array())
     {
         $defaults = array(
-            'namespaceSeparator' => ':',//you may want this to be something other than a colon
+            'namespaceSeparator' => ':', //you may want this to be something other than a colon
             'attributePrefix' => '@',   //to distinguish between attributes and nodes with the same name
             'alwaysArray' => array('entry'),   //array of xml tag names which should always become arrays
             'autoArray' => true,        //only create arrays for tags which appear more than once
             'textContent' => '$',       //key used for the text content of elements
             'autoText' => false,         //skip textContent key if node has no attributes or child nodes
             'keySearch' => false,       //optional search and replace on tag and attribute names
-            'keyReplace' => false       //replace values for above search values (as passed to str_replace())
+            'keyReplace' => false,       //replace values for above search values (as passed to str_replace())
         );
-        $options        = array_merge($defaults, $options);
-        $namespaces     = $xml->getDocNamespaces();
+        $options = array_merge($defaults, $options);
+        $namespaces = $xml->getDocNamespaces();
         $namespaces[''] = null; //add base (empty) namespace
 
         //get attributes from all namespaces
@@ -53,9 +55,9 @@ class XmlToArray implements TransformerInterface
                     $attributeName = str_replace($options['keySearch'], $options['keyReplace'], $attributeName);
                 }
                 $attributeKey = $options['attributePrefix']
-                        . ($prefix ? $prefix . $options['namespaceSeparator'] : '')
-                        . $attributeName;
-                $attributesArray[$attributeKey] = (string)$attribute;
+                        .($prefix ? $prefix.$options['namespaceSeparator'] : '')
+                        .$attributeName;
+                $attributesArray[$attributeKey] = (string) $attribute;
             }
         }
 
@@ -73,7 +75,7 @@ class XmlToArray implements TransformerInterface
                 }
                 //add namespace prefix, if any
                 if ($prefix) {
-                    $childTagName = $prefix . $options['namespaceSeparator'] . $childTagName;
+                    $childTagName = $prefix.$options['namespaceSeparator'].$childTagName;
                 }
 
                 if (!isset($tagsArray[$childTagName])) {
@@ -97,7 +99,7 @@ class XmlToArray implements TransformerInterface
 
         //get text content of node
         $textContentArray = array();
-        $plainText = trim((string)$xml);
+        $plainText = trim((string) $xml);
         if ($plainText !== '') {
             $textContentArray[$options['textContent']] = $plainText;
         }
@@ -108,7 +110,7 @@ class XmlToArray implements TransformerInterface
 
         //return node as array
         return array(
-            $xml->getName() => $propertiesArray
+            $xml->getName() => $propertiesArray,
         );
     }
 }

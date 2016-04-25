@@ -1,0 +1,19 @@
+<div>
+    <h5 class="text-center">{{ 'page_list'|trans:'icap_website' }}</h5>
+    <div class="dropdown">
+        <button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="type"><i class="fa fa-plus"></i> <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="" data-ng-click="vm.createNewNode()">{{ 'create_page'|trans:'icap_website' }}</a></li>
+            <li data-ng-class="{'disabled':!vm.hasActiveNode}"><a href="" data-ng-click="vm.createSubNode(vm.activeNode)">{{ 'create_sub_page'|trans:'icap_website' }}</a></li>
+        </ul>
+        <button data-ng-class="{'disabled':!vm.hasActiveNode}" data-ng-click="vm.deleteActiveNode()" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button>
+    </div>
+</div>
+<div class="ui-tree-container" ui-tree="vm.uiOptions" data-drag-enabled="true" id="tree-root">
+    <ul ng-if="!vm.isEmpty" id="parent-{{ vm.root.id }}" class="edit-menu" ui-tree-nodes ng-model="vm.root.children">
+        <li id="nd-{{node.id}}" ui-tree-node data-ng-repeat="node in vm.root.children" data-webtree-node data-ng-model="node" data-depth="1"></li>
+    </ul>
+    <ul ng-if="vm.isEmpty" class="angular-ui-tree-nodes">
+       <li class="angular-ui-tree-node text-muted"><i>{{ 'no_pages'|trans:'icap_website' }}</i></li>
+    </ul>
+</div>

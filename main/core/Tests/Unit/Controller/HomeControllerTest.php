@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Controller\HomeController;
 use Symfony\Component\HttpFoundation\Response;
 
 class HomeControllerTest extends MockeryTestCase
@@ -221,7 +220,6 @@ class HomeControllerTest extends MockeryTestCase
             'Symfony\Component\HttpFoundation\Response',
             $this->controller->typeExistAction('home')
         );
-
     }
 
     public function testCreateTypeAction()

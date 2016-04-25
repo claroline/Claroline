@@ -24,7 +24,7 @@ class FriendAuthenticationType extends AbstractType
             'checkbox',
             array(
                 'label' => 'allow_authentication',
-                'required' => false
+                'required' => false,
             )
         );
         $builder->add(

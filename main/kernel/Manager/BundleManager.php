@@ -12,7 +12,6 @@
 namespace Claroline\KernelBundle\Manager;
 
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
@@ -42,16 +41,17 @@ class BundleManager
         );
     }
 
-    public function getActiveBundles()
+    public function getActiveBundles($fetchAll = false)
     {
         $entries = parse_ini_file($this->bundlesFile);
         $activeBundles = array();
         $configProviderBundles = array();
         $nonAutoConfigurableBundles = array();
         $environment = $this->getEnvironment();
+        $updateMode = file_exists($this->kernel->getRootDir().'/config/.update');
 
         foreach ($entries as $bundleClass => $isActive) {
-            if ($isActive && $bundleClass !== 'Claroline\KernelBundle\ClarolineKernelBundle') {
+            if (($isActive || $fetchAll || $updateMode) && $bundleClass !== 'Claroline\KernelBundle\ClarolineKernelBundle') {
                 $bundle = new $bundleClass($this->kernel);
 
                 if ($bundle instanceof ConfigurationProviderInterface) {
@@ -63,7 +63,7 @@ class BundleManager
                 } elseif ($bundle->supports($environment)) {
                     $activeBundles[] = array(
                         self::BUNDLE_INSTANCE => $bundle,
-                        self::BUNDLE_CONFIG => $bundle->getConfiguration($environment)
+                        self::BUNDLE_CONFIG => $bundle->getConfiguration($environment),
                     );
                 }
             }
@@ -76,7 +76,7 @@ class BundleManager
                 if ($config instanceof ConfigurationBuilder) {
                     $activeBundles[] = array(
                         self::BUNDLE_INSTANCE => $bundle,
-                        self::BUNDLE_CONFIG => $config
+                        self::BUNDLE_CONFIG => $config,
                     );
 
                     break;

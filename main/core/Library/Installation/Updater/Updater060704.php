@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -10,7 +10,6 @@
  */
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
-
 
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\InstallationBundle\Updater\Updater;

@@ -5,7 +5,6 @@ namespace Icap\OAuthBundle\Listener;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
 use Claroline\CoreBundle\Event\RenderAuthenticationButtonEvent;
-use Claroline\CoreBundle\Event\InjectJavascriptEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -32,15 +31,16 @@ class ExternalAuthenticationListener
      * @DI\Observe("render_external_authentication_button")
      *
      * @param RenderAuthenticationButtonEvent $event
+     *
      * @return string
      */
     public function onRenderButton(RenderAuthenticationButtonEvent $event)
     {
         $services = $this->oauthManager->getActiveServices();
-        if (count($services)>0) {
+        if (count($services) > 0) {
             $content = $this->templating->render(
                 'IcapOAuthBundle::buttons.html.twig',
-                array('services'=>$services)
+                array('services' => $services)
             );
 
             $event->addContent($content);

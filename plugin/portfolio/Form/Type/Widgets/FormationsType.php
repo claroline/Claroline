@@ -4,7 +4,6 @@ namespace Icap\PortfolioBundle\Form\Type\Widgets;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -38,25 +37,25 @@ class FormationsType extends AbstractWidgetType
                 array(
                     'required' => false,
                     'language' => $language,
-                    'format'   => 'Y-M-d'
+                    'format' => 'Y-M-d',
                )
             )
             ->add('endDate', 'datepicker',
                 array(
                     'required' => false,
                     'language' => $language,
-                    'format'   => 'Y-M-d'
+                    'format' => 'Y-M-d',
                )
             )
             ->add('establishmentName', 'text')
             ->add('diploma', 'text')
             ->add('children', 'collection',
                 array(
-                    'type'          => 'icap_portfolio_widget_form_formations_formation',
-                    'by_reference'  => false,
-                    'allow_add'     => true,
-                    'allow_delete'  => true,
-                    'property_path' => 'resources'
+                    'type' => 'icap_portfolio_widget_form_formations_formation',
+                    'by_reference' => false,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'property_path' => 'resources',
                 )
             );
     }
@@ -70,9 +69,9 @@ class FormationsType extends AbstractWidgetType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\FormationsWidget',
+                'data_class' => 'Icap\PortfolioBundle\Entity\Widget\FormationsWidget',
                 'translation_domain' => 'icap_portfolio',
-                'csrf_protection'    => false,
+                'csrf_protection' => false,
             )
         );
     }

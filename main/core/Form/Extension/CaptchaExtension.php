@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -40,7 +39,7 @@ class CaptchaExtension extends AbstractTypeExtension
             $securityToken = $this->container->get('security.token_storage')->getToken();
 
             if (null !== $securityToken && $securityToken->getUser() === 'anon.') {
-                $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+                $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                     $form = $event->getForm();
                     $data = $event->getData();
 
@@ -55,7 +54,7 @@ class CaptchaExtension extends AbstractTypeExtension
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getExtendedType()
     {

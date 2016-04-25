@@ -2,9 +2,8 @@
 /**
  * Created by : Vincent SAISSET
  * Date: 21/08/13
- * Time: 16:40
+ * Time: 16:40.
  */
-
 namespace Icap\DropzoneBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
@@ -16,9 +15,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @ORM\Entity(repositoryClass="Icap\DropzoneBundle\Repository\CorrectionRepository")
  * @ORM\Table(name="icap__dropzonebundle_correction")
-
  */
-class Correction {
+class Correction
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -83,14 +82,14 @@ class Correction {
     protected $reportComment = null;
 
     /**
-    * @ORM\Column(type="boolean",nullable=false)
-    * In the case where the student don't agree the correction, he can flag it ( as the corrector can report the copy)
-    */
+     * @ORM\Column(type="boolean",nullable=false)
+     * In the case where the student don't agree the correction, he can flag it ( as the corrector can report the copy)
+     */
     protected $correctionDenied = false;
 
     /**
-    * @ORM\Column(type="text",nullable=true)
-    */
+     * @ORM\Column(type="text",nullable=true)
+     */
     protected $correctionDeniedComment = null;
 
     /**
@@ -128,7 +127,7 @@ class Correction {
      */
     protected $dropzone;
 
-    function __construct()
+    public function __construct()
     {
         $this->grades = new ArrayCollection();
     }
@@ -374,22 +373,23 @@ class Correction {
     }
 
     /**
-     * Set correctionDenied
+     * Set correctionDenied.
      *
-     * @param boolean $correctionDenied
+     * @param bool $correctionDenied
+     *
      * @return Correction
      */
     public function setCorrectionDenied($correctionDenied)
     {
         $this->correctionDenied = $correctionDenied;
-    
+
         return $this;
     }
 
     /**
-     * Get correctionDenied
+     * Get correctionDenied.
      *
-     * @return boolean 
+     * @return bool
      */
     public function getCorrectionDenied()
     {
@@ -397,28 +397,28 @@ class Correction {
     }
 
     /**
-     * Set correctionDeniedComment
+     * Set correctionDeniedComment.
      *
      * @param string $correctionDeniedComment
+     *
      * @return Correction
      */
     public function setCorrectionDeniedComment($correctionDeniedComment)
     {
         $this->correctionDeniedComment = $correctionDeniedComment;
-    
+
         return $this;
     }
 
     /**
-     * Get correctionDeniedComment
+     * Get correctionDeniedComment.
      *
-     * @return string 
+     * @return string
      */
     public function getCorrectionDeniedComment()
     {
         return $this->correctionDeniedComment;
     }
-
 
     /**
      * @param bool $hydrateUser
@@ -428,24 +428,24 @@ class Correction {
     public function toArray($hydrateUser)
     {
         $json = array(
-            'id'       => $this->getId(),
+            'id' => $this->getId(),
             'editable' => $this->getEditable(),
         );
 
         if ($this->getFinished() === true) {
-            $json['valid']         = $this->getValid();
-            $json['totalGrade']    = $this->getTotalGrade();
-            $json['comment']       = $this->getComment();
-            $json['reporter']      = $this->getReporter();
+            $json['valid'] = $this->getValid();
+            $json['totalGrade'] = $this->getTotalGrade();
+            $json['comment'] = $this->getComment();
+            $json['reporter'] = $this->getReporter();
             $json['reportComment'] = $this->getReportComment();
         }
 
         if ($hydrateUser === true) {
-            $json['user'] = array (
-                'id'        => $this->getUser()->getId(),
-                'lastName'  => $this->getUser()->getLastName(),
+            $json['user'] = array(
+                'id' => $this->getUser()->getId(),
+                'lastName' => $this->getUser()->getLastName(),
                 'firstName' => $this->getUser()->getFirstName(),
-                'username'  => $this->getUser()->getUsername(),
+                'username' => $this->getUser()->getUsername(),
             );
         }
 

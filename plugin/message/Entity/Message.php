@@ -163,7 +163,7 @@ class Message
     public function setSender($sender)
     {
         $this->user = $sender;
-        $this->senderUsername = ($sender) ? $sender->getUsername(): 'claroline-connect';
+        $this->senderUsername = ($sender) ? $sender->getUsername() : 'claroline-connect';
     }
 
     public function getDate()

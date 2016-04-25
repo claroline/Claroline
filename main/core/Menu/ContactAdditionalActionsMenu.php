@@ -16,8 +16,8 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\Renderer\ListRenderer;
 
 /**
- * Class ContactAdditionalActionsMenu
- * @package Claroline\CoreBundle\Menu
+ * Class ContactAdditionalActionsMenu.
+ *
  * @DI\Service("claroline.menu.contact_additional_actions_renderer")
  * @DI\Tag("knp_menu.renderer", attributes = {"name" = "knp_menu.renderer", "alias"="contact_additional_actions"})
  */
@@ -34,16 +34,15 @@ class ContactAdditionalActionsMenu extends ListRenderer
         $matcher,
         $defaultOptions,
         $charset
-    )
-    {
-        $defaultOptions['leaf_class'] = $defaultOptions["branch_class"] = "btn btn-default contact-additional-action";
+    ) {
+        $defaultOptions['leaf_class'] = $defaultOptions['branch_class'] = 'btn btn-default contact-additional-action';
         parent::__construct($matcher, $defaultOptions, $charset);
     }
 
     protected function renderLinkElement(ItemInterface $item, array $options)
     {
-        $uri = $item->getExtra('href') ? $item->getExtra('href'): $item->getUri();
-        $displayMode = $item->getExtra('display') ? $item->getExtra('display'): 'normal';
+        $uri = $item->getExtra('href') ? $item->getExtra('href') : $item->getUri();
+        $displayMode = $item->getExtra('display') ? $item->getExtra('display') : 'normal';
 
         return sprintf(
             '<i class="%s contact-action" data-url="%s" data-toggle="tooltip" data-placement="left" title="%s" data-display-mode="%s"></i>',

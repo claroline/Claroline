@@ -13,5 +13,4 @@ namespace Claroline\CoreBundle\Library\Transfert;
 
 class ExportNotImplementedException extends \Exception
 {
-
-} 
+}

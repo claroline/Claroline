@@ -15,8 +15,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\AbstractRoleSubject;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use JMS\Serializer\Annotation\Groups;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -25,7 +23,7 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\GroupRepository")
  * @ORM\Table(
  *      name="claro_group",
-*       uniqueConstraints={
+ *       uniqueConstraints={
  *          @ORM\UniqueConstraint(name="group_unique_name", columns={"name"})
  *      }
  *  )
@@ -98,8 +96,8 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     public function __construct()
     {
         parent::__construct();
-        $this->users         = new ArrayCollection();
-        $this->models        = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->models = new ArrayCollection();
         $this->organizations = new ArrayCollection();
     }
 
@@ -145,7 +143,7 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     }
 
     /**
-     * alias for getPlateformeRole
+     * alias for getPlateformeRole.
      */
     public function getPlatformRoles()
     {
@@ -262,6 +260,6 @@ class Group extends AbstractRoleSubject implements OrderableInterface
 
     public function addOrganization(Organization $organization)
     {
-        $this->organizations->add($organization); 
+        $this->organizations->add($organization);
     }
 }

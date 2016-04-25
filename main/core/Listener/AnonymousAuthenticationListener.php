@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -33,8 +32,8 @@ class AnonymousAuthenticationListener implements ListenerInterface
     public function __construct(TokenStorageInterface $context, $key, LoggerInterface $logger = null)
     {
         $this->context = $context;
-        $this->key     = $key;
-        $this->logger  = $logger;
+        $this->key = $key;
+        $this->logger = $logger;
     }
 
     public function handle(GetResponseEvent $event)

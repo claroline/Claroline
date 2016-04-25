@@ -26,14 +26,14 @@ class FacetType extends AbstractType
                 'choices' => array('1' => 'yes', '0' => 'no'),
                 'label' => 'visible',
                 'expanded' => false,
-                'multiple' => false
+                'multiple' => false,
             )
         );
         $builder->add(
             'forceCreationForm',
             'checkbox', array(
-                'label'     => 'display_at_registration',
-                'required'  => false,
+                'label' => 'display_at_registration',
+                'required' => false,
             ));
     }
 

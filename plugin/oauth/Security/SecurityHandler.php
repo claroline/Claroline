@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,9 +8,7 @@
  * 
  * Date: 7/6/15
  */
-
 namespace Icap\OAuthBundle\Security;
-
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -48,7 +46,7 @@ class SecurityHandler  implements AuthenticationSuccessHandlerInterface, Authent
      * called by authentication listeners inheriting from
      * AbstractAuthenticationListener.
      *
-     * @param Request $request
+     * @param Request                 $request
      * @param AuthenticationException $exception
      *
      * @return Response The response to return, never null
@@ -70,7 +68,7 @@ class SecurityHandler  implements AuthenticationSuccessHandlerInterface, Authent
      * is called by authentication listeners inheriting from
      * AbstractAuthenticationListener.
      *
-     * @param Request $request
+     * @param Request        $request
      * @param TokenInterface $token
      *
      * @return Response never null

@@ -45,7 +45,7 @@ class BadgeConstraint extends AbstractConstraint
      */
     public function isApplicableTo(Rule $rule)
     {
-        return ($rule instanceof BadgeRule && null !== $rule->getBadge());
+        return $rule instanceof BadgeRule && null !== $rule->getBadge();
     }
 
     /**

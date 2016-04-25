@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioComment;
-use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 use Icap\PortfolioBundle\Factory\CommentFactory;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormFactory;
@@ -38,9 +37,9 @@ class CommentsManager
      */
     public function __construct(EntityManager $entityManager, FormFactory $formFactory, CommentFactory $commentFactory, PortfolioGuideManager $portfolioGuideManager)
     {
-        $this->entityManager         = $entityManager;
-        $this->formFactory           = $formFactory;
-        $this->commentFactory        = $commentFactory;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
+        $this->commentFactory = $commentFactory;
         $this->portfolioGuideManager = $portfolioGuideManager;
     }
 
@@ -67,8 +66,7 @@ class CommentsManager
 
                 $this->entityManager->persist($comment);
                 $this->entityManager->flush();
-            }
-            else {
+            } else {
                 $portfolioGuide = $this->portfolioGuideManager->getByPortfolioAndGuide($portfolio, $user);
 
                 if (null !== $portfolioGuide) {
@@ -80,12 +78,12 @@ class CommentsManager
         }
 
         if ('dev' === $env) {
-            echo "<pre>";
+            echo '<pre>';
             foreach ($form->getErrors(true, false) as $formError) {
                 var_dump($formError->getMessage());
                 var_dump($formError->getMessageParameters());
             }
-            echo "</pre>" . PHP_EOL;
+            echo '</pre>'.PHP_EOL;
         }
 
         throw new \InvalidArgumentException();
@@ -123,4 +121,3 @@ class CommentsManager
         return $comments;
     }
 }
- 

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,14 +8,12 @@
  * 
  * Date: 4/13/15
  */
-
 namespace Icap\NotificationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class NotificationPluginConfiguration
- * @package Icap\NotificationBundle\Entity
+ * Class NotificationPluginConfiguration.
  *
  * @ORM\Entity()
  * @ORM\Table(name="icap__notification_plugin_configuration")
@@ -72,6 +70,7 @@ class NotificationPluginConfiguration
 
     /**
      * @param $dropdownItems
+     *
      * @return $this
      */
     public function setDropdownItems($dropdownItems)
@@ -91,6 +90,7 @@ class NotificationPluginConfiguration
 
     /**
      * @param mixed $maxPerPage
+     *
      * @return $this
      */
     public function setMaxPerPage($maxPerPage)
@@ -110,6 +110,7 @@ class NotificationPluginConfiguration
 
     /**
      * @param mixed $purgeEnabled
+     *
      * @return $this
      */
     public function setPurgeEnabled($purgeEnabled)

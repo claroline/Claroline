@@ -34,8 +34,7 @@ class WorkspaceWidgetListener
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TwigEngine $templating
-    )
-    {
+    ) {
         $this->authorization = $authorization;
         $this->templating = $templating;
     }
@@ -48,7 +47,6 @@ class WorkspaceWidgetListener
     public function onDisplay(DisplayWidgetEvent $event)
     {
         if (!$this->authorization->isGranted('ROLE_USER')) {
-
             throw new AccessDeniedException();
         }
 

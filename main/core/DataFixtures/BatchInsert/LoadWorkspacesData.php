@@ -33,7 +33,7 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -41,7 +41,7 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
@@ -49,18 +49,18 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
         $count = $manager->getRepository('ClarolineCoreBundle:Workspace\Workspace')->count();
         $totalWorkspaces = $count + 1;
         $admin = $this->findJohnDoe($manager);
-        $personalWsTemplateFile = $this->container->getParameter('claroline.param.templates_directory')."default.zip";
+        $personalWsTemplateFile = $this->container->getParameter('claroline.param.templates_directory').'default.zip';
         $config = new Configuration($personalWsTemplateFile);
         $start = time();
 
         for ($j = 0, $i = 0; $i < $this->numberWorkspaces; $i++, $totalWorkspaces++) {
-            $mandatoryFieldValue = "ws_batch" . $totalWorkspaces;
+            $mandatoryFieldValue = 'ws_batch'.$totalWorkspaces;
             $config->setWorkspaceName($mandatoryFieldValue);
             $config->setWorkspaceCode($mandatoryFieldValue);
             $workspaceManager->create($config, $admin);
 
             if (($i % self::BATCH_SIZE) === 0) {
-                $j++;
+                ++$j;
                 $manager->flush();
                 $manager->clear();
                 $admin = $this->findJohnDoe($manager);
@@ -73,7 +73,7 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
         $manager->clear();
         $end = time();
         $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
-        $this->log("Time elapsed for the workspace creation: " . $duration);
+        $this->log('Time elapsed for the workspace creation: '.$duration);
 
         return $duration;
     }
@@ -81,9 +81,8 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
     private function findJohnDoe(ObjectManager $manager)
     {
         $query = $manager->createQuery("SELECT u FROM Claroline\CoreBundle\Entity\User u where u.username = 'JohnDoe'");
-        $query->setFetchMode("MyProject\User", "address", "EXTRA_LAZY");
+        $query->setFetchMode("MyProject\User", 'address', 'EXTRA_LAZY');
 
         return $query->getSingleResult();
     }
-
 }

@@ -69,8 +69,7 @@ class LayoutController extends Controller
         PlatformConfigurationHandler $configHandler,
         HomeManager $homeManager,
         StrictDispatcher $dispatcher
-    )
-    {
+    ) {
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
         $this->toolManager = $toolManager;
@@ -106,7 +105,7 @@ class LayoutController extends Controller
     {
         // TODO: replace core bundle version by distribution version when available
         // TODO: find the lightest way to get that information
-        $bundleManager = $this->get('claroline.manager.bundle_manager');
+        $bundleManager = $this->get('claroline.manager.plugin_manager');
         $version = $bundleManager->getDistributionVersion();
 
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
@@ -119,7 +118,7 @@ class LayoutController extends Controller
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
             'coreVersion' => $version,
-            'selfRegistration' => $selfRegistration
+            'selfRegistration' => $selfRegistration,
         );
     }
 
@@ -136,6 +135,7 @@ class LayoutController extends Controller
      * registration allowed/prohibited).
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function topBarAction(Workspace $workspace = null)
@@ -203,7 +203,7 @@ class LayoutController extends Controller
             'login_target' => $loginTarget,
             'workspaces' => $workspaces,
             'personalWs' => $personalWs,
-            "isImpersonated" => $this->isImpersonated(),
+            'isImpersonated' => $this->isImpersonated(),
             'isInAWorkspace' => $workspace !== null,
             'currentWorkspace' => $workspace,
             'canAdministrate' => $canAdministrate,
@@ -211,7 +211,7 @@ class LayoutController extends Controller
             'homeMenu' => $homeMenu,
             'adminTools' => $adminTools,
             'showHelpButton' => $showHelpButton,
-            'helpUrl' => $helpUrl
+            'helpUrl' => $helpUrl,
         );
     }
 
@@ -255,9 +255,9 @@ class LayoutController extends Controller
         }
 
         return array(
-            "isImpersonated" => $this->isImpersonated(),
+            'isImpersonated' => $this->isImpersonated(),
             'workspace' => $workspaceName,
-            'role' => $roleName
+            'role' => $roleName,
         );
     }
 

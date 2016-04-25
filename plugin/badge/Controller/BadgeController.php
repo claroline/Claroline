@@ -44,30 +44,30 @@ class BadgeController extends Controller
 
         /** @var \Icap\BadgeBundle\Repository\BadgeClaimRepository $badgeClaimRepository */
         $badgeClaimRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:BadgeClaim');
-        $badgeClaimQuery      = $badgeClaimRepository->findByWorkspace($badgeClaimsWorkspace, false);
+        $badgeClaimQuery = $badgeClaimRepository->findByWorkspace($badgeClaimsWorkspace, false);
 
         $userQuery = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findUsersByWorkspace($badgeClaimsWorkspace, false);
 
         /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
         $pagerFactory = $this->get('claroline.pager.pager_factory');
 
-        $badgePager   = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
-        $claimPager   = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
-        $userPager    = $pagerFactory->createPager($userQuery, $parameters['userPage'], 10);
+        $badgePager = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
+        $claimPager = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
+        $userPager = $pagerFactory->createPager($userQuery, $parameters['userPage'], 10);
 
         /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
         $badgeManager = $this->get('icap_badge.manager.badge');
-        $badges       = $badgeManager->getBadgesByWorkspace($userPager, $badgeClaimsWorkspace, $parameters['userPage'], 10);
+        $badges = $badgeManager->getBadgesByWorkspace($userPager, $badgeClaimsWorkspace, $parameters['userPage'], 10);
 
         return $this->render(
             'IcapBadgeBundle::Template/list.html.twig',
             array(
-                'badgePager'       => $badgePager,
-                'claimPager'       => $claimPager,
-                'userPager'        => $userPager,
-                'parameters'       => $parameters,
-                'badges'           => $badges,
-                'badgeRuleChecker' => $this->get("claroline.rule.validator")
+                'badgePager' => $badgePager,
+                'claimPager' => $claimPager,
+                'userPager' => $userPager,
+                'parameters' => $parameters,
+                'badges' => $badges,
+                'badgeRuleChecker' => $this->get('claroline.rule.validator'),
             )
         );
     }
@@ -90,11 +90,11 @@ class BadgeController extends Controller
         $badgeManager = $this->get('icap_badge.manager.badge');
 
         $parameters = array(
-            'locale'    => $platformConfigHandler->getParameter('locale_language'),
-            'mode'      => $requestParameters->get('mode', BadgeManager::BADGE_PICKER_DEFAULT_MODE),
-            'user'      => $user,
+            'locale' => $platformConfigHandler->getParameter('locale_language'),
+            'mode' => $requestParameters->get('mode', BadgeManager::BADGE_PICKER_DEFAULT_MODE),
+            'user' => $user,
             'workspace' => $requestParameters->get('workspace', null),
-            'blacklist' => $requestParameters->get('blacklist', array())
+            'blacklist' => $requestParameters->get('blacklist', array()),
         );
 
         $badges = $badgeManager->getForBadgePicker($parameters);
@@ -106,9 +106,9 @@ class BadgeController extends Controller
         }
 
         return array(
-            'badges'   => $badges,
+            'badges' => $badges,
             'multiple' => $requestParameters->get('multiple', true),
-            'value'    => $value
+            'value' => $value,
         );
     }
 
@@ -121,24 +121,23 @@ class BadgeController extends Controller
         $userBadge = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findOneByUsernameAndBadgeSlug($username, $badgeSlug);
 
         if ($userBadge === null) {
-            throw $this->createNotFoundException("Cannot found badge.");
+            throw $this->createNotFoundException('Cannot found badge.');
         }
 
         if (!$userBadge->isIsShared()) {
-            throw $this->createNotFoundException("Badge not shared.");
+            throw $this->createNotFoundException('Badge not shared.');
         }
 
         if (!$this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $showBanner = false;
-        }
-        else {
+        } else {
             $showBanner = ($this->getUser() === $userBadge->getUser());
         }
 
         return array(
             'userBadge' => $userBadge,
             'user' => $userBadge->getUser(),
-            'showBanner' => $showBanner
+            'showBanner' => $showBanner,
         );
     }
 }

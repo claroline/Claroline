@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -217,6 +216,6 @@ class OrderedTool
     {
         return is_null($this->workspace) ?
             $this->name :
-            '[' . $this->workspace->getName() . '] ' . $this->name;
+            '['.$this->workspace->getName().'] '.$this->name;
     }
 }

@@ -39,17 +39,17 @@ class Updater030100 extends Updater
 
         foreach ($subjects as $subject) {
             $creator = $subject->getCreator();
-            $author = $creator->getFirstName() . ' ' . $creator->getLastName();
+            $author = $creator->getFirstName().' '.$creator->getLastName();
             $subject->setAuthor($author);
             $this->em->persist($subject);
         }
 
         $this->log('Updating forum messages authors...');
         $messages = $this->messageRepo->findMessagesWithNoAuthor();
-                
+
         foreach ($messages as $message) {
             $creator = $message->getCreator();
-            $author = $creator->getFirstName() . ' ' . $creator->getLastName();
+            $author = $creator->getFirstName().' '.$creator->getLastName();
             $message->setAuthor($author);
             $this->em->persist($message);
         }

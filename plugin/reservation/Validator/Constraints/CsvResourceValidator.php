@@ -19,7 +19,7 @@ class CsvResourceValidator extends ConstraintValidator
      *      "em" = @Di\Inject("doctrine.orm.entity_manager")
      * })
      */
-    public function  __construct(EntityManager $em)
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
     }
@@ -36,6 +36,7 @@ class CsvResourceValidator extends ConstraintValidator
 
                 if (count($row) !== 7) {
                     $this->context->addViolation('invalid_number_of_column', ['%lineNb%' => $lineNb]);
+
                     return;
                 }
 
@@ -46,22 +47,25 @@ class CsvResourceValidator extends ConstraintValidator
                     'description',
                     'localisation',
                     'quantity',
-                    'color'
+                    'color',
                 ];
                 foreach ($columnHeaders as $name) {
                     if (!array_key_exists($name, $row)) {
                         $this->context->addViolation('invalid_column_headers', ['%columnName%' => $name]);
+
                         return;
                     }
                 }
 
                 if (strlen($row['resource_type']) < 2 || strlen($row['resource_type']) > 50) {
                     $this->context->addViolation('invalid_number_characters_resource_type', ['%lineNb%' => $lineNb]);
+
                     return;
                 }
 
                 if (strlen($row['name']) < 2 || strlen($row['name']) > 50) {
                     $this->context->addViolation('invalid_number_characters_name', ['%lineNb%' => $lineNb]);
+
                     return;
                 }
 
@@ -74,27 +78,32 @@ class CsvResourceValidator extends ConstraintValidator
                         strtolower($row['resource_type']) === strtolower($row2['resource_type']) &&
                         strtolower($row['name']) === strtolower($row2['name'])) {
                         $this->context->addViolation('double_resource_for_one_resource_type', ['%lineNb1%' => $lineNb, '%lineNb2%' => $lineNb2]);
+
                         return;
                     }
                 }
 
                 if (!empty($row['max_time_reservation']) && !preg_match('#^[0-9]+:[0-9]{2}(:[0-9]{2})?$#', $row['max_time_reservation'])) {
                     $this->context->addViolation('invalid_type_for_max_time_reservation', ['%lineNb%' => $lineNb]);
+
                     return;
                 }
 
                 if (strlen($row['localisation']) > 255) {
                     $this->context->addViolation('invalid_number_characters_localisation', ['%lineNb%' => $lineNb]);
+
                     return;
                 }
 
                 if (intval($row['quantity']) < 1) {
                     $this->context->addViolation('invalid_number_quantity', ['%lineNb%' => $lineNb]);
+
                     return;
                 }
 
                 if (!preg_match('/#[a-zA-Z0-9]{6}/', $row['color']) && !empty($row['color'])) {
                     $this->context->addViolation('invalid_color_format', ['%lineNb%' => $lineNb]);
+
                     return;
                 }
 
@@ -102,11 +111,12 @@ class CsvResourceValidator extends ConstraintValidator
                 if ($resourceType) {
                     $resource = $this->em->getRepository('FormaLibreReservationBundle:Resource')->findBy([
                         'resourceType' => $resourceType->getId(),
-                        'name' => $row['name']
+                        'name' => $row['name'],
                     ]);
 
                     if ($resource) {
                         $this->context->addViolation('resource_already_exists_for_resource_type', ['%lineNb%' => $lineNb]);
+
                         return;
                     }
                 }

@@ -89,8 +89,7 @@ class CourseController extends Controller
         ToolManager $toolManager,
         TranslatorInterface $translator,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->authorization = $authorization;
         $this->cursusManager = $cursusManager;
         $this->formFactory = $formFactory;
@@ -119,8 +118,7 @@ class CourseController extends Controller
         $max = 50,
         $orderedBy = 'title',
         $order = 'ASC'
-    )
-    {
+    ) {
         $displayedWords = array();
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
@@ -143,7 +141,7 @@ class CourseController extends Controller
             'page' => $page,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
         );
     }
 
@@ -170,7 +168,7 @@ class CourseController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'displayedWords' => $displayedWords
+            'displayedWords' => $displayedWords,
         );
     }
 
@@ -202,7 +200,7 @@ class CourseController extends Controller
             $this->cursusManager->persistCourse($course);
 
             $message = $this->translator->trans(
-                'course_creation_confirm_msg' ,
+                'course_creation_confirm_msg',
                 array(),
                 'cursus'
             );
@@ -221,7 +219,7 @@ class CourseController extends Controller
 
             return array(
                 'form' => $form->createView(),
-                'displayedWords' => $displayedWords
+                'displayedWords' => $displayedWords,
             );
         }
     }
@@ -237,15 +235,14 @@ class CourseController extends Controller
      * @EXT\Template()
      *
      * @param Course $course
-     * @param int $source
+     * @param int    $source
      */
     public function courseEditFormAction(
         Course $course,
         User $authenticatedUser,
         $source = 0,
         $cursusId = -1
-    )
-    {
+    ) {
         $cursus = intval($source) === 2 ?
             $this->cursusManager->getOneCursusById($cursusId) :
             null;
@@ -265,7 +262,7 @@ class CourseController extends Controller
             'displayedWords' => $displayedWords,
             'source' => $source,
             'cursus' => $cursus,
-            'cursusId' => $cursusId
+            'cursusId' => $cursusId,
         );
     }
 
@@ -280,15 +277,14 @@ class CourseController extends Controller
      * @EXT\Template("ClarolineCursusBundle:Course:courseEditForm.html.twig")
      *
      * @param Course $course
-     * @param int $source
+     * @param int    $source
      */
     public function courseEditAction(
         Course $course,
         User $authenticatedUser,
         $source = 0,
         $cursusId = -1
-    )
-    {
+    ) {
         $form = $this->formFactory->create(
             new CourseType($authenticatedUser, $this->cursusManager, $this->translator),
             $course
@@ -305,7 +301,7 @@ class CourseController extends Controller
             $this->cursusManager->persistCourse($course);
 
             $message = $this->translator->trans(
-                'course_edition_confirm_msg' ,
+                'course_edition_confirm_msg',
                 array(),
                 'cursus'
             );
@@ -317,6 +313,7 @@ class CourseController extends Controller
                     'claro_cursus_course_management',
                     array('course' => $course->getId(), 'cursusId' => $cursusId)
                 );
+
             return new RedirectResponse($route);
         } else {
             $cursus = intval($source) === 2 ?
@@ -334,7 +331,7 @@ class CourseController extends Controller
                 'displayedWords' => $displayedWords,
                 'source' => $source,
                 'cursus' => $cursus,
-                'cursusId' => $cursusId
+                'cursusId' => $cursusId,
             );
         }
     }
@@ -354,7 +351,7 @@ class CourseController extends Controller
         $this->cursusManager->deleteCourse($course);
 
         $message = $this->translator->trans(
-            'course_deletion_confirm_msg' ,
+            'course_deletion_confirm_msg',
             array(),
             'cursus'
         );
@@ -391,7 +388,6 @@ class CourseController extends Controller
      * @EXT\Template()
      *
      * @param Course $course
-     *
      */
     public function courseManagementAction(Course $course, $cursusId = -1)
     {
@@ -422,7 +418,7 @@ class CourseController extends Controller
             'cursus' => $cursus,
             'course' => $course,
             'sessionsTab' => $sessionsTab,
-            'queues' => $queues
+            'queues' => $queues,
         );
     }
 
@@ -486,7 +482,6 @@ class CourseController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-
             return array('form' => $form->createView(), 'course' => $course);
         }
     }
@@ -532,7 +527,6 @@ class CourseController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-
             return array('form' => $form->createView(), 'session' => $session);
         }
     }
@@ -576,7 +570,6 @@ class CourseController extends Controller
         $tutorsGroups = array();
 
         foreach ($sessionUsers as $sessionUser) {
-
             if ($sessionUser->getUserType() === 0) {
                 $learners[] = $sessionUser;
             } elseif ($sessionUser->getUserType() === 1) {
@@ -585,7 +578,6 @@ class CourseController extends Controller
         }
 
         foreach ($sessionGroups as $sessionGroup) {
-
             if ($sessionGroup->getGroupType() === 0) {
                 $learnersGroups[] = $sessionGroup;
             } elseif ($sessionGroup->getGroupType() === 1) {
@@ -599,7 +591,7 @@ class CourseController extends Controller
             'tutors' => $tutors,
             'learnersGroups' => $learnersGroups,
             'tutorsGroups' => $tutorsGroups,
-            'queues' => $queues
+            'queues' => $queues,
         );
     }
 
@@ -616,12 +608,12 @@ class CourseController extends Controller
      * Displays the list of users who are not registered to the session.
      *
      * @param CourseSession $session
-     * @param integer $userType
-     * @param string  $search
-     * @param integer $page
-     * @param integer $max
-     * @param string  $orderedBy
-     * @param string  $order
+     * @param int           $userType
+     * @param string        $search
+     * @param int           $page
+     * @param int           $max
+     * @param string        $orderedBy
+     * @param string        $order
      */
     public function courseSessionRegistrationUnregisteredUsersListAction(
         CourseSession $session,
@@ -631,8 +623,7 @@ class CourseController extends Controller
         $max = 50,
         $orderedBy = 'firstName',
         $order = 'ASC'
-    )
-    {
+    ) {
         $users = $this->cursusManager->getUnregisteredUsersBySession(
             $session,
             $userType,
@@ -651,7 +642,7 @@ class CourseController extends Controller
             'search' => $search,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
         );
     }
 
@@ -665,15 +656,14 @@ class CourseController extends Controller
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @param CourseSession $session
-     * @param User $user
-     * @param int $userType
+     * @param User          $user
+     * @param int           $userType
      */
     public function courseSessionUserRegisterAction(
         CourseSession $session,
         User $user,
         $userType
-    )
-    {
+    ) {
         $results = $this->cursusManager->registerUsersToSession(
             $session,
             array($user),
@@ -713,12 +703,12 @@ class CourseController extends Controller
      * Displays the list of users who are not registered to the session.
      *
      * @param CourseSession $session
-     * @param integer $groupType
-     * @param string  $search
-     * @param integer $page
-     * @param integer $max
-     * @param string  $orderedBy
-     * @param string  $order
+     * @param int           $groupType
+     * @param string        $search
+     * @param int           $page
+     * @param int           $max
+     * @param string        $orderedBy
+     * @param string        $order
      */
     public function courseSessionRegistrationUnregisteredGroupsListAction(
         CourseSession $session,
@@ -728,8 +718,7 @@ class CourseController extends Controller
         $max = 50,
         $orderedBy = 'name',
         $order = 'ASC'
-    )
-    {
+    ) {
         $groups = $this->cursusManager->getUnregisteredGroupsBySession(
             $session,
             $groupType,
@@ -748,7 +737,7 @@ class CourseController extends Controller
             'search' => $search,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
         );
     }
 
@@ -762,15 +751,14 @@ class CourseController extends Controller
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @param CourseSession $session
-     * @param Group $group
-     * @param int $groupType
+     * @param Group         $group
+     * @param int           $groupType
      */
     public function courseSessionGroupRegisterAction(
         CourseSession $session,
         Group $group,
         $groupType
-    )
-    {
+    ) {
         $results = $this->cursusManager->registerGroupToSessions(
             array($session),
             $group,
@@ -816,7 +804,6 @@ class CourseController extends Controller
             $sessionUsers = $session->getSessionUsers();
 
             foreach ($sessionUsers as $sessionUser) {
-
                 if ($sessionUser->getUserType() === 0) {
                     $users[] = $sessionUser->getUser();
                 }
@@ -859,8 +846,7 @@ class CourseController extends Controller
     public function courseSessionUserConfirmationMailSendAction(
         CourseSession $session,
         User $user
-    )
-    {
+    ) {
         $confirmationEmail = $this->cursusManager->getConfirmationEmail();
 
         if (!is_null($confirmationEmail)) {
@@ -898,12 +884,11 @@ class CourseController extends Controller
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @param CourseSession $session
-     * @param User $user
+     * @param User          $user
      */
     public function courseSessionUserRegistrationAcceptAction(
         CourseSessionRegistrationQueue $queue
-    )
-    {
+    ) {
         $user = $queue->getUser();
         $session = $queue->getSession();
         $results = $this->cursusManager->registerUsersToSession($session, array($user), 0);
@@ -924,12 +909,11 @@ class CourseController extends Controller
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @param CourseSession $session
-     * @param User $user
+     * @param User          $user
      */
     public function courseSessionUserRegistrationDeclineAction(
         CourseSessionRegistrationQueue $queue
-    )
-    {
+    ) {
         $this->cursusManager->declineSessionQueue($queue);
 
         return new JsonResponse('success', 200);
@@ -951,7 +935,7 @@ class CourseController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'queue' => $queue
+            'queue' => $queue,
         );
     }
 
@@ -977,10 +961,9 @@ class CourseController extends Controller
 
             return new JsonResponse($results, 200);
         } else {
-
             return array(
                 'form' => $form->createView(),
-                'queue' => $queue
+                'queue' => $queue,
             );
         }
     }
@@ -1018,7 +1001,7 @@ class CourseController extends Controller
         $courses = $this->cursusManager->getAllCourses('', 'id', 'ASC', false);
         $zipName = 'courses.zip';
         $mimeType = 'application/zip';
-        $file = $this->cursusManager->zipDatas($courses, 'course');;
+        $file = $this->cursusManager->zipDatas($courses, 'course');
 
         $response = new StreamedResponse();
         $response->setCallBack(
@@ -1028,7 +1011,7 @@ class CourseController extends Controller
         );
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($zipName));
+        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($zipName));
         $response->headers->set('Content-Type', $mimeType);
         $response->headers->set('Connection', 'close');
         $response->send();
@@ -1085,15 +1068,15 @@ class CourseController extends Controller
             $courses = json_decode($contents, true);
             $this->cursusManager->importCourses($courses);
 
-            $iconsDir = $this->container->getParameter('claroline.param.thumbnails_directory') . '/';
+            $iconsDir = $this->container->getParameter('claroline.param.thumbnails_directory').'/';
 
-            for ($i = 0; $i < $zip->numFiles; $i++) {
+            for ($i = 0; $i < $zip->numFiles; ++$i) {
                 $name = $zip->getNameIndex($i);
 
                 if (strpos($name, 'icons/') !== 0) {
                     continue;
                 }
-                $iconFileName = $iconsDir . substr($name, 6);
+                $iconFileName = $iconsDir.substr($name, 6);
                 $stream = $zip->getStream($name);
                 $destStream = fopen($iconFileName, 'w');
 
@@ -1107,7 +1090,6 @@ class CourseController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-
             return array('form' => $form->createView());
         }
     }
@@ -1123,7 +1105,6 @@ class CourseController extends Controller
     public function retrieveRolesTranslationKeysFromWorkspaceAction(Workspace $workspace)
     {
         if (!$this->authorization->isGranted('OPEN', $workspace)) {
-
             throw new AccessDeniedException();
         }
         $results = array();

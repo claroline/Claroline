@@ -13,8 +13,6 @@ namespace Claroline\CoreBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
@@ -31,7 +29,7 @@ class OauthCommand extends ContainerAwareCommand
             array(
                 new InputArgument('master', InputArgument::REQUIRED, 'The platform master'),
                 new InputArgument('host', InputArgument::REQUIRED, 'The platform host'),
-                new InputArgument('name', InputArgument::REQUIRED, 'The platform name')
+                new InputArgument('name', InputArgument::REQUIRED, 'The platform name'),
             )
         );
     }
@@ -41,7 +39,7 @@ class OauthCommand extends ContainerAwareCommand
         $params = array(
             'master' => 'master',
             'host' => 'host',
-            'name' => 'name'
+            'name' => 'name',
         );
 
         foreach ($params as $argument => $argumentName) {

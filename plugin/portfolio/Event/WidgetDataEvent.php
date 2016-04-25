@@ -35,13 +35,15 @@ class WidgetDataEvent extends Event
 
     /**
      * @return AbstractWidget
+     *
      * @throws \Exception
      */
     public function getWidget()
     {
         if (null === $this->widget) {
-            throw new \Exception("Empty widget");
+            throw new \Exception('Empty widget');
         }
+
         return $this->widget;
     }
 

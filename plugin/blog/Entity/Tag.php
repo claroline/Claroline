@@ -13,7 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Tag
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -22,7 +22,7 @@ class Tag
     protected $id;
 
     /**
-     * @var string $name
+     * @var string
      *
      * @ORM\Column(type="string", unique=true)
      */

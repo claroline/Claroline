@@ -52,8 +52,7 @@ class CursusController extends FOSRestController
         CursusManager $cursusManager,
         FormFactory $formFactory,
         RequestStack $requestStack
-    )
-    {
+    ) {
         $this->cursusManager = $cursusManager;
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
@@ -282,7 +281,7 @@ class CursusController extends FOSRestController
 
         return new JsonResponse($sessionsInfos, 200);
     }
-    
+
     /**
      * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
@@ -294,8 +293,7 @@ class CursusController extends FOSRestController
         Group $group,
         $cursusIdsTxt,
         $sessionsIdsTxt
-    )
-    {
+    ) {
         $multipleCursus = $this->cursusManager->getCursusFromCursusIdsTxt($cursusIdsTxt);
         $sessions = $this->cursusManager->getSessionsFromSessionsIdsTxt($sessionsIdsTxt);
         $results = $this->cursusManager->registerGroupToCursusAndSessions($group, $multipleCursus, $sessions);
@@ -314,8 +312,7 @@ class CursusController extends FOSRestController
         $usersIdsTxt,
         $cursusIdsTxt,
         $sessionsIdsTxt
-    )
-    {
+    ) {
         $users = $this->cursusManager->getUsersFromUsersIdsTxt($usersIdsTxt);
         $multipleCursus = $this->cursusManager->getCursusFromCursusIdsTxt($cursusIdsTxt);
         $sessions = $this->cursusManager->getSessionsFromSessionsIdsTxt($sessionsIdsTxt);
@@ -392,7 +389,6 @@ class CursusController extends FOSRestController
         $canValidate = $this->cursusManager->canValidateCourseQueue($queue);
 
         if (!$canValidate) {
-
             return new JsonResponse('not_authorized', 403);
         }
         $queueDatas = $this->cursusManager->declineCourseQueue($queue);
@@ -412,7 +408,6 @@ class CursusController extends FOSRestController
         $canValidate = $this->cursusManager->canValidateSessionQueue($queue);
 
         if (!$canValidate) {
-
             return new JsonResponse('not_authorized', 403);
         }
         $queueDatas = $this->cursusManager->declineSessionQueue($queue);
@@ -452,8 +447,7 @@ class CursusController extends FOSRestController
     public function postCourseQueuedUserTransferAction(
         CourseRegistrationQueue $queue,
         CourseSession $session
-    )
-    {
+    ) {
         $results = $this->cursusManager->transferQueuedUserToSession($queue, $session);
 
         return $results;
@@ -462,7 +456,6 @@ class CursusController extends FOSRestController
     /***********************************
      * Not used in angular refactoring *
      ***********************************/
-
 
     /**
      * @View(serializerGroups={"api_cursus"})
@@ -492,7 +485,6 @@ class CursusController extends FOSRestController
             $parent = $cursus->getParent();
 
             if (is_null($parent)) {
-
                 if (!isset($hierarchy['root'])) {
                     $hierarchy['root'] = array();
                 }
@@ -506,6 +498,7 @@ class CursusController extends FOSRestController
                 $hierarchy[$parentId][] = $cursus;
             }
         }
+
         return $hierarchy;
     }
 
@@ -611,7 +604,6 @@ class CursusController extends FOSRestController
             $lockedHierarchy[$oneCursus->getId()] = 'blocked';
 
             if (is_null($parent)) {
-
                 if (!isset($hierarchy['root'])) {
                     $hierarchy['root'] = array();
                 }

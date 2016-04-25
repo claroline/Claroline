@@ -35,12 +35,12 @@ class AuthenticationManager
     {
         $this->container = $container;
         $this->fileTypes = '/\.yml$/';
-        $this->driverPath = $container->getParameter('kernel.root_dir') . '/config/Authentication/';
+        $this->driverPath = $container->getParameter('kernel.root_dir').'/config/Authentication/';
         $this->finder = new Finder();
     }
 
     /**
-     * Get authentication drivers
+     * Get authentication drivers.
      */
     public function getDrivers()
     {
@@ -54,7 +54,7 @@ class AuthenticationManager
 
             if ($service and $servers = $service->getServers()) {
                 foreach ($servers as $server) {
-                    $drivers[$driver . ':' . $server] = $driver . ':' . $server;
+                    $drivers[$driver.':'.$server] = $driver.':'.$server;
                 }
             }
         }
@@ -63,7 +63,7 @@ class AuthenticationManager
     }
 
     /**
-     * Authenticate
+     * Authenticate.
      *
      * @param $driver The name of the driver including the server, example: claroline.ldap:server1
      */
@@ -84,7 +84,7 @@ class AuthenticationManager
     }
 
     /**
-     * Return authentication driver manager
+     * Return authentication driver manager.
      *
      * @param $driver The name of the driver including the server, example: claroline.ldap:server1
      */
@@ -95,12 +95,12 @@ class AuthenticationManager
             $driver = explode('.', $driver[0]) and
             isset($driver[1])
         ) {
-            return $this->container->get($driver[0] . '.' . $driver[1] . '_bundle.manager.' . $driver[1] . '_manager');
+            return $this->container->get($driver[0].'.'.$driver[1].'_bundle.manager.'.$driver[1].'_manager');
         }
     }
 
     /**
-     * Return server name
+     * Return server name.
      *
      * @param $driver The name of the driver including the server, example: claroline.ldap:server1
      */
@@ -110,5 +110,4 @@ class AuthenticationManager
             return $driver[1];
         }
     }
-
 }

@@ -27,7 +27,7 @@ class CollectionController extends Controller
         $collection = new BadgeCollection();
         $collection->setUser($user);
 
-        return $this->processForm($request, $collection, "POST");
+        return $this->processForm($request, $collection, 'POST');
     }
 
     /**
@@ -41,7 +41,7 @@ class CollectionController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-        return $this->processForm($request, $collection, "PATCH");
+        return $this->processForm($request, $collection, 'PATCH');
     }
 
     /**
@@ -61,12 +61,13 @@ class CollectionController extends Controller
 
         $view = View::create();
         $view->setStatusCode(204);
-        return $this->get("fos_rest.view_handler")->handle($view);
+
+        return $this->get('fos_rest.view_handler')->handle($view);
     }
 
-    private function processForm(Request $request, BadgeCollection $collection, $method = "PUT")
+    private function processForm(Request $request, BadgeCollection $collection, $method = 'PUT')
     {
-        $form = $this->createForm($this->get("icap_badge.form.badge.collection"), $collection, array("method" => $method));
+        $form = $this->createForm($this->get('icap_badge.form.badge.collection'), $collection, array('method' => $method));
 
         $formParameters = $request->request->get($form->getName());
 
@@ -93,19 +94,20 @@ class CollectionController extends Controller
 
             $data = array(
                 'collection' => array(
-                    'id'        => $collection->getId(),
-                    'name'      => $collection->getName(),
+                    'id' => $collection->getId(),
+                    'name' => $collection->getName(),
                     'is_shared' => $collection->isIsShared(),
-                    'slug'      => $this->generateUrl("icap_badge_badge_collection_share_view", array("slug" => $collection->getSlug()))
-                )
+                    'slug' => $this->generateUrl('icap_badge_badge_collection_share_view', array('slug' => $collection->getSlug())),
+                ),
             );
 
             $view->setData($data);
 
-            return $this->get("fos_rest.view_handler")->handle($view);
+            return $this->get('fos_rest.view_handler')->handle($view);
         }
 
         $view = View::create($form, 400);
-        return $this->get("fos_rest.view_handler")->handle($view);
+
+        return $this->get('fos_rest.view_handler')->handle($view);
     }
 }

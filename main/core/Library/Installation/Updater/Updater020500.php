@@ -62,8 +62,8 @@ class Updater020500 extends Updater
             $user = $workspaceManager->findPersonalUser($workspace);
 
             if ($user !== null) {
-                $personalWorkspaceName = $trans . $user->getUsername();
-                $this->log('Renaming ' . $personalWorkspaceName);
+                $personalWorkspaceName = $trans.$user->getUsername();
+                $this->log('Renaming '.$personalWorkspaceName);
                 $workspaceManager->rename($workspace, $personalWorkspaceName);
             }
 

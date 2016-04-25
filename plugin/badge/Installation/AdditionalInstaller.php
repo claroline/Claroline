@@ -1,4 +1,5 @@
 <?php
+
 namespace Icap\BadgeBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;

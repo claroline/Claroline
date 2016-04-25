@@ -32,13 +32,13 @@ class Csv
 
     public function export(array $titles, array $data)
     {
-        $tmpFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid() . '.csv';
-        file_put_contents($this->tmpLogPath, $tmpFile . "\n", FILE_APPEND);
+        $tmpFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid().'.csv';
+        file_put_contents($this->tmpLogPath, $tmpFile."\n", FILE_APPEND);
         $fp = fopen($tmpFile, 'w');
 
         fputcsv($fp, $titles);
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             fputcsv($fp, $item);
         }
 

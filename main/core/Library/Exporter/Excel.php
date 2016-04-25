@@ -31,26 +31,27 @@ class Excel implements ExporterInterface
     }
 
     /**
-     * http://www.the-art-of-web.com/php/dataexport/
+     * http://www.the-art-of-web.com/php/dataexport/.
      */
     public function export(array $titles, array $data)
     {
         //titles row
-        $excel = implode("\t", $titles)  . "\r\n";
+        $excel = implode("\t", $titles)."\r\n";
 
         foreach ($data as $row) {
-            array_walk($row, function(&$str) {
-                 $str = preg_replace("/\t/", "\\t", $str);
-                 $str = preg_replace("/\r?\n/", "\\n", $str);
-                 if(strstr($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"';
+            array_walk($row, function (&$str) {
+                 $str = preg_replace("/\t/", '\\t', $str);
+                 $str = preg_replace("/\r?\n/", '\\n', $str);
+                 if (strstr($str, '"')) {
+                     $str = '"'.str_replace('"', '""', $str).'"';
+                 }
             });
 
-
-            $excel .= implode("\t", $row) . "\r\n";
+            $excel .= implode("\t", $row)."\r\n";
         }
 
-        $tmpFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid() . ".xls";
-        file_put_contents($this->tmpLogPath, $tmpFile . "\n", FILE_APPEND);
+        $tmpFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid().'.xls';
+        file_put_contents($this->tmpLogPath, $tmpFile."\n", FILE_APPEND);
         file_put_contents($tmpFile, $excel);
 
         return $tmpFile;

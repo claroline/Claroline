@@ -8,8 +8,8 @@ use Icap\DropzoneBundle\Entity\Document;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 
-class LogDocumentOpenEvent extends AbstractLogResourceEvent {
-
+class LogDocumentOpenEvent extends AbstractLogResourceEvent
+{
     const ACTION = 'resource-icap_dropzone-document_open';
 
     /**
@@ -20,17 +20,17 @@ class LogDocumentOpenEvent extends AbstractLogResourceEvent {
     public function __construct(Dropzone $dropzone, Drop $drop, Document $document)
     {
         $details = array(
-            'dropzone'  => array(
+            'dropzone' => array(
                 'id' => $dropzone->getId(),
             ),
-            'drop'  => array(
+            'drop' => array(
                 'id' => $drop->getId(),
                 'owner' => array(
                     'id' => $drop->getUser()->getId(),
                     'lastName' => $drop->getUser()->getLastName(),
                     'firstName' => $drop->getUser()->getFirstName(),
                     'username' => $drop->getUser()->getUsername(),
-                )
+                ),
             ),
             'document' => $document->toArray(),
         );

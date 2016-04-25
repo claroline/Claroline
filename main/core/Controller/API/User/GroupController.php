@@ -19,17 +19,14 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\View;
-use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Action\AdditionalAction;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Form\User\GroupSettingsType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 
@@ -55,15 +52,14 @@ class GroupController extends FOSRestController
         ObjectManager $om,
         Request       $request,
         ApiManager    $apiManager
-    )
-    {
-        $this->formFactory     = $formFactory;
-        $this->groupManager    = $groupManager;
-        $this->roleManager     = $roleManager;
-        $this->om              = $om;
+    ) {
+        $this->formFactory = $formFactory;
+        $this->groupManager = $groupManager;
+        $this->roleManager = $roleManager;
+        $this->om = $om;
         $this->groupRepository = $this->om->getRepository('ClarolineCoreBundle:Group');
-        $this->request         = $request;
-        $this->apiManager      = $apiManager;
+        $this->request = $request;
+        $this->apiManager = $apiManager;
     }
 
     /**
@@ -125,9 +121,8 @@ class GroupController extends FOSRestController
         $options = array(
             'http_code' => $httpCode,
             'extra_parameters' => $group,
-            'serializer_group'=> "api_group"
+            'serializer_group' => 'api_group',
         );
-
 
         return $this->apiManager->handleFormView(
             'ClarolineCoreBundle:API:User\createGroupForm.html.twig',
@@ -167,9 +162,8 @@ class GroupController extends FOSRestController
             'http_code' => $httpCode,
             'extra_parameters' => $group,
             'form_view' => array('group' => $group),
-            'serializer_group'=> "api_group"
+            'serializer_group' => 'api_group',
         );
-
 
         return $this->apiManager->handleFormView(
             'ClarolineCoreBundle:API:User\editGroupForm.html.twig',
@@ -291,7 +285,6 @@ class GroupController extends FOSRestController
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\createGroupForm.html.twig', $form);
     }
 
-
     /**
      * @View(serializerGroups={"api_group"})
      * @ApiDoc(
@@ -306,7 +299,7 @@ class GroupController extends FOSRestController
         $formType = new GroupSettingsType($group->getPlatformRole(), true, 'egfm');
         $formType->enableApi();
         $form = $this->createForm($formType, $group);
-        $options = array('form_view' => array('group' => $group), 'serializer_group'=> "api_group");
+        $options = array('form_view' => array('group' => $group), 'serializer_group' => 'api_group');
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\editGroupForm.html.twig', $form, $options);
     }
@@ -333,7 +326,9 @@ class GroupController extends FOSRestController
 
     private function throwsExceptionIfNotAdmin()
     {
-        if (!$this->isAdmin()) throw new AccessDeniedException("This action can only be done by the administrator");
+        if (!$this->isAdmin()) {
+            throw new AccessDeniedException('This action can only be done by the administrator');
+        }
     }
 
     private function isGroupGranted($action, $object)
@@ -343,7 +338,7 @@ class GroupController extends FOSRestController
 
     private function throwExceptionIfNotGranted($action, $groups)
     {
-        $collection = is_array($groups) ? new GroupCollection($groups): new GroupCollection(array($groups));
+        $collection = is_array($groups) ? new GroupCollection($groups) : new GroupCollection(array($groups));
         $isGranted = $this->isGroupGranted($action, $collection);
 
         if (!$isGranted) {

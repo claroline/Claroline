@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class CheckExpiringPeriod extends Constraint
 {
-    public $message = "badge_expiring_need_period_and_duration";
+    public $message = 'badge_expiring_need_period_and_duration';
 
     public function getTargets()
     {

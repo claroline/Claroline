@@ -39,7 +39,7 @@ class ScaleRepositoryTest extends RepositoryTestCase
         $expected = [
             ['id' => $s1->getId(), 'name' => 's1', 'competencies' => 2, 'abilities' => 3],
             ['id' => $s2->getId(), 'name' => 's2', 'competencies' => 1, 'abilities' => 0],
-            ['id' => $s3->getId(), 'name' => 's3', 'competencies' => 0, 'abilities' => 0]
+            ['id' => $s3->getId(), 'name' => 's3', 'competencies' => 0, 'abilities' => 0],
         ];
 
         $this->assertEquals($expected, $this->repo->findWithStatus());

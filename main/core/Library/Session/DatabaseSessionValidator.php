@@ -60,18 +60,18 @@ class DatabaseSessionValidator
         $expectedColumns = array(
             'id_col' => Type::STRING,
             'data_col' => Type::TEXT,
-            'time_col' => Type::INTEGER
+            'time_col' => Type::INTEGER,
         );
         $errors = array();
 
         foreach ($expectedColumns as $column => $type) {
-            if (!$table->hasColumn($name = $parameters['session_db_' . $column])) {
-                $errors[] = 'session_db_no_' . $column;
+            if (!$table->hasColumn($name = $parameters['session_db_'.$column])) {
+                $errors[] = 'session_db_no_'.$column;
                 continue;
             }
 
             if ($table->getColumn($name)->getType()->getName() !== $type) {
-                $errors[] = 'session_db_invalid_type_' . $column;
+                $errors[] = 'session_db_invalid_type_'.$column;
             }
         }
 
@@ -88,7 +88,7 @@ class DatabaseSessionValidator
             'db_table' => $parameters['session_db_table'],
             'db_id_col' => $parameters['session_db_id_col'],
             'db_data_col' => $parameters['session_db_data_col'],
-            'db_time_col' => $parameters['session_db_time_col']
+            'db_time_col' => $parameters['session_db_time_col'],
         );
         $errors = array();
         $handler = new PdoSessionHandler($connection, $options);

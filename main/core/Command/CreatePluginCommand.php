@@ -35,7 +35,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $this->setDefinition(
             array(
                 new InputArgument('vendor', InputArgument::REQUIRED, 'The vendor name'),
-                new InputArgument('bundle', InputArgument::REQUIRED, 'The bundle name')
+                new InputArgument('bundle', InputArgument::REQUIRED, 'The bundle name'),
             )
         );
         $this->addOption(
@@ -92,7 +92,7 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $params = array(
             'vendor' => 'The vendor name (camel case required)',
-            'bundle' => 'The bundle name (camel case required)'
+            'bundle' => 'The bundle name (camel case required)',
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -129,7 +129,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $ivendor = $input->getArgument('vendor');
         $ibundle = $input->getArgument('bundle');
         $vname = strtolower($ivendor);
-        $bname = $this->getNormalizedBundleName($ibundle) . '-bundle';
+        $bname = $this->getNormalizedBundleName($ibundle).'-bundle';
 
         //create the directories if they don't exist
         $vendorNameDir = "{$vendorDir}/{$vname}";
@@ -157,20 +157,34 @@ class CreatePluginCommand extends ContainerAwareCommand
 
         $config = array(
             'plugin' => array(
-                'has_options' => false
-            )
+                'has_options' => false,
+            ),
         );
 
-        if ($rType) $this->addResourceType($rootDir, $ivendor, $ibundle, $rType, $config);
-        if ($tType) $this->addTool($rootDir, $ivendor, $ibundle, $tType, $config);
-        if ($wType) $this->addWidget($rootDir, $ivendor, $ibundle, $wType, $config);
-        if ($eAuth) $this->addAuthentication($rootDir, $ivendor, $ibundle, $eAuth, $config);
-        if ($theme) $this->addTheme($theme, $config);
-        if ($aTool) $this->addAdminTool($rootDir, $ivendor, $ibundle, $aTool, $config);
-        if ($fmime) $this->addPlayer($rootDir, $ivendor, $ibundle, $fmime, $config);
+        if ($rType) {
+            $this->addResourceType($rootDir, $ivendor, $ibundle, $rType, $config);
+        }
+        if ($tType) {
+            $this->addTool($rootDir, $ivendor, $ibundle, $tType, $config);
+        }
+        if ($wType) {
+            $this->addWidget($rootDir, $ivendor, $ibundle, $wType, $config);
+        }
+        if ($eAuth) {
+            $this->addAuthentication($rootDir, $ivendor, $ibundle, $eAuth, $config);
+        }
+        if ($theme) {
+            $this->addTheme($theme, $config);
+        }
+        if ($aTool) {
+            $this->addAdminTool($rootDir, $ivendor, $ibundle, $aTool, $config);
+        }
+        if ($fmime) {
+            $this->addPlayer($rootDir, $ivendor, $ibundle, $fmime, $config);
+        }
 
         $yaml = Yaml::dump($config, 5);
-        file_put_contents($rootDir . '/Resources/config/config.yml', $yaml);
+        file_put_contents($rootDir.'/Resources/config/config.yml', $yaml);
 
         $this->recursiveRenamePlaceHolders(
             $rootDir,
@@ -185,7 +199,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         );
 
         if ($input->getOption('install')) {
-            $bundleManager = $this->getContainer()->get('claroline.manager.bundle_manager');
+            $bundleManager = $this->getContainer()->get('claroline.manager.plugin_manager');
             $bundleManager->updateIniFile($ivendor, $ibundle);
             $bundleManager->updateAutoload($ivendor, $ibundle, $vname, $bname);
         }
@@ -193,38 +207,38 @@ class CreatePluginCommand extends ContainerAwareCommand
 
     private function editControllerClass($rootDir, $vendor, $bundle)
     {
-        $newPath = $rootDir . '/Controller/' . $bundle . 'Controller.php';
-        rename($rootDir . '/Controller/BundleController.php', $newPath);
+        $newPath = $rootDir.'/Controller/'.$bundle.'Controller.php';
+        rename($rootDir.'/Controller/BundleController.php', $newPath);
         $content = file_get_contents($newPath);
     }
 
     private function editBundleClass($rootDir, $vendor, $bundle)
     {
-        $newPath = $rootDir . '/' . $vendor . $bundle . 'Bundle.php';
-        rename($rootDir . '/VendorBundleBundle.php', $newPath);
+        $newPath = $rootDir.'/'.$vendor.$bundle.'Bundle.php';
+        rename($rootDir.'/VendorBundleBundle.php', $newPath);
         $content = file_get_contents($newPath);
     }
 
     private function editExtensionClass($rootDir, $vendor, $bundle)
     {
-        $newPath = $rootDir . '/DependencyInjection/' . $vendor . $bundle . 'Extension.php';
-        rename($rootDir . '/DependencyInjection/VendorBundleExtension.php', $newPath);
+        $newPath = $rootDir.'/DependencyInjection/'.$vendor.$bundle.'Extension.php';
+        rename($rootDir.'/DependencyInjection/VendorBundleExtension.php', $newPath);
         $content = file_get_contents($newPath);
     }
 
     private function editComposer($rootDir, $vendor, $bundle)
     {
-        $filepath = $rootDir . '/composer.json';
+        $filepath = $rootDir.'/composer.json';
         $content = file_get_contents($filepath);
-        $content = str_replace('[[name]]', strtolower($vendor) . '/' . $this->getNormalizedBundleName($bundle) . '-bundle', $content);
-        $content = str_replace('[[psr]]', $vendor . '\\\\' . $bundle . 'Bundle', $content);
-        $content = str_replace('[[target_dir]]', $vendor . '/' . $bundle . 'Bundle', $content);
+        $content = str_replace('[[name]]', strtolower($vendor).'/'.$this->getNormalizedBundleName($bundle).'-bundle', $content);
+        $content = str_replace('[[psr]]', $vendor.'\\\\'.$bundle.'Bundle', $content);
+        $content = str_replace('[[target_dir]]', $vendor.'/'.$bundle.'Bundle', $content);
         file_put_contents($filepath, $content);
     }
 
     private function editAdditionalInstaller($rootDir, $vendor, $bundle)
     {
-        $filepath = $rootDir . '/Installation/AdditionalInstaller.php';
+        $filepath = $rootDir.'/Installation/AdditionalInstaller.php';
         $content = file_get_contents($filepath);
     }
 
@@ -236,25 +250,25 @@ class CreatePluginCommand extends ContainerAwareCommand
         $this->addResourceTypeListener($rootDir, $vendor, $bundle, $rType);
         $this->addResourceTypeRepository($rootDir, $vendor, $bundle, $rType);
         $this->addResourceTypeTranslationFiles($rootDir, $vendor, $rType);
-        $transDir = $rootDir . '/Resources/translations';
+        $transDir = $rootDir.'/Resources/translations';
 
         $resTrans = array(
             'fr' => array(
                 'name' => 'Nom',
-                'publish' => 'Publier la ressource'
+                'publish' => 'Publier la ressource',
             ),
             'en' => array(
                 'name' => 'Name',
-                'publish' => 'Publish resource'
+                'publish' => 'Publish resource',
             ),
             'es' => array(
                 'name' => 'Nombre',
-                'publish' => 'Publicar el recurso'
-            )
+                'publish' => 'Publicar el recurso',
+            ),
         );
 
         foreach ($this->langs as $lang) {
-            $transFileName = $transDir . '/' . strtolower($rType) . '.' . $lang . '.yml';
+            $transFileName = $transDir.'/'.strtolower($rType).'.'.$lang.'.yml';
             file_put_contents($transFileName, Yaml::dump($resTrans[$lang], 5));
         }
     }
@@ -262,17 +276,17 @@ class CreatePluginCommand extends ContainerAwareCommand
     private function addResourceTypeRepository($rootDir, $vendor, $bundle, $rType)
     {
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
-        $newPath = $rootDir . '/Repository/' . ucfirst($rType) . 'Repository.php';
-        $content = file_get_contents($templateDir . '/repository.tmp');
+        $newPath = $rootDir.'/Repository/'.ucfirst($rType).'Repository.php';
+        $content = file_get_contents($templateDir.'/repository.tmp');
         file_put_contents($newPath, $content);
     }
 
     private function addResourceTypeListener($rootDir, $vendor, $bundle, $rType)
     {
-        $className = ucfirst($rType) . 'ResourceListener';
-        $newPath = $rootDir . '/Listener/' . $className . '.php';
+        $className = ucfirst($rType).'ResourceListener';
+        $newPath = $rootDir.'/Listener/'.$className.'.php';
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
-        $content = file_get_contents($templateDir . '/listener.tmp');
+        $content = file_get_contents($templateDir.'/listener.tmp');
         file_put_contents($newPath, $content);
     }
 
@@ -280,40 +294,40 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $config['plugin']['resources'][] = array(
             'class' => "{$vendor}\\{$bundle}Bundle\\Entity\\{$rType}",
-            'name' => strtolower($vendor) . '_' . strtolower($rType),
-            'is_exportable' => false
+            'name' => strtolower($vendor).'_'.strtolower($rType),
+            'is_exportable' => false,
         );
     }
 
     private function addResourceTypeEntity($rootDir, $vendor, $bundle, $rType)
     {
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
-        $newPath = $rootDir . '/Entity/' . ucfirst($rType) . '.php';
-        $content = file_get_contents($templateDir . '/resource.tmp');
+        $newPath = $rootDir.'/Entity/'.ucfirst($rType).'.php';
+        $content = file_get_contents($templateDir.'/resource.tmp');
         file_put_contents($newPath, $content);
     }
 
     private function addResourceTypeForm($rootDir, $vendor, $bundle, $rType)
     {
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
-        $newPath = $rootDir . '/Form/' . $rType . 'Type.php';
-        $content = file_get_contents($templateDir . '/form.tmp');
-        $viewDir = $rootDir . '/Resources/views/' . $rType;
+        $newPath = $rootDir.'/Form/'.$rType.'Type.php';
+        $content = file_get_contents($templateDir.'/form.tmp');
+        $viewDir = $rootDir.'/Resources/views/'.$rType;
         $fs = new Filesystem();
         $fs->mkdir($viewDir);
         file_put_contents(
-            $viewDir . '/createForm.html.twig',
-            file_get_contents($templateDir . '/form_view.tmp')
+            $viewDir.'/createForm.html.twig',
+            file_get_contents($templateDir.'/form_view.tmp')
         );
     }
 
     private function addResourceTypeTranslationFiles($rootDir, $vendor, $rType)
     {
-        $data = array(strtolower($vendor) . '_' . strtolower($rType) => ucfirst($rType));
-        $transDir = $rootDir . '/Resources/translations';
+        $data = array(strtolower($vendor).'_'.strtolower($rType) => ucfirst($rType));
+        $transDir = $rootDir.'/Resources/translations';
 
         foreach ($this->langs as $lang) {
-            $transFileName = $transDir . '/resource.' . $lang . '.yml';
+            $transFileName = $transDir.'/resource.'.$lang.'.yml';
             file_put_contents($transFileName, Yaml::dump($data, 5));
         }
     }
@@ -336,20 +350,20 @@ class CreatePluginCommand extends ContainerAwareCommand
 
     private function addToolListener($rootDir, $vendor, $bundle, $tType)
     {
-        $className = ucfirst($tType) . 'Listener';
-        $newPath = $rootDir . '/Listener/' . $className . '.php';
+        $className = ucfirst($tType).'Listener';
+        $newPath = $rootDir.'/Listener/'.$className.'.php';
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_tool_directory');
-        $content = file_get_contents($templateDir . '/listener.tmp');
+        $content = file_get_contents($templateDir.'/listener.tmp');
         file_put_contents($newPath, $content);
     }
 
     private function addToolTranslationFiles($rootDir, $tType)
     {
         $data = array(strtolower($tType) => ucfirst($tType));
-        $transDir = $rootDir . '/Resources/translations';
+        $transDir = $rootDir.'/Resources/translations';
 
         foreach ($this->langs as $lang) {
-            $transFileName = $transDir . '/tools.' . $lang . '.yml';
+            $transFileName = $transDir.'/tools.'.$lang.'.yml';
             file_put_contents($transFileName, Yaml::dump($data, 5));
         }
     }
@@ -365,16 +379,16 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $config['plugin']['admin_tools'][] = array(
             'name' => $rType,
-            'class' => 'warning'
+            'class' => 'warning',
         );
     }
 
     private function addAdminToolListener($rootDir, $vendor, $bundle, $tType)
     {
-        $className = ucfirst($tType) . 'Listener';
-        $newPath = $rootDir . '/Listener/' . $className . '.php';
+        $className = ucfirst($tType).'Listener';
+        $newPath = $rootDir.'/Listener/'.$className.'.php';
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_admin_tool_directory');
-        $content = file_get_contents($templateDir . '/listener.tmp');
+        $content = file_get_contents($templateDir.'/listener.tmp');
         file_put_contents($newPath, $content);
     }
 
@@ -388,56 +402,58 @@ class CreatePluginCommand extends ContainerAwareCommand
     private function addWidgetConfig($wType, $vendor, &$config)
     {
         $config['plugin']['widgets'][] = array(
-            'name' => strtolower($vendor) . '_' . strtolower($wType) . '_widget',
-            'is_configurable' => false
+            'name' => strtolower($vendor).'_'.strtolower($wType).'_widget',
+            'is_configurable' => false,
         );
     }
 
     private function addWidgetListener($rootDir, $vendor, $bundle, $wType)
     {
-        $className = ucfirst($wType) . 'Listener';
-        $newPath = $rootDir . '/Listener/' . $className . '.php';
+        $className = ucfirst($wType).'Listener';
+        $newPath = $rootDir.'/Listener/'.$className.'.php';
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_widget_directory');
-        $content = file_get_contents($templateDir . '/listener.tmp');
+        $content = file_get_contents($templateDir.'/listener.tmp');
         file_put_contents($newPath, $content);
     }
 
     private function addWidgetTranslationFiles($rootDir, $vendor, $wType)
     {
-        $data = array(strtolower($vendor) . '_' . strtolower($wType) . '_widget' => ucfirst($wType));
-        $transDir = $rootDir . '/Resources/translations';
+        $data = array(strtolower($vendor).'_'.strtolower($wType).'_widget' => ucfirst($wType));
+        $transDir = $rootDir.'/Resources/translations';
 
         foreach ($this->langs as $lang) {
-            $transFileName = $transDir . '/widget.' . $lang . '.yml';
+            $transFileName = $transDir.'/widget.'.$lang.'.yml';
             file_put_contents($transFileName, Yaml::dump($data, 5));
         }
     }
 
     private function addAuthenticationListener($rootDir, $vendor, $bundle, $eAuth)
     {
-        $newPath = $rootDir . '/Listener/ConfigureMenuListener.php';
+        $newPath = $rootDir.'/Listener/ConfigureMenuListener.php';
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_external_authentication_directory');
-        $content = file_get_contents($templateDir . '/listener.tmp');
+        $content = file_get_contents($templateDir.'/listener.tmp');
         file_put_contents($newPath, $content);
     }
 
     private function addAuthenticationManager($rootDir, $vendor, $bundle, $eAuth)
     {
-        $newPath = $rootDir . '/Manager/SecurityManager.php';
+        $newPath = $rootDir.'/Manager/SecurityManager.php';
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_external_authentication_directory');
-        $content = file_get_contents($templateDir . '/manager.tmp');
+        $content = file_get_contents($templateDir.'/manager.tmp');
         file_put_contents($newPath, $content);
     }
 
     private function addAuthenticationController($rootDir, $vendor, $bundle, $eAuth)
     {
-        $newPath = $rootDir . '/Controller/AuthenticationController.php';
+        $newPath = $rootDir.'/Controller/AuthenticationController.php';
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_external_authentication_directory');
-        $content = file_get_contents($templateDir . '/controller.tmp');
+        $content = file_get_contents($templateDir.'/controller.tmp');
         file_put_contents($newPath, $content);
         $routingFile = $this->getNewRoutingFile($rootDir);
-        $addRouting = file_get_contents($templateDir . '/routing.tmp');
-        if (!strpos(file_get_contents($routingFile), $addRouting)) file_put_contents($routingFile, $addRouting, FILE_APPEND);
+        $addRouting = file_get_contents($templateDir.'/routing.tmp');
+        if (!strpos(file_get_contents($routingFile), $addRouting)) {
+            file_put_contents($routingFile, $addRouting, FILE_APPEND);
+        }
     }
 
     private function addAuthentication($rootDir, $vendor, $bundle, $tType, &$config)
@@ -450,37 +466,39 @@ class CreatePluginCommand extends ContainerAwareCommand
     public function addTheme($theme, &$config)
     {
         $config['plugin']['themes'][] = array(
-            'name' => $theme . ' theme'
+            'name' => $theme.' theme',
         );
     }
 
     public function addPlayer($rootDir, $ivendor, $ibundle, $fmime, &$config)
     {
-        $className = ucfirst($fmime) . 'PlayerListener';
-        $newPath = $rootDir . '/Listener/' . $className . '.php';
+        $className = ucfirst($fmime).'PlayerListener';
+        $newPath = $rootDir.'/Listener/'.$className.'.php';
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_player_directory');
-        $content = file_get_contents($templateDir . '/listener.tmp');
+        $content = file_get_contents($templateDir.'/listener.tmp');
         file_put_contents($newPath, $content);
 
         $viewName = strtolower($fmime);
-        $newPath = $rootDir . '/Resources/views/' . $viewName . '.html.twig';
-        $content = file_get_contents($templateDir . '/view.tmp');
+        $newPath = $rootDir.'/Resources/views/'.$viewName.'.html.twig';
+        $content = file_get_contents($templateDir.'/view.tmp');
         file_put_contents($newPath, $content);
     }
 
     private function getNewRoutingFile($rootDir)
     {
-        return $rootDir . '/Resources/config/routing.yml';
+        return $rootDir.'/Resources/config/routing.yml';
     }
 
     private function listFiles($source, $target, $files = array(), $rootDir = null)
     {
-        if (!$rootDir) $rootDir = $source;
+        if (!$rootDir) {
+            $rootDir = $source;
+        }
         $ds = DIRECTORY_SEPARATOR;
         $iterator = new \DirectoryIterator($source);
 
         foreach ($iterator as $element) {
-            $newPath = $target . str_replace($rootDir, '', $element->getPathName());
+            $newPath = $target.str_replace($rootDir, '', $element->getPathName());
 
             if (!$element->isDot() && $element->getBaseName() !== '.gitkeep') {
                 $files[$newPath] = $element->getPathName();
@@ -539,7 +557,7 @@ class CreatePluginCommand extends ContainerAwareCommand
     }
 
     /**
-     * Placeholders are put between [[]]
+     * Placeholders are put between [[]].
      */
     private function removePlaceHolders($content)
     {
@@ -551,8 +569,8 @@ class CreatePluginCommand extends ContainerAwareCommand
         preg_match_all('/[A-Z][^A-Z]*/', $ibundle, $results);
         $baseDirName = strtolower($results[0][0]);
 
-        for ($i = 1; $i < count($results[0]); $i++) {
-            $baseDirName .= '-' . strtolower($results[0][$i]);
+        for ($i = 1; $i < count($results[0]); ++$i) {
+            $baseDirName .= '-'.strtolower($results[0][$i]);
         }
 
         return strtolower($baseDirName);
@@ -568,8 +586,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $eAuth = '',
         $adminTool = '',
         $fmime = ''
-    )
-    {
+    ) {
         $patterns = array(
             '/\[\[Vendor\]\]/',
             '/\[\[vendor\]\]/',
@@ -585,7 +602,7 @@ class CreatePluginCommand extends ContainerAwareCommand
             '/\[\[Admin_Tool\]\]/',
             '/\[\[admin_tool\]\]/',
             '/\[\[File_Mime\]\]/',
-            '/\[\[file_mime\]\]/'
+            '/\[\[file_mime\]\]/',
         );
 
         $replacements = array(
@@ -603,7 +620,7 @@ class CreatePluginCommand extends ContainerAwareCommand
             ucfirst($adminTool),
             strtolower($adminTool),
             ucfirst($fmime),
-            strtolower($fmime)
+            strtolower($fmime),
         );
 
         return preg_replace($patterns, $replacements, $content);

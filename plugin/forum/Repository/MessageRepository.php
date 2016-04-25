@@ -29,7 +29,7 @@ class MessageRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
 
-        return ($getQuery) ? $query: $query->getResult();
+        return ($getQuery) ? $query : $query->getResult();
     }
 
     public function findInitialBySubject($subjectId)
@@ -57,16 +57,16 @@ class MessageRepository extends EntityRepository
                 WHERE w IN (:workspaces)
                 AND rr.name in (:roles)";
 
-        if($user !== null){
-            $dql .= " AND m.creator = :user";
+        if ($user !== null) {
+            $dql .= ' AND m.creator = :user';
         }
 
-        $dql .= " ORDER BY m.creationDate DESC";
+        $dql .= ' ORDER BY m.creationDate DESC';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
         $query->setParameter('roles', $roles);
-        if($user !== null) {
+        if ($user !== null) {
             $query->setParameter('user', $user);
         }
         $query->setFirstResult(0)->setMaxResults($n);

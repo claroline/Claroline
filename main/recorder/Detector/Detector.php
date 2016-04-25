@@ -34,25 +34,25 @@ class Detector
         $bundles = array();
 
         //look for a bundle list in the composer.json for meta packages
-        if (file_exists($path . '/composer.json')) {
-            $json = json_decode(file_get_contents($path . '/composer.json'), true);
+        if (file_exists($path.'/composer.json')) {
+            $json = json_decode(file_get_contents($path.'/composer.json'), true);
 
-            if (array_key_exists('bundles', $json) && $json['type'] === 'claroline-core') {
-                foreach($json['bundles'] as $bundle) {
+            if (array_key_exists('extra', $json) && array_key_exists('bundles', $json['extra'])) {
+                foreach ($json['extra']['bundles'] as $bundle) {
                     $bundles[] = $bundle;
                 }
-                
+
                 return $bundles;
             }
         }
 
         foreach ($items as $item) {
-             if (preg_match('#^(.+Bundle)\.php$#', $item->getBasename(), $matches)) {
-                 if ($bundle = $this->findBundleClass($item->getPathname())) {
-                     $bundles[] = $bundle;
-                 }
-             }
-         }
+            if (preg_match('#^(.+Bundle)\.php$#', $item->getBasename(), $matches)) {
+                if ($bundle = $this->findBundleClass($item->getPathname())) {
+                    $bundles[] = $bundle;
+                }
+            }
+        }
 
         return $bundles;
     }
@@ -63,7 +63,7 @@ class Detector
 
         if (1 !== $count = count($bundles)) {
             $msg = "Expected one bundle in class {$path}, {$count} found";
-            $msg .= $count === 0 ? '.' :  ('(' . implode(', ', $bundles) .').');
+            $msg .= $count === 0 ? '.' :  ('('.implode(', ', $bundles).').');
 
             throw new \Exception($msg);
         }
@@ -77,7 +77,7 @@ class Detector
 
         // exclude abstract base classes
         if (preg_match('#abstract\s+class#i', $content)) {
-            return null;
+            return;
         }
 
         // extract the class name with namespace using tokenization
@@ -89,17 +89,17 @@ class Detector
 
         foreach ($tokens as $i => $token) {
             if ($tokens[$i][0] === T_NAMESPACE) {
-                for ($j = $i + 1; $j < count($tokens); $j++) {
+                for ($j = $i + 1; $j < count($tokens); ++$j) {
                     if ($tokens[$j][0] === T_STRING) {
                         $namespaceSegments[] = $tokens[$j][1];
                     } elseif ($tokens[$j] === '{' || $tokens[$j] === ';') {
-                         break;
+                        break;
                     }
                 }
             }
 
             if ($tokens[$i][0] === T_CLASS) {
-                for ($j = $i + 1; $j < count($tokens); $j++) {
+                for ($j = $i + 1; $j < count($tokens); ++$j) {
                     if ($tokens[$j] === '{') {
                         $class = $tokens[$i + 2][1];
                     }

@@ -31,15 +31,15 @@ class EditSectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('activeContribution', new ContributionType(), array(
-            'label' => false
+            'label' => false,
             )
         );
-        
+
         $sectionManager = $this->sectionManager;
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function(FormEvent $event) use ($sectionManager){
-                $form = $event->getForm();               
+            function (FormEvent $event) use ($sectionManager) {
+                $form = $event->getForm();
                 $data = $event->getData();
 
                 $isRoot = $data->isRoot();
@@ -47,22 +47,22 @@ class EditSectionType extends AbstractType
                     $form
                         ->add('visible', 'checkbox', array(
                                 'required' => false,
-                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'hidden')
+                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'hidden'),
                             )
                         )
                         ->add('position', 'choice', array(
                                 'choices' => $sectionManager->getArchivedSectionsForPosition($data),
-                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'col-md-12')
+                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'col-md-12'),
                             )
                         )
                         ->add('brother', 'checkbox', array(
                                 'required' => false,
-                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'hidden')
+                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'hidden'),
                             )
-                        );   
+                        );
                 }
             }
-        );         
+        );
     }
 
     public function getName()
@@ -76,7 +76,7 @@ class EditSectionType extends AbstractType
             'translation_domain' => 'icap_wiki',
             'data_class' => 'Icap\WikiBundle\Entity\Section',
             'sections' => array(),
-            'isRootSection' => false
+            'isRootSection' => false,
         ));
     }
 }

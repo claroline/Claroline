@@ -45,15 +45,15 @@ abstract class AbstractLogResourceEvent extends LogGenericEvent
         $commonDetails = array(
             'resource' => array(
                 'name' => $node->getName(),
-                'path' => $node->getPathForDisplay()
+                'path' => $node->getPathForDisplay(),
             ),
             'workspace' => array(
-                'name' => $node->getWorkspace()->getName()
+                'name' => $node->getWorkspace()->getName(),
             ),
             'owner' => array(
                 'lastName' => $node->getCreator()->getLastName(),
-                'firstName' => $node->getCreator()->getFirstName()
-            )
+                'firstName' => $node->getCreator()->getFirstName(),
+            ),
         );
 
         $detailsData = array_merge($commonDetails, $details);

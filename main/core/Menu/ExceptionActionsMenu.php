@@ -16,8 +16,8 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\Renderer\ListRenderer;
 
 /**
- * Class ExceptionActionsMenu
- * @package Claroline\CoreBundle\Menu
+ * Class ExceptionActionsMenu.
+ *
  * @DI\Service("claroline.menu.exception_actions_renderer")
  * @DI\Tag("knp_menu.renderer", attributes = {"name" = "knp_menu.renderer", "alias"="exception_actions"})
  */
@@ -34,8 +34,7 @@ class ExceptionActionsMenu extends ListRenderer
         $matcher,
         $defaultOptions,
         $charset
-    )
-    {
+    ) {
         parent::__construct($matcher, $defaultOptions, $charset);
     }
 
@@ -46,12 +45,12 @@ class ExceptionActionsMenu extends ListRenderer
 
     protected function renderLinkElement(ItemInterface $item, array $options)
     {
-        $uri = $item->getExtra('href') ? $item->getExtra('href'): $item->getUri();
-        $displayMode = $item->getExtra('display') ? $item->getExtra('display'): 'normal';
+        $uri = $item->getExtra('href') ? $item->getExtra('href') : $item->getUri();
+        $displayMode = $item->getExtra('display') ? $item->getExtra('display') : 'normal';
 
         return sprintf(
-            '<span class="btn btn-danger btn-lg exception-action-btn text-center" data-url="%s" data-display-mode="%s">' .
-            '%s' .
+            '<span class="btn btn-danger btn-lg exception-action-btn text-center" data-url="%s" data-display-mode="%s">'.
+            '%s'.
             '</span>',
 //            $item->getExtra('icon'),
             $this->escape($uri),

@@ -14,8 +14,6 @@ namespace Claroline\CoreBundle\Form\Administration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Manager\LocaleManager;
-use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Entity\Content;
 
 class TermsOfServiceType extends AbstractType
@@ -38,7 +36,7 @@ class TermsOfServiceType extends AbstractType
                 'required' => false,
                 'data' => $builder->getData(),
                 'theme_options' => array('contentTitle' => false),
-                'label' => 'term_of_service'
+                'label' => 'term_of_service',
             )
         )
         ->add(
@@ -49,10 +47,9 @@ class TermsOfServiceType extends AbstractType
                 'mapped' => false,
                 'data' => $this->active,
                 'label' => 'term_of_service_activation_message',
-                'disabled' => isset($this->lockedParams['terms_of_service'])
+                'disabled' => isset($this->lockedParams['terms_of_service']),
             )
         );
-
     }
 
     public function getName()

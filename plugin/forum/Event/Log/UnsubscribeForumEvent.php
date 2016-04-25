@@ -25,8 +25,8 @@ class UnsubscribeForumEvent extends AbstractLogResourceEvent
     {
         $details = array(
             'forum' => array(
-                'forum' => $forum->getId()
-            )
+                'forum' => $forum->getId(),
+            ),
         );
 
         parent::__construct($forum->getResourceNode(), $details);

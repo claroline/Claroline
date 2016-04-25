@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Form\Administration;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -34,7 +33,7 @@ class MailOptionType extends AbstractType
                 array(
                     'required' => false,
                     'label' => 'mailer_from',
-                    'data' => $this->from
+                    'data' => $this->from,
                 )
             );
     }

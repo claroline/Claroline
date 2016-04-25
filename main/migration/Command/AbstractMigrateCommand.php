@@ -24,7 +24,7 @@ abstract class AbstractMigrateCommand extends AbstractCommand
     protected function configure()
     {
         parent::configure();
-        $this->setDescription(ucfirst($this->getAction()) . 's a specified bundle')
+        $this->setDescription(ucfirst($this->getAction()).'s a specified bundle')
             ->addOption(
                 'target',
                 null,

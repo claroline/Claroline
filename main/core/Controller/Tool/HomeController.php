@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
+use Claroline\CoreBundle\Manager\PluginManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
@@ -63,6 +64,7 @@ class HomeController extends Controller
     private $userManager;
     private $utils;
     private $widgetManager;
+    private $bundleManager;
 
     /**
      * @DI\InjectParams({
@@ -77,6 +79,7 @@ class HomeController extends Controller
      *     "tokenStorage"       = @DI\Inject("security.token_storage"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "bundleManager"      = @DI\Inject("claroline.manager.plugin_manager"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
@@ -94,9 +97,9 @@ class HomeController extends Controller
         ToolManager $toolManager,
         UserManager $userManager,
         Utilities $utils,
-        WidgetManager $widgetManager
-    )
-    {
+        WidgetManager $widgetManager,
+        PluginManager $bundleManager
+    ) {
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
@@ -110,6 +113,8 @@ class HomeController extends Controller
         $this->userManager = $userManager;
         $this->utils = $utils;
         $this->widgetManager = $widgetManager;
+        $this->bundleManager = $bundleManager;
+        $this->bundles = $bundleManager->getEnabled(true);
     }
 
     /**
@@ -123,7 +128,7 @@ class HomeController extends Controller
      *
      * Displays the desktop home tab.
      *
-     * @param integer $tabId
+     * @param int $tabId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -143,7 +148,6 @@ class HomeController extends Controller
         $firstElement = true;
 
         if ($homeTabId !== -1) {
-
             foreach ($visibleAdminHomeTabConfigs as $adminHomeTabConfig) {
                 if ($homeTabId === $adminHomeTabConfig->getHomeTab()->getId()) {
                     $firstElement = false;
@@ -218,7 +222,7 @@ class HomeController extends Controller
             'workspaceUserHTCs' => $workspaceUserHTCs,
             'tabId' => $homeTabId,
             'editionMode' => $editionMode,
-            'isHomeLocked' => $isHomeLocked
+            'isHomeLocked' => $isHomeLocked,
         );
     }
 
@@ -239,8 +243,7 @@ class HomeController extends Controller
     public function getDesktopWidgetFormConfigurationAction(
         User $user,
         WidgetInstance $widgetInstance
-    )
-    {
+    ) {
         $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
 
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
@@ -262,15 +265,14 @@ class HomeController extends Controller
      * Asks a widget to render its configuration page for a workspace.
      *
      * @param WidgetInstance $widgetInstance
-     * @param Workspace $workspace
+     * @param Workspace      $workspace
      *
      * @return Response
      */
     public function getWorkspaceWidgetFormConfigurationAction(
         Workspace $workspace,
         WidgetInstance $widgetInstance
-    )
-    {
+    ) {
         $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
 
@@ -323,7 +325,7 @@ class HomeController extends Controller
     public function desktopWidgetInstanceCreateFormAction(User $user, HomeTab $homeTab)
     {
         $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType(true, true, $user->getEntityRoles()),
+            new WidgetInstanceType($this->bundles, true, true, $user->getEntityRoles()),
             new WidgetInstance()
         );
         $displayConfigForm = $this->formFactory->create(
@@ -334,7 +336,7 @@ class HomeController extends Controller
         return array(
             'homeTab' => $homeTab,
             'instanceForm' => $instanceForm->createView(),
-            'displayConfigForm' => $displayConfigForm->createView()
+            'displayConfigForm' => $displayConfigForm->createView(),
         );
     }
 
@@ -358,7 +360,7 @@ class HomeController extends Controller
         $widgetDisplayConfig = new WidgetDisplayConfig();
 
         $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType(true, true, $user->getEntityRoles()),
+            new WidgetInstanceType($this->bundles, true, true, $user->getEntityRoles()),
             $widgetInstance
         );
         $displayConfigForm = $this->formFactory->create(
@@ -401,16 +403,15 @@ class HomeController extends Controller
                     'name' => $widgetInstance->getName(),
                     'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0,
                     'width' => $widget->getDefaultWidth(),
-                    'height' => $widget->getDefaultHeight()
+                    'height' => $widget->getDefaultHeight(),
                 ),
                 200
             );
         } else {
-
             return array(
                 'homeTab' => $homeTab,
                 'instanceForm' => $instanceForm->createView(),
-                'displayConfigForm' => $displayConfigForm->createView()
+                'displayConfigForm' => $displayConfigForm->createView(),
             );
         }
     }
@@ -433,8 +434,7 @@ class HomeController extends Controller
         WidgetHomeTabConfig $widgetHomeTabConfig,
         WidgetDisplayConfig $widgetDisplayConfig,
         User $user
-    )
-    {
+    ) {
         $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
         $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
         $this->checkUserAccessForWidgetDisplayConfig($widgetDisplayConfig, $user);
@@ -453,7 +453,7 @@ class HomeController extends Controller
             'displayConfigForm' => $displayConfigForm->createView(),
             'widgetInstance' => $widgetInstance,
             'widgetHomeTabConfig' => $widgetHomeTabConfig,
-            'widgetDisplayConfig' => $widgetDisplayConfig
+            'widgetDisplayConfig' => $widgetDisplayConfig,
         );
     }
 
@@ -476,8 +476,7 @@ class HomeController extends Controller
         WidgetHomeTabConfig $widgetHomeTabConfig,
         WidgetDisplayConfig $widgetDisplayConfig,
         User $user
-    )
-    {
+    ) {
         $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
         $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
         $this->checkUserAccessForWidgetDisplayConfig($widgetDisplayConfig, $user);
@@ -504,18 +503,17 @@ class HomeController extends Controller
                 array(
                     'id' => $widgetHomeTabConfig->getId(),
                     'color' => $widgetDisplayConfig->getColor(),
-                    'title' => $widgetInstance->getName()
+                    'title' => $widgetInstance->getName(),
                 ),
                 200
             );
         } else {
-
             return array(
                 'instanceForm' => $instanceForm->createView(),
                 'displayConfigForm' => $displayConfigForm->createView(),
                 'widgetInstance' => $widgetInstance,
                 'widgetHomeTabConfig' => $widgetHomeTabConfig,
-                'widgetDisplayConfig' => $widgetDisplayConfig
+                'widgetDisplayConfig' => $widgetDisplayConfig,
             );
         }
     }
@@ -537,12 +535,11 @@ class HomeController extends Controller
     public function workspaceWidgetInstanceCreateFormAction(
         Workspace $workspace,
         HomeTab $homeTab
-    )
-    {
+    ) {
         $this->checkWorkspaceEditionAccess($workspace);
 
         $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType(false),
+            new WidgetInstanceType($this->bundles, false),
             new WidgetInstance()
         );
         $widgetHomeTabConfigForm = $this->formFactory->create(
@@ -559,7 +556,7 @@ class HomeController extends Controller
             'homeTab' => $homeTab,
             'instanceForm' => $instanceForm->createView(),
             'widgetHomeTabConfigForm' => $widgetHomeTabConfigForm->createView(),
-            'displayConfigForm' => $displayConfigForm->createView()
+            'displayConfigForm' => $displayConfigForm->createView(),
         );
     }
 
@@ -581,8 +578,7 @@ class HomeController extends Controller
     public function workspaceWidgetInstanceCreateAction(
         Workspace $workspace,
         HomeTab $homeTab
-    )
-    {
+    ) {
         $this->checkWorkspaceEditionAccess($workspace);
 
         $widgetInstance = new WidgetInstance();
@@ -590,7 +586,7 @@ class HomeController extends Controller
         $widgetDisplayConfig = new WidgetDisplayConfig();
 
         $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType(false),
+            new WidgetInstanceType($this->bundles, false),
             $widgetInstance
         );
         $widgetHomeTabConfigForm = $this->formFactory->create(
@@ -608,7 +604,6 @@ class HomeController extends Controller
         if ($instanceForm->isValid() &&
             $widgetHomeTabConfigForm->isValid() &&
             $displayConfigForm->isValid()) {
-
             $widgetInstance->setWorkspace($workspace);
             $widgetInstance->setIsAdmin(false);
             $widgetInstance->setIsDesktop(false);
@@ -640,18 +635,17 @@ class HomeController extends Controller
                     'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0,
                     'visibility' => $widgetHomeTabConfig->isVisible() ? 1 : 0,
                     'width' => $widget->getDefaultWidth(),
-                    'height' => $widget->getDefaultHeight()
+                    'height' => $widget->getDefaultHeight(),
                 ),
                 200
             );
         } else {
-
             return array(
                 'workspace' => $workspace,
                 'homeTab' => $homeTab,
                 'instanceForm' => $instanceForm->createView(),
                 'widgetHomeTabConfigForm' => $widgetHomeTabConfigForm->createView(),
-                'displayConfigForm' => $displayConfigForm->createView()
+                'displayConfigForm' => $displayConfigForm->createView(),
             );
         }
     }
@@ -673,8 +667,7 @@ class HomeController extends Controller
         WidgetInstance $widgetInstance,
         WidgetHomeTabConfig $widgetHomeTabConfig,
         WidgetDisplayConfig $widgetDisplayConfig
-    )
-    {
+    ) {
         $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
         $this->checkWorkspaceAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $workspace);
@@ -700,7 +693,7 @@ class HomeController extends Controller
             'displayConfigForm' => $displayConfigForm->createView(),
             'widgetInstance' => $widgetInstance,
             'widgetHomeTabConfig' => $widgetHomeTabConfig,
-            'widgetDisplayConfig' => $widgetDisplayConfig
+            'widgetDisplayConfig' => $widgetDisplayConfig,
         );
     }
 
@@ -722,8 +715,7 @@ class HomeController extends Controller
         WidgetInstance $widgetInstance,
         WidgetHomeTabConfig $widgetHomeTabConfig,
         WidgetDisplayConfig $widgetDisplayConfig
-    )
-    {
+    ) {
         $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
         $this->checkWorkspaceAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $workspace);
@@ -748,7 +740,6 @@ class HomeController extends Controller
         if ($instanceForm->isValid() &&
             $widgetHomeTabConfigForm->isValid() &&
             $displayConfigForm->isValid()) {
-
             $this->widgetManager->persistWidgetConfigs(
                 $widgetInstance,
                 $widgetHomeTabConfig,
@@ -763,7 +754,7 @@ class HomeController extends Controller
                     'id' => $widgetHomeTabConfig->getId(),
                     'color' => $widgetDisplayConfig->getColor(),
                     'title' => $widgetInstance->getName(),
-                    'visibility' => $visibility
+                    'visibility' => $visibility,
                 ),
                 200
             );
@@ -775,7 +766,7 @@ class HomeController extends Controller
                 'displayConfigForm' => $displayConfigForm->createView(),
                 'widgetInstance' => $widgetInstance,
                 'widgetHomeTabConfig' => $widgetHomeTabConfig,
-                'widgetDisplayConfig' => $widgetDisplayConfig
+                'widgetDisplayConfig' => $widgetDisplayConfig,
             );
         }
     }
@@ -797,12 +788,10 @@ class HomeController extends Controller
     public function updateDesktopWidgetsDisplayConfigAction(
         User $user,
         array $widgetDisplayConfigs
-    )
-    {
+    ) {
         $toPersist = array();
 
         foreach ($widgetDisplayConfigs as $config) {
-
             $this->checkUserAccessForWidgetDisplayConfig($config, $user);
         }
         $datas = $this->request->request->all();
@@ -842,12 +831,10 @@ class HomeController extends Controller
     public function updateWorkspaceWidgetsDisplayConfigAction(
         Workspace $workspace,
         array $widgetDisplayConfigs
-    )
-    {
+    ) {
         $toPersist = array();
 
         foreach ($widgetDisplayConfigs as $config) {
-
             $this->checkWorkspaceAccessForWidgetDisplayConfig($config, $workspace);
         }
         $datas = $this->request->request->all();
@@ -886,7 +873,7 @@ class HomeController extends Controller
      */
     public function desktopHomeTabCreateFormAction()
     {
-        $form = $this->formFactory->create(new HomeTabType, new HomeTab());
+        $form = $this->formFactory->create(new HomeTabType(), new HomeTab());
 
         return array('form' => $form->createView());
     }
@@ -908,7 +895,7 @@ class HomeController extends Controller
     public function desktopHomeTabCreateAction(User $user)
     {
         $homeTab = new HomeTab();
-        $form = $this->formFactory->create(new HomeTabType, $homeTab);
+        $form = $this->formFactory->create(new HomeTabType(), $homeTab);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -933,7 +920,6 @@ class HomeController extends Controller
 
             return new JsonResponse($homeTab->getId(), 200);
         } else {
-
             return array('form' => $form->createView());
         }
     }
@@ -957,11 +943,11 @@ class HomeController extends Controller
     {
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
-        $form = $this->formFactory->create(new HomeTabType, $homeTab);
+        $form = $this->formFactory->create(new HomeTabType(), $homeTab);
 
         return array(
             'form' => $form->createView(),
-            'homeTab' => $homeTab
+            'homeTab' => $homeTab,
         );
     }
 
@@ -985,7 +971,7 @@ class HomeController extends Controller
     {
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
-        $form = $this->formFactory->create(new HomeTabType, $homeTab);
+        $form = $this->formFactory->create(new HomeTabType(), $homeTab);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -996,10 +982,9 @@ class HomeController extends Controller
                 200
             );
         } else {
-
             return array(
                 'form' => $form->createView(),
-                'homeTab' => $homeTab
+                'homeTab' => $homeTab,
             );
         }
     }
@@ -1015,7 +1000,7 @@ class HomeController extends Controller
      * Delete the given homeTab.
      *
      * @param HomeTab $homeTab
-     * @param integer $tabOrder
+     * @param int     $tabOrder
      *
      * @return Response
      */
@@ -1044,8 +1029,7 @@ class HomeController extends Controller
         User $user,
         HomeTabConfig $homeTabConfig,
         $nextHomeTabConfigId
-    )
-    {
+    ) {
         $homeTab = $homeTabConfig->getHomeTab();
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
@@ -1086,7 +1070,7 @@ class HomeController extends Controller
         return array(
             'workspace' => $workspace,
             'homeTabForm' => $homeTabForm->createView(),
-            'homeTabConfigForm' => $homeTabConfigForm->createView()
+            'homeTabConfigForm' => $homeTabConfigForm->createView(),
         );
     }
 
@@ -1141,11 +1125,10 @@ class HomeController extends Controller
 
             return new JsonResponse($homeTab->getId(), 200);
         } else {
-
             return array(
                 'workspace' => $workspace,
                 'homeTabForm' => $homeTabForm->createView(),
-                'homeTabConfigForm' => $homeTabConfigForm->createView()
+                'homeTabConfigForm' => $homeTabConfigForm->createView(),
             );
         }
     }
@@ -1166,8 +1149,7 @@ class HomeController extends Controller
         Workspace $workspace,
         HomeTab $homeTab,
         HomeTabConfig $homeTabConfig
-    )
-    {
+    ) {
         $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
@@ -1185,7 +1167,7 @@ class HomeController extends Controller
             'homeTabForm' => $homeTabForm->createView(),
             'homeTabConfigForm' => $homeTabConfigForm->createView(),
             'homeTab' => $homeTab,
-            'homeTabConfig' => $homeTabConfig
+            'homeTabConfig' => $homeTabConfig,
         );
     }
 
@@ -1204,8 +1186,7 @@ class HomeController extends Controller
         Workspace $workspace,
         HomeTab $homeTab,
         HomeTabConfig $homeTabConfig
-    )
-    {
+    ) {
         $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
@@ -1228,18 +1209,17 @@ class HomeController extends Controller
                 array(
                     'id' => $homeTab->getId(),
                     'name' => $homeTab->getName(),
-                    'visibility' => $visibility
+                    'visibility' => $visibility,
                 ),
                 200
             );
         } else {
-
             return array(
                 'workspace' => $workspace,
                 'homeTabForm' => $homeTabForm->createView(),
                 'homeTabConfigForm' => $homeTabConfigForm->createView(),
                 'homeTab' => $homeTab,
-                'homeTabConfig' => $homeTabConfig
+                'homeTabConfig' => $homeTabConfig,
             );
         }
     }
@@ -1258,8 +1238,7 @@ class HomeController extends Controller
     public function workspaceHomeTabDeleteAction(
         Workspace $workspace,
         HomeTab $homeTab
-    )
-    {
+    ) {
         $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
         $this->homeTabManager->deleteHomeTab($homeTab);
@@ -1283,8 +1262,7 @@ class HomeController extends Controller
         Workspace $workspace,
         HomeTab $homeTab,
         User $user
-    )
-    {
+    ) {
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
         $homeTabConfig = $this->homeTabManager->getOneVisibleWorkspaceUserHTC(
             $homeTab,
@@ -1325,8 +1303,7 @@ class HomeController extends Controller
     public function workspaceHomeTabBookmarkDeleteAction(
         HomeTabConfig $homeTabConfig,
         User $user
-    )
-    {
+    ) {
         $this->checkUserAccessForWorkspaceUserHomeTabConfig($homeTabConfig, $user);
         $this->homeTabManager->deleteHomeTabConfig($homeTabConfig);
 
@@ -1349,8 +1326,7 @@ class HomeController extends Controller
         Workspace $workspace,
         HomeTabConfig $homeTabConfig,
         $nextHomeTabConfigId
-    )
-    {
+    ) {
         $this->checkWorkspaceEditionAccess($workspace);
         $homeTab = $homeTabConfig->getHomeTab();
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
@@ -1385,8 +1361,7 @@ class HomeController extends Controller
         User $user,
         HomeTabConfig $homeTabConfig,
         $visible
-    )
-    {
+    ) {
         $homeTab = $homeTabConfig->getHomeTab();
         $this->checkUserAccessForAdminHomeTab($homeTab, $user);
 
@@ -1411,8 +1386,7 @@ class HomeController extends Controller
     public function desktopWidgetHomeTabConfigChangeVisibilityAction(
         User $user,
         WidgetHomeTabConfig $widgetHomeTabConfig
-    )
-    {
+    ) {
         $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
 
         $this->homeTabManager->changeVisibilityWidgetHomeTabConfig(
@@ -1437,8 +1411,7 @@ class HomeController extends Controller
     public function desktopWidgetHomeTabConfigDeleteAction(
         User $user,
         WidgetHomeTabConfig $widgetHomeTabConfig
-    )
-    {
+    ) {
         $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
         $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
 
@@ -1471,8 +1444,7 @@ class HomeController extends Controller
         WidgetDisplayConfig $widgetDisplayConfig,
         $row,
         $column
-    )
-    {
+    ) {
         $this->checkUserAccessForWidgetDisplayConfig($widgetDisplayConfig, $user);
         $widgetDisplayConfig->setRow($row);
         $widgetDisplayConfig->setColumn($column);
@@ -1495,8 +1467,7 @@ class HomeController extends Controller
     public function workspaceWidgetHomeTabConfigDeleteAction(
         Workspace $workspace,
         WidgetHomeTabConfig $widgetHomeTabConfig
-    )
-    {
+    ) {
         $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForWidgetHomeTabConfig(
             $widgetHomeTabConfig,
@@ -1529,8 +1500,7 @@ class HomeController extends Controller
         WidgetDisplayConfig $widgetDisplayConfig,
         $row,
         $column
-    )
-    {
+    ) {
         $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForWidgetDisplayConfig($widgetDisplayConfig, $workspace);
         $widgetDisplayConfig->setRow($row);
@@ -1581,7 +1551,6 @@ class HomeController extends Controller
         }
 
         if (!($isAdminUser || $isUser)) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1589,14 +1558,12 @@ class HomeController extends Controller
     private function checkUserAccessForWorkspaceUserHomeTabConfig(
         HomeTabConfig $homeTabConfig,
         User $user
-    )
-    {
+    ) {
         $homeTabConfigUser = $homeTabConfig->getUser();
 
         if ($homeTabConfig->getType() !== 'workspace_user' ||
             is_null($homeTabConfigUser) ||
             $homeTabConfigUser->getId() !== $user->getId()) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1609,12 +1576,10 @@ class HomeController extends Controller
     private function checkWorkspaceAccessForHomeTab(
         HomeTab $homeTab,
         Workspace $workspace
-    )
-    {
+    ) {
         $homeTabWorkspace = $homeTab->getWorkspace();
 
         if (is_null($homeTabWorkspace) || ($homeTabWorkspace->getId() !== $workspace->getId())) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1622,15 +1587,13 @@ class HomeController extends Controller
     private function checkUserAccessForWidgetHomeTabConfig(
         WidgetHomeTabConfig $widgetHomeTabConfig,
         User $user
-    )
-    {
+    ) {
         $widgetHomeTabConfigUser = $widgetHomeTabConfig->getUser();
 
         if (($widgetHomeTabConfig->getType() !== 'desktop'
             && $widgetHomeTabConfig->getType() !== 'admin_desktop') ||
             is_null($widgetHomeTabConfigUser) ||
             ($widgetHomeTabConfigUser->getId() !== $user->getId())) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1638,13 +1601,11 @@ class HomeController extends Controller
     private function checkUserAccessForWidgetDisplayConfig(
         WidgetDisplayConfig $widgetDisplayConfig,
         User $user
-    )
-    {
+    ) {
         $widgetDisplayConfigUser = $widgetDisplayConfig->getUser();
 
         if (is_null($widgetDisplayConfigUser) ||
             ($widgetDisplayConfigUser->getId() !== $user->getId())) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1652,13 +1613,11 @@ class HomeController extends Controller
     private function checkWorkspaceAccessForWidgetDisplayConfig(
         WidgetDisplayConfig $widgetDisplayConfig,
         Workspace $workspace
-    )
-    {
+    ) {
         $widgetDisplayConfigWorkspace = $widgetDisplayConfig->getWorkspace();
 
         if (is_null($widgetDisplayConfigWorkspace) ||
             ($widgetDisplayConfigWorkspace->getId() !== $workspace->getId())) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1666,14 +1625,12 @@ class HomeController extends Controller
     private function checkWorkspaceAccessForWidgetHomeTabConfig(
         WidgetHomeTabConfig $widgetHomeTabConfig,
         Workspace $workspace
-    )
-    {
+    ) {
         $widgetHomeTabConfigWorkspace = $widgetHomeTabConfig->getWorkspace();
 
         if ($widgetHomeTabConfig->getType() !== 'workspace' ||
             is_null($widgetHomeTabConfigWorkspace) ||
             ($widgetHomeTabConfigWorkspace->getId() !== $workspace->getId())) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1681,12 +1638,10 @@ class HomeController extends Controller
     private function checkUserAccessForWidgetInstance(
         WidgetInstance $widgetInstance,
         User $user
-    )
-    {
+    ) {
         $widgetUser = $widgetInstance->getUser();
 
         if (is_null($widgetUser) || ($widgetUser->getId() !== $user->getId())) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1694,12 +1649,10 @@ class HomeController extends Controller
     private function checkWorkspaceAccessForWidgetInstance(
         WidgetInstance $widgetInstance,
         Workspace $workspace
-    )
-    {
+    ) {
         $widgetWorkspace = $widgetInstance->getWorkspace();
 
         if (is_null($widgetWorkspace) || ($widgetWorkspace->getId() !== $workspace->getId())) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1707,7 +1660,6 @@ class HomeController extends Controller
     private function checkWorkspaceEditionAccess(Workspace $workspace)
     {
         if (!$this->authorization->isGranted(array('home', 'edit'), $workspace)) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1715,12 +1667,10 @@ class HomeController extends Controller
     private function hasUserAccessToWidgetInstance(
         WidgetInstance $widgetInstance,
         User $user
-    )
-    {
+    ) {
         $widgetUser = $widgetInstance->getUser();
 
         if (is_null($widgetUser) || ($widgetUser->getId() !== $user->getId())) {
-
             return false;
         }
 
@@ -1730,12 +1680,10 @@ class HomeController extends Controller
     private function hasWorkspaceAccessToWidgetInstance(
         WidgetInstance $widgetInstance,
         Workspace $workspace
-    )
-    {
+    ) {
         $widgetWorkspace = $widgetInstance->getWorkspace();
 
         if (is_null($widgetWorkspace) || ($widgetWorkspace->getId() !== $workspace->getId())) {
-
             return false;
         }
 

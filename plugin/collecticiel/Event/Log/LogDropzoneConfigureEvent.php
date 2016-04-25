@@ -4,11 +4,10 @@ namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
 
-class LogDropzoneConfigureEvent extends AbstractLogResourceEvent {
-
+class LogDropzoneConfigureEvent extends AbstractLogResourceEvent
+{
     const ACTION = 'resource-innova_collecticiel-dropzone_configure';
 
     /**
@@ -18,9 +17,9 @@ class LogDropzoneConfigureEvent extends AbstractLogResourceEvent {
     public function __construct(Dropzone $dropzone, $changeSet)
     {
         $details = array(
-            'dropzone'  => array(
+            'dropzone' => array(
                 'id' => $dropzone->getId(),
-                'changeSet' => $changeSet
+                'changeSet' => $changeSet,
             ),
         );
 

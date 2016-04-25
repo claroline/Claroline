@@ -15,11 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Console\Logger\ConsoleLogger;
-use Psr\Log\LogLevel;
 
 class ExportWorkspaceModelCommand extends ContainerAwareCommand
 {
@@ -30,7 +25,7 @@ class ExportWorkspaceModelCommand extends ContainerAwareCommand
         $this->setDefinition(
             array(
                 new InputArgument('archive_path', InputArgument::REQUIRED, 'The absolute path to the zip file.'),
-                new InputArgument('code', InputArgument::REQUIRED, 'The owner username')
+                new InputArgument('code', InputArgument::REQUIRED, 'The owner username'),
             )
         );
     }
@@ -40,7 +35,7 @@ class ExportWorkspaceModelCommand extends ContainerAwareCommand
         //@todo ask authentication source
         $params = array(
             'archive_path' => 'Absolute path to the zip file: ',
-            'code' => 'The workspace code: '
+            'code' => 'The workspace code: ',
         );
 
         foreach ($params as $argument => $argumentName) {

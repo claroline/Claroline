@@ -2,7 +2,6 @@
 
 namespace Icap\WikiBundle\Event\Log;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\WikiBundle\Entity\Wiki;
@@ -16,10 +15,10 @@ class LogContributionCreateEvent extends AbstractLogResourceEvent implements Not
     protected $details;
 
     /**
-     * @param Wiki $wiki
-     * @param Section $section
+     * @param Wiki         $wiki
+     * @param Section      $section
      * @param Contribution $contribution
-    */
+     */
     public function __construct(Wiki $wiki, Section $section, Contribution $contribution)
     {
         $this->wiki = $wiki;
@@ -30,8 +29,8 @@ class LogContributionCreateEvent extends AbstractLogResourceEvent implements Not
                 'id' => $contribution->getId(),
                 'title' => $contribution->getTitle(),
                 'text' => $contribution->getText(),
-                'contributor' => $contribution->getContributor()->getFirstName() . ' ' . $contribution->getContributor()->getLastName()
-            )
+                'contributor' => $contribution->getContributor()->getFirstName().' '.$contribution->getContributor()->getLastName(),
+            ),
         );
 
         parent::__construct($wiki->getResourceNode(), $this->details);
@@ -48,7 +47,7 @@ class LogContributionCreateEvent extends AbstractLogResourceEvent implements Not
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -92,11 +91,11 @@ class LogContributionCreateEvent extends AbstractLogResourceEvent implements Not
      */
     public function getIconKey()
     {
-        return "wiki";
+        return 'wiki';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -106,16 +105,16 @@ class LogContributionCreateEvent extends AbstractLogResourceEvent implements Not
         $notificationDetails['resource'] = array(
             'id' => $this->wiki->getId(),
             'name' => $this->resource->getName(),
-            'type' => $this->resource->getResourceType()->getName()
+            'type' => $this->resource->getResourceType()->getName(),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

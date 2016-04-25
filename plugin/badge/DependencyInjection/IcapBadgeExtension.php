@@ -11,7 +11,7 @@ class IcapBadgeExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
-        $locator = new FileLocator(__DIR__ . '/../Resources/config');
+        $locator = new FileLocator(__DIR__.'/../Resources/config');
         $loader = new YamlFileLoader($container, $locator);
         $loader->load('services.yml');
     }

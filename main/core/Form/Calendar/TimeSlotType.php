@@ -28,7 +28,6 @@ class TimeSlotType extends AngularType
             ->add('start', 'datetime', array('label' => 'start', 'required' => true))
             ->add('end', 'datetime', array('label' => 'end', 'required' => true))
             ->add('description', 'text', array('label' => 'description', 'required' => false));
-
     }
 
     public function getName()
@@ -44,7 +43,9 @@ class TimeSlotType extends AngularType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $default = array('translation_domain' => 'platform');
-        if ($this->forApi) $default['csrf_protection'] = false;
+        if ($this->forApi) {
+            $default['csrf_protection'] = false;
+        }
         $default['ng-model'] = 'timeSlot';
 
         $resolver->setDefaults($default);

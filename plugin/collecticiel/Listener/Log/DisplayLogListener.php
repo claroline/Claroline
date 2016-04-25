@@ -16,7 +16,7 @@ class DisplayLogListener extends ContainerAware
                 'listItemView' => $this->container->get('templating')->render(
                     'InnovaCollecticielBundle:Log:log_list_item.html.twig',
                     array('log' => $event->getLog())
-                )
+                ),
             )
         );
 

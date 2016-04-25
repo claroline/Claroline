@@ -21,7 +21,7 @@ class PortfolioRepository extends EntityRepository
             ->setParameter('userId', $user->getId())
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder->getQuery();
     }
 
     /**
@@ -34,12 +34,12 @@ class PortfolioRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->select('p')
-            ->leftJoin('p.comments','comments')
+            ->leftJoin('p.comments', 'comments')
             ->andWhere('p.user = :userId')
             ->setParameter('userId', $user->getId())
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder->getQuery();
     }
 
     /**
@@ -56,7 +56,7 @@ class PortfolioRepository extends EntityRepository
             ->setParameter('guide', $user)
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder->getQuery();
     }
 
     /**
@@ -75,7 +75,7 @@ class PortfolioRepository extends EntityRepository
             ->setParameter('guide', $user)
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder->getQuery();
     }
 
     /**
@@ -88,7 +88,6 @@ class PortfolioRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('p')
             ->select('COUNT(p)');
 
-
         return $executeQuery ? $queryBuilder->getQuery()->getSingleScalarResult() : $queryBuilder;
     }
 
@@ -98,6 +97,7 @@ class PortfolioRepository extends EntityRepository
     public function countAllDeleted()
     {
         $queryBuilder = $this->countAll(false);
+
         return $queryBuilder
             ->where('p.deletedAt IS NOT NULL')
             ->getQuery()

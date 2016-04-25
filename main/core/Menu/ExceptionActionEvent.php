@@ -28,17 +28,16 @@ class ExceptionActionEvent extends Event
     private $url;
     private $referer;
 
-
     /**
      * @param \Knp\Menu\FactoryInterface $factory
-     * @param \Knp\Menu\ItemInterface $menu
-     * @param User $user
-     * @param string $message
-     * @param string $exceptionClass
-     * @param string $file
-     * @param string $line
-     * @param string $url
-     * @param string $referer
+     * @param \Knp\Menu\ItemInterface    $menu
+     * @param User                       $user
+     * @param string                     $message
+     * @param string                     $exceptionClass
+     * @param string                     $file
+     * @param string                     $line
+     * @param string                     $url
+     * @param string                     $referer
      */
     public function __construct(
         FactoryInterface $factory,
@@ -50,8 +49,7 @@ class ExceptionActionEvent extends Event
         $line,
         $url,
         $referer
-    )
-    {
+    ) {
         $this->factory = $factory;
         $this->menu = $menu;
         $this->user = $user;

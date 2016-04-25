@@ -137,10 +137,11 @@ class HomeTab
         return $this->widgetHomeTabConfigs;
     }
 
-    public function serializeForWidgetPicker() {
+    public function serializeForWidgetPicker()
+    {
         $return = array(
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
         );
 
         return $return;
@@ -150,7 +151,7 @@ class HomeTab
     {
         return $this->roles->toArray();
     }
-    
+
     public function addRole(Role $role)
     {
         if (!$this->roles->contains($role)) {

@@ -24,7 +24,7 @@ class ActivityController
      *     "activityManager" = @DI\Inject("hevinci.competency.activity_manager")
      * })
      *
-     * @param ActivityManager   $activityManager
+     * @param ActivityManager $activityManager
      */
     public function __construct(ActivityManager $activityManager)
     {
@@ -39,13 +39,14 @@ class ActivityController
      * @EXT\Template
      *
      * @param Activity $activity
+     *
      * @return array
      */
     public function competenciesAction(Activity $activity)
     {
         return [
             '_resource' => $activity,
-            'competencies' => $this->activityManager->loadLinkedCompetencies($activity)
+            'competencies' => $this->activityManager->loadLinkedCompetencies($activity),
         ];
     }
 
@@ -58,8 +59,9 @@ class ActivityController
      * @SEC\SecureParam(name="activity", permissions="OPEN")
      * @SEC\PreAuthorize("hasRole('ROLE_COMPETENCY_MANAGER')")
      *
-     * @param Activity  $activity
-     * @param Ability   $ability
+     * @param Activity $activity
+     * @param Ability  $ability
+     *
      * @return JsonResponse
      */
     public function linkAbilityAction(Activity $activity, Ability $ability)
@@ -79,8 +81,9 @@ class ActivityController
      * @SEC\SecureParam(name="competency", permissions="OPEN")
      * @SEC\PreAuthorize("hasRole('ROLE_COMPETENCY_MANAGER')")
      *
-     * @param Activity      $activity
-     * @param Competency    $competency
+     * @param Activity   $activity
+     * @param Competency $competency
+     *
      * @return JsonResponse
      */
     public function linkCompetencyAction(Activity $activity, Competency $competency)
@@ -99,8 +102,9 @@ class ActivityController
      * @SEC\SecureParam(name="activity", permissions="OPEN")
      * @SEC\PreAuthorize("hasRole('ROLE_COMPETENCY_MANAGER')")
      *
-     * @param Activity  $activity
-     * @param Ability   $ability
+     * @param Activity $activity
+     * @param Ability  $ability
+     *
      * @return JsonResponse
      */
     public function removeAbilityLinkAction(Activity $activity, Ability $ability)
@@ -116,8 +120,9 @@ class ActivityController
      * @SEC\SecureParam(name="competency", permissions="OPEN")
      * @SEC\PreAuthorize("hasRole('ROLE_COMPETENCY_MANAGER')")
      *
-     * @param Activity      $activity
-     * @param Competency    $competency
+     * @param Activity   $activity
+     * @param Competency $competency
+     *
      * @return JsonResponse
      */
     public function removeCompetencyLinkAction(Activity $activity, Competency $competency)
@@ -133,6 +138,7 @@ class ActivityController
      * @EXT\Template
      *
      * @param Competency $competency
+     *
      * @return array
      */
     public function competencyActivitiesAction(Competency $competency)
@@ -148,6 +154,7 @@ class ActivityController
      * @EXT\Template
      *
      * @param Ability $ability
+     *
      * @return array
      */
     public function abilityActivitiesAction(Ability $ability)

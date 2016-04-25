@@ -16,7 +16,7 @@ class StatusType extends AbstractType
             array(
                 'required' => true,
                 'label' => 'name',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
         $builder->add(
@@ -25,7 +25,7 @@ class StatusType extends AbstractType
             array(
                 'required' => true,
                 'label' => 'code',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
         $builder->add(
@@ -33,11 +33,11 @@ class StatusType extends AbstractType
             'choice',
             array(
                 'label' => 'type',
-                'choices' => array(0, 1 , 2, 3, 4),
+                'choices' => array(0, 1, 2, 3, 4),
                 'expanded' => false,
                 'multiple' => false,
                 'required' => true,
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
     }

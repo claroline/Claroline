@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -69,7 +68,7 @@ class WorkspaceControllerTest extends MockeryTestCase
             'hierarchy' => 'hierarchy',
             'rootTags' => 'rootTags',
             'displayable' => 'displayable',
-            'workspaceRoles' => 'workspaceRoles'
+            'workspaceRoles' => 'workspaceRoles',
         );
 
         $this->tagManager
@@ -86,7 +85,7 @@ class WorkspaceControllerTest extends MockeryTestCase
                 'hierarchy' => $datas['hierarchy'],
                 'rootTags' => $datas['rootTags'],
                 'displayable' => $datas['displayable'],
-                'workspaceRoles' => $datas['workspaceRoles']
+                'workspaceRoles' => $datas['workspaceRoles'],
             ),
             $this->getController()->listAction($user)
         );
@@ -103,7 +102,7 @@ class WorkspaceControllerTest extends MockeryTestCase
             'tagWorkspaces' => 'tagWorkspaces',
             'hierarchy' => 'hierarchy',
             'rootTags' => 'rootTags',
-            'displayable' => 'displayable'
+            'displayable' => 'displayable',
         );
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $user = new User();
@@ -135,7 +134,7 @@ class WorkspaceControllerTest extends MockeryTestCase
                 'hierarchy' => 'hierarchy',
                 'rootTags' => 'rootTags',
                 'displayable' => 'displayable',
-                'favourites' => array()
+                'favourites' => array(),
             ),
             $controller->listWorkspacesByUserAction()
         );
@@ -152,7 +151,7 @@ class WorkspaceControllerTest extends MockeryTestCase
             'tagWorkspaces' => 'tagWorkspaces',
             'hierarchy' => 'hierarchy',
             'rootTags' => 'rootTags',
-            'displayable' => 'displayable'
+            'displayable' => 'displayable',
         );
 
         $this->security->shouldReceive('isGranted')->with('ROLE_USER', null)->once()->andReturn(true);
@@ -170,7 +169,7 @@ class WorkspaceControllerTest extends MockeryTestCase
                 'tagWorkspaces' => $datas['tagWorkspaces'],
                 'hierarchy' => $datas['hierarchy'],
                 'rootTags' => $datas['rootTags'],
-                'displayable' => $datas['displayable']
+                'displayable' => $datas['displayable'],
             ),
             $controller->listWorkspacesWithSelfRegistrationAction()
         );
@@ -216,7 +215,6 @@ class WorkspaceControllerTest extends MockeryTestCase
         $form->shouldReceive('isValid')->once()->andReturn(true);
 
         $controller->createAction();
-
     }
 
     public function testDeleteAction()
@@ -328,7 +326,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $this->eventDispatcher
             ->shouldReceive('dispatch')
             ->with(
-                'open_tool_workspace_' . $toolName,
+                'open_tool_workspace_'.$toolName,
                 'DisplayTool',
                 array($workspace)
             )
@@ -482,17 +480,17 @@ class WorkspaceControllerTest extends MockeryTestCase
                     'name' => 'ROLE_A',
                     'translation_key' => 'key_A',
                     'id' => 1,
-                    'workspace' => 'ws_A'
-                )
+                    'workspace' => 'ws_A',
+                ),
             ),
             'code_B' => array(
                 'ROLE_B' => array(
                     'name' => 'ROLE_B',
                     'translation_key' => 'key_B',
                     'id' => 2,
-                    'workspace' => 'ws_B'
-                )
-            )
+                    'workspace' => 'ws_B',
+                ),
+            ),
         );
 
         $this->roleManager
@@ -535,7 +533,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $this->assertEquals(
             array(
                 'workspaceTagId' => 1,
-                'relations' => 'relations'
+                'relations' => 'relations',
             ),
             $this->getController()->workspaceListByTagPagerAction($tag, 1)
         );
@@ -570,7 +568,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $this->assertEquals(
             array(
                 'workspaceTagId' => 1,
-                'relations' => 'relations'
+                'relations' => 'relations',
             ),
             $this->getController()->workspaceListByTagRegistrationPagerAction($tag, 1)
         );
@@ -702,7 +700,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\CoreBundle\Controller\WorkspaceController' . $stringMocked,
+            'Claroline\CoreBundle\Controller\WorkspaceController'.$stringMocked,
             array(
                 $this->homeTabManager,
                 $this->workspaceManager,
@@ -719,7 +717,7 @@ class WorkspaceControllerTest extends MockeryTestCase
                 $this->tokenUpdater,
                 $this->widgetManager,
                 $this->request,
-                $this->templateDir
+                $this->templateDir,
             )
         );
     }

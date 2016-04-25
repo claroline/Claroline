@@ -4,7 +4,6 @@ namespace Icap\PortfolioBundle\Form\Type;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\FormType
@@ -18,7 +17,7 @@ class RenamePortfolioType extends PortfolioTitleType
             ->add('refreshUrl', 'checkbox',
                 array(
                     'required' => false,
-                    'mapped'   => false
+                    'mapped' => false,
                 )
             );
     }

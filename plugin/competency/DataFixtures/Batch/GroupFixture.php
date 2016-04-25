@@ -30,7 +30,7 @@ class GroupFixture extends DataFixture
 
     private function loadGroupData()
     {
-        return $this->loadCsvData(__DIR__ . '/../files/groups.csv', ',');
+        return $this->loadCsvData(__DIR__.'/../files/groups.csv', ',');
     }
 
     private function buildGroup($name)

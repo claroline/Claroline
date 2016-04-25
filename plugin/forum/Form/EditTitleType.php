@@ -31,7 +31,7 @@ class EditTitleType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'translation_domain' => 'forum'
+                'translation_domain' => 'forum',
             )
         );
     }

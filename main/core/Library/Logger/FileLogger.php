@@ -12,14 +12,13 @@
 namespace Claroline\CoreBundle\Library\Logger;
 
 use Monolog\Logger;
-use Psr\Log\LogLevel;
 use Monolog\Handler\StreamHandler;
 
 class FileLogger extends Logger
 {
     public static function get($logFile, $name = 'default.claroline.logger')
     {
-        $fileLogger = new FileLogger($name);
+        $fileLogger = new self($name);
         $fileLogger->pushHandler(new StreamHandler($logFile));
 
         return $fileLogger;

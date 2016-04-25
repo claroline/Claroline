@@ -15,24 +15,23 @@ class ContributionType extends AbstractType
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
-                $form = $event->getForm();               
+                $form = $event->getForm();
                 $data = $event->getData();
                 if ($data === null || $data->getSection() === null || $data->getSection()->isRoot() === false) {
                     $form->add('title', 'text', array(
-                            'theme_options' => array('label_width' => 'col-md-1', 'control_width' => 'col-md-11')
+                            'theme_options' => array('label_width' => 'col-md-1', 'control_width' => 'col-md-11'),
                         )
                     );
                 }
                 $form->add('text', 'tinymce', array(
                     'theme_options' => array('label_width' => 'col-md-1', 'control_width' => 'col-md-11'),
                     'attr' => array(
-                          'id' => 'icap_wiki_section_text'
-                        )
+                          'id' => 'icap_wiki_section_text',
+                        ),
                     )
                 );
             }
         );
-        
     }
 
     public function getName()
@@ -44,7 +43,7 @@ class ContributionType extends AbstractType
     {
         $resolver->setDefaults(array(
             'translation_domain' => 'icap_wiki',
-            'data_class' => 'Icap\WikiBundle\Entity\Contribution'
+            'data_class' => 'Icap\WikiBundle\Entity\Contribution',
         ));
     }
 }

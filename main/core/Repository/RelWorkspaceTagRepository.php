@@ -69,8 +69,7 @@ class RelWorkspaceTagRepository extends EntityRepository
         Workspace $workspace,
         WorkspaceTag $tag,
         User $user
-    )
-    {
+    ) {
         $dql = '
             SELECT rwt
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
@@ -208,7 +207,7 @@ class RelWorkspaceTagRepository extends EntityRepository
         foreach ($workspaces as $workspace) {
             $dql .= $index > 0 ? '    OR ' : '    ';
             $dql .= "w.id = {$workspace->getId()}{$eol}";
-            $index++;
+            ++$index;
         }
         $dql .= ')';
 

@@ -34,7 +34,7 @@ class ResourceIconsUpdater extends Updater
     private function updateIcons()
     {
         $this->log('Refreshing mime types icons...');
-        $coreIconWebDirRelativePath = "bundles/clarolinecore/images/resources/icons/";
+        $coreIconWebDirRelativePath = 'bundles/clarolinecore/images/resources/icons/';
 
         $resourceImages = $this->container->get('claroline.manager.icon_manager')->getDefaultIconMap();
         $this->om->startFlushSuite();
@@ -46,14 +46,14 @@ class ResourceIconsUpdater extends Updater
             //$rimg = count($results > 0) ? $results[0]: null;
 
             if ($rimg === null) {
-                $this->log('Adding mime type for ' . $mimeType . '.');
+                $this->log('Adding mime type for '.$mimeType.'.');
                 $rimg = new ResourceIcon();
                 $rimg->setMimeType($mimeType);
                 $rimg->setShortcut(false);
                 $this->container->get('claroline.manager.icon_manager')->createShortcutIcon($rimg);
-            } 
+            }
 
-            $rimg->setRelativeUrl($coreIconWebDirRelativePath . $resourceImage[0]);
+            $rimg->setRelativeUrl($coreIconWebDirRelativePath.$resourceImage[0]);
             $this->om->persist($rimg);
         }
 
@@ -62,7 +62,7 @@ class ResourceIconsUpdater extends Updater
         $this->om->startFlushSuite();
 
         foreach ($baseIcons as $icon) {
-            $this->log('Refreshing ' . $icon->getMimeType() . '...');
+            $this->log('Refreshing '.$icon->getMimeType().'...');
             $this->iconManager->refresh($icon);
         }
 

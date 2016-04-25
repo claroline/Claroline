@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,10 +8,8 @@
  * 
  * Date: 3/11/15
  */
-
 namespace Icap\WikiBundle\Manager;
 
-use Claroline\CoreBundle\Entity\SecurityToken;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -22,7 +20,8 @@ use Icap\WikiBundle\Entity\Contribution;
 /**
  * @DI\Service("icap.wiki.manager")
  */
-class WikiManager {
+class WikiManager
+{
     /**
      * @var \Claroline\CoreBundle\Persistence\ObjectManager
      */
@@ -99,7 +98,7 @@ class WikiManager {
 
     /**
      * Imports wiki object from array
-     * (see WikiImporter for structure and description)
+     * (see WikiImporter for structure and description).
      *
      * @param array $data
      * @param $rootPath
@@ -154,7 +153,7 @@ class WikiManager {
                     }
                     $entityContribution->setContributor($contributor);
                     $text = file_get_contents(
-                        $rootPath . DIRECTORY_SEPARATOR . $contributionData['path']
+                        $rootPath.DIRECTORY_SEPARATOR.$contributionData['path']
                     );
                     $entityContribution->setText($text);
                     if ($contributionData['is_active']) {
@@ -176,11 +175,12 @@ class WikiManager {
 
     /**
      * Exports a Wiki resource
-     * according to the description found in WikiImporter
+     * according to the description found in WikiImporter.
      *
      * @param Workspace $workspace
-     * @param array $files
-     * @param Wiki $object
+     * @param array     $files
+     * @param Wiki      $object
+     *
      * @return array
      */
     public function exportWiki(Workspace $workspace, array &$files, Wiki $object)
@@ -198,43 +198,43 @@ class WikiManager {
             $contributionsArray = array();
             array_unshift($contributions, $activeContribution);
             foreach ($contributions as $contribution) {
-                $uid = uniqid() . '.txt';
-                $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
+                $uid = uniqid().'.txt';
+                $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$uid;
                 file_put_contents($tmpPath, $contribution->getText());
                 $files[$uid] = $tmpPath;
 
                 $contributionArray = array(
-                    'is_active'     => $contribution->getId()==$activeContribution->getId(),
-                    'title'         => $contribution->getTitle(),
-                    'contributor'   => $contribution->getContributor()->getUsername(),
+                    'is_active' => $contribution->getId() == $activeContribution->getId(),
+                    'title' => $contribution->getTitle(),
+                    'contributor' => $contribution->getContributor()->getUsername(),
                     'creation_date' => $contribution->getCreationDate(),
-                    'path'          => $uid
+                    'path' => $uid,
                 );
 
                 $contributionsArray[] = array('contribution' => $contributionArray);
             }
             $sectionArray = array(
-                'id'                => $section->getId(),
-                'parent_id'         => ($section->getParent() !== null)?$section->getParent()->getId():null,
-                'is_root'           => $section->isRoot(),
-                'visible'           => $section->getVisible(),
-                'creation_date'     => $section->getCreationDate(),
-                'author'            => $section->getAuthor()->getUsername(),
-                'deleted'           => $section->getDeleted(),
-                'deletion_date'     => $section->getDeletionDate(),
-                'contributions'     => $contributionsArray
+                'id' => $section->getId(),
+                'parent_id' => ($section->getParent() !== null) ? $section->getParent()->getId() : null,
+                'is_root' => $section->isRoot(),
+                'visible' => $section->getVisible(),
+                'creation_date' => $section->getCreationDate(),
+                'author' => $section->getAuthor()->getUsername(),
+                'deleted' => $section->getDeleted(),
+                'deletion_date' => $section->getDeletionDate(),
+                'contributions' => $contributionsArray,
             );
 
             $sectionsArray[] = $sectionArray;
         }
 
         $data = array(
-            'options'   => array(
-                'mode'  => $object->getMode()
+            'options' => array(
+                'mode' => $object->getMode(),
             ),
-            'sections'  => $sectionsArray
+            'sections' => $sectionsArray,
         );
 
         return $data;
     }
-} 
+}

@@ -56,10 +56,10 @@ class WidgetManager
     /**
      * Creates a widget instance.
      *
-     * @param \Claroline\CoreBundle\Entity\Widget\Widget               $widget
-     * @param boolean                                                  $isAdmin
-     * @param boolean                                                  $isDesktop
-     * @param \Claroline\CoreBundle\Entity\User                        $user
+     * @param \Claroline\CoreBundle\Entity\Widget\Widget       $widget
+     * @param bool                                             $isAdmin
+     * @param bool                                             $isDesktop
+     * @param \Claroline\CoreBundle\Entity\User                $user
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $ws
      *
      * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance
@@ -72,8 +72,7 @@ class WidgetManager
         $isDesktop,
         User $user = null,
         Workspace $ws = null
-    )
-    {
+    ) {
         if (!$widget->isDisplayableInDesktop()) {
             if ($isDesktop || $user) {
                 throw new \Exception("This widget doesn't support the desktop");
@@ -186,7 +185,7 @@ class WidgetManager
             return $this->widgetInstanceRepo->findBy(
                 array(
                     'isAdmin' => true,
-                    'isDesktop' => true
+                    'isDesktop' => true,
                 )
             );
         }
@@ -208,7 +207,7 @@ class WidgetManager
             return $this->widgetInstanceRepo->findBy(
                 array(
                     'isAdmin' => true,
-                    'isDesktop' => false
+                    'isDesktop' => false,
                 )
             );
         }
@@ -228,14 +227,13 @@ class WidgetManager
     public function getDesktopWidgetInstance(
         User $user,
         array $excludedWidgetInstances
-    )
-    {
+    ) {
         if (count($excludedWidgetInstances) === 0) {
             return $this->widgetInstanceRepo->findBy(
                 array(
                     'user' => $user,
                     'isAdmin' => false,
-                    'isDesktop' => true
+                    'isDesktop' => true,
                 )
             );
         }
@@ -248,21 +246,20 @@ class WidgetManager
      * @todo define what I do
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param array                                                    $excludedWidgetInstances
+     * @param array                                            $excludedWidgetInstances
      *
      * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
      */
     public function getWorkspaceWidgetInstance(
         Workspace $workspace,
         array $excludedWidgetInstances
-    )
-    {
+    ) {
         if (count($excludedWidgetInstances) === 0) {
             return $this->widgetInstanceRepo->findBy(
                 array(
                     'workspace' => $workspace,
                     'isAdmin' => false,
-                    'isDesktop' => false
+                    'isDesktop' => false,
                 )
             );
         }
@@ -306,7 +303,6 @@ class WidgetManager
             $id = $widgetInstance->getId();
 
             if (isset($userTab[$id])) {
-
                 if (isset($mappedWHTCs[$id]) && isset($adminTab[$id])) {
                     $changed = false;
 
@@ -358,8 +354,7 @@ class WidgetManager
     public function generateWidgetDisplayConfigsForWorkspace(
         Workspace $workspace,
         array $widgetHTCs
-    )
-    {
+    ) {
         $results = array();
         $widgetInstances = array();
         $workspaceTab = array();
@@ -454,9 +449,7 @@ class WidgetManager
         WidgetInstance $widgetInstance = null,
         WidgetHomeTabConfig $widgetHomeTabConfig = null,
         WidgetDisplayConfig $widgetDisplayConfig = null
-    )
-    {
-
+    ) {
         if (!is_null($widgetInstance)) {
             $this->om->persist($widgetInstance);
         }
@@ -479,8 +472,7 @@ class WidgetManager
         User $user,
         array $widgetInstances,
         $executeQuery = true
-    )
-    {
+    ) {
         return count($widgetInstances) > 0 ?
             $this->widgetDisplayConfigRepo->findWidgetDisplayConfigsByUserAndWidgets(
                 $user,
@@ -493,8 +485,7 @@ class WidgetManager
     public function getAdminWidgetDisplayConfigsByWidgets(
         array $widgetInstances,
         $executeQuery = true
-    )
-    {
+    ) {
         return count($widgetInstances) > 0 ?
             $this->widgetDisplayConfigRepo->findAdminWidgetDisplayConfigsByWidgets(
                 $widgetInstances,
@@ -507,8 +498,7 @@ class WidgetManager
         Workspace $workspace,
         array $widgetInstances,
         $executeQuery = true
-    )
-    {
+    ) {
         return count($widgetInstances) > 0 ?
             $this->widgetDisplayConfigRepo->findWidgetDisplayConfigsByWorkspaceAndWidgets(
                 $workspace,
@@ -521,8 +511,7 @@ class WidgetManager
     public function getWidgetDisplayConfigsByWidgetsForAdmin(
         array $widgetInstances,
         $executeQuery = true
-    )
-    {
+    ) {
         return count($widgetInstances) > 0 ?
             $this->widgetDisplayConfigRepo->findWidgetDisplayConfigsByWidgetsForAdmin(
                 $widgetInstances,
@@ -535,8 +524,7 @@ class WidgetManager
         Workspace $workspace,
         array $widgetHomeTabConfigs,
         $executeQuery = true
-    )
-    {
+    ) {
         return count($widgetHomeTabConfigs) > 0 ?
             $this->widgetDisplayConfigRepo->findWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
                 $workspace,

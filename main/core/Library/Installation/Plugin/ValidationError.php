@@ -22,8 +22,8 @@ class ValidationError
     /**
      * Constructor.
      *
-     * @param string  $errorMsg
-     * @param integer $errorCode
+     * @param string $errorMsg
+     * @param int    $errorCode
      */
     public function __construct($message, $code = null)
     {
@@ -44,7 +44,7 @@ class ValidationError
     /**
      * Returns the error code.
      *
-     * @return integer
+     * @return int
      */
     public function getCode()
     {

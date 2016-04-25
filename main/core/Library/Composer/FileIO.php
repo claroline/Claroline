@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Composer;
 
-use Composer\IO\BaseIO;
 use Composer\IO\ConsoleIO;
 use Symfony\Component\Console\Output\StreamOutput;
 
@@ -30,7 +29,7 @@ class FileIO extends ConsoleIO
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isInteractive()
     {
@@ -38,7 +37,7 @@ class FileIO extends ConsoleIO
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isVerbose()
     {
@@ -46,7 +45,7 @@ class FileIO extends ConsoleIO
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isVeryVerbose()
     {
@@ -54,7 +53,7 @@ class FileIO extends ConsoleIO
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isDebug()
     {
@@ -62,7 +61,7 @@ class FileIO extends ConsoleIO
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isDecorated()
     {
@@ -70,16 +69,16 @@ class FileIO extends ConsoleIO
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function write($messages, $newline = true)
     {
         $this->output->write($messages, $newline);
-        $this->lastMessage = join($newline ? "\n" : '', (array) $messages);
+        $this->lastMessage = implode($newline ? "\n" : '', (array) $messages);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function ask($question, $default = null)
     {
@@ -87,7 +86,7 @@ class FileIO extends ConsoleIO
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function askConfirmation($question, $default = true)
     {
@@ -95,7 +94,7 @@ class FileIO extends ConsoleIO
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function askAndValidate($question, $validator, $attempts = false, $default = null)
     {
@@ -103,7 +102,7 @@ class FileIO extends ConsoleIO
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function askAndHideAnswer($question)
     {

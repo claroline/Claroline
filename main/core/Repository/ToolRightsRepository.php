@@ -19,8 +19,7 @@ class ToolRightsRepository extends EntityRepository
     public function findRightsByOrderedTool(
         OrderedTool $orderedTool,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT tr
             FROM Claroline\CoreBundle\Entity\Tool\ToolRights tr
@@ -36,8 +35,7 @@ class ToolRightsRepository extends EntityRepository
         Role $role,
         OrderedTool $orderedTool,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT tr
             FROM Claroline\CoreBundle\Entity\Tool\ToolRights tr
@@ -54,10 +52,8 @@ class ToolRightsRepository extends EntityRepository
     public function findRightsForOrderedTools(
         array $orderedTools,
         $executeQuery = true
-    )
-    {
+    ) {
         if (count($orderedTools) === 0) {
-
             return array();
         } else {
             $dql = '

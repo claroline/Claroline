@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -15,8 +15,7 @@ use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class NotificationUserParametersListener
- * @package Claroline\CoreBundle\Listener\Notification
+ * Class NotificationUserParametersListener.
  *
  * @DI\Service()
  */
@@ -31,12 +30,12 @@ class NotificationUserParametersListener
     {
         $event->addTypes(
             array(
-                "resource-create",
-                "role-change_right",
-                "role-subscribe",
-                "badge-award",
-                "resource-text"
+                'resource-create',
+                'role-change_right',
+                'role-subscribe',
+                'badge-award',
+                'resource-text',
             )
         );
     }
-} 
+}

@@ -15,10 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Manager\Organization\LocationManager;
-use Claroline\CoreBundle\Entity\Organization\Location;
-use Claroline\CoreBundle\Form\LocationType;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -33,8 +29,8 @@ class OrganizationController extends Controller
      *     name="claro_organization_index"
      * )
      */
-	public function indexAction()
-	{
-		return array();
-	}
+    public function indexAction()
+    {
+        return array();
+    }
 }

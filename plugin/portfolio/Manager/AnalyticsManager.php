@@ -5,13 +5,9 @@ namespace Icap\PortfolioBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
-use Icap\PortfolioBundle\Entity\PortfolioComment;
-use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 use Icap\PortfolioBundle\Event\Log\PortfolioViewEvent;
-use Icap\PortfolioBundle\Factory\CommentFactory;
 use Icap\PortfolioBundle\Form\Type\AnalyticsViewsType;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Translation\TranslatorInterface;
 

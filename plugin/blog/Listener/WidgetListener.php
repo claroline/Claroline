@@ -16,7 +16,6 @@ use Icap\BlogBundle\Manager\WidgetManager;
 use Icap\BlogBundle\Repository\PostRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -74,7 +73,7 @@ class WidgetListener
         $this->widgetTagListBlogType = $widgetTagListBlogType;
     }
 
-     /**
+    /**
      * @DI\Observe("widget_blog_list")
      */
     public function onWidgetListDisplay(DisplayWidgetEvent $event)
@@ -85,8 +84,8 @@ class WidgetListener
         $content = $this->templatingEngine->render(
             'IcapBlogBundle:widget:list.html.twig',
             array(
-                'blogs' => $blogs, 
-                'diplayStyle' => $widgetOptions->getDisplayStyle()
+                'blogs' => $blogs,
+                'diplayStyle' => $widgetOptions->getDisplayStyle(),
             )
         );
 
@@ -95,7 +94,7 @@ class WidgetListener
         $event->stopPropagation();
     }
 
-     /**
+    /**
      * @DI\Observe("widget_blog_list_configuration")
      */
     public function onWidgetListConfigure(ConfigureWidgetEvent $event)
@@ -109,15 +108,15 @@ class WidgetListener
         $content = $this->templatingEngine->render(
             'IcapBlogBundle:widget:listConfigure.html.twig',
             array(
-                'form'           => $form->createView(),
-                'widgetInstance' => $event->getInstance()
+                'form' => $form->createView(),
+                'widgetInstance' => $event->getInstance(),
             )
         );
 
         $event->setContent($content);
     }
 
-     /**
+    /**
      * @DI\Observe("widget_blog")
      */
     public function onWidgetBlogDisplay(DisplayWidgetEvent $event)
@@ -140,8 +139,8 @@ class WidgetListener
         $content = $this->templatingEngine->render(
             'IcapBlogBundle:widget:blog.html.twig',
             [
-                'blog'  => $blog,
-                'posts' => $posts
+                'blog' => $blog,
+                'posts' => $posts,
             ]
         );
 
@@ -149,7 +148,7 @@ class WidgetListener
         $event->stopPropagation();
     }
 
-     /**
+    /**
      * @DI\Observe("widget_blog_configuration")
      */
     public function onWidgetBlogConfigure(ConfigureWidgetEvent $event)
@@ -162,15 +161,15 @@ class WidgetListener
         $content = $this->templatingEngine->render(
             'IcapBlogBundle:widget:blogConfigure.html.twig',
             array(
-                'form'           => $form->createView(),
-                'widgetInstance' => $event->getInstance()
+                'form' => $form->createView(),
+                'widgetInstance' => $event->getInstance(),
             )
         );
 
         $event->setContent($content);
     }
 
-     /**
+    /**
      * @DI\Observe("widget_tag_list")
      */
     public function onWidgetTagListDisplay(DisplayWidgetEvent $event)
@@ -193,7 +192,7 @@ class WidgetListener
             [
                 'blog' => $blog,
                 '_resource' => $blog,
-                'blogOptions' => $blogOptions
+                'blogOptions' => $blogOptions,
             ]
         );
 
@@ -201,7 +200,7 @@ class WidgetListener
         $event->stopPropagation();
     }
 
-     /**
+    /**
      * @DI\Observe("widget_tag_list_configuration")
      */
     public function onWidgetTagListConfiguration(ConfigureWidgetEvent $event)
@@ -219,8 +218,8 @@ class WidgetListener
         $content = $this->templatingEngine->render(
             'IcapBlogBundle:widget:tagListBlogConfigure.html.twig',
             array(
-                'form'           => $form->createView(),
-                'widgetInstance' => $event->getInstance()
+                'form' => $form->createView(),
+                'widgetInstance' => $event->getInstance(),
             )
         );
 

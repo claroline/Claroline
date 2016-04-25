@@ -67,7 +67,7 @@ class Category
 
     public function __construct()
     {
-        $this->subjects = new ArrayCollection;
+        $this->subjects = new ArrayCollection();
     }
 
     public function getId()

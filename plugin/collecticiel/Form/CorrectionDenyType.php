@@ -12,9 +12,9 @@ class CorrectionDenyType extends AbstractType
     {
         $builder->add('correctionDeniedComment', 'tinymce', array(
             'label_attr' => array(
-                'style' => 'display: none;'
+                'style' => 'display: none;',
             ),
-            'required' => true
+            'required' => true,
         ));
     }
 
@@ -26,7 +26,7 @@ class CorrectionDenyType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'translation_domain' => 'innova_collecticiel'
+            'translation_domain' => 'innova_collecticiel',
         ));
     }
 }

@@ -12,39 +12,43 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
-
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Innova\PathBundle\Entity\Path\Path;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Path Manager
- * Manages life cycle of paths
+ * Manages life cycle of paths.
+ *
  * @author Innovalangues <contact@innovalangues.net>
  */
 class PathManager
 {
     /**
-     * Current entity manage for data persist
-     * @var \Doctrine\Common\Persistence\ObjectManager $om
+     * Current entity manage for data persist.
+     *
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
     protected $om;
 
     /**
-     * claro resource manager
+     * claro resource manager.
+     *
      * @var \Claroline\CoreBundle\Manager\ResourceManager
      */
     protected $resourceManager;
 
     /**
-     * Security Authorization
-     * @var \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $securityAuth
+     * Security Authorization.
+     *
+     * @var \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
      */
     protected $securityAuth;
 
     /**
-     * Security Token
-     * @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $securityToken
+     * Security Token.
+     *
+     * @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
      */
     protected $securityToken;
 
@@ -54,7 +58,8 @@ class PathManager
     protected $stepManager;
 
     /**
-     * Class constructor - Inject required services
+     * Class constructor - Inject required services.
+     *
      * @param \Doctrine\Common\Persistence\ObjectManager                                          $objectManager
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface        $securityAuth
      * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $securityToken
@@ -70,19 +75,21 @@ class PathManager
         Utilities                     $utils,
         StepManager                   $stepManager)
     {
-        $this->om              = $objectManager;
-        $this->securityAuth    = $securityAuth;
-        $this->securityToken   = $securityToken;
+        $this->om = $objectManager;
+        $this->securityAuth = $securityAuth;
+        $this->securityToken = $securityToken;
         $this->resourceManager = $resourceManager;
-        $this->utils           = $utils;
-        $this->stepManager     = $stepManager;
+        $this->utils = $utils;
+        $this->stepManager = $stepManager;
     }
 
     /**
-     * Check if a user has sufficient rights to execute action on Path
-     * @param  string                                           $action
-     * @param  \Innova\PathBundle\Entity\Path\Path              $path
-     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * Check if a user has sufficient rights to execute action on Path.
+     *
+     * @param string                                           $action
+     * @param \Innova\PathBundle\Entity\Path\Path              $path
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     *
      * @throws \Symfony\Component\Finder\Exception\AccessDeniedException
      */
     public function checkAccess($action, Path $path, Workspace $workspace = null)
@@ -93,11 +100,13 @@ class PathManager
     }
 
     /**
-     * Return if a user has sufficient rights to execute action on Path
-     * @param  string                                           $actionName
-     * @param  \Innova\PathBundle\Entity\Path\Path              $path
-     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @return boolean
+     * Return if a user has sufficient rights to execute action on Path.
+     *
+     * @param string                                           $actionName
+     * @param \Innova\PathBundle\Entity\Path\Path              $path
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     *
+     * @return bool
      */
     public function isAllow($actionName, Path $path, Workspace $workspace = null)
     {
@@ -108,14 +117,16 @@ class PathManager
             return $this->securityAuth->isGranted($managerRole->getName());
         }
 
-        $collection = new ResourceCollection(array ($path->getResourceNode()));
+        $collection = new ResourceCollection(array($path->getResourceNode()));
 
         return $this->securityAuth->isGranted($actionName, $collection);
     }
 
     /**
-     * Get widget configuration
+     * Get widget configuration.
+     *
      * @param WidgetInstance $config
+     *
      * @return PathWidgetConfig
      */
     public function getWidgetConfig(WidgetInstance $config = null)
@@ -125,14 +136,16 @@ class PathManager
     }
 
     /**
-     * Get the list of Paths for Widgets
+     * Get the list of Paths for Widgets.
+     *
      * @param PathWidgetConfig $config
-     * @param Workspace $workspace
+     * @param Workspace        $workspace
+     *
      * @return array
      */
     public function getWidgetPaths(PathWidgetConfig $config = null, Workspace $workspace = null)
     {
-        $roots = array ();
+        $roots = array();
         if (!empty($workspace)) {
             $root = $this->resourceManager->getWorkspaceRoot($workspace);
             $roots[] = $root->getPath();
@@ -144,11 +157,11 @@ class PathManager
         $entities = $this->om->getRepository('InnovaPathBundle:Path\Path')->findWidgetPaths($userRoles, $roots, $config);
 
         // Check edit and delete access for paths
-        $paths = array ();
+        $paths = array();
         foreach ($entities as $entity) {
-            $paths[] = array (
-                'entity'    => $entity,
-                'canEdit'   => $this->isAllow('EDIT', $entity),
+            $paths[] = array(
+                'entity' => $entity,
+                'canEdit' => $this->isAllow('EDIT', $entity),
             );
         }
 
@@ -156,9 +169,11 @@ class PathManager
     }
 
     /**
-     * Get progression of a User into a Path
+     * Get progression of a User into a Path.
+     *
      * @param \Innova\PathBundle\Entity\Path\Path $path
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User   $user
+     *
      * @return array
      */
     public function getUserProgression(Path $path, User $user = null)
@@ -168,7 +183,7 @@ class PathManager
             $user = $this->securityToken->getToken()->getUser();
         }
 
-        $results = array ();
+        $results = array();
         if ($user instanceof UserInterface) {
             // We have a logged User => get its progression
             $results = $this->om->getRepository('InnovaPathBundle:UserProgression')->findByPathAndUser($path, $user);
@@ -178,9 +193,11 @@ class PathManager
     }
 
     /**
-     * Create a new path
-     * @param  \Innova\PathBundle\Entity\Path\Path $path
-     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * Create a new path.
+     *
+     * @param \Innova\PathBundle\Entity\Path\Path              $path
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     *
      * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function create(Path $path, Workspace $workspace)
@@ -197,7 +214,7 @@ class PathManager
         $this->om->flush();
 
         // Create a new resource node
-        $parent =       $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
+        $parent = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
         $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('innova_path');
         $path = $this->resourceManager->create($path, $resourceType, $this->securityToken->getToken()->getUser(), $workspace, $parent, null);
 
@@ -205,8 +222,10 @@ class PathManager
     }
 
     /**
-     * Edit existing path
-     * @param  \Innova\PathBundle\Entity\Path\Path $path
+     * Edit existing path.
+     *
+     * @param \Innova\PathBundle\Entity\Path\Path $path
+     *
      * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function edit(Path $path)
@@ -237,9 +256,12 @@ class PathManager
     }
 
     /**
-     * Delete path
-     * @param  \Innova\PathBundle\Entity\Path\Path $path
-     * @return boolean
+     * Delete path.
+     *
+     * @param \Innova\PathBundle\Entity\Path\Path $path
+     *
+     * @return bool
+     *
      * @throws \Exception
      */
     public function delete(Path $path)
@@ -253,19 +275,19 @@ class PathManager
 
     public function export(Workspace $workspace, array &$files, Path $path)
     {
-        $data = array ();
+        $data = array();
 
         // Get path data
-        $pathData = array ();
-        $pathData['description']      = $path->getDescription();
-        $pathData['breadcrumbs']      = $path->hasBreadcrumbs();
-        $pathData['modified']         = $path->isModified();
-        $pathData['published']        = $path->isPublished();
+        $pathData = array();
+        $pathData['description'] = $path->getDescription();
+        $pathData['breadcrumbs'] = $path->hasBreadcrumbs();
+        $pathData['modified'] = $path->isModified();
+        $pathData['published'] = $path->isPublished();
         $pathData['summaryDisplayed'] = $path->isSummaryDisplayed();
 
         // Get path structure into a file (to replace resources ID with placeholders)
-        $uid = uniqid() . '.txt';
-        $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
+        $uid = uniqid().'.txt';
+        $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$uid;
         $structure = $path->getStructure();
         file_put_contents($tmpPath, $structure);
         $files[$uid] = $tmpPath;
@@ -275,9 +297,9 @@ class PathManager
         $data['path'] = $pathData;
 
         // Process Steps
-        $data['steps'] = array ();
+        $data['steps'] = array();
         if ($path->isPublished()) {
-            $stepsData = array ();
+            $stepsData = array();
             foreach ($path->getSteps() as $step) {
                 $stepsData[] = $this->stepManager->export($step);
             }
@@ -289,13 +311,15 @@ class PathManager
     }
 
     /**
-     * Import a Path into the Platform
+     * Import a Path into the Platform.
+     *
      * @param string $structure
-     * @param array $data
-     * @param array $resourcesCreated
+     * @param array  $data
+     * @param array  $resourcesCreated
+     *
      * @return Path
      */
-    public function import($structure, array $data, array $resourcesCreated = array ())
+    public function import($structure, array $data, array $resourcesCreated = array())
     {
         // Create a new Path object which will be populated with exported data
         $path = new Path();
@@ -311,7 +335,7 @@ class PathManager
         // Create steps
         $stepData = $data['data']['steps'];
         if (!empty($stepData)) {
-            $createdSteps = array ();
+            $createdSteps = array();
             foreach ($stepData as $step) {
                 $createdSteps = $this->stepManager->import($path, $step, $resourcesCreated, $createdSteps);
             }

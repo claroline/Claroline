@@ -42,7 +42,7 @@ class WorkspaceTagRepositoryTest extends RepositoryTestCase
         self::createWorkspaceTag('user_tag_4', self::get('user'));
         self::createWorkspaceTag('admin_tag', self::get('admin'));
 
-        /**
+        /*
          *  Associates workspaces and tags :
          *   ___________________________________________________
          *  | Workspaces |                 Tags                 |
@@ -68,7 +68,7 @@ class WorkspaceTagRepositoryTest extends RepositoryTestCase
         self::createWorkspaceTagRelation(self::get('tag_5'), self::get('wsd'));
         self::createWorkspaceTagRelation(self::get('admin_tag'), self::get('wsd'));
 
-        /**
+        /*
          *  Creates admin tag hierarchy
          *   ________________________
          *  | parent | child | level |
@@ -103,7 +103,7 @@ class WorkspaceTagRepositoryTest extends RepositoryTestCase
         self::createWorkspaceTagHierarchy(self::get('tag_4'), self::get('tag_3'), 2);
         self::createWorkspaceTagHierarchy(self::get('tag_5'), self::get('tag_5'), 0);
 
-        /**
+        /*
          *  Creates tag hierarchy for user 'user'
          *   _________________________________
          *  |   parent   |   child    | level |
@@ -136,7 +136,7 @@ class WorkspaceTagRepositoryTest extends RepositoryTestCase
         self::createWorkspaceTagHierarchy(self::get('user_tag_4'), self::get('user_tag_2'), 1, self::get('user'));
         self::createWorkspaceTagHierarchy(self::get('user_tag_4'), self::get('user_tag_3'), 2, self::get('user'));
 
-        /**
+        /*
          *  Creates tag hierarchy for user 'admin'
          *   _______________________________
          *  |  parent   |   child   | level |
@@ -280,7 +280,7 @@ class WorkspaceTagRepositoryTest extends RepositoryTestCase
         $tags = self::$repo->findWorkspaceTagFromIds(
             array(
                 self::get('user_tag_1')->getId(),
-                self::get('user_tag_2')->getId()
+                self::get('user_tag_2')->getId(),
             )
         );
         $this->assertEquals(2, count($tags));

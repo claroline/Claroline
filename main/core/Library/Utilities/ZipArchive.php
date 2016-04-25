@@ -21,7 +21,7 @@ class ZipArchive extends \ZipArchive
         $fs = new FileSystem();
         $ds = DIRECTORY_SEPARATOR;
 
-        for ($i = 0; $i < $this->numFiles; $i++) {
+        for ($i = 0; $i < $this->numFiles; ++$i) {
             $oldName = parent::getNameIndex($i);
             $newName = mb_convert_encoding(
                 $this->getNameIndex($i),
@@ -31,7 +31,7 @@ class ZipArchive extends \ZipArchive
 
             //we cheat a little because we can't tell wich name the extracted part should have
             //so we put it a directory wich share it's name
-            $tmpDir = $extractPath . $ds . '__claro_zip_hack_' . $oldName;
+            $tmpDir = $extractPath.$ds.'__claro_zip_hack_'.$oldName;
             parent::extractTo($tmpDir, parent::getNameIndex($i));
             //now we move the content of the directory and we put the good name on it.
 
@@ -39,10 +39,10 @@ class ZipArchive extends \ZipArchive
                 new \RecursiveDirectoryIterator($tmpDir,
                     \RecursiveDirectoryIterator::SKIP_DOTS),
                 \RecursiveIteratorIterator::SELF_FIRST) as $item) {
-                    if ($item->isFile()) {
-                        $fs->mkdir(dirname($extractPath . $ds . $oldName));
-                        $fs->rename($item->getPathname(), $extractPath . $ds . $oldName);
-                    }
+                if ($item->isFile()) {
+                    $fs->mkdir(dirname($extractPath.$ds.$oldName));
+                    $fs->rename($item->getPathname(), $extractPath.$ds.$oldName);
+                }
             }
         }
 
