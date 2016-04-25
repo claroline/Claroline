@@ -236,7 +236,9 @@ class Persister
              $step->setOrder($i);
              $step->setExercise($exercise);
              $this->om->persist($step);
-             $stepQuestion = new StepQuestion($step, $questions[$i]);
+             $stepQuestion = new StepQuestion();
+             $stepQuestion->setStep($step);
+             $stepQuestion->setQuestion($questions[$i]);
              $stepQuestion->setOrdre(0);
              $this->om->persist($stepQuestion);
 
