@@ -24,7 +24,7 @@ ChoiceQuestionCtrl.$inject = AbstractQuestionCtrl.$inject;
 
 /**
  * Stores Choices to be able to toggle there state
- * @type {Object}
+ * @type {Array}
  */
 ChoiceQuestionCtrl.prototype.choices = [];
 
@@ -59,12 +59,13 @@ ChoiceQuestionCtrl.prototype.toggleChoice = function toggleChoice(choice) {
 
 /**
  * Check if choice is valid or not
- * @TODO expected answers not checked by user should not be shown as bad result except after the last step try
- * @param {Object} choice
+ *    0 = nothing (unexpected answer not checked by user)
+ *    1 = valid   (expected answer checked by user)
+ *    2 = false   (unexpected answer checked by user OR valid answer not checked by user)
+ * @param   {Object} choice
  * @returns {Number}
- *  0 = nothing, (unexpected answer not checked by user)
- *  1 = valid, (expected answer checked by user)
- *  2 = false (unexpected answer checked by user OR valid answer not checked by user)
+ *
+ * @todo expected answers not checked by user should not be shown as bad result except after the last step try
  */
 ChoiceQuestionCtrl.prototype.isChoiceValid = function isChoiceValid(choice) {
     var isValid = 0;
@@ -75,7 +76,7 @@ ChoiceQuestionCtrl.prototype.isChoiceValid = function isChoiceValid(choice) {
             // The choice has been selected by User => check if it's a right response or not
             var choiceSolution = this.getChoiceSolution(choice);
 
-            if (choiceSolution.rightResponse) {
+            if (choiceSolution.score > 0) {
                 // The current choice is part of the right response => User choice is Valid
                 isValid = 1;
             } else {
@@ -90,6 +91,7 @@ ChoiceQuestionCtrl.prototype.isChoiceValid = function isChoiceValid(choice) {
 
 /**
  * For unique choice
+ * @returns {Boolean}
  */
 ChoiceQuestionCtrl.prototype.isUniqueChoiceValid = function isUniqueChoiceValid() {
     var valid = false;
@@ -108,7 +110,8 @@ ChoiceQuestionCtrl.prototype.isUniqueChoiceValid = function isUniqueChoiceValid(
 
 /**
  * Check if a choice has been selected by User
- * @param choice
+ * @param   {Object} choice
+ * @returns {Boolean}
  */
 ChoiceQuestionCtrl.prototype.isChoiceSelected = function isChoiceSelected(choice) {
     return this.questionPaper.answer && -1 !== this.questionPaper.answer.indexOf(choice.id);
@@ -116,7 +119,8 @@ ChoiceQuestionCtrl.prototype.isChoiceSelected = function isChoiceSelected(choice
 
 /**
  * Get the solution for a choice
- * @param {Object} choice
+ * @param   {Object} choice
+ * @returns {Object}
  */
 ChoiceQuestionCtrl.prototype.getChoiceSolution = function getChoiceSolution(choice) {
     var solution = null;
@@ -137,7 +141,7 @@ ChoiceQuestionCtrl.prototype.getChoiceSolution = function getChoiceSolution(choi
 /**
  * Get the Feedback of a Choice
  * @param   {Object} choice
- * @returns {string}
+ * @returns {String}
  */
 ChoiceQuestionCtrl.prototype.getChoiceFeedback = function getChoiceFeedback(choice) {
     if (this.isChoiceSelected(choice)) {

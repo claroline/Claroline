@@ -172,10 +172,7 @@ class QcmHandler implements QuestionHandlerInterface
         }, $choices);
         $interaction = $repo->findOneByQuestion($question);
         $scoreTotal = $this->container->get('ujm.exo.qcm_service')->maxScore($interaction);
-//        $scoreTotal = 0;
-//        foreach ($choices as $choice) {
-//            $scoreTotal = $scoreTotal + $choice->getWeight();
-//        }
+
         $exportData->scoreTotal = $scoreTotal;
 
         if ($withSolution) {
@@ -183,7 +180,6 @@ class QcmHandler implements QuestionHandlerInterface
                 $solutionData = new \stdClass();
                 $solutionData->id = (string) $choice->getId();
                 $solutionData->score = $choice->getWeight();
-                $solutionData->rightResponse = $choice->getRightResponse();
 
                 if ($choice->getFeedback()) {
                     $solutionData->feedback = $choice->getFeedback();
@@ -206,7 +202,6 @@ class QcmHandler implements QuestionHandlerInterface
             $solutionData = new \stdClass();
             $solutionData->id = (string) $choice->getId();
             $solutionData->score = $choice->getWeight();
-            $solutionData->rightResponse = $choice->getRightResponse();
 
             if ($choice->getFeedback()) {
                 $solutionData->feedback = $choice->getFeedback();
