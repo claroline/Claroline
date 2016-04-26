@@ -96,7 +96,7 @@
       '@IcapPortfolioBundle/Resources/views/less/comments.less'
       '@IcapPortfolioBundle/Resources/views/less/statistics.less'
       '@IcapPortfolioBundle/Resources/views/less/daterangepicker.less'
-      '@FrontEndBundle/Resources/public/toastr/toastr.less'
+      'packages/toastr/toastr.less'
       '@ClarolineCoreBundle/Resources/public/css/common/jqplot/jquery.jqplot.css'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
@@ -119,42 +119,43 @@
         })();
     </script>
 
-    <script type="text/javascript" src='{{ asset('bundles/frontend/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('packages/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('packages/jqPlot/src/jquery.jqplot.js') }}'></script>
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_portfolio' }) }}"></script>
 
     {% javascripts debug=false filter='jsmin' output='js/portfolio/index/vendor.js'
         '@StfalconTinymceBundle/Resources/public/vendor/tinymce/tinymce.jquery.min.js'
         '@StfalconTinymceBundle/Resources/public/vendor/tinymce/jquery.tinymce.min.js'
         '@ClarolineCoreBundle/Resources/public/js/tinymce/tinymce.js'
-        '@FrontEndBundle/Resources/public/angular/angular.min.js'
-        '@FrontEndBundle/Resources/public/angular-resource/angular-resource.min.js'
-        '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
-        '@FrontEndBundle/Resources/public/angular-animate/angular-animate.min.js'
+        'packages/angular/angular.min.js'
+        'packages/angular-resource/angular-resource.min.js'
+        'packages/angular-sanitize/angular-sanitize.min.js'
+        'packages/angular-animate/angular-animate.min.js'
         '@InnovaAngularUIResourcePickerBundle/Resources/public/js/angular-resource-picker-directive.js'
         '@InnovaAngularUITinyMCEBundle/Resources/public/js/angular-tinymce-directive.js'
-        '@FrontEndBundle/Resources/public/moment/min/moment.min.js'
-        '@FrontEndBundle/Resources/public/angular-datetime/dist/datetime.js'
-        '@FrontEndBundle/Resources/public/angular-daterangepicker/js/angular-daterangepicker.min.js'
-        '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.min.js'
-        '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.tpl.min.js'
-        '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap.min.js'
-        '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap-tpls.min.js'
-        '@FrontEndBundle/Resources/public/bootstrap-datepicker/dist/js/bootstrap-datepicker.js'
-        '@FrontEndBundle/Resources/public/toastr/toastr.js'
+        'packages/moment/min/moment.min.js'
+        'packages/angular-datetime/dist/datetime.js'
+        'packages/angular-daterangepicker/js/angular-daterangepicker.min.js'
+        'packages/angular-strap/dist/angular-strap.min.js'
+        'packages/angular-strap/dist/angular-strap.tpl.min.js'
+        'packages/angular-bootstrap/ui-bootstrap.min.js'
+        'packages/angular-bootstrap/ui-bootstrap-tpls.min.js'
+        'packages/bootstrap-datepicker/dist/js/bootstrap-datepicker.js'
+        'packages/toastr/toastr.js'
         '@IcapBadgeBundle/Resources/public/js/badge_picker.js'
-        '@FrontEndBundle/Resources/public/jqPlot/src/plugins/jqplot.cursor.js'
-        '@FrontEndBundle/Resources/public/jqPlot/src/plugins/jqplot.highlighter.js'
-        '@FrontEndBundle/Resources/public/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
-        '@FrontEndBundle/Resources/public/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
-        '@FrontEndBundle/Resources/public/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
-        '@FrontEndBundle/Resources/public/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
+        'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
+        'packages/jqPlot/src/plugins/jqplot.cursor.js'
+        'packages/jqPlot/src/plugins/jqplot.highlighter.js'
+        'packages/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
+        'packages/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
+        'packages/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
+        'packages/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% javascripts debug=false filter='jsmin' output='js/portfolio/index/script.js'
         '@IcapPortfolioBundle/Resources/public/js/index.js'
-        '@FrontEndBundle/Resources/public/angular-toArrayFilter/toArrayFilter.js'
+        'packages/angular-toArrayFilter/toArrayFilter.js'
         '@IcapPortfolioBundle/Resources/public/js/utils/Array.js'
         '@IcapPortfolioBundle/Resources/public/js/comments/commentsApp.js'
         '@IcapPortfolioBundle/Resources/public/js/comments/controllers/portfoliosController.js'

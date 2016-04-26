@@ -209,9 +209,9 @@
     {% stylesheets debug=false filter='less, cssmin'  output='css/icapportfolio/style_view.css'
       "@IcapPortfolioBundle/Resources/views/less/style.less"
       "@IcapPortfolioBundle/Resources/views/less/interface.less"
-      "bundles/frontend/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css"
-      "@FrontEndBundle/Resources/public/angular-motion/dist/angular-motion.min.css"
-      "@FrontEndBundle/Resources/public/angular-gridster/src/angular-gridster.less"
+      "packages/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css"
+      "packages/angular-motion/dist/angular-motion.min.css"
+      "packages/angular-gridster/src/angular-gridster.less"
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
@@ -239,33 +239,33 @@
         <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_portfolio' }) }}"></script>
 
         {% if 'en' != app.request.locale %}
-            <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/dist/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('packages/bootstrap-datepicker/dist/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.min.js') }}"></script>
         {% endif %}
 
-        {% javascripts debug=true output='js/portfolio/portfolio/vendor.js'
+        {% javascripts debug=false output='js/portfolio/portfolio/vendor.js'
             '@StfalconTinymceBundle/Resources/public/vendor/tinymce/tinymce.jquery.min.js'
             '@StfalconTinymceBundle/Resources/public/vendor/tinymce/jquery.tinymce.min.js'
             '@ClarolineCoreBundle/Resources/public/js/tinymce/tinymce.js'
             '@IcapBadgeBundle/Resources/public/js/badge_picker.js'
-            '@FrontEndBundle/Resources/public/confirm-bootstrap/confirm-bootstrap.js'
-            '@FrontEndBundle/Resources/public/bootstrap-datepicker/dist/js/bootstrap-datepicker.js'
-            '@FrontEndBundle/Resources/public/angular/angular.min.js'
-            '@FrontEndBundle/Resources/public/angular-resource/angular-resource.min.js'
-            '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
-            '@FrontEndBundle/Resources/public/angular-animate/angular-animate.min.js'
+            'packages/confirm-bootstrap/confirm-bootstrap.js'
+            'packages/bootstrap-datepicker/dist/js/bootstrap-datepicker.js'
+            'packages/angular/angular.min.js'
+            'packages/angular-resource/angular-resource.min.js'
+            'packages/angular-sanitize/angular-sanitize.min.js'
+            'packages/angular-animate/angular-animate.min.js'
             '@InnovaAngularUITinyMCEBundle/Resources/public/js/angular-tinymce-directive.js'
-            '@FrontEndBundle/Resources/public/moment/min/moment.min.js'
-            '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.min.js'
-            '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.tpl.min.js'
-            '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap.js'
-            '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap-tpls.js'
+            'packages/moment/min/moment.min.js'
+            'packages/angular-strap/dist/angular-strap.min.js'
+            'packages/angular-strap/dist/angular-strap.tpl.min.js'
+            'packages/angular-bootstrap/ui-bootstrap.js'
+            'packages/angular-bootstrap/ui-bootstrap-tpls.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/javascript-detect-element-resize/jquery.resize.js'
-            '@FrontEndBundle/Resources/public/angular-gridster/dist/angular-gridster.min.js'
+            'packages/angular-gridster/dist/angular-gridster.min.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
-        {% javascripts debug=true filter='jsmin' output='js/portfolio/portfolio/script.js'
+        {% javascripts debug=false filter='jsmin' output='js/portfolio/portfolio/script.js'
             '@IcapPortfolioBundle/Resources/public/js/utils/Array.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/portfolioApp.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/portfolioController.js'
@@ -294,9 +294,9 @@
         {% endjavascripts %}
     {% else %}
         {% javascripts debug=false output='js/portfolio/portfolio/vendor_view.js'
-            '@FrontEndBundle/Resources/public/angular/angular.min.js'
-            '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
-            '@FrontEndBundle/Resources/public/angular-gridster/dist/angular-gridster.min.js'
+            'packages/angular/angular.min.js'
+            'packages/angular-sanitize/angular-sanitize.min.js'
+            'packages/angular-gridster/dist/angular-gridster.min.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}

@@ -152,3 +152,5 @@ badges_per_user: Nombre de badge par utilisateurs
 top_10_most_awarded_badges: Top 10 des Badges les plus attribués
 badges_number: Nombre des badges
 user_number: Nombre des utilisateurs
+import_export: Importar/Exportar
+expired_badge: Insignia caducado

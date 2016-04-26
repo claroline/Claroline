@@ -18,6 +18,7 @@ use Claroline\InstallationBundle\Manager\InstallationManager;
 use Claroline\CoreBundle\Manager\PluginManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This class is used to perform the (un-)installation of a plugin.
@@ -45,7 +46,8 @@ class Installer
      *     "recorder"      = @DI\Inject("claroline.plugin.recorder"),
      *     "installer"     = @DI\Inject("claroline.installation.manager"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pluginManager" = @DI\Inject("claroline.manager.plugin_manager")
+     *     "pluginManager" = @DI\Inject("claroline.manager.plugin_manager"),
+     *     "translator"    = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -53,13 +55,15 @@ class Installer
         Recorder $recorder,
         InstallationManager $installer,
         ObjectManager $om,
-        PluginManager $pluginManager
+        PluginManager $pluginManager,
+        TranslatorInterface $translator
     ) {
         $this->validator = $validator;
         $this->recorder = $recorder;
         $this->baseInstaller = $installer;
         $this->om = $om;
         $this->pluginManager = $pluginManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -97,6 +101,10 @@ class Installer
 
             foreach ($errors['plugin'] as $bundle) {
                 $this->log(sprintf('<fg=red>The plugin %s is required for %s ! You must enable it first to use %s.</fg=red>', $bundle, $plugin->getName(), $plugin->getName()));
+            }
+
+            foreach ($errors['extra'] as $extra) {
+                $this->log(sprintf('<fg=red>The plugin %s has extra requirements ! %s.</fg=red>', $plugin->getName(), $this->translator->trans($extra, array(), 'error')));
             }
 
             $this->log(sprintf('<fg=red>Disabling %s...</fg=red>', $plugin->getName()));

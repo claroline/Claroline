@@ -222,8 +222,8 @@ class DatabaseWriter
             $this->createAdminTool($adminTool, $plugin);
         }
 
-        foreach ($processedConfiguration['additonal_action'] as $action) {
-            $this->createAdditonalAction($action, $plugin);
+        foreach ($processedConfiguration['additional_action'] as $action) {
+            $this->createAdditionalAction($action, $plugin);
         }
     }
 
@@ -338,7 +338,7 @@ class DatabaseWriter
         $this->persistWidget($widgetConfiguration, $plugin, $pluginBundle, $widget);
     }
 
-    private function createAdditonalAction(array $action, PluginBundle $pluginBundle)
+    private function createAdditionalAction(array $action, PluginBundle $pluginBundle)
     {
         $aa = new AdditionalAction();
         $aa->setClass($action['class']);

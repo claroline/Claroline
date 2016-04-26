@@ -5,6 +5,7 @@
  * Date: 17/12/15
  * Time: 17:48.
  */
+
 namespace Icap\BadgeBundle\Hydrators;
 
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;

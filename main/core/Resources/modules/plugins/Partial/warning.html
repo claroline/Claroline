@@ -9,11 +9,12 @@
             <li ng-repeat="(key, plugin) in cwpc.plugin.required_by"> {{ plugin }} </li>
         </ul>
     </div>
-    <div ng-if="cwpc.plugin.require.extension.length > 0 || cwpc.plugin.require.plugin.length">
+    <div ng-if="cwpc.plugin.require.extension.length > 0 || cwpc.plugin.require.plugin.length > 0 || cwpc.plugin.require.extra.length > 0">
         <h4> {{ 'require'|trans:{}:'platform' }} </h4>
         <ul>
             <li ng-repeat="(key, requirement) in cwpc.plugin.require.extension"> php5-{{ requirement }} </li>
             <li ng-repeat="(key, requirement) in cwpc.plugin.require.plugin"> {{ requirement }} </li>
+            <li ng-repeat="(key, requirement) in cwpc.plugin.require.extra"> {{ requirement|trans:{}:'error' }} </li>
         </ul>
     </div>
 </div>
