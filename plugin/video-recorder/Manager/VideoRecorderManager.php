@@ -34,8 +34,8 @@ class VideoRecorderManager
      * })
      *
      * @param ResourceManager $rm
-     * @param String          $fileDir
-     * @param String          $uploadDir
+     * @param string          $fileDir
+     * @param string          $uploadDir
      */
     public function __construct(ContainerInterface $container, ResourceManager $rm, $fileDir, $uploadDir)
     {
@@ -153,9 +153,9 @@ class VideoRecorderManager
     /**
      * Checks if the data sent by the Ajax Form contain all mandatory fields.
      *
-     * @param Array        $postData
+     * @param array        $postData
      * @param UploadedFile $video     the video or video + audio blob sent by webrtc
-     * @param Bool         $isFirefox
+     * @param bool         $isFirefox
      * @param UploadedFile $audio     the audio blob sent by webrtc if chrome has been used
      */
     public function validateParams($postData, UploadedFile $video)

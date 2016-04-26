@@ -24,10 +24,10 @@ class VideoRecorderManagerTest extends TransactionalTestCase
     /** @var VideoRecorderManager */
     private $manager;
 
-    /** @var String */
+    /** @var string */
     private $fileDir;
 
-    /** @var String */
+    /** @var string */
     private $uploadDir;
 
     /** @var UploadedFile */
