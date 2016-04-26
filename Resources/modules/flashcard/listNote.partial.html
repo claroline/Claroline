@@ -73,12 +73,12 @@
           <tr>
             <th class="col-xs-5"
                 colspan="
-                  {{ vm.getQuestionsFromCard(note, card).lengt }}">
+                  {{ vm.maxColspan(note) }}">
               {{ 'questions'|trans:'flashcard' }}
             </th>
             <th class="col-xs-5"
                 colspan="
-                  {{ vm.getAnswersFromCard(note, card).lengt }}">
+                  {{ vm.maxColspan(note) }}">
               {{ 'answers'|trans:'flashcard' }}
             </th>
             <th class="col-xs-2"
@@ -88,11 +88,17 @@
         </thead>
         <tbody>
           <tr data-ng-repeat="card in note.cards">
-            <td data-ng-repeat="
+            <td colspan="
+                {{ vm.maxColspan(note) / card.card_type.questions.length }}
+                "
+                data-ng-repeat="
                 question in vm.getQuestionsFromCard(note, card)">
               {{ question.value }}
             </td>
-            <td data-ng-repeat="
+            <td colspan="
+                {{ vm.maxColspan(note) / card.card_type.answers.length }}
+                "
+                data-ng-repeat="
                 answer in vm.getAnswersFromCard(note, card)">
               {{ answer.value }}
             </td>

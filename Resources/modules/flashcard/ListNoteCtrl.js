@@ -50,6 +50,14 @@ export default class ListNoteCtrl {
     this.colWidth.push(cols)
   }
 
+  maxColspan (note) {
+    let nbr = 1
+    for (let i=2; i<=note.field_values.length; i++) {
+      nbr *= i
+    }
+    return nbr
+  }
+
   getQuestionsFromCard (note, card) {
     const question_labels = card.card_type.questions
     let questions = []
@@ -105,41 +113,6 @@ export default class ListNoteCtrl {
     )
   }
 
-  createNote (form) {
-    if (form.$valid) {
-      const fields = []
-      let fieldLabel = null
-
-      for(let i=0; i<this.fieldValues.length; i++) {
-        fieldLabel = this.noteTypeChoosen.field_labels[i]
-        fields[i] = {
-          "id": fieldLabel.id,
-          "value": this.fieldValues[i]
-        }
-      }
-
-      this._service.createNote(this.noteTypeChoosen, fields).then(
-        d => { 
-          this.deck.notes.push(d.data)
-          this.newCards = this._service.findNewCardToLearn(this.deck)
-        },
-        d => {
-          // Must do something to delete the created note in this controller
-          // but for the moment the created note is not added to the
-          // attributes.
-          // ...
-          this.errorMessage('errors.note.creation_failure')
-          this.errors = d.data
-        }
-      )
-      this._resetForm(form)
-    }
-  }
-
-  translate (key, data = {}) {
-    return window.Translator.trans(key, data, 'flashcard');
-  }
-
   _deleteNote (data) {
     const noteId = data
     for (let i=0; i<this.sortedNotes.length; i++) {
@@ -149,13 +122,5 @@ export default class ListNoteCtrl {
         }
       }
     }
-  }
-
-  _resetForm (form) {
-    this.errorMessage = null
-    this.errors = []
-    this.fieldValues = []
-    form.$setPristine()
-    form.$setUntouched()
   }
 }
