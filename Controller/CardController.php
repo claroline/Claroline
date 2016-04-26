@@ -178,4 +178,45 @@ class CardController
 
         return new JsonResponse($session->getId());
     }
+
+    /**
+     * @EXT\Route(
+     *     "/card/{card}/reset",
+     *     name="claroline_reset_card"
+     * )
+     *
+     * @param Card $card
+     * @return JsonResponse
+     */
+    public function resetCardAction(Card $card)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $cardLearning = $this->cardLearningMgr->getCardLearning($card, $user);
+
+        $this->cardLearningMgr->delete($cardLearning);
+
+        return new JsonResponse($cardLearning->getId());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/card/{card}/suspend/{suspend}",
+     *     name="claroline_suspend_card"
+     * )
+     *
+     * @param Card $card
+     * @param $suspend
+     * @return JsonResponse
+     */
+    public function suspendCardAction(Card $card, $suspend)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $cardLearning = $this->cardLearningMgr->getCardLearning($card, $user);
+
+        $cardLearning->setPainfull($suspend);
+
+        $this->cardLearningMgr->save($cardLearning);
+
+        return new JsonResponse($card->getId());
+    }
 }

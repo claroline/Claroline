@@ -66,7 +66,7 @@ class CardLearningManager
     }
 
     /**
-     * @param Card $car
+     * @param Card $card
      * @param User $user
      * @return CardLearning
      */
@@ -79,5 +79,16 @@ class CardLearningManager
                 'card' => $card,
             )
         );
+    }
+
+    /**
+     * @param Deck $deck
+     * @param User $user
+     * @return CardLearning
+     */
+    public function allCardLearning(Deck $deck, User $user)
+    {
+        $repo = $this->om->getRepository('ClarolineFlashCardBundle:CardLearning');
+        return $repo->allCardLearning($deck, $user);
     }
 }

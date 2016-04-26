@@ -21,7 +21,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * CardLearning
  *
  * @ORM\Table(name="claro_fcbundle_card_learning")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\FlashCardBundle\Repository\CardLearningRepository")
  */
 class CardLearning
 {

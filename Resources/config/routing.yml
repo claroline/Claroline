@@ -14,6 +14,10 @@ claro_card:
     resource: "@ClarolineFlashCardBundle/Controller/CardController.php"
     type: annotation
 
+claro_card_learning:
+    resource: "@ClarolineFlashCardBundle/Controller/CardLearningController.php"
+    type: annotation
+
 claro_session:
     resource: "@ClarolineFlashCardBundle/Controller/SessionController.php"
     type: annotation
