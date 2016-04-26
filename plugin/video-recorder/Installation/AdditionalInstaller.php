@@ -7,12 +7,11 @@ use Innova\VideoRecorderBundle\DataFixtures\DefaultData;
 
 class AdditionalInstaller extends BaseInstaller
 {
-
-  public function postInstall()
-  {
-      $om = $this->container->get('claroline.persistence.object_manager');
+    public function postInstall()
+    {
+        $om = $this->container->get('claroline.persistence.object_manager');
       // load plugin default data
       $default = new DefaultData();
-      $default->load($om);
-  }
+        $default->load($om);
+    }
 }

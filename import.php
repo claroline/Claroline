@@ -1,8 +1,8 @@
 <?php
 
 if ($argc < 4) {
-  die(
-    "Usage:    php import.php <account> <namespace> <bundle>\n" .
+    die(
+    "Usage:    php import.php <account> <namespace> <bundle>\n".
     "Example:  php import.php UJM-dev UJM ExoBundle\n"
   );
 }
