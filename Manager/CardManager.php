@@ -44,6 +44,15 @@ class CardManager
     }
 
     /**
+     * @param Card $card
+     */
+    public function delete(Card $card)
+    {
+        $this->om->remove($card);
+        $this->om->flush();
+    }
+
+    /**
      * @param Deck $deck
      * @param User $user
      * @return array

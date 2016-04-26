@@ -69,7 +69,13 @@ class NoteManager
      */
     public function delete(Note $note)
     {
+        $repo = $this->om->getRepository('ClarolineFlashCardBundle:CardLearning');
+
         foreach($note->getCards() as $card) {
+            $cardLearnings = $repo->findBy(array('card' => $card));
+            foreach($cardLearnings as $cardLearning) {
+                $this->om->remove($cardLearning);
+            }
             $this->om->remove($card);
         }
 
