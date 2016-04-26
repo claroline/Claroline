@@ -27,21 +27,23 @@ services:
 
     # form handler
     icap_badge.form_handler.badge:
-        class: %icap.form_handler.badge.class%
+        class: "%icap.form_handler.badge.class%"
         scope: request
         arguments:
-            - @icap_badge.form.badge
-            - @request
-            - @doctrine.orm.entity_manager
-            - @icap_badge.manager.badge
+            - "@icap_badge.form.badge"
+            - "@request"
+            - "@doctrine.orm.entity_manager"
+            - "@icap_badge.manager.badge"
+            - "%claroline.param.web_directory%"
     icap_badge.form_handler.badge.workspace:
-        class: %icap.form_handler.badge.class%
+        class: "%icap.form_handler.badge.class%"
         scope: request
         arguments:
-            - @icap_badge.form.badge.workspace
-            - @request
-            - @doctrine.orm.entity_manager
-            - @icap_badge.manager.badge
+            - "@icap_badge.form.badge.workspace"
+            - "@request"
+            - "@doctrine.orm.entity_manager"
+            - "@icap_badge.manager.badge"
+            - "%claroline.param.web_directory%"
 
     #notification listeners
     icap_badge.listener.core.notification_listener:

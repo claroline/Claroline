@@ -12,6 +12,7 @@
 namespace Icap\WebsiteBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Entity\WebsiteOptions;
@@ -43,19 +44,27 @@ class WebsiteManager
      */
     private $userRepository;
 
+    private $webDir;
+
     /**
      * @DI\InjectParams({
      *      "om"        = @DI\Inject("claroline.persistence.object_manager"),
-     *      "router"    = @DI\Inject("router")
+     *      "router"    = @DI\Inject("router"),
+     *      "webDir"    = @DI\Inject("%claroline.param.web_directory%")
      * })
+     *
+     * @param ObjectManager $om
+     * @param Router        $router
+     * @param $webDir
      */
-    public function __construct(ObjectManager $om, Router $router)
+    public function __construct(ObjectManager $om, Router $router, $webDir)
     {
         $this->om = $om;
         $this->router = $router;
         $this->websitePageRepository = $this->om->getRepository('IcapWebsiteBundle:WebsitePage');
         $this->websiteOptionsRepository = $this->om->getRepository('IcapWebsiteBundle:WebsiteOptions');
         $this->userRepository = $this->om->getRepository('ClarolineCoreBundle:User');
+        $this->webDir = $webDir;
     }
 
     /**
@@ -95,8 +104,9 @@ class WebsiteManager
         }
         $this->om->flush();
         $newWebsite->getOptions()->importFromArray(
-            $orgOptions->exportToArray(),
-            rtrim($orgOptions->getUploadRootDir(), DIRECTORY_SEPARATOR)
+            $this->webDir,
+            $orgOptions->exportToArray($this->webDir),
+            $this->webDir.DIRECTORY_SEPARATOR.$orgOptions->getUploadDir()
         );
 
         return $newWebsite;
@@ -143,6 +153,7 @@ class WebsiteManager
             }
             $this->om->flush();
             $websiteOptions->importFromArray(
+                $this->webDir,
                 $websiteData['options'],
                 $rootPath
             );
@@ -161,12 +172,21 @@ class WebsiteManager
         foreach ($websitePages as $websitePage) {
             $websitePagesArray[] = $websitePage->exportToArray($this->router, $files);
         }
-        $websiteOptionsArray = $object->getOptions()->exportToArray($files);
+        $websiteOptionsArray = $object->getOptions()->exportToArray($this->webDir, $files);
         $data = array(
             'options' => $websiteOptionsArray,
             'pages' => $websitePagesArray,
         );
 
         return $data;
+    }
+
+    public function deleteWebsite(Website $website)
+    {
+        $websiteUploadFolder = $this->webDir.DIRECTORY_SEPARATOR.$website->getOptions()->getUploadDir();
+        $fs = new FileSystem();
+        $fs->remove($websiteUploadFolder);
+        $this->om->remove($website);
+        $this->om->flush();
     }
 }

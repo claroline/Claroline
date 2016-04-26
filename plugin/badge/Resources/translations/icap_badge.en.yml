@@ -195,3 +195,5 @@ badges_per_user: Badges number by number of users
 top_10_most_awarded_badges: Top 10 of most awarded badges
 badges_number: Badges number
 user_number: Users number
+import_export: Import/Export
+expired_badge: Expired badge
