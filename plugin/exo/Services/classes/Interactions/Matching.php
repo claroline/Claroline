@@ -73,7 +73,7 @@ class Matching extends Interaction
         $tabResponseIndex = null
     ) {
         $em = $this->doctrine->getManager();
-        $scoreTmp = 0;
+        $score = 0;
 
         foreach ($tabRightResponse as $labelId => $value) {
             if (isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
@@ -81,17 +81,17 @@ class Matching extends Interaction
             ) {
                 $label = $em->getRepository('UJMExoBundle:Label')
                     ->find($labelId);
-                $scoreTmp += $label->getScoreRightResponse();
+                $score += $label->getScoreRightResponse();
             }
             if ($tabRightResponse[$labelId] == null && !isset($tabResponseIndex[$labelId])) {
                 $label = $em->getRepository('UJMExoBundle:Label')
                     ->find($labelId);
-                $scoreTmp += $label->getScoreRightResponse();
+                $score += $label->getScoreRightResponse();
             }
         }
 
         if ($penalty) {
-            $score = $scoreTmp - $penalty;
+            $score = $score - $penalty;
         }
 
         if ($score < 0) {
