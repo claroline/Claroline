@@ -11,6 +11,7 @@
 </pre>
 
 <pre>
+{{ vm.cardLearnings }}
 </pre>
 
 <hr/>
@@ -88,35 +89,42 @@
         </thead>
         <tbody>
           <tr data-ng-repeat="card in note.cards">
-            <td colspan="
-                {{ vm.maxColspan(note) / card.card_type.questions.length }}
-                "
+            <td colspan="{{ vm.maxColspan(note) / card.card_type.questions.length }}"
                 data-ng-repeat="
                 question in vm.getQuestionsFromCard(note, card)">
               {{ question.value }}
             </td>
-            <td colspan="
-                {{ vm.maxColspan(note) / card.card_type.answers.length }}
-                "
+            <td colspan="{{ vm.maxColspan(note) / card.card_type.answers.length }}"
                 data-ng-repeat="
                 answer in vm.getAnswersFromCard(note, card)">
               {{ answer.value }}
             </td>
-            <td style="text-align: center;width: 20%"
-                data-ng-if="!vm.isReadOnly">
+            <td class="col-xs-2 text-center"
+                data-ng-if="!vm.isNew(card) && !vm.isReadOnly">
               <button class="btn btn-default"
                       aria-label="{{ 'suspend'|trans }}"
                       data-uib-tooltip="{{ 'suspend'|trans }}"
-                      data-ng-click="
-                        vm.isCardShown[i][j] = !vm.isCardShown[i][j]">
+                      data-ng-if="!vm.isSuspend(card)"
+                      data-ng-click="vm.suspendCard(card, 1)">
                 <i class="fa fa-hand-stop-o"></i>
+              </button>
+              <button class="btn btn-default"
+                      aria-label="{{ 'unsuspend'|trans }}"
+                      data-uib-tooltip="{{ 'unsuspend'|trans }}"
+                      data-ng-if="vm.isSuspend(card)"
+                      data-ng-click="vm.suspendCard(card, 0)">
+                <i class="fa fa-thumbs-o-up"></i>
               </button>
               <button class="btn btn-default"
                       aria-label="{{ 'repeat'|trans:'flashcard' }}"
                       data-uib-tooltip="{{ 'repeat'|trans:'flashcard' }}"
-                      data-ng-click="vm.isCardShown[i] = !vm.isCardShown[i]">
+                      data-ng-click="vm.resetCard(card)">
                 <i class="fa fa-repeat"></i>
               </button>
+            </td>
+            <td class="col-xs-2 text-center"
+                data-ng-if="vm.isNew(card) && !vm.isReadOnly">
+              {{ 'card.is_new'|trans:'flashcard' }}
             </td>
           </tr>
         </tbody>

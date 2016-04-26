@@ -46,6 +46,13 @@ export default class FlashCardService {
     return this.$http.get(url)
   }
 
+  findAllCardLearning (deck) {
+    const url = Routing.generate('claroline_getall_card_learning', {
+      deck: deck.id
+    })
+    return this.$http.get(url)
+  }
+
   createNote (noteType, fields) {
     const url = Routing.generate('claroline_create_note', {
       deck: this._deck.id,
@@ -92,6 +99,21 @@ export default class FlashCardService {
       sessionId: sessionId,
       card: card.id,
       result: answerQuality,
+    })
+    return this.$http.get(url)
+  }
+
+  suspendCard (card, suspend) {
+    const url = Routing.generate('claroline_suspend_card', {
+      card: card.id,
+      suspend: suspend
+    })
+    return this.$http.get(url)
+  }
+
+  resetCard (card) {
+    const url = Routing.generate('claroline_reset_card', {
+      card: card.id
     })
     return this.$http.get(url)
   }

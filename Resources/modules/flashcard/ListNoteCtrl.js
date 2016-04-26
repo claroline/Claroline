@@ -16,6 +16,7 @@ export default class ListNoteCtrl {
     this.sortedNotes = []
     this.IsCardShown = []
     this.colWidth = []
+    this.cardLearnings = []
 
     this.errorMessage = null
     this.errors = []
@@ -36,6 +37,9 @@ export default class ListNoteCtrl {
           )
         }
       }
+    )
+    service.findAllCardLearning(this.deck).then(
+      d => this.cardLearnings = d.data
     )
   }
 
@@ -82,6 +86,49 @@ export default class ListNoteCtrl {
       }
     }
     return answers;
+  }
+
+  resetCard (card) {
+    this._service.resetCard(card).then(
+      d => {
+        for (let i=0; i<this.cardLearnings.length; i++) {
+          if (this.cardLearnings[i].card.id == card.id) {
+            this.cardLearnings.splice(i, 1)
+          }
+        }
+      }
+    )
+
+  }
+
+  suspendCard (card, suspend) {
+    this._service.suspendCard(card, suspend).then(
+      d => {
+        for (let i=0; i<this.cardLearnings.length; i++) {
+          if (this.cardLearnings[i].card.id == card.id) {
+            this.cardLearnings[i].painfull = suspend
+          }
+        }
+      }
+    )
+  }
+
+  isSuspend (card) {
+    for (let i=0; i<this.cardLearnings.length; i++) {
+      if (this.cardLearnings[i].card.id == card.id) {
+        return this.cardLearnings[i].painfull
+      }
+    }
+    return false
+  }
+
+  isNew (card) {
+    for (let i=0; i<this.cardLearnings.length; i++) {
+      if (this.cardLearnings[i].card.id == card.id) {
+        return false
+      }
+    }
+    return true
   }
 
   confirmDeleteNote (note) {
