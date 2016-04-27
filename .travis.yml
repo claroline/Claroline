@@ -49,5 +49,7 @@ before_script:
   - php app/console claroline:install --env=test
 
 script:
-  - bin/php-cs-fixer fix --dry-run --diff --config-file=vendor/claroline/distribution/main/dev/Resources/travis/php-cs.php -vvv
-  - SYMFONY_DEPRECATIONS_HELPER=weak bin/phpunit -c vendor/claroline/distribution
+  - cd vendor/claroline/distribution
+  - ../../../bin/phpmd --exclude main/core/Resources/bundle-creator,main/web-installer `cat git_diff_files.txt | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml
+  - ../../../bin/php-cs-fixer fix --dry-run --diff --config-file=main/dev/Resources/travis/php-cs.php -vvv
+  - SYMFONY_DEPRECATIONS_HELPER=weak ../../../bin/phpunit
