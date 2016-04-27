@@ -5,13 +5,12 @@ namespace UJM\ExoBundle\Transfer\Json\QuestionHandler;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Coords;
-use UJM\ExoBundle\Entity\Document;
 use UJM\ExoBundle\Entity\InteractionGraphic;
+use UJM\ExoBundle\Entity\Picture;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Services\classes\Interactions\Graphic;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
  * @DI\Service("ujm.exo.graphic_handler")
@@ -19,26 +18,29 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
  */
 class GraphicHandler implements QuestionHandlerInterface
 {
+    /**
+     * @var ObjectManager
+     */
     private $om;
-    private $container;
-    private $doctrine;
+
+    /**
+     * @var Graphic
+     */
+    private $graphicService;
 
     /**
      * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "container"       = @DI\Inject("service_container"),
-     *     "doctrine"        = @DI\Inject("doctrine")
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "graphicService" = @DI\Inject("ujm.exo.graphic_service")
      * })
      *
-     * @param ObjectManager      $om
-     * @param ContainerInterface $container
-     * @param Registry           $doctrine
+     * @param ObjectManager $om
+     * @param Graphic       $graphicService
      */
-    public function __construct(ObjectManager $om, ContainerInterface $container, Registry $doctrine)
+    public function __construct(ObjectManager $om, Graphic $graphicService)
     {
-        $this->om = $om;
-        $this->container = $container;
-        $this->doctrine = $doctrine;
+        $this->om             = $om;
+        $this->graphicService = $graphicService;
     }
 
     /**
@@ -142,19 +144,21 @@ class GraphicHandler implements QuestionHandlerInterface
             $this->om->persist($coord);
         }
 
-        // should we upload the document ??
-        $document = new Document();
-        $document->setLabel($importData->document->label ? $importData->document->label : '');
-        $document->setUrl($importData->document->url);
+        // should we upload the picture ??
+        $picture = new Picture();
+        $picture->setLabel($importData->document->label ? $importData->document->label : '');
+        $picture->setUrl($importData->document->url);
+        $picture->setWidth($importData->width);
+        $picture->setHeight($importData->height);
+
         $ext = pathinfo($importData->document->url)['extension'];
-        $document->setType($ext);
-        $this->om->persist($document);
+        $picture->setType($ext);
 
-        $interaction->setWidth($importData->width);
-        $interaction->setHeight($importData->height);
-        $interaction->setDocument($document);
+        $this->om->persist($picture);
 
+        $interaction->setPicture($picture);
         $interaction->setQuestion($question);
+
         $this->om->persist($interaction);
     }
 
@@ -164,11 +168,11 @@ class GraphicHandler implements QuestionHandlerInterface
     public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
     {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionGraphic');
-        $graphic = $repo->findOneBy(['question' => $question]);
+        $interaction = $repo->findOneBy(['question' => $question]);
 
-        $coords = $graphic->getCoords()->toArray();
+        $coords = $interaction->getCoords()->toArray();
 
-        $picture = $this->om->getRepository('UJMExoBundle:Picture')->findOneBy(array('id' => $graphic->getPicture()));
+        $picture = $this->om->getRepository('UJMExoBundle:Picture')->findOneBy(array('id' => $interaction->getPicture()));
 
         $exportData->width = $picture->getWidth();
         $exportData->height = $picture->getHeight();
@@ -185,6 +189,8 @@ class GraphicHandler implements QuestionHandlerInterface
 
             return $coordData;
         }, $coords);
+
+        $exportData->scoreTotal = $this->graphicService->maxScore($interaction);
 
         if ($withSolution) {
             $exportData->solutions = array_map(function ($coord) {
@@ -250,6 +256,8 @@ class GraphicHandler implements QuestionHandlerInterface
         if (!is_array($data)) {
             return ['Answer data must be an array, '.gettype($data).' given'];
         }
+
+        return [];
     }
 
     /**
@@ -271,12 +279,8 @@ class GraphicHandler implements QuestionHandlerInterface
             throw new \Exception('Global score not implemented yet');
         }
 
-        $em = $this->doctrine->getManager();
-
-        $rightCoords = $em->getRepository('UJMExoBundle:Coords')
+        $rightCoords = $this->om->getRepository('UJMExoBundle:Coords')
             ->findBy(array('interactionGraphic' => $interaction->getId()));
-
-        $serviceGraphic = $this->container->get('ujm.exo.graphic_service');
 
         $nbpointer = count($data);
 
@@ -284,12 +288,12 @@ class GraphicHandler implements QuestionHandlerInterface
 
         $coords2 = preg_split('[,]', $responses);
 
-        $mark = $serviceGraphic->mark($responses, $nbpointer, $rightCoords, $coords2);
+        $mark = $this->graphicService->mark($responses, $nbpointer, $rightCoords, $coords2);
 
         if ($mark < 0) {
             $mark = 0;
         }
-        // stroe answers like before x1-y1;x2-y2...
+        // store answers like before x1-y1;x2-y2...
         $result = count($data) > 0 ? implode(';', $data) : '';
 
         $response->setResponse($result);
