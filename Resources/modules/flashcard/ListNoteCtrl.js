@@ -160,6 +160,10 @@ export default class ListNoteCtrl {
     )
   }
 
+  translate(key, data = {}) {
+    return window.Translator.trans(key, data, 'flashcard');
+  }
+
   _deleteNote (data) {
     const noteId = data
     for (let i=0; i<this.sortedNotes.length; i++) {
