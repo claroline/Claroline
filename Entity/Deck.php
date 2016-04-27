@@ -70,7 +70,7 @@ class Deck extends AbstractResource
     {
         $this->notes = new ArrayCollection();
         $this->sessions = new ArrayCollection();
-        $this->newCardDayDefault = 10;
+        $this->newCardDayDefault = 5;
         $this->sessionDurationDefault = 10;
         $this->userPreferences = new ArrayCollection();
     }
@@ -123,6 +123,25 @@ class Deck extends AbstractResource
     public function getSessions()
     {
         return $this->sessions;
+    }
+
+    /**
+     * @param User $user 
+     * @param DateTime $date 
+     *
+     * @return Session
+     */
+    public function getSession(User $user, \DateTime $date)
+    {
+        foreach($this->sessions as $session) {
+            $interval = $date->diff($session->getDate(), true);
+            if($interval->days == 0 AND 
+               $session->getUser()->getId() == $user->getId()) {
+                return $session;
+            }
+        }
+
+        return null;
     }
 
     /**

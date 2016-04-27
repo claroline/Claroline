@@ -92,8 +92,16 @@ class CardController
     {
         // Must do something when user is not connected !
         $user = $this->tokenStorage->getToken()->getUser();
+        $userPref = $deck->getUserPreference($user);
 
-        $cards = $this->cardMgr->getNewCardToLearn($deck, $user);
+        $newCardStudied = 0;
+        if($session = $deck->getSession($user, new \DateTime())) {
+            $newCardStudied = count($session->getNewCards());
+        }
+
+        $maxCard = $userPref->getNewCardDay() - $newCardStudied;
+
+        $cards = $this->cardMgr->getNewCardToLearn($deck, $user, $maxCard);
 
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_card');

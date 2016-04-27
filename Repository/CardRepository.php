@@ -30,7 +30,7 @@ class CardRepository extends EntityRepository
         $dql = '
             SELECT c
             FROM Claroline\FlashCardBundle\Entity\Card c
-            JOIN Claroline\FlashCardBundle\Entity\Note n
+            JOIN c.note n
             WHERE n.deck = :deck
             AND NOT EXISTS (
                 SELECT cl
