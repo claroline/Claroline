@@ -19,7 +19,7 @@ set_error_handler(function ($severity, $message, $file, $line) {
 });
 
 if ($argc < 3) {
-    echo "Expected three arguments: package_name package_path\n";
+    echo "Expected two arguments: package_name package_path\n";
     exit(1);
 }
 
@@ -39,10 +39,13 @@ if (!isset($data->repositories)) {
     $data->repositories = [];
 }
 
-$repo = new stdClass();
-$repo->type = 'path';
-$repo->url = $packagePath;
-$data->repositories[] = $repo;
+$data->repositories[] = [
+    'type' => 'path',
+    'url' => $packagePath,
+    'options' => [
+        'symlink' => false,
+    ],
+];
 
 $content = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 file_put_contents($composerFile, $content);
