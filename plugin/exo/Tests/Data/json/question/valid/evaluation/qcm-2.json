@@ -3,7 +3,8 @@
   "type": "application/x.choice+json",
   "title": "Question ?",
   "description":null,
-  "invite":"Question ?", 
+  "invite":"Question ?",
+  "scoreTotal": 0,
   "choices": [
     {
       "id": "1",

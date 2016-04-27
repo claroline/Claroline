@@ -2,6 +2,7 @@
   "id": "1",
   "type": "application/x.match+json",
   "title": "Question ?",
+  "scoreTotal": 2.5,
   "firstSet": [
     {
       "id": "2",
