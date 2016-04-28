@@ -4,6 +4,7 @@
  * Date: 22/08/13
  * Time: 09:30.
  */
+
 namespace Innova\CollecticielBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
@@ -158,11 +159,11 @@ class CorrectionController extends DropzoneBaseController
 
         $grade = null;
         $i = 0;
-        while ($i < count($grades) and $grade == null) {
+        while ($i < count($grades) && $grade == null) {
             $current = $grades[$i];
             if (
                 $current->getCriterion()->getId() == $criterionId
-                and $current->getCorrection()->getId() == $correction->getId()
+                && $current->getCorrection()->getId() == $correction->getId()
             ) {
                 $grade = $current;
             }
@@ -381,7 +382,7 @@ class CorrectionController extends DropzoneBaseController
             array('criteria' => $pager->getCurrentPageResults(), 'totalChoice' => $dropzone->getTotalCriteriaColumn())
         );
 
-        if ($this->getRequest()->isMethod('POST') and $correction !== null) {
+        if ($this->getRequest()->isMethod('POST') && $correction !== null) {
             $form->handleRequest($this->getRequest());
             if ($form->isValid()) {
                 $data = $form->getData();
@@ -598,7 +599,7 @@ class CorrectionController extends DropzoneBaseController
 
         $edit = $state == 'edit';
 
-        if ($edit === true and $correction->getEditable() === false) {
+        if ($edit === true && $correction->getEditable() === false) {
             throw new AccessDeniedException();
         }
 
@@ -795,7 +796,7 @@ class CorrectionController extends DropzoneBaseController
             throw new NotFoundHttpException();
         }
 
-        if ($edit === true and $correction->getEditable() === false) {
+        if ($edit === true && $correction->getEditable() === false) {
             throw new AccessDeniedException();
         }
 
@@ -834,7 +835,7 @@ class CorrectionController extends DropzoneBaseController
             )
         );
         if ($edit) {
-            if ($this->getRequest()->isMethod('POST') and $correction !== null) {
+            if ($this->getRequest()->isMethod('POST') && $correction !== null) {
                 $form->handleRequest($this->getRequest());
                 if ($form->isValid()) {
                     $data = $form->getData();
@@ -971,7 +972,7 @@ class CorrectionController extends DropzoneBaseController
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
         $edit = $state == 'edit';
 
-        if ($edit === true and $correction->getEditable() === false) {
+        if ($edit === true && $correction->getEditable() === false) {
             throw new AccessDeniedException();
         }
 
@@ -1842,7 +1843,7 @@ class CorrectionController extends DropzoneBaseController
             throw new NotFoundHttpException();
         }
 
-        if ($edit === true and $correction->getEditable() === false) {
+        if ($edit === true && $correction->getEditable() === false) {
             throw new AccessDeniedException();
         }
 
@@ -1877,7 +1878,7 @@ class CorrectionController extends DropzoneBaseController
             )
         );
         if ($edit) {
-            if ($this->getRequest()->isMethod('POST') and $correction !== null) {
+            if ($this->getRequest()->isMethod('POST') && $correction !== null) {
                 $form->handleRequest($this->getRequest());
                 if ($form->isValid()) {
                     $data = $form->getData();
@@ -2401,7 +2402,7 @@ class CorrectionController extends DropzoneBaseController
                         }
 
                         // Ici, on récupère celui qui vient de déposer le nouveau document
-                        //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
+                        //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId();
                         $userDropDocument = $document->getDrop()->getUser()->getId();
                         $userSenderDocument = $document->getSender()->getId();
 
