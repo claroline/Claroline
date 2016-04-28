@@ -282,17 +282,13 @@ class GraphicHandler implements QuestionHandlerInterface
         $rightCoords = $this->om->getRepository('UJMExoBundle:Coords')
             ->findBy(array('interactionGraphic' => $interaction->getId()));
 
-        $nbpointer = count($data);
+        $answer = implode(',', $data);
 
-        $responses = implode(',', $data);
-
-        $coords2 = preg_split('[,]', $responses);
-
-        $mark = $this->graphicService->mark($responses, $nbpointer, $rightCoords, $coords2);
-
+        $mark = $this->graphicService->mark($answer, $rightCoords, 0);
         if ($mark < 0) {
             $mark = 0;
         }
+
         // store answers like before x1-y1;x2-y2...
         $result = count($data) > 0 ? implode(';', $data) : '';
 
