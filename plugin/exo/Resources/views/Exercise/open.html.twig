@@ -43,6 +43,15 @@
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_sequence' }) }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
 
+    {# Set some vars needed by Angular parts #}
+    <script type="text/javascript">
+        {# Make Twig variables accessibles by AngularJS #}
+        var AngularApp = {};
+
+        AngularApp.webDir = "{{ path('claro_index') }}".split('/').slice(0, -2).join('/') + "/";
+        AngularApp.locale = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
+    </script>
+
     {# Angular JS #}
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-angular-js.js'
         '@FrontEndBundle/Resources/public/angular/angular.min.js'
@@ -114,15 +123,6 @@
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
-    {# Set some vars needed by Angular parts #}
-    <script type="text/javascript">
-        {# Make Twig variables accessibles by AngularJS #}
-        var AngularApp = {};
-
-        AngularApp.webDir = "{{ path('claro_index') }}".split('/').slice(0, -2).join('/') + "/";
-        AngularApp.locale = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
-    </script>
     
     <script src="https://rawgithub.com/gsklee/ngStorage/master/ngStorage.js"></script>
 {% endblock %}

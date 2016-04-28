@@ -72,8 +72,6 @@ class Graphic extends Interaction
     {
         $score = 0;
 
-        $right = [];
-
         // Get the list of submitted coords from the answer string
         $coordsList = preg_split('/[;,]/', $answer);
         if (!empty($coordsList)) {
@@ -89,13 +87,11 @@ class Graphic extends Interaction
                         // Get X and Y values from answers of the student
                         list($xa, $ya) = explode('-', $coords);
 
-                        if ((($xa + 8.5) <= ($xr + $zoneSize)) && (($xa + 8.5) > $xr) &&
-                            (($ya + 8.5) <= ($yr + $zoneSize)) && (($ya + 8.5) > $yr)
+                        if (($xa <= ($xr + $zoneSize)) && ($xa > $xr) &&
+                            ($ya <= ($yr + $zoneSize)) && ($ya > $yr)
                         ) {
                             // The student answer is in the answer zone give him the points
                             $score += $expected->getScoreCoords();
-
-                            $right[] = true;
 
                             break; // We have found an answer for this answer zone, so we directly pass to the next one
                         }

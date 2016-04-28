@@ -25,7 +25,9 @@
             <div class="col-md-12">
                 <ul class="list-inline">
                     <li data-ng-repeat="coord in graphicQuestionCtrl.question.coords">
-                        <img class="crosshair draggable" id="crosshair_{{coord.id}}" data-ng-src="{{ graphicQuestionCtrl.getAssetsDir() + 'bundles/ujmexo/images/graphic/answer.png' }}" />
+                        <img id="crosshair_{{coord.id}}"
+                             class="crosshair draggable"
+                             data-ng-src="{{ graphicQuestionCtrl.crosshair.url }}" />
                     </li>
                 </ul>
             </div>
@@ -33,7 +35,12 @@
 
         <!-- document row -->
         <div class="droppable-container">
-            <img id="document-img" alt="{{graphicQuestionCtrl.question.document.label}}" width="{{graphicQuestionCtrl.question.width}}" height="{{graphicQuestionCtrl.question.height}}" data-ng-src="{{ graphicQuestionCtrl.getAssetsDir() + graphicQuestionCtrl.question.document.url }}" />
+            <img id="document-img"
+                 alt="{{ graphicQuestionCtrl.question.document.label }}"
+                 width="{{ graphicQuestionCtrl.question.width }}"
+                 height="{{ graphicQuestionCtrl.question.height }}"
+                 style="margin: {{ graphicQuestionCtrl.crosshair.size / 2 }}px;"
+                 data-ng-src="{{ graphicQuestionCtrl.getAssetsDir() + graphicQuestionCtrl.question.document.url }}" />
         </div>
     </div>
 </div>

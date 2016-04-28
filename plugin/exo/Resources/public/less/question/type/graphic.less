@@ -1,13 +1,15 @@
 .graphic-question-container {
     .crosshair {
         cursor: pointer;
+        z-index: 3;
     }
 
     .droppable-container {
+        /*margin: 0 auto;*/
         display: inline-block;
-
-        img {
-            /*border: 1px solid black;*/
-        }
+        /*position: relative;*/
+        z-index: 1;
+        border: 1px solid @panel-default-border;
+        border-radius: @border-radius-base;
     }
 }
