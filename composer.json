@@ -177,7 +177,8 @@
             "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator",
             "Claroline\\DevBundle\\": "main/dev",
             "Claroline\\WebInstaller\\": "main/web-installer/",
-            "Icap\\WebsiteBundle\\": "plugin/website"
+            "Icap\\WebsiteBundle\\": "plugin/website",
+	          "Innova\\VideoRecorderBundle\\": "plugin/video-recorder"
         }
     },
     "extra": {
@@ -223,7 +224,8 @@
             "Claroline\\ResultBundle\\ClarolineResultBundle",
             "Innova\\PathBundle\\InnovaPathBundle",
             "Claroline\\DevBundle\\ClarolineDevBundle",
-            "Icap\\WebsiteBundle\\IcapWebsiteBundle"
+            "Icap\\WebsiteBundle\\IcapWebsiteBundle",
+            "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle"
         ]
     }
 }
