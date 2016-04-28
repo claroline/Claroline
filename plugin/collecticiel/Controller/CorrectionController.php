@@ -701,8 +701,6 @@ class CorrectionController extends DropzoneBaseController
             ->getRepository('InnovaCollecticielBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
 
-        $countCorrection = count($correction);
-
         // Parcours des documents sélectionnés
         foreach ($correction->getDrop()->getDocuments() as $document) {
             if ($document->getId() == $documentOri->getId()) {
