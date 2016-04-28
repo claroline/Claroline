@@ -146,7 +146,13 @@ MatchQuestionCtrl.prototype.colorBindings = function colorBindings() {
             if (this.connections[i].source === this.question.solutions[j].firstId && this.connections[i].target === this.question.solutions[j].secondId) {
                 rightAnswer = true;
                 c.setType("right");
-                c.setLabel({label: this.question.solutions[j].feedback, cssClass: "label label-success"});
+                /*
+                 * The following line adds the specific feedback on right bingings
+                 * We decided not to show it, as it can easily take too much space on the bindings
+                 * The best way would be to show it on hover
+                 * 
+                 * c.setLabel({label: this.question.solutions[j].feedback, cssClass: "label label-success"});
+                 */
             }
         }
         if (!rightAnswer) {
@@ -575,7 +581,7 @@ MatchQuestionCtrl.prototype.addPreviousConnections = function addPreviousConnect
                         if (items[0] === this.question.solutions[j].firstId && items[1] === this.question.solutions[j].secondId) {
                             var c = jsPlumb.connect({source: "draggable_" + items[0], target: "droppable_" + items[1], type: "right"});
                             created = true;
-                            c.setLabel({label: this.question.solutions[j].feedback, cssClass: "label label-success"});
+                            //c.setLabel({label: this.question.solutions[j].feedback, cssClass: "label label-success"});
                         }
                     }
                     if (!created) {

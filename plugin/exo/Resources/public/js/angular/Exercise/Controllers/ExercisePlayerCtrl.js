@@ -40,6 +40,9 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl($location, exercise, step, 
 
     // Get feedback info
     this.feedback = this.FeedbackService.get();
+    
+    // for now, we set the maxAttempts systematicly to 5
+//    this.exercise.meta.maxAttempts = 5;
 };
 
 // Set up dependency injection
