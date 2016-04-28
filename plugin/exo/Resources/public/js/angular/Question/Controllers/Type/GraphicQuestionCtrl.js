@@ -21,10 +21,8 @@ var GraphicQuestionCtrl = function GraphicQuestionCtrl(FeedbackService) {
         });
     }
 
-    console.log(this.questionPaper.answer);
-
     // init draggable elements with answers if any
-    /*if (this.questionPaper.answer && this.questionPaper.answer.length > 0) {
+    if (this.questionPaper.answer && this.questionPaper.answer.length > 0) {
         for (var i = 0; i < this.questionPaper.answer.length; i++) {
             var answerArray = this.questionPaper.answer[i].split('-');
             if (answerArray[0] !== 'a' || answerArray[1] !== 'a') {
@@ -34,7 +32,7 @@ var GraphicQuestionCtrl = function GraphicQuestionCtrl(FeedbackService) {
             }
 
         }
-    }*/
+    }
 };
 
 // Extends AbstractQuestionCtrl
@@ -116,8 +114,6 @@ GraphicQuestionCtrl.prototype.initDragAndDrop = function initDragAndDrop() {
             // get dragged coordonates with offset instead of position
             var coordX = $(this).offset().left - $('#document-img').offset().left;
             var coordY = $(this).offset().top - $('#document-img').offset().top;
-            // var coordX = $(this).offset().left - $('#document-img').offset().left;
-            // var coordY = $(this).offset().top - $('#document-img').offset().top;
 
             // update this.coords
             for (var i = 0; i < self.coords.length; i++) {
@@ -196,7 +192,7 @@ GraphicQuestionCtrl.prototype.showRightAnswerZones = function showRightAnswerZon
 
             if (((this.question.solutions[i].size >= distance*2 && this.question.solutions[i].shape === "circle") || (this.question.solutions[i].shape === "square" && pointX > startX && pointX < endX && pointY > startY && pointY < endY)) && this.notFoundZones.indexOf(this.question.solutions[i]) !== -1) {
                 var rightPointY = pointY + topElementsHeight;
-                $("#" + firstElementId).replaceWith("<i id='crosshair_valid_" + firstElementNumId + "' class='text-success fa fa-check' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + this.question.solutions[i].feedback + "' ></i>");
+                $("#" + firstElementId).replaceWith("<i id='crosshair_valid_" + firstElementNumId + "' class='text-success feedback-info fa fa-check' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + (this.question.solutions[i].feedback ? this.question.solutions[i].feedback : '') + "' ></i>");
 
                 var solution = this.question.solutions[i];
                 var elem = document.createElement('div');
@@ -235,7 +231,7 @@ GraphicQuestionCtrl.prototype.setWrongFeedback = function setWrongFeedback() {
         var numId = id.replace("crosshair_", "");
         var rightPointY = $("#" + id).prop("y");
         var pointX = $("#" + id).prop("x");
-        $("#" + id).replaceWith("<i id='crosshair_invalid_" + numId + "' class='text-danger fa fa-close crosshair_invalid' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + this.question.solutions[i].feedback + "' ></i>");
+        $("#" + id).replaceWith("<i id='crosshair_invalid_" + numId + "' class='text-danger fa fa-close feedback-info crosshair_invalid' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + (this.question.solutions[i].feedback ? this.question.solutions[i].feedback : '') + "' ></i>");
     }
 };
 
@@ -295,10 +291,11 @@ GraphicQuestionCtrl.prototype.hideWrongFeedbacks = function hideWrongFeedbacks()
 
 /**
  * Called on each checkbox / radiobutton click
- * We need to share those informations with parent controllers
+ * We need to share those information with parent controllers
  * For that purpose we use a shared service
  */
 GraphicQuestionCtrl.prototype.updateStudentData = function updateStudentData() {
+    this.questionPaper.answer.splice(0, this.questionPaper.answer.length);
     for (var i = 0; i < this.coords.length; i++) {
         var answerString = this.coords[i].x.toString() + '-' + this.coords[i].y.toString();
         this.questionPaper.answer.push(answerString);
