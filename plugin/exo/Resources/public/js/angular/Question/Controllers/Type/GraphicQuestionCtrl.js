@@ -126,10 +126,8 @@ GraphicQuestionCtrl.prototype.initDragAndDrop = function initDragAndDrop() {
  */
 GraphicQuestionCtrl.prototype.reset = function reset() {
     for (var i = 0; i < this.coords.length; i++) {
-        $('#crosshair_' + this.coords[i].id).css('top', 0);
-        $('#crosshair_' + this.coords[i].id).css('bottom', 'auto');
-        $('#crosshair_' + this.coords[i].id).css('right', 'auto');
-        $('#crosshair_' + this.coords[i].id).css('left', 0);
+        $('#crosshair_' + this.coords[i].id).css('top', 'auto');
+        $('#crosshair_' + this.coords[i].id).css('left', 'auto');
     }
 
     this.coords.splice(0, this.coords.length);

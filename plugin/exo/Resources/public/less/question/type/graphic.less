@@ -4,6 +4,38 @@
         z-index: 3;
     }
 
+    .crosshairs-list {
+        margin: 0 auto 20px auto; // Same as panel but there is no var for this
+        display: table;
+        border-radius: @border-radius-base;
+        border: 1px solid @panel-default-border;
+
+        > span, > ul {
+            padding: @padding-base-vertical @padding-base-horizontal;
+            display: table-cell;
+        }
+
+        > span {
+            border-right: 1px solid @panel-default-border;
+            background-color: @input-group-addon-bg;
+            font-weight: normal;
+            line-height: 1;
+            width: 16px;
+            cursor: help;
+            vertical-align: middle;
+        }
+
+        > ul {
+            margin: 0;
+            list-style-type: none;
+
+            li {
+                display: inline-block;
+                padding: 0 5px;
+            }
+        }
+    }
+
     .droppable-container {
         /*margin: 0 auto;*/
         display: inline-block;
