@@ -260,7 +260,7 @@ class PaperService
 
     /**
      * For the navigation in a paper
-     * Finds and displays the question selectionned by the User in an assesment.
+     * Finds and displays the question selected by the User in an assessment.
      *
      *
      * @param int                               $numQuestionToDisplayed position of the question in the paper
@@ -304,7 +304,7 @@ class PaperService
       * To finish an assessment.
       *
       *
-      * @param Symfony\Component\HttpFoundation\Session\SessionInterface  $session
+      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface  $session
       *
       * @return \UJM\ExoBundle\Entity\Paper
       */
