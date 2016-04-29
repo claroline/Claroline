@@ -1,9 +1,9 @@
 <div class="player-container">
     <!-- Player header -->
     <div class="attempts">
-        <span>{{ 'sequence_attempts_infos'|trans:{"1" : exercisePlayerCtrl.step.maxStepTries}:'ujm_sequence'}}.</span>
+        <span>{{ 'sequence_attempts_infos'|trans:{"1" : exercisePlayerCtrl.step.maxAttempts}:'ujm_sequence'}}.</span>
         <span>{{ 'sequence_nb_attempts'|trans:{"1" : exercisePlayerCtrl.step.currentTry}:'ujm_sequence' }}</span>
-        <span>/ {{ exercisePlayerCtrl.step.maxStepTries }}</span>
+        <span>/ {{ exercisePlayerCtrl.step.maxAttempts }}</span>
     </div>
 
     <!-- Step content -->
@@ -57,7 +57,7 @@
 
             <!-- Retry step (for Formative exercises) -->
             <button type="button" role="button" class="btn btn-default"
-                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.step.currentTry !== exercisePlayerCtrl.step.maxStepTries"
+                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.step.currentTry !== exercisePlayerCtrl.step.maxAttempts"
                     data-toggle="tooltip" data-container="body" title="{{ 'btn_retry_step'|trans:{}:'ujm_sequence' }}"
                     data-ng-click="exercisePlayerCtrl.retry()"
             >
@@ -67,7 +67,7 @@
 
             <!-- Show solution (for Formative exercises) -->
             <button type="button" role="button" class="btn btn-default"
-                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.step.currentTry === exercisePlayerCtrl.step.maxStepTries"
+                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.step.currentTry === exercisePlayerCtrl.step.maxAttempts"
                     data-toggle="tooltip" data-container="body" title="{{ 'btn_show_solution'|trans:{}:'ujm_sequence' }}"
                     data-ng-click="exercisePlayerCtrl.showSolution()"
             >
