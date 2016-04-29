@@ -1,9 +1,9 @@
 <div class="player-container">
     <!-- Player header -->
     <div class="attempts">
-        <span data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">{{ 'sequence_attempts_infos'|trans:{"1" : exercisePlayerCtrl.exercise.meta.maxAttempts}:'ujm_sequence'}}.</span>
-        <span>{{ 'sequence_nb_attempts'|trans:{"1" : exercisePlayerCtrl.paper.number}:'ujm_sequence' }}</span>
-        <span data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">/ {{ exercisePlayerCtrl.exercise.meta.maxAttempts }}</span>
+        <span>{{ 'sequence_attempts_infos'|trans:{"1" : exercisePlayerCtrl.step.maxStepTries}:'ujm_sequence'}}.</span>
+        <span>{{ 'sequence_nb_attempts'|trans:{"1" : exercisePlayerCtrl.step.currentTry}:'ujm_sequence' }}</span>
+        <span>/ {{ exercisePlayerCtrl.step.maxStepTries }}</span>
     </div>
 
     <!-- Step content -->
@@ -30,7 +30,7 @@
         </div>-->
 
         <!-- Display the current Step -->
-        <step-show data-step-index="{{ exercisePlayerCtrl.index }}"  data-step="exercisePlayerCtrl.step"></step-show>
+        <step-show data-step-index="{{exercisePlayerCtrl.index}}" data-step="exercisePlayerCtrl.step"></step-show>
     </div>
 
     <!-- Player navigation -->
@@ -39,7 +39,7 @@
             <!-- Previous step -->
             <button type="button" role="button" class="btn btn-default"
                     data-toggle="tooltip" data-container="body" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}"
-                    data-ng-disabled="!exercisePlayerCtrl.previous || (exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible)"
+                    data-ng-disabled="!exercisePlayerCtrl.previous || (exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible) || (exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && !exercisePlayerCtrl.solutionShown)"
                     data-ng-click="exercisePlayerCtrl.goTo(exercisePlayerCtrl.previous)"
             >
                 <span class="fa fa-arrow-circle-left"></span>
@@ -57,7 +57,7 @@
 
             <!-- Retry step (for Formative exercises) -->
             <button type="button" role="button" class="btn btn-default"
-                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible"
+                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.step.currentTry !== exercisePlayerCtrl.step.maxStepTries"
                     data-toggle="tooltip" data-container="body" title="{{ 'btn_retry_step'|trans:{}:'ujm_sequence' }}"
                     data-ng-click="exercisePlayerCtrl.retry()"
             >
@@ -65,9 +65,19 @@
                 {{ 'btn_retry_step'|trans:{}:'ujm_sequence' }}
             </button>
 
+            <!-- Show solution (for Formative exercises) -->
+            <button type="button" role="button" class="btn btn-default"
+                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.step.currentTry === exercisePlayerCtrl.step.maxStepTries"
+                    data-toggle="tooltip" data-container="body" title="{{ 'btn_show_solution'|trans:{}:'ujm_sequence' }}"
+                    data-ng-click="exercisePlayerCtrl.showSolution()"
+            >
+                <span class="fa fa-file"></span>
+                {{ 'btn_show_solution'|trans:{}:'ujm_sequence' }}
+            </button>
+
             <!-- Next step -->
-            <button type="button" role="button"class="btn btn-default"
-                    data-ng-disabled="!exercisePlayerCtrl.next || (exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible)"
+            <button type="button" role="button" class="btn btn-default"
+                    data-ng-disabled="!exercisePlayerCtrl.next || (exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible) || (exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && !exercisePlayerCtrl.solutionShown)"
                     data-toggle="tooltip" data-container="body" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}"
                     data-ng-click="exercisePlayerCtrl.goTo(exercisePlayerCtrl.next)"
             >
@@ -103,7 +113,7 @@
         <!-- End Exercise -->
         <button type="button" role="button" class="btn btn-primary"
                 data-ng-if="!exercisePlayerCtrl.next"
-                data-ng-disabled="!exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.feedback.enabled"
+                data-ng-disabled="!exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.feedback.enabled || (exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && !exercisePlayerCtrl.solutionShown)"
                 ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}"
                 ng-bootbox-confirm-action="exercisePlayerCtrl.end()"
         >
