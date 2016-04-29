@@ -55,7 +55,7 @@ class LogDropEvaluateListener
         if ($drop != null) {
             if ($drop->getDropzone()->getPeerReview() === false or $drop->countFinishedCorrections() >= $drop->getDropzone()->getExpectedTotalCorrection()) {
                 $finished = false;
-                if ($drop->getDropzone()->getPeerReview() === true)
+                if ($drop->getDropzone()->getPeerReview() === true) {
                     $nbCorrections = $this->entityManager
                         ->getRepository('IcapDropzoneBundle:Correction')
                         ->countFinished($drop->getDropzone(), $drop->getUser());
@@ -68,9 +68,13 @@ class LogDropEvaluateListener
                 }
 
                 if ($finished === true) {
+                    //                    var_dump('finish');
                     $grade = $drop->getCalculatedGrade();
                     $event = new LogDropEvaluateEvent($drop->getDropzone(), $drop, $grade);
                     $event->setDoer($drop->getUser());
+
+//                    var_dump('finish grade = '.$grade);
+
                     $this->eventDispatcher->dispatch('log', $event);
                 }
             }
