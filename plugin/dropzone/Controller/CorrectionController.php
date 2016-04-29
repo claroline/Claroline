@@ -4,6 +4,7 @@
  * Date: 22/08/13
  * Time: 09:30.
  */
+
 namespace Icap\DropzoneBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;

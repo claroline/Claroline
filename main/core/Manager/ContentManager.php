@@ -102,8 +102,8 @@ class ContentManager
     /**
      * Create a new content.
      *
-     * @param array $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
-     * @param string $type             A type of content
+     * @param array  $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
+     * @param string $type              A type of content
      *
      * @return int The id of the new content.
      */
@@ -127,8 +127,8 @@ class ContentManager
     /**
      * Update a content.
      *
-     * @param Content $content Content Entity
-     * @param array $translatedContents array('en' => array('content' => 'foo', 'title' => 'foo'))
+     * @param Content $content            Content Entity
+     * @param array   $translatedContents array('en' => array('content' => 'foo', 'title' => 'foo'))
      */
     public function updateContent(Content $content, array $translatedContents)
     {
@@ -162,8 +162,8 @@ class ContentManager
     /**
      * Reset translated values of a content.
      *
-     * @param Content $content A content entity
-     * @param array $translatedContents array('en' => array('content' => 'foo', 'title' => 'foo'))
+     * @param Content $content            A content entity
+     * @param array   $translatedContents array('en' => array('content' => 'foo', 'title' => 'foo'))
      *
      * @return \Claroline\CoreBundle\Entity\Content
      */
@@ -181,10 +181,10 @@ class ContentManager
     /**
      * Update a content translation.
      *
-     * @param Content $content A content entity
-     * @param array $translation array('content' => 'foo', 'title' => 'foo')
-     * @param string $locale A string with a locale value as 'en' or 'fr'
-     * @param boolean $reset A boolean in case of you whant to reset the values of the translation
+     * @param Content $content     A content entity
+     * @param array   $translation array('content' => 'foo', 'title' => 'foo')
+     * @param string  $locale      A string with a locale value as 'en' or 'fr'
+     * @param bool    $reset       A boolean in case of you whant to reset the values of the translation
      */
     private function updateTranslation(Content $content, $translation, $locale = 'en', $reset = false)
     {
@@ -205,9 +205,9 @@ class ContentManager
      * create_content in another language not longer create this content in the default language,
      * so this function is used for this purpose.
      *
-     * @param array $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
-     * @param string $field The name of a field as 'title' or 'content'
-     * @param string $locale A string with a locale value as 'en' or 'fr'
+     * @param array  $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
+     * @param string $field             The name of a field as 'title' or 'content'
+     * @param string $locale            A string with a locale value as 'en' or 'fr'
      *
      * @return array('en' => array('content' => 'foo', 'title' => 'foo'))
      */

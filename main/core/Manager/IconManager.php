@@ -219,7 +219,7 @@ class IconManager
      * Creates an image from a file.
      *
      * @param string    $filePath
-     * @param string    $baseMime (image|video)
+     * @param string    $baseMime  (image|video)
      * @param Workspace $workspace
      *
      * @return null|string

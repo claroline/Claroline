@@ -6,6 +6,7 @@
  * Time: 17:06
  * To change this template use File | Settings | File Templates.
  */
+
 namespace Innova\CollecticielBundle\Listener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;

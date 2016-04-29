@@ -5,6 +5,7 @@
  * Date: 17/06/14
  * Time: 09:47.
  */
+
 namespace Innova\CollecticielBundle\Voter;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;

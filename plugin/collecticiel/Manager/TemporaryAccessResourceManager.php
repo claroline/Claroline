@@ -5,7 +5,6 @@ namespace Innova\CollecticielBundle\Manager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 
 /**
  * @DI\Service("innova.temporary_access_resource_manager")

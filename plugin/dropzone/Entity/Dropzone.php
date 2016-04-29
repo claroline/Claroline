@@ -4,6 +4,7 @@
  * Date: 21/08/13
  * Time: 15:18.
  */
+
 namespace Icap\DropzoneBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
