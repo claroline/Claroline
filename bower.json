@@ -9,6 +9,7 @@
     "angular-breadcrumb": "0.4.1",
     "angular-data-table": "https://github.com/ngodfraind/angular-data-table.git#a80b9a5ca83d86e3720baa45ca020147dcf7dd85",
     "angular-daterangepicker": "0.2.2",
+    "angular-datetime": "3.1.1",
     "angular-gridster": "0.13.5",
     "angular-motion": "0.4.3",
     "angular-resource": "1.4.9",

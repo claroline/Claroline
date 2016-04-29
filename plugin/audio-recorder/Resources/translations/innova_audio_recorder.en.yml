@@ -1,0 +1,32 @@
+# c
+creating_resource: Creating resource...
+
+# d
+download_audio: Download audio file
+db_meter: Mic level
+
+# e
+end_recording_message: Recording is complete<br/>It was placed in your temporary list
+end_recording_message_maxtime_reached: The recording has reached the maximum allowed<br/>He was stopped and placed in your temporary list
+
+
+# m
+my_recordings: My recordings (temporary)
+max_recording_time: Maximum recording time:
+max_try_threshold_reached: The temporary list is full<br/>Delete files to record again
+
+# n
+nb_try_label: Try n°
+
+# o
+ok: Validate
+
+# r
+resource_name: Name:
+resource_name_placeholder: The resource name is mandatory.
+resource_creation_error: An error occured while creating resource.
+resource_creation_error_download: Please use the download button to save locally your audio file.
+
+# s
+start_recording: Start
+stop_recording: Stop

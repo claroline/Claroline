@@ -1,0 +1,33 @@
+video {
+  width: 255px;
+  height: 192px
+}
+
+.current-time-row{
+  margin-top: 10px;
+}
+
+.recorder-buttons-row{
+  margin-top: 10px;
+}
+.alert{
+  margin-top: 10px;
+}
+.db-container {
+  margin-top: 138px
+}
+#db-meter {
+  background: #eee;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  vertical-align: middle;
+  width: 15px;
+  height: 55px
+}
+.fa-circle::before {
+  content: "\f111";
+  color: red
+}
+.fa-circle[disabled]::before {
+  opacity: 0.65
+}

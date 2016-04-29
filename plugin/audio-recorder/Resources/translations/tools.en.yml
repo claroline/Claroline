@@ -1,0 +1,13 @@
+# c
+config_update_error: Problem while updating audio recorder configuration.
+config_update_success: Audio recorder configuration update successfull.
+
+# i
+innova_audio_recorder_tool: Audio recorder configuration (whole platform)
+
+# m
+audio_recorder_configuration_max_try: Maximum recording try
+audio_recorder_configuration_max_recording_time: Maximum recording time (Secondes, 0 = infinite)
+
+# s
+submit_config_label: Save configuration
