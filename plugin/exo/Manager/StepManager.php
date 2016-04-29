@@ -47,6 +47,7 @@ class StepManager
 
         return [
             'id' => $step->getId(),
+            'maxAttempts' => $step->getMaxAttempts(),
             'items' => $items,
         ];
     }
