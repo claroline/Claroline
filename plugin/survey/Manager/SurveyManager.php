@@ -635,6 +635,18 @@ class SurveyManager
             );
     }
 
+    public function getMultipleChoiceAnswersBySurveyAndQuestionWithoutPager(
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    ) {
+        return $this->multipleChoiceQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
+            $survey,
+            $question,
+            $executeQuery
+        );
+    }
+
     public function countMultipleChoiceAnswersBySurveyAndChoice(
         Survey $survey,
         Choice $choice,
