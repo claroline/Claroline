@@ -1,0 +1,5 @@
+services:
+    innova_audio_recorder.twig.audio_recorder_extension:
+        class: Innova\AudioRecorderBundle\Twig\AudioRecorderExtension
+        tags:
+            - { name: twig.extension }
