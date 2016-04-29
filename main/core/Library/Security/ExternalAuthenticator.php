@@ -122,8 +122,6 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
         //do we want a regular authentication
         if ($passwordValid) {
 
-            //throw new \Exception(var_dump($user->getAuthentication()));
-
             /*$currentHour = date('G');
             if ($currentHour < 10 || $currentHour > 16) {
                 throw new AuthenticationException(

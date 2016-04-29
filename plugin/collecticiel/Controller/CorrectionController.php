@@ -2385,7 +2385,6 @@ class CorrectionController extends DropzoneBaseController
                         $comment->setDocument($document);
                         $comment->setCommentText($commentText);
                         $comment->setUser($user);
-//                        var_dump($documentId);
                         // Insertion en base du commentaire
                         $em->persist($comment);
 
@@ -2400,7 +2399,6 @@ class CorrectionController extends DropzoneBaseController
                         }
 
                         // Ici, on récupère celui qui vient de déposer le nouveau document
-                        //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId();
                         $userDropDocument = $document->getDrop()->getUser()->getId();
                         $userSenderDocument = $document->getSender()->getId();
 
