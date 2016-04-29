@@ -409,8 +409,6 @@ class SectionController extends Controller
                     }
                     $flashBag->add('success', $translator->trans('icap_wiki_section_update_success', array(), 'icap_wiki'));
                 } catch (\Exception $exception) {
-                    print_r($exception->getMessage());
-                    die();
                     $flashBag->add('error', $translator->trans('icap_wiki_section_update_error', array(), 'icap_wiki'));
                 }
 
