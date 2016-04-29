@@ -288,11 +288,6 @@ class TransfertManager
         $this->om->flush();
     }
 
-    private function setRootPath($rootPath)
-    {
-        $this->rootPath = $rootPath;
-    }
-
     private function getImporterByName($name)
     {
         foreach ($this->listImporters as $importer) {

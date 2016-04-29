@@ -168,9 +168,17 @@ class OauthManager
         if (!$appId || !$secret) {
             return array('error' => $service.'_application_validation_error');
         }
-        $serviceMethodName = str_replace(' ', '', ucwords(str_replace('_', ' ', $service)));
 
-        return call_user_func(array($this, 'validate'.$serviceMethodName), $appId, $secret);
+        switch ($service) {
+            case 'facebook':
+                return $this->validateFacebook($appId, $secret);
+            case 'twitter':
+                return $this->validateTwitter($appId, $secret);
+            case 'google':
+            case 'linkedin':
+            case 'windows_live':
+                return [];
+        }
     }
 
     public function getConfiguration($service)
@@ -345,21 +353,6 @@ class OauthManager
             return array('error' => 'twitter_application_validation_error');
         }
 
-        return array();
-    }
-
-    private function validateGoogle($appId, $secret)
-    {
-        return array();
-    }
-
-    private function validateLinkedin($appId, $secret)
-    {
-        return array();
-    }
-
-    private function validateWindowsLive($appId, $secret)
-    {
         return array();
     }
 }

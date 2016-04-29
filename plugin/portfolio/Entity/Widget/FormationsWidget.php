@@ -7,8 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /** * @ORM\Table(name="icap__portfolio_widget_formations") * @ORM\Entity */class FormationsWidget extends AbstractWidget
 {
-    const WIDGET_TYPE = 'formations';
+    const WIDGET_TYPE = 'formations';
+
     const SIZE_X = 4;
+
     const SIZE_Y = 6;
 
     protected $widgetType = self::WIDGET_TYPE;
