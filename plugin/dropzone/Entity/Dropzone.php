@@ -775,11 +775,11 @@ class Dropzone extends AbstractResource
     public function isAllowDrop()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == $this::MANUAL_STATE_ALLOW_DROP or $this->manualState == $this::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW;
+            return $this->manualState == $this::MANUAL_STATE_ALLOW_DROP || $this->manualState == $this::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW;
         } else {
             $now = new \DateTime();
 
-            return $now->getTimestamp() >= $this->startAllowDrop->getTimestamp() and $now->getTimestamp() < $this->endAllowDrop->getTimestamp();
+            return $now->getTimestamp() >= $this->startAllowDrop->getTimestamp() && $now->getTimestamp() < $this->endAllowDrop->getTimestamp();
         }
     }
 
@@ -797,7 +797,7 @@ class Dropzone extends AbstractResource
             } else {
                 $now = new \DateTime();
 
-                return $this->startReview != null && $this->endReview != null && $now->getTimestamp() >= $this->startReview->getTimestamp() and $now->getTimestamp() < $this->endReview->getTimestamp();
+                return $this->startReview != null && $this->endReview != null && $now->getTimestamp() >= $this->startReview->getTimestamp() && $now->getTimestamp() < $this->endReview->getTimestamp();
             }
         } else {
             return false;

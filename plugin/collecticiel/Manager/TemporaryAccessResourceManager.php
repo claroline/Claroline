@@ -39,12 +39,12 @@ class TemporaryAccessResourceManager
     {
         $temporaryAccessArray = $this->container->get('request')->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
 
-        if ($temporaryAccessArray == null or count($temporaryAccessArray) == 0) {
+        if ($temporaryAccessArray == null || count($temporaryAccessArray) == 0) {
             return false;
         } else {
             $temporaryAccessIds = $temporaryAccessArray[$this->getUserKey($user)];
 
-            return $temporaryAccessIds !== null and count($temporaryAccessIds) > 0;
+            return $temporaryAccessIds !== null && count($temporaryAccessIds) > 0;
         }
     }
 
@@ -52,12 +52,12 @@ class TemporaryAccessResourceManager
     {
         $temporaryAccessArray = $this->container->get('request')->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
 
-        if ($temporaryAccessArray == null or count($temporaryAccessArray) == 0) {
+        if ($temporaryAccessArray == null || count($temporaryAccessArray) == 0) {
             return false;
         } else {
             $temporaryAccessIds = $temporaryAccessArray[$this->getUserKey($user)];
 
-            if ($temporaryAccessIds == null or count($temporaryAccessIds) == 0) {
+            if ($temporaryAccessIds == null || count($temporaryAccessIds) == 0) {
                 return false;
             } else {
                 foreach ($temporaryAccessIds as $temporaryAccessId) {
@@ -69,13 +69,10 @@ class TemporaryAccessResourceManager
                 return false;
             }
         }
-
-        return true;
     }
 
     public function addTemporaryAccess(ResourceNode $node, User $user = null)
     {
-        $collection = new ResourceCollection(array($node));
         $temporaryAccessArray = $this->container->get('request')->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
 
         if ($temporaryAccessArray === null) {

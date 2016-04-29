@@ -284,28 +284,6 @@ class CorrectionController extends DropzoneBaseController
         }
     }
 
-    /* // MOVED TO CORRECTION MANAGER
-        private function calculateCorrectionTotalGrade(Dropzone $dropzone, Correction $correction)
-        {
-            $correction->setTotalGrade(null);
-
-            $nbCriteria = count($dropzone->getPeerReviewCriteria());
-            $maxGrade = $dropzone->getTotalCriteriaColumn() - 1;
-            $sumGrades = 0;
-            foreach ($correction->getGrades() as $grade) {
-                ($grade->getValue() > $maxGrade) ? $sumGrades += $maxGrade : $sumGrades += $grade->getValue();
-            }
-
-            $totalGrade = 0;
-            if ($nbCriteria != 0) {
-
-                $totalGrade = $sumGrades / ($nbCriteria);
-                $totalGrade = ($totalGrade * 20) / ($maxGrade);
-            }
-
-            return $totalGrade;
-        }
-    */
     /**
      * @Route(
      *      "/{resourceId}/correct",

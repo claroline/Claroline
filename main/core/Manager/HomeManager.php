@@ -107,7 +107,7 @@ class HomeManager
         $content = $this->getContentByType($type->getName(), $father, $region);
         $array = null;
 
-        if ($content and ($type->isPublish() or $admin)) {
+        if ($content && ($type->isPublish() || $admin)) {
             $array = array();
             $array['content'] = $content;
             $array['type'] = $type->getName();
@@ -153,7 +153,7 @@ class HomeManager
             }
 
             if ($first) {
-                for ($i = 0; $i < $type->getMaxContentPage() and $first != null; ++$i) {
+                for ($i = 0; $i < $type->getMaxContentPage() && $first != null; ++$i) {
                     $variables = array();
                     $variables['content'] = $first->getContent();
                     $variables['size'] = $first->getSize();
@@ -236,6 +236,8 @@ class HomeManager
     /**
      * Get the open graph contents of a web page by his URL.
      *
+     * @param string $url
+     *
      * @return array
      */
     public function getGraph($url)
@@ -279,8 +281,6 @@ class HomeManager
 
     /**
      * Update a content.
-     *
-     * @return This function doesn't return anything.
      */
     public function updateContent($content, $translatedContent = null, $size = null, $type = null)
     {
@@ -290,7 +290,7 @@ class HomeManager
             $this->contentManager->updateContent($content, $translatedContent['content'.$content->getId()]);
         }
 
-        if ($size and $type) {
+        if ($size && $type) {
             $type = $this->type->findOneBy(array('name' => $type));
             $contentType = $this->contentType->findOneBy(array('content' => $content, 'type' => $type));
             $contentType->setSize($size);
@@ -301,8 +301,6 @@ class HomeManager
 
     /**
      * Reorder Contents.
-     *
-     * @return This function doesn't return anything.
      */
     public function reorderContent($type, $a, $b = null, $father = null)
     {
@@ -354,27 +352,26 @@ class HomeManager
     /**
      * Move a content from a type to another.
      *
-     * @param content The content to move
-     * @param page The page type where move the content
-     *
-     * @return This function doesn't return anything.
+     * @param string content The content to move
+     * @param Type $type
+     * @param Type $page The page type where move the content
      */
     public function moveContent($content, $type, $page)
     {
-        $contenType = $this->contentType->findOneBy(array('type' => $type, 'content' => $content));
+        $contentType = $this->contentType->findOneBy(array('type' => $type, 'content' => $content));
 
-        $contenType->detach();
-        $contenType->setType($page);
-        $contenType->setFirst($this->contentType->findOneBy(array('type' => $page, 'back' => null)));
+        $contentType->detach();
+        $contentType->setType($page);
+        $contentType->setFirst($this->contentType->findOneBy(array('type' => $page, 'back' => null)));
 
-        $this->manager->persist($contenType);
+        $this->manager->persist($contentType);
         $this->manager->flush();
     }
 
     /**
-     * Delete a content and his childs.
+     * Delete a content and his children.
      *
-     * @return This function doesn't return anything.
+     * @param string $content
      */
     public function deleteContent($content)
     {
@@ -394,6 +391,8 @@ class HomeManager
     /**
      * Create a type.
      *
+     * @param string $name
+     *
      * @return Type
      */
     public function createType($name)
@@ -408,6 +407,9 @@ class HomeManager
     /**
      * Rename a type.
      *
+     * @param Type   $type
+     * @param string $name
+     *
      * @return Type
      */
     public function renameType($type, $name)
@@ -419,6 +421,9 @@ class HomeManager
         return $type;
     }
 
+    /**
+     * @param Type $type
+     */
     public function persistType(Type $type)
     {
         $this->manager->persist($type);
@@ -427,6 +432,10 @@ class HomeManager
 
     /**
      * Verify if a type exist.
+     *
+     * @param string $name
+     *
+     * @return boolean
      */
     public function typeExist($name)
     {
@@ -442,7 +451,7 @@ class HomeManager
     /**
      * Delete a type and his childs.
      *
-     * @return This function doesn't return anything.
+     * @param Type $type a content type
      */
     public function deleteType($type)
     {
@@ -459,7 +468,7 @@ class HomeManager
     /**
      * Publish content type page.
      *
-     * @param $type a content type
+     * @param Type $type a content type
      *
      * @return bool
      */
@@ -467,7 +476,7 @@ class HomeManager
     {
         $publish = true;
 
-        if ($type instanceof Type and $type->getName() !== 'home' and $type->getName() !== 'menu') {
+        if ($type instanceof Type && $type->getName() !== 'home' && $type->getName() !== 'menu') {
             if ($type->isPublish()) {
                 $publish = false;
             }
@@ -510,7 +519,7 @@ class HomeManager
     {
         $regions = $this->contentRegion->findBy(array('content' => $content));
 
-        if (count($regions) === 1 and $regions[0]->getRegion()->getName() === $region->getName()) {
+        if (count($regions) === 1 && $regions[0]->getRegion()->getName() === $region->getName()) {
             $this->deleteRegions($content, $regions);
         } else {
             $this->deleteRegions($content, $regions);
@@ -545,7 +554,7 @@ class HomeManager
     {
         $variables = array('type' => $type);
 
-        if ($id and !$content) {
+        if ($id && !$content) {
             $content = $this->content->find($id);
             $variables['content'] = $content;
         }
@@ -607,7 +616,7 @@ class HomeManager
             array(
                 'home_menu' => is_numeric($homeMenu) ? intval($homeMenu) : null,
                 'footer_login' => ($footerLogin === 'true'),
-            'footer_workspaces' => ($footerWorkspaces === 'true'),
+                'footer_workspaces' => ($footerWorkspaces === 'true'),
                 'header_locale' => ($headerLocale === 'true'),
             )
         );

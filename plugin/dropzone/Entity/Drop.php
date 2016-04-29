@@ -285,7 +285,7 @@ class Drop
         $nbFinishedCorrections = 0;
         if (count($this->getCorrections()) > 0) {
             foreach ($this->getCorrections() as $correction) {
-                if ($correction->getFinished() and $correction->getValid() and $correction->getTotalGrade() != null) {
+                if ($correction->getFinished() && $correction->getValid() && $correction->getTotalGrade() != null) {
                     $grade = $grade + $correction->getTotalGrade();
                     $nbFinishedCorrections = $nbFinishedCorrections + 1;
                 }
@@ -310,7 +310,7 @@ class Drop
     {
         $nbFinishedCorrections = 0;
         foreach ($this->getCorrections() as $correction) {
-            if ($correction->getFinished() and $correction->getValid() and $correction->getTotalGrade() != null) {
+            if ($correction->getFinished() && $correction->getValid() && $correction->getTotalGrade() != null) {
                 $nbFinishedCorrections = $nbFinishedCorrections + 1;
             }
         }

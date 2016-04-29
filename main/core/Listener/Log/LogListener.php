@@ -270,7 +270,7 @@ class LogListener
      */
     public function onLog(LogGenericEvent $event)
     {
-        if (!($event instanceof LogNotRepeatableInterface) or !$this->isARepeat($event)) {
+        if (!($event instanceof LogNotRepeatableInterface) || !$this->isARepeat($event)) {
             $this->createLog($event);
         }
     }
