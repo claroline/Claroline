@@ -1,4 +1,17 @@
 .match-question-container {
+    p > audio {
+        margin-top: 40px;
+        max-width: 90%;
+    }
+    
+    div > p > video {
+        max-height: 110px;
+    }
+    
+    div > p > img {
+        max-height: 110px;
+    }
+    
     ._jsPlumb_hover {
         cursor: url("../images/scissors-red.png"), pointer;
     }
@@ -12,22 +25,29 @@
     }
 
     .origin {
-        background-color: @gray-lighter;
-        margin-top: floor(@grid-gutter-width / 2);
-        padding: 10px;
-        border-radius: @border-radius-base;
+        background-color: #f9f9f9;
+        margin: 10px;
+        min-height: 50px;
+        /*max-width: 400px;*/
+        min-width: 200px;
     }
-
+    
     .droppable {
-        background-color: @gray-lighter;
-        margin-top: floor(@grid-gutter-width / 2);
+        background-color: #f9f9f9;
+        border-color: #b7b7b7;
+        margin: 10px;
+        /*max-width: 400px;*/
+        /*min-height: 150px;*/
+        min-width: 200px;
         padding: 10px;
-        border-radius: @border-radius-base;
     }
 
     .draggable {
         list-style-type:none;
-        cursor: all-scroll;
+    }
+    
+    .ui-draggable-dragging {
+        max-width: 450px; 
     }
 
     .lidroppable {
@@ -69,8 +89,8 @@
     }
 
     .drop-textbox-height {
-        height: 80px;
-        max-height: 80px;
+        height: 120px;
+        max-height: 120px;
     }
 
     .dropzone-textbox {
@@ -86,7 +106,7 @@
     }
 
     .drag-button {
-        padding-top: 32px;
+        padding-top: 52px;
         text-align: center;
         background-color: #ededed;
     }
@@ -137,7 +157,6 @@
     }
 
     .drop-color-default {
-        background-color: #ededed;
         border-color: #b7b7b7;
     }
 

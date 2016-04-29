@@ -77,11 +77,11 @@
                             </a>
                         </li>
                     </ul>
-
                     <!-- Play the Exercise -->
-                    <a data-ng-if="exerciseCtrl.composeEnabled && exerciseCtrl.exercise.steps.length > 0" href="#/play" role="button" class="btn btn-primary navbar-btn navbar-right">
+                    <a data-ng-if="(exerciseCtrl.nbPapers < exerciseCtrl.exercise.meta.maxAttempts || exerciseCtrl.exercise.meta.maxAttempts === 0) && exerciseCtrl.composeEnabled && exerciseCtrl.exercise.steps.length > 0" href="#/play" role="button" class="btn btn-primary navbar-btn navbar-right">
                         <span class="fa fa-check-square-o"></span> {{ 'compose' | trans:{}:'ujm_exo' }}
                     </a>
+                    <span data-ng-if="!(exerciseCtrl.nbPapers < exerciseCtrl.exercise.meta.maxAttempts || exerciseCtrl.exercise.meta.maxAttempts === 0)" class="navbar-right alert alert-info">{{ 'attempt_info6' | trans:{}:'ujm_exo' }}</span>
 
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Display results of the Exercise -->

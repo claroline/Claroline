@@ -28,6 +28,8 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl($location, exercise, step, 
     this.index    = this.ExerciseService.getIndex(step);
     this.previous = this.ExerciseService.getPrevious(step);
     this.next     = this.ExerciseService.getNext(step);
+    
+    this.solutionShown = false;
 
     // Reset feedback (hide feedback and reset registered callbacks of the Step)
     this.FeedbackService.reset();
@@ -40,6 +42,12 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl($location, exercise, step, 
 
     // Get feedback info
     this.feedback = this.FeedbackService.get();
+    
+    // for now, we set a new variable, maxStepTries, to 5 by default
+    for (var i=0; i < this.exercise.steps.length; i++) {
+        this.exercise.steps[i].currentTry = 1;
+        this.exercise.steps[i].maxStepTries = 5;
+    }
 };
 
 // Set up dependency injection
@@ -126,11 +134,19 @@ ExercisePlayerCtrl.prototype.submit = function submit() {
  */
 ExercisePlayerCtrl.prototype.retry = function retry() {
     this.submitted = false;
+    this.step.currentTry++;
 
     if (this.FeedbackService.isEnabled()) {
         // Hide feedback
         this.FeedbackService.hide();
     }
+};
+
+/**
+ * Show the solution
+ */
+ExercisePlayerCtrl.prototype.showSolution = function showSolution() {
+    this.solutionShown = true;
 };
 
 /**

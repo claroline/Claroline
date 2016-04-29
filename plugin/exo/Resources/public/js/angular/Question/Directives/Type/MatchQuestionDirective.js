@@ -22,6 +22,21 @@ var MatchQuestionDirective = function MatchQuestionDirective($timeout, MatchQues
             $timeout(function () {
                 // MatchQuestion sub type is ToBind
                 if (matchQuestionCtrl.question.toBind) {
+                    jsPlumb.registerConnectionTypes({
+                        "right": {
+                            paintStyle:{ strokeStyle:"#5CB85C", lineWidth: 5  },
+                            hoverPaintStyle:{ strokeStyle:"green", lineWidth: 6 }
+                        },
+                        "wrong": {
+                            paintStyle:{ strokeStyle:"#D9534F", lineWidth: 5 },
+                            hoverPaintStyle:{ strokeStyle:"red", lineWidth: 6 }
+                        },
+                        "default": {
+                            paintStyle:{ strokeStyle:"grey", lineWidth: 5 },
+                            hoverPaintStyle:{ strokeStyle:"grey", lineWidth: 6 }
+                        }
+                    });
+    
                     MatchQuestionService.initBindMatchQuestion();
 
                     jsPlumb.bind("beforeDrop", function (info) {
@@ -30,7 +45,15 @@ var MatchQuestionDirective = function MatchQuestionDirective($timeout, MatchQues
 
                     // remove one connection
                     jsPlumb.bind("click", function (connection) {
-                        matchQuestionCtrl.removeConnection(connection);
+                        var deletable = false;
+                        for (var i=0; i<connection._jsPlumb.types.length; i++) {
+                            if (connection._jsPlumb.types[i] === "default") {
+                                deletable = true;
+                            }
+                        }
+                        if (deletable) {
+                            matchQuestionCtrl.removeConnection(connection);
+                        }
                     });
 
                     matchQuestionCtrl.addPreviousConnections();
