@@ -24,7 +24,6 @@ var GraphicQuestionDirective = function GraphicQuestionDirective($timeout) {
                 graphicQuestionCtrl.initPreviousAnswers();
                 graphicQuestionCtrl.initDragAndDrop();
             });
-
         }
     };
 };

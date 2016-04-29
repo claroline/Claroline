@@ -13,27 +13,35 @@
             </div>
         </div>
 
-        <div class="text-right">
-            <button type="button" role="button" class="btn btn-sm btn-danger" data-ng-disabled="graphicQuestionCtrl.feedback.visible" data-ng-click="matchQuestionCtrl.reset()">
+        <div class="text-right" style="margin-bottom: 20px;">
+            <button type="button" role="button" class="btn btn-sm btn-danger" data-ng-disabled="graphicQuestionCtrl.feedback.visible" data-ng-click="graphicQuestionCtrl.reset()">
                 <span class="fa fa-refresh"></span>
                 {{ 'reset'|trans:{}:'ujm_exo' }}
             </button>
         </div>
 
-        <!-- draggable objects row -->
-        <div class="row">
-            <div class="col-md-12">
-                <ul class="list-inline">
+        <div class="text-center">
+            <!-- Crosshairs to drag -->
+            <div class="crosshairs-list text-left" style="width: {{ graphicQuestionCtrl.question.width + graphicQuestionCtrl.crosshair.size + 2 }}px; min-height: {{ graphicQuestionCtrl.crosshair.size }}px;">
+                <span class="fa fa-hand-rock-o" data-toggle="tooltip" title="{{ 'graphic_help'|trans:{}:'ujm_exo' }}"></span>
+                <ul class="text-center">
                     <li data-ng-repeat="coord in graphicQuestionCtrl.question.coords">
-                        <img class="crosshair draggable" id="crosshair_{{coord.id}}" data-ng-src="{{ graphicQuestionCtrl.getAssetsDir() + 'bundles/ujmexo/images/graphic/answer.png' }}" />
+                        <img id="crosshair_{{coord.id}}"
+                             class="crosshair draggable"
+                             data-ng-src="{{ graphicQuestionCtrl.crosshair.url }}" />
                     </li>
                 </ul>
             </div>
-        </div>
 
-        <!-- document row -->
-        <div class="droppable-container">
-            <img id="document-img" alt="{{graphicQuestionCtrl.question.document.label}}" width="{{graphicQuestionCtrl.question.width}}" height="{{graphicQuestionCtrl.question.height}}" data-ng-src="{{ graphicQuestionCtrl.getAssetsDir() + graphicQuestionCtrl.question.document.url }}" />
+            <!-- Image -->
+            <div class="droppable-container">
+                <img id="document-img"
+                     alt="{{ graphicQuestionCtrl.question.document.label }}"
+                     width="{{ graphicQuestionCtrl.question.width }}"
+                     height="{{ graphicQuestionCtrl.question.height }}"
+                     style="margin: {{ graphicQuestionCtrl.crosshair.size / 2 }}px;"
+                     data-ng-src="{{ graphicQuestionCtrl.getAssetsDir() + graphicQuestionCtrl.question.document.url }}" />
+            </div>
         </div>
     </div>
 </div>

@@ -135,6 +135,7 @@ formative : Formatif
 graphic: Graphique
 graphic_creation: Création d'une question graphique
 graphic_edition: Edition d'une question graphique
+graphic_help: Glisser les réticules sur l'image pour marques votre réponse
 group: Groupe
 
 # H

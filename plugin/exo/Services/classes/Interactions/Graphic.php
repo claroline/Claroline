@@ -16,7 +16,6 @@ class Graphic extends Interaction
      * implement the abstract method
      * To process the user's response for a paper(or a test).
      *
-     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int                                       $paperID id Paper or 0 if it's just a question test and not a paper
      *
@@ -26,7 +25,6 @@ class Graphic extends Interaction
     {
         $answers = $request->request->get('answers'); // Answer of the student
         $graphId = $request->request->get('graphId'); // Id of the graphic interaction
-        $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
 
         $em = $this->doctrine->getManager();
 
@@ -39,35 +37,23 @@ class Graphic extends Interaction
         $doc = $em->getRepository('UJMExoBundle:Picture')
             ->findOneBy(array('id' => $interG->getPicture()));
 
-        $point = $this->mark($answers, $request, $rightCoords, $coords);
-
-        $session = $request->getSession();
-
-        $penalty = $this->getPenalty($interG->getQuestion(), $session, $paperID);
-
-        $score = $point - $penalty; // Score of the student with penalty
-
-        // Not negative score
-        if ($score < 0) {
-            $score = 0;
-        }
-
         if (!preg_match('/[0-9]+/', $answers)) {
             $answers = '';
         }
 
-        $total = $this->maxScore($interG); // Score max
+        $penalty = $this->getPenalty($interG->getQuestion(), $request->getSession(), $paperID);
+        $score   = $this->mark($answers, $rightCoords, $penalty);
+        $total   = $this->maxScore($interG); // Score max
 
         $res = array(
-            'point' => $point, // Score of the student without penalty
             'penalty' => $penalty, // Penalty (hints)
             'interG' => $interG, // The entity interaction graphic (for the id ...)
-            'coords' => $rightCoords, // The coordonates of the right answer zones
+            'coords' => $rightCoords, // The coordinates of the right answer zones
             'doc' => $doc, // The answer picture (label, src ...)
             'total' => $total, // Score max if all answers right and no penalty
-            'rep' => $coords, // Coordonates of the answer zones of the student's answer
+            'rep' => preg_split('[;]', $answers), // Coordinates of the answer zones of the student's answer
             'score' => $score, // Score of the student (right answer - penalty)
-            'response' => $answers, // The student's answer (with all the informations of the coordonates)
+            'response' => $answers, // The student's answer (with all the information of the coordinates)
         );
 
         return $res;
@@ -77,61 +63,60 @@ class Graphic extends Interaction
      * implement the abstract method
      * To calculate the score.
      *
-     *
-     * @param string                                             $answers
-     * @param \Symfony\Component\HttpFoundation\Request          $request
+     * @param string                         $answer
      * @param \UJM\ExoBundle\Entity\Coords[] $rightCoords
-     * @param array [string]                                     $coords
-     *
+     * @param number                         $penalty
      * @return float
      */
-    public function mark($answers = null, $request = null, $rightCoords = null, $coords = null)
+    public function mark($answer = null, array $rightCoords = null, $penalty = null)
     {
-        // differentiate the exercise of the bank of questions
-        if (is_int($request)) {
-            $max = $request;
-            $coords = preg_split('[,]', $answers); // Divide the answer zones into cells
-        } else {
-            $max = $request->request->get('nbpointer'); // Number of answer zones
-            $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
-        }
+        $score = 0;
 
-        $verif = array();
-        $point = $z = 0;
+        // Get the list of submitted coords from the answer string
+        $coordsList = preg_split('/[;,]/', $answer);
+        if (!empty($coordsList)) {
+            // Loop through correct answers to know if they are in the submitted data
+            foreach ($rightCoords as $expected) {
+                // Get X and Y values from expected string
+                list($xr, $yr) = explode(',', $expected->getValue());
+                // Get tolerance zone
+                $zoneSize = $expected->getSize();
 
-        for ($i = 0; $i < $max - 1; ++$i) {
-            for ($j = 0; $j < $max - 1; ++$j) {
-                if (preg_match('/[0-9]+/', $coords[$j])) {
-                    list($xa, $ya) = explode('-', $coords[$j]); // Answers of the student
-                    list($xr, $yr) = explode(',', $rightCoords[$i]->getValue()); // Right answers
+                foreach ($coordsList as $coords) {
+                    if (preg_match('/[0-9]+/', $coords)) {
+                        // Get X and Y values from answers of the student
+                        list($xa, $ya) = explode('-', $coords);
 
-                    $valid = $rightCoords[$i]->getSize(); // Size of the answer zone
+                        if (($xa <= ($xr + $zoneSize)) && ($xa > $xr) &&
+                            ($ya <= ($yr + $zoneSize)) && ($ya > $yr)
+                        ) {
+                            // The student answer is in the answer zone give him the points
+                            $score += $expected->getScoreCoords();
 
-                    // If answer student is in right answer
-                    if ((($xa + 8) < ($xr + $valid)) && (($xa + 8) > ($xr)) &&
-                        (($ya + 8) < ($yr + $valid)) && (($ya + 8) > ($yr))
-                    ) {
-                        // Not get points twice for one answer
-                        if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) {
-                            $point += $rightCoords[$i]->getScoreCoords(); // Score of the student without penalty
-                            $verif[$z] = $rightCoords[$i]->getValue(); // Add this answer zone to already answered zones
-                            ++$z;
+                            break; // We have found an answer for this answer zone, so we directly pass to the next one
                         }
                     }
                 }
             }
         }
 
-        return $point;
+        if ($penalty) {
+            $score = $score - $penalty; // Score of the student with penalty
+        }
+
+        // Not negative score
+        if ($score < 0) {
+            $score = 0;
+        }
+
+        return $score;
     }
 
     /**
      * implement the abstract method
      * Get score max possible for a graphic question.
      *
-     *
      * @param \UJM\ExoBundle\Entity\InteractionGraphic $interGraph
-     *
      * @return float
      */
     public function maxScore($interGraph = null)
@@ -153,7 +138,6 @@ class Graphic extends Interaction
      * implement the abstract method.
      *
      * @param int $questionId
-     *
      * @return \UJM\ExoBundle\Entity\InteractionGraphic
      */
     public function getInteractionX($questionId)
@@ -169,7 +153,7 @@ class Graphic extends Interaction
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
      * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface    $session
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface   $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
@@ -179,32 +163,5 @@ class Graphic extends Interaction
         $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
 
         return $responseGiven;
-    }
-
-    /**
-     * Graphic question : Check if the suggested answer zone isn't already right in order not to have points twice.
-     *
-     *
-     * @param string $coor  coords of one right answer
-     * @param array  $verif list of the student's placed answers zone
-     * @param int    $z     number of rights placed answers by the user
-     *
-     * @return bool
-     */
-    private function alreadyDone($coor, $verif, $z)
-    {
-        $resu = true;
-
-        for ($v = 0; $v < $z; ++$v) {
-            // if already placed at this right place
-            if ($coor == $verif[$v]) {
-                $resu = false;
-                break;
-            } else {
-                $resu = true;
-            }
-        }
-
-        return $resu;
     }
 }

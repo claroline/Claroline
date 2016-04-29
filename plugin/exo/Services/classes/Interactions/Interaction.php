@@ -169,7 +169,7 @@ abstract class Interaction
       * To calculate the score for a question.
       *
       *
-      * @return string userScore/scoreMax
+      * @return float userScore
       */
      abstract public function mark();
 

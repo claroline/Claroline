@@ -126,6 +126,10 @@ class QcmHandler implements QuestionHandlerInterface
                 if ($solution->id === $importData->choices[$i]->id) {
                     $choice->setWeight($solution->score);
 
+                    if (0 < $solution->score) {
+                        $choice->setRightResponse(true);
+                    }
+
                     if (isset($solution->feedback)) {
                         $choice->setFeedback($solution->feedback);
                     }
@@ -152,16 +156,17 @@ class QcmHandler implements QuestionHandlerInterface
     public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
     {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionQCM');
-        $qcm = $repo->findOneBy(['question' => $question]);
-        $exportData->random = $qcm->getShuffle();
+        $interaction = $repo->findOneByQuestion($question);
+
+        $exportData->random = $interaction->getShuffle();
         // if needed shuffle choices
         if ($exportData->random && !$forPaperList) {
-            $qcm->shuffleChoices();
+            $interaction->shuffleChoices();
         }
 
-        $choices = $qcm->getChoices()->toArray();
+        $choices = $interaction->getChoices()->toArray();
 
-        $exportData->multiple = $qcm->getTypeQCM()->getCode() === 1;
+        $exportData->multiple = $interaction->getTypeQCM()->getCode() === 1;
         $exportData->choices = array_map(function ($choice) {
             $choiceData = new \stdClass();
             $choiceData->id = (string) $choice->getId();
@@ -170,10 +175,8 @@ class QcmHandler implements QuestionHandlerInterface
 
             return $choiceData;
         }, $choices);
-        $interaction = $repo->findOneByQuestion($question);
-        $scoreTotal = $this->container->get('ujm.exo.qcm_service')->maxScore($interaction);
 
-        $exportData->scoreTotal = $scoreTotal;
+        $exportData->scoreTotal = $this->container->get('ujm.exo.qcm_service')->maxScore($interaction);
 
         if ($withSolution) {
             $exportData->solutions = array_map(function ($choice) {

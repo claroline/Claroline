@@ -4,6 +4,7 @@
   "title": "Question ?",
   "description":null,
   "invite":"Question ?",
+  "scoreTotal": 1.5,
   "choices": [
     {
       "id": "1",

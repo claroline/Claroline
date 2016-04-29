@@ -2,6 +2,7 @@
   "id": "1",
   "type": "application/x.choice+json",
   "title": "Question ?",
+  "scoreTotal": 0,
   "choices": [
     {
       "id": "1",

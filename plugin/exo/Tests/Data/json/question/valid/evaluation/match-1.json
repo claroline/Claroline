@@ -6,6 +6,7 @@
   "invite":"Question ?",
   "random": false,
   "toBind": true,
+  "scoreTotal": 0,
   "firstSet": [
     {
       "id": "2",
