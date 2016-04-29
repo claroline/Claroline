@@ -28,9 +28,6 @@ class Updater030400 extends Updater
     {
         $this->log('replacing default zip file');
         $this->replaceDefaultZip();
-
-        //why is it here ? can't remember
-        //$this->removeModelTable();
     }
 
     private function replaceDefaultZip()
@@ -39,15 +36,5 @@ class Updater030400 extends Updater
         $sourcePath = $this->container->getParameter('claroline.param.default_template');
         @unlink($destinationPath);
         copy($sourcePath, $destinationPath);
-    }
-
-    private function removeModelTable()
-    {
-        $this->log('Removing model table...');
-        try {
-            $this->conn->query('DROP TABLE claro_workspace_model_resource');
-        } catch (\Doctrine\DBAL\DBALException $e) {
-            $this->log('claro_workspace_model_resource already removed.');
-        }
     }
 }

@@ -27,7 +27,7 @@ class IcapBadgeBundle extends PluginBundle
         return new AdditionalInstaller();
     }
 
-    public function getRequiredPlugins()
+    public function getPluginsRequirements()
     {
         return ['Icap\\PortfolioBundle\\IcapPortfolioBundle', 'Icap\\NotificationBundle\\IcapNotificationBundle'];
     }

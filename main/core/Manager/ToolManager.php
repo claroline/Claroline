@@ -591,12 +591,6 @@ class ToolManager
         );
     }
 
-    private function configChecker($conf)
-    {
-        //no implementation yet
-        return true;
-    }
-
     /**
      * Sets a tool visible for a user in the desktop.
      *

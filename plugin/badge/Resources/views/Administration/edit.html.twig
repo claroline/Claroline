@@ -8,21 +8,21 @@
 
 {% block breadcrumb %}
     {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'badges_management'|trans({}, 'icap_badge'),
-                'href': path('icap_badge_admin_badges')
-            },
-            {
-                'name': 'view_badge'|trans({'%badge_name%': badge.name}, 'icap_badge'),
-                'href': ''
-            }
-        ])
+    macros.breadcrumbs([
+    {
+        'icon': 'fa fa-cog',
+        'name': 'administration'|trans({}, 'platform'),
+        'href': path('claro_admin_index')
+    },
+    {
+        'name': 'badges_management'|trans({}, 'icap_badge'),
+        'href': path('icap_badge_admin_badges')
+    },
+    {
+        'name': 'view_badge'|trans({'%badge_name%': badge.name}, 'icap_badge'),
+        'href': ''
+    }
+    ])
     }}
 {% endblock %}
 
@@ -48,9 +48,7 @@
     <div class="tab-content view_badge">
         <div class="tab-pane active view" id="view">
             <div class="row">
-                <div class="col-md-2 text-center">
-                    <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
-                </div>
+                <div class="col-md-2 text-center img_container" style="background-image: url({{ app.request.getSchemeAndHttpHost() ~ asset(badge.webPath) }});"></div>
                 <div class="col-md-7">
                     <div class="table-responsive">
                         <table class="badge_informations table table-condensed">
@@ -59,31 +57,31 @@
                                 <col class="dataCol">
                             </colgroup>
                             <tbody>
+                            <tr>
+                                <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
+                                <td>{{ badge.name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">{{ 'badge_version'|trans }}</td>
+                                <td>{{ badge.version }}</td>
+                            </tr>
+                            {% if badge.isExpiring %}
                                 <tr>
-                                  <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
-                                </tr>
-                                <tr>
-                                  <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
-                                  <td>{{ badge.name }}</td>
-                                </tr>
-                                <tr>
-                                  <td class="fieldlabel">{{ 'badge_version'|trans }}</td>
-                                  <td>{{ badge.version }}</td>
-                                </tr>
-                                {% if badge.isExpiring %}
-                                <tr>
-                                  <td class="fieldlabel">{{ 'badge_validity_period'|trans }}</td>
+                                    <td class="fieldlabel">{{ 'badge_validity_period'|trans }}</td>
                                     <td>{{ badge.expireDuration ~ ' ' ~ badge.expirePeriodLabel|trans }}</td>
                                 </tr>
-                                {% endif %}
-                                <tr>
-                                  <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
-                                  <td>{{ badge.description }}</td>
-                                </tr>
-                                <tr>
-                                  <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
-                                  <td>{{ badge.criteria|raw }}</td>
-                                </tr>
+                            {% endif %}
+                            <tr>
+                                <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
+                                <td>{{ badge.description }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
+                                <td>{{ badge.criteria|raw }}</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -100,8 +98,8 @@
                             <thead>
                             <tr>
                                 <th></th>
-                                <th>{{ 'First name'|trans({}, 'platform') }}</th>
-                                <th>{{ 'Last name'|trans({}, 'platform') }}</th>
+                                <th>{{ 'first_name'|trans({}, 'platform') }}</th>
+                                <th>{{ 'last_name'|trans({}, 'platform') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -124,17 +122,17 @@
                         </table>
                     </div>
                     {% if pager.haveToPaginate %}
-                    {{
+                        {{
                         pagerfanta(
-                            pager,
-                            'twitter_bootstrap_translated',
-                            {
-                                'proximity' : 1,
-                                'routeName': 'icap_badge_admin_badges_edit',
-                                'routeParams': {'slug': badge.slug}
-                            }
+                        pager,
+                        'twitter_bootstrap_translated',
+                        {
+                            'proximity' : 1,
+                            'routeName': 'icap_badge_admin_badges_edit',
+                            'routeParams': {'slug': badge.slug}
+                        }
                         )
-                    }}
+                        }}
                     {% endif %}
                 {% else %}
                     <p class="badge_not_awarded">
@@ -266,12 +264,12 @@
                 {{ form_rest(form) }}
                 <div class="form-actions">
                     {% if 0 < pager.currentPageResults|length %}
-                    <button type="submit" class="btn btn-primary edit-confirm" data-confirm-title="{{ 'badge_edit_confirm_title'|trans }}"
-                        data-confirm-message="{{ '<div class="alert alert-warning">' ~ 'badge_edit_create_new_version'|trans|raw ~ '</div><br>' ~ 'badge_edit_confirm_message'|trans({'%badgeName%': badge.name}) }}"
-                        data-confirm-ok="{{ 'edit'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"
-                        data-confirm-style="primary">{{ 'edit'|trans({}, 'platform') }}</button>
+                        <button type="submit" class="btn btn-primary edit-confirm" data-confirm-title="{{ 'badge_edit_confirm_title'|trans }}"
+                                data-confirm-message="{{ '<div class="alert alert-warning">' ~ 'badge_edit_create_new_version'|trans|raw ~ '</div><br>' ~ 'badge_edit_confirm_message'|trans({'%badgeName%': badge.name}) }}"
+                                data-confirm-ok="{{ 'edit'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"
+                                data-confirm-style="primary">{{ 'edit'|trans({}, 'platform') }}</button>
                     {% else %}
-                    <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
                     {% endif %}
                     <a href="{{ path('icap_badge_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">
                         {{ 'cancel'|trans({}, 'platform') }}
@@ -288,14 +286,14 @@
 {% endblock %}
 
 {% block javascripts %}
-{{ parent() }}
-<script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/select2/select2.min.js') }}"></script>
-{% if 'en' != app.request.locale %}
-<script type="text/javascript" src="{{ asset('bundles/frontend/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
-{% endif %}
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery-option-tree/jquery.optionTree.js') }}"></script>
-<script type="text/javascript" src='{{ asset('bundles/frontend/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-<script type="text/javascript" src='{{ asset('bundles/icapbadge/js/edit.js') }}'></script>
-<script type="text/javascript" src='{{ asset('bundles/icapbadge/js/rules.js') }}'></script>
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/select2/select2.min.js') }}"></script>
+    {% if 'en' != app.request.locale %}
+        <script type="text/javascript" src="{{ asset('bundles/frontend/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
+    {% endif %}
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-option-tree/jquery.optionTree.js') }}"></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/icapbadge/js/edit.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/icapbadge/js/rules.js') }}'></script>
 {% endblock %}

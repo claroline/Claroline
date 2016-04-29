@@ -68,7 +68,7 @@ class ToolRepository extends EntityRepository implements ContainerAwareInterface
                     AND BIT_AND(r.mask, 1) = 1
                     AND (
                         CONCAT(p.vendorName, p.bundleName) IN (:bundles)
-                        OR tool.plugin is NULL
+                        OR p.id is NULL
                     )
                     ORDER BY ot.order
                 ';
@@ -340,11 +340,11 @@ class ToolRepository extends EntityRepository implements ContainerAwareInterface
         $dql = '
             SELECT t
             FROM Claroline\CoreBundle\Entity\Tool\Tool t
-            LEFT JOIN tool.plugin p
+            LEFT JOIN t.plugin p
             WHERE t.isDisplayableInWorkspace = true
             AND (
                 CONCAT(p.vendorName, p.bundleName) IN (:bundles)
-                OR tool.plugin is NULL
+                OR t.plugin is NULL
             )
         ';
 

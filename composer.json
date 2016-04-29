@@ -126,6 +126,7 @@
         "icap/social-media-bundle": "*",
         "icap/wiki-bundle": "*",
         "icap/oauth-bundle": "*",
+        "icap/formula-plugin-bundle": "*",
         "claroline/result-bundle": "*",
         "innova/path-bundle": "*",
         "claroline/pdf-generator-bundle": "*",
@@ -170,12 +171,14 @@
             "Icap\\SocialmediaBundle\\": "plugin/social-media",
             "Icap\\WikiBundle\\": "plugin/wiki",
             "Icap\\OAuthBundle\\": "plugin/oauth",
+            "Icap\\FormulaPluginBundle\\": "plugin/formula",
             "Claroline\\ResultBundle\\": "plugin/result",
             "Innova\\PathBundle\\": "plugin/path",
             "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator",
             "Claroline\\DevBundle\\": "main/dev",
             "Claroline\\WebInstaller\\": "main/web-installer/",
-            "Icap\\WebsiteBundle\\": "plugin/website"
+            "Icap\\WebsiteBundle\\": "plugin/website",
+	          "Innova\\VideoRecorderBundle\\": "plugin/video-recorder"
         }
     },
     "extra": {
@@ -217,10 +220,12 @@
             "Icap\\SocialmediaBundle\\IcapSocialmediaBundle",
             "Icap\\WikiBundle\\IcapWikiBundle",
             "Icap\\OAuthBundle\\IcapOAuthBundle",
+            "Icap\\FormulaPluginBundle\\IcapFormulaPluginBundle",
             "Claroline\\ResultBundle\\ClarolineResultBundle",
             "Innova\\PathBundle\\InnovaPathBundle",
             "Claroline\\DevBundle\\ClarolineDevBundle",
-            "Icap\\WebsiteBundle\\IcapWebsiteBundle"
+            "Icap\\WebsiteBundle\\IcapWebsiteBundle",
+            "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle"
         ]
     }
 }

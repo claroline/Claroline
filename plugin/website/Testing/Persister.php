@@ -8,7 +8,9 @@
 
 namespace Icap\WebsiteBundle\Testing;
 
+use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -32,9 +34,8 @@ class Persister
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->websiteType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findOneByName('icap_website');
-        $this->userRole = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
+        $this->websiteType = $this->resourceType('icap_website');
+        $this->userRole = $this->role('ROLE_USER');
     }
 
     /**
@@ -108,10 +109,61 @@ class Persister
         return $website;
     }
 
-    public function deleteWebsiteTestsFolder(Website $website)
+    public function deleteWebsiteTestsFolder(Website $website, $webDir)
     {
-        $websiteUploadFolder = $website->getOptions()->getUploadRootDir();
+        $websiteUploadFolder = $webDir.DIRECTORY_SEPARATOR.$website->getOptions()->getUploadDir();
         $fs = new FileSystem();
         $fs->remove($websiteUploadFolder);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Role
+     */
+    private function role($name)
+    {
+        $role = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName($name);
+
+        if (!$role) {
+            $role = new Role();
+            $role->setName($name);
+            $role->setTranslationKey($name);
+            $this->om->persist($role);
+        }
+
+        return $role;
+    }
+
+    private function resourceType($name)
+    {
+        $type = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneByName($name);
+
+        if (!$type) {
+            $type = new ResourceType();
+            $type->setName($name);
+            $type->setDefaultMask(1);
+            $type->setPlugin($this->websitePlugin());
+            $this->om->persist($type);
+        }
+
+        return $type;
+    }
+
+    private function websitePlugin()
+    {
+        $plugin = $this->om->getRepository('ClarolineCoreBundle:Plugin')
+            ->findOneByBundleName('WebsiteBundle');
+
+        if (!$plugin) {
+            $plugin = new Plugin();
+            $plugin->setVendorName('Icap');
+            $plugin->setBundleName('WebsiteBundle');
+            $plugin->setHasOptions(false);
+            $this->om->persist($plugin);
+        }
+
+        return $plugin;
     }
 }

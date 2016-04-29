@@ -1645,13 +1645,4 @@ class WorkspaceController extends Controller
             }
         }
     }
-
-    private function checkWorkspaceManagerAccess(Workspace $workspace)
-    {
-        $role = $this->roleManager->getManagerRole($workspace);
-
-        if (is_null($role) || !$this->authorization->isGranted($role->getName())) {
-            throw new AccessDeniedException();
-        }
-    }
 }

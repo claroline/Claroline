@@ -313,61 +313,6 @@ class Scorm2004Listener
     }
 
     /**
-     * Looks for the organization to use.
-     *
-     * @param \DOMDocument $dom
-     *
-     * @return array of Scorm2004Sco
-     *
-     * @throws InvalidScormArchiveException If a default organization
-     *                                      is defined and not found
-     */
-    private function parseOrganizationsNode(\DOMDocument $dom)
-    {
-        $organizationsList = $dom->getElementsByTagName('organizations');
-        $resources = $dom->getElementsByTagName('resource');
-
-        if ($organizationsList->length > 0) {
-            $organizations = $organizationsList->item(0);
-            $organization = $organizations->firstChild;
-
-            if (!is_null($organizations->attributes)
-                && !is_null($organizations->attributes->getNamedItem('default'))) {
-                $defaultOrganization = $organizations->attributes->getNamedItem('default')->nodeValue;
-            } else {
-                $defaultOrganization = null;
-            }
-            // No default organization is defined
-            if (is_null($defaultOrganization)) {
-                while (!is_null($organization)
-                    && $organization->nodeName !== 'organization') {
-                    $organization = $organization->nextSibling;
-                }
-
-                if (is_null($organization)) {
-                    return $this->parseResourceNodes($resources);
-                }
-            }
-            // A default organization is defined
-            // Look for it
-            else {
-                while (!is_null($organization)
-                    && ($organization->nodeName !== 'organization'
-                    || is_null($organization->attributes->getNamedItem('identifier'))
-                    || $organization->attributes->getNamedItem('identifier')->nodeValue !== $defaultOrganization)) {
-                    $organization = $organization->nextSibling;
-                }
-
-                if (is_null($organization)) {
-                    throw new InvalidScormArchiveException('default_organization_not_found_message');
-                }
-            }
-
-            return $this->parseItemNodes($organization, $resources);
-        }
-    }
-
-    /**
      * Creates defined structure of SCOs.
      *
      * @param \DOMNode     $source
@@ -398,41 +343,6 @@ class Scorm2004Listener
                 }
             }
             $item = $item->nextSibling;
-        }
-
-        return $scos;
-    }
-
-    private function parseResourceNodes(\DOMNodeList $resources)
-    {
-        $scos = array();
-
-        foreach ($resources as $resource) {
-            if (!is_null($resource->attributes)) {
-                $scormType = $resource->attributes->getNamedItemNS(
-                    $resource->lookupNamespaceUri('adlcp'),
-                    'scormType'
-                );
-
-                if (!is_null($scormType) && $scormType->nodeValue === 'sco') {
-                    $identifier = $resource->attributes->getNamedItem('identifier');
-                    $href = $resource->attributes->getNamedItem('href');
-
-                    if (is_null($identifier)) {
-                        throw new InvalidScormArchiveException('sco_with_no_identifier_message');
-                    }
-                    if (is_null($href)) {
-                        throw new InvalidScormArchiveException('sco_resource_without_href_message');
-                    }
-                    $sco = new Scorm2004Sco();
-                    $sco->setIsBlock(false);
-                    $sco->setVisible(true);
-                    $sco->setIdentifier($identifier->nodeValue);
-                    $sco->setTitle($identifier->nodeValue);
-                    $sco->setEntryUrl($href->nodeValue);
-                    $scos[] = $sco;
-                }
-            }
         }
 
         return $scos;

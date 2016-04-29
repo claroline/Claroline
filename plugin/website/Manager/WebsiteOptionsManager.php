@@ -40,24 +40,29 @@ class WebsiteOptionsManager
      */
     protected $serializer;
 
+    protected $webDir;
+
     /**
      * Constructor.
      *
      * @DI\InjectParams({
      *      "formFactory"   = @DI\Inject("form.factory"),
      *      "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
-     *      "serializer"    = @DI\Inject("jms_serializer")
+     *      "serializer"    = @DI\Inject("jms_serializer"),
+     *      "webDir"        = @DI\Inject("%claroline.param.web_directory%")
      * })
      *
      * @param FormFactory   $formFactory
      * @param ObjectManager $objectManager
      * @param Serializer    $serializer
+     * @param $webDir
      */
-    public function __construct(FormFactory $formFactory, ObjectManager $objectManager, Serializer $serializer)
+    public function __construct(FormFactory $formFactory, ObjectManager $objectManager, Serializer $serializer, $webDir)
     {
         $this->formFactory = $formFactory;
         $this->om = $objectManager;
         $this->serializer = $serializer;
+        $this->webDir = $webDir;
     }
 
     public function processForm(WebsiteOptions $options, array $parameters, $method = 'PUT')
@@ -90,23 +95,36 @@ class WebsiteOptionsManager
             $oldFileName = null;
             $getImageValue = 'get'.ucfirst($imageStr);
             $setImageValue = 'set'.ucfirst($imageStr);
+            $uploadDir = $this->webDir.DIRECTORY_SEPARATOR.$options->getUploadDir();
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+            $realpathUploadRootDir = realpath($uploadDir);
+            if (false === $realpathUploadRootDir) {
+                throw new \Exception(
+                    sprintf(
+                        "Invalid upload root dir '%s'for uploading website images.",
+                        $uploadDir
+                    )
+                );
+            }
             if ($options->$getImageValue() !== $newFileName) {
                 $oldFileName = $options->$getImageValue();
                 $options->$setImageValue($newFileName);
                 try {
-                    $uploadedFile->move($options->getUploadRootDir(), $newFileName);
+                    $uploadedFile->move($realpathUploadRootDir, $newFileName);
                     $this->om->persist($options);
                     $this->om->flush();
                 } catch (\Exception $e) {
-                    if (file_exists($options->getUploadRootDir().DIRECTORY_SEPARATOR.$newFileName)) {
-                        unlink($options->getUploadRootDir().DIRECTORY_SEPARATOR.$newFileName);
+                    if (file_exists($realpathUploadRootDir.DIRECTORY_SEPARATOR.$newFileName)) {
+                        unlink($realpathUploadRootDir.DIRECTORY_SEPARATOR.$newFileName);
                     }
                     $options->$setImageValue($oldFileName);
                     throw new \InvalidArgumentException($e->getMessage());
                 }
 
-                if (null !== $oldFileName && !filter_var($oldFileName, FILTER_VALIDATE_URL) && file_exists($options->getUploadRootDir().DIRECTORY_SEPARATOR.$oldFileName)) {
-                    unlink($options->getUploadRootDir().DIRECTORY_SEPARATOR.$oldFileName);
+                if (null !== $oldFileName && !filter_var($oldFileName, FILTER_VALIDATE_URL) && file_exists($realpathUploadRootDir.DIRECTORY_SEPARATOR.$oldFileName)) {
+                    unlink($realpathUploadRootDir.DIRECTORY_SEPARATOR.$oldFileName);
                 }
             }
 
@@ -129,8 +147,12 @@ class WebsiteOptionsManager
             $options->$setImageValue($oldPath);
             throw new \InvalidArgumentException();
         }
-        if (null !== $oldPath && !filter_var($oldPath, FILTER_VALIDATE_URL) && file_exists($options->getUploadRootDir().DIRECTORY_SEPARATOR.$oldPath)) {
-            unlink($options->getUploadRootDir().DIRECTORY_SEPARATOR.$oldPath);
+        if (
+            null !== $oldPath
+            && !filter_var($oldPath, FILTER_VALIDATE_URL)
+            && file_exists($this->webDir.DIRECTORY_SEPARATOR.$options->getUploadDir().DIRECTORY_SEPARATOR.$oldPath)
+        ) {
+            unlink($this->webDir.DIRECTORY_SEPARATOR.$options->getUploadDir().DIRECTORY_SEPARATOR.$oldPath);
         }
 
         return array($imageStr => $options->getWebPath($imageStr));
