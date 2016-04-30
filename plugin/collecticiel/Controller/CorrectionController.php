@@ -284,28 +284,6 @@ class CorrectionController extends DropzoneBaseController
         }
     }
 
-    /* // MOVED TO CORRECTION MANAGER
-        private function calculateCorrectionTotalGrade(Dropzone $dropzone, Correction $correction)
-        {
-            $correction->setTotalGrade(null);
-
-            $nbCriteria = count($dropzone->getPeerReviewCriteria());
-            $maxGrade = $dropzone->getTotalCriteriaColumn() - 1;
-            $sumGrades = 0;
-            foreach ($correction->getGrades() as $grade) {
-                ($grade->getValue() > $maxGrade) ? $sumGrades += $maxGrade : $sumGrades += $grade->getValue();
-            }
-
-            $totalGrade = 0;
-            if ($nbCriteria != 0) {
-
-                $totalGrade = $sumGrades / ($nbCriteria);
-                $totalGrade = ($totalGrade * 20) / ($maxGrade);
-            }
-
-            return $totalGrade;
-        }
-    */
     /**
      * @Route(
      *      "/{resourceId}/correct",
@@ -2385,7 +2363,6 @@ class CorrectionController extends DropzoneBaseController
                         $comment->setDocument($document);
                         $comment->setCommentText($commentText);
                         $comment->setUser($user);
-//                        var_dump($documentId);
                         // Insertion en base du commentaire
                         $em->persist($comment);
 
@@ -2400,7 +2377,6 @@ class CorrectionController extends DropzoneBaseController
                         }
 
                         // Ici, on récupère celui qui vient de déposer le nouveau document
-                        //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId();
                         $userDropDocument = $document->getDrop()->getUser()->getId();
                         $userSenderDocument = $document->getSender()->getId();
 

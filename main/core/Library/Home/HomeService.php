@@ -66,7 +66,7 @@ class HomeService
      */
     public function isDefinedPush($array, $name, $variable, $method = null)
     {
-        if ($method and $variable) {
+        if ($method && $variable) {
             $array[$name] = $variable->$method();
         } elseif ($variable) {
             $array[$name] = $variable;

@@ -52,7 +52,7 @@ class AuthenticationManager
             $driver = str_replace('.yml', '', $file->getRelativePathname());
             $service = $this->getService($driver);
 
-            if ($service and $servers = $service->getServers()) {
+            if ($service && $servers = $service->getServers()) {
                 foreach ($servers as $server) {
                     $drivers[$driver.':'.$server] = $driver.':'.$server;
                 }
@@ -71,7 +71,7 @@ class AuthenticationManager
     {
         $service = $this->getService($driver);
 
-        if ($service and $service->authenticate($this->getServerName($driver), $user, $password)) {
+        if ($service && $service->authenticate($this->getServerName($driver), $user, $password)) {
             return true;
         }
     }
@@ -90,9 +90,9 @@ class AuthenticationManager
      */
     public function getService($driver)
     {
-        if ($driver = explode(':', $driver) and
-            isset($driver[0]) and
-            $driver = explode('.', $driver[0]) and
+        if ($driver = explode(':', $driver) &&
+            isset($driver[0]) &&
+            $driver = explode('.', $driver[0]) &&
             isset($driver[1])
         ) {
             return $this->container->get($driver[0].'.'.$driver[1].'_bundle.manager.'.$driver[1].'_manager');
@@ -106,7 +106,7 @@ class AuthenticationManager
      */
     public function getServerName($driver)
     {
-        if ($driver = explode(':', $driver) and isset($driver[1])) {
+        if ($driver = explode(':', $driver) && isset($driver[1])) {
             return $driver[1];
         }
     }

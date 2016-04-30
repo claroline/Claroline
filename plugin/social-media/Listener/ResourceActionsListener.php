@@ -8,6 +8,7 @@
  * 
  * Date: 4/24/15
  */
+
 namespace Icap\SocialmediaBundle\Listener;
 
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;

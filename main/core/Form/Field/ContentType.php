@@ -59,7 +59,7 @@ class ContentType extends AbstractType
             $translatedContent = $builder->getData();
         }
 
-        if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
+        if (isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce']) {
             $this->tinymce = false;
         }
 

@@ -5,11 +5,12 @@
  * Date: 25/09/14
  * Time: 10:19.
  */
+
 namespace Icap\DropzoneBundle\Tests\Entity;
 
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Drop;
-use \DateTime;
+use DateTime;
 
 class DropTest extends \PHPUnit_Framework_TestCase
 {

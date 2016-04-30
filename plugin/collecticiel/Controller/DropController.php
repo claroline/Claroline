@@ -547,14 +547,7 @@ class DropController extends DropzoneBaseController
                                         $documentId
                                     );
 
-//                    var_dump("User : " . $this->get('security.token_storage')->getToken()->getUser()->getId());
-//                    var_dump("Document : " . $documentId);
-//                    var_dump("Compteur : créé élève lu admin " . $commentReadForATeacherOrNot .
-//                    "+ élève " . $commentReadForATeacherOrNot2 .
-//                    "+ créé admin lu admin " . $commentReadForATeacherOrNot3)
-                    ;
                     $haveCommentOrNotArray[$documentId] = $commentReadForATeacherOrNot + $commentReadForATeacherOrNot2 + $commentReadForATeacherOrNot3;
-    //                var_dump("Indice : " . $indice);
                 }
             }
 
@@ -1114,7 +1107,6 @@ class DropController extends DropzoneBaseController
         $userManager = $this->get('claroline.manager.user_manager');
         $withPager = false;
         $usersByWorkspaces = $userManager->getUsersByWorkspaces($workspaceArray, $page, 20, $withPager);
-//      var_dump($usersByWorkspaces[0]);
 
         $userWithRights = $userManager->getUsersWithRights($dropzone->getResourceNode());
         // Fin ajout du code pour afficher les élèves inscrits mais qui n'ont pas déposé. InnovaERV.

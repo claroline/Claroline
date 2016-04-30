@@ -372,8 +372,8 @@ class DocumentController extends DropzoneBaseController
             return $this->redirect($document->getUrl());
         } elseif (
             $document->getType() == 'text'
-            or $document->getType() == 'resource'
-            or $document->getType() == 'file'
+            || $document->getType() == 'resource'
+            || $document->getType() == 'file'
         ) {
             $this->get('claroline.temporary_access_resource_manager')->addTemporaryAccess($document->getResourceNode(), $user);
 

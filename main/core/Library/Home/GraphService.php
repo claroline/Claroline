@@ -27,7 +27,7 @@ class GraphService
         $this->graph['url'] = $url;
         $headers = get_headers($url, 1);
 
-        if ($headers and is_string($type = $headers['Content-Type']) and strpos($type, 'image/') === 0) {
+        if ($headers && is_string($type = $headers['Content-Type']) && strpos($type, 'image/') === 0) {
             $this->graph['type'] = 'raw';
             $this->graph['images'][] = $url;
         } elseif (false !== ($content = @file_get_contents($url))) {
@@ -38,8 +38,8 @@ class GraphService
             $this->openGraph();
             $this->twitter();
 
-            if (!isset($this->graph['title']) and
-                !isset($this->graph['type']) and
+            if (!isset($this->graph['title']) &&
+                !isset($this->graph['type']) &&
                 !isset($this->graph['description'])) {
                 $this->html();
             }
