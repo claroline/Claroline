@@ -8,6 +8,7 @@
  *
  * Date: 4/8/15
  */
+
 namespace Icap\NotificationBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;

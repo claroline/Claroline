@@ -8,6 +8,7 @@
  * 
  * Date: 3/11/15
  */
+
 namespace Icap\WikiBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;

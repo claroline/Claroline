@@ -90,7 +90,7 @@ class WorkspaceEditType extends AbstractType
             );
         }
         $builder->add('creator', 'text', array('disabled' => 'disabled', 'data' => $this->username, 'label' => 'creator'));
-        if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
+        if (isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce']) {
             $builder->add(
                 'description',
                 'textarea',

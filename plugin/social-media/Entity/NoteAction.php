@@ -8,6 +8,7 @@
  * 
  * Date: 4/23/15
  */
+
 namespace Icap\SocialmediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

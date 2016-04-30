@@ -8,6 +8,7 @@
  * 
  * Date: 4/14/15
  */
+
 namespace Icap\NotificationBundle\Exception;
 
 class InvalidNotificationFormException extends \RuntimeException

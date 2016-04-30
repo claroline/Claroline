@@ -8,6 +8,7 @@
  * 
  * Date: 5/18/15
  */
+
 namespace Icap\SocialmediaBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;

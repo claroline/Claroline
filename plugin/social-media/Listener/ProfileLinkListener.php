@@ -8,6 +8,7 @@
  * 
  * Date: 5/5/15
  */
+
 namespace Icap\SocialmediaBundle\Listener;
 
 use Claroline\CoreBundle\Event\Profile\ProfileLink;

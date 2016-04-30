@@ -4,6 +4,7 @@
  * Date: 22/08/13
  * Time: 09:30.
  */
+
 namespace Icap\DropzoneBundle\Controller;
 
 use Icap\DropzoneBundle\Entity\Correction;
@@ -102,9 +103,6 @@ class DropController extends DropzoneBaseController
             }
 
             if ($form->isValid()) {
-
-                //var_dump($notFinishedDrop);
-
                 // change the folder name to take the datetime of the drop event
                 $dropDate = new \DateTime();
                 $date_format = $this->get('translator')->trans('date_form_datepicker_php', array(), 'platform');
@@ -732,7 +730,7 @@ class DropController extends DropzoneBaseController
             ->countFinished($dropzone, $user);
 
         if ($dropzone->getDiplayCorrectionsToLearners() && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection() &&
-            $dropzone->getExpectedTotalCorrection() <= $nbCorrections || ($dropzone->isFinished() && $dropzone->getDiplayCorrectionsToLearners() or $drop->getUnlockedUser())
+            $dropzone->getExpectedTotalCorrection() <= $nbCorrections || ($dropzone->isFinished() && $dropzone->getDiplayCorrectionsToLearners() || $drop->getUnlockedUser())
         ) {
             $showCorrections = true;
         }

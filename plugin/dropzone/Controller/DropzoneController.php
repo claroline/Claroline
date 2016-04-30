@@ -71,7 +71,7 @@ class DropzoneController extends DropzoneBaseController
             /** @var Dropzone $dropzone */
             $dropzone = $form->getData();
 
-            if (!$dropzone->getPeerReview() and $dropzone->getManualState() == 'peerReview') {
+            if (!$dropzone->getPeerReview() && $dropzone->getManualState() == 'peerReview') {
                 $dropzone->setManualState('notStarted');
             }
             if ($dropzone->getEditionState() < 2) {
@@ -80,9 +80,9 @@ class DropzoneController extends DropzoneBaseController
 
             if (
                 !$dropzone->getAllowWorkspaceResource()
-                and !$dropzone->getAllowUpload()
-                and !$dropzone->getAllowUrl()
-                and !$dropzone->getAllowRichText()
+                && !$dropzone->getAllowUpload()
+                && !$dropzone->getAllowUrl()
+                && !$dropzone->getAllowRichText()
             ) {
                 $form->get('allowWorkspaceResource')->addError(new FormError('Choose at least one type of document'));
                 $form->get('allowUpload')->addError(new FormError('Choose at least one type of document'));

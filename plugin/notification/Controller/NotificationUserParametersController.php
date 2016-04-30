@@ -8,6 +8,7 @@
  *
  * Date: 4/8/15
  */
+
 namespace Icap\NotificationBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;

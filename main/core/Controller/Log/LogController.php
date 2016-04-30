@@ -202,7 +202,7 @@ class LogController extends Controller
             $em->flush();
 
             foreach ($data as $workspaceId => $visible) {
-                if ($workspaceId != 'amount' and $visible !== true) {
+                if ($workspaceId != 'amount' && $visible !== true) {
                     $hiddenConfig = new LogHiddenWorkspaceWidgetConfig();
                     $hiddenConfig->setUser($user);
                     $hiddenConfig->setWorkspaceId($workspaceId);

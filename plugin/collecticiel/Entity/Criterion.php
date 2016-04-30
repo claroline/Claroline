@@ -4,6 +4,7 @@
  * Date: 21/08/13
  * Time: 16:06.
  */
+
 namespace Innova\CollecticielBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

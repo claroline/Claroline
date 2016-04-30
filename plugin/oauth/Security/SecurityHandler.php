@@ -8,6 +8,7 @@
  * 
  * Date: 7/6/15
  */
+
 namespace Icap\OAuthBundle\Security;
 
 use JMS\DiExtraBundle\Annotation as DI;

@@ -8,6 +8,7 @@
  * 
  * Date: 4/21/15
  */
+
 namespace Icap\BlogBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
