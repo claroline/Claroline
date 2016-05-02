@@ -34,7 +34,7 @@ class HomeContentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->type === 'menu' and !$this->father) {
+        if ($this->type === 'menu' && !$this->father) {
             $builder->add(
                 $this->name,
                 'content',

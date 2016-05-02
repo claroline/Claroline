@@ -67,7 +67,7 @@ class TemporaryAccessResourceVoter implements VoterInterface
 
     public function supportsAttribute($attribute)
     {
-        return 'open' === strtolower($attribute) or 'export' === strtolower($attribute);
+        return 'open' === strtolower($attribute) || 'export' === strtolower($attribute);
     }
 
     public function supportsClass($class)

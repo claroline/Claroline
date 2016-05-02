@@ -8,6 +8,7 @@
  * 
  * Date: 5/7/15
  */
+
 namespace Icap\SocialmediaBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command;
+namespace Claroline\DevBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -125,7 +125,7 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $fs = new Filesystem();
         $vendorDir = $this->getContainer()->getParameter('claroline.param.vendor_directory');
-        $skel = $this->getContainer()->getParameter('claroline.param.plugin_skel_directory');
+        $skel = $this->getTemplateDirectory('skel');
         $ivendor = $input->getArgument('vendor');
         $ibundle = $input->getArgument('bundle');
         $vname = strtolower($ivendor);
@@ -144,7 +144,6 @@ class CreatePluginCommand extends ContainerAwareCommand
         $this->editControllerClass($rootDir, $ivendor, $ibundle);
         $this->editExtensionClass($rootDir, $ivendor, $ibundle);
         $this->editComposer($rootDir, $ivendor, $ibundle);
-        $this->editAdditionalInstaller($rootDir, $ivendor, $ibundle);
 
         //now we create the resource type listener, entity & config if we wanted
         $rType = $input->getOption('resource_type');
@@ -208,21 +207,21 @@ class CreatePluginCommand extends ContainerAwareCommand
     private function editControllerClass($rootDir, $vendor, $bundle)
     {
         $newPath = $rootDir.'/Controller/'.$bundle.'Controller.php';
-        rename($rootDir.'/Controller/BundleController.php', $newPath);
+        rename($rootDir.'/Controller/BundleController.tpl', $newPath);
         $content = file_get_contents($newPath);
     }
 
     private function editBundleClass($rootDir, $vendor, $bundle)
     {
         $newPath = $rootDir.'/'.$vendor.$bundle.'Bundle.php';
-        rename($rootDir.'/VendorBundleBundle.php', $newPath);
+        rename($rootDir.'/VendorBundleBundle.tpl', $newPath);
         $content = file_get_contents($newPath);
     }
 
     private function editExtensionClass($rootDir, $vendor, $bundle)
     {
         $newPath = $rootDir.'/DependencyInjection/'.$vendor.$bundle.'Extension.php';
-        rename($rootDir.'/DependencyInjection/VendorBundleExtension.php', $newPath);
+        rename($rootDir.'/DependencyInjection/VendorBundleExtension.tpl', $newPath);
         $content = file_get_contents($newPath);
     }
 
@@ -234,12 +233,6 @@ class CreatePluginCommand extends ContainerAwareCommand
         $content = str_replace('[[psr]]', $vendor.'\\\\'.$bundle.'Bundle', $content);
         $content = str_replace('[[target_dir]]', $vendor.'/'.$bundle.'Bundle', $content);
         file_put_contents($filepath, $content);
-    }
-
-    private function editAdditionalInstaller($rootDir, $vendor, $bundle)
-    {
-        $filepath = $rootDir.'/Installation/AdditionalInstaller.php';
-        $content = file_get_contents($filepath);
     }
 
     private function addResourceType($rootDir, $vendor, $bundle, $rType, &$config)
@@ -275,9 +268,9 @@ class CreatePluginCommand extends ContainerAwareCommand
 
     private function addResourceTypeRepository($rootDir, $vendor, $bundle, $rType)
     {
-        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
+        $templateDir = $this->getTemplateDirectory('optional/resource');
         $newPath = $rootDir.'/Repository/'.ucfirst($rType).'Repository.php';
-        $content = file_get_contents($templateDir.'/repository.tmp');
+        $content = file_get_contents($templateDir.'/repository.tpl');
         file_put_contents($newPath, $content);
     }
 
@@ -285,8 +278,8 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $className = ucfirst($rType).'ResourceListener';
         $newPath = $rootDir.'/Listener/'.$className.'.php';
-        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
-        $content = file_get_contents($templateDir.'/listener.tmp');
+        $templateDir = $this->getTemplateDirectory('optional/resource');
+        $content = file_get_contents($templateDir.'/listener.tpl');
         file_put_contents($newPath, $content);
     }
 
@@ -301,23 +294,23 @@ class CreatePluginCommand extends ContainerAwareCommand
 
     private function addResourceTypeEntity($rootDir, $vendor, $bundle, $rType)
     {
-        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
+        $templateDir = $this->getTemplateDirectory('optional/resource');
         $newPath = $rootDir.'/Entity/'.ucfirst($rType).'.php';
-        $content = file_get_contents($templateDir.'/resource.tmp');
+        $content = file_get_contents($templateDir.'/resource.tpl');
         file_put_contents($newPath, $content);
     }
 
     private function addResourceTypeForm($rootDir, $vendor, $bundle, $rType)
     {
-        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
+        $templateDir = $this->getTemplateDirectory('optional/resource');
         $newPath = $rootDir.'/Form/'.$rType.'Type.php';
-        $content = file_get_contents($templateDir.'/form.tmp');
+        $content = file_get_contents($templateDir.'/form.tpl');
         $viewDir = $rootDir.'/Resources/views/'.$rType;
         $fs = new Filesystem();
         $fs->mkdir($viewDir);
         file_put_contents(
             $viewDir.'/createForm.html.twig',
-            file_get_contents($templateDir.'/form_view.tmp')
+            file_get_contents($templateDir.'/form_view.tpl')
         );
     }
 
@@ -352,8 +345,8 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $className = ucfirst($tType).'Listener';
         $newPath = $rootDir.'/Listener/'.$className.'.php';
-        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_tool_directory');
-        $content = file_get_contents($templateDir.'/listener.tmp');
+        $templateDir = $this->getTemplateDirectory('optional/tool');
+        $content = file_get_contents($templateDir.'/listener.tpl');
         file_put_contents($newPath, $content);
     }
 
@@ -387,8 +380,8 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $className = ucfirst($tType).'Listener';
         $newPath = $rootDir.'/Listener/'.$className.'.php';
-        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_admin_tool_directory');
-        $content = file_get_contents($templateDir.'/listener.tmp');
+        $templateDir = $this->getTemplateDirectory('optional/admin_tool');
+        $content = file_get_contents($templateDir.'/listener.tpl');
         file_put_contents($newPath, $content);
     }
 
@@ -411,8 +404,8 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $className = ucfirst($wType).'Listener';
         $newPath = $rootDir.'/Listener/'.$className.'.php';
-        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_widget_directory');
-        $content = file_get_contents($templateDir.'/listener.tmp');
+        $templateDir = $this->getTemplateDirectory('optional/widget');
+        $content = file_get_contents($templateDir.'/listener.tpl');
         file_put_contents($newPath, $content);
     }
 
@@ -430,27 +423,27 @@ class CreatePluginCommand extends ContainerAwareCommand
     private function addAuthenticationListener($rootDir, $vendor, $bundle, $eAuth)
     {
         $newPath = $rootDir.'/Listener/ConfigureMenuListener.php';
-        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_external_authentication_directory');
-        $content = file_get_contents($templateDir.'/listener.tmp');
+        $templateDir = $this->getTemplateDirectory('optional/external_authentication');
+        $content = file_get_contents($templateDir.'/listener.tpl');
         file_put_contents($newPath, $content);
     }
 
     private function addAuthenticationManager($rootDir, $vendor, $bundle, $eAuth)
     {
         $newPath = $rootDir.'/Manager/SecurityManager.php';
-        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_external_authentication_directory');
-        $content = file_get_contents($templateDir.'/manager.tmp');
+        $templateDir = $this->getTemplateDirectory('optional/external_authentication');
+        $content = file_get_contents($templateDir.'/manager.tpl');
         file_put_contents($newPath, $content);
     }
 
     private function addAuthenticationController($rootDir, $vendor, $bundle, $eAuth)
     {
         $newPath = $rootDir.'/Controller/AuthenticationController.php';
-        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_external_authentication_directory');
-        $content = file_get_contents($templateDir.'/controller.tmp');
+        $templateDir = $this->getTemplateDirectory('optional/external_authentication');
+        $content = file_get_contents($templateDir.'/controller.tpl');
         file_put_contents($newPath, $content);
         $routingFile = $this->getNewRoutingFile($rootDir);
-        $addRouting = file_get_contents($templateDir.'/routing.tmp');
+        $addRouting = file_get_contents($templateDir.'/routing.tpl');
         if (!strpos(file_get_contents($routingFile), $addRouting)) {
             file_put_contents($routingFile, $addRouting, FILE_APPEND);
         }
@@ -474,13 +467,13 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $className = ucfirst($fmime).'PlayerListener';
         $newPath = $rootDir.'/Listener/'.$className.'.php';
-        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_player_directory');
-        $content = file_get_contents($templateDir.'/listener.tmp');
+        $templateDir = $this->getTemplateDirectory('optional/player');
+        $content = file_get_contents($templateDir.'/listener.tpl');
         file_put_contents($newPath, $content);
 
         $viewName = strtolower($fmime);
         $newPath = $rootDir.'/Resources/views/'.$viewName.'.html.twig';
-        $content = file_get_contents($templateDir.'/view.tmp');
+        $content = file_get_contents($templateDir.'/view.tpl');
         file_put_contents($newPath, $content);
     }
 
@@ -616,5 +609,13 @@ class CreatePluginCommand extends ContainerAwareCommand
         );
 
         return preg_replace($patterns, $replacements, $content);
+    }
+
+    private function getTemplateDirectory($subDirectory)
+    {
+        $vendorDir = $this->getContainer()->getParameter('claroline.param.vendor_directory');
+        $baseDir = $vendorDir.'/claroline/distribution/main/dev/Resources/bundle-creator';
+
+        return "{$baseDir}/{$subDirectory}";
     }
 }

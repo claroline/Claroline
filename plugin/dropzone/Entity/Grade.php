@@ -4,6 +4,7 @@
  * Date: 21/08/13
  * Time: 16:26.
  */
+
 namespace Icap\DropzoneBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

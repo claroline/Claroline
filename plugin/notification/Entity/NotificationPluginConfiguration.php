@@ -8,6 +8,7 @@
  * 
  * Date: 4/13/15
  */
+
 namespace Icap\NotificationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

@@ -63,7 +63,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
 
                 return true;
             } else {
-                if (array_key_exists('messageEnabled', $options) and $options['messageEnabled'] === true) {
+                if (array_key_exists('messageEnabled', $options) && $options['messageEnabled'] === true) {
                     $messageType = 'warning';
                     if (array_key_exists('messageType', $options)) {
                         $messageType = $options['messageType'];

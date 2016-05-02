@@ -8,6 +8,7 @@
  * 
  * Date: 4/13/15
  */
+
 namespace Icap\DropzoneBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;

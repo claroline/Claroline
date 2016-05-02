@@ -8,6 +8,7 @@
  * 
  * Date: 5/13/15
  */
+
 namespace Icap\SocialmediaBundle\Listener;
 
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;

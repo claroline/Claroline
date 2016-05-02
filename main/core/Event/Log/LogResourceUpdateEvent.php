@@ -32,7 +32,7 @@ class LogResourceUpdateEvent extends LogGenericEvent
     public function __construct(ResourceNode $node, $changeSet)
     {
         $action = self::ACTION;
-        if ($changeSet != null and count($changeSet) == 1 and array_key_exists('name', $changeSet)) {
+        if ($changeSet != null && count($changeSet) == 1 && array_key_exists('name', $changeSet)) {
             $action = self::ACTION_RENAME;
         }
 
