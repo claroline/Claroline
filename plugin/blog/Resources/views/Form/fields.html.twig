@@ -17,15 +17,15 @@
 
         <script type="text/javascript">
             $(document).ready( function(){
-                
-                /*************************************************************** 
+
+                /***************************************************************
                 On utilise un masque de bits pour gérer l'ordre des widget.
-                On a une paire par widget. 
+                On a une paire par widget.
 
                 Le premier numéro correspond à l'id de l'élément.
                 Le second numéro correspond à la visibilité.
 
-                L'id des elements : 0.Recherche / 1.Info bar / 2.Flux RSS / 
+                L'id des elements : 0.Recherche / 1.Info bar / 2.Flux RSS /
                 3.Nuage de tags / 4.Rédacteurs / 5.Calendrier / 6.Archives
                 ****************************************************************/
                 /*Order Option*/
@@ -39,19 +39,18 @@
                     start: function(event, ui){
                         var start_pos = ui.item.index();
                         ui.item.data('start_pos', start_pos);
-                        console.log(start_pos);
                     },
                     update: function (event, ui){
                         var start_pos = ui.item.data('start_pos');
                         var end_pos = ui.item.index();
                         //Recuperation de la chaine dans le label
                         var chaine = $( "#icap_blog_options_form_listWidgetBlog" ).val();
-                        
+
                         //Modificaation du masque pour le déplacement
                         var doubletteSelect=chaine.substr(start_pos*2,2);
                         var chaineSansSousChaine = chaine.slice(0,(start_pos*2))+chaine.slice((start_pos*2)+2,chaine.length);
-                        var newChaine=chaineSansSousChaine.slice(0,end_pos*2)+doubletteSelect+chaineSansSousChaine.slice((end_pos*2),chaine.length);     
-                       
+                        var newChaine=chaineSansSousChaine.slice(0,end_pos*2)+doubletteSelect+chaineSansSousChaine.slice((end_pos*2),chaine.length);
+
                         for(var pos_chaine=0; pos_chaine<newChaine.length; pos_chaine+=2 )
                         {
                             var index_enfant=(parseInt(newChaine.charAt(pos_chaine)));
@@ -77,7 +76,7 @@
 
                 $( "#sortable" ).disableSelection();
 
-                
+
                 //Fermer les yeux des options correspondant aux panels
                 $( ".col-lg-4 .hidden").each(function()
                 {
@@ -110,7 +109,7 @@
 
                         $(this).parent().animate({opacity:0.5}, 250);
                         $(this).addClass("closed-eye");
-                        
+
                         $("#panel"+lastNumberId).addClass("hidden");
 
                     } else{
@@ -120,7 +119,7 @@
 
                         $(this).parent().animate({opacity:1}, 250);
                         $(this).removeClass("closed-eye");
-                        
+
                         $("#panel"+lastNumberId).removeClass("hidden");
                     }
                 });
@@ -130,5 +129,3 @@
 
     {% endspaceless %}
 {% endblock %}
-
-

@@ -129,7 +129,7 @@
              </div>
         </div>
 
-        {# Evaluation. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        {# Evaluation affichage. Ajout de cette zone, demande JJQ. InnovaERV  #}
         <div id="evaluation">
             <h4>{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</h4>
             <div class="row form-group">
@@ -138,6 +138,73 @@
                     ) }}
                  </div>
              </div>
+        </div>
+
+        {# Evaluation gestion. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        <div id="evaluationType">
+            <h4>{{ 'Evaluation for documents'|trans({}, 'innova_collecticiel') }}</h4>
+
+            <div class="row form-group">
+                <div class="col-md-10">
+                    {{ form_row(form.evaluationType, {'label_attr': {'class': 'col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                     ) }}
+                 </div>
+             </div>
+
+
+            <div id="dropzone-message-part-notation"
+                {% if dropzone.evaluationType() != "notation" %} style="display:none" {% endif %}
+            >
+{#                {{ form_label(form.successMessage,null,{'label': 'successMessage'|trans({},'icap_dropzone'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
+                {{ form_widget(form.successMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                {{ form_errors(form.successMessage) }}
+                 {{ form_label(form.failMessage,null,{'label': 'failMessage'|trans({},'icap_dropzone'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
+                {{ form_widget(form.failMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                {{ form_errors(form.failMessage) }} #}
+                {# Notation max. Ajout de cette zone, demande JJQ. InnovaERV  #}
+                <div class="row form-group">
+                    <div class="col-md-10">
+                        {{ form_row(form.maximumNotation, {'label_attr': {'class': 'col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                         ) }}
+                     </div>
+                 </div>
+
+                <h4>{{ 'Criterion information'|trans({}, 'innova_collecticiel') }}</h4>
+
+                <div class="col-md-8">
+
+                    <button id="submitAndGotoCriteriaButton" type="submit"
+                            class="btn btn-primary">aaaa{{ 'Add a new'|trans({}, 'innova_collecticiel') }}</button>
+{#
+                    <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}"
+                       class="btn btn-primary add-criterion-button disabled-during-edition"><span
+                                class="fa fa-plus "> {{ 'Add a new'|trans({}, 'icap_dropzone') }}bbb</span></a>
+
+            <button id="submitAndGotoCriteriaButton" type="submit"
+                    class="btn btn-primary">{{ 'Add a new'|trans({}, 'innova_collecticiel') }}</button>
+
+                            <button type="button" id="add-criterion-button-innova2" class="btn btn-primary toto disabled-during-edition">{{ 'Add a new'|trans({}, 'innova_collecticiel') }}</button>
+
+                            <a class="btn btn-primary add-criterion-button-innova disabled-during-edition">
+                               <span class="fa fa-plus">{{ 'Add a new'|trans({}, 'innova_collecticiel') }}</span>
+                            </a>
+#}
+                </div>
+            </div>
+
+
+            <div id="dropzone-message-part-appreciation"
+                {% if dropzone.evaluationType() != "ratingScale" %} style="display:none" {% endif %}
+            >
+                <h4>{{ 'Rating Scale appreciation'|trans({}, 'innova_collecticiel') }}</h4>
+                <div class="col-md-8">
+                    <button id="submitAndGotoCriteriaButton" type="submit"
+                            class="btn btn-primary">{{ 'Rating Scale appreciation'|trans({}, 'innova_collecticiel') }}</button>
+
+                    <a href="{{ path('innova_collecticiel_edit_appreciation', {'resourceId': dropzone.id}) }}"
+                       class="btn btn-primary">{{ 'Rating Scale appreciation'|trans({}, 'innova_collecticiel') }}</a>
+                </div>
+            </div>
         </div>
 
         {# Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV  #}
@@ -215,7 +282,41 @@
             $('#innova_collecticiel_common_form_peerReview_1').on('click', function() {
                 enablePeerReviewOptions(true);
             });
-            var $displayNotationToLearner = $('#innova_collecticiel_common_form_displayNotationMessageToLearners');
+
+
+            // Set Collecticiel Notation dependency. InnovaERV
+            // Pas d'évaluation. InnovaERV
+            $('#innova_collecticiel_common_form_evaluationType_0').on('click', function(event) {
+                var $displayNotationMax = $('#innova_collecticiel_common_form_evaluationType_1');
+                manageSuccessNotationMessagesVisibility($displayNotationMax);
+                $displayNotationMax.change(function () {
+                    manageSuccessNotationMessagesVisibility($(this));
+                });
+            });
+
+            // Notation. InnovaERV
+            $('#innova_collecticiel_common_form_evaluationType_1').on('click', function(event) {
+                var $displayNotationMax = $('#innova_collecticiel_common_form_evaluationType_1');
+                manageSuccessNotationMessagesVisibility($displayNotationMax);
+                $displayNotationMax.change(function () {
+                    manageSuccessNotationMessagesVisibility($(this));
+                });
+            });
+
+
+            // Echelle d'appréciation. InnovaERV
+            $('#innova_collecticiel_common_form_evaluationType_2').on('click', function(event) {
+                var $displayNotationMax = $('#innova_collecticiel_common_form_evaluationType_2');
+                var $choix="appreciation";
+                alert("je suis ici");
+                alert($choix);
+                manageSuccessNotationMessagesVisibilityAppreciation($displayNotationMax, $choix);
+                $displayNotationMax.change(function () {
+                    manageSuccessNotationMessagesVisibilityAppreciation($(this), $choix);
+                });
+            });
+            // End Collecticiel Notation dependency. InnovaERV
+
             manageSuccessFailMessagesVisibility($displayNotationToLearner);
             $displayNotationToLearner.change(function () {
                 manageSuccessFailMessagesVisibility($(this));
@@ -284,6 +385,7 @@
             });
             $('#editCriteriaLink').click(function (e) {
                 e.preventDefault();
+                alert("editCriteriaLink");
                 $('#submitAndGotoCriteriaButton').trigger('click');
             });
         });
@@ -313,15 +415,48 @@
             $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').parent().show();
             manageCorrectionDeny();
         }
+
         function manageSuccessFailMessagesVisibility($cb)
         {
             var $div = $('#dropzone-message-part');
+
             if($cb.prop('checked')) {
                 $div.fadeIn();
             }else {
                 $div.fadeOut();
             }
         }
+
+        // Set Collecticiel Notation dependency. InnovaERV
+        function manageSuccessNotationMessagesVisibility($cb)
+        {
+            var $div = $('#dropzone-message-part-notation');
+
+            if($cb.prop('checked')) {
+                $div.fadeIn();
+            }else {
+                $div.fadeOut();
+            }
+        }
+
+        // Set Collecticiel Notation dependency. InnovaERV
+        function manageSuccessNotationMessagesVisibilityAppreciation($cb, $type)
+        {
+            var $div = $('#dropzone-message-part-appreciation');
+
+alert("suis dans manageSuccessNotationMessagesVisibilityAppreciation");
+
+            if($cb.prop('checked')) {
+alert("fadeIn");
+                $div.fadeIn();
+            }else {
+alert("fadeOut");
+                $div.fadeOut();
+            }
+        }
+
+
+
         /**
          * When manual state has changed and involve that poeple will not be able to drop anymore, this will ask if
          * you want to close opened drop. ( same as autoClose when time is up ).
@@ -342,6 +477,8 @@
             }
         }
     </script>
+
+    <script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}

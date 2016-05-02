@@ -111,12 +111,17 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         return strtolower(str_replace('Bundle', '', $this->getVendorName().$this->getBundleName()));
     }
 
-    public function getRequiredPhpExtensions()
+    public function getPhpExtensionRequirements()
     {
         return array();
     }
 
-    public function getRequiredPlugins()
+    public function getPluginsRequirements()
+    {
+        return array();
+    }
+
+    public function getExtraRequirements()
     {
         return array();
     }

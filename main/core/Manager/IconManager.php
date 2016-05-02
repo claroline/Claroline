@@ -218,10 +218,11 @@ class IconManager
     /**
      * Creates an image from a file.
      *
-     * @param string $filePath
-     * @param string $baseMime (image|video)
+     * @param string    $filePath
+     * @param string    $baseMime  (image|video)
+     * @param Workspace $workspace
      *
-     * @return null|string $thumnnailPath
+     * @return null|string
      */
     public function createFromFile($filePath, $baseMime, Workspace $workspace = null)
     {

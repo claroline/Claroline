@@ -4,6 +4,7 @@
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  */
+
 namespace Claroline\ForumBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;

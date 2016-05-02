@@ -8,6 +8,7 @@
  *
  * Date: 5/12/15
  */
+
 namespace Icap\SocialmediaBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;

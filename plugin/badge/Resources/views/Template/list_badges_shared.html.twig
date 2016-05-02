@@ -1,0 +1,50 @@
+<li class="col-md-12 badge_container" data-image="{{ dataImage }}" data-id="{{ badgeId }}">
+    <div class="panel panel-default badge_panel">
+        <div class="panel-body">
+            <div class="col-md-4">
+                {% if isExpired is defined and isExpired %}
+                    <span class="expired fa fa-exclamation-circle" data-title="{{ 'expired_badge'|trans({}, 'icap_badge') }}" data-toggle="tooltip" data-placement="top" data-container="body"></span>
+                {% endif %}
+                <a href="{{ path(link, {'slug': badge.slug}|merge(route_params)) }}" title="{{ badge.name }}" class="img_container"  style="background-image: url({{ app.request.getSchemeAndHttpHost() ~ asset(badge.webPath) }});"></a>
+            </div>
+            <div class="col-md-8">
+                <a href="{{ path(link, {'slug': badge.slug}|merge(route_params)) }}" title="{{ badge.name }}">
+                    <h3>{{ badge.name }}</h3>
+                </a>
+                <p>{{ badge.description }}</p>
+                <p class="criteria">
+                    <span class="fa fa-th-list"></span> {{ badge.criteria|truncate(140, true, ' ...')|striptags|raw }}
+                </p>
+            </div>
+                
+            {% if hasAside is defined and hasAside %}    
+                <div class="col-md-2">
+                    <div class="dropdown">
+                        <a data-toggle="dropdown" href="#" data-target="#" class="shared_toggle btn btn-default btn-md"
+                           title="{% if isShared %}{{ 'badge-shared'|trans({}, 'icap_badge') }}{% else %}{{ 'badge-private'|trans({}, 'icap_badge') }}{% endif %}"
+                           data-loading-state="{{ badgeLoadingState }}" data-shared-state="{{ badgeSharedState }}"
+                           data-private-state="{{ bagdePrivateState }}">
+                            {% if isShared %}
+                                {{ badgeSharedState|raw }}
+                            {% else %}
+                                {{ bagdePrivateState|raw }}
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu shared_options" role="menu">
+                            <li role="presentation" class="{% if false == isShared %} active{% endif %}">
+                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="0">
+                                    <span class="fa fa-eye-slash publish_badge"></span> {{ 'stop_share'|trans({}, 'icap_badge') }}
+                                </a>
+                            </li>
+                            <li role="presentation" class="{% if isShared %} active{% endif %}">
+                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="1">
+                                    <span class="fa fa-eye publish_badge"></span> {{ 'share'|trans({}, 'icap_badge') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</li>

@@ -1,18 +1,15 @@
 {
     "name": "claroline/distribution",
-    "replace": {"claroline/distribution-bundle": "self.version"},
     "description": "Claroline distribution",
     "keywords": ["Claroline", "Distribution"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-core",
     "license": "GPL-3.0+",
-    "authors": [
-        {
-            "name": "Claroline development team",
-            "email": "dev@claroline.net",
-            "homepage": "http://github.com/claroline"
-        }
-    ],
+    "authors": [{
+        "name": "Claroline development team",
+        "email": "dev@claroline.net",
+        "homepage": "http://github.com/claroline"
+    }],
     "require": {
         "php": ">=5.5",
         "ext-curl": "*",
@@ -76,18 +73,19 @@
         "zendframework/zend-crypt": "~2.3",
         "zenstruck/form-bundle": "1.5.1",
         "innova/angular-js-bundle": "~5.0",
-        "innova/angular-ui-resource-picker-bundle" : "~6.0",
+        "innova/angular-ui-resource-picker-bundle": "~6.0",
         "innova/angular-ui-tinymce-bundle": "5.*",
-        "innova/angular-ui-pageslide-bundle" : "~5.0",
+        "innova/angular-ui-pageslide-bundle": "~5.0",
         "claroline/front-end-bundle": "dev-7.x-test"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.6",
-        "fabpot/php-cs-fixer":"^1.10",
+        "fabpot/php-cs-fixer": "^1.10",
         "mikey179/vfsStream": "~1.5",
         "mockery/mockery": "^0.9.4"
     },
     "replace": {
+        "claroline/distribution-bundle": "*",
         "claroline/core-bundle": "*",
         "claroline/bundle-recorder": "*",
         "claroline/installation-bundle": "*",
@@ -126,16 +124,19 @@
         "icap/social-media-bundle": "*",
         "icap/wiki-bundle": "*",
         "icap/oauth-bundle": "*",
+        "icap/formula-plugin-bundle": "*",
         "claroline/result-bundle": "*",
         "innova/path-bundle": "*",
         "claroline/pdf-generator-bundle": "*",
-        "claroline/dev-bundle": "*"
+        "claroline/dev-bundle": "*",
+        "innova/video-recorder-bundle": "*",
+        "innova/audio-recorder-bundle": "*"
     },
     "autoload": {
         "psr-4": {
-      	    "Claroline\\CoreBundle\\": "main/core/",
-      	    "Claroline\\BundleRecorder\\": "main/recorder/",
-       	    "Claroline\\InstallationBundle\\": "main/installation/",
+            "Claroline\\CoreBundle\\": "main/core/",
+            "Claroline\\BundleRecorder\\": "main/recorder/",
+            "Claroline\\InstallationBundle\\": "main/installation/",
             "Claroline\\MigrationBundle\\": "main/migration/",
             "Claroline\\KernelBundle\\": "main/kernel/",
             "Claroline\\ActivityToolBundle\\": "plugin/activity-tool",
@@ -170,12 +171,15 @@
             "Icap\\SocialmediaBundle\\": "plugin/social-media",
             "Icap\\WikiBundle\\": "plugin/wiki",
             "Icap\\OAuthBundle\\": "plugin/oauth",
+            "Icap\\FormulaPluginBundle\\": "plugin/formula",
             "Claroline\\ResultBundle\\": "plugin/result",
             "Innova\\PathBundle\\": "plugin/path",
             "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator",
             "Claroline\\DevBundle\\": "main/dev",
             "Claroline\\WebInstaller\\": "main/web-installer/",
-            "Icap\\WebsiteBundle\\": "plugin/website"
+            "Icap\\WebsiteBundle\\": "plugin/website",
+            "Innova\\VideoRecorderBundle\\": "plugin/video-recorder",
+            "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder"
         }
     },
     "extra": {
@@ -217,10 +221,13 @@
             "Icap\\SocialmediaBundle\\IcapSocialmediaBundle",
             "Icap\\WikiBundle\\IcapWikiBundle",
             "Icap\\OAuthBundle\\IcapOAuthBundle",
+            "Icap\\FormulaPluginBundle\\IcapFormulaPluginBundle",
             "Claroline\\ResultBundle\\ClarolineResultBundle",
             "Innova\\PathBundle\\InnovaPathBundle",
             "Claroline\\DevBundle\\ClarolineDevBundle",
-            "Icap\\WebsiteBundle\\IcapWebsiteBundle"
+            "Icap\\WebsiteBundle\\IcapWebsiteBundle",
+            "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle",
+            "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle"
         ]
     }
 }

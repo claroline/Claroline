@@ -30,6 +30,10 @@ class IniFileManager
 
         foreach ($parameters as $key => $value) {
             $content .= "{$key} = {$value}\n";
+
+            if (is_bool($value)) {
+                $value = $value ? 'true' : 'false';
+            }
         }
 
         if (!file_put_contents($iniFile, $content)) {

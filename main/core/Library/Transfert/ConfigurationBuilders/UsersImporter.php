@@ -170,11 +170,6 @@ class UsersImporter extends Importer implements ConfigurationInterface
         self::$data = $data;
     }
 
-    private static function getData()
-    {
-        return self::$data;
-    }
-
     public static function roleNameExists($v, $roles)
     {
         return !in_array($v, $roles);

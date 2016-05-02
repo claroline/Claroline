@@ -25,11 +25,31 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ContentManager
 {
+    /**
+     * @var \Claroline\CoreBundle\Persistence\ObjectManager
+     */
     private $manager;
+
+    /**
+     * @var \Symfony\Component\HttpFoundation\Request
+     */
     private $request;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectRepository
+     */
     private $content;
 
     /**
+     * @var \Claroline\CoreBundle\Repository\ContentTranslationRepository
+     */
+    private $translations;
+
+    /**
+     * @param Registry      $manager,
+     * @param RequestStack  $requestStack,
+     * @param ObjectManager $persistence
+     *
      * @InjectParams({
      *     "manager"        = @Inject("doctrine"),
      *     "requestStack"   = @Inject("request_stack"),
@@ -82,7 +102,7 @@ class ContentManager
     /**
      * Create a new content.
      *
-     * @param string $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
+     * @param array  $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
      * @param string $type              A type of content
      *
      * @return int The id of the new content.
@@ -107,8 +127,8 @@ class ContentManager
     /**
      * Update a content.
      *
-     * @param $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
-     * @param $content Content Entity
+     * @param Content $content            Content Entity
+     * @param array   $translatedContents array('en' => array('content' => 'foo', 'title' => 'foo'))
      */
     public function updateContent(Content $content, array $translatedContents)
     {
@@ -122,10 +142,8 @@ class ContentManager
     /**
      * Delete a translation of content.
      *
-     * @param $locale
+     * @param string $locale
      * @param $id
-     *
-     * @return This function doesn't return anything.
      */
     public function deleteTranslation($locale, $id)
     {
@@ -135,7 +153,7 @@ class ContentManager
             $content = $this->translations->findOneBy(array('foreignKey' => $id, 'locale' => $locale));
         }
 
-        if ($content instanceof ContentTranslation or $content instanceof Content) {
+        if ($content instanceof ContentTranslation || $content instanceof Content) {
             $this->manager->remove($content);
             $this->manager->flush();
         }
@@ -144,10 +162,10 @@ class ContentManager
     /**
      * Reset translated values of a content.
      *
-     * @param $content A content entity
-     * @param $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
+     * @param Content $content            A content entity
+     * @param array   $translatedContents array('en' => array('content' => 'foo', 'title' => 'foo'))
      *
-     * @return Claroline\CoreBundle\Entity\Content
+     * @return \Claroline\CoreBundle\Entity\Content
      */
     private function resetContent(Content $content, array $translatedContents)
     {
@@ -163,10 +181,10 @@ class ContentManager
     /**
      * Update a content translation.
      *
-     * @param $content A content entity
-     * @param translation array('content' => 'foo', 'title' => 'foo')
-     * @param $locale A string with a locale value as 'en' or 'fr'
-     * @param $reset A boolean in case of you whant to reset the values of the translation
+     * @param Content $content     A content entity
+     * @param array   $translation array('content' => 'foo', 'title' => 'foo')
+     * @param string  $locale      A string with a locale value as 'en' or 'fr'
+     * @param bool    $reset       A boolean in case of you whant to reset the values of the translation
      */
     private function updateTranslation(Content $content, $translation, $locale = 'en', $reset = false)
     {
@@ -187,17 +205,17 @@ class ContentManager
      * create_content in another language not longer create this content in the default language,
      * so this function is used for this purpose.
      *
-     * @param $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
-     * @param $field The name of a fiel as 'title' or 'content'
-     * @param $locale A string with a locale value as 'en' or 'fr'
+     * @param array  $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
+     * @param string $field             The name of a field as 'title' or 'content'
+     * @param string $locale            A string with a locale value as 'en' or 'fr'
      *
      * @return array('en' => array('content' => 'foo', 'title' => 'foo'))
      */
     private function setDefault(array $translatedContent, $field, $locale)
     {
         if ($locale !== 'en') {
-            if (isset($translatedContent['en'][$field]) and !strlen($translatedContent['en'][$field]) and
-                isset($translatedContent[$locale][$field]) and strlen($translatedContent[$locale][$field])) {
+            if (isset($translatedContent['en'][$field]) && !strlen($translatedContent['en'][$field]) &&
+                isset($translatedContent[$locale][$field]) && strlen($translatedContent[$locale][$field])) {
                 $translatedContent['en'][$field] = $translatedContent[$locale][$field];
             }
         }

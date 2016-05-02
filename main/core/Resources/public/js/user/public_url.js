@@ -29,7 +29,7 @@
             var publicUrl = urlField.val()
             loadingState();
 
-            if ('' == publicUrl || /\s/g.test(publicUrl)) {
+            if ('' == publicUrl || /[\s\/]/g.test(publicUrl)) {
                 koState();
             }
             else if (currentPublicUrl != publicUrl) {

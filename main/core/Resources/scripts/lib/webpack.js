@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const failPlugin = require('webpack-fail-plugin')
+const assetsPlugin = require('assets-webpack-plugin')
 
 /**
  * Builds a webpack configuration suitable for export.
@@ -26,7 +27,7 @@ function configure(rootDir, packages, isWatchMode) {
   const output = {
     path: path.resolve(rootDir, 'web/dist'),
     publicPath: 'http://localhost:8080/dist',
-    filename: '[name].js'
+    filename: '[name]-[hash].js'
   }
 
   // third-party modules are taken from the web/packages directory,
@@ -38,6 +39,7 @@ function configure(rootDir, packages, isWatchMode) {
   const plugins = [
     makeBundleResolverPlugin(normalizedBundles),
     makeBowerPlugin(),
+    makeAssetsPlugin(),
     //makeBaseCommonsPlugin(),
     ...makeBundleCommonsPlugins(commons)
   ]
@@ -169,6 +171,18 @@ function makeBaseCommonsPlugin() {
     name: 'commons',
     minChunks: 10
   })
+}
+
+/**
+ * This plugin outputs information about generated assets in a dedicated file
+ * ("webpack-assets.json" by default). This is useful to retrieve assets names
+ * when a hash has been used for cache busting.
+ */
+function makeAssetsPlugin() {
+  return new assetsPlugin({
+    fullPath: false,
+    prettyPrint: true
+  });
 }
 
 /**

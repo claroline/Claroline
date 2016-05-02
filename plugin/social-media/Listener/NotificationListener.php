@@ -8,6 +8,7 @@
  * 
  * Date: 5/18/15
  */
+
 namespace Icap\SocialmediaBundle\Listener;
 
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;

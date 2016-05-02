@@ -1,0 +1,29 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-briefcase',
+                'name': 'desktop'|trans({}, 'platform'),
+                'href': path('claro_desktop_open')
+            },
+            {
+                'name': 'innova_video_recorder_tool'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'innova_video_recorder_tool'|trans({}, 'tools') }}</h3>
+    </div>
+
+    <div class="panel-body">
+        {{ form_start(form, {'action': path('video_recorder_config_save', {'id':id }) , 'method': 'POST'}) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

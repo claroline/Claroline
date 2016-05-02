@@ -130,9 +130,9 @@ class HomeExtension extends \Twig_Extension
      */
     public function homeLink($link)
     {
-        if (!(strpos($link, 'http://') === 0 or
-            strpos($link, 'https://') === 0 or
-            strpos($link, 'ftp://') === 0 or
+        if (!(strpos($link, 'http://') === 0 ||
+            strpos($link, 'https://') === 0 ||
+            strpos($link, 'ftp://') === 0 ||
             strpos($link, 'www.') === 0)
         ) {
             $home = $this->container->get('router')->generate('claro_index').$link;
@@ -151,7 +151,7 @@ class HomeExtension extends \Twig_Extension
     public function activeLink($link)
     {
         $pathinfo = $this->getPathInfo();
-        if (($pathinfo and '/'.$pathinfo === $link) or (!$pathinfo and $link === '/')) {
+        if (($pathinfo && '/'.$pathinfo === $link) || (!$pathinfo && $link === '/')) {
             return ' active'; //the white space is nedded
         }
 
@@ -173,8 +173,8 @@ class HomeExtension extends \Twig_Extension
     {
         $request = $this->container->get('request_stack')->getMasterRequest();
 
-        if ($request instanceof Request and $request->get('_route') === $route) {
-            if (is_array($params) and count(array_intersect_assoc($request->get('_route_params'), $params)) <= 0) {
+        if ($request instanceof Request && $request->get('_route') === $route) {
+            if (is_array($params) && count(array_intersect_assoc($request->get('_route_params'), $params)) <= 0) {
                 return false;
             }
 
@@ -188,7 +188,7 @@ class HomeExtension extends \Twig_Extension
     public function compareRoute($link, $return = " class='active'")
     {
         $pathinfo = $this->getPathInfo();
-        if ($pathinfo and strpos('/'.$pathinfo, $link) === 0) {
+        if ($pathinfo && strpos('/'.$pathinfo, $link) === 0) {
             return $return;
         }
 
@@ -261,7 +261,7 @@ class HomeExtension extends \Twig_Extension
         $request = $this->container->get('request_stack')->getMasterRequest();
         $router = $this->container->get('router');
 
-        if ($request instanceof Request and $router instanceof Router) {
+        if ($request instanceof Request && $router instanceof Router) {
             $index = $router->generate('claro_index');
             $current = $router->generate($request->get('_route'), $request->get('_route_params'));
 

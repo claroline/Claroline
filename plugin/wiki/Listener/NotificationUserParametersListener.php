@@ -8,6 +8,7 @@
  * 
  * Date: 4/13/15
  */
+
 namespace Icap\WikiBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;

@@ -64,8 +64,10 @@ $(document).ready(function () {
     }
 
 //var form_count = 0;
-    $('.add-criterion-button').on('click', function (event) {
+    $('.add-criterion-button-innova').on('click', function (event) {
+alert("ici add-criterion-button");
         event.preventDefault();
+
 
         $('.disabled-during-edition').attr('disabled', 'disabled');
         tinyMCE.get('innova_collecticiel_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);

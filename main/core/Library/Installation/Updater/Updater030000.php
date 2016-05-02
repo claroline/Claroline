@@ -123,25 +123,6 @@ class Updater030000 extends Updater
         $this->container->get('claroline.manager.icon_manager')->createShortcutIcon($icon);
     }
 
-    private function updateTools()
-    {
-        $this->log('updating icons...');
-        $tools = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findAll();
-        $adminTools = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll();
-
-        foreach ($tools as $tool) {
-            if (isset($this->icons[$tool->getClass()])) {
-                $this->updateToolClass($tool, $this->icons[$tool->getClass()]);
-            }
-        }
-
-        foreach ($adminTools as $tool) {
-            if (isset($this->icons[$tool->getClass()])) {
-                $this->updateToolClass($tool, $this->icons[$tool->getClass()]);
-            }
-        }
-    }
-
     private function updateAdminPluginTool()
     {
         $this->log('updating admin plugin tool...');
@@ -155,13 +136,6 @@ class Updater030000 extends Updater
             $this->om->persist($pluginTool);
             $this->om->flush();
         }
-    }
-
-    private function updateToolClass($tool, $class)
-    {
-        $tool->setClass($class);
-        $this->om->persist($tool);
-        $this->om->flush();
     }
 
     private function cleanWeb()
