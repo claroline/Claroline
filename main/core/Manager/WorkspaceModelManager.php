@@ -658,6 +658,18 @@ class WorkspaceModelManager
                     $copy->getResourceNode(),
                     $workspaceRoles
                 );
+
+                /*** Copies content of a directory ***/
+                if ($resourceNode->getResourceType()->getName() === 'directory') {
+                    $errors = $this->duplicateDirectoryContent(
+                        $resourceNode,
+                        $copy->getResourceNode(),
+                        $user,
+                        $workspaceRoles,
+                        $resourcesInfos
+                    );
+                    $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
+                }
             } else {
                 $shortcut = $this->resourceManager->makeShortcut(
                     $resourceNode,
@@ -756,6 +768,72 @@ class WorkspaceModelManager
             $this->om->persist($newRight);
         }
         $this->om->flush();
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $directory
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $directoryCopy
+     * @param \Claroline\CoreBundle\Entity\User                  $user
+     * @param array                                              $workspaceRoles
+     */
+    private function duplicateDirectoryContent(
+        ResourceNode $directory,
+        ResourceNode $directoryCopy,
+        User $user,
+        array $workspaceRoles,
+        &$resourcesInfos
+    ) {
+        $this->log('Duplicating directory content...');
+        $children = $directory->getChildren();
+        $copies = array();
+        $resourcesErrors = array();
+
+        foreach ($children as $child) {
+            try {
+                $this->log('Duplicating '.$resourceNode->getName().' from type '.$resourceNode->getResourceType()->getName());
+                $copy = $this->resourceManager->copy(
+                    $child,
+                    $directoryCopy,
+                    $user,
+                    false,
+                    false
+                );
+                $copies[] = $copy;
+                $resourcesInfos['copies'][] = array('original' => $child, 'copy' => $copy->getResourceNode());
+            } catch (NotPopulatedEventException $e) {
+                $resourcesErrors[] = array(
+                    'resourceName' => $child->getName(),
+                    'resourceType' => $child->getResourceType()->getName(),
+                    'type' => 'copy',
+                    'error' => $e->getMessage(),
+                );
+                continue;
+            }
+
+            /*** Copies rights ***/
+            $this->duplicateRights(
+                $child,
+                $copy->getResourceNode(),
+                $workspaceRoles
+            );
+
+            /*** Recursive call for a directory ***/
+            if ($child->getResourceType()->getName() === 'directory') {
+                $errors = $this->duplicateDirectoryContent(
+                    $child,
+                    $copy->getResourceNode(),
+                    $user,
+                    $workspaceRoles,
+                    $resourcesInfos
+                );
+                $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
+            }
+        }
+
+        $this->linkResourcesArray($copies);
+        $this->om->flush();
+
+        return $resourcesErrors;
     }
 
     public function addDataFromModel(WorkspaceModel $model, Workspace $workspace, User $user, &$errors)
