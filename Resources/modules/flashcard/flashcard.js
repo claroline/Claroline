@@ -17,10 +17,12 @@ import studyTemplate from './study.partial.html'
 import createNoteTemplate from './createNote.partial.html'
 import editNoteTemplate from './editNote.partial.html'
 import listNoteTemplate from './listNote.partial.html'
+import editNoteTypeTemplate from './editNoteType.partial.html'
 import FlashCardCtrl from './FlashCardCtrl.js'
 import CreateNoteCtrl from './CreateNoteCtrl.js'
 import EditNoteCtrl from './EditNoteCtrl.js'
 import ListNoteCtrl from './ListNoteCtrl.js'
+import EditNoteTypeCtrl from './EditNoteTypeCtrl.js'
 import StudyCtrl from './StudyCtrl.js'
 import FlashCardService from './FlashCardService.js'
 
@@ -63,9 +65,27 @@ angular
     'ClarolineAPIService',
     ListNoteCtrl
   ])
+  .controller('EditNoteTypeCtrl', [
+    'FlashCardService',
+    '$routeParams',
+    '$location',
+    EditNoteTypeCtrl
+  ])
   .filter('trans', () => (string, domain = 'platform') =>
     Translator.trans(string, domain)
   )
+  .directive('unique', () => {
+    return {
+      require: 'ngModel',
+      link: (scope, elm, attrs, ctrl) => {
+        ctrl.$validators.unique = (modelValue, viewValue, field) => {
+          console.log(field)
+          console.log(modelValue)
+          return false
+        }
+      }
+    }
+  })
   .config(["$routeProvider",
     $routeProvider => {
       $routeProvider
@@ -97,6 +117,12 @@ angular
           template: listNoteTemplate,
           bindToController: true,
           controller: 'ListNoteCtrl',
+          controllerAs: 'vm'
+        })
+        .when('/edit_note_type/:id', {
+          template: editNoteTypeTemplate,
+          bindToController: true,
+          controller: 'EditNoteTypeCtrl',
           controllerAs: 'vm'
         })
         .otherwise({

@@ -1,0 +1,192 @@
+<form name="editNoteTypeForm" novalidate>
+
+  <div class="panel-body" >
+    <pre>
+    {{ vm.noteType|json }}
+    </pre>
+    {{ vm.questionsChecked }}
+    {{ vm.answersChecked }}
+    <div class="alert alert-danger"
+         data-ng-if="vm.errorMessage !== null">
+      <i class="fa fa-warning"></i>
+      {{ vm.errorMessage|trans:'flashcard' }}
+      <ul>
+        <li data-ng-repeat="error in vm.errors track by error.line">
+          {{ error.message|trans:'flashcard' }}
+          <span data-ng-if="error.line">
+            ({{ 'errors.line'|trans:'flashcard' }} {{ error.line }})
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <h2>{{ 'note_model'|trans:'flashcard' }}</h2>
+
+    <div class="form-group"
+         data-ng-class="{ 'has-error': (editNoteTypeForm.$submitted ||
+         editNoteTypeForm.noteTypeName.$dirty) &&
+         editNoteTypeForm.noteTypeName.$invalid }">
+      <label for="noteTypeName">{{ 'name'|trans }}</label>
+      <input id="noteTypeName"
+             type="text"
+             name="noteTypeName"
+             class="form-control"
+             data-ng-model="vm.noteType.name"
+             required />
+      <p class="help-block"
+         data-ng-if="(editNoteTypeForm.$submitted ||
+         editNoteTypeForm.noteTypeName.$dirty) &&
+         editNoteTypeForm.noteTypeName.$error.required">
+        {{ 'errors.not_blank'|trans:'flashcard' }}
+      </p>
+    </div>
+
+    <div data-ng-if="vm.noteType !== undefined">
+      <label>{{ 'field_names'|trans:'flashcard' }}</label>
+      <div class="form-group"
+           data-ng-repeat="(i, fieldLabel) in vm.noteType.field_labels"
+           data-ng-class="{ 'has-error': fieldNameForm.fieldName.$invalid }">
+        <div class="input-group"
+             data-ng-form="fieldNameForm">
+          <input id="fieldName"
+                 type="text"
+                 name="fieldName"
+                 class="form-control"
+                 data-ng-model="fieldLabel.name"
+                 data-ng-init="vm.fieldNameForm[i] = fieldNameForm"
+                 data-ng-change="vm.verifyUniqueFieldName()"
+                 required />
+          <span class="input-group-btn">
+            <button class="btn btn-danger"
+                    data-ng-click="vm.removeFieldLabel(i)">
+              <i class="fa fa-close"></i>
+            </button>
+          </span>
+        </div>
+        <p class="help-block"
+           data-ng-if="(fieldNameForm.$submitted ||
+           fieldNameForm.fieldName.$dirty) &&
+           fieldNameForm.fieldName.$error.required">
+          {{ 'errors.not_blank'|trans:'flashcard' }}
+        </p>
+        <p class="help-block"
+           data-ng-if="fieldNameForm.fieldName.$error.unique">
+          {{ 'errors.not_unique'|trans:'flashcard' }}
+        </p>
+      </div>
+      <button class="btn btn-primary"
+              data-ng-click="vm.addFieldLabel()">
+        <i class="fa fa-plus"></i>
+        {{ 'add_field'|trans:'flashcard' }}
+      </button>
+    </div>
+
+    <h2>{{ 'card_model'|trans:'flashcard' }}</h2>
+
+    <table class="table table-condensed table-bordered">
+      <thead>
+        <tr>
+          <th class="col-xs-3">{{ 'name'|trans }}</th>
+          <th class="col-xs-4">{{ 'questions'|trans:'flashcard' }}</th>
+          <th class="col-xs-4">{{ 'answers'|trans:'flashcard' }}</th>
+          <th class="col-xs-1 text-center">{{ 'actions'|trans }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-ng-repeat="(i, cardType) in vm.noteType.card_types"
+            data-ng-form="cardTypeForm">
+          <td data-ng-class="{ 'has-error': (cardTypeForm.$submitted ||
+              cardTypeForm.cardTypeName.$dirty) &&
+              cardTypeForm.cardTypeName.$invalid }">
+            <input id="cardTypeName"
+                   type="text"
+                   name="cardTypeName"
+                   class="form-control"
+                   data-ng-model="cardType.name"
+                   required />
+            <p class="help-block"
+               data-ng-if="(cardTypeForm.$submitted ||
+               cardTypeForm.cardTypeName.$dirty) &&
+               cardTypeForm.cardTypeName.$error.required">
+            {{ 'errors.not_blank'|trans:'flashcard' }}
+            </p>
+          </td>
+
+          <td>
+            <div class="checkbox"
+                 data-ng-repeat="(f, fieldLabel) in vm.noteType.field_labels"
+                 data-ng-form="questionsForm">
+              <label>
+                <input type="checkbox"
+                       name="questions"
+                       data-ng-checked="vm.questionsChecked[i][f]"
+                       data-ng-disabled="vm.answersChecked[i][f]"
+                       data-ng-init="vm.questionsForm[i] = questionsForm"
+                       data-ng-click="vm.clickQuestion(i, f, fieldLabel)"/>
+                {{ fieldLabel.name }}
+              </label>
+            </div>
+            <p class="help-block"
+               data-ng-if="questionsForm.$error.atLeastOne">
+            {{ 'errors.not_blank'|trans:'flashcard' }}
+            </p>
+          </td>
+          <td>
+            <div class="checkbox"
+                 data-ng-repeat="(f, fieldLabel) in vm.noteType.field_labels"
+                 data-ng-form="answersForm">
+              <label>
+                <input type="checkbox"
+                       name="answers"
+                       data-ng-checked="vm.answersChecked[i][f]"
+                       data-ng-disabled="vm.questionsChecked[i][f]"
+                       data-ng-init="vm.answersForm[i] = answersForm"
+                       data-ng-click="vm.clickAnswer(i, f, fieldLabel)"/>
+                {{ fieldLabel.name }}
+              </label>
+            </div>
+            <p class="help-block"
+               data-ng-if="answersForm.$error.atLeastOne">
+            {{ 'errors.not_blank'|trans:'flashcard' }}
+            </p>
+          </td>
+
+          <td class="text-center" data-ng-if="!vm.isReadOnly">
+            <button class="btn btn-default"
+                    aria-label="{{ 'card_type.create_reverse'|trans:'flashcard' }}"
+                    data-uib-tooltip="{{ 'card_type.create_reverse'|trans }}"
+                    data-ng-click="vm.addReverseCardType(i)">
+              <i class="fa fa-exchange"></i>
+            </button>
+            <button class="btn btn-default"
+                    aria-label="{{ 'delete'|trans }}"
+                    data-uib-tooltip="{{ 'delete'|trans }}"
+                    data-ng-click="vm.removeCardType(i)">
+              <i class="fa fa-trash-o"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn btn-primary"
+            data-ng-click="vm.addCardType()">
+      <i class="fa fa-plus"></i>
+      {{ 'add_card_type'|trans:'flashcard' }}
+    </button>
+
+  </div>
+
+  <div class="panel-footer" data-ng-if="!vm.isReadOnly">
+    <button type="submit"
+            class="btn btn-primary"
+            data-ng-disabled="editNoteTypeForm.$invalid"
+            data-ng-click="vm.editNoteType(editNoteTypeForm)">
+      {{ 'save'|trans }}
+    </button>
+    <a class="btn btn-default"
+       href="#{{ vm.nexturl }}">
+      {{ 'cancel'|trans }}
+    </a>
+  </div>
+
+</form>
