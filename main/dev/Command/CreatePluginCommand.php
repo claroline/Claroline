@@ -98,7 +98,11 @@ class CreatePluginCommand extends ContainerAwareCommand
         foreach ($params as $argument => $argumentName) {
             if (!$input->getArgument($argument)) {
                 $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
+                    $argument,
+                    $this->askArgument(
+                        $output,
+                        $argumentName
+                    )
                 );
             }
         }

@@ -71,6 +71,7 @@ class LogDropEvaluateListener
                     $grade = $drop->getCalculatedGrade();
                     $event = new LogDropEvaluateEvent($drop->getDropzone(), $drop, $grade);
                     $event->setDoer($drop->getUser());
+
                     $this->eventDispatcher->dispatch('log', $event);
                 }
             }

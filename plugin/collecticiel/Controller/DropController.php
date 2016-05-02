@@ -581,9 +581,6 @@ class DropController extends DropzoneBaseController
         }
 
         $adminInnova = $dropzoneVoter->checkEditRight($dropzone);
-    /*    if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
-            $adminInnova = true;
-        }*/
 
         if (count($pager) == 0) {
             $this->getRequest()->getSession()->getFlashBag()->add('success', $translator->trans('No copy waiting for correction', array(), 'innova_collecticiel'));
@@ -1165,11 +1162,6 @@ class DropController extends DropzoneBaseController
 
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
-        /*
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
-            $adminInnova = true;
-        }*/
-
         $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -1256,7 +1248,6 @@ class DropController extends DropzoneBaseController
                 // Ici, on récupère le créateur du collecticiel = l'admin
                 $userCreator = $dropzone->getResourceNode()->getCreator()->getId();
                 // Ici, on récupère celui qui vient de déposer le nouveau document
-                //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId();
                 $userDropDocument = $document->getDrop()->getUser()->getId();
                 $userSenderDocument = $document->getSender()->getId();
 
