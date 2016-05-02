@@ -1,5 +1,197 @@
+$('#add-criterion-button-innova2').on('click', function(event) {
+
+        event.preventDefault();
+
+        $('.disabled-during-edition').attr('disabled', 'disabled');
+        tinyMCE.get('innova_collecticiel_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);
+        //$('.icap_dropzone_criteria_form_correctionInstruction').attr('disabled','disabled');
+        $('.criteria-form-button').attr('disabled', 'disabled');
+
+        var criterionId = $(this).data('criterion');
+        var $form = $('#global_form');
+        $('#addCriteriaReRouting').val('add-criterion');
+        $.ajax({
+            url: $form.attr('action'),
+            type: $form.attr('method'),
+            data: $form.serialize(),
+            success: function (data) {
+                console.log(data);
+                $.get($('.add-criterion-button').attr('href'))
+                    .done(function (data) {
+                        resetTiny();
+                        $('.new-criteria-zone').empty();
+                        $('.criterion-row > .criterion-edit').empty();
+
+                        $('.template > .template-criteria-zone').clone().appendTo('.new-criteria-zone');
+                        $('.new-criteria-zone .new-criteria-form').append(data);
+
+                        $('.column-input input').val(totalColumn);
+                        $('.comment-input input').val(comment);
+
+                        $('.add-criteria-zone').hide();
+                        $('.new-criteria').show();
+                        $('.new-criteria-zone > .template-criteria-zone').show();
+
+                        $('.new-criteria-zone > .template-criteria-zone .form-buttons').hide();
+
+                        $('.add-remove-column').show();
+                        initTinyMCE(stfalcon_tinymce_config);
+
+                        var top = $('#new-criteria').offset().top;
+                        top = top - 50;
+                        $('body,html').scrollTop(top);
+                        setSaveListener();
+                    })
+                ;
+
+            }
+        });
+
+});
+
+
 $(document).ready(function () {
+
     'use strict';
+
+    // BEGIN ADD LINK
+    // setup an "add a tag" link
+    var $addTagLink = $('<a href="#" class="add_tag_link">Degré d\'appréciation</a>');
+    var $newLinkLi = $('<li></li>').append($addTagLink);
+
+    // Get the ul that holds the collection of tags
+    var $collectionHolder = $('ul.tags');
+    
+    // add the "add a tag" anchor and li to the tags ul
+    $collectionHolder.append($newLinkLi);
+    
+    // count the current form inputs we have (e.g. 2), use that as the new
+    // index when inserting a new item (e.g. 2)
+    $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+    // Je divise par 2 car pour UNE donnée en base, j'envoie également UNE donnée en hidden
+    var $nb = ($collectionHolder.find(':input').length)/2;
+
+    // we must have at least 3 grading scales
+    if ($nb < 3) {
+        var i = $nb;
+        var $idNew = 1;
+        for (; i < 3; i++) {
+            var $type = "empty";
+            addTagForm($collectionHolder, $newLinkLi, $idNew);
+            $idNew++;
+        }
+    }
+
+    $addTagLink.on('click', function(e) {
+        // prevent the link from creating a "#" on the URL
+        e.preventDefault();
+        
+        // add a new tag form (see code block below)
+        addTagForm($collectionHolder, $newLinkLi, 0);
+    });
+
+    function addTagForm($collectionHolder, $newLinkLi, $idNew) {
+        // Get the data-prototype explained earlier
+        var prototype = $collectionHolder.data('prototype');
+        
+        // get the new index
+        var index = $collectionHolder.data('index');
+
+// Pour modifier la valeur de l'ID créé si on n'a pas 3 input.
+//        alert(index);
+//        var $selector = 'innova_collecticiel_appreciation_form_gradingScales_' + index + '_scaleName';
+//        alert($selector);
+//        document.getElementById($selector).value = "titi";
+
+        // Replace '$$name$$' in the prototype's HTML to
+        // instead be a number based on how many items we have
+        var newForm = prototype.replace(/__name__/g, index);
+        
+        // increase the index with one for the next item
+        $collectionHolder.data('index', index + 1);
+
+        // Display the form in the page in an li, before the "Add a tag" link li
+        var $newFormLi = $('<li></li>').append(newForm);
+        
+        // also add a remove button, just for this example
+        $newFormLi.append('<a href="#" class="remove-tag">Suppression</a>');
+        
+        $newLinkLi.before($newFormLi);
+        
+        // handle the removal, just for this example
+        $('.remove-tag').click(function(e) {
+            e.preventDefault();
+            
+            $(this).parent().remove();
+            
+            return false;
+        });
+    }
+    // END ADD LINK
+
+
+
+    // BEGIN ADD LINK
+    // setup an "add a tag" link
+    var $addTagLinkCriteria = $('<a href="#" class="add_tag_link">Information/critère</a>');
+    var $newLinkLiCriteria = $('<li></li>').append($addTagLinkCriteria);
+
+    // Get the ul that holds the collection of tags
+    var $collectionHolderCriteria = $('ul.tags');
+    
+    // add the "add a tag" anchor and li to the tags ul
+    $collectionHolderCriteria.append($newLinkLiCriteria);
+    
+    // count the current form inputs we have (e.g. 2), use that as the new
+    // index when inserting a new item (e.g. 2)
+    $collectionHolderCriteria.data('index', $collectionHolder.find(':input').length);
+
+    // Je divise par 2 car pour UNE donnée en base, j'envoie également UNE donnée en hidden
+    var $nb = ($collectionHolderCriteria.find(':input').length)/2;
+
+    $addTagLinkCriteria.on('click', function(e) {
+        // prevent the link from creating a "#" on the URL
+        e.preventDefault();
+        
+        // add a new tag form (see code block below)
+        addTagFormCriteria($collectionHolderCriteria, $newLinkLiCriteria);
+    });
+
+    function addTagFormCriteria($collectionHolder, $newLinkLi) {
+        // Get the data-prototype explained earlier
+        var prototype = $collectionHolder.data('prototype');
+        
+        // get the new index
+        var index = $collectionHolder.data('index');
+        
+        // Replace '$$name$$' in the prototype's HTML to
+        // instead be a number based on how many items we have
+        var newForm = prototype.replace(/__name__/g, index);
+        
+        // increase the index with one for the next item
+        $collectionHolder.data('index', index + 1);
+        
+        // Display the form in the page in an li, before the "Add a tag" link li
+        var $newFormLi = $('<li></li>').append(newForm);
+        
+        // also add a remove button, just for this example
+        $newFormLi.append('<a href="#" class="remove-tag">Suppression</a>');
+        
+        $newLinkLi.before($newFormLi);
+        
+        // handle the removal, just for this example
+        $('.remove-tag').click(function(e) {
+            e.preventDefault();
+            
+            $(this).parent().remove();
+            
+            return false;
+        });
+    }
+    // END ADD LINK
+
+
 
     var modalNewForm = null;
 

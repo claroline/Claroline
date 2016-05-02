@@ -1,0 +1,228 @@
+{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
+{% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('innova_collecticiel_edit_appreciation',{'resourceId':dropzone.id}) }}"><span
+                    class=" fa fa-bars"></span>  {{ dropzone.resourceNode.name }}</a></li>
+    <li class="active"> {{ 'Evaluation criterions'|trans({}, 'innova_collecticiel') }}</li>
+{% endblock %}
+
+{# reset the default active tab#}
+{% block dropzone_edit_navTabs_param_element_class %}
+{% endblock %}
+{% block collecticiel_espace_partage_edit_navTabs_criteria_element_class %}
+{% endblock %}
+{% block collecticiel_mon_espace_edit_navTabs_criteria_element_class %}
+{% endblock %}
+
+{# seting the correct active tab#}
+{% block dropzone_edit_navTabs_criteria_element_class %}
+    active
+{% endblock %}
+
+{# reset the default url setting to # #}
+{% block dropzone_edit_navTabs_criteria_element_link %}
+    #
+{% endblock %}
+
+{% block drop_zone_content_edit %}
+
+    <form id="global_form" class="form-horizontal" method="POST"
+          action="{{ path('innova_collecticiel_edit_appreciation', {'resourceId': dropzone.id}) }}"
+          class="disabled-during-edition">
+        <input id="addCriteriaReRouting" type="hidden" name="addCriteria" value="default"/>
+
+        <div class='container col-md-12'>
+            <div class='row '>
+            </div>
+        </div>
+
+        <h3>{{ 'Evaluation Appreciation'|trans({}, 'innova_collecticiel') }}</h3>
+
+        <h3>{{ 'ratingScale'|trans({}, 'innova_collecticiel') }}</h3>
+
+        <ul class="tags list1" data-prototype="{{ _self.gradingScale_prototype(form.gradingScales.vars.prototype)|e }}">
+            {# Affichage des données de la base #}
+            {% for scale in form.gradingScales %}
+                {{ _self.gradingScale_prototype(scale) }}
+            {% endfor %}
+        </ul>
+
+        <h4>{{ 'Very good'|trans({}, 'innova_collecticiel') }}</h4>
+        <h4>{{ 'Good'|trans({}, 'innova_collecticiel') }}</h4>
+        <h4>{{ 'Insufficient'|trans({}, 'innova_collecticiel') }}</h4>
+
+        <button id="submitAndGotoCriteriaButton" type="submit" class="btn btn-primary">
+        {{ 'Add grading scale'|trans({}, 'innova_collecticiel') }}
+        </button>
+
+
+        <h3>{{ 'Info ratingScale'|trans({}, 'innova_collecticiel') }}</h3>
+
+        <ul class="tags list2" data-prototype="{{ _self.gradingCriteria_prototype(form.gradingCriterias.vars.prototype)|e }}">
+            {# Affichage des données de la base #}
+            {% for criteria in form.gradingCriterias %}
+                {{ _self.gradingCriteria_prototype(criteria) }}
+            {% endfor %}
+        </ul>
+
+        <button id="submitAndGotoCriteriaButton" type="submit" class="btn btn-primary">
+        {{ 'Add a new'|trans({}, 'innova_collecticiel') }}
+        </button>
+
+{#
+    {% if nbCorrection > 0 %}
+        <div class="alert alert-warning">
+            <h4> {{ 'Warning'|trans({}, 'innova_collecticiel') }}</h4>
+
+            <p> {{ 'corrections were already created'|transchoice(nbCorrection,{},'innova_collecticiel') }}</p>
+
+            <p> {{ 'Modify add or delete criteria will affect this corrections if you recalculate the note on it.'|trans({},'innova_collecticiel') }}</p>
+        </div>
+    {% endif %}
+#}
+
+        <div class="container">
+            <div class="row align-with-panel">
+                <div class="col-md-8">fdfdsfsdf
+                </div>
+
+            </div>
+
+            {{ form_rest(form) }}
+            <div class="row">
+                <div class="btn-group pull-right">
+                    <a href="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.getId()}) }}"
+                       class="btn btn-default criteria-form-button back-button">{{ 'Return'|trans({}, 'innova_collecticiel') }}</a>
+                    <button id="submit_global_form" type="submit"
+                            class="btn btn-primary criteria-form-button save-submit">{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}</button>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="modal fade" id="recalculateAskPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+{#                    <h4 class="modal-title">{{ 'Warning'|trans({}, 'innova_collecticiel') }}  {{ 'corrections were already created'|transchoice(nbCorrection,{},'innova_collecticiel') }}</h4> #}
+                </div>
+                <div class="modal-body">
+                    <p> {{ 'Your modifications will only affect new corrections. For older, do you want to apply modification and recalculate grades'|trans({},'innova_collecticiel') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="notRecalculateButton"
+                            class="btn btn-default">{{ 'Just save'|trans({}, 'innova_collecticiel') }}</button>
+
+                    <button id='recalculateButton' class="btn btn-primary pull-right">
+                        {{ 'Save and recalculate all grade'|trans({}, 'innova_collecticiel') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% macro gradingScale_prototype(gradingScale) %}
+    <li>
+        <div class="row">
+            <div class="col-md-8">
+                {{ form_row(gradingScale.scaleName) }}
+                {{ form_row(gradingScale.id) }}
+            </div>
+        </div>
+    </li>
+{% endmacro %}
+
+{% macro gradingCriteria_prototype(gradingCriteria) %}
+    <li>
+        <div class="row">
+            <div class="col-md-8">
+                {{ form_row(gradingCriteria.criteriaName) }}
+                {{ form_row(gradingCriteria.id) }}
+            </div>
+        </div>
+    </li>
+{% endmacro %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /*.row {
+            border:1px solid red;
+        }*/
+        .column-container-div {
+            text-align: center;
+        }
+
+        hr {
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
+
+        .panel-heading {
+            padding: 10px;
+        }
+
+        .panel-body {
+            padding: 10px;
+        }
+
+        .criteria-radio-container {
+            text-align: center;
+        }
+
+        .btn.disabled.fake-button {
+            opacity: 1;
+        }
+
+        .align-with-panel {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .spacer10 {
+            height: 10px;
+            width: 100%;
+            font-size: 0;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            display: block;
+        }
+
+        .center-div {
+            margin: auto;
+            text-align: center;
+        }
+
+        .panel-criteria > .panel-heading {
+            background-color: #E0E0E0;
+            border-color: #E0E0E0;
+        }
+
+        .panel-criteria {
+            border-color: #E0E0E0;
+        }
+
+        /*.test {
+            background-color:blue;
+        }*/
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>
+    {{ tinymce_init() }}
+    <script>
+        var totalColumn = {{ dropzone.totalCriteriaColumn }};
+        var comment =
+        {{ dropzone.allowCommentInCorrection ? 1 : 0 }}
+    </script>
+    <script src="{{ asset('bundles/innovacollecticiel/js/Dropzone/editCriteria.js') }}"></script>
+
+{% endblock %}

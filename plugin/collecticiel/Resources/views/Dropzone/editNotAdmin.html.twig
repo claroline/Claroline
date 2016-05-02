@@ -5,7 +5,7 @@
         {% block collecticiel_mon_espace_edit_navTabs_criteria_element_link %}
             {{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}
         {% endblock %}" class="hometab-link">
-            Mon espace collecticiel
+            {{ 'My collecticiel'|trans({}, 'innova_collecticiel') }}
         </a>
 {#
             <a href="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}"

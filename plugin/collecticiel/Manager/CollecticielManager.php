@@ -3,7 +3,6 @@
 namespace Innova\CollecticielBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\User;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -12,26 +11,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class CollecticielManager
 {
-    /**
-     *  Admin or not.
-     *
-     * @param User $user
-     *
-     * @return bool
-     */
-    public function adminOrNot(User $user)
-    {
-        $adminInnova = false;
-
-        // TODO : change service to @security.authorization_checker
-        if ($this->securityContext->isGranted('ROLE_ADMIN' === true)
-        && $this->get('security.context')->getToken()->getUser()->getId() == $user->getId()) {
-            $adminInnova = true;
-        }
-
-        return $adminInnova;
-    }
-
     /**
      * Import a Collecticiel into the platform.
      *
