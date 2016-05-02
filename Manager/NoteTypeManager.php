@@ -49,6 +49,18 @@ class NoteTypeManager
     public function create(NoteType $noteType)
     {
         $this->om->persist($noteType);
+        foreach($noteType->getFieldLabels() as $f) {
+            $this->om->persist($f);
+        }
+        foreach($noteType->getCardTypes() as $c) {
+            $this->om->persist($c);
+            foreach($c->getQuestions() as $f) {
+                $this->om->persist($f);
+            }
+            foreach($c->getAnswers() as $f) {
+                $this->om->persist($f);
+            }
+        }
         $this->om->flush();
 
         return $noteType;
@@ -61,6 +73,16 @@ class NoteTypeManager
     {
         $this->om->remove($noteType);
         $this->om->flush();
+    }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function get($id)
+    {
+        $repoNoteType = $this->om->getRepository('ClarolineFlashCardBundle:NoteType');
+        return $repoNoteType->findBy(array('id' => $id), array("id" => 'ASC'));
     }
 
     /**

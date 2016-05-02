@@ -45,6 +45,7 @@ class CardType
      * @Groups({
      *     "api_flashcard",
      *     "api_flashcard_card",
+     *     "api_flashcard_note_type",
      *     "api_flashcard_deck"
      * })
      */
@@ -57,6 +58,7 @@ class CardType
      * @Groups({
      *     "api_flashcard",
      *     "api_flashcard_card",
+     *     "api_flashcard_note_type",
      *     "api_flashcard_deck"
      * })
      */
@@ -69,6 +71,7 @@ class CardType
      * @Groups({
      *     "api_flashcard",
      *     "api_flashcard_card",
+     *     "api_flashcard_note_type",
      *     "api_flashcard_deck"
      * })
      */

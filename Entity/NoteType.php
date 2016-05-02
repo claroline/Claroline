@@ -61,6 +61,10 @@ class NoteType
 
     /**
      * @ORM\OneToMany(targetEntity="CardType", mappedBy="noteType")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_note_type"
+     * })
      */
     private $cardTypes;
 
@@ -74,6 +78,37 @@ class NoteType
         $this->fieldLabels = new ArrayCollection();
         $this->cardTypes = new ArrayCollection();
         $this->notes = new ArrayCollection();
+    }
+
+    /**
+     * Check if the structure of this object is correct.
+     *
+     * @return boolean
+     */
+    public function isValid()
+    {
+        if($this->fieldLabels->count() < 2) {
+            return false;
+        }
+        foreach($this->cardTypes as $cardType) {
+            if($cardType->getQuestions()->count() < 1) {
+                return false;
+            }
+            if($cardType->getAnswers()->count() < 1) {
+                return false;
+            }
+            foreach($cardType->getQuestions() as $q) {
+                if(!$this->fieldLabels->contains($q)) {
+                    return false;
+                }
+            }
+            foreach($cardType->getAnswers() as $a) {
+                if(!$this->fieldLabels->contains($a)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -152,6 +187,19 @@ class NoteType
         foreach($this->fieldLabels as $fieldLabel) {
             if($fieldLabel->getId() == $id) {
                 return $fieldLabel;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param string $name
+     * @return FieldLabel Null if the field is notfound.
+     */
+    public function getFieldLabelFromName($name) {
+        foreach($this->fieldLabels as $f)  {
+            if($f->getName() == $name) {
+                return $f;
             }
         }
         return null;
