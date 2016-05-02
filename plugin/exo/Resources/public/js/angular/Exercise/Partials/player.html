@@ -2,7 +2,7 @@
     <!-- Player header -->
     <div class="attempts">
         <span>{{ 'sequence_attempts_infos'|trans:{"1" : exercisePlayerCtrl.step.maxAttempts}:'ujm_sequence'}}.</span>
-        <span>{{ 'sequence_nb_attempts'|trans:{"1" : exercisePlayerCtrl.step.currentTry}:'ujm_sequence' }}</span>
+        <span>{{ 'sequence_nb_attempts'|trans:{"1" : exercisePlayerCtrl.currentStepTry}:'ujm_sequence' }}</span>
         <span>/ {{ exercisePlayerCtrl.step.maxAttempts }}</span>
     </div>
 
@@ -57,7 +57,7 @@
 
             <!-- Retry step (for Formative exercises) -->
             <button type="button" role="button" class="btn btn-default"
-                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.step.currentTry !== exercisePlayerCtrl.step.maxAttempts"
+                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.currentStepTry !== exercisePlayerCtrl.step.maxAttempts"
                     data-toggle="tooltip" data-container="body" title="{{ 'btn_retry_step'|trans:{}:'ujm_sequence' }}"
                     data-ng-click="exercisePlayerCtrl.retry()"
             >
@@ -67,7 +67,7 @@
 
             <!-- Show solution (for Formative exercises) -->
             <button type="button" role="button" class="btn btn-default"
-                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.step.currentTry === exercisePlayerCtrl.step.maxAttempts"
+                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.currentStepTry === exercisePlayerCtrl.step.maxAttempts && !exercisePlayerCtrl.solutionShown"
                     data-toggle="tooltip" data-container="body" title="{{ 'btn_show_solution'|trans:{}:'ujm_sequence' }}"
                     data-ng-click="exercisePlayerCtrl.showSolution()"
             >
@@ -88,7 +88,7 @@
 
         <!-- Navigation menu (to go to any step of the Exercise) -->
         <div class="btn-group dropup">
-            <button data-ng-disabled="exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button data-ng-disabled="(exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible) || (exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && !exercisePlayerCtrl.solutionShown)" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ 'dropdown_step_navigate_choice_label'|trans:{"1" : exercisePlayerCtrl.index + 1, "2" : exercisePlayerCtrl.exercise.steps.length}:'ujm_sequence'}} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
