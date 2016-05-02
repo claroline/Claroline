@@ -55,9 +55,9 @@ class Hole extends Interaction
      * implement the abstract method
      * To calculate the score.
      *
-     * @param InteractionHole     $interHole
+     * @param InteractionHole $interHole
      * @param $request
-     * @param float                                     $penalty   penalty if the user showed hints
+     * @param float $penalty penalty if the user showed hints
      *
      * @return string userScore/scoreMax
      */
@@ -136,7 +136,7 @@ class Hole extends Interaction
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
      * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
-     * @param SessionInterface    $session
+     * @param SessionInterface                                             $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
