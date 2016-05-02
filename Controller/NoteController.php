@@ -17,12 +17,10 @@ use Claroline\FlashCardBundle\Entity\NoteType;
 use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Entity\FieldValue;
 use Claroline\FlashCardBundle\Entity\Card;
-use Claroline\FlashCardBundle\Entity\CardType;
 use Claroline\FlashCardBundle\Manager\NoteManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,8 +51,7 @@ class NoteController
         FormHandler $handler,
         AuthorizationCheckerInterface $checker,
         $serializer
-    )
-    {
+    ) {
         $this->manager = $manager;
         $this->formHandler = $handler;
         $this->checker = $checker;
@@ -68,9 +65,10 @@ class NoteController
      * )
      * @EXT\Method("POST")
      *
-     * @param Request   $request
-     * @param Deck $deck
-     * @param NoteType  $noteType
+     * @param Request  $request
+     * @param Deck     $deck
+     * @param NoteType $noteType
+     *
      * @return JsonResponse
      */
     public function createNoteAction(Request $request, Deck $deck, NoteType $noteType)
@@ -78,12 +76,12 @@ class NoteController
         $fields = $request->request->get('fields', false);
         $response = new JsonResponse();
 
-        if($fields) {
+        if ($fields) {
             $note = new Note();
             $note->setDeck($deck);
             $note->setNoteType($noteType);
 
-            foreach($fields as $field) {
+            foreach ($fields as $field) {
                 $fieldValue = new FieldValue();
                 $fieldValue->setFieldLabel($noteType->getFieldLabel($field['id']));
                 $fieldValue->setValue($field['value']);
@@ -91,7 +89,7 @@ class NoteController
                 $note->addFieldValue($fieldValue);
             }
 
-            foreach($noteType->getCardTypes() as $cardType) {
+            foreach ($noteType->getCardTypes() as $cardType) {
                 $card = new Card();
                 $card->setCardType($cardType);
                 $card->setNote($note);
@@ -120,8 +118,9 @@ class NoteController
      * )
      * @EXT\Method("POST")
      *
-     * @param Request   $request
-     * @param Note $note
+     * @param Request $request
+     * @param Note    $note
+     *
      * @return JsonResponse
      */
     public function editNoteAction(Request $request, Note $note)
@@ -129,8 +128,8 @@ class NoteController
         $fieldValues = $request->request->get('fieldValues', false);
         $response = new JsonResponse();
 
-        if($fieldValues) {
-            foreach($fieldValues as $f) {
+        if ($fieldValues) {
+            foreach ($fieldValues as $f) {
                 $note->setFieldValue($f['id'], $f['value']);
             }
 
@@ -145,6 +144,7 @@ class NoteController
             $response->setData('Field "fieldValues" is missing');
             $response->setStatusCode(422);
         }
+
         return $response;
     }
 
@@ -155,6 +155,7 @@ class NoteController
      * )
      *
      * @param Note $note
+     *
      * @return JsonResponse
      */
     public function findNote(Note $note)
@@ -162,6 +163,7 @@ class NoteController
         $response = new JsonResponse();
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_deck');
+
         return $response->setData(json_decode(
             $this->serializer->serialize($note, 'json', $context)
         ));
@@ -173,8 +175,9 @@ class NoteController
      *     name="claroline_list_notes"
      * )
      *
-     * @param Deck $deck
+     * @param Deck     $deck
      * @param NoteType $noteType
+     *
      * @return JsonResponse
      */
     public function listNotesAction(Deck $deck, NoteType $noteType)
@@ -184,6 +187,7 @@ class NoteController
         $response = new JsonResponse();
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_deck');
+
         return $response->setData(json_decode(
             $this->serializer->serialize($notes, 'json', $context)
         ));
@@ -196,12 +200,14 @@ class NoteController
      * )
      *
      * @param Note $note
+     *
      * @return JsonResponse
      */
     public function deleteNoteAction(Note $note)
     {
         $noteId = $note->getId();
         $this->manager->delete($note);
+
         return new JsonResponse($noteId);
     }
 }

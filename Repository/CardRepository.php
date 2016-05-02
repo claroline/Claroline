@@ -22,10 +22,11 @@ class CardRepository extends EntityRepository
      *
      * @param Deck $deck
      * @param User $user
-     * @param integer $maxResults
+     * @param int  $maxResults
+     *
      * @return array
      */
-    public function findNewCardToLearn(Deck $deck, User $user, $maxResults=-1)
+    public function findNewCardToLearn(Deck $deck, User $user, $maxResults = -1)
     {
         $dql = '
             SELECT c
@@ -43,10 +44,10 @@ class CardRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameters([
             'user' => $user,
-            'deck' => $deck
+            'deck' => $deck,
         ]);
 
-        if($maxResults >= 0) {
+        if ($maxResults >= 0) {
             $query->setMaxResults($maxResults);
         }
 
@@ -57,13 +58,14 @@ class CardRepository extends EntityRepository
      * Return the cards that must be studied at a given date for a given
      * user and a given deck.
      *
-     * @param Deck $deck
-     * @param User $user
+     * @param Deck      $deck
+     * @param User      $user
      * @param \DateTime $date
-     * @param integer $maxResults
+     * @param int       $maxResults
+     *
      * @return array
      */
-    public function findCardToReview(Deck $deck, User $user, \DateTime $date, $maxResults=-1)
+    public function findCardToReview(Deck $deck, User $user, \DateTime $date, $maxResults = -1)
     {
         $dql = '
             SELECT c
@@ -81,10 +83,10 @@ class CardRepository extends EntityRepository
         $query->setParameters([
             'user' => $user,
             'deck' => $deck,
-            'date' => $date
+            'date' => $date,
         ]);
 
-        if($maxResults >= 0) {
+        if ($maxResults >= 0) {
             $query->setMaxResults($maxResults);
         }
 

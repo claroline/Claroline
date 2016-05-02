@@ -11,13 +11,11 @@
 
 namespace Claroline\FlashCardBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * Card
+ * Card.
  *
  * @ORM\Table(name="claro_fcbundle_card")
  * @ORM\Entity(repositoryClass="Claroline\FlashCardBundle\Repository\CardRepository")
@@ -25,7 +23,7 @@ use JMS\Serializer\Annotation\SerializedName;
 class Card
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -67,9 +65,9 @@ class Card
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -78,6 +76,7 @@ class Card
 
     /**
      * @param CardType $obj
+     *
      * @return Card
      */
     public function setCardType(CardType $obj)

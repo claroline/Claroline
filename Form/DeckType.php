@@ -16,7 +16,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Range;
 
 /**
  * @DI\Service("claroline_form_deck")
@@ -29,7 +28,7 @@ class DeckType extends AbstractType
         $builder
             ->add('name', 'text', [
                 'label' => 'title',
-                'constraints' => new NotBlank()
+                'constraints' => new NotBlank(),
             ]);
     }
 

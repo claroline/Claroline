@@ -14,17 +14,14 @@ namespace Claroline\FlashCardBundle\Listener;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Form\Handler\FormHandler;
 use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Manager\DeckManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**
@@ -47,11 +44,11 @@ class DeckListener
      *     "context"    = @DI\Inject("security.context")
      * })
      *
-     * @param RequestStack          $stack
-     * @param HttpKernelInterface   $kernel
-     * @param DeckManager           $manager
-     * @param FormHandler           $handler
-     * @param SecurityContext       $context
+     * @param RequestStack        $stack
+     * @param HttpKernelInterface $kernel
+     * @param DeckManager         $manager
+     * @param FormHandler         $handler
+     * @param SecurityContext     $context
      */
     public function __construct(
         RequestStack $stack,
@@ -59,8 +56,7 @@ class DeckListener
         DeckManager $manager,
         FormHandler $handler,
         SecurityContext $context
-    )
-    {
+    ) {
         $this->request = $stack->getCurrentRequest();
         $this->kernel = $kernel;
         $this->manager = $manager;
@@ -97,7 +93,7 @@ class DeckListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        if ($this->formHandler->isValid('claroline_form_deck', $this->request, 
+        if ($this->formHandler->isValid('claroline_form_deck', $this->request,
             new Deck())) {
             $event->setResources([$this->manager->create($this->formHandler->getData())]);
         } else {
@@ -117,7 +113,7 @@ class DeckListener
     {
         $subRequest = $this->request->duplicate([], null, [
             '_controller' => 'ClarolineFlashCardBundle:Deck:deck',
-            'id' => $event->getResource()->getId()
+            'id' => $event->getResource()->getId(),
         ]);
         $event->setResponse($this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST));
         $event->stopPropagation();

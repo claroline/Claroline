@@ -19,7 +19,6 @@ use Claroline\FlashCardBundle\Manager\NoteTypeManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,8 +49,7 @@ class NoteTypeController
         FormHandler $handler,
         AuthorizationCheckerInterface $checker,
         $serializer
-    )
-    {
+    ) {
         $this->manager = $manager;
         $this->formHandler = $handler;
         $this->checker = $checker;
@@ -66,38 +64,39 @@ class NoteTypeController
      * @EXT\Method("POST")
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function editNoteTypeAction(Request $request)
     {
         $response = new JsonResponse();
         $noteType = $request->request->get('noteType', false);
-        if($noteType) {
-            if(array_key_exists('id', $noteType) && !empty($noteType['id'])) {
+        if ($noteType) {
+            if (array_key_exists('id', $noteType) && !empty($noteType['id'])) {
                 $response->setData('Function not implemented yet');
                 $response->setStatusCode(422);
             } else {
                 $newNoteType = new NoteType();
                 $newNoteType->setName($noteType['name']);
-                foreach($noteType['field_labels'] as $field) {
+                foreach ($noteType['field_labels'] as $field) {
                     $f = new FieldLabel();
                     $f->setName($field['name']);
                     $f->setNoteType($newNoteType);
                     $newNoteType->addFieldLabel($f);
                 }
-                foreach($noteType['card_types'] as $cardType) {
+                foreach ($noteType['card_types'] as $cardType) {
                     $newCardType = new cardType();
-                    foreach($cardType['questions'] as $question) {
+                    foreach ($cardType['questions'] as $question) {
                         $newCardType->addQuestion(
                             $newNoteType->getFieldLabelFromName($question['name']));
                     }
-                    foreach($cardType['answers'] as $answer) {
+                    foreach ($cardType['answers'] as $answer) {
                         $newCardType->addAnswer(
                             $newNoteType->getFieldLabelFromName($answer['name']));
                     }
                     $newCardType->setNoteType($newNoteType);
                 }
-                if($newNoteType->isValid()) {
+                if ($newNoteType->isValid()) {
                     $newNoteType = $this->manager->create($newNoteType);
                     $response->setData($newNoteType->getId());
                 } else {
@@ -109,6 +108,7 @@ class NoteTypeController
             $response->setData('Field "fieldValues" is missing');
             $response->setStatusCode(422);
         }
+
         return $response;
     }
 
@@ -119,24 +119,25 @@ class NoteTypeController
      * )
      *
      * @param int $noteTypeId
+     *
      * @return JsonResponse
      */
     public function findNoteTypeAction($noteTypeId)
     {
         $noteType = $this->manager->get($noteTypeId);
-        if(!$noteType) {
+        if (!$noteType) {
             $noteType = new NoteType();
-            $noteType->setName("Basic");
+            $noteType->setName('Basic');
 
             $frontField = new FieldLabel();
-            $frontField->setName("Front");
+            $frontField->setName('Front');
             $noteType->addFieldLabel($frontField);
             $backField = new FieldLabel();
-            $backField->setName("Back");
+            $backField->setName('Back');
             $noteType->addFieldLabel($backField);
 
             $cardType = new CardType();
-            $cardType->setName("Forward");
+            $cardType->setName('Forward');
             $cardType->addQuestion($frontField);
             $cardType->addAnswer($backField);
             $noteType->addCardType($cardType);
@@ -148,6 +149,7 @@ class NoteTypeController
         $response->setData(json_decode(
             $this->serializer->serialize($noteType, 'json', $context)
         ));
+
         return $response;
     }
 

@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Table(name="claro_fcbundle_deck")
@@ -25,7 +24,7 @@ use JMS\Serializer\Annotation\SerializedName;
 class Deck extends AbstractResource
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -46,7 +45,7 @@ class Deck extends AbstractResource
     protected $sessions;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="new_card_day_default", type="integer")
      * @Groups({"api_flashcard", "api_flashcard_deck"})
@@ -54,7 +53,7 @@ class Deck extends AbstractResource
     protected $newCardDayDefault;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="session_duration_default", type="integer")
      * @Groups({"api_flashcard", "api_flashcard_deck"})
@@ -76,9 +75,9 @@ class Deck extends AbstractResource
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -126,26 +125,26 @@ class Deck extends AbstractResource
     }
 
     /**
-     * @param User $user 
-     * @param DateTime $date 
+     * @param User     $user
+     * @param DateTime $date
      *
      * @return Session
      */
     public function getSession(User $user, \DateTime $date)
     {
-        foreach($this->sessions as $session) {
+        foreach ($this->sessions as $session) {
             $interval = $date->diff($session->getDate(), true);
-            if($interval->days == 0 AND 
+            if ($interval->days == 0 and
                $session->getUser()->getId() == $user->getId()) {
                 return $session;
             }
         }
 
-        return null;
+        return;
     }
 
     /**
-     * @param integer $newCardDayDefault
+     * @param int $newCardDayDefault
      *
      * @return Deck
      */
@@ -157,7 +156,7 @@ class Deck extends AbstractResource
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getNewCardDayDefault()
     {
@@ -165,19 +164,19 @@ class Deck extends AbstractResource
     }
 
     /**
-     * @param integer $sessionDurationDefault
+     * @param int $sessionDurationDefault
      *
      * @return Deck
      */
     public function setSessionDurationDefault($sessionDurationDefault)
     {
-        $this->sessionDurationDefault= $sessionDurationDefault;
+        $this->sessionDurationDefault = $sessionDurationDefault;
 
         return $this;
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getSessionDurationDefault()
     {
@@ -197,12 +196,13 @@ class Deck extends AbstractResource
      * personnal preferences, the default preferences are used.
      *
      * @param User $user
+     *
      * @return UserPreference
      */
     public function getUserPreference(User $user)
     {
-        foreach($this->userPreferences as $userPref) {
-            if($user->getId() == $userPref->getUser()->getId()) {
+        foreach ($this->userPreferences as $userPref) {
+            if ($user->getId() == $userPref->getUser()->getId()) {
                 return $userPref;
             }
         }
@@ -215,5 +215,4 @@ class Deck extends AbstractResource
 
         return $userPref;
     }
-
 }

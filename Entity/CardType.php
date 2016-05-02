@@ -14,10 +14,9 @@ namespace Claroline\FlashCardBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * CardType
+ * CardType.
  *
  * @ORM\Table(name="claro_fcbundle_card_type")
  * @ORM\Entity
@@ -25,7 +24,7 @@ use JMS\Serializer\Annotation\SerializedName;
 class CardType
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -96,9 +95,9 @@ class CardType
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -128,22 +127,16 @@ class CardType
     /**
      * @param FieldLabel
      *
-     * @return boolean
+     * @return bool
      */
     public function addQuestion(FieldLabel $obj)
     {
-        if($this->questions->contains($obj))
-        {
+        if ($this->questions->contains($obj)) {
             return false;
-        }
-        else
-        {
-            if($this->noteType == $obj->getNoteType())
-            {
+        } else {
+            if ($this->noteType == $obj->getNoteType()) {
                 return $this->questions->add($obj);
-            }
-            else
-            {
+            } else {
                 false;
             }
         }
@@ -172,22 +165,16 @@ class CardType
     /**
      * @param FieldLabel
      *
-     * @return boolean
+     * @return bool
      */
     public function addAnswer(FieldLabel $obj)
     {
-        if($this->answers->contains($obj))
-        {
+        if ($this->answers->contains($obj)) {
             return false;
-        }
-        else
-        {
-            if($this->noteType == $obj->getNoteType())
-            {
+        } else {
+            if ($this->noteType == $obj->getNoteType()) {
                 return $this->answers->add($obj);
-            }
-            else
-            {
+            } else {
                 false;
             }
         }
@@ -240,5 +227,4 @@ class CardType
     {
         return $this->cards;
     }
-
 }

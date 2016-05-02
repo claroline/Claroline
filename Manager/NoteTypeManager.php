@@ -11,13 +11,10 @@
 
 namespace Claroline\FlashCardBundle\Manager;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\FlashCardBundle\Entity\NoteType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\Form\FormView;
 
 /**
  * @DI\Service("claroline.flashcard.note_type_manager")
@@ -33,8 +30,8 @@ class NoteTypeManager
      *     "templating" = @DI\Inject("templating")
      * })
      *
-     * @param ObjectManager     $om
-     * @param EngineInterface   $templating
+     * @param ObjectManager   $om
+     * @param EngineInterface $templating
      */
     public function __construct(ObjectManager $om, EngineInterface $templating)
     {
@@ -44,20 +41,21 @@ class NoteTypeManager
 
     /**
      * @param NoteType $noteType
+     *
      * @return NoteType
      */
     public function create(NoteType $noteType)
     {
         $this->om->persist($noteType);
-        foreach($noteType->getFieldLabels() as $f) {
+        foreach ($noteType->getFieldLabels() as $f) {
             $this->om->persist($f);
         }
-        foreach($noteType->getCardTypes() as $c) {
+        foreach ($noteType->getCardTypes() as $c) {
             $this->om->persist($c);
-            foreach($c->getQuestions() as $f) {
+            foreach ($c->getQuestions() as $f) {
                 $this->om->persist($f);
             }
-            foreach($c->getAnswers() as $f) {
+            foreach ($c->getAnswers() as $f) {
                 $this->om->persist($f);
             }
         }
@@ -77,12 +75,14 @@ class NoteTypeManager
 
     /**
      * @param int $id
+     *
      * @return array
      */
     public function get($id)
     {
         $repoNoteType = $this->om->getRepository('ClarolineFlashCardBundle:NoteType');
-        return $repoNoteType->findBy(array('id' => $id), array("id" => 'ASC'));
+
+        return $repoNoteType->findBy(array('id' => $id), array('id' => 'ASC'));
     }
 
     /**
@@ -91,6 +91,7 @@ class NoteTypeManager
     public function getAll()
     {
         $repoNoteType = $this->om->getRepository('ClarolineFlashCardBundle:NoteType');
-        return $repoNoteType->findBy(array(), array("id" => 'ASC'));
+
+        return $repoNoteType->findBy(array(), array('id' => 'ASC'));
     }
 }

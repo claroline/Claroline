@@ -14,10 +14,9 @@ namespace Claroline\FlashCardBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * Note
+ * Note.
  *
  * @ORM\Table(name="claro_fcbundle_note")
  * @ORM\Entity
@@ -25,7 +24,7 @@ use JMS\Serializer\Annotation\SerializedName;
 class Note
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -47,7 +46,7 @@ class Note
      *     "api_flashcard_note", 
      *     "api_flashcard_deck"
      * })
-    */
+     */
     private $noteType;
 
     /**
@@ -84,9 +83,9 @@ class Note
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -136,14 +135,14 @@ class Note
     /**
      * @param FieldValue
      *
-     * @return boolean
+     * @return bool
      */
     public function addFieldValue(FieldValue $obj)
     {
-        if($this->fieldValues->contains($obj)) {
+        if ($this->fieldValues->contains($obj)) {
             return false;
         } else {
-            if($this->noteType->getFieldLabels()->contains($obj->getFieldLabel())) {
+            if ($this->noteType->getFieldLabels()->contains($obj->getFieldLabel())) {
                 return $this->fieldValues->add($obj);
             } else {
                 false;
@@ -155,16 +154,18 @@ class Note
      * @param $fieldId
      * @param $value
      *
-     * @return boolean
+     * @return bool
      */
     public function setFieldValue($fieldId, $value)
     {
-        foreach($this->fieldValues as $f) {
-            if($f->getId() == $fieldId) {
+        foreach ($this->fieldValues as $f) {
+            if ($f->getId() == $fieldId) {
                 $f->setValue($value);
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -191,14 +192,14 @@ class Note
     /**
      * @param Card
      *
-     * @return boolean
+     * @return bool
      */
     public function addCard(Card $obj)
     {
-        if($this->cards->contains($obj)) {
+        if ($this->cards->contains($obj)) {
             return false;
         } else {
-            if($this->noteType->getCardTypes()->contains($obj->getCardType())) {
+            if ($this->noteType->getCardTypes()->contains($obj->getCardType())) {
                 return $this->cards->add($obj);
             } else {
                 false;

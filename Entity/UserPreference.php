@@ -12,11 +12,10 @@
 namespace Claroline\FlashCardBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UserPreference
+ * UserPreference.
  *
  * @ORM\Table(name="claro_fcbundle_user_preference",
  *     uniqueConstraints={
@@ -28,14 +27,14 @@ use Doctrine\ORM\Mapping as ORM;
 class UserPreference
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="new_card_day", type="integer")
      */
     private $newCardDay;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="session_duration", type="integer")
      */
@@ -61,19 +60,19 @@ class UserPreference
     }
 
     /**
-     * @param integer $newCardDay
+     * @param int $newCardDay
      *
      * @return UserPreference
      */
     public function setNewCardDay($newCardDay)
     {
-        $this->newCardDay= $newCardDay;
+        $this->newCardDay = $newCardDay;
 
         return $this;
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getNewCardDay()
     {
@@ -81,19 +80,19 @@ class UserPreference
     }
 
     /**
-     * @param integer $sessionDuration
+     * @param int $sessionDuration
      *
      * @return UserPreference
      */
     public function setSessionDuration($sessionDuration)
     {
-        $this->sessionDuration= $sessionDuration;
+        $this->sessionDuration = $sessionDuration;
 
         return $this;
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getSessionDuration()
     {
@@ -120,7 +119,6 @@ class UserPreference
         return $this->deck;
     }
 
-
     /**
      * @param User $obj
      *
@@ -140,5 +138,4 @@ class UserPreference
     {
         return $this->user;
     }
-
 }

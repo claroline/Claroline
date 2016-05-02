@@ -22,7 +22,6 @@ use Claroline\FlashCardBundle\Manager\SessionManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -68,8 +67,7 @@ class CardController
         AuthorizationCheckerInterface $checker,
         TokenStorageInterface $tokenStorage,
         $serializer
-    )
-    {
+    ) {
         $this->cardMgr = $cardMgr;
         $this->cardLearningMgr = $cardLearningMgr;
         $this->sessionMgr = $sessionMgr;
@@ -86,6 +84,7 @@ class CardController
      * )
      *
      * @param Deck $deck
+     *
      * @return JsonResponse
      */
     public function newCardToLearnAction(Deck $deck)
@@ -95,7 +94,7 @@ class CardController
         $userPref = $deck->getUserPreference($user);
 
         $newCardStudied = 0;
-        if($session = $deck->getSession($user, new \DateTime())) {
+        if ($session = $deck->getSession($user, new \DateTime())) {
             $newCardStudied = count($session->getNewCards());
         }
 
@@ -105,6 +104,7 @@ class CardController
 
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_card');
+
         return new JsonResponse(json_decode(
             $this->serializer->serialize($cards, 'json', $context)
         ));
@@ -117,6 +117,7 @@ class CardController
      * )
      *
      * @param Deck $deck
+     *
      * @return JsonResponse
      */
     public function cardToReviewAction(Deck $deck)
@@ -129,6 +130,7 @@ class CardController
 
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_card');
+
         return new JsonResponse(json_decode(
             $this->serializer->serialize($cards, 'json', $context)
         ));
@@ -141,9 +143,10 @@ class CardController
      * )
      *
      * @param Deck $deck
-     * @param int $sessionId
+     * @param int  $sessionId
      * @param Card $card
      * @param $result
+     *
      * @return JsonResponse
      */
     public function studyCardAction(Deck $deck, $sessionId, Card $card, $result)
@@ -153,7 +156,7 @@ class CardController
 
         $isNewCard = $cardLearning == null;
 
-        if($isNewCard) {
+        if ($isNewCard) {
             $cardLearning = new cardLearning();
             $cardLearning->setCard($card);
             $cardLearning->setUser($user);
@@ -164,7 +167,7 @@ class CardController
         $this->cardLearningMgr->save($cardLearning);
 
         // Save the session
-        if($sessionId > 0) {
+        if ($sessionId > 0) {
             $session = $this->sessionMgr->get($sessionId);
         } else {
             $session = new Session();
@@ -172,7 +175,7 @@ class CardController
             $session->setUser($user);
         }
 
-        if($isNewCard) {
+        if ($isNewCard) {
             $session->addNewCard($card);
         } else {
             $session->addOldCard($card);
@@ -194,6 +197,7 @@ class CardController
      * )
      *
      * @param Card $card
+     *
      * @return JsonResponse
      */
     public function resetCardAction(Card $card)
@@ -214,6 +218,7 @@ class CardController
      *
      * @param Card $card
      * @param $suspend
+     *
      * @return JsonResponse
      */
     public function suspendCardAction(Card $card, $suspend)

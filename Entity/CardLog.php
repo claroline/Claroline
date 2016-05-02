@@ -12,11 +12,10 @@
 namespace Claroline\FlashCardBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CardLog
+ * CardLog.
  *
  * @ORM\Table(name="claro_fcbundle_card_log")
  * @ORM\Entity
@@ -24,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 class CardLog
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -47,14 +46,14 @@ class CardLog
     private $factor;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="painfull", type="boolean")
      */
     private $painfull;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="number_repeated", type="integer")
      */
@@ -84,9 +83,9 @@ class CardLog
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -134,7 +133,7 @@ class CardLog
     }
 
     /**
-     * @param boolean $painfull
+     * @param bool $painfull
      *
      * @return CardLog
      */
@@ -146,7 +145,7 @@ class CardLog
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getPainfull()
     {
@@ -154,7 +153,7 @@ class CardLog
     }
 
     /**
-     * @param integer $numberRepeated
+     * @param int $numberRepeated
      *
      * @return CardLog
      */
@@ -232,5 +231,4 @@ class CardLog
     {
         return $this->user;
     }
-
 }

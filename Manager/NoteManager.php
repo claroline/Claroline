@@ -11,15 +11,12 @@
 
 namespace Claroline\FlashCardBundle\Manager;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\FlashCardBundle\Entity\Note;
 use Claroline\FlashCardBundle\Entity\NoteType;
 use Claroline\FlashCardBundle\Entity\Deck;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\Form\FormView;
 
 /**
  * @DI\Service("claroline.flashcard.note_manager")
@@ -35,8 +32,8 @@ class NoteManager
      *     "templating" = @DI\Inject("templating")
      * })
      *
-     * @param ObjectManager     $om
-     * @param EngineInterface   $templating
+     * @param ObjectManager   $om
+     * @param EngineInterface $templating
      */
     public function __construct(ObjectManager $om, EngineInterface $templating)
     {
@@ -46,15 +43,16 @@ class NoteManager
 
     /**
      * @param Note $note
+     *
      * @return Note
      */
     public function create(Note $note)
     {
-        foreach($note->getFieldValues() as $fieldValue) {
+        foreach ($note->getFieldValues() as $fieldValue) {
             $this->om->persist($fieldValue);
         }
 
-        foreach($note->getCards() as $card) {
+        foreach ($note->getCards() as $card) {
             $this->om->persist($card);
         }
 
@@ -71,9 +69,9 @@ class NoteManager
     {
         $repo = $this->om->getRepository('ClarolineFlashCardBundle:CardLearning');
 
-        foreach($note->getCards() as $card) {
+        foreach ($note->getCards() as $card) {
             $cardLearnings = $repo->findBy(array('card' => $card));
-            foreach($cardLearnings as $cardLearning) {
+            foreach ($cardLearnings as $cardLearning) {
                 $this->om->remove($cardLearning);
             }
             $this->om->remove($card);
@@ -84,17 +82,19 @@ class NoteManager
     }
 
     /**
-     * @param Deck $deck
+     * @param Deck     $deck
      * @param NoteType $noteType
-     * @return Array
+     *
+     * @return array
      */
     public function findByNoteType(Deck $deck, NoteType $noteType)
     {
         $repo = $this->om->getRepository('ClarolineFlashCardBundle:Note');
+
         return $repo->findBy(
             array(
                 'deck' => $deck->getId(),
-                'noteType' => $noteType->getId()
+                'noteType' => $noteType->getId(),
             ),
             array('id' => 'ASC')
         );

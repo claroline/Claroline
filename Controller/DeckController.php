@@ -43,8 +43,7 @@ class DeckController
         DeckManager $manager,
         FormHandler $handler,
         AuthorizationCheckerInterface $checker
-    )
-    {
+    ) {
         $this->manager = $manager;
         $this->formHandler = $handler;
         $this->checker = $checker;
@@ -55,6 +54,7 @@ class DeckController
      * @EXT\Template
      *
      * @param Deck $deck
+     *
      * @return array
      */
     public function deckAction(Deck $deck)

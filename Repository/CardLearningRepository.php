@@ -22,6 +22,7 @@ class CardLearningRepository extends EntityRepository
      *
      * @param Deck $deck
      * @param User $user
+     *
      * @return array
      */
     public function allCardLearning(Deck $deck, User $user)
@@ -38,7 +39,7 @@ class CardLearningRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameters([
             'user' => $user,
-            'deck' => $deck
+            'deck' => $deck,
         ]);
 
         return $query->getResult();

@@ -12,13 +12,11 @@
 namespace Claroline\FlashCardBundle\Controller;
 
 use Claroline\CoreBundle\Form\Handler\FormHandler;
-use Claroline\FlashCardBundle\Entity\CardLearning;
 use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Manager\CardLearningManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -58,15 +56,13 @@ class CardLearningController
         AuthorizationCheckerInterface $checker,
         TokenStorageInterface $tokenStorage,
         $serializer
-    )
-    {
+    ) {
         $this->manager = $manager;
         $this->formHandler = $handler;
         $this->checker = $checker;
         $this->tokenStorage = $tokenStorage;
         $this->serializer = $serializer;
     }
-
 
     /**
      * @EXT\Route(
@@ -75,6 +71,7 @@ class CardLearningController
      * )
      *
      * @param Deck $deck
+     *
      * @return JsonResponse
      */
     public function allCardLearning(Deck $deck)
@@ -86,6 +83,7 @@ class CardLearningController
 
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_card');
+
         return new JsonResponse(json_decode(
             $this->serializer->serialize($cardLearnings, 'json', $context)
         ));

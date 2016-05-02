@@ -14,10 +14,9 @@ namespace Claroline\FlashCardBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * Note
+ * Note.
  *
  * @ORM\Table(name="claro_fcbundle_note_type")
  * @ORM\Entity
@@ -83,38 +82,39 @@ class NoteType
     /**
      * Check if the structure of this object is correct.
      *
-     * @return boolean
+     * @return bool
      */
     public function isValid()
     {
-        if($this->fieldLabels->count() < 2) {
+        if ($this->fieldLabels->count() < 2) {
             return false;
         }
-        foreach($this->cardTypes as $cardType) {
-            if($cardType->getQuestions()->count() < 1) {
+        foreach ($this->cardTypes as $cardType) {
+            if ($cardType->getQuestions()->count() < 1) {
                 return false;
             }
-            if($cardType->getAnswers()->count() < 1) {
+            if ($cardType->getAnswers()->count() < 1) {
                 return false;
             }
-            foreach($cardType->getQuestions() as $q) {
-                if(!$this->fieldLabels->contains($q)) {
+            foreach ($cardType->getQuestions() as $q) {
+                if (!$this->fieldLabels->contains($q)) {
                     return false;
                 }
             }
-            foreach($cardType->getAnswers() as $a) {
-                if(!$this->fieldLabels->contains($a)) {
+            foreach ($cardType->getAnswers() as $a) {
+                if (!$this->fieldLabels->contains($a)) {
                     return false;
                 }
             }
         }
+
         return true;
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -144,16 +144,13 @@ class NoteType
     /**
      * @param FieldLabel
      *
-     * @return boolean
+     * @return bool
      */
     public function addFieldLabel(FieldLabel $obj)
     {
-        if($this->fieldLabels->contains($obj))
-        {
+        if ($this->fieldLabels->contains($obj)) {
             return false;
-        }
-        else
-        {
+        } else {
             return $this->fieldLabels->add($obj);
         }
     }
@@ -180,39 +177,44 @@ class NoteType
 
     /**
      * @param int $id
+     *
      * @return FieldLabel Null if the field is not found.
      */
     public function getFieldLabel($id)
     {
-        foreach($this->fieldLabels as $fieldLabel) {
-            if($fieldLabel->getId() == $id) {
+        foreach ($this->fieldLabels as $fieldLabel) {
+            if ($fieldLabel->getId() == $id) {
                 return $fieldLabel;
             }
         }
-        return null;
+
+        return;
     }
 
     /**
      * @param string $name
+     *
      * @return FieldLabel Null if the field is notfound.
      */
-    public function getFieldLabelFromName($name) {
-        foreach($this->fieldLabels as $f)  {
-            if($f->getName() == $name) {
+    public function getFieldLabelFromName($name)
+    {
+        foreach ($this->fieldLabels as $f) {
+            if ($f->getName() == $name) {
                 return $f;
             }
         }
-        return null;
+
+        return;
     }
 
     /**
      * @param CardType
      *
-     * @return boolean
+     * @return bool
      */
     public function addCardType(CardType $obj)
     {
-        if($this->fieldLabels->contains($obj)) {
+        if ($this->fieldLabels->contains($obj)) {
             return false;
         } else {
             return $this->cardTypes->add($obj);
@@ -246,5 +248,4 @@ class NoteType
     {
         return $this->notes;
     }
-
 }

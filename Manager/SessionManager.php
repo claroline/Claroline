@@ -11,13 +11,10 @@
 
 namespace Claroline\FlashCardBundle\Manager;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\FlashCardBundle\Entity\Session;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\Form\FormView;
 
 /**
  * @DI\Service("claroline.flashcard.session_manager")
@@ -33,8 +30,8 @@ class SessionManager
      *     "templating" = @DI\Inject("templating")
      * })
      *
-     * @param ObjectManager     $om
-     * @param EngineInterface   $templating
+     * @param ObjectManager   $om
+     * @param EngineInterface $templating
      */
     public function __construct(ObjectManager $om, EngineInterface $templating)
     {
@@ -44,6 +41,7 @@ class SessionManager
 
     /**
      * @param Session $session
+     *
      * @return Session
      */
     public function save(Session $session)
@@ -65,10 +63,13 @@ class SessionManager
 
     /**
      * @param int $id
+     *
      * @return Session
      */
-    public function get($id) {
+    public function get($id)
+    {
         $repo = $this->om->getRepository('ClarolineFlashCardBundle:Session');
+
         return $repo->find($id);
     }
 }

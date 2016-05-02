@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class LoadRequiredData extends AbstractFixture implements ContainerAwareInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -30,25 +30,25 @@ class LoadRequiredData extends AbstractFixture implements ContainerAwareInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $om)
     {
         $noteType = new NoteType();
-        $noteType->setName("Basic");
+        $noteType->setName('Basic');
         $om->persist($noteType);
 
         $frontField = new FieldLabel();
-        $frontField->setName("Front");
+        $frontField->setName('Front');
         $frontField->setNoteType($noteType);
         $om->persist($frontField);
         $backField = new FieldLabel();
-        $backField->setName("Back");
+        $backField->setName('Back');
         $backField->setNoteType($noteType);
         $om->persist($backField);
 
         $cardType = new CardType();
-        $cardType->setName("Forward");
+        $cardType->setName('Forward');
         $cardType->setNoteType($noteType);
         $cardType->addQuestion($frontField);
         $cardType->addAnswer($backField);

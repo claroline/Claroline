@@ -12,13 +12,11 @@
 namespace Claroline\FlashCardBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\FlashCardBundle\Entity\Card;
 use Claroline\FlashCardBundle\Entity\Deck;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\Form\FormView;
 
 /**
  * @DI\Service("claroline.flashcard.card_manager")
@@ -34,8 +32,8 @@ class CardManager
      *     "templating" = @DI\Inject("templating")
      * })
      *
-     * @param ObjectManager     $om
-     * @param EngineInterface   $templating
+     * @param ObjectManager   $om
+     * @param EngineInterface $templating
      */
     public function __construct(ObjectManager $om, EngineInterface $templating)
     {
@@ -55,23 +53,27 @@ class CardManager
     /**
      * @param Deck $deck
      * @param User $user
+     *
      * @return array
      */
-    public function getNewCardToLearn(Deck $deck, User $user, $maxResults=-1)
+    public function getNewCardToLearn(Deck $deck, User $user, $maxResults = -1)
     {
         $repoCard = $this->om->getRepository('ClarolineFlashCardBundle:Card');
+
         return $repoCard->findNewCardToLearn($deck, $user, $maxResults);
     }
 
     /**
-     * @param Deck $deck
-     * @param User $user
+     * @param Deck      $deck
+     * @param User      $user
      * @param \DateTime $date
+     *
      * @return array
      */
-    public function getCardToReview(Deck $deck, User $user, \DateTime $date, $maxResults=-1)
+    public function getCardToReview(Deck $deck, User $user, \DateTime $date, $maxResults = -1)
     {
         $repoCard = $this->om->getRepository('ClarolineFlashCardBundle:Card');
+
         return $repoCard->findCardToReview($deck, $user, $date, $maxResults);
     }
 }

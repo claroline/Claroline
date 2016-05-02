@@ -14,10 +14,9 @@ namespace Claroline\FlashCardBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * FieldLabel
+ * FieldLabel.
  *
  * @ORM\Table(name="claro_fcbundle_field_label")
  * @ORM\Entity
@@ -25,7 +24,7 @@ use JMS\Serializer\Annotation\SerializedName;
 class FieldLabel
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -71,9 +70,9 @@ class FieldLabel
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -127,5 +126,4 @@ class FieldLabel
     {
         return $this->fieldValues;
     }
-
 }

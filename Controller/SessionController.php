@@ -19,7 +19,6 @@ use Claroline\FlashCardBundle\Manager\SessionManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -54,8 +53,7 @@ class SessionController
         AuthorizationCheckerInterface $checker,
         TokenStorageInterface $tokenStorage,
         $serializer
-    )
-    {
+    ) {
         $this->manager = $manager;
         $this->formHandler = $handler;
         $this->checker = $checker;
@@ -70,6 +68,7 @@ class SessionController
      * )
      *
      * @param Deck $deck
+     *
      * @return JsonResponse
      */
     public function createSessionAction(Deck $deck)
@@ -86,9 +85,9 @@ class SessionController
 
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_session');
+
         return new JsonResponse(json_decode(
             $this->serializer->serialize($session, 'json', $context)
         ));
     }
-
 }

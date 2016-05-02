@@ -15,10 +15,9 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * Session
+ * Session.
  *
  * @ORM\Table(name="claro_fcbundle_session")
  * @ORM\Entity
@@ -26,7 +25,7 @@ use JMS\Serializer\Annotation\SerializedName;
 class Session
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -50,7 +49,7 @@ class Session
     private $date;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="duration", type="integer")
      * @Groups({
@@ -95,9 +94,9 @@ class Session
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -125,7 +124,7 @@ class Session
     }
 
     /**
-     * @param integer $duration
+     * @param int $duration
      *
      * @return Session
      */
@@ -137,7 +136,7 @@ class Session
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getDuration()
     {
@@ -147,11 +146,11 @@ class Session
     /**
      * @param Card
      *
-     * @return boolean
+     * @return bool
      */
     public function addNewCard(Card $obj)
     {
-        if($this->newCards->contains($obj)) {
+        if ($this->newCards->contains($obj)) {
             return false;
         } else {
             return $this->newCards->add($obj);
@@ -181,11 +180,11 @@ class Session
     /**
      * @param Card
      *
-     * @return boolean
+     * @return bool
      */
     public function addOldCard(Card $obj)
     {
-        if($this->oldCards->contains($obj)) {
+        if ($this->oldCards->contains($obj)) {
             return false;
         } else {
             return $this->oldCards->add($obj);
@@ -232,7 +231,6 @@ class Session
         return $this->deck;
     }
 
-
     /**
      * @param User $obj
      *
@@ -252,6 +250,4 @@ class Session
     {
         return $this->user;
     }
-
-
 }

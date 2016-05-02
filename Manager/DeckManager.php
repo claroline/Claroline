@@ -11,8 +11,6 @@
 
 namespace Claroline\FlashCardBundle\Manager;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\FlashCardBundle\Entity\Deck;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -33,8 +31,8 @@ class DeckManager
      *     "templating" = @DI\Inject("templating")
      * })
      *
-     * @param ObjectManager     $om
-     * @param EngineInterface   $templating
+     * @param ObjectManager   $om
+     * @param EngineInterface $templating
      */
     public function __construct(ObjectManager $om, EngineInterface $templating)
     {
@@ -46,6 +44,7 @@ class DeckManager
      * Creates a flashcard resource.
      *
      * @param Deck $deck
+     *
      * @return Deck
      */
     public function create(Deck $deck)
@@ -71,6 +70,7 @@ class DeckManager
      * Returns the content of the result resource form.
      * 
      * @param FormView $view
+     *
      * @return string
      **/
     public function getDeckFormContent(FormView $view)
@@ -79,7 +79,7 @@ class DeckManager
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             [
                 'form' => $view,
-                'resourceType' => 'claroline_flashcard'
+                'resourceType' => 'claroline_flashcard',
             ]
         );
     }

@@ -12,13 +12,11 @@
 namespace Claroline\FlashCardBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * CardLearning
+ * CardLearning.
  *
  * @ORM\Table(name="claro_fcbundle_card_learning")
  * @ORM\Entity(repositoryClass="Claroline\FlashCardBundle\Repository\CardLearningRepository")
@@ -26,7 +24,7 @@ use JMS\Serializer\Annotation\SerializedName;
 class CardLearning
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -50,7 +48,7 @@ class CardLearning
     private $factor;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="painfull", type="boolean")
      * @Groups({
@@ -61,7 +59,7 @@ class CardLearning
     private $painfull;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="number_repeated", type="integer")
      * @Groups({
@@ -116,16 +114,16 @@ class CardLearning
 
     /**
      * @param int $answerQuality
-     *     0 - Not good, repeat again
-     *     1 - Good, but difficult to remember
-     *     2 - Good
-     *     3 - Good and easy to remember
-     *     See constant of this class
+     *                           0 - Not good, repeat again
+     *                           1 - Good, but difficult to remember
+     *                           2 - Good
+     *                           3 - Good and easy to remember
+     *                           See constant of this class
      */
     public function study($answerQuality)
     {
-        if($answerQuality > 0) {
-            $this->numberRepeated++;
+        if ($answerQuality > 0) {
+            ++$this->numberRepeated;
         } else {
             $this->numberRepeated = 0;
         }
@@ -141,15 +139,15 @@ class CardLearning
     {
         $newFactor = $this->factor;
 
-        if($answerQuality > $this::ANS_AGAIN) {
+        if ($answerQuality > $this::ANS_AGAIN) {
             // The quality must be between 0 and 5
             $answerQuality += 2;
             $newFactor = $this->factor - 0.8 + 0.28 * $answerQuality - 0.02 * $answerQuality * $answerQuality;
         }
 
-        if($newFactor < 1.3) {
+        if ($newFactor < 1.3) {
             $this->factor = 1.3;
-        } elseif($newFactor > 2.5) {
+        } elseif ($newFactor > 2.5) {
             $this->factor = 2.5;
         } else {
             $this->factor = $newFactor;
@@ -158,22 +156,22 @@ class CardLearning
 
     public function updateDueDate()
     {
-        if($this->numberRepeated > 0) {
+        if ($this->numberRepeated > 0) {
             $date = new \DateTime();
 
-            if($this->numberRepeated == 1) {
+            if ($this->numberRepeated == 1) {
                 $nbrDays = 1;
-            } elseif($this->numberRepeated == 2) {
+            } elseif ($this->numberRepeated == 2) {
                 $nbrDays = 6;
             } else {
                 $nbrDays = 6;
-                for($i=2; $i <= $this->numberRepeated; $i++) {
+                for ($i = 2; $i <= $this->numberRepeated; ++$i) {
                     $nbrDays *= $this->factor;
                 }
                 $nbrDays = ceil($nbrDays);
             }
 
-            $date->add(new \DateInterval('P' . $nbrDays . 'D'));
+            $date->add(new \DateInterval('P'.$nbrDays.'D'));
             $date->setTime(0, 0);
 
             $this->dueDate = $date;
@@ -181,9 +179,9 @@ class CardLearning
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -211,7 +209,7 @@ class CardLearning
     }
 
     /**
-     * @param boolean $painfull
+     * @param bool $painfull
      *
      * @return CardLearning
      */
@@ -223,7 +221,7 @@ class CardLearning
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getPainfull()
     {
@@ -231,7 +229,7 @@ class CardLearning
     }
 
     /**
-     * @param integer $numberRepeated
+     * @param int $numberRepeated
      *
      * @return CardLearning
      */
@@ -309,5 +307,4 @@ class CardLearning
     {
         return $this->user;
     }
-
 }
