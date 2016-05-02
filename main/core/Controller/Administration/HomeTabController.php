@@ -38,7 +38,7 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
  * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("canOpenAdminTool('home_tabs')")
+ * @SEC\PreAuthorize("canOpenAdminTool('desktop_and_home')")
  */
 class HomeTabController extends Controller
 {

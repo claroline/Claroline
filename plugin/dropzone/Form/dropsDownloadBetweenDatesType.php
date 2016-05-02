@@ -5,6 +5,7 @@
  * Date: 06/10/14
  * Time: 11:05.
  */
+
 namespace Icap\DropzoneBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

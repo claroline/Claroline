@@ -7,6 +7,7 @@
  * Modifiey by : Eric VINCENT InnovaERV Add Evaluation Column
  * Modifiey by : Eric VINCENT InnovaERV Add Username and Picture Column.
  */
+
 namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;

@@ -8,6 +8,7 @@
  * 
  * Date: 4/13/15
  */
+
 namespace Icap\NotificationBundle\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;

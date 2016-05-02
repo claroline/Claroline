@@ -54,7 +54,7 @@ class LogoService
      */
     public function createLogo(UploadedFile $file)
     {
-        if ($file->getMimeType() and strpos($file->getMimeType(), 'image/') === 0) {
+        if ($file->getMimeType() && strpos($file->getMimeType(), 'image/') === 0) {
             $file->move($this->path, uniqid().'.'.$file->guessExtension());
         }
     }

@@ -3,6 +3,7 @@
  * Created by : VINCENT Eric
  * Date: 10/05/2015.
 */
+
 namespace Innova\CollecticielBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

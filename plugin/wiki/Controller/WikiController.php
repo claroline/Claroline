@@ -6,6 +6,7 @@
  * Time: 15:33
  * To change this template use File | Settings | File Templates.
  */
+
 namespace Icap\WikiBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;

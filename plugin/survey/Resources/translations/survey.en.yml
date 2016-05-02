@@ -19,6 +19,7 @@ closed_user_message: 'The survey is closed.'
 closing_date: 'Closing date'
 closing_date_next: 'Next closing date'
 comment: Comment
+comments: Comments
 create_model_from_question: 'Create a model from question'
 create_question: 'Create a question'
 create_title: 'Create a title'
@@ -62,6 +63,7 @@ publish: Publish
 published: Published
 published_survey_message: 'The survey is published.'
 published_user_message: 'The survey is published.'
+question_answers_deletion_warning: 'By editing the question you will delete all answers to this question in others surveys.'
 question_creation: 'Question creation'
 question_delete_confirm_message: 'Do you really want to delete this question ?'
 question_delete_confirm_title: 'Delete question'
