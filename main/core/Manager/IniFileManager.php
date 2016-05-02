@@ -29,11 +29,10 @@ class IniFileManager
         $content = '';
 
         foreach ($parameters as $key => $value) {
-            $content .= "{$key} = {$value}\n";
-
             if (is_bool($value)) {
                 $value = $value ? 'true' : 'false';
             }
+            $content .= "{$key} = {$value}\n";
         }
 
         if (!file_put_contents($iniFile, $content)) {
@@ -63,6 +62,15 @@ class IniFileManager
 
     public function getValues($iniFile)
     {
-        return file_exists($iniFile) ? parse_ini_file($iniFile) : [];
+        $values = [];
+
+        if (file_exists($iniFile)) {
+            $values = parse_ini_file($iniFile);
+            foreach ($values as &$value) {
+                $value = (bool) $value ? true : false;
+            }
+        }
+
+        return $values;
     }
 }
