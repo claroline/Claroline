@@ -42,6 +42,8 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl($location, exercise, step, 
 
     // Get feedback info
     this.feedback = this.FeedbackService.get();
+    
+    this.currentStepTry = 1;
 };
 
 // Set up dependency injection
@@ -128,7 +130,7 @@ ExercisePlayerCtrl.prototype.submit = function submit() {
  */
 ExercisePlayerCtrl.prototype.retry = function retry() {
     this.submitted = false;
-    this.step.currentTry++;
+    this.currentStepTry++;
 
     if (this.FeedbackService.isEnabled()) {
         // Hide feedback
@@ -141,8 +143,6 @@ ExercisePlayerCtrl.prototype.retry = function retry() {
  */
 ExercisePlayerCtrl.prototype.showSolution = function showSolution() {
     this.solutionShown = true;
-    
-    
 };
 
 /**
