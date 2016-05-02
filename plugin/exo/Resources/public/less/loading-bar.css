@@ -2,7 +2,7 @@
 /* Absolute Center CSS Spinner */
 .loading {
   position: fixed;
-  z-index: 999;
+  z-index: 1001; /* backdrop must pass over the .navbar commponents */
   height: 2em;
   width: 2em;
   overflow: show;
