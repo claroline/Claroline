@@ -131,7 +131,8 @@
         "claroline/pdf-generator-bundle": "*",
         "claroline/dev-bundle": "*",
         "innova/video-recorder-bundle": "*",
-        "innova/audio-recorder-bundle": "*"
+        "innova/audio-recorder-bundle": "*",
+        "ujm/exo-bundle": "*"
     },
     "autoload": {
         "psr-4": {
@@ -229,7 +230,8 @@
             "Claroline\\DevBundle\\ClarolineDevBundle",
             "Icap\\WebsiteBundle\\IcapWebsiteBundle",
             "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle",
-            "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle"
+            "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle",
+            "UJM\\ExoBundle\\UJMExoBundle"
         ]
     }
 }
