@@ -69,10 +69,10 @@ class LogRepository extends EntityRepository
         $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
         $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
 
-        if ($workspaceIds !== null and count($workspaceIds) > 0) {
+        if ($workspaceIds !== null && count($workspaceIds) > 0) {
             $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
         }
-        if ($resourceNodeIds !== null and count($resourceNodeIds) > 0) {
+        if ($resourceNodeIds !== null && count($resourceNodeIds) > 0) {
             $queryBuilder = $this->addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds);
         }
 
@@ -124,10 +124,10 @@ class LogRepository extends EntityRepository
         $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
         $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
 
-        if ($workspaceIds !== null and count($workspaceIds) > 0) {
+        if ($workspaceIds !== null && count($workspaceIds) > 0) {
             $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
         }
-        if ($resourceNodeIds !== null and count($resourceNodeIds) > 0) {
+        if ($resourceNodeIds !== null && count($resourceNodeIds) > 0) {
             $queryBuilder = $this->addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds);
         }
 
@@ -335,10 +335,10 @@ class LogRepository extends EntityRepository
         }
         $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
 
-        if ($workspaceIds !== null and count($workspaceIds) > 0) {
+        if ($workspaceIds !== null && count($workspaceIds) > 0) {
             $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
         }
-        if ($resourceNodeIds !== null and count($resourceNodeIds) > 0) {
+        if ($resourceNodeIds !== null && count($resourceNodeIds) > 0) {
             $queryBuilder = $this->addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds);
         }
         if (!$enableAnonymous) {
@@ -375,10 +375,10 @@ class LogRepository extends EntityRepository
         $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
         $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
 
-        if ($workspaceIds !== null and count($workspaceIds) > 0) {
+        if ($workspaceIds !== null && count($workspaceIds) > 0) {
             $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
         }
-        if ($resourceNodeIds !== null and count($resourceNodeIds) > 0) {
+        if ($resourceNodeIds !== null && count($resourceNodeIds) > 0) {
             $queryBuilder = $this->addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds);
         }
         if (!$enableAnonymous) {
@@ -417,10 +417,10 @@ class LogRepository extends EntityRepository
         $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
         $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
 
-        if ($workspaceIds !== null and count($workspaceIds) > 0) {
+        if ($workspaceIds !== null && count($workspaceIds) > 0) {
             $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
         }
-        if ($resourceNodeIds !== null and count($resourceNodeIds) > 0) {
+        if ($resourceNodeIds !== null && count($resourceNodeIds) > 0) {
             $queryBuilder = $this->addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds);
         }
         if ($userIds !== null && count($userIds) > 0) {
@@ -471,7 +471,7 @@ class LogRepository extends EntityRepository
      */
     public function addDateRangeFilterToQueryBuilder(QueryBuilder $queryBuilder, $range)
     {
-        if ($range !== null and count($range) == 2) {
+        if ($range !== null && count($range) == 2) {
             $startDate = new \DateTime();
             $startDate->setTimestamp($range[0]);
             $startDate->setTime(0, 0, 0);
@@ -528,7 +528,7 @@ class LogRepository extends EntityRepository
 
     private function addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds)
     {
-        if ($workspaceIds !== null and count($workspaceIds) > 0) {
+        if ($workspaceIds !== null && count($workspaceIds) > 0) {
             $queryBuilder->leftJoin('log.workspace', 'workspace');
             if (count($workspaceIds) == 1) {
                 $queryBuilder->andWhere('workspace.id = :workspaceId');
@@ -543,7 +543,7 @@ class LogRepository extends EntityRepository
 
     private function addUserIdsFilterToQueryBuilder($queryBuilder, $userIds)
     {
-        if ($userIds !== null and count($userIds) > 0) {
+        if ($userIds !== null && count($userIds) > 0) {
             if (count($userIds) == 1) {
                 $queryBuilder->andWhere('doer.id = :userId');
                 $queryBuilder->setParameter('userId', $userIds[0]);
@@ -557,7 +557,7 @@ class LogRepository extends EntityRepository
 
     private function addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds)
     {
-        if ($resourceNodeIds !== null and count($resourceNodeIds) > 0) {
+        if ($resourceNodeIds !== null && count($resourceNodeIds) > 0) {
             $queryBuilder->leftJoin('log.resourceNode', 'resource');
             if (count($resourceNodeIds) == 1) {
                 $queryBuilder->andWhere('resource.id = :resourceId');
@@ -615,7 +615,7 @@ class LogRepository extends EntityRepository
             //We send an array indexed by date dans contains count
             $lastDay = null;
             $endDay = null;
-            if ($range !== null and count($range) == 2) {
+            if ($range !== null && count($range) == 2) {
                 $lastDay = new \DateTime();
                 $lastDay->setTimestamp($range[0]);
 

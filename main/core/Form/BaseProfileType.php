@@ -73,7 +73,7 @@ class BaseProfileType extends AbstractType
 
         $content = $this->termsOfService->getTermsOfService(false);
 
-        if ($this->termsOfService->isActive() and $content instanceof Content) {
+        if ($this->termsOfService->isActive() && $content instanceof Content) {
             $builder->add(
                 'scroll',
                 'scroll',

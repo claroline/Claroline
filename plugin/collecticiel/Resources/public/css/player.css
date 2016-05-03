@@ -165,7 +165,32 @@ input.form-control {
   margin-right:-10px
 }
 
+li *{
+    display:inline-block;
+    margin:0 10px;
+}
+
 /* #271 : Afficher les liens en noir */
 .blackLink {
   color:black;  
+}
+
+/* Pour ne plus afficher les puces */
+.list1 li{
+    list-style: none;
+   }
+
+/* Pour ne plus afficher les puces */
+.list2 li{
+    list-style: none;
+   }
+    
+    
+/* Pour agrandir la zone de saisie */
+input.form-control-scale {
+  width : 100%;
+}
+/* Pour agrandir la zone de saisie */
+input.form-control-criteria {
+  width : 100%;
 }

@@ -396,6 +396,7 @@ group: Group
 group_configuration: 'Group configuration'
 group_creation: 'Group creation'
 group_parameter: 'Group parameter'
+group_invalid: 'The group %group% is not valid at line %line%.'
 groups: Groups
 groups_list: 'Groups list'
 groups_per_page: 'Groups per page'

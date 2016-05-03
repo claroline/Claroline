@@ -1,0 +1,4 @@
+innova_video_recorder:
+    resource: "@InnovaVideoRecorderBundle/Controller/VideoRecorderController.php"
+    prefix: /
+    type: annotation

@@ -43,7 +43,7 @@ class BaseContentType extends BaseType
         }
 
         $builder->add('title', 'text', array('data' => $title));
-        if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
+        if (isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce']) {
             $builder->add(
                 'content',
                 'textarea',

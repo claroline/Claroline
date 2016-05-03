@@ -33,23 +33,13 @@ class LogDropzoneValidateDocumentEvent extends AbstractLogResourceEvent implemen
         $this->document = $document;
         $this->type = $dropzone->getResourceNode()->getName();
         $this->userIds = $userIds;
-//echo "<pre>";
-//var_dump($this->userIds);
-//echo "</pre>";
-//die();
 
         $this->details = array(
-//            'newState'=> $this->newState
         );
 
         // Récupération du nom et du prénom
         $this->firstName = $document->getSender()->getFirstName();
         $this->lastName = $document->getSender()->getLastName();
-
-//var_dump($this->firstName);
-//var_dump($this->lastName);
-//var_dump($this->type);
-//die();
 
         parent::__construct($dropzone->getResourceNode(), $this->details);
     }

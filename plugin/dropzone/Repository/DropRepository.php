@@ -4,6 +4,7 @@
  * Date: 05/09/13
  * Time: 14:56.
  */
+
 namespace Icap\DropzoneBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -49,16 +50,10 @@ class DropRepository extends EntityRepository
         }
 
         $arrayResult = array();
+
         foreach ($dropIds as $key => $value) {
             $arrayResult[] = $key;
         }
-//        echo('<pre>');
-//        var_dump($dropzone->getExpectedTotalCorrection());
-//        var_dump($result);
-//        var_dump($dropIds);
-//        var_dump($arrayResult);
-//        echo('</pre>');
-//        die();
 
         return $arrayResult;
     }

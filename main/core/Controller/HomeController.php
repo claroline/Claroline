@@ -721,7 +721,7 @@ class HomeController
     {
         $tmp = ' '; // void in case of not yet content
 
-        if (isset($layout['content']) and isset($layout['type']) and is_array($layout['content'])) {
+        if (isset($layout['content']) && isset($layout['type']) && is_array($layout['content'])) {
             foreach ($layout['content'] as $content) {
                 $tmp .= $this->render(
                     'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true

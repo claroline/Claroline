@@ -4,6 +4,7 @@
  * Date: 21/08/13
  * Time: 16:40.
  */
+
 namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;

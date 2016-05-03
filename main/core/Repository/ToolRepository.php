@@ -68,7 +68,7 @@ class ToolRepository extends EntityRepository implements ContainerAwareInterface
                     AND BIT_AND(r.mask, 1) = 1
                     AND (
                         CONCAT(p.vendorName, p.bundleName) IN (:bundles)
-                        OR t.plugin is NULL
+                        OR p.id is NULL
                     )
                     ORDER BY ot.order
                 ';
