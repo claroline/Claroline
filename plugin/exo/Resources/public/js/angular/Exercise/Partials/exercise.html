@@ -96,7 +96,7 @@
                         </li>
 
                         <!-- Display docimology -->
-                        <li>
+                        <li data-ng-if="exerciseCtrl.editEnabled">
                             <a href="{{ 'ujm_exercise_docimology' | path:{ id: exerciseCtrl.exercise.id } }}">
                                 <span class="fa fa-bar-chart"></span> {{ 'docimology' | trans:{}:'ujm_exo' }}
                             </a>
