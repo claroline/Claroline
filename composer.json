@@ -130,7 +130,8 @@
         "claroline/pdf-generator-bundle": "*",
         "claroline/dev-bundle": "*",
         "innova/video-recorder-bundle": "*",
-        "innova/audio-recorder-bundle": "*"
+        "innova/audio-recorder-bundle": "*",
+        "icap/lesson-bundle": "*"
     },
     "autoload": {
         "psr-4": {

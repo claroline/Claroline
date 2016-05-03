@@ -502,7 +502,7 @@ class LessonController extends Controller
 
     /**
      * Create a new chapter (angular version).
-     * 
+     *
      * @Route(
      *      "api/add/{resourceId}",
      *      name="icap_lesson_add_ng_chapter",
@@ -713,21 +713,6 @@ class LessonController extends Controller
                             'resourceId' => $lesson->getId(),
                             'chapterId' => $chapter_copy->getSlug(),
         )));
-    }
-
-    /*
-     * fonction recherchant un cours dans la base
-     */
-
-    private function findLesson($resourceId)
-    {
-        $lessonRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Lesson');
-        $lesson = $lessonRepository->findOneBy(array('id' => $resourceId));
-        if ($lesson === null) {
-            throw new NotFoundHttpException();
-        }
-
-        return $lesson;
     }
 
     /*
