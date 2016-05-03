@@ -147,12 +147,25 @@ class GeneralType extends AbstractType
                 )
             )
             ->add(
-                'redirect_after_login',
-                'checkbox',
+                'redirect_after_login_option',
+                'choice',
                 array(
-                    'label' => 'redirect_after_login',
+                    'choices' => $this->buildRedirectOptions(),
+                    'attr' => array(
+                        'class' => 'redirect-after-login',
+                    ),
+                    'choices_as_values' => true,
+                    'expanded' => true,
+                    'multiple' => false,
+                    'label' => 'redirect_after_login_option',
+                )
+            )
+            ->add(
+                'redirect_after_login_url',
+                'text',
+                array(
+                    'label' => 'redirect_after_login_url',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['redirect_after_login']),
                 )
             )
             ->add(
@@ -161,7 +174,6 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'account_duration_label',
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['account_duration']),
                 )
             )
             ->add(
@@ -322,5 +334,16 @@ class GeneralType extends AbstractType
                 'date_format' => DateType::HTML5_FORMAT,
             )
         );
+    }
+
+    private function buildRedirectOptions()
+    {
+        $options = PlatformConfiguration::$REDIRECT_OPTIONS;
+        $choices = array();
+        foreach ($options as $option) {
+            $choices['redirect_after_login_option_'.strtolower($option)] = $option;
+        }
+
+        return $choices;
     }
 }
