@@ -86,6 +86,8 @@ class NoteTypeController
                 }
                 foreach ($noteType['card_types'] as $cardType) {
                     $newCardType = new cardType();
+                    $newCardType->setNoteType($newNoteType);
+                    $newCardType->setName($cardType['name']);
                     foreach ($cardType['questions'] as $question) {
                         $newCardType->addQuestion(
                             $newNoteType->getFieldLabelFromName($question['name']));
@@ -94,7 +96,7 @@ class NoteTypeController
                         $newCardType->addAnswer(
                             $newNoteType->getFieldLabelFromName($answer['name']));
                     }
-                    $newCardType->setNoteType($newNoteType);
+                    $newNoteType->addCardType($newCardType);
                 }
                 if ($newNoteType->isValid()) {
                     $newNoteType = $this->manager->create($newNoteType);

@@ -199,7 +199,7 @@ class NoteType
     public function getFieldLabelFromName($name)
     {
         foreach ($this->fieldLabels as $f) {
-            if ($f->getName() == $name) {
+            if (strcmp($f->getName(), $name) == 0) {
                 return $f;
             }
         }

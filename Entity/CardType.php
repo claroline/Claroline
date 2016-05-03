@@ -137,7 +137,7 @@ class CardType
             if ($this->noteType == $obj->getNoteType()) {
                 return $this->questions->add($obj);
             } else {
-                false;
+                return false;
             }
         }
     }
