@@ -194,7 +194,7 @@ class LayoutController extends Controller
                 $registerTarget = $this->router->generate('claro_registration_user_registration_form');
             }
 
-            $loginTarget = $this->router->generate('claro_desktop_open');
+            $loginTarget = $this->router->generate('claro_security_login');
         }
 
         return array(
