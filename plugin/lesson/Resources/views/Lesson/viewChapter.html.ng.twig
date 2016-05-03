@@ -7,7 +7,7 @@
 
         <div class="chapter_btn">
             {% if is_granted('EDIT', node) %}
-            <a 
+            <a
                 data-ng-if="lesson.lessonData.defaultChapter"
                 data-original-title="{{ 'create_root'|trans({}, 'icap_lesson') }}"
                 href="{{ path('icap_lesson', {'resourceId': _resource.id}) }}#/new"
@@ -20,14 +20,14 @@
             {% if app.user is not empty %}
                 {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}
             {% endif %}
-            
+
             {% if config.getParameter('is_pdf_export_active') == true %}
                 <a href="{{ path('icap_lesson_pdf', {'resourceId':_resource.id})}}" target="_blank" class="btn btn-default">
                     <i class="fa fa-file-pdf-o text-danger"></i>
                     {{ 'pdf_export'|trans({}, 'platform') }}
                 </a>
             {% endif %}
-            
+
         </div>
 
         <lesson-alerts></lesson-alerts>
@@ -59,7 +59,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_lesson' }) }}"></script>
-    <script src="{{ hotAsset('dist/icap-lesson-list.js') }}"></script>
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-lesson-list.js') }}"></script>
     <script>
     var bootstrapCSS = _.find(_.pluck(document.styleSheets, 'href'), function(link){return link && link.indexOf("themes/") !== -1});
 angular.module('LessonModule').value('lesson.data', {
