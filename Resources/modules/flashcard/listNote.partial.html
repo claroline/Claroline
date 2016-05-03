@@ -1,21 +1,4 @@
 <div class="panel-body" >
-<h1>Débug</h1>
-{{ vm.deck.id }}
-{{ vm.deckNode.name }}
-{{ vm.canEdit }}
-<pre>
-{{ vm.deck }}
-</pre>
-
-<pre>
-{{ vm.sortedNotes }}
-</pre>
-
-<pre>
-{{ vm.cardLearnings }}
-</pre>
-
-<hr/>
 
   <div data-ng-repeat="(i, notes) in vm.sortedNotes">
     <table class="table table-condensed table-bordered"
@@ -137,6 +120,7 @@
     <i class="fa fa-info-circle"></i>
     {{ 'deck.empty'|trans:'flashcard' }}
   </div>
+
 </div>
 
 <div class="panel-footer">

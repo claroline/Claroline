@@ -1,6 +1,7 @@
 <form name="editNoteTypeForm" novalidate>
 
   <div class="panel-body" >
+
     <pre>
     {{ vm.noteType|json }}
     </pre>
@@ -168,6 +169,7 @@
         </tr>
       </tbody>
     </table>
+
     <button class="btn btn-primary"
             data-ng-click="vm.addCardType()">
       <i class="fa fa-plus"></i>
@@ -176,7 +178,9 @@
 
   </div>
 
+
   <div class="panel-footer">
+
     <button type="submit"
             class="btn btn-primary"
             data-ng-disabled="editNoteTypeForm.$invalid"
@@ -187,6 +191,7 @@
        href="#{{ vm.nexturl }}">
       {{ 'cancel'|trans }}
     </a>
+
   </div>
 
 </form>

@@ -1,24 +1,4 @@
 <div class="panel-body" >
-  <h1>Débug</h1>
-  <pre>
-  {{ vm.newCards.length }}
-  </pre>
-
-  <pre>
-  {{ vm.learningCards }}
-  </pre>
-
-  <pre>
-  {{ vm.sessionId }}
-  </pre>
-
-  <pre>
-    {{ vm.currentCard }}
-  </pre>
-
-  Answer quality : {{ vm.answerQuality }}
-
-  <hr/>
 
   <div class="text-center">
     <div ng-repeat="question in vm.questions">
@@ -38,9 +18,11 @@
     <i class="fa fa-info-circle"></i>
     {{ 'deck.empty'|trans:'flashcard' }}
   </div>
+
 </div>
 
 <div class="panel-footer text-center" data-ng-if="!vm.isReadOnly">
+
   <a class="btn btn-default"
      href="#/">
     {{ 'study.stop'|trans:'flashcard' }}
@@ -70,4 +52,5 @@
           data-ng-if="vm.answers.length > 0">
     {{ 'answer.easy'|trans:'flashcard' }}
   </button>
+
 </div>

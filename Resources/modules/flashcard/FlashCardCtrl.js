@@ -8,9 +8,6 @@
  * file that was distributed with this source code.
  */
 
-import createNoteTemplate from './createNote.partial.html'
-import errorTemplate from './error.partial.html'
-
 export default class FlashCardCtrl {
   constructor (service, modal, $http) {
     this.deck = service.getDeck()
