@@ -12,6 +12,7 @@ export default class ListNoteCtrl {
   constructor (service, ClarolineAPIService, $http) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
+    this.canEdit = service._canEdit
     this.noteTypes = []
     this.sortedNotes = []
     this.IsCardShown = []

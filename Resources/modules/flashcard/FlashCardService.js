@@ -13,6 +13,7 @@ export default class FlashCardService {
     this.$http = $http
     this._deck = FlashCardService._getGlobal('deck')
     this._deckNode = FlashCardService._getGlobal('deckNode')
+    this._canEdit = FlashCardService._getGlobal('canEdit')
   }
 
   getDeck () {

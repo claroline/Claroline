@@ -12,6 +12,7 @@ export default class CreateNoteCtrl {
   constructor (service, $http) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
+    this.canEdit = service._canEdit
     this.noteTypes = []
     this.noteTypeChoosenId = 0
     this.noteTypeChoosen = null
@@ -48,7 +49,7 @@ export default class CreateNoteCtrl {
           // but for the moment the created note is not added to the
           // attributes.
           // ...
-          this.errorMessage('errors.note.creation_failure')
+          this.errorMessage = 'errors.note.creation_failure'
           this.errors = d.data
         }
       )

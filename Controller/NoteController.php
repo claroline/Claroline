@@ -21,6 +21,7 @@ use Claroline\FlashCardBundle\Manager\NoteManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,6 +77,8 @@ class NoteController
         $fields = $request->request->get('fields', false);
         $response = new JsonResponse();
 
+        $this->assertCanCreate($deck);
+
         if ($fields) {
             $note = new Note();
             $note->setDeck($deck);
@@ -127,6 +130,8 @@ class NoteController
     {
         $fieldValues = $request->request->get('fieldValues', false);
         $response = new JsonResponse();
+
+        $this->assertCanEdit($note->getDeck());
 
         if ($fieldValues) {
             foreach ($fieldValues as $f) {
@@ -205,9 +210,32 @@ class NoteController
      */
     public function deleteNoteAction(Note $note)
     {
+        $this->assertCanDelete($note->getDeck());
+
         $noteId = $note->getId();
         $this->manager->delete($note);
 
         return new JsonResponse($noteId);
+    }
+
+    private function assertCanEdit($obj)
+    {
+        if (!$this->checker->isGranted('EDIT', $obj)) {
+            throw new AccessDeniedHttpException();
+        }
+    }
+
+    private function assertCanCreate($obj)
+    {
+        if (!$this->checker->isGranted('CREATE', $obj)) {
+            throw new AccessDeniedHttpException();
+        }
+    }
+
+    private function assertCanDelete($obj)
+    {
+        if (!$this->checker->isGranted('DELETE', $obj)) {
+            throw new AccessDeniedHttpException();
+        }
     }
 }

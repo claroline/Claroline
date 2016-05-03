@@ -12,6 +12,7 @@ export default class EditNoteTypeCtrl {
   constructor (service, $routeParams, $location, $http) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
+    this.canEdit = service._canEdit
     this.noteType = null
     this.nexturl = $routeParams.nexturl
     this.questionsChecked = []
@@ -174,7 +175,7 @@ export default class EditNoteTypeCtrl {
           // but for the moment the created note is not added to the
           // attributes.
           // ...
-          this.errorMessage('errors.note_type.creation_failure')
+          this.errorMessage = 'errors.note_type.creation_failure'
           this.errors = d.data
         }
       )

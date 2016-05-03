@@ -63,6 +63,11 @@ class DeckController
             throw new AccessDeniedException();
         }
 
-        return ['_resource' => $deck];
+        $canEdit = $this->checker->isGranted('EDIT', $deck);
+
+        return [
+            '_resource' => $deck,
+            '_canEdit' => $canEdit,
+        ];
     }
 }

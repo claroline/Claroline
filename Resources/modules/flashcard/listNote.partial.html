@@ -2,6 +2,7 @@
 <h1>Débug</h1>
 {{ vm.deck.id }}
 {{ vm.deckNode.name }}
+{{ vm.canEdit }}
 <pre>
 {{ vm.deck }}
 </pre>
@@ -25,8 +26,7 @@
               data-ng-repeat="(f, fieldValue) in notes[0].field_values">
             {{ fieldValue.field_label.name }}
           </th>
-          <th class="col-xs-2"
-              data-ng-if="!vm.isReadOnly">
+          <th class="col-xs-2">
             {{ 'actions'|trans }}
           </th>
         </tr>
@@ -41,11 +41,11 @@
               {{ fieldValue.value }}
             </td>
             <td style="text-align: center"
-                class="col-xs-2"
-                data-ng-if="!vm.isReadOnly">
+                class="col-xs-2">
               <a href="#/edit_note/{{ note.id }}?nexturl=/list_notes"
                  class="btn btn-default"
                  aria-label="{{ 'edit'|trans }}"
+                 data-ng-if="!vm.canEdit"
                  data-uib-tooltip="{{ 'edit'|trans }}"
                  data-ng-click="">
                 <i class="fa fa-pencil"></i>
@@ -53,6 +53,7 @@
               <button class="btn btn-default"
                       aria-label="{{ 'delete'|trans }}"
                       data-uib-tooltip="{{ 'delete'|trans }}"
+                      data-ng-if="!vm.canEdit"
                       data-ng-click="vm.confirmDeleteNote(note)">
                 <i class="fa fa-trash-o"></i>
               </button>
@@ -82,8 +83,7 @@
                   {{ vm.maxColspan(note) }}">
               {{ 'answers'|trans:'flashcard' }}
             </th>
-            <th class="col-xs-2"
-                data-ng-if="!vm.isReadOnly">
+            <th class="col-xs-2">
               {{ 'actions'|trans }}
             </th>
         </thead>
@@ -100,7 +100,7 @@
               {{ answer.value }}
             </td>
             <td class="col-xs-2 text-center"
-                data-ng-if="!vm.isNew(card) && !vm.isReadOnly">
+                data-ng-if="!vm.isNew(card)">
               <button class="btn btn-default"
                       aria-label="{{ 'suspend'|trans }}"
                       data-uib-tooltip="{{ 'suspend'|trans }}"
@@ -123,7 +123,7 @@
               </button>
             </td>
             <td class="col-xs-2 text-center"
-                data-ng-if="vm.isNew(card) && !vm.isReadOnly">
+                data-ng-if="vm.isNew(card)">
               {{ 'card.is_new'|trans:'flashcard' }}
             </td>
           </tr>
@@ -139,7 +139,7 @@
   </div>
 </div>
 
-<div class="panel-footer" data-ng-if="!vm.isReadOnly">
+<div class="panel-footer">
   <a href="#/"
      class="btn btn-default">
     {{ 'back'|trans }}

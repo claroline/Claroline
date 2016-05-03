@@ -68,8 +68,9 @@
   </div>
 </div>
 
-<div class="panel-footer" data-ng-if="!vm.isReadOnly">
+<div class="panel-footer">
   <button class="btn btn-primary"
+          data-ng-if="!vm.canEdit"
           data-ng-click="">
     {{ 'default_parameters'|trans:'flashcard' }}
   </button>
@@ -82,6 +83,7 @@
     {{ 'cards.list'|trans:'flashcard' }}
   </a>
   <a class="btn btn-primary"
+     data-ng-if="!vm.canEdit"
      href="#/edit_note_type/new">
     {{ 'note_types.create'|trans:'flashcard' }}
   </a>
@@ -90,6 +92,7 @@
     {{ 'study.begin'|trans:'flashcard' }}
   </a>
   <a class="btn btn-primary"
+     data-ng-if="!vm.canEdit"
      href="#/create_note">
     {{ 'cards.add'|trans:'flashcard' }}
   </a>

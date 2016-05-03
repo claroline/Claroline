@@ -12,6 +12,7 @@ export default class EditNoteCtrl {
   constructor (service, $routeParams, $location, $http) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
+    this.canEdit = service._canEdit
     this.note = null
     this.nexturl = $routeParams.nexturl
 

@@ -151,7 +151,7 @@
             </p>
           </td>
 
-          <td class="text-center" data-ng-if="!vm.isReadOnly">
+          <td class="text-center">
             <button class="btn btn-default"
                     aria-label="{{ 'card_type.create_reverse'|trans:'flashcard' }}"
                     data-uib-tooltip="{{ 'card_type.create_reverse'|trans }}"
@@ -176,7 +176,7 @@
 
   </div>
 
-  <div class="panel-footer" data-ng-if="!vm.isReadOnly">
+  <div class="panel-footer">
     <button type="submit"
             class="btn btn-primary"
             data-ng-disabled="editNoteTypeForm.$invalid"
