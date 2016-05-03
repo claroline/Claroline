@@ -267,7 +267,6 @@ db_table: 'Database table'
 decline: Decline
 default_language: 'Default Language'
 default_role: 'Default role'
-default_workspace_tag: 'Tag of the workspace that will be opened at connection'
 deletable: Deletable
 delete: Delete
 delete_category: 'Delete category'
@@ -737,7 +736,11 @@ put_back_permissions_after_update: 'Don''t forget to put your original permissio
 receiver: Receiver(s)
 recent_all_workspace_activities_overview: 'Overview of all recent activities in %workspaceName%'
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
-redirect_after_login: 'Redirect to last visited page'
+redirect_after_login_option: 'Redirect after login'
+redirect_after_login_option_desktop: 'Desktop'
+redirect_after_login_option_last: 'Last active page'
+redirect_after_login_option_url: 'URL'
+redirect_after_login_option_workspace_tag: 'To workspace with tag :'
 redirect_uri: 'Redirection url'
 refresh: refresh
 refresh_explanation: "Some issues can be cause because javascript and css aren't properly generated. </br>\nIf you want to try to solve them, please click on \"refresh\" </br>\nYou can also try to empty your app/cache directory before this operation.\n"

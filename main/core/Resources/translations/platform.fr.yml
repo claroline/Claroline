@@ -268,7 +268,6 @@ db_table: 'Table de la base de données'
 decline: Refuser
 default_language: 'Langue par défaut'
 default_role: 'Rôle par défaut'
-default_workspace_tag: 'Tag de l''espace d''activités qui doit être ouvert à la connexion'
 deletable: Supprimable
 delete: Supprimer
 delete_category: 'Supprimer la catégorie'
@@ -738,7 +737,11 @@ put_back_permissions_after_update: 'N''oubliez pas de remettre les permissions d
 receiver: destinataire(s)
 recent_all_workspace_activities_overview: 'Aperçu de toutes les activités récentes de %workspaceName%'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
-redirect_after_login: 'Rediriger vers la dernière page visitée'
+redirect_after_login_option: 'Redirection après login'
+redirect_after_login_option_desktop: 'Bureau'
+redirect_after_login_option_last: 'Dernière page active'
+redirect_after_login_option_url: 'URL'
+redirect_after_login_option_workspace_tag: 'Vers l''espace d''activités avec le tag : '
 redirect_uri: 'Url de redirection'
 refresh: Rafraîchir
 refresh_explanation: "Certains problèmes peuvent apparaître en raison de fichiers javascripts et css qui n'ont pas bien été générés. </br>\nAfin de tenter de résoudre ce problème, veuillez cliquer sur \"Rafraîchir\".  </br>\nPour augmenter vos chances, vous pouvez également essayer de vider le dossier app/cache de la plateforme manuellement avant de tenter l'opération.\n"
