@@ -10,10 +10,8 @@
 namespace Icap\LessonBundle\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
-
 
 class Updater13 extends Updater
 {
@@ -34,17 +32,16 @@ class Updater13 extends Updater
         $this->setSlug();
     }
 
-    public function setChapterTitles(){
+    public function setChapterTitles()
+    {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $chapters = $em->getRepository("IcapLessonBundle:Chapter")->findAll();
+        $chapters = $em->getRepository('IcapLessonBundle:Chapter')->findAll();
         foreach ($chapters as $chapter) {
-            if($chapter->getTitle() == null){
+            if ($chapter->getTitle() == null) {
                 //if root chapter, take name of its lesson
-                if($chapter->getRoot() == $chapter->getId())
-                {
-                    $chapter->setTitle("root_".$chapter->getId());
-                }
-                else{
+                if ($chapter->getRoot() == $chapter->getId()) {
+                    $chapter->setTitle('root_'.$chapter->getId());
+                } else {
                     //case treated to match current database state (title nullable), tho this case shouldnt happen since UI prevent inputing empty titles
                     $chapter->setTitle('Default title');
                 }
@@ -53,13 +50,14 @@ class Updater13 extends Updater
         $em->flush();
     }
 
-    public function setSlug(){
+    public function setSlug()
+    {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $chapters = $em->getRepository("IcapLessonBundle:Chapter")->findAll();
+        $chapters = $em->getRepository('IcapLessonBundle:Chapter')->findAll();
         $cpt = 0;
         //first pass needed to set slug value to something other than NULL, otherwise entities wont be persisted and wont trigger slug generation
         foreach ($chapters as $chapter) {
-            if($chapter->getSlug() == null){
+            if ($chapter->getSlug() == null) {
                 $chapter->setSlug('slug_placeholder_'.$cpt++);
             }
         }
@@ -70,5 +68,4 @@ class Updater13 extends Updater
         }
         $em->flush();
     }
-
 }

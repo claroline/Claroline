@@ -1,4 +1,5 @@
 <?php
+
 namespace Icap\LessonBundle\Form;
 
 use Doctrine\ORM\EntityManager;
@@ -38,8 +39,7 @@ class MoveChapterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($builder, $options)
-            {
+            function (FormEvent $event) use ($builder, $options) {
                 //var_dump($options['attr']['filter']);
                 //$filter = 1;
                 //if($options['attr']['filter'] != null){
@@ -50,23 +50,23 @@ class MoveChapterType extends AbstractType
                 $form = $event->getForm();
                 $data = $event->getData();
 
-                if($data != null){
+                if ($data != null) {
                     $chapterRepository = $this->entityManager->getRepository('IcapLessonBundle:Chapter');
                     $chapters = $chapterRepository->getChapterAndChapterChildren($data->getLesson()->getRoot());
-                    $nonLegitTargets =  $chapterRepository->getChapterAndChapterChildren($data);
+                    $nonLegitTargets = $chapterRepository->getChapterAndChapterChildren($data);
 
                     //add current parent to non legit destination list
-                    if($data->getParent() != null){
+                    if ($data->getParent() != null) {
                         array_push($nonLegitTargets, $data->getParent());
                     }
 
                     $chapters_list = array();
                     foreach ($chapters as $child) {
                         //add and rename lesson root, if legit destination
-                        if($child->getId() == $child->getRoot() && ($filter == 0 || $this->isLegitTarget($child, $nonLegitTargets))){
+                        if ($child->getId() == $child->getRoot() && ($filter == 0 || $this->isLegitTarget($child, $nonLegitTargets))) {
                             $chapters_list[$child->getId()] = $this->translator->trans('Root', array(), 'icap_lesson');
                         //add chapters as legit destination for move, after checking if legit
-                        }else if( $filter == 0 || $this->isLegitTarget($child, $nonLegitTargets)){
+                        } elseif ($filter == 0 || $this->isLegitTarget($child, $nonLegitTargets)) {
                             $chapters_list[$child->getId()] = $child->getTitle();
                         }
                     }
@@ -74,36 +74,38 @@ class MoveChapterType extends AbstractType
                     $form
                         ->add('choiceChapter', 'choice', array(
                             'mapped' => false,
-                            'choices' => $chapters_list
+                            'choices' => $chapters_list,
                         ));
                 }
 
                 $form
                     ->add('brother', 'checkbox', array(
                         'required' => false,
-                        'mapped' => false
+                        'mapped' => false,
                     ))
                     ->add('firstposition', 'hidden', array(
                         'required' => false,
                         'mapped' => false,
-                        'data' => 'false'
+                        'data' => 'false',
                     ));
         });
     }
 
-    private function isLegitTarget($chapter, $list){
+    private function isLegitTarget($chapter, $list)
+    {
         foreach ($list as $key2 => $chap2) {
-            if($chapter->getId() == $chap2->getId()){
+            if ($chapter->getId() == $chap2->getId()) {
                 return false;
             }
         }
+
         return true;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Icap\LessonBundle\Entity\Chapter'
+            'data_class' => 'Icap\LessonBundle\Entity\Chapter',
         ));
     }
 

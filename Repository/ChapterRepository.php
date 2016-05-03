@@ -13,24 +13,27 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 
-class ChapterRepository extends NestedTreeRepository{
-
-    function getFirstChapter(Lesson $lesson){
+class ChapterRepository extends NestedTreeRepository
+{
+    public function getFirstChapter(Lesson $lesson)
+    {
         return $this->findOneBy(array('lesson' => $lesson, 'root' => $lesson->getRoot()->getId(), 'left' => 2));
     }
 
-    function getChapterTree(Chapter $chapter){
+    public function getChapterTree(Chapter $chapter)
+    {
         return $this->childrenHierarchy($chapter, false, array(), true);
     }
 
     /**
      * @param Chapter $chapter
+     *
      * @return Tree $tree
      */
-    public function buildChapterTree(Chapter $chapter)
+    public function buildChapterTree(Chapter $chapter, $fields = 'chapter')
     {
         $queryBuilder = $this->createQueryBuilder('chapter')
-            ->select('chapter')
+            ->select($fields)
             ->andWhere('chapter.root = :rootId')
             ->orderBy('chapter.root, chapter.left', 'ASC')
             ->setParameter('rootId', $chapter->getId());
@@ -40,15 +43,18 @@ class ChapterRepository extends NestedTreeRepository{
         return $tree;
     }
 
-    function getChapterAndChapterChildren(Chapter $chapter){
+    public function getChapterAndChapterChildren(Chapter $chapter)
+    {
         return $this->children($chapter, false, null, 'ASC', true);
     }
 
-    function getChapterChildren(Chapter $chapter){
+    public function getChapterChildren(Chapter $chapter)
+    {
         return $this->children($chapter, false, null, 'ASC', false);
     }
 
-    function getChapterFirstChild(Chapter $chapter){
+    public function getChapterFirstChild(Chapter $chapter)
+    {
         try {
             return $this->childrenQueryBuilder($chapter)
                 ->setFirstResult(0)
@@ -56,55 +62,59 @@ class ChapterRepository extends NestedTreeRepository{
                 ->getQuery()
                 ->getSingleResult();
         } catch (\Doctrine\Orm\NoResultException $e) {
-            return null;
+            return;
         }
     }
 
-    function getChapterAndDirectChapterChildren(Chapter $chapter){
+    public function getChapterAndDirectChapterChildren(Chapter $chapter)
+    {
         return $this->children($chapter, true, null, 'ASC', true);
     }
 
-    function getDirectChapterChildren(Chapter $chapter){
+    public function getDirectChapterChildren(Chapter $chapter)
+    {
         return $this->children($chapter, true, null, 'ASC', false);
     }
 
-    function getNextSibling(Chapter $chapter){
-        try{
+    public function getNextSibling(Chapter $chapter)
+    {
+        try {
             return $this->getNextSiblingsQueryBuilder($chapter)
                 ->setFirstResult(0)
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();
         } catch (\Doctrine\Orm\NoResultException $e) {
-            return null;
+            return;
         }
     }
 
-
-
-    function getPreviousSibling(Chapter $chapter){
-        try{
+    public function getPreviousSibling(Chapter $chapter)
+    {
+        try {
             return $this->getPrevSiblingsQueryBuilder($chapter)
                 ->setFirstResult(0)
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();
         } catch (\Doctrine\Orm\NoResultException $e) {
-            return null;
+            return;
         }
     }
 
-    function getNextChapter(Chapter $chapter){
-        try{
+    public function getNextChapter(Chapter $chapter)
+    {
+        try {
             $qb = $this->_em->createQueryBuilder();
+
             return $this->_em->createQueryBuilder()->add('select', 'c')
                 ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
-                ->innerJoin('c.lesson',' l')
+                ->innerJoin('c.lesson', ' l')
                 ->where($qb->expr()->andx(
                     $qb->expr()->gt('c.left', '?1'),
                     $qb->expr()->eq('l.id', '?2')
                 ))
-                ->orderBy("c.left", 'ASC')
+                ->orderBy('c.left', 'ASC')
                 ->setParameter(1, $chapter->getLeft())
                 ->setParameter(2, $chapter->getLesson())
                 ->setFirstResult(0)
@@ -112,23 +122,24 @@ class ChapterRepository extends NestedTreeRepository{
                 ->getQuery()
                 ->getSingleResult();
         } catch (\Doctrine\Orm\NoResultException $e) {
-            return null;
+            return;
         }
     }
 
-
-    function getPreviousChapter($chapter){
-        try{
+    public function getPreviousChapter($chapter)
+    {
+        try {
             $qb = $this->_em->createQueryBuilder();
+
             return $this->_em->createQueryBuilder()->add('select', 'c')
                 ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
-                ->innerJoin('c.lesson',' l')
+                ->innerJoin('c.lesson', ' l')
                 ->where($qb->expr()->andx(
                     $qb->expr()->lt('c.left', '?1'),
                     $qb->expr()->eq('l.id', '?2'),
                     $qb->expr()->not($qb->expr()->eq('c.id', '?3'))
                 ))
-                ->orderBy("c.left", 'DESC')
+                ->orderBy('c.left', 'DESC')
                 ->setParameter(1, $chapter->getLeft())
                 ->setParameter(2, $chapter->getLesson()->getId())
                 ->setParameter(3, $chapter->getLesson()->getRoot()->getId())
@@ -137,16 +148,18 @@ class ChapterRepository extends NestedTreeRepository{
                 ->getQuery()
                 ->getSingleResult();
         } catch (\Doctrine\Orm\NoResultException $e) {
-            return null;
+            return;
         }
     }
 
-    function getChapterById($chapterId, $lessonId){
-        try{
+    public function getChapterById($chapterId, $lessonId)
+    {
+        try {
             $qb = $this->_em->createQueryBuilder();
+
             return $this->_em->createQueryBuilder()->add('select', 'c')
                 ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
-                ->innerJoin('c.lesson',' l')
+                ->innerJoin('c.lesson', ' l')
                 ->where($qb->expr()->andx(
                     $qb->expr()->eq('c.id', '?1'),
                     $qb->expr()->eq('l.id', '?2')
@@ -156,16 +169,18 @@ class ChapterRepository extends NestedTreeRepository{
                 ->getQuery()
                 ->getSingleResult();
         } catch (\Doctrine\Orm\NoResultException $e) {
-            return null;
+            return;
         }
     }
 
-    function getChapterBySLug($chapterSlug, $lessonId){
-        try{
+    public function getChapterBySLug($chapterSlug, $lessonId)
+    {
+        try {
             $qb = $this->_em->createQueryBuilder();
+
             return $this->_em->createQueryBuilder()->add('select', 'c')
                 ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
-                ->innerJoin('c.lesson',' l')
+                ->innerJoin('c.lesson', ' l')
                 ->where($qb->expr()->andx(
                     $qb->expr()->eq('c.slug', '?1'),
                     $qb->expr()->eq('l.id', '?2')
@@ -175,7 +190,7 @@ class ChapterRepository extends NestedTreeRepository{
                 ->getQuery()
                 ->getSingleResult();
         } catch (\Doctrine\Orm\NoResultException $e) {
-            return null;
+            return;
         }
     }
 }

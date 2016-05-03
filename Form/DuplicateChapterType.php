@@ -13,11 +13,9 @@ use Doctrine\ORM\EntityManager;
 use Icap\LessonBundle\Entity\Chapter;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-
 
 /**
  * @DI\Service("icap.lesson.duplicatechaptertype")
@@ -44,10 +42,10 @@ class DuplicateChapterType extends AbstractType
         $this->translator = $translator;
     }
 
-    public function buildForm(\Symfony\Component\Form\FormBuilderInterface $builder, array $options){
+    public function buildForm(\Symfony\Component\Form\FormBuilderInterface $builder, array $options)
+    {
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($builder)
-            {
+            function (FormEvent $event) use ($builder) {
                 $form = $event->getForm();
                 $data = $event->getData();
 
@@ -56,10 +54,10 @@ class DuplicateChapterType extends AbstractType
                 $root = true;
 
                 foreach ($chapters as $child) {
-                    if($root){
+                    if ($root) {
                         $chapters_list[$child->getId()] = $this->translator->trans('Root', array(), 'icap_lesson');
                         $root = false;
-                    }else{
+                    } else {
                         $chapters_list[$child->getId()] = $child->getTitle();
                     }
                 }
@@ -67,22 +65,22 @@ class DuplicateChapterType extends AbstractType
                 $form
                     ->add('title', 'text', array(
                             'mapped' => false,
-                            'data' => $this->translator->trans('copy_prefix', array(), 'icap_lesson').$data->getTitle()
+                            'data' => $this->translator->trans('copy_prefix', array(), 'icap_lesson').$data->getTitle(),
                         )
                     )
                     ->add('parent', 'choice',
                         array(
                             'mapped' => false,
-                            'choices' => $chapters_list
+                            'choices' => $chapters_list,
                         )
                     );
 
-                if($this->entityManager->getRepository('IcapLessonBundle:Chapter')->childCount($data) > 0){
+                if ($this->entityManager->getRepository('IcapLessonBundle:Chapter')->childCount($data) > 0) {
                     $form
                         ->add('duplicate_children', 'checkbox',
                             array(
                                 'mapped' => false,
-                                'required' => false
+                                'required' => false,
                             )
                     );
                 }
@@ -92,7 +90,8 @@ class DuplicateChapterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Icap\LessonBundle\Entity\Chapter'
+            'data_class' => 'Icap\LessonBundle\Entity\Chapter',
+            'no_captcha' => true,
         ));
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -15,8 +15,7 @@ use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class NotificationUserParametersListener
- * @package Icap\LessonBundle\Listener
+ * Class NotificationUserParametersListener.
  *
  * @DI\Service()
  */
@@ -29,6 +28,6 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
-        $event->addTypes("icap_lesson");
+        $event->addTypes('icap_lesson');
     }
-} 
+}

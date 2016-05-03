@@ -2,14 +2,7 @@
 
 namespace Icap\LessonBundle\Listener;
 
-use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
-use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
-use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
-use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
-use Icap\BlogBundle\Event\Log\LogPostReadEvent;
-use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
 use Icap\LessonBundle\Event\Log\LogChapterCreateEvent;
-use Icap\LessonBundle\Event\Log\LogChapterDeleteEvent;
 use Icap\LessonBundle\Event\Log\LogChapterMoveEvent;
 use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
 use Icap\LessonBundle\Event\Log\LogChapterUpdateEvent;
@@ -45,10 +38,9 @@ class BadgeListener
     public function onBagdeCreateValidationLink($event)
     {
         $content = null;
-        $log     = $event->getLog();
+        $log = $event->getLog();
 
-        switch($log->getAction())
-        {
+        switch ($log->getAction()) {
             case LogChapterCreateEvent::ACTION:
             case LogChapterMoveEvent::ACTION:
             case LogChapterReadEvent::ACTION:
@@ -56,11 +48,11 @@ class BadgeListener
                 $logDetails = $event->getLog()->getDetails();
                 $parameters = array(
                     'resourceId' => $logDetails['chapter']['lesson'],
-                    'chapterId'  => $logDetails['chapter']['chapter']
+                    'chapterId' => $logDetails['chapter']['chapter'],
                 );
 
-                $url     = $this->router->generate('icap_lesson_chapter', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
-                $title   = $logDetails['chapter']['title'];
+                $url = $this->router->generate('icap_lesson_chapter', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+                $title = $logDetails['chapter']['title'];
                 $content = sprintf('<a href="%s" title="%s">%s</a>', $url, $title, $title);
                 break;
         }

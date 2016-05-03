@@ -2,14 +2,11 @@
 
 namespace Icap\LessonBundle\Listener;
 
-use Claroline\CoreBundle\Event\Log\CreateFormResourceEvent;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
- * Class NotificationListener
- * @package Icap\LessonBundle\Listener
+ * Class NotificationListener.
  *
  * @DI\Service
  */
@@ -40,9 +37,9 @@ class NotificationListener
         $content = $this->templating->render(
             'IcapLessonBundle:Notification:notification_item.html.twig',
             array(
-                'notification'  => $notification,
-                'status'        => $notificationView->getStatus(),
-                'systemName'    => $event->getSystemName()
+                'notification' => $notification,
+                'status' => $notificationView->getStatus(),
+                'systemName' => $event->getSystemName(),
             )
         );
 

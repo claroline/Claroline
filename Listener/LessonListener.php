@@ -2,27 +2,19 @@
 
 namespace Icap\LessonBundle\Listener;
 
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\LogCreateDelegateViewEvent;
-
 use Icap\LessonBundle\Entity\Chapter;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
-
 use Icap\LessonBundle\Form\LessonType;
 use Icap\LessonBundle\Entity\Lesson;
-use Icap\LessonBundle\Controller\LessonController;
 
 class LessonListener extends ContainerAware
 {
-
-
     /*Méthode permettant de créer le formulaire de creation*/
     public function onCreateForm(CreateFormResourceEvent $event)
     {
@@ -31,7 +23,7 @@ class LessonListener extends ContainerAware
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'icap_lesson'
+                'resourceType' => 'icap_lesson',
             )
         );
 
@@ -52,14 +44,13 @@ class LessonListener extends ContainerAware
                 'ClarolineCoreBundle:Resource:create_form.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'resourceType' => 'icap_lesson'
+                    'resourceType' => 'icap_lesson',
                 )
             );
             $event->setErrorFormContent($content);
         }
         $event->stopPropagation();
     }
-
 
     public function onOpen(OpenResourceEvent $event)
     {
@@ -73,7 +64,8 @@ class LessonListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onCopy(CopyResourceEvent $event){
+    public function onCopy(CopyResourceEvent $event)
+    {
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
         $lesson = $event->getResource();
 
@@ -83,7 +75,7 @@ class LessonListener extends ContainerAware
         $entityManager->flush($newLesson);
 
         //$chapterRepository = $entityManager->getRepository('IcapLessonBundle:Chapter');
-        $chapter_manager = $this->container->get("icap.lesson.manager.chapter");
+        $chapter_manager = $this->container->get('icap.lesson.manager.chapter');
         $chapter_manager->copyRoot($lesson->getRoot(), $newLesson->getRoot());
 
         $event->setCopy($newLesson);
@@ -99,10 +91,9 @@ class LessonListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onDownload(DownloadResourceEvent $event){
+    public function onDownload(DownloadResourceEvent $event)
+    {
         /*$event->setResponseContent("allo");
         $event->stopPropagation();*/
     }
-
-
 }

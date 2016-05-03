@@ -4,11 +4,10 @@ namespace Icap\LessonBundle\Event\Log;
 
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Entity\Chapter;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 
-class LogChapterDeleteEvent extends AbstractLogResourceEvent{
-
+class LogChapterDeleteEvent extends AbstractLogResourceEvent
+{
     const ACTION = 'resource-icap_lesson-chapter_delete';
 
     /**
@@ -20,8 +19,8 @@ class LogChapterDeleteEvent extends AbstractLogResourceEvent{
         $details = array(
             'chapter' => array(
                 'lesson' => $lesson->getId(),
-                'title'  => $chaptername
-            )
+                'title' => $chaptername,
+            ),
         );
         parent::__construct($lesson->getResourceNode(), $details);
     }
@@ -33,5 +32,4 @@ class LogChapterDeleteEvent extends AbstractLogResourceEvent{
     {
         return array(self::DISPLAYED_WORKSPACE);
     }
-
 }

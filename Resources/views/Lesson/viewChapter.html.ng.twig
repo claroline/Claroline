@@ -1,0 +1,88 @@
+{% extends 'IcapLessonBundle:Lesson:layout.html.twig' %}
+
+{% block lesson_content %}
+    <div data-ng-controller="mainController as lesson">
+        <a id="top"></a>
+        <h3 class="lesson_title">{{ _resource.getResourceNode().getName() }}</h3>
+
+        <div class="chapter_btn">
+            {% if is_granted('EDIT', node) %}
+            <a 
+                data-ng-if="lesson.lessonData.defaultChapter"
+                data-original-title="{{ 'create_root'|trans({}, 'icap_lesson') }}"
+                href="{{ path('icap_lesson', {'resourceId': _resource.id}) }}#/new"
+                class="lesson_tooltip btn-primary icon_link createchapter btn">
+                <span class="fa fa-plus"></span>
+                <span class='chapter_menu_labels'>{{ 'new_chapter'|trans({}, 'icap_lesson') }}</span>
+            </a>
+            {% endif %}
+
+            {% if app.user is not empty %}
+                {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}
+            {% endif %}
+            
+            {% if config.getParameter('is_pdf_export_active') == true %}
+                <a href="{{ path('icap_lesson_pdf', {'resourceId':_resource.id})}}" target="_blank" class="btn btn-default">
+                    <i class="fa fa-file-pdf-o text-danger"></i>
+                    {{ 'pdf_export'|trans({}, 'platform') }}
+                </a>
+            {% endif %}
+            
+        </div>
+
+        <lesson-alerts></lesson-alerts>
+
+        <div id="lesson-main-container" class="row">
+
+            <lesson-tree
+                data-ng-if="lesson.lessonData.defaultChapter"
+                class="col-md-3" id="lesson_left_column">
+            </lesson-tree>
+
+            <div
+                data-ng-class="!lesson.lessonData.defaultChapter ? 'col-md-12' : 'col-md-9'">
+                <div
+                        data-ng-if="!lesson.lessonData.defaultChapter && !lesson.lessonData.createNew"
+                        class="panel panel-default"
+                        data-no-chapter>
+                </div>
+                <div
+                        data-ng-if="lesson.lessonData.defaultChapter || lesson.lessonData.createNew"
+                        class="panel panel-default" id="chapter_content"
+                        data-ng-view>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_lesson' }) }}"></script>
+    <script src="{{ hotAsset('dist/icap-lesson-list.js') }}"></script>
+    <script>
+    var bootstrapCSS = _.find(_.pluck(document.styleSheets, 'href'), function(link){return link && link.indexOf("themes/") !== -1});
+angular.module('LessonModule').value('lesson.data', {
+    isGranted: {{ is_granted('EDIT', node) ? 'true' : 'false' }},
+    lessonId: {{ _resource.id }},
+    root: "{{ root.slug }}",
+    defaultChapter: {% if defaultChapter is defined and defaultChapter is not empty %}"{{ defaultChapter }}"{% else %}null{% endif %},
+    tinymceStylesheets: [bootstrapCSS, "/bundles/icaplesson/css/styles.css", "/bundles/clarolinecore/css/common/tinymce.css"]
+});
+    </script>
+    <script>
+        $( document ).ready(function() {
+
+            $(window).scroll(function(){
+                if ($(window).scrollTop() <= 100)
+                {
+                    $(".lesson_tooltip.btn_up.btn-primary").addClass("hidden");
+                }
+                else
+                {
+                    $(".lesson_tooltip.btn_up.btn-primary").removeClass("hidden");
+                }
+            })
+        });
+    </script>
+{% endblock %}

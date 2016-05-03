@@ -6,6 +6,7 @@
  * Time: 15:31
  * To change this template use File | Settings | File Templates.
  */
+
 namespace Icap\LessonBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -16,13 +17,13 @@ class DeleteChapterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['hasChildren'] == true){
-            $builder ->add('deletechildren', 'checkbox', array(
+        if ($options['hasChildren'] == true) {
+            $builder->add('deletechildren', 'checkbox', array(
                 'required' => false,
-                'mapped' => false
+                'mapped' => false,
             ));
         } else {
-/*            $builder ->add('children', 'hidden', array(
+            /*            $builder ->add('children', 'hidden', array(
                 'required' => false,
                 'mapped' => false
             ));*/
@@ -33,7 +34,8 @@ class DeleteChapterType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Icap\LessonBundle\Entity\Chapter',
-            'hasChildren' => true
+            'hasChildren' => true,
+            'no_captcha' => true,
         ));
     }
 

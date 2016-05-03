@@ -4,7 +4,7 @@ function init(){
         initTooltip();
         initCollapsor();
         //fixLeftMenuAffixedSize();
-        
+
         $(window).scroll(function(){
             if ($(window).scrollTop() <= 100)
             {
@@ -13,7 +13,7 @@ function init(){
             else
             {
                 $(".lesson_tooltip.btn_up.btn-primary").removeClass("hidden");
-            } 
+            }
         })
     });
 }

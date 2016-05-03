@@ -2,3 +2,12 @@ icap_lesson:
     resource: "@IcapLessonBundle/Controller/"
     type:     annotation
     prefix:   /
+
+
+icap_lesson_api:
+    resource: "@IcapLessonBundle/Controller/API/ApiController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true

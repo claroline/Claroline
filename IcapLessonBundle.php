@@ -12,7 +12,7 @@ class IcapLessonBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'icap_lesson');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'icap_lesson');
     }
 
     public function getAdditionalInstaller()

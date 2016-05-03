@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -42,10 +42,11 @@ class LessonManager
 
     /**
      * Imports lesson object from array
-     * (see LessonImporter for structure and description)
+     * (see LessonImporter for structure and description).
      *
      * @param array $data
      * @param $rootPath
+     *
      * @return Lesson
      */
     public function importLesson(array $data, $rootPath)
@@ -60,7 +61,7 @@ class LessonManager
                 $entityChapter->setLesson($lesson);
                 $entityChapter->setTitle($chapter['title']);
                 $text = file_get_contents(
-                    $rootPath . DIRECTORY_SEPARATOR . $chapter['path']
+                    $rootPath.DIRECTORY_SEPARATOR.$chapter['path']
                 );
                 $entityChapter->setText($text);
                 if ($chapter['is_root']) {
@@ -83,11 +84,12 @@ class LessonManager
 
     /**
      * Exports a Lesson resource
-     * according to the description found in LessonImporter
+     * according to the description found in LessonImporter.
      *
      * @param Workspace $workspace
-     * @param array $files
-     * @param Lesson $object
+     * @param array     $files
+     * @param Lesson    $object
+     *
      * @return array
      */
     public function exportLesson(Workspace $workspace, array &$files, Lesson $object)
@@ -99,17 +101,17 @@ class LessonManager
         $chapters = $this->chapterRepository->children($rootChapter);
         array_unshift($chapters, $rootChapter);
         foreach ($chapters as $chapter) {
-            $uid = uniqid() . '.txt';
-            $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
+            $uid = uniqid().'.txt';
+            $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$uid;
             file_put_contents($tmpPath, $chapter->getText());
             $files[$uid] = $tmpPath;
 
             $chapterArray = array(
-                'id'                => $chapter->getId(),
-                'parent_id'         => ($chapter->getParent() !== null)?$chapter->getParent()->getId():null,
-                'is_root'           => $chapter->getId() == $rootChapter->getId(),
-                'title'             => $chapter->getTitle(),
-                'path'              => $uid
+                'id' => $chapter->getId(),
+                'parent_id' => ($chapter->getParent() !== null) ? $chapter->getParent()->getId() : null,
+                'is_root' => $chapter->getId() == $rootChapter->getId(),
+                'title' => $chapter->getTitle(),
+                'path' => $uid,
             );
 
             $data['chapters'][] = $chapterArray;
@@ -117,4 +119,4 @@ class LessonManager
 
         return $data;
     }
-} 
+}

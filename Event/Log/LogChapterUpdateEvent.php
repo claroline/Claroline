@@ -5,7 +5,6 @@ namespace Icap\LessonBundle\Event\Log;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Entity\Chapter;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 
 class LogChapterUpdateEvent extends AbstractLogResourceEvent implements NotifiableInterface
@@ -14,9 +13,9 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
     protected $lesson;
 
     /**
-     * @param Lesson $lesson
+     * @param Lesson  $lesson
      * @param Chapter $chapter
-     * @param array $changeSet
+     * @param array   $changeSet
      */
     public function __construct(Lesson $lesson, Chapter $chapter, $changeSet)
     {
@@ -24,11 +23,11 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
 
         $details = array(
             'chapter' => array(
-                'lesson'    => $lesson->getId(),
-                'chapter'   => $chapter->getId(),
-                'title'     => $chapter->getTitle(),
-                'changeSet' => $changeSet
-            )
+                'lesson' => $lesson->getId(),
+                'chapter' => $chapter->getId(),
+                'title' => $chapter->getTitle(),
+                'changeSet' => $changeSet,
+            ),
         );
         parent::__construct($lesson->getResourceNode(), $details);
     }
@@ -44,7 +43,7 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -88,11 +87,11 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public function getIconKey()
     {
-        return "lesson";
+        return 'lesson';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -102,16 +101,16 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
         $notificationDetails['resource'] = array(
             'id' => $this->lesson->getId(),
             'name' => $this->resource->getName(),
-            'type' => $this->resource->getResourceType()->getName()
+            'type' => $this->resource->getResourceType()->getName(),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

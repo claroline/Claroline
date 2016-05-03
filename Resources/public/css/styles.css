@@ -376,3 +376,75 @@ a.btn_up.btn-primary{
 a.btn_up.btn-primary .lesson_footer_icon {
     font-size: 30px;
 }
+
+/* Tree adjustments */
+#lesson_left_column button {
+    outline: none;
+}
+
+#lesson_left_column button.enabled {
+    background-color: #337AB7;
+}
+#lesson_left_column button.enabled i {
+    color: white;
+}
+
+#lesson_menu>li.draggable-list:last-child {
+    border-bottom: 1px dashed #357EBD;
+}
+
+.angular-ui-tree-placeholder {
+    border: 2px dashed activecaption;
+    border-radius: 3px;
+}
+.angular-ui-tree-placeholder:before {
+    display: inline-block;
+    position: relative;
+    left: -7px;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    content: '\f0da';
+    color: red;
+}
+.angular-ui-tree-drag {
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+    opacity: .8;
+    top: -450px;
+}
+.angular-ui-tree-drag li {
+    list-style-type: none;
+}
+
+/* Invalid forms */
+form.ng-submitted .form-control.ng-invalid:focus {
+    border-color: red;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(255,0,0,.6);
+}
+form.ng-submitted input.ng-invalid {
+    border-color: red;
+}
+
+form.ng-submitted input.ng-invalid + .popover {
+    border-color: #b94a48;
+    color: #b94a48;
+}
+form.ng-submitted input.ng-invalid + .popover.top > .arrow {
+    border-top-color: #b94a48;
+}
+
+/* Loading bar */
+#loading-bar .bar {
+    background-color: white;
+    height: 3px;
+}
+
+#loading-bar-spinner .spinner-icon {
+    border-top-color: white;
+    border-left-color: #BBC8D0;
+    width: 25px;
+    height: 25px;
+}

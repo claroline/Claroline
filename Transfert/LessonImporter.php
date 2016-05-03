@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -10,7 +10,6 @@
  */
 
 namespace Icap\LessonBundle\Transfert;
-
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
@@ -29,7 +28,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class LessonImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
-
     /**
      * @var \Icap\LessonBundle\Manager\LessonManager
      */
@@ -43,11 +41,10 @@ class LessonImporter extends Importer implements ConfigurationInterface, RichTex
      * })
      */
     public function __construct(
-        LessonManager $lessonManager, 
+        LessonManager $lessonManager,
         ObjectManager $om,
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->lessonManager = $lessonManager;
         $this->om = $om;
         $this->container = $container;
@@ -100,8 +97,8 @@ class LessonImporter extends Importer implements ConfigurationInterface, RichTex
 
     /**
      * @param Workspace $workspace
-     * @param array $files
-     * @param mixed $object
+     * @param array     $files
+     * @param mixed     $object
      *
      * @return array $data
      */
@@ -109,23 +106,22 @@ class LessonImporter extends Importer implements ConfigurationInterface, RichTex
     {
         return $this->lessonManager->exportLesson($workspace, $files, $object);
     }
-    
+
     public function format($data)
     {
         foreach ($data['chapters'] as $chapter) {
-             //look for the text with the exact same content (it's really bad I know but at least it works
-             $text = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $chapter['path']);
-             $chapters = $this->om->getRepository('Icap\LessonBundle\Entity\Chapter')->findByText($text);
-             
-             foreach ($chapters as $entity) {
-                 //avoid circulary dependency
+            //look for the text with the exact same content (it's really bad I know but at least it works
+             $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$chapter['path']);
+            $chapters = $this->om->getRepository('Icap\LessonBundle\Entity\Chapter')->findByText($text);
+
+            foreach ($chapters as $entity) {
+                //avoid circulary dependency
                  $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
-                 $entity->setText($text);
-                 $this->om->persist($entity);
+                $entity->setText($text);
+                $this->om->persist($entity);
             }
-             
         }
-        
+
         //this could be bad, but the corebundle can use a transaction and force flush itself anyway
         $this->om->flush();
     }

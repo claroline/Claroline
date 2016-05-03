@@ -6,6 +6,7 @@
  * Time: 15:31
  * To change this template use File | Settings | File Templates.
  */
+
 namespace Icap\LessonBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -26,7 +27,7 @@ class LessonType extends AbstractType
             'data_class' => 'Icap\LessonBundle\Entity\Lesson',
             'translation_domain' => 'icap_lesson',
             'csrf_protection' => true,
-            'intention'       => 'create_lesson'
+            'intention' => 'create_lesson',
         ));
     }
 

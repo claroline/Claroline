@@ -1,4 +1,5 @@
 <?php
+
 namespace Icap\LessonBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -30,34 +31,34 @@ class ChapterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title','text')
+            ->add('title', 'text')
             ->add('text', 'tinymce', array(
                     'attr' => array(
                         'data-theme' => 'advanced',
-                        'height' => '600'
-                    )
+                        'height' => '600',
+                    ),
                 )
             )
         ;
-        if($options['chapters'] != null){
+        if ($options['chapters'] != null) {
             $root = true;
             $parentId = null;
             foreach ($options['chapters'] as $child) {
-                if($root){
+                if ($root) {
                     $choices[$child->getId()] = $this->translator->trans('Root', array(), 'icap_lesson');
                     $root = false;
-                }else{
+                } else {
                     $choices[$child->getId()] = $child->getTitle();
                 }
                 //check that the provided parentId is a legit chapter id
-                if($options['parentId'] == $child->getId()){
+                if ($options['parentId'] == $child->getId()) {
                     $parentId = $child->getId();
                 }
             }
             $builder->add('parentChapter', 'choice', array(
                 'mapped' => false,
                 'choices' => $choices,
-                'data' => $parentId
+                'data' => $parentId,
             ));
         }
     }
@@ -67,7 +68,8 @@ class ChapterType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Icap\LessonBundle\Entity\Chapter',
             'chapters' => array(),
-            'parentId' => null
+            'parentId' => null,
+            'no_captcha' => true,
         ));
     }
 
