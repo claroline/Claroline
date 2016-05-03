@@ -6,6 +6,18 @@
 
 .exercise-container {
     position: relative;
+
+    /* Fix panel styles because of the wrap div .exercise-container used for the directive
+     * break the expected DOM structure by Bootstrap
+     * expected : .panel > .panel-heading
+     * current  : .panel > .exercise-container > .panel-heading
+     */
+    > .panel-heading {
+        color: @panel-default-text;
+        background-color: @panel-default-heading-bg;
+        border-color: @panel-default-border;
+    }
+
     .navbar {
         margin-bottom: 0 !important;
 
