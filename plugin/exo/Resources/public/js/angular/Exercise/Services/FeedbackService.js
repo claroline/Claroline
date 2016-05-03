@@ -162,7 +162,9 @@ FeedbackService.prototype.on = function on(event, callback) {
  * @returns {FeedbackService}
  */
 FeedbackService.prototype.reset = function reset() {
-    this.hide();
+    if (this.isVisible()) {
+        this.hide();
+    }
 
     // Remove events
     for (var event in this.callbacks) {
