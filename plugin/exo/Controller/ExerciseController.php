@@ -486,14 +486,14 @@ class ExerciseController extends Controller
     /**
      * To display the docimology's histogramms.
      *
-     * @EXT\Route("/docimology/{id}/{nbPapers}", name="ujm_exercise_docimology", options={"expose"=true})
+     * @EXT\Route("/docimology/{id}", name="ujm_exercise_docimology", options={"expose"=true})
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
-     * @param int $nbPapers number of papers to this exercise
+     * @param Exercise $exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function docimologyAction(Exercise $exercise, $nbPapers)
+    public function docimologyAction(Exercise $exercise)
     {
         $this->assertHasPermission('OPEN', $exercise);
 
@@ -503,6 +503,7 @@ class ExerciseController extends Controller
         $sqs = $em->getRepository('UJMExoBundle:StepQuestion')->findExoByOrder($exercise);
 
         $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exercise->getId());
+        $nbPapers = count($papers);
 
         if ($this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise)) {
             $workspace = $exercise->getResourceNode()->getWorkspace();
