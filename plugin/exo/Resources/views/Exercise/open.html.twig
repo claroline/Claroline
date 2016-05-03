@@ -16,13 +16,8 @@
 {# Title of the Page #}
 {% block title %} {{ 'exercise' | trans({}, 'ujm_exo') }} : {{ _resource.title }} {% endblock %}
 
-{# Breadcrumbs #}
-{% block breadcrumb %}
-    {{ parent() }}
-{% endblock %}
-
 {# Content of the Page #}
-{% block content %}
+{% block section_content %}
     {# Initialize AngularJS application #}
     <div data-ng-app="ExerciseApp" data-ng-cloak="">
         <exercise
