@@ -1,0 +1,85 @@
+<div
+        data-ui-tree="vm.treeOptions"
+        data-drag-enabled="vm.dragEnabled"
+        class="panel panel-default menu_lesson">
+    <div class='chapter_list_header'>
+
+        {{ 'chapter_list_header'|trans: 'icap_lesson' }}
+
+        <div class="icon_chapter_list_header">
+            <button
+                data-ng-if="vm.displayDrag"
+                class="btn-xs btn btn-default lesson_tooltip menu_lesson_button"
+                data-ng-click="vm.dragEnabled=!vm.dragEnabled"
+                data-ng-class="{'enabled': vm.dragEnabled}"
+                tooltip-placement="top" uib-tooltip="{{ vm.getDragEnableButtonText() }}">
+                <i class="fa fa-arrows text-primary" ></i>
+            </button>
+            <button
+                data-ng-click="vm.collapseAll()"
+                class="btn-xs btn btn-default lesson_tooltip menu_lesson_button"
+                tooltip-placement="top" uib-tooltip="{{ 'collapse_all'|trans: 'icap_lesson' }}">
+                <i class="fa fa-long-arrow-up text-primary" ></i>
+                <i class="fa fa-minus text-primary"></i>
+            </button>
+            <button
+                data-ng-click="vm.expandAll()"
+                class="btn-xs btn btn-default lesson_tooltip menu_lesson_button"
+                tooltip-placement="top" uib-tooltip="{{ 'expand_all'|trans: 'icap_lesson' }}">
+                <i class="fa fa-long-arrow-down text-primary"></i>
+                <i class="fa fa-reorder text-primary"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <ul
+        id="lesson_menu"
+        class="jquery-sortable-list"
+        data-ui-tree-nodes=""
+        data-ng-model="vm.tree.data.__children">
+        <li
+            ui-tree-handle
+            data-ng-repeat="node in vm.tree.data.__children"
+            data-ui-tree-node
+            data-ng-include="'nodes_renderer.html'"
+            class="draggable-item"
+            data-ng-class="{'draggable-list': vm.dragEnabled}">
+        </li>
+    </ul>
+    <script type="text/ng-template" id="nodes_renderer.html">
+        <div
+                id = "menu_item_{{ node.id }}"
+                class="menu-item"
+                data-ng-class="{'cursor_move': vm.dragEnabled, 'active_chapter': node.id == vm.chapter.current.id}">
+            <i
+                    data-nodrag
+                    data-ng-click="vm.toggle(this)"
+                    data-ng-class="{'fa-caret-right': collapsed, 'fa-caret-down': !collapsed, 'invisible': node.__children.length == 0}"
+                    class="fa collapsor"></i>
+            <a
+                    data-ng-href="{{ vm.getChapterUrl(node.slug) }}"
+                    class="draggableLink">
+                {{ node.title }}
+            </a>
+        </div>
+        <ul
+                id="list_{{ node.id }}"
+                data-ui-tree-nodes
+                data-ng-model="node.__children"
+                data-ng-class="{'hidden': collapsed}">
+            <li
+                    ui-tree-handle
+                    class="draggable-item"
+                    data-ng-class="{'draggable-list': vm.dragEnabled}"
+                    data-ng-repeat="node in node.__children"
+                    data-ui-tree-node
+                    data-ng-include="'nodes_renderer.html'">
+            </li>
+        </ul>
+    </script>
+
+    <br />
+
+</div>
+

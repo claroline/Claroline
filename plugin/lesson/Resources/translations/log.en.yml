@@ -1,0 +1,36 @@
+log_resource-icap_lesson-chapter_read_shortname: "Chapter opening"
+log_resource-icap_lesson-chapter_read_title:     "Chapter opening in a lesson"
+log_resource-icap_lesson-chapter_read_filter:    "Chapter opening in a lesson"
+
+log_resource-icap_lesson-chapter_create_shortname: "Chapter creation"
+log_resource-icap_lesson-chapter_create_title:     "Chapter creation in a lesson"
+log_resource-icap_lesson-chapter_create_filter:    "Chapter creation in a lesson"
+
+log_resource-icap_lesson-chapter_update_shortname: "Chapter update"
+log_resource-icap_lesson-chapter_update_title:     "Chapter update in a lesson"
+log_resource-icap_lesson-chapter_update_filter:    "Chapter update in a lesson"
+
+log_resource-icap_lesson-chapter_move_shortname: "Chapter updating"
+log_resource-icap_lesson-chapter_move_title:     "Chapter updating in a lesson"
+log_resource-icap_lesson-chapter_move_filter:    "Chapter updating in a lesson"
+
+log_resource-icap_lesson-chapter_delete_shortname: "Chapter deletion"
+log_resource-icap_lesson-chapter_delete_title:     "Chapter deletion in a lesson"
+log_resource-icap_lesson-chapter_delete_filter:    "Chapter deletion in a lesson"
+
+log.lesson.read_chapter:      "opened chapter %chapter% in lesson %lesson%"
+log.lesson.create_chapter:    "created chapter %chapter% in lesson %lesson%"
+log.lesson.update_chapter:    "updated chapter %chapter% in lesson %lesson%"
+log.lesson.delete_chapter:    "deleted chapter %chapter% in lesson %lesson%"
+log.lesson.move_chapter:      "deleted chapter %chapter% in lesson %lesson%"
+
+log.lesson.old_parent:      "Former parent"
+log.lesson.new_parent:      "New parent"
+log.lesson.log_created_chapter:          "Created chapter"
+log.lesson.log_read_chapter:             "Read chapter"
+log.lesson.log_updated_chapter:          "Updated chapter"
+log.lesson.log_deleted_chapter:          "Deleted chapter"
+log.lesson.log_moved_chapter:            "Moved chapter"
+
+title:                        "Title"
+text:                         "Text"

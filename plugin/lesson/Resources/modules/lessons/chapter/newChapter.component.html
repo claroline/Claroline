@@ -1,0 +1,94 @@
+<div
+        class='panel-heading chapter_title'>
+    <h4>
+        {{ 'Chapter Creation'|trans: 'icap_lesson' }}
+    </h4>
+</div>
+
+<form
+        data-confirm-discard-changes
+        novalidate
+        name="createForm"
+        class="form-horizontal">
+    <div class='chapter_content'>
+        <fieldset>
+            <div
+                data-ng-if="!vm.lessonData.createNew"
+                class="control-group">
+                <label
+                        class="control-label"
+                        for="icap_lesson_chaptertype_parentChapter">
+                    {{ 'location'|trans: 'icap_lesson' }}
+                </label>
+
+                <div
+                    class="controls">
+                    <select
+                        id="icap_lesson_chaptertype_parentChapter"
+                        required
+                        name="parent"
+                        class="form-control"
+                        data-ng-model="vm._createdChapter.parent"
+                        data-ng-options="chapter.slug as chapter.title for chapter in vm.lessonData.chapters">
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label
+                        class="control-label"
+                        for="icap_lesson_chaptertype_title">
+                    {{ 'Title'|trans: 'icap_lesson' }}
+                </label>
+                <div class="controls">
+                    <input
+                        type="text"
+                        id="icap_lesson_chaptertype_title"
+                        name="title"
+                        required
+                        data-give-focus
+                        class="form-control"
+                        data-ng-model="vm._createdChapter.title"
+                        data-uib-popover="{{ 'field_mandatory'|trans: 'icap_lesson' }}"
+                        data-popover-trigger="none"
+                        data-popover-is-open="createForm.$submitted && createForm.title.$invalid"
+                    />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label
+                        class="control-label"
+                        for="icap_lesson_chaptertype_text">
+                    {{ 'Text'|trans: 'icap_lesson' }}
+                </label>
+                <div class="controls">
+                    <input
+                        name="text"
+                        id="icap_lesson_chaptertype_text"
+                        type="text"
+                        data-ui-tinymce="vm.tinymceOptions"
+                        data-ng-model="vm._createdChapter.text"
+                    />
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="form-actions">
+            <button
+                type="submit"
+                class="btn btn-primary"
+                data-ng-disabled="vm.buttonSubmit.disabled"
+                data-ng-click="vm.createChapter(createForm)">
+                {{ 'Save'|trans: 'icap_lesson' }}
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-default btncancel"
+                data-ng-click="vm.cancelForm(vm.chapter.current.slug)">
+                {{ 'Cancel'|trans: 'icap_lesson' }}
+            </button>
+        </div>
+    </div>
+</form>
