@@ -1,8 +1,6 @@
 <form name="createNoteForm" novalidate>
+
   <div class="panel-body" >
-  {{ vm.noteTypes }}
-  {{ vm.noteTypeChoosen }}
-  {{ vm.fieldValues }}
   
     <div class="alert alert-danger"
          data-ng-if="vm.errorMessage !== null">
@@ -62,8 +60,11 @@
         {{ 'errors.not_blank'|trans:'flashcard' }}
       </p>
     </div>
+
   </div>
-  <div class="panel-footer" data-ng-if="!vm.isReadOnly">
+
+  <div class="panel-footer" data-ng-if="!vm.canEdit">
+    
     <button type="submit"
             class="btn btn-primary"
             data-ng-disabled="!createNoteForm.$valid"
@@ -74,5 +75,7 @@
        href="#/">
       {{ 'cancel'|trans }}
     </a>
+
   </div>
+
 </form>
