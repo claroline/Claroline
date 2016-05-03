@@ -28,6 +28,9 @@ export default class ChatRoomVideoCtrl {
     $(window).unload(($event) => {
       $event.preventDefault()
       console.log('Disconnecting...')
+      this.VideoService.closeAllConnections()
+      this.VideoService.stopMedia()
+      console.log('All connection closed...')
       this.ChatRoomService.disconnectFromRoom()
     })
 
@@ -49,6 +52,9 @@ export default class ChatRoomVideoCtrl {
   }
 
   goBack () {
+    this.VideoService.closeAllConnections()
+    this.VideoService.stopMedia()
+    console.log('All connection closed...')
     this.ChatRoomService.disconnectFromRoom()
     this.$state.transitionTo(
       'main',
@@ -62,12 +68,8 @@ export default class ChatRoomVideoCtrl {
     this.input = ''
   }
 
-  switchCamera () {
-    this.VideoService.switchCamera()
-  }
-
-  switchAudio () {
-    this.VideoService.switchAudio()
+  switchAudio (username = null) {
+    this.VideoService.switchUserAudio(username)
   }
 
   switchVideo () {
@@ -80,5 +82,12 @@ export default class ChatRoomVideoCtrl {
 
   selectSourceStream (username) {
     this.VideoService.selectSourceStream(username)
+  }
+
+  getStreamClass (username) {
+    const selectedClass = this.videoConfig['selectedUser'] === username ? 'video-selected' : ''
+    const speakingClass = this.videoConfig['speakingUser'] === username ? 'video-speaking' : ''
+
+    return `${selectedClass} ${speakingClass}`
   }
 }

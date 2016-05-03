@@ -46,7 +46,9 @@ export default class ChatRoomService {
     this._onIQStanza = this._onIQStanza.bind(this)
 
     this._fullConnection = this._fullConnection.bind(this)
-    this._connectedCallBack = () => {}
+    this._connectedCallback = () => {}
+    this._userDisconnectedCallback = () => {}
+    this._managementCallback = () => {}
   }
 
   getConfig () {
@@ -73,8 +75,16 @@ export default class ChatRoomService {
     return this.MessageService.getOldMessages()
   }
 
-  setConnectedCallBack (callback) {
-    this._connectedCallBack = callback
+  setConnectedCallback (callback) {
+    this._connectedCallback = callback
+  }
+
+  setUserDisconnectedCallback (callback) {
+    this._userDisconnectedCallback = callback
+  }
+
+  setManagementCallback (callback) {
+    this._managementCallback = callback
   }
 
   connect () {
@@ -87,7 +97,7 @@ export default class ChatRoomService {
       this.connectAdminToRoom()
     } else {
       console.log('Not connected to XMPP')
-      this.XmppService.setConnectedCallBack(this._fullConnection)
+      this.XmppService.setConnectedCallback(this._fullConnection)
       this.XmppService.connectWithAdmin()
     }
   }
@@ -517,6 +527,8 @@ export default class ChatRoomService {
       this.UserService.removeBannedUser(username)
       this.MessageService.addPresenceMessage(name, 'unbanned')
       this.refreshScope()
+    } else {
+      this._managementCallback(type, username, name, value)
     }
   }
 
@@ -614,7 +626,7 @@ export default class ChatRoomService {
               if (this.config['canEdit'] && this.config['myAffiliation'] === 'admin') {
                 this.requestOutcastList()
               }
-              this._connectedCallBack()
+              this._connectedCallback()
               this.refreshScope()
             }
           } else if (statusCode === '301') {
@@ -635,6 +647,8 @@ export default class ChatRoomService {
         }
 
         if (type === 'unavailable') {
+          console.log(`****************** ${username} => disconnected`)
+          this._userDisconnectedCallback(username)
           this.UserService.removeUser(username, statusCode)
           this.refreshScope()
         } else {
@@ -695,7 +709,7 @@ export default class ChatRoomService {
   }
 
   _onIQStanzaInit (iq) {
-    console.log(iq)
+    //console.log(iq)
     let response = true
     const type = $(iq).attr('type')
     const id = $(iq).attr('id')
@@ -712,7 +726,7 @@ export default class ChatRoomService {
   }
 
   _onIQStanza (iq) {
-    console.log(iq)
+    //console.log(iq)
     const type = $(iq).attr('type')
     const id = $(iq).attr('id')
 
