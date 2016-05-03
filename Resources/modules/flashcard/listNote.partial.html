@@ -1,6 +1,7 @@
 <div class="panel-body" >
 
-  <div data-ng-repeat="(i, notes) in vm.sortedNotes">
+  <div class="col-xs-12"
+       data-ng-repeat="(i, notes) in vm.sortedNotes">
     <table class="table table-condensed table-bordered"
            data-ng-if="notes.length > 0">
       <thead>
@@ -9,7 +10,7 @@
               data-ng-repeat="(f, fieldValue) in notes[0].field_values">
             {{ fieldValue.field_label.name }}
           </th>
-          <th class="col-xs-2">
+          <th class="col-xs-2 text-center">
             {{ 'actions'|trans }}
           </th>
         </tr>
@@ -23,8 +24,7 @@
                 data-ng-repeat="(f, fieldValue) in note.field_values">
               {{ fieldValue.value }}
             </td>
-            <td style="text-align: center"
-                class="col-xs-2">
+            <td class="col-xs-2 text-center">
               <a href="#/edit_note/{{ note.id }}?nexturl=/list_notes"
                  class="btn btn-default"
                  aria-label="{{ 'edit'|trans }}"
