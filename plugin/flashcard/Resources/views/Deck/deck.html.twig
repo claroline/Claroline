@@ -20,10 +20,10 @@
   <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'flashcard' }) }}">
   </script>
   <script>
-    window.deck = {{ _resource|api_serialize('api_flashcard_deck')|raw }}
-    window.deckNode = {{ _resource.getResourceNode()|api_serialize('api_resource_node')|raw }}
+    window.deck = {{ _resource|json_serialize('api_flashcard_deck')|raw }}
+    window.deckNode = {{ _resource.getResourceNode()|json_serialize('api_resource_node')|raw }}
     window.canEdit = {{ _canEdit ? 'false' : 'true' }}
   </script>
-  <script src="{{ hotAsset('dist/claroline-flashcard-list.js') }}">
+  <script src="{{ hotAsset('dist/claroline-distribution-plugin-flashcard-list.js') }}">
   </script>
 {% endblock %}
