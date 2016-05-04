@@ -45,10 +45,6 @@ export default class CreateNoteCtrl {
           this.newCards = this._service.findNewCardToLearn(this.deck)
         },
         d => {
-          // Must do something to delete the created note in this controller
-          // but for the moment the created note is not added to the
-          // attributes.
-          // ...
           this.errorMessage = 'errors.note.creation_failure'
           this.errors = d.data
         }

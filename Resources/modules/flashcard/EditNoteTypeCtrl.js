@@ -171,10 +171,6 @@ export default class EditNoteTypeCtrl {
           this.$location.path(this.nexturl)
         },
         d => {
-          // Must do something to delete the created note in this controller
-          // but for the moment the created note is not added to the
-          // attributes.
-          // ...
           this.errorMessage = 'errors.note_type.creation_failure'
           this.errors = d.data
         }

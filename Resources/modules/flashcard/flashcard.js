@@ -74,18 +74,6 @@ angular
   .filter('trans', () => (string, domain = 'platform') =>
     Translator.trans(string, domain)
   )
-  .directive('unique', () => {
-    return {
-      require: 'ngModel',
-      link: (scope, elm, attrs, ctrl) => {
-        ctrl.$validators.unique = (modelValue, viewValue, field) => {
-          console.log(field)
-          console.log(modelValue)
-          return false
-        }
-      }
-    }
-  })
   .config(["$routeProvider",
     $routeProvider => {
       $routeProvider

@@ -62,27 +62,23 @@ export default class StudyCtrl {
 
   showQuestions () {
     for (let i=0; i < this.currentCard.card_type.questions.length; i++) {
-      //if (this.currentCard.note) {
         for (let j=0; j < this.currentCard.note.field_values.length; j++) {
           if (this.currentCard.card_type.questions[i].id ==
               this.currentCard.note.field_values[j].field_label.id) {
             this.questions.push(this.currentCard.note.field_values[j])
           }
         }
-      //}
     }
   }
 
   showAnswers () {
     for (let i=0; i < this.currentCard.card_type.answers.length; i++) {
-      //if (this.currentCard.note) {
         for (let j=0; j < this.currentCard.note.field_values.length; j++) {
           if (this.currentCard.card_type.answers[i].id ==
               this.currentCard.note.field_values[j].field_label.id) {
             this.answers.push(this.currentCard.note.field_values[j])
           }
         }
-      //}
     }
   }
 
