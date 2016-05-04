@@ -66,7 +66,9 @@ class DropzoneController extends DropzoneBaseController
             array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => 'dd/MM/yyyy')
         );
 
-        if ($this->getRequest()->isMethod('POST')) {
+        $request = $this->getRequest();
+
+        if ($request->isMethod('POST')) {
             // see if manual planification option has changed.
             $oldManualPlanning = $dropzone->getManualPlanning();
             $oldManualPlanningOption = $dropzone->getManualState();
@@ -117,30 +119,16 @@ class DropzoneController extends DropzoneBaseController
             $em->persist($dropzone);
             $em->flush();
 
-            $stayHere = $form->get('stayHere')->getData();
-
-            if ($stayHere == 1) {
-                if ($dropzone->hasCriteria() === false) {
-                    $request->getSession()->getFlashBag()->add(
+            if ($dropzone->hasCriteria() === false) {
+                $request->getSession()->getFlashBag()->add(
                                 'warning',
                                 $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
                             );
-                }
-
-                $request->getSession()->getFlashBag()->add(
-                            'success',
-                            $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'icap_dropzone')
-                        );
             } else {
-                //                        die("iciiiiiiiiii stayhere=0");
-                        return $this->redirect(
-                            $this->generateUrl(
-                                'innova_collecticiel_edit_criteria',
-                                array(
-                                    'resourceId' => $dropzone->getId(),
-                                )
-                            )
-                        );
+                $request->getSession()->getFlashBag()->add(
+                              'success',
+                              $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'icap_dropzone')
+                          );
             }
 
             $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
@@ -256,6 +244,15 @@ class DropzoneController extends DropzoneBaseController
             $this->dispatch($event);
 
             $this->getRequest()->getSession()->getFlashBag()->add('success', $translator->trans('The collecticiel has been successfully saved', array(), 'innova_collecticiel'));
+            // redirect to main dropzone settings view
+            return $this->redirect(
+                $this->generateUrl(
+                    'innova_collecticiel_edit_common',
+                    array(
+                        'resourceId' => $dropzone->getId(),
+                    )
+                )
+            );
         }
 
         $adminInnova = false;

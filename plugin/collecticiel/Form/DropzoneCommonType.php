@@ -84,7 +84,7 @@ class DropzoneCommonType extends AbstractType
 
         //     $form
         //         // Publication. Ajout de cette zone, demande JJQ. InnovaERV
-        //         ->add('published', 'checkbox', 
+        //         ->add('published', 'checkbox',
         //             array(
         //                 'attr' => $publishedAttr,
         //                 'mapped' => false,
@@ -108,7 +108,7 @@ class DropzoneCommonType extends AbstractType
 
         //     $form
         //         // Publication. Ajout de cette zone, demande JJQ. InnovaERV
-        //         ->add('published', 'checkbox', 
+        //         ->add('published', 'checkbox',
         //             array(
         //                 'attr' => $publishedAttr,
         //                 'mapped' => false,
@@ -153,8 +153,8 @@ class DropzoneCommonType extends AbstractType
             ))
 
             // Notation maxi. Ajout de cette zone, demande JJQ. InnovaERV
-            ->add('maximumNotation', 'text', array(
-                          'required' => true, )
+            ->add('maximumNotation', 'integer', array(
+                          'required' => true, 'attr' => array('min' => 0), )
                         )
 
             ;

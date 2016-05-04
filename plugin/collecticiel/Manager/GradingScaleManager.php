@@ -37,7 +37,11 @@ class GradingScaleManager
      */
     public function manageGradingScales($tab, Dropzone $dropzone)
     {
+        // handle old scales deletion
+        $this->deletOldScales($tab, $dropzone);
+        // handle update and add
         foreach (array_keys($tab) as $key) {
+            // new
             if (empty($tab[$key]['id'])) {
                 $gradingScaleData = $this->insertGradingScale($tab[$key]['scaleName'], $dropzone);
             } else {
@@ -51,6 +55,24 @@ class GradingScaleManager
         $this->em->flush();
 
         return true;
+    }
+
+    private function deletOldScales($data,  Dropzone $dropzone)
+    {
+        $existing = $this->gradingScaleRepo->findByDropzone($dropzone);
+        foreach ($existing as $scale) {
+            $searchedId = $scale->getId();
+            $found = false;
+            foreach ($data as $value) {
+                if ((int) $value['id'] === $searchedId) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $this->em->remove($scale);
+            }
+        }
     }
 
     /**
