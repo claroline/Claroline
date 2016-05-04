@@ -15,7 +15,6 @@ $('#add-criterion-button-innova2').on('click', function(event) {
         type: $form.attr('method'),
         data: $form.serialize(),
         success: function(data) {
-            console.log(data);
             $.get($('.add-criterion-button').attr('href'))
                 .done(function(data) {
                     resetTiny();
@@ -213,9 +212,6 @@ $(document).ready(function() {
     // InnovaERV
     // Ajout pour le traitement de la case à cocher lors de la soumission de documents
     $('#validate-modal').on('show.bs.modal', function(event) {
-
-        console.log('here');
-
         var button = $(event.relatedTarget); // Button that triggered the modal
         var documentId = button.data('document_id'); // Extract info from data-* attributes
 
