@@ -1,0 +1,56 @@
+<div class="panel-body" >
+
+  <div class="text-center">
+    <div ng-repeat="question in vm.questions">
+      <span class="h2">{{ question.field_label.name }} : </span>
+      <span class="h2">{{ question.value }}</span>
+    </div>
+    <hr/>
+    <div ng-repeat="answer in vm.answers">
+      <span class="h2">{{ answer.field_label.name }} : </span>
+      <span class="h2">{{ answer.value }}</span>
+    </div>
+  </div>
+
+  <div class="alert alert-info"
+       data-ng-if="vm.learningCards.length == 0 &&
+       vm.newCards.length == 0">
+    <i class="fa fa-info-circle"></i>
+    {{ 'deck.empty'|trans:'flashcard' }}
+  </div>
+
+</div>
+
+<div class="panel-footer text-center">
+
+  <a class="btn btn-default"
+     href="#/">
+    {{ 'study.stop'|trans:'flashcard' }}
+  </a>
+  <button class="btn btn-primary"
+          data-ng-click="vm.showAnswers()"
+          data-ng-if="vm.answers.length == 0">
+    {{ 'answer.show'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-danger"
+          data-ng-click="vm.validAnswer(0)"
+          data-ng-if="vm.answers.length > 0">
+    {{ 'answer.again'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-warning"
+          data-ng-click="vm.validAnswer(1)"
+          data-ng-if="vm.answers.length > 0">
+    {{ 'answer.hard'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-success"
+          data-ng-click="vm.validAnswer(2)"
+          data-ng-if="vm.answers.length > 0">
+    {{ 'answer.good'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-info"
+          data-ng-click="vm.validAnswer(3)"
+          data-ng-if="vm.answers.length > 0">
+    {{ 'answer.easy'|trans:'flashcard' }}
+  </button>
+
+</div>

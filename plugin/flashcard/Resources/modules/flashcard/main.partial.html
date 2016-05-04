@@ -1,0 +1,59 @@
+<div class="panel-body" >
+
+  <table class="table table-condensed table-bordered"
+         data-ng-if="vm.learningCards.length > 0 ||
+         vm.newCards.length > 0">
+    <thead>
+      <tr>
+        <th class="col-xs-6">{{ 'new_cards'|trans:'flashcard' }}</th>
+        <th class="col-xs-6">{{ 'card_to_review'|trans:'flashcard' }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ vm.newCards.length }}</td>
+        <td>{{ vm.learningCards.length }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info"
+       data-ng-if="vm.learningCards.length == 0 &&
+       vm.newCards.length == 0">
+    <i class="fa fa-info-circle"></i>
+    {{ 'deck.empty'|trans:'flashcard' }}
+  </div>
+
+</div>
+
+<div class="panel-footer">
+
+  <button class="btn btn-default"
+          data-ng-if="!vm.canEdit"
+          data-ng-click="">
+    {{ 'default_parameters'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-default"
+          data-ng-click="">
+    {{ 'parameters'|trans:'flashcard' }}
+  </button>
+  <a class="btn btn-default"
+     href="#/list_notes">
+    {{ 'cards.list'|trans:'flashcard' }}
+  </a>
+  <a class="btn btn-default"
+     data-ng-if="!vm.canEdit"
+     href="#/edit_note_type/new?nexturl=/">
+    {{ 'note_types.create'|trans:'flashcard' }}
+  </a>
+  <a class="btn btn-default"
+     data-ng-if="!vm.canEdit"
+     href="#/create_note">
+    {{ 'cards.add'|trans:'flashcard' }}
+  </a>
+  <a class="btn btn-primary"
+     href="#/study">
+    {{ 'study.begin'|trans:'flashcard' }}
+  </a>
+
+</div>

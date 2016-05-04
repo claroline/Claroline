@@ -1,0 +1,131 @@
+<div class="panel-body" >
+
+  <div class="col-xs-12"
+       data-ng-repeat="(i, notes) in vm.sortedNotes">
+    <table class="table table-condensed table-bordered"
+           data-ng-if="notes.length > 0">
+      <thead>
+        <tr>
+          <th class="col-xs-{{ vm.colWidth[i][f] }}"
+              data-ng-repeat="(f, fieldValue) in notes[0].field_values">
+            {{ fieldValue.field_label.name }}
+          </th>
+          <th class="col-xs-2 text-center">
+            {{ 'actions'|trans }}
+          </th>
+        </tr>
+      </thead>
+    </table>
+    <div data-ng-repeat="(j, note) in notes">
+      <table class="col-md-12 table table-condensed table-bordered">
+        <tbody>
+          <tr> 
+            <td class="col-xs-{{ vm.colWidth[i][f] }}"
+                data-ng-repeat="(f, fieldValue) in note.field_values">
+              {{ fieldValue.value }}
+            </td>
+            <td class="col-xs-2 text-center">
+              <a href="#/edit_note/{{ note.id }}?nexturl=/list_notes"
+                 class="btn btn-default"
+                 aria-label="{{ 'edit'|trans }}"
+                 data-ng-if="!vm.canEdit"
+                 data-uib-tooltip="{{ 'edit'|trans }}"
+                 data-ng-click="">
+                <i class="fa fa-pencil"></i>
+              </a>
+              <button class="btn btn-default"
+                      aria-label="{{ 'delete'|trans }}"
+                      data-uib-tooltip="{{ 'delete'|trans }}"
+                      data-ng-if="!vm.canEdit"
+                      data-ng-click="vm.confirmDeleteNote(note)">
+                <i class="fa fa-trash-o"></i>
+              </button>
+              <button class="btn btn-default"
+                      aria-label="{{ 'show'|trans }}"
+                      data-uib-tooltip="{{ 'show'|trans }}"
+                      data-ng-click="
+                        vm.isCardShown[i][j] = !vm.isCardShown[i][j]">
+                <i class="fa fa-list"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="col-md-offset-1 col-md-11 table-condensed table-bordered"
+             style="margin-bottom: 20px"
+             data-ng-if="vm.isCardShown[i][j]">
+        <thead>
+          <tr>
+            <th class="col-xs-5"
+                colspan="
+                  {{ vm.maxColspan(note) }}">
+              {{ 'questions'|trans:'flashcard' }}
+            </th>
+            <th class="col-xs-5"
+                colspan="
+                  {{ vm.maxColspan(note) }}">
+              {{ 'answers'|trans:'flashcard' }}
+            </th>
+            <th class="col-xs-2">
+              {{ 'actions'|trans }}
+            </th>
+        </thead>
+        <tbody>
+          <tr data-ng-repeat="card in note.cards">
+            <td colspan="{{ vm.maxColspan(note) / card.card_type.questions.length }}"
+                data-ng-repeat="
+                question in vm.getQuestionsFromCard(note, card)">
+              {{ question.value }}
+            </td>
+            <td colspan="{{ vm.maxColspan(note) / card.card_type.answers.length }}"
+                data-ng-repeat="
+                answer in vm.getAnswersFromCard(note, card)">
+              {{ answer.value }}
+            </td>
+            <td class="col-xs-2 text-center"
+                data-ng-if="!vm.isNew(card)">
+              <button class="btn btn-default"
+                      aria-label="{{ 'suspend'|trans }}"
+                      data-uib-tooltip="{{ 'suspend'|trans }}"
+                      data-ng-if="!vm.isSuspend(card)"
+                      data-ng-click="vm.suspendCard(card, 1)">
+                <i class="fa fa-hand-stop-o"></i>
+              </button>
+              <button class="btn btn-default"
+                      aria-label="{{ 'unsuspend'|trans }}"
+                      data-uib-tooltip="{{ 'unsuspend'|trans }}"
+                      data-ng-if="vm.isSuspend(card)"
+                      data-ng-click="vm.suspendCard(card, 0)">
+                <i class="fa fa-thumbs-o-up"></i>
+              </button>
+              <button class="btn btn-default"
+                      aria-label="{{ 'repeat'|trans:'flashcard' }}"
+                      data-uib-tooltip="{{ 'repeat'|trans:'flashcard' }}"
+                      data-ng-click="vm.resetCard(card)">
+                <i class="fa fa-repeat"></i>
+              </button>
+            </td>
+            <td class="col-xs-2 text-center"
+                data-ng-if="vm.isNew(card)">
+              {{ 'card.is_new'|trans:'flashcard' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="alert alert-info"
+       data-ng-if="vm.deck.notes.length == 0">
+    <i class="fa fa-info-circle"></i>
+    {{ 'deck.empty'|trans:'flashcard' }}
+  </div>
+
+</div>
+
+<div class="panel-footer">
+  <a href="#/"
+     class="btn btn-default">
+    {{ 'back'|trans }}
+  </a>
+</div>
