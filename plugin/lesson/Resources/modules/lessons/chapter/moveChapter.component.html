@@ -1,0 +1,62 @@
+<div class='panel-heading chapter_title'>
+    <h4>{{ 'Chapter Move'|trans: 'icap_lesson' }}</h4>
+</div>
+<form
+    name="formMove"
+    class="form-horizontal">
+    <fieldset>
+        <div class='chapter_content'>
+            <div class="control-group">
+                <div class="controls">
+                    {{ vm.chapter.current.title }}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="icap_lesson_movechaptertype_choiceChapter">
+                    {{ 'move_destination'|trans: 'icap_lesson' }}
+                </label>
+                <div class="controls">
+                    <select
+                        id="icap_lesson_movechaptertype_choiceChapter"
+                        required
+                        name="parent"
+                        class="form-control"
+                        data-ng-model="vm.chapter.current.parent"
+                        data-ng-options="chapter.slug as chapter.title for chapter in vm.lessonData.chapters">
+                    </select>
+
+                </div>
+            </div>
+            <div class="control-group" data-ng-if="formMove.parent.$viewValue != 'root-' + vm.lessonData.lessonId">
+                <label class="control-label" for="icap_lesson_movechaptertype_brother">
+                    {{ 'same_level'|trans: 'icap_lesson' }}
+                </label>
+                <input
+                    id="icap_lesson_movechaptertype_brother"
+                    data-ng-model="vm.asSibling"
+                    name="asSibling"
+                    type="checkbox"
+                    data-ng-disabled="formMove.parent.$viewValue == 'root-' + vm.lessonData.lessonId"/>
+            </div>
+        </div>
+
+    </fieldset>
+    <br/>
+    <div class="form-actions">
+        <button
+            type="submit"
+            class="btn btn-primary"
+            value="{{ 'Ok'|trans: 'icap_lesson' }}"
+            data-ng-click="vm._moveChapter(formMove)"
+            data-ng-disabled="vm.buttonSubmit.disabled">
+            {{ 'Ok'|trans: 'icap_lesson' }}
+        </button>
+
+        <button
+            type="button"
+            class="btn btn-default"
+            data-ng-click="vm.cancelForm(vm.chapter.current.slug)">
+            {{ 'Cancel'|trans: 'icap_lesson' }}
+        </button>
+    </div>
+</form>

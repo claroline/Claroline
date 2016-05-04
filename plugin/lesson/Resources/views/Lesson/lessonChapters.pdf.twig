@@ -1,0 +1,24 @@
+{% macro lesson_chapters_pdf(chapters, lessonId) %}
+    {% for chapter in chapters %}
+        {% set level = chapter.level + 1 %}
+        {% set fontsize = 0 %}
+        {% if level > 4 %}
+            {% set level = 4 %}
+        {% endif %}
+        <li id="chapter-{{chapter.id}}" class="chapter-title">
+            <div class="{{level>2?"subsection-header":"page-header"}}">
+                <h{{level}}>{{chapter.title}}</h{{level}}>
+            </div>
+            <div id="wst-{{ chapter.id }}" class="lesson-chapter-text">{{chapter.text|preg_replace("/src=\"\\/\\//","src=\"http://")|preg_replace("/src=\"\\//","src=\""~app.request.getSchemeAndHttpHost()~"/")|raw}}</div>
+            {% if chapter.__children is not empty %}
+                <ul class="no-bullet-list">
+                    {{ _self.lesson_chapters_pdf(chapter.__children, lessonId) }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}
+
+<ul id="lesson-chapters-list" class="no-bullet-list">
+    {{ _self.lesson_chapters_pdf(chapters, lessonId) }}
+</ul>

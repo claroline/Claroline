@@ -1,0 +1,36 @@
+log_resource-icap_lesson-chapter_read_shortname: "Ouverture d'un chapitre"
+log_resource-icap_lesson-chapter_read_title:     "Ouverture d'un chapitre d'un cours"
+log_resource-icap_lesson-chapter_read_filter:    "Ouverture d'un chapitre d'un cours"
+
+log_resource-icap_lesson-chapter_create_shortname: "Creation d'un chapitre"
+log_resource-icap_lesson-chapter_create_title:     "Creation d'un chapitre d'un cours"
+log_resource-icap_lesson-chapter_create_filter:    "Creation d'un chapitre d'un cours"
+
+log_resource-icap_lesson-chapter_update_shortname: "Modification d'un chapitre"
+log_resource-icap_lesson-chapter_update_title:     "Modification d'un chapitre d'un cours"
+log_resource-icap_lesson-chapter_update_filter:    "Modification d'un chapitre d'un cours"
+
+log_resource-icap_lesson-chapter_move_shortname: "Déplacement d'un chapitre"
+log_resource-icap_lesson-chapter_move_title:     "Déplacement d'un chapitre d'un cours"
+log_resource-icap_lesson-chapter_move_filter:    "Déplacement d'un chapitre d'un cours"
+
+log_resource-icap_lesson-chapter_delete_shortname: "Suppression d'un chapitre"
+log_resource-icap_lesson-chapter_delete_title:     "Suppression d'un chapitre d'un cours"
+log_resource-icap_lesson-chapter_delete_filter:    "Suppression d'un chapitre d'un cours"
+
+log.lesson.read_chapter:      "a ouvert le chapitre %chapter% du cours %lesson%"
+log.lesson.create_chapter:    "a crée le chapitre %chapter% dans le cours %lesson%"
+log.lesson.update_chapter:    "a mis à jour le chapitre %chapter% du cours %lesson%"
+log.lesson.delete_chapter:    "a supprimé le chapitre %chapter% du cours %lesson%"
+log.lesson.move_chapter:      "a déplacé le chapitre %chapter% du cours %lesson%"
+
+log.lesson.old_parent:                   "Ancien parent"
+log.lesson.new_parent:                   "Nouveau parent"
+log.lesson.log_created_chapter:          "Chapitre créé"
+log.lesson.log_read_chapter:             "Chapitre lu"
+log.lesson.log_updated_chapter:          "Chapitre modifié"
+log.lesson.log_deleted_chapter:          "Chapitre supprimé"
+log.lesson.log_moved_chapter:            "Chapitre déplacé"
+
+title:                        "Titre"
+text:                         "Texte"
