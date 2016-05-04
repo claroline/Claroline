@@ -1,0 +1,38 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block form_label %}
+    {% set parent_class = null %}
+    {% if form.parent is defined and form.parent.vars.attr["class"] is defined %}
+        {%  set parent_class = form.parent.vars.attr["class"] %}
+    {% endif %}
+    {% if parent_class == "redirect-after-login" %}
+        {% spaceless %}
+            {% set isOptionUrl = label == 'redirect_after_login_option_url' %}
+            {% set isOptionWorkspace = label == 'redirect_after_login_option_workspace_tag' %}
+            {% set attrClass = 'radio' in block_prefixes ? 'radio' : 'checkbox' %}
+            {% if isOptionUrl == true or isOptionWorkspace == true %}
+                {% set attrClass = attrClass ~ ' radio-with-input' %}
+            {% endif %}
+            {% set label_attr = label_attr|merge({'class': attrClass}) %}
+            <div {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+                <label class="col-md-12">
+                    <div class="pull-left">
+                    {{ form_widget(form) }}
+                    <span>{{ label|trans({}, translation_domain)|raw }}</span>
+                    </div>
+                    {% if isOptionUrl == true %}
+                    <div class="col-md-6">
+                        {{ form_widget(form.parent.parent.redirect_after_login_url) }}
+                    </div>
+                    {% elseif isOptionWorkspace == true %}
+                    <div class="col-md-4">
+                        {{ form_widget(form.parent.parent.defaultWorkspaceTag) }}
+                    </div>
+                    {%  endif %}
+                </label>
+            </div>
+        {% endspaceless %}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
