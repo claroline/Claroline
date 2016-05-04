@@ -1,24 +1,50 @@
-mark: Result
-marks:
-  add: Add a result
-  confirm_delete: Are you sure you want to delete this result?
-  delete: Delete a result
-  edit: Edit a result
-  empty: No result is associated with this evaluation. You can add a result or import a result set using one of the buttons below.
-  import: Import
-  import_info: To import results, attach a CSV file in which each line contains the following three values (separated by commas): user first name, user last name, mark or grade. Note that users referenced in the file must be members of this workspace.
+deck:
+  empty: No cards to show.
+cards:
+  add: Add a card
+  list: Show all cards
+card:
+  is_new: Not studied yet
+  suspend: Suspend learning process
+  unsuspend: Unsuspend learning process
+  repeat: Delet learning data
+note:
+  delete: Delete note
+  warning: Warning, this will delete all the cards linked to this note.
+notes:
+  add: Add a note
+note_type: Note model
+note_types:
+  add: Add a note model
+card_types: Card model
+card_type:
+  add: Add a card model
+  create_reverse: Create the reverse card model
+field:
+  name: Name of the field
+  names: Name of fields
+  add: Add a new field
+study:
+  begin: Study now
+  stop: Stop studying
+answer:
+  show: Show response
+  again: Again
+  hard: Hard
+  good: Good
+  easy: Easy
 errors:
-  csv_empty: The file is empty.
-  csv_empty_values: One or more values are empty
-  csv_extra_users: User is unknown or isn't a member of this workspace
-  csv_missing_values: One or more missing values
-  invalid_mark: This mark is not valid.
   line: line
   title: Error
-  mark_creation_failure: An error occurred during the creation of the result. Please try again later.
-  mark_edition_failure: An error occurred during the edition of the result. Please try again later.
-  mark_import_failure: The results cannot be imported due to one or more errors in the data format:
-  mark_suppression_failure: An error occurred during the deletion of the result. Please try again later.
-  not_blank: This value should not be blank.
-  unknown_user: This user is not a member of this workspace.
-maximum_mark: Maximum mark
+  not_blank: This value cannot be empty.
+  not_unique: This value must be unique.
+  note:
+    creation_failure: Error when creating notes.
+  note_type:
+    edition_failure: Error when editing the model of notes.
+questions: Questions
+answers: Answers
+default_parameters: Default parameters
+new_cards: New cards
+card_to_review: Cards to review
+

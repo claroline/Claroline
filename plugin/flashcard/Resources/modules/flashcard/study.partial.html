@@ -13,8 +13,8 @@
   </div>
 
   <div class="alert alert-info"
-       data-ng-if="vm.learningCards.length == 0 &&
-       vm.newCards.length == 0">
+       data-ng-show="vm.learningCards.length != 0 ||
+       vm.newCards.length != 0">
     <i class="fa fa-info-circle"></i>
     {{ 'deck.empty'|trans:'flashcard' }}
   </div>

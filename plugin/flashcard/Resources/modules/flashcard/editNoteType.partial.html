@@ -16,7 +16,7 @@
       </ul>
     </div>
 
-    <h2>{{ 'note_model'|trans:'flashcard' }}</h2>
+    <h2>{{ 'note_type'|trans:'flashcard' }}</h2>
 
     <div class="form-group"
          data-ng-class="{ 'has-error': (editNoteTypeForm.$submitted ||
@@ -38,7 +38,7 @@
     </div>
 
     <div data-ng-if="vm.noteType !== undefined">
-      <label>{{ 'field_names'|trans:'flashcard' }}</label>
+      <label>{{ 'field.names'|trans:'flashcard' }}</label>
       <div class="form-group"
            data-ng-repeat="(i, fieldLabel) in vm.noteType.field_labels"
            data-ng-class="{ 'has-error': fieldNameForm.fieldName.$invalid }">
@@ -73,11 +73,11 @@
       <button class="btn btn-primary"
               data-ng-click="vm.addFieldLabel()">
         <i class="fa fa-plus"></i>
-        {{ 'add_field'|trans:'flashcard' }}
+        {{ 'field.add'|trans:'flashcard' }}
       </button>
     </div>
 
-    <h2>{{ 'card_model'|trans:'flashcard' }}</h2>
+    <h2>{{ 'card_types'|trans:'flashcard' }}</h2>
 
     <table class="table table-condensed table-bordered">
       <thead>
@@ -168,7 +168,7 @@
     <button class="btn btn-primary"
             data-ng-click="vm.addCardType()">
       <i class="fa fa-plus"></i>
-      {{ 'add_card_type'|trans:'flashcard' }}
+      {{ 'card_type.add'|trans:'flashcard' }}
     </button>
 
   </div>
