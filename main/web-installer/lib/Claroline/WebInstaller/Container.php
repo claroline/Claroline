@@ -134,7 +134,7 @@ class Container
         $packages = json_decode(file_get_contents($this->appDirectory.'/../vendor/composer/installed.json'));
 
         foreach ($packages as $package) {
-            if ($package instanceof \stdClass and $package->name === 'claroline/core-bundle') {
+            if ($package instanceof \stdClass && $package->name === 'claroline/core-bundle') {
                 return $package->version;
             }
         }
@@ -165,13 +165,13 @@ class Container
      */
     public function getURL()
     {
-        $url = (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+        $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
 
         if (isset($_SERVER['SERVER_NAME'])) {
             $url .= $_SERVER['SERVER_NAME'];
         }
 
-        if (isset($_SERVER['SERVER_PORT']) and $_SERVER['SERVER_PORT'] != '80') {
+        if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') {
             return $url .= ':'.$_SERVER['SERVER_PORT'];
         }
 

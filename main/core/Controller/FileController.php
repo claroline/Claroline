@@ -289,16 +289,4 @@ class FileController extends Controller
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
-
-    /**
-     * Get Current User.
-     *
-     * @return mixed Claroline\CoreBundle\Entity\User or null
-     */
-    private function getCurrentUser()
-    {
-        if (is_object($token = $this->get('security.token_storage')->getToken()) and is_object($user = $token->getUser())) {
-            return $user;
-        }
-    }
 }

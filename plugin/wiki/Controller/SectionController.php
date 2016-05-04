@@ -6,6 +6,7 @@
  * Time: 15:33
  * To change this template use File | Settings | File Templates.
  */
+
 namespace Icap\WikiBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
@@ -33,7 +34,7 @@ class SectionController extends Controller
      * @Route(
      *      "/{wikiId}/history/{sectionId}/{maxPerPage}/{page}",
      *      requirements = {
-     *          "wikiId" = "\d+", 
+     *          "wikiId" = "\d+",
      *          "sectionId" = "\d+",
      *          "page" = "\d+",
      *          "maxPerPage" = "10|25|50|100|250|500"
@@ -93,7 +94,7 @@ class SectionController extends Controller
      * @Route(
      *      "/{wikiId}/section/new/{parentSectionId}",
      *      requirements = {
-     *          "wikiId" = "\d+", 
+     *          "wikiId" = "\d+",
      *          "parentSectionId" = "\d+"
      *      },
      *      name="icap_wiki_new_section"
@@ -125,11 +126,11 @@ class SectionController extends Controller
      *
      * @param $wikiId, $sectionId
      *
-     * @return $wiki, $section, $form 
+     * @return $wiki, $section, $form
      * @Route(
      *      "/{wikiId}/section/edit/{sectionId}",
      *      requirements = {
-     *          "wikiId" = "\d+", 
+     *          "wikiId" = "\d+",
      *          "sectionId" = "\d+"
      *      },
      *      defaults = {"sectionId" = 0},
@@ -166,7 +167,7 @@ class SectionController extends Controller
      * @Route(
      *      "/{wikiId}/section/move/{sectionId}/{referenceSectionId}/{isBrother}",
      *      requirements = {
-     *          "wikiId" = "\d+", 
+     *          "wikiId" = "\d+",
      *          "sectionId" = "\d+",
      *          "referenceSectionId" = "\d+",
      *          "isBrother" = "true|false"
@@ -222,13 +223,13 @@ class SectionController extends Controller
      *
      * @param $wikiId, $sectionId
      *
-     * @return $wiki, $section, $form 
+     * @return $wiki, $section, $form
      * @Route(
      *      "/{wikiId}/section/delete/{sectionId}",
      *      requirements = {
-     *          "wikiId" = "\d+", 
+     *          "wikiId" = "\d+",
      *          "sectionId" = "\d+"
-     *      },      
+     *      },
      *      name="icap_wiki_delete_section"
      * )
      * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
@@ -248,13 +249,13 @@ class SectionController extends Controller
      *
      * @param $wikiId, $sectionId
      *
-     * @return $wiki, $section, $form 
+     * @return $wiki, $section, $form
      * @Route(
      *      "/{wikiId}/section/restore/{sectionId}",
      *      requirements = {
-     *          "wikiId" = "\d+", 
+     *          "wikiId" = "\d+",
      *          "sectionId" = "\d+"
-     *      },      
+     *      },
      *      name="icap_wiki_restore_section"
      * )
      * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
@@ -322,8 +323,6 @@ class SectionController extends Controller
 
                     $flashBag->add('success', $translator->trans('icap_wiki_section_add_success', array(), 'icap_wiki'));
                 } catch (\Exception $exception) {
-                    var_dump($exception->getMessage());
-                    die();
                     $flashBag->add('error', $translator->trans('icap_wiki_section_add_error', array(), 'icap_wiki'));
                 }
 
@@ -410,8 +409,6 @@ class SectionController extends Controller
                     }
                     $flashBag->add('success', $translator->trans('icap_wiki_section_update_success', array(), 'icap_wiki'));
                 } catch (\Exception $exception) {
-                    print_r($exception->getMessage());
-                    die();
                     $flashBag->add('error', $translator->trans('icap_wiki_section_update_error', array(), 'icap_wiki'));
                 }
 

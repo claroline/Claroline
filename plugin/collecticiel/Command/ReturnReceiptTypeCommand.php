@@ -20,7 +20,8 @@ class ReturnReceiptTypeCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $start = time();
-        $em = $this->getContainer()->get('doctrine')->getEntityManager('default');
+            //$em = $this->getContainer()->get('doctrine')->getEntityManager('default');
+            $em = $this->getContainer()->get('claroline.persistence.object_manager');
 
             /* RETURN RECEIPT TYPE ARRAY */
             $returnreceipttypesArray = array(

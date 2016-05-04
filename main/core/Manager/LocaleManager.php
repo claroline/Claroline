@@ -153,7 +153,7 @@ class LocaleManager
      */
     private function getCurrentUser()
     {
-        if (is_object($token = $this->tokenStorage->getToken()) and is_object($user = $token->getUser())) {
+        if (is_object($token = $this->tokenStorage->getToken()) && is_object($user = $token->getUser())) {
             return $user;
         }
     }

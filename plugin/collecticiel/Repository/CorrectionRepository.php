@@ -4,6 +4,7 @@
  * Date: 05/09/13
  * Time: 14:56.
  */
+
 namespace Innova\CollecticielBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -169,10 +170,8 @@ class CorrectionRepository extends EntityRepository
         ';
 
         $query = $this->_em->createQuery($dql);
-
         $query->setParameter('dropzoneId', $dropzone->getId());
-        //var_dump($query);
-       // die;
+
         return $query;
     }
 

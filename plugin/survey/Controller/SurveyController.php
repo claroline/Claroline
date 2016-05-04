@@ -11,7 +11,7 @@
 
 namespace Claroline\SurveyBundle\Controller;
 
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
@@ -1682,9 +1682,8 @@ class SurveyController extends Controller
         );
         $fileName = $this->translator->trans('results', array(), 'platform');
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Type', 'application/force-download; application/vnd.ms-excel; charset=utf-8');
         $response->headers->set('Content-Disposition', 'attachment; filename='.$fileName.'.xls');
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
 
         return $response;
     }
@@ -1880,6 +1879,12 @@ class SurveyController extends Controller
                     0;
             }
         }
+        $answers = $forExport ?
+            $this->surveyManager->getMultipleChoiceAnswersBySurveyAndQuestionWithoutPager(
+                $survey,
+                $question
+            ) :
+            array();
 
         return new Response(
             $this->templating->render(
@@ -1894,6 +1899,7 @@ class SurveyController extends Controller
                     'otherChoice' => $otherChoice,
                     'otherMax' => $otherMax,
                     'forExport' => $forExport,
+                    'answers' => $answers,
                 )
             )
         );

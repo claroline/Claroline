@@ -398,6 +398,7 @@ group: Groupe
 group_configuration: 'Configuration du groupe'
 group_creation: 'Création d''un groupe'
 group_parameter: 'Paramètres du groupe'
+group_invalid: 'Le groupe %group% n''est pas valide à la ligne %line%.'
 groups: Groupes
 groups_list: 'Liste des groupes'
 groups_per_page: 'Groupes par page'

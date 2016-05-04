@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Validator\Constraints;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Doctrine\ORM\NonUniqueResultException;
@@ -32,6 +33,7 @@ class CsvUserValidator extends ConstraintValidator
     private $translator;
     private $userManager;
     private $validator;
+    private $groupManager;
 
     /**
      * @DI\InjectParams({
@@ -39,6 +41,7 @@ class CsvUserValidator extends ConstraintValidator
      *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
      *     "trans"                 = @DI\Inject("translator"),
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
+     *     "groupManager"          = @DI\Inject("claroline.manager.group_manager"),
      *     "validator"             = @DI\Inject("validator"),
      *     "ut"                    = @DI\Inject("claroline.utilities.misc")
      * })
@@ -49,7 +52,8 @@ class CsvUserValidator extends ConstraintValidator
         TranslatorInterface $translator,
         UserManager $userManager,
         ValidatorInterface $validator,
-        ClaroUtilities $ut
+        ClaroUtilities $ut,
+        GroupManager $groupManager
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->om = $om;
@@ -57,6 +61,7 @@ class CsvUserValidator extends ConstraintValidator
         $this->userManager = $userManager;
         $this->validator = $validator;
         $this->ut = $ut;
+        $this->groupManager = $groupManager;
     }
 
     public function validate($value, Constraint $constraint)
@@ -121,9 +126,15 @@ class CsvUserValidator extends ConstraintValidator
                 }
 
                 if (isset($user[8])) {
-                    $modelName = trim($user[7]) === '' ? null : $user[7];
+                    $modelName = trim($user[8]) === '' ? null : $user[8];
                 } else {
                     $modelName = null;
+                }
+
+                if (isset($user[9])) {
+                    $groupName = trim($user[9]) === '' ? null : $user[9];
+                } else {
+                    $groupName = null;
                 }
 
                 (!array_key_exists($email, $mails)) ?
@@ -230,6 +241,24 @@ class CsvUserValidator extends ConstraintValidator
                 $msg = $this->translator->trans(
                     'model_invalid',
                     array('%model%' => $modelName, '%line%' => $i + 1),
+                    'platform'
+                ).' ';
+                $this->context->addViolation($msg);
+            }
+        }
+
+        if ($groupName) {
+            $group = $this->om->getRepository('ClarolineCoreBundle:Group')->findOneByName($groupName);
+            $isValid = false;
+
+            if ($group) {
+                $isValid = $this->groupManager->validateAddUsersToGroup(array($user), $group);
+            }
+
+            if (!$isValid) {
+                $msg = $this->translator->trans(
+                    'group_invalid',
+                    array('%group%' => $groupName, '%line%' => $i + 1),
                     'platform'
                 ).' ';
                 $this->context->addViolation($msg);

@@ -4,6 +4,7 @@
  * Date: 05/09/13
  * Time: 14:56.
  */
+
 namespace Innova\CollecticielBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -31,9 +32,7 @@ class ReturnReceiptRepository extends EntityRepository
         /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->select('returnreceipt')
-//            ->andWhere('returnreceipt.user = :user')
             ->andWhere('returnreceipt.dropzone = :dropzone')
-//            ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone);
 
         $returnReceipt = $qb->getQuery()->getResult();
@@ -79,10 +78,8 @@ class ReturnReceiptRepository extends EntityRepository
         $qb = $this->createQueryBuilder('returnreceipt')
             ->select('returnreceipt')
             ->Join('returnreceipt.document', 'document')
-//            ->andWhere('returnreceipt.user = :user')
             ->andWhere('returnreceipt.dropzone = :dropzone')
             ->andWhere('document.validate = true')
-//            ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone);
 
         $numberDocuments = count($qb->getQuery()->getResult());
@@ -166,10 +163,8 @@ class ReturnReceiptRepository extends EntityRepository
         /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->delete()
-//            ->andWhere('returnreceipt.user = :user')
             ->andWhere('returnreceipt.dropzone = :dropzone')
             ->andWhere('returnreceipt.document = :document')
-//            ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone)
             ->setParameter('document', $document);
 

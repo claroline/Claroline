@@ -13,22 +13,20 @@
 
 {% block title %} {{ 'docimology' | trans({}, 'ujm_exo') }} {% endblock %}
 
-{% block resourceBreadcrumb %}
-    <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'docimology' | trans({}, 'ujm_exo') }}</li>
-{% endblock %}
-
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'docimology' | trans({}, 'ujm_exo') }}</h3>
     </div>
+
     <div class="panel-body">
         <a href="{{ path('ujm_exercise_open', { 'id': exoID }) }}" class="btn btn-primary">
-            <i class="fa fa-arrow-left"></i> {{ "back" | trans({}, 'ujm_exo') }}
-        </a><br/><br/>
+            <span class="fa fa-arrow-left"></span> {{ "back" | trans({}, 'ujm_exo') }}
+        </a>
+
+        <br/><br/>
 
         {% if nbPapers >= 12 %}
-            {#--------------------------------------------------- Legend -----------------------------------------------------------------------------------#}
+            {# Legend #}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ 'legend' | trans({}, 'ujm_exo') }}</h3>
@@ -43,21 +41,24 @@
                     </ol>
                 </div>
             </div>
-            {#--------------------------------------------------- Histogramm of marks ---------------------------------------------------------------------#}
+
+            {# Histogramm of marks #}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ 'histo_marks' | trans({}, 'ujm_exo') }}</h3>
                 </div>
                 <div class="panel-body" id="histoMarks"></div>
             </div>
-            {#--------------------------------------------------- Histogramm of success -------------------------------------------------------------------#}
+
+            {# Histogramm of success #}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ 'histo_success' | trans({}, 'ujm_exo') }}</h3>
                 </div>
                 <div class="panel-body" id="histoSuccess"  style="margin-bottom: 100px;"></div>
             </div>
-            {#--------------------------------------------------- Histogramm of discrimination -----------------------------------------------------------#}
+
+            {# Histogramm of discrimination #}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ 'histo_discrimination' | trans({}, 'ujm_exo') }}</h3>
@@ -67,7 +68,6 @@
                     <div class="list-group-item">
                         {% if coeffQ == 'none' %}
                             {{ 'explain_coeff_dis0' | trans({}, 'ujm_exo') }}
-
                         {% endif %}
                         <p>
                             {{ 'explain_coeff_dis1' | trans({}, 'ujm_exo') }}
@@ -77,7 +77,8 @@
                     </div>
                 </div>
             </div>
-            {#--------------------------------------------------- Histogramm of measure of diffculty -----------------------------------------------------#}
+
+            {# Histogramm of measure of diffculty #}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ 'histo_measure_difficulty' | trans({}, 'ujm_exo') }}</h3>
@@ -86,10 +87,10 @@
                 <div class="list-group">
                     <div class="list-group-item">
                         <p>
-                        {{ 'explain_measure_difficulty' | trans({}, 'ujm_exo') }}.
-                        {{ 'calculation_measure_difficulty' | trans({}, 'ujm_exo') }}.
-                        {{ 'meaning_measure_difficulty' | trans({}, 'ujm_exo') }}.
-                        {{ 'info_measure_difficulty' | trans({}, 'ujm_exo') }}.
+                            {{ 'explain_measure_difficulty' | trans({}, 'ujm_exo') }}.
+                            {{ 'calculation_measure_difficulty' | trans({}, 'ujm_exo') }}.
+                            {{ 'meaning_measure_difficulty' | trans({}, 'ujm_exo') }}.
+                            {{ 'info_measure_difficulty' | trans({}, 'ujm_exo') }}.
                         </p>
                     </div>
                 </div>
@@ -97,7 +98,7 @@
         {% else %}
             <div class="alert alert-info">{{ 'not_enought_papers'|trans({}, 'ujm_exo') }}.</div>
         {% endif %}
-    <div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

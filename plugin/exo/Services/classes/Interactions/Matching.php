@@ -61,7 +61,7 @@ class Matching extends Interaction
      *
      *
      * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
-     * @param float                                     $penalty         penalty if the user showed hints
+     * @param float                                     $penalty          penalty if the user showed hints
      * @param array                                     $tabRightResponse
      * @param array                                     $tabResponseIndex
      *
@@ -141,7 +141,7 @@ class Matching extends Interaction
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
      * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface    $session
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface   $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
@@ -188,7 +188,7 @@ class Matching extends Interaction
      * init array of rights responses indexed by labelId.
      *
      *
-     * @param string                                          $response
+     * @param string                                    $response
      * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
      *
      * @return array of arrays

@@ -4,6 +4,7 @@
  * Date: 22/08/13
  * Time: 09:30.
  */
+
 namespace Innova\CollecticielBundle\Controller;
 
 use Innova\CollecticielBundle\Entity\Correction;
@@ -248,117 +249,6 @@ class DropController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'pager' => $pager,
         ));
-    }
-
-    /**
-     * @Route(
-     *      "/{resourceId}/unlock/{userId}",
-     *      name="innova_collecticiel_unlock_user",
-     *      requirements={"resourceId" = "\d+", "userId" = "\d+"}
-     * )
-     * @ParamConverter("dropzone",class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
-     *
-     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
-     * @param $userId
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @internal param $user
-     * @internal param $userId
-     */
-    private function unlockUser(Dropzone $dropzone, $userId)
-    {
-        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
-        $drop = $dropRepo->getDropByUser($dropzone->getId(), $userId);
-        if ($drop != null) {
-            $drop->setUnlockedUser(true);
-        }
-        $em = $this->getDoctrine()->getManager();
-        $em->merge($drop);
-        $em->flush();
-
-        return $this->redirect(
-            $this->generateUrl(
-                'innova_collecticiel_examiners',
-                array(
-                    'resourceId' => $dropzone->getId(),
-                )
-            )
-        );
-    }
-
-    /**
-     * @Route(
-     *      "/{resourceId}/unlock/all",
-     *      name="innova_collecticiel_unlock_all_user",
-     *      requirements={"resourceId" = "\d+"}
-     * )
-     * @ParamConverter("dropzone",class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
-     *
-     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @internal param $user
-     * @internal param $userId
-     */
-    private function unlockUsers(Dropzone $dropzone)
-    {
-        return $this->unlockOrLockUsers($dropzone, true);
-    }
-
-    /**
-     * @Route(
-     *      "/{resourceId}/unlock/cancel",
-     *      name="innova_collecticiel_unlock_cancel",
-     *      requirements={"resourceId" = "\d+"}
-     * )
-     * @ParamConverter("dropzone",class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
-     *
-     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @internal param $user
-     * @internal param $userId
-     */
-    private function unlockUsersCancel(Dropzone $dropzone)
-    {
-        return $this->unlockOrLockUsers($dropzone, false);
-    }
-
-    /**
-     *  Factorised function for lock & unlock users in a dropzone.
-     *
-     * @param Dropzone $dropzone
-     * @param bool     $unlock
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    private function unlockOrLockUsers(Dropzone $dropzone, $unlock = true)
-    {
-        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
-
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
-        $drops = $dropRepo->findBy(array('dropzone' => $dropzone->getId(), 'unlockedUser' => !$unlock));
-
-        foreach ($drops as $drop) {
-            $drop->setUnlockedUser($unlock);
-        }
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
-
-        return $this->redirect(
-            $this->generateUrl(
-                'innova_collecticiel_examiners',
-                array(
-                    'resourceId' => $dropzone->getId(),
-                )
-            )
-        );
     }
 
     /**
@@ -657,14 +547,7 @@ class DropController extends DropzoneBaseController
                                         $documentId
                                     );
 
-//                    var_dump("User : " . $this->get('security.token_storage')->getToken()->getUser()->getId());
-//                    var_dump("Document : " . $documentId);
-//                    var_dump("Compteur : créé élève lu admin " . $commentReadForATeacherOrNot .
-//                    "+ élève " . $commentReadForATeacherOrNot2 .
-//                    "+ créé admin lu admin " . $commentReadForATeacherOrNot3)
-                    ;
                     $haveCommentOrNotArray[$documentId] = $commentReadForATeacherOrNot + $commentReadForATeacherOrNot2 + $commentReadForATeacherOrNot3;
-    //                var_dump("Indice : " . $indice);
                 }
             }
 
@@ -698,9 +581,6 @@ class DropController extends DropzoneBaseController
         }
 
         $adminInnova = $dropzoneVoter->checkEditRight($dropzone);
-    /*    if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
-            $adminInnova = true;
-        }*/
 
         if (count($pager) == 0) {
             $this->getRequest()->getSession()->getFlashBag()->add('success', $translator->trans('No copy waiting for correction', array(), 'innova_collecticiel'));
@@ -1224,7 +1104,6 @@ class DropController extends DropzoneBaseController
         $userManager = $this->get('claroline.manager.user_manager');
         $withPager = false;
         $usersByWorkspaces = $userManager->getUsersByWorkspaces($workspaceArray, $page, 20, $withPager);
-//      var_dump($usersByWorkspaces[0]);
 
         $userWithRights = $userManager->getUsersWithRights($dropzone->getResourceNode());
         // Fin ajout du code pour afficher les élèves inscrits mais qui n'ont pas déposé. InnovaERV.
@@ -1282,11 +1161,6 @@ class DropController extends DropzoneBaseController
         $adminInnova = $dropzoneVoter->checkEditRight($dropzone);
 
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
-
-        /*
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
-            $adminInnova = true;
-        }*/
 
         $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -1374,7 +1248,6 @@ class DropController extends DropzoneBaseController
                 // Ici, on récupère le créateur du collecticiel = l'admin
                 $userCreator = $dropzone->getResourceNode()->getCreator()->getId();
                 // Ici, on récupère celui qui vient de déposer le nouveau document
-                //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
                 $userDropDocument = $document->getDrop()->getUser()->getId();
                 $userSenderDocument = $document->getSender()->getId();
 

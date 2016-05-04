@@ -109,7 +109,7 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
         );
 
         //do we want an external authentication
-        if ($user->getAuthentication() and $user->getAuthentication() !== '' && $token->getCredentials()) {
+        if ($user->getAuthentication() && $user->getAuthentication() !== '' && $token->getCredentials()) {
             if (!$this->authenticationManager->authenticate(
                 $user->getAuthentication(), $user->getUsername(), $token->getCredentials()
             )) {
@@ -121,17 +121,6 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
 
         //do we want a regular authentication
         if ($passwordValid) {
-
-            //throw new \Exception(var_dump($user->getAuthentication()));
-
-            /*$currentHour = date('G');
-            if ($currentHour < 10 || $currentHour > 16) {
-                throw new AuthenticationException(
-                    'You can only log in between 10 and 16!',
-                    100
-                );
-            }*/
-
             return new UsernamePasswordToken($user, $user->getPassword(), $providerKey, $user->getRoles());
         }
 

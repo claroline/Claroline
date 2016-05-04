@@ -5,6 +5,7 @@
  * Date: 25/09/14
  * Time: 10:19.
  */
+
 namespace Innova\CollecticielBundle\Tests\Entity;
 
 use Innova\CollecticielBundle\Entity\Correction;

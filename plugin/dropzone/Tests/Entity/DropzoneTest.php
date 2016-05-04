@@ -5,10 +5,11 @@
  * Date: 29/09/14
  * Time: 11:24.
  */
+
 namespace Icap\DropzoneBundle\Tests\Entity;
 
 use Icap\DropzoneBundle\Entity\Dropzone;
-use \DateTime;
+use DateTime;
 
 class DropzoneTest extends \PHPUnit_Framework_TestCase
 {

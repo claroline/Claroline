@@ -5,6 +5,7 @@
  * Date: 17/06/14
  * Time: 09:47.
  */
+
 namespace Icap\DropzoneBundle\Voter;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;

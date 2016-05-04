@@ -124,29 +124,6 @@ class ExerciseController
     }
 
     /**
-     * Marks a paper as finished.
-     *
-     * @EXT\Route("/papers/{id}/end", name="exercise_finish_paper")
-     * @EXT\Method("PUT")
-     * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * @param User  $user
-     * @param Paper $paper
-     *
-     * @return JsonResponse
-     */
-    public function finishPaperAction(User $user, Paper $paper)
-    {
-        if ($user !== $paper->getUser()) {
-            throw new AccessDeniedHttpException();
-        }
-
-        $this->paperManager->finishPaper($paper);
-
-        return new JsonResponse('', 204);
-    }
-
-    /**
      * Returns all the papers associated with an exercise for the current user.
      *
      * @EXT\Route("/exercises/{id}/papers", name="exercise_papers")

@@ -8,6 +8,7 @@
  * 
  * Date: 4/22/15
  */
+
 namespace Icap\SocialmediaBundle\Manager;
 
 use Doctrine\ORM\EntityManager;

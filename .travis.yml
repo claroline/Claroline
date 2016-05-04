@@ -37,11 +37,11 @@ before_script:
   - php scripts/configure.php --default
 
   # override platform composer.json with build/repo local reference
-  - mkdir -p travis/local/pkg && mv ../$TRAVIS_REPO_SLUG/* ../$TRAVIS_REPO_SLUG/.[!.]* travis/local/pkg
-  - rm -rf travis/local/pkg/.git
-  - php travis/local/pkg/main/dev/Resources/travis/pre-composer.php claroline/distribution travis/local/pkg
+  - rm -rf ../$TRAVIS_REPO_SLUG/.git
+  - php ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/pre-composer.php claroline/distribution ../$TRAVIS_REPO_SLUG
 
   # fetch dependencies and build
+  - composer self-update
   - composer update --prefer-source
   - npm install
   - npm run bower
@@ -49,5 +49,7 @@ before_script:
   - php app/console claroline:install --env=test
 
 script:
-  - bin/php-cs-fixer fix --dry-run --diff --config-file=vendor/claroline/distribution/main/dev/Resources/travis/php-cs.php
-  - SYMFONY_DEPRECATIONS_HELPER=weak bin/phpunit -c vendor/claroline/distribution
+  - cd vendor/claroline/distribution
+  - ../../../bin/phpmd --exclude main/core/Resources/bundle-creator,main/web-installer `cat git_diff_files.txt | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml
+  - ../../../bin/php-cs-fixer fix --dry-run --diff --config-file=main/dev/Resources/travis/php-cs.php -vvv
+  - SYMFONY_DEPRECATIONS_HELPER=weak ../../../bin/phpunit

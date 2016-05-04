@@ -152,7 +152,6 @@ class DocumentController extends DropzoneBaseController
         $revision->setUser($drop->getUser());
         $text = new Text();
         // #272 : Maintenant, on insère le TITRE qui est saisi.
-//      $text->setName($this->get('translator')->trans('Free text', array(), 'innova_collecticiel'));
         $text->setName($titleText);
         $revision->setText($text);
         $em->persist($text);
@@ -222,12 +221,6 @@ class DocumentController extends DropzoneBaseController
         $sender = $this->get('security.token_storage')->getToken()->getUser();
 
         $canEdit = $dropzoneVoter->checkEditRight($dropzone);
-
-// #267 : dès que l'enseignant dépose un document dans son collecticiel ou dans un collecticiel partagé,
-// une demande de commentaire est automatiquement adressé, ce qui ne devrait pas être le cas.  
-//        if ($canEdit) {
-//            $document->setValidate(true);
-//        }
 
         $document->setDrop($drop);
         $document->setSender($sender);
@@ -310,8 +303,7 @@ class DocumentController extends DropzoneBaseController
 /*
 InnoERV : demande de JJQ dans son document d'août 2015
 Quand un enseignant dépose un document (Fichier, URl, ressource ou texte)
-dans l'espace collecticiel d'un étudiant
-alors il faut revenir sur l'espace collecticiel de l'étudiant
+dans l'espace collecticiel d'un étudiant alors il faut revenir sur l'espace collecticiel de l'étudiant
 Travail effectué : changement de route et ajout d'un paramètre pour cette nouvelle route
 */
                 return $this->redirect(

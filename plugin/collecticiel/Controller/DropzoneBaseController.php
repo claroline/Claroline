@@ -5,13 +5,14 @@
  * Date: 22/08/13
  * Time: 09:30.
  */
+
 namespace Innova\CollecticielBundle\Controller;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-/* Partie log créé pour Innova */
+/* Logs for Innova */
 use Innova\CollecticielBundle\Event\Log\LogCommentCreateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCommentReadCreateEvent;
-/* Fin partie log créé pour Innova */
+/* end Logs for Innova */
 use Innova\CollecticielBundle\Event\Log\LogCorrectionDeleteEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionStartEvent;
@@ -26,6 +27,7 @@ use Innova\CollecticielBundle\Event\Log\LogDocumentOpenEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropEndEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropEvaluateEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropStartEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropReportEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneConfigureEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneManualRequestSentEvent;
@@ -41,36 +43,34 @@ class DropzoneBaseController extends Controller
     protected function dispatch($event)
     {
         if (
-            $event instanceof LogResourceReadEvent or
-            $event instanceof LogDropzoneConfigureEvent or
-/* Partie log créé pour Innova */
-            $event instanceof LogCommentReadCreateEvent or
-            $event instanceof LogCommentCreateEvent or
-            $event instanceof LogDropzoneManualRequestSentEvent or
-/* Fin partie log créé pour Innova */
-            $event instanceof LogCriterionCreateEvent or
-            $event instanceof LogCriterionUpdateEvent or
-            $event instanceof LogCriterionDeleteEvent or
-            $event instanceof LogDropStartEvent or
-            $event instanceof LogDropEndEvent or
-            $event instanceof LogDocumentCreateEvent or
-            $event instanceof LogDocumentDeleteEvent or
-            $event instanceof LogDocumentOpenEvent or
-            $event instanceof LogCorrectionStartEvent or
-            $event instanceof LogCorrectionEndEvent or
-            $event instanceof LogCorrectionUpdateEvent or
-            $event instanceof LogCorrectionDeleteEvent or
-            $event instanceof LogCorrectionValidationChangeEvent or
-            $event instanceof LogDropEvaluateEvent or
-            $event instanceof LogDropReportEvent or
-            $event instanceof LogDropzoneManualStateChangedEvent or
+            $event instanceof LogResourceReadEvent ||
+            $event instanceof LogDropzoneConfigureEvent ||
+            /* Logs for Innova */
+            $event instanceof LogCommentReadCreateEvent ||
+            $event instanceof LogCommentCreateEvent ||
+            $event instanceof LogDropzoneManualRequestSentEvent ||
+            /* end Logs for Innova */
+            $event instanceof LogCriterionCreateEvent ||
+            $event instanceof LogCriterionUpdateEvent ||
+            $event instanceof LogCriterionDeleteEvent ||
+            $event instanceof LogDropStartEvent ||
+            $event instanceof LogDropEndEvent ||
+            $event instanceof LogDocumentCreateEvent ||
+            $event instanceof LogDocumentDeleteEvent ||
+            $event instanceof LogDocumentOpenEvent ||
+            $event instanceof LogCorrectionStartEvent ||
+            $event instanceof LogCorrectionEndEvent ||
+            $event instanceof LogCorrectionUpdateEvent ||
+            $event instanceof LogCorrectionDeleteEvent ||
+            $event instanceof LogCorrectionValidationChangeEvent ||
+            $event instanceof LogDropEvaluateEvent ||
+            $event instanceof LogDropReportEvent ||
+            $event instanceof LogDropzoneManualStateChangedEvent ||
             $event instanceof LogDropzoneReturnReceiptEvent
         ) {
-
             // Other logs are WIP.
             $this->get('event_dispatcher')->dispatch('log', $event);
         }
-        //$this->get('event_dispatcher')->dispatch('log', $event);
 
         return $this;
     }

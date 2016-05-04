@@ -316,15 +316,6 @@ class PortfolioManager
             return $data;
         }
 
-        if ('dev' === $env) {
-            echo '<pre>';
-            foreach ($form->getErrors(true, false) as $formError) {
-                var_dump($formError->getMessage());
-                var_dump($formError->getMessageParameters());
-            }
-            echo '</pre>'.PHP_EOL;
-        }
-
         throw new \InvalidArgumentException();
     }
 

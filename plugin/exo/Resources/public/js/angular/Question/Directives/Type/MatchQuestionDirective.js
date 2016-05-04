@@ -80,6 +80,13 @@ var MatchQuestionDirective = function MatchQuestionDirective($timeout, MatchQues
                 }
 
             }.bind(this));
+
+            // On directive destroy, remove events
+            scope.$on('$destroy', function handleDestroyEvent() {
+                // TODO : remove drag'n'drop events
+                jsPlumb.detachEveryConnection();
+                jsPlumb.deleteEveryEndpoint();
+            });
         }
     };
 };

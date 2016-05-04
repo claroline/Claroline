@@ -6,6 +6,7 @@
  * InnovaERV : vu avec Axel car souci lors de la suppression
  * ajout de "cascade= {"remove", "persist"} pour resourceNode. Voir également deleteDocumentAction.
  */
+
 namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;

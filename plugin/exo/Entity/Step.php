@@ -60,7 +60,7 @@ class Step
      *
      * @ORM\Column(name="max_attempts", type="integer")
      */
-    private $maxAttempts = 0;
+    private $maxAttempts = 5;
 
     /**
      * @var int

@@ -8,6 +8,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Services for the graphic.
+ *
  * @DI\Service("ujm.exo.graphic_service")
  */
 class Graphic extends Interaction
@@ -42,8 +43,8 @@ class Graphic extends Interaction
         }
 
         $penalty = $this->getPenalty($interG->getQuestion(), $request->getSession(), $paperID);
-        $score   = $this->mark($answers, $rightCoords, $penalty);
-        $total   = $this->maxScore($interG); // Score max
+        $score = $this->mark($answers, $rightCoords, $penalty);
+        $total = $this->maxScore($interG); // Score max
 
         $res = array(
             'penalty' => $penalty, // Penalty (hints)
@@ -66,6 +67,7 @@ class Graphic extends Interaction
      * @param string                         $answer
      * @param \UJM\ExoBundle\Entity\Coords[] $rightCoords
      * @param number                         $penalty
+     *
      * @return float
      */
     public function mark($answer = null, array $rightCoords = null, $penalty = null)
@@ -117,6 +119,7 @@ class Graphic extends Interaction
      * Get score max possible for a graphic question.
      *
      * @param \UJM\ExoBundle\Entity\InteractionGraphic $interGraph
+     *
      * @return float
      */
     public function maxScore($interGraph = null)
@@ -138,6 +141,7 @@ class Graphic extends Interaction
      * implement the abstract method.
      *
      * @param int $questionId
+     *
      * @return \UJM\ExoBundle\Entity\InteractionGraphic
      */
     public function getInteractionX($questionId)

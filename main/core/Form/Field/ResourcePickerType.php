@@ -102,7 +102,7 @@ class ResourcePickerType extends TextType
     {
         if ($form->getData() instanceof ResourceNode) {
             return $form->getData();
-        } elseif ($form->getData() and $form->getData() != '') {
+        } elseif ($form->getData() && $form->getData() != '') {
             return $this->resourceManager->getById($form->getData());
         }
     }

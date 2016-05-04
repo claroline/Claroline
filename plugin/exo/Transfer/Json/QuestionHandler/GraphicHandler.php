@@ -39,7 +39,7 @@ class GraphicHandler implements QuestionHandlerInterface
      */
     public function __construct(ObjectManager $om, Graphic $graphicService)
     {
-        $this->om             = $om;
+        $this->om = $om;
         $this->graphicService = $graphicService;
     }
 

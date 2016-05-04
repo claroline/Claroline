@@ -64,6 +64,7 @@ class UserManager
     private $container;
     private $authorization;
     private $organizationManager;
+    private $groupManager;
 
     /**
      * Constructor.
@@ -83,7 +84,8 @@ class UserManager
      *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
      *     "transfertManager"       = @DI\Inject("claroline.manager.transfert_manager"),
      *     "container"              = @DI\Inject("service_container"),
-     *     "organizationManager"    = @DI\Inject("claroline.manager.organization.organization_manager")
+     *     "organizationManager"    = @DI\Inject("claroline.manager.organization.organization_manager"),
+     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager")
      * })
      */
     public function __construct(
@@ -101,7 +103,8 @@ class UserManager
         TransfertManager $transfertManager,
         OrganizationManager $organizationManager,
         $uploadsDirectory,
-        ContainerInterface $container
+        ContainerInterface $container,
+        GroupManager $groupManager
     ) {
         $this->userRepo = $objectManager->getRepository('ClarolineCoreBundle:User');
         $this->roleManager = $roleManager;
@@ -119,6 +122,7 @@ class UserManager
         $this->transfertManager = $transfertManager;
         $this->organizationManager = $organizationManager;
         $this->container = $container;
+        $this->groupManager = $groupManager;
     }
 
     /**
@@ -390,6 +394,12 @@ class UserManager
                 $modelName = null;
             }
 
+            if (isset($user[9])) {
+                $groupName = trim($user[9]) === '' ? null : $user[9];
+            } else {
+                $groupName = null;
+            }
+
             if ($modelName) {
                 $model = $this->objectManager
                     ->getRepository('Claroline\CoreBundle\Entity\Model\WorkspaceModel')
@@ -398,6 +408,7 @@ class UserManager
                 $model = null;
             }
 
+            $group = $groupName ? $this->groupManager->getGroupByName($groupName) : null;
             $newUser = new User();
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);
@@ -411,6 +422,10 @@ class UserManager
             $this->createUser($newUser, $sendMail, $additionalRoles, $model, $username.uniqid());
             $this->objectManager->persist($newUser);
             $returnValues[] = $firstName.' '.$lastName;
+
+            if ($group) {
+                $this->groupManager->addUsersToGroup($group, array($newUser));
+            }
 
             if ($logger) {
                 $logger(' [UOW size: '.$this->objectManager->getUnitOfWork()->size().']');
