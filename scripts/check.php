@@ -47,8 +47,11 @@ function ensureVersion($executable, $versionCmd, $minExpected)
     }
 
     $expected = explode('.', $minExpected);
+    $isUnderMajor = $matches[1] < $expected[0];
+    $hasSameMajor = $matches[1] === $expected[0];
+    $isUnderMinor = $matches[2] < $expected[1];
 
-    if ($matches[1] < $expected[0] || $matches[2] < $expected[1]) {
+    if ($isUnderMajor || $hasSameMajor && $isUnderMinor) {
         abort(sprintf(
             'Expected %s >= %s, found %s.%s',
             $executable,
