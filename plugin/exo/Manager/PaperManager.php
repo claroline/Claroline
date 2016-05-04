@@ -457,4 +457,37 @@ class PaperManager
 
         return $paperQuestions;
     }
+
+    /**
+     * Returns array of array with the indexs "step" and "question"
+     *
+     * @param Paper $paper
+     *
+     * @return array
+     */
+    public function getStepsQuestions($paper)
+    {
+        $qIds = explode(';', substr($paper->getOrdreQuestion(), 0, -1));
+        //to keep the questions order
+        foreach ($qIds as $qid) {
+            $q = $this->om->getRepository('UJMExoBundle:Question')->find($qid);
+            $questions[] = $q;
+        }
+
+        $exercise  = $paper->getExercise();
+        $stepsQuestions = array();
+        $i = 0;
+
+        foreach ($exercise->getSteps() as $step) {
+            //to keep the questions order
+            $sqs = $this->om->getRepository('UJMExoBundle:StepQuestion')->findBy(array('step' => $step));
+            foreach ($sqs as $sq) {
+                $stepsQuestions[$i]['step'] = $sq->getStep()->getId();
+                $stepsQuestions[$i]['question'] = $sq->getQuestion()->getId();
+                $i++;
+            }
+        }
+
+        return $stepsQuestions;
+    }
 }
