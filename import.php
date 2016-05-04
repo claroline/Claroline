@@ -20,7 +20,7 @@ cmd("git branch -f {$bundle} {$bundle}/master");
 cmd("git checkout {$bundle}");
 cmd("git pull --no-tags {$bundle} master");
 cmd("git filter-branch -f --msg-filter 'sed \"1 s/^/[{$bundle}] /\"' HEAD");
-cmd('git checkout import-module');
+cmd('git checkout import-flashcard');
 cmd("git read-tree --prefix={$prefix}/ -u {$bundle}");
 cmd("git commit -m 'Import {$bundle}'");
 cmd("git merge -s subtree {$bundle}");
