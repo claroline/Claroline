@@ -1,0 +1,90 @@
+<div class='panel-heading chapter_title'>
+    <h4>
+        {{ 'chapter_duplicate'|trans: 'icap_lesson' }}
+    </h4>
+</div>
+
+<form
+        novalidate
+        name="duplicateForm"
+        class="form-horizontal">
+    <fieldset>
+        <div class='chapter_content'>
+            <div class="control-group">
+                <div class="controls">
+                    {{::vm.chapter.current.title}}
+                </div>
+            </div>
+            <div class="control-group">
+                <div>
+                    <label
+                            class="control-label"
+                            for="icap_lesson_duplicatechaptertype_title">
+                        {{ 'duplicate_title'|trans: 'icap_lesson' }}
+                    </label>
+                    <div class="controls">
+                        <input
+                                type="text"
+                                id="icap_lesson_duplicatechaptertype_title"
+                                name="title"
+                                required
+                                class="form-control"
+                                data-ng-model="vm.chapter.current.title"
+                                data-uib-popover="{{ 'field_mandatory'|trans: 'icap_lesson' }}"
+                                data-popover-trigger="none"
+                                data-popover-is-open="duplicateForm.$submitted && duplicateForm.title.$invalid"
+                        />
+                        <label class="control-label" for="icap_lesson_duplicatechaptertype_chapters">
+                            {{ 'duplicate_destination'|trans: 'icap_lesson' }}
+                        </label>
+                        <select
+                                id="icap_lesson_duplicatechaptertype_chapters"
+                                name="parent"
+                                required
+                                class="form-control"
+                                data-ng-model="vm.chapter.current.parent"
+                                data-ng-options="chapter.slug as chapter.title for chapter in vm.lessonData.chapters">
+                        </select>
+                    </div>
+
+                    <div data-ng-if="vm.chapter.hasChildren">
+                        <input
+                                type="checkbox"
+                                id="icap_lesson_duplicatechaptertype_duplicate_children"
+                                name="copyChildren"
+                                data-ng-model="vm.copyChildren"
+                                class="control-standalone control-standalone"
+                                value="1"
+                        />
+                        <label
+                                class="control-label"
+                                for="icap_lesson_duplicatechaptertype_duplicate_children">
+                            {{ 'duplicate_children'|trans: 'icap_lesson' }}
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <br/>
+
+    <div class="form-actions">
+        <button
+                type="submit"
+                class="btn btn-primary"
+                data-ng-disabled="vm.buttonSubmit.disabled"
+                data-ng-click="vm.copyChapter(duplicateForm)"
+                >
+            {{ 'Ok'|trans: 'icap_lesson' }}
+        </button>
+        <button
+                type="cancel"
+                class="btn btn-default"
+                data-ng-click="vm.cancelForm(vm.chapter.current.slug)">
+            {{ 'Cancel'|trans: 'icap_lesson' }}
+        </button>
+    </div>
+
+</form>

@@ -130,7 +130,8 @@
         "claroline/pdf-generator-bundle": "*",
         "claroline/dev-bundle": "*",
         "innova/video-recorder-bundle": "*",
-        "innova/audio-recorder-bundle": "*"
+        "innova/audio-recorder-bundle": "*",
+        "icap/lesson-bundle": "*"
     },
     "autoload": {
         "psr-4": {
@@ -179,7 +180,8 @@
             "Claroline\\WebInstaller\\": "main/web-installer/",
             "Icap\\WebsiteBundle\\": "plugin/website",
             "Innova\\VideoRecorderBundle\\": "plugin/video-recorder",
-            "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder"
+            "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder",
+            "Icap\\LessonBundle\\": "plugin/lesson"
         }
     },
     "extra": {
@@ -227,7 +229,8 @@
             "Claroline\\DevBundle\\ClarolineDevBundle",
             "Icap\\WebsiteBundle\\IcapWebsiteBundle",
             "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle",
-            "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle"
+            "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle",
+            "Icap\\LessonBundle\\IcapLessonBundle"
         ]
     }
 }
