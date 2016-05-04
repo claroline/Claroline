@@ -480,11 +480,13 @@ class PaperManager
 
         foreach ($exercise->getSteps() as $step) {
             //to keep the questions order
-            $sqs = $this->om->getRepository('UJMExoBundle:StepQuestion')->findBy(array('step' => $step));
-            foreach ($sqs as $sq) {
-                $stepsQuestions[$i]['step'] = $sq->getStep()->getId();
-                $stepsQuestions[$i]['question'] = $sq->getQuestion()->getId();
-                $i++;
+            foreach ($questions as $question) {
+                $sq = $this->om->getRepository('UJMExoBundle:StepQuestion')->findOneBy(array('step' => $step, 'question' => $question));
+                if ($sq) {
+                    $stepsQuestions[$i]['step'] = $sq->getStep()->getId();
+                    $stepsQuestions[$i]['question'] = $sq->getQuestion()->getId();
+                    $i++;
+                }
             }
         }
 
