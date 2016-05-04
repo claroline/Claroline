@@ -19,7 +19,7 @@ $env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?:
 $debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(array('--no-debug', '')) && $env !== 'prod';
 
 if ($debug) {
-    Debug::enable(E_ALL ^ ~E_DEPRECATED);
+    Debug::enable();
 }
 
 $kernel = new AppKernel($env, $debug);
