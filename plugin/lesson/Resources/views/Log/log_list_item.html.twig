@@ -1,0 +1,21 @@
+{% set chapter %}
+    {% include 'IcapLessonBundle:Log:log_list_item_chapter.html.twig' %}
+{% endset %}
+
+{% set resource %}
+    {% include 'ClarolineCoreBundle:Log:view_list_item_resource.html.twig' %}
+{% endset %}
+
+{% if constant('Icap\\LessonBundle\\Event\\Log\\LogChapterCreateEvent::ACTION') == log.action %}
+    {{ 'log.lesson.create_chapter'|trans({'%lesson%': resource, '%chapter%': chapter}, 'log')|raw }}
+{% elseif constant('Icap\\LessonBundle\\Event\\Log\\LogChapterReadEvent::ACTION') == log.action %}
+    {{ 'log.lesson.read_chapter'|trans({'%lesson%': resource, '%chapter%': chapter}, 'log')|raw }}
+{% elseif constant('Icap\\LessonBundle\\Event\\Log\\LogChapterUpdateEvent::ACTION') == log.action %}
+    {{ 'log.lesson.update_chapter'|trans({'%lesson%': resource, '%chapter%': chapter}, 'log')|raw }}
+{% elseif constant('Icap\\LessonBundle\\Event\\Log\\LogChapterDeleteEvent::ACTION') == log.action %}
+    {{ 'log.lesson.delete_chapter'|trans({'%lesson%': resource, '%chapter%': chapter}, 'log')|raw }}
+{% elseif constant('Icap\\LessonBundle\\Event\\Log\\LogChapterMoveEvent::ACTION') == log.action %}
+    {{ 'log.lesson.move_chapter'|trans({'%lesson%': resource, '%chapter%': chapter}, 'log')|raw }}
+{% else %}
+    no default text
+{% endif %}

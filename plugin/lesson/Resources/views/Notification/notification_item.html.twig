@@ -1,0 +1,17 @@
+{% extends 'IcapNotificationBundle:Templates:notification.html.twig' %}
+{% set avatarUrlPrefix = asset('uploads/pictures/') %}
+
+{% block notificationText %}
+    {% if notification.userId is not empty and notification.details.doer is defined %}
+        <a href="{{ path('claro_public_profile_view', {'publicUrl' : notification.userId}) }}"><strong>{{ notification.details.doer.firstName ~ ' ' ~ notification.details.doer.lastName }}</strong></a>
+    {% else %}
+        <strong>{{ systemName }}</strong>
+    {% endif %}
+    {% if constant('Icap\\LessonBundle\\Event\\Log\\LogChapterCreateEvent::ACTION') == notification.actionKey %}
+        {% include 'IcapLessonBundle:Notification:notification_chapter_create.html.twig' %}
+    {% elseif constant('Icap\\LessonBundle\\Event\\Log\\LogChapterUpdateEvent::ACTION') == notification.actionKey %}
+        {% include 'IcapLessonBundle:Notification:notification_chapter_update.html.twig' %}
+    {% elseif 'resource-icap_lesson-user_tagged' == notification.actionKey %}
+        {% include 'IcapLessonBundle:Notification:notification_user_tagged.html.twig' %}
+    {% endif %}
+{% endblock %}

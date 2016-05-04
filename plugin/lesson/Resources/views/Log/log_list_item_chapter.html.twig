@@ -1,0 +1,7 @@
+{% if log.details.chapter is defined and log.details.chapter.chapter is defined and log.details.chapter.chapter != null %}
+    <a href="{{ path('icap_lesson_chapter', {'resourceId': log.details.chapter.lesson, 'chapterId': log.details.chapter.chapter }) }}">
+        <strong>{{ log.details.chapter.title }}</strong>
+    </a>
+{% else %}
+       <strong>{{ log.details.chapter.title }}</strong>
+{% endif %}
