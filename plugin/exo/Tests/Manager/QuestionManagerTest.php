@@ -53,7 +53,7 @@ class QuestionManagerTest extends TransactionalTestCase
      */
     public function testQcmQuestionRoundTrip($dataFilename)
     {
-        $this->loadQuestionTypeFixture();
+//        $this->loadQuestionTypeFixture();
 
         $originalCompData = $this->loadData("question/valid/complete/{$dataFilename}");
         $originalEvalData = $this->loadData("question/valid/evaluation/{$dataFilename}");
@@ -92,7 +92,7 @@ class QuestionManagerTest extends TransactionalTestCase
      */
     public function testMatchQuestionRoundTrip($dataFilename)
     {
-        $this->loadQuestionTypeFixture();
+//        $this->loadQuestionTypeFixture();
 
         $originalCompData = $this->loadData("question/valid/complete/{$dataFilename}");
         $originalEvalData = $this->loadData("question/valid/evaluation/{$dataFilename}");

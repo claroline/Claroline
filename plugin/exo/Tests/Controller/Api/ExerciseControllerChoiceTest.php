@@ -51,9 +51,8 @@ class ExerciseControllerChoiceTest extends TransactionalTestCase
 
         $this->persist->role('ROLE_ADMIN');
         $this->admin = $this->persist->user('admin');
-
-        $this->ch1 = $this->persist->qcmChoice('ch1', 1);
-        $this->ch2 = $this->persist->qcmChoice('ch2', 0);
+        $this->ch1 = $this->persist->qcmChoice('ch1',1, 1);
+        $this->ch2 = $this->persist->qcmChoice('ch2',2, 0);
         $this->qu1 = $this->persist->qcmQuestion('qu1', [$this->ch1, $this->ch2]);
         $this->hi1 = $this->persist->hint($this->qu1, 'hi1');
         $this->ex1 = $this->persist->exercise('ex1', [$this->qu1], $this->john);
