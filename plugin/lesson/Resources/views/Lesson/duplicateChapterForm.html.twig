@@ -1,0 +1,37 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+<div class='panel-heading chapter_title'><h4>{{ 'chapter_duplicate'|trans({}, 'icap_lesson') }}</h4></div>
+<form id='duplicate_form' method="post" action="{{ path('icap_lesson_duplicate_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
+    <fieldset>
+        <div class='chapter_content'>
+            <div class="control-group">
+                {#            <label class="control-label" for="icap_lesson_chaptertype_title">{{ 'Title'|trans({}, 'icap_lesson') }}</label>#}
+                <div class="controls">
+                    {{ chapter.title }}
+                </div>
+            </div>
+            <div class="control-group">
+                <div>
+                    <label class="control-label" for="icap_lesson_duplicatechaptertype_title">{{ 'duplicate_title'|trans({}, 'icap_lesson') }}</label>
+                    {{ form_widget(form.title) }}
+                    <label class="control-label" for="icap_lesson_duplicatechaptertype_chapters">{{ 'duplicate_destination'|trans({}, 'icap_lesson') }}</label>
+                    {{ form_widget(form.parent) }}
+                </div>
+                {#<label class="control-label" for="icap_lesson_duplicatechaptertype_duplicate_children">{{ 'duplicate_children'|trans({}, 'icap_lesson') }}</label>#}
+                {% if form.duplicate_children is defined %}
+                    {{ form_widget(form.duplicate_children) }}
+                    <label class="control-label" for="icap_lesson_duplicatechaptertype_duplicate_children">{{ 'duplicate_children'|trans({}, 'icap_lesson') }}</label>
+                {%  endif %}
+            </div>
+            {{ form_rest(form) }}
+        </div>
+    </fieldset>
+    {{ macros.flashBox() }}
+    <br/>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ 'Ok'|trans({}, 'icap_lesson') }}</button>
+        <a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.slug }) }}">
+            <button type="button" class="btn btn-default">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button>
+        </a>
+    </div>
+</form>

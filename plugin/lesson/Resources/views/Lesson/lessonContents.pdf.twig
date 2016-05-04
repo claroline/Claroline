@@ -1,0 +1,18 @@
+{% macro lesson_contents_pdf(chapters, delimeter, prefix) %}
+    {% for chapter in chapters %}
+        <li id="li-{{ chapter.id }}" data-chapter="{{ chapter.id }}">
+            <a href="#chapter-{{chapter.id}}">
+                {{prefix ~ loop.index}}&nbsp;{{ chapter.title }}
+            </a>
+            <ul id="ul-{{ chapter.id }}" class="no-bullet-list" data-chapter="{{ chapter.id }}">
+                {% if chapter.__children is not empty %}
+                    {{ _self.lesson_contents_pdf(chapter.__children, delimeter, prefix ~ loop.index ~ delimeter) }}
+                {% endif %}
+            </ul>
+        </li>
+    {% endfor %}
+{% endmacro %}
+
+<ul id="lesson-contents-list" data-chapter="{{ rootId }}" class="no-bullet-list">
+    {{ _self.lesson_contents_pdf(chapters, delimeter, "") }}
+</ul>
