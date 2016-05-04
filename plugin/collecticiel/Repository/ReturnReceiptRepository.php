@@ -16,11 +16,6 @@ use Innova\CollecticielBundle\Entity\Document;
 class ReturnReceiptRepository extends EntityRepository
 {
     /**
-     *  Fonctions créées pour InnovaCollecticielBundle.
-     *  InnovaERV.
-     */
-
-    /**
      *  Pour avoir le type d'accusé de réception pour l'utilisateur indiqué et le dropzone indiqué.
      *
      * @param $userId
@@ -28,8 +23,6 @@ class ReturnReceiptRepository extends EntityRepository
      */
     public function haveReturnReceiptOrNot(User $user, Dropzone $dropzone)
     {
-
-        /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->select('returnreceipt')
             ->andWhere('returnreceipt.dropzone = :dropzone')
@@ -48,8 +41,6 @@ class ReturnReceiptRepository extends EntityRepository
      */
     public function countTextToRead(User $user, Dropzone $dropzone)
     {
-
-        /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->select('returnreceipt')
             ->Join('returnreceipt.document', 'document')
@@ -73,8 +64,6 @@ class ReturnReceiptRepository extends EntityRepository
      */
     public function countTextToReadAll(User $user, Dropzone $dropzone)
     {
-
-        /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->select('returnreceipt')
             ->Join('returnreceipt.document', 'document')
@@ -96,8 +85,6 @@ class ReturnReceiptRepository extends EntityRepository
      */
     public function haveReturnReceiptOrNotForADocument(User $user, Dropzone $dropzone, Document $document)
     {
-
-        /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->select('returnreceipt')
             ->andWhere('returnreceipt.user = :user')
@@ -118,8 +105,6 @@ class ReturnReceiptRepository extends EntityRepository
      */
     public function doneReturnReceiptForADocument(Dropzone $dropzone, Document $document)
     {
-
-        /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->select('returnreceipt')
             ->andWhere('returnreceipt.dropzone = :dropzone')
@@ -138,8 +123,6 @@ class ReturnReceiptRepository extends EntityRepository
      */
     public function doneReturnReceiptForOneDocument(Document $document)
     {
-
-        /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->select('returnreceipt')
             ->andWhere('returnreceipt.document = :document')
@@ -157,10 +140,6 @@ class ReturnReceiptRepository extends EntityRepository
      */
     public function deleteReturnReceipt(User $user, Dropzone $dropzone, Document $document)
     {
-
-        /* #254 : on supprime tous les AR avant de créer le nouveau */
-
-        /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->delete()
             ->andWhere('returnreceipt.dropzone = :dropzone')

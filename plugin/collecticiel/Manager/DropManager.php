@@ -87,7 +87,7 @@ class DropManager
         return $drop;
     }
 
-    public function getTeacherComments(Drop $drop)
+    public function getDropTeacherComments(Drop $drop)
     {
         $teacherComments = array();
         $dropzone = $drop->getDropzone();
@@ -151,5 +151,53 @@ class DropManager
         }
 
         return $userRequestCount;
+    }
+
+    public function countDocsWithoutReceipt($drops)
+    {
+        $docWithoutReceiptCount = 0;
+        foreach ($drops as $drop) {
+            foreach ($drop->getDocuments() as $document) {
+                $returnReceiptType = $this->receiptRepo->doneReturnReceiptForADocument($drop->getDropzone(), $document);
+                // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
+                $id = 0;
+                if (!empty($returnReceiptType)) {
+                    // Récupération de la valeur de l'accusé de réceptoin
+                    $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
+                    if ($id == 0) {
+                        ++$docWithoutReceiptCount;
+                    }
+                } else {
+                    ++$docWithoutReceiptCount;
+                }
+            }
+        }
+
+        return $docWithoutReceiptCount;
+    }
+
+    public function getTeacherComments($drops, $workspace)
+    {
+        $teacherDocComments = array();
+
+        foreach ($drops as $drop) {
+            foreach ($drop->getDocuments() as $document) {
+                $userComments = $this->commentRepo->teacherCommentDocArray($document);
+                $foundAdminComment = false;
+                for ($i = 0; $i < count($userComments); ++$i) {
+                    $user = $userComments[$i]->getUser();
+                    $roles = $this->roleManager->getWorkspaceRolesForUser($user, $workspace);
+                    for ($j = 0; $j < count($roles); ++$j) {
+                        $roleName = $roles[$j]->getName();
+                        if (strpos('_'.$roleName, 'ROLE_WS_MANAGER') === 1 && !$foundAdminComment) {
+                            $teacherDocComments[$document->getId()] = $user->getFirstName().' '.$user->getLastName();
+                            $foundAdminComment = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $teacherDocComments;
     }
 }
