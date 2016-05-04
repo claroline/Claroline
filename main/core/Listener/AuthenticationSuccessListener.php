@@ -14,12 +14,14 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\TermsOfServiceType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Templating\EngineInterface;
@@ -40,16 +42,28 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
  */
 class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInterface
 {
+    /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var StrictDispatcher */
     private $eventDispatcher;
+    /** @var PlatformConfigurationHandler */
     private $configurationHandler;
+    /** @var EngineInterface */
     private $templating;
+    /** @var FormFactory */
     private $formFactory;
+    /** @var TermsOfServiceManager */
     private $termsOfService;
+    /** @var ObjectManager */
     private $manager;
+    /** @var Router */
     private $router;
+    /** @var UserManager */
     private $userManager;
+    /** @var RequestStack */
+    private $requestStack;
 
     /**
      * @DI\InjectParams({
@@ -62,7 +76,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      *     "termsOfService"         = @DI\Inject("claroline.common.terms_of_service_manager"),
      *     "manager"                = @DI\Inject("claroline.persistence.object_manager"),
      *     "router"                 = @DI\Inject("router"),
-     *     "userManager"            = @DI\Inject("claroline.manager.user_manager")
+     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
+     *     "requestStack"           = @DI\Inject("request_stack")
      * })
      */
     public function __construct(
@@ -75,7 +90,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         TermsOfServiceManager $termsOfService,
         ObjectManager $manager,
         Router $router,
-        UserManager $userManager
+        UserManager $userManager,
+        RequestStack $requestStack
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -87,6 +103,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->manager = $manager;
         $this->router = $router;
         $this->userManager = $userManager;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -106,9 +123,27 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $defaultWorkspaceTag = $this->configurationHandler->getParameter('default_workspace_tag');
 
-        if (!is_null($defaultWorkspaceTag)) {
+        if ($uri = $request->getSession()->get('_security.main.target_path')) {
+            return new RedirectResponse($uri);
+        }
+
+        if ($this->configurationHandler->isRedirectOption(PlatformConfiguration::$REDIRECT_OPTIONS['DESKTOP'])) {
+            return new RedirectResponse($this->router->generate('claro_desktop_open'));
+        } elseif (
+            $this->configurationHandler->isRedirectOption(PlatformConfiguration::$REDIRECT_OPTIONS['LAST'])
+            && $uri = $request->getSession()->get('redirect_route')
+        ) {
+            return new RedirectResponse($uri);
+        } elseif (
+            $this->configurationHandler->isRedirectOption(PlatformConfiguration::$REDIRECT_OPTIONS['URL'])
+            && null !== $url = $this->configurationHandler->getParameter('redirect_after_login_url')
+        ) {
+            return new RedirectResponse($url);
+        } elseif (
+            $this->configurationHandler->isRedirectOption(PlatformConfiguration::$REDIRECT_OPTIONS['WORKSPACE_TAG'])
+            && null !== $defaultWorkspaceTag = $this->configurationHandler->getParameter('default_workspace_tag')
+        ) {
             $event = $this->eventDispatcher->dispatch(
                 'claroline_retrieve_user_workspaces_by_tag',
                 'GenericDatas',
@@ -134,20 +169,6 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             }
         }
 
-        if ($uri = $request->getSession()->get('redirect_route')) {
-            $request->getSession()->remove('redirect_route');
-
-            return new RedirectResponse($uri);
-        }
-
-        if ($uri = $request->getSession()->get('_security.main.target_path')) {
-            return new RedirectResponse($uri);
-        }
-
-        if ($this->configurationHandler->getParameter('redirect_after_login') && $user->getLastUri() !== null) {
-            return new RedirectResponse($user->getLastUri());
-        }
-
         return new RedirectResponse($this->router->generate('claro_desktop_open'));
     }
 
@@ -164,30 +185,31 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     }
 
     /**
-     * @DI\Observe("kernel.response")
+     * @DI\Observe("kernel.response", priority = 1)
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if ($this->configurationHandler->getParameter('redirect_after_login')) {
+        if ($this->configurationHandler->isRedirectOption(PlatformConfiguration::$REDIRECT_OPTIONS['LAST'])) {
             $this->saveLastUri($event);
         }
     }
 
     private function saveLastUri(FilterResponseEvent $event)
     {
+        $request = $event->getRequest();
+        $route = $request->attributes->get('_route');
         if ($event->isMasterRequest()
-            && !$event->getRequest()->isXmlHttpRequest()
-            && !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes())
-            && 'GET' === $event->getRequest()->getMethod()
+            && !empty($route)
+            && !$request->isXmlHttpRequest()
+            && 'GET' === $request->getMethod()
             && 200 === $event->getResponse()->getStatusCode()
             && !$event->getResponse() instanceof StreamedResponse
+            && !$this->isRouteExcluded($route)
         ) {
             if ($token = $this->tokenStorage->getToken()) {
-                if ('anon.' !== $user = $token->getUser()) {
-                    $uri = $event->getRequest()->getRequestUri();
-                    $user->setLastUri($uri);
-                    $this->manager->persist($user);
-                    $this->manager->flush();
+                if ('anon.' === $user = $token->getUser()) {
+                    $uri = $request->getRequestUri();
+                    $request->getSession()->set('redirect_route', $uri);
                 }
             }
         }
@@ -240,12 +262,30 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         }
     }
 
+    /**
+     * Tests if given route is one of excluded routes.
+     * Excluded routes are:
+     * 1. all login routes (claro_security_login, claro_security_*)
+     * 2. register routes
+     * 3. oauth routes and oauth redirect routes.
+     *
+     * @param $route
+     *
+     * @return bool
+     */
+    private function isRouteExcluded($route)
+    {
+        return in_array($route, $this->getExcludedRoutes()) || preg_match('/(claro_security_|oauth_|_login)/', $route);
+    }
+
     private function getExcludedRoutes()
     {
         return array(
+            'bazinga_jstranslation_js',
             'bazinga_exposetranslation_js',
             'login_check',
             'login',
+            'claro_registration_user_registration_form',
         );
     }
 

@@ -21,180 +21,96 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class WidgetHomeTabConfigRepository extends EntityRepository implements ContainerAwareInterface
 {
-    private $bundles = [];
     private $container;
-
-    const LEFT_JOIN_PLUGIN = '
-        LEFT JOIN whtc.widgetInstance instance
-        JOIN instance.widget widget
-        LEFT JOIN widget.plugin plugin
-    ';
-
-    const WHERE_PLUGIN_ENABLED = '
-        (CONCAT(plugin.vendorName, plugin.bundleName) IN (:bundles)
-        OR widget.plugin is NULL)
-    ';
 
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
-        $this->bundles = $this->container->get('claroline.manager.plugin_manager')->getEnabled(true);
     }
 
     public function findAdminWidgetConfigs(HomeTab $homeTab)
     {
-        $dql = "
-            SELECT whtc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN.'
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.user IS NULL
-            AND whtc.workspace IS NULL'
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            ORDER BY whtc.widgetOrder ASC
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->getResult();
+        return $this->buildBaseQuery($homeTab)
+            ->andWhere('whtc.workspace IS NULL')
+            ->andWhere('whtc.user IS NULL')
+            ->getQuery()
+            ->getResult();
     }
 
     public function findVisibleAdminWidgetConfigs(HomeTab $homeTab)
     {
-        $dql = "
-            SELECT whtc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN.'
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.user IS NULL
-            AND whtc.workspace IS NULL'
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            AND whtc.visible = true
-            ORDER BY whtc.widgetOrder ASC
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->getResult();
+        return $this->buildBaseQuery($homeTab)
+            ->andWhere('whtc.workspace IS NULL')
+            ->andWhere('whtc.user IS NULL')
+            ->andWhere('whtc.visible = true')
+            ->getQuery()
+            ->getResult();
     }
 
     public function findWidgetConfigsByUser(HomeTab $homeTab, User $user)
     {
-        $dql = "
-            SELECT whtc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN.'
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.user = :user
-            AND whtc.workspace IS NULL'
-            .' AND '.self::WHERE_PLUGIN_ENABLED."
-            AND whtc.type = 'desktop'
-            ORDER BY whtc.widgetOrder ASC
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('user', $user);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->getResult();
+        return $this->buildBaseQuery($homeTab)
+            ->andWhere('whtc.workspace IS NULL')
+            ->andWhere('whtc.user = :user')
+            ->andWhere("whtc.type = 'desktop'")
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
     }
 
     public function findVisibleWidgetConfigsByUser(HomeTab $homeTab, User $user)
     {
-        $dql = "
-            SELECT whtc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN."
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.user = :user
-            AND whtc.workspace IS NULL
-            AND whtc.type = 'desktop'
-            AND whtc.visible = true"
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            ORDER BY whtc.widgetOrder ASC
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('user', $user);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->getResult();
+        return $this->buildBaseQuery($homeTab)
+            ->andWhere('whtc.workspace IS NULL')
+            ->andWhere('whtc.user = :user')
+            ->andWhere("whtc.type = 'desktop'")
+            ->andWhere('whtc.visible = true')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
     }
 
-    public function findWidgetConfigsByWorkspace(
-        HomeTab $homeTab,
-        Workspace $workspace
-    ) {
-        $dql = "
-            SELECT whtc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN."
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.workspace = :workspace
-            AND whtc.user IS NULL
-            AND whtc.type = 'workspace'"
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            ORDER BY whtc.widgetOrder ASC
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->getResult();
+    public function findWidgetConfigsByWorkspace(HomeTab $homeTab, Workspace $workspace)
+    {
+        return $this->buildBaseQuery($homeTab)
+            ->andWhere('whtc.workspace = :workspace')
+            ->andWhere('whtc.user IS NULL')
+            ->andWhere("whtc.type = 'workspace'")
+            ->setParameter('workspace', $workspace)
+            ->getQuery()
+            ->getResult();
     }
 
-    public function findVisibleWidgetConfigsByWorkspace(
-        HomeTab $homeTab,
-        Workspace $workspace
-    ) {
-        $dql = "
-            SELECT whtc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN."
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.workspace = :workspace
-            AND whtc.user IS NULL
-            AND whtc.type = 'workspace'
-            AND whtc.visible = true"
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            ORDER BY whtc.widgetOrder ASC
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->getResult();
+    public function findVisibleWidgetConfigsByWorkspace(HomeTab $homeTab, Workspace $workspace)
+    {
+        return $this->buildBaseQuery($homeTab)
+            ->andWhere('whtc.workspace = :workspace')
+            ->andWhere('whtc.user IS NULL')
+            ->andWhere("whtc.type = 'workspace'")
+            ->andWhere('whtc.visible = true')
+            ->setParameter('workspace', $workspace)
+            ->getQuery()
+            ->getResult();
     }
 
-    public function findVisibleWidgetConfigsByTabIdAndWorkspace(
-        $homeTabId,
-        Workspace $workspace
-    ) {
-        $dql = "
-            SELECT whtc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN."
-            JOIN Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
-            WITH htc.homeTab = :homeTabId
-            WHERE whtc.homeTab = :homeTabId
-            AND htc.visible = true
-            AND whtc.workspace = :workspace
-            AND whtc.user IS NULL
-            AND whtc.type = 'workspace'
-            AND whtc.visible = true"
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            ORDER BY whtc.widgetOrder ASC
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTabId', $homeTabId);
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->getResult();
+    public function findVisibleWidgetConfigsByTabIdAndWorkspace($homeTabId, Workspace $workspace)
+    {
+        return $this->buildBaseQuery($homeTabId)
+            ->join(
+                'Claroline\CoreBundle\Entity\Home\HomeTabConfig',
+                'htc',
+                'WITH',
+                'htc.homeTab = :homeTabId'
+            )
+            ->where('htc.homeTab = :homeTabId')
+            ->andWhere('htc.visible = true')
+            ->andWhere('whtc.workspace = :workspace')
+            ->andWhere('whtc.user IS NULL')
+            ->andWhere("whtc.type = 'workspace'")
+            ->andWhere('whtc.visible = true')
+            ->setParameter('workspace', $workspace)
+            ->getQuery()
+            ->getResult();
     }
 
     public function findVisibleWidgetConfigByWidgetIdAndTabIdAndWorkspace(
@@ -202,48 +118,61 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $homeTabId,
         Workspace $workspace
     ) {
-        $dql = "
-            SELECT whtc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN."
-            JOIN Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
-            WITH htc.homeTab = :homeTabId
-            WHERE whtc.homeTab = :homeTabId"
-            .' AND '.self::WHERE_PLUGIN_ENABLED."
-            AND htc.visible = true
-            AND whtc.workspace = :workspace
-            AND whtc.user IS NULL
-            AND whtc.type = 'workspace'
-            AND whtc.visible = true
-            AND whtc.widgetInstance = :widgetId
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('widgetId', $widgetId);
-        $query->setParameter('homeTabId', $homeTabId);
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('bundles', $this->bundles);
+        return $this->buildBaseQuery($homeTabId)
+            ->join(
+                'Claroline\CoreBundle\Entity\Home\HomeTabConfig',
+                'htc',
+                'WITH',
+                'htc.homeTab = :homeTab'
+            )
+            ->where('htc.homeTab = :homeTab')
+            ->andWhere('htc.visible = true')
+            ->andWhere('whtc.workspace = :workspace')
+            ->andWhere('whtc.user IS NULL')
+            ->andWhere("whtc.type = 'workspace'")
+            ->andWhere('whtc.visible = true')
+            ->andWhere('whtc.widgetInstance = :widgetId')
+            ->setParameter('workspace', $workspace)
+            ->setParameter('widgetId', $widgetId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
-        return $query->getOneOrNullResult();
+    public function findUserAdminWidgetHomeTabConfig(
+        HomeTab $homeTab,
+        WidgetInstance $widgetInstance,
+        User $user
+    ) {
+        return $this->buildBaseQuery($homeTab)
+            ->andWhere('whtc.user = :user')
+            ->andWhere('whtc.workspace IS NULL')
+            ->andWhere("whtc.type = 'admin_desktop'")
+            ->andWhere('whtc.widgetInstance = :widgetInstance')
+            ->setParameter('user', $user)
+            ->setParameter('widgetInstance', $widgetInstance)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findWidgetHomeTabConfigsByHomeTabAndType(HomeTab $homeTab, $type)
+    {
+        return $this->buildBaseQuery($homeTab)
+            ->andWhere('whtc.type = :type')
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getResult();
     }
 
     public function updateAdminWidgetHomeTabConfig(HomeTab $homeTab, $widgetOrder)
     {
-        $dql = "
-            UPDATE Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN.'
-            SET whtc.widgetOrder = whtc.widgetOrder - 1
-            WHERE whtc.homeTab = :homeTab'
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            AND whtc.user IS NULL
-            AND whtc.workspace IS NULL
-            AND whtc.widgetOrder > :widgetOrder
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('widgetOrder', $widgetOrder);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->execute();
+        return $this->buildBaseQuery($homeTab, true)
+            ->set('whtc.widgetOrder', 'whtc.widgetOrder - 1')
+            ->where('whtc.user IS NULL')
+            ->andWhere('whtc.workspace IS NULL')
+            ->andWhere('whtc.widgetOrder > :widgetOrder')
+            ->setParameter('widgetOrder', $widgetOrder)
+            ->getQuery()
+            ->execute();
     }
 
     public function updateWidgetHomeTabConfigByUser(
@@ -251,23 +180,15 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $widgetOrder,
         User $user
     ) {
-        $dql = "
-            UPDATE Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN.'
-            SET whtc.widgetOrder = whtc.widgetOrder - 1
-            WHERE whtc.homeTab = :homeTab'
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            AND whtc.user = :user
-            AND whtc.workspace IS NULL
-            AND whtc.widgetOrder > :widgetOrder
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('user', $user);
-        $query->setParameter('widgetOrder', $widgetOrder);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->execute();
+        return $this->buildBaseQuery($homeTab, true)
+            ->set('whtc.widgetOrder', 'whtc.widgetOrder - 1')
+            ->where('whtc.user = :user')
+            ->andWhere('whtc.workspace IS NULL')
+            ->andWhere('whtc.widgetOrder > :widgetOrder')
+            ->setParameter('user', $user)
+            ->setParameter('widgetOrder', $widgetOrder)
+            ->getQuery()
+            ->execute();
     }
 
     public function updateWidgetHomeTabConfigByWorkspace(
@@ -275,23 +196,14 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $widgetOrder,
         Workspace $workspace
     ) {
-        $dql = "
-            UPDATE Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN.'
-            SET whtc.widgetOrder = whtc.widgetOrder - 1
-            WHERE whtc.homeTab = :homeTab'
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            AND whtc.workspace = :workspace
-            AND whtc.user IS NULL
-            AND whtc.widgetOrder > :widgetOrder
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('widgetOrder', $widgetOrder);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->execute();
+        return $this->buildBaseQuery($homeTab, true)
+            ->set('whtc.widgetOrder', 'whtc.widgetOrder - 1')
+            ->where('whtc.user IS NULL')
+            ->andWhere('whtc.workspace = :workspace')
+            ->andWhere('whtc.widgetOrder > :widgetOrder')
+            ->setParameter('workspace', $workspace)
+            ->getQuery()
+            ->execute();
     }
 
     public function updateAdminWidgetOrder(
@@ -299,23 +211,15 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $widgetOrder,
         $newWidgetOrder
     ) {
-        $dql = "
-            UPDATE Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN.'
-            SET whtc.widgetOrder = :newWidgetOrder
-            WHERE whtc.homeTab = :homeTab'
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            AND whtc.user IS NULL
-            AND whtc.workspace IS NULL
-            AND whtc.widgetOrder = :widgetOrder
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('widgetOrder', $widgetOrder);
-        $query->setParameter('newWidgetOrder', $newWidgetOrder);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->execute();
+        return $this->buildBaseQuery($homeTab, true)
+            ->set('whtc.widgetOrder', ':newWidgetOrder')
+            ->where('whtc.user IS NULL')
+            ->andWhere('whtc.workspace IS NULL')
+            ->andWhere('whtc.widgetOrder = :widgetOrder')
+            ->setParameter('widgetOrder', $widgetOrder)
+            ->setParameter('newWidgetOrder', $newWidgetOrder)
+            ->getQuery()
+            ->execute();
     }
 
     public function updateWidgetOrderByUser(
@@ -324,24 +228,16 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $newWidgetOrder,
         User $user
     ) {
-        $dql = "
-            UPDATE Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN.'
-            SET whtc.widgetOrder = :newWidgetOrder
-            WHERE whtc.homeTab = :homeTab'
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            AND whtc.user = :user
-            AND whtc.workspace IS NULL
-            AND whtc.widgetOrder = :widgetOrder
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('widgetOrder', $widgetOrder);
-        $query->setParameter('newWidgetOrder', $newWidgetOrder);
-        $query->setParameter('user', $user);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->execute();
+        return $this->buildBaseQuery($homeTab, true)
+            ->set('whtc.widgetOrder', ':newWidgetOrder')
+            ->where('whtc.user = :user')
+            ->andWhere('whtc.workspace IS NULL')
+            ->andWhere('whtc.widgetOrder = :widgetOrder')
+            ->setParameter('user', $user)
+            ->setParameter('widgetOrder', $widgetOrder)
+            ->setParameter('newWidgetOrder', $newWidgetOrder)
+            ->getQuery()
+            ->execute();
     }
 
     public function updateWidgetOrderByWorkspace(
@@ -350,67 +246,45 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $newWidgetOrder,
         Workspace $workspace
     ) {
-        $dql = "
-            UPDATE Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN.'
-            SET whtc.widgetOrder = :newWidgetOrder
-            WHERE whtc.homeTab = :homeTab'
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            AND whtc.workspace = :workspace
-            AND whtc.user IS NULL
-            AND whtc.widgetOrder = :widgetOrder
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('widgetOrder', $widgetOrder);
-        $query->setParameter('newWidgetOrder', $newWidgetOrder);
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->execute();
+        return $this->buildBaseQuery($homeTab, true)
+            ->set('whtc.widgetOrder', ':newWidgetOrder')
+            ->where('whtc.user IS NULL')
+            ->andWhere('whtc.workspace = :workspace')
+            ->andWhere('whtc.widgetOrder = :widgetOrder')
+            ->setParameter('workspace', $workspace)
+            ->setParameter('widgetOrder', $widgetOrder)
+            ->setParameter('newWidgetOrder', $newWidgetOrder)
+            ->getQuery()
+            ->execute();
     }
 
-    public function findUserAdminWidgetHomeTabConfig(
-        HomeTab $homeTab,
-        WidgetInstance $widgetInstance,
-        User $user
-    ) {
-        $dql = "
-            SELECT whtc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN.'
-            WHERE whtc.homeTab = :homeTab'
-            .' AND '.self::WHERE_PLUGIN_ENABLED."
-            AND whtc.widgetInstance = :widgetInstance
-            AND whtc.user = :user
-            AND whtc.workspace IS NULL
-            AND whtc.type = 'admin_desktop'
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('widgetInstance', $widgetInstance);
-        $query->setParameter('user', $user);
-        $query->setParameter('bundles', $this->bundles);
-
-        return $query->getResult();
-    }
-
-    public function findWidgetHomeTabConfigsByHomeTabAndType(HomeTab $homeTab, $type)
+    private function buildBaseQuery($homeTab, $isUpdate = false)
     {
-        $dql = "
-            SELECT whtc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc"
-            .self::LEFT_JOIN_PLUGIN.'
-            WHERE whtc.homeTab = :homeTab'
-            .' AND '.self::WHERE_PLUGIN_ENABLED.'
-            AND whtc.type = :type
-            ORDER BY whtc.widgetOrder ASC
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('type', $type);
-        $query->setParameter('bundles', $this->bundles);
+        $qb = $this->createQueryBuilder('whtc');
 
-        return $query->getResult();
+        if ($isUpdate) {
+            $qb->update('whtc');
+        } else {
+            $qb->select('whtc');
+        }
+
+        $qb->leftJoin('whtc.widgetInstance', 'instance')
+            ->join('instance.widget', 'widget')
+            ->leftJoin('widget.plugin', 'plugin')
+            ->where('whtc.homeTab = :homeTab')
+            ->andWhere($qb->expr()->orX(
+                'CONCAT(plugin.vendorName, plugin.bundleName) IN (:bundles)',
+                'widget.plugin IS NULL'
+            ))
+            ->orderBy('whtc.widgetOrder', 'ASC');
+
+        $bundles = $this->container
+            ->get('claroline.manager.plugin_manager')
+            ->getEnabled(true);
+
+        return $qb->setParameters([
+            'homeTab' => $homeTab,
+            'bundles' => $bundles,
+        ]);
     }
 }
