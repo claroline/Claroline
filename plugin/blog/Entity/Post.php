@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Icap\BlogBundle\Utils\String;
+use Icap\BlogBundle\Utils\StringUtils;
 use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
@@ -184,7 +184,7 @@ class Post extends Statusable
     {
         $readMoreText = sprintf('... <a href="%s" class="read_more">%s <span class="fa fa-long-arrow-right"></span></a>', $url, $text);
 
-        return String::resumeHtml($this->content, 400, $readMoreText);
+        return StringUtils::resumeHtml($this->content, 400, $readMoreText);
     }
 
     /**
