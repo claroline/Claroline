@@ -6,7 +6,7 @@
 {% import 'InnovaCollecticielBundle::macrosCollecticielDocumentDisplay.html.twig' as collecticielDocumentMacros %}
 {% import 'InnovaCollecticielBundle::macrosCollecticielDocumentDisplayAddComments.html.twig' as collecticielDocumentMacrosAddComments %}
 
-{#  
+{#
 Modification ERV (août 2015) InnovaERV
 suite demande JJQ, voir son document de référence d'août 2015
 il faut venir sur l'onglet "Mon espace collecticiel" et non plus sur "Drop"
@@ -44,7 +44,7 @@ Point 5 du document, vu avec Axel
                             </a>
                         </li>
                     {% endif %}
-                   
+
                 </ul>
         {% endif %}
     </div>
@@ -59,9 +59,9 @@ Point 5 du document, vu avec Axel
     <link href="{{ asset("bundles/innovacollecticiel/css/player.css") }}" rel="stylesheet" />
     <link href="{{ asset("bundles/innovacollecticiel/css/datatables.css") }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link href="{{ asset("bundles/innovacollecticiel/css/adminLte.css") }}" rel="stylesheet" />
-
-
+<!--
+    <link href="{#{ asset("bundles/innovacollecticiel/css/adminLte.css") }#}" rel="stylesheet" />
+-->
     {% endstylesheets %}
 {% endblock %}
 
@@ -72,6 +72,7 @@ Point 5 du document, vu avec Axel
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain':'innova_collecticiel' }) }}"></script>
     <script src="{{ asset("bundles/innovacollecticiel/js/datatables.min.js") }}" ></script>
     <script src="{{ asset("bundles/innovacollecticiel/js/datatables-init.js") }}" ></script>
 {% endblock %}

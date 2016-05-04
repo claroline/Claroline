@@ -65,7 +65,7 @@ $(document).ready(function () {
 
 //var form_count = 0;
     $('.add-criterion-button-innova').on('click', function (event) {
-alert("ici add-criterion-button");
+
         event.preventDefault();
 
 

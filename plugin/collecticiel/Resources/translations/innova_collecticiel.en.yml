@@ -1,3 +1,14 @@
+# a
+add_grading_scale_label: Add a grading scale
+add_criteria_label: Add Information/criteria
+
+# d
+default_scale_very_good: Very good
+default_scale_satisfying: Satisfying
+default_scale_insufficient: Not satisfying
+default_criteria_comment: Comment
+
+# to sort
 formatDatetime: 'm/d/Y H:i'
 Resource: 'Resource'
 dropzone_edit: 'Edit'
