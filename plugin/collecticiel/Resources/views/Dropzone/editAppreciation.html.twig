@@ -8,8 +8,6 @@
         </div>
         {{ form_row(gradingScale.id) }}
     </div>
-
-
 {% endmacro %}
 
 {% macro gradingCriteria_prototype(gradingCriteria) %}
@@ -22,7 +20,6 @@
         </div>
     </div>
     {{ form_row(gradingCriteria.id) }}
-
 {% endmacro %}
 
 {% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
@@ -57,9 +54,6 @@
 {% block drop_zone_content_edit %}
 
     <form id="dropzone_appreciation_and_criterion_form" class="form" method="POST" action="{{ path('innova_collecticiel_edit_appreciation', {'resourceId': dropzone.id}) }}" class="disabled-during-edition">
-        <!--
-        <input id="addCriteriaReRouting" type="hidden" name="addCriteria" value="default"/>
--->
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{{ 'Evaluation Appreciation'|trans({}, 'innova_collecticiel') }}</h3>
@@ -86,13 +80,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!--
-                <h4>{{ 'Very good'|trans({}, 'innova_collecticiel') }}</h4>
-                <h4>{{ 'Good'|trans({}, 'innova_collecticiel') }}</h4>
-                <h4>{{ 'Insufficient'|trans({}, 'innova_collecticiel') }}</h4>
--->
-
                 <!-- /Grading scale list -->
                 <hr/>
                 <!-- #Criterion list -->
@@ -176,6 +163,5 @@
             var comment = {{ dropzone.allowCommentInCorrection ? 1 : 0 }}
         </script>
         <script src="{{ asset('bundles/innovacollecticiel/js/editAppreciationForm.js') }}"></script>
-        <script src="{{ asset('bundles/innovacollecticiel/js/Dropzone/editCriteria.js') }}"></script>
 
     {% endblock %}

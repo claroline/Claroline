@@ -52,11 +52,6 @@ $('#add-criterion-button-innova2').on('click', function(event) {
 $(document).ready(function() {
 
     'use strict';
-
-
-
-
-
     var modalNewForm = null;
 
     $('a.launch-modal').on('click', function(event) {

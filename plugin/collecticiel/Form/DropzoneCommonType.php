@@ -147,8 +147,7 @@ class DropzoneCommonType extends AbstractType
                     'notation' => 'notation',
                     'ratingScale' => 'ratingScale',
                 ),
-                'data' => 'noEvaluation', // Valeur par défaut
-                'expanded' => true,
+                'expanded' => false,
                 'multiple' => false,
             ))
 
