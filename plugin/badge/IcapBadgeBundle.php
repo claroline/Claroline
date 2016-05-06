@@ -12,14 +12,11 @@ class IcapBadgeBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        $config
+        return $config
             ->addRoutingResource($this->getPath().'/Resources/config/routing.yml')
             ->addContainerResource($this->getPath().'/Resources/config/idci_exporter.yml')
             ->addContainerResource($this->getPath().'/Resources/config/doctrine.yml')
-            ->addContainerResource($this->getPath().'/Resources/config/twig.yml')
-        ;
-
-        return $config;
+            ->addContainerResource($this->getPath().'/Resources/config/twig.yml');
     }
 
     public function getAdditionalInstaller()
@@ -27,8 +24,11 @@ class IcapBadgeBundle extends PluginBundle
         return new AdditionalInstaller();
     }
 
-    public function getPluginsRequirements()
+    public function getRequiredPlugins()
     {
-        return ['Icap\\PortfolioBundle\\IcapPortfolioBundle', 'Icap\\NotificationBundle\\IcapNotificationBundle'];
+        return [
+            'Icap\\PortfolioBundle\\IcapPortfolioBundle',
+            'Icap\\NotificationBundle\\IcapNotificationBundle',
+        ];
     }
 }

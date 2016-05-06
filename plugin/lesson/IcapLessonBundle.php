@@ -20,7 +20,7 @@ class IcapLessonBundle extends PluginBundle
         return new AdditionalInstaller();
     }
 
-    public function getPluginsRequirements()
+    public function getRequiredPlugins()
     {
         return ['Icap\\NotificationBundle\\IcapNotificationBundle'];
     }
