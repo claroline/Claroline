@@ -472,9 +472,10 @@ class ExerciseController extends Controller
                             $exoQuestion->setOrdre($newOrder);
                         }
                     }
+
+                    $em->persist($exoQuestion);
                 }
 
-                $em->persist($exoQuestion);
                 $em->flush();
             }
         }
@@ -484,7 +485,7 @@ class ExerciseController extends Controller
         );
     }
     /**
-     * To display the docimology's histogramms.
+     * To display the docimology's histograms.
      *
      * @EXT\Route("/docimology/{id}", name="ujm_exercise_docimology", options={"expose"=true})
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
