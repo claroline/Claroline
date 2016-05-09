@@ -138,13 +138,12 @@ class ExerciseManager
     public function pickQuestions(Exercise $exercise)
     {
         $steps = $this->pickSteps($exercise);
-        $finalQuestions = array();
+        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
+        $finalQuestions = [];
 
         foreach ($steps as $step) {
             $questions = array();
-            $originalQuestions = $questions = $this->om
-                ->getRepository('UJMExoBundle:Question')
-                ->findByStep($step);
+            $originalQuestions = $questions = $questionRepo->findByStep($step);
             $questionCount = count($questions);
 
             if ($exercise->getShuffle() && $questionCount > 1) {
@@ -176,11 +175,8 @@ class ExerciseManager
      */
     public function pickSteps(Exercise $exercise)
     {
-        $steps = $this->om
-                      ->getRepository('UJMExoBundle:Step')
-                      ->findByExercise($exercise);
-
-        return $steps;
+        return $this->om->getRepository('UJMExoBundle:Step')
+            ->findByExercise($exercise);
     }
 
     /**

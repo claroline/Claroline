@@ -53,7 +53,8 @@ class QuestionManagerTest extends TransactionalTestCase
      */
     public function testQcmQuestionRoundTrip($dataFilename)
     {
-//        $this->loadQuestionTypeFixture();
+        // see https://github.com/claroline/Distribution/issues/238
+        $this->markTestSkipped('the scoreTotal property must be removed in favour of a score object');
 
         $originalCompData = $this->loadData("question/valid/complete/{$dataFilename}");
         $originalEvalData = $this->loadData("question/valid/evaluation/{$dataFilename}");
@@ -92,7 +93,7 @@ class QuestionManagerTest extends TransactionalTestCase
      */
     public function testMatchQuestionRoundTrip($dataFilename)
     {
-//        $this->loadQuestionTypeFixture();
+        $this->markTestSkipped('the typeMatch must be removed in favour of something more meaningful');
 
         $originalCompData = $this->loadData("question/valid/complete/{$dataFilename}");
         $originalEvalData = $this->loadData("question/valid/evaluation/{$dataFilename}");
