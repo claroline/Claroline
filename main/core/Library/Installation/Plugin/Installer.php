@@ -95,15 +95,15 @@ class Installer
         if (!$this->pluginManager->isReady($pluginEntity)) {
             $errors = $this->pluginManager->getMissingRequirements($pluginEntity);
 
-            foreach ($errors['extension'] as $extension) {
+            foreach ($errors['extensions'] as $extension) {
                 $this->log(sprintf('<fg=red>Extension %s missing for %s !</fg=red>', $extension, $plugin->getName()));
             }
 
-            foreach ($errors['plugin'] as $bundle) {
+            foreach ($errors['plugins'] as $bundle) {
                 $this->log(sprintf('<fg=red>The plugin %s is required for %s ! You must enable it first to use %s.</fg=red>', $bundle, $plugin->getName(), $plugin->getName()));
             }
 
-            foreach ($errors['extra'] as $extra) {
+            foreach ($errors['extras'] as $extra) {
                 $this->log(sprintf('<fg=red>The plugin %s has extra requirements ! %s.</fg=red>', $plugin->getName(), $this->translator->trans($extra, array(), 'error')));
             }
 
