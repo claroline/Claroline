@@ -90,11 +90,10 @@ class AuthenticationManager
      */
     public function getService($driver)
     {
-        if ($driver = explode(':', $driver) &&
-            isset($driver[0]) &&
-            $driver = explode('.', $driver[0]) &&
-            isset($driver[1])
-        ) {
+        $parts = $driver = explode(':', $driver);
+        $driver = explode('.', $parts[0]);
+
+        if (isset($driver[1])) {
             return $this->container->get($driver[0].'.'.$driver[1].'_bundle.manager.'.$driver[1].'_manager');
         }
     }
