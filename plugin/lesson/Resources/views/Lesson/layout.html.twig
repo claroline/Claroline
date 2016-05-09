@@ -1,0 +1,38 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('packages/angular-loading-bar/build/loading-bar.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/icaplesson/css/styles.css') }}" screen="media" />
+{% endblock %}
+
+{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+{#    {{ parent() }}#}
+    {% if path is defined and path != null %}
+        <li>
+            <a href="{{ path('icap_lesson', { 'resourceId': _resource.id}) }}">{{ _resource.getResourceNode().getName() }}</a>
+        </li>
+        {{ _self.chapterBreadcrumb(path, _resource, chapter) }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% block lesson_content %}
+    {% endblock %}
+{% endblock %}
+
+{% macro chapterBreadcrumb(path, _resource, chapter) %}
+    {% for path_part in path %}
+        {% if chapter.id != path_part.id%}
+            <li><a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': path_part.id}) }}">{{ path_part.title }}</a></li>
+        {%  else %}
+            <li class="active"><a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': path_part.id}) }}">{{ path_part.title }}</a></li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

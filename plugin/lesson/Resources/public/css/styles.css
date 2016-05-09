@@ -1,0 +1,450 @@
+.affix {
+    top:70px;
+}
+
+.align_left{
+    text-align: left;
+}
+
+.align_right{
+    text-align: right;
+}
+
+
+.form-actions{
+    padding : 20px;
+    text-align: center;
+}
+
+.form-actions input{
+    margin : 5px;
+}
+
+.form-actions a{
+    margin : 5px;
+}
+
+.menu_lesson .collapsor {
+    color:#2a6496;
+}
+
+.menu_lesson .empty{
+    color:#2a6496;
+}
+
+.section-content > .container-reference {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.toolbar {
+    width: 100%;
+    height: 40px;
+    background-color: #EEE;
+    padding-left: 20px;
+    padding-top: 5px;
+    box-shadow: rgba(140, 140, 140, 0.498039) 0px -3px 4px inset;
+}
+
+.reference_list {
+    padding:30px;
+}
+.reference_list .reference_box { background-color: transparent;margin-bottom: 10px; width:800px;}
+.reference_list .reference_box:hover { background-color: #efefef;}
+
+.reference_new {
+    padding:30px;
+}
+.reference_new .reference_box { background-color: #F5F6FA;margin-bottom: 10px; width:800px;}
+
+.reference-list-item {
+    margin: 10px 0px;
+}
+.reference-list-item h3 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.more_info { cursor: pointer; position: relative;}
+.more_info > *:last-child{
+    padding: 4px;
+    z-index: 99999;
+    opacity: 0;
+    position: absolute;
+    left: 100px;
+    top: -13px;
+    display: none;
+}
+.more_info > *:last-child > table {
+    margin: 0px;
+}
+.more_info > *:last-child > table > tbody > tr:first-child > td {
+    border-top: 0px;
+}
+.more_info:hover > *:last-child{
+    opacity: 1;
+    display: block;
+}
+
+ul.customFields {
+    list-style-type: none;
+    margin-left: 0px;
+}
+li.custom_field {}
+li.custom_field div div {
+    float: left;
+    padding-right: 10px
+}
+
+.clear {
+    clear: both;
+}
+
+.lesson_title{
+    margin-top:10px;
+}
+
+.portrate {
+    text-align: center;
+}
+
+.new-reference {
+    margin: 20px 0px;
+}
+
+.reference-footer {
+    margin: 0px;
+    background-color: transparent;
+}
+
+.breadcrumb > li> span.divider {
+    padding: 0px;
+}
+
+.welcome{
+    margin-top:50px;
+    text-align:center;
+    font-size:1.4em;
+    color: #BBBBBB;
+}
+
+.welcome div{
+    padding:10px;
+}
+
+.chapter_content_text{
+    margin-top: 40px;
+    padding: 20px;
+    text-align: justify;
+    min-height: 535px;
+}
+
+.chapter_content{
+    padding:20px;
+}
+
+.delete_chapter_title{
+    font-weight:bold;
+    padding:0px 0px 10px 0px;
+}
+
+.chapter_title h4{
+    margin: 0px;
+}
+
+.delete_chapter_warning{
+    text-align: center;
+    margin-top:40px;
+    margin-bottom:40px;
+    font-weight: bold;
+}
+
+#editchapterform textarea, #createchapterform textarea{
+    height:300px;
+    width: 100%;
+}
+
+.lesson_tooltip{
+    cursor:pointer;
+}
+
+.overflow{
+    overflow:auto;
+}
+
+.menu_lesson_icons{
+    text-align:right;
+}
+.menu_lesson_icons i{
+    padding:5px;
+}
+
+.cursor_move{
+    cursor: move;
+}
+
+.navbar .navbar-nav .icon_link{
+    padding-top:13px;
+    padding-bottom:13px;
+    padding-left: 4px;
+    padding-right: 4px;
+    vertical-align: middle;
+    font-size:12px;
+    border: 1px solid transparent;
+}
+
+.navbar .navbar-nav .icon_link.active{
+    border: 1px solid #cccccc;
+}
+
+.chapter_menu_labels{
+    font-size:14px;
+    margin-left:2px;
+}
+
+.navbar .navbar-nav .icon_link span{
+    vertical-align: middle;
+    padding-left:1px;
+    padding-right:1px;
+}
+
+.chapter_list_header{
+    margin-left: 5px;
+    font-weight: bold;
+    color: #777;
+    font-size: 1.2em;
+    margin-top: 5px;
+}
+
+.icon_chapter_list_header {
+    display: inline-block;
+    float: right;
+    margin-top:-5px;
+}
+
+.lesson_footer{
+    text-align: center;
+    color: #666;
+    padding:20px;
+}
+
+.lesson_header{
+    color: #666;
+    padding-left:20px;
+    padding-right:20px;
+}
+
+.lesson_footer_icon{
+    font-size: 22px;
+}
+
+/*sortable styles*/
+
+body.dragging, body.dragging * {
+    cursor: move !important;
+}
+
+.dragged {
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
+}
+
+ul.jquery-sortable-list {
+    padding-left:10px;
+    margin-bottom:5px;
+    padding-top:5px;
+
+}
+
+.jquery-sortable-list ul{
+    padding-left: 15px;
+}
+
+ul.jquery-sortable-list li {
+    display: block;
+}
+
+ul.jquery-sortable-list li i{
+    padding-right:5px;
+    cursor: pointer;
+}
+
+ul.jquery-sortable-list li .menu-item{
+    padding: 5px 5px 5px 15px;
+    font-size: 0.9em;
+}
+
+ul.jquery-sortable-list li .menu-item .fa-arrows{
+    color:#2a6496;
+    margin-right:5px;
+}
+
+ul.jquery-sortable-list li .menu-item:hover{
+    background-color: #eeeeee;
+}
+
+ul.jquery-sortable-list li .active_chapter{
+    background-color: #f5f5f5;
+}
+
+ul.jquery-sortable-list li .active_chapter a{
+    color: #000000;
+    font-weight: bold;
+}
+
+ul.jquery-sortable-list .active{
+    border: 1px dotted #aaaaaa;
+}
+
+
+ul.jquery-sortable-list li.placeholder {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+ul.jquery-sortable-list li.placeholder:before {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    margin-top: -5px;
+    left: -5px;
+    top: -4px;
+    border: 5px solid transparent;
+    border-left-color: red;
+    border-right: none;
+}
+
+.fa-arrows{
+    cursor: pointer;
+}
+
+.draggable-item{
+    border-top: 1px dashed transparent;
+    border-left: 2px solid transparent;
+}
+
+.draggable-list{
+    border-top: 1px dashed #357EBD;
+    border-left: 2px solid #357EBD;
+}
+
+.lesson_tooltip.menu_lesson_button {
+    display: inline-block;
+}
+
+.lesson_tooltip.menu_lesson_button {
+    display: inline-block;
+}
+
+.lesson_tooltip.menu_lesson_button{
+    display: inline-block;
+}
+
+/* Chapter buttons */
+
+/* Grip */
+.menu-item.cursor_move::before{
+    content: "..\A ..\A ..\A ..\A ";
+    display: inline-block;
+    line-height: 5px;
+    margin-left: -11px;
+    margin-top: -5px;
+    position: absolute;
+    width: 5px;
+}
+
+.chapter_btn {
+    margin: 10px 0;
+}
+
+/* bouton retour haut page */
+
+a.btn_up.btn-primary{
+    display: inline-block;
+    padding: 10px;
+    text-decoration: none;
+    bottom: 5px;
+    left: 20%;
+    position: fixed;
+    z-index:1000;
+}
+
+a.btn_up.btn-primary .lesson_footer_icon {
+    font-size: 30px;
+}
+
+/* Tree adjustments */
+#lesson_left_column button {
+    outline: none;
+}
+
+#lesson_left_column button.enabled {
+    background-color: #337AB7;
+}
+#lesson_left_column button.enabled i {
+    color: white;
+}
+
+#lesson_menu>li.draggable-list:last-child {
+    border-bottom: 1px dashed #357EBD;
+}
+
+.angular-ui-tree-placeholder {
+    border: 2px dashed activecaption;
+    border-radius: 3px;
+}
+.angular-ui-tree-placeholder:before {
+    display: inline-block;
+    position: relative;
+    left: -7px;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    content: '\f0da';
+    color: red;
+}
+.angular-ui-tree-drag {
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+    opacity: .8;
+    top: -450px;
+}
+.angular-ui-tree-drag li {
+    list-style-type: none;
+}
+
+/* Invalid forms */
+form.ng-submitted .form-control.ng-invalid:focus {
+    border-color: red;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(255,0,0,.6);
+}
+form.ng-submitted input.ng-invalid {
+    border-color: red;
+}
+
+form.ng-submitted input.ng-invalid + .popover {
+    border-color: #b94a48;
+    color: #b94a48;
+}
+form.ng-submitted input.ng-invalid + .popover.top > .arrow {
+    border-top-color: #b94a48;
+}
+
+/* Loading bar */
+#loading-bar .bar {
+    background-color: white;
+    height: 3px;
+}
+
+#loading-bar-spinner .spinner-icon {
+    border-top-color: white;
+    border-left-color: #BBC8D0;
+    width: 25px;
+    height: 25px;
+}
