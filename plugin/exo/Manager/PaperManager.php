@@ -133,8 +133,9 @@ class PaperManager
         }
 
         return [
-            'id' => $paper->getId(),
-            'number' => $paper->getNumPaper(),
+            'id'        => $paper->getId(),
+            'number'    => $paper->getNumPaper(),
+            'order'     => $this->getStepsQuestions($paper),
             'questions' => $questions,
         ];
     }
@@ -459,7 +460,7 @@ class PaperManager
     }
 
     /**
-     * Returns array of array with the indexs "step" and "question"
+     * Returns array of array with the indexes "step" and "question"
      *
      * @param Paper $paper
      *
@@ -468,26 +469,32 @@ class PaperManager
     public function getStepsQuestions($paper)
     {
         $qIds = explode(';', substr($paper->getOrdreQuestion(), 0, -1));
+
         //to keep the questions order
+        $questions = [];
         foreach ($qIds as $qid) {
             $q = $this->om->getRepository('UJMExoBundle:Question')->find($qid);
             $questions[] = $q;
         }
 
         $exercise  = $paper->getExercise();
-        $stepsQuestions = array();
-        $i = 0;
+        $stepsQuestions = [];
 
         foreach ($exercise->getSteps() as $step) {
+            $stepQuestions = [
+                'id'    => $step->getId(),
+                'items' => [],
+            ];
+
             //to keep the questions order
             foreach ($questions as $question) {
                 $sq = $this->om->getRepository('UJMExoBundle:StepQuestion')->findOneBy(array('step' => $step, 'question' => $question));
                 if ($sq) {
-                    $stepsQuestions[$i]['step'] = $sq->getStep()->getId();
-                    $stepsQuestions[$i]['question'] = $sq->getQuestion()->getId();
-                    $i++;
+                    $stepQuestions['items'][] = $sq->getQuestion()->getId();
                 }
             }
+
+            $stepsQuestions[] = $stepQuestions;
         }
 
         return $stepsQuestions;
