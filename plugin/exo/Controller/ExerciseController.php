@@ -298,8 +298,8 @@ class ExerciseController extends Controller
         $em = $this->getDoctrine()->getManager();
         $request = $this->container->get('request');
 
+        $exoID = $request->request->get('exoID');
         if ($request->isXmlHttpRequest()) {
-            $exoID = $request->request->get('exoID');
             $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
             $pageGoNow = $request->request->get('pageGoNow');
             $qid = $request->request->get('qid');

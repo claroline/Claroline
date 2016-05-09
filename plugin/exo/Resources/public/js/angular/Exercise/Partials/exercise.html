@@ -17,7 +17,7 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="exercise-navbar">
                     <!-- Administration links -->
-                    <ul class="nav navbar-nav" data-ng-if="exerciseCtrl.editEnabled">
+                    <ul class="nav navbar-nav">
                         <!-- Information about the Exercise -->
                         <li data-ng-class="{ active: 'overview' === exerciseCtrl.$route.current.tab }">
                             <a href="#/">
@@ -26,14 +26,14 @@
                         </li>
 
                         <!-- Edit Exercise metadata -->
-                        <li data-ng-class="{ active: 'metadata' === exerciseCtrl.$route.current.tab }">
+                        <li data-ng-class="{ active: 'metadata' === exerciseCtrl.$route.current.tab }" data-ng-if="exerciseCtrl.editEnabled">
                             <a href="#/edit">
                                 <span class="fa fa-pencil"></span> {{ 'metadata' | trans:{}:'ujm_exo' }}
                             </a>
                         </li>
 
                         <!-- Questions -->
-                        <li data-uib-dropdown="" data-ng-class="{ active: 'steps' === exerciseCtrl.$route.current.tab }">
+                        <li data-uib-dropdown="" data-ng-class="{ active: 'steps' === exerciseCtrl.$route.current.tab }" data-ng-if="exerciseCtrl.editEnabled">
                             <a href="" data-uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
                                 <span class="fa fa-question"></span>
                                 {{ 'questions' | trans:{}:'ujm_exo' }}
@@ -64,14 +64,14 @@
                         </li>
 
                         <!-- Publish Exercise -->
-                        <li data-ng-if="!exerciseCtrl.exercise.meta.published">
+                        <li data-ng-if="!exerciseCtrl.exercise.meta.published" data-ng-if="exerciseCtrl.editEnabled">
                             <a href="" role="button" data-ng-click="exerciseCtrl.publish()">
                                 <span class="fa fa-check"></span> {{ 'publish' | trans:{}:'ujm_exo' }}
                             </a>
                         </li>
 
                         <!-- Unpublish Exercise (Only if there is no submitted paper on it) -->
-                        <li data-ng-if="exerciseCtrl.exercise.meta.published && 0 == exerciseCtrl.nbPapers">
+                        <li data-ng-if="exerciseCtrl.exercise.meta.published && 0 == exerciseCtrl.nbPapers" data-ng-if="exerciseCtrl.editEnabled">
                             <a href="" role="button" data-ng-click="exerciseCtrl.unpublish()">
                                 <span class="fa fa-times"></span> {{ 'unpublish' | trans:{}:'ujm_exo' }}
                             </a>
