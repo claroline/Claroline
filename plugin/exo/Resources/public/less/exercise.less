@@ -24,9 +24,19 @@
         .navbar-right {
             margin-right: 0;
         }
+
+        .btn-start {
+            margin-left: floor(@grid-gutter-width / 2);
+        }
     }
 
     .overview {
+        .exercise-description {
+            > .panel-body > p {
+                margin-bottom: 0; // remove styles from the TinyMCE <p> wrapper
+            }
+        }
+
         .table {
             /*border: none;*/
             margin-bottom: 0;
