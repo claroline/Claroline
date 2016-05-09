@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "26204507a55ea31f6158c3dfcb44448cf7a6eaef"
+                "reference": "747a6c6d383db38541680ff4b26f93a31e98f182"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/26204507a55ea31f6158c3dfcb44448cf7a6eaef",
-                "reference": "26204507a55ea31f6158c3dfcb44448cf7a6eaef",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/747a6c6d383db38541680ff4b26f93a31e98f182",
+                "reference": "747a6c6d383db38541680ff4b26f93a31e98f182",
                 "shasum": ""
             },
             "require": {
@@ -204,6 +204,7 @@
                 "claroline/core-bundle": "*",
                 "claroline/cursus-bundle": "*",
                 "claroline/dev-bundle": "*",
+                "claroline/distribution-bundle": "*",
                 "claroline/forum-bundle": "*",
                 "claroline/image-player-bundle": "*",
                 "claroline/installation-bundle": "*",
@@ -232,13 +233,17 @@
                 "icap/badge-bundle": "*",
                 "icap/blog-bundle": "*",
                 "icap/dropzone-bundle": "*",
+                "icap/formula-plugin-bundle": "*",
+                "icap/lesson-bundle": "*",
                 "icap/notification-bundle": "*",
                 "icap/oauth-bundle": "*",
                 "icap/portfolio-bundle": "*",
                 "icap/social-media-bundle": "*",
                 "icap/wiki-bundle": "*",
+                "innova/audio-recorder-bundle": "*",
                 "innova/collecticiel-bundle": "*",
-                "innova/path-bundle": "*"
+                "innova/path-bundle": "*",
+                "innova/video-recorder-bundle": "*"
             },
             "require-dev": {
                 "fabpot/php-cs-fixer": "^1.10",
@@ -286,10 +291,14 @@
                     "Icap\\SocialmediaBundle\\IcapSocialmediaBundle",
                     "Icap\\WikiBundle\\IcapWikiBundle",
                     "Icap\\OAuthBundle\\IcapOAuthBundle",
+                    "Icap\\FormulaPluginBundle\\IcapFormulaPluginBundle",
                     "Claroline\\ResultBundle\\ClarolineResultBundle",
                     "Innova\\PathBundle\\InnovaPathBundle",
                     "Claroline\\DevBundle\\ClarolineDevBundle",
-                    "Icap\\WebsiteBundle\\IcapWebsiteBundle"
+                    "Icap\\WebsiteBundle\\IcapWebsiteBundle",
+                    "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle",
+                    "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle",
+                    "Icap\\LessonBundle\\IcapLessonBundle"
                 ]
             },
             "autoload": {
@@ -331,12 +340,16 @@
                     "Icap\\SocialmediaBundle\\": "plugin/social-media",
                     "Icap\\WikiBundle\\": "plugin/wiki",
                     "Icap\\OAuthBundle\\": "plugin/oauth",
+                    "Icap\\FormulaPluginBundle\\": "plugin/formula",
                     "Claroline\\ResultBundle\\": "plugin/result",
                     "Innova\\PathBundle\\": "plugin/path",
                     "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator",
                     "Claroline\\DevBundle\\": "main/dev",
                     "Claroline\\WebInstaller\\": "main/web-installer/",
-                    "Icap\\WebsiteBundle\\": "plugin/website"
+                    "Icap\\WebsiteBundle\\": "plugin/website",
+                    "Innova\\VideoRecorderBundle\\": "plugin/video-recorder",
+                    "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder",
+                    "Icap\\LessonBundle\\": "plugin/lesson"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -356,7 +369,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-04-20 12:57:51"
+            "time": "2016-05-09 08:10:32"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -453,16 +466,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "1.0.1",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "de0e25b0d494ace6b571a9205b82d017e5cb9257"
+                "reference": "a4a0546ece469cae984219f920c75437820064ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/de0e25b0d494ace6b571a9205b82d017e5cb9257",
-                "reference": "de0e25b0d494ace6b571a9205b82d017e5cb9257",
+                "url": "https://api.github.com/repos/composer/composer/zipball/a4a0546ece469cae984219f920c75437820064ff",
+                "reference": "a4a0546ece469cae984219f920c75437820064ff",
                 "shasum": ""
             },
             "require": {
@@ -524,7 +537,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-04-18 20:14:28"
+            "time": "2016-04-29 15:30:16"
         },
         {
             "name": "composer/semver",
@@ -590,16 +603,16 @@
         },
         {
             "name": "composer/spdx-licenses",
-            "version": "1.1.3",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/spdx-licenses.git",
-                "reference": "547659c3cacd3ccfe1b4714c2ff88cafc6b6793b"
+                "reference": "88c26372b1afac36d8db601cdf04ad8716f53d88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/547659c3cacd3ccfe1b4714c2ff88cafc6b6793b",
-                "reference": "547659c3cacd3ccfe1b4714c2ff88cafc6b6793b",
+                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/88c26372b1afac36d8db601cdf04ad8716f53d88",
+                "reference": "88c26372b1afac36d8db601cdf04ad8716f53d88",
                 "shasum": ""
             },
             "require": {
@@ -647,7 +660,7 @@
                 "spdx",
                 "validator"
             ],
-            "time": "2016-03-25 10:57:10"
+            "time": "2016-05-04 12:27:30"
         },
         {
             "name": "container-interop/container-interop",
@@ -1028,12 +1041,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/data-fixtures.git",
-                "reference": "b4213c21f138c96c29ba2f57349d6fca5b2878a9"
+                "reference": "73c46507fc4244525a402b66fb0339d230717023"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/data-fixtures/zipball/b4213c21f138c96c29ba2f57349d6fca5b2878a9",
-                "reference": "b4213c21f138c96c29ba2f57349d6fca5b2878a9",
+                "url": "https://api.github.com/repos/doctrine/data-fixtures/zipball/73c46507fc4244525a402b66fb0339d230717023",
+                "reference": "73c46507fc4244525a402b66fb0339d230717023",
                 "shasum": ""
             },
             "require": {
@@ -1077,7 +1090,7 @@
             "keywords": [
                 "database"
             ],
-            "time": "2015-11-02 22:38:12"
+            "time": "2016-05-05 03:37:05"
         },
         {
             "name": "doctrine/dbal",
@@ -3359,12 +3372,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/johngrogg/ics-parser.git",
-                "reference": "8ed85e9ce540f0ebea43f5d6789a984e3138380f"
+                "reference": "096a3fb89000d576de0ed24f39d6448000c8c6e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/8ed85e9ce540f0ebea43f5d6789a984e3138380f",
-                "reference": "8ed85e9ce540f0ebea43f5d6789a984e3138380f",
+                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/096a3fb89000d576de0ed24f39d6448000c8c6e7",
+                "reference": "096a3fb89000d576de0ed24f39d6448000c8c6e7",
                 "shasum": ""
             },
             "type": "library",
@@ -3391,7 +3404,7 @@
                 "ical",
                 "ics"
             ],
-            "time": "2016-03-16 14:36:39"
+            "time": "2016-04-27 08:43:51"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -4090,12 +4103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "9caa2816e7d8a02fa97d71ff5be849d483e37cf9"
+                "reference": "2d214fc93464e59ea817ef2ea5a8388eef84be3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/9caa2816e7d8a02fa97d71ff5be849d483e37cf9",
-                "reference": "9caa2816e7d8a02fa97d71ff5be849d483e37cf9",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/2d214fc93464e59ea817ef2ea5a8388eef84be3c",
+                "reference": "2d214fc93464e59ea817ef2ea5a8388eef84be3c",
                 "shasum": ""
             },
             "require": {
@@ -4166,7 +4179,7 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2016-04-20 11:41:39"
+            "time": "2016-04-21 15:38:04"
         },
         {
             "name": "ocramius/proxy-manager",
@@ -4729,12 +4742,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/stefk/JVal.git",
-                "reference": "d0b5dd610caaa7a06e882f3ac1e607f725a73d76"
+                "reference": "691c19972c909f1552d2fc8d50ed97336a3ac13b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stefk/JVal/zipball/d0b5dd610caaa7a06e882f3ac1e607f725a73d76",
-                "reference": "d0b5dd610caaa7a06e882f3ac1e607f725a73d76",
+                "url": "https://api.github.com/repos/stefk/JVal/zipball/691c19972c909f1552d2fc8d50ed97336a3ac13b",
+                "reference": "691c19972c909f1552d2fc8d50ed97336a3ac13b",
                 "shasum": ""
             },
             "require": {
@@ -4772,7 +4785,7 @@
                 "json",
                 "validation"
             ],
-            "time": "2016-04-16 19:15:19"
+            "time": "2016-04-24 20:51:32"
         },
         {
             "name": "stfalcon/tinymce-bundle",
@@ -4896,16 +4909,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.4.1",
+            "version": "v5.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "0697e6aa65c83edf97bb0f23d8763f94e3f11421"
+                "reference": "d8db871a54619458a805229a057ea2af33c753e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/0697e6aa65c83edf97bb0f23d8763f94e3f11421",
-                "reference": "0697e6aa65c83edf97bb0f23d8763f94e3f11421",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/d8db871a54619458a805229a057ea2af33c753e8",
+                "reference": "d8db871a54619458a805229a057ea2af33c753e8",
                 "shasum": ""
             },
             "require": {
@@ -4945,7 +4958,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2015-06-06 14:19:39"
+            "time": "2016-05-01 08:45:47"
         },
         {
             "name": "symfony/assetic-bundle",
@@ -5631,27 +5644,27 @@
         },
         {
             "name": "zendframework/zend-code",
-            "version": "2.6.2",
+            "version": "2.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-code.git",
-                "reference": "c4e8f976a772cfb14b47dabd69b5245a423082b4"
+                "reference": "95033f061b083e16cdee60530ec260d7d628b887"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-code/zipball/c4e8f976a772cfb14b47dabd69b5245a423082b4",
-                "reference": "c4e8f976a772cfb14b47dabd69b5245a423082b4",
+                "url": "https://api.github.com/repos/zendframework/zend-code/zipball/95033f061b083e16cdee60530ec260d7d628b887",
+                "reference": "95033f061b083e16cdee60530ec260d7d628b887",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5",
-                "zendframework/zend-eventmanager": "^2.6|^3.0"
+                "php": "^5.5 || 7.0.0 - 7.0.4 || ^7.0.6",
+                "zendframework/zend-eventmanager": "^2.6 || ^3.0"
             },
             "require-dev": {
                 "doctrine/annotations": "~1.0",
                 "fabpot/php-cs-fixer": "1.7.*",
-                "phpunit/phpunit": "~4.0",
-                "zendframework/zend-stdlib": "~2.7"
+                "phpunit/phpunit": "^4.8.21",
+                "zendframework/zend-stdlib": "^2.7 || ^3.0"
             },
             "suggest": {
                 "doctrine/annotations": "Doctrine\\Common\\Annotations >=1.0 for annotation features",
@@ -5679,7 +5692,7 @@
                 "code",
                 "zf2"
             ],
-            "time": "2016-01-05 05:58:37"
+            "time": "2016-04-20 17:26:42"
         },
         {
             "name": "zendframework/zend-crypt",
@@ -6241,20 +6254,20 @@
         },
         {
             "name": "phpmd/phpmd",
-            "version": "2.4.2",
+            "version": "2.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpmd/phpmd.git",
-                "reference": "fccbdb6b222f6d7a6d35af1c396ba5435cec76a9"
+                "reference": "2b9c2417a18696dfb578b38c116cd0ddc19b256e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpmd/phpmd/zipball/fccbdb6b222f6d7a6d35af1c396ba5435cec76a9",
-                "reference": "fccbdb6b222f6d7a6d35af1c396ba5435cec76a9",
+                "url": "https://api.github.com/repos/phpmd/phpmd/zipball/2b9c2417a18696dfb578b38c116cd0ddc19b256e",
+                "reference": "2b9c2417a18696dfb578b38c116cd0ddc19b256e",
                 "shasum": ""
             },
             "require": {
-                "pdepend/pdepend": "~2.0",
+                "pdepend/pdepend": "^2.0.4",
                 "php": ">=5.3.0"
             },
             "require-dev": {
@@ -6302,7 +6315,7 @@
                 "phpmd",
                 "pmd"
             ],
-            "time": "2016-03-10 17:17:44"
+            "time": "2016-04-04 11:52:04"
         },
         {
             "name": "phpspec/prophecy",
@@ -6852,16 +6865,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "1.3.5",
+            "version": "1.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "dc7a29032cf72b54f36dac15a1ca5b3a1b6029bf"
+                "reference": "2292b116f43c272ff4328083096114f84ea46a56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/dc7a29032cf72b54f36dac15a1ca5b3a1b6029bf",
-                "reference": "dc7a29032cf72b54f36dac15a1ca5b3a1b6029bf",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/2292b116f43c272ff4328083096114f84ea46a56",
+                "reference": "2292b116f43c272ff4328083096114f84ea46a56",
                 "shasum": ""
             },
             "require": {
@@ -6898,7 +6911,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-02-26 18:40:46"
+            "time": "2016-05-04 07:59:13"
         },
         {
             "name": "sebastian/exporter",
@@ -7107,16 +7120,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.0.4",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "b097218e4ab7724e7ec0c420e96dfd70518c2354"
+                "reference": "3231629ff97abccd60f93ff900accfb5b39c8200"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/b097218e4ab7724e7ec0c420e96dfd70518c2354",
-                "reference": "b097218e4ab7724e7ec0c420e96dfd70518c2354",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/3231629ff97abccd60f93ff900accfb5b39c8200",
+                "reference": "3231629ff97abccd60f93ff900accfb5b39c8200",
                 "shasum": ""
             },
             "require": {
@@ -7158,7 +7171,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2016-03-23 13:46:08"
+            "time": "2016-04-12 18:09:53"
         }
     ],
     "aliases": [],
