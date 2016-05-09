@@ -8,9 +8,7 @@ env:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install stable
-  - npm install npm -g
-  - composer self-update
+  - nvm install 5
 
 before_script:
   - composer validate
@@ -18,5 +16,3 @@ before_script:
   - composer sync-dev
 
 script: echo done
-
-sudo: false
