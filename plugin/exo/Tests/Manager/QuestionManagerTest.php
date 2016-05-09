@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Manager;
 
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use UJM\ExoBundle\DataFixtures\LoadOptionsData;
 
 class QuestionManagerTest extends TransactionalTestCase
 {
@@ -119,12 +118,6 @@ class QuestionManagerTest extends TransactionalTestCase
           ['match-2'],
           ['match-3'],
         ];
-    }
-
-    private function loadQuestionTypeFixture()
-    {
-        $fixture = new LoadOptionsData();
-        $fixture->load($this->om);
     }
 
     private function loadData($fileRelativeName)
