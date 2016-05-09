@@ -1,0 +1,8 @@
+<uib-alert
+        id="lesson-alert"
+        data-ng-repeat="alert in lesson.alerts"
+        data-type="{{ alert.type }}"
+        data-close="lesson.closeAlert($index)"
+        data-dismiss-on-timeout="10000">
+    {{ alert.msg }}
+</uib-alert>

@@ -333,7 +333,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE u IN (
             SELECT u1 FROM Claroline\CoreBundle\Entity\User u1
             JOIN u1.roles r1 WITH r1 IN (
-                SELECT pr1 from Claroline\CoreBundle\Entity\Role pr1 WHERE pr1.type = '.Role::WS_ROLE.'
+                SELECT pr1 from Claroline\CoreBundle\Entity\Role pr1 WHERE pr1.type = :type
             )
             LEFT JOIN r1.workspace wol1
             WHERE wol1.id = :workspaceId AND u1 IN (

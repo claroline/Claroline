@@ -731,7 +731,10 @@ put_back_permissions_after_update: put_back_permissions_after_update
 receiver: Destinatarios
 recent_all_workspace_activities_overview: 'Resumen de todas las actividades recientes en %workspaceName%'
 recursive_dir_action: 'Aplicar en el contenido de la carpeta y la subcarpeta'
-redirect_after_login: 'Redirigir a la ultima página visitada'
+redirect_after_login_option: 'Redirección después login'
+redirect_after_login_option_desktop: 'Escritorio'
+redirect_after_login_option_last: 'Ultima página activa'
+redirect_after_login_option_url: 'URL'
 redirect_uri: redirect_uri
 refresh: refresh
 refresh_explanation: refresh_explanation
