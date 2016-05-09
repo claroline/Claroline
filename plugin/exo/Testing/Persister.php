@@ -70,14 +70,16 @@ class Persister
 
     /**
      * @param string $text
+     * @param float  $order
      * @param float  $score
      *
      * @return Choice
      */
-    public function qcmChoice($text, $score)
+    public function qcmChoice($text,$order, $score)
     {
         $choice = new Choice();
         $choice->setLabel($text);
+        $choice->setOrdre($order);
         $choice->setWeight($score);
         $this->om->persist($choice);
 
@@ -97,6 +99,8 @@ class Persister
         $question->setTitle($title);
         $question->setInvite('Invite...');
         $question->setDescription($description);
+
+        $this->multipleChoiceType = $this->om->getRepository('UJMExoBundle:TypeQCM')->findOneByValue('Multiple response');
 
         if (!$this->multipleChoiceType) {
             $this->multipleChoiceType = new TypeQCM();
@@ -169,11 +173,12 @@ class Persister
         $question = new Question();
         $question->setTitle($title);
         $question->setInvite('Invite...');
+        $this->matchType = $this->om->getRepository('UJMExoBundle:TypeMatching')->findOneByCode(1);
 
         if (!$this->matchType) {
             $this->matchType = new TypeMatching();
+            $this->matchType->setValue('To bind');
             $this->matchType->setCode(1);
-            $this->matchType->setValue('To Bind');
             $this->om->persist($this->matchType);
         }
 
@@ -322,10 +327,14 @@ class Persister
      */
     public function role($name)
     {
-        $role = new Role();
-        $role->setName($name);
-        $role->setTranslationKey($name);
-        $this->om->persist($role);
+        $role = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName($name);
+
+        if (!$role) {
+            $role = new Role();
+            $role->setName($name);
+            $role->setTranslationKey($name);
+            $this->om->persist($role);
+        }
 
         return $role;
     }

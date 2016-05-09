@@ -67,7 +67,6 @@ angular.module('Correction').factory('CorrectionService', [
                 if (question.typeOpen === "long") {
                     for (var j = 0; j < paper.questions.length; j++) {
                         if (paper.questions[j].id === question.id.toString()) {
-                            console.log('truc '+ paper.questions[j].score);
                             if (paper.questions[j].score !== -1) {
                                 result = paper.questions[j].score.toString() + '/' + question.scoreMaxLongResp.toString();
                                 return result;
