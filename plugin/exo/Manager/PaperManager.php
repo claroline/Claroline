@@ -133,9 +133,9 @@ class PaperManager
         }
 
         return [
-            'id'        => $paper->getId(),
-            'number'    => $paper->getNumPaper(),
-            'order'     => $this->getStepsQuestions($paper),
+            'id' => $paper->getId(),
+            'number' => $paper->getNumPaper(),
+            'order' => $this->getStepsQuestions($paper),
             'questions' => $questions,
         ];
     }
@@ -460,7 +460,7 @@ class PaperManager
     }
 
     /**
-     * Returns array of array with the indexes "step" and "question"
+     * Returns array of array with the indexes "step" and "question".
      *
      * @param Paper $paper
      *
@@ -477,12 +477,12 @@ class PaperManager
             $questions[] = $q;
         }
 
-        $exercise  = $paper->getExercise();
+        $exercise = $paper->getExercise();
         $stepsQuestions = [];
 
         foreach ($exercise->getSteps() as $step) {
             $stepQuestions = [
-                'id'    => $step->getId(),
+                'id' => $step->getId(),
                 'items' => [],
             ];
 
