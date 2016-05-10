@@ -119,12 +119,8 @@ class DropzoneController extends DropzoneBaseController
             $em->persist($dropzone);
             $em->flush();
 
-            if ($dropzone->hasCriteria() === false) {
-                $request->getSession()->getFlashBag()->add(
-                                'warning',
-                                $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
-                            );
-            } else {
+            // https://github.com/claroline/Distribution/issues/262
+            if ($dropzone->hasCriteria() !== false) {
                 $request->getSession()->getFlashBag()->add(
                               'success',
                               $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'icap_dropzone')
