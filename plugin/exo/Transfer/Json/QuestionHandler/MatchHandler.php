@@ -247,23 +247,22 @@ class MatchHandler implements QuestionHandlerInterface
         }
         $exportData->scoreTotal = $scoreTotal;
 
-        //if ($withSolution) {
-
+        if ($withSolution) {
             $exportData->solutions = array();
-        foreach ($proposals as $proposal) {
-            $associatedLabels = $proposal->getAssociatedLabel();
-            foreach ($associatedLabels as $label) {
-                $solution = new \stdClass();
-                $solution->firstId = (string) $proposal->getId();
-                $solution->secondId = (string) $label->getId();
-                $solution->score = $label->getScoreRightResponse();
-                if ($label->getFeedback()) {
-                    $solution->feedback = $label->getFeedback();
+            foreach ($proposals as $proposal) {
+                $associatedLabels = $proposal->getAssociatedLabel();
+                foreach ($associatedLabels as $label) {
+                    $solution = new \stdClass();
+                    $solution->firstId = (string) $proposal->getId();
+                    $solution->secondId = (string) $label->getId();
+                    $solution->score = $label->getScoreRightResponse();
+                    if ($label->getFeedback()) {
+                        $solution->feedback = $label->getFeedback();
+                    }
+                    array_push($exportData->solutions, $solution);
                 }
-                array_push($exportData->solutions, $solution);
             }
         }
-        //}
 
         return $exportData;
     }
