@@ -88,14 +88,6 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h3>{{ 'Info ratingScale'|trans({}, 'innova_collecticiel') }}</h3>
-                                {# @TODO replace 4 by a real variable (nbCorrection) #}
-                                {% if 4 > 0 %}
-                                    <div class="alert alert-warning">
-                                        <h4>{{ 'Warning'|trans({}, 'innova_collecticiel') }}</h4>
-                                        <p>{{ 'corrections were already created'|transchoice(4,{},'innova_collecticiel') }}</p>
-                                        <p>{{ 'Modify add or delete criteria will affect this corrections if you recalculate the note on it.'|trans({},'innova_collecticiel') }}</p>
-                                    </div>
-                                {% endif %}
                                 <div class="criterion" data-prototype="{{ _self.gradingCriteria_prototype(form.gradingCriterias.vars.prototype)|e }}">
                                     {# Show existing data #}
                                     {% for criteria in form.gradingCriterias %}
