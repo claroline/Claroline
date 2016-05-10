@@ -75,7 +75,7 @@ class Persister
      *
      * @return Choice
      */
-    public function qcmChoice($text,$order, $score)
+    public function qcmChoice($text, $order, $score)
     {
         $choice = new Choice();
         $choice->setLabel($text);
@@ -100,13 +100,10 @@ class Persister
         $question->setInvite('Invite...');
         $question->setDescription($description);
 
-        $this->multipleChoiceType = $this->om->getRepository('UJMExoBundle:TypeQCM')->findOneByValue('Multiple response');
-
         if (!$this->multipleChoiceType) {
-            $this->multipleChoiceType = new TypeQCM();
-            $this->multipleChoiceType->setCode(1);
-            $this->multipleChoiceType->setValue('Multiple response');
-            $this->om->persist($this->multipleChoiceType);
+            $this->multipleChoiceType = $this->om
+                ->getRepository('UJMExoBundle:TypeQCM')
+                ->findOneByValue('Multiple response');
         }
 
         $interactionQcm = new InteractionQCM();
@@ -173,13 +170,11 @@ class Persister
         $question = new Question();
         $question->setTitle($title);
         $question->setInvite('Invite...');
-        $this->matchType = $this->om->getRepository('UJMExoBundle:TypeMatching')->findOneByCode(1);
 
         if (!$this->matchType) {
-            $this->matchType = new TypeMatching();
-            $this->matchType->setValue('To bind');
-            $this->matchType->setCode(1);
-            $this->om->persist($this->matchType);
+            $this->matchType = $this->om
+                ->getRepository('UJMExoBundle:TypeMatching')
+                ->findOneByCode(1);
         }
 
         $interactionMatching = new InteractionMatching();

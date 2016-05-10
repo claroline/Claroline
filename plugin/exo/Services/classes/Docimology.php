@@ -224,26 +224,17 @@ class Docimology
     /**
      * Docimology, to calulate the standard deviation for the discrimination coefficient.
      *
-     * @param type $x
-     * @param type $mean
-     *
-     * @return type
-     */
-    private function sd_square($x, $mean)
-    {
-        return pow($x - $mean, 2);
-    }
-
-    /**
-     * Docimology, to calulate the standard deviation for the discrimination coefficient.
-     *
      * @param type $array
      *
      * @return type
      */
     private function sd($array)
     {
-        return sqrt(array_sum(array_map(array($this, 'sd_square'), $array, array_fill(0, count($array), (array_sum($array) / count($array))))) / (count($array) - 1));
+        $sdSquare = function ($x, $mean) {
+            return pow($x - $mean, 2);
+        };
+
+        return sqrt(array_sum(array_map($sdSquare, $array, array_fill(0, count($array), (array_sum($array) / count($array))))) / (count($array) - 1));
     }
 
     /**
@@ -252,7 +243,7 @@ class Docimology
      *
      *
      * @param int      $exerciseId
-     * @param Question $sq         questions 
+     * @param Question $sq         questions
      *
      * @return array
      */
