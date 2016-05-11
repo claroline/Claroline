@@ -1572,22 +1572,43 @@ class UserManager
      */
     public function bindUserToOrganization()
     {
+        $limit = 2000;
+        $offset = 0;
+        $this->log('Add organizations to users...');
         $this->objectManager->startFlushSuite();
-        $users = $this->getAll();
+        $countUsers = $this->objectManager->count('ClarolineCoreBundle:User');
         $default = $this->organizationManager->getDefault();
         $i = 0;
+        $detach = [];
 
-        foreach ($users as $user) {
-            if (count($user->getOrganizations()) === 0) {
-                ++$i;
-                $this->log('Add default organization for user '.$user->getUsername());
-                $user->addOrganization($default);
-                $this->objectManager->persist($user);
+        while ($offset < $countUsers) {
+            $users = $this->userRepo->findBy(array(), null, $limit, $offset);
 
-                if ($i % self::MAX_EDIT_BATCH_SIZE == 0) {
-                    $this->objectManager->forceFlush();
+            foreach ($users as $user) {
+                if (count($user->getOrganizations()) === 0) {
+                    ++$i;
+                    $this->log('Add default organization for user '.$user->getUsername());
+                    $user->addOrganization($default);
+                    $this->objectManager->persist($user);
+                    $detach[] = $user;
+
+                    if ($i % 250 == 0) {
+                        $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
+                        $this->objectManager->forceFlush();
+
+                        foreach ($detach as $el) {
+                            $this->objectManager->detach($el);
+                        }
+
+                        $detach = [];
+                    }
+                } else {
+                    $this->log("Organization for user {$user->getUsername()} already exists");
+                    $this->objectManager->detach($user);
                 }
             }
+
+            $offset += $limit;
         }
 
         $this->objectManager->endFlushSuite();
