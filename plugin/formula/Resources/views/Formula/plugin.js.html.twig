@@ -1,8 +1,12 @@
+{% javascripts output='js/tinymce/plugins/formula/langs.js'
+    '@IcapFormulaPluginBundle/Resources/public/tinymce/plugins/formula/langs/*'
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
 <script>
     (function () {
         'use strict';
         var tinymce = window.tinymce;
-        tinymce.PluginManager.requireLangPack('formula', 'en,es,fr_FR');
         tinymce.PluginManager.add('formula', function (editor, url) {
             function showFormulaDialog() {
                 var currentNode = editor.selection.getNode();
