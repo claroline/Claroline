@@ -1,3 +1,15 @@
+
+# a
+add_grading_scale_label: Ajouter un degré d'apréciation
+add_criteria_label: Ajouter une information/un critère
+
+# d
+default_scale_very_good: Très bien
+default_scale_satisfying: Satisfaisant
+default_scale_insufficient: Insuffisant
+default_criteria_comment: Commentaire
+
+# to sort
 formatDatetime: 'd/m/Y (H:i)'
 Resource: 'Ressource'
 dropzone_edit: 'Modifier'
