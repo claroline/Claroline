@@ -11,12 +11,9 @@
 
 namespace Claroline\ForumBundle\Listener;
 
-use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
-use Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig;
-use Claroline\ForumBundle\Form\Widget\LastMessageWidgetConfigType;
 use Claroline\ForumBundle\Manager\Manager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -141,29 +138,5 @@ class ForumWidgetListener
             )
         ));
         $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("widget_claroline_forum_widget_configuration")
-     */
-    public function onConfigure(ConfigureWidgetEvent $event)
-    {
-        $widgetInstance = $event->getInstance();
-        $lastMessageWidgetConfig = $this->forumManager->getConfig($widgetInstance);
-
-        if ($lastMessageWidgetConfig === null) {
-            $lastMessageWidgetConfig = new LastMessageWidgetConfig();
-        }
-
-        $form = $this->formFactory->create(new LastMessageWidgetConfigType(), $lastMessageWidgetConfig);
-
-        $content = $this->templatingEngine->render(
-            'ClarolineForumBundle:Widget:lastMessageWidgetConfig.html.twig',
-            array(
-                'form' => $form->createView(),
-                'widgetInstance' => $widgetInstance,
-            )
-        );
-        $event->setContent($content);
     }
 }
