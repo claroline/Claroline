@@ -335,7 +335,7 @@ class UserManager
      *
      * @return array
      */
-    public function importUsers(array $users, $sendMail = true, $logger = null, $additionalRoles = array())
+    public function importUsers(array $users, $sendMail = true, $logger = null, $additionalRoles = array(), $enableEmailNotifaction = false)
     {
         $returnValues = array();
         //keep these roles before the clear() will mess everything up. It's not what we want.
@@ -419,6 +419,8 @@ class UserManager
             $newUser->setPhone($phone);
             $newUser->setLocale($lg);
             $newUser->setAuthentication($authentication);
+            $newUser->setIsMailNotified($enableEmailNotifaction);
+
             $this->createUser($newUser, $sendMail, $additionalRoles, $model, $username.uniqid());
             $this->objectManager->persist($newUser);
             $returnValues[] = $firstName.' '.$lastName;
@@ -1204,10 +1206,11 @@ class UserManager
      * )
      *
      * @param array $users
+     * @param bool  $enableEmailNotification default to null so we have the option to not override it
      *
      * @return array
      */
-    public function updateImportedUsers(array $users, $additionalRoles = array())
+    public function updateImportedUsers(array $users, $additionalRoles = array(), $enableEmailNotification = null)
     {
         $returnValues = array();
         $lg = $this->platformConfigHandler->getParameter('locale_language');
@@ -1253,6 +1256,9 @@ class UserManager
                 $existingUser->setPhone($phone);
                 $existingUser->setLocale($lg);
                 $existingUser->setAuthentication($authentication);
+                if ($enableEmailNotification !== null) {
+                    $existingUser->setIsMailNotified($enableEmailNotification);
+                }
                 $this->objectManager->persist($existingUser);
                 $updatedUsers[] = $existingUser;
                 $returnValues[] = $firstName.' '.$lastName;

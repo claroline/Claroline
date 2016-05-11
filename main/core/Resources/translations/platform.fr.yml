@@ -1043,6 +1043,7 @@ use_stable_repo: 'Utiliser les dépôts stables'
 use_test_repo: 'Utiliser les dépôts de test'
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
+user_enable_mail_notification_label: 'Activer les notifications par email'
 user_creation: 'Création d''un utilisateur'
 user_creation_success: 'Le compte utilisateur a été créé avec succès.'
 user_info: 'Informations utilisateur'
