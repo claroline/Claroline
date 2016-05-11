@@ -109,10 +109,12 @@ class Detector
 
         if ($class) {
             $namespaceSegments[] = $class;
+            $fqcn = implode('\\', $namespaceSegments);
+            $bundleInterface = 'Symfony\Component\HttpKernel\Bundle\BundleInterface';
 
-            return implode('\\', $namespaceSegments);
+            if (in_array($bundleInterface, class_implements($fqcn))) {
+                return $fqcn;
+            }
         }
-
-        return $class;
     }
 }
