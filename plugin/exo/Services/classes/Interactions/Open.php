@@ -82,8 +82,6 @@ class Open extends Interaction
             }
         }
 
-        $score .= '/'.$this->maxScore($interOpen);
-
         return $score;
     }
 
