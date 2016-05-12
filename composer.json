@@ -19,7 +19,7 @@
         "ext-pdo_mysql": "*",
         "besimple/sso-auth-bundle": "*",
         "cocur/slugify": "~1.0",
-        "composer/composer": "~1.0",
+        "composer/composer": "1.1.0",
         "ddeboer/data-import": "~0.18",
         "doctrine/data-fixtures": "dev-master",
         "doctrine/dbal": "~2.4",
