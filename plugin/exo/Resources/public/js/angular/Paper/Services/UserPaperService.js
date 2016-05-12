@@ -4,18 +4,16 @@
  * @param {Object}       $http
  * @param {Object}       $q
  * @param {PaperService} PaperService
- * @param {StepService}  StepService
  * @constructor
  */
-var UserPaperService = function UserPaperService($http, $q, PaperService, StepService) {
+var UserPaperService = function UserPaperService($http, $q, PaperService) {
     this.$http        = $http;
     this.$q           = $q;
     this.PaperService = PaperService;
-    this.StepService  = StepService;
 };
 
 // Set up dependency injection
-UserPaperService.$inject = [ '$http', '$q', 'PaperService', 'StepService' ];
+UserPaperService.$inject = [ '$http', '$q', 'PaperService' ];
 
 /**
  * Current paper of the User
@@ -48,33 +46,7 @@ UserPaperService.prototype.setPaper = function setPaper(paper) {
  * @returns {Array} The ordered list of Questions
  */
 UserPaperService.prototype.orderQuestions = function orderQuestions(step) {
-    var ordered = [];
-    if (step.items && 0 !== step.items.length) {
-        // Get order for the current Step
-        var itemsOrder = null;
-        if (this.paper && this.paper.order) {
-            for (var i = 0; i < this.paper.order.length; i++) {
-                if (step.id === this.paper.order[i].id) {
-                    // Order for the current step found
-                    itemsOrder = this.paper.order[i].items;
-                    break; // Stop searching
-                }
-            }
-        }
-
-        if (itemsOrder) {
-            for (var i = 0; i < itemsOrder.length; i++) {
-                var question = this.StepService.getQuestion(step, itemsOrder[i]);
-                if (question) {
-                    ordered.push(question);
-                }
-            }
-        } else {
-            ordered = step.items;
-        }
-    }
-
-    return ordered;
+    return this.PaperService.orderStepQuestions(this.paper, step);
 };
 
 /**

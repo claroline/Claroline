@@ -3,18 +3,20 @@
  * @param {Object}          $http
  * @param {Object}          $q
  * @param {ExerciseService} ExerciseService
+ * @param {StepService}     StepService
  * @param {QuestionService} QuestionService
  * @constructor
  */
-var PaperService = function PaperService($http, $q, ExerciseService, QuestionService) {
+var PaperService = function PaperService($http, $q, ExerciseService, StepService, QuestionService) {
     this.$http           = $http;
     this.$q              = $q;
     this.ExerciseService = ExerciseService;
+    this.StepService     = StepService;
     this.QuestionService = QuestionService;
 };
 
 // Set up dependency injection
-PaperService.$inject = [ '$http', '$q', 'ExerciseService', 'QuestionService' ];
+PaperService.$inject = [ '$http', '$q', 'ExerciseService', 'StepService', 'QuestionService' ];
 
 /**
  * Get one paper details
@@ -235,6 +237,67 @@ PaperService.prototype.getPaperScore = function getPaperScore(paper) {
     }
 
     return score;
+};
+
+/**
+ * Order the Questions of a Step
+ * @param   {Object} paper
+ * @param   {Array}  questions
+ * @returns {Array}
+ */
+PaperService.prototype.orderQuestions = function orderQuestions(paper, questions) {
+    var ordered = [];
+
+    if (paper && paper.order) {
+        for (var i = 0; i < paper.order.length; i++) {
+            var stepOrder = paper.order[i];
+            for (var j = 0; j < stepOrder.items.length; j++) {
+                var item = stepOrder.items[j];
+                var question = this.QuestionService.getQuestion(questions, item);
+                if (question) {
+                    ordered.push(question);
+                }
+            }
+        }
+    }
+
+    return ordered;
+};
+
+/**
+ * Order the Questions of a Step
+ * @param   {Object} paper
+ * @param   {Object} step
+ * @returns {Array} The ordered list of Questions
+ */
+PaperService.prototype.orderStepQuestions = function orderStepQuestions(paper, step) {
+    var ordered = [];
+    if (step.items && 0 !== step.items.length) {
+        // Get order for the current Step
+        var itemsOrder = null;
+        if (paper && paper.order) {
+            for (var i = 0; i < paper.order.length; i++) {
+                if (step.id === paper.order[i].id) {
+                    // Order for the current step found
+                    itemsOrder = paper.order[i].items;
+                    break; // Stop searching
+                }
+            }
+        }
+
+        if (itemsOrder) {
+            for (var i = 0; i < itemsOrder.length; i++) {
+                var question = this.StepService.getQuestion(step, itemsOrder[i]);
+                if (question) {
+                    ordered.push(question);
+                }
+            }
+        } else {
+            ordered = step.items;
+        }
+    }
+
+    return ordered;
 };
 
 // Register service into AngularJS

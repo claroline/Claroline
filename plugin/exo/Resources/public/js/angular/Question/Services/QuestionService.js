@@ -48,6 +48,24 @@ QuestionService.prototype.getTypeService = function getTypeService(questionType)
     return service;
 };
 
+/**
+ * Get a Question from its ID
+ * @param {Array} questions
+ * @param {String} id
+ * @returns {Object}
+ */
+QuestionService.prototype.getQuestion = function getQuestion(questions, id) {
+    var question = null;
+    for (var i = 0; i < questions.length; i++) {
+        if (id === questions[i].id) {
+            question = questions[i];
+            break; // Stop searching
+        }
+    }
+
+    return question;
+};
+
 // Register service into AngularJS
 angular
     .module('Question')

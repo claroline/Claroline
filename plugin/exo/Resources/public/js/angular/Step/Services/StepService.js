@@ -1,13 +1,14 @@
 /**
  * Step Service
+ * @param {QuestionService} QuestionService
  * @constructor
  */
-var StepService = function StepService() {
-
+var StepService = function StepService(QuestionService) {
+    this.QuestionService = QuestionService;
 };
 
 // Set up dependency injection
-StepService.$inject = [];
+StepService.$inject = [ 'QuestionService' ];
 
 /**
  * Get a Step question by its ID
@@ -18,14 +19,8 @@ StepService.$inject = [];
 StepService.prototype.getQuestion = function getQuestion(step, questionId) {
     var question = null;
 
-    if (step && step.items && 0 !== step.items) {
-        for (var i = 0; i < step.items.length; i++) {
-            if (questionId === step.items[i].id) {
-                // Question found
-                question = step.items[i];
-                break; // Stop searching
-            }
-        }
+    if (step && step.items && 0 !== step.items.length) {
+        question = this.QuestionService.getQuestion(step.items, questionId);
     }
 
     return question;

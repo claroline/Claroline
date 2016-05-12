@@ -9,7 +9,7 @@ var PaperShowCtrl = function PaperShowCtrl(paperPromise, PaperService) {
     this.PaperService = PaperService;
 
     this.paper        = paperPromise.paper;
-    this.questions    = paperPromise.questions;
+    this.questions    = this.PaperService.orderQuestions(this.paper, paperPromise.questions);
 };
 
 // Set up dependency injection
@@ -17,6 +17,10 @@ PaperShowCtrl.$inject = [ 'paperPromise', 'PaperService' ];
 
 PaperShowCtrl.prototype.paper = {};
 
+/**
+ * Ordered Questions of the Paper
+ * @type {Array}
+ */
 PaperShowCtrl.prototype.questions = [];
 
 PaperShowCtrl.prototype.getQuestionPaper = function getQuestionPaper(question) {

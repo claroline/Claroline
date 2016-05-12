@@ -277,6 +277,7 @@ class PaperManager
                 'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
                 'interrupted' => $paper->getInterupt(),
                 'scoreTotal' => $paper->getScore(),
+                'order' => $this->getStepsQuestions($paper),
                 'questions' => $this->exportPaperQuestions($paper),
             ];
         }, $papers);
@@ -313,6 +314,7 @@ class PaperManager
             'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
             'interrupted' => $paper->getInterupt(),
             'scoreTotal' => $paper->getScore(),
+            'order' => $this->getStepsQuestions($paper),
             'questions' => $this->exportPaperQuestions($paper),
         ];
 
@@ -387,6 +389,7 @@ class PaperManager
                 'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
                 'interrupted' => $paper->getInterupt(),
                 'scoreTotal' => $paper->getScore(),
+                'order' => $this->getStepsQuestions($paper),
                 'questions' => $this->exportPaperQuestions($paper),
             ];
         }, $papers);
