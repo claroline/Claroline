@@ -86,6 +86,50 @@ ExerciseService.prototype.setComposeEnabled = function setComposeEnabled(compose
 };
 
 /**
+ * Get the total score of the Exercise
+ * @returns {number}
+ */
+ExerciseService.prototype.getScoreTotal = function getScoreTotal() {
+    var scoreTotal = 0;
+    if (this.exercise && this.exercise.steps) {
+        for (var i = 0; i < this.exercise.steps.length; i++) {
+            var step = this.exercise.steps[i];
+            for (var j = 0; j < step.items.length; j++) {
+                if (step.items[j].scoreTotal) {
+                    scoreTotal += step.items[j].scoreTotal;
+                }
+            }
+        }
+    }
+
+    return scoreTotal;
+};
+
+/**
+ * Check if the current Exercise has questions that need manual correction (eg. long open question)
+ */
+ExerciseService.prototype.needManualCorrection = function needManualCorrection() {
+    var needed = false;
+    if (this.exercise && this.exercise.steps && 0 !== this.exercise.steps.length) {
+        // Exercise has steps
+        for (var i = 0; i < this.exercise.steps.length; i++) {
+            var step = this.exercise.steps[i];
+            if (step && step.items && 0 !== step.items.length) {
+                // Step has items
+                for (var j = 0; j < step.items.length; j++){
+                    if (step.items[j].typeOpen && step.items[j].typeOpen === 'long'){
+                        needed = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return needed;
+};
+
+/**
  * Save modifications of the metadata of the Exercise
  * @param   {Object} exercise
  * @returns {Promise}

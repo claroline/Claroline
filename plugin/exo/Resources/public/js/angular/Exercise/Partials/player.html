@@ -1,9 +1,9 @@
 <div class="player-container">
     <!-- Player header -->
-    <div class="attempts">
-        <span>{{ 'sequence_attempts_infos'|trans:{"1" : exercisePlayerCtrl.step.maxAttempts}:'ujm_sequence'}}.</span>
-        <span>{{ 'sequence_nb_attempts'|trans:{"1" : exercisePlayerCtrl.currentStepTry}:'ujm_sequence' }}</span>
-        <span>/ {{ exercisePlayerCtrl.step.maxAttempts }}</span>
+    <div class="attempts" data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">
+        <span>{{ 'sequence_attempts_infos'|trans:{ "1" : exercisePlayerCtrl.exercise.meta.maxAttempts }:'ujm_sequence'}}.</span>
+        <span>{{ 'sequence_nb_attempts'|trans:{ "1" : exercisePlayerCtrl.paper.number }:'ujm_sequence' }}</span>
+        <span>/ {{ exercisePlayerCtrl.exercise.meta.maxAttempts }}</span>
     </div>
 
     <!-- Step content -->
@@ -14,23 +14,13 @@
             data-on-end="exercisePlayerCtrl.end()"
         ></timer>
 
-        <!--<div class="alert alert-warning" role="alert" data-ng-show="exercisePlayerCtrl.exercise.meta.duration != 0">
-            {{ 'timer'|trans:{};'ujm_exo' }}
-            <span data-ng-show="exercisePlayerCtrl.$localStorage.hours != 0">
-                {{ exercisePlayerCtrl.$localStorage.hours }}h
-            </span>
-
-            <span data-ng-show="exercisePlayerCtrl.$localStorage.minutes != 0">
-                {{ exercisePlayerCtrl.$localStorage.minutes }}m
-            </span>
-
-            <span data-ng-show="exercisePlayerCtrl.$localStorage.minutes < 2 && exercisePlayerCtrl.$localStorage.hours == 0">
-                {{ exercisePlayerCtrl.$localStorage.seconds }}s
-            </span>
-        </div>-->
-
         <!-- Display the current Step -->
-        <step-show data-step-index="{{exercisePlayerCtrl.index}}" data-step="exercisePlayerCtrl.step"></step-show>
+        <step-show
+                data-step-index="{{exercisePlayerCtrl.index}}"
+                data-step="exercisePlayerCtrl.step"
+                data-solution-shown="exercisePlayerCtrl.solutionShown"
+                data-current-try="exercisePlayerCtrl.currentStepTry">
+        </step-show>
     </div>
 
     <!-- Player navigation -->

@@ -152,12 +152,6 @@ angular
 
                                 return promise;
                             }
-                        ],
-                        exercise: [
-                            'ExerciseService',
-                            function exerciseResolve(ExerciseService) {
-                                return ExerciseService.getExercise();
-                            }
                         ]
                     },
 

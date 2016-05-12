@@ -291,6 +291,8 @@ question_description: Description of the question (optional)
 question_model: Set as model
 question_title: Question title (optional)
 question_shared_with: This question is shared with users below
+question_need_manual_correction: This question needs a manual correction
+question_open_keywords_info: Your answer needs to contain the following keywords to get the points
 
 # R
 random_questions: Random order of questions

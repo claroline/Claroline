@@ -12,7 +12,7 @@ var AbstractQuestionCtrl = function AbstractQuestionCtrl(FeedbackService) {
     // Register specific Feedback functions
     this.FeedbackService
         .on('show', this.onFeedbackShow.bind(this))
-        .on('hide', this.onFeedbackHide.bind(this))
+        .on('hide', this.onFeedbackHide.bind(this));
 };
 
 // Set up dependency injection
@@ -25,10 +25,10 @@ AbstractQuestionCtrl.$inject = [ 'FeedbackService' ];
 AbstractQuestionCtrl.prototype.question = {};
 
 /**
- * Paper data for the current question
- * @type {Object}
+ * Answer of the User for the current Question
+ * @type {Object|Array}
  */
-AbstractQuestionCtrl.prototype.questionPaper = {};
+AbstractQuestionCtrl.prototype.answer = null;
 
 /**
  * Feedback info (available + visible)

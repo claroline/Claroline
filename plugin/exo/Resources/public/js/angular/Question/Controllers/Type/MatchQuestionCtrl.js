@@ -12,11 +12,6 @@ var MatchQuestionCtrl = function MatchQuestionCtrl(FeedbackService, $scope) {
     for (var i=0; i<this.dropped.length; i++) {
         this.savedAnswers.push(this.dropped[i]);
     }
-
-    // Initialize answer if needed
-    if (null === this.questionPaper.answer || typeof this.questionPaper.answer === 'undefined') {
-        this.questionPaper.answer = [];
-    }
 };
 
 // Extends AbstractQuestionCtrl
@@ -264,7 +259,7 @@ MatchQuestionCtrl.prototype.getDropColor = function getDropColor(subject, propos
     for (var i = 0; i < this.savedAnswers.length; i++) {
         if (this.savedAnswers[i].target === proposal.id) {
             for (var j = 0; j < this.question.solutions.length; j++) {
-                if (this.savedAnswers[i].source === this.question.solutions[j].firstId && this.savedAnswers[i].target === this.question.solutions[j].secondId && this.feedback.enabled) {
+                if (this.savedAnswers[i].source === this.question.solutions[j].firstId && this.savedAnswers[i].target === this.question.solutions[j].secondId && (this.feedback.enabled || this.solutions)) {
                     if (subject === 'div') {
                         return "drop-success";
                     }
@@ -510,7 +505,7 @@ MatchQuestionCtrl.prototype.onFeedbackHide = function onFeedbackHide() {
  */
 MatchQuestionCtrl.prototype.updateStudentData = function () {
     // build answers
-    this.questionPaper.answer.splice(0, this.questionPaper.answer.length);
+    this.answer.splice(0, this.answer.length);
     var answers_to_check;
     if (this.question.toBind) {
         answers_to_check = this.connections;
@@ -522,7 +517,7 @@ MatchQuestionCtrl.prototype.updateStudentData = function () {
     for (var i = 0; i < answers_to_check.length; i++) {
         if (answers_to_check[i] !== '' && answers_to_check[i].source && answers_to_check[i].target) {
             var answer = answers_to_check[i].source + ',' + answers_to_check[i].target;
-            this.questionPaper.answer.push(answer);
+            this.answer.push(answer);
         }
     }
 };
@@ -569,13 +564,13 @@ MatchQuestionCtrl.prototype.reset = function () {
  * problem when updating a previously given answer
  */
 MatchQuestionCtrl.prototype.addPreviousConnections = function addPreviousConnections() {
-    if (this.questionPaper.answer && this.questionPaper.answer.length > 0) {
+    if (this.answer && this.answer.length > 0) {
         // init previously given answer
-        var sets = this.questionPaper.answer;
+        var sets = this.answer;
         for (var i = 0; i < sets.length; i++) {
             if (sets[i] && sets[i] !== '') {
                 var items = sets[i].split(',');
-                if (this.feedback.enabled) {
+                if (this.feedback.enabled || this.solutions) {
                     var created = false;
                     for (var j=0; j<this.question.solutions.length; j++) {
                         if (items[0] === this.question.solutions[j].firstId && items[1] === this.question.solutions[j].secondId) {
@@ -607,9 +602,9 @@ MatchQuestionCtrl.prototype.addPreviousConnections = function addPreviousConnect
  */
 MatchQuestionCtrl.prototype.addPreviousDroppedItems = function addPreviousDroppedItems() {
     this.dropped = [];
-    if (this.questionPaper.answer && this.questionPaper.answer.length > 0) {
+    if (this.answer && this.answer.length > 0) {
         // init previously given answer
-        var sets = this.questionPaper.answer;
+        var sets = this.answer;
         for (var i = 0; i < sets.length; i++) {
             if (sets[i] && sets[i] !== '') {
                 var items = sets[i].split(',');
@@ -684,7 +679,7 @@ MatchQuestionCtrl.prototype.removeConnection = function removeConnection(data) {
     // connection is removed from dom even with this commented...
     // If not commented, code stops at this methods...
     jsPlumb.detach(data);
-console.log("pass detach");
+
     for (var i = 0; i < this.connections.length; i++) {
         if (this.connections[i].source === sourceId && this.connections[i].target === targetId) {
             this.connections.splice(i, 1);

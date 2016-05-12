@@ -1,19 +1,21 @@
 /**
  * UserPaper Service
- * Manages Paper of the current User
- * @param {Object}      $http
- * @param {Object}      $q
- * @param {StepService} StepService
+ * Manages Paper of the  current User
+ * @param {Object}       $http
+ * @param {Object}       $q
+ * @param {PaperService} PaperService
+ * @param {StepService}  StepService
  * @constructor
  */
-var UserPaperService = function UserPaperService($http, $q, StepService) {
-    this.$http       = $http;
-    this.$q          = $q;
-    this.StepService = StepService;
+var UserPaperService = function UserPaperService($http, $q, PaperService, StepService) {
+    this.$http        = $http;
+    this.$q           = $q;
+    this.PaperService = PaperService;
+    this.StepService  = StepService;
 };
 
 // Set up dependency injection
-UserPaperService.$inject = [ '$http', '$q', 'StepService' ];
+UserPaperService.$inject = [ '$http', '$q', 'PaperService', 'StepService' ];
 
 /**
  * Current paper of the User
@@ -60,7 +62,6 @@ UserPaperService.prototype.orderQuestions = function orderQuestions(step) {
             }
         }
 
-
         if (itemsOrder) {
             for (var i = 0; i < itemsOrder.length; i++) {
                 var question = this.StepService.getQuestion(step, itemsOrder[i]);
@@ -79,42 +80,9 @@ UserPaperService.prototype.orderQuestions = function orderQuestions(step) {
 /**
  * Get Paper for a Question
  * @param {Object} question
- *
- * @todo Do not send empty answers and cancel submission if all step answers are empty
  */
 UserPaperService.prototype.getQuestionPaper = function getQuestionPaper(question) {
-    var questionPaper = {};
-
-    for (var i = 0; i < this.paper.questions.length; i++) {
-        if (this.paper.questions[i].id == question.id) {
-            // Question paper found
-            questionPaper = this.paper.questions[i];
-
-            // Initialize answers property
-            if (!questionPaper.answer) {
-                questionPaper.answer = null;
-            }
-
-            // Initialize hints property
-            if (!questionPaper.hints) {
-                questionPaper.hints  = [];
-            }
-
-            break; // Stop searching
-        }
-    }
-
-    if (0 === Object.keys(questionPaper).length) {
-        // There is no Paper for the current Question => initialize Object properties
-        questionPaper.id     = question.id;
-        questionPaper.answer = null;
-        questionPaper.hints  = [];
-
-        // Add Question to the Paper
-        this.paper.questions.push(questionPaper);
-    }
-
-    return questionPaper;
+    return this.PaperService.getQuestionPaper(this.paper, question);
 };
 
 /**

@@ -14,8 +14,8 @@ var ClozeQuestionDirective = function ClozeQuestionDirective($compile) {
         bindToController: true,
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/cloze.html',
         scope: {
-            question     : '=',
-            questionPaper: '='
+            question : '=',
+            answer   : '='
         },
         compile: function compile() {
             return {
@@ -28,7 +28,7 @@ var ClozeQuestionDirective = function ClozeQuestionDirective($compile) {
                     for (var i = 0; i < controller.question.holes.length; i++) {
                         var hole            = controller.question.holes[i];
                         var holeAnswer      = controller.getHoleAnswer(hole);
-                        var holeAnswerIndex = controller.questionPaper.answer.indexOf(holeAnswer); // Will be used for Angular data-binding
+                        var holeAnswerIndex = controller.answer.indexOf(holeAnswer); // Will be used for Angular data-binding
 
                         // Find hole input
                         var holeHtml = cloze.find('#' + hole.position);
@@ -37,7 +37,7 @@ var ClozeQuestionDirective = function ClozeQuestionDirective($compile) {
                         holeHtml.addClass('form-control input-sm');
 
                         // Bind Angular JS
-                        holeHtml.attr('data-ng-model', 'clozeQuestionCtrl.questionPaper.answer[' + holeAnswerIndex + '].answerText');
+                        holeHtml.attr('data-ng-model', 'clozeQuestionCtrl.answer[' + holeAnswerIndex + '].answerText');
 
                         // Add validation class
                         holeHtml.attr('data-ng-class', '{ "has-success": clozeQuestionCtrl.holes["' + hole.id + '"].valid, "has-error": clozeQuestionCtrl.feedback.visible && !clozeQuestionCtrl.holes[' + hole.id + '].valid }');

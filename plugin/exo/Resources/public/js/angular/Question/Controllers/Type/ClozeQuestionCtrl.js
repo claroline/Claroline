@@ -1,22 +1,20 @@
 /**
  * Cloze Question Controller
- * @param {FeedbackService} FeedbackService
+ * @param {FeedbackService}      FeedbackService
+ * @param {ClozeQuestionService} ClozeQuestionService
  * @constructor
  */
-var ClozeQuestionCtrl = function ClozeQuestionCtrl(FeedbackService) {
+var ClozeQuestionCtrl = function ClozeQuestionCtrl(FeedbackService, ClozeQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
 
-    // Initialize answer if needed
-    if (null === this.questionPaper.answer || typeof this.questionPaper.answer === 'undefined') {
-        this.questionPaper.answer = [];
-    }
+    this.ClozeQuestionService = ClozeQuestionService;
 };
 
 // Extends AbstractQuestionCtrl
 ClozeQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype);
 
 // Set up dependency injection (get DI from parent too)
-ClozeQuestionCtrl.$inject = AbstractQuestionCtrl.$inject;
+ClozeQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'ClozeQuestionService' ]);
 
 /**
  * Stores Holes to be able to toggle there state
@@ -31,18 +29,16 @@ ClozeQuestionCtrl.prototype.holes = {};
  * @returns {Boolean}
  */
 ClozeQuestionCtrl.prototype.isHoleValid = function isHoleValid(hole) {
-    var solution = this.getHoleSolution(hole);
     var answer   = this.getHoleAnswer(hole);
-
-    if (solution && answer) {
-        var expected = this.getHoleExpectedAnswer(hole, solution);
-        if (expected) {
+    if (answer) {
+        var correct = this.ClozeQuestionService.getHoleCorrectAnswer(this.question, hole);
+        if (correct) {
             // The right response has been found, we can check the User answer
             if (hole.selector) {
-                return answer.answerText === expected.id;
+                return answer.answerText === correct.id;
             } else {
-                return !!((expected.caseSensitive && expected.text === answer.answerText)
-                || (!expected.caseSensitive && expected.text.toLowerCase() === answer.answerText.toLowerCase()));
+                return !!((correct.caseSensitive && correct.text === answer.answerText)
+                || (!correct.caseSensitive && correct.text.toLowerCase() === answer.answerText.toLowerCase()));
             }
         }
     }
@@ -54,15 +50,7 @@ ClozeQuestionCtrl.prototype.isHoleValid = function isHoleValid(hole) {
  * @returns {Object}
  */
 ClozeQuestionCtrl.prototype.getHoleAnswer = function getHoleAnswer(hole) {
-    var answer = null;
-
-    for (var i = 0; i < this.questionPaper.answer.length; i++) {
-        if (hole.id === this.questionPaper.answer[i].holeId) {
-            answer = this.questionPaper.answer[i];
-            break; // Stop searching
-        }
-    }
-
+    var answer = this.ClozeQuestionService.getHoleAnswer(this.answer, hole);
     if (null === answer) {
         // Generate an empty response
         answer = {
@@ -71,32 +59,10 @@ ClozeQuestionCtrl.prototype.getHoleAnswer = function getHoleAnswer(hole) {
         };
 
         // Add to the list of answers
-        this.questionPaper.answer.push(answer);
+        this.answer.push(answer);
     }
 
     return answer;
-};
-
-/**
- * Get the complete solution for a Hole
- * @param   {Object} hole
- * @returns {{
- *      id      : String
- *      answers : Array
- * }}
- */
-ClozeQuestionCtrl.prototype.getHoleSolution = function getHoleSolution(hole) {
-    var solution = null;
-    if (this.question.solutions) {
-        for (var i = 0; i < this.question.solutions.length; i++) {
-            if (this.question.solutions[i].holeId == hole.id) {
-                solution = this.question.solutions[i];
-                break; // Stop searching
-            }
-        }
-    }
-
-    return solution;
 };
 
 /**
@@ -105,48 +71,7 @@ ClozeQuestionCtrl.prototype.getHoleSolution = function getHoleSolution(hole) {
  * @returns {string}
  */
 ClozeQuestionCtrl.prototype.getHoleFeedback = function getHoleFeedback(hole) {
-    var feedback = '';
-
-    var solution = this.getHoleSolution(hole);
-    if (solution) {
-        var expected = this.getHoleExpectedAnswer(hole, solution);
-        if (expected && expected.feedback) {
-            feedback = expected.feedback;
-        }
-    }
-
-    return feedback;
-};
-
-/**
- * Get the expected answer from the Hole solution
- * @param   {Object} hole
- * @param   {Object} solution
- * @returns {{
- *      text          : String,
- *      caseSensitive : Boolean,
- *      score         : Number,
- *      feedback      : String,
- *      rightResponse : Boolean
- * }}
- */
-ClozeQuestionCtrl.prototype.getHoleExpectedAnswer = function getHoleExpectedAnswer(hole, solution) {
-    var expectedWord = null;
-    if (hole.selector) {
-        // The hole is a <select>
-        // Find the expected word in the solution list
-        for (var i = 0; i < solution.answers.length; i++) {
-            if (solution.answers[i].rightResponse) {
-                expectedWord = solution.answers[i];
-                break; // stop searching
-            }
-        }
-    } else {
-        // The hole is a <input>
-        expectedWord = solution.answers && solution.answers.length > 0 ? solution.answers[0] : null;
-    }
-
-    return expectedWord;
+    return this.ClozeQuestionService.getHoleFeedback(this.question, hole);
 };
 
 /**

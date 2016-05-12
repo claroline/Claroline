@@ -1,15 +1,13 @@
 /**
  * Graphic Question Controller
- * @param {FeedbackService} FeedbackService
+ * @param {FeedbackService}        FeedbackService
+ * @param {GraphicQuestionService} GraphicQuestionService
  * @constructor
  */
-var GraphicQuestionCtrl = function GraphicQuestionCtrl(FeedbackService) {
+var GraphicQuestionCtrl = function GraphicQuestionCtrl(FeedbackService, GraphicQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
 
-    // Initialize answer if needed
-    if (null === this.questionPaper.answer || typeof this.questionPaper.answer === 'undefined') {
-        this.questionPaper.answer = [];
-    }
+    this.GraphicQuestionService = GraphicQuestionService;
 
     // init coord answer array in any case
     // id order is totally arbitrary
@@ -22,9 +20,9 @@ var GraphicQuestionCtrl = function GraphicQuestionCtrl(FeedbackService) {
     }
 
     // init draggable elements with answers if any
-    if (this.questionPaper.answer && this.questionPaper.answer.length > 0) {
-        for (var i = 0; i < this.questionPaper.answer.length; i++) {
-            var answerArray = this.questionPaper.answer[i].split('-');
+    if (this.answer && this.answer.length > 0) {
+        for (var i = 0; i < this.answer.length; i++) {
+            var answerArray = this.answer[i].split('-');
             if (answerArray[0] !== 'a' || answerArray[1] !== 'a') {
                 var coord = this.coords[i];
                 coord.x = answerArray[0] !== 'a' ? parseFloat(answerArray[0]):0;
@@ -39,7 +37,13 @@ var GraphicQuestionCtrl = function GraphicQuestionCtrl(FeedbackService) {
 GraphicQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype);
 
 // Set up dependency injection (get DI from parent too)
-GraphicQuestionCtrl.$inject = AbstractQuestionCtrl.$inject;
+GraphicQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'GraphicQuestionService' ]);
+
+/**
+ * The current image of the question
+ * @type {HTMLElement}
+ */
+GraphicQuestionCtrl.prototype.$image = null;
 
 /**
  * Definition of the crosshair
@@ -61,6 +65,14 @@ GraphicQuestionCtrl.prototype.coords = []; // student answers
  * @type {Array}
  */
 GraphicQuestionCtrl.prototype.notFoundZones = [];
+
+/**
+ * Get the full URL of the Image
+ * @returns {string}
+ */
+GraphicQuestionCtrl.prototype.getImageUrl = function getImageUrl() {
+    return this.GraphicQuestionService.getImageUrl(this.question);
+};
 
 /**
  *
@@ -140,14 +152,6 @@ GraphicQuestionCtrl.prototype.reset = function reset() {
     }
 
     this.updateStudentData();
-};
-
-/**
- *
- * @returns {*|null}
- */
-GraphicQuestionCtrl.prototype.getAssetsDir = function getAssetsDir() {
-    return AngularApp.webDir;
 };
 
 /**
@@ -294,13 +298,13 @@ GraphicQuestionCtrl.prototype.hideWrongFeedbacks = function hideWrongFeedbacks()
  * For that purpose we use a shared service
  */
 GraphicQuestionCtrl.prototype.updateStudentData = function updateStudentData() {
-    this.questionPaper.answer.splice(0, this.questionPaper.answer.length);
+    this.answer.splice(0, this.answer.length);
     for (var i = 0; i < this.coords.length; i++) {
         // Se want to store the center of the crosshair
         var x = this.coords[i].x + (this.crosshair.size / 2);
         var y = this.coords[i].y + (this.crosshair.size / 2);
 
-        this.questionPaper.answer.push((x + '-' + y));
+        this.answer.push((x + '-' + y));
     }
 };
 

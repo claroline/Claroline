@@ -64,7 +64,7 @@
                         </li>
 
                         <!-- Publish Exercise -->
-                        <li data-ng-if="!exerciseCtrl.exercise.meta.published" data-ng-if="exerciseCtrl.editEnabled">
+                        <li data-ng-if="!exerciseCtrl.exercise.meta.published && exerciseCtrl.editEnabled">
                             <a href="" role="button" data-ng-click="exerciseCtrl.publish()">
                                 <span class="fa fa-check"></span> {{ 'publish' | trans:{}:'ujm_exo' }}
                             </a>
@@ -83,9 +83,12 @@
                         <span class="fa fa-check-square-o"></span> {{ 'compose' | trans:{}:'ujm_exo' }}
                     </a>
 
-                    <span data-ng-if="!(exerciseCtrl.nbPapers < exerciseCtrl.exercise.meta.maxAttempts || exerciseCtrl.exercise.meta.maxAttempts === 0)" class="navbar-right alert alert-info">
+                    <div data-ng-if="exerciseCtrl.exercise.meta.maxAttempts && exerciseCtrl.nbPapers >= exerciseCtrl.exercise.meta.maxAttempts" class="navbar-right navbar-text">
+                        <span class="text-danger">
+                            <span class="fa fa-warning"></span>
                         {{ 'attempt_info6' | trans:{}:'ujm_exo' }}
-                    </span>
+                        </span>
+                    </div>
 
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Display results of the Exercise -->
@@ -106,6 +109,6 @@
             </div><!-- /.container-fluid -->
         </nav>
 
-        <div data-ng-view=""></div>
+        <div data-ng-view="" data-ng-cloak=""></div>
     <!--</div>-->
 </div>

@@ -4,6 +4,10 @@
 // Bootstrap variables
 @import "@{vendorPath}/variables.less";
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
 .exercise-container {
     position: relative;
 
@@ -73,16 +77,6 @@
             top: 0;
             right: 0;
             padding: @panel-heading-padding;
-        }
-    }
-
-    .step-container {
-        .panel-heading {
-            border-bottom: none;
-
-            & + .panel-body {
-                border-top: 1px solid @panel-inner-border;
-            }
         }
     }
 }

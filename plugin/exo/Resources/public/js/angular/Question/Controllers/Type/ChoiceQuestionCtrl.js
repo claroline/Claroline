@@ -1,15 +1,13 @@
 /**
  * Choice Question Controller
- * @param {FeedbackService} FeedbackService
+ * @param {FeedbackService}       FeedbackService
+ * @param {ChoiceQuestionService} ChoiceQuestionService
  * @constructor
  */
-var ChoiceQuestionCtrl = function ChoiceQuestionCtrl(FeedbackService) {
+var ChoiceQuestionCtrl = function ChoiceQuestionCtrl(FeedbackService, ChoiceQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
 
-    // Initialize answer if needed
-    if (null === this.questionPaper.answer || typeof this.questionPaper.answer === 'undefined') {
-        this.questionPaper.answer = [];
-    }
+    this.ChoiceQuestionService = ChoiceQuestionService;
 
     if (this.question.choices) {
         this.choices = this.question.choices;
@@ -20,7 +18,7 @@ var ChoiceQuestionCtrl = function ChoiceQuestionCtrl(FeedbackService) {
 ChoiceQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype);
 
 // Set up dependency injection (get DI from parent too)
-ChoiceQuestionCtrl.$inject = AbstractQuestionCtrl.$inject;
+ChoiceQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'ChoiceQuestionService' ]);
 
 /**
  * Stores Choices to be able to toggle there state
@@ -34,25 +32,21 @@ ChoiceQuestionCtrl.prototype.choices = [];
  */
 ChoiceQuestionCtrl.prototype.toggleChoice = function toggleChoice(choice) {
     if (!this.feedback.visible && 1 !== choice.valid && !this.isUniqueChoiceValid()) {
-        if (!this.questionPaper.answer) {
-            this.questionPaper.answer = [];
-        }
-
         // Toggle value only if field is not locked
         if (!this.isChoiceSelected(choice)) {
             // Choice is not already selected => SELECT IT
             if (!this.question.multiple) {
                 // Only one response authorized for this question, so we need to empty the response array
-                this.questionPaper.answer.splice(0, this.questionPaper.answer.length);
+                this.answer.splice(0, this.answer.length);
             }
 
             // Add new choice into the response array
-            this.questionPaper.answer.push(choice.id);
+            this.answer.push(choice.id);
         } else {
             // Choice is already selected => UNSELECT IT
-            var choicePosition = this.questionPaper.answer.indexOf(choice.id);
+            var choicePosition = this.answer.indexOf(choice.id);
 
-            this.questionPaper.answer.splice(choicePosition, 1);
+            this.answer.splice(choicePosition, 1);
         }
     }
 };
@@ -71,12 +65,10 @@ ChoiceQuestionCtrl.prototype.isChoiceValid = function isChoiceValid(choice) {
     var isValid = 0;
 
     // if there is any answer in student data
-    if (this.questionPaper.answer && this.questionPaper.answer.length > 0 && this.question.solutions) {
+    if (this.answer && this.answer.length > 0 && this.question.solutions) {
         if (this.isChoiceSelected(choice)) {
             // The choice has been selected by User => check if it's a right response or not
-            var choiceSolution = this.getChoiceSolution(choice);
-
-            if (choiceSolution.score > 0) {
+            if (this.ChoiceQuestionService.isChoiceValid(this.question, choice)) {
                 // The current choice is part of the right response => User choice is Valid
                 isValid = 1;
             } else {
@@ -114,28 +106,7 @@ ChoiceQuestionCtrl.prototype.isUniqueChoiceValid = function isUniqueChoiceValid(
  * @returns {Boolean}
  */
 ChoiceQuestionCtrl.prototype.isChoiceSelected = function isChoiceSelected(choice) {
-    return this.questionPaper.answer && -1 !== this.questionPaper.answer.indexOf(choice.id);
-};
-
-/**
- * Get the solution for a choice
- * @param   {Object} choice
- * @returns {Object}
- */
-ChoiceQuestionCtrl.prototype.getChoiceSolution = function getChoiceSolution(choice) {
-    var solution = null;
-
-    if (this.question.solutions) {
-        // Solutions have been loaded
-        for (var i = 0; i < this.question.solutions.length; i++) {
-            if (choice.id === this.question.solutions[i].id) {
-                solution = this.question.solutions[i];
-                break; // Stop searching
-            }
-        }
-    }
-
-    return solution;
+    return this.ChoiceQuestionService.isChoiceSelected(this.answer, choice);
 };
 
 /**
@@ -144,12 +115,12 @@ ChoiceQuestionCtrl.prototype.getChoiceSolution = function getChoiceSolution(choi
  * @returns {String}
  */
 ChoiceQuestionCtrl.prototype.getChoiceFeedback = function getChoiceFeedback(choice) {
+    var feedback = null;
     if (this.isChoiceSelected(choice)) {
-        var solution = this.getChoiceSolution(choice);
-        if (solution) {
-            return solution.feedback;
-        }
+        feedback = this.ChoiceQuestionService.getChoiceFeedback(this.question, choice);
     }
+
+    return feedback;
 };
 
 /**

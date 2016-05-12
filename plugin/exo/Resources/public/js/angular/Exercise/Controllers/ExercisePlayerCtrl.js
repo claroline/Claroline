@@ -28,8 +28,6 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl($location, exercise, step, 
     this.index    = this.ExerciseService.getIndex(step);
     this.previous = this.ExerciseService.getPrevious(step);
     this.next     = this.ExerciseService.getNext(step);
-    
-    this.solutionShown = false;
 
     // Reset feedback (hide feedback and reset registered callbacks of the Step)
     this.FeedbackService.reset();
@@ -42,8 +40,6 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl($location, exercise, step, 
 
     // Get feedback info
     this.feedback = this.FeedbackService.get();
-    
-    this.currentStepTry = 1;
 };
 
 // Set up dependency injection
@@ -107,6 +103,18 @@ ExercisePlayerCtrl.prototype.next = null;
 ExercisePlayerCtrl.prototype.submitted = false;
 
 /**
+ *
+ * @type {boolean}
+ */
+ExercisePlayerCtrl.prototype.solutionShown = false;
+
+/**
+ *
+ * @type {number}
+ */
+ExercisePlayerCtrl.prototype.currentStepTry = 1;
+
+/**
  * Submit answers for the current Step
  */
 ExercisePlayerCtrl.prototype.submit = function submit() {
@@ -157,12 +165,16 @@ ExercisePlayerCtrl.prototype.goTo = function goTo(step) {
         // Answers for the current step have not been submitted => submit it before navigating
         this.submit()
             .then(function onSuccess() {
-                this.submitted = false;
+                this.submitted     = false;
+                this.solutionShown = false;
+
                 this.$location.path('/play/' + step.id);
             }.bind(this));
     } else {
         // Directly navigate to the Step
-        this.submitted = false;
+        this.submitted     = false;
+        this.solutionShown = false;
+
         this.$location.path('/play/' + step.id);
     }
 };
@@ -205,7 +217,7 @@ ExercisePlayerCtrl.prototype.interrupt = function interrupt() {
 /**
  * Check if correction is available for an exercise
  * @returns {Boolean}
- * @todo To mode into CorrectionService
+ * @todo To mode into ExerciseService
  */
 ExercisePlayerCtrl.prototype.checkCorrectionAvailability = function () {
     var correctionMode = this.CommonService.getCorrectionMode(this.exercise.meta.correctionMode);

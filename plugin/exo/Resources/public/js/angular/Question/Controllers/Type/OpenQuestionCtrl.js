@@ -5,11 +5,6 @@
  */
 var OpenQuestionCtrl = function OpenQuestionCtrl(FeedbackService) {
     AbstractQuestionCtrl.apply(this, arguments);
-
-    // Initialize answer if needed
-    if (null === this.questionPaper.answer || typeof this.questionPaper.answer === 'undefined') {
-        this.questionPaper.answer = '';
-    }
 };
 
 // Extends AbstractQuestionCtrl
@@ -28,7 +23,7 @@ OpenQuestionCtrl.prototype.answerWithKeywords = '';
  * Callback executed when Feedback for the Question is shown
  */
 OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
-    this.answerWithKeywords = this.questionPaper.answer ? this.questionPaper.answer : '';
+    this.answerWithKeywords = this.answer ? this.answer : '';
 
     // Get EOL
     this.answerWithKeywords = this.answerWithKeywords.replace(/(\r\n|\n|\r)/gm, '<br/>');
@@ -42,7 +37,7 @@ OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
             // Check in answer if the keyword as been used
             var searchFlags      = 'g' + (solution.caseSensitive ? 'i' : '');
             var searchExpression = new RegExp(solution.word, searchFlags);
-            if (-1 !== this.questionPaper.answer.search(searchExpression)) {
+            if (-1 !== this.answer.search(searchExpression)) {
                 // Keyword has been found in answer => Update formatted answer
                 var keyword = '';
                 keyword += '<b class="text-success feedback-info" data-toggle="tooltip" title="' + solution.feedback + '">';

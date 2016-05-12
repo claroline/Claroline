@@ -1,18 +1,20 @@
 /**
  * Papers service
- * @param {Object} $http
- * @param {Object} $q
- * @param {Object} ExerciseService
+ * @param {Object}          $http
+ * @param {Object}          $q
+ * @param {ExerciseService} ExerciseService
+ * @param {QuestionService} QuestionService
  * @constructor
  */
-var PaperService = function PaperService($http, $q, ExerciseService) {
+var PaperService = function PaperService($http, $q, ExerciseService, QuestionService) {
     this.$http           = $http;
     this.$q              = $q;
     this.ExerciseService = ExerciseService;
+    this.QuestionService = QuestionService;
 };
 
 // Set up dependency injection
-PaperService.$inject = [ '$http', '$q', 'ExerciseService' ];
+PaperService.$inject = [ '$http', '$q', 'ExerciseService', 'QuestionService' ];
 
 /**
  * Get one paper details
@@ -65,6 +67,50 @@ PaperService.prototype.getAll = function getAll() {
 };
 
 /**
+ * Get Paper for a Question
+ * @param {Object} paper
+ * @param {Object} question
+ */
+PaperService.prototype.getQuestionPaper = function getQuestionPaper(paper, question) {
+    var questionPaper = {};
+
+    for (var i = 0; i < paper.questions.length; i++) {
+        if (paper.questions[i].id == question.id) {
+            // Question paper found
+            questionPaper = paper.questions[i];
+
+            // Initialize answers property
+            if (!questionPaper.answer) {
+                questionPaper.answer = this.QuestionService.getTypeService(question.type).initAnswer();
+            }
+
+            // Initialize hints property
+            if (!questionPaper.hints) {
+                questionPaper.hints  = [];
+            }
+
+            if (typeof questionPaper.score === 'undefined' || null === questionPaper.score) {
+                questionPaper.score = 0;
+            }
+
+            break; // Stop searching
+        }
+    }
+
+    if (0 === Object.keys(questionPaper).length) {
+        // There is no Paper for the current Question => initialize Object properties
+        questionPaper.id     = question.id;
+        questionPaper.answer = this.QuestionService.getTypeService(question.type).initAnswer();
+        questionPaper.hints  = [];
+
+        // Add Question to the Paper
+        paper.questions.push(questionPaper);
+    }
+
+    return questionPaper;
+};
+
+/**
  * Delete all papers of an Exercise
  */
 PaperService.prototype.deleteAll = function deleteAll(papers) {
@@ -82,6 +128,113 @@ PaperService.prototype.deleteAll = function deleteAll(papers) {
         });
 
     return deferred.promise;
+};
+
+/**
+ * Delete a Paper
+ */
+PaperService.prototype.delete = function deletePaper(paper) {
+
+};
+
+/**
+ * Check if the correction of the Exercise is available
+ * @returns boolean
+ * @todo finish implementation and replace the old check method
+ */
+PaperService.prototype.isCorrectionAvailable = function isCorrectionAvailable() {
+    var available = false;
+
+    if (this.ExerciseService.isEditEnabled()) {
+        // Always show correction for exercise's administrators
+        available = true;
+    } else {
+        // Use the configuration of the Exercise to know if it's available
+        var exercise = this.ExerciseService.getExercise();
+
+        switch (exercise.meta.correctionMode) {
+            // At the end of assessment
+            case 1:
+                break;
+
+            // After the last attempt
+            case 2:
+                break;
+
+            // From a fixed date
+            case 3:
+                /*if (this.exercise.)*/
+                break;
+
+            // Never
+            case 4:
+                available = false;
+                break;
+
+            // Show correction if nothing specified
+            default:
+                available = true;
+                break;
+        }
+    }
+
+    return available;
+};
+
+/**
+ * Check if the score obtained by the User for the Exercise is available
+ * @returns boolean
+ * @todo finish implementation and replace the old check method
+ */
+PaperService.prototype.isScoreAvailable = function isScoreAvailable() {
+    var available = false;
+
+    if (this.ExerciseService.isEditEnabled()) {
+        // Always show score for exercise's administrators
+        available = true;
+    } else {
+        // Use the configuration of the Exercise to know if it's available
+        var exercise = this.ExerciseService.getExercise();
+
+        switch (exercise.meta.markMode) {
+            // At the same time that the correction
+            case 1:
+                available = this.isCorrectionAvailable();
+                break;
+
+            // At the end of the assessment
+            case 2:
+                break;
+
+            // Show score if nothing specified
+            default:
+                available = true;
+                break;
+        }
+    }
+
+    return available;
+};
+
+/**
+ * Calculate the score of the Paper (/20)
+ * @param   {Object} paper
+ * @returns {number}
+ */
+PaperService.prototype.getPaperScore = function getPaperScore(paper) {
+    var score = 0.0; // final score
+    var scoreTotal = this.ExerciseService.getScoreTotal();
+    var userScore = paper.scoreTotal;
+    if (userScore) {
+        score = userScore * 20 / scoreTotal;
+        if (userScore > 0) {
+            score = Math.round(score / 0.5) * 0.5;
+        } else {
+            score = 0;
+        }
+    }
+
+    return score;
 };
 
 // Register service into AngularJS

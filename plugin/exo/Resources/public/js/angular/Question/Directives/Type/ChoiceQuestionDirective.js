@@ -14,8 +14,8 @@ var ChoiceQuestionDirective = function ChoiceQuestionDirective() {
         bindToController: true,
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/choice.html',
         scope: {
-            question     : '=',
-            questionPaper: '='
+            question : '=',
+            answer   : '='
         }
     };
 };

@@ -1,20 +1,43 @@
 <div class="question-container panel panel-default">
-    <div class="panel-heading" data-ng-click="collapsed = !collapsed">
+    <div class="panel-heading" data-ng-click="questionShowCtrl.collapsed = !questionShowCtrl.collapsed">
         <!-- Title of the Question -->
         <h4 class="panel-title">
-            <span class="fa fa-fw" data-ng-class="{ 'fa-caret-down': !collapsed, 'fa-caret-right': collapsed }"></span>
+            <span class="fa fa-fw" data-ng-class="{ 'fa-caret-down': !questionShowCtrl.collapsed, 'fa-caret-right': questionShowCtrl.collapsed }"></span>
 
             {{ questionShowCtrl.question.title }}
 
             <!-- Score -->
-            <div class="pull-right label label-primary" data-ng-if="questionShowCtrl.feedback.enabled">
-                {{ 'score'|trans:{}:'ujm_exo' }}:
-                <span>{{ questionShowCtrl.feedback.visible ? questionShowCtrl.questionPaper.score + '/' + questionShowCtrl.question.scoreTotal : '...' }}</span>
+            <div class="pull-right" data-ng-if="questionShowCtrl.includeCorrection || questionShowCtrl.feedback.enabled">
+                <!-- Display manual correction message -->
+                <small class="text-danger" data-ng-if="questionShowCtrl.feedback.visible && -1 === questionShowCtrl.questionPaper.score">
+                    <span class="fa fa-warning"></span>
+                    {{ 'question_need_manual_correction'|trans:{}:'ujm_exo' }}
+                </small>
+
+                <!-- Display score -->
+                <span class="label label-primary">
+                    {{ 'score'|trans:{}:'ujm_exo' }}:
+
+                    <!-- Feedback is hidden -->
+                    <span data-ng-if="!questionShowCtrl.feedback.visible">
+                        ...
+                    </span>
+
+                    <!-- Feedback is visible and question is marked -->
+                    <span data-ng-if="questionShowCtrl.feedback.visible && -1 !== questionShowCtrl.questionPaper.score">
+                        {{questionShowCtrl.questionPaper.score + '/' + questionShowCtrl.question.scoreTotal }}
+                    </span>
+
+                    <!-- Feedback is visible but question require a manual correction -->
+                    <span data-ng-if="questionShowCtrl.feedback.visible && -1 === questionShowCtrl.questionPaper.score">
+                        {{' ?/' + questionShowCtrl.question.scoreTotal }}
+                    </span>
+                </span>
             </div>
         </h4>
     </div>
 
-    <div class="panel-body" data-ng-show="!collapsed">
+    <div class="panel-body" data-ng-show="!questionShowCtrl.collapsed">
         <div class="question-info">
             <!-- Invite of the Question -->
             <div data-ng-bind-html="questionShowCtrl.question.invite | unsafe"></div>
@@ -24,21 +47,85 @@
         </div>
 
         <!-- Display specificity of the Question -->
+        <h5 data-ng-if="questionShowCtrl.includeCorrection && questionShowCtrl.question.solutions && questionShowCtrl.question.solutions.length > 0">
+            <span class="fa fa-fw fa-user"></span>
+            {{ 'paper_details_table_your_answer'|trans:{}:'ujm_sequence' }}
+        </h5>
         <div data-ng-switch="questionShowCtrl.question.type">
             <!-- Choice Type -->
-            <choice-question data-ng-switch-when="application/x.choice+json" data-question="questionShowCtrl.question" data-question-paper="questionShowCtrl.questionPaper"></choice-question>
+            <choice-question
+                    data-ng-switch-when="application/x.choice+json"
+                    data-question="questionShowCtrl.question"
+                    data-answer="questionShowCtrl.questionPaper.answer">
+            </choice-question>
 
             <!-- Match Type -->
-            <match-question data-ng-switch-when="application/x.match+json" data-question="questionShowCtrl.question" data-question-paper="questionShowCtrl.questionPaper"></match-question>
+            <match-question
+                    data-ng-switch-when="application/x.match+json"
+                    data-question="questionShowCtrl.question"
+                    data-answer="questionShowCtrl.questionPaper.answer">
+            </match-question>
 
             <!-- Cloze Type -->
-            <cloze-question data-ng-switch-when="application/x.cloze+json" data-question="questionShowCtrl.question" data-question-paper="questionShowCtrl.questionPaper"></cloze-question>
+            <cloze-question
+                    data-ng-switch-when="application/x.cloze+json"
+                    data-question="questionShowCtrl.question"
+                    data-answer="questionShowCtrl.questionPaper.answer">
+            </cloze-question>
 
             <!-- Open Type -->
-            <open-question data-ng-switch-when="application/x.short+json" data-question="questionShowCtrl.question" data-question-paper="questionShowCtrl.questionPaper"></open-question>
+            <open-question
+                    data-ng-switch-when="application/x.short+json"
+                    data-question="questionShowCtrl.question"
+                    data-answer="questionShowCtrl.questionPaper.answer">
+            </open-question>
 
             <!-- Graphic Type -->
-            <graphic-question data-ng-switch-when="application/x.graphic+json" data-question="questionShowCtrl.question" data-question-paper="questionShowCtrl.questionPaper"></graphic-question>
+            <graphic-question
+                    data-ng-switch-when="application/x.graphic+json"
+                    data-question="questionShowCtrl.question"
+                    data-answer="questionShowCtrl.questionPaper.answer">
+            </graphic-question>
+        </div>
+
+        <!-- Display solution of the Question -->
+        <div data-ng-if="questionShowCtrl.includeCorrection && questionShowCtrl.question.solutions && questionShowCtrl.question.solutions.length > 0">
+            <h5>
+                <span class="fa fa-fw fa-check"></span>
+                {{ 'paper_details_table_expected_answer'|trans:{}:'ujm_sequence' }}
+            </h5>
+
+            <div data-ng-switch="questionShowCtrl.question.type">
+                <!-- Choice Type -->
+                <choice-correction
+                        data-ng-switch-when="application/x.choice+json"
+                        data-question="questionShowCtrl.question">
+                </choice-correction>
+
+                <!-- Match Type -->
+                <match-correction
+                        data-ng-switch-when="application/x.match+json"
+                        data-question="questionShowCtrl.question">
+                </match-correction>
+
+                <!-- Cloze Type -->
+                <cloze-correction
+                        data-ng-switch-when="application/x.cloze+json"
+                        data-question="questionShowCtrl.question">
+                </cloze-correction>
+
+                <!-- Open Type -->
+                <open-correction
+                        data-ng-switch-when="application/x.short+json"
+                        data-question="questionShowCtrl.question">
+                </open-correction>
+
+                <!-- Graphic Type -->
+                <graphic-correction
+                        data-ng-switch-when="application/x.graphic+json"
+                        data-question="questionShowCtrl.question">
+                </graphic-correction>
+            </div>
         </div>
 
         <!-- Display Question Feedback -->
@@ -57,6 +144,7 @@
                 <!-- Button to load the Hint -->
                 <button type="button" role="button" class="btn btn-default"
                         data-ng-if="!questionShowCtrl.isHintUsed(hint)"
+                        data-ng-disabled="questionShowCtrl.includeCorrection"
                         ng-bootbox-confirm="{{ 'question_show_hint_confirm'|trans:{ 1: hint.penalty }:'ujm_sequence' }}"
                         ng-bootbox-confirm-action="questionShowCtrl.showHint(hint)"
                 >

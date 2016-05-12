@@ -7,18 +7,27 @@
 
 .question-container {
     // Title of the Question
-    .panel-heading {
+    > .panel-heading {
         /* Panels can be collapsed by clicking on heading => change cursor to help User */
         cursor: pointer;
+        border-bottom: none;
 
         .panel-title > * {
             vertical-align: middle;
+        }
+
+        & + .panel-body {
+            border-top: 1px solid @panel-inner-border;
         }
     }
 
     // Generic information of the Question
     .question-info {
         margin-bottom: 20px;
+    }
+
+    h5 {
+        font-weight: bold;
     }
 
     .question-feedback {

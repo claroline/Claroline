@@ -11,7 +11,10 @@ var QuestionShowDirective = function ExerciseDirective() {
         controllerAs: 'questionShowCtrl',
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/show.html',
         scope: {
-            question: '='
+            question: '=',
+            questionPaper: '=',
+            includeCorrection: '=', // Is the solution for the current question displayed ?
+            collapsed: '=?'
         },
         bindToController: true
     };

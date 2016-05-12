@@ -14,8 +14,8 @@ var MatchQuestionDirective = function MatchQuestionDirective($timeout, MatchQues
         bindToController: true,
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/match.html',
         scope: {
-            question     : '=',
-            questionPaper: '='
+            question : '=',
+            answer   : '='
         },
         link: function (scope, element, attr, matchQuestionCtrl) {
             // init jsPlumb dom elements

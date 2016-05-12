@@ -292,6 +292,8 @@ question_description: Description de la question (facultatif)
 question_model: Définir comme modèle
 question_title: Titre de la question (facultatif)
 question_shared_with: Cette question est partagée avec les utilisateurs suivants
+question_need_manual_correction: Cette question nécessite une correction manuelle
+question_open_keywords_info: Votre réponse doit contenir les mots clés suivant pour obtenir les points
 
 # R
 random_questions: Ordre des questions aléatoire

@@ -14,12 +14,11 @@ var OpenQuestionDirective = function OpenQuestionDirective() {
         bindToController: true,
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/open.html',
         scope: {
-            question: '=',
-            questionPaper: '='
+            question : '=',
+            answer   : '='
         }
     };
 };
-
 
 // Set up dependency injection
 OpenQuestionDirective.$inject = [];
