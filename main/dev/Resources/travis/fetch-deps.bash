@@ -76,15 +76,17 @@ fetch() {
             echo "Sending archive to remote cache..."
             export SSHPASS=$REMOTE_PASS
             sshpass -e scp -o stricthostkeychecking=no $ZIP $REMOTE_USER@$REMOTE_HOST:$CACHE_PATH/$ZIP
-            rm $ZIP
         fi
     fi
+
+    rm -f $ZIP
 }
 
 fetch composer $COMPOSER_SUM "composer update --prefer-source" vendor
-fetch npm $NPM_SUM "npm install" node_modules
-fetch bower $BOWER_SUM "npm run bower" web/packages
 
-# override distribution package with local build/repo
+echo "Overriding distribution package with local build/repo..."
 rm -rf vendor/claroline/distribution
 cp -r $DIST vendor/claroline/distribution
+
+fetch npm $NPM_SUM "npm install" node_modules
+fetch bower $BOWER_SUM "npm run bower" web/packages
