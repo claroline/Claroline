@@ -15,11 +15,30 @@
         "phpmd/phpmd" : "@stable"
     },
     "scripts": {
-        "fast-install" : [
+        "fast-install": [
             "php scripts/check.php",
             "php app/console doctrine:database:create --if-not-exists",
             "php bin/doctrine dbal:import claroline.sql -vvv",
             "php app/console assets:install web --symlink"
+        ],
+	"full-install": [
+	    "php scripts/check.php",
+	    "composer update",
+            "npm install",
+            "npm run bower",
+            "composer build",
+            "php app/console claroline:install",
+            "php app/console assetic:dump",
+            "composer disable-maintenance",
+            "php app/console claroline:user:create -a root root root root root"
+	],
+        "full-update": [
+           "composer update",
+           "npm install",
+           "npm run bower",
+           "composer build",
+           "php app/console claroline:update",
+	   "composer disable-maintenance"
         ],
         "sync": [
             "composer fetch",
@@ -50,14 +69,14 @@
             "npm run themes",
             "npm run webpack"
         ],
+	"enable-maintenance": [
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
+        ],
         "disable-maintenance": [
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
         ],
         "bundles": [
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
-        ],
-        "bundles-clean": [
-            "Claroline\\BundleRecorder\\ScriptHandler::removeBupIniFile"
         ],
         "pre-install-cmd": [
             "php scripts/check.php",
