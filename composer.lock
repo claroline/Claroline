@@ -120,19 +120,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "747a6c6d383db38541680ff4b26f93a31e98f182"
+                "reference": "492844fc6354c981b38fb3daabde853dc827cf2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/747a6c6d383db38541680ff4b26f93a31e98f182",
-                "reference": "747a6c6d383db38541680ff4b26f93a31e98f182",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/492844fc6354c981b38fb3daabde853dc827cf2d",
+                "reference": "492844fc6354c981b38fb3daabde853dc827cf2d",
                 "shasum": ""
             },
             "require": {
                 "besimple/sso-auth-bundle": "*",
                 "claroline/front-end-bundle": "dev-7.x-test",
                 "cocur/slugify": "~1.0",
-                "composer/composer": "~1.0",
+                "composer/composer": "1.1.0",
                 "ddeboer/data-import": "~0.18",
                 "doctrine/data-fixtures": "dev-master",
                 "doctrine/dbal": "~2.4",
@@ -163,6 +163,7 @@
                 "jms/serializer-bundle": "~0.13",
                 "jms/twig-js-bundle": "1.0.0",
                 "johngrogg/ics-parser": "dev-master",
+                "json-quiz/json-quiz": "dev-master",
                 "knplabs/knp-menu-bundle": "2.0.0",
                 "knplabs/knp-snappy-bundle": "1.3",
                 "leafo/lessphp": "0.4.0",
@@ -243,7 +244,8 @@
                 "innova/audio-recorder-bundle": "*",
                 "innova/collecticiel-bundle": "*",
                 "innova/path-bundle": "*",
-                "innova/video-recorder-bundle": "*"
+                "innova/video-recorder-bundle": "*",
+                "ujm/exo-bundle": "*"
             },
             "require-dev": {
                 "fabpot/php-cs-fixer": "^1.10",
@@ -298,6 +300,7 @@
                     "Icap\\WebsiteBundle\\IcapWebsiteBundle",
                     "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle",
                     "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle",
+                    "UJM\\ExoBundle\\UJMExoBundle",
                     "Icap\\LessonBundle\\IcapLessonBundle"
                 ]
             },
@@ -347,6 +350,7 @@
                     "Claroline\\DevBundle\\": "main/dev",
                     "Claroline\\WebInstaller\\": "main/web-installer/",
                     "Icap\\WebsiteBundle\\": "plugin/website",
+                    "UJM\\ExoBundle\\": "plugin/exo",
                     "Innova\\VideoRecorderBundle\\": "plugin/video-recorder",
                     "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder",
                     "Icap\\LessonBundle\\": "plugin/lesson"
@@ -369,7 +373,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-05-09 08:10:32"
+            "time": "2016-05-13 13:20:09"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -465,24 +469,81 @@
             "time": "2016-02-11 09:53:46"
         },
         {
-            "name": "composer/composer",
-            "version": "1.0.3",
+            "name": "composer/ca-bundle",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/composer/composer.git",
-                "reference": "a4a0546ece469cae984219f920c75437820064ff"
+                "url": "https://github.com/composer/ca-bundle.git",
+                "reference": "a2995e5fe351055f2c7630166af12ce8fd03edfc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/a4a0546ece469cae984219f920c75437820064ff",
-                "reference": "a4a0546ece469cae984219f920c75437820064ff",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/a2995e5fe351055f2c7630166af12ce8fd03edfc",
+                "reference": "a2995e5fe351055f2c7630166af12ce8fd03edfc",
                 "shasum": ""
             },
             "require": {
+                "php": "^5.3.2 || ^7.0"
+            },
+            "require-dev": {
+                "symfony/process": "^2.5 || ^3.0"
+            },
+            "suggest": {
+                "symfony/process": "This is necessary to reliably check whether openssl_x509_parse is vulnerable on older php versions, but can be ignored on PHP 5.5.6+"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\CaBundle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "Lets you find a path to the system CA bundle, and includes a fallback to the Mozilla CA bundle.",
+            "keywords": [
+                "cabundle",
+                "cacert",
+                "certificate",
+                "ssl",
+                "tls"
+            ],
+            "time": "2016-04-13 10:13:24"
+        },
+        {
+            "name": "composer/composer",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/composer.git",
+                "reference": "2eab5e81fc983cfd262d6a728aa48fca833f1c74"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/composer/zipball/2eab5e81fc983cfd262d6a728aa48fca833f1c74",
+                "reference": "2eab5e81fc983cfd262d6a728aa48fca833f1c74",
+                "shasum": ""
+            },
+            "require": {
+                "composer/ca-bundle": "^1.0",
                 "composer/semver": "^1.0",
                 "composer/spdx-licenses": "^1.0",
                 "justinrainbow/json-schema": "^1.6",
                 "php": "^5.3.2 || ^7.0",
+                "psr/log": "^1.0",
                 "seld/cli-prompt": "^1.0",
                 "seld/jsonlint": "^1.4",
                 "seld/phar-utils": "^1.0",
@@ -506,7 +567,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -537,7 +598,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-04-29 15:30:16"
+            "time": "2016-05-10 14:21:19"
         },
         {
             "name": "composer/semver",
@@ -3407,6 +3468,24 @@
             "time": "2016-04-27 08:43:51"
         },
         {
+            "name": "json-quiz/json-quiz",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/json-quiz/json-quiz.git",
+                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
+                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2016-02-12 10:44:18"
+        },
+        {
             "name": "justinrainbow/json-schema",
             "version": "1.6.1",
             "source": {
@@ -3522,7 +3601,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "KnpLabs",
+                    "name": "Knplabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
@@ -4103,12 +4182,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "2d214fc93464e59ea817ef2ea5a8388eef84be3c"
+                "reference": "b494d8e1ab4f95c64e0b99e8c81d7fc4804eeb9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/2d214fc93464e59ea817ef2ea5a8388eef84be3c",
-                "reference": "2d214fc93464e59ea817ef2ea5a8388eef84be3c",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/b494d8e1ab4f95c64e0b99e8c81d7fc4804eeb9e",
+                "reference": "b494d8e1ab4f95c64e0b99e8c81d7fc4804eeb9e",
                 "shasum": ""
             },
             "require": {
@@ -4179,7 +4258,7 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2016-04-21 15:38:04"
+            "time": "2016-05-11 15:32:04"
         },
         {
             "name": "ocramius/proxy-manager",
@@ -6531,20 +6610,23 @@
         },
         {
             "name": "phpunit/php-timer",
-            "version": "1.0.7",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-timer.git",
-                "reference": "3e82f4e9fc92665fafd9157568e4dcb01d014e5b"
+                "reference": "38e9124049cf1a164f1e4537caf19c99bf1eb260"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/3e82f4e9fc92665fafd9157568e4dcb01d014e5b",
-                "reference": "3e82f4e9fc92665fafd9157568e4dcb01d014e5b",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/38e9124049cf1a164f1e4537caf19c99bf1eb260",
+                "reference": "38e9124049cf1a164f1e4537caf19c99bf1eb260",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4|~5"
             },
             "type": "library",
             "autoload": {
@@ -6568,7 +6650,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2015-06-21 08:01:12"
+            "time": "2016-05-12 18:03:57"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -7120,7 +7202,7 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.0.5",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
