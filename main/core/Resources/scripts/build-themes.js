@@ -7,9 +7,9 @@ const cssDir = path.resolve(__dirname, '../../../../../../../web/themes')
 shell.ls(lessDir).forEach(file => {
   const lessFile = path.join(lessDir, file)
   const cssFile = path.join(cssDir, path.basename(file, '.less'), 'bootstrap.css')
-  const lessCmd = `node_modules/.bin/lessc --verbose ${lessFile} ${cssFile}`
+  const lessCmd = `node_modules/less/bin/lessc --verbose ${lessFile} ${cssFile}`
   const postCmd = [
-    'node_modules/.bin/postcss',
+    'node_modules/postcss-cli/bin/postcss',
     '-u autoprefixer -u cssnano',
     '--autoprefixer.browsers "last 2 versions"',
     '--cssnano.safe true',

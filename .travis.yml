@@ -3,8 +3,25 @@ language: php
 php:
   - "5.5"
 
+addons:
+  apt:
+    packages:
+      - sshpass
+
 env:
-  - DB=mysql
+  global:
+    # REMOTE_HOST
+    - secure: "X6CEFn8DREjkXknQMV0tw7tTdMI5XowOx+u8EaUH6ctDuKmdIRFx0+y3Y45TPir1DKC26vImdF7w/CrLtDWXav6KzcUTs6RjMuS1WCVJTl0DxkrzxgnXIUTsNYPc7l47OaFjKxiYhpCEmfo8Wnwi0V+OEL8xl6QSDfz7ir39RA7JS52K1ZTqA9Mo2gGneXqnNza5MIAKTngsRJg1KSrxUgrIKfWjGO8SUoJAGkDfIdCfSl4qAWEM2zZHqzFbzHTsMomiKbGhebBFGWfrUhVo/M9KOaFqnFm7eGdEJfPeJf183hHKM2nvFQ7fjXuKi45ki3OOFqnc0BrFTc0J3VOCjYZ7sqr/hHfu1vZy9qp2HXfY416juV3Pn91QmRkSeLU5aTfOd95zQWI2QYDSbf8k3hMhoktvw3LdWGn13GrQfqnLmfdS4J26rGspmERRj4yZhQTFVpOEqPmFVexGtO9P+OYo+ZSDcLFPLMNKGByjxDaeHyOm30qLpHpsM2Vyw5KSqujdgkvJ4jGKYZHdMGzWXYH45ZUZBDMex5xwal+Qfn1ZAMsAn4BHW0N2I+WJHAPtHzyA1wVg2xOOJkPLZeW7VF4IOIgrGsjO3ML5EdALXYN7YlXZpeyN6PbIbQEM1IQKJWid8E0J4F0/muAoIeC/tNzqepgdOyT6u1HBjdXR5Qs="
+    # REMOTE_USER
+    - secure: "XQrP3Psma3T+zGgEwH88keg01ed6lj1vOxl5f+beQ85bbpWY5opuS2/J6A9cg9MBJzzfErZH78ugfJERrXkm4ktEC6v3teXWQt8cXXqzDaUAMP7JU0MM5USPmP87/bYR4IKf9Tk9MV213qfnIBM/aNtBlURqUkyvY8qrc3HwkwA+ruYTkJKUILwGTNjqVPFbjhUWoRnqN0GTyI7MiAAqys0VdT3lcUKU3yPWuRvAwmXGF3zDt/uE9O+erepHAGfyVe9j9k2Cpac23Ybtewl7Xu6CwdIjbij/GR/owkAqAk5tpyAIv1hRyxs9upzpK+DhX13DP/xdsx0JmqVZHK+6DUnp0Jyj+r8uO4A7lkf6PACilwm6VQlHbIZiduWRuocI3QUz1TZDSgOqI1LWia0Fl5RJhrzUYSyeFqOUEImSSDdS/dx1irtpuWwJP1VytikciHG2/oZH2qmmjOnrTS48vlySJiwTVytWNLbgR74TQ/bj8/GpV9zsBYGSkUb64Y85+nBxLNdthKffE4IX4ca75gN6o4buDVjOHz4w3vlVPPO+1Iq0L04bX8BJKJAbjK/LC408jOWCoPH8OfqRjuj4oWZ9O6BdNPFKzgLZRQJZbrXft05XfN1jpooH7KDCMIvOdEC9YEjxiUn6wmyRZ9SegQ61P/5MFmMQdvKpLLJezTA="
+    # REMOTE_PASS
+    - secure: "GHH7FbBWzH2MXkj2f59R7OtVVLQS/QThxZJDNsGLUeRyL5ITZlS2292b06wvVdgDgHOzFbxqbMJf8MFz+byK/A7xtcdG/UJ3mIdkOdNrPLmmyFuBuxbNJIsM75C2bC8Fnedf6ozIWsaYDcPKebIh8kpv99zE9cOZ7owxlTBtAf6Rl7KEwedUenSU9VaWthoHQGdLiSx3X+J/SMjLyw6eUmTFDVqY0JUBrbUfup6Q/fjIEUQOA7zfWWbqy74BA4sbI+sAh2cHP9wgjLt+7d8TEcUbo3RUxbSsbhmu9LKm0wLNd75ua71AAW+ZuFEGEbC6Fl1dpWHRtT6PgRM5KlgUVWZCvHhSQSLPrA/UPX3p9QAXiL/pLLoDokgv8DfSEgvv9qimeKW+zupy2gln2tb7JbqihxUo5rU2KMzF/Evxsn3pi1AKeC8+CQjTpM8W8h2xsTX5k8mlZAMJGuaGwphtCte2vbcMnsi2iVYGuFPHuysa160te8Ah05QXXFwluPuJ39zqu1Bi+CBV314D8oHbpfjG7kynZRLcrTu+Op81cXSGT2YRlE7/VJfytlYsTb2c+u/MBoAkmihtVvtKgk+F18coXdZQ0m9hUX5ujhEi/9wgFHI7HHDnBsBLT9EkZbyZ4T+l3YIA4Ze0mHT82duc+p5M95UL4YHHyzCZeX62/6g="
+    # CACHE_PATH
+    - secure: "bsc8nVTOGaRtuukf3wfWfpRft+BnNeFyiVn+c37P5hgsv5fwygp7lzFDJeCXlCd5sevp7at1Y7CHW09Y+YeJx0nmgE0saSPQjcpem+NkMMpfo1ucivNGLQjZ3ltID0uX3j6RqpqU1Ok+MvfAXnevEXbALqRsBKA8AL+OhdCFStoH3YxEkxx6FR7NIrU0/v+cu+6OgHcYSFnI0KPVII+NULUC8X+ES6lfDTWZBm6a3HVMOtVw4Ey2pt7Lhel1WZfS/zAZ+5I8k9GKvY+I8GS/+jez4SBh3e1PVejjZVl72OQQHdMDsqUF8vteV/MZVizU/gjvrCMPBZOzKGKbkMs/v/Gj1e+OYyTl4jq4BBdNvxbzq4Z8AgUg8enTuQ/1a1A2hbLPmoIBoStZ13Q8mQymSXHd2vxiUtMHC4Fhq5WZsrn3ORpnhylzS7wyDpzJ4pcyVADQN/6wdFL+i+upvrKjSrmY1aE5UtRw7uHFSm4DHp676+3s2LE3ltpfH9SUW0hEAY4gU2VnTOZ3TQLOyXj8ZLfGpz/MO5A6riOfpIz8D+Op3u/jkpzpgWWxjBL/onzrcqMqqQABlIn7YXwCAB085VPIbJ25xw9iVsIdDAv+Jt254t47qVpUhtiPMAnI/t1hQknDs+dm700++btTSuRtPKLH46wW1dcgFZo6S4sI4WY="
+    # PREVIEW_PATH
+    - secure: "R3yYS0dAT+XLp20qSaq392cUJYfCp63yUypOdFEiisbY+hSkr1m4d5yg5+IOzx0N5hIyft2QRIVHEuXnCKTZgbJ1ykzIyxxtlePFP1vW5zAwZSF8YVBKGMqjDn3osxRKGonNm+yaiMWjJM1TQhrsEXwFVH7XMoK6H6U/KwuncBJ/kLbnEjMYFSLkjPN0YMmPUOg4waaUaNdWQuQO1dj0G4+5CQLcxpxC6rp92I1jamhAAfGnmTfLviSRLEkbF9tmyG7sgfB1sS5OREWQFEAYECSw0CD4oM6aL6FbvX96M/ELUjXN3Nq19U0a5m0tRvPB52nrhTfsjx1tN7Z8+6zABg00rVNAuSMUXoojc86AXR8W4OVFrxsYkRJkJxx/YlUlEDZNWd9SHlq0qmg22Bru/i2eNdDqxeSmqr7C1LmaacHRsgF5OfIeG2U4FYWP6aPeUyHM8erpF24thLGGqKFExsIcIUA1aEM44HiRrcHmVhkawRX6BUHNcWFuiJH036nu9YF/ZdwW5LDFSBO8yUYwQEkoReC67C9qDrRVDx4HwYlFCA+XTdaKPmig6vn+Z3RyylmhyRomP1GK3eCwpt15qVfTCdLLnB5ty7eb1vcDPovvEO+hYXk0CAMIYjiIonOfn2nFPM/ydvmipIvDDATjvNXxTuOnunp5F6w6HCmKJQw="
+  matrix:
+    - DB=mysql
 
 mysql:
   adapter: mysql2
@@ -12,44 +29,51 @@ mysql:
   username: root
   encoding: utf8
 
-before_script:
+before_install:
   # keep a list of files impacted by the PR
   - git diff-tree --no-commit-id --diff-filter=ACM --name-only -r ${TRAVIS_COMMIT_RANGE/.../ } > git_diff_files.txt
-
   # leave build/repo dir
   - cd ../..
-
   # increase php memory size (required for composer)
   - echo "memory_limit=3072M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-
   # disable xdebug
   - phpenv config-rm xdebug.ini
-
-  # get node >=5.6
+  # get node >=5.6 (manual upgrade of nvm is currently required, pre-installed version is buggy)
   - git clone https://github.com/creationix/nvm.git /tmp/.nvm
   - source /tmp/.nvm/nvm.sh
   - nvm install 5
-  - nvm use --delete-prefix 5
 
+before_script:
   # get and configure claroline platform
   - curl -L https://github.com/claroline/Claroline/archive/monolithic-build.tar.gz | tar xzv
   - cd Claroline-monolithic-build
   - php scripts/configure.php --default
-
   # override platform composer.json with build/repo local reference
   - rm -rf ../$TRAVIS_REPO_SLUG/.git
   - php ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/pre-composer.php claroline/distribution ../$TRAVIS_REPO_SLUG
-
   # fetch dependencies and build
-  - composer self-update
-  - composer update --prefer-source
-  - npm install
-  - npm run bower
+  - export TRAVIS_REPO_SLUG REMOTE_HOST REMOTE_USER REMOTE_PASS CACHE_PATH
+  - bash ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/fetch-deps.bash
   - composer build
   - php app/console claroline:install --env=test -vvv
+  # move to distribution directory
+  - export ROOT=`pwd`
+  - cd vendor/claroline/distribution
 
 script:
-  - cd vendor/claroline/distribution
-  - ../../../bin/phpmd --exclude main/core/Resources/bundle-creator,main/web-installer `cat git_diff_files.txt | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml
-  - ../../../bin/php-cs-fixer fix --dry-run --diff --config-file=main/dev/Resources/travis/php-cs.php
-  - SYMFONY_DEPRECATIONS_HELPER=weak ../../../bin/phpunit
+  # launch phpmd on modified files
+  - $ROOT/vendor/phpmd/phpmd/src/bin/phpmd --exclude main/core/Resources/bundle-creator,main/web-installer `cat git_diff_files.txt | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml
+  # dry run php-cs-fixer on modified files (fail on violation)
+  - $ROOT/vendor/fabpot/php-cs-fixer/php-cs-fixer fix --dry-run --diff --config-file=main/dev/Resources/travis/php-cs.php
+  # launch the whole test suite
+  - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/phpunit/phpunit/phpunit
+
+after_success:
+  # send a preview release to a remote server
+  - cd $ROOT
+  - export PREVIEW="pr-$TRAVIS_PULL_REQUEST-`date +%s`.zip"
+  - mysqldump --opt --no-create-db claroline_test -uroot --password="" > claroline.sql
+  - rm -rf app/cache/* app/logs/* web/bundles
+  - zip -qr --exclude=*.git* $PREVIEW .
+  - export SSHPASS=$REMOTE_PASS
+  - sshpass -e scp -q -o stricthostkeychecking=no $PREVIEW $REMOTE_USER@$REMOTE_HOST:$PREVIEW_PATH/$PREVIEW
