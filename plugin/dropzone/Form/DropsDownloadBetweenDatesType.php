@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class dropsDownloadBetweenDatesType extends AbstractType
+class DropsDownloadBetweenDatesType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

@@ -127,6 +127,7 @@ export default class Webtree {
             node.isHomepage = true
             this.home = node
           }
+          this.copyNode = null
         },
         node => {
           if (node.id == 0 && this.activeNode != node) {

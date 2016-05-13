@@ -299,6 +299,7 @@ class UsersController extends Controller
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
             $sendMail = $form->get('sendMail')->getData();
+            $enableEmailNotification = $form->get('enable_mail_notification')->getData();
             $data = file_get_contents($file);
             $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
             $lines = str_getcsv($data, PHP_EOL);
@@ -307,22 +308,24 @@ class UsersController extends Controller
             $sessionFlashBag = $this->session->getFlashBag();
 
             foreach ($lines as $line) {
-                if ($mode === 'update') {
-                    $datas = str_getcsv($line, ';');
-                    $username = $datas[2];
-                    $email = $datas[4];
-                    $existingUser = $this->userManager->getUserByUsernameOrMail(
-                        $username,
-                        $email
-                    );
+                if (trim($line) !== '') {
+                    if ($mode === 'update') {
+                        $datas = str_getcsv($line, ';');
+                        $username = $datas[2];
+                        $email = $datas[4];
+                        $existingUser = $this->userManager->getUserByUsernameOrMail(
+                            $username,
+                            $email
+                        );
 
-                    if (is_null($existingUser)) {
-                        $users[] = $datas;
+                        if (is_null($existingUser)) {
+                            $users[] = $datas;
+                        } else {
+                            $toUpdate[] = $datas;
+                        }
                     } else {
-                        $toUpdate[] = $datas;
+                        $users[] = str_getcsv($line, ';');
                     }
-                } else {
-                    $users[] = str_getcsv($line, ';');
                 }
             }
 
@@ -351,7 +354,8 @@ class UsersController extends Controller
             if (count($toUpdate) > 0) {
                 $updatedNames = $this->userManager->updateImportedUsers(
                     $toUpdate,
-                    $additionalRoles->toArray()
+                    $additionalRoles->toArray(),
+                    $enableEmailNotification
                 );
 
                 foreach ($updatedNames as $name) {
@@ -364,11 +368,13 @@ class UsersController extends Controller
                     $sessionFlashBag->add('success', $msg);
                 }
             }
+
             $createdNames = $this->userManager->importUsers(
                 $users,
                 $sendMail,
                 null,
-                $additionalRoles
+                $additionalRoles,
+                $enableEmailNotification
             );
 
             foreach ($createdNames as $name) {

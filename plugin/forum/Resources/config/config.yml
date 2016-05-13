@@ -22,5 +22,4 @@ plugin:
 
   widgets:
      - name: claroline_forum_widget
-       is_configurable: true
-
+       is_configurable: false
