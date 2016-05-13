@@ -1,0 +1,216 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('bundles/ujmexo/css/matchingOverview.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('bundles/ujmexo/css/graphic.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'paper' | trans({}, 'ujm_exo') }} {% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li class="active">{{ 'n_question' | trans({}, 'ujm_exo') }}{{numQ}}</li>
+{% endblock %}
+
+{% block section_content %}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}
+            <span style="float:right;">
+                {% if(maxAttempsAllowed > 0) %}
+                    {{ "attempt_info1" | trans({}, 'ujm_exo') }} {{ maxAttempsAllowed }}
+                    {% if(maxAttempsAllowed > 1) %}
+                        {{ "attempt_info2plur" | trans({}, 'ujm_exo') }}
+                    {% else %}
+                        {{ "attempt_info2sing" | trans({}, 'ujm_exo') }}
+                    {% endif %}
+                     -
+                {% endif %}
+                {{ "attempt_info3" | trans({}, 'ujm_exo') }} {{ numAttempt }}
+            </span>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <form action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
+            <input type="hidden" name="numQuestionToDisplayed" id="numQuestionToDisplayed" value=""/>
+                {% include "UJMExoBundle:Partial:exercise/#{interactionType}.html.twig" %}         
+        </form>
+    </div>
+    {#--------------------------------------------------- Pagination ----------------------------------------------------#}
+
+    <!--div class="text-center panel-footer">
+        {#% set indexMax = 1 %}
+        <ul class="pagination">
+            {% if numQ != 1 %}
+                <li>
+                    <a href="#" onClick="submitForm(1, '{{ interactionType }}');">
+                        <i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
+                        <i class="fa fa-chevron-left"></i>
+                    </a>
+                </li>
+            {% else %}
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i></a></li>
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+            {% endif %}
+
+            {% for interactionID in tabOrderInter %}
+                {% if loop.index != numQ %}
+                    <li><a href="#" onClick="submitForm({{ loop.index }}, '{{ interactionType }}');">{{ loop.index }}</a></li>
+                    {% set indexMax = loop.index %}
+                {% else %}
+                    <li class="active"><a href="#">{{ loop.index }}</a></li>
+                    {% set indexMax = loop.index %}
+                {% endif %}
+            {% endfor %}
+
+            {% if numQ != indexMax %}
+                <li>
+                    <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onClick="submitForm({{ indexMax }}, '{{ interactionType }}');">
+                        <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i>
+                    </a>
+                </li>
+            {% else %}
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></a></li>
+            {% endif %}
+
+            {% if dispButtonInterrupt %}
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                <li>
+                    <input type="button" value="{{ "interupt" | trans({}, 'ujm_exo') }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
+                </li>
+            {% endif %}
+            <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+            {% if numQ == indexMax %}
+                <li>
+                    <input type="button" value="{{ "finish" | trans({}, 'ujm_exo') }}" onClick="finish('{{ interactionType }}', '{{ 'alert_ending' | trans({}, 'ujm_exo') }}');"
+                        class="btn btn-primary"/>
+                </li>
+            {% endif %#}
+        </ul>
+    </div-->
+
+    <div class="text-center panel-footer">
+        {% set indexMax = 1 %}
+
+        {% for interactionID in tabOrderInter %}
+            {% set indexMax = loop.index %}
+        {% endfor %}
+
+        <ul class="pagination">
+
+            {% if numQ == indexMax and numQ == 1 %}
+                <li>
+                    <input type="button" value="{{ "finish" | trans({}, 'ujm_exo') }}" onClick="finish('{{ interactionType }}');"
+                        class="btn btn-primary"/>
+                </li>
+            {% else %}
+
+                {% if numQ == 1 %}
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}</a></li>
+                    <li>
+                        <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
+                            {{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if numQ == indexMax %}
+                    <li>
+                        <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
+                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}
+                        </a>
+                    </li>
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                    <li>
+                        <input type="button" value="{{ "finish" | trans({}, 'ujm_exo') }}" onClick="finish('{{ interactionType }}');"
+                            class="btn btn-primary"/>
+                    </li>
+                {% endif %}
+
+                {% if numQ != indexMax and numQ != 1 %}
+                    <li>
+                        <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
+                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
+                            {{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            {% endif %}
+
+            {% if dispButtonInterrupt %}
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                <li>
+                    <input type="button" value="{{ "interupt" | trans({}, 'ujm_exo') }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
+                </li>
+            {% endif %}
+            <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+
+            <li>
+                <select id="Qnumber" onchange="submitForm(this.options[this.selectedIndex].value, '{{ interactionType }}');">
+                    {% for interactionID in tabOrderInter %}
+                        <option value="{{ loop.index }}">{{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ tabOrderInter | length }}</option>
+                    {% endfor %}
+                </select>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    
+    <script type="text/javascript">
+        //$(document).ready(function() {
+            $('#Qnumber option[value="' + {{ numQ }} + '"]').attr('selected', 'selected');
+        //});
+    </script>
+
+    {{ parent() }}
+    
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
+
+    <script type="text/javascript">
+        var mssg             = "{{ "exercise_alert_break" | trans({}, 'ujm_exo') }}";
+        var allowToInterrupt = "{{ dispButtonInterrupt }}";
+        var interType        = "{{ interactionType }}";
+    </script>
+
+    {% if interactionType == 'InteractionGraphic' %}
+        <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
+    {% elseif interactionType == 'InteractionMatching' %}
+        {% if interactionToDisplayed.typeMatching.code == 2 %}
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+        {% else %}
+            <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/dom.jsPlumb-1.7.2-min.js') }}"></script>
+        {% endif %}
+    {% endif %}
+
+    {% include "UJMExoBundle:Partial:modal/confirmFinishExercise.html.twig" %}
+
+{% endblock %}

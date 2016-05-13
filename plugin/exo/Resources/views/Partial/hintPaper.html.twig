@@ -1,0 +1,35 @@
+{% if interactionToDisplayed.question.hints is not empty %}
+    <hr/>
+    <div class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans({}, 'ujm_exo') }}</h3></div>
+    <div class="panel-body">
+        <table>
+            {% set penalties = app.session.get('penalties') %}
+            {% set nbr_hint = 1 %}
+            {% for hint in interactionToDisplayed.question.hints %}
+                <tr>
+                    {% if penalties[hint.id] is defined %}
+
+                        <td class="classic">{{ "hint" | trans({}, 'ujm_exo') }} {{nbr_hint}}</td>
+
+                        <script type="text/javascript">
+                            show_hint2('{{hint.id}}', '{{path('ujm_hint_show')}}',
+                                       '{{nbr_hint}}', {{hint.penalty}}, '{{paper}}'
+                                      );
+                        </script>
+                    {% else %}
+
+                        <td class="classic"><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
+                                '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans({}, 'ujm_exo') }} ?', '{{nbr_hint}}',
+                                {{hint.penalty}}, '{{paper}}');event.preventDefault();">{{ "hint" | trans({}, 'ujm_exo') }} {{nbr_hint}}</a>
+                        </td>
+
+                    {% endif %}
+                    <td id="div_hint{{nbr_hint}}" class="classic"></td>
+                </tr>
+                {% set nbr_hint = nbr_hint + 1 %}
+            {% endfor %}
+        </table>
+    </div>
+    </div>
+{% endif %}

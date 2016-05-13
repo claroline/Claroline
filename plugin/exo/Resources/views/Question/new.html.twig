@@ -1,0 +1,110 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% block breadcrumb %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-briefcase',
+                    'name': 'desktop'|trans({}, 'platform'),
+                    'href': path('claro_desktop_open')
+                },
+                {
+                    'name': 'question_creation' | trans({}, 'ujm_exo'),
+                    'href': ''
+                }
+            ])
+        }}
+    {% endblock %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'question_creation' | trans({}, 'ujm_exo') }} {% endblock %}
+
+{% if _resource is defined %}
+    {% block resourceBreadcrumb %}
+        <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+        <li><a href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">{{ 'my_questions' | trans({}, 'ujm_exo') }}</a></li>
+        <li class="active">{{ 'question_creation' | trans({}, 'ujm_exo') }}</li>
+    {% endblock %}
+{% endif %}
+
+{% block section_content %}
+
+    {% set al = '' %}
+
+    {% for key,value in linkedCategory %}
+        {% set al = al ~ key ~ '/' ~ value ~ ';' %}
+    {% endfor %}
+    {% if locker != "" %}
+        <input type="hidden" id="locker" value="{{locker.value}}">
+    {% endif %}
+    <input type="hidden" id="categoryArray" value="{{al}}"/>
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'question_creation' | trans({}, 'ujm_exo') }}</h3>
+    </div>
+    <div class="panel-body">
+        {% if exoID == -1 %}
+            <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
+                <i class="fa fa-arrow-left"></i> {{ 'back_to_the_list' | trans({}, 'ujm_exo') }}
+            </a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
+            </a>
+        {% endif %}
+    </div>
+    <div class="list-group">
+        <div class="list-group-item">
+            <form name="form_type_question">
+                <div class="form-group row">
+                <label class="col-md-3 control-label" for="menu_type_question">{{ 'kind_question' | trans({}, 'ujm_exo') }}?&nbsp;&nbsp;</label>
+                <div class="col-md-9">
+                    <select class="form-control" name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans({}, 'ujm_exo') }} ?', '{{ exoID }}', '{{ stepID }}' , '{{ path('ujm_question_display_form_type')}}' )">
+                        <option selected="selected" disabled>{{ 'choose_type' | trans({}, 'ujm_exo') }}</option>
+                        {% for type in interactionType %}
+                            {% for value in type %}
+                                <option value="{{ type[loop.index0] }}">{{ type[loop.index0] | trans({}, 'ujm_exo') }}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
+                </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    </div>{# end div of extend panel #}
+    <div id="formulaire_interactions">
+        {% if formWithError is defined %}
+            {{ formWithError | raw }}
+        {% endif %}
+    {# no need end div (extend panel) #}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/question.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/instructions.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionHole.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionQCM.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/instructions.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/malsup.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionMatching.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionOpen.js') }}"></script>
+{% endblock %}

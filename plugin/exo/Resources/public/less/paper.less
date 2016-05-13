@@ -1,0 +1,20 @@
+.papers-container {
+    > .paper-title {
+        margin-top: 0;
+        margin-bottom: 20px; // Same as panel, but there is no var for this one :(
+    }
+
+    .pagination {
+        margin: 0;
+    }
+
+    .papers-list {
+        // Tables in panels default styles do not work because the DOM is not the one expected by Bootstrap
+        margin-bottom: 0;
+        border-top: 1px solid @panel-default-border;
+
+        td {
+            vertical-align: middle;
+        }
+    }
+}

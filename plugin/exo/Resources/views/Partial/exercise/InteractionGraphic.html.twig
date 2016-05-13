@@ -1,0 +1,39 @@
+<input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.question.id }}"/>
+<input type="hidden" name="typeInteraction" value="InteractionGraphic"/>
+
+{% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
+
+<h5>{{ "consignes" | trans({}, 'ujm_exo') }} :</h5>
+<h6><em>{{ "position" | trans({}, 'ujm_exo') }}<br/>{{ "selection" | trans({}, 'ujm_exo') }}<br/>{{ "raz" | trans({}, 'ujm_exo') }}<br/>
+        {{ "only_once" | trans({}, 'ujm_exo') }}</em>
+</h6>
+</div>
+<div style="margin-left: 30px;">
+    <div style="position: relative;" id="Answer">
+        <p id="ContainerCursorPaper">
+            {% set i = 1 %}
+            {% set listCoords = goodGraphCoords(interactionToDisplayed) %}
+            {% for coords in listCoords %}
+                <img class="AnswerImage" src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
+                     id="cursor{{ i }}" style="position: absolute;"/>
+                {% set i = i + 1 %}
+            {% endfor %}
+        </p><p>
+
+            {% if response is empty %}
+                {% set response = 'empty' %}
+            {% endif %}
+
+            <img class="AnswerImage" src="{{ asset(interactionToDisplayed.picture.url) }}" alt="AnswerImg" id="AnswerImg"
+                 width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
+                 style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}');"/>
+        </p>
+    </div>
+
+    <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
+    <input type="hidden" id="answers" name="answers" value=""/>
+    <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
+
+    {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+</div>
+    <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
