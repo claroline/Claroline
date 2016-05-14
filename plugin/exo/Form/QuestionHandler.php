@@ -202,20 +202,6 @@ abstract class QuestionHandler
     }
 
     /**
-     * Link interaction to a Step if created from an Exercise.
-     *
-     * @param $inter
-     */
-    protected function addStep($inter)
-    {
-        $data = $this->form->getData()->getStepID();
-        var_dump($data);
-        die();
-        if (-1 !== $data) {
-        }
-    }
-
-    /**
      * Duplicate the Interaction during the creation.
      *
      *
