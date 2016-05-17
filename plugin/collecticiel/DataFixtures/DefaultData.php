@@ -28,7 +28,6 @@ class DefaultData extends AbstractFixture
         foreach ($returnreceipttypesArray as $returnreceipttype) {
             $returnReceiptTypeAdd = new ReturnReceiptType();
             $returnReceiptTypeAdd->setTypeName($returnreceipttype[0]);
-            $output->writeln('Manage Return Receipt Type ('.$returnreceipttype[0].')');
             $manager->persist($returnReceiptTypeAdd);
         }
 
