@@ -1,6 +1,7 @@
 <div class="panel-body" >
 
-  <div class="text-center">
+  <div class="text-center"
+       data-ng-if="vm.currentCard">
     <div ng-repeat="question in vm.questions">
       <span class="h2">{{ question.field_label.name }} : </span>
       <span class="h2">{{ question.value }}</span>
@@ -13,8 +14,7 @@
   </div>
 
   <div class="alert alert-info"
-       data-ng-show="vm.learningCards.length != 0 ||
-       vm.newCards.length != 0">
+       data-ng-show="!vm.currentCard.length">
     <i class="fa fa-info-circle"></i>
     {{ 'deck.empty'|trans:'flashcard' }}
   </div>
@@ -29,7 +29,7 @@
   </a>
   <button class="btn btn-primary"
           data-ng-click="vm.showAnswers()"
-          data-ng-if="vm.answers.length == 0">
+          data-ng-if="vm.answers.length == 0 && vm.currentCard">
     {{ 'answer.show'|trans:'flashcard' }}
   </button>
   <button class="btn btn-danger"

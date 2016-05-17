@@ -16,7 +16,7 @@ export default class StudyCtrl {
     this.newCards = []
     this.learningCards = []
     this.sessionId = 0
-    this.currentCard = {}
+    this.currentCard = false
     this.currentCardIsNew = 0
     this.questions = []
     this.answers = []
@@ -24,8 +24,22 @@ export default class StudyCtrl {
 
     this._service = service
 
-    service.findNewCardToLearn(this.deck).then(d => {this.newCards = d.data; this.chooseCard()})
-    service.findCardToLearn(this.deck).then(d => this.learningCards = d.data)
+    service.findNewCardToLearn(this.deck).then(
+      d => {
+        this.newCards = d.data 
+        if (!this.currentCard) {
+          this.chooseCard()
+        }
+      }
+    )
+    service.findCardToLearn(this.deck).then(
+      d => {
+        this.learningCards = d.data
+        if (!this.currentCard) {
+          this.chooseCard()
+        }
+      }
+    )
   }
 
   createSession () {
@@ -38,24 +52,28 @@ export default class StudyCtrl {
 
     this.questions = []
     this.answers = []
-    
-    if (rand == 0) {
-      if (this.newCards.length > 0) {
-        rand = Math.floor(Math.random() * this.newCards.length)
-        this.currentCard = this.newCards.splice(rand, 1)[0]
-        this.currentCardIsNew = 1
-        this.showQuestions()
-      } else {
-        this.chooseCard()
-      }
+
+    if (this.newCards.length == 0 && this.learningCards.length == 0) {
+      this.currentCard = false
     } else {
-      if (this.learningCards.length > 0) {
-        rand = Math.floor(Math.random() * this.learningCards.length)
-        this.currentCard = this.learningCards.splice(rand, 1)[0]
-        this.currentCardIsNew = 0
-        this.showQuestions()
+      if (rand == 0) {
+        if (this.newCards.length > 0) {
+          rand = Math.floor(Math.random() * this.newCards.length)
+            this.currentCard = this.newCards.splice(rand, 1)[0]
+            this.currentCardIsNew = 1
+            this.showQuestions()
+        } else {
+          this.chooseCard()
+        }
       } else {
-        this.chooseCard()
+        if (this.learningCards.length > 0) {
+          rand = Math.floor(Math.random() * this.learningCards.length)
+            this.currentCard = this.learningCards.splice(rand, 1)[0]
+            this.currentCardIsNew = 0
+            this.showQuestions()
+        } else {
+          this.chooseCard()
+        }
       }
     }
   }
