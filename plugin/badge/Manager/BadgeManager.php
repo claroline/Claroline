@@ -118,7 +118,6 @@ class BadgeManager
                     $this->entityManager->flush();
                     $this->dispatchBadgeAwardingEvent($badge, $user, $issuer);
                 }
-
             } catch (\Exception $exception) {
                 throw $exception;
             }
@@ -128,12 +127,14 @@ class BadgeManager
     }
 
     /**
-     * @param Badge $badge
-     * @param User $user
+     * @param Badge     $badge
+     * @param User      $user
      * @param User/null $issuer
+     *
      * @return bool
      */
-    public function revokeBadgeFromUser(Badge $badge, User $user, $comment = null, $issuer = null, $delayFlushAndEvent = false) {
+    public function revokeBadgeFromUser(Badge $badge, User $user, $comment = null, $issuer = null, $delayFlushAndEvent = false)
+    {
         $badgeRevoked = false;
         $userBadgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
         $userBadge = $userBadgeRepository->findOneByBadgeAndUser($badge, $user);
@@ -149,7 +150,6 @@ class BadgeManager
 
         return $badgeRevoked;
     }
-
 
     /**
      * @param \Icap\BadgeBundle\Entity\Badge         $badge
@@ -389,13 +389,13 @@ class BadgeManager
     }
 
     /**
-     * @param Badge $badge
+     * @param Badge          $badge
      * @param Workspace|null $Workspace
+     *
      * @return array User
      */
-    public function getUsersNotAwardedWithBadge(Badge $badge, Workspace $workspace = null)
+    public function getUsersNotAwardedWithBadge(Badge $badge)
     {
-        return $this->entityManager->getRepository('IcapBadgeBundle:UserBadge')->findUsersNotAwardedWithBadge($badge, $workspace);
+        return $this->entityManager->getRepository('IcapBadgeBundle:UserBadge')->findUsersNotAwardedWithBadge($badge);
     }
-
 }

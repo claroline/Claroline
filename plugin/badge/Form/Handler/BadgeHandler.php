@@ -82,12 +82,10 @@ class BadgeHandler
             $this->form->handleRequest($this->request);
 
             if ($this->form->isValid()) {
-
                 $this->handleUpload($this->form->get('file')->getData(), $badge);
                 $badgeRules = $badge->getRules();
 
                 $userBadges = $badge->getUserBadges();
-
 
                 if (0 < count($userBadges) && $this->badgeManager->isRuleChanged($badgeRules, $originalRules)) {
 
@@ -110,7 +108,6 @@ class BadgeHandler
                             $badgeManager->addBadgeToUser($newBadge, $userBadge->getUser());
                         }
                     }
-
                 } else {
                     // Compute which rules was deleted
                     foreach ($badgeRules as $rule) {

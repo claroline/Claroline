@@ -29,7 +29,6 @@ use Icap\BadgeBundle\Manager\BadgeManager;
  */
 class WorkspaceController extends Controller
 {
-
     private $userManager;
     private $ruleValidator;
     private $entityManager;
@@ -497,8 +496,8 @@ class WorkspaceController extends Controller
      * )
      * @ParamConverter("badge", converter="badge_converter")
      */
-    public function recalculateAction(Request $request, Workspace $workspace, Badge $badge) {
-
+    public function recalculateAction(Request $request, Workspace $workspace, Badge $badge)
+    {
         $this->checkUserIsAllowed($workspace);
 
         // Check rules for already awarded badges ?
@@ -506,13 +505,12 @@ class WorkspaceController extends Controller
 
         // Get Users
         $users = $recalculateAlreadyAwarded ?
-            $this->userManager->getUsersByWorkspaces([$workspace], 1, 1, false):
-            $this->badgeManager->getUsersNotAwardedWithBadge($badge, $workspace);
+            $this->userManager->getUsersByWorkspaces([$workspace], 1, 1, false) :
+            $this->badgeManager->getUsersNotAwardedWithBadge($badge);
 
         $nbRules = count($badge->getRules());
 
-        foreach($users as $user) {
-
+        foreach ($users as $user) {
             $resources = $this->ruleValidator->validate($badge, $user);
             if (0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
                 // Add badge to user but delay flush. It will be performed later, outside foreach loop

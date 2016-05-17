@@ -398,8 +398,8 @@ class AdministrationController extends Controller
      *
      * @ParamConverter("badge", converter="badge_converter")
      */
-    public function recalculateAction(Request $request, Badge $badge) {
-
+    public function recalculateAction(Request $request, Badge $badge)
+    {
         $this->checkOpen();
 
         // Check rules for already awarded badges ?
@@ -407,13 +407,12 @@ class AdministrationController extends Controller
 
         // Get Users
         $users = $recalculateAlreadyAwarded ?
-            $this->userManager->getAll():
+            $this->userManager->getAll() :
             $this->badgeManager->getUsersNotAwardedWithBadge($badge);
 
         $nbRules = count($badge->getRules());
 
-        foreach($users as $user) {
-
+        foreach ($users as $user) {
             $resources = $this->ruleValidator->validate($badge, $user);
             if (0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
                 // Add badge to user but delay flush. It will be performed later, outside foreach loop
