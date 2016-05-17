@@ -189,12 +189,24 @@ class Updater600200
         $stepId = -1;
 
         $exoQuestion = $this->checkExoQuestion();
+        $stepStmt = $this->connection->prepare("
+            INSERT INTO ujm_step
+            (exercise_id, value, nbQuestion, keepSameQuestion, shuffle, duration, max_attempts, ordre)
+            VALUES (:exoId, '', 0, FALSE, FALSE, 0, 0, :orderStep)
+        ");
 
         foreach ($exoQuestion as $eq) {
             if ($eq['exercise_id'] != $exoId) {
                 $exoId = $eq['exercise_id'];
             }
-            $stepId = $this->newStep($exoId, $eq['ordre']);
+
+            $this->log('Create step ...');
+
+            $stepStmt->bindValue('exoId', $exoId);
+            $stepStmt->bindValue('orderStep', $orderStep);
+            $stepStmt->execute();
+
+            $stepId = $this->connection->lastInsertId();
             $this->addQuestionStep($stepId, $eq['question_id'], 1);
         }
     }
@@ -215,33 +227,17 @@ class Updater600200
         $this->log('UPDATE interaction_graphic -> picture_id ...');
         $query = 'SELECT * FROM ujm_interaction_graphic_temp';
         $results = $this->connection->query($query)->fetchAll();
+        $stmt = $this->connection->prepare('
+            UPDATE ujm_interaction_graphic
+            SET picture_id = :docId
+            WHERE id = :resId
+        ');
+
         foreach ($results as $res) {
-            $query = 'UPDATE ujm_interaction_graphic SET picture_id='.$res['document_id']
-                .' WHERE id='.$res['id'];
-            $this->connection->exec($query);
+            $stmt->bindValue('docId', $res['document_id']);
+            $stmt->bindValue('resId', $res['id']);
+            $stmt->execute();
         }
-    }
-
-    /**
-     * Create one step for each exercise.
-     *
-     * @param int $exoId
-     */
-    private function newStep($exoId, $orderStep)
-    {
-        $this->log('UPDATE Step ...');
-
-        $this->connection->exec("
-            INSERT INTO ujm_step
-            (exercise_id, value, nbQuestion, keepSameQuestion, shuffle, duration, max_attempts, ordre)
-            VALUES
-            ({$exoId}, '', 0, FALSE, FALSE, 0, 0, {$orderStep})
-        ");
-
-        $query = 'SELECT * FROM ujm_step WHERE exercise_id='.$exoId.' AND ordre='.$orderStep;
-        $step = $this->connection->query($query)->fetch();
-
-        return $step['id'];
     }
 
     /**
@@ -298,9 +294,15 @@ class Updater600200
     private function updatePaper($score, $idPaper)
     {
         $this->log('UPDATE Paper ...');
-        $query = 'UPDATE ujm_paper SET score='.$score
-                .' WHERE id='.$idPaper;
-        $this->connection->exec($query);
+
+        $stmt = $this->connection->prepare('
+            UPDATE ujm_paper
+            SET score = :score
+            WHERE id = :idPaper
+        ');
+        $stmt->bindValue('score', $score);
+        $stmt->bindValue('idPaper', $idPaper);
+        $stmt->execute();
     }
 
     private function dropTables(array $tables)

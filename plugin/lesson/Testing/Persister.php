@@ -90,8 +90,7 @@ class Persister
 
         $this->om->persist($chapter);
         $this->om->flush();
-        var_dump($chapter);
 
-        //return $chapter;
+        return $chapter;
     }
 }
