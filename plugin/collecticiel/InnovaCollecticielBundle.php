@@ -9,7 +9,7 @@
 namespace Innova\CollecticielBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
-use Innova\PathBundle\Installation\AdditionalInstaller;
+use Innova\CollecticielBundle\Installation\AdditionalInstaller;
 
 class InnovaCollecticielBundle extends PluginBundle
 {
