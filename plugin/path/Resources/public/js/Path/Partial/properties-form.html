@@ -66,7 +66,7 @@
                 <div class="row form-group">
                     <label class="control-label col-md-3" for="innova_path_description">{{ 'path_description'|trans:{}:'path_wizards' }}</label>
                     <div class="col-md-9">
-                        <input type="text" class="form-control" id="innova_path_description" name="innova_path[description]" placeholder="{{ 'description_help'|trans:{}:'path_wizards' }}" data-ng-model="pathEditCtrl.path.description" />
+                        <textarea data-ui-tinymce="pathEditCtrl.tinymceOptions" class="form-control" id="innova_path_description" name="innova_path[description]" placeholder="{{ 'description_help'|trans:{}:'path_wizards' }}" data-ng-model="pathEditCtrl.path.description"></textarea>
                     </div>
                 </div>
 

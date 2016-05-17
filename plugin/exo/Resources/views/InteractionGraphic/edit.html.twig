@@ -1,0 +1,99 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% block breadcrumb %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-briefcase',
+                    'name': 'desktop'|trans({}, 'platform'),
+                    'href': path('claro_desktop_open')
+                },
+                {
+                    'name': 'graphic_edition' | trans({}, 'ujm_exo'),
+                    'href': ''
+                }
+            ])
+        }}
+    {% endblock %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ asset('bundles/ujmexo/js/ext/jquery-ui-smoothness.css') }}"/>
+{% endblock %}
+
+{% block title %} {{ 'edit_question' | trans({}, 'ujm_exo') }} {% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'graphic_edition'|trans({}, 'ujm_exo') }}</h3>
+        </div>
+    </div>
+
+    {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
+
+    <form id="InterGraphForm" onsubmit="return Check( '{{ 'no_question' | trans({}, 'ujm_exo') }} ...','{{ 'no_img' | trans({}, 'ujm_exo') }} !',
+        '{{ 'no_answer_zone' | trans({}, 'ujm_exo') }} ...', '{{ edit_form.question.invite.vars.id }}');"
+        action="{{ path('ujm_interactiongraphic_update', { 'id': entityInterGraph.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+
+        <div class="panel-body">
+            {% set form = edit_form %}
+            {% set src = 'edit' %}
+
+            {% include "UJMExoBundle:Partial:questionEdit.html.twig" %}
+            {% include "UJMExoBundle:Partial:interactions/graphic.html.twig" %}
+            {% include "UJMExoBundle:Partial:model.html.twig" %}
+            {% include "UJMExoBundle:Partial:restform.html.twig" %}
+        </div>
+
+        <div class="panel-footer">
+            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans({}, 'ujm_exo') }}</button>
+            {% if exoID == -1 %}
+                <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ "cancel" | trans({}, "platform") }}</a>
+            {% else %}
+                <a class="btn btn-default" href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">{{ "cancel" | trans({}, "platform") }}</a>
+            {% endif %}
+        </div>
+        {% if locker != "" %}
+        <input type="hidden" id="locker" value="{{locker.value}}">
+    {% endif %}
+    </form>
+
+{% endblock %}
+
+{# ------------------------------------------------- Javascript ---------------------------------------------------------------------------- #}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/instructions.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicEdit.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/malsup.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            newHintEdit('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
+        });
+    </script>
+
+    <script type="text/javascript">
+        var translations = {
+            'tradWrongPoint' : '{{ 'wrong_point' | trans({}, 'ujm_exo') }}',
+            'tradCircle' : '{{ 'cercle' | trans({}, 'ujm_exo') }}',
+            'tradSquare' : '{{ 'square' | trans({}, 'ujm_exo') }}'
+        }
+    </script>
+{% endblock %}

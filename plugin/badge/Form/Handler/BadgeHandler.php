@@ -71,7 +71,7 @@ class BadgeHandler
      *
      * @return bool True on successfull processing, false otherwise
      */
-    public function handleEdit(Badge $badge)
+    public function handleEdit(Badge $badge, $badgeManager = null, $unawardBadge = false)
     {
         $this->form->setData($badge);
 
@@ -88,6 +88,7 @@ class BadgeHandler
                 $userBadges = $badge->getUserBadges();
 
                 if (0 < count($userBadges) && $this->badgeManager->isRuleChanged($badgeRules, $originalRules)) {
+
                     /** @var \Doctrine\ORM\UnitOfWork $unitOfWork */
                     $unitOfWork = $this->entityManager->getUnitOfWork();
 
@@ -99,6 +100,14 @@ class BadgeHandler
                     $badge->setDeletedAt(new \DateTime());
 
                     $this->entityManager->persist($newBadge);
+
+                    // If the new badge has to be revoked from users already awarded, skip the next part
+                    if (!$unawardBadge) {
+                        foreach ($userBadges as $userBadge) {
+                            // Award new version to previous users
+                            $badgeManager->addBadgeToUser($newBadge, $userBadge->getUser());
+                        }
+                    }
                 } else {
                     // Compute which rules was deleted
                     foreach ($badgeRules as $rule) {

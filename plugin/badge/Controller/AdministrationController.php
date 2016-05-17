@@ -17,6 +17,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Rule\Validator;
+use Doctrine\ORM\EntityManager;
+use Icap\BadgeBundle\Manager\BadgeManager;
 
 /**
  * Controller of the badges.
@@ -25,6 +30,31 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class AdministrationController extends Controller
 {
+    private $userManager;
+    private $ruleValidator;
+    private $entityManager;
+    private $badgeManager;
+
+    /**
+     * @DI\InjectParams({
+     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
+     *     "ruleValidator" = @DI\Inject("claroline.rule.validator"),
+     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "badgeManager" = @DI\Inject("icap_badge.manager.badge")
+     * })
+     */
+    public function __construct(
+        UserManager $userManager,
+        Validator $ruleValidator,
+        EntityManager $entityManager,
+        BadgeManager $badgeManager
+    ) {
+        $this->userManager = $userManager;
+        $this->ruleValidator = $ruleValidator;
+        $this->entityManager = $entityManager;
+        $this->badgeManager = $badgeManager;
+    }
+
     /**
      * @Route(
      *     "/{badgePage}/{claimPage}/{userPage}",
@@ -128,7 +158,9 @@ class AdministrationController extends Controller
         $translator = $this->get('translator');
 
         try {
-            if ($this->get('icap_badge.form_handler.badge')->handleEdit($badge)) {
+            $unawardBadge = $request->query->get('unawardBadge') === 'true';
+
+            if ($this->get('icap_badge.form_handler.badge')->handleEdit($badge, $this->badgeManager, $unawardBadge)) {
                 $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', array(), 'icap_badge'));
 
                 return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
@@ -359,6 +391,44 @@ class AdministrationController extends Controller
         $this->checkOpen();
 
         return array();
+    }
+
+    /**
+     * @Route("/recalculate/{slug}", name="icap_badge_admin_badges_recalculate")
+     *
+     * @ParamConverter("badge", converter="badge_converter")
+     */
+    public function recalculateAction(Request $request, Badge $badge)
+    {
+        $this->checkOpen();
+
+        // Check rules for already awarded badges ?
+        $recalculateAlreadyAwarded = $request->query->get('recalculateAlreadyAwarded') === 'true';
+
+        // Get Users
+        $users = $recalculateAlreadyAwarded ?
+            $this->userManager->getAll() :
+            $this->badgeManager->getUsersNotAwardedWithBadge($badge);
+
+        $nbRules = count($badge->getRules());
+
+        foreach ($users as $user) {
+            $resources = $this->ruleValidator->validate($badge, $user);
+            if (0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
+                // Add badge to user but delay flush. It will be performed later, outside foreach loop
+                $this->badgeManager->addBadgeToUser($badge, $user, null, null, true);
+            } else {
+                // Remove badge from user but delay flush. It will be performed later, outside foreach loop
+                $this->badgeManager->revokeBadgeFromUser($badge, $user, null, null, true);
+            }
+        }
+        $this->getDoctrine()->getManager()->flush();
+
+        $translator = $this->get('translator');
+        $successMessage = $translator->trans('recalculate_success', array(), 'icap_badge');
+        $this->get('session')->getFlashBag()->add('success', $successMessage);
+
+        return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
     }
 
     private function checkOpen()

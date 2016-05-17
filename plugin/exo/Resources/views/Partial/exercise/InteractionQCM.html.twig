@@ -1,0 +1,29 @@
+<input class="form-control" type="hidden" name="interactionQCMToValidated" value="{{ interactionToDisplayed.id }}"/>
+<input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.question.id }}"/>
+<input class="form-control" type="hidden" name="typeInteraction" value="InteractionQCM"/>
+
+{% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
+
+<table class="table-striped" cellspacing="5" cellpadding="2" border="0">
+    {% for choice in interactionToDisplayed.choices %}
+        {% set checked = "" %}
+        <tr>
+            {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
+                {% set checked = "checked" %}
+            {% endif %}
+            {% if interactionToDisplayed.typeQCM.code == 2 %}
+                <td><p><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }}/></p></td>
+                    {% else %}
+                <td><p><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }}/></p></td>
+                    {% endif %}
+            <td>{{ choice.label|raw }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+
+<!--</div>-->
+
+<input type="hidden" name="testQCM" value="testQCM" />
+<input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>

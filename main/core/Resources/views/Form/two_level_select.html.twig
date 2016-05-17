@@ -13,10 +13,12 @@
                 if (preselectedValuePath == null) {
                     preselectedValuePath = [choices[0]['label']];
                 }
+                var inputName = $("{{"#"~form.vars['id']}}").attr('name');
                 var choicesTreeOptions = {
-                    preselect:{"{{form.vars['id']}}":preselectedValuePath},
+                    preselect:{},
                     choose:''
                 };
+                choicesTreeOptions.preselect[inputName] = preselectedValuePath;
                 $("{{"#"~form.vars['id']}}").optionTree(choicesTree, choicesTreeOptions);
             });
             function buildChoicesTree(choices, choicesTree, pathToNode, preselectedValue)

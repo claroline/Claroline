@@ -12,6 +12,8 @@
 namespace Claroline\LdapBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Inject;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 
@@ -25,9 +27,14 @@ class LdapManager
     private $config;
     private $connect;
 
-    public function __construct()
+    /**
+     * @InjectParams({
+     *     "authenticationDir" = @Inject("%claroline.param.authentication_directory%")
+     * })
+     */
+    public function __construct($authenticationDir)
     {
-        $this->path = __DIR__.'/../../../../../../app/config/Authentication/claroline.ldap.yml';
+        $this->path = $authenticationDir.'claroline.ldap.yml';
         $this->yml = new Parser();
         $this->dumper = new Dumper();
         $this->config = $this->parseYml();
