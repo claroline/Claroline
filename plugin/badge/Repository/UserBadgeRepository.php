@@ -266,4 +266,39 @@ class UserBadgeRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findUsersNotAwardedWithBadge(Badge $badge, Workspace $workspace = null) {
+
+        $em = $this->getEntityManager();
+
+        $qb = $em->createQueryBuilder();
+        $notIn = $qb    ->select('IDENTITY(ub.user)')
+                        ->from('IcapBadgeBundle:Userbadge', 'ub')
+                        ->where('ub.badge = ?1');
+
+        $qb1 = $em->createQueryBuilder();
+        $qb1    ->select('u')
+                ->from('ClarolineCoreBundle:User', 'u')
+                ->where($qb1->expr()->notIn('u.id', $notIn->getDQL()))
+                ->setParameter(1, $badge->getId());
+
+        if ($workspace) {
+
+            $userRepository = $this
+                ->getEntityManager()
+                ->getRepository('ClarolineCoreBundle:User');
+
+            $in = $userRepository->findUsersByWorkspace($workspace, false);
+
+            $qb2 = $em->createQueryBuilder();
+            $qb1->andWhere($qb2->expr()->in('u.id', $in->getDQL()))
+                ->setParameter('workspaceId', $workspace->getId());
+        }
+
+        //var_dump($qb1->getQuery()->getDQL()); die();
+
+        return $qb1->getQuery()->getResult();
+
+    }
+
 }

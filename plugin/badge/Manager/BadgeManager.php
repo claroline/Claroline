@@ -94,7 +94,7 @@ class BadgeManager
      *
      * @return bool
      */
-    public function addBadgeToUser(Badge $badge, User $user, $comment = null, $issuer = null)
+    public function addBadgeToUser(Badge $badge, User $user, $comment = null, $issuer = null, $delayFlushAndEvent = false)
     {
         $badgeAwarded = false;
         /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
@@ -114,8 +114,11 @@ class BadgeManager
                 $badge->addUserBadge($userBadge);
                 $badgeAwarded = true;
                 $this->entityManager->persist($badge);
-                $this->entityManager->flush();
-                $this->dispatchBadgeAwardingEvent($badge, $user, $issuer);
+                if (!$delayFlushAndEvent) {
+                    $this->entityManager->flush();
+                    $this->dispatchBadgeAwardingEvent($badge, $user, $issuer);
+                }
+
             } catch (\Exception $exception) {
                 throw $exception;
             }
@@ -123,6 +126,31 @@ class BadgeManager
 
         return $badgeAwarded;
     }
+
+    /**
+     * @param Badge $badge
+     * @param User $user
+     * @param User/null $issuer
+     * @return bool
+     */
+    public function revokeBadgeFromUser(Badge $badge, User $user, $comment = null, $issuer = null, $delayFlushAndEvent = false) {
+        $badgeRevoked = false;
+        $userBadgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
+        $userBadge = $userBadgeRepository->findOneByBadgeAndUser($badge, $user);
+        if ($userBadge !== null) {
+            $this->entityManager->remove($userBadge);
+            if (!$delayFlushAndEvent) {
+                $this->entityManager->flush();
+                //$this->dispatchBadgeRevokingEvent($badge, $user, $issuer);
+            }
+
+            $badgeRevoked = true;
+        }
+
+        return $badgeRevoked;
+    }
+
+
     /**
      * @param \Icap\BadgeBundle\Entity\Badge         $badge
      * @param \Claroline\CoreBundle\Entity\User      $receiver
@@ -359,4 +387,15 @@ class BadgeManager
 
         return $badgeRepository->findByUser($user);
     }
+
+    /**
+     * @param Badge $badge
+     * @param Workspace|null $Workspace
+     * @return array User
+     */
+    public function getUsersNotAwardedWithBadge(Badge $badge, Workspace $workspace = null)
+    {
+        return $this->entityManager->getRepository('IcapBadgeBundle:UserBadge')->findUsersNotAwardedWithBadge($badge, $workspace);
+    }
+
 }
