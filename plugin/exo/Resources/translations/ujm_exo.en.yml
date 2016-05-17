@@ -107,6 +107,8 @@ exercise_definition: Exercise definition
 exercise_edit: Exercise edit
 exercice_linked_question: Questions linked to the exercise
 exit: Exit
+exo_empty_user_can_edit: This exercise is empty. Please edit and publish it to fill it.
+exo_empty_user_read_only: This exercise is empty and has not been configured by its designer. Please come back later.
 expected_answer: Expected answer
 explain_coeff_dis0: The copies must have the same questions to calculate the coefficient of discrimination.
 explain_coeff_dis1: Analysis of the relevance of the questions, this correlation coefficient ranges from -1 to +1.
