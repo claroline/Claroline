@@ -2,3 +2,10 @@ claro_message_bundle:
     resource: "@ClarolineMessageBundle/Controller/"
     prefix:   message
     type:     annotation
+claro_message_bundle_api:
+    resource: "@ClarolineMessageBundle/Controller/ApiMessageController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+      expose: true
