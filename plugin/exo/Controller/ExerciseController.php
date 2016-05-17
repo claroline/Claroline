@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -16,6 +17,7 @@ class ExerciseController extends Controller
     /**
      * Opens an exercise.
      *
+     * @param User     $user
      * @param Exercise $exercise
      *
      * @EXT\Route(
@@ -24,10 +26,11 @@ class ExerciseController extends Controller
      *     requirements={"id"="\d+"},
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter("user", converter="current_user")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function openAction(Exercise $exercise)
+    public function openAction(User $user, Exercise $exercise)
     {
         $this->assertHasPermission('OPEN', $exercise);
 
@@ -45,7 +48,8 @@ class ExerciseController extends Controller
             $nbUserPaper = 0;
         }
 
-        $nbQuestions = $em->getRepository('UJMExoBundle:StepQuestion')->getCountQuestion($exercise);
+        $this->container->get('ujm.exo.paper_manager')->countUserFinishedPapers($exercise, $user);
+
         $nbPapers = $em->getRepository('UJMExoBundle:Paper')->countPapers($exerciseId);
 
         // Display the Summary of the Exercise
@@ -54,7 +58,6 @@ class ExerciseController extends Controller
             '_resource' => $exercise,
             'workspace' => $exercise->getResourceNode()->getWorkspace(),
 
-            'nbQuestion' => $nbQuestions['nbq'],
             'nbUserPaper' => $nbUserPaper,
             'nbPapers' => $nbPapers,
 
@@ -62,7 +65,6 @@ class ExerciseController extends Controller
             'exercise' => $this->get('ujm.exo.exercise_manager')->exportExercise($exercise, false),
             'editEnabled' => $isExoAdmin,
             'composeEnabled' => $isAllowedToCompose,
-            'duration' => $exercise->getDuration(),
         ]);
     }
 

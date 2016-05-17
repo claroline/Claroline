@@ -22,6 +22,13 @@ UserPaperService.$inject = [ '$http', '$q', 'PaperService' ];
 UserPaperService.prototype.paper = {};
 
 /**
+ * Number of finished attempt of the current User
+ * (used to know if the User can play exercise)
+ * @type {number}
+ */
+UserPaperService.prototype.finishedAttempts = 0;
+
+/**
  * Get Paper
  * @returns {Object}
  */
@@ -36,6 +43,25 @@ UserPaperService.prototype.getPaper = function getPaper() {
  */
 UserPaperService.prototype.setPaper = function setPaper(paper) {
     this.paper = paper;
+
+    return this;
+};
+
+/**
+ * Get the number of finished attempts
+ * @returns {number}
+ */
+UserPaperService.prototype.getFinishedAttempts = function getFinishedAttempts() {
+    return this.finishedAttempts;
+};
+
+/**
+ * Set the number of finished attempts
+ * @param   {Number} finishedAttempts
+ * @returns {UserPaperService}
+ */
+UserPaperService.prototype.setFinishedAttempts = function setFinishedAttempts(finishedAttempts) {
+    this.finishedAttempts = finishedAttempts;
 
     return this;
 };
