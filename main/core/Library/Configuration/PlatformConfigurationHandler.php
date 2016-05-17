@@ -25,6 +25,7 @@ class PlatformConfigurationHandler
 {
     private $configFile;
     private $parameters;
+
     public static $defaultParameters = array(
         'name' => 'claroline',
         'nameActive' => true,
@@ -45,7 +46,8 @@ class PlatformConfigurationHandler
         'mailer_auth_mode' => null,
         'terms_of_service' => true,
         'google_meta_tag' => null,
-        'redirect_after_login' => false,
+        'redirect_after_login_option' => PlatformConfiguration::DEFAULT_REDIRECT_OPTION,
+        'redirect_after_login_url' => null,
         'session_storage_type' => 'native',
         'session_db_table' => null,
         'session_db_id_col' => null,
@@ -149,6 +151,11 @@ class PlatformConfigurationHandler
         $this->saveParameters();
     }
 
+    public function isRedirectOption($option)
+    {
+        return $this->parameters['redirect_after_login_option'] == $option;
+    }
+
     public function getPlatformConfig()
     {
         $config = new PlatformConfiguration();
@@ -170,7 +177,8 @@ class PlatformConfigurationHandler
         $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
         $config->setMailerPort($this->parameters['mailer_port']);
         $config->setGoogleMetaTag($this->parameters['google_meta_tag']);
-        $config->setRedirectAfterLogin($this->parameters['redirect_after_login']);
+        $config->setRedirectAfterLoginOption($this->parameters['redirect_after_login_option']);
+        $config->setRedirectAfterLoginUrl($this->parameters['redirect_after_login_url']);
         $config->setSessionStorageType($this->parameters['session_storage_type']);
         $config->setSessionDbTable($this->parameters['session_db_table']);
         $config->setSessionDbIdCol($this->parameters['session_db_id_col']);

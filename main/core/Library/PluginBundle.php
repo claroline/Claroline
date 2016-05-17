@@ -111,18 +111,42 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         return strtolower(str_replace('Bundle', '', $this->getVendorName().$this->getBundleName()));
     }
 
-    public function getPhpExtensionRequirements()
+    /**
+     * Returns the list of PHP extensions required by this plugin.
+     *
+     * Example: ['ldap', 'zlib']
+     *
+     * @return array
+     */
+    public function getRequiredExtensions()
     {
-        return array();
+        return [];
     }
 
-    public function getPluginsRequirements()
+    /**
+     * Returns the list of Claroline plugins required by this plugin. Each plugin
+     * in the list must be represented by its fully qualified namespace.
+     *
+     * @return array
+     */
+    public function getRequiredPlugins()
     {
-        return array();
+        return [];
     }
 
+    /**
+     * Returns the list of extra requirements to be met before enabling the plugin.
+     *
+     * Each requirement must be an array containing the two following keys:
+     *
+     *   - "test":          An anonymous function checking that the requirement is met.
+     *                      Must return true if the check is successful, false otherwise.
+     *   - "failure_msg":   A text indicating what went wrong if the test has failed.
+     *
+     * @return array
+     */
     public function getExtraRequirements()
     {
-        return array();
+        return [];
     }
 }

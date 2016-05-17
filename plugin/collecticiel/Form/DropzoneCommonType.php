@@ -54,7 +54,6 @@ class DropzoneCommonType extends AbstractType
                     'allowDrop' => 'allowDropManualState',
                     'finished' => 'finishedManualState',
                 ),
-//                'data' => 'allowDrop',
                 'expanded' => true,
                 'multiple' => false,
             ))
@@ -70,58 +69,10 @@ class DropzoneCommonType extends AbstractType
                     'required' => false, )
                      );
 
-        // $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-        //     $dropzone = $event->getData();
-        //     $form = $event->getForm();
-        //     $publishedAttr = array();
-
-        //     // check if the Product object is "new"
-        //     // If no data is passed to the form, the data is "null".
-        //     // This should be considered a new "Product"
-        //     if ($dropzone->getResourceNode()->isPublished()) {
-        //         $publishedAttr['checked'] = 'checked';
-        //     }
-
-        //     $form
-        //         // Publication. Ajout de cette zone, demande JJQ. InnovaERV
-        //         ->add('published', 'checkbox', 
-        //             array(
-        //                 'attr' => $publishedAttr,
-        //                 'mapped' => false,
-        //                 'required' => false)
-        //                  );
-        // });
-
-        // $builder->addEventListener(
-        // FormEvents::POST_SUBMIT,
-        // function (FormEvent $event) {
-        //     $dropzone = $event->getData();
-        //     $form = $event->getForm();
-        //     $publishedAttr = array();
-
-        //     // check if the Product object is "new"
-        //     // If no data is passed to the form, the data is "null".
-        //     // This should be considered a new "Product"
-        //     if ($dropzone->getResourceNode()->isPublished()) {
-        //         $publishedAttr['checked'] = 'checked';
-        //     }
-
-        //     $form
-        //         // Publication. Ajout de cette zone, demande JJQ. InnovaERV
-        //         ->add('published', 'checkbox', 
-        //             array(
-        //                 'attr' => $publishedAttr,
-        //                 'mapped' => false,
-        //                 'required' => false)
-        //                  );
-        //     }
-        // );
-
         $builder
             // Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('returnReceipt', 'checkbox',
                  array(
-//                     'attr' => array('checked' => 'checked'),
                      'required' => false, )
                       )
             // Evaluation. Ajout de cette zone, demande JJQ. InnovaERV
@@ -139,6 +90,23 @@ class DropzoneCommonType extends AbstractType
                  array(
                      'required' => false, )
                       )
+
+            // EvaluationType. Ajout de cette zone, demande JJQ. InnovaERV
+            ->add('evaluationType', 'choice', array(
+                'choices' => array(
+                    'noEvaluation' => 'noEvaluation',
+                    'notation' => 'notation',
+                    'ratingScale' => 'ratingScale',
+                ),
+                'expanded' => false,
+                'multiple' => false,
+            ))
+
+            // Notation maxi. Ajout de cette zone, demande JJQ. InnovaERV
+            ->add('maximumNotation', 'integer', array(
+                          'required' => true, 'attr' => array('min' => 0), )
+                        )
+
             ;
     }
     public function getName()

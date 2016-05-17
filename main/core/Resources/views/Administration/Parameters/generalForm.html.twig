@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% form_theme form_settings _self %}
+{% form_theme form_settings "ClarolineCoreBundle:Form:redirect_after_login_theme.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'general' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
@@ -41,7 +41,7 @@
             {{ form_row(form_settings.defaultRole) }}
             {{ form_row(form_settings.localeLanguage) }}
             {{ form_row(form_settings.formCaptcha) }}
-            {{ form_row(form_settings.redirect_after_login) }}
+            {{ form_row(form_settings.redirect_after_login_option) }}
             {{ form_row(form_settings.account_duration) }}
             {{ form_row(form_settings.platform_init_date) }}
             {{ form_row(form_settings.platform_limit_date) }}

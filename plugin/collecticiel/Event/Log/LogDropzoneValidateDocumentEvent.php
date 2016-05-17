@@ -24,14 +24,18 @@ class LogDropzoneValidateDocumentEvent extends AbstractLogResourceEvent implemen
     public function __construct(Document $document, Dropzone $dropzone, $userIds)
     {
         $this->document = $document;
+        $this->dropzone = $dropzone;
         $this->type = $dropzone->getResourceNode()->getName();
         $this->userIds = $userIds;
+
+        $this->details = array(
+        );
 
         // Récupération du nom et du prénom
         $this->firstName = $document->getSender()->getFirstName();
         $this->lastName = $document->getSender()->getLastName();
 
-        parent::__construct($dropzone->getResourceNode(), []);
+        parent::__construct($dropzone->getResourceNode(), $this->details);
     }
 
     /**
@@ -49,7 +53,7 @@ class LogDropzoneValidateDocumentEvent extends AbstractLogResourceEvent implemen
 
     /**
      * Get sendToFollowers boolean.
-     *
+     * 
      * @return bool
      */
     public function getSendToFollowers()
@@ -108,7 +112,7 @@ class LogDropzoneValidateDocumentEvent extends AbstractLogResourceEvent implemen
         $notificationDetails = array_merge($this->details, array());
 
         $notificationDetails['resource'] = array(
-            'id' => $this->document->getId(),
+            'id' => $this->dropzone->getId(),
             'name' => $this->firstName.' '.$this->lastName, // $this->resource->getName(),
             'type' => $this->type,
         );

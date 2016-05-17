@@ -34,11 +34,11 @@
 
         {# ??? #}
         <div class="form-group">
-            <div id='dropzone-message-part' class='col-lg-offset-3 col-lg-7' {% if dropzone.displayNotationMessageToLearners == false %} style="display:none" {% endif %} >
+            <div id='dropzone-message-part' class='col-lg-offset-3 col-lg-7' {% if dropzone.displayNotationMessageToLearners == false %} style="display:none" {% endif %}>
                 {{ form_label(form.successMessage,null,{'label': 'successMessage'|trans({},'innova_collecticiel'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
                 {{ form_widget(form.successMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
                 {{ form_errors(form.successMessage) }}
-                 {{ form_label(form.failMessage,null,{'label': 'failMessage'|trans({},'innova_collecticiel'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
+                {{ form_label(form.failMessage,null,{'label': 'failMessage'|trans({},'innova_collecticiel'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
                 {{ form_widget(form.failMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
                 {{ form_errors(form.failMessage) }}
             </div>
@@ -71,7 +71,7 @@
                 <strong>{{ 'scheduleByDatePlanning'|trans({}, 'innova_collecticiel') }}</strong>
             </label>
         </div>
-        
+
         <div id="planning_dates">
             <div class="row form-group">
                 <div class="col-md-6">
@@ -97,7 +97,6 @@
                         {{ form_row(form.published, {
                         'label_attr':
                             {
-                                'class': 'col-xs-offset-2 col-xs-12 col-sm-2',
                                 'style': 'font-weight: normal;'
                             },
                         'attr' : {'checked' : 'checked'},
@@ -107,7 +106,6 @@
                         {{ form_row(form.published, {
                         'label_attr':
                             {
-                                'class': 'col-xs-offset-2 col-xs-12 col-sm-2',
                                 'style': 'font-weight: normal;'
                             },
                         'attr' : {},
@@ -123,47 +121,93 @@
             <h4>{{ 'Return receipt'|trans({}, 'innova_collecticiel') }}</h4>
             <div class="row form-group">
                 <div class="col-md-10">
-                    {{ form_row(form.returnReceipt, {'label_attr': {'class': 'col-xs-offset-1 col-xs-11 col-sm-2', 'style': 'font-weight: normal;' }}
+                    {{ form_row(form.returnReceipt, {'label_attr': {'style': 'font-weight: normal;' }}
                     ) }}
                  </div>
              </div>
         </div>
-
-        {# Evaluation. Ajout de cette zone, demande JJQ. InnovaERV  #}
-        <div id="evaluation">
-            <h4>{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</h4>
-            <div class="row form-group">
-                <div class="col-md-10">
-                    {{ form_row(form.evaluation, {'label_attr': {'class': 'col-xs-offset-1 col-xs-11 col-sm-2', 'style': 'font-weight: normal;' }}
-                    ) }}
-                 </div>
+        {# Evaluation affichage. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        <div class="row">
+          <div class="col-md-12">
+            <div id="evaluation">
+                <h4>{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</h4>
+                {{ form_row(form.evaluation, {'label_attr': {'style': 'font-weight: normal;' }})}}
+            </div>
+          </div>
+        </div>
+        <!-- Evaluation types -->
+        <div class="row">
+          <div class="col-md-12">
+            <div id="evaluationType">
+              <h4>{{ 'Evaluation for documents'|trans({}, 'innova_collecticiel') }}</h4>
+              <div class="row">
+                  <div class="col-md-8">
+                      {{ form_widget(form.evaluationType) }}
+                  </div>
+                  <div class="col-md-4">
+                  </div>
+               </div>
              </div>
+             <!-- Manage Scales Button -->
+             <div class="row">
+               <div class="col-md-12">
+                 <div id="dropzone-message-part-appreciation" {% if dropzone.evaluationType != "ratingScale" %} style="display:none" {% endif %}>
+                    <hr>
+                     <div class="col-md-8">
+                       <a href="{{ path('innova_collecticiel_edit_appreciation', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">
+                         <i class="fa fa-pencil"></i>&nbsp;{{ 'Rating Scale appreciation'|trans({}, 'innova_collecticiel') }}
+                       </a>
+                     </div>
+                     <div class="col-md-4">
+                     </div>
+                 </div>
+               </div>
+             </div>
+             {# Evaluation gestion. Ajout de cette zone, demande JJQ. InnovaERV  #}
+             <div class="row">
+               <div class="col-md-12">
+                 <div id="dropzone-message-part-notation" {% if dropzone.evaluationType != "notation" %} style="display:none" {% endif %}>
+                      <hr>
+                     {# Notation max. Ajout de cette zone, demande JJQ. InnovaERV  #}
+                     <div class="row form-group">
+                         <div class="col-md-8">
+                             {{ form_row(form.maximumNotation, {'label_attr': {'style': 'font-weight: normal;' }} ) }}
+                          </div>
+                          <div class="col-md-4">
+                          </div>
+                      </div>
+                 </div>
+               </div>
+             </div>
+          </div>
         </div>
 
-        {# Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        <hr>
+        {# user image and id. Ajout de cette zone, demande JJQ. InnovaERV  #}
         <div id="display">
             <h4>{{ 'Display'|trans({}, 'innova_collecticiel') }}</h4>
             <div class="row form-group">
-                <div class="col-md-8">
-                    {{ form_row(form.picture, {'label_attr': {'class': 'col-xs-offset-1 col-xs-11 col-sm-2', 'style': 'font-weight: normal;' }}
-                    ) }}
+                <div class="col-md-12">
+                    {{ form_row(form.picture, {'label_attr': {'style': 'font-weight: normal;' }} ) }}
                  </div>
              </div>
 
             <div class="row form-group">
-                <div class="col-md-8">
-                    {{ form_row(form.username, {'label_attr': {'class': 'col-xs-offset-1 col-xs-11 col-sm-2', 'style': 'font-weight: normal;' }}
+                <div class="col-md-12">
+                    {{ form_row(form.username, {'label_attr': {'style': 'font-weight: normal;' }}
                      ) }}
                  </div>
              </div>
         </div>
 
         {# Submit #}
-        <div class="btn-group pull-right">
+        <div class="pull-right">
+          <!--
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}"
                class="btn btn-default ">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}
             </a>
-            <button id="submitAndGotoCriteriaButton" type="submit" class="btn btn-primary submit_button">
+          -->
+            <button role="submit" type="submit" class="btn btn-primary">
                 {{ 'Save'|trans({}, 'innova_collecticiel') }}
             </button>
         </div>
@@ -187,7 +231,7 @@
                 'trigger': 'hover',
                 'html': true
             });
-            
+
             $('#innova_collecticiel_common_form_manualPlanning_1').on('click', function() {
                 var hour1 = $("#innova_collecticiel_common_form_startAllowDrop_time").val();
                 var hour2 = $("#innova_collecticiel_common_form_endAllowDrop_time").val();
@@ -209,17 +253,20 @@
                 $('#innova_collecticiel_common_form_stayHere').val(1);
                 $('.submit_button').trigger('click');
             });
+
             $('#innova_collecticiel_common_form_peerReview_0').on('click', function() {
                 enablePeerReviewOptions(false);
             });
+
             $('#innova_collecticiel_common_form_peerReview_1').on('click', function() {
                 enablePeerReviewOptions(true);
             });
-            var $displayNotationToLearner = $('#innova_collecticiel_common_form_displayNotationMessageToLearners');
-            manageSuccessFailMessagesVisibility($displayNotationToLearner);
-            $displayNotationToLearner.change(function () {
-                manageSuccessFailMessagesVisibility($(this));
+
+            $('#innova_collecticiel_common_form_evaluationType').on('change', function(event) {
+              showHideEvaluationTypeForms($(this).val());
             });
+            // End Collecticiel Notation dependency. InnovaERV
+
             var enablePeerReviewOptions = function (peerReviewEnabled) {
                 // when loading the page without having saved yet, all tabs available by default
                 if (peerReviewEnabled || typeof peerReviewEnabled === 'undefined') {
@@ -248,11 +295,11 @@
                     $('#innova_collecticiel_common_form_startReview_date').val(null);
                     $('#innova_collecticiel_common_form_startReview_time').val(null);
                     $('#dropzone_notification_part').show();
-                    $('.submit_button').html('{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}'); 
+                    $('.submit_button').html('{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}');
                 }
                 manageCorrectionVisibility(peerReviewEnabled);
             };
-            
+
             enablePeerReviewOptions({{ dropzone.peerReview }});
             var manualPlanning = function () {
                 var $planning_dates = $('#planning_dates');
@@ -282,10 +329,7 @@
             {
                 manageCorrectionDeny();
             });
-            $('#editCriteriaLink').click(function (e) {
-                e.preventDefault();
-                $('#submitAndGotoCriteriaButton').trigger('click');
-            });
+
         });
         function manageCorrectionDeny()
         {
@@ -299,29 +343,38 @@
                 $('#allow-correction-deny').parent().hide();
             }
         }
+
         function manageCorrectionVisibility(peerReviewEnabled)
         {
-            // Set PeerReview dependency
-            // show option only if peerReview is Activated, set to false and desactivate if it is not.
-            // call manageCorrectionDeny to cascade dependencies .
-           /* if(peerReviewEnabled)
-            {
-                $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').parent().show();
-            }else {
-                 $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').prop('checked',false).parent().hide();
-            }*/
             $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').parent().show();
             manageCorrectionDeny();
         }
+
         function manageSuccessFailMessagesVisibility($cb)
         {
             var $div = $('#dropzone-message-part');
+
             if($cb.prop('checked')) {
                 $div.fadeIn();
             }else {
                 $div.fadeOut();
             }
         }
+
+        function showHideEvaluationTypeForms(type)
+        {
+          if(type === 'notation'){
+            $('#dropzone-message-part-notation').show();
+            $('#dropzone-message-part-appreciation').hide();
+          } else if (type === 'ratingScale'){
+            $('#dropzone-message-part-appreciation').show();
+            $('#dropzone-message-part-notation').hide();
+          } else {
+            $('#dropzone-message-part-appreciation').hide();
+            $('#dropzone-message-part-notation').hide();
+          }
+        }
+        
         /**
          * When manual state has changed and involve that poeple will not be able to drop anymore, this will ask if
          * you want to close opened drop. ( same as autoClose when time is up ).
@@ -342,6 +395,8 @@
             }
         }
     </script>
+
+    <script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}

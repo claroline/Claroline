@@ -265,10 +265,6 @@ class CorrectionController extends DropzoneBaseController
             //Expected corrections
             $expectedCorrections = $dropzone->getExpectedTotalCorrection();
 
-/**
- * $nbCorrectionByUser = $em->getRepository('InnovaCollecticielBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
- * if(count($nbCorrectionByUser) >=  $expectedCorrections && count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections  ).
- **/
             // corrected copy only instead of corrected copy AND given corrections.
             if (count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections) {
                 //dispatchEvent.
@@ -744,25 +740,7 @@ class CorrectionController extends DropzoneBaseController
             if ($correction->getDrop()->getUser()->getId() != $userId) {
                 throw new AccessDeniedException();
             }
-        } else {
-            //            $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
         }
-        //$this->checkUserGradeAvailable($dropzone);
-
-        /*
-        if (!$dropzone->getPeerReview()) {
-            return $this->redirect(
-                $this->generateUrl(
-                    'innova_collecticiel_drops_detail_correction_standard',
-                    array(
-                        'resourceId' => $dropzone->getId(),
-                        'state' => $state,
-                        'correctionId' => $correctionId
-                    )
-                )
-            );
-        }
-        */
 
         /* @var Correction $correction */
 
@@ -1063,12 +1041,6 @@ class CorrectionController extends DropzoneBaseController
      */
     public function dropsDetailAddCommentsInnovaAction($dropzone, $user, $drop, $document)
     {
-
-        /*
-        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
-        */
-
         $em = $this->getDoctrine()->getManager();
         $correction = new Correction();
         $correction->setUser($user);
@@ -1524,22 +1496,6 @@ class CorrectionController extends DropzoneBaseController
         // check rights
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
-
-        /*
-        // view only available in peerReview mode
-        if(! $dropzone->getPeerReview())
-        {
-            // redirection if the dropzone is not in PeerReview.
-            return $this->redirect(
-                    $this->generateUrl(
-                        'innova_collecticiel_drop',
-                        array(
-                            'resourceId' => $dropzone->getId()
-                        )
-                    )
-                );
-        }
-        */
 
         //getting the repos
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
@@ -2277,7 +2233,6 @@ class CorrectionController extends DropzoneBaseController
                 $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
                 // Envoi notification. InnovaERV
-//                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
                 $usersIds = array();
                 $usersIds[] = $dropzone->getResourceNode()->getCreator()->getId();
                 $usersIds[] = $document->getSender()->getId();

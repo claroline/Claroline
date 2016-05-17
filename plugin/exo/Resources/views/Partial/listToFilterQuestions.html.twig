@@ -1,0 +1,17 @@
+{% set ws = '' %}
+
+<option value="-1">{{ 'all_question' | trans({}, 'ujm_exo') }}</option>
+<option value="-2">{{ 'my_models' | trans({}, 'ujm_exo') }}</option>
+{% for Exo in listExo %}
+    {% if ws != Exo['name'] %}
+        {% if ws !='' %}
+            </optgroup>
+        {% endif %}
+        {% set ws = Exo['name'] %}
+        <optgroup label="{{ Exo['name'] }}">
+    {% endif %}
+    <option value="{{ Exo['id'] }}">
+        {{ Exo['title'] }}
+    </option>
+{% endfor %}
+</optgroup>

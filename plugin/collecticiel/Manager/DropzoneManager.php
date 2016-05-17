@@ -8,7 +8,6 @@ use Claroline\AgendaBundle\Entity\Event;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Drop;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 
 /**
  * @DI\Service("innova.manager.dropzone_manager")
@@ -18,8 +17,8 @@ class DropzoneManager
     private $container;
     private $maskManager;
     private $em;
-    /** @var ResourceNodeRepository */
     private $resourceNodeRepo;
+
     /**
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container"),

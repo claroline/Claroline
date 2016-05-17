@@ -38,10 +38,14 @@ class Updater050002 extends Updater
         if ($this->connection->getSchemaManager()->tablesExist(array('icap__portfolio_widget_title'))) {
             $this->log('Restoring portfolio titles...');
             $rowPortfolioTitles = $this->connection->query('SELECT * FROM icap__portfolio_widget_title');
+            $sql = 'SELECT aw.id, aw.user_id FROM icap__portfolio_abstract_widget aw WHERE id = :id';
+            $stmt = $this->connection->prepare($sql);
 
             foreach ($rowPortfolioTitles as $rowPortfolioTitle) {
-                $rowAbstractWidgets = $this->connection->query('SELECT aw.id, aw.user_id FROM icap__portfolio_abstract_widget aw WHERE id = '.$rowPortfolioTitle['id']);
-                foreach ($rowAbstractWidgets as $rowAbstractWidget) {
+                $stmt->bindValue('id', $rowPortfolioTitle['id']);
+                $stmt->execute();
+
+                foreach ($stmt->fetchAll() as $rowAbstractWidget) {
                     $this->connection->update('icap__portfolio',
                         [
                             'title' => $rowPortfolioTitle['title'],
@@ -49,7 +53,6 @@ class Updater050002 extends Updater
                         ],
                         [
                             'id' => $rowAbstractWidget['user_id'],
-
                         ]);
                 }
 

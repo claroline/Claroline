@@ -22,15 +22,15 @@ class CriterionController extends DropzoneBaseController
 {
     /**
      * @Route(
-     *      "/{resourceId}/edit/addcriterion/{page}/{criterionId}",
+     *      "/{resourceId}/edit/addcriterion/{page}/criterion/{criterionId}/admin/adminInnova}/collecticiel/{collecticielOpenOrNot}",
      *      name="innova_collecticiel_edit_add_criterion",
-     *      requirements={"resourceId" = "\d+", "criterionId" = "\d+", "page" = "\d+"},
+     *      requirements={"resourceId" = "\d+", "criterionId" = "\d+", "page" = "\d+", "adminInnova" = "[0-1]", "collecticielOpenOrNot" = "[0-1]"},
      *      defaults={"criterionId" = 0}
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
-    public function editAddCriterionAction($dropzone, $page, $criterionId)
+    public function editAddCriterionAction($dropzone, $page, $criterionId, $adminInnova, $collecticielOpenOrNot)
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -69,6 +69,7 @@ class CriterionController extends DropzoneBaseController
             'form' => $form->createView(),
             'criterion' => $criterion,
             'page' => $page,
+            'adminInnova' => $adminInnova,
         );
     }
 

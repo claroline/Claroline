@@ -1,0 +1,43 @@
+<link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'qcm_creation' | trans({}, 'ujm_exo') }}</h3>
+    </div>
+
+    <form onsubmit="return check_form('{{ 'nbr_choices' | trans({}, 'ujm_exo') }}', '{{ 'answer_coched' | trans({}, 'ujm_exo') }}', '{{ 'label_empty' | trans({}, 'ujm_exo') }}', '{{ 'point_answers' | trans({}, 'ujm_exo') }}', '{{ 'point_answer' | trans({}, 'ujm_exo') }}', '{{ 'invite_question' | trans({}, 'ujm_exo') }}');"
+          action="{{ path('ujm_interactionqcm_create') }}" method="post" {{ form_enctype(form) }}>
+
+        <div class="panel-body">
+            {% include "UJMExoBundle:Partial:question.html.twig" %}
+            {% include "UJMExoBundle:Partial:interactions/qcm.html.twig" %}
+            {% include "UJMExoBundle:Partial:model.html.twig" %}
+            {% include "UJMExoBundle:Partial:cloneInterCreation.html.twig" %}
+            {% include "UJMExoBundle:Partial:restform.html.twig" %}
+        </div>
+        <div class="panel-footer">
+            <input type="hidden" name="exercise" value="{{ exoID }}" />
+            <input type="hidden" name="step" value="{{ stepID }}" />
+            <button type="submit" id="button_submit" class="btn btn-primary" onclick="setOrder();">{{ 'create' | trans({}, 'ujm_exo') }}</button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionQCM.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
+
+{# functions javascript #}
+{% if error is defined %}
+    <script type="text/javascript">
+        creationQCMEdit('{{ 'expected_answer' | trans({}, 'ujm_exo') }}', '{{ 'response' | trans({}, 'ujm_exo') }}', '{{ 'points' | trans({}, 'ujm_exo') }}', '{{ 'comment' | trans({}, 'ujm_exo') }}', '{{ 'position_force' | trans({}, 'ujm_exo') }}', '{{ 'add_choice' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}', '{{ typeQCM|raw }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}', 0);
+        newHintEdit('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
+    </script>
+{% else %}
+    <script type="text/javascript">
+        creationQCM('{{ 'expected_answer' | trans({}, 'ujm_exo') }}', '{{ 'response' | trans({}, 'ujm_exo') }}', '{{ 'points' | trans({}, 'ujm_exo') }}', '{{ 'comment' | trans({}, 'ujm_exo') }}', '{{ 'position_force' | trans({}, 'ujm_exo') }}', '{{ 'add_choice' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}' ,'{{ typeQCM|raw }}');
+        newHint('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
+    </script>
+{% endif %}

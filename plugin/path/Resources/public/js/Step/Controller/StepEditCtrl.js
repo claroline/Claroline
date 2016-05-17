@@ -3,44 +3,14 @@
  * @returns {StepEditCtrl}
  * @constructor
  */
-var StepEditCtrl = function StepEditCtrl(step, inheritedResources, PathService, $scope, StepService) {
+var StepEditCtrl = function StepEditCtrl(step, inheritedResources, PathService, $scope, StepService, tinymceConfig) {
     StepBaseCtrl.apply(this, arguments);
 
     this.scope       = $scope;
     this.stepService = StepService;
     this.pathService = PathService;
     this.nextstep = this.pathService.getNext(step);
-
-    // Initialize TinyMCE
-    var tinymce = window.tinymce;
-    tinymce.claroline.init    = tinymce.claroline.init || {};
-    tinymce.claroline.plugins = tinymce.claroline.plugins || {};
-
-    var plugins = [
-        'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
-        'searchreplace wordcount visualblocks visualchars fullscreen',
-        'insertdatetime media nonbreaking table directionality',
-        'template paste textcolor emoticons code'
-    ];
-    var toolbar = 'undo redo | styleselect | bold italic underline | forecolor | alignleft aligncenter alignright | preview fullscreen';
-
-    $.each(tinymce.claroline.plugins, function(key, value) {
-        if ('autosave' != key &&  value === true) {
-            plugins.push(key);
-            toolbar += ' ' + key;
-        }
-    });
-
-    for (var prop in tinymce.claroline.configuration) {
-        if (tinymce.claroline.configuration.hasOwnProperty(prop)) {
-            this.tinymceOptions[prop] = tinymce.claroline.configuration[prop];
-        }
-    }
-
-    this.tinymceOptions.plugins = plugins;
-    this.tinymceOptions.toolbar1 = toolbar;
-    this.tinymceOptions.trusted = true;
-    this.tinymceOptions.format = 'html';
+    this.tinymceOptions = tinymceConfig;
 
     /**
      * Activity resource picker config
@@ -79,7 +49,7 @@ StepEditCtrl.prototype = Object.create(StepBaseCtrl.prototype);
 StepEditCtrl.prototype.constructor = StepEditCtrl;
 
 // Dependency Injection
-StepEditCtrl.$inject = [ 'step', 'inheritedResources', 'PathService', '$scope', 'StepService' ];
+StepEditCtrl.$inject = [ 'step', 'inheritedResources', 'PathService', '$scope', 'StepService', 'tinymceConfig' ];
 
 /**
  * Defines which panels of the form are collapsed or not

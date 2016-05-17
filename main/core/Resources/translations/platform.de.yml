@@ -724,7 +724,11 @@ put_back_permissions_after_update: 'N''oubliez pas de remettre les permissions d
 receiver: destinataire(s)
 recent_all_workspace_activities_overview: 'Aperçu de toutes les activités récentes de %workspaceName%'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
-redirect_after_login: 'Rediriger vers la dernière page visitée'
+redirect_after_login_option: 'Redirection après login'
+redirect_after_login_option_desktop: 'Bureau'
+redirect_after_login_option_last: 'Dernière page active'
+redirect_after_login_option_url: 'URL'
+redirect_after_login_option_workspace_tag: 'Vers l''espace d''activités avec le tag : '
 redirect_uri: redirect_uri
 refresh: Raffraîchir
 refresh_explanation: "Certains problèmes peuvent être causés car les fichiers javascripts et css n'ont pas été bien générés. </br>\nAfin de tenter de résoudre, veuillez sur \"Raffraîchir\"  </br>\nPour augmenter vos chances, pouvez également essayer de vider le dossier app/cache de la plateforme manuellement avant de tenter l'opération.\n"

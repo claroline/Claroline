@@ -64,25 +64,20 @@ class BadgeClaimRepository extends EntityRepository
      */
     public function findByWorkspace(Workspace $workspace = null, $executedQuery = true)
     {
-        $workspaceConstraint = 'b.workspace = :workspace';
+        $qb = $this->createQueryBuilder('bc')
+            ->select('bc', 'b', 'bt')
+            ->join('bc.badge', 'b')
+            ->join('b.translations', 'bt');
 
-        if (null === $workspace) {
-            $workspaceConstraint = 'b.workspace IS NULL';
+        if ($workspace) {
+            $qb->where('b.workspace = :workspace');
+            $qb->setParameter('workspace', $workspace);
+        } else {
+            $qb->where('b.workspace IS NULL');
         }
 
-        $query = $this->getEntityManager()
-            ->createQuery(
-                'SELECT bc, b, bt
-                FROM IcapBadgeBundle:BadgeClaim bc
-                JOIN bc.badge b
-                JOIN b.translations bt
-                WHERE '.$workspaceConstraint
-            );
+        $query = $qb->getQuery();
 
-        if (null !== $workspace) {
-            $query->setParameter('workspace', $workspace);
-        }
-
-        return ($executedQuery) ? $query->getResult() : $query;
+        return $executedQuery ? $query->getResult() : $query;
     }
 }

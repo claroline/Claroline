@@ -68,7 +68,6 @@ class DropzoneBaseController extends Controller
             $event instanceof LogDropzoneManualStateChangedEvent ||
             $event instanceof LogDropzoneReturnReceiptEvent
         ) {
-
             // Other logs are WIP.
             $this->get('event_dispatcher')->dispatch('log', $event);
         }
