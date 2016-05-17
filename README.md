@@ -1,6 +1,8 @@
 README
 ======
 
+[![Join the chat at https://gitter.im/claroline/Claroline](https://badges.gitter.im/claroline/Claroline.svg)](https://gitter.im/claroline/Claroline?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This repository provides the basic application structure of the Claroline
 platform. It doesn't contain the sources nor the third-party libraries 
 required to make the application fully functional. Those sources have to 
