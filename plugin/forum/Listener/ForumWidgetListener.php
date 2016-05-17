@@ -11,17 +11,17 @@
 
 namespace Claroline\ForumBundle\Listener;
 
-use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
-use Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig;
-use Claroline\ForumBundle\Form\Widget\LastMessageWidgetConfigType;
-use Claroline\ForumBundle\Manager\ForumWidgetManager;
+use Claroline\ForumBundle\Manager\Manager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Claroline\CoreBundle\Library\Security\Utilities;
 
 /**
  * @DI\Service()
@@ -29,9 +29,14 @@ use Symfony\Component\Templating\EngineInterface;
 class ForumWidgetListener
 {
     /**
-     * @var ForumWidgetManager
+     * @var Manager
      */
-    protected $forumWidgetManager;
+    protected $forumManager;
+
+    /**
+     * @var WorkspaceManager
+     */
+    protected $workspaceManager;
 
     /**
      * @var FormFactoryInterface
@@ -54,22 +59,45 @@ class ForumWidgetListener
     private $httpKernel;
 
     /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var Utilities
+     */
+    protected $securityUtilities;
+
+    /**
      * @DI\InjectParams({
-     *     "requestStack"   = @DI\Inject("request_stack"),
-     *     "httpKernel"     = @DI\Inject("http_kernel"),
-     *     "forumWidgetManager" =  @DI\Inject("claroline.manager.forum_widget"),
-     *     "formFactory" =  @DI\Inject("form.factory"),
-     *     "templatingEngine" = @DI\Inject("templating")
+     *     "requestStack"      = @DI\Inject("request_stack"),
+     *     "httpKernel"        = @DI\Inject("http_kernel"),
+     *     "forumManager"      = @DI\Inject("claroline.manager.forum_manager"),
+     *     "formFactory"       = @DI\Inject("form.factory"),
+     *     "templatingEngine"  = @DI\Inject("templating"),
+     *     "tokenStorage"      = @DI\Inject("security.token_storage"),
+     *     "securityUtilities" = @DI\Inject("claroline.security.utilities"),
+     *     "workspaceManager"  = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
-    public function __construct(RequestStack $requestStack, HttpKernelInterface $httpKernel,
-        ForumWidgetManager $forumWidgetManager, FormFactoryInterface $formFactory, EngineInterface $templatingEngine)
-    {
+    public function __construct(
+        RequestStack $requestStack,
+        HttpKernelInterface $httpKernel,
+        Manager $forumManager,
+        FormFactoryInterface $formFactory,
+        EngineInterface $templatingEngine,
+        TokenStorageInterface $tokenStorage,
+        Utilities $securityUtilities,
+        WorkspaceManager $workspaceManager
+    ) {
         $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
-        $this->forumWidgetManager = $forumWidgetManager;
+        $this->forumManager = $forumManager;
         $this->formFactory = $formFactory;
         $this->templatingEngine = $templatingEngine;
+        $this->tokenStorage = $tokenStorage;
+        $this->securityUtilities = $securityUtilities;
+        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -85,46 +113,30 @@ class ForumWidgetListener
             throw new NoHttpRequestException();
         }
 
-        $workspace = $event->getInstance()->getWorkspace();
+        $widgetInstance = $event->getInstance();
+        $workspace = $widgetInstance->getWorkspace();
+        $token = $this->tokenStorage->getToken();
+        $roles = $token->getUser() !== 'anon.' ? $token->getUser()->getRoles() : $this->securityUtilities->getRoles($token);
 
-        $templatePath = 'ClarolineForumBundle:Forum:forumsWorkspaceWidget.html.twig';
-        $widgetType = 'workspace';
         if ($workspace == null) {
             $templatePath = 'ClarolineForumBundle:Forum:forumsDesktopWidget.html.twig';
             $widgetType = 'desktop';
+            $workspaces = $this->workspaceManager->getWorkspacesByUser($token->getUser());
+        } else {
+            $workspaces = array($workspace);
+            $templatePath = 'ClarolineForumBundle:Forum:forumsWorkspaceWidget.html.twig';
+            $widgetType = 'workspace';
         }
+
+        $messages = $this->forumManager->getLastMessagesByWorkspacesAndRoles($workspaces, $roles);
 
         $event->setContent($this->templatingEngine->render(
             $templatePath,
             array(
                 'widgetType' => $widgetType,
-                'messages' => $this->forumWidgetManager->getLastMessages($event->getInstance(), $workspace),
+                'messages' => $messages,
             )
         ));
         $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("widget_claroline_forum_widget_configuration")
-     */
-    public function onConfigure(ConfigureWidgetEvent $event)
-    {
-        $widgetInstance = $event->getInstance();
-        $lastMessageWidgetConfig = $this->forumWidgetManager->getConfig($widgetInstance);
-
-        if ($lastMessageWidgetConfig === null) {
-            $lastMessageWidgetConfig = new LastMessageWidgetConfig();
-        }
-
-        $form = $this->formFactory->create(new LastMessageWidgetConfigType(), $lastMessageWidgetConfig);
-
-        $content = $this->templatingEngine->render(
-            'ClarolineForumBundle:Widget:lastMessageWidgetConfig.html.twig',
-            array(
-                'form' => $form->createView(),
-                'widgetInstance' => $widgetInstance,
-            )
-        );
-        $event->setContent($content);
     }
 }

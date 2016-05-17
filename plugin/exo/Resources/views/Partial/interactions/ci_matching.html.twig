@@ -1,0 +1,32 @@
+<div id="Instructions" class="alert alert-info">
+    <a class="close" onclick="HideInstruction();">&times;</a>
+    <p>{{ 'instruction_matching' | trans({}, 'ujm_exo') }}</p>
+</div>
+</br>
+<a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct">
+    <i class="fa fa-question"></i> {{ 'show_instructions' | trans({}, 'ujm_exo') }}
+</a>
+<a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct">
+    <i class="fa fa-question"></i> {{ 'hide_instructions' | trans({}, 'ujm_exo') }}
+</a>
+</br></br>
+<div>
+    {{ form_row(form.typeMatching) }}
+        <table>
+            <tr>
+                <td>
+                    <div id="proposalError"></div>
+                    <div id="tableProposal" style='text-align: center;'></div>
+                    {{ form_row(form.proposals) | replace({"col-md-3": "col-md-12"}) | raw }}
+                    {{ form_errors(form.proposals) }}
+                </td>
+                <td style='padding: 20px;'> </td>
+                <td>
+                    <div id="labelError"></div>
+                    <div id="tableLabel" style='text-align: center;'></div>
+                    {{ form_row(form.labels) | replace({"col-md-3": "col-md-12"}) | raw }}
+                    {{ form_errors(form.labels) }}
+                </td>
+            </tr>
+        </table>
+</div>

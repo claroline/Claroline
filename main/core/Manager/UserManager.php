@@ -335,7 +335,7 @@ class UserManager
      *
      * @return array
      */
-    public function importUsers(array $users, $sendMail = true, $logger = null, $additionalRoles = array())
+    public function importUsers(array $users, $sendMail = true, $logger = null, $additionalRoles = array(), $enableEmailNotifaction = false)
     {
         $returnValues = array();
         //keep these roles before the clear() will mess everything up. It's not what we want.
@@ -419,6 +419,8 @@ class UserManager
             $newUser->setPhone($phone);
             $newUser->setLocale($lg);
             $newUser->setAuthentication($authentication);
+            $newUser->setIsMailNotified($enableEmailNotifaction);
+
             $this->createUser($newUser, $sendMail, $additionalRoles, $model, $username.uniqid());
             $this->objectManager->persist($newUser);
             $returnValues[] = $firstName.' '.$lastName;
@@ -1204,10 +1206,11 @@ class UserManager
      * )
      *
      * @param array $users
+     * @param bool  $enableEmailNotification default to null so we have the option to not override it
      *
      * @return array
      */
-    public function updateImportedUsers(array $users, $additionalRoles = array())
+    public function updateImportedUsers(array $users, $additionalRoles = array(), $enableEmailNotification = null)
     {
         $returnValues = array();
         $lg = $this->platformConfigHandler->getParameter('locale_language');
@@ -1253,6 +1256,9 @@ class UserManager
                 $existingUser->setPhone($phone);
                 $existingUser->setLocale($lg);
                 $existingUser->setAuthentication($authentication);
+                if ($enableEmailNotification !== null) {
+                    $existingUser->setIsMailNotified($enableEmailNotification);
+                }
                 $this->objectManager->persist($existingUser);
                 $updatedUsers[] = $existingUser;
                 $returnValues[] = $firstName.' '.$lastName;
@@ -1566,22 +1572,43 @@ class UserManager
      */
     public function bindUserToOrganization()
     {
+        $limit = 2000;
+        $offset = 0;
+        $this->log('Add organizations to users...');
         $this->objectManager->startFlushSuite();
-        $users = $this->getAll();
+        $countUsers = $this->objectManager->count('ClarolineCoreBundle:User');
         $default = $this->organizationManager->getDefault();
         $i = 0;
+        $detach = [];
 
-        foreach ($users as $user) {
-            if (count($user->getOrganizations()) === 0) {
-                ++$i;
-                $this->log('Add default organization for user '.$user->getUsername());
-                $user->addOrganization($default);
-                $this->objectManager->persist($user);
+        while ($offset < $countUsers) {
+            $users = $this->userRepo->findBy(array(), null, $limit, $offset);
 
-                if ($i % self::MAX_EDIT_BATCH_SIZE == 0) {
-                    $this->objectManager->forceFlush();
+            foreach ($users as $user) {
+                if (count($user->getOrganizations()) === 0) {
+                    ++$i;
+                    $this->log('Add default organization for user '.$user->getUsername());
+                    $user->addOrganization($default);
+                    $this->objectManager->persist($user);
+                    $detach[] = $user;
+
+                    if ($i % 250 == 0) {
+                        $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
+                        $this->objectManager->forceFlush();
+
+                        foreach ($detach as $el) {
+                            $this->objectManager->detach($el);
+                        }
+
+                        $detach = [];
+                    }
+                } else {
+                    $this->log("Organization for user {$user->getUsername()} already exists");
+                    $this->objectManager->detach($user);
                 }
             }
+
+            $offset += $limit;
         }
 
         $this->objectManager->endFlushSuite();

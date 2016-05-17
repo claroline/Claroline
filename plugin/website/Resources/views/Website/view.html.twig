@@ -5,7 +5,7 @@
 {% set options = _resource.options %}
 
 {% block content %}
-    <div class="website-container" ng-controller="MainController as vm">
+    <div class="website-container" data-ng-cloak ng-controller="MainController as vm">
         <div class="loading text-center" ng-if="!pageLoaded" >
             {{ 'loading'|trans({},'icap_website') }}
         </div>
@@ -96,7 +96,7 @@
                 .module('website.constants', [])
                 .constant('website.data', {
                     'id': {{ _resource.id }},
-                    'currentPage': {{ currentPage.id }},
+                    'currentPage': {{ (currentPage is defined and currentPage is not empty)? currentPage.id : 0 }},
                     'options': {{ _resource.options|serialize('json', serialization_context().setSerializeNull(true))|raw }},
                     'path': "{{ path('icap_website_view',{'websiteId': _resource.id}) }}",
                     'pages': {{ _resource.pages|serialize('json', serialization_context().setSerializeNull(true))|raw }}

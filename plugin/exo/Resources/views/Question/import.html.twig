@@ -1,0 +1,181 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'list_question' | trans({}, 'ujm_exo') }} {% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li><a href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">{{ 'my_questions' | trans({}, 'ujm_exo') }}</a></li>
+    <li class="active">{{ 'list_question' | trans({}, 'ujm_exo') }}</li>
+    {% endblock %}
+
+{% set exerciseID = exoID %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'list_question' | trans({}, 'ujm_exo') }}</h3>
+    </div>
+    <div class="panel-body">
+        <a class="btn btn-primary" href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
+        </a>
+        <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exoID }) }}">
+            <i class="fa fa-plus"></i> {{ 'create_a_new_entry' | trans({}, 'ujm_exo') }}
+        </a>
+        <a class="btn btn-primary" title="{{ 'qti_format_warning' | trans({}, 'ujm_exo') }}" onClick="importQTI('{{ path('ujm_qti_import_form') }}', '{{ exoID }}');">
+            <i class="fa fa-download"></i> {{ 'import_qti' | trans({}, 'ujm_exo') }}
+        </a>
+        {# <a class="btn btn-primary" href="{{ path('ujm_question_search_question', { 'exoID': exoID }) }}">
+             <i class="fa fa-question"></i> {{ 'search_question' | trans({}, 'ujm_exo') }}
+         </a>#}      
+        {% if QuestionsExo == 'false' %}
+            {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
+                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'id': exoID, 'displayAll': 1 }) }} ">
+                    <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans({}, 'ujm_exo') }}
+                </a>
+            {% elseif displayAll == 1 %}
+                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'id': exoID }) }}">
+                    <i class="fa fa-minus-circle"></i> {{ 'display_pagination' | trans({}, 'ujm_exo') }}
+                </a>
+            {% endif %}
+        {% endif %}
+        <a class="btn btn-success" href="#" onclick="importQuestion('{{ path('ujm_exercise_validate_import') }}',
+           {{ exoID }}, {{ pageToGo }}, '{{ 'no_thing_import' | trans({}, 'ujm_exo') }}'); event.preventDefault();">
+            <i class="fa fa-arrow-circle-o-down"></i> {{ 'import' | trans({}, 'ujm_exo') }}
+        </a>
+
+        <select id="exoList" onchange="getQuestionsExoImport(this.options[this.selectedIndex].value,
+                        '{{ path('ujm_exercise_import_question', { 'id': exoID, 'idExo': idExo, 'QuestionsExo': 'true' }) }}',
+                        '{{ path('ujm_exercise_import_question', { 'id': exoID }) }}');">
+            {% include "UJMExoBundle:Partial:listToFilterQuestions.html.twig" %}
+        </select>
+
+        <form action="{{ path('ujm_question_briefSearch') }}" method="post" id='formBriefSearch'>
+            <div class="input-group" style="width: 350px; margin-top: 20px;">
+                <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'brief_search'|trans({}, 'ujm_exo') }}" name="userSearch"
+                       onkeydown="if (event.keyCode == 13) {
+                                   briefSearchSubmit();
+                                   return false;
+                               }">
+                <input type='hidden' name='exoID' value={{ exoID }} />
+                <input type='hidden' name='where' value='import' />
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="SubmitBriefSearch"
+                            data-toggle="tooltip" title="{{ 'brief_search' | trans({}, 'ujm_exo') }}"
+                            onClick="briefSearchSubmit();">
+                        <i class="fa fa-search"></i></button>
+                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'info_search' | trans({}, 'ujm_exo') }}"
+                       accesskey=""href="#" onclick="showInfos();
+                               event.preventDefault();">
+                        <i class="fa fa-question"></i>
+                    </a>
+                    <a class="btn btn-default" href="{{ path('ujm_question_search_question', { 'exoID': exoID }) }}"
+                       data-toggle="tooltip" title="{{ 'find_question_advance' | trans({}, 'ujm_exo') }}">
+                    <i class="fa fa-cog"></i></a>
+                </span>
+            </div>
+        </form>
+
+        <div id="infosSearch" style="display: none;">
+            <br/>
+            <div class="alert alert-info">
+                <p>
+                    {{ 'info_search_type' | trans({}, 'ujm_exo') }} :
+                <ul>
+                    <li style="list-style-type: circle">'qcm' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'qcm' | trans({}, 'ujm_exo') }},</li>
+                    <li style="list-style-type: circle">'graphic' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'graphic' | trans({}, 'ujm_exo') }},</li>
+                    <li style="list-style-type: circle">'hole' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'hole' | trans({}, 'ujm_exo') }},</li>
+                    <li style="list-style-type: circle">'open' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'open' | trans({}, 'ujm_exo') }}.</li>
+                    <li style="list-style-type: circle">'matching' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'matching' | trans({}, 'ujm_exo') }}.</li>
+                </ul>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% if qtiError is defined %}
+        <div class="alert alert-warning">{{ qtiError }}</div>
+    {% endif %}
+    <div class="list-group">
+        <div class="list-group-item">
+            {% if QuestionsExo == 'false' %}
+                <h3 class="panel-title">{{ "my_questions"|trans({}, 'ujm_exo') }} : </h3><br/>
+                {% if interactions is not empty %}
+                    {% set questionsList = 'importMy' %}
+                    {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
+
+                    <div>
+                        {% if pagerMy.haveToPaginate %}
+                            <div class="text-center panel-footer">
+                                {{ pagerfanta(pagerMy, 'twitter_bootstrap_translated',
+                                    {'routeName': 'ujm_exercise_import_question', 'routeParams':
+                                    { 'id': exoID, 'pagerShared': pagerShared.getCurrentPage,
+                                        'pagerMy': pagerMy.getCurrentPage, 'click': 'my', 'pageGoNow': pageToGo } }) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">{{ 'no_question_found'|trans({}, 'ujm_exo') }} ...</div>
+                {% endif %}
+                <hr/>
+                <h3 class="panel-title">{{ 'shared_questions' | trans({}, 'ujm_exo') }} : </h3><br/>
+                {% if sharedWithMe is not empty %}
+                    {% set questionsList = 'importShare' %}
+                    {% set interactions = sharedWithMe %}
+                    {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
+
+                    <div>
+                        {% if pagerShared.haveToPaginate %}
+                            <div class="text-center panel-footer">
+                                {{ pagerfanta(pagerShared, 'twitter_bootstrap_translated',
+                                    {'routeName': 'ujm_exercise_import_question', 'routeParams':
+                                    { 'id': exoID, 'pagerMy': pagerMy.getCurrentPage,
+                                        'pagerShared': pagerShared.getCurrentPage,  'click': 'shared',
+                                        'pageGoNow': pageToGo} }) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">{{ 'no_question_found'|trans({}, 'ujm_exo') }} ...</div>
+                {% endif %}
+            {% else %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'exercice_linked_question' | trans({}, 'ujm_exo') }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if interactions is not empty %}
+                            {% set questionsList = 'importExoList' %}
+                            {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
+                        {% else %}
+                            <div class="alert alert-info">{{ 'no_question_found'|trans({}, 'ujm_exo') }} ...</div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/resize.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exerciseImportQuestion.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/qti.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            ready();
+        });
+                $("#exoList option[value=\""+{{ idExo }}+"\"]").attr('selected', 'selected');
+    </script>
+{% endblock %}

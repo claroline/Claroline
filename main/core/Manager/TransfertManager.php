@@ -213,7 +213,7 @@ class TransfertManager
             true
         );
 
-        $defaultZip = $this->container->getParameter('claroline.param.templates_directory').'default.zip';
+        $defaultZip = $this->container->getParameter('claroline.param.templates_directory').'personal.zip';
 
         //batch import with default template shouldn't be flushed
         if ($configuration->getArchive() !== $defaultZip) {
