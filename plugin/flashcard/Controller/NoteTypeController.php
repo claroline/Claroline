@@ -19,6 +19,7 @@ use Claroline\FlashCardBundle\Manager\NoteTypeManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,6 +70,8 @@ class NoteTypeController
      */
     public function editNoteTypeAction(Request $request)
     {
+        $this->assertIsAuthenticated();
+
         $response = new JsonResponse();
         $noteType = $request->request->get('noteType', false);
         if ($noteType) {
@@ -107,7 +110,7 @@ class NoteTypeController
                 }
             }
         } else {
-            $response->setData('Field "fieldValues" is missing');
+            $response->setData('Field "noteType" is missing');
             $response->setStatusCode(422);
         }
 
@@ -126,6 +129,7 @@ class NoteTypeController
      */
     public function findNoteTypeAction($noteTypeId)
     {
+        $this->assertIsAuthenticated();
         $noteType = $this->manager->get($noteTypeId);
         if (!$noteType) {
             $noteType = new NoteType();
@@ -162,6 +166,8 @@ class NoteTypeController
      */
     public function allNoteTypesAction()
     {
+        $this->assertIsAuthenticated();
+
         $noteTypes = $this->manager->getAll();
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_note_type');
@@ -169,5 +175,12 @@ class NoteTypeController
         return new JsonResponse(json_decode(
             $this->serializer->serialize($noteTypes, 'json', $context)
         ));
+    }
+
+    private function assertIsAuthenticated()
+    {
+        if (!$this->checker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedHttpException();
+        }
     }
 }

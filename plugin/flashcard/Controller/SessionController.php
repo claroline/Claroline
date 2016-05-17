@@ -12,13 +12,13 @@
 namespace Claroline\FlashCardBundle\Controller;
 
 use Claroline\CoreBundle\Form\Handler\FormHandler;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\FlashCardBundle\Entity\Session;
 use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Manager\SessionManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -73,7 +73,8 @@ class SessionController
      */
     public function createSessionAction(Deck $deck)
     {
-        // Must do something when user is not connected !
+        $this->assertCanOpen($deck);
+
         $user = $this->tokenStorage->getToken()->getUser();
         $response = new JsonResponse();
 
@@ -89,5 +90,15 @@ class SessionController
         return new JsonResponse(json_decode(
             $this->serializer->serialize($session, 'json', $context)
         ));
+    }
+
+    private function assertCanOpen($obj)
+    {
+        if (!$this->checker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedHttpException();
+        }
+        if (!$this->checker->isGranted('OPEN', $obj)) {
+            throw new AccessDeniedHttpException();
+        }
     }
 }

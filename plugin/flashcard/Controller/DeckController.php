@@ -17,7 +17,6 @@ use Claroline\FlashCardBundle\Manager\DeckManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})
@@ -59,9 +58,7 @@ class DeckController
      */
     public function deckAction(Deck $deck)
     {
-        if (!$this->checker->isGranted('OPEN', $deck)) {
-            throw new AccessDeniedException();
-        }
+        $this->assertCanOpen($deck);
 
         $canEdit = $this->checker->isGranted('EDIT', $deck);
 
@@ -69,5 +66,15 @@ class DeckController
             '_resource' => $deck,
             '_canEdit' => $canEdit,
         ];
+    }
+
+    private function assertCanOpen($obj)
+    {
+        if (!$this->checker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedHttpException();
+        }
+        if (!$this->checker->isGranted('OPEN', $obj)) {
+            throw new AccessDeniedHttpException();
+        }
     }
 }

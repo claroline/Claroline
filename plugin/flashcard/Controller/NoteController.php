@@ -163,8 +163,10 @@ class NoteController
      *
      * @return JsonResponse
      */
-    public function findNote(Note $note)
+    public function findNoteAction(Note $note)
     {
+        $this->assertCanOpen($note->getDeck());
+
         $response = new JsonResponse();
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_deck');
@@ -187,6 +189,8 @@ class NoteController
      */
     public function listNotesAction(Deck $deck, NoteType $noteType)
     {
+        $this->assertCanOpen($deck);
+
         $notes = $this->manager->findByNoteType($deck, $noteType);
 
         $response = new JsonResponse();
@@ -216,6 +220,16 @@ class NoteController
         $this->manager->delete($note);
 
         return new JsonResponse($noteId);
+    }
+
+    private function assertCanOpen($obj)
+    {
+        if (!$this->checker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedHttpException();
+        }
+        if (!$this->checker->isGranted('OPEN', $obj)) {
+            throw new AccessDeniedHttpException();
+        }
     }
 
     private function assertCanEdit($obj)

@@ -17,6 +17,7 @@ use Claroline\FlashCardBundle\Manager\CardLearningManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -74,9 +75,10 @@ class CardLearningController
      *
      * @return JsonResponse
      */
-    public function allCardLearning(Deck $deck)
+    public function allCardLearningAction(Deck $deck)
     {
-        // Must do something when user is not connected !
+        $this->assertCanOpen($deck);
+
         $user = $this->tokenStorage->getToken()->getUser();
 
         $cardLearnings = $this->manager->allCardLearning($deck, $user);
@@ -87,5 +89,15 @@ class CardLearningController
         return new JsonResponse(json_decode(
             $this->serializer->serialize($cardLearnings, 'json', $context)
         ));
+    }
+
+    private function assertCanOpen($obj)
+    {
+        if (!$this->checker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedHttpException();
+        }
+        if (!$this->checker->isGranted('OPEN', $obj)) {
+            throw new AccessDeniedHttpException();
+        }
     }
 }

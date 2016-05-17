@@ -22,6 +22,7 @@ use Claroline\FlashCardBundle\Manager\SessionManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -89,7 +90,8 @@ class CardController
      */
     public function newCardToLearnAction(Deck $deck)
     {
-        // Must do something when user is not connected !
+        $this->assertCanOpen($deck);
+
         $user = $this->tokenStorage->getToken()->getUser();
         $userPref = $deck->getUserPreference($user);
 
@@ -122,7 +124,8 @@ class CardController
      */
     public function cardToReviewAction(Deck $deck)
     {
-        // Must do something when user is not connected !
+        $this->assertCanOpen($deck);
+
         $user = $this->tokenStorage->getToken()->getUser();
         $date = new \DateTime();
 
@@ -151,6 +154,8 @@ class CardController
      */
     public function studyCardAction(Deck $deck, $sessionId, Card $card, $result)
     {
+        $this->assertCanOpen($deck);
+
         $user = $this->tokenStorage->getToken()->getUser();
         $cardLearning = $this->cardLearningMgr->getCardLearning($card, $user);
 
@@ -202,6 +207,8 @@ class CardController
      */
     public function resetCardAction(Card $card)
     {
+        $this->assertCanOpen($card->getNote()->getDeck());
+
         $user = $this->tokenStorage->getToken()->getUser();
         $cardLearning = $this->cardLearningMgr->getCardLearning($card, $user);
 
@@ -223,6 +230,8 @@ class CardController
      */
     public function suspendCardAction(Card $card, $suspend)
     {
+        $this->assertCanOpen($card->getNote()->getDeck());
+
         $user = $this->tokenStorage->getToken()->getUser();
         $cardLearning = $this->cardLearningMgr->getCardLearning($card, $user);
 
@@ -231,5 +240,15 @@ class CardController
         $this->cardLearningMgr->save($cardLearning);
 
         return new JsonResponse($card->getId());
+    }
+
+    private function assertCanOpen($obj)
+    {
+        if (!$this->checker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedHttpException();
+        }
+        if (!$this->checker->isGranted('OPEN', $obj)) {
+            throw new AccessDeniedHttpException();
+        }
     }
 }
