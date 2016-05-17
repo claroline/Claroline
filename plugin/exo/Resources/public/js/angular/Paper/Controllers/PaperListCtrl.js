@@ -18,8 +18,6 @@ var PaperListCtrl = function PaperListCtrl($filter, CommonService, exercise, Pap
     this.exercise  = exercise;
 
     this.filtered = this.papers;
-    /*this.setTableData();*/
-    /*this.needManualCorrection();*/
 };
 
 // set up dependency injection
@@ -30,8 +28,6 @@ PaperListCtrl.prototype.papers = [];
 PaperListCtrl.prototype.questions = [];
 
 PaperListCtrl.prototype.exercise = {};
-
-PaperListCtrl.prototype.displayManualCorrectionMessage = false;
 
 // table data
 PaperListCtrl.prototype.filtered = [];
@@ -90,7 +86,6 @@ PaperListCtrl.prototype.checkCorrectionAvailability = function (paper) {
     }
 };
 
-
 PaperListCtrl.prototype.countFinishedAttempts = function () {
     var nb = 0;
     for (var i = 0; i < this.papers.length; i++) {
@@ -102,45 +97,23 @@ PaperListCtrl.prototype.countFinishedAttempts = function () {
     return nb;
 };
 
-PaperListCtrl.prototype.needManualCorrection = function (){
-    for(var i = 0; i < this.questions.length; i++){
-        if(this.questions[i].typeOpen && this.questions[i].typeOpen === 'long'){
-            this.displayManualCorrectionMessage = true;
-            break;
-        }
-    }
-};
-
 /**
- * All data that need to be transformed and used in filter / sort
- * @returns {undefined}
+ * Check whether a Paper needs a manual correction (if the score of one question is -1)
+ * @param paper
  */
-PaperListCtrl.prototype.setTableData = function () {
-    var score;
-    for (var i = 0; i < this.filtered.length; i++) {
-        // set scores in paper object and in the same time format end date
-        if (this.filtered[i].end ) { // TODO check score availability
-            score = 0;
-            score = this.CommonService.getPaperScore(this.filtered[i], this.questions) ;
-            if(score !== null){
-                this.filtered[i].score = score + '/20';
-            } else {
-                this.filtered[i].end = '-';
-                this.filtered[i].score = '-';
+PaperListCtrl.prototype.needManualCorrection = function needManualCorrection(paper) {
+    var needed = false;
+    if (paper.questions && 0 !== paper.questions.length) {
+        for(var i = 0; i < paper.questions.length; i++){
+            if (-1 === paper.questions[i].score) {
+                // The question has not been marked
+                needed = true;
+                break; // Stop searching
             }
-        } else {
-            this.filtered[i].end = '-';
-            this.filtered[i].score = '-';
-        }
-        // set interrupt property in a human readable way
-        if (this.filtered[i].interrupted) {
-            this.filtered[i].interruptLabel = Translator.trans('paper_list_table_interrupted_yes', {}, 'ujm_sequence');
-            this.interrupted = true;
-        } else {
-            this.filtered[i].interruptLabel = Translator.trans('paper_list_table_interrupted_no', {}, 'ujm_sequence');
-            this.interrupted = false;
         }
     }
+
+    return needed;
 };
 
 /**
