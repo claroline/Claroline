@@ -1,0 +1,47 @@
+<div class="type-question-container graphic-question-container panel panel-default">
+    <div class="panel-body">
+        <!-- setpoint row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    <ul>
+                        <li>{{ 'graphic_setpoint_first'|trans:{}:'ujm_sequence' }}</li>
+                        <li>{{ 'graphic_setpoint_second'|trans:{}:'ujm_sequence' }}</li>
+                        <li>{{ 'graphic_setpoint_third'|trans:{}:'ujm_sequence' }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-right" style="margin-bottom: 20px;">
+            <button type="button" role="button" class="btn btn-sm btn-danger" data-ng-disabled="graphicQuestionCtrl.feedback.visible" data-ng-click="graphicQuestionCtrl.reset()">
+                <span class="fa fa-refresh"></span>
+                {{ 'reset'|trans:{}:'ujm_exo' }}
+            </button>
+        </div>
+
+        <div class="text-center">
+            <!-- Crosshairs to drag -->
+            <div class="crosshairs-list text-left" style="width: {{ graphicQuestionCtrl.question.width + graphicQuestionCtrl.crosshair.size + 2 }}px; min-height: {{ graphicQuestionCtrl.crosshair.size }}px;">
+                <span class="fa fa-hand-rock-o" data-toggle="tooltip" title="{{ 'graphic_help'|trans:{}:'ujm_exo' }}"></span>
+                <ul class="text-center">
+                    <li data-ng-repeat="coord in graphicQuestionCtrl.question.coords">
+                        <img id="crosshair_{{coord.id}}"
+                             class="crosshair draggable"
+                             data-ng-src="{{ graphicQuestionCtrl.crosshair.url }}" />
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Image -->
+            <div class="droppable-container">
+                <img id="document-img"
+                     alt="{{ graphicQuestionCtrl.question.document.label }}"
+                     width="{{ graphicQuestionCtrl.question.width }}"
+                     height="{{ graphicQuestionCtrl.question.height }}"
+                     style="margin: {{ graphicQuestionCtrl.crosshair.size / 2 }}px;"
+                     data-ng-src="{{ graphicQuestionCtrl.getImageUrl() }}" />
+            </div>
+        </div>
+    </div>
+</div>

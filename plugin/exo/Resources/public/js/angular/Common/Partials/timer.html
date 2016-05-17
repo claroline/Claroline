@@ -1,0 +1,17 @@
+<div class="alert alert-warning" role="alert">
+    <span class="fa fa-clock-o"></span>
+
+    {{ 'timer'|trans:{}:'ujm_exo' }}
+
+    <span data-ng-show="timerCtrl.$localStorage.hours != 0">
+        {{ timerCtrl.$localStorage.hours }}h
+    </span>
+
+    <span data-ng-show="timerCtrl.$localStorage.minutes != 0">
+        {{ timerCtrl.$localStorage.minutes }}m
+    </span>
+
+    <span data-ng-show="timerCtrl.$localStorage.minutes < 2 && timerCtrl.$localStorage.hours == 0">
+        {{ timerCtrl.$localStorage.seconds }}s
+    </span>
+</div>

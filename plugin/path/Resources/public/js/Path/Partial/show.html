@@ -17,7 +17,6 @@
 
             {{ pathShowCtrl.path.name }}
 
-            <small>{{ pathShowCtrl.path.description }}</small>
 
             <!--<div class="pull-right">
                 <button type="button" role="button" class="btn btn-sm btn-primary btn-path-edit" data-ng-if="pathShowCtrl.path.steps.length !== 0 && pathShowCtrl.editEnabled" data-ng-click="pathShowCtrl.edit()">
@@ -26,6 +25,7 @@
                 </button>
             </div>-->
         </h1>
+        <div data-ng-if="pathShowCtrl.path.description" data-ng-bind-html="pathShowCtrl.path.description | trustAsHtml"></div>
 
         <!-- Breadcrumbs -->
         <path-navigation data-ng-if="pathShowCtrl.path.breadcrumbs && pathShowCtrl.path.steps.length !== 0"></path-navigation>

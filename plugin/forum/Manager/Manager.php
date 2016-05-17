@@ -303,7 +303,6 @@ class Manager
         );
 
         $body = "<a href='{$url}'>{$title}</a><hr>{$message->getContent()}";
-
         $this->mailManager->send($title, $body, $users);
     }
 
@@ -671,5 +670,17 @@ class Manager
             $orderedBy,
             $order
         );
+    }
+
+    /**
+     * @param array $workspaces
+     * @param array $roles
+     *
+     * @return \Claroline\ForumBundle\Entity\Message[]
+     */
+    public function getLastMessagesByWorkspacesAndRoles(array $workspaces, array $roles)
+    {
+        return $this->om->getRepository('ClarolineForumBundle:Message')
+            ->findNLastByWorkspacesAndRoles($workspaces, $roles);
     }
 }

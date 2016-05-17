@@ -23,14 +23,8 @@ class LogDropzoneValidateDocumentEvent extends AbstractLogResourceEvent implemen
      */
     public function __construct(Document $document, Dropzone $dropzone, $userIds)
     {
-
-//        $this->resourceNodeId = $dropzone->getDrops()[0]->getUser()->getId();
-
-//        $dropId = $document->getDrop()->getId(); //->getDropzone()->getId();
-
-//var_dump($dp);
-//var_dump($document);die();
         $this->document = $document;
+        $this->dropzone = $dropzone;
         $this->type = $dropzone->getResourceNode()->getName();
         $this->userIds = $userIds;
 
@@ -118,7 +112,7 @@ class LogDropzoneValidateDocumentEvent extends AbstractLogResourceEvent implemen
         $notificationDetails = array_merge($this->details, array());
 
         $notificationDetails['resource'] = array(
-            'id' => $this->document->getId(),
+            'id' => $this->dropzone->getId(),
             'name' => $this->firstName.' '.$this->lastName, // $this->resource->getName(),
             'type' => $this->type,
         );

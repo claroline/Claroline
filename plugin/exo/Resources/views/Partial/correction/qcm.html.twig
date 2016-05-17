@@ -1,0 +1,46 @@
+{% include "UJMExoBundle:Partial:correction/interaction.html.twig" %}
+<table border="1" class="table table-striped table-bordered table-condensed">
+    <tr>
+        <th class="classic">{{ 'choice' | trans({}, 'ujm_exo') }}</th>
+        <th class="classic">{{ 'expected_answer' | trans({}, 'ujm_exo') }}</th>
+        <th class="classic">{{ 'your_answer' | trans({}, 'ujm_exo') }}</th>
+        <th class="classic">{{ 'comment' | trans({}, 'ujm_exo') }}</th>
+    </tr>
+
+    {% for choice in inter.choices %}
+        <tr>
+            <td class="classic">
+                {{ choice.label|raw }}
+            </td>
+            <td class="classic">
+                {% if choice.rightResponse %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                {% else %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                {% endif %}
+            </td>
+            <td class="classic">
+                {% if response is not defined %}
+                    {% set response = responses[p].response %}
+                {% endif %}
+                {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
+                    {# choice checked by student #}
+                    {% if choice.rightResponse %}
+                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                    {% else %}
+                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
+                    {% endif %}
+                {% else %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                {% endif %}
+            </td>
+            <td class="classic">
+                {% if choice.feedback is not empty %}
+                    {{ choice.feedback|raw }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>

@@ -1,0 +1,15 @@
+{% extends 'ClarolineCoreBundle:Log:view_details.html.twig' %}
+{% block logDetailsContext %}
+    {{ parent() }}
+    {% if constant('Icap\\LessonBundle\\Event\\Log\\LogChapterCreateEvent::ACTION') == log.action %}
+        {% include 'IcapLessonBundle:Log:log_details_chapter_create.html.twig' %}
+    {% elseif constant('Icap\\LessonBundle\\Event\\Log\\LogChapterReadEvent::ACTION') == log.action %}
+        {% include 'IcapLessonBundle:Log:log_details_chapter_read.html.twig' %}
+    {% elseif constant('Icap\\LessonBundle\\Event\\Log\\LogChapterUpdateEvent::ACTION') == log.action %}
+        {% include 'IcapLessonBundle:Log:log_details_chapter_update.html.twig' %}
+    {% elseif constant('Icap\\LessonBundle\\Event\\Log\\LogChapterDeleteEvent::ACTION') == log.action %}
+        {% include 'IcapLessonBundle:Log:log_details_chapter_delete.html.twig' %}
+    {% elseif constant('Icap\\LessonBundle\\Event\\Log\\LogChapterMoveEvent::ACTION') == log.action %}
+        {% include 'IcapLessonBundle:Log:log_details_chapter_move.html.twig' %}
+    {% endif %}
+{% endblock %}

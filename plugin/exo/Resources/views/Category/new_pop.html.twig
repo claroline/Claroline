@@ -1,0 +1,99 @@
+<div class="modal fade" id="modalcategory" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </br>
+            </div>
+            <div class="modal-body">
+                <h3 class="panel-title">{{'category'|trans({}, 'ujm_exo')}}</h3>
+                <input class="form-control" type="text" required="required" id='category' name="category" />
+                <input type="hidden" value="{{ edit }}" id="edit" />
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+                    <button type="submit" class="btn btn-primary" id="submit_category">{{ 'ok'|trans({}, 'platform') }}</button>
+
+                </div>
+           </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $("#submit_category").click(function () {
+        var nom_cat = $("#category").val();
+
+        if (nom_cat == '') {
+            alert('{{ 'wrong_name'|trans({}, 'ujm_exo') }}');
+            return false;
+        }
+
+        var exists = false;
+        $("*[id$='_question_category'] option").each(function() {
+
+            if ($(this).text() == nom_cat) {
+                exists = true;
+                return false;
+            }
+        });
+
+        if (exists) {
+            alert('{{ 'already_exist'|trans({}, 'ujm_exo') }}');
+        } else {
+            if ($('#edit').val() == 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "{{path('ujm_category_create_pop')}}",
+                    data: {
+                        value: nom_cat,
+                        locker : '0'
+                    },
+                    cache: false,
+                    success: function(data){
+                        // ne rien faire
+                        $("*[id$='_question_category']")
+                            .append($('<option selected="selected" value="'+data+'"></option>')
+                            .text(nom_cat));
+
+                        $('#linkedCategory').css({"display" : "inline-block"});
+                        $('#modalcategory').modal('hide');
+                    }
+                });
+            } else {
+                // Id of the category to update
+                var idOldCategory = $("*[id$='_question_category']").val();
+                // New label of the category
+                var newlabel = $('#category').val();
+                $.ajax({
+                    type: "POST",
+                    url: "{{path('ujm_category_alter')}}",
+                    data: {
+                        newlabel: newlabel,
+                        idOldCategory: idOldCategory
+                    },
+                    cache: false,
+                    success: function (data) {
+                        // Remove the old label from the list
+                        $("*[id$='_question_category'] option[value=\""+idOldCategory+"\"]").remove();
+
+                        // Add the new one to the list
+                        $("*[id$='_question_category']")
+                            .append($('<option selected="selected" value="'+data+'"></option>')
+                            .text(newlabel));
+
+                        // Hide the pop up to update the name
+                        $('#modalcategory').modal('hide');
+                    }
+                });
+            }
+        }
+
+    });
+
+    if ($('#edit').val() == 1) {
+        $('#category').val($("*[id$='_question_category'] option:selected").text());
+    }
+    $('#modalcategory').modal('toggle', 'show');
+</script>
