@@ -9,6 +9,7 @@
         'ClipboardModule',
         'StepModule',
         'TemplateModule',
-        'UserProgressionModule'
+        'UserProgressionModule',
+        'UtilsModule'
     ]);
 })();
