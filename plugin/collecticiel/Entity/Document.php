@@ -54,6 +54,16 @@ class Document
     protected $comments;
 
     /**
+     * @ORM\OneToMany(
+     *     targetEntity="Innova\CollecticielBundle\Entity\Notation",
+     *     mappedBy="document",
+     *     cascade={"all"},
+     *     orphanRemoval=true
+     * )
+     */
+    protected $notations;
+
+    /**
      * @ORM\Column(type="boolean", nullable=false)
      */
     protected $validate = false;
@@ -209,6 +219,7 @@ class Document
     public function __construct()
     {
         $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->notations = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -330,5 +341,39 @@ class Document
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Add notation.
+     *
+     * @param \Innova\CollecticielBundle\Entity\Notation $notation
+     *
+     * @return Document
+     */
+    public function addNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    {
+        $this->notations[] = $notation;
+
+        return $this;
+    }
+
+    /**
+     * Remove notation.
+     *
+     * @param \Innova\CollecticielBundle\Entity\Notation $notation
+     */
+    public function removeNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    {
+        $this->notations->removeElement($notation);
+    }
+
+    /**
+     * Get notations.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNotations()
+    {
+        return $this->notations;
     }
 }

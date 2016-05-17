@@ -325,6 +325,18 @@ class Dropzone extends AbstractResource
      * @var ArrayCollection
      *
      * @ORM\OneToMany(
+     *     targetEntity="Innova\CollecticielBundle\Entity\Notation",
+     *     mappedBy="dropzone",
+     *     cascade={"all"},
+     *     orphanRemoval=true
+     * )
+     */
+    public $notations;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(
      *     targetEntity="Innova\CollecticielBundle\Entity\GradingCriteria",
      *     mappedBy="dropzone",
      *     cascade={"all"},
@@ -335,6 +347,7 @@ class Dropzone extends AbstractResource
 
     public function __construct()
     {
+        $this->notations = new ArrayCollection();
         $this->gradingScales = new ArrayCollection();
         $this->gradingCriterias = new ArrayCollection();
         $this->drops = new ArrayCollection();
@@ -1307,5 +1320,39 @@ class Dropzone extends AbstractResource
     public function getGradingCriterias()
     {
         return $this->gradingCriterias;
+    }
+
+    /**
+     * Add notation.
+     *
+     * @param \Innova\CollecticielBundle\Entity\Notation $notation
+     *
+     * @return Dropzone
+     */
+    public function addNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    {
+        $this->notations[] = $notation;
+
+        return $this;
+    }
+
+    /**
+     * Remove notation.
+     *
+     * @param \Innova\CollecticielBundle\Entity\Notation $notation
+     */
+    public function removeNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    {
+        $this->notations->removeElement($notation);
+    }
+
+    /**
+     * Get notations.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNotations()
+    {
+        return $this->notations;
     }
 }
