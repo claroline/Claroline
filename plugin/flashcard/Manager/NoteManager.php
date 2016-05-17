@@ -70,7 +70,7 @@ class NoteManager
         $repo = $this->om->getRepository('ClarolineFlashCardBundle:CardLearning');
 
         foreach ($note->getCards() as $card) {
-            $cardLearnings = $repo->findBy(array('card' => $card));
+            $cardLearnings = $repo->findBy(['card' => $card]);
             foreach ($cardLearnings as $cardLearning) {
                 $this->om->remove($cardLearning);
             }
@@ -92,11 +92,11 @@ class NoteManager
         $repo = $this->om->getRepository('ClarolineFlashCardBundle:Note');
 
         return $repo->findBy(
-            array(
+            [
                 'deck' => $deck->getId(),
                 'noteType' => $noteType->getId(),
-            ),
-            array('id' => 'ASC')
+            ],
+            ['id' => 'ASC']
         );
     }
 }

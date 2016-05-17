@@ -75,10 +75,10 @@ class CardLearningManager
         $repo = $this->om->getRepository('ClarolineFlashCardBundle:CardLearning');
 
         return $repo->findOneBy(
-            array(
+            [
                 'user' => $user,
                 'card' => $card,
-            )
+            ]
         );
     }
 
@@ -92,6 +92,6 @@ class CardLearningManager
     {
         $repo = $this->om->getRepository('ClarolineFlashCardBundle:CardLearning');
 
-        return $repo->allCardLearning($deck, $user);
+        return $repo->findByDeckAndUser($deck, $user);
     }
 }

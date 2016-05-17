@@ -141,13 +141,12 @@ class Note
     {
         if ($this->fieldValues->contains($obj)) {
             return false;
-        } else {
-            if ($this->noteType->getFieldLabels()->contains($obj->getFieldLabel())) {
-                return $this->fieldValues->add($obj);
-            } else {
-                false;
-            }
         }
+        if ($this->noteType->getFieldLabels()->contains($obj->getFieldLabel())) {
+            return $this->fieldValues->add($obj);
+        }
+
+        return false;
     }
 
     /**
@@ -159,7 +158,7 @@ class Note
     public function setFieldValue($fieldId, $value)
     {
         foreach ($this->fieldValues as $f) {
-            if ($f->getId() == $fieldId) {
+            if ($f->getId() === $fieldId) {
                 $f->setValue($value);
 
                 return true;
@@ -198,13 +197,12 @@ class Note
     {
         if ($this->cards->contains($obj)) {
             return false;
-        } else {
-            if ($this->noteType->getCardTypes()->contains($obj->getCardType())) {
-                return $this->cards->add($obj);
-            } else {
-                false;
-            }
         }
+        if ($this->noteType->getCardTypes()->contains($obj->getCardType())) {
+            return $this->cards->add($obj);
+        }
+
+        return false;
     }
 
     /**

@@ -150,9 +150,9 @@ class NoteType
     {
         if ($this->fieldLabels->contains($obj)) {
             return false;
-        } else {
-            return $this->fieldLabels->add($obj);
         }
+
+        return $this->fieldLabels->add($obj);
     }
 
     /**
@@ -183,12 +183,10 @@ class NoteType
     public function getFieldLabel($id)
     {
         foreach ($this->fieldLabels as $fieldLabel) {
-            if ($fieldLabel->getId() == $id) {
+            if ($fieldLabel->getId() === $id) {
                 return $fieldLabel;
             }
         }
-
-        return;
     }
 
     /**
@@ -199,12 +197,10 @@ class NoteType
     public function getFieldLabelFromName($name)
     {
         foreach ($this->fieldLabels as $f) {
-            if (strcmp($f->getName(), $name) == 0) {
+            if (strcmp($f->getName(), $name) === 0) {
                 return $f;
             }
         }
-
-        return;
     }
 
     /**
@@ -216,9 +212,9 @@ class NoteType
     {
         if ($this->fieldLabels->contains($obj)) {
             return false;
-        } else {
-            return $this->cardTypes->add($obj);
         }
+
+        return $this->cardTypes->add($obj);
     }
 
     /**

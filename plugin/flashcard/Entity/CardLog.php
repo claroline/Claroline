@@ -48,9 +48,9 @@ class CardLog
     /**
      * @var bool
      *
-     * @ORM\Column(name="painfull", type="boolean")
+     * @ORM\Column(name="painful", type="boolean")
      */
-    private $painfull;
+    private $painful;
 
     /**
      * @var int
@@ -77,10 +77,6 @@ class CardLog
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $user;
-
-    public function __construct()
-    {
-    }
 
     /**
      * Get id.
@@ -133,13 +129,13 @@ class CardLog
     }
 
     /**
-     * @param bool $painfull
+     * @param bool $painful
      *
      * @return CardLog
      */
-    public function setPainfull($painfull)
+    public function setPainful($painful)
     {
-        $this->painfull = $painfull;
+        $this->painful = $painful;
 
         return $this;
     }
@@ -147,9 +143,9 @@ class CardLog
     /**
      * @return bool
      */
-    public function getPainfull()
+    public function getPainful()
     {
-        return $this->painfull;
+        return $this->painful;
     }
 
     /**

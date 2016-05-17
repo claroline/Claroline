@@ -133,13 +133,12 @@ class CardType
     {
         if ($this->questions->contains($obj)) {
             return false;
-        } else {
-            if ($this->noteType == $obj->getNoteType()) {
-                return $this->questions->add($obj);
-            } else {
-                return false;
-            }
         }
+        if ($this->noteType === $obj->getNoteType()) {
+            return $this->questions->add($obj);
+        }
+
+        return false;
     }
 
     /**
@@ -171,13 +170,12 @@ class CardType
     {
         if ($this->answers->contains($obj)) {
             return false;
-        } else {
-            if ($this->noteType == $obj->getNoteType()) {
-                return $this->answers->add($obj);
-            } else {
-                false;
-            }
         }
+        if ($this->noteType === $obj->getNoteType()) {
+            return $this->answers->add($obj);
+        }
+
+        return false;
     }
 
     /**

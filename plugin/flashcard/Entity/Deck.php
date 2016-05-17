@@ -134,13 +134,11 @@ class Deck extends AbstractResource
     {
         foreach ($this->sessions as $session) {
             $interval = $date->diff($session->getDate(), true);
-            if ($interval->days == 0 and
-               $session->getUser()->getId() == $user->getId()) {
+            if ($interval->days === 0 &&
+               $session->getUser()->getId() === $user->getId()) {
                 return $session;
             }
         }
-
-        return;
     }
 
     /**
@@ -202,7 +200,7 @@ class Deck extends AbstractResource
     public function getUserPreference(User $user)
     {
         foreach ($this->userPreferences as $userPref) {
-            if ($user->getId() == $userPref->getUser()->getId()) {
+            if ($user->getId() === $userPref->getUser()->getId()) {
                 return $userPref;
             }
         }

@@ -152,9 +152,9 @@ class Session
     {
         if ($this->newCards->contains($obj)) {
             return false;
-        } else {
-            return $this->newCards->add($obj);
         }
+
+        return $this->newCards->add($obj);
     }
 
     /**
@@ -186,9 +186,9 @@ class Session
     {
         if ($this->oldCards->contains($obj)) {
             return false;
-        } else {
-            return $this->oldCards->add($obj);
         }
+
+        return $this->oldCards->add($obj);
     }
 
     /**

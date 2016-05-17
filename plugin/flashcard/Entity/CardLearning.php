@@ -23,6 +23,11 @@ use JMS\Serializer\Annotation\Groups;
  */
 class CardLearning
 {
+    const ANS_AGAIN = 0, // Not good, repeat again
+          ANS_HARD = 1,  // Good, but difficult to remember
+          ANS_GOOD = 2,  // Good
+          ANS_EASY = 3;  // Good and easy to remember
+
     /**
      * @var int
      *
@@ -50,13 +55,13 @@ class CardLearning
     /**
      * @var bool
      *
-     * @ORM\Column(name="painfull", type="boolean")
+     * @ORM\Column(name="painful", type="boolean")
      * @Groups({
      *     "api_flashcard",
      *     "api_flashcard_card"
      * })
      */
-    private $painfull;
+    private $painful;
 
     /**
      * @var int
@@ -99,15 +104,10 @@ class CardLearning
      */
     private $user;
 
-    const ANS_AGAIN = 0, // Not good, repeat again
-          ANS_HARD = 1,  // Good, but difficult to remember
-          ANS_GOOD = 2,  // Good
-          ANS_EASY = 3;  // Good and easy to remember
-
     public function __construct()
     {
         $this->factor = 1.3;
-        $this->painfull = false;
+        $this->painful = false;
         $this->numberRepeated = 0;
         $this->dueDate = new \DateTime();
     }
@@ -139,7 +139,7 @@ class CardLearning
     {
         $newFactor = $this->factor;
 
-        if ($answerQuality > $this::ANS_AGAIN) {
+        if ($answerQuality > self::ANS_AGAIN) {
             // The quality must be between 0 and 5
             $answerQuality += 2;
             $newFactor = $this->factor - 0.8 + 0.28 * $answerQuality - 0.02 * $answerQuality * $answerQuality;
@@ -159,9 +159,9 @@ class CardLearning
         if ($this->numberRepeated > 0) {
             $date = new \DateTime();
 
-            if ($this->numberRepeated == 1) {
+            if ($this->numberRepeated === 1) {
                 $nbrDays = 1;
-            } elseif ($this->numberRepeated == 2) {
+            } elseif ($this->numberRepeated === 2) {
                 $nbrDays = 6;
             } else {
                 $nbrDays = 6;
@@ -209,13 +209,13 @@ class CardLearning
     }
 
     /**
-     * @param bool $painfull
+     * @param bool $painful
      *
      * @return CardLearning
      */
-    public function setPainfull($painfull)
+    public function setPainful($painful)
     {
-        $this->painfull = $painfull;
+        $this->painful = $painful;
 
         return $this;
     }
@@ -223,9 +223,9 @@ class CardLearning
     /**
      * @return bool
      */
-    public function getPainfull()
+    public function getPainful()
     {
-        return $this->painfull;
+        return $this->painful;
     }
 
     /**

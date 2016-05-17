@@ -107,7 +107,7 @@ export default class ListNoteCtrl {
       d => {
         for (let i=0; i<this.cardLearnings.length; i++) {
           if (this.cardLearnings[i].card.id == card.id) {
-            this.cardLearnings[i].painfull = suspend
+            this.cardLearnings[i].painful = suspend
           }
         }
       }
@@ -117,7 +117,7 @@ export default class ListNoteCtrl {
   isSuspend (card) {
     for (let i=0; i<this.cardLearnings.length; i++) {
       if (this.cardLearnings[i].card.id == card.id) {
-        return this.cardLearnings[i].painfull
+        return this.cardLearnings[i].painful
       }
     }
     return false

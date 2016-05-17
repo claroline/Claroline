@@ -59,11 +59,6 @@ class Card
      */
     private $note;
 
-    public function __construct()
-    {
-        // Not imlemented yet.
-    }
-
     /**
      * Get id.
      *

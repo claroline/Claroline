@@ -76,7 +76,7 @@ class CardRepository extends EntityRepository
             WHERE cl.user = :user
             AND n.deck = :deck
             AND cl.dueDate <= :date
-            AND cl.painfull != 1
+            AND cl.painful != 1
         ';
 
         $query = $this->_em->createQuery($dql);

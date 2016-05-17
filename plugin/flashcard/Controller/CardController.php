@@ -235,7 +235,7 @@ class CardController
         $user = $this->tokenStorage->getToken()->getUser();
         $cardLearning = $this->cardLearningMgr->getCardLearning($card, $user);
 
-        $cardLearning->setPainfull($suspend);
+        $cardLearning->setPainful($suspend);
 
         $this->cardLearningMgr->save($cardLearning);
 

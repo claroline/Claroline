@@ -82,7 +82,7 @@ class NoteTypeManager
     {
         $repoNoteType = $this->om->getRepository('ClarolineFlashCardBundle:NoteType');
 
-        return $repoNoteType->findBy(array('id' => $id), array('id' => 'ASC'));
+        return $repoNoteType->findBy(['id' => $id], ['id' => 'ASC']);
     }
 
     /**
@@ -92,6 +92,6 @@ class NoteTypeManager
     {
         $repoNoteType = $this->om->getRepository('ClarolineFlashCardBundle:NoteType');
 
-        return $repoNoteType->findBy(array(), array('id' => 'ASC'));
+        return $repoNoteType->findBy([], ['id' => 'ASC']);
     }
 }

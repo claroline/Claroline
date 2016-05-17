@@ -25,7 +25,7 @@ class CardLearningRepository extends EntityRepository
      *
      * @return array
      */
-    public function allCardLearning(Deck $deck, User $user)
+    public function findByDeckAndUser(Deck $deck, User $user)
     {
         $dql = '
             SELECT cl
