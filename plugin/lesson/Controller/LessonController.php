@@ -2,9 +2,6 @@
 
 namespace Icap\LessonBundle\Controller;
 
-use Icap\LessonBundle\Form\ChapterType;
-use Icap\LessonBundle\Form\MoveChapterType;
-use Icap\LessonBundle\Form\DuplicateChapterType;
 use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
 use Icap\LessonBundle\Event\Log\LogChapterUpdateEvent;
 use Icap\LessonBundle\Event\Log\LogChapterCreateEvent;
@@ -382,14 +379,6 @@ class LessonController extends Controller
         $this->dispatchChapterDeleteEvent($lesson, $chaptername);
 
         return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
-
-        return array(
-            'lesson' => $lesson,
-            'chapter' => $chapter,
-            'form' => $form->createView(),
-            'workspace' => $lesson->getResourceNode()->getWorkspace(),
-            '_resource' => $lesson,
-        );
     }
 
     /**
