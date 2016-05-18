@@ -25,7 +25,8 @@
             {
                 var preselectedValuePath = null;
                 for (var key in choices) {
-                    var label = choices[key].label.replace(/[A-Z-a-z]+: /g, "");
+                    var label = choices[key].label;
+                    label = label.substring(label.indexOf(":") + 1);
                     if (!choices[key].choices) {
                         choicesTree[label] = choices[key].value;
                         if (preselectedValue == choices[key].data) {

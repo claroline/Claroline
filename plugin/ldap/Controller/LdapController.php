@@ -97,7 +97,7 @@ class LdapController extends Controller
     {
         $form = $this->formFactory->create(new LdapType(), $this->ldap->get($name));
 
-        if ($this->request->getMethod() === 'POST' and $form->handleRequest($this->request) and $form->isValid()) {
+        if ($this->request->getMethod() === 'POST' && $form->handleRequest($this->request) && $form->isValid()) {
             $data = $form->getData();
 
             if ($this->ldap->exists($name, $data)) {
@@ -127,7 +127,7 @@ class LdapController extends Controller
      */
     public function deleteAction($name)
     {
-        if ($name and $this->ldap->deleteServer($name)) {
+        if ($name && $this->ldap->deleteServer($name)) {
             return new Response('true');
         }
 
@@ -254,7 +254,7 @@ class LdapController extends Controller
         $user = isset($server['user']) ? $server['user'] : null;
         $password = isset($server['password']) ? $server['password'] : null;
 
-        if ($this->ldap->userMapping($server) and $this->ldap->connect($server, $user, $password)) {
+        if ($this->ldap->userMapping($server) && $this->ldap->connect($server, $user, $password)) {
             $users = $this->ldap->getUsers($server);
             $this->ldap->close();
 

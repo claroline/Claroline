@@ -3,12 +3,12 @@
         {{ 'paper_details_correction_label'|trans:{}:'ujm_sequence' }} <span class="badge">{{ paperShowCtrl.paper.number }}</span>
 
         <div class="pull-right">
-            <span class="label label-primary" data-ng-if="paperShowCtrl.paper.scoreTotal">
+            <span class="label label-primary" data-ng-if="paperShowCtrl.paper.scoreTotal || 0 === paperShowCtrl.paper.scoreTotal">
                 {{ 'score'|trans:{}:'ujm_exo' }}:
                 {{ paperShowCtrl.getScore() + '/20' }}
             </span>
 
-            <span class="label label-primary" data-ng-if="!paperShowCtrl.paper.scoreTotal">
+            <span class="label label-primary" data-ng-if="!paperShowCtrl.paper.scoreTotal && 0 !== paperShowCtrl.paper.scoreTotal">
                 {{ 'score'|trans:{}:'ujm_exo' }}:
                 ?/20
             </span>
