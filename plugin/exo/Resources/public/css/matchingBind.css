@@ -1,0 +1,11 @@
+._jsPlumb_hover {
+    cursor: url("../images/scissors-red.png"), pointer;
+}
+
+.endPoints {
+    z-index: 1;
+}
+
+._jsPlumb_endpoint {
+    cursor: default;
+}
