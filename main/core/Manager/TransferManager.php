@@ -112,15 +112,9 @@ class TransferManager
         $isValidated = false,
         $importRoles = true
     ) {
-        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
+        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
         $this->om->startFlushSuite();
         $data = $this->reorderData($data);
-        //now we need to reorder the data because well...
-        //this is used for the rich text parser... a
-        $this->data = $data;
-        //refactor how workspace are created because this sucks
-        $this->workspace = $workspace;
-
         $this->setImporters($template, $workspace->getCreator());
         $this->setWorkspaceForImporter($workspace);
 
@@ -160,7 +154,7 @@ class TransferManager
         File $template,
         $isValidated = false
     ) {
-        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
+        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
         $this->om->startFlushSuite();
         $this->setImporters($template, $workspace->getCreator());
 
@@ -190,7 +184,7 @@ class TransferManager
         $defaultZip = $this->container->getParameter('claroline.param.templates_directory').'personal.zip';
 
         //batch import with default template shouldn't be flushed
-        if (strpos('personal.zip', $template->getPathname()) === false) {
+        if (strpos($template->getPathname(), 'personal.zip') === false) {
             $this->om->forceFlush();
         }
 
@@ -427,7 +421,7 @@ class TransferManager
         User $owner,
         ResourceNode $directory
     ) {
-        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
+        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
         $data = $this->reorderData($data);
         $workspace = $directory->getWorkspace();
         $this->om->startFlushSuite();

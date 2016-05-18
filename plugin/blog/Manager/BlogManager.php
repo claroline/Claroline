@@ -259,7 +259,6 @@ class BlogManager
 
         foreach ($scheduledForInsert as $entity) {
             if (get_class($entity) === 'Icap\BlogBundle\Entity\Tag') {
-                var_dump('Its a tag Scheduled for insert ! '.$entity->getName().' while looking for '.$name);
                 if ($entity->getName() === $name) {
                     return $entity;
                 }
@@ -279,7 +278,6 @@ class BlogManager
 
         //so it was in the identityMap hey !
         foreach ($map['Icap\BlogBundle\Entity\Tag'] as $tag) {
-            var_dump('Its a tag mapped !');
             if ($tag->getName() === $name) {
                 return $tag;
             }

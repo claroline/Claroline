@@ -106,7 +106,6 @@ class RichTextFormatter
 
             if ($node) {
                 $toReplace = $this->generateDisplayedUrlForTinyMce($node);
-                var_dump($toReplace);
                 $text = str_replace($match[0], $toReplace, $text);
             }
         }

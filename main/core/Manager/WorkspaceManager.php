@@ -84,6 +84,8 @@ class WorkspaceManager
     private $pagerFactory;
     private $workspaceFavouriteRepo;
     private $container;
+    /** @var array */
+    private $importData;
 
     /**
      * Constructor.
@@ -136,6 +138,7 @@ class WorkspaceManager
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
         $this->container = $container;
+        $this->importData = [];
     }
 
     /**
@@ -1125,8 +1128,13 @@ class WorkspaceManager
         return $this->logger;
     }
 
-    public function getTemplateData(File $file)
+    public function getTemplateData(File $file, $refresh = false)
     {
+        //from cache
+        if (!$refresh) {
+            return $this->importData;
+        }
+
         $archive = new \ZipArchive();
         $fileName = $file->getBaseName();
         $extractPath = $this->templateDir.$fileName;
@@ -1135,8 +1143,9 @@ class WorkspaceManager
             $res = $archive->extractTo($extractPath);
             $archive->close();
             $resolver = new Resolver($extractPath);
+            $this->importData = $resolver->resolve();
 
-            return $resolver->resolve();
+            return $this->importData;
         }
 
         throw new \Exception("The workspace archive couldn't be opened");
