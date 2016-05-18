@@ -252,9 +252,9 @@ class HomeManager
      */
     public function createContent($translatedContent, $type = null, $father = null)
     {
-        if (isset($translatedContent['content']) and
-            is_array($translatedContent['content']) and
-            $id = $this->contentManager->createContent($translatedContent['content']) and
+        if (isset($translatedContent['content']) &&
+            is_array($translatedContent['content']) &&
+            $id = $this->contentManager->createContent($translatedContent['content']) &&
             $content = $this->content->find($id)
         ) {
             if ($father) {
@@ -284,7 +284,7 @@ class HomeManager
      */
     public function updateContent($content, $translatedContent = null, $size = null, $type = null)
     {
-        if (isset($translatedContent['content'.$content->getId()]) and
+        if (isset($translatedContent['content'.$content->getId()]) &&
             is_array($translatedContent['content'.$content->getId()])
         ) {
             $this->contentManager->updateContent($content, $translatedContent['content'.$content->getId()]);
