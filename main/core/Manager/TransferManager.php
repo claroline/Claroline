@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
@@ -91,23 +90,6 @@ class TransferManager
         }
     }
 
-    public function import(Configuration $configuration)
-    {
-        $owner = $this->container->get('security.token_storage')->getToken()->getUser();
-        $configuration->setOwner($owner);
-        $this->setImporters($configuration, $data);
-        $this->validate($data);
-
-        //initialize the configuration
-        $configuration->setWorkspaceName($data['properties']['name']);
-        $configuration->setWorkspaceCode($data['properties']['code']);
-        $configuration->setDisplayable($data['properties']['visible']);
-        $configuration->setSelfRegistration($data['properties']['self_registration']);
-        $configuration->setSelfUnregistration($data['properties']['self_unregistration']);
-
-        $this->createWorkspace($configuration, $owner, true);
-    }
-
     /**
      * Populates a workspace content with the content of an zip archive. In other words, it ignores the
      * many properties of the configuration object and use an existing workspace as base.
@@ -115,12 +97,12 @@ class TransferManager
      * This will set the $this->data var
      * This will set the $this->workspace var
      *
-     * @param Workspace     $workspace
-     * @param Confuguration $configuration
-     * @param Directory     $root
-     * @param array         $entityRoles
-     * @param bool          $isValidated
-     * @param bool          $importRoles
+     * @param Workspace $workspace
+     * @param File      $template
+     * @param Directory $root
+     * @param array     $entityRoles
+     * @param bool      $isValidated
+     * @param bool      $importRoles
      */
     public function populateWorkspace(
         Workspace $workspace,
@@ -161,9 +143,9 @@ class TransferManager
     }
 
     /**
-     * @param Configuration $configuration
-     * @param User          $owner
-     * @param bool          $isValidated
+     * @param File $template
+     * @param User $owner
+     * @param bool $isValidated
      *
      * @throws InvalidConfigurationException
      *
@@ -395,9 +377,8 @@ class TransferManager
     /**
      * Inject the rootPath.
      *
-     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $configuration
-     * @param array                                                 $data
-     * @param $isStrict
+     * @param File  $template
+     * @param array $data
      */
     private function setImporters(File $template, User $owner)
     {
@@ -438,21 +419,19 @@ class TransferManager
     }
 
     /**
-     * @param Configuration $configuration
-     * @param User          $owner
+     * @param File $template
+     * @param User $owner
      */
     public function importResources(
-        Configuration $configuration,
+        File $template,
         User $owner,
         ResourceNode $directory
     ) {
-        $configuration->setOwner($owner);
-        $data = $configuration->getData();
+        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
         $data = $this->reorderData($data);
-        $this->data = $data;
-        $this->workspace = $directory->getWorkspace();
+        $workspace = $directory->getWorkspace();
         $this->om->startFlushSuite();
-        $this->setImporters($data, $workspace->getCreator());
+        $this->setImporters($template, $workspace->getCreator());
 
         $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
 

@@ -1160,7 +1160,7 @@ class WorkspaceManager
     {
         $archive = new \ZipArchive();
         $fileName = $file->getBaseName();
-        $extractPath = $this->templateDir;
+        $extractPath = $this->templateDir.$fileName;
 
         if (true === $code = $archive->open($file->getPathname())) {
             $res = $archive->extractTo($extractPath);

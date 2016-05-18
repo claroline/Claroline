@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller;
 use Exception;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +28,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\ImportResourcesType;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
 use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundExcetion;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -1125,28 +1123,18 @@ class ResourceController
         $form = $this->formFactory->create(new ImportResourcesType());
         $form->handleRequest($this->request);
 
-        /*try {*/
-            if ($form->isValid()) {
-                $template = $form->get('file')->getData();
-                $config = Configuration::fromTemplate($template);
-                $user = $this->tokenStorage->getToken()->getUser();
-                $this->transferManager->importResources($config, $user, $directory);
-                $this->transferManager->importRichText();
+        if ($form->isValid()) {
+            $template = $form->get('file')->getData();
+            $user = $this->tokenStorage->getToken()->getUser();
+            $this->transferManager->importResources($template, $user, $directory);
+            $this->transferManager->importRichText($directory->getWorkspace(), $template);
 
-                return new JsonResponse(array());
-            } else {
-                return array('form' => $form->createView(), 'directory' => $directory);
-            }/*
-        } catch (\Exception $e) {
-            $errorMsg = $this->translator->trans(
-                'invalid_file',
-                array(),
-                'platform'
-            );
-            $form->addError(new FormError($e->getMessage()));*/
-
+            return new JsonResponse(array());
+        } else {
             return array('form' => $form->createView(), 'directory' => $directory);
-        //}
+        }
+
+        return array('form' => $form->createView(), 'directory' => $directory);
     }
 
     public function deleteNodeConfirmAction(ResourceNode $node)
