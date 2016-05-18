@@ -379,14 +379,6 @@ class LessonController extends Controller
         $this->dispatchChapterDeleteEvent($lesson, $chaptername);
 
         return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
-
-        return array(
-            'lesson' => $lesson,
-            'chapter' => $chapter,
-            'form' => $form->createView(),
-            'workspace' => $lesson->getResourceNode()->getWorkspace(),
-            '_resource' => $lesson,
-        );
     }
 
     /**
