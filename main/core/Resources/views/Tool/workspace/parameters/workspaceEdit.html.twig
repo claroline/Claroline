@@ -38,9 +38,6 @@
             {% endif %}
         </div>
         <div class="panel-footer text-right">
-            <a href="{{ path('claro_workspace_partial_import_form', {'workspace': workspace.getId()}) }}" class="workspace-import-form btn btn-default">
-                {{ 'import'|trans({}, 'platform') }}
-            </a>
             {% if is_granted('DELETE', workspace) and workspace != user.personalWorkspace %}
                 <a href="#" class="workspace-delete-confirmation btn btn-default">
                     <i class="fa fa-trash-o"></i> {{ 'workspace_delete'|trans({}, 'platform') }}

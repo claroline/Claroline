@@ -840,35 +840,6 @@ class WorkspaceManager
     }
 
     /**
-     * Import the content of an archive in a workspace.
-     *
-     * @param Configuration $configuration
-     * @param Workspace     $workspace
-     *
-     * @return Workspace
-     */
-    public function importInExistingWorkspace(Configuration $configuration, Workspace $workspace)
-    {
-        $root = $this->resourceManager->getResourceFromNode($this->resourceManager->getWorkspaceRoot($workspace));
-        $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
-        $entityRoles = [];
-
-        foreach ($wsRoles as $wsRole) {
-            $entityRoles[$this->roleManager->getWorkspaceRoleBaseName($wsRole)] = $wsRole;
-        }
-
-        $workspace = $this->container->get('claroline.manager.transfer_manager')->importResources(
-            $configuration,
-            $workspace->getCreator(),
-            $root->getResourceNode()
-        );
-
-        $this->importRichText();
-
-        return $workspace;
-    }
-
-    /**
      * This function must be fired right after a workspace is "populated".
      * Don't use it otherwise !!!!
      */

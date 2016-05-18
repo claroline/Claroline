@@ -442,7 +442,7 @@ class TransferManager
                 if ($tool['type'] === 'resource_manager') {
                     $resourceImporter->import(
                         $tool,
-                        $this->workspace,
+                        $workspace,
                         array(),
                         $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($directory),
                         false
