@@ -20,7 +20,6 @@ use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Claroline\CoreBundle\Manager\Calendar\PeriodManager;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Form\Calendar\PeriodType;
-use Claroline\CoreBundle\Entity\Calendar\Period;
 use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 

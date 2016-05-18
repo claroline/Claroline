@@ -2,9 +2,6 @@
 
 namespace Icap\LessonBundle\Controller;
 
-use Icap\LessonBundle\Form\ChapterType;
-use Icap\LessonBundle\Form\MoveChapterType;
-use Icap\LessonBundle\Form\DuplicateChapterType;
 use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
 use Icap\LessonBundle\Event\Log\LogChapterUpdateEvent;
 use Icap\LessonBundle\Event\Log\LogChapterCreateEvent;
