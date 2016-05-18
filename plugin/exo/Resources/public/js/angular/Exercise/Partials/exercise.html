@@ -66,12 +66,12 @@
                         <!-- Publish Exercise -->
                         <li data-ng-if="!exerciseCtrl.exercise.meta.published && exerciseCtrl.editEnabled">
                             <a href="" role="button" data-ng-click="exerciseCtrl.publish()">
-                                <span class="fa fa-check"></span> {{ 'publish' | trans:{}:'ujm_exo' }}
+                                <span class="fa fa-share-square-o"></span> {{ 'publish' | trans:{}:'ujm_exo' }}
                             </a>
                         </li>
 
                         <!-- Unpublish Exercise (Only if there is no submitted paper on it) -->
-                        <li data-ng-if="exerciseCtrl.exercise.meta.published && 0 == exerciseCtrl.nbPapers" data-ng-if="exerciseCtrl.editEnabled">
+                        <li data-ng-if="exerciseCtrl.exercise.meta.published && 0 == exerciseCtrl.nbPapers && exerciseCtrl.editEnabled">
                             <a href="" role="button" data-ng-click="exerciseCtrl.unpublish()">
                                 <span class="fa fa-times"></span> {{ 'unpublish' | trans:{}:'ujm_exo' }}
                             </a>
@@ -90,7 +90,7 @@
                         </span>
                     </div>
 
-                    <ul class="nav navbar-nav navbar-right">
+                    <ul class="nav navbar-nav navbar-right" data-ng-if="exerciseCtrl.exercise.steps.length > 0">
                         <!-- Display results of the Exercise -->
                         <li data-ng-class="{ active: 'papers' === exerciseCtrl.$route.current.tab }">
                             <a href="#/papers">
