@@ -3,6 +3,7 @@
 namespace Icap\NotificationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Icap\NotificationBundle\Repository\NotificationViewerRepository")
@@ -14,12 +15,14 @@ class NotificationViewer
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
      */
     protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\NotificationBundle\Entity\Notification")
      * @ORM\JoinColumn(name="notification_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @Groups({"api"})
      */
     protected $notification;
 
@@ -30,6 +33,7 @@ class NotificationViewer
 
     /**
      * @ORM\Column(type="boolean", name="status", nullable=true)
+     * @Groups({"api"})
      */
     protected $status;
 

@@ -4,6 +4,7 @@ namespace Icap\NotificationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Icap\NotificationBundle\Repository\NotificationRepository")
@@ -15,12 +16,14 @@ class Notification
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
      */
     protected $id;
 
     /**
      * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
+     * @Groups({"api"})
      */
     protected $creationDate;
 
@@ -41,11 +44,13 @@ class Notification
 
     /**
      * @ORM\Column(type="string", name="action_key")
+     * @Groups({"api"})
      */
     protected $actionKey;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
+     * @Groups({"api"})
      */
     protected $details;
 
