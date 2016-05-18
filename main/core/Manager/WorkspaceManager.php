@@ -157,10 +157,8 @@ class WorkspaceManager
     /**
      * Creates a workspace.
      *
-     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $configuration
-     * @param \Claroline\CoreBundle\Entity\User                     $manager
-     * @param bool                                                  $createUsers
-     * @param bool                                                  $importUsers
+     * @param Workspace $workspace
+     * @param File      $template
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
