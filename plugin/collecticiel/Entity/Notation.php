@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\NotationRepository")
  * @ORM\Table(name="innova_collecticielbundle_notation")
  */
 class Notation
