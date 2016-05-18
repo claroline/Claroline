@@ -43,7 +43,12 @@ var TimerDirective = function TimerDirective() {
                         this.$timeout.cancel(onTimeout);
 
                         // Remove local storage
-                        this.$localStorage.$reset();
+                        this.$localStorage.$reset({
+                            counter: 0,
+                            hours: 0,
+                            minutes: 0,
+                            seconds: 0
+                        });
 
                         // Execute registered callback
                         this.onEnd();
