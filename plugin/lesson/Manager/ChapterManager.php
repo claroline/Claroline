@@ -71,7 +71,7 @@ class ChapterManager
     {
         $chapterRepository = $this->entityManager->getRepository('IcapLessonBundle:Chapter');
         $chapters = $chapterRepository->children($chapter_org, true);
-        if ($chapters != null and count($chapters) > 0) {
+        if ($chapters != null && count($chapters) > 0) {
             foreach ($chapters as $child) {
                 $this->copyChapter($child, $chapter_copy, $copy_children);
             }

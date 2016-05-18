@@ -108,7 +108,7 @@ class ContentType extends AbstractType
         );
 
         foreach ($themeOptions as $option => $defaultValue) {
-            if (isset($options['theme_options']) and isset($options['theme_options'][$option])) {
+            if (isset($options['theme_options']) && isset($options['theme_options'][$option])) {
                 $view->vars[$option] = $options['theme_options'][$option];
             } else {
                 $view->vars[$option] = $defaultValue;

@@ -3,7 +3,6 @@
 namespace Innova\CollecticielBundle\Listener\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CoreBundle\Entity\Log\Log;
 use Doctrine\ORM\EntityManager;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Event\Log\LogDropEvaluateEvent;
