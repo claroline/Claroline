@@ -21,6 +21,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 /**
  * @DI\Service("claroline.importer.rich_text_formatter")
@@ -39,6 +40,7 @@ class RichTextFormatter
     private $maskManager;
     private $resourceManagerImporter;
     private $eventDispatcher;
+    private $ch;
 
     /**
      * @DI\InjectParams({
@@ -47,7 +49,8 @@ class RichTextFormatter
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "transferManager" = @DI\Inject("claroline.manager.transfer_manager"),
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "ch"              = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
@@ -56,7 +59,8 @@ class RichTextFormatter
         ObjectManager $om,
         TransferManager $transferManager,
         MaskManager $maskManager,
-        StrictDispatcher $eventDispatcher
+        StrictDispatcher $eventDispatcher,
+        PlatformConfigurationHandler $ch
     ) {
         $data = array();
         $this->resourceManagerImporter = null;
@@ -68,6 +72,7 @@ class RichTextFormatter
         $this->transferManager = $transferManager;
         $this->maskManager = $maskManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->ch = $ch;
     }
 
     /**
@@ -101,6 +106,7 @@ class RichTextFormatter
 
             if ($node) {
                 $toReplace = $this->generateDisplayedUrlForTinyMce($node);
+                var_dump($toReplace);
                 $text = str_replace($match[0], $toReplace, $text);
             }
         }
@@ -340,14 +346,32 @@ class RichTextFormatter
      */
     public function generateDisplayedUrlForTinyMce(ResourceNode $node)
     {
+        //ie: /path/to/web/app_dev.php
+        $baseUrl = $this->ch->getParameter('base_url');
+
+        //http://stackoverflow.com/questions/173851/what-is-the-canonical-way-to-determine-commandline-vs-http-execution-of-a-php-s
+        //we need to configure the router if we're doing the import by cli.
+        if ($baseUrl && php_sapi_name() === 'cli') {
+            $context = $this->router->getContext();
+            $context->setBaseUrl($baseUrl);
+        }
+
         if (strpos('_'.$node->getMimeType(), 'image') > 0) {
-            $url = $this->router->generate('claro_file_get_media', array('node' => $node->getId()));
+            $url = $this->router->generate(
+                'claro_file_get_media',
+                array('node' => $node->getId()),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
 
             return "<img style='max-width: 100%;' src='{$url}' alt='{$node->getName()}'>";
         }
 
         if (strpos('_'.$node->getMimeType(), 'video') > 0) {
-            $url = $this->router->generate('claro_file_get_media', array('node' => $node->getId()));
+            $url = $this->router->generate(
+                'claro_file_get_media',
+                array('node' => $node->getId()),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
 
             return "<source type='{$node->getMimeType()}' src='{$url}'></source>";
         }
@@ -357,7 +381,8 @@ class RichTextFormatter
             array(
                 'resourceType' => $node->getResourceType()->getName(),
                 'node' => $node->getId(),
-            )
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
         );
 
         return "<a href='{$url}'>{$node->getName()}</a>";

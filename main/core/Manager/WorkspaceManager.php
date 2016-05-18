@@ -872,9 +872,9 @@ class WorkspaceManager
      * This function must be fired right after a workspace is "populated".
      * Don't use it otherwise !!!!
      */
-    public function importRichText()
+    public function importRichText(Workspace $workspace, File $template)
     {
-        $this->container->get('claroline.manager.transfer_manager')->importRichText();
+        $this->container->get('claroline.manager.transfer_manager')->importRichText($workspace, $template);
     }
 
     /**

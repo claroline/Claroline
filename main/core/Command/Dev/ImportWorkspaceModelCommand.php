@@ -101,6 +101,6 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
         $workspace->setCode($code);
         $file = new File($template);
         $workspaceManager->create($workspace, $file);
-        $workspaceManager->importRichText();
+        $workspaceManager->importRichText($workspace, $file);
     }
 }
