@@ -84,6 +84,7 @@ class WorkspaceType extends AbstractType
                         'property' => 'nameAndWorkspace',
                         'required' => false,
                         'label' => 'model',
+                        'mapped' => false,
                     )
                 );
         }
