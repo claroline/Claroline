@@ -291,7 +291,7 @@ $(document).ready(function() {
     });
 
     // InnovaERV
-    // Ajout pour le traitement de la case Ã  cocher lors de la soumission de documents
+    // Ajout pour le traitement de la case à cocher lors de la soumission de documents
     $('#validate-modal-return-receipt').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
         var documentId = button.data('document_id'); // Extract info from data-* attributes
