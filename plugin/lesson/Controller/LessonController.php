@@ -583,7 +583,7 @@ class LessonController extends Controller
 
         $form = $this->createForm($this->get('icap.lesson.movechaptertype'), $chapter, array('attr' => array('filter' => 0)));
         $form->handleRequest($this->getRequest());
-        if ($form->isValid() and $form->get('choiceChapter')->getData() != $chapter->getid()) {
+        if ($form->isValid() && $form->get('choiceChapter')->getData() != $chapter->getid()) {
             $newParentId = $form->get('choiceChapter')->getData();
             $brother = $form->get('brother')->getData();
             $firstposition = $form->get('firstposition')->getData();
@@ -605,7 +605,7 @@ class LessonController extends Controller
         }
 
         //a node cant be sibling with root
-        if ($brother == true and $newParentId != $lesson->getRoot()->getId()) {
+        if ($brother == true && $newParentId != $lesson->getRoot()->getId()) {
             $repo->persistAsNextSiblingOf($chapter, $newParent);
         } else {
             if ($firstposition == 'true') {
