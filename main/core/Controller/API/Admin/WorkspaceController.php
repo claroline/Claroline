@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -29,9 +28,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Put;
+use JMS\SecurityExtraBundle\Annotation as SEC;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @NamePrefix("api_")
+ * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
  */
 class WorkspaceController extends FOSRestController
 {
@@ -39,7 +43,7 @@ class WorkspaceController extends FOSRestController
     private $om;
     private $request;
     private $roleManager;
-    private $templateDir;
+    private $defaultTemplate;
     private $tokenStorage;
     private $utilities;
     private $workspaceManager;
@@ -51,7 +55,7 @@ class WorkspaceController extends FOSRestController
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"          = @DI\Inject("request"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
-     *     "templateDir"      = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "defaultTemplate"  = @DI\Inject("%claroline.param.default_template%"),
      *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "utilities"        = @DI\Inject("claroline.utilities.misc"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
@@ -62,7 +66,7 @@ class WorkspaceController extends FOSRestController
         ObjectManager $om,
         Request $request,
         RoleManager $roleManager,
-        $templateDir,
+        $defaultTemplate,
         TokenStorageInterface $tokenStorage,
         ClaroUtilities $utilities,
         WorkspaceManager $workspaceManager
@@ -71,7 +75,7 @@ class WorkspaceController extends FOSRestController
         $this->om = $om;
         $this->request = $request;
         $this->roleManager = $roleManager;
-        $this->templateDir = $templateDir;
+        $this->defaultTemplate = $defaultTemplate;
         $this->tokenStorage = $tokenStorage;
         $this->utilities = $utilities;
         $this->workspaceManager = $workspaceManager;
@@ -142,34 +146,20 @@ class WorkspaceController extends FOSRestController
      *     views = {"workspace"},
      *     input="Claroline\CoreBundle\Form\WorkspaceType"
      * )
-     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
+     * @Post("workspace/user/{user}", name="post_workspace", options={ "method_prefix" = false })
      */
     public function postWorkspaceUserAction(User $user)
     {
         $workspaceType = new WorkspaceType($user);
         $workspaceType->enableApi();
-        $form = $this->formFactory->create($workspaceType);
+        $form = $this->formFactory->create($workspaceType, new Workspace());
         $form->submit($this->request);
-        //$form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $config = Configuration::fromTemplate(
-                $this->templateDir.DIRECTORY_SEPARATOR.'default.zip'
-            );
-            $config->setWorkspaceName($form->get('name')->getData());
-            $config->setWorkspaceCode($form->get('code')->getData());
-            $config->setDisplayable($form->get('displayable')->getData());
-            $config->setSelfRegistration($form->get('selfRegistration')->getData());
-            $config->setRegistrationValidation($form->get('registrationValidation')->getData());
-            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
-            $config->setWorkspaceDescription($form->get('description')->getData());
-            $workspace = $this->workspaceManager->create($config, $user);
-            $workspace->setEndDate($form->get('endDate')->getData());
-            $workspace->setMaxStorageSize($form->get('maxStorageSize')->getData());
-            $workspace->setMaxUploadResources($form->get('maxUploadResources')->getData());
-            $workspace->setMaxUsers($form->get('maxUsers')->getData());
-
-            $this->workspaceManager->editWorkspace($workspace);
+            $workspace = $form->getData();
+            $workspace->setCreator($user);
+            $template = new File($this->defaultTemplate);
+            $workspace = $this->workspaceManager->create($workspace, $template);
 
             return $workspace;
         }
@@ -198,28 +188,16 @@ class WorkspaceController extends FOSRestController
      *     views = {"workspace"},
      *     input="Claroline\CoreBundle\Form\WorkspaceType"
      * )
-     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
+     * @Put("workspace/{workspace}", name="put_workspace", options={ "method_prefix" = false })
      */
-    public function putWorkspaceUserAction(Workspace $workspace, User $user)
+    public function putWorkspaceAction(Workspace $workspace)
     {
-        $workspaceType = new WorkspaceType($user);
+        $workspaceType = new WorkspaceType();
         $workspaceType->enableApi();
         $form = $this->formFactory->create($workspaceType, $workspace);
         $form->submit($this->request);
 
         if ($form->isValid()) {
-            $workspace->setName($form->get('name')->getData());
-            $workspace->setCode($form->get('code')->getData());
-            $workspace->setDisplayable($form->get('displayable')->getData());
-            $workspace->setSelfRegistration($form->get('selfRegistration')->getData());
-            $workspace->setRegistrationValidation($form->get('registrationValidation')->getData());
-            $workspace->setSelfUnregistration($form->get('selfUnregistration')->getData());
-            $workspace->setDescription($form->get('description')->getData());
-            $workspace->setEndDate($form->get('endDate')->getData());
-            $workspace->setMaxStorageSize($form->get('maxStorageSize')->getData());
-            $workspace->setMaxUploadResources($form->get('maxUploadResources')->getData());
-            $workspace->setMaxUsers($form->get('maxUsers')->getData());
-
             $this->workspaceManager->editWorkspace($workspace);
 
             return $workspace;

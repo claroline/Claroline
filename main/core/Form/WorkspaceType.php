@@ -128,7 +128,6 @@ class WorkspaceType extends AbstractType
                     'data-date-format' => 'dd-mm-yyyy',
                     'autocomplete' => 'off',
                 ),
-                'constraints' => array(new NotBlank()),
             );
 
             $builder->add('endDate', 'datepicker', $params);

@@ -208,7 +208,7 @@ class TransferManager
         $defaultZip = $this->container->getParameter('claroline.param.templates_directory').'personal.zip';
 
         //batch import with default template shouldn't be flushed
-        if ($archive != 'personal.zip') {
+        if (strpos('personal.zip', $template->getPathname()) === false) {
             $this->om->forceFlush();
         }
 
