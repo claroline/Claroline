@@ -2,11 +2,8 @@
 
 namespace Icap\BadgeBundle\Controller;
 
-use Icap\BadgeBundle\Entity\BadgeCollection;
 use Icap\BadgeBundle\Event\BadgeCreateValidationLinkEvent;
-use Claroline\CoreBundle\Rule\Validator;
 use Icap\BadgeBundle\Entity\Badge;
-use Icap\BadgeBundle\Entity\UserBadge;
 use Icap\BadgeBundle\Entity\BadgeClaim;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

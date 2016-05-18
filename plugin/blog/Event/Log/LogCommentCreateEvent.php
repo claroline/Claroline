@@ -4,7 +4,6 @@ namespace Icap\BlogBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
-use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 

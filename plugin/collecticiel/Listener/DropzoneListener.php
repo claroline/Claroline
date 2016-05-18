@@ -15,7 +15,6 @@ use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Form\DropzoneType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class DropzoneListener extends ContainerAware
 {
@@ -83,7 +82,7 @@ class DropzoneListener extends ContainerAware
             $dropzone = $em->getRepository('InnovaCollecticielBundle:Dropzone')
             ->find($event->getResource()->getId());
 
-            // Pour savoir si le collecticiel est ouvert ou pas. InnovaERV            
+            // Pour savoir si le collecticiel est ouvert ou pas. InnovaERV
             $dropzoneManager = $this->container->get('innova.manager.dropzone_manager');
 
             if ($dropzoneManager->collecticielOpenOrNot($dropzone)) {
