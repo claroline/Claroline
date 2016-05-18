@@ -107,6 +107,8 @@ exercise_definition: Définition de l'exercice
 exercise_edit: Modification de l'exercice
 exercice_linked_question: Questions liées à l'exercice
 exit: Quitter
+exo_empty_user_can_edit: Cet exercice est vide. Editez et publiez le afin de le remplir.
+exo_empty_user_read_only: Cet exercice est vide et n'a pas encore été configuré par son concepteur. Veuillez revenir plus tard.
 expected_answer: Réponse attendue
 explain_coeff_dis0: Les copies doivent avoir les mêmes questions pour pouvoir calculer le coefficient de discrimination.
 explain_coeff_dis1: Analyse de la pertinence des questions, ce coefficient de corrélation varie de -1 à + 1.
