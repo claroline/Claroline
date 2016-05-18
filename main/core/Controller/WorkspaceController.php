@@ -1440,7 +1440,7 @@ class WorkspaceController extends Controller
      */
     public function exportAction(Workspace $workspace)
     {
-        $archive = $this->container->get('claroline.manager.transfert_manager')->export($workspace);
+        $archive = $this->container->get('claroline.manager.transfer_manager')->export($workspace);
 
         $fileName = $workspace->getCode().'.zip';
         $mimeType = 'application/zip';

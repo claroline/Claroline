@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Manager\TransfertManager;
+use Claroline\CoreBundle\Manager\TransferManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -45,7 +45,7 @@ class RichTextFormatter
      *     "router"          = @DI\Inject("router"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "transferManager" = @DI\Inject("claroline.manager.transfert_manager"),
+     *     "transferManager" = @DI\Inject("claroline.manager.transfer_manager"),
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
@@ -54,7 +54,7 @@ class RichTextFormatter
         UrlGeneratorInterface $router,
         ResourceManager $resourceManager,
         ObjectManager $om,
-        TransfertManager $transferManager,
+        TransferManager $transferManager,
         MaskManager $maskManager,
         StrictDispatcher $eventDispatcher
     ) {

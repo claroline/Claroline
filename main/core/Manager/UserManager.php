@@ -60,7 +60,7 @@ class UserManager
     private $validator;
     private $workspaceManager;
     private $uploadsDirectory;
-    private $transfertManager;
+    private $transferManager;
     private $container;
     private $authorization;
     private $organizationManager;
@@ -82,7 +82,7 @@ class UserManager
      *     "validator"              = @DI\Inject("validator"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
-     *     "transfertManager"       = @DI\Inject("claroline.manager.transfert_manager"),
+     *     "transferManager"       = @DI\Inject("claroline.manager.transfer_manager"),
      *     "container"              = @DI\Inject("service_container"),
      *     "organizationManager"    = @DI\Inject("claroline.manager.organization.organization_manager"),
      *     "groupManager"           = @DI\Inject("claroline.manager.group_manager")
@@ -100,7 +100,7 @@ class UserManager
         TranslatorInterface $translator,
         ValidatorInterface $validator,
         WorkspaceManager $workspaceManager,
-        TransfertManager $transfertManager,
+        TransferManager $transferManager,
         OrganizationManager $organizationManager,
         $uploadsDirectory,
         ContainerInterface $container,
@@ -119,7 +119,7 @@ class UserManager
         $this->mailManager = $mailManager;
         $this->validator = $validator;
         $this->uploadsDirectory = $uploadsDirectory;
-        $this->transfertManager = $transfertManager;
+        $this->transferManager = $transferManager;
         $this->organizationManager = $organizationManager;
         $this->container = $container;
         $this->groupManager = $groupManager;
@@ -492,7 +492,7 @@ class UserManager
             $config = Configuration::fromTemplate($this->personalWsTemplateFile);
             $config->setWorkspaceName($personalWorkspaceName);
             $config->setWorkspaceCode($code);
-            $workspace = $this->transfertManager->createWorkspace($config, $user, true);
+            $workspace = $this->transferManager->createWorkspace($config, $user, true);
         } else {
             $workspace = $this->workspaceManager->createWorkspaceFromModel(
                 $model,

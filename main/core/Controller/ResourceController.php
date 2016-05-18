@@ -38,7 +38,7 @@ use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\LogManager;
-use Claroline\CoreBundle\Manager\TransfertManager;
+use Claroline\CoreBundle\Manager\TransferManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -74,7 +74,7 @@ class ResourceController
      *     "templating"      = @DI\Inject("templating"),
      *     "logManager"      = @DI\Inject("claroline.log.manager"),
      *      "fileManager"     = @DI\Inject("claroline.manager.file_manager"),
-     *     "transferManager" = @DI\Inject("claroline.manager.transfert_manager"),
+     *     "transferManager" = @DI\Inject("claroline.manager.transfer_manager"),
      *     "formFactory"     = @DI\Inject("form.factory")
      * })
      */
@@ -91,7 +91,7 @@ class ResourceController
         TwigEngine $templating,
         LogManager $logManager,
         FileManager $fileManager,
-        TransfertManager $transferManager,
+        TransferManager $transferManager,
         FormFactory $formFactory
     ) {
         $this->tokenStorage = $tokenStorage;
