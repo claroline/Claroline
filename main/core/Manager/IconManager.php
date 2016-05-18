@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
 use Symfony\Component\HttpFoundation\File\File;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @DI\Service("claroline.manager.icon_manager")
@@ -188,8 +189,9 @@ class IconManager
      */
     public function createCustomIcon(File $file, Workspace $workspace = null)
     {
+        $fileName = $file instanceof UploadedFile ? $file->getClientOriginalName() : $file->getFilename();
         $this->om->startFlushSuite();
-        $extension = pathinfo($file->getFilename(), PATHINFO_EXTENSION);
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
 
         if (is_null($workspace)) {
             $dest = $this->thumbDir;

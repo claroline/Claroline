@@ -24,7 +24,7 @@ class Exercise extends AbstractResource
     /**
      * @ORM\Column(name="description", type="text", nullable=true)
      */
-    private $description;
+    private $description = '';
 
     /**
      * @ORM\Column(name="shuffle", type="boolean", nullable=true)
