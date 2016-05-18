@@ -158,7 +158,12 @@
 
         <!-- Display a big button for those who can edit Exercise OR a big button to play the Exercise if no alert -->
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-6 col-md-offset-3 text-center">
+                <!-- Results of the Exercise -->
+                <a href="#/papers" class="btn btn-link">
+                    <span class="fa fa-list"></span> {{ 'result' | trans:{}:'ujm_exo' }}
+                </a>
+
                 <!-- Edit button if Exercise is empty -->
                 <a href="#/steps" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="exerciseOverviewCtrl.editEnabled && exerciseOverviewCtrl.exercise.steps.length === 0">
                     <span class="fa fa-pencil"></span>

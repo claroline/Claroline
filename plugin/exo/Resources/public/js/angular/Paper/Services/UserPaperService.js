@@ -233,6 +233,10 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
     return deferred.promise;
 };
 
+UserPaperService.prototype.isAllowedToCompose = function isAllowedToCompose() {
+
+};
+
 // Register service into AngularJS
 angular
     .module('Paper')
