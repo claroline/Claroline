@@ -84,7 +84,7 @@
             this.publishNode(event);
             this.$('#node-element-' + event.id).attr(
                 'style',
-                'background-image:url("' + this.parameters.webPath + event.large_icon + '");'
+                'background-image:url("' + this.parameters.webPath + '/' + event.large_icon + '");'
             );
         },
         removeNodes: function (event) {
@@ -203,7 +203,7 @@
             var j = 1;
             //first we need to order the nodes !
             for (var i in this.nodes) {
-                
+
                 if (this.nodes[i].index_dir === null) {
                     orderedNodes[j] = this.nodes[i];
                     j++;
