@@ -1,11 +1,26 @@
 <div class="overview">
     <div class="panel-body">
-        <div class="alert alert-info" data-ng-if="!exerciseOverviewCtrl.exercise.meta.published && !exerciseOverviewCtrl.exercise.meta.publishedOnce">
+        <!--<div class="alert alert-info" data-ng-if="!exerciseOverviewCtrl.exercise.meta.published && !exerciseOverviewCtrl.exercise.meta.publishedOnce">
             {{ 'info_exercise_never_published'|trans:{}:'ujm_exo' }}
+        </div>-->
+
+        <!-- Empty exercise alert -->
+        <div class="row" data-ng-if="exerciseOverviewCtrl.exercise.steps.length === 0">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="alert alert-info text-center">
+                    <span class="fa fa-fw fa-warning"></span>
+
+                    <!-- Message for Users who can only read the Path -->
+                    <span data-ng-if="!exerciseOverviewCtrl.editEnabled">{{ 'exo_empty_user_read_only'|trans:{}:'ujm_exo' }}</span>
+
+                    <!-- Message for Users who can edit the Path -->
+                    <span data-ng-if="exerciseOverviewCtrl.editEnabled">{{ 'exo_empty_user_can_edit'|trans:{}:'ujm_exo' }}</span>
+                </div>
+            </div>
         </div>
 
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-6 col-md-offset-3">
                 <!-- Description of the exercise -->
                 <div class="exercise-description panel panel-default" data-ng-if="exerciseOverviewCtrl.exercise.meta.description">
                     <div class="panel-body" data-ng-bind-html="exerciseOverviewCtrl.exercise.meta.description"></div>
@@ -138,6 +153,23 @@
                         <span class="fa fa-fw" data-ng-class="{ 'fa-angle-double-down': !exerciseOverviewCtrl.additionalInfo, 'fa-angle-double-up': exerciseOverviewCtrl.additionalInfo }"></span>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Display a big button for those who can edit Exercise OR a big button to play the Exercise if no alert -->
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <!-- Edit button if Exercise is empty -->
+                <a href="#/steps" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="exerciseOverviewCtrl.editEnabled && exerciseOverviewCtrl.exercise.steps.length === 0">
+                    <span class="fa fa-pencil"></span>
+                    {{ 'edit'|trans:{}:'ujm_exo' }}
+                </a>
+
+                <!-- Play button if Exercise is OK -->
+                <a href="#/play" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="(exerciseCtrl.nbPapers < exerciseCtrl.exercise.meta.maxAttempts || exerciseCtrl.exercise.meta.maxAttempts === 0) && exerciseCtrl.composeEnabled && exerciseCtrl.exercise.steps.length > 0">
+                    <span class="fa fa-check-square-o"></span>
+                    {{ 'compose' | trans:{}:'ujm_exo' }}
+                </a>
             </div>
         </div>
     </div>
