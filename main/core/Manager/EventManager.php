@@ -246,7 +246,6 @@ class EventManager
 
             if ($sortedKey !== 'all') {
                 foreach ($tempResourceEvents[$sortedKey] as $resourceEventKey => $resourceEventValue) {
-                    $sortedEvents[$resourceTrans][$keyTrans]['null'] = null;
                     $sortedEvents[$resourceTrans][$keyTrans][$resourceEventKey] = $resourceEventValue;
                 }
             }
