@@ -32,8 +32,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Form\ImportWorkspaceType;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Security\TokenUpdater;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
@@ -1468,7 +1468,8 @@ class WorkspaceController extends Controller
      */
     public function importFormAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_IMPORT, array());
+        $importType = new ImportWorkspaceType();
+        $form = $this->container->get('form.factory')->create($importType);
 
         return array('form' => $form->createView());
     }
@@ -1486,21 +1487,17 @@ class WorkspaceController extends Controller
      */
     public function importAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_IMPORT, array());
+        $importType = new ImportWorkspaceType();
+        $form = $this->container->get('form.factory')->create($importType,  new Workspace());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $template = $form->get('workspace')->getData();
-            $config = Configuration::fromTemplate($template);
-            $config->setWorkspaceName($form->get('name')->getData());
-            $config->setWorkspaceCode($form->get('code')->getData());
-            $config->setDisplayable($form->get('displayable')->getData());
-            $config->setSelfRegistration($form->get('selfRegistration')->getData());
-            $config->setRegistrationValidation($form->get('registrationValidation')->getData());
-            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
-            $config->setWorkspaceDescription($form->get('description')->getData());
-            $this->workspaceManager->create($config, $this->tokenStorage->getToken()->getUser());
-            $this->workspaceManager->importRichText();
+            $file = $form->get('workspace')->getData();
+            $template = new File($file);
+            $workspace = $form->getData();
+            $workspace->setCreator($this->tokenStorage->getToken()->getUser());
+            $this->workspaceManager->create($workspace, $template);
+            $this->workspaceManager->importRichText($workspace, $template);
         } else {
             return new Response(
                 $this->templating->render(
