@@ -1129,8 +1129,6 @@ class ResourceController
             $this->transferManager->importResources($template, $user, $directory);
 
             return new JsonResponse(array());
-        } else {
-            return array('form' => $form->createView(), 'directory' => $directory);
         }
 
         return array('form' => $form->createView(), 'directory' => $directory);

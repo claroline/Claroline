@@ -40,7 +40,7 @@ class RichTextFormatter
     private $maskManager;
     private $resourceManagerImporter;
     private $eventDispatcher;
-    private $ch;
+    private $config;
 
     /**
      * @DI\InjectParams({
@@ -50,7 +50,7 @@ class RichTextFormatter
      *     "transferManager" = @DI\Inject("claroline.manager.transfer_manager"),
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "ch"              = @DI\Inject("claroline.config.platform_config_handler")
+     *     "config"          = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
@@ -60,7 +60,7 @@ class RichTextFormatter
         TransferManager $transferManager,
         MaskManager $maskManager,
         StrictDispatcher $eventDispatcher,
-        PlatformConfigurationHandler $ch
+        PlatformConfigurationHandler $config
     ) {
         $data = array();
         $this->resourceManagerImporter = null;
@@ -72,7 +72,7 @@ class RichTextFormatter
         $this->transferManager = $transferManager;
         $this->maskManager = $maskManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->ch = $ch;
+        $this->config = $config;
     }
 
     /**
@@ -346,7 +346,7 @@ class RichTextFormatter
     public function generateDisplayedUrlForTinyMce(ResourceNode $node)
     {
         //ie: /path/to/web/app_dev.php
-        $baseUrl = $this->ch->getParameter('base_url');
+        $baseUrl = $this->config->getParameter('base_url');
 
         //http://stackoverflow.com/questions/173851/what-is-the-canonical-way-to-determine-commandline-vs-http-execution-of-a-php-s
         //we need to configure the router if we're doing the import by cli.

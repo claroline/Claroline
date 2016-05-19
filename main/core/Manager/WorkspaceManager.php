@@ -1131,8 +1131,11 @@ class WorkspaceManager
         $fileName = $file->getBaseName();
         $extractPath = $this->templateDir.$fileName;
 
-        if (true === $code = $archive->open($file->getPathname())) {
+        if ($archive->open($file->getPathname())) {
             $res = $archive->extractTo($extractPath);
+            if (!$res) {
+                throw new \Exception("The workspace archive couldn't be extracted");
+            }
             $archive->close();
             $resolver = new Resolver($extractPath);
             $this->importData = $resolver->resolve();
@@ -1148,7 +1151,6 @@ class WorkspaceManager
         $fileName = $file->getBaseName();
         $extractPath = $this->templateDir.$fileName;
         $fs = new FileSystem();
-        $iterator = new \DirectoryIterator($extractPath);
         $fs->remove($extractPath);
     }
 }
