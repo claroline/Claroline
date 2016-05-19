@@ -41,7 +41,7 @@ OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
                 if (-1 !== this.answer.search(searchExpression)) {
                     // Keyword has been found in answer => Update formatted answer
                     var keyword = '';
-                    keyword += '<b class="text-success feedback-info" data-toggle="tooltip" title="' + solution.feedback + '">';
+                    keyword += '<b class="text-success feedback-info" data-toggle="tooltip" title="' + (solution.feedback || '') + '">';
                     keyword += solution.word;
                     keyword += '<span class="fa fa-fw fa-check"></span>';
                     keyword += '</b>';
