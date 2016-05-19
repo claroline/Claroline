@@ -36,18 +36,12 @@ class ExerciseController extends Controller
 
         $exerciseSer = $this->container->get('ujm.exo_exercise');
 
-        /*$userId = $exerciseSer->getUserId();
-        $exerciseId = $exercise->getId();*/
-        $isExoAdmin = $exerciseSer->isExerciseAdmin($exercise);
-        /*$isAllowedToCompose = $exerciseSer->controlMaxAttemps($exercise, $userId, $isExoAdmin);*/
-
-        if ($userId !== 'anonymous') {
-            $nbUserPaper = $exerciseSer->getNbPaper($userId, $exerciseId);
-        } else {
-            $nbUserPaper = 0;
+        $nbUserPapers = 0;
+        if ($user instanceof User) {
+            $nbUserPapers = $this->container->get('ujm.exo.paper_manager')->countUserFinishedPapers($exercise, $user);
         }
 
-        $nbUserPaper = $this->container->get('ujm.exo.paper_manager')->countUserFinishedPapers($exercise, $user);
+        // TODO : no need to count the $nbPapers for regular Users as it's only for admin purpose (we maybe need to put the call in Angular ?)
         $nbPapers = $this->container->get('ujm.exo.paper_manager')->countExercisePapers($exercise);
 
         // Display the Summary of the Exercise
@@ -56,13 +50,12 @@ class ExerciseController extends Controller
             '_resource' => $exercise,
             'workspace' => $exercise->getResourceNode()->getWorkspace(),
 
-            'nbUserPaper' => $nbUserPaper,
+            'nbUserPapers' => $nbUserPapers,
             'nbPapers' => $nbPapers,
 
             // Angular JS data
             'exercise' => $this->get('ujm.exo.exercise_manager')->exportExercise($exercise, false),
-            'editEnabled' => $isExoAdmin,
-            'composeEnabled' => $isAllowedToCompose,
+            'editEnabled' => $exerciseSer->isExerciseAdmin($exercise),
             'duration' => $exercise->getDuration(),
         ]);
     }

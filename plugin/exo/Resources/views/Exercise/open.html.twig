@@ -23,8 +23,8 @@
         <exercise
             data-exercise="{{ exercise | json_encode | raw | escape }}"
             data-nb-papers ="{{ nbPapers }}"
-            data-edit-enabled="{{ editEnabled }}"
-            data-compose-enabled="{{ composeEnabled }}">
+            data-nb-user-papers ="{{ nbUserPapers }}"
+            data-edit-enabled="{{ editEnabled }}">
         </exercise>
     </div>
 {% endblock %}

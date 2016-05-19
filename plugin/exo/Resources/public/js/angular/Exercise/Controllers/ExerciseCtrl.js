@@ -11,7 +11,7 @@ var ExerciseCtrl = function ExerciseCtrl(ExerciseService, $route) {
     // Share current Exercise with the whole application
     this.ExerciseService.setExercise(this.exercise);
     this.ExerciseService.setEditEnabled(this.editEnabled);
-    this.ExerciseService.setComposeEnabled(this.composeEnabled);
+    /*this.ExerciseService.setComposeEnabled(this.composeEnabled);*/
 
     this.$route = $route;
 };
@@ -32,18 +32,17 @@ ExerciseCtrl.prototype.exercise = null;
 ExerciseCtrl.prototype.nbPapers = 0;
 
 /**
+ * The numbers of Papers submitted for this Exercise
+ * @type {Number}
+ */
+ExerciseCtrl.prototype.nbUserPapers = 0;
+
+/**
  * If the current User has the rights to administrate the Exercise,
  * we display him tools to do it
  * @type {boolean}
  */
 ExerciseCtrl.prototype.editEnabled = false;
-
-/**
- * If the current User has the rights to do the Exercise,
- * we display him the button to access it
- * @type {boolean}
- */
-ExerciseCtrl.prototype.composeEnabled = false;
 
 /**
  * Publish the Current exercise
