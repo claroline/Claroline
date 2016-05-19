@@ -2,10 +2,6 @@ admin_category:
     resource: "routing/admin/category.yml"
     prefix:   /admin/category
 
-admin_exercise:
-    resource: "routing/admin/exercise.yml"
-    prefix:   /admin/exercise
-
 admin_interaction_graphic:
     resource: "routing/admin/interactionGraphic.yml"
     prefix:   /admin/interactiongraphic
@@ -34,10 +30,6 @@ admin_question:
     resource: "@UJMExoBundle/Controller/QuestionController.php"
     type: annotation
     prefix:   /admin/question
-
-all_exercise:
-    resource: "routing/all/exercise.yml"
-    prefix:   /all/exercise
 
 all_hint:
     resource: "routing/all/hint.yml"
