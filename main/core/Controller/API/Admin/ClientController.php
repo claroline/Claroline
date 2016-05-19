@@ -12,10 +12,12 @@
 namespace Claroline\CoreBundle\Controller\API\Admin;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Manager\OauthManager;
+
 
 /**
  * @NamePrefix("client_")
@@ -24,7 +26,7 @@ class ClientController extends FOSRestController
 {
     private $oauthManager;
 
-   /**
+	/**
     * @DI\InjectParams({
     *     "oauthManager" = @DI\Inject("claroline.manager.oauth_manager")
     * })
@@ -63,4 +65,5 @@ class ClientController extends FOSRestController
 
             return $result;
         }
+
 }
