@@ -263,7 +263,6 @@ class PaperManager
      */
     public function exportUserPapers(Exercise $exercise, User $user)
     {
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
         $papers = $this->om->getRepository('UJMExoBundle:Paper')
             ->findBy(['exercise' => $exercise, 'user' => $user]);
 
@@ -368,7 +367,6 @@ class PaperManager
      */
     public function exportExercisePapers(Exercise $exercise)
     {
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
         $papers = $this->om->getRepository('UJMExoBundle:Paper')
             ->findBy(['exercise' => $exercise]);
 
