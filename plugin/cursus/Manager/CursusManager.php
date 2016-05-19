@@ -1247,7 +1247,7 @@ class CursusManager
             $workspace = new Workspace();
             $workspace->setCreator($user);
             $workspace->setName($name);
-            $workspace->setWorkspaceCode($code);
+            $workspace->setCode($code);
             $workspace->setDisplayable($displayable);
             $workspace->setSelfRegistration($selfRegistration);
             $workspace->setSelfUnregistration($selfUnregistration);
