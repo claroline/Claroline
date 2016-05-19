@@ -22,8 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use RMS\PushNotificationsBundle\Message\AndroidMessage;
 
 /**
- * Class NotificationManager
- * @package Icap\NotificationBundle\Manager
+ * Class NotificationManager.
  *
  * @DI\Service("icap.notification.manager")
  */
@@ -55,7 +54,8 @@ class NotificationManager
     protected $notificationPluginConfigurationManager;
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @DI\InjectParams({
      *      "em" = @DI\Inject("doctrine.orm.entity_manager"),
      *      "tokenStorage" = @DI\Inject("security.token_storage"),
@@ -76,14 +76,13 @@ class NotificationManager
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
-        $this->platformName = $configHandler->getParameter("name");
+        $this->platformName = $configHandler->getParameter('name');
         if ($this->platformName === null || empty($this->platformName)) {
-            $this->platformName = "Claroline";
+            $this->platformName = 'Claroline';
         }
         $this->notificationParametersManager = $notificationParametersManager;
         $this->notificationPluginConfigurationManager = $notificationPluginConfigurationManager;
     }
-
 
     private function getLoggedUser()
     {
@@ -101,7 +100,9 @@ class NotificationManager
     private function getConfigurationAndPurge()
     {
         $config = $this->notificationPluginConfigurationManager->getConfigOrEmpty();
-        if($config->getPurgeEnabled())$this->purgeNotifications($config);
+        if ($config->getPurgeEnabled()) {
+            $this->purgeNotifications($config);
+        }
 
         return $config;
     }
@@ -126,7 +127,7 @@ class NotificationManager
         $iconKeys = $this->getNotificationRepository()->findAllDistinctIconKeys();
         $colorChooser = new ColorChooser();
         foreach ($iconKeys as $key) {
-            $colorChooser->getColorForName($key["iconKey"]);
+            $colorChooser->getColorForName($key['iconKey']);
         }
 
         return $colorChooser;
@@ -201,13 +202,13 @@ class NotificationManager
                 $notificationColor = $colorChooser->getColorForName($iconKey);
                 $notification->setIconColor($notificationColor);
             }
-            $eventName = 'create_notification_item_' . $notification->getActionKey();
+            $eventName = 'create_notification_item_'.$notification->getActionKey();
             $event = new NotificationCreateDelegateViewEvent($notificationView, $this->platformName);
 
-            /** @var EventDispatcher $eventDispatcher */
+            /* @var EventDispatcher $eventDispatcher */
             if ($this->eventDispatcher->hasListeners($eventName)) {
                 $event = $this->eventDispatcher->dispatch($eventName, $event);
-                $views[$notificationView->getId() . ''] = $event->getResponseContent();
+                $views[$notificationView->getId().''] = $event->getResponseContent();
             }
             if ($notificationView->getStatus() == false) {
                 array_push(
@@ -218,11 +219,8 @@ class NotificationManager
         }
         $this->markNotificationsAsViewed($unviewedNotificationIds);
 
-        return array("views" => $views, "colors" => $colorChooser->getColorObjectArray());
+        return array('views' => $views, 'colors' => $colorChooser->getColorObjectArray());
     }
-
-
-
 
     /**
      * @return EntityManager
@@ -237,13 +235,13 @@ class NotificationManager
      */
     public function getPlatformName()
     {
-       return $this->platformName;
+        return $this->platformName;
     }
 
     /**
-     * Get Hash for a given object which must implement notifiable interface
+     * Get Hash for a given object which must implement notifiable interface.
      *
-     * @param int $resourceId
+     * @param int    $resourceId
      * @param string $resourceClass
      *
      * @return string The generated hash
@@ -260,7 +258,7 @@ class NotificationManager
     }
 
     /**
-     * @param int $resourceId
+     * @param int    $resourceId
      * @param string $resourceClass
      *
      * @return mixed
@@ -278,12 +276,12 @@ class NotificationManager
     }
 
     /**
-     * Create new Tag given its name
+     * Create new Tag given its name.
      *
-     * @param string $actionKey
-     * @param string $iconKey
-     * @param integer|null $resourceId
-     * @param array $details
+     * @param string      $actionKey
+     * @param string      $iconKey
+     * @param int|null    $resourceId
+     * @param array       $details
      * @param object|null $doer
      *
      * @internal param \Icap\NotificationBundle\Entity\NotifiableInterface $notifiable
@@ -309,11 +307,11 @@ class NotificationManager
 
         if (!isset($details['doer']) && !empty($doerId)) {
             $details['doer'] = array(
-                'id'        => $doerId,
+                'id' => $doerId,
                 'firstName' => $doer->getFirstName(),
-                'lastName'  => $doer->getLastName(),
-                'avatar'    => $doer->getPicture(),
-                'publicUrl' => $doer->getPublicUrl()
+                'lastName' => $doer->getLastName(),
+                'avatar' => $doer->getPicture(),
+                'publicUrl' => $doer->getPublicUrl(),
             );
         }
         $notification->setDetails($details);
@@ -326,10 +324,11 @@ class NotificationManager
     }
 
     /**
-     * Creates a notification viewer for every user in the list of people to be notified
+     * Creates a notification viewer for every user in the list of people to be notified.
      *
      * @param Notification $notification
      * @param $userIds
+     *
      * @internal param \Icap\NotificationBundle\Entity\NotifiableInterface $notifiable
      *
      * @return \Icap\NotificationBundle\Entity\Notification
@@ -353,12 +352,7 @@ class NotificationManager
                     //
                     // $this->container->get('rms_push_notifications')->send($message);
 
-
-
-
                     $this->getEntityManager()->persist($notificationViewer);
-
-
                 }
             }
         }
@@ -368,9 +362,10 @@ class NotificationManager
     }
 
     /**
-     * Creates a notification and notifies the concerned users
+     * Creates a notification and notifies the concerned users.
      *
-     * @param  NotifiableInterface $notifiable
+     * @param NotifiableInterface $notifiable
+     *
      * @return Notification
      */
     public function createNotificationAndNotify(NotifiableInterface $notifiable)
@@ -399,12 +394,14 @@ class NotificationManager
     public function getDropdownNotifications($userId)
     {
         $config = $this->getConfigurationAndPurge();
+
         return $this->getUserNotificationsList($userId, 1, $config->getDropdownItems());
     }
 
     public function getPaginatedNotifications($userId, $page = 1, $category = null)
     {
         $config = $this->getConfigurationAndPurge();
+
         return $this->getUserNotificationsList($userId, $page, $config->getMaxPerPage(), false, null, $category);
     }
 
@@ -414,20 +411,20 @@ class NotificationManager
     }
 
     /**
-     * Retrieves the notifications list
+     * Retrieves the notifications list.
      *
-     * @param  int  $userId
-     * @param  int  $page
-     * @param  int  $maxResult
-     * @param  bool $isRss
+     * @param int  $userId
+     * @param int  $page
+     * @param int  $maxResult
+     * @param bool $isRss
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
      * @return mixed
      */
     public function getUserNotificationsList($userId, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $category = null)
     {
-
         $query = $this->getUserNotifications($userId, $page, $maxResult, $isRss, $notificationParameters, false);
-
 
         $adapter = new DoctrineORMAdapter($query, false);
         $pager = new Pagerfanta($adapter);
@@ -442,9 +439,9 @@ class NotificationManager
         $notifications = $this->renderNotifications($pager->getCurrentPageResults());
 
         return array(
-            'pager'             => $pager,
-            'notificationViews' => $notifications["views"],
-            'colors'            => $notifications["colors"]
+            'pager' => $pager,
+            'notificationViews' => $notifications['views'],
+            'colors' => $notifications['colors'],
         );
     }
 
@@ -465,7 +462,7 @@ class NotificationManager
             ->getNotificationViewerRepository()
             ->findUserNotificationsQuery($userId, $visibleTypes);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function getUserNotificationsListRss($rssId)
@@ -474,7 +471,7 @@ class NotificationManager
         $notificationUserParameters = $this
             ->notificationParametersManager
             ->getParametersByRssId($rssId);
-        if($notificationUserParameters === null) {
+        if ($notificationUserParameters === null) {
             throw new NoResultException();
         }
 
@@ -488,8 +485,8 @@ class NotificationManager
     }
 
     /**
-     * @param int $userId
-     * @param int $resourceId
+     * @param int    $userId
+     * @param int    $resourceId
      * @param string $resourceClass
      *
      * @return null|object
@@ -499,7 +496,7 @@ class NotificationManager
         $followerResource = $this->getFollowerResourceRepository()->findOneBy(
             array(
                 'followerId' => $userId,
-                'hash'       => $this->getHash($resourceId, $resourceClass)
+                'hash' => $this->getHash($resourceId, $resourceClass),
             )
         );
 
@@ -508,13 +505,13 @@ class NotificationManager
 
     public function getTaggedUsersFromText($text)
     {
-
     }
 
     /**
      * @param $userId
      * @param $resourceId
      * @param $resourceClass
+     *
      * @return FollowerResource
      */
     public function followResource($userId, $resourceId, $resourceClass)
@@ -535,6 +532,7 @@ class NotificationManager
      * @param $userId
      * @param $resourceId
      * @param $resourceClass
+     *
      * @return mixed
      */
     public function unfollowResource($userId, $resourceId, $resourceClass)
@@ -560,7 +558,8 @@ class NotificationManager
     }
 
     /**
-     * @param  null $viewerId
+     * @param null $viewerId
+     *
      * @return int
      */
     public function countUnviewedNotifications($viewerId = null)
@@ -570,6 +569,6 @@ class NotificationManager
         }
         $notificationParameters = $this->notificationParametersManager->getParametersByUserId($viewerId);
 
-        return intval($this->getNotificationViewerRepository()->countUnviewedNotifications($viewerId, $notificationParameters->getDisplayEnabledTypes())["total"]);
+        return intval($this->getNotificationViewerRepository()->countUnviewedNotifications($viewerId, $notificationParameters->getDisplayEnabledTypes())['total']);
     }
 }

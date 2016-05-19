@@ -12,61 +12,55 @@
 namespace Claroline\CoreBundle\Controller\API\Admin;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Manager\OauthManager;
 
-
-
-
 /**
  * @NamePrefix("client_")
  */
-class ClientController extends FOSRestController {
+class ClientController extends FOSRestController
+{
+    private $oauthManager;
 
-	 private $oauthManager;
-
-	/**
+   /**
     * @DI\InjectParams({
     *     "oauthManager" = @DI\Inject("claroline.manager.oauth_manager")
     * })
     */
-   public function _construct(OauthManager $oauthManager){
-     $this->oauthManager = $oauthManager;
+   public function _construct(OauthManager $oauthManager)
+   {
+       $this->oauthManager = $oauthManager;
    }
 
+    /**
+     * Get the client id and the client secret.
+     */
+    public function getIdsecretAction()
+    {
+        $arr = $this->oauthManager->findVisibleClients();
+        $client = $arr[0];
+        $clientId = $client->getConcatRandomId();
+        $clientSecret = $client->getSecret();
 
-   /**
-    * Get the client id and the client secret
-    */
-    public function getIdsecretAction(){
-      $arr = $this->oauthManager->findVisibleClients();
-      $client = $arr[0];
-      $clientId = $client->getConcatRandomId();
-      $clientSecret = $client->getSecret();
+        $result = array('client_id' => $clientId, 'client_secret' => $clientSecret);
 
-      $result = array('client_id' => $clientId, 'client_secret' =>$clientSecret);
-      return $result;
-
+        return $result;
     }
 
-		/**
-		 * Check if access token is expired
-		 */
-		public function getExpiredAction(){
-			$arr = $this->oauthManager->findVisibleClients();
-      $client = $arr[0];
-			$tab = $client->getAccessTokens(); // all access tokens
-			$mostRecentToken = $tab[count($tab)-1];
+        /**
+         * Check if access token is expired.
+         */
+        public function getExpiredAction()
+        {
+            $arr = $this->oauthManager->findVisibleClients();
+            $client = $arr[0];
+            $tab = $client->getAccessTokens(); // all access tokens
+            $mostRecentToken = $tab[count($tab) - 1];
 
-			$result = array("hasExpired"=>$mostRecentToken->hasExpired());
+            $result = array('hasExpired' => $mostRecentToken->hasExpired());
 
-			return $result;
-
-
-		}
-
-
+            return $result;
+        }
 }
