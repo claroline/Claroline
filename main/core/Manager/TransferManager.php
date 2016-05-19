@@ -134,6 +134,16 @@ class TransferManager
         $this->log('Importing tools...');
         $tools = $this->getImporterByName('tools')->import($data['tools'], $workspace, $importedRoles, $root);
         $this->om->endFlushSuite();
+        //flush has to be forced unless it's a default template
+        $defaults = [
+            realpath($this->container->getParameter('claroline.param.default_template')),
+            realpath($this->container->getParameter('claroline.param.personal_template')),
+        ];
+
+        if (!in_array(realpath($template->getPathname()), $defaults)) {
+            $this->om->forceFlush();
+        }
+
         $this->importRichText($workspace, $template);
         $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
     }
@@ -182,8 +192,6 @@ class TransferManager
             $workspace,
             true
         );
-
-        $defaultZip = $this->container->getParameter('claroline.param.templates_directory').'personal.zip';
 
         //batch import with default template shouldn't be flushed
         if (strpos($template->getPathname(), 'personal.zip') === false) {
@@ -379,7 +387,7 @@ class TransferManager
     private function setImporters(File $template, User $owner)
     {
         foreach ($this->listImporters as $importer) {
-            $importer->setRootPath($this->container->getParameter('claroline.param.templates_directory').$template->getBaseName());
+            $importer->setRootPath(sys_get_temp_dir().DIRECTORY_SEPARATOR.$template->getBaseName());
             $importer->setOwner($owner);
             $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
             $importer->setConfiguration($data);

@@ -79,8 +79,6 @@ class WorkspaceManager
     /** @var ClaroUtilities */
     private $ut;
     private $sut;
-    /** @var string */
-    private $templateDir;
     /** @var PagerFactory */
     private $pagerFactory;
     private $workspaceFavouriteRepo;
@@ -100,7 +98,6 @@ class WorkspaceManager
      *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
      *     "sut"                   = @DI\Inject("claroline.security.utilities"),
-     *     "templateDir"           = @DI\Inject("%claroline.param.templates_directory%"),
      *     "pagerFactory"          = @DI\Inject("claroline.pager.pager_factory"),
      *     "container"             = @DI\Inject("service_container")
      * })
@@ -114,7 +111,6 @@ class WorkspaceManager
         ObjectManager $om,
         ClaroUtilities $ut,
         Utilities $sut,
-        $templateDir,
         PagerFactory $pagerFactory,
         ContainerInterface $container
     ) {
@@ -126,7 +122,6 @@ class WorkspaceManager
         $this->sut = $sut;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
-        $this->templateDir = $templateDir;
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
@@ -894,13 +889,14 @@ class WorkspaceManager
                 $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
             } else {
                 //this should be changed later
-                $configuration = new Configuration($this->templateDir.$ds.'default.zip');
-                $configuration->setWorkspaceName($name);
-                $configuration->setWorkspaceCode($code);
-                $configuration->setDisplayable($isVisible);
-                $configuration->setSelfRegistration($selfRegistration);
-                $configuration->setSelfUnregistration($registrationValidation);
-                $this->container->get('claroline.manager.transfer_manager')->createWorkspace($configuration, $user);
+                $workspace = new Workspace();
+                $workspace->setName($name);
+                $workspace->setCode($code);
+                $workspace->setDisplayable($isVisible);
+                $workspace->setSelfRegistration($selfRegistration);
+                $workspace->setSelfUnregistration($registrationValidation);
+                $template = new File($this->container->getParameter('claroline.param.default_template'));
+                $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template);
             }
 
             ++$i;
@@ -1129,7 +1125,7 @@ class WorkspaceManager
 
         $archive = new \ZipArchive();
         $fileName = $file->getBaseName();
-        $extractPath = $this->templateDir.$fileName;
+        $extractPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$fileName;
 
         if ($archive->open($file->getPathname())) {
             if (!$archive->extractTo($extractPath)) {
@@ -1149,7 +1145,7 @@ class WorkspaceManager
     public function removeTemplate(File $file)
     {
         $fileName = $file->getBaseName();
-        $extractPath = $this->templateDir.$fileName;
+        $extractPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$fileName;
         $fs = new FileSystem();
         $fs->remove($extractPath);
     }
