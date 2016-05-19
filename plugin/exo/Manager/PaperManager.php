@@ -281,15 +281,8 @@ class PaperManager
                 'questions' => $this->exportPaperQuestions($paper),
             ];
         }, $papers);
-
-        $questions = array_map(function ($question) {
-            return $this->questionManager->exportQuestion($question, true);
-        }, $questionRepo->findByExercise($exercise));
-
-        return [
-            'questions' => $questions,
-            'papers' => $papers,
-        ];
+        
+        return $papers;
     }
 
     /**
@@ -394,14 +387,7 @@ class PaperManager
             ];
         }, $papers);
 
-        $questions = array_map(function ($question) {
-            return $this->questionManager->exportQuestion($question, true, true);
-        }, $questionRepo->findByExercise($exercise));
-
-        return [
-            'questions' => $questions,
-            'papers' => $papers,
-        ];
+        return $papers;
     }
 
     private function applyPenalties(Paper $paper, Question $question, Response $response)
