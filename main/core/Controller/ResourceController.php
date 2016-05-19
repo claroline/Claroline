@@ -1127,7 +1127,6 @@ class ResourceController
             $template = $form->get('file')->getData();
             $user = $this->tokenStorage->getToken()->getUser();
             $this->transferManager->importResources($template, $user, $directory);
-            $this->transferManager->importRichText($directory->getWorkspace(), $template);
 
             return new JsonResponse(array());
         } else {

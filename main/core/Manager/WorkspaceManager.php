@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @DI\Service("claroline.manager.workspace_manager")
@@ -841,15 +842,6 @@ class WorkspaceManager
     }
 
     /**
-     * This function must be fired right after a workspace is "populated".
-     * Don't use it otherwise !!!!
-     */
-    public function importRichText(Workspace $workspace, File $template)
-    {
-        $this->container->get('claroline.manager.transfer_manager')->importRichText($workspace, $template);
-    }
-
-    /**
      * Import a workspace list from a csv data.
      *
      * @param array $workspaces
@@ -1149,5 +1141,14 @@ class WorkspaceManager
         }
 
         throw new \Exception("The workspace archive couldn't be opened");
+    }
+
+    public function removeTemplate(File $file)
+    {
+        $fileName = $file->getBaseName();
+        $extractPath = $this->templateDir.$fileName;
+        $fs = new FileSystem();
+        $iterator = new \DirectoryIterator($extractPath);
+        $fs->remove($extractPath);
     }
 }

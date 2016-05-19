@@ -1497,7 +1497,6 @@ class WorkspaceController extends Controller
             $workspace = $form->getData();
             $workspace->setCreator($this->tokenStorage->getToken()->getUser());
             $this->workspaceManager->create($workspace, $template);
-            $this->workspaceManager->importRichText($workspace, $template);
         } else {
             return new Response(
                 $this->templating->render(

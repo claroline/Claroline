@@ -134,6 +134,8 @@ class TransferManager
         $this->log('Importing tools...');
         $tools = $this->getImporterByName('tools')->import($data['tools'], $workspace, $importedRoles, $root);
         $this->om->endFlushSuite();
+        $this->importRichText($workspace, $template);
+        $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
     }
 
     /**
@@ -446,6 +448,8 @@ class TransferManager
             }
         }
         $this->om->endFlushSuite();
+        $this->importRichText($directory->getWorkspace(), $template);
+        $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
     }
 
     private function reorderData(array $data)
