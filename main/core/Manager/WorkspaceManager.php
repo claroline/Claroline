@@ -1132,8 +1132,8 @@ class WorkspaceManager
         $extractPath = $this->templateDir.$fileName;
 
         if ($archive->open($file->getPathname())) {
-            $res = $archive->extractTo($extractPath);
-            if (!$res) {
+            $res = ;
+            if (!$archive->extractTo($extractPath)) {
                 throw new \Exception("The workspace archive couldn't be extracted");
             }
             $archive->close();
