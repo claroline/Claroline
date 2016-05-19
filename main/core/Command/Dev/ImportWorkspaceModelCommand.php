@@ -15,9 +15,10 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\HttpFoundation\File\File;
 use Psr\Log\LogLevel;
 
 /**
@@ -94,15 +95,11 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
         $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsername($username);
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->getContainer()->get('security.context')->setToken($token);
-        $config = Configuration::fromTemplate($template);
-        $config->setWorkspaceName($name);
-        $config->setWorkspaceCode($code);
-        $config->setDisplayable(true);
-        $config->setSelfRegistration(true);
-        $config->setRegistrationValidation(true);
-        $config->setSelfUnregistration(true);
-        $config->setWorkspaceDescription(true);
-        $workspaceManager->create($config, $user);
-        $workspaceManager->importRichText();
+        $workspace = new Workspace();
+        $workspace->setCreator($user);
+        $workspace->setName($name);
+        $workspace->setCode($code);
+        $file = new File($template);
+        $workspaceManager->create($workspace, $file);
     }
 }

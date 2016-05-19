@@ -36,6 +36,9 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl($location, exercise, step, 
     if ('3' === this.exercise.meta.type) {
         // Enable feedback
         this.FeedbackService.enable();
+    } else {
+        // Disable feedback
+        this.FeedbackService.disable();
     }
 
     // Get feedback info

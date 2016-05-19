@@ -69,7 +69,7 @@ class ExportWorkspaceModelCommand extends ContainerAwareCommand
         $path = $input->getArgument('archive_path');
         $code = $input->getArgument('code');
         $workspace = $this->getContainer()->get('claroline.manager.workspace_manager')->getWorkspaceByCode($code);
-        $arch = $this->getContainer()->get('claroline.manager.transfert_manager')->export($workspace);
+        $arch = $this->getContainer()->get('claroline.manager.transfer_manager')->export($workspace);
         rename($arch, $path);
     }
 }
