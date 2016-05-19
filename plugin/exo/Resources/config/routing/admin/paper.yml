@@ -1,9 +1,3 @@
-ujm_paper_export_results:
-    pattern:  /export/results/csv/{exerciseId}
-    defaults: { _controller: "UJMExoBundle:Paper:exportResCSV" }
-    options:
-        expose: true
-
 ujm_paper_mark_open_question:
     pattern:  /{respid}/{maxScore}/mark/open
     defaults: { _controller: "UJMExoBundle:Paper:markedOpen" }
