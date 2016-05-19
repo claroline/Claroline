@@ -280,7 +280,7 @@ class PaperManager
                 'questions' => $this->exportPaperQuestions($paper),
             ];
         }, $papers);
-        
+
         return $papers;
     }
 
