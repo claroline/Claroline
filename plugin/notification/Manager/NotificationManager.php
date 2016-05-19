@@ -19,11 +19,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Icap\NotificationBundle\Library\ColorChooser;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use RMS\PushNotificationsBundle\Message\AndroidMessage;
+
 
 /**
  * Class NotificationManager
- * @package Icap\NotificationBundle\Manager
  *
  * @DI\Service("icap.notification.manager")
  */

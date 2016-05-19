@@ -60,13 +60,4 @@ class ApiNotificationController extends FOSRestController
          return $this->notificationManager->getUserNotifications($user->getId());
    }
 
-
-
-
-
-
-
-
-
->>>>>>> 4095328782323869c21c48cb5c8dcc692eb40f77
 }
