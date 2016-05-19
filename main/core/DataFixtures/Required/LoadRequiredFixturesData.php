@@ -90,13 +90,5 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
             $fixture->load($om);
             $om->flush();
         }
-
-        //$om->endFlushSuite();
-
-        //create the default workspace template.
-        $destinationPath = $this->container->getParameter('claroline.param.templates_directory').'/default.zip';
-        $sourcePath = $this->container->getParameter('claroline.param.default_template');
-        @unlink($destinationPath);
-        copy($sourcePath, $destinationPath);
     }
 }

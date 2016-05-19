@@ -54,7 +54,7 @@ fetch() {
         echo "Failure ($STATUS), executing $1..."
         eval $3
 
-        if [ "${TRAVIS_REPO_SLUG}" != "claroline/Distribution" ]
+        if [ -z ${REMOTE_HOST+x} ]
         then
             # We need to access encrypted environment variables to push the
             # package through SSH, but those variables aren't available in PRs

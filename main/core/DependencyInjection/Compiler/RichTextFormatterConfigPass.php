@@ -23,10 +23,10 @@ class RichTextFormatterConfigPass implements CompilerPassInterface
             return;
         }
 
-        $transfertManager = $container->getDefinition('claroline.importer.rich_text_formatter');
+        $transferManager = $container->getDefinition('claroline.importer.rich_text_formatter');
 
         foreach ($container->findTaggedServiceIds('claroline.importer') as $id => $attributes) {
-            $transfertManager->addMethodCall('addImporter', array(new Reference($id)));
+            $transferManager->addMethodCall('addImporter', array(new Reference($id)));
         }
     }
 }
