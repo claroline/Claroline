@@ -142,7 +142,7 @@ class LdapManager
      */
     public function get($name = null)
     {
-        if ($name and isset($this->config['servers'][$name])) {
+        if ($name && isset($this->config['servers'][$name])) {
             return $this->config['servers'][$name];
         }
     }
@@ -159,8 +159,8 @@ class LdapManager
     {
         $servers = isset($this->config['servers']) ? $this->config['servers'] : null;
 
-        if ((!$name or ($name and $name !== $data['name'])) and
-            isset($data['name']) and isset($servers[$data['name']])
+        if ((!$name or ($name && $name !== $data['name'])) &&
+            isset($data['name']) && isset($servers[$data['name']])
         ) {
             return true;
         }
@@ -174,7 +174,7 @@ class LdapManager
      */
     public function deleteIfReplace($name, $data)
     {
-        if ($name and isset($data['name']) and $name !== $data['name']) {
+        if ($name && isset($data['name']) && $name !== $data['name']) {
             $this->deleteServer($name);
         }
     }
@@ -188,7 +188,7 @@ class LdapManager
      */
     public function deleteServer($name)
     {
-        if (isset($this->config['servers']) and isset($this->config['servers'][$name])) {
+        if (isset($this->config['servers']) && isset($this->config['servers'][$name])) {
             unset($this->config['servers'][$name]);
 
             return $this->saveConfig();
@@ -204,7 +204,7 @@ class LdapManager
      */
     public function saveSettings($settings)
     {
-        if (isset($settings['name']) and isset($this->config['servers'][$settings['name']])) {
+        if (isset($settings['name']) && isset($this->config['servers'][$settings['name']])) {
             return $this->saveConfig(array_merge($this->config['servers'][$settings['name']], $settings));
         }
     }
@@ -218,7 +218,7 @@ class LdapManager
      */
     public function saveConfig($server = null)
     {
-        if (is_array($server) and isset($server['name'])) {
+        if (is_array($server) && isset($server['name'])) {
             $this->config['servers'][$server['name']] = $server;
         }
 
@@ -256,7 +256,7 @@ class LdapManager
     {
         $users = array();
 
-        if (isset($server['objectClass']) and
+        if (isset($server['objectClass']) &&
             $search = $this->search($server, '(&(objectClass='.$server['objectClass'].'))')
         ) {
             $users = $this->getEntries($search);
@@ -274,7 +274,7 @@ class LdapManager
     {
         $groups = array();
 
-        if (isset($server['group']) and
+        if (isset($server['group']) &&
             $search = $this->search($server, '(&(objectClass='.$server['group'].'))')
         ) {
             $groups = $this->getEntries($search);
@@ -300,7 +300,7 @@ class LdapManager
     {
         $servers = array();
 
-        if (isset($this->config['servers']) and is_array($this->config['servers'])) {
+        if (isset($this->config['servers']) && is_array($this->config['servers'])) {
             foreach ($this->config['servers'] as $server) {
                 $servers[] = $server['name'];
             }
@@ -315,7 +315,7 @@ class LdapManager
     public function userMapping($server)
     {
         foreach (['userName', 'firstName', 'lastName', 'email', 'password'] as $field) {
-            if (!(isset($server[$field]) and $server[$field] !== '')) {
+            if (!(isset($server[$field]) && $server[$field] !== '')) {
                 return false;
             }
         }

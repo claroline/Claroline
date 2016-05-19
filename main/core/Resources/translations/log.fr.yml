@@ -89,6 +89,7 @@ log_resource-update_sentence: 'a modifié %resource%'
 log_resource-update_shortname: Modification
 log_resource-update_title: 'Mise à jour d''une ressource'
 log_resource_owner: 'Propriétaire de la ressource'
+log_resource-text-update_filter: 'Modification d''un texte'
 log_role: 'Rôle cible de l''action'
 log_role-subscribe_group_filter: 'Attribution d''un rôle à un groupe'
 log_role-subscribe_user_filter: 'Attribution d''un rôle à un utilisateur'
