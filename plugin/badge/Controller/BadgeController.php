@@ -31,7 +31,7 @@ class BadgeController extends Controller
             false
         );
 
-        if (isset($parameters['workspace']) && null !== $parameters['workspace']) {
+        if ($inWorkspace = isset($parameters['workspace']) && null !== $parameters['workspace']) {
             $badgeQueryBuilder
                 ->andWhere('badge.workspace = :workspace')
                 ->setParameter('workspace', $parameters['workspace']);
