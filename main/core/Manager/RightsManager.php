@@ -569,6 +569,7 @@ class RightsManager
     {
         $res = null;
         $res = $this->getRightsFromIdentityMap($roleName, $resourceNode);
+
         if ($res) {
             return $res;
         }

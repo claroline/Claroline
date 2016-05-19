@@ -19,17 +19,17 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * @DI\Service("claroline.manager.transfert_manager")
+ * @DI\Service("claroline.manager.transfer_manager")
  */
-class TransfertManager
+class TransferManager
 {
     use LoggableTrait;
 
@@ -90,23 +90,6 @@ class TransfertManager
         }
     }
 
-    public function import(Configuration $configuration)
-    {
-        $owner = $this->container->get('security.token_storage')->getToken()->getUser();
-        $configuration->setOwner($owner);
-        $this->setImporters($configuration, $data);
-        $this->validate($data);
-
-        //initialize the configuration
-        $configuration->setWorkspaceName($data['properties']['name']);
-        $configuration->setWorkspaceCode($data['properties']['code']);
-        $configuration->setDisplayable($data['properties']['visible']);
-        $configuration->setSelfRegistration($data['properties']['self_registration']);
-        $configuration->setSelfUnregistration($data['properties']['self_unregistration']);
-
-        $this->createWorkspace($configuration, $owner, true);
-    }
-
     /**
      * Populates a workspace content with the content of an zip archive. In other words, it ignores the
      * many properties of the configuration object and use an existing workspace as base.
@@ -114,30 +97,25 @@ class TransfertManager
      * This will set the $this->data var
      * This will set the $this->workspace var
      *
-     * @param Workspace     $workspace
-     * @param Confuguration $configuration
-     * @param Directory     $root
-     * @param array         $entityRoles
-     * @param bool          $isValidated
-     * @param bool          $importRoles
+     * @param Workspace $workspace
+     * @param File      $template
+     * @param Directory $root
+     * @param array     $entityRoles
+     * @param bool      $isValidated
+     * @param bool      $importRoles
      */
     public function populateWorkspace(
         Workspace $workspace,
-        Configuration $configuration,
+        File $template,
         Directory $root,
         array $entityRoles,
         $isValidated = false,
         $importRoles = true
     ) {
+        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
         $this->om->startFlushSuite();
-        $data = $configuration->getData();
         $data = $this->reorderData($data);
-        //now we need to reorder the data because well...
-
-        //refactor how workspace are created because this sucks
-        $this->data = $configuration->getData();
-        $this->workspace = $workspace;
-        $this->setImporters($configuration, $data);
+        $this->setImporters($template, $workspace->getCreator());
         $this->setWorkspaceForImporter($workspace);
 
         if (!$isValidated) {
@@ -156,12 +134,24 @@ class TransfertManager
         $this->log('Importing tools...');
         $tools = $this->getImporterByName('tools')->import($data['tools'], $workspace, $importedRoles, $root);
         $this->om->endFlushSuite();
+        //flush has to be forced unless it's a default template
+        $defaults = [
+            realpath($this->container->getParameter('claroline.param.default_template')),
+            realpath($this->container->getParameter('claroline.param.personal_template')),
+        ];
+
+        if (!in_array(realpath($template->getPathname()), $defaults)) {
+            $this->om->forceFlush();
+        }
+
+        $this->importRichText($workspace, $template);
+        $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
     }
 
     /**
-     * @param Configuration $configuration
-     * @param User          $owner
-     * @param bool          $isValidated
+     * @param File $template
+     * @param User $owner
+     * @param bool $isValidated
      *
      * @throws InvalidConfigurationException
      *
@@ -172,30 +162,20 @@ class TransfertManager
      *  - we want to create a user from the default template (it should work no matter what)
      */
     public function createWorkspace(
-        Configuration $configuration,
-        User $owner,
+        Workspace $workspace,
+        File $template,
         $isValidated = false
     ) {
-        $configuration->setOwner($owner);
-        $data = $configuration->getData();
-        $this->data = $data;
+        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
         $this->om->startFlushSuite();
-        $this->setImporters($configuration, $data);
+        $this->setImporters($template, $workspace->getCreator());
 
         if (!$isValidated) {
             $this->validate($data, false);
             $isValidated = true;
         }
 
-        $workspace = new Workspace();
-        $workspace->setName($configuration->getWorkspaceName());
-        $workspace->setCode($configuration->getWorkspaceCode());
-        $workspace->setDescription($configuration->getWorkspaceDescription());
         $workspace->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
-        $workspace->setDisplayable($configuration->isDisplayable());
-        $workspace->setSelfRegistration($configuration->getSelfRegistration());
-        $workspace->setRegistrationValidation($configuration->getRegistrationValidation());
-        $workspace->setSelfUnregistration($configuration->getSelfUnregistration());
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
         $this->om->persist($workspace);
@@ -213,13 +193,12 @@ class TransfertManager
             true
         );
 
-        $defaultZip = $this->container->getParameter('claroline.param.templates_directory').'personal.zip';
-
         //batch import with default template shouldn't be flushed
-        if ($configuration->getArchive() !== $defaultZip) {
+        if (strpos($template->getPathname(), 'personal.zip') === false) {
             $this->om->forceFlush();
         }
 
+        $owner = $workspace->getCreator();
         $this->log('Roles imported...');
         $owner->addRole($entityRoles['ROLE_WS_MANAGER']);
         $this->om->persist($owner);
@@ -251,14 +230,8 @@ class TransfertManager
         );
 
         $this->log('Populating the workspace...');
-        $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
+        $this->populateWorkspace($workspace, $template, $root, $entityRoles, true, false);
         $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
-
-        if ($owner) {
-            $this->log('Set the owner...');
-            $workspace->setCreator($owner);
-        }
-
         $this->om->endFlushSuite();
         $fs = new FileSystem();
 
@@ -266,15 +239,12 @@ class TransfertManager
     }
 
     //refactor how workspace are created because this sucks
-    public function importRichText()
+    public function importRichText(Workspace $workspace, File $template)
     {
         $this->log('Parsing rich texts...');
-        //now we have to parse everything in case there is a rich text
-        //rich texts must be located in the tools section
-        $data = $this->data;
-        //@todo remove the line for claroline v6
+        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
         $this->container->get('claroline.importer.rich_text_formatter')->setData($data);
-        $this->container->get('claroline.importer.rich_text_formatter')->setWorkspace($this->workspace);
+        $this->container->get('claroline.importer.rich_text_formatter')->setWorkspace($workspace);
 
         foreach ($data['tools'] as $tool) {
             $importer = $this->getImporterByName($tool['tool']['type']);
@@ -411,19 +381,15 @@ class TransfertManager
     /**
      * Inject the rootPath.
      *
-     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $configuration
-     * @param array                                                 $data
-     * @param $isStrict
+     * @param File  $template
+     * @param array $data
      */
-    private function setImporters(Configuration $configuration, array $data)
+    private function setImporters(File $template, User $owner)
     {
         foreach ($this->listImporters as $importer) {
-            $importer->setRootPath($configuration->getExtractPath());
-            if ($owner = $configuration->getOwner()) {
-                $importer->setOwner($owner);
-            } else {
-                $importer->setOwner($this->container->get('security.token_storage')->getToken()->getUser());
-            }
+            $importer->setRootPath(sys_get_temp_dir().DIRECTORY_SEPARATOR.$template->getBaseName());
+            $importer->setOwner($owner);
+            $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
             $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);
 
@@ -457,21 +423,19 @@ class TransfertManager
     }
 
     /**
-     * @param Configuration $configuration
-     * @param User          $owner
+     * @param File $template
+     * @param User $owner
      */
     public function importResources(
-        Configuration $configuration,
+        File $template,
         User $owner,
         ResourceNode $directory
     ) {
-        $configuration->setOwner($owner);
-        $data = $configuration->getData();
+        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
         $data = $this->reorderData($data);
-        $this->data = $data;
-        $this->workspace = $directory->getWorkspace();
+        $workspace = $directory->getWorkspace();
         $this->om->startFlushSuite();
-        $this->setImporters($configuration, $data);
+        $this->setImporters($template, $workspace->getCreator());
 
         $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
 
@@ -482,7 +446,7 @@ class TransfertManager
                 if ($tool['type'] === 'resource_manager') {
                     $resourceImporter->import(
                         $tool,
-                        $this->workspace,
+                        $workspace,
                         array(),
                         $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($directory),
                         false
@@ -492,6 +456,8 @@ class TransfertManager
             }
         }
         $this->om->endFlushSuite();
+        $this->importRichText($directory->getWorkspace(), $template);
+        $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
     }
 
     private function reorderData(array $data)

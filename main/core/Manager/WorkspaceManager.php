@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
@@ -33,9 +33,11 @@ use Claroline\CoreBundle\Repository\UserRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @DI\Service("claroline.manager.workspace_manager")
@@ -77,12 +79,12 @@ class WorkspaceManager
     /** @var ClaroUtilities */
     private $ut;
     private $sut;
-    /** @var string */
-    private $templateDir;
     /** @var PagerFactory */
     private $pagerFactory;
     private $workspaceFavouriteRepo;
     private $container;
+    /** @var array */
+    private $importData;
 
     /**
      * Constructor.
@@ -96,7 +98,6 @@ class WorkspaceManager
      *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
      *     "sut"                   = @DI\Inject("claroline.security.utilities"),
-     *     "templateDir"           = @DI\Inject("%claroline.param.templates_directory%"),
      *     "pagerFactory"          = @DI\Inject("claroline.pager.pager_factory"),
      *     "container"             = @DI\Inject("service_container")
      * })
@@ -110,7 +111,6 @@ class WorkspaceManager
         ObjectManager $om,
         ClaroUtilities $ut,
         Utilities $sut,
-        $templateDir,
         PagerFactory $pagerFactory,
         ContainerInterface $container
     ) {
@@ -122,7 +122,6 @@ class WorkspaceManager
         $this->sut = $sut;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
-        $this->templateDir = $templateDir;
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
@@ -135,6 +134,7 @@ class WorkspaceManager
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
         $this->container = $container;
+        $this->importData = [];
     }
 
     /**
@@ -156,20 +156,20 @@ class WorkspaceManager
     /**
      * Creates a workspace.
      *
-     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $configuration
-     * @param \Claroline\CoreBundle\Entity\User                     $manager
-     * @param bool                                                  $createUsers
-     * @param bool                                                  $importUsers
+     * @param Workspace $workspace
+     * @param File      $template
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
-    public function create(Configuration $configuration, User $manager)
+    public function create(Workspace $workspace, File $template)
     {
-        $transfertManager = $this->container->get('claroline.manager.transfert_manager');
+        $transferManager = $this->container->get('claroline.manager.transfer_manager');
+
         if ($this->logger) {
-            $transfertManager->setLogger($this->logger);
+            $transferManager->setLogger($this->logger);
         }
-        $workspace = $transfertManager->createWorkspace($configuration, $manager);
+
+        $workspace = $transferManager->createWorkspace($workspace, $template);
 
         return $workspace;
     }
@@ -837,44 +837,6 @@ class WorkspaceManager
     }
 
     /**
-     * Import the content of an archive in a workspace.
-     *
-     * @param Configuration $configuration
-     * @param Workspace     $workspace
-     *
-     * @return Workspace
-     */
-    public function importInExistingWorkspace(Configuration $configuration, Workspace $workspace)
-    {
-        $root = $this->resourceManager->getResourceFromNode($this->resourceManager->getWorkspaceRoot($workspace));
-        $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
-        $entityRoles = [];
-
-        foreach ($wsRoles as $wsRole) {
-            $entityRoles[$this->roleManager->getWorkspaceRoleBaseName($wsRole)] = $wsRole;
-        }
-
-        $workspace = $this->container->get('claroline.manager.transfert_manager')->importResources(
-            $configuration,
-            $workspace->getCreator(),
-            $root->getResourceNode()
-        );
-
-        $this->importRichText();
-
-        return $workspace;
-    }
-
-    /**
-     * This function must be fired right after a workspace is "populated".
-     * Don't use it otherwise !!!!
-     */
-    public function importRichText()
-    {
-        $this->container->get('claroline.manager.transfert_manager')->importRichText();
-    }
-
-    /**
      * Import a workspace list from a csv data.
      *
      * @param array $workspaces
@@ -927,13 +889,14 @@ class WorkspaceManager
                 $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
             } else {
                 //this should be changed later
-                $configuration = new Configuration($this->templateDir.$ds.'default.zip');
-                $configuration->setWorkspaceName($name);
-                $configuration->setWorkspaceCode($code);
-                $configuration->setDisplayable($isVisible);
-                $configuration->setSelfRegistration($selfRegistration);
-                $configuration->setSelfUnregistration($registrationValidation);
-                $this->container->get('claroline.manager.transfert_manager')->createWorkspace($configuration, $user);
+                $workspace = new Workspace();
+                $workspace->setName($name);
+                $workspace->setCode($code);
+                $workspace->setDisplayable($isVisible);
+                $workspace->setSelfRegistration($selfRegistration);
+                $workspace->setSelfUnregistration($registrationValidation);
+                $template = new File($this->container->getParameter('claroline.param.default_template'));
+                $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template);
             }
 
             ++$i;
@@ -1151,5 +1114,39 @@ class WorkspaceManager
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    public function getTemplateData(File $file, $refresh = false)
+    {
+        //from cache
+        if (!$refresh) {
+            return $this->importData;
+        }
+
+        $archive = new \ZipArchive();
+        $fileName = $file->getBaseName();
+        $extractPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$fileName;
+
+        if ($archive->open($file->getPathname())) {
+            if (!$archive->extractTo($extractPath)) {
+                throw new \Exception("The workspace archive couldn't be extracted");
+            }
+
+            $archive->close();
+            $resolver = new Resolver($extractPath);
+            $this->importData = $resolver->resolve();
+
+            return $this->importData;
+        }
+
+        throw new \Exception("The workspace archive couldn't be opened");
+    }
+
+    public function removeTemplate(File $file)
+    {
+        $fileName = $file->getBaseName();
+        $extractPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$fileName;
+        $fs = new FileSystem();
+        $fs->remove($extractPath);
     }
 }

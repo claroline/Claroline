@@ -15,8 +15,10 @@
                        {% if badges[user.id] is defined %}
                            {% for badge in badges[user.id] %}
                                <li>
-                                    <a href="{{ path(parameters.edit_link.url, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" title="{{ badge.name }}">
-                                        <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+                                    <a href="{{ path(parameters.edit_link.url, {'slug': badge.slug}|merge(parameters.route_parameters)) }}"
+                                       title="{{ badge.name }}"
+                                       style="background-image: url({{ app.request.getSchemeAndHttpHost() ~ asset(badge.webPath) }});"
+                                       class="img_container">
                                     </a>
                                </li>
                            {% endfor %}
