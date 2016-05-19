@@ -161,7 +161,7 @@
             <div class="col-md-6 col-md-offset-3 text-center">
                 <!-- Results of the Exercise -->
                 <a href="#/papers" class="btn btn-link">
-                    <span class="fa fa-list"></span> {{ 'result' | trans:{}:'ujm_exo' }}
+                    <span class="fa fa-list"></span> {{ 'result_show' | trans:{}:'ujm_exo' }}
                 </a>
 
                 <!-- Edit button if Exercise is empty -->
@@ -171,7 +171,7 @@
                 </a>
 
                 <!-- Play button if Exercise is OK -->
-                <a href="#/play" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="(exerciseCtrl.nbPapers < exerciseCtrl.exercise.meta.maxAttempts || exerciseCtrl.exercise.meta.maxAttempts === 0) && exerciseCtrl.composeEnabled && exerciseCtrl.exercise.steps.length > 0">
+                <a href="#/play" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="exerciseOverviewCtrl.exercise.steps.length > 0 && exerciseOverviewCtrl.isComposeEnabled()">
                     <span class="fa fa-check-square-o"></span>
                     {{ 'compose' | trans:{}:'ujm_exo' }}
                 </a>

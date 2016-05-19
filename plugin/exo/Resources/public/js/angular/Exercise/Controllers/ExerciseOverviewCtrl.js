@@ -25,6 +25,13 @@ ExerciseCtrl.prototype.editEnabled = false;
  */
 ExerciseOverviewCtrl.prototype.additionalInfo = false;
 
+/**
+ * Check if the current User can play the exercise
+ */
+ExerciseOverviewCtrl.prototype.isComposeEnabled = function isComposeEnabled() {
+    return this.editEnabled;
+};
+
 // Register controller into Angular JS
 angular
     .module('Exercise')
