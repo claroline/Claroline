@@ -24,7 +24,7 @@
 
     $('body')
         .on('click', '#add-client-btn', function(event) {
-            var url = Routing.generate('claro_admin_oauth_form');
+            var url = Routing.generate('claro_admin_oauth_client_form');
             modal.displayForm(url, addClient, function(){}, 'form_client_creation');
         })
         .on('click', '.show-client-btn', function(event) {

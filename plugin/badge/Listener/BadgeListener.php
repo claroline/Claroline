@@ -220,6 +220,7 @@ class BadgeListener
             'current_link' => 'icap_badge_workspace_tool_badges',
             'claim_link' => 'icap_badge_workspace_tool_manage_claim',
             'statistics_link' => 'icap_badge_workspace_tool_badges_statistics',
+            'csv_link' => 'icap_badge_workspace_export_csv',
             'totalBadges' => $totalBadges,
             'totalAwarding' => $userBadgeRepository->countAwardingByWorkspace($workspace),
             'totalBadgeAwarded' => $totalBadgeAwarded,
