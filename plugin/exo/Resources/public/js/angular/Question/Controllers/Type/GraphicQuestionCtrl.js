@@ -5,8 +5,6 @@
  * @constructor
  */
 var GraphicQuestionCtrl = function GraphicQuestionCtrl(FeedbackService, GraphicQuestionService) {
-    AbstractQuestionCtrl.apply(this, arguments);
-
     this.GraphicQuestionService = GraphicQuestionService;
 
     // init coord answer array in any case
@@ -31,6 +29,8 @@ var GraphicQuestionCtrl = function GraphicQuestionCtrl(FeedbackService, GraphicQ
 
         }
     }
+
+    AbstractQuestionCtrl.apply(this, arguments);
 };
 
 // Extends AbstractQuestionCtrl
