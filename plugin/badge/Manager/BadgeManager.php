@@ -343,6 +343,7 @@ class BadgeManager
 
         return $badges;
     }
+
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
@@ -397,5 +398,35 @@ class BadgeManager
     public function getUsersNotAwardedWithBadge(Badge $badge)
     {
         return $this->entityManager->getRepository('IcapBadgeBundle:UserBadge')->findUsersNotAwardedWithBadge($badge);
+    }
+
+    /**
+     * @param Workspace $workspace
+     * @param string    $locale
+     *
+     * @return Badge array
+     */
+    public function getWorkspaceBadgesOrderedByName(Workspace $workspace, $locale)
+    {
+        return $this->entityManager->getRepository('IcapBadgeBundle:Badge')
+            ->findOrderedByName($locale, false)
+            ->andWhere('badge.workspace = :workspace')
+            ->setParameter('workspace', $workspace)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return Badge array
+     */
+    public function getPlatformBadgesOrderedbyName($locale)
+    {
+        return $this->entityManager->getRepository('IcapBadgeBundle:Badge')
+            ->findOrderedByName($locale, false)
+            ->andWhere('badge.workspace IS NULL')
+            ->getQuery()
+            ->getResult();
     }
 }
