@@ -13,6 +13,8 @@ var TimerDirective = function TimerDirective() {
             '$localStorage',
             '$timeout',
             function TimerCtrl($localStorage, $timeout) {
+                console.log('append directive');
+
                 this.$localStorage = $localStorage;
                 this.$timeout      = $timeout;
 
@@ -29,13 +31,17 @@ var TimerDirective = function TimerDirective() {
                     // Increase the timer
                     this.$localStorage.counter = $localStorage.counter + 1;
 
-                    // Call function to increase next
-                    this.$timeout(onTimeout.bind(this), 1000);
+                    // Calculate remaining duration
+                    var remaining = this.duration - this.$localStorage.counter;
 
-                    // Transform counter into hours, minutes and second
-                    this.$localStorage.hours   = Math.floor((this.duration - this.$localStorage.counter) / 3600);
-                    this.$localStorage.minutes = Math.floor(((this.duration - this.$localStorage.counter) - (this.$localStorage.hours * 3600))  / 60);
-                    this.$localStorage.seconds = Math.floor((this.duration - this.$localStorage.counter) - ((this.$localStorage.hours * 3600) + (this.$localStorage.minutes * 60)));
+                    // Transform counter into hours, minutes and seconds
+                    var hoursMod = remaining % 3600; // Hours which are not plain
+                    this.$localStorage.hours = (remaining - hoursMod) / 3600;
+
+                    var minutesMod = hoursMod % 60; // Minutes which are not plain
+                    this.$localStorage.minutes = (hoursMod - minutesMod) / 60;
+
+                    this.$localStorage.seconds = minutesMod;
 
                     // If timer reach the exercise duration
                     if (this.$localStorage.counter == this.duration) {
@@ -52,6 +58,9 @@ var TimerDirective = function TimerDirective() {
 
                         // Execute registered callback
                         this.onEnd();
+                    } else {
+                        // Call function to increase next
+                        this.$timeout(onTimeout.bind(this), 1000);
                     }
                 }.bind(this);
 
