@@ -308,7 +308,7 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count($content->papers));
+        $this->assertEquals(1, count($content));
         $this->assertEquals($pa1->getId(), $content[0]->id);
     }
 
@@ -328,7 +328,7 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(4, count($content->papers));
+        $this->assertEquals(4, count($content));
         $this->assertEquals($pa1->getId(), $content[0]->id);
         $this->assertEquals($pa2->getId(), $content[1]->id);
         $this->assertEquals($pa3->getId(), $content[2]->id);
