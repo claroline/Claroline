@@ -49,7 +49,7 @@
     */
 
    public function getReceivedMessagesAction()
-   {
+   { 
        $user = $this->tokenStorage->getToken()->getUser();
        return $this->messageManager->getReceivedMessagesJson($user);
    }

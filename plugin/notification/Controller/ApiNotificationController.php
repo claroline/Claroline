@@ -16,7 +16,6 @@ use FOS\RestBundle\Controller\Annotations\View;
 use JMS\DiExtraBundle\Annotation as DI;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Icap\NotificationBundle\Manager\NotificationManager;
 use Claroline\CoreBundle\Entity\Oauth\ClarolineAccess;
 
 
