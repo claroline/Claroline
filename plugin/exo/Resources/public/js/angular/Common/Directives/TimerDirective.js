@@ -12,7 +12,7 @@ var TimerDirective = function TimerDirective() {
         controller: [
             '$localStorage',
             '$timeout',
-            function TimerCtrl ($localStorage, $timeout) {
+            function TimerCtrl($localStorage, $timeout) {
                 this.$localStorage = $localStorage;
                 this.$timeout      = $timeout;
 
@@ -55,10 +55,19 @@ var TimerDirective = function TimerDirective() {
                     }
                 }.bind(this);
 
+                this.destroy = function destroy() {
+                    this.$timeout.cancel(onTimeout);
+                };
+
                 // Call for the first time the function to increase timer
                 this.$timeout(onTimeout.bind(this), 1000);
             }
         ],
+        link: function link(scope, element, attrs, ctrl) {
+            scope.$on('$destroy', function onDestroy() {
+                ctrl.destroy();
+            });
+        },
         scope: {
             /**
              * Duration of the Timer (in seconds)
