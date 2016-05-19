@@ -73,11 +73,11 @@
 
                 <!-- Score -->
                 <td at-attribute="score" at-sortable at-title="{{ 'paper_list_table_score'|trans:{}:'ujm_sequence' }}">
-                    <span data-ng-if="item.end && item.scoreTotal" class="label label-primary">
+                    <span data-ng-if="item.end && (item.scoreTotal || 0 === item.scoreTotal)" class="label label-primary">
                         {{ paperListCtrl.getPaperScore(item) + '/20' }}
                     </span>
 
-                    <span data-ng-if="!item.end || !item.scoreTotal">-</span>
+                    <span data-ng-if="!item.end || (!item.scoreTotal && 0 !== item.scoreTotal)">-</span>
                 </td>
 
                 <!-- Actions -->
