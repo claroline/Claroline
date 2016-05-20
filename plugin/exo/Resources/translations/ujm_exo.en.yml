@@ -309,6 +309,7 @@ reset: Reset
 resize_zone: To re-size the picture, place your mouse on its bottom right corner, keep left mouse button down, and mouve your mouse
 response: Response
 result: Results
+results_list: List of results
 result_show: Show the results
 right_response: Points for correct answer
 
