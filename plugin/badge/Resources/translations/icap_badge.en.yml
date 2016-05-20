@@ -115,6 +115,8 @@ claim_date: 'Claim date'
 claiming: Claim|Claimings
 collection_name: 'Collection name'
 collection_owned_by_user: 'From user %user%'
+csv_export: 'CSV Export'
+csv_filename: 'badge_awardings'
 day: day
 delete_collection_error: 'An error occured while deleting the collection.'
 dont_award: 'Don''t award'

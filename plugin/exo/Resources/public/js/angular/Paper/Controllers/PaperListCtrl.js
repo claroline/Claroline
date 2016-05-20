@@ -1,33 +1,28 @@
 /**
  * List all the Papers of an Exercise
- * @param {Object} $filter
+ * @param {Object}        $filter
  * @param {CommonService} CommonService
- * @param {Object} exercise
- * @param {PaperService} PaperService
- * @param {Object} papersPromise
+ * @param {Object}        exercise
+ * @param {PaperService}  PaperService
+ * @param {Array}         papers
  * @constructor
  */
-var PaperListCtrl = function PaperListCtrl($filter, CommonService, exercise, PaperService, papersPromise) {
+var PaperListCtrl = function PaperListCtrl($filter, CommonService, exercise, PaperService, papers) {
     this.$filter = $filter;
     this.PaperService  = PaperService;
     this.CommonService = CommonService;
     this.ExerciseService = ExerciseService;
 
-    this.papers    = papersPromise.papers;
-    this.questions = papersPromise.questions;
+    this.papers    = papers;
     this.exercise  = exercise;
 
     this.filtered = this.papers;
-    /*this.setTableData();*/
-    /*this.needManualCorrection();*/
 };
 
 // set up dependency injection
-PaperListCtrl.$inject = ['$filter', 'CommonService', 'exercise', 'PaperService', 'papersPromise'];
+PaperListCtrl.$inject = ['$filter', 'CommonService', 'exercise', 'PaperService', 'papers'];
 
 PaperListCtrl.prototype.papers = [];
-
-PaperListCtrl.prototype.questions = [];
 
 PaperListCtrl.prototype.exercise = {};
 
@@ -107,38 +102,6 @@ PaperListCtrl.prototype.needManualCorrection = function (){
         if(this.questions[i].typeOpen && this.questions[i].typeOpen === 'long'){
             this.displayManualCorrectionMessage = true;
             break;
-        }
-    }
-};
-
-/**
- * All data that need to be transformed and used in filter / sort
- * @returns {undefined}
- */
-PaperListCtrl.prototype.setTableData = function () {
-    var score;
-    for (var i = 0; i < this.filtered.length; i++) {
-        // set scores in paper object and in the same time format end date
-        if (this.filtered[i].end ) { // TODO check score availability
-            score = 0;
-            score = this.CommonService.getPaperScore(this.filtered[i], this.questions) ;
-            if(score !== null){
-                this.filtered[i].score = score + '/20';
-            } else {
-                this.filtered[i].end = '-';
-                this.filtered[i].score = '-';
-            }
-        } else {
-            this.filtered[i].end = '-';
-            this.filtered[i].score = '-';
-        }
-        // set interrupt property in a human readable way
-        if (this.filtered[i].interrupted) {
-            this.filtered[i].interruptLabel = Translator.trans('paper_list_table_interrupted_yes', {}, 'ujm_sequence');
-            this.interrupted = true;
-        } else {
-            this.filtered[i].interruptLabel = Translator.trans('paper_list_table_interrupted_no', {}, 'ujm_sequence');
-            this.interrupted = false;
         }
     }
 };

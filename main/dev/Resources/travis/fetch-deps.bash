@@ -50,18 +50,11 @@ fetch() {
     then
         echo "Success, unzipping..."
         unzip -q "$ZIP"
-
-        if [ $1 = "composer" ]
-        then
-            # this is normally done in the post-update-cmd script
-            echo "Building app/config/bundles.ini..."
-            composer bundles
-        fi
     else
         echo "Failure ($STATUS), executing $1..."
         eval $3
 
-        if [ "${TRAVIS_REPO_SLUG}" != "claroline/Distribution" ]
+        if [ -z ${REMOTE_HOST+x} ]
         then
             # We need to access encrypted environment variables to push the
             # package through SSH, but those variables aren't available in PRs
@@ -82,11 +75,14 @@ fetch() {
     rm -f $ZIP
 }
 
-fetch composer $COMPOSER_SUM "composer update --prefer-source" vendor
+fetch composer $COMPOSER_SUM "composer update --prefer-dist" vendor
 
 echo "Overriding distribution package with local build/repo..."
 rm -rf vendor/claroline/distribution
 cp -r $DIST vendor/claroline/distribution
+# this is normally done in the post-update-cmd script
+echo "Building app/config/bundles.ini..."
+composer bundles
 
 fetch npm $NPM_SUM "npm install" node_modules
 fetch bower $BOWER_SUM "npm run bower" web/packages

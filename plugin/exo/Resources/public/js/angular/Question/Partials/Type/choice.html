@@ -1,6 +1,6 @@
 <div class="type-question-container choice-question-container panel panel-default">
     <!-- Choices list -->
-    <table class="table table-hover table-striped" data-ng-if="choiceQuestionCtrl.choices">
+    <table class="table table-striped" data-ng-if="choiceQuestionCtrl.choices" data-ng-class="{'table-hover': !choiceQuestionCtrl.feedback.visible}">
         <!-- Choice row -->
         <tr data-ng-repeat="choice in choiceQuestionCtrl.choices"
             data-ng-class="{

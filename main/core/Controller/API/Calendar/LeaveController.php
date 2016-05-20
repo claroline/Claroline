@@ -20,7 +20,6 @@ use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Claroline\CoreBundle\Manager\Calendar\LeaveManager;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Form\Calendar\LeaveType;
-use Claroline\CoreBundle\Entity\Calendar\Leave;
 use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
