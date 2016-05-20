@@ -116,7 +116,7 @@ angular
                     controller: 'PaperListCtrl',
                     controllerAs: 'paperListCtrl',
                     resolve: {
-                        papersPromise: [
+                        papers: [
                             'PaperService',
                             function papersResolve(PaperService) {
                                 return PaperService.getAll();

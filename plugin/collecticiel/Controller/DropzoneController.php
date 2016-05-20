@@ -9,7 +9,6 @@ use Innova\CollecticielBundle\Form\DropzoneCommonType;
 use Innova\CollecticielBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
-use Claroline\AgendaBundle\Entity\Event;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

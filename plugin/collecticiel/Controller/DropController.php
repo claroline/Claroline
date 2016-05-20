@@ -8,11 +8,8 @@
 namespace Innova\CollecticielBundle\Controller;
 
 use Innova\CollecticielBundle\Entity\Correction;
-use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
-use Innova\CollecticielBundle\Entity\ReturnReceipt;
-use Innova\CollecticielBundle\Entity\ReturnReceiptType;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropReportEvent;
 use Innova\CollecticielBundle\Form\CorrectionReportType;

@@ -9,10 +9,12 @@ use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @service("claroline.library.testing.persister")
@@ -64,6 +66,32 @@ class Persister
         $this->om->persist($user);
 
         return $user;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Workspace
+     */
+    public function workspace($name, User $creator)
+    {
+        $workspace = new Workspace();
+        $workspace->setName($name);
+        $workspace->setCode($name);
+        $workspace->setCreator($creator);
+        $template = new File($this->container->getParameter('claroline.param.default_template'));
+
+        //optimize this later
+        $this->container->get('claroline.manager.workspace_manager')->create($workspace, $template);
+
+        return $workspace;
+    }
+
+    public function grantAdminRole(User $user)
+    {
+        $role = $this->role('ROLE_ADMIN');
+        $user->addRole($role);
+        $this->om->persist($user);
     }
 
     public function group($name)

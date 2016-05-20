@@ -1,0 +1,34 @@
+.lidroppable {
+    list-style-type:none;
+}
+
+.state-highlight {
+    border: 1px solid #fcefa1;
+    background: #fbf9ee 50% 50% repeat-x;
+    color: #363636;
+}
+
+.state-hover {
+    border: 1px solid #999999;
+    background: #dadada 50% 50% repeat-x;
+    font-weight: normal;
+    color: #212121;
+}
+
+.state-active {
+    border: 1px solid #aaaaaa;
+    background: #989C98 50% 50% repeat-x;
+    font-weight: normal;
+    color: #212121;
+}
+
+.fa-trash {
+    text-decoration: red;
+    color: red;
+}
+
+.fa-trash:hover {
+    text-decoration: red;
+    color: red;
+    cursor:pointer;
+}

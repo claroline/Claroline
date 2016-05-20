@@ -36,7 +36,7 @@ PaperService.prototype.get = function get(id) {
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'Correction get one error';
             var code = data && data.error && data.error.code ? data.error.code : 403;
-            var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
+            /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
             /*$window.location = url;*/
         });
 
@@ -60,7 +60,7 @@ PaperService.prototype.getAll = function getAll() {
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'Papers get all error';
             var code = data && data.error && data.error.code ? data.error.code : 403;
-            var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
+            /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
 
             /*$window.location = url;*/
         });

@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Rule\Validator;
 use Doctrine\ORM\EntityManager;
 use Icap\BadgeBundle\Manager\BadgeManager;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Controller of the badges.
@@ -83,6 +84,7 @@ class AdministrationController extends Controller
             'current_link' => 'icap_badge_admin_badges',
             'claim_link' => 'icap_badge_admin_manage_claim',
             'statistics_link' => 'icap_badge_admin_badges_statistics',
+            'csv_link' => 'icap_badge_export_csv',
             'route_parameters' => array(),
         );
 
@@ -429,6 +431,75 @@ class AdministrationController extends Controller
         $this->get('session')->getFlashBag()->add('success', $successMessage);
 
         return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
+    }
+
+    /**
+     * @Route("/export", name="icap_badge_export_csv")
+     *
+     * @param Request $request
+     *
+     * @return StreamedResponse
+     */
+    public function exportCSVAction(Request $request)
+    {
+        $this->checkOpen();
+
+        $locale = $request->getLocale();
+        $translator = $this->get('translator');
+        $userBadgeRepo = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
+
+        $users = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findBy(array(), array('lastName' => 'ASC', 'firstName' => 'ASC'));
+        $badges = $this->badgeManager->getPlatformBadgesOrderedbyName($locale);
+
+        $response = new StreamedResponse(function () use ($users, $badges, $locale, $translator, $userBadgeRepo) {
+            $handle = fopen('php://output', 'w+');
+
+            $userTrans = count($users) > 1 ?
+                $translator->trans('users', array(), 'platform') :
+                $translator->trans('user', array(), 'platform');
+            $badgeTrans = count($badges) > 1 ?
+                $translator->trans('badges', array(), 'icap_badge') :
+                $translator->trans('badge', array(), 'icap_badge');
+
+            fputcsv($handle, array(count($users).' '.strtolower($userTrans).', '.count($badges).' '.strtolower($badgeTrans)));
+
+            // Headers
+            $headers = array(
+                $translator->trans('username', array(), 'platform'),
+                $translator->trans('first_name', array(), 'platform'),
+                $translator->trans('last_name', array(), 'platform'),
+            );
+            foreach ($badges as $badge) {
+                array_push($headers, $badge->getTranslationForLocale($locale)->getName());
+            }
+            fputcsv($handle, $headers);
+
+            // Data
+            foreach ($users as $user) {
+                $line = array(
+                    $user->getUsername(),
+                    $user->getFirstname(),
+                    $user->getlastName(),
+                );
+                foreach ($badges as $badge) { // foreach iterates always in the same order
+                    $check = $userBadgeRepo->findOneByBadgeAndUser($badge, $user) ?
+                        'x' : '';
+                    array_push($line, $check);
+                }
+                fputcsv($handle, $line);
+            }
+
+            fclose($handle);
+
+        });
+
+        $dateStr = date('Y-m-d');
+        $response->headers->set('Content-Type', 'application/force-download');
+
+        $filename = $translator->trans('csv_filename', array(), 'icap_badge');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'_'.$dateStr.'.csv"');
+
+        return $response;
     }
 
     private function checkOpen()
