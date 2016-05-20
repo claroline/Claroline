@@ -108,6 +108,7 @@ exercise_edit: Exercise edit
 exercice_linked_question: Questions linked to the exercise
 exercise_restart: Restart the exercise
 exercise_start: Start the exercise
+exercise_try: Try the exercise
 exit: Exit
 exo_empty_user_can_edit: This exercise is empty. Please edit and publish it to fill it.
 exo_empty_user_read_only: This exercise is empty and has not been configured by its designer. Please come back later.

@@ -109,7 +109,7 @@ UserPaperService.prototype.start = function start(exercise) {
         deferred.reject([]);
         var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error';
         var code = data && data.error && data.error.code ? data.error.code : 403;
-        var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });
+        /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
         /*$window.location = url;*/
     });
 
@@ -141,7 +141,7 @@ UserPaperService.prototype.end = function end() {
 
             var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService end sequence error';
             var code = data && data.error && data.error.code ? data.error.code : 403;
-            var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
+            /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
             /*$window.location = url;*/
         });
 
@@ -174,7 +174,7 @@ UserPaperService.prototype.useHint = function useHint(question, hint) {
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'QuestionService get hint error';
             var code = data && data.error && data.error.code ? data.error.code : 400;
-            var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});
+            /*var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});*/
             /*$window.location = url;*/
         });
 
@@ -251,7 +251,7 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
                 deferred.reject([]);
                 var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService submit answer error';
                 var code = data && data.error && data.error.code ? data.error.code : 403;
-                var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });
+                /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
                 //$window.location = url;
             });
     } else {

@@ -62,43 +62,58 @@
                         </ul>
                     </li>
 
-                    <!-- Publish Exercise -->
-                    <li data-ng-if="!exerciseCtrl.exercise.meta.published">
-                        <a href="" role="button" data-ng-click="exerciseCtrl.publish()">
-                            <span class="fa share-square-o"></span> {{ 'publish' | trans:{}:'ujm_exo' }}
+                    <li>
+                        <!-- Publish Exercise -->
+                        <a href="" role="button" data-ng-click="exerciseCtrl.publish()" data-ng-if="!exerciseCtrl.exercise.meta.published">
+                            <span class="fa fa-fw fa-share-square-o"></span> {{ 'publish' | trans:{}:'ujm_exo' }}
                         </a>
-                    </li>
 
-                    <!-- Unpublish Exercise (Only if there is no submitted paper on it) -->
-                    <li data-ng-if="exerciseCtrl.exercise.meta.published && 0 == exerciseCtrl.nbPapers">
-                        <a href="" role="button" data-ng-click="exerciseCtrl.unpublish()">
-                            <span class="fa fa-times"></span> {{ 'unpublish' | trans:{}:'ujm_exo' }}
+                        <!-- Unpublish Exercise (Only if there is no submitted paper on it) -->
+                        <a href="" role="button" data-ng-click="exerciseCtrl.unpublish()" data-ng-if="exerciseCtrl.exercise.meta.published && 0 == exerciseCtrl.nbPapers">
+                            <span class="fa fa-fw fa-times"></span> {{ 'unpublish' | trans:{}:'ujm_exo' }}
                         </a>
                     </li>
                 </ul>
 
                 <!-- Play the Exercise -->
                 <a data-ng-if="exerciseCtrl.exercise.steps.length > 0 && 'play' !== exerciseCtrl.$route.current.tab" href="#/play" role="button" class="btn btn-primary navbar-btn navbar-right btn-start">
-                    <span class="fa fa-check-square-o"></span> {{ 'compose' | trans:{}:'ujm_exo' }}
+                    <span class="fa fa-fw fa-play"></span> {{ 'exercise_try' | trans:{}:'ujm_exo' }}
                 </a>
 
                 <ul class="nav navbar-nav navbar-right" data-ng-if="exerciseCtrl.exercise.steps.length > 0">
-                    <!-- Display results of the Exercise -->
-                    <li data-ng-class="{ active: 'papers' === exerciseCtrl.$route.current.tab }">
-                        <a href="#/papers">
-                           <span class="fa fa-list"></span> {{ 'result' | trans:{}:'ujm_exo' }}
+                    <!-- Questions -->
+                    <li data-uib-dropdown="" data-ng-class="{ active: 'papers' === exerciseCtrl.$route.current.tab }">
+                        <a href="" data-uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="fa fa-fw fa-check-square-o"></span>
+                            {{ 'result' | trans:{}:'ujm_exo' }}
+                            <span class="caret"></span>
                         </a>
-                    </li>
+                        <ul data-uib-dropdown-menu="">
+                            <!-- Display results of the Exercise -->
+                            <li>
+                                <a href="#/papers">
+                                    <span class="fa fa-fw fa-list"></span> {{ 'result' | trans:{}:'ujm_exo' }}
+                                </a>
+                            </li>
 
-                    <!-- Display docimology -->
-                    <li data-ng-if="exerciseCtrl.editEnabled">
-                        <a href="{{ 'ujm_exercise_docimology' | path:{ id: exerciseCtrl.exercise.id } }}">
-                            <span class="fa fa-bar-chart"></span> {{ 'docimology' | trans:{}:'ujm_exo' }}
-                        </a>
+                            <!-- Display docimology -->
+                            <li data-ng-if="exerciseCtrl.editEnabled">
+                                <a href="{{ 'ujm_exercise_docimology' | path:{ id: exerciseCtrl.exercise.id } }}">
+                                    <span class="fa fa-fw fa-bar-chart"></span> {{ 'docimology' | trans:{}:'ujm_exo' }}
+                                </a>
+                            </li>
+
+                            <!-- Export results in CSV -->
+                            <li data-ng-if="exerciseCtrl.editEnabled">
+                                <a href="{{ 'exercise_papers_export' | path:{ id: exerciseCtrl.exercise.id } }}">
+                                    <span class="fa fa-fw fa-table"></span> {{ 'export_csv_results' | trans:{}:'ujm_exo' }}
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
-            </div>
-        </div>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
     </nav>
 
     <div data-ng-view="" data-ng-cloak=""></div>
