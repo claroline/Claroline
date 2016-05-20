@@ -156,7 +156,7 @@ class ExerciseController
     }
 
     /**
-     * Exports papers into a CSV format
+     * Exports papers into a CSV format.
      *
      * @EXT\Route("/exercises/{id}/papers/export", name="exercise_papers_export")
      *
@@ -198,7 +198,7 @@ class ExerciseController
         fclose($handle);
 
         return new Response($content, 200, [
-            'Content-Type'        => 'application/force-download',
+            'Content-Type' => 'application/force-download',
             'Content-Disposition' => 'attachment; filename="export.csv"',
         ]);
     }
