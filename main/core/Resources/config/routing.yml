@@ -403,8 +403,5 @@ claro_admin_widget:
 
 claro_client:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ClientController.php"
-    type: rest
+    type: annotation
     prefix: client
-    defaults: {_format: json}
-    options:
-      expose: true

@@ -17,11 +17,9 @@ use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Manager\OauthManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 
-/**
- * @NamePrefix("client_")
- */
 class ClientController extends FOSRestController
 {
     private $oauthManager;
@@ -38,6 +36,7 @@ class ClientController extends FOSRestController
 
     /**
      * Get the client id and the client secret.
+     * @Route("/idsecret.{_format}", name="claro_id_secret", defaults={"_format":"json"})
      */
     public function getIdsecretAction()
     {
@@ -46,13 +45,12 @@ class ClientController extends FOSRestController
         $clientId = $client->getConcatRandomId();
         $clientSecret = $client->getSecret();
 
-        $result = array('client_id' => $clientId, 'client_secret' => $clientSecret);
-
-        return $result;
+        return ['client_id' => $clientId, 'client_secret' => $clientSecret];
     }
 
         /**
          * Check if access token is expired.
+         * @Route("/expired.{_format}", name="claro_token_expired", defaults={"_format":"json"})
          */
         public function getExpiredAction()
         {
@@ -61,9 +59,7 @@ class ClientController extends FOSRestController
             $tab = $client->getAccessTokens(); // all access tokens
             $mostRecentToken = $tab[count($tab) - 1];
 
-            $result = array('hasExpired' => $mostRecentToken->hasExpired());
-
-            return $result;
+            return ['hasExpired' => $mostRecentToken->hasExpired()];
         }
 
 }

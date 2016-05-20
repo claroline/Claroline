@@ -20,6 +20,7 @@
  use Claroline\MessageBundle\Entity\Message;
  use Claroline\CoreBundle\Manager\UserManager;
  use Claroline\CoreBundle\Entity\User;
+ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
  class ApiMessageController extends FOSRestController {
 
@@ -45,30 +46,35 @@
    }
 
    /**
+    * @Route("/received.{_format}", name="claro_received_message", defaults={"_format":"json"})
     * @View(serializerGroups={"api_message"})
     */
-
-   public function getReceivedMessagesAction()
-   { 
+   public function getReceivedAction()
+   {
        $user = $this->tokenStorage->getToken()->getUser();
+
        return $this->messageManager->getReceivedMessagesJson($user);
    }
 
-    /**
-     * @View(serializerGroups={"api_message"})
-     */
-    public function getSentMessagesAction()
+   /**
+    * @Route("/sent.{_format}", name="claro_sent_message", defaults={"_format":"json"})
+    * @View(serializerGroups={"api_message"})
+    */
+    public function getSentAction()
     {
         $user = $this->tokenStorage->getToken()->getUser();
+
         return $this->messageManager->getSentMessagesJson($user);
     }
 
     /**
+     * @Route("/removed.{_format}", name="claro_removed_message", defaults={"_format":"json"})
      * @View(serializerGroups={"api_message"})
      */
-    public function getRemovedMessagesAction()
+    public function getRemovedAction()
     {
         $user = $this->tokenStorage->getToken()->getUser();
+
         return $this->messageManager->getRemovedMessagesJson($user);
    }
 

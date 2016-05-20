@@ -63,6 +63,7 @@ class ExerciseControllerChoiceTest extends TransactionalTestCase
     {
         $pa1 = $this->persist->paper($this->john, $this->ex1);
         $this->om->flush();
+        //$this->logIn($this->john);
 
         $this->request(
             'PUT',

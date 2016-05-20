@@ -14,7 +14,7 @@ namespace Claroline\MessageBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
-use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\MessageBundle\Repository\MessageRepository")
@@ -27,21 +27,21 @@ class Message
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_message"})
+     * @JMS\Groups({"api_message"})
      */
     protected $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_message"})
+     * @JMS\Groups({"api_message"})
      */
     protected $object;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
-     * @Groups({"api_message"})
+     * @JMS\Groups({"api_message"})
      */
     protected $content;
 
@@ -53,14 +53,14 @@ class Message
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="sender_id", onDelete="CASCADE", nullable=true)
-     * @Groups({"api_message"})
+     * @JMS\Groups({"api_message"})
      */
     protected $user;
 
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
-     * @Groups({"api_message"})
+     * @JMS\Groups({"api_message"})
      */
     protected $date;
 
@@ -122,14 +122,14 @@ class Message
 
     /**
      * @ORM\Column(name="sender_username")
-     * @Groups({"api_message"})
+     * @JMS\Groups({"api_message"})
      */
     protected $senderUsername = 'claroline-connect';
 
     /**
      * @ORM\Column(name="receiver_string", length=16000)
      * @Assert\Length(max = "16000")
-     * @Groups({"api_message"})
+     * @JMS\Groups({"api_message"})
      */
     protected $to;
 

@@ -17,6 +17,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Claroline\CoreBundle\Entity\Oauth\ClarolineAccess;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 
 class ApiNotificationController extends FOSRestController
@@ -39,11 +40,13 @@ class ApiNotificationController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @Route("/notifications.{_format}", name="icap_notifications", defaults={"_format":"json"})
+     * @View(serializerGroups={"api_notification"})
      */
     public function getNotificationsAction()
     {
         $user = $this->tokenStorage->getToken()->getUser();
+
         return $this->notificationManager->getUserNotifications($user->getId());
     }
 
@@ -51,11 +54,13 @@ class ApiNotificationController extends FOSRestController
 
 
    /** Mark all notifications as read
-    * @View(serializerGroups={"api"})
+    * @Route("/notifications/read.{_format}", name="icap_notifications_read", defaults={"_format":"json"})
+    * @View(serializerGroups={"api_notification"})
     */
    public function getNotificationsReadAction(){
          $user = $this->tokenStorage->getToken()->getUser();
          $this->notificationManager->markAllNotificationsAsViewed($user->getId());
+
          return $this->notificationManager->getUserNotifications($user->getId());
    }
 
