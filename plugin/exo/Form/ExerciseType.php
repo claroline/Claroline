@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use UJM\ExoBundle\Library\Mode\CorrectionMode;
+use UJM\ExoBundle\Library\Mode\MarkMode;
 
 class ExerciseType extends AbstractType
 {
@@ -68,12 +70,7 @@ class ExerciseType extends AbstractType
             ])
             ->add('correctionMode', 'choice', [
                 'label' => 'availability_of_correction',
-                'choices' => [
-                    '1' => 'at_the_end_of_assessment',
-                    '2' => 'after_the_last_attempt',
-                    '3' => 'from',
-                    '4' => 'never',
-                ],
+                'choices' => CorrectionMode::getList(),
             ])
             ->add('dateCorrection', 'datetime', [
                 'widget' => 'single_text',
@@ -84,10 +81,7 @@ class ExerciseType extends AbstractType
             ])
             ->add('markMode', 'choice', [
                 'label' => 'availability_of_score',
-                'choices' => [
-                    '1' => 'at_the_same_time_that_the_correction',
-                    '2' => 'at_the_end_of_assessment',
-                ],
+                'choices' => MarkMode::getList(),
             ])
             ->add('dispButtonInterrupt', 'checkbox', [
                 'required' => false,

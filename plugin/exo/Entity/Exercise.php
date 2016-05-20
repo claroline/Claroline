@@ -80,6 +80,8 @@ class Exercise extends AbstractResource
      */
     private $dispButtonInterrupt = false;
 
+    private $dispMetadata = true;
+
     /**
      * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
      */
