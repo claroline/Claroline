@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller\API\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use FOS\RestBundle\Controller\Annotations\View;
 use JMS\Serializer\SerializationContext;
 
 class ApiController extends Controller

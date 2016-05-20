@@ -71,7 +71,7 @@ class TransfertManagerTest extends MockeryTestCase
                 array($this->om)
             );
 
-        $this->manager = new TransfertManager();
+        $this->manager = new TransferManager();
         $homeImporter = new HomeImporter();
         $textImporter = new TextImporter();
         $resourceImporter = new ResourceManagerImporter();

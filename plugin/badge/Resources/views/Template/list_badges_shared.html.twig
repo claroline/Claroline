@@ -5,7 +5,12 @@
                 {% if isExpired is defined and isExpired %}
                     <span class="expired fa fa-exclamation-circle" data-title="{{ 'expired_badge'|trans({}, 'icap_badge') }}" data-toggle="tooltip" data-placement="top" data-container="body"></span>
                 {% endif %}
-                <a href="{{ path(link, {'slug': badge.slug}|merge(route_params)) }}" title="{{ badge.name }}" class="img_container"  style="background-image: url({{ app.request.getSchemeAndHttpHost() ~ asset(badge.webPath) }});"></a>
+                <a
+                        href="{{ path(link, {'slug': badge.slug}|merge(route_params)) }}"
+                        title="{{ badge.name }}"
+                        class="img_container"
+                        style="background-image: url({{ app.request.getSchemeAndHttpHost() ~ asset(badge.webPath) }});">
+                </a>
             </div>
             <div class="col-md-8">
                 <a href="{{ path(link, {'slug': badge.slug}|merge(route_params)) }}" title="{{ badge.name }}">

@@ -3,7 +3,6 @@
 namespace Icap\DropzoneBundle\Manager;
 
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Entity\Drop;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -190,7 +189,7 @@ class DropzoneManager
                 if ($drop->getFinished()) {
                     ++$currentState;
                 }
-                // @TODO manage invalidated corrections. 
+                // @TODO manage invalidated corrections.
                 //  update the state with the correction number.
                 if ($nbCorrection > $expectedCorrections) {
                     $nbCorrection = $expectedCorrections;
