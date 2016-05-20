@@ -10,15 +10,27 @@
  * @param {ExerciseService}  ExerciseService
  * @param {FeedbackService}  FeedbackService
  * @param {UserPaperService} UserPaperService
+ * @param {TimerService}     TimerService
  * @constructor
  */
-var ExercisePlayerCtrl = function ExercisePlayerCtrl($location, exercise, step, paper, CommonService, ExerciseService, FeedbackService, UserPaperService) {
+var ExercisePlayerCtrl = function ExercisePlayerCtrl(
+    $location,
+    exercise,
+    step,
+    paper,
+    CommonService,
+    ExerciseService,
+    FeedbackService,
+    UserPaperService,
+    TimerService
+) {
     // Store services
     this.$location        = $location;
     this.CommonService    = CommonService;
     this.ExerciseService  = ExerciseService;
     this.FeedbackService  = FeedbackService;
     this.UserPaperService = UserPaperService;
+    this.TimerService     = TimerService;
 
     // Initialize some data
     this.exercise = exercise; // Current exercise
@@ -43,6 +55,11 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl($location, exercise, step, 
 
     // Get feedback info
     this.feedback = this.FeedbackService.get();
+
+    // Initialize Timer if needed
+    if (0 !== this.exercise.meta.duration) {
+        this.timer = this.TimerService.new(this.exercise.id, this.exercise.meta.duration * 60, this.end.bind(this), true);
+    }
 };
 
 // Set up dependency injection
@@ -54,7 +71,8 @@ ExercisePlayerCtrl.$inject = [
     'CommonService',
     'ExerciseService',
     'FeedbackService',
-    'UserPaperService'
+    'UserPaperService',
+    'TimerService'
 ];
 
 /**
@@ -106,7 +124,7 @@ ExercisePlayerCtrl.prototype.next = null;
 ExercisePlayerCtrl.prototype.submitted = false;
 
 /**
- *
+ * Are the solutions shown in the Exercise ?
  * @type {boolean}
  */
 ExercisePlayerCtrl.prototype.solutionShown = false;
@@ -116,6 +134,12 @@ ExercisePlayerCtrl.prototype.solutionShown = false;
  * @type {number}
  */
 ExercisePlayerCtrl.prototype.currentStepTry = 1;
+
+/**
+ * Timer of the Exercise
+ * @type {Object|null}
+ */
+ExercisePlayerCtrl.prototype.timer = null;
 
 /**
  * Submit answers for the current Step
@@ -187,6 +211,11 @@ ExercisePlayerCtrl.prototype.goTo = function goTo(step) {
  * Saves the current step and go to the Exercise home or papers if correction is available
  */
 ExercisePlayerCtrl.prototype.end = function end() {
+    if (this.timer) {
+        // Stop Timer if the Exercise as a fixed duration
+        this.TimerService.destroy(this.timer.id);
+    }
+
     this.submit()
         .then(function onSuccess() {
             // Answers submitted, we can now end the Exercise
@@ -210,6 +239,11 @@ ExercisePlayerCtrl.prototype.end = function end() {
  * Saves the current step and go to the Exercise home
  */
 ExercisePlayerCtrl.prototype.interrupt = function interrupt() {
+    if (this.timer) {
+        // Stop Timer if the Exercise as a fixed duration
+        this.TimerService.destroy(this.timer.id);
+    }
+
     this.submit()
         .then(function onSuccess() {
             // Return to exercise home
