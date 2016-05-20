@@ -40,7 +40,7 @@ class InteractionQCMController extends Controller
         $vars['form'] = $form->createView();
         $vars['exoID'] = $attr->get('exoID');
 
-        return $this->render('UJMExoBundle:InteractionQCM:paper.html.twig', $vars);
+        return $this->render('UJMExoBundle:InteractionQCM:show.html.twig', $vars);
     }
 
     /**

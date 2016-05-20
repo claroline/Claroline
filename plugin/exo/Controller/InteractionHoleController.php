@@ -34,7 +34,7 @@ class InteractionHoleController extends Controller
         $vars['form'] = $form->createView();
         $vars['exoID'] = $attr->get('exoID');
 
-        return $this->render('UJMExoBundle:InteractionHole:paper.html.twig', $vars);
+        return $this->render('UJMExoBundle:InteractionHole:show.html.twig', $vars);
     }
 
     /**
