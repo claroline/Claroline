@@ -263,7 +263,6 @@ class PaperManager
      */
     public function exportUserPapers(Exercise $exercise, User $user)
     {
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
         $papers = $this->om->getRepository('UJMExoBundle:Paper')
             ->findBy(['exercise' => $exercise, 'user' => $user]);
 
@@ -282,14 +281,7 @@ class PaperManager
             ];
         }, $papers);
 
-        $questions = array_map(function ($question) {
-            return $this->questionManager->exportQuestion($question, true);
-        }, $questionRepo->findByExercise($exercise));
-
-        return [
-            'questions' => $questions,
-            'papers' => $papers,
-        ];
+        return $papers;
     }
 
     /**
@@ -375,7 +367,6 @@ class PaperManager
      */
     public function exportExercisePapers(Exercise $exercise)
     {
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
         $papers = $this->om->getRepository('UJMExoBundle:Paper')
             ->findBy(['exercise' => $exercise]);
 
@@ -394,14 +385,7 @@ class PaperManager
             ];
         }, $papers);
 
-        $questions = array_map(function ($question) {
-            return $this->questionManager->exportQuestion($question, true, true);
-        }, $questionRepo->findByExercise($exercise));
-
-        return [
-            'questions' => $questions,
-            'papers' => $papers,
-        ];
+        return $papers;
     }
 
     private function applyPenalties(Paper $paper, Question $question, Response $response)
