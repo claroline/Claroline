@@ -126,7 +126,20 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" id="cancel_button" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
-            <button data-dropzone_id="{{dropzone.id}}" data-document_id="{{document.id}}" id="modal_confirm_notation" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
+            <button
+            data-dropzone_id="{{dropzone.id}}" data-document_id="{{document.id}}"
+            data-document_url="{{document.url}}" data-document_title="{{document.title}}"
+            data-document_name="{{document.resourceNode.name}}"
+            data-document_sender_firstname="{{document.sender.firstname}}"
+            data-document_sender_lastname="{{document.sender.lastname}}"
+            id="modal_confirm_notation" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'To record'|trans({}, 'innova_collecticiel') }}</button>
+            <button
+            data-dropzone_id="{{dropzone.id}}" data-document_id="{{document.id}}"
+            data-document_url="{{document.url}}" data-document_title="{{document.title}}"
+            data-document_name="{{document.resourceNode.name}}"
+            data-document_sender_firstname="{{document.sender.firstname}}"
+            data-document_sender_lastname="{{document.sender.lastname}}"
+            id="modal_confirm_notation" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'To transmit'|trans({}, 'innova_collecticiel') }}</button>
         </div>
         </div>
     </div>

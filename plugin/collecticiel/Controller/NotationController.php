@@ -1,8 +1,7 @@
 <?php
 /**
- * Created by : Vincent SAISSET
- * Date: 22/08/13
- * Time: 09:30.
+ * Created by : Eric VINCENT
+ * Date: 05/16.
  */
 
 namespace Innova\CollecticielBundle\Controller;
