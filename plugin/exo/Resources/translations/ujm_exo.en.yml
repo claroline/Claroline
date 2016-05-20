@@ -26,7 +26,7 @@ attempt_info2plur: attempts
 attempt_info3: Attempt N°
 attempt_info4: You have
 attempt_info5: in order to improve your score
-attempt_info6: You do not have attempt
+attempt_info6: You have no more attempts.
 at_the_end_of_assessment: At the end of assessment
 at_the_same_time_that_the_correction: At the same time that the correction
 availability_of_correction: Availability of correction
@@ -105,6 +105,7 @@ exercise: Exercise
 exercise_alert_break: The interruption of this exercise is not allowed. Your paper will be considered finish !
 exercise_definition: Exercise definition
 exercise_edit: Exercise edit
+exercise_finished_attempts: "[0, 1] You have finished %count% attempt|]1,Inf[  You have finished %count% attempts"
 exercice_linked_question: Questions linked to the exercise
 exercise_restart: Restart the exercise
 exercise_start: Start the exercise
