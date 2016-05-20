@@ -2,18 +2,22 @@
  * Exercise Controller
  * Base controller for Exercises
  * @param {ExerciseService}  ExerciseService
+ * @param {PaperService}     PaperService
  * @param {UserPaperService} UserPaperService
  * @param {object}           $route
  * @constructor
  */
-var ExerciseCtrl = function ExerciseCtrl(ExerciseService, UserPaperService, $route) {
+var ExerciseCtrl = function ExerciseCtrl(ExerciseService, PaperService, UserPaperService, $route) {
     this.ExerciseService  = ExerciseService;
+    this.PaperService     = PaperService;
     this.UserPaperService = UserPaperService;
 
     // Share current Exercise with the whole application
     this.ExerciseService.setExercise(this.exercise);
     this.ExerciseService.setEditEnabled(this.editEnabled);
-    /*this.ExerciseService.setComposeEnabled(this.composeEnabled);*/
+
+    // Store number of papers already done for the Exercise (all users)
+    this.PaperService.setNbPapers(this.nbPapers);
 
     // Store number of papers already done by the User
     this.UserPaperService.setNbPapers(this.nbUserPapers);
@@ -22,7 +26,7 @@ var ExerciseCtrl = function ExerciseCtrl(ExerciseService, UserPaperService, $rou
 };
 
 // Set up dependency injection
-ExerciseCtrl.$inject = [ 'ExerciseService', 'UserPaperService', '$route' ];
+ExerciseCtrl.$inject = [ 'ExerciseService', 'PaperService', 'UserPaperService', '$route' ];
 
 /**
  * Current Exercise

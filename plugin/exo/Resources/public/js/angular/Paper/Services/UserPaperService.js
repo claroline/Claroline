@@ -62,7 +62,6 @@ UserPaperService.prototype.getNbPapers = function getNbPapers() {
  * @returns {UserPaperService}
  */
 UserPaperService.prototype.setNbPapers = function setNbPapers(count) {
-
     this.nbPapers = count ? parseInt(count) : 0;
 
     return this;
@@ -129,6 +128,9 @@ UserPaperService.prototype.end = function end() {
         )
         // Success callback
         .success(function (response) {
+            // Update the number of finished papers
+            this.nbPapers++;
+
             // TODO : display message
 
             deferred.resolve(this.paper);
@@ -263,6 +265,7 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
 
 /**
  * Check if the User is allowed to compose (max attempts of the Exercise is not reached)
+ * @returns {boolean}
  */
 UserPaperService.prototype.isAllowedToCompose = function isAllowedToCompose() {
     var allowed = true;
