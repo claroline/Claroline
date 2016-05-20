@@ -69,7 +69,8 @@ script:
   - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/phpunit/phpunit/phpunit
 
 after_success:
-  # send a preview release to a remote server
+  # send a preview release to a remote server (only for internal PRs)
+  - if [ -z ${REMOTE_HOST+x} ]; then exit 1; fi
   - cd $ROOT
   - export PREVIEW="pr-$TRAVIS_PULL_REQUEST-`date +%s`.zip"
   - mysqldump --opt --no-create-db claroline_test -uroot --password="" > claroline.sql
