@@ -8,8 +8,6 @@ var OpenCorrectionCtrl = function OpenCorrectionCtrl(QuestionService, OpenQuesti
     AbstractCorrectionCtrl.apply(this, arguments);
 
     this.OpenQuestionService = OpenQuestionService;
-
-    console.log(this.answer);
 };
 
 // Extends AbstractQuestionCtrl

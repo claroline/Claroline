@@ -16,10 +16,8 @@ var QuestionShowCtrl = function QuestionShowCtrl(QuestionService, FeedbackServic
 
     // Force the feedback when correction is shown
     if (this.includeCorrection && !this.FeedbackService.isEnabled()) {
-        $timeout(function () {
-            this.FeedbackService.enable();
-            this.FeedbackService.show();
-        }.bind(this));
+        this.FeedbackService.enable();
+        this.FeedbackService.show();
     }
 };
 
