@@ -4,17 +4,19 @@ namespace UJM\ExoBundle\Controller\Api;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Paper;
-use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Manager\ExerciseManager;
 use UJM\ExoBundle\Manager\PaperManager;
 use UJM\ExoBundle\Manager\QuestionManager;
+use UJM\ExoBundle\Services\classes\PaperService;
 
 /**
  * Exercise Controller.
@@ -28,34 +30,44 @@ use UJM\ExoBundle\Manager\QuestionManager;
  */
 class ExerciseController
 {
+    private $om;
     private $authorization;
     private $exerciseManager;
     private $questionManager;
     private $paperManager;
+    private $paperService;
 
     /**
      * @DI\InjectParams({
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "authorization"      = @DI\Inject("security.authorization_checker"),
      *     "exerciseManager"    = @DI\Inject("ujm.exo.exercise_manager"),
      *     "questionManager"    = @DI\Inject("ujm.exo.question_manager"),
-     *     "paperManager"       = @DI\Inject("ujm.exo.paper_manager")
+     *     "paperManager"       = @DI\Inject("ujm.exo.paper_manager"),
+     *     "paperService"       = @DI\Inject("ujm.exo_paper")
      * })
      *
+     * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
      * @param ExerciseManager               $exerciseManager
      * @param QuestionManager               $questionManager
      * @param PaperManager                  $paperManager
+     * @param PaperService                  $paperService
      */
     public function __construct(
+        ObjectManager $om,
         AuthorizationCheckerInterface $authorization,
         ExerciseManager $exerciseManager,
         QuestionManager $questionManager,
-        PaperManager $paperManager
+        PaperManager $paperManager,
+        PaperService $paperService
     ) {
+        $this->om = $om;
         $this->authorization = $authorization;
         $this->exerciseManager = $exerciseManager;
         $this->questionManager = $questionManager;
         $this->paperManager = $paperManager;
+        $this->paperService = $paperService;
     }
 
     /**
@@ -141,6 +153,54 @@ class ExerciseController
         }
 
         return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));
+    }
+
+    /**
+     * Exports papers into a CSV format.
+     *
+     * @EXT\Route("/exercises/{id}/papers/export", name="exercise_papers_export")
+     *
+     * @param Exercise $exercise
+     *
+     * @return Response
+     */
+    public function papersExportAction(Exercise $exercise)
+    {
+        $this->assertHasPermission('ADMINISTRATE', $exercise);
+
+        $iterableResult = $this->om->getRepository('UJMExoBundle:Paper')
+            ->getExerciseAllPapersIterator($exercise->getId());
+
+        $handle = fopen('php://memory', 'r+');
+        while (false !== ($row = $iterableResult->next())) {
+            $rowCSV = array();
+            $infosPaper = $this->paperService->getInfosPaper($row[0]);
+            $score = $infosPaper['scorePaper'] / $infosPaper['maxExoScore'];
+            $score = $score * 20;
+
+            $rowCSV[] = $row[0]->getUser()->getLastName().'-'.$row[0]->getUser()->getFirstName();
+            $rowCSV[] = $row[0]->getNumPaper();
+            $rowCSV[] = $row[0]->getStart()->format('Y-m-d H:i:s');
+            if ($row[0]->getEnd()) {
+                $rowCSV[] = $row[0]->getEnd()->format('Y-m-d H:i:s');
+            } else {
+                $rowCSV[] = $this->get('translator')->trans('no_finish', array(), 'ujm_exo');
+            }
+            $rowCSV[] = $row[0]->getInterupt();
+            $rowCSV[] = $this->paperService->roundUpDown($score);
+
+            fputcsv($handle, $rowCSV);
+            $this->om->detach($row[0]);
+        }
+
+        rewind($handle);
+        $content = stream_get_contents($handle);
+        fclose($handle);
+
+        return new Response($content, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="export.csv"',
+        ]);
     }
 
     /**

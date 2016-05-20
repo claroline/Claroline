@@ -80,7 +80,7 @@
 
                     <!-- Play the Exercise -->
                     <a data-ng-if="(exerciseCtrl.nbPapers < exerciseCtrl.exercise.meta.maxAttempts || exerciseCtrl.exercise.meta.maxAttempts === 0) && exerciseCtrl.composeEnabled && exerciseCtrl.exercise.steps.length > 0" href="#/play" role="button" class="btn btn-primary navbar-btn navbar-right btn-start">
-                        <span class="fa fa-check-square-o"></span> {{ 'compose' | trans:{}:'ujm_exo' }}
+                        <span class="fa fa-play"></span> {{ 'compose' | trans:{}:'ujm_exo' }}
                     </a>
 
                     <div data-ng-if="exerciseCtrl.exercise.meta.maxAttempts && exerciseCtrl.nbPapers >= exerciseCtrl.exercise.meta.maxAttempts" class="navbar-right navbar-text">
@@ -91,18 +91,35 @@
                     </div>
 
                     <ul class="nav navbar-nav navbar-right" data-ng-if="exerciseCtrl.exercise.steps.length > 0">
-                        <!-- Display results of the Exercise -->
-                        <li data-ng-class="{ active: 'papers' === exerciseCtrl.$route.current.tab }">
-                            <a href="#/papers">
-                                <span class="fa fa-list"></span> {{ 'result' | trans:{}:'ujm_exo' }}
+                        <!-- Questions -->
+                        <li data-uib-dropdown="" data-ng-class="{ active: 'papers' === exerciseCtrl.$route.current.tab }">
+                            <a href="" data-uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="fa fa-check-square-o"></span>
+                                {{ 'result' | trans:{}:'ujm_exo' }}
+                                <span class="caret"></span>
                             </a>
-                        </li>
+                            <ul data-uib-dropdown-menu="">
+                                <!-- Display results of the Exercise -->
+                                <li>
+                                    <a href="#/papers">
+                                        <span class="fa fa-list"></span> {{ 'result' | trans:{}:'ujm_exo' }}
+                                    </a>
+                                </li>
 
-                        <!-- Display docimology -->
-                        <li data-ng-if="exerciseCtrl.editEnabled">
-                            <a href="{{ 'ujm_exercise_docimology' | path:{ id: exerciseCtrl.exercise.id } }}">
-                                <span class="fa fa-bar-chart"></span> {{ 'docimology' | trans:{}:'ujm_exo' }}
-                            </a>
+                                <!-- Display docimology -->
+                                <li data-ng-if="exerciseCtrl.editEnabled">
+                                    <a href="{{ 'ujm_exercise_docimology' | path:{ id: exerciseCtrl.exercise.id } }}">
+                                        <span class="fa fa-bar-chart"></span> {{ 'docimology' | trans:{}:'ujm_exo' }}
+                                    </a>
+                                </li>
+
+                                <!-- Export results in CSV -->
+                                <li data-ng-if="exerciseCtrl.editEnabled">
+                                    <a href="{{ 'exercise_papers_export' | path:{ id: exerciseCtrl.exercise.id } }}">
+                                        <span class="fa fa-table"></span> {{ 'export_csv_results' | trans:{}:'ujm_exo' }}
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div><!-- /.navbar-collapse -->

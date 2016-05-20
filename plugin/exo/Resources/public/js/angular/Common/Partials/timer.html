@@ -3,15 +3,15 @@
 
     {{ 'timer'|trans:{}:'ujm_exo' }}
 
-    <span data-ng-show="timerCtrl.$localStorage.hours != 0">
-        {{ timerCtrl.$localStorage.hours }}h
+    <span data-ng-show="timerCtrl.timer.remaining.hours != 0">
+        {{ timerCtrl.timer.remaining.hours }}h
     </span>
 
-    <span data-ng-show="timerCtrl.$localStorage.minutes != 0">
-        {{ timerCtrl.$localStorage.minutes }}m
+    <span data-ng-show="timerCtrl.timer.remaining.minutes != 0">
+        {{ timerCtrl.timer.remaining.minutes }}m
     </span>
 
-    <span data-ng-show="timerCtrl.$localStorage.minutes < 2 && timerCtrl.$localStorage.hours == 0">
-        {{ timerCtrl.$localStorage.seconds }}s
+    <span data-ng-show="timerCtrl.timer.remaining.minutes < 2 && timerCtrl.timer.remaining.hours == 0">
+        {{ timerCtrl.timer.remaining.seconds }}s
     </span>
 </div>

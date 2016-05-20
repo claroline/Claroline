@@ -42,7 +42,7 @@ class InteractionMatchingController extends Controller
         $vars['form'] = $form->createView();
         $vars['exoID'] = $attr->get('exoID');
 
-        return $this->render('UJMExoBundle:InteractionMatching:paper.html.twig', $vars);
+        return $this->render('UJMExoBundle:InteractionMatching:show.html.twig', $vars);
     }
 
     /**
