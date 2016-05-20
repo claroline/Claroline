@@ -1171,15 +1171,17 @@ class QuestionController extends Controller
         $question = $service->controlUserQuestion($questionId);
         $sharedQuestions = $service->controlUserSharedQuestion($questionId);
         $allowToAccess = false;
-        $step = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Step')->find($stepID);
-        $exercise = $step->getExercise();
 
+        $step = -1;
         if ($stepID != -1) {
-            if ($this->container->get('ujm.exo_exercise')
-                            ->isExerciseAdmin($exercise) === true) {
+            $step = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Step')->find($stepID);
+            $exercise = $step->getExercise();
+
+            if ($this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise) === true) {
                 $allowToAccess = true;
             }
         }
+
         if (count($question) > 0 || $allowToAccess === true || count($sharedQuestions) > 0) {
             if (count($sharedQuestions) > 0) {
                 $question = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Question')->find($questionId);
