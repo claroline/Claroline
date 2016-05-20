@@ -62,7 +62,8 @@ UserPaperService.prototype.getNbPapers = function getNbPapers() {
  * @returns {UserPaperService}
  */
 UserPaperService.prototype.setNbPapers = function setNbPapers(count) {
-    this.nbPapers = count;
+
+    this.nbPapers = count ? parseInt(count) : 0;
 
     return this;
 };
