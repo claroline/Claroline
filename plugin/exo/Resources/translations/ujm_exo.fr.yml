@@ -106,6 +106,8 @@ exercise_alert_break: Interuption non autorisée. Votre copie sera considérée 
 exercise_definition: Définition de l'exercice
 exercise_edit: Modification de l'exercice
 exercice_linked_question: Questions liées à l'exercice
+exercise_restart: Recommencer l'exercice
+exercise_start: Commencer l'exercice
 exit: Quitter
 exo_empty_user_can_edit: Cet exercice est vide. Editez et publiez le afin de le remplir.
 exo_empty_user_read_only: Cet exercice est vide et n'a pas encore été configuré par son concepteur. Veuillez revenir plus tard.
