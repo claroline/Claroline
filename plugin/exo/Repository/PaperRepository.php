@@ -111,7 +111,7 @@ class PaperRepository extends EntityRepository
      *
      * @param Exercise $exercise
      *
-     * @return integer the number of exercise papers
+     * @return int the number of exercise papers
      */
     public function countExercisePapers(Exercise $exercise)
     {
@@ -131,7 +131,7 @@ class PaperRepository extends EntityRepository
      * Count the number of finished paper for a user and an exercise.
      *
      * @param Exercise $exercise
-     * @param User $user
+     * @param User     $user
      *
      * @return int the number of finished papers
      */

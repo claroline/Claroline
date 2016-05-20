@@ -293,6 +293,7 @@ class ExerciseServices
 
     /**
      * @return Claroline\CoreBundle\Entity\User
+     *
      * @deprecated
      */
     public function getUser()
@@ -305,6 +306,7 @@ class ExerciseServices
 
     /**
      * @return int or String
+     *
      * @deprecated
      */
     public function getUserId()

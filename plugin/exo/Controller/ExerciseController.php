@@ -17,7 +17,7 @@ class ExerciseController extends Controller
     /**
      * Opens an exercise.
      *
-     * @param User|string $user the current User or the "anon." string if not logged
+     * @param User|string $user     the current User or the "anon." string if not logged
      * @param Exercise    $exercise
      *
      * @EXT\Route(
