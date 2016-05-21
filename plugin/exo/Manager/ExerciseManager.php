@@ -250,7 +250,7 @@ class ExerciseManager
         $exercise->setTitle($metadata->title);
         $exercise->setDescription($metadata->description);
         $exercise->setType($metadata->type);
-        $exercise->setNbQuestion($metadata->pick);
+        $exercise->setNbQuestion($metadata->pick ? $metadata->pick : 0);
         $exercise->setShuffle($metadata->random);
         $exercise->setKeepSameQuestion($metadata->keepSameQuestions);
         $exercise->setMaxAttempts($metadata->maxAttempts);
