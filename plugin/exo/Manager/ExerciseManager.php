@@ -247,7 +247,11 @@ class ExerciseManager
             throw new ValidationException('Exercise metadata are not valid', $errors);
         }
 
-        $exercise->setTitle($metadata->title);
+        // Update ResourceNode info
+        $node = $exercise->getResourceNode();
+        $node->setName($metadata->title);
+
+        // Update Exercise info
         $exercise->setDescription($metadata->description);
         $exercise->setType($metadata->type);
         $exercise->setNbQuestion($metadata->pick ? $metadata->pick : 0);
@@ -290,7 +294,7 @@ class ExerciseManager
                 ['name' => $authorName],
             ],
             'created'             => $node->getCreationDate()->format('Y-m-d H:i:s'),
-            'title'               => $exercise->getTitle(),
+            'title'               => $node->getName(),
             'description'         => $exercise->getDescription(),
             'type'                => $exercise->getType(),
             'pick'                => $exercise->getNbQuestion(),
