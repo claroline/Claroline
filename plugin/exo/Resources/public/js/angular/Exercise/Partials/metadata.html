@@ -126,9 +126,7 @@
                     </div>
 
                     <!-- Date of availability -->
-                    <!-- data-ng-if="3 == exerciseMetadataCtrl.exercise.meta.correctionMode" -->
-
-                    <div class="form-group" datat-ng-class="{'has-error': exerciseMetadataCtrl.exercise.meta.correctionDate.$invalid}">
+                    <div class="form-group" datat-ng-class="{'has-error': exerciseMetadataCtrl.exercise.meta.correctionDate.$invalid}" data-ng-if="3 == exerciseMetadataCtrl.exercise.meta.correctionMode">
                         <label for="exercise-correction-date" class="control-label col-md-4">{{ 'correction_date'| trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="input-group">

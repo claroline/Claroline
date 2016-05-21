@@ -267,7 +267,7 @@ class ExerciseManager
         $exercise->setDuration($metadata->duration);
 
         $correctionDate = null;
-        if (!empty($metadata->correctionDate)) {
+        if (!empty($metadata->correctionDate) && 3 == $metadata->correctionMode) {
             $correctionDate = \DateTime::createFromFormat('Y-m-d H:i:s', $metadata->correctionDate);
         }
 
