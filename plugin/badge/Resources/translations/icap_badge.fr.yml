@@ -54,7 +54,7 @@ badge_dont_award_confirm_message: 'Etes-vous sûr de ne pas vouloir attribuer le
 badge_dont_award_confirm_title: 'Refus d''attribution d''un badge'
 badge_edit_confirm_message: 'Etes-vous sûr de vouloir modifier le badge <strong>%badgeName%</strong> ?'
 badge_edit_confirm_title: 'Modification d''un badge'
-badge_edit_create_new_version: '<strong>Attention!!!</strong> Ce badge a déjà été attribué. Modifier ses règles d''attribution entraînera la création d''une nouvelle version de ce badge.'
+badge_edit_create_new_version: '<strong>Attention!!!</strong> Ce badge a déjà été attribué. N''oubliez pas de lancer un recalcul des règles d''attribution.'
 badge_edit_error_message: 'Erreur lors de la modification du badge.'
 badge_edit_success_message: 'Badge modifié avec succès.'
 badge_expiration_date_explanation: 'Durée de validité du badge. Si omis le badge n''expirera jamais. Le badge n''est pas supprimé de l''utilisateur après expiration, un indicateur visuel d''expiration est affiché.'
@@ -118,6 +118,8 @@ claim_date: 'Date de la demande'
 claiming: 'Demande d''attribution|Demandes d''attribution'
 collection_name: 'Nom de la collection'
 collection_owned_by_user: 'De l''utilisateur %user%'
+csv_export: 'Exporter en CSV'
+csv_filename: 'attributions_badges'
 day: jour
 delete_collection_error: 'Une erreur est survenue lors de la suppression de la collection.'
 dont_award: 'Ne pas attribuer'
@@ -196,3 +198,12 @@ badges_number: Nombre des badges
 user_number: Nombre des utilisateurs
 import_export: Importer/Exporter
 expired_badge: Badge expiré
+recalculate_modal_title: 'Démarrer la réattribution automatique des badges ?'
+recalculate_modal_waning: '<strong>Attention !</strong> En raison de la charge de travail conséquente liée au recalcul de l''attribution d''un badge, <strong>les utilisateurs ne recevront pas de notification</strong> du gain ou de la perte de ce badge.'
+recalculate_modal_option_all_users: 'Autoriser la perte du badge si les règles ne sont plus vérifiées.'
+recalculate_button_tooltip: 'Vérifier à nouveau les conditions d''attribution de ce badge pour tous les utilisateurs de l''espace de travail.'
+recalculate_button: 'Recalculer les attributions'
+recalculate_success: 'Réattribution automatique effectuée avec succès.'
+unaward_modal_title: 'Modifier le badge'
+unaward_modal_option_all_users: 'Retirer ce badge aux utilisateurs qui le possèdent déjà.'
+unaward_modal_warning: '<strong>N''oubliez pas :</strong> si vous avez modifié les règles d''attribution de ce badge, vous pouvez lancer un recalcul afin de l''attribuer  automatiquement aux utilisateurs éligibles.'

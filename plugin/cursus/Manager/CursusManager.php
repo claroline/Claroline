@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -66,6 +65,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @DI\Service("claroline.manager.cursus_manager")
@@ -85,7 +85,7 @@ class CursusManager
     private $roleManager;
     private $router;
     private $serializer;
-    private $templateDir;
+    private $defaultTemplate;
     private $templating;
     private $tokenStorage;
     private $toolManager;
@@ -122,7 +122,7 @@ class CursusManager
  *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
  *     "router"                = @DI\Inject("router"),
  *     "serializer"            = @DI\Inject("jms_serializer"),
- *     "templateDir"           = @DI\Inject("%claroline.param.templates_directory%"),
+ *     "defaultTemplate"       = @DI\Inject("%claroline.param.default_template%"),
  *     "templating"            = @DI\Inject("templating"),
  *     "tokenStorage"          = @DI\Inject("security.token_storage"),
  *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
@@ -146,7 +146,7 @@ class CursusManager
         RoleManager $roleManager,
         UrlGeneratorInterface $router,
         Serializer $serializer,
-        $templateDir,
+        $defaultTemplate,
         TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
         ToolManager $toolManager,
@@ -170,7 +170,7 @@ class CursusManager
         $this->roleManager = $roleManager;
         $this->router = $router;
         $this->serializer = $serializer;
-        $this->templateDir = $templateDir;
+        $this->defaultTemplate = $defaultTemplate;
         $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->toolManager = $toolManager;
@@ -1243,17 +1243,17 @@ class CursusManager
 
         if (is_null($model)) {
             $ds = DIRECTORY_SEPARATOR;
-            $config = Configuration::fromTemplate(
-                $this->templateDir.$ds.'default.zip'
-            );
-            $config->setWorkspaceName($name);
-            $config->setWorkspaceCode($code);
-            $config->setDisplayable($displayable);
-            $config->setSelfRegistration($selfRegistration);
-            $config->setSelfUnregistration($selfUnregistration);
-            $config->setRegistrationValidation($registrationValidation);
-            $config->setWorkspaceDescription($description);
-            $workspace = $this->workspaceManager->create($config, $user);
+            $template = new File($this->defaultTemplate);
+            $workspace = new Workspace();
+            $workspace->setCreator($user);
+            $workspace->setName($name);
+            $workspace->setCode($code);
+            $workspace->setDisplayable($displayable);
+            $workspace->setSelfRegistration($selfRegistration);
+            $workspace->setSelfUnregistration($selfUnregistration);
+            $workspace->setRegistrationValidation($registrationValidation);
+            $workspace->setDescription($description);
+            $workspace = $this->workspaceManager->create($workspace, $template);
         } else {
             $workspace = $this->workspaceManager->createWorkspaceFromModel(
                 $model,

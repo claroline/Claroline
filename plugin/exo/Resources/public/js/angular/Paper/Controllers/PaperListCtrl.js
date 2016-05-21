@@ -1,31 +1,28 @@
 /**
  * List all the Papers of an Exercise
- * @param {Object} $filter
+ * @param {Object}        $filter
  * @param {CommonService} CommonService
- * @param {Object} exercise
- * @param {PaperService} PaperService
- * @param {Object} papersPromise
+ * @param {Object}        exercise
+ * @param {PaperService}  PaperService
+ * @param {Array}         papers
  * @constructor
  */
-var PaperListCtrl = function PaperListCtrl($filter, CommonService, exercise, PaperService, papersPromise) {
+var PaperListCtrl = function PaperListCtrl($filter, CommonService, exercise, PaperService, papers) {
     this.$filter = $filter;
     this.PaperService  = PaperService;
     this.CommonService = CommonService;
     this.ExerciseService = ExerciseService;
 
-    this.papers    = papersPromise.papers;
-    this.questions = papersPromise.questions;
+    this.papers    = papers;
     this.exercise  = exercise;
 
     this.filtered = this.papers;
 };
 
 // set up dependency injection
-PaperListCtrl.$inject = ['$filter', 'CommonService', 'exercise', 'PaperService', 'papersPromise'];
+PaperListCtrl.$inject = ['$filter', 'CommonService', 'exercise', 'PaperService', 'papers'];
 
 PaperListCtrl.prototype.papers = [];
-
-PaperListCtrl.prototype.questions = [];
 
 PaperListCtrl.prototype.exercise = {};
 
@@ -86,6 +83,10 @@ PaperListCtrl.prototype.checkCorrectionAvailability = function (paper) {
     }
 };
 
+/**
+ * 
+ * @returns {number}
+ */
 PaperListCtrl.prototype.countFinishedAttempts = function () {
     var nb = 0;
     for (var i = 0; i < this.papers.length; i++) {

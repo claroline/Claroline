@@ -34,7 +34,7 @@ class InteractionGraphicController extends Controller
         $vars['listeCoords'] = $listeCoords;
         $vars['exoID'] = $attr->get('exoID');
 
-        return $this->render('UJMExoBundle:InteractionGraphic:paper.html.twig', $vars);
+        return $this->render('UJMExoBundle:InteractionGraphic:show.html.twig', $vars);
     }
     /**
      * @return \Symfony\Component\HttpFoundation\Response

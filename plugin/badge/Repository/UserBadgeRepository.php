@@ -266,4 +266,22 @@ class UserBadgeRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findUsersNotAwardedWithBadge(Badge $badge)
+    {
+        $em = $this->getEntityManager();
+
+        $qb = $em->createQueryBuilder();
+        $notIn = $qb->select('IDENTITY(ub.user)')
+                        ->from('IcapBadgeBundle:Userbadge', 'ub')
+                        ->where('ub.badge = ?1');
+
+        $qb1 = $em->createQueryBuilder();
+        $qb1->select('u')
+                ->from('ClarolineCoreBundle:User', 'u')
+                ->where($qb1->expr()->notIn('u.id', $notIn->getDQL()))
+                ->setParameter(1, $badge->getId());
+
+        return $qb1->getQuery()->getResult();
+    }
 }

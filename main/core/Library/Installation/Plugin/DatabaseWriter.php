@@ -47,7 +47,6 @@ class DatabaseWriter
     private $mm;
     private $fileSystem;
     private $kernelRootDir;
-    private $templateDir;
     private $modifyTemplate = false;
     private $toolManager;
     private $toolMaskManager;
@@ -61,7 +60,6 @@ class DatabaseWriter
      *     "mm"              = @DI\Inject("claroline.manager.mask_manager"),
      *     "fileSystem"      = @DI\Inject("filesystem"),
      *     "kernel"          = @DI\Inject("kernel"),
-     *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
      *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *     "toolMaskManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager")
      * })
@@ -72,7 +70,6 @@ class DatabaseWriter
         Filesystem $fileSystem,
         KernelInterface $kernel,
         MaskManager $mm,
-        $templateDir,
         ToolManager $toolManager,
         ToolMaskDecoderManager $toolMaskManager
     ) {
@@ -81,7 +78,6 @@ class DatabaseWriter
         $this->mm = $mm;
         $this->fileSystem = $fileSystem;
         $this->kernelRootDir = $kernel->getRootDir();
-        $this->templateDir = $templateDir;
         $this->modifyTemplate = $kernel->getEnvironment() !== 'test';
         $this->toolManager = $toolManager;
         $this->toolMaskManager = $toolMaskManager;

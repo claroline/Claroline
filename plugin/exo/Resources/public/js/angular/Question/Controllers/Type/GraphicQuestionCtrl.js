@@ -5,8 +5,6 @@
  * @constructor
  */
 var GraphicQuestionCtrl = function GraphicQuestionCtrl(FeedbackService, GraphicQuestionService) {
-    AbstractQuestionCtrl.apply(this, arguments);
-
     this.GraphicQuestionService = GraphicQuestionService;
 
     // init coord answer array in any case
@@ -31,6 +29,8 @@ var GraphicQuestionCtrl = function GraphicQuestionCtrl(FeedbackService, GraphicQ
 
         }
     }
+
+    AbstractQuestionCtrl.apply(this, arguments);
 };
 
 // Extends AbstractQuestionCtrl
@@ -156,6 +156,14 @@ GraphicQuestionCtrl.prototype.reset = function reset() {
 
 /**
  *
+ * @returns {*|null}
+ */
+GraphicQuestionCtrl.prototype.getAssetsDir = function getAssetsDir() {
+    return AngularApp.webDir;
+};
+
+/**
+ *
  */
 GraphicQuestionCtrl.prototype.showRightAnswerZones = function showRightAnswerZones() {
     var pointX = 0;
@@ -171,9 +179,13 @@ GraphicQuestionCtrl.prototype.showRightAnswerZones = function showRightAnswerZon
             var firstElementId = $(".crosshair")[j].id;
             var firstElementNumId = firstElementId.replace("crosshair_", "");
             var topElementsHeight = $("#" + firstElementId).parent().parent().parent().prop("offsetHeight");
-
-            pointX = $("#" + firstElementId).prop("x");
-            pointY = $("#" + firstElementId).prop("y") - topElementsHeight;
+            
+            var pointOffsetX = $("#" + firstElementId).offset().left;
+            var pointOffsetY = $("#" + firstElementId).offset().top;
+            var imageOffsetX = $('#document-img').offset().left;
+            var imageOffsetY = $('#document-img').offset().top;
+            pointX = pointOffsetX - imageOffsetX;
+            pointY = pointOffsetY - imageOffsetY;
             start = this.question.solutions[i].value.split(",");
             startX = parseFloat(start[0]);
             startY = parseFloat(start[1]);
@@ -181,6 +193,13 @@ GraphicQuestionCtrl.prototype.showRightAnswerZones = function showRightAnswerZon
             centerY = startY + this.question.solutions[i].size/2;
             var endX = startX + this.question.solutions[i].size;
             var endY = startY + this.question.solutions[i].size;
+            
+            var offsetFromPanelX = $("#" + firstElementId).prop("x") - pointX;
+            var offsetFromPanelY = $("#" + firstElementId).prop("y") - pointY;
+            
+            /*
+             * Il reste un souci, à partir du moment où on essaie de valider deux bonnes réponses pas en même temps
+             */
 
             var distance = Math.sqrt((centerX-pointX)*(centerX-pointX) + (centerY-pointY)*(centerY-pointY));
             distance = Math.round(distance);
@@ -189,9 +208,11 @@ GraphicQuestionCtrl.prototype.showRightAnswerZones = function showRightAnswerZon
                 || (this.question.solutions[i].shape === "square" && pointX > startX && pointX < endX && pointY > startY && pointY < endY))
                 && this.notFoundZones.indexOf(this.question.solutions[i]) !== -1) {
                 var rightPointY = pointY + topElementsHeight;
-                $("#" + firstElementId).replaceWith("<i id='crosshair_valid_" + firstElementNumId + "' class='text-success feedback-info fa fa-check' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + (this.question.solutions[i].feedback ? this.question.solutions[i].feedback : '') + "' ></i>");
+                var visualPointX = $("#" + firstElementId).prop("x");
+                var visualPointY = $("#" + firstElementId).prop("y");
+                $("#" + firstElementId).replaceWith("<i id='crosshair_valid_" + firstElementNumId + "' class='text-success feedback-info fa fa-check' data-toggle='tooltip' style='top: " + visualPointY + "px; left: " + visualPointX + "px; position: absolute; z-index: 3;' title='" + (this.question.solutions[i].feedback ? this.question.solutions[i].feedback : '') + "' ></i>");
 
-                var answerZone = this.getAnswerZoneHTML(this.question.solutions[i], startX, startY);
+                var answerZone = this.getAnswerZoneHTML(this.question.solutions[i], startX + offsetFromPanelX, startY + offsetFromPanelY);
                 document.getElementsByClassName('droppable-container')[0].appendChild(answerZone);
 
                 this.notFoundZones.splice(this.notFoundZones.indexOf(this.question.solutions[i]), 1);

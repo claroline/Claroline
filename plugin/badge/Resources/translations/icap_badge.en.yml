@@ -115,6 +115,8 @@ claim_date: 'Claim date'
 claiming: Claim|Claimings
 collection_name: 'Collection name'
 collection_owned_by_user: 'From user %user%'
+csv_export: 'CSV Export'
+csv_filename: 'badge_awardings'
 day: day
 delete_collection_error: 'An error occured while deleting the collection.'
 dont_award: 'Don''t award'
@@ -197,3 +199,12 @@ badges_number: Badges number
 user_number: Users number
 import_export: Import/Export
 expired_badge: Expired badge
+recalculate_modal_title: 'Start automatic badge awarding?'
+recalculate_modal_waning: '<strong>Caution!</strong> Automatic badge awarding is an expensive process which can''t trigger any user notification.'
+recalculate_modal_option_all_users: 'Badge can be unawarded if awarding rules are not met anymore.'
+recalculate_button_tooltip: 'Start automatic badge (un)awarding process if attribution rules have been modified.'
+recalculate_button: 'Recalculate awardings'
+recalculate_success: 'Automatic badge awarding done with success'
+unaward_modal_title: 'Edit badge'
+unaward_modal_option_all_users: 'Unaward badge if attribution rules are not met anymore.'
+unaward_modal_warning: '<strong>Don''t forget:</strong> should attibution rules have been modified, users who can claim for this badge can obtain it with automatic awarding process.'

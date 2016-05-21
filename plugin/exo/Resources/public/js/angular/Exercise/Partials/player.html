@@ -9,14 +9,15 @@
     <!-- Step content -->
     <div class="panel-body">
         <timer
-            data-ng-if="exercisePlayerCtrl.exercise.meta.duration != 0"
-            data-duration="exercisePlayerCtrl.exercise.meta.duration * 60"
-            data-on-end="exercisePlayerCtrl.end()"
-        ></timer>
+            data-ng-if="exercisePlayerCtrl.timer"
+            data-timer="exercisePlayerCtrl.timer"
+            data-timer-start="true"
+            data-timer-destroy="false">
+        </timer>
 
         <!-- Display the current Step -->
         <step-show
-                data-step-index="{{exercisePlayerCtrl.index}}"
+                data-step-index="{{ exercisePlayerCtrl.index }}"
                 data-step="exercisePlayerCtrl.step"
                 data-solution-shown="exercisePlayerCtrl.solutionShown"
                 data-current-try="exercisePlayerCtrl.currentStepTry">
@@ -61,7 +62,6 @@
                     data-toggle="tooltip" data-container="body" title="{{ 'btn_show_solution'|trans:{}:'ujm_sequence' }}"
                     data-ng-click="exercisePlayerCtrl.showSolution()"
             >
-                <span class="fa fa-file"></span>
                 {{ 'btn_show_solution'|trans:{}:'ujm_sequence' }}
             </button>
 
