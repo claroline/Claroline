@@ -119,6 +119,15 @@ class Exercise extends AbstractResource
     private $dispButtonInterrupt = false;
 
     /**
+     * Show the Exercise meta in the overview of the Exercise
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="metadata_visible", type="boolean")
+     */
+    private $metadataVisible = true;
+
+    /**
      * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
      */
     private $lockAttempt = false;
@@ -413,6 +422,26 @@ class Exercise extends AbstractResource
     public function getDispButtonInterrupt()
     {
         return $this->dispButtonInterrupt;
+    }
+
+    /**
+     * Set visibility of metadata
+     *
+     * @param boolean $visible
+     */
+    public function setMetadataVisible($visible)
+    {
+        $this->metadataVisible = $visible;
+    }
+
+    /**
+     * Are metadata visible ?
+     *
+     * @return boolean
+     */
+    public function isMetadataVisible()
+    {
+        return $this->metadataVisible;
     }
 
     /**
