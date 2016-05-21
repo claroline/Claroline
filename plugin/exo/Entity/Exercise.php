@@ -12,26 +12,42 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Exercise extends AbstractResource
 {
-    const TYPE_SUMMATIVE = '1';
+    const TYPE_SUMMATIVE  = '1';
     const TYPE_EVALUATIVE = '2';
-    const TYPE_FORMATIVE = '3';
+    const TYPE_FORMATIVE  = '3';
 
     /**
+     * Title of the Exercise
+     *
+     * @var string
+     * @deprecated duplicate of ResourceNode::$name. needs to be removed
+     *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
 
     /**
+     * Description of the Exercise
+     *
+     * @var string
+     *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description = '';
 
     /**
+     * Are the Questions shuffled in the Steps ?
+     *
      * @ORM\Column(name="shuffle", type="boolean", nullable=true)
      */
     private $shuffle = false;
 
     /**
+     * Number of Questions to use when we play the Exercise
+     * If 0, all the questions are used in the Player
+     *
+     * @var integer
+     *
      * @ORM\Column(name="nb_question", type="integer")
      */
     private $nbQuestion = 0;
@@ -42,6 +58,10 @@ class Exercise extends AbstractResource
     private $keepSameQuestion;
 
     /**
+     * Maximum time allowed to do the Exercise
+     *
+     * @var integer
+     *
      * @ORM\Column(name="duration", type="integer")
      */
     private $duration = 0;
@@ -52,11 +72,18 @@ class Exercise extends AbstractResource
     private $doprint = false;
 
     /**
+     * Number of attempts allowed for the Exercise
+     *
+     * @var integer
+     *
      * @ORM\Column(name="max_attempts", type="integer")
      */
     private $maxAttempts = 0;
 
     /**
+     * When corrections are available to the Users ?
+     *
+     * @var string
      * @todo mode should be at least a class constant
      *
      * @ORM\Column(name="correction_mode", type="string", length=255)
@@ -64,11 +91,18 @@ class Exercise extends AbstractResource
     private $correctionMode = '1';
 
     /**
+     * Date of availability of the corrections
+     *
+     * @var string
+     *
      * @ORM\Column(name="date_correction", type="datetime", nullable=true)
      */
     private $dateCorrection;
 
     /**
+     * When marks are available to the Users ?
+     *
+     * @var string
      * @todo mode should be at least a class constant
      *
      * @ORM\Column(name="mark_mode", type="string", length=255)
@@ -76,6 +110,10 @@ class Exercise extends AbstractResource
     private $markMode = '1';
 
     /**
+     * Add a button to stop the Exercise before the end
+     *
+     * @var boolean
+     *
      * @ORM\Column(name="disp_button_interrupt", type="boolean", nullable=true)
      */
     private $dispButtonInterrupt = false;
@@ -90,16 +128,26 @@ class Exercise extends AbstractResource
      * one time. An exercise that has never been published has all its
      * existing papers deleted at the first publication.
      *
+     * @var boolean
+     *
      * @ORM\Column(name="published", type="boolean")
      */
     private $wasPublishedOnce = false;
 
     /**
+     * Are anonymous allowed to play the Exercise ?
+     *
+     * @var boolean
+     *
      * @ORM\Column(name="anonymous", type="boolean", nullable=true)
      */
     private $anonymous = false;
 
     /**
+     * Type of the Exercise
+     *
+     * @var string
+     *
      * @ORM\Column(name="type", type="string", length=255)
      * sommatif, formatif, certificatif
      */
@@ -135,6 +183,8 @@ class Exercise extends AbstractResource
      * Set title.
      *
      * @param string $title
+     *
+     * @deprecated Use ResourceNode::setName() instead
      */
     public function setTitle($title)
     {
@@ -145,6 +195,8 @@ class Exercise extends AbstractResource
      * Get title.
      *
      * @return string
+     *
+     * @deprecated Use ResourceNode::getName() instead
      */
     public function getTitle()
     {
