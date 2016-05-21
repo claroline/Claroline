@@ -265,7 +265,13 @@ class ExerciseManager
         $exercise->setCorrectionMode($metadata->correctionMode);
         $exercise->setAnonymous($metadata->anonymous);
         $exercise->setDuration($metadata->duration);
-        /*$exercise->setDateCorrection($metadata->correctionDate);*/
+
+        $correctionDate = null;
+        if (!empty($metadata->correctionDate)) {
+            $correctionDate = \DateTime::createFromFormat('Y-m-d H:i:s', $metadata->correctionDate);
+        }
+
+        $exercise->setDateCorrection($correctionDate);
 
         // Save to DB
         $this->om->persist($exercise);
@@ -288,6 +294,7 @@ class ExerciseManager
         // Accessibility dates
         $startDate = $node->getAccessibleFrom()  ? $node->getAccessibleFrom()->format('Y-m-d H:i:s')  : null;
         $endDate = $node->getAccessibleUntil() ? $node->getAccessibleUntil()->format('Y-m-d H:i:s') : null;
+        $correctionDate = $exercise->getDateCorrection() ? $exercise->getDateCorrection()->format('Y-m-d H:i:s') : null;
 
         return [
             'authors' => [
@@ -308,7 +315,7 @@ class ExerciseManager
             'duration'            => $exercise->getDuration(),
             'markMode'            => $exercise->getMarkMode(),
             'correctionMode'      => $exercise->getCorrectionMode(),
-            'correctionDate'      => $exercise->getDateCorrection()->format('Y-m-d H:i:s'),
+            'correctionDate'      => $correctionDate,
             'startDate'           => $startDate,
             'endDate'             => $endDate,
             'published'           => $node->isPublished(),
