@@ -17,6 +17,26 @@ ExerciseService.$inject = [ '$http', '$q' ];
 ExerciseService.prototype.exercise = null;
 
 /**
+ * List of available correction modes for Exercise
+ * @type {Object}
+ */
+ExerciseService.prototype.correctionModes = {
+    '1': Translator.trans('at_the_end_of_assessment', {}, 'ujm_exo'),
+    '2': Translator.trans('after_the_last_attempt', {}, 'ujm_exo'),
+    '3': Translator.trans('from', {}, 'ujm_exo'),
+    '4': Translator.trans('never', {}, 'ujm_exo')
+};
+
+/**
+ * List of available mark modes for Exercise
+ * @type {Object}
+ */
+ExerciseService.prototype.markModes = {
+    '1': Translator.trans('at_the_same_time_that_the_correction', {}, 'ujm_exo'),
+    '2': Translator.trans('at_the_end_of_assessment', {}, 'ujm_exo')
+};
+
+/**
  * Is the current User can edit the Exercise ?
  * @type {boolean}
  */

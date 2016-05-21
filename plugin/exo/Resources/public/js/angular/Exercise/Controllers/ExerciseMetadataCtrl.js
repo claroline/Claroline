@@ -1,14 +1,18 @@
 /**
  * Exercise Metadata Controller
  * Manages edition of the parameters of the Exercise
- * @param {Object} exercise - The exercise to Edit
+ * @param {ExerciseService} ExerciseService
+ * @param {Object}          exercise - The exercise to Edit
  * @constructor
  */
 var ExerciseMetadataCtrl = function ExerciseMetadataCtrl(ExerciseService, exercise) {
-    this.exerciseService = ExerciseService;
+    this.ExerciseService = ExerciseService;
 
     // Create a copy of the exercise
     angular.copy(exercise, this.exercise);
+
+    this.correctionModes = this.ExerciseService.correctionModes;
+    this.markModes       = this.ExerciseService.markModes;
 
     // Initialize TinyMCE
     var tinymce = window.tinymce;
@@ -58,10 +62,22 @@ ExerciseMetadataCtrl.prototype.tinymceOptions = {};
 ExerciseMetadataCtrl.prototype.exercise = {};
 
 /**
+ * List of available correction modes for Exercise
+ * @type {Object}
+ */
+ExerciseMetadataCtrl.prototype.correctionModes = {};
+
+/**
+ * List of available mark modes for Exercise
+ * @type {Object}
+ */
+ExerciseMetadataCtrl.prototype.markModes = {};
+
+/**
  * Save modifications of the Exercise
  */
 ExerciseMetadataCtrl.prototype.save = function save() {
-    this.exerciseService.save(this.exercise);
+    this.ExerciseService.save(this.exercise);
 };
 
 // Register controller into AngularJS
