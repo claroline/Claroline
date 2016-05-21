@@ -126,10 +126,21 @@
                     </div>
 
                     <!-- Date of availability -->
-                    <div class="form-group" data-ng-if="3 == exerciseMetadataCtrl.exercise.meta.correctionMode">
+                    <!-- data-ng-if="3 == exerciseMetadataCtrl.exercise.meta.correctionMode" -->
+
+                    <div class="form-group" datat-ng-class="{'has-error': exerciseMetadataCtrl.exercise.meta.correctionDate.$invalid}">
                         <label for="exercise-correction-date" class="control-label col-md-4">{{ 'correction_date'| trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
-                            <input type="text" id="exercise-correction-date" class="form-control" data-ng-model="exerciseMetadataCtrl.exercise.meta.correctionDate" />
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-fw fa-calendar"></span>
+                                </span>
+                                <input type="text"
+                                       id="exercise-correction-date"
+                                       class="form-control"
+                                       data-ng-model="exerciseMetadataCtrl.exercise.meta.correctionDate"
+                                       data-bs-datepicker="" />
+                            </div>
                         </div>
                     </div>
 
@@ -171,7 +182,12 @@
                     <div class="form-group">
                         <label for="exercise-duration" class="control-label col-md-4">{{ 'duration' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-2">
-                            <input type="text" class="form-control" id="exercise-duration" data-ng-model="exerciseMetadataCtrl.exercise.meta.duration" />
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-fw fa-clock-o"></span>
+                                </span>
+                                <input type="text" class="form-control" id="exercise-duration" data-ng-model="exerciseMetadataCtrl.exercise.meta.duration" />
+                            </div>
                         </div>
                     </div>
 
