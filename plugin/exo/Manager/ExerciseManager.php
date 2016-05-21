@@ -256,6 +256,7 @@ class ExerciseManager
         $exercise->setMaxAttempts($metadata->maxAttempts);
         $exercise->setLockAttempt($metadata->lockAttempt);
         $exercise->setDispButtonInterrupt($metadata->dispButtonInterrupt);
+        $exercise->setMetadataVisible($metadata->metadataVisible);
         $exercise->setMarkMode($metadata->markMode);
         $exercise->setCorrectionMode($metadata->correctionMode);
         $exercise->setAnonymous($metadata->anonymous);
@@ -288,25 +289,26 @@ class ExerciseManager
             'authors' => [
                 ['name' => $authorName],
             ],
-            'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
-            'title' => $exercise->getTitle(),
-            'description' => $exercise->getDescription(),
-            'type' => $exercise->getType(),
-            'pick' => $exercise->getNbQuestion(),
-            'random' => $exercise->getShuffle(),
-            'keepSameQuestions' => $exercise->getKeepSameQuestion(),
-            'maxAttempts' => $exercise->getMaxAttempts(),
-            'lockAttempt' => $exercise->getLockAttempt(),
+            'created'             => $node->getCreationDate()->format('Y-m-d H:i:s'),
+            'title'               => $exercise->getTitle(),
+            'description'         => $exercise->getDescription(),
+            'type'                => $exercise->getType(),
+            'pick'                => $exercise->getNbQuestion(),
+            'random'              => $exercise->getShuffle(),
+            'keepSameQuestions'   => $exercise->getKeepSameQuestion(),
+            'maxAttempts'         => $exercise->getMaxAttempts(),
+            'lockAttempt'         => $exercise->getLockAttempt(),
             'dispButtonInterrupt' => $exercise->getDispButtonInterrupt(),
-            'anonymous' => $exercise->getAnonymous(),
-            'duration' => $exercise->getDuration(),
-            'markMode' => $exercise->getMarkMode(),
-            'correctionMode' => $exercise->getCorrectionMode(),
-            'correctionDate' => $exercise->getDateCorrection()->format('Y-m-d H:i:s'),
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'published' => $node->isPublished(),
-            'publishedOnce' => $exercise->wasPublishedOnce(),
+            'metadataVisible'     => $exercise->isMetadataVisible(),
+            'anonymous'           => $exercise->getAnonymous(),
+            'duration'            => $exercise->getDuration(),
+            'markMode'            => $exercise->getMarkMode(),
+            'correctionMode'      => $exercise->getCorrectionMode(),
+            'correctionDate'      => $exercise->getDateCorrection()->format('Y-m-d H:i:s'),
+            'startDate'           => $startDate,
+            'endDate'             => $endDate,
+            'published'           => $node->isPublished(),
+            'publishedOnce'       => $exercise->wasPublishedOnce(),
         ];
     }
 
