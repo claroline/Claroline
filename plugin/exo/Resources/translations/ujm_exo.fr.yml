@@ -204,6 +204,8 @@ matching_edition: Edition d'une question associative
 matching_value: Type de question associative
 maximum_tries: Nombre d'essai maximum
 meaning_measure_difficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
+metadata_visible:      Afficher les informations de l'exercice
+metadata_visible_help: Si coché, un tableau récapitulatif sera affiché sur la vue d'ensemble de l'exercice
 model: Modèle
 more_info: Plus d'informations
 my_questions: Mes questions
