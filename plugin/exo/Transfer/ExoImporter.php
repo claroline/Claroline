@@ -201,13 +201,9 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $newExercise->setType($exercise['type']);
 
         $this->om->persist($newExercise);
-        $this->om->flush();
 
-        $subscription = new Subscription($user, $newExercise);
-        $subscription->setAdmin(1);
-        $subscription->setCreator(1);
+        $this->container->get('ujm.exo.subscription_manager')->subscribe($newExercise, $user);
 
-        $this->om->persist($subscription);
         $this->om->flush();
 
         return $newExercise;
@@ -302,7 +298,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
     /**
      * return steps of an exercise in an array.
      *
-     * @param object Exercise                                  $ojbect
+     * @param object Exercise                                  $object
      * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
      * @param string                                           $exoTitle
      *
