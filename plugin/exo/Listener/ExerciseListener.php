@@ -14,6 +14,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\Subscription;
 use UJM\ExoBundle\Form\ExerciseType;
 
@@ -121,7 +122,7 @@ class ExerciseListener
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         $exercise = $event->getResource();
-        
+
         $nbPapers = $em->getRepository('UJMExoBundle:Paper')->countExercisePapers($event->getResource());
         if (0 === $nbPapers) {
             $this->container->get('ujm.exo.subscription_manager')->deleteSubscriptions($exercise);
@@ -149,36 +150,13 @@ class ExerciseListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
+        $newExercise = $this->container->get('ujm.exo.exercise_manager')->copyExercise($event->getResource());
 
-        $exerciseToCopy = $event->getResource();
-        $listQuestionsExoToCopy = $em->getRepository('UJMExoBundle:StepQuestion')->findExoByOrder($exerciseToCopy);
+        $this->container->get('doctrine.orm.entity_manager')->persist($newExercise);
 
-        $newExercise = new Exercise();
-        $newExercise->setName($exerciseToCopy->getName());
-        $newExercise->setDescription($exerciseToCopy->getDescription());
-        $newExercise->setShuffle($exerciseToCopy->getShuffle());
-        $newExercise->setNbQuestion($exerciseToCopy->getNbQuestion());
-        $newExercise->setDuration($exerciseToCopy->getDuration());
-        $newExercise->setDoprint($exerciseToCopy->getDoprint());
-        $newExercise->setMaxAttempts($exerciseToCopy->getMaxAttempts());
-        $newExercise->setCorrectionMode($exerciseToCopy->getCorrectionMode());
-        $newExercise->setDateCorrection($exerciseToCopy->getDateCorrection());
-        $newExercise->setMarkMode($exerciseToCopy->getMarkMode());
-        $newExercise->setDispButtonInterrupt($exerciseToCopy->getDispButtonInterrupt());
-        $newExercise->setLockAttempt($exerciseToCopy->getLockAttempt());
-
-        $em->persist($newExercise);
-
-        foreach ($listQuestionsExoToCopy as $eq) {
-            $questionToAdd = $em->getRepository('UJMExoBundle:Question')->find($eq->getQuestion());
-            $this->container->get('ujm.exo_exercise')->createStepForOneQuestion($newExercise, $questionToAdd, 1);
-        }
-
+        // Create Subscription for User who has copied the Exercise
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $this->container->get('ujm.exo.subscription_manager')->subscribe($newExercise, $user);
-
-        $em->flush();
 
         $event->setCopy($newExercise);
         $event->stopPropagation();
@@ -191,11 +169,13 @@ class ExerciseListener
      */
     public function onPublicationChange(PublicationChangeEvent $event)
     {
+        /** @var Exercise $exercise */
         $exercise = $event->getResource();
 
         if ($exercise->getResourceNode()->isPublished() && !$exercise->wasPublishedOnce()) {
             $this->container->get('ujm.exo.exercise_manager')->deletePapers($exercise);
             $exercise->setPublishedOnce(true);
+
             $this->container->get('claroline.persistence.object_manager')->flush();
         }
 

@@ -149,11 +149,9 @@ class Exercise extends AbstractResource
     private $type = self::TYPE_SUMMATIVE;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Step",
-     *     mappedBy="exercise",
-     *     cascade={"remove"}
-     * )
+     * @var ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="Step", mappedBy="exercise", cascade={"all"})
      * @ORM\OrderBy({"order" = "ASC"})
      */
     private $steps;

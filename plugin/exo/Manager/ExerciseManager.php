@@ -174,8 +174,43 @@ class ExerciseManager
      */
     public function pickSteps(Exercise $exercise)
     {
-        return $this->om->getRepository('UJMExoBundle:Step')
-            ->findByExercise($exercise);
+        return $this->om->getRepository('UJMExoBundle:Step')->findByExercise($exercise);
+    }
+
+    /**
+     * Create a copy of an Exercise.
+     *
+     * @param Exercise $exercise
+     *
+     * @return Exercise the copy of the Exercise
+     */
+    public function copyExercise(Exercise $exercise)
+    {
+        $newExercise = new Exercise();
+
+        // Populate Exercise properties
+        $newExercise->setName($exercise->getName());
+        $newExercise->setDescription($exercise->getDescription());
+        $newExercise->setShuffle($exercise->getShuffle());
+        $newExercise->setNbQuestion($exercise->getNbQuestion());
+        $newExercise->setDuration($exercise->getDuration());
+        $newExercise->setDoprint($exercise->getDoprint());
+        $newExercise->setMaxAttempts($exercise->getMaxAttempts());
+        $newExercise->setCorrectionMode($exercise->getCorrectionMode());
+        $newExercise->setDateCorrection($exercise->getDateCorrection());
+        $newExercise->setMarkMode($exercise->getMarkMode());
+        $newExercise->setDispButtonInterrupt($exercise->getDispButtonInterrupt());
+        $newExercise->setLockAttempt($exercise->getLockAttempt());
+
+        /** @var \UJM\ExoBundle\Entity\Step $step */
+        foreach ($exercise->getSteps() as $step) {
+            $newStep = $this->stepManager->copyStep($step);
+
+            // Add step to Exercise
+            $newExercise->addStep($newStep);
+        }
+
+        return $newExercise;
     }
 
     /**

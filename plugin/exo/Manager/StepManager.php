@@ -67,6 +67,39 @@ class StepManager
     }
 
     /**
+     * Create a copy of a Step.
+     *
+     * @param Step $step
+     *
+     * @return Step the copy of the Step
+     */
+    public function copyStep(Step $step)
+    {
+        $newStep = new Step();
+
+        // Populate Step properties
+        $newStep->setOrder($step->getOrder());
+        $newStep->setText($step->getText());
+        $newStep->setNbQuestion($step->getNbQuestion());
+        $newStep->setShuffle($step->getShuffle());
+        $newStep->setDuration($step->getDuration());
+        $newStep->setMaxAttempts($step->getMaxAttempts());
+        $newStep->setKeepSameQuestion($step->getKeepSameQuestion());
+
+        // Link questions to Step
+        /** @var StepQuestion $stepQuestion */
+        foreach ($step->getStepQuestions() as $stepQuestion) {
+            $newStepQuestion = new StepQuestion();
+
+            $newStepQuestion->setStep($newStep);
+            $newStepQuestion->setQuestion($stepQuestion->getQuestion());
+            $newStepQuestion->setOrdre($stepQuestion->getOrdre());
+        }
+
+        return $newStep;
+    }
+
+    /**
      * Exports a step in a JSON-encodable format.
      *
      * @param Step $step
