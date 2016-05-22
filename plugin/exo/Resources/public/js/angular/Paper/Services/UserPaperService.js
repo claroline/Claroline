@@ -21,7 +21,7 @@ UserPaperService.$inject = [ '$http', '$q', 'PaperService', 'ExerciseService' ];
  * Current paper of the User
  * @type {Object}
  */
-UserPaperService.prototype.paper = {};
+UserPaperService.prototype.paper = null;
 
 /**
  * Number of papers already done by the User
@@ -92,25 +92,26 @@ UserPaperService.prototype.getQuestionPaper = function getQuestionPaper(question
 UserPaperService.prototype.start = function start(exercise) {
     var deferred = this.$q.defer();
 
-    this.$http.post(
-        Routing.generate('exercise_new_attempt', { id: exercise.id })
-    ).success(function(response){
-        // TODO : display message
+    if (!this.paper) {
+        // Start a new Paper (or load an interrupted one)
+        this.$http.post(
+            Routing.generate('exercise_new_attempt', { id: exercise.id })
+        ).success(function(response){
+            this.paper = response;
+            deferred.resolve(this.paper);
+        }.bind(this)).error(function(data, status){
+            // TODO : display message
 
-        if (response && response.paper) {
-            this.paper = response.paper;
-
-            deferred.resolve(response.paper);
-        }
-    }.bind(this)).error(function(data, status){
-        // TODO : display message
-
-        deferred.reject([]);
-        var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error';
-        var code = data && data.error && data.error.code ? data.error.code : 403;
-        /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
-        /*$window.location = url;*/
-    });
+            deferred.reject([]);
+            var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error';
+            var code = data && data.error && data.error.code ? data.error.code : 403;
+            /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
+            /*$window.location = url;*/
+        });
+    } else {
+        // Continue the current Paper
+        deferred.resolve(this.paper);
+    }
 
     return deferred.promise;
 };
@@ -127,16 +128,19 @@ UserPaperService.prototype.end = function end() {
             Routing.generate('exercise_finish_paper', { id: this.paper.id })
         )
         // Success callback
-        .success(function (response) {
+        .success(function onSuccess(response) {
             // Update the number of finished papers
             this.nbPapers++;
 
             // TODO : display message
 
-            deferred.resolve(this.paper);
+            // Reset current paper
+            this.paper = null;
+
+            deferred.resolve(response);
         }.bind(this))
         // Error callback
-        .error(function (data, status) {
+        .error(function onError(data, status) {
             // TODO : display message
 
             deferred.reject([]);
@@ -160,7 +164,7 @@ UserPaperService.prototype.useHint = function useHint(question, hint) {
         .get(
             Routing.generate('exercise_hint', { paperId: this.paper.id, hintId: hint.id })
         )
-        .success(function (response) {
+        .success(function onSuccess(response) {
             // Update question Paper with used hint
             var questionPaper = this.getQuestionPaper(question);
 
@@ -172,7 +176,7 @@ UserPaperService.prototype.useHint = function useHint(question, hint) {
 
             deferred.resolve(response);
         }.bind(this))
-        .error(function (data, status) {
+        .error(function onError(data, status) {
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'QuestionService get hint error';
             var code = data && data.error && data.error.code ? data.error.code : 400;
@@ -247,7 +251,7 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
             }.bind(this))
 
             // Error callback
-            .error(function (data, status) {
+            .error(function onError(data, status) {
                 // TODO : display message
 
                 deferred.reject([]);
