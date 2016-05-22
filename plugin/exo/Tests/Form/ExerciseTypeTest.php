@@ -37,7 +37,7 @@ class ExerciseTypeTest extends TypeTestCase
             'publish' => '1',
         ];
 
-        $form = $this->factory->create(new ExerciseType(true));
+        $form = $this->factory->create(new ExerciseType());
         $form->submit($formData);
         $this->assertTrue($form->isSynchronized());
 
@@ -46,29 +46,6 @@ class ExerciseTypeTest extends TypeTestCase
         $this->assertInstanceOf('UJM\ExoBundle\Entity\Exercise', $exercise);
         $this->assertEquals('Ex 1', $exercise->getTitle());
         $this->assertEquals('1', $form->get('publish')->getData());
-
-        $this->assertViewIsValid($form, $formData);
-    }
-
-    public function testSubmitEditionFormWithValidData()
-    {
-        $formData = [
-            'title' => 'Ex 1',
-            'description' => 'Desc...',
-            'duration' => '3600',
-            'lockAttempt' => '1',
-        ];
-
-        $form = $this->factory->create(new ExerciseType(), new Exercise());
-        $form->submit($formData);
-        $this->assertTrue($form->isSynchronized());
-
-        $exercise = $form->getData();
-
-        $this->assertInstanceOf('UJM\ExoBundle\Entity\Exercise', $exercise);
-        $this->assertEquals('Ex 1', $exercise->getTitle());
-        $this->assertEquals('Desc...', $exercise->getDescription());
-        $this->assertEquals('3600', $exercise->getDuration());
 
         $this->assertViewIsValid($form, $formData);
     }
