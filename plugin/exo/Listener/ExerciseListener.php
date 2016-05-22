@@ -121,10 +121,9 @@ class ExerciseListener
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         $exercise = $event->getResource();
-
-        // TODO use count method instead of loading the list
-        $papers = $em->getRepository('UJMExoBundle:Paper')->findOneByExercise($event->getResource());
-        if (count($papers) === 0) {
+        
+        $nbPapers = $em->getRepository('UJMExoBundle:Paper')->countExercisePapers($event->getResource());
+        if (0 === $nbPapers) {
             $this->container->get('ujm.exo.subscription_manager')->deleteSubscriptions($exercise);
 
             $em->remove($exercise);
