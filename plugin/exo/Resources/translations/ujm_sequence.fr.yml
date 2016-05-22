@@ -83,7 +83,7 @@ question_show_hint_confirm: Êtes vous sûr de vouloir utiliser l'indice ? <br/>
 
 # s
 sequence_step: Etape
-sequence_attempts_infos: Vous avez le droit à %1% essai(s)
+sequence_attempts_infos: "[0, 1] Vous avez le droit à %count% essai|]1,Inf[ Vous avez le droit à %count% essais"
 sequence_nb_attempts: Essai N° %1%
 sequence_interrupt_sequence_confirm: Êtes vous sûr de vouloir interrompre l'exercice ?
 sequence_end_sequence_confirm: Êtes vous sûr de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.

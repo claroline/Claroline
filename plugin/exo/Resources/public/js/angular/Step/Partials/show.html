@@ -3,7 +3,7 @@
         {{ 'step'|trans:{}:'ujm_exo' }} <span class="badge">{{ stepShowCtrl.stepIndex*1 + 1 }}</span>
 
         <small data-ng-if="stepShowCtrl.step.maxAttempts" class="pull-right">
-            <span>{{ 'sequence_attempts_infos'|trans:{ "1" : stepShowCtrl.step.maxAttempts }:'ujm_sequence'}}.</span>
+            <span>{{ 'sequence_attempts_infos'|transChoice:stepShowCtrl.step.maxAttempts:{ count: stepShowCtrl.step.maxAttempts }:'ujm_sequence'}}.</span>
             <span>{{ 'sequence_nb_attempts'|trans:{ "1" : stepShowCtrl.currentTry }:'ujm_sequence' }}</span>
             <span>/ {{ stepShowCtrl.step.maxAttempts }}</span>
         </small>

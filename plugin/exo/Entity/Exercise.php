@@ -22,11 +22,18 @@ class Exercise extends AbstractResource
     private $description = '';
 
     /**
+     * Are the Questions shuffled in the Steps ?
+     *
      * @ORM\Column(name="shuffle", type="boolean", nullable=true)
      */
     private $shuffle = false;
 
     /**
+     * Number of Questions to use when we play the Exercise
+     * If 0, all the questions are used in the Player.
+     *
+     * @var int
+     *
      * @ORM\Column(name="nb_question", type="integer")
      */
     private $nbQuestion = 0;
@@ -37,6 +44,10 @@ class Exercise extends AbstractResource
     private $keepSameQuestion;
 
     /**
+     * Maximum time allowed to do the Exercise.
+     *
+     * @var int
+     *
      * @ORM\Column(name="duration", type="integer")
      */
     private $duration = 0;
@@ -47,11 +58,19 @@ class Exercise extends AbstractResource
     private $doprint = false;
 
     /**
+     * Number of attempts allowed for the Exercise.
+     *
+     * @var int
+     *
      * @ORM\Column(name="max_attempts", type="integer")
      */
     private $maxAttempts = 0;
 
     /**
+     * When corrections are available to the Users ?
+     *
+     * @var string
+     *
      * @todo mode should be at least a class constant
      *
      * @ORM\Column(name="correction_mode", type="string", length=255)
@@ -59,11 +78,19 @@ class Exercise extends AbstractResource
     private $correctionMode = '1';
 
     /**
+     * Date of availability of the corrections.
+     *
+     * @var string
+     *
      * @ORM\Column(name="date_correction", type="datetime", nullable=true)
      */
     private $dateCorrection;
 
     /**
+     * When marks are available to the Users ?
+     *
+     * @var string
+     *
      * @todo mode should be at least a class constant
      *
      * @ORM\Column(name="mark_mode", type="string", length=255)
@@ -71,9 +98,22 @@ class Exercise extends AbstractResource
     private $markMode = '1';
 
     /**
+     * Add a button to stop the Exercise before the end.
+     *
+     * @var bool
+     *
      * @ORM\Column(name="disp_button_interrupt", type="boolean", nullable=true)
      */
     private $dispButtonInterrupt = false;
+
+    /**
+     * Show the Exercise meta in the overview of the Exercise.
+     *
+     * @var bool
+     *
+     * @ORM\Column(name="metadata_visible", type="boolean")
+     */
+    private $metadataVisible = true;
 
     /**
      * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
@@ -85,16 +125,26 @@ class Exercise extends AbstractResource
      * one time. An exercise that has never been published has all its
      * existing papers deleted at the first publication.
      *
+     * @var bool
+     *
      * @ORM\Column(name="published", type="boolean")
      */
     private $wasPublishedOnce = false;
 
     /**
+     * Are anonymous allowed to play the Exercise ?
+     *
+     * @var bool
+     *
      * @ORM\Column(name="anonymous", type="boolean", nullable=true)
      */
     private $anonymous = false;
 
     /**
+     * Type of the Exercise.
+     *
+     * @var string
+     *
      * @ORM\Column(name="type", type="string", length=255)
      * sommatif, formatif, certificatif
      */
@@ -336,6 +386,26 @@ class Exercise extends AbstractResource
     public function getDispButtonInterrupt()
     {
         return $this->dispButtonInterrupt;
+    }
+
+    /**
+     * Set visibility of metadata.
+     *
+     * @param bool $visible
+     */
+    public function setMetadataVisible($visible)
+    {
+        $this->metadataVisible = $visible;
+    }
+
+    /**
+     * Are metadata visible ?
+     *
+     * @return bool
+     */
+    public function isMetadataVisible()
+    {
+        return $this->metadataVisible;
     }
 
     /**
