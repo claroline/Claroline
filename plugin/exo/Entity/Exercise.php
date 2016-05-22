@@ -17,11 +17,6 @@ class Exercise extends AbstractResource
     const TYPE_FORMATIVE = '3';
 
     /**
-     * @ORM\Column(name="title", type="string", length=255)
-     */
-    private $title;
-
-    /**
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description = '';
@@ -129,26 +124,6 @@ class Exercise extends AbstractResource
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set title.
-     *
-     * @param string $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**
