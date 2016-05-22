@@ -43,15 +43,15 @@ class ExerciseListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')
-                ->create(new ExerciseType(true));
-        $twig = $this->container->get('templating');
-        $content = $twig->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig', [
-            'form' => $form->createView(),
-            'resourceType' => 'ujm_exercise',
-                ]
+        $form = $this->container->get('form.factory')->create(new ExerciseType());
+
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Resource:createForm.html.twig', [
+                'form'         => $form->createView(),
+                'resourceType' => 'ujm_exercise',
+            ]
         );
+
         $event->setResponseContent($content);
         $event->stopPropagation();
     }
@@ -64,18 +64,15 @@ class ExerciseListener
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
-        $form = $this->container
-                ->get('form.factory')
-                ->create(new ExerciseType(true));
-        $form->handleRequest($request);
+        $form = $this->container->get('form.factory')->create(new ExerciseType());
 
+        $form->handleRequest($request);
         if ($form->isValid()) {
             $em = $this->container->get('doctrine.orm.entity_manager');
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
             $exercise = $form->getData();
-            $exercise->setName($exercise->getTitle());
-            $event->setPublished((bool) $form->get('publish')->getData());
+            $event->setPublished((bool) $form->get('published')->getData());
 
             $subscription = new Subscription($user, $exercise);
             $subscription->setAdmin(true);
@@ -84,20 +81,18 @@ class ExerciseListener
             $em->persist($exercise);
             $em->persist($subscription);
 
-            $event->setResources(array($exercise));
-            $event->stopPropagation();
+            $event->setResources([$exercise]);
+        } else {
+            $content = $this->container->get('templating')->render(
+                'ClarolineCoreBundle:Resource:createForm.html.twig', [
+                    'resourceType' => 'ujm_exercise',
+                    'form' => $form->createView(),
+                ]
+            );
+            $event->setErrorFormContent($content);
 
-            return;
         }
 
-        $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig', [
-            'resourceType' => 'ujm_exercise',
-            'form' => $form->createView(),
-                ]
-        );
-
-        $event->setErrorFormContent($content);
         $event->stopPropagation();
     }
 
@@ -135,8 +130,10 @@ class ExerciseListener
             '_controller' => 'UJMExoBundle:Exercise:open',
             'id' => $event->getResource()->getId(),
         ]);
+
         $response = $this->container->get('http_kernel')
                 ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
         $event->setResponse($response);
         $event->stopPropagation();
     }
@@ -194,7 +191,6 @@ class ExerciseListener
     public function onCopy(CopyResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $resource = $event->getResource();
 
         $exerciseToCopy = $event->getResource();
         $listQuestionsExoToCopy = $em->getRepository('UJMExoBundle:StepQuestion')->findExoByOrder($exerciseToCopy);
