@@ -5,6 +5,8 @@ namespace UJM\ExoBundle\Entity;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use UJM\ExoBundle\Library\Mode\CorrectionMode;
+use UJM\ExoBundle\Library\Mode\MarkMode;
 
 /**
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseRepository")
@@ -57,11 +59,9 @@ class Exercise extends AbstractResource
     private $maxAttempts = 0;
 
     /**
-     * @todo mode should be at least a class constant
-     *
      * @ORM\Column(name="correction_mode", type="string", length=255)
      */
-    private $correctionMode = '1';
+    private $correctionMode = CorrectionMode::AFTER_END;
 
     /**
      * @ORM\Column(name="date_correction", type="datetime", nullable=true)
@@ -69,18 +69,14 @@ class Exercise extends AbstractResource
     private $dateCorrection;
 
     /**
-     * @todo mode should be at least a class constant
-     *
      * @ORM\Column(name="mark_mode", type="string", length=255)
      */
-    private $markMode = '1';
+    private $markMode = MarkMode::WITH_CORRECTION;
 
     /**
      * @ORM\Column(name="disp_button_interrupt", type="boolean", nullable=true)
      */
     private $dispButtonInterrupt = false;
-
-    private $dispMetadata = true;
 
     /**
      * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
