@@ -1,10 +1,12 @@
 /**
  * Exercise Service
+ * @param {Object} $http
+ * @param {Object} $q
+ * @constructor
  */
-var ExerciseService = function ExerciseService($http, $q, UserPaperService) {
+var ExerciseService = function ExerciseService($http, $q) {
     this.$http = $http;
     this.$q    = $q;
-    this.UserPaperService = UserPaperService;
 };
 
 // Set up dependency injection
@@ -43,12 +45,6 @@ ExerciseService.prototype.markModes = {
 ExerciseService.prototype.editEnabled = false;
 
 /**
- * Is the current User can do the Exercise ?
- * @type {boolean}
- */
-ExerciseService.prototype.composeEnabled = false;
-
-/**
  * Get the current Exercise
  * @returns {Object}
  */
@@ -82,25 +78,6 @@ ExerciseService.prototype.isEditEnabled = function isEditEnabled() {
  */
 ExerciseService.prototype.setEditEnabled = function setEditEnabled(editEnabled) {
     this.editEnabled = editEnabled;
-
-    return this;
-};
-
-/**
- * Is compose enabled ?
- * @returns {boolean}
- */
-ExerciseService.prototype.isComposeEnabled = function isComposeEnabled() {
-    return this.composeEnabled;
-};
-
-/**
- * Set compose enabled
- * @param   {boolean} composeEnabled
- * @returns {ExerciseService}
- */
-ExerciseService.prototype.setComposeEnabled = function setComposeEnabled(composeEnabled) {
-    this.composeEnabled = composeEnabled;
 
     return this;
 };

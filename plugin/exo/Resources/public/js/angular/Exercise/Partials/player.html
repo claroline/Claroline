@@ -1,11 +1,4 @@
 <div class="player-container">
-    <!-- Player header -->
-    <div class="attempts" data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">
-        <span>{{ 'sequence_attempts_infos'|trans:{ "1" : exercisePlayerCtrl.exercise.meta.maxAttempts }:'ujm_sequence'}}.</span>
-        <span>{{ 'sequence_nb_attempts'|trans:{ "1" : exercisePlayerCtrl.paper.number }:'ujm_sequence' }}</span>
-        <span>/ {{ exercisePlayerCtrl.exercise.meta.maxAttempts }}</span>
-    </div>
-
     <!-- Step content -->
     <div class="panel-body">
         <timer

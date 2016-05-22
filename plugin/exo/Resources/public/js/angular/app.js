@@ -71,7 +71,6 @@ angular
                     },
 
                     // Active tab
-                    hideMenu: false,
                     tab: 'overview'
                 })
 
@@ -91,7 +90,6 @@ angular
                     },
 
                     // Active tab
-                    hideMenu: false,
                     tab: 'metadata'
                 })
 
@@ -119,7 +117,6 @@ angular
                         ]
                     },
 
-                    // Active tab
                     tab: 'steps'
                 })
 
@@ -144,7 +141,6 @@ angular
                     },
 
                     // Active tab
-                    hideMenu: false,
                     tab: 'papers'
                 })
 
@@ -169,7 +165,6 @@ angular
                     },
 
                     // Active tab
-                    hideMenu: false,
                     tab: 'papers'
                 })
 
@@ -215,8 +210,8 @@ angular
                         ]
                     },
 
-                    // Hide management menu in player
-                    hideMenu: true
+                    // Active tab
+                    tab: 'play'
                 })
 
                 // Otherwise redirect User on Overview

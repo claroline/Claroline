@@ -12,9 +12,9 @@ var ExerciseDirective = function ExerciseDirective() {
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/exercise.html',
         scope: {
             exercise       : '=', // The current Exercise to display
-            nbPapers       : '@', // The numbers of Papers submitted for this Exercise
+            nbPapers       : '@', // The number of Papers submitted for this Exercise
+            nbUserPapers   : '@', // The number of Papers submitted by the current User for this Exercise
             editEnabled    : '@', // User is allowed to edit current exercise ?
-            composeEnabled : '@'  // Use is allowed to do (or retry) the Exercise
         },
         bindToController: true
     };
