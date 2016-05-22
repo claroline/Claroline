@@ -129,40 +129,35 @@ class ExoImporter extends Importer implements ConfigurationInterface
 
     public function export(Workspace $workspace, array &$files, $object)
     {
-        $exoTitle = hash('sha1', $object->getTitle());
-        $qtiRepos = $this->container->get('ujm.exo_qti_repository');
-        $qtiRepos->createDirQTI($exoTitle, $this->new);
+        $exoTitle = hash('sha1', $object->getResourceNode()->getName());
+        $qtiRepo = $this->container->get('ujm.exo_qti_repository');
+        $qtiRepo->createDirQTI($exoTitle, $this->new);
         $this->new = false;
 
-        $steps = $this->getStepsToExport($object, $qtiRepos, $exoTitle, $files);
+        $steps = $this->getStepsToExport($object, $qtiRepo, $exoTitle, $files);
 
         $version = '1';
         $path = 'qti/'.$exoTitle;
 
-//        $data = array(array('file' => array(
-//            'path' => $path,
-//            'version' => $version,
-//            'title' => $object->getTitle(),
-//        )));
-        $data['exercise'] = array(
-                                'path' => $path,
-                                'version' => $version,
-                                'title' => $object->getTitle(),
-                                'description' => $object->getDescription(),
-                                'shuffle' => $object->getShuffle(),
-                                'nbQuestion' => $object->getNbQuestion(),
-                                'keepSameQuestion' => $object->getKeepSameQuestion(),
-                                'duration' => $object->getDuration(),
-                                'doPrint' => $object->getDoprint(),
-                                'maxAttempts' => $object->getMaxAttempts(),
-                                'correctionMode' => $object->getCorrectionMode(),
-                                'dateCorrection' => $object->getDateCorrection(),
-                                'markMode' => $object->getMarkMode(),
-                                'dispButtonInterrupt' => $object->getDispButtonInterrupt(),
-                                'lockAttempt' => $object->getLockAttempt(),
-                                'anonymous' => $object->getAnonymous(),
-                                'type' => $object->getType(),
-                            );
+        $data['exercise'] = [
+            'path' => $path,
+            'version' => $version,
+            'description' => $object->getDescription(),
+            'shuffle' => $object->getShuffle(),
+            'nbQuestion' => $object->getNbQuestion(),
+            'keepSameQuestion' => $object->getKeepSameQuestion(),
+            'duration' => $object->getDuration(),
+            'doPrint' => $object->getDoprint(),
+            'maxAttempts' => $object->getMaxAttempts(),
+            'correctionMode' => $object->getCorrectionMode(),
+            'dateCorrection' => $object->getDateCorrection(),
+            'markMode' => $object->getMarkMode(),
+            'dispButtonInterrupt' => $object->getDispButtonInterrupt(),
+            'lockAttempt' => $object->getLockAttempt(),
+            'anonymous' => $object->getAnonymous(),
+            'type' => $object->getType(),
+        ];
+
         $data['steps'] = $steps;
 
         return $data;
@@ -184,7 +179,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
     private function createExo(array $exercise, $user)
     {
         $newExercise = new Exercise();
-        $newExercise->setTitle($exercise['title']);
         $newExercise->setDescription($exercise['description']);
         $newExercise->setShuffle($exercise['shuffle']);
         $newExercise->setNbQuestion($exercise['nbQuestion']);

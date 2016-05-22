@@ -208,8 +208,6 @@ class Persister
      public function exercise($title, array $questions = [], User $user = null)
      {
          $exercise = new Exercise();
-         $exercise->setTitle($title);
-
          if ($user) {
              if (!isset($this->exoType)) {
                  $this->exoType = new ResourceType();

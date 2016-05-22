@@ -157,7 +157,6 @@ class ExerciseListener
 
         $newExercise = new Exercise();
         $newExercise->setName($exerciseToCopy->getName());
-        $newExercise->setTitle($exerciseToCopy->getTitle());
         $newExercise->setDescription($exerciseToCopy->getDescription());
         $newExercise->setShuffle($exerciseToCopy->getShuffle());
         $newExercise->setNbQuestion($exerciseToCopy->getNbQuestion());
