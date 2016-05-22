@@ -33,8 +33,8 @@ class ExerciseTypeTest extends TypeTestCase
     public function testSubmitCreationFormWithValidData()
     {
         $formData = [
-            'title' => 'Ex 1',
-            'publish' => '1',
+            'name' => 'Ex 1',
+            'published' => '1',
         ];
 
         $form = $this->factory->create(new ExerciseType());
@@ -44,8 +44,8 @@ class ExerciseTypeTest extends TypeTestCase
         $exercise = $form->getData();
 
         $this->assertInstanceOf('UJM\ExoBundle\Entity\Exercise', $exercise);
-        $this->assertEquals('Ex 1', $exercise->getTitle());
-        $this->assertEquals('1', $form->get('publish')->getData());
+        $this->assertEquals('Ex 1', $exercise->getName());
+        $this->assertEquals('1', $form->get('published')->getData());
 
         $this->assertViewIsValid($form, $formData);
     }
