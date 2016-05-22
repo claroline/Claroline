@@ -130,9 +130,8 @@ class ExerciseController
                 throw new AccessDeniedHttpException('max attempts reached');
             }
         }
-        $data = $this->paperManager->openPaper($exercise, $user, false);
 
-        return new JsonResponse($data);
+        return new JsonResponse($this->paperManager->openPaper($exercise, $user));
     }
 
     /**
@@ -225,17 +224,27 @@ class ExerciseController
      * associated with the exercise.
      *
      * @EXT\Route("/exercises/{exerciseId}/papers/{paperId}", name="exercise_paper")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = false})
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
      *
+     * @param User     $user
      * @param Exercise $exercise
      * @param Paper    $paper
      *
      * @return JsonResponse
      */
-    public function paperAction(Exercise $exercise, Paper $paper)
+    public function paperAction(User $user, Exercise $exercise, Paper $paper)
     {
-        return new JsonResponse($this->paperManager->exportUserPaper($paper, $exercise));
+        if (!$this->isAdmin($exercise) && $paper->getUser() !== $user) {
+            // Only administrator or the User attached can see a Paper
+            throw new AccessDeniedHttpException();
+        }
+        
+        return new JsonResponse([
+            'questions' => $this->paperManager->exportPaperQuestions($paper),
+            'paper' => $this->paperManager->exportPaper($paper)
+        ]);
     }
 
     private function assertHasPermission($permission, Exercise $exercise)
