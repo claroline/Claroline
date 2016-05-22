@@ -170,6 +170,13 @@ PaperService.prototype.delete = function deletePaper(paper) {
 };
 
 /**
+ * Check wether a paper need manual correction
+ */
+PaperService.prototype.needManualCorrection = function needManualCorrection() {
+    
+};
+
+/**
  * Check if the correction of the Exercise is available
  * @returns boolean
  * @todo finish implementation and replace the old check method
