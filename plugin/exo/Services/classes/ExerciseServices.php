@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Services\classes;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -30,10 +31,10 @@ class ExerciseServices
      * Constructor.
      *
      *
-     * @param \Claroline\CoreBundle\Persistence\ObjectManager                              $om                   Dependency Injection
-     * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Dependency Injection
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface                  $eventDispatcher      Dependency Injection
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry                                     $doctrine             Dependency Injection;
+     * @param \Claroline\CoreBundle\Persistence\ObjectManager                              $om
+     * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface                  $eventDispatcher
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry                                     $doctrine
      * @param \Symfony\Component\DependencyInjection\Container                             $container
      */
     public function __construct(
@@ -55,7 +56,7 @@ class ExerciseServices
      *
      *
      * @param int  $uid      id User
-     * @param int  $exoId    id Exercise
+     * @param int  $exoID    id Exercise
      * @param bool $finished to count or no paper n o finished
      *
      * @return int
@@ -73,11 +74,11 @@ class ExerciseServices
      * Get max score possible for an exercise.
      *
      *
-     * @param UJM\ExoBundle\Entity\Exercise $exercise
+     * @param Exercise $exercise
      *
      * @return float
      */
-    public function getExerciseTotalScore($exercise)
+    public function getExerciseTotalScore(Exercise $exercise)
     {
         $exoTotalScore = 0;
 
@@ -100,13 +101,13 @@ class ExerciseServices
      * To know if an user is the creator of an exercise.
      *
      *
-     * @param \UJM\ExoBundle\Entity\Exercise $exercise
+     * @param Exercise $exercise
      *
      * @return bool
      */
-    public function isExerciseAdmin($exercise)
+    public function isExerciseAdmin(Exercise $exercise)
     {
-        $collection = new ResourceCollection(array($exercise->getResourceNode()));
+        $collection = new ResourceCollection([$exercise->getResourceNode()]);
         if ($this->authorizationChecker->isGranted('ADMINISTRATE', $collection)) {
             return true;
         } else {
@@ -145,10 +146,10 @@ class ExerciseServices
     }
 
     /**
-     * Trigger an event to log informations after to execute an exercise if the score is not temporary.
+     * Trigger an event to log information after to execute an exercise if the score is not temporary.
      *
      *
-     * @param \UJM\ExoBundle\Entity\Paper\paper $paper
+     * @param Paper $paper
      */
     public function manageEndOfExercise(Paper $paper)
     {
@@ -161,7 +162,7 @@ class ExerciseServices
     }
 
     /**
-     * To control the max attemps, allow to know if an user can again execute an exercise.
+     * To control the max attempts, allow to know if an user can again execute an exercise.
      *
      *
      * @param \UJM\ExoBundle\Entity\Exercise $exercise
@@ -186,10 +187,9 @@ class ExerciseServices
      * Add an Interaction in an exercise if created from an exercise.
      *
      *
-     * @param UJM\ExoBundle\Entity\Question $question
-     * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise
-     * @param UJM\ExoBundle\Entity\Step     $step
-     * @param Doctrine EntityManager        $em
+     * @param Question $question
+     * @param Exercise $exercise
+     * @param Step $step
      */
     public function addQuestionInExercise($question, $exercise, $step)
     {
@@ -217,9 +217,9 @@ class ExerciseServices
      * Add a question in a step.
      *
      *
-     * @param UJM\ExoBundle\Entity\Question $question
-     * @param UJM\ExoBundle\Entity\Step     $step
-     * @param int                           $order
+     * @param Question $question
+     * @param Step $step
+     * @param int $order
      */
     public function addQuestionInStep($question, $step, $order)
     {
@@ -263,7 +263,7 @@ class ExerciseServices
     }
 
     /**
-     * @return Claroline\CoreBundle\Entity\User
+     * @return User
      */
     public function getUser()
     {
@@ -313,7 +313,7 @@ class ExerciseServices
 
     /**
      * @param Exercise $exercise
-     * @param type     $orderStep
+     * @param int     $orderStep
      * @param type     $em
      *
      * @return Step

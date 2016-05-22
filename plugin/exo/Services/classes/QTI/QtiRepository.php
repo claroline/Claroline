@@ -4,7 +4,9 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use UJM\ExoBundle\Entity\AbstractInteraction;
 use UJM\ExoBundle\Entity\InteractionOpen;
+use UJM\ExoBundle\Entity\Step;
 
 /**
  * To create temporary repository for QTI files.
@@ -279,10 +281,11 @@ class QtiRepository
     /**
      * Call scanFiles method for ExoImporter.
      *
+     * @param Step $step
      *
-     * @param UJM\ExoBundle\Entity\Step $step
+     * @return mixed
      */
-    public function scanFilesToImport(\UJM\ExoBundle\Entity\Step $step)
+    public function scanFilesToImport(Step $step)
     {
         $this->step = $step;
         $scanFile = $this->scanFiles();
@@ -294,16 +297,16 @@ class QtiRepository
     }
 
     /**
-     * @param UJM\ExoBundle\Entity\InteractionQCM or InteractionGraphic or .... $interX
+     * @param AbstractInteraction $interaction
+     * @param int $order
      */
-    private function addQuestionInExercise($interX, $order = -1)
+    private function addQuestionInExercise(AbstractInteraction $interaction, $order = -1)
     {
-        $exoServ = $this->container->get('ujm.exo_exercise');
-        $exoServ->addQuestionInStep($interX->getQuestion(), $this->step, $order);
+        $this->container->get('ujm.exo_exercise')->addQuestionInStep($interaction->getQuestion(), $this->step, $order);
     }
 
     /**
-     *
+     * @param bool $ws
      */
     public function assocExerciseQuestion($ws = false)
     {
