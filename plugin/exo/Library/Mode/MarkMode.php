@@ -3,27 +3,28 @@
 namespace UJM\ExoBundle\Library\Mode;
 
 /**
- * Defines when the marks of an Exercise become available
+ * Defines when the marks of an Exercise become available.
  */
 final class MarkMode
 {
     /**
-     * The marks are available at the same time than the Correction
+     * The marks are available at the same time than the Correction.
+     *
      * @see \UJM\ExoBundle\Entity\Mode\CorrectionMode
      *
-     * @type integer
+     * @var int
      */
     const WITH_CORRECTION = '1';
 
     /**
-     * The marks are available once the User has validated his Paper
+     * The marks are available once the User has validated his Paper.
      * 
-     * @type integer
+     * @var int
      */
-    const AFTER_END       = '2';
+    const AFTER_END = '2';
 
     /**
-     * Returns the list of all MarkMode available (the value is the corresponding translation key)
+     * Returns the list of all MarkMode available (the value is the corresponding translation key).
      * 
      * @return array
      */
@@ -31,7 +32,7 @@ final class MarkMode
     {
         return [
             static::WITH_CORRECTION => 'at_the_same_time_that_the_correction',
-            static::AFTER_END       => 'at_the_end_of_assessment',
+            static::AFTER_END => 'at_the_end_of_assessment',
         ];
     }
 }
