@@ -194,21 +194,19 @@ class ExerciseServices
     public function addQuestionInExercise($question, $exercise, $step)
     {
         if (null != $exercise) {
-            if ($this->isExerciseAdmin($exercise)) {
-                if (null == $step) {
-                    // Create a new Step to add the Question
-                    $this->createStepForOneQuestion($exercise, $question, 1);
-                } else {
-                    // Add the question to the existing Step
-                    $em = $this->doctrine->getManager();
+            if (null == $step) {
+                // Create a new Step to add the Question
+                $this->createStepForOneQuestion($exercise, $question, 1);
+            } else {
+                // Add the question to the existing Step
+                $em = $this->doctrine->getManager();
 
-                    $sq = new StepQuestion();
-                    $sq->setStep($step);
-                    $sq->setQuestion($question);
-                    $sq->setOrdre($step->getNbQuestion() + 1);
-                    $em->persist($sq);
-                    $em->flush();
-                }
+                $sq = new StepQuestion();
+                $sq->setStep($step);
+                $sq->setQuestion($question);
+                $sq->setOrdre($step->getNbQuestion() + 1);
+                $em->persist($sq);
+                $em->flush();
             }
         }
     }
@@ -224,23 +222,21 @@ class ExerciseServices
     public function addQuestionInStep($question, $step, $order)
     {
         if ($step != null) {
-            if ($this->isExerciseAdmin($step->getExercise())) {
-                $sq = new StepQuestion($step, $question);
+            $sq = new StepQuestion($step, $question);
 
-                if ($order == -1) {
-                    $dql = 'SELECT max(sq.ordre) FROM UJM\ExoBundle\Entity\StepQuestion sq '
-                          .'WHERE sq.step='.$step->getId();
-                    $query = $this->doctrine->getManager()->createQuery($dql);
-                    $maxOrdre = $query->getResult();
+            if ($order == -1) {
+                $dql = 'SELECT max(sq.ordre) FROM UJM\ExoBundle\Entity\StepQuestion sq '
+                      .'WHERE sq.step='.$step->getId();
+                $query = $this->doctrine->getManager()->createQuery($dql);
+                $maxOrdre = $query->getResult();
 
-                    $sq->setOrdre((int) $maxOrdre[0][1] + 1);
-                } else {
-                    $sq->setOrdre($order);
-                }
-
-                $this->om->persist($sq);
-                $this->om->flush();
+                $sq->setOrdre((int) $maxOrdre[0][1] + 1);
+            } else {
+                $sq->setOrdre($order);
             }
+
+            $this->om->persist($sq);
+            $this->om->flush();
         }
     }
 
@@ -267,10 +263,7 @@ class ExerciseServices
      */
     public function getUser()
     {
-        $user = $this->container->get('security.token_storage')
-                                ->getToken()->getUser();
-
-        return $user;
+        return $this->container->get('security.token_storage')->getToken()->getUser();
     }
 
     /**
