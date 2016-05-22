@@ -219,12 +219,13 @@ ExercisePlayerCtrl.prototype.end = function end() {
     this.submit()
         .then(function onSuccess() {
             // Answers submitted, we can now end the Exercise
+            var paperId = this.paper.id;
             this.UserPaperService
                 .end()
                 .then(function onSuccess() {
                     if (this.checkCorrectionAvailability()) {
                         // go to paper correction view
-                        this.$location.path('/papers/' + this.paper.id);
+                        this.$location.path('/papers/' + paperId);
                     }
                     else {
                         // go to exercise home page
