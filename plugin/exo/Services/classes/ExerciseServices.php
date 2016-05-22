@@ -301,7 +301,7 @@ class ExerciseServices
             Question $question, $orderStep)
     {
         $em = $this->doctrine->getManager();
-        $step = $this->createStep($exercise, $orderStep, $em);
+        $step = $this->createStep($exercise, $orderStep);
 
         $sq = new StepQuestion();
         $sq->setStep($step);
@@ -314,12 +314,12 @@ class ExerciseServices
     /**
      * @param Exercise $exercise
      * @param int     $orderStep
-     * @param type     $em
      *
      * @return Step
      */
-    public function createStep(Exercise $exercise, $orderStep, $em)
+    public function createStep(Exercise $exercise, $orderStep)
     {
+        $em = $this->doctrine->getManager();
 
         //Creating a step by question
         $step = new Step();
@@ -329,6 +329,7 @@ class ExerciseServices
         $step->setDuration(0);
         $step->setMaxAttempts(0);
         $step->setOrder($orderStep);
+
         $em->persist($step);
 
         return $step;
