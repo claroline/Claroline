@@ -5,8 +5,6 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use UJM\ExoBundle\Library\Mode\CorrectionMode;
-use UJM\ExoBundle\Library\Mode\MarkMode;
 
 class ExerciseType extends AbstractType
 {
@@ -20,7 +18,7 @@ class ExerciseType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'UJM\ExoBundle\Entity\Exercise',
-            'translation_domain' => 'ujm_exo'
+            'translation_domain' => 'ujm_exo',
         ]);
     }
 

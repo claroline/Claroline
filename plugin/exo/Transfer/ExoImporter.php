@@ -65,9 +65,9 @@ class ExoImporter extends Importer implements ConfigurationInterface
      *     "subscriptionManager" = @DI\Inject("ujm.exo.subscription_manager")
      * })
      *
-     * @param ObjectManager $om
-     * @param QtiServices $qtiService,
-     * @param QtiRepository $qtiRepository,
+     * @param ObjectManager       $om
+     * @param QtiServices         $qtiService,
+     * @param QtiRepository       $qtiRepository,
      * @param SubscriptionManager $subscriptionManager
      */
     public function __construct(
@@ -204,7 +204,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
      * create the exercise.
      *
      * @param array $exercise properties of the exercise
-     * @param User $user
+     * @param User  $user
      *
      * @return Exercise
      */
@@ -238,7 +238,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
     /**
      * create the exercise.
      *
-     * @param array $step - properties of the step
+     * @param array    $step     - properties of the step
      * @param Exercise $exercise
      *
      * @return Step
@@ -264,9 +264,9 @@ class ExoImporter extends Importer implements ConfigurationInterface
     /**
      * create the step and the question.
      *
-     * @param Step[] $steps
+     * @param Step[]   $steps
      * @param Exercise $exercise
-     * @param string $exoPath
+     * @param string   $exoPath
      */
     private function createQuestion(array $steps, Exercise $exercise, $exoPath)
     {
@@ -299,7 +299,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
      * create the directory questions to export an exercise and export the qti files.
      *
      * @param \UJM\ExoBundle\Entity\Question[] $questions
-     * @param int $numStep
+     * @param int                              $numStep
      */
     private function createQuestionsDirectory(array $questions, $numStep)
     {
@@ -323,8 +323,8 @@ class ExoImporter extends Importer implements ConfigurationInterface
      * return steps of an exercise in an array.
      *
      * @param Exercise $object
-     * @param string $exoTitle
-     * @param array $files
+     * @param string   $exoTitle
+     * @param array    $files
      *
      * @return array
      */

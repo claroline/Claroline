@@ -8,7 +8,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
-use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Form\ExerciseType;
 
 class ExerciseTypeTest extends TypeTestCase

@@ -50,7 +50,7 @@ class ExerciseManager
      * Publishes an exercise.
      *
      * @param Exercise $exercise
-     * @param bool $throwException Throw an exception if the Exercise is already published
+     * @param bool     $throwException Throw an exception if the Exercise is already published
      *
      * @throws \LogicException if the exercise is already published
      */
@@ -73,7 +73,7 @@ class ExerciseManager
      * Unpublishes an exercise.
      *
      * @param Exercise $exercise
-     * @param bool $throwException Throw an exception if the Exercise is not published
+     * @param bool     $throwException Throw an exception if the Exercise is not published
      *
      * @throws \LogicException if the exercise is not published
      */

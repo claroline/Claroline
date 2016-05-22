@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use UJM\ExoBundle\Entity\AbstractInteraction;
 use UJM\ExoBundle\Entity\InteractionOpen;
 use UJM\ExoBundle\Entity\Step;
 
@@ -24,7 +23,7 @@ class QtiRepository
     /**
      * Constructor.
      *
-     * @param TokenStorageInterface $tokenStorageInterface
+     * @param TokenStorageInterface                            $tokenStorageInterface
      * @param \Symfony\Component\DependencyInjection\Container $container
      */
     public function __construct(TokenStorageInterface $tokenStorageInterface, $container)

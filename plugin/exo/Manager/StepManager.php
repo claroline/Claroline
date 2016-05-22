@@ -31,7 +31,7 @@ class StepManager
      *     "questionManager" = @DI\Inject("ujm.exo.question_manager")
      * })
      *
-     * @param ObjectManager $om
+     * @param ObjectManager   $om
      * @param QuestionManager $questionManager
      */
     public function __construct(
@@ -43,10 +43,11 @@ class StepManager
     }
 
     /**
-     * Append a Question to a Step
-     * @param Step $step
+     * Append a Question to a Step.
+     *
+     * @param Step     $step
      * @param Question $question
-     * @param int $order if -1 the question will be added at the end of the Step
+     * @param int      $order    if -1 the question will be added at the end of the Step
      */
     public function addQuestion(Step $step, Question $question, $order = -1)
     {

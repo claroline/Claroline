@@ -30,7 +30,7 @@ class QtiServices
      * sort the paths of questions.
      *
      * @param QtiRepository $qtiRepo
-     * @param string $stepDir  directory of step
+     * @param string        $stepDir directory of step
      *
      * @return array of String array with the paths of questions sorted
      */

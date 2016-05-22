@@ -31,11 +31,11 @@ class SubscriptionManager
     }
 
     /**
-     * Subscribes a Use to an Exercise
+     * Subscribes a Use to an Exercise.
      *
      * @param Exercise $exercise
-     * @param User $user
-     * @param bool $flush
+     * @param User     $user
+     * @param bool     $flush
      *
      * @return SubscriptionManager
      */
@@ -57,10 +57,10 @@ class SubscriptionManager
     }
 
     /**
-     * Delete all Subscriptions of an Exercise
+     * Delete all Subscriptions of an Exercise.
      *
      * @param Exercise $exercise
-     * @param bool $flush
+     * @param bool     $flush
      *
      * @return SubscriptionManager
      */

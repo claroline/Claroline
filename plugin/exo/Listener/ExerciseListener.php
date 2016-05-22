@@ -9,12 +9,10 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\Subscription;
 use UJM\ExoBundle\Form\ExerciseType;
 
@@ -189,7 +187,7 @@ class ExerciseListener
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
         $subRequest = $this->container->get('request')->duplicate([], null, [
-            '_controller' => 'UJMExoBundle:Question:index'
+            '_controller' => 'UJMExoBundle:Question:index',
         ]);
 
         $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
