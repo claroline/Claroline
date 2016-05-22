@@ -226,7 +226,9 @@ class ExerciseServices
     public function addQuestionInStep($question, $step, $order)
     {
         if ($step != null) {
-            $sq = new StepQuestion($step, $question);
+            $sq = new StepQuestion();
+            $sq->setStep($step);
+            $sq->setQuestion($question);
 
             if ($order == -1) {
                 $dql = 'SELECT max(sq.ordre) FROM UJM\ExoBundle\Entity\StepQuestion sq '
