@@ -12,14 +12,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Exercise extends AbstractResource
 {
-    const TYPE_SUMMATIVE  = '1';
+    const TYPE_SUMMATIVE = '1';
     const TYPE_EVALUATIVE = '2';
-    const TYPE_FORMATIVE  = '3';
+    const TYPE_FORMATIVE = '3';
 
     /**
-     * Title of the Exercise
+     * Title of the Exercise.
      *
      * @var string
+     *
      * @deprecated duplicate of ResourceNode::$name. needs to be removed
      *
      * @ORM\Column(name="title", type="string", length=255)
@@ -27,7 +28,7 @@ class Exercise extends AbstractResource
     private $title;
 
     /**
-     * Description of the Exercise
+     * Description of the Exercise.
      *
      * @var string
      *
@@ -44,9 +45,9 @@ class Exercise extends AbstractResource
 
     /**
      * Number of Questions to use when we play the Exercise
-     * If 0, all the questions are used in the Player
+     * If 0, all the questions are used in the Player.
      *
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="nb_question", type="integer")
      */
@@ -58,9 +59,9 @@ class Exercise extends AbstractResource
     private $keepSameQuestion;
 
     /**
-     * Maximum time allowed to do the Exercise
+     * Maximum time allowed to do the Exercise.
      *
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="duration", type="integer")
      */
@@ -72,9 +73,9 @@ class Exercise extends AbstractResource
     private $doprint = false;
 
     /**
-     * Number of attempts allowed for the Exercise
+     * Number of attempts allowed for the Exercise.
      *
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="max_attempts", type="integer")
      */
@@ -84,6 +85,7 @@ class Exercise extends AbstractResource
      * When corrections are available to the Users ?
      *
      * @var string
+     *
      * @todo mode should be at least a class constant
      *
      * @ORM\Column(name="correction_mode", type="string", length=255)
@@ -91,7 +93,7 @@ class Exercise extends AbstractResource
     private $correctionMode = '1';
 
     /**
-     * Date of availability of the corrections
+     * Date of availability of the corrections.
      *
      * @var string
      *
@@ -103,6 +105,7 @@ class Exercise extends AbstractResource
      * When marks are available to the Users ?
      *
      * @var string
+     *
      * @todo mode should be at least a class constant
      *
      * @ORM\Column(name="mark_mode", type="string", length=255)
@@ -110,18 +113,18 @@ class Exercise extends AbstractResource
     private $markMode = '1';
 
     /**
-     * Add a button to stop the Exercise before the end
+     * Add a button to stop the Exercise before the end.
      *
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="disp_button_interrupt", type="boolean", nullable=true)
      */
     private $dispButtonInterrupt = false;
 
     /**
-     * Show the Exercise meta in the overview of the Exercise
+     * Show the Exercise meta in the overview of the Exercise.
      *
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="metadata_visible", type="boolean")
      */
@@ -137,7 +140,7 @@ class Exercise extends AbstractResource
      * one time. An exercise that has never been published has all its
      * existing papers deleted at the first publication.
      *
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="published", type="boolean")
      */
@@ -146,14 +149,14 @@ class Exercise extends AbstractResource
     /**
      * Are anonymous allowed to play the Exercise ?
      *
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="anonymous", type="boolean", nullable=true)
      */
     private $anonymous = false;
 
     /**
-     * Type of the Exercise
+     * Type of the Exercise.
      *
      * @var string
      *
@@ -425,9 +428,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set visibility of metadata
+     * Set visibility of metadata.
      *
-     * @param boolean $visible
+     * @param bool $visible
      */
     public function setMetadataVisible($visible)
     {
@@ -437,7 +440,7 @@ class Exercise extends AbstractResource
     /**
      * Are metadata visible ?
      *
-     * @return boolean
+     * @return bool
      */
     public function isMetadataVisible()
     {

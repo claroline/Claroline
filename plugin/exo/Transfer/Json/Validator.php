@@ -52,7 +52,7 @@ class Validator
                     $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $metadata->correctionDate);
                     if ($dateTime->format('Y-m-d H:i:s') !== $metadata->correctionDate) {
                         $errors[] = [
-                            'path'    => 'dateCorrection',
+                            'path' => 'dateCorrection',
                             'message' => 'Invalid date format',
                         ];
                     }
@@ -63,7 +63,7 @@ class Validator
         }
 
         return [[
-            'path'    => '',
+            'path' => '',
             'message' => 'Exercise metadata cannot be validated due to missing property "type"',
         ]];
     }
