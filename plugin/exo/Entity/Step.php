@@ -81,6 +81,7 @@ class Step
      * @ORM\OneToMany(
      *     targetEntity="StepQuestion",
      *     mappedBy="step",
+     *     cascade={"remove"}
      * )
      */
     private $stepQuestions;
