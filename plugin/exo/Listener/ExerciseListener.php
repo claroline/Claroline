@@ -47,8 +47,8 @@ class ExerciseListener
 
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig', [
-                'form'         => $form->createView(),
                 'resourceType' => 'ujm_exercise',
+                'form' => $form->createView(),
             ]
         );
 
@@ -74,12 +74,9 @@ class ExerciseListener
             $exercise = $form->getData();
             $event->setPublished((bool) $form->get('published')->getData());
 
-            $subscription = new Subscription($user, $exercise);
-            $subscription->setAdmin(true);
-            $subscription->setCreator(true);
+            $this->container->get('ujm.exo.subscription_manager')->subscribe($exercise, $user);
 
             $em->persist($exercise);
-            $em->persist($subscription);
 
             $event->setResources([$exercise]);
         } else {
@@ -89,8 +86,8 @@ class ExerciseListener
                     'form' => $form->createView(),
                 ]
             );
-            $event->setErrorFormContent($content);
 
+            $event->setErrorFormContent($content);
         }
 
         $event->stopPropagation();
@@ -103,36 +100,12 @@ class ExerciseListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $subRequest = $this->container->get('request_stack')
-                ->getCurrentRequest()
-                ->duplicate([], null, [
-            '_controller' => 'UJMExoBundle:Exercise:open',
-            'id' => $event->getResource()->getId(),
-        ]);
-        $response = $this->container->get('http_kernel')
-                ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
-    }
-
-    /**
-     * Event launched when choosing Administrate exercise from the resource icon contextual menu.
-     *
-     * @DI\Observe("ujm_exercise_administrate_ujm_exercise")
-     *
-     * @param CustomActionResourceEvent $event
-     */
-    public function onAdministrate(CustomActionResourceEvent $event)
-    {
-        $subRequest = $this->container->get('request_stack')
-                ->getCurrentRequest()
-                ->duplicate([], null, [
+        $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate([], null, [
             '_controller' => 'UJMExoBundle:Exercise:open',
             'id' => $event->getResource()->getId(),
         ]);
 
-        $response = $this->container->get('http_kernel')
-                ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         $event->setResponse($response);
         $event->stopPropagation();
@@ -147,37 +120,24 @@ class ExerciseListener
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
 
-        $papers = $em->getRepository('UJMExoBundle:Paper')
-                ->findOneByExercise($event->getResource());
+        $exercise = $event->getResource();
 
-        if (count($papers) == 0) {
-            $eqs = $em->getRepository('UJMExoBundle:StepQuestion')
-                    ->findExoByOrder($event->getResource());
+        // TODO use count method instead of loading the list
+        $papers = $em->getRepository('UJMExoBundle:Paper')->findOneByExercise($event->getResource());
+        if (count($papers) === 0) {
+            $this->container->get('ujm.exo.subscription_manager')->deleteSubscriptions($exercise);
 
-            foreach ($eqs as $eq) {
-                $em->remove($eq);
-            }
-
-            $subscriptions = $em->getRepository('UJMExoBundle:Subscription')
-                    ->findByExercise($event->getResource());
-
-            foreach ($subscriptions as $subscription) {
-                $em->remove($subscription);
-            }
-
-            $em->flush();
-
-            $em->remove($event->getResource());
+            $em->remove($exercise);
         } else {
+            // If papers, the Exercise is not completely removed
             $event->enableSoftDelete();
-            $exercise = $event->getResource();
-            $resourceNode = $exercise->getResourceNode();
 
-            $em->remove($resourceNode);
+            $em->remove($exercise->getResourceNode());
+
             $exercise->archiveExercise();
+
             $em->persist($exercise);
             $em->flush();
-            exit();
         }
 
         $event->stopPropagation();
@@ -211,7 +171,6 @@ class ExerciseListener
         $newExercise->setLockAttempt($exerciseToCopy->getLockAttempt());
 
         $em->persist($newExercise);
-        $em->flush();
 
         foreach ($listQuestionsExoToCopy as $eq) {
             $questionToAdd = $em->getRepository('UJMExoBundle:Question')->find($eq->getQuestion());
@@ -219,10 +178,7 @@ class ExerciseListener
         }
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        $subscription = new Subscription($user, $newExercise);
-        $subscription->setAdmin(true);
-        $subscription->setCreator(true);
-        $em->persist($subscription);
+        $this->container->get('ujm.exo.subscription_manager')->subscribe($newExercise, $user);
 
         $em->flush();
 
@@ -255,8 +211,12 @@ class ExerciseListener
      */
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
-        $subRequest = $this->container->get('request')->duplicate([], null, ['_controller' => 'UJMExoBundle:Question:index']);
+        $subRequest = $this->container->get('request')->duplicate([], null, [
+            '_controller' => 'UJMExoBundle:Question:index'
+        ]);
+
         $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
         $event->setContent($response->getContent());
     }
 }
