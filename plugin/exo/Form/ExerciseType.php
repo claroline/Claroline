@@ -5,6 +5,8 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use UJM\ExoBundle\Library\Mode\CorrectionMode;
+use UJM\ExoBundle\Library\Mode\MarkMode;
 
 class ExerciseType extends AbstractType
 {
