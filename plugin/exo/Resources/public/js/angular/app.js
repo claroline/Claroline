@@ -13,6 +13,7 @@ angular
         'ui.translation',
         'ui.tinymce',
         'ngBootbox',
+        'mgcrea.ngStrap.datepicker',
 
         // Exercise modules
         'Common',
@@ -28,11 +29,23 @@ angular
     .config([
         '$routeProvider',
         'cfpLoadingBarProvider',
-        function ExerciseAppConfig($routeProvider, cfpLoadingBarProvider) {
-            // please wait spinner config
+        '$datepickerProvider',
+        function ExerciseAppConfig($routeProvider, cfpLoadingBarProvider, $datepickerProvider) {
+            // Configure loader
             cfpLoadingBarProvider.latencyThreshold = 200;
             cfpLoadingBarProvider.includeBar       = false;
             cfpLoadingBarProvider.spinnerTemplate  = '<div class="loading">Loading&#8230;</div>';
+
+            // Configure DatePicker
+            angular.extend($datepickerProvider.defaults, {
+                dateFormat: 'dd/MM/yyyy',
+                dateType: 'string',
+                startWeek: 1,
+                iconLeft: 'fa fa-fw fa-chevron-left',
+                iconRight: 'fa fa-fw fa-chevron-right',
+                modelDateFormat: 'yyyy-MM-dd HH:mm:ss',
+                autoclose: true
+            });
 
             // Define routes
             $routeProvider
