@@ -5,6 +5,8 @@ namespace UJM\ExoBundle\Entity;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use UJM\ExoBundle\Library\Mode\CorrectionMode;
+use UJM\ExoBundle\Library\Mode\MarkMode;
 
 /**
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseRepository")
@@ -17,21 +19,38 @@ class Exercise extends AbstractResource
     const TYPE_FORMATIVE = '3';
 
     /**
+     * Title of the Exercise.
+     *
+     * @var string
+     *
+     * @deprecated duplicate of ResourceNode::$name. needs to be removed
+     *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
 
     /**
+     * Description of the Exercise.
+     *
+     * @var string
+     *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description = '';
 
     /**
+     * Are the Questions shuffled in the Steps ?
+     *
      * @ORM\Column(name="shuffle", type="boolean", nullable=true)
      */
     private $shuffle = false;
 
     /**
+     * Number of Questions to use when we play the Exercise
+     * If 0, all the questions are used in the Player.
+     *
+     * @var int
+     *
      * @ORM\Column(name="nb_question", type="integer")
      */
     private $nbQuestion = 0;
@@ -42,6 +61,10 @@ class Exercise extends AbstractResource
     private $keepSameQuestion;
 
     /**
+     * Maximum time allowed to do the Exercise.
+     *
+     * @var int
+     *
      * @ORM\Column(name="duration", type="integer")
      */
     private $duration = 0;
@@ -52,33 +75,58 @@ class Exercise extends AbstractResource
     private $doprint = false;
 
     /**
+     * Number of attempts allowed for the Exercise.
+     *
+     * @var int
+     *
      * @ORM\Column(name="max_attempts", type="integer")
      */
     private $maxAttempts = 0;
 
     /**
-     * @todo mode should be at least a class constant
+     * When corrections are available to the Users ?
+     *
+     * @var string
      *
      * @ORM\Column(name="correction_mode", type="string", length=255)
      */
-    private $correctionMode = '1';
+    private $correctionMode = CorrectionMode::AFTER_END;
 
     /**
+     * Date of availability of the corrections.
+     *
+     * @var string
+     *
      * @ORM\Column(name="date_correction", type="datetime", nullable=true)
      */
     private $dateCorrection;
 
     /**
-     * @todo mode should be at least a class constant
+     * When marks are available to the Users ?
+     *
+     * @var string
      *
      * @ORM\Column(name="mark_mode", type="string", length=255)
      */
-    private $markMode = '1';
+    private $markMode = MarkMode::WITH_CORRECTION;
 
     /**
+     * Add a button to stop the Exercise before the end.
+     *
+     * @var bool
+     *
      * @ORM\Column(name="disp_button_interrupt", type="boolean", nullable=true)
      */
     private $dispButtonInterrupt = false;
+
+    /**
+     * Show the Exercise meta in the overview of the Exercise.
+     *
+     * @var bool
+     *
+     * @ORM\Column(name="metadata_visible", type="boolean")
+     */
+    private $metadataVisible = true;
 
     /**
      * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
@@ -90,16 +138,26 @@ class Exercise extends AbstractResource
      * one time. An exercise that has never been published has all its
      * existing papers deleted at the first publication.
      *
+     * @var bool
+     *
      * @ORM\Column(name="published", type="boolean")
      */
     private $wasPublishedOnce = false;
 
     /**
+     * Are anonymous allowed to play the Exercise ?
+     *
+     * @var bool
+     *
      * @ORM\Column(name="anonymous", type="boolean", nullable=true)
      */
     private $anonymous = false;
 
     /**
+     * Type of the Exercise.
+     *
+     * @var string
+     *
      * @ORM\Column(name="type", type="string", length=255)
      * sommatif, formatif, certificatif
      */
@@ -135,6 +193,8 @@ class Exercise extends AbstractResource
      * Set title.
      *
      * @param string $title
+     *
+     * @deprecated Use ResourceNode::setName() instead
      */
     public function setTitle($title)
     {
@@ -145,6 +205,8 @@ class Exercise extends AbstractResource
      * Get title.
      *
      * @return string
+     *
+     * @deprecated Use ResourceNode::getName() instead
      */
     public function getTitle()
     {
@@ -361,6 +423,26 @@ class Exercise extends AbstractResource
     public function getDispButtonInterrupt()
     {
         return $this->dispButtonInterrupt;
+    }
+
+    /**
+     * Set visibility of metadata.
+     *
+     * @param bool $visible
+     */
+    public function setMetadataVisible($visible)
+    {
+        $this->metadataVisible = $visible;
+    }
+
+    /**
+     * Are metadata visible ?
+     *
+     * @return bool
+     */
+    public function isMetadataVisible()
+    {
+        return $this->metadataVisible;
     }
 
     /**

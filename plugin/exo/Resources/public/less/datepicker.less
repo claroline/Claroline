@@ -1,0 +1,31 @@
+/**
+ * We need to recreate styles for AngularStrap datepicker because the styles of bootstrap-datepicker cause issue
+ */
+.dropdown-menu.datepicker {
+    width: 250px;
+
+    table tr td,
+    table tr th {
+        border-radius: 0;
+        width: auto;
+        height: auto;
+    }
+
+    button {
+        outline: none;
+        border: 0px;
+    }
+
+    tbody button {
+        padding: 6px;
+    }
+
+    span {
+        border-radius: 0;
+        width: auto;
+        height: auto;
+        line-height: @line-height-base;
+        float: none;
+        margin: 0;
+    }
+}

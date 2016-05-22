@@ -17,8 +17,8 @@ class ExerciseController extends Controller
     /**
      * Opens an exercise.
      *
-     * @param User     $user
-     * @param Exercise $exercise
+     * @param User|string $user     the current User or the "anon." string if not logged
+     * @param Exercise    $exercise
      *
      * @EXT\Route(
      *     "/{id}",
@@ -26,31 +26,23 @@ class ExerciseController extends Controller
      *     requirements={"id"="\d+"},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = false})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function openAction(User $user, Exercise $exercise)
+    public function openAction($user, Exercise $exercise)
     {
         $this->assertHasPermission('OPEN', $exercise);
 
-        $em = $this->getDoctrine()->getManager();
         $exerciseSer = $this->container->get('ujm.exo_exercise');
 
-        $userId = $exerciseSer->getUserId();
-        $exerciseId = $exercise->getId();
-        $isExoAdmin = $exerciseSer->isExerciseAdmin($exercise);
-        $isAllowedToCompose = $exerciseSer->controlMaxAttemps($exercise, $userId, $isExoAdmin);
-
-        if ($userId !== 'anonymous') {
-            $nbUserPaper = $exerciseSer->getNbPaper($userId, $exerciseId);
-        } else {
-            $nbUserPaper = 0;
+        $nbUserPapers = 0;
+        if ($user instanceof User) {
+            $nbUserPapers = $this->container->get('ujm.exo.paper_manager')->countUserFinishedPapers($exercise, $user);
         }
 
-        $this->container->get('ujm.exo.paper_manager')->countUserFinishedPapers($exercise, $user);
-
-        $nbPapers = $em->getRepository('UJMExoBundle:Paper')->countPapers($exerciseId);
+        // TODO : no need to count the $nbPapers for regular Users as it's only for admin purpose (we maybe need to put the call in Angular ?)
+        $nbPapers = $this->container->get('ujm.exo.paper_manager')->countExercisePapers($exercise);
 
         // Display the Summary of the Exercise
         return $this->render('UJMExoBundle:Exercise:open.html.twig', [
@@ -58,13 +50,12 @@ class ExerciseController extends Controller
             '_resource' => $exercise,
             'workspace' => $exercise->getResourceNode()->getWorkspace(),
 
-            'nbUserPaper' => $nbUserPaper,
+            'nbUserPapers' => $nbUserPapers,
             'nbPapers' => $nbPapers,
 
             // Angular JS data
             'exercise' => $this->get('ujm.exo.exercise_manager')->exportExercise($exercise, false),
-            'editEnabled' => $isExoAdmin,
-            'composeEnabled' => $isAllowedToCompose,
+            'editEnabled' => $exerciseSer->isExerciseAdmin($exercise),
         ]);
     }
 
