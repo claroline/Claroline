@@ -172,11 +172,10 @@ class ExerciseListener
         /** @var Exercise $exercise */
         $exercise = $event->getResource();
 
-        if ($exercise->getResourceNode()->isPublished() && !$exercise->wasPublishedOnce()) {
-            $this->container->get('ujm.exo.exercise_manager')->deletePapers($exercise);
-            $exercise->setPublishedOnce(true);
-
-            $this->container->get('claroline.persistence.object_manager')->flush();
+        if ($exercise->getResourceNode()->isPublished()) {
+            $this->container->get('ujm.exo.exercise_manager')->publish($exercise, false);
+        } else {
+            $this->container->get('ujm.exo.exercise_manager')->unpublish($exercise, false);
         }
 
         $event->stopPropagation();

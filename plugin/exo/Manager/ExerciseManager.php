@@ -50,12 +50,13 @@ class ExerciseManager
      * Publishes an exercise.
      *
      * @param Exercise $exercise
+     * @param bool $throwException Throw an exception if the Exercise is already published
      *
      * @throws \LogicException if the exercise is already published
      */
-    public function publish(Exercise $exercise)
+    public function publish(Exercise $exercise, $throwException = true)
     {
-        if ($exercise->getResourceNode()->isPublished()) {
+        if ($throwException && $exercise->getResourceNode()->isPublished()) {
             throw new \LogicException("Exercise {$exercise->getId()} is already published");
         }
 
@@ -72,12 +73,13 @@ class ExerciseManager
      * Unpublishes an exercise.
      *
      * @param Exercise $exercise
+     * @param bool $throwException Throw an exception if the Exercise is not published
      *
-     * @throws \LogicException if the exercise is already unpublished
+     * @throws \LogicException if the exercise is not published
      */
-    public function unpublish(Exercise $exercise)
+    public function unpublish(Exercise $exercise, $throwException = true)
     {
-        if (!$exercise->getResourceNode()->isPublished()) {
+        if ($throwException && !$exercise->getResourceNode()->isPublished()) {
             throw new \LogicException("Exercise {$exercise->getId()} is already unpublished");
         }
 
