@@ -297,15 +297,6 @@ class QtiRepository
     }
 
     /**
-     * @param AbstractInteraction $interaction
-     * @param int $order
-     */
-    private function addQuestionInExercise(AbstractInteraction $interaction, $order = -1)
-    {
-        $this->container->get('ujm.exo_exercise')->addQuestionInStep($interaction->getQuestion(), $this->step, $order);
-    }
-
-    /**
      * @param bool $ws
      */
     public function assocExerciseQuestion($ws = false)
@@ -315,7 +306,8 @@ class QtiRepository
             if ($ws === false) {
                 $order = -1;
             }
-            $this->addQuestionInExercise($this->importedQuestions[$xmlName], $order);
+            $this->container->get('ujm.exo_exercise')->addQuestionInStep($this->importedQuestions[$xmlName]->getQuestion(), $this->step, $order);
+
             ++$order;
         }
     }
