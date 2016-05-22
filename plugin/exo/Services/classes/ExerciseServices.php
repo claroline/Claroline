@@ -96,32 +96,6 @@ class ExerciseServices
         return $exoTotalScore;
     }
 
-    // /**
-    //  * To link a question with an exercise.
-    //  *
-    //  *
-    //  * @param UJM\ExoBundle\Entity\Exercise               $exercise instance of Exercise
-    //  * @param InteractionQCM or InteractionGraphic or ... $interX
-    //  */
-    // public function setExerciseQuestion($exercise, $interX, $order = -1)
-    // {
-    //     $eq = new ExerciseQuestion($exercise, $interX->getQuestion());
-    //
-    //     if ($order == -1) {
-    //         $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
-    //               .'WHERE eq.exercise='.$exercise->getId();
-    //         $query = $this->doctrine->getManager()->createQuery($dql);
-    //         $maxOrdre = $query->getResult();
-    //
-    //         $eq->setOrdre((int) $maxOrdre[0][1] + 1);
-    //     } else {
-    //         $eq->setOrdre($order);
-    //     }
-    //     $this->om->persist($eq);
-    //
-    //     $this->om->flush();
-    // }
-
     /**
      * To know if an user is the creator of an exercise.
      *
