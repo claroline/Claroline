@@ -142,7 +142,6 @@ class ExerciseManager
         $finalQuestions = [];
 
         foreach ($steps as $step) {
-            $questions = array();
             $originalQuestions = $questions = $questionRepo->findByStep($step);
             $questionCount = count($questions);
 
@@ -247,7 +246,11 @@ class ExerciseManager
             throw new ValidationException('Exercise metadata are not valid', $errors);
         }
 
-        $exercise->setTitle($metadata->title);
+        // Update ResourceNode
+        $node = $exercise->getResourceNode();
+        $node->setName($metadata->title);
+
+        // Update Exercise
         $exercise->setDescription($metadata->description);
         $exercise->setType($metadata->type);
         $exercise->setNbQuestion($metadata->pick);
@@ -289,7 +292,7 @@ class ExerciseManager
                 ['name' => $authorName],
             ],
             'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
-            'title' => $exercise->getTitle(),
+            'title' => $node->getName(),
             'description' => $exercise->getDescription(),
             'type' => $exercise->getType(),
             'pick' => $exercise->getNbQuestion(),
