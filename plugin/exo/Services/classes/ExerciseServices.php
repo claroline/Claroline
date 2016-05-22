@@ -221,6 +221,7 @@ class ExerciseServices
      * @param Question $question
      * @param Step $step
      * @param int $order
+     * @deprecated Use StepManager::addQuestion(Step $step, Question $question, $order = -1) instead
      */
     public function addQuestionInStep($question, $step, $order)
     {
