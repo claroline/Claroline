@@ -84,7 +84,6 @@ class Exercise extends AbstractResource
     private $maxAttempts = 0;
 
     /**
-
      * When corrections are available to the Users ?
      *
      * @var string
