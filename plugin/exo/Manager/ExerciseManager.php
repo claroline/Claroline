@@ -247,20 +247,31 @@ class ExerciseManager
             throw new ValidationException('Exercise metadata are not valid', $errors);
         }
 
-        $exercise->setTitle($metadata->title);
+        // Update ResourceNode info
+        $node = $exercise->getResourceNode();
+        $node->setName($metadata->title);
+
+        // Update Exercise info
         $exercise->setDescription($metadata->description);
         $exercise->setType($metadata->type);
-        $exercise->setNbQuestion($metadata->pick);
+        $exercise->setNbQuestion($metadata->pick ? $metadata->pick : 0);
         $exercise->setShuffle($metadata->random);
         $exercise->setKeepSameQuestion($metadata->keepSameQuestions);
         $exercise->setMaxAttempts($metadata->maxAttempts);
         $exercise->setLockAttempt($metadata->lockAttempt);
         $exercise->setDispButtonInterrupt($metadata->dispButtonInterrupt);
+        $exercise->setMetadataVisible($metadata->metadataVisible);
         $exercise->setMarkMode($metadata->markMode);
         $exercise->setCorrectionMode($metadata->correctionMode);
         $exercise->setAnonymous($metadata->anonymous);
         $exercise->setDuration($metadata->duration);
-        /*$exercise->setDateCorrection($metadata->correctionDate);*/
+
+        $correctionDate = null;
+        if (!empty($metadata->correctionDate) && 3 == $metadata->correctionMode) {
+            $correctionDate = \DateTime::createFromFormat('Y-m-d H:i:s', $metadata->correctionDate);
+        }
+
+        $exercise->setDateCorrection($correctionDate);
 
         // Save to DB
         $this->om->persist($exercise);
@@ -283,13 +294,14 @@ class ExerciseManager
         // Accessibility dates
         $startDate = $node->getAccessibleFrom()  ? $node->getAccessibleFrom()->format('Y-m-d H:i:s')  : null;
         $endDate = $node->getAccessibleUntil() ? $node->getAccessibleUntil()->format('Y-m-d H:i:s') : null;
+        $correctionDate = $exercise->getDateCorrection() ? $exercise->getDateCorrection()->format('Y-m-d H:i:s') : null;
 
         return [
             'authors' => [
                 ['name' => $authorName],
             ],
             'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
-            'title' => $exercise->getTitle(),
+            'title' => $node->getName(),
             'description' => $exercise->getDescription(),
             'type' => $exercise->getType(),
             'pick' => $exercise->getNbQuestion(),
@@ -298,11 +310,12 @@ class ExerciseManager
             'maxAttempts' => $exercise->getMaxAttempts(),
             'lockAttempt' => $exercise->getLockAttempt(),
             'dispButtonInterrupt' => $exercise->getDispButtonInterrupt(),
+            'metadataVisible' => $exercise->isMetadataVisible(),
             'anonymous' => $exercise->getAnonymous(),
             'duration' => $exercise->getDuration(),
             'markMode' => $exercise->getMarkMode(),
             'correctionMode' => $exercise->getCorrectionMode(),
-            'correctionDate' => $exercise->getDateCorrection()->format('Y-m-d H:i:s'),
+            'correctionDate' => $correctionDate,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'published' => $node->isPublished(),
