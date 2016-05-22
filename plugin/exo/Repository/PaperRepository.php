@@ -39,27 +39,6 @@ class PaperRepository extends EntityRepository
     }
 
     /**
-     * Get a student's Paper which is not finished.
-     *
-     *
-     * @param int $userID     id User
-     * @param int $exerciseID id Exercise
-     *
-     * Return array[Paper]
-     */
-    public function getPaper($userID, $exerciseID)
-    {
-        $qb = $this->createQueryBuilder('p');
-        $qb->join('p.user', 'u')
-            ->join('p.exercise', 'e')
-            ->where($qb->expr()->in('u.id', $userID))
-            ->andWhere($qb->expr()->in('e.id', $exerciseID))
-            ->andWhere('p.end IS NULL');
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
      * Get the user's papers for an exercise.
      *
      *
@@ -128,39 +107,20 @@ class PaperRepository extends EntityRepository
     }
 
     /**
-     * Returns all papers of all exercise for an user.
+     * Returns the number of papers for an exercise.
      *
+     * @param Exercise $exercise
      *
-     * @param int $userID id User
-     *
-     * Return array[Paper]
+     * @return int the number of exercise papers
      */
-    public function getPaperUser($userID)
-    {
-        $dql = 'SELECT p FROM UJM\ExoBundle\Entity\Paper p
-                WHERE p.user = ?1';
-
-        $query = $this->_em->createQuery($dql)->setParameter(1, $userID);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns number of papers for an exercise.
-     *
-     *
-     * @param int $exerciseID id Exercise
-     *
-     * Return integer
-     */
-    public function countPapers($exerciseID)
+    public function countExercisePapers(Exercise $exercise)
     {
         $qb = $this->createQueryBuilder('p');
 
         $nbPapers = $qb->select('COUNT(p)')
                        ->join('p.exercise', 'e')
-                       ->join('p.user', 'u')
-                       ->where($qb->expr()->in('e.id', $exerciseID))
+                       ->where('e = :exercise')
+                       ->setParameters(['exercise' => $exercise])
                        ->getQuery()
                        ->getSingleScalarResult();
 
@@ -170,8 +130,8 @@ class PaperRepository extends EntityRepository
     /**
      * Count the number of finished paper for a user and an exercise.
      *
-     * @param User
-     * @param Exercise
+     * @param Exercise $exercise
+     * @param User     $user
      *
      * @return int the number of finished papers
      */

@@ -16,6 +16,9 @@ use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\StepQuestion;
 
+/**
+ * @deprecated prefer the use of UJM\ExoBundle\Manager\ExerciseManager to add new methods
+ */
 class ExerciseServices
 {
     protected $om;
@@ -290,6 +293,8 @@ class ExerciseServices
 
     /**
      * @return Claroline\CoreBundle\Entity\User
+     *
+     * @deprecated
      */
     public function getUser()
     {
@@ -301,6 +306,8 @@ class ExerciseServices
 
     /**
      * @return int or String
+     *
+     * @deprecated
      */
     public function getUserId()
     {
