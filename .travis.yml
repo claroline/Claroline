@@ -30,8 +30,6 @@ mysql:
   encoding: utf8
 
 before_install:
-
-
   # keep a list of files impacted by the PR
   - git diff-tree --no-commit-id --diff-filter=ACM --name-only -r ${TRAVIS_COMMIT_RANGE/.../ } > git_diff_files.txt
   # leave build/repo dir
@@ -54,6 +52,7 @@ before_script:
   - rm -rf ../$TRAVIS_REPO_SLUG/.git
   - php ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/pre-composer.php claroline/distribution ../$TRAVIS_REPO_SLUG
   # fetch dependencies and build
+  - export TRAVIS_REPO_SLUG REMOTE_HOST REMOTE_USER REMOTE_PASS CACHE_PATH
   - bash ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/fetch-deps.bash
   - composer build
   - php app/console claroline:install --env=test -vvv
@@ -71,4 +70,5 @@ script:
 
 after_success:
   # send a preview release to a remote server (only for internal PRs)
+  - export TRAVIS_REPO_SLUG REMOTE_HOST REMOTE_USER REMOTE_PASS PREVIEW_PATH
   - if [ ${REMOTE_HOST+x} ]; then cd $ROOT && sh vendor/claroline/distribution/main/dev/Resources/travis/send-preview.sh; fi
