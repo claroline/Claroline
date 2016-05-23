@@ -1,9 +1,9 @@
 <?php
 
-$maintenanceMode = file_exists(__DIR__ . '/../app/config/.update');
+$maintenanceMode = file_exists(__DIR__.'/../app/config/.update');
 
 if (!$maintenanceMode) {
-    $url = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '/../app.php';
+    $url = $_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../app.php';
     header("Location: http://{$url}");
 }
 

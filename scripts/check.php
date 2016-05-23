@@ -14,7 +14,7 @@
 if (!file_exists(__DIR__ . '/../app/config/parameters.yml')) {
     abort(
         'The configuration file app/config/parameter.yml is missing '
-         . '(execute "php configure.php" to build it interactively)'
+         . '(execute "php scripts/configure.php" to build it interactively)'
     );
 }
 
@@ -47,8 +47,11 @@ function ensureVersion($executable, $versionCmd, $minExpected)
     }
 
     $expected = explode('.', $minExpected);
+    $isUnderMajor = $matches[1] < $expected[0];
+    $hasSameMajor = $matches[1] === $expected[0];
+    $isUnderMinor = $matches[2] < $expected[1];
 
-    if ($matches[1] < $expected[0] || $matches[2] < $expected[1]) {
+    if ($isUnderMajor || $hasSameMajor && $isUnderMinor) {
         abort(sprintf(
             'Expected %s >= %s, found %s.%s',
             $executable,
