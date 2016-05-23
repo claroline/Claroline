@@ -348,7 +348,7 @@ class ExerciseController extends Controller
         $step->setText(' ');
         $step->setNbQuestion('0');
         $step->setDuration(0);
-        $step->setMaxAttempts(0);
+        $step->setMaxAttempts(5);
         $step->setOrder($exercise->getSteps()->count() + 1);
 
         // Link the Step to the Exercise

@@ -15,7 +15,8 @@ var ClozeQuestionDirective = function ClozeQuestionDirective($compile) {
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/cloze.html',
         scope: {
             question : '=',
-            answer   : '='
+            answer   : '=',
+            feedbackState : '='
         },
         compile: function compile() {
             return {
