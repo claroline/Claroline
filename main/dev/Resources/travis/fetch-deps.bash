@@ -7,18 +7,18 @@
 #
 # Note that:
 #
-# 1. this script must be executed with bash, not sh;
-# 2. the working directory must be the root directory of the platform;
-# 3. the following environment variables are supposed to be available:
-#      - TRAVIS_REPO_SLUG (set by travis)
-#      - REMOTE_HOST
-#      - REMOTE_USER
-#      - REMOTE_PASS
-#      - CACHE_PATH
+# 1. this script must be executed with bash, not sh
+# 2. the working directory must be the root directory of the platform
 ################################################################################
 
 set -e
 set -o pipefail
+
+: ${TRAVIS_REPO_SLUG:?"must be set"}
+: ${REMOTE_HOST:?"must be set"}
+: ${REMOTE_USER:?"must be set"}
+: ${REMOTE_PASS:?"must be set"}
+: ${CACHE_PATH:?"must be set"}
 
 DIST=../$TRAVIS_REPO_SLUG
 
