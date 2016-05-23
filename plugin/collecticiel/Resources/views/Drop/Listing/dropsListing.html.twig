@@ -162,7 +162,9 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
             {% for document in drop.documents %}
                 {% if (document.validate == 1) %}
                     {# Séparation de l'affichage de la vue. InnovaERV #}
-                    {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig' %}
+                    {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig'
+                        with {'maximumNotation': maximumNotation}
+                     %}
                 {% endif %}
             {% endfor %}
         {% endfor %}
@@ -227,8 +229,6 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
     </div>
 </div>
 {# Fin de la déclaration de la modal pour confirmation de la validation #}
-
-
 
 <script src="{{ asset('bundles/innovacollecticiel/js/tooltip.js') }}"></script>
 <script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>

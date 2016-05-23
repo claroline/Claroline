@@ -1,12 +1,36 @@
 <form class="form-horizontal" role="form" method="POST" 
         action="{{ path('innova_collecticiel_add_notation') }}">
     <div class="innova_collecticiel_notation_form container form-group form-buttons">
+
+        {# Bloc "Rappel des instructions ..." #}
+        {% if dropzone.instruction != null %}
+            {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionTeacher.html.twig' %}
+        {% endif %}
+
+        <div class="form-group row col-md-9">
+            <span>{{ 'Review on'|trans({}, 'innova_collecticiel') }}</span>
+            <span>{{ 'Type'|trans({}, 'innova_collecticiel') }}</span>
+            <span>{{ 'Document'|trans({}, 'innova_collecticiel') }}</span>
+            <span>{{ documentTitle }}</span>
+            <span>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</span>
+        </div>
+
+
+        <div class="form-group row col-md-9">
+            <span>{{ 'Author'|trans({}, 'innova_collecticiel') }}</span>
+            <span>{{ drop.user.firstName }} {{ drop.user.lastName }}</span>
+        </div>
+
         <div class="form-group row col-md-9">
             <span>{{ 'Grade'|trans({}, 'innova_collecticiel') }}</span>
             <label>
                 <input id="innova_collecticiel_notation_form_note" name="innova_collecticiel_notation_form[note]" required="required" min="0" max="9999" class="form-control" type="integer">
             </label>
+            <span>{{ 'Notation Max'|trans({}, 'innova_collecticiel') }}</span>
+            <span>{{ maximumNotation }}</span>
+            <span>{{ ')' }}</span>
         </div>
+
         <div class="form-group row col-md-9">
             <span>{{ 'Global comment'|trans({}, 'innova_collecticiel') }}</span>
             <label>

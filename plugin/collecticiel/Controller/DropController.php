@@ -374,6 +374,8 @@ class DropController extends DropzoneBaseController
      */
     public function dropsAwaitingAction(Dropzone $dropzone, $page)
     {
+        echo $dropzone->getMaximumNotation();
+
         $translator = $this->get('translator');
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropManager = $this->get('innova.manager.drop_manager');
@@ -388,6 +390,7 @@ class DropController extends DropzoneBaseController
         $commentRepo = $em->getRepository('InnovaCollecticielBundle:Comment');
         $documentRepo = $em->getRepository('InnovaCollecticielBundle:Document');
         $receiptRepo = $em->getRepository('InnovaCollecticielBundle:ReturnReceipt');
+        $notationRepo = $em->getRepository('InnovaCollecticielBundle:Notation');
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         $workspace = $dropzone->getResourceNode()->getWorkspace();
 
@@ -492,6 +495,7 @@ class DropController extends DropzoneBaseController
             'alertNbDocumentWithoutReturnReceipt' => $docWithoutReceiptCount,
             'haveCommentOrNotArray' => $haveCommentOrNotArray,
             'teacherCommentDocArray' => $teacherDocComments,
+            'maximumNotation' => $dropzone->getMaximumNotation(),
         ));
 
         return $dataToView;

@@ -406,9 +406,10 @@ $(document).ready(function() {
 
     // InnovaERV
     // Ajout pour le traitement de la modal de choix du type d'accusÃ© de rÃ©ception
-    $('#modal_confirm_notation').on('click', function(event) {
+    $('#modal_confirm_notation_record').on('click', function(event) {
         event.preventDefault();
 
+alert("modal_confirm_notation_record");
         // Récupération de l'id du document
         var dropzoneId = $(this).attr("data-dropzone_id");
 
@@ -455,6 +456,70 @@ $(document).ready(function() {
         $('#validate-modal-return-receipt').modal('hide');
 
     });
+
+    // InnovaERV
+    // Ajout pour le traitement de la modal de choix du type d'accusÃ© de rÃ©ception
+    $('#modal_confirm_notation_transmit').on('click', function(event) {
+        event.preventDefault();
+
+alert("modal_confirm_notation_transmit");
+        // Récupération de l'id du document
+        var dropzoneId = $(this).attr("data-dropzone_id");
+
+        // Récupération de l'id du document
+        var documentId = $(this).attr("data-document_id");
+
+        var arrayDocsId = [];
+
+        if (!documentId) {
+            $("input[type='checkbox']:checked").each(
+                function() {
+                    var chaineCaractere = $(this).attr('id');
+                    var splitChaine = chaineCaractere.split('_');
+                    if (splitChaine[2] != '0') {
+                        arrayDocsId.push($(this).attr('id'));
+                    }
+                });
+        } else {
+            var numDocPush = $(this).attr('data-document_id');
+            var docPush = "document_id_" + $(this).attr('data-document_id');
+            arrayDocsId.push(docPush);
+        }
+
+        $.ajax({
+            url: Routing.generate('innova_collecticiel_add_notation', {
+                dropzoneId: dropzoneId,
+                returnReceiptId: returnReceiptId,
+            }),
+            method: "GET",
+            data: {
+                arrayDocsId: arrayDocsId
+            },
+            complete: function(data) {
+                var data_link = $.parseJSON(data.responseText)
+
+                if (data_link !== 'false') {
+                    document.location.href = data_link.link;
+                }
+
+            }
+        });
+
+        // Fermeture de la modal
+        $('#validate-modal-return-receipt').modal('hide');
+
+    });
+
+
+
+
+
+
+
+
+
+
+
 
     // InnovaERV
     // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document
