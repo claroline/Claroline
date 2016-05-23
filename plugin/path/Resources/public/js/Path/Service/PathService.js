@@ -39,6 +39,12 @@
             };
 
             /**
+             * is condition blocking all children of a step
+             * @type {boolean}
+             */
+            var completeBlockingCondition = true;
+
+            /**
              * list af all steps following the current step
              * @type {Array}
              */
@@ -204,6 +210,13 @@
                     summary.opened = value;
                 },
 
+                setCompleteBlockingCondition: function setCompleteBlockingCondition(value) {
+                    completeBlockingCondition = value;
+                },
+                isCompleteBlockingCondition: function isCompleteBlockingCondition() {
+                    return completeBlockingCondition;
+                },
+
                 /**
                  * Initialize a new Path structure
                  */
@@ -239,6 +252,7 @@
                             description:      path.description,
                             breadcrumbs:      path.breadcrumbs,
                             summaryDisplayed: path.summaryDisplayed,
+                            completeBlockingCondition: path.completeBlockingCondition,
                             structure:        angular.toJson(path)
                         }
                     };

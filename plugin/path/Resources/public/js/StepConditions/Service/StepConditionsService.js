@@ -333,7 +333,7 @@
                             parentCriteriagroup = parent;
                             return true;
                         }
-                        return false
+                        return false;
                     });
                     return parentCriteriagroup;
                 },
