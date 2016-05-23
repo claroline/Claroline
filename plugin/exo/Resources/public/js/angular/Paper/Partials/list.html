@@ -65,12 +65,6 @@
                     <span data-ng-if="!item.end">-</span>
                 </td>
 
-                <!-- Has been interrupted ? -->
-                <td at-attribute="interrupted" at-sortable at-title="{{ 'paper_list_table_interrupted'|trans:{}:'ujm_sequence' }}">
-                    <span data-ng-if="item.interrupted">{{ 'paper_list_table_interrupted_yes'|trans:{}:'ujm_sequence' }}</span>
-                    <span data-ng-if="!item.interrupted">{{ 'paper_list_table_interrupted_no'|trans:{}:'ujm_sequence' }}</span>
-                </td>
-
                 <!-- Score -->
                 <td at-attribute="score" at-sortable at-title="{{ 'paper_list_table_score'|trans:{}:'ujm_sequence' }}" class="text-right">
                     <span data-ng-if="item.end && (item.scoreTotal || 0 === item.scoreTotal)" class="label label-primary">
