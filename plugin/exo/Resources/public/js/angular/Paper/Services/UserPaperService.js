@@ -92,7 +92,7 @@ UserPaperService.prototype.getQuestionPaper = function getQuestionPaper(question
 UserPaperService.prototype.start = function start(exercise) {
     var deferred = this.$q.defer();
 
-    if (!this.paper) {
+    if (!this.paper || this.paper.end) {
         // Start a new Paper (or load an interrupted one)
         this.$http.post(
             Routing.generate('exercise_new_attempt', { id: exercise.id })
@@ -134,8 +134,8 @@ UserPaperService.prototype.end = function end() {
 
             // TODO : display message
 
-            // Reset current paper
-            this.paper = null;
+            // Update the current User Paper with updated data (endDate particularly)
+            angular.merge(this.paper, response);
 
             deferred.resolve(response);
         }.bind(this))
