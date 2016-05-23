@@ -58,6 +58,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
                         ->scalarNode('structure')->end()
                         ->booleanNode('breadcrumbs')->end()
                         ->booleanNode('summaryDisplayed')->end()
+                        ->booleanNode('completeBlockingCondition')->end()
                         ->booleanNode('modified')->end()
                         ->booleanNode('published')->end()
                     ->end()

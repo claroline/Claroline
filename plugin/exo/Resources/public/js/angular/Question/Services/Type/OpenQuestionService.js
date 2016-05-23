@@ -1,22 +1,65 @@
 /**
  * Open Question Service
+ * @param {FeedbackService}  FeedbackService
  * @constructor
  */
-var OpenQuestionService = function OpenQuestionService() {
+var OpenQuestionService = function OpenQuestionService(FeedbackService) {
     AbstractQuestionService.apply(this, arguments);
+    
+    this.FeedbackService = FeedbackService;
 };
 
 // Extends AbstractQuestionCtrl
 OpenQuestionService.prototype = Object.create(AbstractQuestionService.prototype);
 
 // Set up dependency injection (get DI from parent too)
-OpenQuestionService.$inject = AbstractQuestionService.$inject;
+OpenQuestionService.$inject = AbstractQuestionService.$inject.concat(['FeedbackService']);
 
 /**
  * Initialize the answer object for the Question
  */
 OpenQuestionService.prototype.initAnswer = function initAnswer() {
     return '';
+};
+
+/**
+ * 
+ * @returns {answersAllFound}
+ */
+OpenQuestionService.prototype.answersAllFound = function answersAllFound(question, answer) {
+    var numAnswersFound = 0;
+    var answerWithKeywords = answer ? answer : '';
+
+    // Get EOL
+    answerWithKeywords = answerWithKeywords.replace(/(\r\n|\n|\r)/gm, '<br/>');
+
+    if ('long' !== question.typeOpen) {
+        // Initialize answer with keywords
+        // Search used keywords in student answer
+        for (var i = 0; i < question.solutions.length; i++) {
+            var solution = question.solutions[i];
+
+            // Check in answer if the keyword as been used
+            var searchFlags      = 'g' + (solution.caseSensitive ? 'i' : '');
+            var searchExpression = new RegExp(solution.word, searchFlags);
+            if (-1 !== answer.search(searchExpression)) {
+                numAnswersFound++;
+            }
+        }
+    } else {
+        feedbackState = this.FeedbackService.SOLUTION_FOUND;
+    }
+    
+    var feedbackState = -1;
+    if (question.solutions.length === numAnswersFound) {
+        feedbackState = this.FeedbackService.SOLUTION_FOUND;
+    } else if (question.solutions.length -1 === numAnswersFound) {
+        feedbackState = this.FeedbackService.ONE_ANSWER_MISSING;
+    } else {
+        feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
+    }
+    
+    return feedbackState;
 };
 
 /**

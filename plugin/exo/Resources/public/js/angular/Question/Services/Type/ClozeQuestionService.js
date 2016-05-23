@@ -1,22 +1,60 @@
 /**
  * Cloze Question Service
+ * @param {FeedbackService} FeedbackService
  * @constructor
  */
-var ClozeQuestionService = function ClozeQuestionService() {
+var ClozeQuestionService = function ClozeQuestionService(FeedbackService) {
     AbstractQuestionService.apply(this, arguments);
+    
+    this.FeedbackService = FeedbackService;
 };
 
 // Extends AbstractQuestionCtrl
 ClozeQuestionService.prototype = Object.create(AbstractQuestionService.prototype);
 
 // Set up dependency injection (get DI from parent too)
-ClozeQuestionService.$inject = AbstractQuestionService.$inject;
+ClozeQuestionService.$inject = AbstractQuestionService.$inject.concat(['FeedbackService']);
 
 /**
  * Initialize the answer object for the Question
  */
 ClozeQuestionService.prototype.initAnswer = function initAnswer() {
     return [];
+};
+
+ClozeQuestionService.prototype.answersAllFound = function answersAllFound(question, answers) {
+    var numAnswersFound = 0;
+    
+    for (var i=0; i<question.solutions.length; i++) {
+        for (var j=0; j<question.solutions[i].answers.length; j++) {
+            for (var k=0; k<question.holes.length; k++) {
+                for (var l=0; l<answers.length; l++) {
+                    if (answers[l].holeId === question.solutions[i].holeId) {
+                        var answer = answers[l];
+                    }
+                }
+                if (question.holes[k].id === question.solutions[i].holeId && question.solutions[i].answers[j].text === answer.answerText && question.solutions[i].answers[j].score > 0 && !question.holes[k].selector) {
+                    numAnswersFound++;
+                } else if (question.holes[k].id === question.solutions[i].holeId && question.solutions[i].answers[j].id === answer.answerText && question.solutions[i].answers[j].score > 0 && question.holes[k].selector) {
+                    numAnswersFound++;
+                }
+            }
+        }
+    }
+    
+    var feedbackState = -1;
+    if (numAnswersFound === question.solutions.length) {
+        // all answers have been found
+        feedbackState = this.FeedbackService.SOLUTION_FOUND;
+    } else if (numAnswersFound === question.solutions.length -1) {
+        // one answer remains to be found
+        feedbackState = this.FeedbackService.ONE_ANSWER_MISSING;
+    } else {
+        // more answers remain to be found
+        feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
+    }
+    
+    return feedbackState;
 };
 
 /**

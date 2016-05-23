@@ -1,5 +1,9 @@
 # a
+all_answers_found: Toutes vos réponses sont correctes. Passez à la suite.
 answer_zone: Zone de réponse
+answers_correct: Votre solution est maintenant correcte. Passez à la suite.
+answers_not_found: XXXXX Toutes les bonnes réponses n'ont pas été trouvées
+answers_now_correct: Toutes vos réponses sont maintenant correctes. Passez à la suite.
 
 # b
 btn_end_sequence_label: Terminer l'exercice
@@ -19,6 +23,7 @@ comment: Commentaire
 dropdown_step_navigate_choice_label: Etape n°%1% / %2%
 
 # g
+good_solution_found: XXXXX Solution trouvée
 graphic_setpoint_first: Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur définit votre réponse.
 graphic_setpoint_second: Pour répondre, utiliser la technique du glisser/déposer.
 graphic_setpoint_third: Les bonnes réponses ne sont comptabilisées qu'une seule fois.
@@ -40,9 +45,15 @@ label_exercise_correction: Correction
 label_no_labels_associated: Pas de label(s) associé(s)
 label_manual_correction_needed: Correction manuelle nécessaire!
 
+# m
+max_attempts_reached_see_solution: Vous avez atteint le maximum d'essais. Consultez la solution proposée et poursuivez.
+
 # n
 need_correction: Cette réponse nécessite une correction manuelle
 note_question: Noter cette question
+
+# o
+one_answer_to_find: XXXXX Il manque une bonne réponse
 
 # p
 paper_list: Liste des copies
@@ -73,6 +84,8 @@ paper_details_correction_label: Correction
 paper_details_your_answers: Vos réponses
 paper_details_right_answers: Bonnes réponses
 
+perfectly_correct: Votre solution est parfaitement correcte. Passez à la suite.
+
 points: Points
 
 # q
@@ -89,6 +102,7 @@ sequence_interrupt_sequence_confirm: Êtes vous sûr de vouloir interrompre l'ex
 sequence_end_sequence_confirm: Êtes vous sûr de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.
 sequence_play_leave_confirm: Êtes vous sûr de vouloir quitter l'application ?
 sequence_score: Score
+some_answers_miss_try_again: Il manque des réponses ou certaines réponses sont incorrectes. Essayez à nouveau.
 
 # v
 validate: Valider

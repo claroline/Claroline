@@ -11,10 +11,11 @@ var StepShowDirective = function StepShowDirective() {
         bindToController: true,
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Step/Partials/show.html',
         scope: {
-            step          : '=',
-            stepIndex     : '@',
-            currentTry    : '=',
-            solutionShown : '='
+            step            : '=',
+            stepIndex       : '@',
+            currentTry      : '=',
+            solutionShown   : '=',
+            allAnswersFound : '='
         }
     };
 };

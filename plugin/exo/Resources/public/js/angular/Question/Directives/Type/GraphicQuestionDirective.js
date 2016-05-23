@@ -15,7 +15,8 @@ var GraphicQuestionDirective = function GraphicQuestionDirective($timeout) {
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/graphic.html',
         scope: {
             question : '=',
-            answer   : '='
+            answer   : '=',
+            feedbackState : '='
         },
         bindToController: true,
         link: function (scope, element, attr, graphicQuestionCtrl) {
