@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "26d7cb5097387a003537d3d37c2ed431",
+    "hash": "b82636ba0c27d137fbcbb35b1582e5f1",
     "content-hash": "b00629a66d3a69d9449134b56ca4a373",
     "packages": [
         {
@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "492844fc6354c981b38fb3daabde853dc827cf2d"
+                "reference": "4f69acfbe91c6d66f9e20af3e350e6af1f2b8128"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/492844fc6354c981b38fb3daabde853dc827cf2d",
-                "reference": "492844fc6354c981b38fb3daabde853dc827cf2d",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/4f69acfbe91c6d66f9e20af3e350e6af1f2b8128",
+                "reference": "4f69acfbe91c6d66f9e20af3e350e6af1f2b8128",
                 "shasum": ""
             },
             "require": {
@@ -373,7 +373,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-05-13 13:20:09"
+            "time": "2016-05-23 12:53:26"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -1760,7 +1760,7 @@
                     "homepage": "https://github.com/friendsofsymfony/FOSJsRoutingBundle/contributors"
                 },
                 {
-                    "name": "William Durand",
+                    "name": "William DURAND",
                     "email": "william.durand1@gmail.com"
                 }
             ],
@@ -3473,17 +3473,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8"
+                "reference": "2a13b367e0638f855c3381beb2816f940e40ed42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
-                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/2a13b367e0638f855c3381beb2816f940e40ed42",
+                "reference": "2a13b367e0638f855c3381beb2816f940e40ed42",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2016-02-12 10:44:18"
+            "time": "2016-05-18 13:30:11"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -3601,7 +3601,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "Knplabs",
+                    "name": "KnpLabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
@@ -4182,12 +4182,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "b494d8e1ab4f95c64e0b99e8c81d7fc4804eeb9e"
+                "reference": "7288ccad079b381e11ad261d1a8374902a27e385"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/b494d8e1ab4f95c64e0b99e8c81d7fc4804eeb9e",
-                "reference": "b494d8e1ab4f95c64e0b99e8c81d7fc4804eeb9e",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/7288ccad079b381e11ad261d1a8374902a27e385",
+                "reference": "7288ccad079b381e11ad261d1a8374902a27e385",
                 "shasum": ""
             },
             "require": {
@@ -4258,7 +4258,7 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2016-05-11 15:32:04"
+            "time": "2016-05-19 19:43:45"
         },
         {
             "name": "ocramius/proxy-manager",
