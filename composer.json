@@ -18,7 +18,7 @@
         "fast-install" : [
             "php scripts/check.php",
             "php app/console doctrine:database:create --if-not-exists",
-            "php bin/doctrine dbal:import claroline.sql -vvv",
+            "php bin/vendor/doctrine dbal:import claroline.sql -vvv",
             "php app/console assets:install web --symlink"
         ],
         "sync": [
@@ -78,7 +78,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "bin-dir": "bin",
         "github-protocols": ["https", "git", "ssh"],
         "process-timeout": 3600
     },
