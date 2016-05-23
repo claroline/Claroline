@@ -283,7 +283,7 @@ class MessageManager
         $query = $search === '' ?
         $this->userMessageRepo->findRemoved($user, false) :
         $this->userMessageRepo->findRemovedByObjectOrSender($user, $search, false);
-        
+
         return $query->getResult();
     }
 
@@ -405,8 +405,8 @@ class MessageManager
         $content,
         $object,
         $sender = null,
-        $withMail = true
-    ) {
+        $withMail = true)
+    {
         $users = array();
 
         if ($subject instanceof User) {

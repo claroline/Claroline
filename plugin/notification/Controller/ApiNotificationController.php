@@ -50,10 +50,8 @@ class ApiNotificationController extends FOSRestController
         return $this->notificationManager->getUserNotifications($user->getId());
     }
 
-
-
-
-   /** Mark all notifications as read
+   /**
+    * Mark all notifications as read
     * @Route("/notifications/read.{_format}", name="icap_notifications_read", defaults={"_format":"json"})
     * @View(serializerGroups={"api_notification"})
     */
@@ -63,5 +61,4 @@ class ApiNotificationController extends FOSRestController
 
          return $this->notificationManager->getUserNotifications($user->getId());
    }
-
 }

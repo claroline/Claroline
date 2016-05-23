@@ -19,12 +19,11 @@ use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Manager\OauthManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
-
 class ClientController extends FOSRestController
 {
     private $oauthManager;
 
-	/**
+	 /**
     * @DI\InjectParams({
     *     "oauthManager" = @DI\Inject("claroline.manager.oauth_manager")
     * })
@@ -61,5 +60,4 @@ class ClientController extends FOSRestController
 
             return ['hasExpired' => $mostRecentToken->hasExpired()];
         }
-
 }

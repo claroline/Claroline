@@ -28,8 +28,6 @@
    private $tokenStorage;
    private $userManager;
 
-
-
    /**
     * @DI\InjectParams({
     *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
@@ -76,6 +74,6 @@
         $user = $this->tokenStorage->getToken()->getUser();
 
         return $this->messageManager->getRemovedMessagesJson($user);
-   }
+    }
 
  }
