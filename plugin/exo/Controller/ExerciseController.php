@@ -75,6 +75,8 @@ class ExerciseController extends Controller
      */
     public function updateMetadataAction(Exercise $exercise)
     {
+        $this->assertHasPermission('ADMINISTRATE', $exercise);
+
         // Get Exercise data from the Request
         $dataRaw = $this->get('request')->getContent();
         if (!empty($dataRaw)) {
