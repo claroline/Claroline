@@ -368,6 +368,8 @@ upload: Upload
 uploading: Uploading
 user: User
 users: Users
+ujm_exo_exercise_name: Name
+ujm_exo_exercise_published: Publish resource
 
 # V
 validate: Validate

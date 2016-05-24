@@ -34,7 +34,7 @@ class QtiController extends Controller
         } else {
             $em = $this->getDoctrine()->getManager();
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-            $step = $this->container->get('ujm.exo_exercise')->createStep($exercise, 1, $em);
+            $step = $this->container->get('ujm.exo_exercise')->createStep($exercise, 1);
             $em->flush();
             $scanFile = $qtiRepos->scanFilesToImport($step);
         }

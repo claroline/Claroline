@@ -326,29 +326,6 @@ class PaperService
      }
 
     /**
-     * To force finish an assessment.
-     *
-     *
-     * @param \UJM\ExoBundle\Entity\Paper $paperToClose
-     *
-     * @return \UJM\ExoBundle\Entity\Paper
-     */
-    public function forceFinishExercise($paperToClose)
-    {
-        $em = $this->doctrine->getManager();
-        /** @var \UJM\ExoBundle\Entity\Paper $paper */
-        $paper = $paperToClose;
-        $paper->setInterupt(0);
-        $paper->setEnd(new \Datetime());
-        $em->persist($paper);
-        $em->flush();
-
-        $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
-
-        return $paper;
-    }
-
-    /**
      * To interupt an assessment.
      *
      *
