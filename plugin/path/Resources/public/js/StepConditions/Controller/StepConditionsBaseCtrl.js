@@ -3,7 +3,7 @@
  * @returns {StepConditionsBaseCtrl}
  * @constructor
  */
-    //StepService
+//StepService
 var StepConditionsBaseCtrl = function StepConditionsBaseCtrl($route, $routeParams, PathService, StepConditionsService) {
     this.webDir = AngularApp.webDir;
 
@@ -18,20 +18,22 @@ var StepConditionsBaseCtrl = function StepConditionsBaseCtrl($route, $routeParam
     }
 
     //force id if not set
-    if (typeof this.current.stepId == 'undefined'){this.current.stepId = this.structure[0].id}
+    if (typeof this.current.stepId == 'undefined') {
+        this.current.stepId = this.structure[0].id
+    }
     //Get the current step
     this.step = this.pathService.getStep(this.current.stepId);
 
-//    this.evaluation[step.id] = this.stepConditionsService.getEvaluationFromController(step.activityId);
+    //    this.evaluation[step.id] = this.stepConditionsService.getEvaluationFromController(step.activityId);
 
     //get the current condition
     this.conditionstructure = [];
-    if (angular.isObject(this.step) && angular.isObject(this.step.condition)){
+    if (angular.isObject(this.step) && angular.isObject(this.step.condition)) {
         this.conditionstructure = [this.step.condition];
     }
 
     //TODO : Make it work, to use in conditions
-//    this.pathService.getAllEvaluationsForPath(this.structure);
+    //    this.pathService.getAllEvaluationsForPath(this.structure);
 
     return this;
 };

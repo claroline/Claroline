@@ -15,7 +15,8 @@ var ChoiceQuestionDirective = function ChoiceQuestionDirective() {
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/choice.html',
         scope: {
             question : '=',
-            answer   : '='
+            answer   : '=',
+            feedbackState : '='
         }
     };
 };

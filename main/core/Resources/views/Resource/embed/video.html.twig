@@ -1,4 +1,3 @@
-<video width="100%" height="400" controls="controls" preload='none'>
-    <source src="{{ path('claro_file_get_media', {'node': node.getId}) }}" type="{{ node.getMimeType() }}">
-</video>
-<a href="{{ path('claro_resource_open', {'resourceType': node.getResourceType().getName(), 'node' : node.getId()}) }}">{{ node.getName() }}</a>
+{% set source = path('claro_file_get_media', {'node': node.getId}) %}
+
+{% include "ClarolineVideoPlayerBundle::player.html.twig" with {'video': resource, 'source': source} %}

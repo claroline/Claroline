@@ -6,7 +6,7 @@
             {{ workspace.getName() }}
         {% else %}
             {% if _resource is defined %}
-                {% if _resource.getWorkspace() %} 
+                {% if _resource.getWorkspace() is defined %}
                     {{ _resource.getWorkspace.getName() }} -
                 {% endif %}
                 {{ _resource.getResourceNode().getName() | striptags | raw }}

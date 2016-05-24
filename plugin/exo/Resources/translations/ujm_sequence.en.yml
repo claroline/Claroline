@@ -1,5 +1,9 @@
 # a
+all_answers_found: All your answers are correct. Move to the next step.
 answer_zone: Answer zone
+answers_correct: Your answer is now correct. Move to the next step.
+answers_not_found: XXXXX All answers were not found
+answers_now_correct: All your answers are now correct. Move to the next step.
 
 # b
 btn_end_sequence_label: End exercise
@@ -20,6 +24,7 @@ dropdown_step_navigate_choice_label: Step N°%1% / %2%
 
 
 # g
+good_solution_found: XXXXX Solution found
 graphic_setpoint_first: Drag the "sights" on the picture. The sight center defines your answer.
 graphic_setpoint_second: Use drag and drop to answer.
 graphic_setpoint_third: Correct answers are only counted once.
@@ -41,9 +46,15 @@ label_exercise_correction: Correction
 label_no_labels_associated: No associated label(s)
 label_manual_correction_needed: Manual correction needed!
 
+# m
+max_attempts_reached_see_solution: You reached the maximum number of tries. Consult the solution and get to the next step.
+
 # n
 need_correction: This answer needs a manual correction
 note_question: Note this question
+
+# o
+one_answer_to_find: XXXXX There is one answer left to find
 
 # p
 paper_list: Paper list
@@ -72,6 +83,8 @@ paper_details_paper_score: Global score
 paper_details_question_score: Question score
 paper_details_correction_label: Correction
 
+perfectly_correct: Your solution is perfectly correct. Move to the next step.
+
 points: Points
 
 # q
@@ -82,12 +95,13 @@ question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This 
 
 # s
 sequence_step: Step
-sequence_attempts_infos: You have %1% attempt(s)
+sequence_attempts_infos: "[0, 1] You have %count% attempt|]1,Inf[ You have %count% attempts"
 sequence_nb_attempts: Attempt N° %1%
 sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the exercise ?
 sequence_end_sequence_confirm: Are you sure you want to go to finish the exercise ? <br/> Yon won't be able to edit your answers.
 sequence_play_leave_confirm: Are you sure you want to leave the application ?
 sequence_score: Score
+some_answers_miss_try_again: Some answers miss or are incorrect. Try again.
 
 # v
 validate: Validate

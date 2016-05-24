@@ -6,7 +6,6 @@
 
     {# Exercise styles #}
     {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/ujm-exo.css'
-        '@UJMExoBundle/Resources/public/less/loading-bar.css'
         '@UJMExoBundle/Resources/public/less/main.less'
     %}
     <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
@@ -14,7 +13,7 @@
 {% endblock %}
 
 {# Title of the Page #}
-{% block title %} {{ 'exercise' | trans({}, 'ujm_exo') }} : {{ _resource.title }} {% endblock %}
+{% block title %} {{ 'exercise' | trans({}, 'ujm_exo') }} : {{ _resource.resourceNode.name }} {% endblock %}
 
 {# Content of the Page #}
 {% block section_content %}
@@ -23,8 +22,8 @@
         <exercise
             data-exercise="{{ exercise | json_encode | raw | escape }}"
             data-nb-papers ="{{ nbPapers }}"
-            data-edit-enabled="{{ editEnabled }}"
-            data-compose-enabled="{{ composeEnabled }}">
+            data-nb-user-papers ="{{ nbUserPapers }}"
+            data-edit-enabled="{{ editEnabled }}">
         </exercise>
     </div>
 {% endblock %}
@@ -48,31 +47,33 @@
 
     {# Angular JS #}
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-angular-js.js'
-        '@FrontEndBundle/Resources/public/angular/angular.min.js'
-        '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
-        '@FrontEndBundle/Resources/public/angular-route/angular-route.min.js'
+        'packages/jquery-ui/jquery-ui.min.js'
+        'packages/angular/angular.min.js'
+        'packages/angular-sanitize/angular-sanitize.min.js'
+        'packages/angular-route/angular-route.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
     {# Angular UI #}
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-angular-ui.js'
-        '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap-tpls.min.js'
-        '@FrontEndBundle/Resources/public/angular-ui-tinymce/src/tinymce.js'
-        '@FrontEndBundle/Resources/public/angular-ui-translation/angular-translation.js'
-        '@FrontEndBundle/Resources/public/angular-ui-resource-picker/angular-resource-picker.js'
+        'packages/angular-bootstrap/ui-bootstrap-tpls.min.js'
+        'packages/angular-ui-tinymce/src/tinymce.js'
+        'packages/angular-ui-translation/angular-translation.js'
+        'packages/angular-ui-resource-picker/angular-resource-picker.js'
+        'packages/angular-loading-bar/src/loading-bar.js'
+        'packages/ngstorage/ngStorage.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
-    {# libs : bootbox #}
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-libs.js'
-        '@FrontEndBundle/Resources/public/jquery-ui/jquery-ui.min.js'
         '@UJMExoBundle/Resources/public/js/libs/bootbox.min.js'
         '@UJMExoBundle/Resources/public/js/libs/dom.jsPlumb.min.js'
         '@UJMExoBundle/Resources/public/js/libs/angular-libs/angular-table/*'
         '@UJMExoBundle/Resources/public/js/libs/angular-libs/bootbox/*'
-        '@UJMExoBundle/Resources/public/js/libs/angular-libs/loading-bar/*'
+        'packages/angular-strap/dist/angular-strap.min.js'
+        'packages/angular-strap/dist/angular-strap.tpl.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -118,6 +119,4 @@
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
-    <script src="{{ asset('packages/ngstorage/ngStorage.min.js') }}"></script>
 {% endblock %}

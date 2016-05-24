@@ -89,7 +89,7 @@ class OauthManager
      *      "entityManager"         = @DI\Inject("doctrine.orm.entity_manager"),
      *      "cacheManager"          = @DI\Inject("claroline.manager.cache_manager"),
      *      "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *      "localeManager"         = @DI\Inject("claroline.common.locale_manager"),
+     *      "localeManager"         = @DI\Inject("claroline.manager.locale_manager"),
      *      "termsManager"          = @DI\Inject("claroline.common.terms_of_service_manager"),
      *      "facetManager"          = @DI\Inject("claroline.manager.facet_manager"),
      *      "formFactory"           = @DI\Inject("form.factory"),

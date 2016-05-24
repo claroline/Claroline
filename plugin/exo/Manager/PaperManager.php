@@ -350,10 +350,21 @@ class PaperManager
      */
     public function countUserFinishedPapers(Exercise $exercise, User $user)
     {
-        $nbPapers = $this->om->getRepository('UJMExoBundle:Paper')
+        return $this->om->getRepository('UJMExoBundle:Paper')
             ->countUserFinishedPapers($exercise, $user);
+    }
 
-        return $nbPapers;
+    /**
+     * Returns the number of papers already done for a given exercise.
+     *
+     * @param Exercise $exercise
+     *
+     * @return array
+     */
+    public function countExercisePapers(Exercise $exercise)
+    {
+        return $this->om->getRepository('UJMExoBundle:Paper')
+            ->countExercisePapers($exercise);
     }
 
     /**

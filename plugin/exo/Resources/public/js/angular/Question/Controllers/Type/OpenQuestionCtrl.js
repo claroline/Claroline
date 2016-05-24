@@ -5,6 +5,8 @@
  */
 var OpenQuestionCtrl = function OpenQuestionCtrl(FeedbackService) {
     AbstractQuestionCtrl.apply(this, arguments);
+    
+    this.FeedbackService = FeedbackService;
 };
 
 // Extends AbstractQuestionCtrl
@@ -20,10 +22,17 @@ OpenQuestionCtrl.$inject = AbstractQuestionCtrl.$inject;
 OpenQuestionCtrl.prototype.answerWithKeywords = '';
 
 /**
+ * Tells wether the answers are all found, not found, or if only one misses
+ * @type {Integer}
+ */
+OpenQuestionCtrl.prototype.feedbackState = -1;
+
+/**
  * Callback executed when Feedback for the Question is shown
  */
 OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
     if (this.question.solutions) {
+	var numAnswersFound = 0;
         this.answerWithKeywords = this.answer ? this.answer : '';
 
         // Get EOL
@@ -39,6 +48,7 @@ OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
                 var searchFlags      = 'g' + (solution.caseSensitive ? 'i' : '');
                 var searchExpression = new RegExp(solution.word, searchFlags);
                 if (-1 !== this.answer.search(searchExpression)) {
+                    numAnswersFound++;                    
                     // Keyword has been found in answer => Update formatted answer
                     var keyword = '';
                     keyword += '<b class="text-success feedback-info" data-toggle="tooltip" title="' + (solution.feedback || '') + '">';
@@ -46,10 +56,18 @@ OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
                     keyword += '<span class="fa fa-fw fa-check"></span>';
                     keyword += '</b>';
 
-                    this.answerWithKeywords = this.answerWithKeywords.replace(searchExpression, keyword, searchFlags);
-                }
-            }
-        }
+	            this.answerWithKeywords = this.answerWithKeywords.replace(searchExpression, keyword, searchFlags);
+	        }
+	    }
+	}
+    }
+    
+    if (this.question.solutions.length === numAnswersFound) {
+        this.feedbackState = this.FeedbackService.SOLUTION_FOUND;
+    } else if (this.question.solutions.length -1 === numAnswersFound) {
+        this.feedbackState = this.FeedbackService.ONE_ANSWER_MISSING;
+    } else {
+        this.feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
     }
 };
 

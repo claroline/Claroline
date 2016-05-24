@@ -49,7 +49,7 @@ class UserController extends FOSRestController
      *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
      *     "formFactory"            = @DI\Inject("form.factory"),
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager"          = @DI\Inject("claroline.manager.locale_manager"),
      *     "request"                = @DI\Inject("request"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),

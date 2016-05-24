@@ -1,4 +1,4 @@
-import NumberController from './NumberController'
+import FieldController from '../FieldController'
 
 export default class NumberDirective {
   constructor () {
@@ -6,7 +6,7 @@ export default class NumberDirective {
     this.restrict = 'E'
     this.template = require('./number.html')
     this.replace = true,
-    this.controller = NumberController
+    this.controller = FieldController
     this.controllerAs = 'nc'
     this.bindToController = {
       field: '=',
