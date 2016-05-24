@@ -10,6 +10,10 @@ var FeedbackService = function FeedbackService() {
 // Set up dependency injection
 FeedbackService.$inject = [];
 
+FeedbackService.prototype.SOLUTION_FOUND = 0;
+FeedbackService.prototype.ONE_ANSWER_MISSING = 1;
+FeedbackService.prototype.MULTIPLE_ANSWERS_MISSING = 2;
+
 /**
  * Feedback configuration
  * @type {Object}
@@ -25,7 +29,14 @@ FeedbackService.prototype.config = {
      * Is feedback currently displayed ?
      * @type {boolean}
      */
-    visible: false
+    visible: false,
+    
+    /**
+     * The state of the feedback
+     * (0 : all found, 1 : partially found, 2 : error)
+     * @type {integer}
+     */
+    state: -1
 };
 
 /**

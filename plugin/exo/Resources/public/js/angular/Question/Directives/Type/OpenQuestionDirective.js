@@ -15,7 +15,8 @@ var OpenQuestionDirective = function OpenQuestionDirective() {
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/open.html',
         scope: {
             question : '=',
-            answer   : '='
+            answer   : '=',
+            feedbackState : '='
         }
     };
 };
