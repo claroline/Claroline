@@ -410,37 +410,37 @@ $(document).ready(function() {
         event.preventDefault();
 
 alert("modal_confirm_notation_record");
+
         // Récupération de l'id du document
-        var dropzoneId = $(this).attr("data-dropzone_id");
+        var note = document.getElementById('innova_collecticiel_notation_form_note').value;
+alert("Note");
+alert(note);
+
+        var commentText = document.getElementById('innova_collecticiel_notation_form_commentText').value;
+alert(commentText);
+
+        var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText').value;
+alert(qualityText);
 
         // Récupération de l'id du document
         var documentId = $(this).attr("data-document_id");
+alert(documentId);
 
-        var arrayDocsId = [];
+        // Récupération de l'id du document
+        var dropzoneId = $(this).attr("data-dropzone_id");
+alert(dropzoneId);
 
-        if (!documentId) {
-            $("input[type='checkbox']:checked").each(
-                function() {
-                    var chaineCaractere = $(this).attr('id');
-                    var splitChaine = chaineCaractere.split('_');
-                    if (splitChaine[2] != '0') {
-                        arrayDocsId.push($(this).attr('id'));
-                    }
-                });
-        } else {
-            var numDocPush = $(this).attr('data-document_id');
-            var docPush = "document_id_" + $(this).attr('data-document_id');
-            arrayDocsId.push(docPush);
-        }
 
         $.ajax({
             url: Routing.generate('innova_collecticiel_add_notation', {
+                documentId: documentId,
                 dropzoneId: dropzoneId,
-                returnReceiptId: returnReceiptId,
+                note: note,
+                commentText: commentText,
+                qualityText: qualityText
             }),
             method: "GET",
             data: {
-                arrayDocsId: arrayDocsId
             },
             complete: function(data) {
                 var data_link = $.parseJSON(data.responseText)
@@ -453,7 +453,7 @@ alert("modal_confirm_notation_record");
         });
 
         // Fermeture de la modal
-        $('#validate-modal-return-receipt').modal('hide');
+        $('#validate-modal-notation').modal('hide');
 
     });
 
