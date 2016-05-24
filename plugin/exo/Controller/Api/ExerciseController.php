@@ -242,8 +242,8 @@ class ExerciseController
         }
         
         return new JsonResponse([
-            'questions' => $this->paperManager->exportPaperQuestions($paper),
-            'paper' => $this->paperManager->exportPaper($paper)
+            'questions' => $this->paperManager->exportPaperQuestions($paper, $this->isAdmin($exercise)),
+            'paper' => $this->paperManager->exportPaper($paper, $this->isAdmin($exercise))
         ]);
     }
 
