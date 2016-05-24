@@ -2,19 +2,21 @@
  * List all the Papers of an Exercise
  * @param {Object}           $filter
  * @param {CommonService}    CommonService
+ * @param {ExerciseService}  ExerciseService
  * @param {Object}           exercise
  * @param {PaperService}     PaperService
  * @param {UserPaperService} UserPaperService
  * @param {Array}            papers
  * @constructor
  */
-var PaperListCtrl = function PaperListCtrl($filter, CommonService, exercise, PaperService, UserPaperService, papers) {
+var PaperListCtrl = function PaperListCtrl($filter, CommonService, ExerciseService, exercise, PaperService, UserPaperService, papers) {
     this.$filter = $filter;
     this.PaperService  = PaperService;
     this.CommonService = CommonService;
     this.ExerciseService = ExerciseService;
     this.UserPaperService = UserPaperService;
 
+    this.editEnabled = this.ExerciseService.isEditEnabled();
     this.papers    = papers;
     this.exercise  = exercise;
 
@@ -22,7 +24,12 @@ var PaperListCtrl = function PaperListCtrl($filter, CommonService, exercise, Pap
 };
 
 // set up dependency injection
-PaperListCtrl.$inject = ['$filter', 'CommonService', 'exercise', 'PaperService', 'UserPaperService', 'papers'];
+PaperListCtrl.$inject = ['$filter', 'CommonService', 'ExerciseService', 'exercise', 'PaperService', 'UserPaperService', 'papers'];
+
+/**
+ * @type {boolean}
+ */
+PaperListCtrl.prototype.editEnabled = false;
 
 /**
  * Original list of Papers
