@@ -11,10 +11,12 @@ var PathBaseCtrl = function PathBaseCtrl($window, $route, $routeParams, PathServ
     // Store path to make it available by all UI components
     this.pathService.setId(this.id);
     this.pathService.setPath(this.path);
+    this.pathService.setCompleteBlockingCondition(this.path.completeBlockingCondition);
 
     this.currentStep = $routeParams;
 
     this.summaryState = this.pathService.getSummaryState();
+    this.completeBlockingCondition = this.pathService.isCompleteBlockingCondition();
 
     //triggering of promise
     this.pathService.userteampromise(this.id);

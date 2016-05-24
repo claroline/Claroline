@@ -11,6 +11,9 @@
 
 namespace UJM\ExoBundle\Transfer;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Claroline\CoreBundle\Library\Transfert\Importer;
@@ -19,7 +22,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Step;
-use UJM\ExoBundle\Entity\Subscription;
+use UJM\ExoBundle\Manager\SubscriptionManager;
+use UJM\ExoBundle\Services\classes\QTI\QtiRepository;
+use UJM\ExoBundle\Services\classes\QTI\QtiServices;
 
 /**
  * @DI\Service("claroline.importer.exo_importer")
@@ -27,20 +32,54 @@ use UJM\ExoBundle\Entity\Subscription;
  */
 class ExoImporter extends Importer implements ConfigurationInterface
 {
-    private $container;
+    /**
+     * @var ObjectManager
+     */
     private $om;
+
+    /**
+     * @var QtiServices
+     */
+    private $qtiService;
+
+    /**
+     * @var QtiRepository
+     */
+    private $qtiRepository;
+
+    /**
+     * @var SubscriptionManager
+     */
+    private $subscriptionManager;
+
+    /**
+     * @var bool
+     */
     private $new = true;
 
     /**
      * @DI\InjectParams({
-     *      "om"        = @DI\Inject("claroline.persistence.object_manager"),
-     *      "container" = @DI\Inject("service_container")
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "qtiService"          = @DI\Inject("ujm.exo_qti"),
+     *     "qtiRepository"       = @DI\Inject("ujm.exo_qti_repository"),
+     *     "subscriptionManager" = @DI\Inject("ujm.exo.subscription_manager")
      * })
+     *
+     * @param ObjectManager       $om
+     * @param QtiServices         $qtiService,
+     * @param QtiRepository       $qtiRepository,
+     * @param SubscriptionManager $subscriptionManager
      */
-    public function __construct($om, $container)
+    public function __construct(
+        ObjectManager $om,
+        QtiServices $qtiService,
+        QtiRepository $qtiRepository,
+        SubscriptionManager $subscriptionManager)
     {
-        $this->container = $container;
         $this->om = $om;
+        $this->qtiService = $qtiService;
+        $this->qtiRepository = $qtiRepository;
+        $this->subscriptionManager = $subscriptionManager;
     }
 
     public function getConfigTreeBuilder()
@@ -57,7 +96,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         return 'ujm_exercise';
     }
 
-    public function addExoDescription($rootNode)
+    public function addExoDescription(ArrayNodeDefinition $rootNode)
     {
         $rootNode
             ->children()
@@ -105,7 +144,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
     public function validate(array $data)
     {
         $processor = new Processor();
-        $result = $processor->processConfiguration($this, $data);
+        $processor->processConfiguration($this, $data);
     }
 
     public function import(array $data)
@@ -115,11 +154,10 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $rootPath = $this->getRootPath();
         $exoPath = $data['data']['exercise']['path'];
 
-        $qtiRepos = $this->container->get('ujm.exo_qti_repository');
-        $newExercise = $this->createExo($data['data']['exercise'], $qtiRepos->getQtiUser());
+        $newExercise = $this->createExo($data['data']['exercise'], $this->qtiRepository->getQtiUser());
 
         if (file_exists($rootPath.'/'.$exoPath)) {
-            $this->createQuestion($data['data']['steps'], $newExercise, $rootPath.'/'.$exoPath, $qtiRepos);
+            $this->createQuestion($data['data']['steps'], $newExercise, $rootPath.'/'.$exoPath);
         }
         $this->om->endFlushSuite();
         $this->om->forceFlush();
@@ -129,62 +167,50 @@ class ExoImporter extends Importer implements ConfigurationInterface
 
     public function export(Workspace $workspace, array &$files, $object)
     {
-        $exoTitle = hash('sha1', $object->getTitle());
-        $qtiRepos = $this->container->get('ujm.exo_qti_repository');
-        $qtiRepos->createDirQTI($exoTitle, $this->new);
+        $exoTitle = hash('sha1', $object->getResourceNode()->getName());
+        $this->qtiRepository->createDirQTI($exoTitle, $this->new);
         $this->new = false;
 
-        $steps = $this->getStepsToExport($object, $qtiRepos, $exoTitle, $files);
+        $steps = $this->getStepsToExport($object, $exoTitle, $files);
 
         $version = '1';
         $path = 'qti/'.$exoTitle;
 
-//        $data = array(array('file' => array(
-//            'path' => $path,
-//            'version' => $version,
-//            'title' => $object->getTitle(),
-//        )));
-        $data['exercise'] = array(
-                                'path' => $path,
-                                'version' => $version,
-                                'title' => $object->getTitle(),
-                                'description' => $object->getDescription(),
-                                'shuffle' => $object->getShuffle(),
-                                'nbQuestion' => $object->getNbQuestion(),
-                                'keepSameQuestion' => $object->getKeepSameQuestion(),
-                                'duration' => $object->getDuration(),
-                                'doPrint' => $object->getDoprint(),
-                                'maxAttempts' => $object->getMaxAttempts(),
-                                'correctionMode' => $object->getCorrectionMode(),
-                                'dateCorrection' => $object->getDateCorrection(),
-                                'markMode' => $object->getMarkMode(),
-                                'dispButtonInterrupt' => $object->getDispButtonInterrupt(),
-                                'lockAttempt' => $object->getLockAttempt(),
-                                'anonymous' => $object->getAnonymous(),
-                                'type' => $object->getType(),
-                            );
+        $data['exercise'] = [
+            'path' => $path,
+            'version' => $version,
+            'description' => $object->getDescription(),
+            'shuffle' => $object->getShuffle(),
+            'nbQuestion' => $object->getNbQuestion(),
+            'keepSameQuestion' => $object->getKeepSameQuestion(),
+            'duration' => $object->getDuration(),
+            'doPrint' => $object->getDoprint(),
+            'maxAttempts' => $object->getMaxAttempts(),
+            'correctionMode' => $object->getCorrectionMode(),
+            'dateCorrection' => $object->getDateCorrection(),
+            'markMode' => $object->getMarkMode(),
+            'dispButtonInterrupt' => $object->getDispButtonInterrupt(),
+            'lockAttempt' => $object->getLockAttempt(),
+            'anonymous' => $object->getAnonymous(),
+            'type' => $object->getType(),
+        ];
+
         $data['steps'] = $steps;
 
         return $data;
     }
 
-    public static function fileNotExists($v, $rootpath)
-    {
-        $ds = DIRECTORY_SEPARATOR;
-
-        return !file_exists($rootpath.$ds.$v);
-    }
-
     /**
      * create the exercise.
      *
-     * @param array       $exercise properties of the exercise
-     * @param object User $user
+     * @param array $exercise properties of the exercise
+     * @param User  $user
+     *
+     * @return Exercise
      */
-    private function createExo(array $exercise, $user)
+    private function createExo(array $exercise, User $user)
     {
         $newExercise = new Exercise();
-        $newExercise->setTitle($exercise['title']);
         $newExercise->setDescription($exercise['description']);
         $newExercise->setShuffle($exercise['shuffle']);
         $newExercise->setNbQuestion($exercise['nbQuestion']);
@@ -201,13 +227,9 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $newExercise->setType($exercise['type']);
 
         $this->om->persist($newExercise);
-        $this->om->flush();
 
-        $subscription = new Subscription($user, $newExercise);
-        $subscription->setAdmin(1);
-        $subscription->setCreator(1);
+        $this->subscriptionManager->subscribe($newExercise, $user);
 
-        $this->om->persist($subscription);
         $this->om->flush();
 
         return $newExercise;
@@ -216,12 +238,12 @@ class ExoImporter extends Importer implements ConfigurationInterface
     /**
      * create the exercise.
      *
-     * @param array                         $step     properties of the step
-     * @param UJM\ExoBundle\Entity\Exercise $exercise
+     * @param array    $step     - properties of the step
+     * @param Exercise $exercise
      *
-     * @return UJM\ExoBundle\Entity\Step
+     * @return Step
      */
-    private function createStep(array $step, $exercise)
+    private function createStep(array $step, Exercise $exercise)
     {
         $newStep = new Step();
         $newStep->setText($step['text']);
@@ -242,15 +264,14 @@ class ExoImporter extends Importer implements ConfigurationInterface
     /**
      * create the step and the question.
      *
-     * @param UJM\ExoBundle\Entity\Step[]                      $steps
-     * @param UJM\ExoBundle\Entity\Exercise                    $exercise
-     * @param string                                           $exoPath
-     * @param UJM\ExoBundle\Services\classes\QTI\QtiRepository $qtiRepos
+     * @param Step[]   $steps
+     * @param Exercise $exercise
+     * @param string   $exoPath
      */
-    private function createQuestion($steps, $exercise, $exoPath, $qtiRepos)
+    private function createQuestion(array $steps, Exercise $exercise, $exoPath)
     {
         foreach ($steps as $step) {
-            $qtiRepos->razValues();
+            $this->qtiRepository->razValues();
             $newStep = $this->createStep($step, $exercise);
             $questions = opendir($exoPath.'/'.$step['order']);
             $questionFiles = array();
@@ -261,38 +282,37 @@ class ExoImporter extends Importer implements ConfigurationInterface
             }
             sort($questionFiles);
             foreach ($questionFiles as $question) {
-                $qtiRepos->createDirQTI();
+                $this->qtiRepository->createDirQTI();
                 $files = opendir($question);
                 while (($file = readdir($files)) !== false) {
                     if ($file != '.' && $file != '..') {
-                        copy($question.'/'.$file, $qtiRepos->getUserDir().$file);
+                        copy($question.'/'.$file, $this->qtiRepository->getUserDir().$file);
                     }
                 }
-                $qtiRepos->scanFilesToImport($newStep);
+                $this->qtiRepository->scanFilesToImport($newStep);
             }
-            $qtiRepos->assocExerciseQuestion(true);
+            $this->qtiRepository->assocExerciseQuestion(true);
         }
     }
 
     /**
      * create the directory questions to export an exercise and export the qti files.
      *
-     * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
-     * @param collection of  UJM\ExoBundle\Entity\Question     $interactions
-     * @param int                                              $numStep      order the step in the exercise
+     * @param \UJM\ExoBundle\Entity\Question[] $questions
+     * @param int                              $numStep
      */
-    private function createQuestionsDirectory($qtiRepos, $questions, $numStep)
+    private function createQuestionsDirectory(array $questions, $numStep)
     {
-        @mkdir($qtiRepos->getUserDir().'questions');
+        @mkdir($this->qtiRepository->getUserDir().'questions');
         $i = 'a';
-        @mkdir($qtiRepos->getUserDir().'questions/'.$numStep);
+        @mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep);
         foreach ($questions as $question) {
-            $qtiRepos->export($question);
-            @mkdir($qtiRepos->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i);
-            $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
+            $this->qtiRepository->export($question);
+            @mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i);
+            $iterator = new \DirectoryIterator($this->qtiRepository->getUserDir());
             foreach ($iterator as $element) {
                 if (!$element->isDot() && $element->isFile()) {
-                    rename($qtiRepos->getUserDir().$element->getFilename(), $qtiRepos->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i.'/'.$element->getFilename());
+                    rename($this->qtiRepository->getUserDir().$element->getFilename(), $this->qtiRepository->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i.'/'.$element->getFilename());
                 }
             }
             $i .= 'a';
@@ -302,41 +322,43 @@ class ExoImporter extends Importer implements ConfigurationInterface
     /**
      * return steps of an exercise in an array.
      *
-     * @param object Exercise                                  $ojbect
-     * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
-     * @param string                                           $exoTitle
+     * @param Exercise $object
+     * @param string   $exoTitle
+     * @param array    $files
      *
      * @return array
      */
-    private function getStepsToExport($object, $qtiRepos, $exoTitle, array &$files)
+    private function getStepsToExport(Exercise $object, $exoTitle, array &$files)
     {
-        $qtiServ = $this->container->get('ujm.exo_qti');
-
+        /** @var \UJM\ExoBundle\Repository\QuestionRepository $questionRepo */
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
 
         $steps = array();
         foreach ($object->getSteps() as $step) {
-            $s = array(
-                    'text' => $step->getText(),
-                    'order' => $step->getOrder(),
-                    'shuffle' => $step->getShuffle(),
-                    'nbQuestion' => $step->getNbQuestion(),
-                    'keepSameQuestion' => $step->getKeepSameQuestion(),
-                    'duration' => $step->getDuration(),
-                    'maxAttempts' => $step->getMaxAttempts(),
-                    );
+            $s = [
+                'text' => $step->getText(),
+                'order' => $step->getOrder(),
+                'shuffle' => $step->getShuffle(),
+                'nbQuestion' => $step->getNbQuestion(),
+                'keepSameQuestion' => $step->getKeepSameQuestion(),
+                'duration' => $step->getDuration(),
+                'maxAttempts' => $step->getMaxAttempts(),
+            ];
+
             $steps[] = $s;
             $questions = $questionRepo->findByStep($step);
-            $this->createQuestionsDirectory($qtiRepos, $questions, $step->getOrder());
-            $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos, $step->getOrder());
+            $this->createQuestionsDirectory($questions, $step->getOrder());
+            $dirs = $this->qtiService->sortPathOfQuestions($this->qtiRepository, $step->getOrder());
 
             $i = 'a';
-            foreach ($qdirs as $dir) {
+            foreach ($dirs as $dir) {
                 $iterator = new \DirectoryIterator($dir);
+
+                /** @var \DirectoryIterator $element */
                 foreach ($iterator as $element) {
                     if (!$element->isDot() && $element->isFile()) {
-                        $localPath = 'qti/'.$exoTitle.'/'.$step->getOrder().'/'.$step->getOrder().'_question_'.$i.'/'.$element->getFileName();
-                        $files[$localPath] = $element->getPathName();
+                        $localPath = 'qti/'.$exoTitle.'/'.$step->getOrder().'/'.$step->getOrder().'_question_'.$i.'/'.$element->getFilename();
+                        $files[$localPath] = $element->getPathname();
                     }
                 }
                 $i .= 'a';

@@ -22,7 +22,7 @@ class PaperRepository extends EntityRepository
      * @param User     $user
      * @param Exercise $exercise
      *
-     * @return array
+     * @return Paper[]
      */
     public function findUnfinishedPapers(User $user, Exercise $exercise)
     {
@@ -46,7 +46,7 @@ class PaperRepository extends EntityRepository
      * @param int  $exerciseID id Exercise
      * @param bool $finished   to return or no the papers no finished
      *
-     * Return array[Paper]
+     * @return Paper[]
      */
     public function getExerciseUserPapers($userID, $exerciseID, $finished = false)
     {
@@ -70,7 +70,7 @@ class PaperRepository extends EntityRepository
      *
      * @param int $exerciseID id Exercise
      *
-     * Return array[Paper]
+     * @return Paper[]
      */
     public function getExerciseAllPapers($exerciseID)
     {
@@ -91,7 +91,7 @@ class PaperRepository extends EntityRepository
      *
      * @param int $exerciseID id Exercise
      *
-     * Return array[Paper]
+     * @return Paper[]
      */
     public function getExerciseAllPapersIterator($exerciseID)
     {

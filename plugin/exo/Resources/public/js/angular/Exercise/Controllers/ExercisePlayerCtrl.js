@@ -40,6 +40,8 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl(
     this.index    = this.ExerciseService.getIndex(step);
     this.previous = this.ExerciseService.getPrevious(step);
     this.next     = this.ExerciseService.getNext(step);
+    
+    this.allAnswersFound = -1;
 
     // Reset feedback (hide feedback and reset registered callbacks of the Step)
     this.FeedbackService.reset();
@@ -158,6 +160,24 @@ ExercisePlayerCtrl.prototype.submit = function submit() {
                         }
                     }
                 }.bind(this));
+};
+
+/**
+ * @param button
+ */
+ExercisePlayerCtrl.prototype.isButtonEnabled = function isButtonEnabled(button) {
+    var buttonEnabled;
+    if (button === 'retry') {
+        buttonEnabled = this.feedback.enabled && this.feedback.visible && this.currentStepTry !== this.step.maxAttempts && this.allAnswersFound !== 0;
+    } else if (button === 'next') {
+        buttonEnabled = !this.next || (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
+    } else if (button === 'navigation') {
+        buttonEnabled = (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
+    } else if (button === 'end') {
+        buttonEnabled = (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
+    }
+    
+    return buttonEnabled;
 };
 
 /**
