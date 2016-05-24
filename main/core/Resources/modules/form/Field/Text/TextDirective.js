@@ -1,4 +1,4 @@
-import TextController from './TextController'
+import FieldController from '../FieldController'
 
 export default class TextDirective {
   constructor ($parse, $compile) {
@@ -9,7 +9,7 @@ export default class TextDirective {
     this.restrict = 'E'
     this.template = require('./text.html')
     this.replace = true
-    this.controller = TextController
+    this.controller = FieldController
     this.controllerAs = 'tc'
     this.bindToController = {
       field: '=',

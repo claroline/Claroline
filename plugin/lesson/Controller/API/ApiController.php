@@ -35,7 +35,7 @@ class ApiController extends FOSRestController
 {
     /**
      * @DI\InjectParams({
-     *     "localeManager" = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager" = @DI\Inject("claroline.manager.locale_manager"),
      *     "formFactory"   = @DI\Inject("form.factory"),
      *     "request"       = @DI\Inject("request")
      * })

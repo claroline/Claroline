@@ -34,7 +34,7 @@ class InternationalizationController extends Controller
      */
     public function formAction()
     {
-        $localeManager = $this->container->get('claroline.common.locale_manager');
+        $localeManager = $this->container->get('claroline.manager.locale_manager');
         $availableLocales = $localeManager->getImplementedLocales();
         $activatedLocales = $localeManager->retrieveAvailableLocales();
         $form = $this->createForm(new InternationalizationType($activatedLocales, $availableLocales));
@@ -51,7 +51,7 @@ class InternationalizationController extends Controller
      */
     public function submitAction()
     {
-        $localeManager = $this->container->get('claroline.common.locale_manager');
+        $localeManager = $this->container->get('claroline.manager.locale_manager');
         $availableLocales = $localeManager->getImplementedLocales();
         $activatedLocales = $localeManager->retrieveAvailableLocales();
         $form = $this->createForm(new InternationalizationType($activatedLocales, $availableLocales));
