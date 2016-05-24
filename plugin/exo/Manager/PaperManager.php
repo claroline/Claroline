@@ -270,8 +270,8 @@ class PaperManager
     /**
      * Returns one specific paper details.
      *
-     * @param Paper    $paper
-     * @param boolean  $withScore If true, the score will be exported even if it's not available (for Admins)
+     * @param Paper $paper
+     * @param bool  $withScore If true, the score will be exported even if it's not available (for Admins)
      *
      * @return array
      */
@@ -364,10 +364,10 @@ class PaperManager
     }
 
     /**
-     * Export the Questions linked to the Paper
+     * Export the Questions linked to the Paper.
      *
      * @param Paper $paper
-     * @param boolean $withSolution
+     * @param bool  $withSolution
      *
      * @return array
      */
@@ -383,10 +383,11 @@ class PaperManager
     }
 
     /**
-     * Export submitted answers for each Question of the Paper
+     * Export submitted answers for each Question of the Paper.
      *
      * @param Paper $paper
-     * @param boolean $withScore Do we need to export the score of the Paper ?
+     * @param bool  $withScore Do we need to export the score of the Paper ?
+     *
      * @return array
      *
      * @throws \UJM\ExoBundle\Transfer\Json\UnregisteredHandlerException
@@ -483,10 +484,10 @@ class PaperManager
     }
 
     /**
-     * Check if the solution of the Paper is available to User
+     * Check if the solution of the Paper is available to User.
      *
      * @param Exercise $exercise
-     * @param Paper $paper
+     * @param Paper    $paper
      *
      * @return bool
      */
@@ -517,10 +518,10 @@ class PaperManager
     }
 
     /**
-     * Check if the score of the Paper is available to User
+     * Check if the score of the Paper is available to User.
      *
      * @param Exercise $exercise
-     * @param Paper $paper
+     * @param Paper    $paper
      *
      * @return bool
      */
