@@ -48,7 +48,7 @@
         <tbody>
             <tr>
                 <!-- User -->
-                <td at-implicit at-attribute="user" at-sortable at-title="{{ 'paper_list_table_user'|trans:{}:'ujm_sequence' }}"></td>
+                <td data-ng-if="" at-implicit at-attribute="user" at-sortable at-title="{{ 'paper_list_table_user'|trans:{}:'ujm_sequence' }}"></td>
 
                 <!-- Paper number -->
                 <td at-implicit at-attribute="number" at-sortable at-title="{{ 'paper_list_table_paper_number'|trans:{}:'ujm_sequence' }}"></td>
@@ -105,7 +105,7 @@
         </tbody>
     </table>
 
-    <div class="panel-footer text-center" data-ng-if="paperListCtrl.filtered.length > 0">
+    <div class="panel-footer text-center" data-ng-if="paperListCtrl.filtered.length > 10">
         <at-pagination at-config="paperListCtrl.config" at-list="paperListCtrl.filtered"></at-pagination>
     </div>
 </div>
