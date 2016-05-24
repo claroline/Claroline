@@ -230,9 +230,27 @@ class PaperManager
     }
 
     /**
+     * Returns the papers for a given exercise, in a JSON format.
+     *
+     * @param Exercise $exercise
+     *
+     * @return array
+     */
+    public function exportExercisePapers(Exercise $exercise)
+    {
+        $papers = $this->om->getRepository('UJMExoBundle:Paper')
+            ->findBy(['exercise' => $exercise]);
+
+        $export = [];
+        foreach ($papers as $paper) {
+            $export[] = $this->exportPaper($paper, true);
+        }
+
+        return $export;
+    }
+
+    /**
      * Returns the papers of a user for a given exercise, in a JSON format.
-     * Also includes the complete definition and solution of each question
-     * associated with the exercise.
      *
      * @param Exercise $exercise
      * @param User     $user
@@ -253,11 +271,14 @@ class PaperManager
      * Returns one specific paper details.
      *
      * @param Paper    $paper
+     * @param boolean  $withScore If true, the score will be exported even if it's not available (for Admins)
      *
      * @return array
      */
-    public function exportPaper(Paper $paper)
+    public function exportPaper(Paper $paper, $withScore = false)
     {
+        $scoreAvailable = $withScore || $this->isScoreAvailable($paper->getExercise(), $paper);
+
         $_paper = [
             'id' => $paper->getId(),
             'number' => $paper->getNumPaper(),
@@ -265,9 +286,9 @@ class PaperManager
             'start' => $paper->getStart()->format('Y-m-d H:i:s'),
             'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
             'interrupted' => $paper->getInterupt(),
-            'scoreTotal' => $paper->getScore(),
+            'scoreTotal' => $scoreAvailable ? $paper->getScore() : null,
             'order' => $this->getStepsQuestions($paper),
-            'questions' => $this->exportPaperAnswers($paper),
+            'questions' => $this->exportPaperAnswers($paper, $scoreAvailable),
         ];
 
         return $_paper;
@@ -320,38 +341,6 @@ class PaperManager
             ->countExercisePapers($exercise);
     }
 
-    /**
-     * Returns the papers for a given exercise, in a JSON format.
-     * Also includes the complete definition and solution of each question
-     * associated with the exercise.
-     *
-     * @param Exercise $exercise
-     *
-     * @return array
-     */
-    public function exportExercisePapers(Exercise $exercise)
-    {
-        $papers = $this->om->getRepository('UJMExoBundle:Paper')
-            ->findBy(['exercise' => $exercise]);
-
-        $papers = array_map(function ($paper) {
-
-            return [
-                'id' => $paper->getId(),
-                'user' => $this->showUserPaper($paper),
-                'number' => $paper->getNumPaper(),
-                'start' => $paper->getStart()->format('Y-m-d H:i:s'),
-                'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
-                'interrupted' => $paper->getInterupt(),
-                'scoreTotal' => $paper->getScore(),
-                'order' => $this->getStepsQuestions($paper),
-                'questions' => $this->exportPaperAnswers($paper),
-            ];
-        }, $papers);
-
-        return $papers;
-    }
-
     private function applyPenalties(Paper $paper, Question $question, Response $response)
     {
         $logs = $this->om->getRepository('UJMExoBundle:LinkHintPaper')
@@ -378,13 +367,16 @@ class PaperManager
      * Export the Questions linked to the Paper
      *
      * @param Paper $paper
+     * @param boolean $withSolution
      *
      * @return array
      */
-    public function exportPaperQuestions(Paper $paper)
+    public function exportPaperQuestions(Paper $paper, $withSolution = false)
     {
-        $questions = array_map(function ($question) {
-            return $this->questionManager->exportQuestion($question, true, true);
+        $solutionAvailable = $withSolution || $this->isSolutionAvailable($paper->getExercise(), $paper);
+
+        $questions = array_map(function ($question) use ($solutionAvailable) {
+            return $this->questionManager->exportQuestion($question, $solutionAvailable, true);
         }, $this->getPaperQuestions($paper));
 
         return $questions;
@@ -392,11 +384,14 @@ class PaperManager
 
     /**
      * Export submitted answers for each Question of the Paper
+     *
      * @param Paper $paper
+     * @param boolean $withScore Do we need to export the score of the Paper ?
      * @return array
+     *
      * @throws \UJM\ExoBundle\Transfer\Json\UnregisteredHandlerException
      */
-    private function exportPaperAnswers(Paper $paper)
+    private function exportPaperAnswers(Paper $paper, $withScore = false)
     {
         $responseRepo = $this->om->getRepository('UJMExoBundle:Response');
         $linkRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
@@ -425,7 +420,7 @@ class PaperManager
                     'id' => (string) $question->getId(),
                     'answer' => $answer,
                     'hints' => $hints,
-                    'score' => $answerScore,
+                    'score' => $withScore ? $answerScore : null,
                 ];
             }
         }
