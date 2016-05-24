@@ -127,18 +127,18 @@ UserPaperService.prototype.end = function end() {
         .put(
             Routing.generate('exercise_finish_paper', { id: this.paper.id })
         )
+
         // Success callback
         .success(function onSuccess(response) {
             // Update the number of finished papers
             this.nbPapers++;
-
-            // TODO : display message
 
             // Update the current User Paper with updated data (endDate particularly)
             angular.merge(this.paper, response);
 
             deferred.resolve(response);
         }.bind(this))
+
         // Error callback
         .error(function onError(data, status) {
             // TODO : display message
@@ -281,6 +281,91 @@ UserPaperService.prototype.isAllowedToCompose = function isAllowedToCompose() {
     }
 
     return allowed;
+};
+
+/**
+ * Check if the correction of the Exercise is available
+ * @param {Object} paper
+ * @returns {Boolean}
+ */
+UserPaperService.prototype.isCorrectionAvailable = function isCorrectionAvailable(paper) {
+    var available = false;
+
+    if (this.ExerciseService.isEditEnabled()) {
+        // Always show correction for exercise's administrators
+        available = true;
+    } else {
+        // Use the configuration of the Exercise to know if it's available
+        var exercise = this.ExerciseService.getExercise();
+
+        switch (exercise.meta.correctionMode) {
+            // At the end of assessment
+            case '1':
+                available = null !== paper.end;
+                break;
+
+            // After the last attempt
+            case '2':
+                available = (0 === exercise.meta.maxAttempts || this.nbPapers >= exercise.meta.maxAttempts);
+                break;
+
+            // From a fixed date
+            case '3':
+                var now = new Date();
+
+                var correctionDate = null;
+                if (null !== exercise.meta.correctionDate) {
+                    correctionDate = new Date(Date.parse(exercise.meta.correctionDate));
+                }
+
+                available = (null === correctionDate || now >= correctionDate);
+                break;
+
+            // Never
+            default:
+            case '4':
+                available = false;
+                break;
+        }
+    }
+
+    return available;
+};
+
+/**
+ * Check if the score obtained by the User for the Exercise is available
+ * @param {Object} paper
+ * @returns {Boolean}
+ */
+UserPaperService.prototype.isScoreAvailable = function isScoreAvailable(paper) {
+    var available = false;
+
+    if (this.ExerciseService.isEditEnabled()) {
+        // Always show score for exercise's administrators
+        available = true;
+    } else {
+        // Use the configuration of the Exercise to know if it's available
+        var exercise = this.ExerciseService.getExercise();
+
+        switch (exercise.meta.markMode) {
+            // At the same time that the correction
+            case '1':
+                available = this.isCorrectionAvailable(paper);
+                break;
+
+            // At the end of the assessment
+            case '2':
+                available = null !== paper.end;
+                break;
+
+            // Show score if nothing specified
+            default:
+                available = false;
+                break;
+        }
+    }
+
+    return available;
 };
 
 // Register service into AngularJS
