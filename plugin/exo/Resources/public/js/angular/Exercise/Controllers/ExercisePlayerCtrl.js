@@ -242,8 +242,6 @@ ExercisePlayerCtrl.prototype.end = function end() {
             this.UserPaperService
                 .end()
                 .then(function onSuccess() {
-                    console.log('end success');
-                    console.log(this.UserPaperService.getNbPapers());
                     if (this.UserPaperService.isCorrectionAvailable(this.paper)) {
                         // go to paper correction view
                         this.$location.path('/papers/' + this.paper.id);
