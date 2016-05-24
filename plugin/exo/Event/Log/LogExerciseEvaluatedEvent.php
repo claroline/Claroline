@@ -16,15 +16,10 @@ class LogExerciseEvaluatedEvent extends AbstractLogResourceEvent
      */
     public function __construct(Exercise $exercise, $grade)
     {
-        $details = array(
-            'exercise' => array(
-                'id' => $exercise->getId(),
-                'name' => $exercise->getName(),
-                'title' => $exercise->getTitle(),
-            ),
+        $details = [
             'result' => $grade['scorePaper'],
             'resultMax' => $grade['maxExoScore'],
-        );
+        ];
 
         parent::__construct($exercise->getResourceNode(), $details);
     }
