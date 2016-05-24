@@ -7,7 +7,6 @@
 {% extends layout %}
 
 {% set tag = 'video' %}
-{% set source = path ('claro_stream_video', {'node': video.getResourceNode().getId(), 'name': video.getResourceNode().getName()}) %}
 {% if "audio" in video.getResourceNode().getMimeType() %}
     {% set tag = 'audio' %}
 {% endif %}
@@ -18,23 +17,23 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ video.getResourceNode().getName() }}</h3>
     </div>
-    
     <div class="panel-body">
-        {% include "ClarolineVideoPlayerBundle::" ~ player ~ 'player.html.twig' with {'tag': tag, 'video': video, 'source': source} %}
+        {% include "ClarolineVideoPlayerBundle::player.html.twig" with {'video': video} %}
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{ video.getResourceNode().getId() }}">
             <i class="fa fa-download"></i> {{ 'download'|trans({}, 'platform') }}
         </a>
+        <span><video-tracks ng-app="TrackButton"></video-tracks></span>
     </div>
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    {% include "ClarolineVideoPlayerBundle::" ~ player ~ 'player.css.twig' %} 
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {% include "ClarolineVideoPlayerBundle::" ~ player ~ 'player.js.twig' %} 
+    <script>
+        window.videoId = {{ video.getId() }}
+        window.nodeId = {{ video.getResourceNode().getId() }}
+        window.tracks = {{ tracks|json_serialize('api_resource')|raw }}
+    </script>
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-video-player-track-management.js') | raw }}"></script>
 {% endblock %}

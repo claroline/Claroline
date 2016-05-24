@@ -1,6 +1,6 @@
 import CheckboxesController from './CheckboxesController'
 
-export default class CheckboxesDirectivz {
+export default class CheckboxesDirective {
   constructor () {
     this.scope = {}
     this.restrict = 'E'

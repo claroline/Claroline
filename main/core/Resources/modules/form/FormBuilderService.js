@@ -1,15 +1,16 @@
 export default class FormBuilderService {
-  constructor ($httpParamSerializerJQLike) {
+  constructor ($httpParamSerializerJQLike, Upload) {
     this.$httpParamSerializerJQLike = $httpParamSerializerJQLike
+    this.Upload = Upload
   }
 
-  // copy pasted from ClarolineAPIService as it's probably going to change and the other one should be removed someday
-  formSerialize (formName, parameters) {
-    var data = {}
-    var serialized = angular.copy(parameters)
-    data[formName] = serialized
-
-    return this.$httpParamSerializerJQLike(data)
+  submit(url, parameters, method = 'POST') {
+      return this.Upload.upload({
+          url: url,
+          data: parameters,
+          method: method
+          //headers: {'Content-type': 'application/x-www-form-urlencoded' }
+      })
   }
 
   // copy pasted from ClarolineAPIService. Where should it go ?

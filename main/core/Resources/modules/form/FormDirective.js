@@ -8,8 +8,7 @@ export default class FormDirective {
     this.controllerAs = 'fc'
     this.bindToController = {
       form: '=',
-      ngModel: '=',
-      formCtrl: '='
+      ngModel: '='
     }
   }
 }
