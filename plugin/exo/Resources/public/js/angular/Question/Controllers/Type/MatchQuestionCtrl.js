@@ -32,6 +32,12 @@ MatchQuestionCtrl.prototype.orphanAnswersAreChecked = false;
 MatchQuestionCtrl.prototype.savedAnswers = [];
 
 /**
+ * Tells wether the answers are all found, not found, or if only one misses
+ * @type {Integer}
+ */
+ChoiceQuestionCtrl.prototype.feedbackState = -1;
+
+/**
  *
  * @param item
  * @returns {boolean}
@@ -49,8 +55,7 @@ MatchQuestionCtrl.prototype.answerIsSaved = function answerIsSaved(item) {
 MatchQuestionCtrl.prototype.checkAnswerValidity = function checkAnswerValidity(label) {
     if (this.question.toBind) {
         var answers = this.connections;
-    }
-    else {
+    } else {
         var answers = this.dropped;
     }
 
@@ -128,8 +133,7 @@ MatchQuestionCtrl.prototype.checkAnswerValidity = function checkAnswerValidity(l
 
     if (valid2) {
         return true;
-    }
-    else {
+    } else {
         return valid && valid3;
     }
 };
@@ -154,8 +158,7 @@ MatchQuestionCtrl.prototype.colorBindings = function colorBindings() {
         if (!rightAnswer) {
             if (this.feedback.visible) {
                 c.setType("wrong");
-            }
-            else {
+            } else {
                 c.setType("default");
             }
         }
@@ -240,8 +243,7 @@ MatchQuestionCtrl.prototype.getDropClass = function getDropClass(typeDiv, propos
     if (typeDiv === "dropzone") {
         if (droppable) {
             classname += "droppable ";
-        }
-        else {
+        } else {
             classname += "state-highlight-pair";
         }
     }
@@ -263,8 +265,7 @@ MatchQuestionCtrl.prototype.getDropColor = function getDropColor(subject, propos
                 if (this.savedAnswers[i].source === this.question.solutions[j].firstId && this.savedAnswers[i].target === this.question.solutions[j].secondId && (this.feedback.enabled || this.solutions)) {
                     if (subject === 'div') {
                         return "drop-success";
-                    }
-                    else if (subject === 'button') {
+                    } else if (subject === 'button') {
                         return "drop-button-success";
                     }
                     found = true;
@@ -276,26 +277,22 @@ MatchQuestionCtrl.prototype.getDropColor = function getDropColor(subject, propos
     if (this.feedback.visible && !found) {
         if (subject === 'div') {
             return "drop-warning";
-        }
-        else {
+        } else {
             return "drop-button-warning";
         }
-    }
-    else {
+    } else {
         for (var i = 0; i < this.dropped.length; i++) {
             if (this.dropped[i].target === proposal.id) {
                 if (subject === 'div') {
                     return "drop-alert";
-                }
-                else if (subject === 'button') {
+                } else if (subject === 'button') {
                     return "drop-button-alert";
                 }
             }
         }
         if (subject === 'div') {
             return "";
-        }
-        else {
+        } else {
             return "drop-button-default";
         }
     }
@@ -325,8 +322,7 @@ MatchQuestionCtrl.prototype.getStudentAnswers = function getStudentAnswers(label
     var answers_to_check;
     if (this.question.toBind) {
         answers_to_check = this.connections;
-    }
-    else {
+    } else {
         answers_to_check = this.dropped;
     }
 
@@ -353,8 +349,7 @@ MatchQuestionCtrl.prototype.getStudentAnswersWithIcons = function getStudentAnsw
     var answers_to_check;
     if (this.question.toBind) {
         answers_to_check = this.connections;
-    }
-    else {
+    } else {
         answers_to_check = this.dropped;
     }
 
@@ -474,9 +469,42 @@ MatchQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
         if (this.question.typeMatch !== 3) {
             $('.draggable').fadeTo(100, 0.3);
         }
-    }
-    else if (this.question.toBind) {
+    } else if (this.question.toBind) {
         this.colorBindings();
+    }
+    
+    this.answersAllFound();
+};
+
+/**
+ * 
+ * @returns {answersAllFound}
+ */
+MatchQuestionCtrl.prototype.answersAllFound = function answersAllFound() {
+    var answers_to_check;
+    if (this.question.toBind) {
+        answers_to_check = this.connections;
+    } else {
+        answers_to_check = this.dropped;
+    }
+    var numAnswersFound = 0;
+    for (var j=0; j<this.question.solutions.length; j++) {
+        for (var i=0; i<answers_to_check.length; i++) {
+            if (this.question.solutions[j].firstId === answers_to_check[i].source && this.question.solutions[j].secondId === answers_to_check[i].target) {
+                numAnswersFound++;
+            }
+        }
+    }
+    
+    if (numAnswersFound === this.question.solutions.length) {
+        // all answers have been found
+        this.feedbackState = 0;
+    } else if (numAnswersFound === this.question.solutions.length -1) {
+        // one answer remains to be found
+        this.feedbackState = 1;
+    } else {
+        // more answers remain to be found
+        this.feedbackState = 2;
     }
 };
 
@@ -492,8 +520,7 @@ MatchQuestionCtrl.prototype.onFeedbackHide = function onFeedbackHide() {
             $('#draggable_' + this.dropped[i].source).draggable("disable");
             $('#draggable_' + this.dropped[i].source).fadeTo(100, 0.3);
         }
-    }
-    else if (this.question.toBind) {
+    } else if (this.question.toBind) {
         this.colorBindings();
     }
 };
@@ -510,8 +537,7 @@ MatchQuestionCtrl.prototype.updateStudentData = function () {
     var answers_to_check;
     if (this.question.toBind) {
         answers_to_check = this.connections;
-    }
-    else {
+    } else {
         answers_to_check = this.dropped;
     }
 
@@ -612,8 +638,7 @@ MatchQuestionCtrl.prototype.addPreviousDroppedItems = function addPreviousDroppe
                 // disable corresponding draggable item
                 if (this.question.typeMatch === 3) {
                     $('#div_' + items[0]).draggable("disable");
-                }
-                else {
+                } else {
                     $('#draggable_' + items[0]).draggable("disable");
                 }
                 // ui update
@@ -727,8 +752,7 @@ MatchQuestionCtrl.prototype.handleDragMatchQuestionDrop = function handleDragMat
     // disable draggable element
     if (this.question.typeMatch === 3) {
         $('#' + sourceId.replace("draggable", "div")).draggable("disable");
-    }
-    else {
+    } else {
         $('#' + sourceId).draggable("disable");
         $('#' + sourceId).fadeTo(100, 0.3);
     }
@@ -752,8 +776,7 @@ MatchQuestionCtrl.prototype.removeDropped = function removeDropped(sourceId, tar
     if (targetId === -1) {
         var itemId = sourceId;
         var valueType = "source";
-    }
-    else {
+    } else {
         var itemId = targetId;
         var valueType = "target";
     }
@@ -772,8 +795,7 @@ MatchQuestionCtrl.prototype.removeDropped = function removeDropped(sourceId, tar
             if (this.question.typeMatch === 3) {
                 $('#div_' + sourceId).draggable("enable");
                 $('#div_' + sourceId).fadeTo(100, 1);
-            }
-            else {
+            } else {
                 // reactivate source draggable element
                 $('#draggable_' + sourceId).draggable("enable");
                 // visual changes for reactivated draggable element
@@ -788,8 +810,7 @@ MatchQuestionCtrl.prototype.removeDropped = function removeDropped(sourceId, tar
 
             // update student data
             this.updateStudentData();
-        }
-        else {
+        } else {
             // remove from local array (this.dropped)
             for (var i = 0; i < this.dropped.length; i++) {
                 if (this.dropped[i].source === sourceId) {

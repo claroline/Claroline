@@ -9,8 +9,8 @@ class QtiServices
     /**
      * For create a zip where questions while be integrate.
      *
-     * @param type $tmpFileName
-     * @param type $title
+     * @param string $tmpFileName
+     * @param string $title
      *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
@@ -29,27 +29,27 @@ class QtiServices
     /**
      * sort the paths of questions.
      *
-     * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
-     * @param string                                           $stepDir  directory of step
+     * @param QtiRepository $qtiRepo
+     * @param string        $stepDir directory of step
      *
      * @return array of String array with the paths of questions sorted
      */
-    public function sortPathOfQuestions($qtiRepos, $stepDir = '')
+    public function sortPathOfQuestions(QtiRepository $qtiRepo, $stepDir = '')
     {
-        $pathQtiDir = $qtiRepos->getUserDir().'questions';
+        $pathQtiDir = $qtiRepo->getUserDir().'questions';
         if ($stepDir != '') {
             $pathQtiDir .= '/'.$stepDir;
         }
         $questions = new \DirectoryIterator($pathQtiDir);
         //create array with sort file
-        $qdirs = array();
+        $dirs = array();
         foreach ($questions as $question) {
             if ($question != '.' && $question != '..' && $question->getExtension() == '') {
-                $qdirs[] = $pathQtiDir.'/'.$question->getFilename();
+                $dirs[] = $pathQtiDir.'/'.$question->getFilename();
             }
         }
-        sort($qdirs);
+        sort($dirs);
 
-        return $qdirs;
+        return $dirs;
     }
 }

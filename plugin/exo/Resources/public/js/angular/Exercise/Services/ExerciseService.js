@@ -1,10 +1,12 @@
 /**
  * Exercise Service
+ * @param {Object} $http
+ * @param {Object} $q
+ * @constructor
  */
-var ExerciseService = function ExerciseService($http, $q, UserPaperService) {
+var ExerciseService = function ExerciseService($http, $q) {
     this.$http = $http;
     this.$q    = $q;
-    this.UserPaperService = UserPaperService;
 };
 
 // Set up dependency injection
@@ -17,16 +19,30 @@ ExerciseService.$inject = [ '$http', '$q' ];
 ExerciseService.prototype.exercise = null;
 
 /**
+ * List of available correction modes for Exercise
+ * @type {Object}
+ */
+ExerciseService.prototype.correctionModes = {
+    '1': Translator.trans('at_the_end_of_assessment', {}, 'ujm_exo'),
+    '2': Translator.trans('after_the_last_attempt', {}, 'ujm_exo'),
+    '3': Translator.trans('from', {}, 'ujm_exo'),
+    '4': Translator.trans('never', {}, 'ujm_exo')
+};
+
+/**
+ * List of available mark modes for Exercise
+ * @type {Object}
+ */
+ExerciseService.prototype.markModes = {
+    '1': Translator.trans('at_the_same_time_that_the_correction', {}, 'ujm_exo'),
+    '2': Translator.trans('at_the_end_of_assessment', {}, 'ujm_exo')
+};
+
+/**
  * Is the current User can edit the Exercise ?
  * @type {boolean}
  */
 ExerciseService.prototype.editEnabled = false;
-
-/**
- * Is the current User can do the Exercise ?
- * @type {boolean}
- */
-ExerciseService.prototype.composeEnabled = false;
 
 /**
  * Get the current Exercise
@@ -62,25 +78,6 @@ ExerciseService.prototype.isEditEnabled = function isEditEnabled() {
  */
 ExerciseService.prototype.setEditEnabled = function setEditEnabled(editEnabled) {
     this.editEnabled = editEnabled;
-
-    return this;
-};
-
-/**
- * Is compose enabled ?
- * @returns {boolean}
- */
-ExerciseService.prototype.isComposeEnabled = function isComposeEnabled() {
-    return this.composeEnabled;
-};
-
-/**
- * Set compose enabled
- * @param   {boolean} composeEnabled
- * @returns {ExerciseService}
- */
-ExerciseService.prototype.setComposeEnabled = function setComposeEnabled(composeEnabled) {
-    this.composeEnabled = composeEnabled;
 
     return this;
 };

@@ -83,6 +83,7 @@ path_empty_user_can_edit: Ce parcours est vide. Editez et publiez le afin de le 
 path_empty_user_read_only: Ce parcours est vide et n'a pas encore été configuré par son concepteur. Veuillez revenir plus tard.
 path_init_structure: Créer une nouvelle structure vide
 path_init_structure_template: Créer une structure à partir d'un modèle
+path_complete_blocking_condition: Conditions bloquantes pour toutes les étapes enfants ?
 path_name: Nom
 path_no_structure: Ce Parcours n'a aucune structure.
 path_status: Statut

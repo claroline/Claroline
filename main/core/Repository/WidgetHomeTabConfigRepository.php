@@ -108,6 +108,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
             ->andWhere('whtc.user IS NULL')
             ->andWhere("whtc.type = 'workspace'")
             ->andWhere('whtc.visible = true')
+            ->setParameter('homeTabId', $homeTabId)
             ->setParameter('workspace', $workspace)
             ->getQuery()
             ->getResult();

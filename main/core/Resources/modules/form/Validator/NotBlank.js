@@ -4,6 +4,6 @@ export default class NotBlank {
   }
 
   getErrorMessage (el) {
-    return 'value_not_blank'
+    return Translator.trans('value_not_blank', {}, 'validators')
   }
 }

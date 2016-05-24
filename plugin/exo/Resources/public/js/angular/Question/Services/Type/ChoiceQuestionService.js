@@ -1,22 +1,56 @@
 /**
  * Choice Question Service
+ * @param {FeedbackService} FeedbackService
  * @constructor
  */
-var ChoiceQuestionService = function ChoiceQuestionService() {
+var ChoiceQuestionService = function ChoiceQuestionService(FeedbackService) {
     AbstractQuestionService.apply(this, arguments);
+    
+    this.FeedbackService = FeedbackService;
 };
 
 // Extends AbstractQuestionCtrl
 ChoiceQuestionService.prototype = Object.create(AbstractQuestionService.prototype);
 
 // Set up dependency injection (get DI from parent too)
-ChoiceQuestionService.$inject = AbstractQuestionService.$inject;
+ChoiceQuestionService.$inject = AbstractQuestionService.$inject.concat(['FeedbackService']);
 
 /**
  * Initialize the answer object for the Question
  */
 ChoiceQuestionService.prototype.initAnswer = function initAnswer() {
     return [];
+};
+
+/**
+ * Check if all, all but one, or not all answers are found
+ */
+ChoiceQuestionService.prototype.answersAllFound = function answersAllFound(question, answer) {
+    var numAnswersFound = 0;
+    var numSolutions = 0;
+    for (var i=0; i<question.solutions.length; i++) {
+        if (question.solutions[i].score > 0) {
+            numSolutions++;
+        }
+        for (var j=0; j<answer.length; j++) {
+            if (question.solutions[i].id === answer[j] && question.solutions[i].score > 0) {
+                numAnswersFound++;
+            }
+        }
+    }
+    var feedbackState = -1;
+    if (numAnswersFound === numSolutions) {
+        // all answers have been found
+        feedbackState = this.FeedbackService.SOLUTION_FOUND;
+    } else if (numAnswersFound === numSolutions -1 && question.multiple) {
+        // one answer remains to be found
+        feedbackState = this.FeedbackService.ONE_ANSWER_MISSING;
+    } else {
+        // more answers remain to be found
+        feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
+    }
+    
+    return feedbackState;
 };
 
 /**
@@ -119,6 +153,13 @@ ChoiceQuestionService.prototype.getChoiceFeedback = function getChoiceFeedback(q
     }
 
     return feedback;
+};
+
+/**
+ * 
+ */
+ChoiceQuestionService.prototype.getFeedbackState = function getFeedbackState() {
+    return this.feedbackState;
 };
 
 // Register service into AngularJS

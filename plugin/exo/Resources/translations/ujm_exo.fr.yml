@@ -26,7 +26,7 @@ attempt_info2plur: essais
 attempt_info3: Essai N°
 attempt_info4: Il vous reste
 attempt_info5: afin d'améliorer votre note
-attempt_info6: Il ne vous reste plus aucun essai
+attempt_info6: Il ne vous reste plus aucun essai.
 at_the_end_of_assessment: A la fin du test
 at_the_same_time_that_the_correction: En même temps que la correction
 availability_of_correction: Disponibilité de la correction
@@ -105,7 +105,11 @@ exercise: Exercice
 exercise_alert_break: Interuption non autorisée. Votre copie sera considérée comme terminée !
 exercise_definition: Définition de l'exercice
 exercise_edit: Modification de l'exercice
+exercise_finished_attempts: "[0, 1] Vous avez terminé %count% essai|]1,Inf[ Vous avez terminé %count% essais"
 exercice_linked_question: Questions liées à l'exercice
+exercise_restart: Recommencer l'exercice
+exercise_start: Commencer l'exercice
+exercise_try: Tester l'exercice
 exit: Quitter
 exo_empty_user_can_edit: Cet exercice est vide. Editez et publiez le afin de le remplir.
 exo_empty_user_read_only: Cet exercice est vide et n'a pas encore été configuré par son concepteur. Veuillez revenir plus tard.
@@ -204,6 +208,8 @@ matching_edition: Edition d'une question associative
 matching_value: Type de question associative
 maximum_tries: Nombre d'essai maximum
 meaning_measure_difficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
+metadata_visible:      Afficher les informations de l'exercice
+metadata_visible_help: Si coché, un tableau récapitulatif sera affiché sur la vue d'ensemble de l'exercice
 model: Modèle
 more_info: Plus d'informations
 my_questions: Mes questions
@@ -307,6 +313,8 @@ reset: Réinitialiser
 resize_zone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites la glisser
 response: Réponse
 result: Résultats
+results_list: Liste des résultats
+result_show: Voir les résultats
 right_response: Points pour la bonne réponse
 
 # S
@@ -361,6 +369,8 @@ upload: Télécharger
 uploading: Chargement en cours
 user: Utilisateur
 users: Utilisateurs
+ujm_exo_exercise_name: Nom
+ujm_exo_exercise_published: Publier la ressource
 
 # V
 validate: Valider

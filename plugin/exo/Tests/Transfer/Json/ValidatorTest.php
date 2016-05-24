@@ -63,7 +63,7 @@ class ValidatorTest extends TransactionalTestCase
         $question = json_decode($data);
         $expected = [
             'path' => '',
-            'message' => 'a solution(s) property is required',
+            'message' => 'A solution property is required',
         ];
         $this->assertContains($expected, $this->validator->validateQuestion($question));
     }

@@ -176,7 +176,7 @@ class ClaroUtilities
         if (!$this->formatter && $this->hasIntl) {
             $request = $this->container->get('request_stack')->getMasterRequest();
             $this->formatter = new \IntlDateFormatter(
-                $this->container->get('claroline.common.locale_manager')->getUserLocale($request),
+                $this->container->get('claroline.manager.locale_manager')->getUserLocale($request),
                 \IntlDateFormatter::SHORT,
                 \IntlDateFormatter::SHORT,
                 date_default_timezone_get(),

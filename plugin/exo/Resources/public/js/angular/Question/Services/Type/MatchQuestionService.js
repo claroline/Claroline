@@ -1,16 +1,19 @@
 /**
  * Match Question Service
+ * @param {FeedbackService} FeedbackService
  * @constructor
  */
-var MatchQuestionService = function MatchQuestionService() {
+var MatchQuestionService = function MatchQuestionService(FeedbackService) {
     AbstractQuestionService.apply(this, arguments);
+    
+    this.FeedbackService = FeedbackService;
 };
 
 // Extends AbstractQuestionCtrl
 MatchQuestionService.prototype = Object.create(AbstractQuestionService.prototype);
 
 // Set up dependency injection (get DI from parent too)
-MatchQuestionService.$inject = AbstractQuestionService.$inject;
+MatchQuestionService.$inject = AbstractQuestionService.$inject.concat(['FeedbackService']);
 
 /**
  * Initialize the answer object for the Question
@@ -28,6 +31,37 @@ MatchQuestionService.prototype.getCorrectAnswer = function getCorrectAnswer(ques
     var answer = [];
 
     return answer;
+};
+
+/**
+ * 
+ * @returns {answersAllFound}
+ */
+MatchQuestionService.prototype.answersAllFound = function answersAllFound(question, answers) {
+    var numAnswersFound = 0;
+    for (var j=0; j<question.solutions.length; j++) {
+        for (var i=0; i<answers.length; i++) {
+            var answer = answers[i].split(",");
+            
+            if (question.solutions[j].firstId === answer[0] && question.solutions[j].secondId === answer[1]) {
+                numAnswersFound++;
+            }
+        }
+    }
+    
+    var feedbackState = -1;
+    if (numAnswersFound === question.solutions.length) {
+        // all answers have been found
+        feedbackState = this.FeedbackService.SOLUTION_FOUND;
+    } else if (numAnswersFound === question.solutions.length -1) {
+        // one answer remains to be found
+        feedbackState = this.FeedbackService.ONE_ANSWER_MISSING;
+    } else {
+        // more answers remain to be found
+        feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
+    }
+    
+    return feedbackState;
 };
 
 MatchQuestionService.prototype.initBindMatchQuestion = function initBindMatchQuestion() {

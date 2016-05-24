@@ -50,12 +50,13 @@ class ExerciseManager
      * Publishes an exercise.
      *
      * @param Exercise $exercise
+     * @param bool     $throwException Throw an exception if the Exercise is already published
      *
      * @throws \LogicException if the exercise is already published
      */
-    public function publish(Exercise $exercise)
+    public function publish(Exercise $exercise, $throwException = true)
     {
-        if ($exercise->getResourceNode()->isPublished()) {
+        if ($throwException && $exercise->getResourceNode()->isPublished()) {
             throw new \LogicException("Exercise {$exercise->getId()} is already published");
         }
 
@@ -72,12 +73,13 @@ class ExerciseManager
      * Unpublishes an exercise.
      *
      * @param Exercise $exercise
+     * @param bool     $throwException Throw an exception if the Exercise is not published
      *
-     * @throws \LogicException if the exercise is already unpublished
+     * @throws \LogicException if the exercise is not published
      */
-    public function unpublish(Exercise $exercise)
+    public function unpublish(Exercise $exercise, $throwException = true)
     {
-        if (!$exercise->getResourceNode()->isPublished()) {
+        if ($throwException && !$exercise->getResourceNode()->isPublished()) {
             throw new \LogicException("Exercise {$exercise->getId()} is already unpublished");
         }
 
@@ -142,7 +144,6 @@ class ExerciseManager
         $finalQuestions = [];
 
         foreach ($steps as $step) {
-            $questions = array();
             $originalQuestions = $questions = $questionRepo->findByStep($step);
             $questionCount = count($questions);
 
@@ -175,8 +176,43 @@ class ExerciseManager
      */
     public function pickSteps(Exercise $exercise)
     {
-        return $this->om->getRepository('UJMExoBundle:Step')
-            ->findByExercise($exercise);
+        return $this->om->getRepository('UJMExoBundle:Step')->findByExercise($exercise);
+    }
+
+    /**
+     * Create a copy of an Exercise.
+     *
+     * @param Exercise $exercise
+     *
+     * @return Exercise the copy of the Exercise
+     */
+    public function copyExercise(Exercise $exercise)
+    {
+        $newExercise = new Exercise();
+
+        // Populate Exercise properties
+        $newExercise->setName($exercise->getName());
+        $newExercise->setDescription($exercise->getDescription());
+        $newExercise->setShuffle($exercise->getShuffle());
+        $newExercise->setNbQuestion($exercise->getNbQuestion());
+        $newExercise->setDuration($exercise->getDuration());
+        $newExercise->setDoprint($exercise->getDoprint());
+        $newExercise->setMaxAttempts($exercise->getMaxAttempts());
+        $newExercise->setCorrectionMode($exercise->getCorrectionMode());
+        $newExercise->setDateCorrection($exercise->getDateCorrection());
+        $newExercise->setMarkMode($exercise->getMarkMode());
+        $newExercise->setDispButtonInterrupt($exercise->getDispButtonInterrupt());
+        $newExercise->setLockAttempt($exercise->getLockAttempt());
+
+        /** @var \UJM\ExoBundle\Entity\Step $step */
+        foreach ($exercise->getSteps() as $step) {
+            $newStep = $this->stepManager->copyStep($step);
+
+            // Add step to Exercise
+            $newExercise->addStep($newStep);
+        }
+
+        return $newExercise;
     }
 
     /**
@@ -247,20 +283,31 @@ class ExerciseManager
             throw new ValidationException('Exercise metadata are not valid', $errors);
         }
 
-        $exercise->setTitle($metadata->title);
+        // Update ResourceNode
+        $node = $exercise->getResourceNode();
+        $node->setName($metadata->title);
+
+        // Update Exercise
         $exercise->setDescription($metadata->description);
         $exercise->setType($metadata->type);
-        $exercise->setNbQuestion($metadata->pick);
+        $exercise->setNbQuestion($metadata->pick ? $metadata->pick : 0);
         $exercise->setShuffle($metadata->random);
         $exercise->setKeepSameQuestion($metadata->keepSameQuestions);
         $exercise->setMaxAttempts($metadata->maxAttempts);
         $exercise->setLockAttempt($metadata->lockAttempt);
         $exercise->setDispButtonInterrupt($metadata->dispButtonInterrupt);
+        $exercise->setMetadataVisible($metadata->metadataVisible);
         $exercise->setMarkMode($metadata->markMode);
         $exercise->setCorrectionMode($metadata->correctionMode);
         $exercise->setAnonymous($metadata->anonymous);
         $exercise->setDuration($metadata->duration);
-        /*$exercise->setDateCorrection($metadata->correctionDate);*/
+
+        $correctionDate = null;
+        if (!empty($metadata->correctionDate) && 3 == $metadata->correctionMode) {
+            $correctionDate = \DateTime::createFromFormat('Y-m-d H:i:s', $metadata->correctionDate);
+        }
+
+        $exercise->setDateCorrection($correctionDate);
 
         // Save to DB
         $this->om->persist($exercise);
@@ -283,13 +330,14 @@ class ExerciseManager
         // Accessibility dates
         $startDate = $node->getAccessibleFrom()  ? $node->getAccessibleFrom()->format('Y-m-d H:i:s')  : null;
         $endDate = $node->getAccessibleUntil() ? $node->getAccessibleUntil()->format('Y-m-d H:i:s') : null;
+        $correctionDate = $exercise->getDateCorrection() ? $exercise->getDateCorrection()->format('Y-m-d H:i:s') : null;
 
         return [
             'authors' => [
                 ['name' => $authorName],
             ],
             'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
-            'title' => $exercise->getTitle(),
+            'title' => $node->getName(),
             'description' => $exercise->getDescription(),
             'type' => $exercise->getType(),
             'pick' => $exercise->getNbQuestion(),
@@ -298,11 +346,12 @@ class ExerciseManager
             'maxAttempts' => $exercise->getMaxAttempts(),
             'lockAttempt' => $exercise->getLockAttempt(),
             'dispButtonInterrupt' => $exercise->getDispButtonInterrupt(),
+            'metadataVisible' => $exercise->isMetadataVisible(),
             'anonymous' => $exercise->getAnonymous(),
             'duration' => $exercise->getDuration(),
             'markMode' => $exercise->getMarkMode(),
             'correctionMode' => $exercise->getCorrectionMode(),
-            'correctionDate' => $exercise->getDateCorrection()->format('Y-m-d H:i:s'),
+            'correctionDate' => $correctionDate,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'published' => $node->isPublished(),

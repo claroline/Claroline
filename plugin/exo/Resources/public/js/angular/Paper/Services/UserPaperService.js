@@ -1,25 +1,33 @@
 /**
  * UserPaper Service
- * Manages Paper of the  current User
- * @param {Object}       $http
- * @param {Object}       $q
- * @param {PaperService} PaperService
+ * Manages Paper of the current User
+ * @param {Object}          $http
+ * @param {Object}          $q
+ * @param {PaperService}    PaperService
+ * @param {ExerciseService} ExerciseService
  * @constructor
  */
-var UserPaperService = function UserPaperService($http, $q, PaperService) {
-    this.$http        = $http;
-    this.$q           = $q;
-    this.PaperService = PaperService;
+var UserPaperService = function UserPaperService($http, $q, PaperService, ExerciseService) {
+    this.$http           = $http;
+    this.$q              = $q;
+    this.PaperService    = PaperService;
+    this.ExerciseService = ExerciseService;
 };
 
 // Set up dependency injection
-UserPaperService.$inject = [ '$http', '$q', 'PaperService' ];
+UserPaperService.$inject = [ '$http', '$q', 'PaperService', 'ExerciseService' ];
 
 /**
  * Current paper of the User
  * @type {Object}
  */
 UserPaperService.prototype.paper = {};
+
+/**
+ * Number of papers already done by the User
+ * @type {number}
+ */
+UserPaperService.prototype.nbPapers = 0;
 
 /**
  * Get Paper
@@ -36,6 +44,25 @@ UserPaperService.prototype.getPaper = function getPaper() {
  */
 UserPaperService.prototype.setPaper = function setPaper(paper) {
     this.paper = paper;
+
+    return this;
+};
+
+/**
+ * Get number of Papers
+ * @returns {number}
+ */
+UserPaperService.prototype.getNbPapers = function getNbPapers() {
+    return this.nbPapers;
+};
+
+/**
+ * Set number of Papers
+ * @param {number} count
+ * @returns {UserPaperService}
+ */
+UserPaperService.prototype.setNbPapers = function setNbPapers(count) {
+    this.nbPapers = count ? parseInt(count) : 0;
 
     return this;
 };
@@ -101,6 +128,9 @@ UserPaperService.prototype.end = function end() {
         )
         // Success callback
         .success(function (response) {
+            // Update the number of finished papers
+            this.nbPapers++;
+
             // TODO : display message
 
             deferred.resolve(this.paper);
@@ -231,6 +261,22 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
     }
 
     return deferred.promise;
+};
+
+/**
+ * Check if the User is allowed to compose (max attempts of the Exercise is not reached)
+ * @returns {boolean}
+ */
+UserPaperService.prototype.isAllowedToCompose = function isAllowedToCompose() {
+    var allowed = true;
+
+    var exercise = this.ExerciseService.getExercise();
+    if (exercise.meta.maxAttempts && this.nbPapers >= exercise.meta.maxAttempts) {
+        // Max attempts reached => user can not do the exercise
+        allowed = false;
+    }
+
+    return allowed;
 };
 
 // Register service into AngularJS
