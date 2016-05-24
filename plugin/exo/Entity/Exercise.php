@@ -19,21 +19,6 @@ class Exercise extends AbstractResource
     const TYPE_FORMATIVE = '3';
 
     /**
-     * Title of the Exercise.
-     *
-     * @var string
-     *
-     * @deprecated duplicate of ResourceNode::$name. needs to be removed
-     *
-     * @ORM\Column(name="title", type="string", length=255)
-     */
-    private $title;
-
-    /**
-     * Description of the Exercise.
-     *
-     * @var string
-     *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description = '';
@@ -164,11 +149,9 @@ class Exercise extends AbstractResource
     private $type = self::TYPE_SUMMATIVE;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Step",
-     *     mappedBy="exercise",
-     *     cascade={"remove"}
-     * )
+     * @var ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="Step", mappedBy="exercise", cascade={"all"})
      * @ORM\OrderBy({"order" = "ASC"})
      */
     private $steps;
@@ -187,30 +170,6 @@ class Exercise extends AbstractResource
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set title.
-     *
-     * @param string $title
-     *
-     * @deprecated Use ResourceNode::setName() instead
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * Get title.
-     *
-     * @return string
-     *
-     * @deprecated Use ResourceNode::getName() instead
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**

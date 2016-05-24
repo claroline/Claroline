@@ -1,21 +1,20 @@
 <?php
 
-/**
- * To create temporary repository for QTI files.
- */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\InteractionOpen;
+use UJM\ExoBundle\Entity\Step;
 
+/**
+ * To create temporary repository for QTI files.
+ */
 class QtiRepository
 {
-    private $user;
     private $userRootDir;
     private $userDir;
-    private $tokenStorageInterface;
+    private $tokenStorage;
     private $container;
     private $step = null;
     private $exerciseQuestions = array();
@@ -24,15 +23,13 @@ class QtiRepository
     /**
      * Constructor.
      *
-     *
-     * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorageInterface Dependency Injection
-     * @param \Symfony\Component\DependencyInjection\Container                                   $container
+     * @param TokenStorageInterface                            $tokenStorageInterface
+     * @param \Symfony\Component\DependencyInjection\Container $container
      */
     public function __construct(TokenStorageInterface $tokenStorageInterface, $container)
     {
-        $this->tokenStorageInterface = $tokenStorageInterface;
+        $this->tokenStorage = $tokenStorageInterface;
         $this->container = $container;
-        $this->user = $this->tokenStorageInterface->getToken()->getUser();
     }
 
      /**
@@ -49,7 +46,7 @@ class QtiRepository
      */
     public function getQtiUser()
     {
-        return $this->user;
+        return $this->tokenStorage->getToken()->getUser();
     }
 
     /**
@@ -61,7 +58,7 @@ class QtiRepository
     public function createDirQTI($directory = 'default', $clear = true)
     {
         $fs = new FileSystem();
-        $this->userRootDir = $this->container->getParameter('ujm.param.exo_directory').'/qti/'.$this->user->getUsername().'/';
+        $this->userRootDir = $this->container->getParameter('ujm.param.exo_directory').'/qti/'.$this->getQtiUser()->getUsername().'/';
         $this->userDir = $this->userRootDir.$directory.'/';
         if ($clear === true) {
             $this->removeDirectory();
@@ -79,20 +76,6 @@ class QtiRepository
      */
     public function removeDirectory()
     {
-        //        if (is_dir($this->userRootDir)) {
-//            exec('rm -rf '.$this->userRootDir.'*');
-//            $fs = new FileSystem();
-//            $iterator = new \DirectoryIterator($this->userRootDir);
-//
-//            foreach ($iterator as $el) {
-//                if ($el->isDir()) {
-//                    $fs->rmDir($el->getRealPath(), true);
-//                }
-//                if ($el->isFile()) {
-//                    $fs->rm($el->getRealPath());
-//                }
-//            }
-//        }
         $fs = new FileSystem();
         $fs->rmdir($this->userRootDir, true);
     }
@@ -297,10 +280,11 @@ class QtiRepository
     /**
      * Call scanFiles method for ExoImporter.
      *
+     * @param Step $step
      *
-     * @param UJM\ExoBundle\Entity\Step $step
+     * @return mixed
      */
-    public function scanFilesToImport(\UJM\ExoBundle\Entity\Step $step)
+    public function scanFilesToImport(Step $step)
     {
         $this->step = $step;
         $scanFile = $this->scanFiles();
@@ -312,16 +296,7 @@ class QtiRepository
     }
 
     /**
-     * @param UJM\ExoBundle\Entity\InteractionQCM or InteractionGraphic or .... $interX
-     */
-    private function addQuestionInExercise($interX, $order = -1)
-    {
-        $exoServ = $this->container->get('ujm.exo_exercise');
-        $exoServ->addQuestionInStep($interX->getQuestion(), $this->step, $order);
-    }
-
-    /**
-     *
+     * @param bool $ws
      */
     public function assocExerciseQuestion($ws = false)
     {
@@ -330,7 +305,8 @@ class QtiRepository
             if ($ws === false) {
                 $order = -1;
             }
-            $this->addQuestionInExercise($this->importedQuestions[$xmlName], $order);
+            $this->container->get('ujm.exo_exercise')->addQuestionInStep($this->importedQuestions[$xmlName]->getQuestion(), $this->step, $order);
+
             ++$order;
         }
     }

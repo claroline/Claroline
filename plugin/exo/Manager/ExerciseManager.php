@@ -50,12 +50,13 @@ class ExerciseManager
      * Publishes an exercise.
      *
      * @param Exercise $exercise
+     * @param bool     $throwException Throw an exception if the Exercise is already published
      *
      * @throws \LogicException if the exercise is already published
      */
-    public function publish(Exercise $exercise)
+    public function publish(Exercise $exercise, $throwException = true)
     {
-        if ($exercise->getResourceNode()->isPublished()) {
+        if ($throwException && $exercise->getResourceNode()->isPublished()) {
             throw new \LogicException("Exercise {$exercise->getId()} is already published");
         }
 
@@ -72,12 +73,13 @@ class ExerciseManager
      * Unpublishes an exercise.
      *
      * @param Exercise $exercise
+     * @param bool     $throwException Throw an exception if the Exercise is not published
      *
-     * @throws \LogicException if the exercise is already unpublished
+     * @throws \LogicException if the exercise is not published
      */
-    public function unpublish(Exercise $exercise)
+    public function unpublish(Exercise $exercise, $throwException = true)
     {
-        if (!$exercise->getResourceNode()->isPublished()) {
+        if ($throwException && !$exercise->getResourceNode()->isPublished()) {
             throw new \LogicException("Exercise {$exercise->getId()} is already unpublished");
         }
 
@@ -142,7 +144,6 @@ class ExerciseManager
         $finalQuestions = [];
 
         foreach ($steps as $step) {
-            $questions = array();
             $originalQuestions = $questions = $questionRepo->findByStep($step);
             $questionCount = count($questions);
 
@@ -175,8 +176,43 @@ class ExerciseManager
      */
     public function pickSteps(Exercise $exercise)
     {
-        return $this->om->getRepository('UJMExoBundle:Step')
-            ->findByExercise($exercise);
+        return $this->om->getRepository('UJMExoBundle:Step')->findByExercise($exercise);
+    }
+
+    /**
+     * Create a copy of an Exercise.
+     *
+     * @param Exercise $exercise
+     *
+     * @return Exercise the copy of the Exercise
+     */
+    public function copyExercise(Exercise $exercise)
+    {
+        $newExercise = new Exercise();
+
+        // Populate Exercise properties
+        $newExercise->setName($exercise->getName());
+        $newExercise->setDescription($exercise->getDescription());
+        $newExercise->setShuffle($exercise->getShuffle());
+        $newExercise->setNbQuestion($exercise->getNbQuestion());
+        $newExercise->setDuration($exercise->getDuration());
+        $newExercise->setDoprint($exercise->getDoprint());
+        $newExercise->setMaxAttempts($exercise->getMaxAttempts());
+        $newExercise->setCorrectionMode($exercise->getCorrectionMode());
+        $newExercise->setDateCorrection($exercise->getDateCorrection());
+        $newExercise->setMarkMode($exercise->getMarkMode());
+        $newExercise->setDispButtonInterrupt($exercise->getDispButtonInterrupt());
+        $newExercise->setLockAttempt($exercise->getLockAttempt());
+
+        /** @var \UJM\ExoBundle\Entity\Step $step */
+        foreach ($exercise->getSteps() as $step) {
+            $newStep = $this->stepManager->copyStep($step);
+
+            // Add step to Exercise
+            $newExercise->addStep($newStep);
+        }
+
+        return $newExercise;
     }
 
     /**
@@ -247,11 +283,11 @@ class ExerciseManager
             throw new ValidationException('Exercise metadata are not valid', $errors);
         }
 
-        // Update ResourceNode info
+        // Update ResourceNode
         $node = $exercise->getResourceNode();
         $node->setName($metadata->title);
 
-        // Update Exercise info
+        // Update Exercise
         $exercise->setDescription($metadata->description);
         $exercise->setType($metadata->type);
         $exercise->setNbQuestion($metadata->pick ? $metadata->pick : 0);
