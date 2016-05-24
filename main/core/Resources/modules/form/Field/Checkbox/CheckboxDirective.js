@@ -1,4 +1,4 @@
-import CheckboxController from './CheckboxController'
+import FieldController from '../FieldController'
 
 export default class CheckboxDirective {
   constructor () {
@@ -6,7 +6,7 @@ export default class CheckboxDirective {
     this.restrict = 'E'
     this.template = require('./checkbox.html')
     this.replace = true
-    this.controller = CheckboxController
+    this.controller = FieldController
     this.controllerAs = 'cc'
     this.bindToController = {
       field: '=',

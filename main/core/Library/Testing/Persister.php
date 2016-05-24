@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
+use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
@@ -14,7 +15,6 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
-use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @service("claroline.library.testing.persister")
@@ -79,7 +79,7 @@ class Persister
         $workspace->setName($name);
         $workspace->setCode($name);
         $workspace->setCreator($creator);
-        $template = new File($this->container->getParameter('claroline.param.default_template'));
+        $template = new \Symfony\Component\HttpFoundation\File\File($this->container->getParameter('claroline.param.default_template'));
 
         //optimize this later
         $this->container->get('claroline.manager.workspace_manager')->create($workspace, $template);
@@ -121,6 +121,32 @@ class Persister
         }
 
         return $role;
+    }
+
+    public function file($fileName, $mimeType, $withNode = false, User $creator = null)
+    {
+        $file = new File();
+        $file->setSize(123);
+        $file->setName($fileName);
+        $file->setHashName(uniqid());
+        $file->setMimeType($mimeType);
+        $this->om->persist($file);
+
+        if ($withNode && !$creator) {
+            throw new \Exception('File requires a creator if you want to set a Resource Node.');
+        }
+
+        if ($withNode) {
+            $fileType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('file');
+
+            $this->container->get('claroline.manager.resource_manager')->create(
+                $file,
+                $fileType,
+                $creator
+            );
+        }
+
+        return $file;
     }
 
     public function maskDecoder(ResourceType $type, $permission, $value)

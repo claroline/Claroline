@@ -26,7 +26,7 @@ class DatePickerType extends AbstractType
 {
     /**
      * @DI\InjectParams({
-     *     "localeManager" = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager" = @DI\Inject("claroline.manager.locale_manager"),
      *     "container"     = @DI\Inject("service_container")
      * })
      */
