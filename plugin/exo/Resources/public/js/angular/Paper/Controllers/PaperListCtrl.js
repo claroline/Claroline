@@ -1,17 +1,19 @@
 /**
  * List all the Papers of an Exercise
- * @param {Object}        $filter
- * @param {CommonService} CommonService
- * @param {Object}        exercise
- * @param {PaperService}  PaperService
- * @param {Array}         papers
+ * @param {Object}           $filter
+ * @param {CommonService}    CommonService
+ * @param {Object}           exercise
+ * @param {PaperService}     PaperService
+ * @param {UserPaperService} UserPaperService
+ * @param {Array}            papers
  * @constructor
  */
-var PaperListCtrl = function PaperListCtrl($filter, CommonService, exercise, PaperService, papers) {
+var PaperListCtrl = function PaperListCtrl($filter, CommonService, exercise, PaperService, UserPaperService, papers) {
     this.$filter = $filter;
     this.PaperService  = PaperService;
     this.CommonService = CommonService;
     this.ExerciseService = ExerciseService;
+    this.UserPaperService = UserPaperService;
 
     this.papers    = papers;
     this.exercise  = exercise;
@@ -20,18 +22,36 @@ var PaperListCtrl = function PaperListCtrl($filter, CommonService, exercise, Pap
 };
 
 // set up dependency injection
-PaperListCtrl.$inject = ['$filter', 'CommonService', 'exercise', 'PaperService', 'papers'];
+PaperListCtrl.$inject = ['$filter', 'CommonService', 'exercise', 'PaperService', 'UserPaperService', 'papers'];
 
+/**
+ * Original list of Papers
+ * @type {Array}
+ */
 PaperListCtrl.prototype.papers = [];
 
+/**
+ * Current Exercise
+ * @type {Object}
+ */
 PaperListCtrl.prototype.exercise = {};
 
-// table data
+/**
+ * Filtered list of Papers (filtered by `query`)
+ * @type {Array}
+ */
 PaperListCtrl.prototype.filtered = [];
-PaperListCtrl.prototype.query = '';
-PaperListCtrl.prototype.showPagination = true;
 
-// table config
+/**
+ * Filter query string
+ * @type {string}
+ */
+PaperListCtrl.prototype.query = '';
+
+/**
+ * Table and Pagination configuration
+ * @type {Object}
+ */
 PaperListCtrl.prototype.config = {
     itemsPerPage: '10',
     fillLastPage: false,
@@ -53,68 +73,11 @@ PaperListCtrl.prototype.filterPapers = function () {
 };
 
 /**
- * Checks if we can display the correction link
- * For now the API does not return the needed data so...
- * @returns {bool}
- */
-PaperListCtrl.prototype.checkCorrectionAvailability = function (paper) {
-    var correctionMode = this.CommonService.getCorrectionMode(this.exercise.meta.correctionMode);
-    // !!! countFinishedAttempts dont take the paper user into account...
-    var nbFinishedAttempts = this.countFinishedAttempts();
-    switch (correctionMode) {
-        case "test-end":
-            return paper.end && paper.end !== undefined && paper.end !== '';
-            break;
-        case "last-try":
-            // only used for normal user ? if admin i will always see correction link ?
-            return nbFinishedAttempts >= this.exercise.meta.maxAttempts;
-            break;
-        case "after-date":
-            var now = new Date();
-            var searched = new RegExp('-', 'g');
-            var correctionDate = new Date(Date.parse(this.exercise.meta.correctionDate.replace(searched, '/')));
-            return now >= correctionDate;
-            break;
-        case "never":
-            return false;
-            break;
-        default:
-            return false;
-    }
-};
-
-/**
- * 
- * @returns {number}
- */
-PaperListCtrl.prototype.countFinishedAttempts = function () {
-    var nb = 0;
-    for (var i = 0; i < this.papers.length; i++) {
-        if (this.papers[i].end && this.papers[i].end !== undefined && this.papers[i].end !== '') {
-            nb++;
-        }
-    }
-
-    return nb;
-};
-
-/**
  * Check whether a Paper needs a manual correction (if the score of one question is -1)
  * @param paper
  */
 PaperListCtrl.prototype.needManualCorrection = function needManualCorrection(paper) {
-    var needed = false;
-    if (paper.questions && 0 !== paper.questions.length) {
-        for(var i = 0; i < paper.questions.length; i++){
-            if (-1 === paper.questions[i].score) {
-                // The question has not been marked
-                needed = true;
-                break; // Stop searching
-            }
-        }
-    }
-
-    return needed;
+    return this.PaperService.needManualCorrection(paper);
 };
 
 /**
@@ -138,6 +101,24 @@ PaperListCtrl.prototype.deletePaper = function deletePaper(paper) {
  */
 PaperListCtrl.prototype.getPaperScore = function getPaperScore(paper) {
     return this.PaperService.getPaperScore(paper);
+};
+
+/**
+ * Check if the correction for the Paper is available
+ * @param {Object} paper
+ * @returns boolean
+ */
+PaperListCtrl.prototype.isCorrectionAvailable = function isCorrectionAvailable(paper) {
+    return this.UserPaperService.isCorrectionAvailable(paper);
+};
+
+/**
+ * Check if the score obtained by the User for the Paper is available
+ * @param {Object} paper
+ * @returns boolean
+ */
+PaperListCtrl.prototype.isScoreAvailable = function isScoreAvailable(paper) {
+    return this.UserPaperService.isScoreAvailable(paper);
 };
 
 // Register controller into AngularJS
