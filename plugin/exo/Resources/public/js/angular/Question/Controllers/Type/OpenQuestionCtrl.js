@@ -5,8 +5,6 @@
  */
 var OpenQuestionCtrl = function OpenQuestionCtrl(FeedbackService) {
     AbstractQuestionCtrl.apply(this, arguments);
-    
-    this.FeedbackService = FeedbackService;
 };
 
 // Extends AbstractQuestionCtrl

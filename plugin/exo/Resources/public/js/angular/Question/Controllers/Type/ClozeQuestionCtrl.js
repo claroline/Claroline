@@ -5,9 +5,9 @@
  * @constructor
  */
 var ClozeQuestionCtrl = function ClozeQuestionCtrl(FeedbackService, ClozeQuestionService) {
-    this.ClozeQuestionService = ClozeQuestionService;
-
     AbstractQuestionCtrl.apply(this, arguments);
+
+    this.ClozeQuestionService = ClozeQuestionService;
 };
 
 // Extends AbstractQuestionCtrl

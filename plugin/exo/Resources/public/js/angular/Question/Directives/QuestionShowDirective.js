@@ -3,7 +3,7 @@
  * Displays a Question
  * @constructor
  */
-var QuestionShowDirective = function ExerciseDirective() {
+var QuestionShowDirective = function QuestionShowDirective() {
     return {
         restrict: 'E',
         replace: true,
@@ -21,7 +21,7 @@ var QuestionShowDirective = function ExerciseDirective() {
 };
 
 // Set up dependency injection
-ExerciseDirective.$inject = [];
+QuestionShowDirective.$inject = [];
 
 // Register directive into AngularJS
 angular
