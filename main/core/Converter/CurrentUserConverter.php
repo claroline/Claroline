@@ -20,7 +20,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Usage (short) : `@ParamConverter("VARIABLE_TO_BIND", converter="current_user")`
  * By default throws an exception if no User authenticated.
  *
  * If anonymous must be allowed add `options={"allowAnonymous" = true}`,
@@ -89,10 +88,10 @@ class CurrentUserConverter implements ParamConverterInterface
         }
 
         $options = $configuration->getOptions();
-        if (isset($options['allowAnonymous']) && is_bool($options['allowAnonymous'])) {
-            return true;
+        if (isset($options['allowAnonymous']) && !is_bool($options['allowAnonymous'])) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 }
