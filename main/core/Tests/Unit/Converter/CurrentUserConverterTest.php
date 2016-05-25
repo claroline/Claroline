@@ -32,13 +32,7 @@ class CurrentUserConverterTest extends MockeryTestCase
         $this->token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $this->securityContext->shouldReceive('getToken')->andReturn($this->token);
         $this->translator = $this->mock('Symfony\Component\Translation\TranslatorInterface');
-        $this->converter = new AuthenticatedUserConverter($this->securityContext, $this->translator);
-    }
-
-    public function testSupportsAcceptsOnlyParamConverterConfiguration()
-    {
-        $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface');
-        $this->assertFalse($this->converter->supports($configuration));
+        $this->converter = new CurrentUserConverter($this->securityContext, $this->translator);
     }
 
     /**
@@ -54,9 +48,11 @@ class CurrentUserConverterTest extends MockeryTestCase
     public function testSupportsAcceptsOnlyAnonymousAllowedParameter()
     {
         $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+
+        $configuration->shouldReceive('getName')->once()->andReturn('user');
         $configuration->shouldReceive('getOptions')->times(2)->andReturn(
-            array('some_other_option'),
-            array('anonymousAllowed' => true)
+            ['some_other_option'],
+            ['allowAnonymous' => true]
         );
 
         $this->assertFalse($this->converter->supports($configuration));
@@ -66,22 +62,23 @@ class CurrentUserConverterTest extends MockeryTestCase
     public function testSupportsAcceptsOnlyBooleanForAnonymousAllowedParameter()
     {
         $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+
+        $configuration->shouldReceive('getName')->once()->andReturn('user');
         $configuration->shouldReceive('getOptions')->once()->andReturn(
-            array('anonymousAllowed' => 'not_a_boolean')
+            ['allowAnonymous' => 'not_a_boolean']
         );
 
         $this->assertFalse($this->converter->supports($configuration));
     }
 
     /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
     public function testApplyThrowsAnExceptionIfThereIsNoAuthenticatedUserAndAnonymousDisallowed()
     {
-        $this->configuration->shouldReceive('getName')->once()->andReturn('current_user');
-        $this->configuration->shouldReceive('getOptions')
-            ->once()
-            ->andReturn(array('authenticatedUser' => true));
+        $this->configuration->shouldReceive('getName')->once()->andReturn('user');
+        $this->configuration->shouldReceive('getOptions')->once()->andReturn([]);
+
         $this->token->shouldReceive('getUser')->andReturn('anon.');
         $this->converter->apply($this->request, $this->configuration);
     }
@@ -90,7 +87,8 @@ class CurrentUserConverterTest extends MockeryTestCase
     {
         $user = new User();
         $this->request->attributes = new ParameterBag();
-        $this->configuration->shouldReceive('getName')->once()->andReturn('current_user');
+        $this->configuration->shouldReceive('getName')->once()->andReturn('user');
+        $this->configuration->shouldReceive('getOptions')->once()->andReturn([]);
 
         $this->token->shouldReceive('getUser')->andReturn($user);
         $this->assertTrue($this->converter->apply($this->request, $this->configuration));
@@ -101,6 +99,7 @@ class CurrentUserConverterTest extends MockeryTestCase
     {
         $this->request->attributes = new ParameterBag();
         $this->configuration->shouldReceive('getName')->once()->andReturn('current_user');
+        $this->configuration->shouldReceive('getOptions')->once()->andReturn(['allowAnonymous' => true]);
 
         $this->token->shouldReceive('getUser')->andReturn('anon.');
         $this->assertTrue($this->converter->apply($this->request, $this->configuration));
