@@ -21,7 +21,6 @@ class CurrentUserConverterTest extends MockeryTestCase
     private $configuration;
     private $securityContext;
     private $token;
-    private $translator;
     private $converter;
 
     protected function setUp()
@@ -31,8 +30,7 @@ class CurrentUserConverterTest extends MockeryTestCase
         $this->securityContext = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
         $this->token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $this->securityContext->shouldReceive('getToken')->andReturn($this->token);
-        $this->translator = $this->mock('Symfony\Component\Translation\TranslatorInterface');
-        $this->converter = new CurrentUserConverter($this->securityContext, $this->translator);
+        $this->converter = new CurrentUserConverter($this->securityContext);
     }
 
     /**
