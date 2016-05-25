@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Entity\Paper;
 
 /**
@@ -19,7 +20,7 @@ class ResponseRepository extends EntityRepository
      * @param int $paperID
      * @param int $questionID
      *
-     * Return array[Response]
+     * @return Response[]
      */
     public function getAlreadyResponded($paperID, $questionID)
     {
@@ -39,7 +40,7 @@ class ResponseRepository extends EntityRepository
      * @param int    $exoId id Exercise
      * @param string $order to order result
      *
-     * Return array
+     * @return array
      */
     public function getExerciseMarks($exoId, $order)
     {
@@ -62,7 +63,7 @@ class ResponseRepository extends EntityRepository
      *
      * @param int $paperID id paper
      *
-     * Return array[Response]
+     * @return Response[]
      */
     public function getPaperResponses($paperID)
     {
@@ -80,7 +81,7 @@ class ResponseRepository extends EntityRepository
      * @param int $exoId
      * @param int $questionId
      *
-     * Return array[Response]
+     * @return Response[]
      */
     public function getExerciseInterResponsesWithCount($exoId, $questionId)
     {
@@ -107,7 +108,7 @@ class ResponseRepository extends EntityRepository
      * @param int $exoId
      * @param int $questionId
      *
-     * Return array[Response]
+     * @return Response[]
      */
     public function getExerciseInterResponses($exoId, $questionId)
     {
@@ -133,7 +134,7 @@ class ResponseRepository extends EntityRepository
      *
      * @param int $paperId id paper
      *
-     * Return int
+     * @return int
      */
     public function getScoreExercise($paperId)
     {
