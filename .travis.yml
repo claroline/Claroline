@@ -46,8 +46,8 @@ before_install:
 
 before_script:
   # get and configure claroline platform
-  - curl -L https://github.com/claroline/Claroline/archive/monolithic-build.tar.gz | tar xzv
-  - cd Claroline-monolithic-build
+  - curl -L https://github.com/claroline/Claroline/archive/master.tar.gz | tar xzv
+  - cd Claroline-master
   - php scripts/configure.php --default
   # override platform composer.json with build/repo local reference
   - rm -rf ../$TRAVIS_REPO_SLUG/.git
