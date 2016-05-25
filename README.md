@@ -4,20 +4,13 @@ README
 [![Join the chat at https://gitter.im/claroline/Claroline](https://badges.gitter.im/claroline/Claroline.svg)](https://gitter.im/claroline/Claroline?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This repository provides the basic application structure of the Claroline
-platform. It doesn't contain the sources nor the third-party libraries 
-required to make the application fully functional. Those sources have to 
+platform. It doesn't contain the sources nor the third-party libraries
+required to make the application fully functional. Those sources have to
 be installed following one of the procedures described below.
 
-If you want to contribute or directly browse the sources of the project, here
-is a (non-exhaustive) list of their dedicated repositories:
-
-- [CoreBundle][core]
-- [KernelBundle][kernel]
-- [InstallationBundle][install]
-- [MigrationBundle][migration]
-- [ForumBundle][forum]
-- [AnnouncementBundle][announcement]
-- [RssReaderBundle][rssreader]
+If you want to contribute or directly browse the sources of the project,
+check the [claroline/Distribution][distribution] repository, which gathers
+the standard modules and plugins of the platform.
 
 Requirements
 ------------
@@ -43,7 +36,7 @@ Installation
 
 ### 1. From a pre-built archive
 
-A tarball containing everything needed for development and testing 
+A tarball containing everything needed for development and testing
 (pre-fetched sources, database dump, etc.) is made available with every release
 of the platform at [packages.claroline.net/releases][releases]. This is the
 fastest way to get started:
@@ -55,9 +48,9 @@ fastest way to get started:
 
 ### 2. From source
 
-The raw installation procedure is comprised of several steps that need to be 
+The raw installation procedure is comprised of several steps that need to be
 executed in order (fetching php sources, installing dev dependencies, building,
-creating the database, etc.). Except for the configuration step, the whole process 
+creating the database, etc.). Except for the configuration step, the whole process
 is managed through composer scripts listed in the [composer.json](composer.json)
 file. For an installation from scratch, the commands would be:
 
@@ -69,7 +62,7 @@ file. For an installation from scratch, the commands would be:
 Upgrade
 -------
 
-To update an existing development installation, just pull the latest changes 
+To update an existing development installation, just pull the latest changes
 (or a specific version) of this repository and use the `sync-dev` script:
 
     git pull
@@ -78,8 +71,8 @@ To update an existing development installation, just pull the latest changes
 Development
 -----------
 
-Some assets of the platform are managed by [webpack][webpack]. In a 
-development environment, they require the webpack dev server to be 
+Some assets of the platform are managed by [webpack][webpack]. In a
+development environment, they require the webpack dev server to be
 running. You can start it with:
 
     npm run watch
@@ -87,7 +80,7 @@ running. You can start it with:
 Obviously, you'll also need a PHP-enabled web server to serve the application.
 Two alternatives are available.
 
-### 1. Using PHP's built-in web server 
+### 1. Using PHP's built-in web server
 
 This is the simplest and recommended way of serving the application during
 development. To start the server, use the command provided by the symfony
@@ -100,7 +93,7 @@ The application will be available at [http://localhost:8000](http://localhost:80
 ### 2. Using a standalone web server
 
 If you want to use Apache or Nginx during development, make them serve the
-*web* directory, and access the application at 
+*web* directory, and access the application at
 [http://localhost/example-site/app_dev.php](http://localhost/example-site/app_dev.php).
 
 Note that you'll certainly face permissions issues on the following directories:
@@ -113,7 +106,7 @@ Note that you'll certainly face permissions issues on the following directories:
 - *web/uploads*
 
 All of them must be recursively writable from both the web server and the CLI.
-For more information on that subject, see the [configuration section][symfo-config] 
+For more information on that subject, see the [configuration section][symfo-config]
 of the official Symfony documentation.
 
 Usage
@@ -147,17 +140,10 @@ Documentation
 -------------
 
 For development documentation, see
-[Claroline/CoreBundle/Resources/doc/index.md][core-doc].
+[Claroline/CoreBundle/Resources/doc/index.md][dist-doc].
 
 
-[core]:         https://github.com/claroline/CoreBundle
-[kernel]:       https://github.com/claroline/KernelBundle
-[install]:      https://github.com/claroline/InstallationBundle
-[migration]:    https://github.com/claroline/MigrationBundle
-[forum]:        https://github.com/claroline/ForumBundle
-[announcement]: https://github.com/claroline/AnnouncementBundle
-[rssreader]:    https://github.com/claroline/RssReaderBundle
-
+[distribution]: https://github.com/claroline/Distribution
 [gd]:           http://www.php.net/manual/en/book.image.php
 [ffmpeg]:       http://ffmpeg-php.sourceforge.net
 [composer]:     https://getcomposer.org
@@ -167,4 +153,4 @@ For development documentation, see
 [webpack]:      https://webpack.github.io
 [symfo-server]: http://symfony.com/doc/2.7/cookbook/web_server/built_in.html
 [symfo-config]: http://symfony.com/doc/2.7/book/installation.html#checking-symfony-application-configuration-and-setup
-[core-doc]:     https://github.com/claroline/CoreBundle/blob/master/Resources/doc/index.md
+[dist-doc]:     https://github.com/claroline/Distribution/blob/master/doc/index.md
