@@ -142,6 +142,16 @@
                         </div>
                     </div>
 
+                    <!-- Display stats to Users ? -->
+                    <div class="form-group" data-ng-if="4 != exerciseMetadataCtrl.exercise.meta.correctionMode">
+                        <label for="exercise-statistics" class="control-label col-md-4">{{ 'statistics' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <div class="checkbox">
+                                <input type="checkbox" id="exercise-statistics" data-ng-model="exerciseMetadataCtrl.exercise.meta.statistics" />
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- When score will be available ? -->
                     <div class="form-group">
                         <label for="exercise-mark-mode" class="control-label col-md-4">{{ 'availability_of_score'|trans:{}:'ujm_exo' }}</label>

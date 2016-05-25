@@ -270,6 +270,7 @@ overview: Overview
 
 # P
 paper: Paper
+paper_legend: Papers which need manual correction
 paper_list: Paper list
 paper_count: "{0} no paper|{1} %count% paper|]1,Inf[ %count% papers"
 paper_need_manual_correction: This paper needs a manual correction
@@ -359,6 +360,7 @@ sort: Sort documents
 summative : Summative
 show_additional_info: Display additional information
 step: Step
+statistics: Display statistics
 step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
 step_item_add: Drag'n'drop or click the "+" button to add questions.
 

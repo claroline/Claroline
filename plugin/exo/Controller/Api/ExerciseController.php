@@ -220,6 +220,20 @@ class ExerciseController
         return new JsonResponse($this->paperManager->countUserFinishedPapers($exercise, $user));
     }
 
+    /**
+     * Get information about Answers given by the Users for the current Exercise.
+     *
+     * @param Exercise $exercise
+     *
+     * @return JsonResponse
+     */
+    public function answerStatsAction(Exercise $exercise)
+    {
+        $this->assertHasPermission('OPEN', $exercise);
+
+        return new JsonResponse([]);
+    }
+
     private function assertHasPermission($permission, Exercise $exercise)
     {
         $collection = new ResourceCollection([$exercise->getResourceNode()]);

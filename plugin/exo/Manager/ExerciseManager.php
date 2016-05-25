@@ -378,6 +378,7 @@ class ExerciseManager
         $exercise->setCorrectionMode($metadata->correctionMode);
         $exercise->setAnonymous($metadata->anonymous);
         $exercise->setDuration($metadata->duration);
+        $exercise->setStatistics($metadata->statistics ? true : false);
 
         $correctionDate = null;
         if (!empty($metadata->correctionDate) && CorrectionMode::AFTER_DATE == $metadata->correctionMode) {
@@ -392,8 +393,8 @@ class ExerciseManager
     }
 
     /**
-     * @todo duration
-     *
+     * Export metadata of the Exercise in a JSON-encodable format.
+     * 
      * @param Exercise $exercise
      *
      * @return array
@@ -424,6 +425,7 @@ class ExerciseManager
             'lockAttempt' => $exercise->getLockAttempt(),
             'dispButtonInterrupt' => $exercise->getDispButtonInterrupt(),
             'metadataVisible' => $exercise->isMetadataVisible(),
+            'statistics' => $exercise->hasStatistics(),
             'anonymous' => $exercise->getAnonymous(),
             'duration' => $exercise->getDuration(),
             'markMode' => $exercise->getMarkMode(),
