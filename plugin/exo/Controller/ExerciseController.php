@@ -26,11 +26,12 @@ class ExerciseController extends Controller
      *     requirements={"id"="\d+"},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = false})
+     *
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function openAction($user, Exercise $exercise)
+    public function openAction(User $user = null, Exercise $exercise)
     {
         $this->assertHasPermission('OPEN', $exercise);
 
