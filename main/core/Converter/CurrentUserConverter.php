@@ -20,6 +20,12 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
+ * Usage (short) : `@ParamConverter("VARIABLE_TO_BIND", converter="current_user")`
+ * By default throws an exception if no User authenticated.
+ *
+ * If anonymous must be allowed add `options={"authenticatedUser" = true}`,
+ * in this case the converter will return `null`.
+ *
  * @DI\Service
  * @DI\Tag("request.param_converter", attributes={"converter"="current_user"})
  */
@@ -41,7 +47,7 @@ class CurrentUserConverter implements ParamConverterInterface
      * {@inheritdoc}
      *
      * @throws InvalidConfigurationException if the parameter name is missing
-     * @throws AccessDeniedHttpException     if the current request is anonymous
+     * @throws AccessDeniedHttpException     if the current request is anonymous and `allowAnonymous` option is false
      */
     public function apply(Request $request, ParamConverter $configuration)
     {
@@ -49,12 +55,25 @@ class CurrentUserConverter implements ParamConverterInterface
             throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_NAME);
         }
 
+        // Check whether we need to let pass anonymous
+        $allowAnonymous = false;
+        $options = $configuration->getOptions();
+        if ($options && $options['allowAnonymous'] === true) {
+            $allowAnonymous = true;
+        }
+
         $token = $this->tokenStorage->getToken();
+        if ($token) {
+            $user = $token->getUser();
+            if ($user instanceof User) {
+                $request->attributes->set($parameter, $user);
 
-        if ($token && ($user = $token->getUser()) instanceof User) {
-            $request->attributes->set($parameter, $user);
+                return true;
+            } else if ($allowAnonymous) {
+                $request->attributes->set($parameter, null);
 
-            return true;
+                return true;
+            }
         }
 
         throw new AccessDeniedHttpException();
@@ -65,6 +84,19 @@ class CurrentUserConverter implements ParamConverterInterface
      */
     public function supports(ParamConverter $configuration)
     {
-        return $configuration->getConverter() === 'current_user';
+        if (!$configuration instanceof ParamConverter) {
+            return false;
+        }
+
+        if ($configuration->getConverter() !== 'current_user') {
+            return false;
+        }
+
+        $options = $configuration->getOptions();
+        if (isset($options['allowAnonymous']) && is_bool($options['allowAnonymous'])) {
+            return true;
+        }
+
+        return false;
     }
 }
