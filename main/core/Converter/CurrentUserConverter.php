@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * Usage (short) : `@ParamConverter("VARIABLE_TO_BIND", converter="current_user")`
  * By default throws an exception if no User authenticated.
  *
- * If anonymous must be allowed add `options={"authenticatedUser" = true}`,
+ * If anonymous must be allowed add `options={"allowAnonymous" = true}`,
  * in this case the converter will return `null`.
  *
  * @DI\Service
@@ -85,10 +85,6 @@ class CurrentUserConverter implements ParamConverterInterface
     public function supports(ParamConverter $configuration)
     {
         if (!$configuration instanceof ParamConverter) {
-            return false;
-        }
-
-        if ($configuration->getConverter() !== 'current_user') {
             return false;
         }
 
