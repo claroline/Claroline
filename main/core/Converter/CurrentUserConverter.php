@@ -69,7 +69,7 @@ class CurrentUserConverter implements ParamConverterInterface
                 $request->attributes->set($parameter, $user);
 
                 return true;
-            } else if ($allowAnonymous) {
+            } elseif ($allowAnonymous) {
                 $request->attributes->set($parameter, null);
 
                 return true;
