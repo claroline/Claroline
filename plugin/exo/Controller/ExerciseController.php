@@ -26,7 +26,6 @@ class ExerciseController extends Controller
      *     requirements={"id"="\d+"},
      *     options={"expose"=true}
      * )
-     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
