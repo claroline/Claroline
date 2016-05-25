@@ -240,10 +240,10 @@ class ExerciseController
             // Only administrator or the User attached can see a Paper
             throw new AccessDeniedHttpException();
         }
-        
+
         return new JsonResponse([
             'questions' => $this->paperManager->exportPaperQuestions($paper, $this->isAdmin($exercise)),
-            'paper' => $this->paperManager->exportPaper($paper, $this->isAdmin($exercise))
+            'paper' => $this->paperManager->exportPaper($paper, $this->isAdmin($exercise)),
         ]);
     }
 
