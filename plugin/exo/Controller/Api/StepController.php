@@ -65,7 +65,7 @@ class StepController
      * Add a Step to the Exercise.
      *
      * @EXT\Route(
-     *     "/{id}/step",
+     *     "/steps",
      *     name="exercise_step_add",
      *     options={"expose"=true}
      * )
@@ -87,7 +87,7 @@ class StepController
 
     /**
      * @EXT\Route(
-     *     "/reorder",
+     *     "/steps/reorder",
      *     name="exercise_step_reorder",
      *     options={"expose"=true}
      * )

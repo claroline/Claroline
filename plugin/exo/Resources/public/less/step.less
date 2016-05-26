@@ -1,4 +1,18 @@
 .steps {
+    .panel {
+        > .panel-heading {
+            border-bottom: none;
+
+            small {
+                display: block;
+            }
+
+            & + .table {
+                border-top: 1px solid @panel-inner-border;
+            }
+        }
+    }
+
     .table > tbody > tr > td {
         vertical-align: middle;
     }

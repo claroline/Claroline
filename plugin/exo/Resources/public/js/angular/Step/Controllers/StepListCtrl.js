@@ -1,32 +1,32 @@
 /**
  * List of steps of an Exercise
  * @param {Object}          $scope
- * @param {Object}          exercise
  * @param {Array}           steps
  * @param {Object}          dragulaService
  * @param {ExerciseService} ExerciseService
  * @param {StepService}     StepService
  * @constructor
  */
-var StepListCtrl = function StepListCtrl($scope, exercise, steps, dragulaService, ExerciseService, StepService) {
+var StepListCtrl = function StepListCtrl($scope, steps, dragulaService, ExerciseService, StepService) {
     this.steps           = steps;
-    this.exercise        = exercise;
     this.ExerciseService = ExerciseService;
     this.StepService     = StepService;
 
-    $scope.$on('order-steps.drop', function dropStep() {
+    this.exerciseId      = ExerciseService.getExercise().id;
+
+    $scope.$on('order-steps.drop-model', function dropStep() {
         this.ExerciseService.reorderSteps();
     }.bind(this));
 };
 
 // Set p up dependency injection
-StepListCtrl.$inject = [ '$scope', 'exercise', 'steps', 'dragulaService', 'ExerciseService', 'StepService' ];
+StepListCtrl.$inject = [ '$scope', 'steps', 'dragulaService', 'ExerciseService', 'StepService' ];
 
 /**
- * Current Exercise
- * @type {Object}
+ * Id of the current Exercise (for PHP actions links)
+ * @type {string}
  */
-StepListCtrl.prototype.exercise = {};
+StepListCtrl.prototype.exerciseId = null;
 
 /**
  * List of Steps of the Exercise

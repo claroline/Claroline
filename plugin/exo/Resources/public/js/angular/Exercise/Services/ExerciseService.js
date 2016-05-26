@@ -161,7 +161,7 @@ ExerciseService.prototype.save = function save(exercise) {
  * @returns {Array}
  */
 ExerciseService.prototype.getSteps = function getSteps() {
-    return (this.exercise && this.exercise.steps) ? this.exercise.steps : [];
+    return this.exercise.steps;
 };
 
 /**
@@ -233,6 +233,8 @@ ExerciseService.prototype.reorderSteps = function reorderSteps() {
         return step.id;
     });
 
+    console.log(order);
+    
     var deferred = this.$q.defer();
     this.$http
         .put(
@@ -270,7 +272,7 @@ ExerciseService.prototype.addStep = function addStep() {
     var deferred = this.$q.defer();
     this.$http
         .post(
-            Routing.generate('exercise_step_add', { id: this.exercise.id }),
+            Routing.generate('exercise_step_add', { exerciseId: this.exercise.id }),
             step
         )
         // Success callback

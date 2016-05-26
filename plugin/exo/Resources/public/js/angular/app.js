@@ -99,13 +99,6 @@ angular
                     controller  : 'StepListCtrl',
                     controllerAs: 'stepListCtrl',
                     resolve: {
-                        exercise: [
-                            'ExerciseService',
-                            function exerciseResolve(ExerciseService) {
-                                return ExerciseService.getExercise();
-                            }
-                        ],
-
                         // Get the list of Steps from the Exercise
                         steps: [
                             'ExerciseService',

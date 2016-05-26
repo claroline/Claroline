@@ -93,7 +93,6 @@ class ExerciseManager
             }
 
             $step->setOrder($pos);
-
             $this->om->persist($step);
         }
 

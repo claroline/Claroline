@@ -6,13 +6,13 @@
                 <div class="panel-heading">
                     <div class="row">
                         <h3 class="col-md-10 panel-title">
-                            <b>#{{ $index + 1 }}</b>
+                            {{ 'step'|trans:{}:'ujm_exo' }} <b>#{{ $index + 1 }}</b>
                             <small>({{ 'step_items_count'|transChoice:step.items.length:{ count: step.items.length }:'ujm_exo' }})</small>
                         </h3>
 
                         <div class="col-md-2 step-actions text-right">
                             <a role="button"
-                               href="{{ 'ujm_question_new' | path:{ exoID: stepListCtrl.exercise.id, stepID: step.id } }}"
+                               href="{{ 'ujm_question_new' | path:{ exoID: stepListCtrl.exerciseId, stepID: step.id } }}"
                                class="btn btn-sm btn-default"
                                data-toggle="tooltip" title="{{ 'add_question' | trans:{}:'ujm_exo' }}">
                                 <span class="fa fa-plus"></span>
@@ -41,13 +41,13 @@
                         </td>
                         <td class="col-md-2 text-right">
                             <!-- Edit Item button -->
-                            <a class="btn btn-sm btn-default" data-toggle="tooltip" title="{{ 'edit' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_edit' | path:{ id: item.id, exoID: stepListCtrl.exercise.id } }}">
+                            <a class="btn btn-sm btn-default" data-toggle="tooltip" title="{{ 'edit' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_edit' | path:{ id: item.id, exoID: stepListCtrl.exerciseId } }}">
                                 <span class="fa fa-pencil"></span>
                                 <span class="sr-only">{{ 'edit' | trans:{}:'ujm_exo' }}</span>
                             </a>
 
                             <!-- Duplicate Item button -->
-                            <a class="btn btn-sm btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_duplicate' | path:{ questionId: item.id, exoID: stepListCtrl.exercise.id } }}">
+                            <a class="btn btn-sm btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_duplicate' | path:{ questionId: item.id, exoID: stepListCtrl.exerciseId } }}">
                                 <span class="fa fa-repeat"></span>
                                 <span class="sr-only">{{ 'duplicate' | trans:{}:'ujm_exo' }}</span>
                             </a>
