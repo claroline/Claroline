@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Controller\Api;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -40,7 +41,9 @@ class StepController
 
     /**
      * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker")
+     *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "exerciseManager" = @DI\Inject("ujm.exo.exercise_manager"),
+     *     "stepManager" = @DI\Inject("ujm.exo.step_manager")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
