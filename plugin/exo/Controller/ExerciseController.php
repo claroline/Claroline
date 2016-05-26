@@ -56,7 +56,6 @@ class ExerciseController extends Controller
             // Angular JS data
             'exercise' => $this->get('ujm.exo.exercise_manager')->exportExercise($exercise, false),
             'editEnabled' => $exerciseSer->isExerciseAdmin($exercise),
-            'duration' => $exercise->getDuration(),
         ]);
     }
 
@@ -76,6 +75,8 @@ class ExerciseController extends Controller
      */
     public function updateMetadataAction(Exercise $exercise)
     {
+        $this->assertHasPermission('ADMINISTRATE', $exercise);
+
         // Get Exercise data from the Request
         $dataRaw = $this->get('request')->getContent();
         if (!empty($dataRaw)) {

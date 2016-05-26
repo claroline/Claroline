@@ -47,6 +47,15 @@
                             {{ 'questions_management'|trans({}, 'survey') }}
                         </a>
                     </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1"
+                           href="{{ path('claro_survey_answers_management', {'survey': surveyId}) }}"
+                        >
+                            <i class="fa fa-check-square-o"></i>
+                            {{ 'survey_answers_management'|trans({}, 'survey') }}
+                        </a>
+                    </li>
 
                     {% if status == 'published' or status == 'closed' %}
                         {% if questionResult is not empty %}

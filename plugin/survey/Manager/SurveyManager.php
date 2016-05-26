@@ -25,19 +25,23 @@ use Claroline\SurveyBundle\Entity\QuestionModel;
 use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
 use Claroline\SurveyBundle\Entity\Survey;
 use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
+use Claroline\SurveyBundle\Event\Log\LogSurveyAnswerDelete;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @DI\Service("claroline.manager.survey_manager")
  */
 class SurveyManager
 {
+    private $eventDispatcher;
     private $om;
+    private $pagerFactory;
+
     private $choiceRepo;
     private $multipleChoiceQuestionAnswerRepo;
     private $multipleChoiceQuestionRepo;
     private $openEndedQuestionAnswerRepo;
-    private $pagerFactory;
     private $surveyAnswerRepo;
     private $surveyQuestionRelationRepo;
     private $questionAnswerRepo;
@@ -46,32 +50,26 @@ class SurveyManager
 
     /**
      * @DI\InjectParams({
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
-    public function __construct(ObjectManager $om, PagerFactory $pagerFactory)
+    public function __construct(EventDispatcherInterface $eventDispatcher, ObjectManager $om, PagerFactory $pagerFactory)
     {
+        $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
-        $this->choiceRepo =
-            $om->getRepository('ClarolineSurveyBundle:Choice');
-        $this->multipleChoiceQuestionAnswerRepo =
-            $om->getRepository('ClarolineSurveyBundle:Answer\MultipleChoiceQuestionAnswer');
-        $this->multipleChoiceQuestionRepo =
-            $om->getRepository('ClarolineSurveyBundle:MultipleChoiceQuestion');
-        $this->openEndedQuestionAnswerRepo =
-            $om->getRepository('ClarolineSurveyBundle:Answer\OpenEndedQuestionAnswer');
-        $this->surveyAnswerRepo =
-            $om->getRepository('ClarolineSurveyBundle:Answer\SurveyAnswer');
-        $this->surveyQuestionRelationRepo =
-            $om->getRepository('ClarolineSurveyBundle:SurveyQuestionRelation');
-        $this->questionAnswerRepo =
-            $om->getRepository('ClarolineSurveyBundle:Answer\QuestionAnswer');
-        $this->questionModelRepo =
-            $om->getRepository('ClarolineSurveyBundle:QuestionModel');
-        $this->questionRepo =
-            $om->getRepository('ClarolineSurveyBundle:Question');
+
+        $this->choiceRepo = $om->getRepository('ClarolineSurveyBundle:Choice');
+        $this->multipleChoiceQuestionAnswerRepo = $om->getRepository('ClarolineSurveyBundle:Answer\MultipleChoiceQuestionAnswer');
+        $this->multipleChoiceQuestionRepo = $om->getRepository('ClarolineSurveyBundle:MultipleChoiceQuestion');
+        $this->openEndedQuestionAnswerRepo = $om->getRepository('ClarolineSurveyBundle:Answer\OpenEndedQuestionAnswer');
+        $this->surveyAnswerRepo = $om->getRepository('ClarolineSurveyBundle:Answer\SurveyAnswer');
+        $this->surveyQuestionRelationRepo = $om->getRepository('ClarolineSurveyBundle:SurveyQuestionRelation');
+        $this->questionAnswerRepo = $om->getRepository('ClarolineSurveyBundle:Answer\QuestionAnswer');
+        $this->questionModelRepo = $om->getRepository('ClarolineSurveyBundle:QuestionModel');
+        $this->questionRepo = $om->getRepository('ClarolineSurveyBundle:Question');
     }
 
     public function persistSurvey(Survey $survey)
@@ -354,6 +352,24 @@ class SurveyManager
         $this->om->flush();
     }
 
+    public function deleteSurveyAnswers(array $surveyAnswers)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($surveyAnswers as $surveyAnswer) {
+            $this->om->remove($surveyAnswer);
+            $event = new LogSurveyAnswerDelete($surveyAnswer);
+            $this->eventDispatcher->dispatch('log', $event);
+        }
+        $this->om->endFlushSuite();
+    }
+
+    public function deleteAllSurveyAnswers(Survey $survey)
+    {
+        $surveyAnswers = $this->getSurveyAnswersBySurvey($survey);
+        $this->deleteSurveyAnswers($surveyAnswers);
+    }
+
     /****************************************
      * Access to QuestionRepository methods *
      ****************************************/
@@ -499,6 +515,13 @@ class SurveyManager
     public function getSurveyAnswersBySurvey(Survey $survey, $executeQuery = true)
     {
         return $this->surveyAnswerRepo->findSurveyAnswersBySurvey($survey, $executeQuery);
+    }
+
+    public function getSurveyAnswersBySurveyWithPager(Survey $survey, $page = 1, $max = 20)
+    {
+        $answers = $this->surveyAnswerRepo->findSurveyAnswersBySurvey($survey);
+
+        return $this->pagerFactory->createPagerFromArray($answers, $page, $max);
     }
 
     /**********************************************
