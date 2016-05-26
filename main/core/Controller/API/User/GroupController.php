@@ -201,6 +201,7 @@ class GroupController extends FOSRestController
         $this->container->get('claroline.persistence.object_manager')->startFlushSuite();
 
         foreach ($groups as $group) {
+            $this->throwExceptionIfNotGranted('delete', $group);
             $this->groupManager->deleteGroup($group);
         }
 

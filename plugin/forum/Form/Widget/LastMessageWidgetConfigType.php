@@ -10,12 +10,24 @@ class LastMessageWidgetConfigType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('display_my_last_messages', 'checkbox', array(
-            'theme_options' => array(
-                'control_width' => 'col-md-6',
-                'label_width' => 'col-md-6',
-            ),
-        ));
+        $builder->add(
+            'forum',
+            'resourcePicker',
+            array(
+                'label' => 'forum',
+                'attr' => array(
+                    'data-is-picker-multi-select-allowed' => 0,
+                    'data-is-directory-selection-allowed' => 0,
+                    'data-type-white-list' => 'claroline_forum',
+                ),
+                'display_browse_button' => false,
+                'display_download_button' => false,
+            )
+        );
+        $builder->add(
+            'displayMyLastMessages',
+            'checkbox'
+        );
     }
 
     public function getName()

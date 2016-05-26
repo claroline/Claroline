@@ -11,9 +11,10 @@
 
 namespace Claroline\ForumBundle\Repository;
 
+use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\Subject;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Claroline\ForumBundle\Entity\Subject;
 
 class MessageRepository extends EntityRepository
 {
@@ -44,6 +45,66 @@ class MessageRepository extends EntityRepository
         return $query->getSingleResult();
     }
 
+    public function findNLastByRoles(array $roles, $max = 10)
+    {
+        $dql = "
+            SELECT m
+            FROM Claroline\ForumBundle\Entity\Message m
+            JOIN m.subject s
+            JOIN s.category c
+            JOIN c.forum as f
+            JOIN f.resourceNode n
+            JOIN n.workspace w
+            JOIN n.rights r
+            JOIN r.role rr
+            WHERE rr.name IN (:roles)
+            AND (
+                BIT_AND(r.mask, 1) = 1
+                OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
+            )
+            ORDER BY m.creationDate DESC
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+        $query->setFirstResult(0)->setMaxResults($max);
+
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
+    }
+
+    public function findNLastByRolesAndSubjects(array $roles, array $subjects, $max = 10)
+    {
+        $dql = "
+            SELECT m
+            FROM Claroline\ForumBundle\Entity\Message m
+            JOIN m.subject s
+            JOIN s.category c
+            JOIN c.forum as f
+            JOIN f.resourceNode n
+            JOIN n.workspace w
+            JOIN n.rights r
+            JOIN r.role rr
+            WHERE s IN (:subjects)
+            AND rr.name IN (:roles)
+            AND (
+                BIT_AND(r.mask, 1) = 1
+                OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
+            )
+            ORDER BY m.creationDate DESC
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+        $query->setParameter('subjects', $subjects);
+        $query->setFirstResult(0)->setMaxResults($max);
+
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
+    }
+
     public function findNLastByWorkspacesAndRoles(array $workspaces, array $roles, $max = 10)
     {
         $dql = "SELECT m FROM Claroline\ForumBundle\Entity\Message m
@@ -55,10 +116,10 @@ class MessageRepository extends EntityRepository
                 JOIN n.rights r
                 JOIN r.role rr
                 WHERE w IN (:workspaces)
-                AND rr.name in (:roles)
+                AND rr.name IN (:roles)
                 AND (
                     BIT_AND(r.mask, 1) = 1
-                    OR CONCAT('ROLE_WS_MANAGER_', w.guid) in (:roles)
+                    OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
                 )
                 ORDER BY m.creationDate DESC";
 
@@ -67,6 +128,101 @@ class MessageRepository extends EntityRepository
         $query->setParameter('roles', $roles);
         $query->setFirstResult(0)->setMaxResults($max);
 
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
+    }
+
+    public function findNLastByWorkspacesAndRolesAndSubjects(array $workspaces, array $roles, array $subjects, $max = 10)
+    {
+        $dql = "
+            SELECT m
+            FROM Claroline\ForumBundle\Entity\Message m
+            JOIN m.subject s
+            JOIN s.category c
+            JOIN c.forum as f
+            JOIN f.resourceNode n
+            JOIN n.workspace w
+            JOIN n.rights r
+            JOIN r.role rr
+            WHERE w IN (:workspaces)
+            AND s IN (:subjects)
+            AND rr.name IN (:roles)
+            AND (
+                BIT_AND(r.mask, 1) = 1
+                OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
+            )
+            ORDER BY m.creationDate DESC
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaces', $workspaces);
+        $query->setParameter('roles', $roles);
+        $query->setParameter('subjects', $subjects);
+        $query->setFirstResult(0)->setMaxResults($max);
+
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
+    }
+
+    public function findNLastByForumAndRoles(Forum $forum, array $roles, $max = 10)
+    {
+        $dql = "
+            SELECT m
+            FROM Claroline\ForumBundle\Entity\Message m
+            JOIN m.subject s
+            JOIN s.category c
+            JOIN c.forum f
+            JOIN f.resourceNode n
+            JOIN n.workspace w
+            JOIN n.rights r
+            JOIN r.role rr
+            WHERE f = :forum
+            AND rr.name IN (:roles)
+            AND (
+                BIT_AND(r.mask, 1) = 1
+                OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
+            )
+            ORDER BY m.creationDate DESC
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('forum', $forum);
+        $query->setParameter('roles', $roles);
+        $query->setFirstResult(0)->setMaxResults($max);
+        $paginator = new Paginator($query, true);
+
+        return $paginator;
+    }
+
+    public function findNLastByForumAndRolesAndSubjects(Forum $forum, array $roles, array $subjects, $max = 10)
+    {
+        $dql = "
+            SELECT m
+            FROM Claroline\ForumBundle\Entity\Message m
+            JOIN m.subject s
+            JOIN s.category c
+            JOIN c.forum f
+            JOIN f.resourceNode n
+            JOIN n.workspace w
+            JOIN n.rights r
+            JOIN r.role rr
+            WHERE f = :forum
+            AND s IN (:subjects)
+            AND rr.name IN (:roles)
+            AND (
+                BIT_AND(r.mask, 1) = 1
+                OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
+            )
+            ORDER BY m.creationDate DESC
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('forum', $forum);
+        $query->setParameter('roles', $roles);
+        $query->setParameter('subjects', $subjects);
+        $query->setFirstResult(0)->setMaxResults($max);
         $paginator = new Paginator($query, true);
 
         return $paginator;
