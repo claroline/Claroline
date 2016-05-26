@@ -1,7 +1,19 @@
 .steps {
+    .handle {
+        cursor: move;
+        padding: 0 5px;
+    }
+
     .panel {
         > .panel-heading {
             border-bottom: none;
+
+            .panel-title {
+                span {
+                    vertical-align: middle;
+                    display: inline-block;
+                }
+            }
 
             small {
                 display: block;

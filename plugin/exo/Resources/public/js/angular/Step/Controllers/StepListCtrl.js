@@ -14,8 +14,21 @@ var StepListCtrl = function StepListCtrl($scope, steps, dragulaService, Exercise
 
     this.exerciseId      = ExerciseService.getExercise().id;
 
+    dragulaService.options($scope, 'order-steps', {
+        moves: function (el, container, handle) {
+            return handle.className === 'handle';
+        }
+    });
+
     $scope.$on('order-steps.drop-model', function dropStep() {
         this.ExerciseService.reorderSteps();
+    }.bind(this));
+
+    $scope.$on('order-questions.drop-model', function dropStep(el, target, source) {
+        console.log(el);
+        console.log(target);
+        console.log(source);
+        /*this.StepService.reorderQuestions();*/
     }.bind(this));
 };
 

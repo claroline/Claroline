@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Manager\ExerciseManager;
 use UJM\ExoBundle\Manager\StepManager;
 
@@ -21,7 +22,7 @@ use UJM\ExoBundle\Manager\StepManager;
  *     options={"expose"=true},
  *     defaults={"_format": "json"}
  * )
- * @EXT\Method("GET")
+ * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
  */
 class StepController
 {
@@ -70,7 +71,6 @@ class StepController
      *     options={"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
      *
      * @param Exercise $exercise
      *
@@ -86,6 +86,33 @@ class StepController
     }
 
     /**
+     * Delete a Step from the Exercise.
+     *
+     * @EXT\Route(
+     *     "/steps/{id}",
+     *     name="exercise_step_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     *
+     * @param Exercise $exercise
+     * @param Step     $step
+     *
+     * @return JsonResponse
+     */
+    public function deleteStepAction(Exercise $exercise, Step $step)
+    {
+        $this->assertHasPermission('ADMINISTRATE', $exercise);
+
+        $this->exerciseManager->deleteStep($exercise, $step);
+
+        // Return updated list of steps
+        return new JsonResponse($this->get('ujm.exo.exercise_manager')->exportSteps($exercise, false));
+    }
+
+    /**
+     * Reorder the Steps of an Exercise.
+     *
      * @EXT\Route(
      *     "/steps/reorder",
      *     name="exercise_step_reorder",
@@ -108,11 +135,50 @@ class StepController
             $order = json_decode($dataRaw);
             if (!is_array($order)) {
                 return new JsonResponse([
-                    'message' => 'Invalid data sent. Expected an array of IDs.'
+                    'message' => 'Invalid data sent. Expected an array of Step IDs.'
                 ], 422);
             }
 
             $errors = $this->exerciseManager->reorderSteps($exercise, $order);
+            if (count($errors) !== 0) {
+                return new JsonResponse($errors, 422);
+            }
+        }
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * Reorder the Questions of a Step.
+     *
+     * @EXT\Route(
+     *     "/steps/{id}/questions/reorder",
+     *     name="exercise_question_reorder",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
+
+     * @param Exercise $exercise
+     * @param Step $step
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function reorderQuestionsAction(Exercise $exercise, Step $step, Request $request)
+    {
+        $this->assertHasPermission('ADMINISTRATE', $exercise);
+
+        $dataRaw = $request->getContent();
+        if (!empty($dataRaw)) {
+            $order = json_decode($dataRaw);
+            if (!is_array($order)) {
+                return new JsonResponse([
+                    'message' => 'Invalid data sent. Expected an array of Question IDs.'
+                ], 422);
+            }
+
+            $errors = $this->stepManager->reorderQuestions($step, $order);
             if (count($errors) !== 0) {
                 return new JsonResponse($errors, 422);
             }

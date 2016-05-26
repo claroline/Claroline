@@ -232,8 +232,6 @@ ExerciseService.prototype.reorderSteps = function reorderSteps() {
     var order = this.exercise.steps.map(function getIds(step) {
         return step.id;
     });
-
-    console.log(order);
     
     var deferred = this.$q.defer();
     this.$http
@@ -311,7 +309,7 @@ ExerciseService.prototype.removeStep = function removeStep(step) {
     var deferred = this.$q.defer();
     this.$http
         .delete(
-            Routing.generate('ujm_exercise_step_delete', { id: this.exercise.id, sid: step.id })
+            Routing.generate('exercise_step_delete', { id: this.exercise.id, sid: step.id })
         )
         // Success callback
         .success(function (response) {

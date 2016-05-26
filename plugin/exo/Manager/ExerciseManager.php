@@ -70,6 +70,20 @@ class ExerciseManager
     }
 
     /**
+     * Delete a Step.
+     *
+     * @param Exercise $exercise
+     * @param Step $step
+     */
+    public function deleteStep(Exercise $exercise, Step $step)
+    {
+        $exercise->removeStep($step);
+
+        $this->om->remove($step);
+        $this->om->flush();
+    }
+
+    /**
      * Reorder the steps of an Exercise.
      *
      * @param Exercise $exercise
