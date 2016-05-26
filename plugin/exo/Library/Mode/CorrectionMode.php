@@ -8,14 +8,14 @@ namespace UJM\ExoBundle\Library\Mode;
 final class CorrectionMode
 {
     /**
-     * The marks are available once the User has validated his Paper.
+     * The solutions are available once the User has validated his Paper.
      *
      * @var int
      */
     const AFTER_END = 1;
 
     /**
-     * The marks are available once the User has validated his Paper for his last attempt
+     * The solutions are available once the User has validated his Paper for his last attempt
      * (Exercise must define `maxAttempts`).
      *
      * @var int
@@ -23,7 +23,7 @@ final class CorrectionMode
     const AFTER_LAST_ATTEMPT = 2;
 
     /**
-     * The marks are available after a fixed date
+     * The solutions are available after a fixed date
      * (Exercise must define `dateCorrection`).
      *
      * @var int
@@ -31,7 +31,7 @@ final class CorrectionMode
     const AFTER_DATE = '3';
 
     /**
-     * The marks will never be available to Users.
+     * The solutions will never be available to Users.
      *
      * @var int
      */
