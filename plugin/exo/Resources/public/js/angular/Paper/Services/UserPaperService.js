@@ -203,6 +203,8 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
 
                 // At least one answer found
                 noAnswer = false;
+            } else {
+                stepAnswers[item.id] = '';
             }
         }
     }
