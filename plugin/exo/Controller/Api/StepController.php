@@ -15,7 +15,7 @@ use UJM\ExoBundle\Manager\StepManager;
  * Exercise Controller.
  *
  * @EXT\Route(
- *     "/exercises/{exerciseId}"
+ *     "/exercises/{exerciseId}",
  *     options={"expose"=true},
  *     defaults={"_format": "json"}
  * )
