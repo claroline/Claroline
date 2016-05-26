@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
 use UJM\ExoBundle\Transfer\Json\Validator;
 
@@ -303,7 +304,7 @@ class ExerciseManager
         $exercise->setDuration($metadata->duration);
 
         $correctionDate = null;
-        if (!empty($metadata->correctionDate) && 3 == $metadata->correctionMode) {
+        if (!empty($metadata->correctionDate) && CorrectionMode::AFTER_DATE == $metadata->correctionMode) {
             $correctionDate = \DateTime::createFromFormat('Y-m-d H:i:s', $metadata->correctionDate);
         }
 

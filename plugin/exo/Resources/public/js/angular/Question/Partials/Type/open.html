@@ -9,6 +9,11 @@
 
     <!-- Corrected text -->
     <div class="panel panel-default" data-ng-if="openQuestionCtrl.feedback.visible">
-        <div class="panel-body" data-ng-bind-html="openQuestionCtrl.answerWithKeywords | unsafe"></div>
+        <div class="panel-body" data-ng-if="openQuestionCtrl.answer && '' !== openQuestionCtrl.answer" data-ng-bind-html="(openQuestionCtrl.answerWithKeywords | unsafe)">
+        </div>
+
+        <div class="panel-body" data-ng-if="!openQuestionCtrl.answer || '' === openQuestionCtrl.answer">
+            <em>{{ 'no_answer'|trans:{}:'ujm_exo' }}</em>
+        </div>
     </div>
 </div>

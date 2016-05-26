@@ -265,7 +265,7 @@ overview: Vue d'ensemble
 
 # P
 paper: Passage
-paper_legend: Copies nécessitant une correction manuelle
+paper_need_manual_correction: Cette copie nécessite une correction manuelle
 paper_list: Liste des copies
 metadata: Paramètres
 partially: Partiellement correcte
