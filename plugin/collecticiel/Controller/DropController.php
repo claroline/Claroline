@@ -95,6 +95,7 @@ class DropController extends DropzoneBaseController
         $canEdit = $dropzoneVoter->checkEditRight($dropzone);
         $activeRoute = $this->getRequest()->attributes->get('_route');
         $isOpen = $dropzoneManager->collecticielOpenOrNot($dropzone);
+        $notationDocuments = $dropManager->getNotationForDocuments($drop);
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -114,6 +115,7 @@ class DropController extends DropzoneBaseController
             'collecticielOpenOrNot' => $isOpen,
             'returnReceiptArray' => $returnReceipts,
             'teacherCommentDocArray' => $teacherComments,
+            'notationDocuments' => $notationDocuments,
         );
     }
 

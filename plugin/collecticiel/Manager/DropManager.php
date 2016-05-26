@@ -22,6 +22,7 @@ class DropManager
     private $commentRepo;
     private $receiptRepo;
     private $documentRepo;
+    private $notationRepo;
 
     /**
      * @DI\InjectParams({
@@ -41,6 +42,7 @@ class DropManager
         $this->commentRepo = $this->em->getRepository('InnovaCollecticielBundle:Comment');
         $this->documentRepo = $this->em->getRepository('InnovaCollecticielBundle:Document');
         $this->receiptRepo = $this->em->getRepository('InnovaCollecticielBundle:ReturnReceipt');
+        $this->notationRepo = $this->em->getRepository('InnovaCollecticielBundle:Notation');
     }
 
     public function create(Dropzone $dropzone, User $user)
@@ -199,5 +201,40 @@ class DropManager
         }
 
         return $teacherDocComments;
+    }
+
+    public function getNotationForDocuments(Drop $drop)
+    {
+        $notationDocuments = array();
+
+        $dropzone = $drop->getDropzone();
+
+        foreach ($drop->getDocuments() as $document) {
+            $documentId = $document->getId();
+
+            // Ajout pour avoir la notation.
+            $notations = $this
+                        ->em->getRepository('InnovaCollecticielBundle:Notation')
+                        ->findBy(
+                            array(
+                                'document' => $documentId,
+                                'dropzone' => $dropzone->getId(),
+                                 )
+                            );
+
+            // Nombre de notation pour le document et pour le dropzone
+            $countExistNotation = count($notations);
+
+            if ($countExistNotation == 0) {
+                $notationDocuments[$documentId] = 0; // Pas de notation donc = 0
+            } else {
+                // Parcours des commentaires des documents sélectionnés
+                foreach ($notations as $notation) {
+                    $notationDocuments[$documentId] = $notation->getNote(); // Valeur de la notation
+                }
+            }
+        }
+
+        return $notationDocuments;
     }
 }

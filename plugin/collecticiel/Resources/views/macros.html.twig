@@ -1,6 +1,6 @@
 {% macro displayDocumentsList
-(drop, dropzone, width, mode, documentListText, adminInnova,
-collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray
+(drop, dropzone, width, mode, documentListText, adminInnova, collecticielOpenOrNot,
+returnReceiptArray, teacherCommentDocArray, notationDocuments
 )
 %}
     <div class="row">
@@ -59,6 +59,9 @@ collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray
                                     <i class="fa fa-hand-o-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Return receipt'|trans({},'innova_collecticiel') }}">
                                 </th>
                             {% endif %}
+                            {% if dropzone.evaluation == 1  %}
+                                <th class="centered"><i class="fa fa-graduation-cap"></th>
+                            {% endif %}
                             {% if adminInnova %}
                                 <th class="no-sort"></th>
                             {% else %}
@@ -73,7 +76,8 @@ collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray
                             {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig'
                             with {
                                     'returnReceiptArray': returnReceiptArray,
-                                    'teacherCommentDocArray': teacherCommentDocArray
+                                    'teacherCommentDocArray': teacherCommentDocArray,
+                                    'notationDocuments': notationDocuments,
                                  }
                             %}
                         {% endfor %}
