@@ -224,7 +224,7 @@ class ExerciseController
      * associated with the exercise.
      *
      * @EXT\Route("/exercises/{exerciseId}/papers/{paperId}", name="exercise_paper")
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = false})
+     * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
      *
