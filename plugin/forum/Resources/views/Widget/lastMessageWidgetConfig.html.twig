@@ -1,12 +1,35 @@
 <link rel="stylesheet" href="{{ asset('bundles/clarolineforum/css/forum.css') }}" type="text/css" media="all" />
-<form name="claroline_forum_last_message_widget_config" class="form-inline" action="{{ path("claroline_forum_last_message_widget_configure", {'id': widgetInstance.id}) }}" method="post" {{ form_enctype(form) }} novalidate="novalidate">
+
+<form name="claroline_forum_last_message_widget_config"
+      class="form-inline widget-content-config-form"
+      action="{{ path("claroline_forum_last_message_widget_configure", {'widgetInstance': widgetInstance.getId()}) }}"
+      method="post"
+      {{ form_enctype(form) }}
+      novalidate="novalidate"
+>
     <div class="panel-body">
-        <label class="control-label col-md-3">{{  'title_form_last_messages'|trans({}, 'forum') }}</label>
-            {{ form_errors(form) }}
-            {{ form_widget(form.display_my_last_messages) }}
-            {{ form_errors(form.display_my_last_messages) }}
-            {{ form_label(form.display_my_last_messages, 'title_option_form_last_messages'|trans({}, 'forum')) }}
-            {{ form_rest(form) }}
+        <label class="control-label col-md-3">
+            Forum
+            <i class="fa fa-info-circle"
+               data-toggle="tooltip"
+               data-placement="right"
+               title="{{ 'widget_forum_field_info'|trans({}, 'forum') }}"
+            >
+            </i>
+        </label>
+        <div class="col-md-9">
+            {{ form_widget(form.forum) }}
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="col-md-3">
+            {{ form_widget(form.displayMyLastMessages) }}
+        </div>
+        <label for="claroline_forum_last_message_widget_config_displayMyLastMessages" class="col-md-9">
+            {{ 'title_option_form_last_messages'|trans({}, 'forum') }}
+        </label>
+        {{ form_rest(form) }}
     </div>
     <div class="panel-footer">
         <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
