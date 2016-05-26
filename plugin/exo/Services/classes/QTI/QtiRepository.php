@@ -100,7 +100,7 @@ class QtiRepository
         $xmlFileFound = false;
         $info = '';
         $iterator = new RecursiveDirectoryIterator($this->getUserDir(), \FilesystemIterator::SKIP_DOTS);
-        foreach(new \RecursiveIteratorIterator($iterator) as $file) {
+        foreach (new \RecursiveIteratorIterator($iterator) as $file) {
             if ($file->getExtension() == 'xml' && $this->alreadyImported(base64_encode($file)) === false) {
                 $xmlFileFound = true;
                 $document_xml = new \DomDocument();
