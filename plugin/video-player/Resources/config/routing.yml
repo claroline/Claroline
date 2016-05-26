@@ -1,4 +1,7 @@
-claro_video_player:
-    resource: "@ClarolineVideoPlayerBundle/Controller/VideoPlayerController.php"
-    type:     annotation
-    prefix:   /
+claro_video_api:
+    resource: "@ClarolineVideoPlayerBundle/Controller/API/VideoController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true

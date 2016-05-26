@@ -18,9 +18,11 @@ use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
  * @NamePrefix("api_")
+ * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
  */
 class ParametersController extends FOSRestController
 {

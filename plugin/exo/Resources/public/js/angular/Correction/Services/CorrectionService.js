@@ -85,8 +85,7 @@ angular.module('Correction').factory('CorrectionService', [
                                 availableScore = question.solutions[i].score;
                             }
                         }
-                    }
-                    else{
+                    } else {
                         for (var i = 0; i < question.solutions.length; i++) {
                             if(question.solutions[i].score > 0) {
                                 availableScore += question.solutions[i].score ? question.solutions[i].score : 0;

@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @Service("claroline.common.locale_manager")
+ * @Service("claroline.manager.locale_manager")
  */
 class LocaleManager
 {
@@ -144,6 +144,32 @@ class LocaleManager
         }
 
         return $locale;
+    }
+
+    public function getLocaleListForSelect()
+    {
+        $locales = $this->retrieveAvailableLocales();
+        $labels = $this->getLocalesLabels();
+        $keys = array_keys($labels);
+        $data = [];
+
+        foreach ($locales as $locale) {
+            if (in_array($locale, $keys)) {
+                $data[] = ['value' => $locale, 'label' => $labels[$locale]];
+            }
+        }
+
+        return $data;
+    }
+
+    public function getLocalesLabels()
+    {
+        return [
+            'fr' => 'Français',
+            'en' => 'English',
+            'nl' => 'Nederlands',
+            'es' => 'Español',
+        ];
     }
 
     /**

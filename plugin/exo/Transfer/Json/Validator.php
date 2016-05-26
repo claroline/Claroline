@@ -47,6 +47,16 @@ class Validator
 
             // Validate custom metadata fields
             if (count($errors) === 0) {
+                // Date correction
+                if (!empty($metadata->correctionDate)) {
+                    $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $metadata->correctionDate);
+                    if ($dateTime->format('Y-m-d H:i:s') !== $metadata->correctionDate) {
+                        $errors[] = [
+                            'path' => 'dateCorrection',
+                            'message' => 'Invalid date format',
+                        ];
+                    }
+                }
             }
 
             return $errors;
@@ -81,7 +91,7 @@ class Validator
                     && !isset($question->solutions)) {
                     $errors[] = [
                         'path' => '',
-                        'message' => 'a solution(s) property is required',
+                        'message' => 'A solution property is required',
                     ];
                 }
 

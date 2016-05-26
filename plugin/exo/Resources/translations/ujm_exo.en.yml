@@ -26,7 +26,7 @@ attempt_info2plur: attempts
 attempt_info3: Attempt N°
 attempt_info4: You have
 attempt_info5: in order to improve your score
-attempt_info6: You do not have attempt
+attempt_info6: You have no more attempts.
 at_the_end_of_assessment: At the end of assessment
 at_the_same_time_that_the_correction: At the same time that the correction
 availability_of_correction: Availability of correction
@@ -105,7 +105,11 @@ exercise: Exercise
 exercise_alert_break: The interruption of this exercise is not allowed. Your paper will be considered finish !
 exercise_definition: Exercise definition
 exercise_edit: Exercise edit
+exercise_finished_attempts: "[0, 1] You have finished %count% attempt|]1,Inf[  You have finished %count% attempts"
 exercice_linked_question: Questions linked to the exercise
+exercise_restart: Restart the exercise
+exercise_start: Start the exercise
+exercise_try: Try the exercise
 exit: Exit
 exo_empty_user_can_edit: This exercise is empty. Please edit and publish it to fill it.
 exo_empty_user_read_only: This exercise is empty and has not been configured by its designer. Please come back later.
@@ -203,6 +207,8 @@ matching_edition: Association edition
 matching_value: Type of associative question
 maximum_tries: Maximum number of tries
 meaning_measure_difficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
+metadata_visible:      Display exercise information
+metadata_visible_help: If checked a table with the exercise information will be displayed on the overview
 model: Model
 more_info: More information
 my_questions: My questions
@@ -306,6 +312,8 @@ reset: Reset
 resize_zone: To re-size the picture, place your mouse on its bottom right corner, keep left mouse button down, and mouve your mouse
 response: Response
 result: Results
+results_list: List of results
+result_show: Show the results
 right_response: Points for correct answer
 
 # S
@@ -360,6 +368,8 @@ upload: Upload
 uploading: Uploading
 user: User
 users: Users
+ujm_exo_exercise_name: Name
+ujm_exo_exercise_published: Publish resource
 
 # V
 validate: Validate

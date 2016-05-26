@@ -71,7 +71,7 @@ class ResourceController
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"      = @DI\Inject("templating"),
      *     "logManager"      = @DI\Inject("claroline.log.manager"),
-     *      "fileManager"     = @DI\Inject("claroline.manager.file_manager"),
+     *     "fileManager"     = @DI\Inject("claroline.manager.file_manager"),
      *     "transferManager" = @DI\Inject("claroline.manager.transfer_manager"),
      *     "formFactory"     = @DI\Inject("form.factory")
      * })
@@ -1020,6 +1020,7 @@ class ResourceController
                 "ClarolineCoreBundle:Resource:embed/{$view}.html.twig",
                 array(
                     'node' => $node,
+                    'resource' => $this->resourceManager->getResourceFromNode($node),
                     'type' => $type,
                     'extension' => $extension,
                     'openInNewTab' => $openInNewTab !== '0',

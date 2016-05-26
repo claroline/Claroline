@@ -27,12 +27,19 @@ class StepQuestion
     private $question;
 
     /**
+     * Order of the Question in the Step.
+     *
      * @var int
      *
      * @ORM\Column(name="ordre", type="integer")
      */
     private $ordre;
 
+    /**
+     * Set Step.
+     *
+     * @param Step $step
+     */
     public function setStep(Step $step)
     {
         $this->step = $step;
@@ -40,33 +47,48 @@ class StepQuestion
         $step->addStepQuestion($this);
     }
 
+    /**
+     * Get Step.
+     *
+     * @return Step
+     */
     public function getStep()
     {
         return $this->step;
     }
 
+    /**
+     * Set Question.
+     *
+     * @param Question $question
+     */
     public function setQuestion(Question $question)
     {
         $this->question = $question;
     }
 
+    /**
+     * Get Question.
+     *
+     * @return Question
+     */
     public function getQuestion()
     {
         return $this->question;
     }
 
     /**
-     * Set ordre.
+     * Set order.
      *
-     * @param int $ordre
+     * @param int $order
      */
-    public function setOrdre($ordre)
+    public function setOrdre($order)
     {
-        $this->ordre = $ordre;
+        $this->ordre = $order;
     }
 
     /**
-     * Get ordre.
+     * Get order.
      *
      * @return int
      */

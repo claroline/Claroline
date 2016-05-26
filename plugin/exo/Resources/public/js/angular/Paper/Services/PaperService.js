@@ -19,6 +19,31 @@ var PaperService = function PaperService($http, $q, ExerciseService, StepService
 PaperService.$inject = [ '$http', '$q', 'ExerciseService', 'StepService', 'QuestionService' ];
 
 /**
+ * Number of papers already done for the current Exercise
+ * @type {number}
+ */
+PaperService.prototype.nbPapers = 0;
+
+/**
+ * Get number of Papers
+ * @returns {number}
+ */
+PaperService.prototype.getNbPapers = function getNbPapers() {
+    return this.nbPapers;
+};
+
+/**
+ * Set number of Papers
+ * @param {number} count
+ * @returns {PaperService}
+ */
+PaperService.prototype.setNbPapers = function setNbPapers(count) {
+    this.nbPapers = count ? parseInt(count) : 0;
+
+    return this;
+};
+
+/**
  * Get one paper details
  * @param   {String} id
  * @returns {Promise}
@@ -54,8 +79,10 @@ PaperService.prototype.getAll = function getAll() {
     this.$http
         .get(Routing.generate('exercise_papers', { id: exercise.id }))
         .success(function (response) {
+            this.setNbPapers(response.length);
+
             deferred.resolve(response);
-        })
+        }.bind(this))
         .error(function (data, status) {
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'Papers get all error';
@@ -123,8 +150,11 @@ PaperService.prototype.deleteAll = function deleteAll(papers) {
         .delete(Routing.generate('ujm_exercise_delete_papers', { id: exercise.id }))
         .success(function (response) {
             papers.splice(0, papers.length); // Empty the Papers list
+
+            this.setNbPapers(0);
+
             deferred.resolve(response);
-        })
+        }.bind(this))
         .error(function (data, status) {
             deferred.reject([]);
         });

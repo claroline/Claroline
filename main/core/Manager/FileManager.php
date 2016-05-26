@@ -18,6 +18,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Symfony\Component\HttpFoundation\File\File as SfFile;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service("claroline.manager.file_manager")
@@ -29,15 +32,18 @@ class FileManager
     private $ut;
     private $resManager;
     private $dispatcher;
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
-     *      "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *      "fileDir"    = @DI\Inject("%claroline.param.files_directory%"),
-     *      "uploadDir"  = @DI\Inject("%claroline.param.uploads_directory%"),
-     *      "ut"         = @DI\Inject("claroline.utilities.misc"),
-     *      "rm"         = @DI\Inject("claroline.manager.resource_manager"),
-     *      "dispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *      "om"               = @DI\Inject("claroline.persistence.object_manager"),
+     *      "fileDir"          = @DI\Inject("%claroline.param.files_directory%"),
+     *      "uploadDir"        = @DI\Inject("%claroline.param.uploads_directory%"),
+     *      "ut"               = @DI\Inject("claroline.utilities.misc"),
+     *      "rm"               = @DI\Inject("claroline.manager.resource_manager"),
+     *      "dispatcher"       = @DI\Inject("claroline.event.event_dispatcher"),
+     *      "tokenStorage"     = @DI\Inject("security.token_storage"),
+     *      "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
@@ -46,7 +52,9 @@ class FileManager
         ClaroUtilities $ut,
         ResourceManager $rm,
         StrictDispatcher $dispatcher,
-        $uploadDir
+        $uploadDir,
+        TokenStorageInterface $tokenStorage,
+        WorkspaceManager $workspaceManager
     ) {
         $this->om = $om;
         $this->fileDir = $fileDir;
@@ -54,6 +62,45 @@ class FileManager
         $this->resManager = $rm;
         $this->dispatcher = $dispatcher;
         $this->uploadDir = $uploadDir;
+        $this->tokenStorage = $tokenStorage;
+        $this->workspaceManager = $workspaceManager;
+    }
+
+    public function create(
+        File $file,
+        SfFile $tmpFile,
+        $fileName,
+        $mimeType,
+        Workspace $workspace = null
+    ) {
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $size = filesize($tmpFile);
+
+        if (!is_null($workspace)) {
+            $hashName = 'WORKSPACE_'.$workspace->getId().
+                DIRECTORY_SEPARATOR.
+                $this->ut->generateGuid().
+                '.'.
+                $extension;
+            $tmpFile->move(
+                $this->workspaceManager->getStorageDirectory($workspace).'/',
+                $hashName
+            );
+        } else {
+            $hashName =
+                $this->tokenStorage->getToken()->getUsername().DIRECTORY_SEPARATOR.$this->ut->generateGuid().
+                '.'.$extension;
+            $tmpFile->move(
+                $this->fileDir.DIRECTORY_SEPARATOR.$this->tokenStorage->getToken()->getUsername(),
+                $hashName
+            );
+        }
+        $file->setSize($size);
+        $file->setName($fileName);
+        $file->setHashName($hashName);
+        $file->setMimeType($mimeType);
+
+        return $file;
     }
 
     public function changeFile(File $file, UploadedFile $upload)

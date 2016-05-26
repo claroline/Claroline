@@ -1,9 +1,5 @@
 <div class="overview">
     <div class="panel-body">
-        <!--<div class="alert alert-info" data-ng-if="!exerciseOverviewCtrl.exercise.meta.published && !exerciseOverviewCtrl.exercise.meta.publishedOnce">
-            {{ 'info_exercise_never_published'|trans:{}:'ujm_exo' }}
-        </div>-->
-
         <!-- Empty exercise alert -->
         <div class="row" data-ng-if="exerciseOverviewCtrl.exercise.steps.length === 0">
             <div class="col-md-6 col-md-offset-3">
@@ -27,7 +23,7 @@
                 </div>
 
                 <!-- Information of the Exercise -->
-                <div class="panel panel-default">
+                <div class="panel panel-default" data-ng-if="exerciseOverviewCtrl.exercise.meta.metadataVisible">
                     <table class="table table-striped">
                         <!-- Display exercise general information -->
                         <tbody>
@@ -158,17 +154,38 @@
 
         <!-- Display a big button for those who can edit Exercise OR a big button to play the Exercise if no alert -->
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-6 col-md-offset-3 text-center">
                 <!-- Edit button if Exercise is empty -->
                 <a href="#/steps" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="exerciseOverviewCtrl.editEnabled && exerciseOverviewCtrl.exercise.steps.length === 0">
                     <span class="fa fa-pencil"></span>
                     {{ 'edit'|trans:{}:'ujm_exo' }}
                 </a>
 
+                <!-- Attempts info -->
+                <div class="attempts" data-ng-if="exerciseOverviewCtrl.exercise.steps.length > 0 && exerciseOverviewCtrl.exercise.meta.maxAttempts > 0">
+
+                    <!-- Max attempts not reached -->
+                    <span data-ng-if="exerciseOverviewCtrl.isComposeEnabled()">
+                        {{ 'sequence_attempts_infos'|transChoice:5:{ count: exerciseOverviewCtrl.exercise.meta.maxAttempts }:'ujm_sequence'}}
+                        ({{ 'exercise_finished_attempts'|transChoice:exerciseOverviewCtrl.getNbUserPapers():{ count: exerciseOverviewCtrl.getNbUserPapers() }:'ujm_exo' }})
+                    </span>
+
+                    <!-- Max attempts reached -->
+                    <em data-ng-if="!exerciseOverviewCtrl.isComposeEnabled()">
+                        {{ 'attempt_info6'|trans:{}:'ujm_exo' }}
+                    </em>
+                </div>
+
                 <!-- Play button if Exercise is OK -->
-                <a href="#/play" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="(exerciseCtrl.nbPapers < exerciseCtrl.exercise.meta.maxAttempts || exerciseCtrl.exercise.meta.maxAttempts === 0) && exerciseCtrl.composeEnabled && exerciseCtrl.exercise.steps.length > 0">
-                    <span class="fa fa-play"></span>
-                    {{ 'compose' | trans:{}:'ujm_exo' }}
+                <a href="#/play" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="exerciseOverviewCtrl.exercise.steps.length > 0 && exerciseOverviewCtrl.isComposeEnabled()">
+                    <span class="fa fa-fw fa-play"></span>
+                    <span data-ng-if="0 === exerciseOverviewCtrl.getNbUserPapers()">{{ 'exercise_start' | trans:{}:'ujm_exo' }}</span>
+                    <span data-ng-if="0 < exerciseOverviewCtrl.getNbUserPapers()">{{ 'exercise_restart' | trans:{}:'ujm_exo' }}</span>
+                </a>
+
+                <!-- Results of the Exercise -->
+                <a href="#/papers" class="btn btn-default btn-block" data-ng-if="0 < exerciseOverviewCtrl.getNbUserPapers()">
+                    <span class="fa fa-fw fa-check-square-o"></span> {{ 'result_show' | trans:{}:'ujm_exo' }}
                 </a>
             </div>
         </div>

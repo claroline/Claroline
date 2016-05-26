@@ -66,7 +66,7 @@ class MailManager
      */
     public function isMailerAvailable()
     {
-        return $this->cacheManager->getParameter('is_mailer_available');
+        return $this->cacheManager->getParameter('is_mailer_available') && $this->getMailerFrom();
     }
 
     /**
