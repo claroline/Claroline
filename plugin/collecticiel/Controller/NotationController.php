@@ -24,14 +24,16 @@ class NotationController extends DropzoneBaseController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function AddNotationForDocsInnovaAction()
+    public function AddNotationForDocsAction()
     {
+
         // Récupération de l'ID du document
         $documentId = $this->get('request')->query->get('documentId');
         $dropzoneId = $this->get('request')->query->get('dropzoneId');
         $note = $this->get('request')->query->get('note');
         $commentText = $this->get('request')->query->get('commentText');
         $qualityText = $this->get('request')->query->get('qualityText');
+        $recordOrTransmit = $this->get('request')->query->get('recordOrTransmit');
 
         $em = $this->getDoctrine()->getManager();
         $dropzone = $em->getRepository('InnovaCollecticielBundle:Dropzone')->find($dropzoneId);
@@ -50,12 +52,14 @@ class NotationController extends DropzoneBaseController
         $notation->setNote($note);
         $notation->setCommentText($commentText);
         $notation->setQualityText($qualityText);
+        $notation->setRecordOrTransmit($recordOrTransmit);
 
-        // Insertion en base du commentaire
+        // Insertion en base de la notation
         $em->persist($notation);
 
         $em->flush();
 
+        // Redirection
         $url = $this->generateUrl('innova_collecticiel_drops_awaiting', array(
                     'resourceId' => $dropzone->getId(),
                 )

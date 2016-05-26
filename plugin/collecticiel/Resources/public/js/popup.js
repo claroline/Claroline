@@ -409,27 +409,18 @@ $(document).ready(function() {
     $('#modal_confirm_notation_record').on('click', function(event) {
         event.preventDefault();
 
-alert("modal_confirm_notation_record");
-
         // Récupération de l'id du document
         var note = document.getElementById('innova_collecticiel_notation_form_note').value;
-alert("Note");
-alert(note);
-
         var commentText = document.getElementById('innova_collecticiel_notation_form_commentText').value;
-alert(commentText);
-
         var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText').value;
-alert(qualityText);
 
         // Récupération de l'id du document
         var documentId = $(this).attr("data-document_id");
-alert(documentId);
-
-        // Récupération de l'id du document
+        // Récupération de l'id du dropzone
         var dropzoneId = $(this).attr("data-dropzone_id");
-alert(dropzoneId);
 
+        // Récupération de l'id qui indique si transmission ou enregistrement
+        var recordOrTransmit = $(this).attr("data-document_record_or_transmit");
 
         $.ajax({
             url: Routing.generate('innova_collecticiel_add_notation', {
@@ -437,7 +428,8 @@ alert(dropzoneId);
                 dropzoneId: dropzoneId,
                 note: note,
                 commentText: commentText,
-                qualityText: qualityText
+                qualityText: qualityText,
+                recordOrTransmit: recordOrTransmit,
             }),
             method: "GET",
             data: {
@@ -462,38 +454,29 @@ alert(dropzoneId);
     $('#modal_confirm_notation_transmit').on('click', function(event) {
         event.preventDefault();
 
-alert("modal_confirm_notation_transmit");
         // Récupération de l'id du document
-        var dropzoneId = $(this).attr("data-dropzone_id");
+        var note = document.getElementById('innova_collecticiel_notation_form_note').value;
+        var commentText = document.getElementById('innova_collecticiel_notation_form_commentText').value;
+        var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText').value;
 
         // Récupération de l'id du document
         var documentId = $(this).attr("data-document_id");
+        // Récupération de l'id du dropzone
+        var dropzoneId = $(this).attr("data-dropzone_id");
 
-        var arrayDocsId = [];
-
-        if (!documentId) {
-            $("input[type='checkbox']:checked").each(
-                function() {
-                    var chaineCaractere = $(this).attr('id');
-                    var splitChaine = chaineCaractere.split('_');
-                    if (splitChaine[2] != '0') {
-                        arrayDocsId.push($(this).attr('id'));
-                    }
-                });
-        } else {
-            var numDocPush = $(this).attr('data-document_id');
-            var docPush = "document_id_" + $(this).attr('data-document_id');
-            arrayDocsId.push(docPush);
-        }
-
+        // Récupération de l'id qui indique si transmission ou enregistrement
+        var recordOrTransmit = $(this).attr("data-document_record_or_transmit");
         $.ajax({
             url: Routing.generate('innova_collecticiel_add_notation', {
+                documentId: documentId,
                 dropzoneId: dropzoneId,
-                returnReceiptId: returnReceiptId,
+                note: note,
+                commentText: commentText,
+                qualityText: qualityText,
+                recordOrTransmit: recordOrTransmit,
             }),
             method: "GET",
             data: {
-                arrayDocsId: arrayDocsId
             },
             complete: function(data) {
                 var data_link = $.parseJSON(data.responseText)
@@ -506,7 +489,7 @@ alert("modal_confirm_notation_transmit");
         });
 
         // Fermeture de la modal
-        $('#validate-modal-return-receipt').modal('hide');
+        $('#validate-modal-notation').modal('hide');
 
     });
 

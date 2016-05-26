@@ -2,6 +2,7 @@
 /**
  * Created by : Eric VINCENT
  * Date: 05/2016.
+ * Modifiey by : Add recordOrTransmit (05/2016).
  */
 
 namespace Innova\CollecticielBundle\Entity;
@@ -78,6 +79,11 @@ class Notation
      * @Gedmo\Timestampable(on="create")
      */
     protected $noteDate;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    protected $recordOrTransmit = false;
 
     /**
      * Get id.
@@ -255,5 +261,29 @@ class Notation
     public function getDropzone()
     {
         return $this->dropzone;
+    }
+
+    /**
+     * Set recordOrTransmit.
+     *
+     * @param bool $recordOrTransmit
+     *
+     * @return Notation
+     */
+    public function setRecordOrTransmit($recordOrTransmit)
+    {
+        $this->recordOrTransmit = $recordOrTransmit;
+
+        return $this;
+    }
+
+    /**
+     * Get recordOrTransmit.
+     *
+     * @return bool
+     */
+    public function getRecordOrTransmit()
+    {
+        return $this->recordOrTransmit;
     }
 }

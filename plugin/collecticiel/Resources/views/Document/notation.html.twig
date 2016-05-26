@@ -35,6 +35,7 @@ class="document_validate">
                 data-document_name="{{document.resourceNode.name}}"
                 data-document_sender_firstname="{{document.sender.firstname}}"
                 data-document_sender_lastname="{{document.sender.lastname}}"
+                data-document_record_or_transmit="0"
                 id="modal_confirm_notation_record" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'To record'|trans({}, 'innova_collecticiel') }}</button>
                 <button
                 data-dropzone_id="{{dropzone.id}}" data-document_id="{{document.id}}"
@@ -42,6 +43,7 @@ class="document_validate">
                 data-document_name="{{document.resourceNode.name}}"
                 data-document_sender_firstname="{{document.sender.firstname}}"
                 data-document_sender_lastname="{{document.sender.lastname}}"
+                data-document_record_or_transmit="1"
                 id="modal_confirm_notation_transmit" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'To transmit'|trans({}, 'innova_collecticiel') }}</button>
             </div>
         </div>
