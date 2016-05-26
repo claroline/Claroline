@@ -161,7 +161,7 @@ class QtiRepository
                             $interX = $other[0];
                             $imported = $other[1];
                             if ($imported == false) {
-                                $info .=$file.' qti unsupported format'."\n";
+                                $info .= $file.' qti unsupported format'."\n";
                             }
                         }
                         if ($this->step != null) {
@@ -172,7 +172,7 @@ class QtiRepository
                 }
             }
             if ($xmlFileFound === false) {
-                $info .='qti xml not found'."\n";
+                $info .= 'qti xml not found'."\n";
             }
             closedir($dh);
         }
