@@ -97,6 +97,7 @@ class QtiRepository
     public function scanFiles()
     {
         $xmlFileFound = false;
+        $info = '';
         if ($dh = opendir($this->getUserDir())) {
             while (($file = readdir($dh)) !== false) {
                 if (substr($file, -4, 4) == '.xml'
@@ -143,7 +144,7 @@ class QtiRepository
                             $interX = $other[0];
                             $imported = $other[1];
                             if ($imported == false) {
-                                return 'qti unsupported format';
+                                $info .= $file.' qti unsupported format'."\n";
                             }
                         }
                         if ($this->step != null) {
@@ -154,12 +155,15 @@ class QtiRepository
                 }
             }
             if ($xmlFileFound === false) {
-                return 'qti xml not found';
+                $info .= 'qti xml not found'."\n";
             }
             closedir($dh);
         }
 
         $this->removeDirectory();
+        if ($info != '') {
+            return $info;
+        }
 
         return true;
     }
