@@ -6,18 +6,23 @@
  * @constructor
  */
 var ChoiceQuestionDirective = function ChoiceQuestionDirective() {
-    return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
+    return {
+        restrict: 'E',
+        replace: true,
         controller: 'ChoiceQuestionCtrl',
         controllerAs: 'choiceQuestionCtrl',
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/choice.html'
-    });
+        bindToController: true,
+        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/choice.html',
+        scope: {
+            question : '=',
+            answer   : '=',
+            feedbackState : '='
+        }
+    };
 };
 
-// Extends AbstractQuestionDirective
-ChoiceQuestionDirective.prototype = Object.create(AbstractQuestionDirective.prototype);
-
-// Set up dependency injection (get DI from parent too)
-ChoiceQuestionDirective.$inject = AbstractQuestionDirective.$inject;
+// Set up dependency injection
+ChoiceQuestionDirective.$inject = [];
 
 // Register directive into AngularJS
 angular

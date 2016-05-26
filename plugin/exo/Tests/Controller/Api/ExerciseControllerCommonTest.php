@@ -115,7 +115,8 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertInternalType('object', $content);
+        $this->assertEquals($this->ex1->getId(), $content->exercise->id);
+        $this->assertInternalType('object', $content->paper);
     }
 
     /**
@@ -172,7 +173,8 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
         $this->request('POST', "/exercise/api/exercises/{$this->ex1->getId()}/attempts", $this->john);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertInternalType('object', $content);
+        $this->assertEquals($this->ex1->getId(), $content->exercise->id);
+        $this->assertInternalType('object', $content->paper);
     }
 
     public function testAnonymousSubmit()
@@ -261,16 +263,9 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
 
         // end the paper
         $this->request('PUT', "/exercise/api/papers/{$pa1->getId()}/end", $this->john);
-
-        // Check if the Paper has been correctly updated
+        $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
         $this->assertFalse($pa1->getInterupt());
         $this->assertTrue($pa1->getEnd() !== null);
-
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-
-        // Check the paper is correctly returned to User
-        $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertInternalType('object', $content);
     }
 
     /**

@@ -5,8 +5,8 @@
  */
 var OpenQuestionCtrl = function OpenQuestionCtrl(FeedbackService) {
     AbstractQuestionCtrl.apply(this, arguments);
-
-    console.log(this.answer);
+    
+    this.FeedbackService = FeedbackService;
 };
 
 // Extends AbstractQuestionCtrl
@@ -32,7 +32,7 @@ OpenQuestionCtrl.prototype.feedbackState = -1;
  */
 OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
     if (this.question.solutions) {
-        var numAnswersFound = 0;
+	var numAnswersFound = 0;
         this.answerWithKeywords = this.answer ? this.answer : '';
 
         // Get EOL
@@ -48,18 +48,18 @@ OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
                 var searchFlags      = 'g' + (solution.caseSensitive ? 'i' : '');
                 var searchExpression = new RegExp(solution.word, searchFlags);
                 if (-1 !== this.answer.search(searchExpression)) {
-                        numAnswersFound++;
-                        // Keyword has been found in answer => Update formatted answer
-                        var keyword = '';
-                        keyword += '<b class="text-success feedback-info" data-toggle="tooltip" title="' + (solution.feedback || '') + '">';
-                        keyword += solution.word;
-                        keyword += '<span class="fa fa-fw fa-check"></span>';
-                        keyword += '</b>';
+                    numAnswersFound++;                    
+                    // Keyword has been found in answer => Update formatted answer
+                    var keyword = '';
+                    keyword += '<b class="text-success feedback-info" data-toggle="tooltip" title="' + (solution.feedback || '') + '">';
+                    keyword += solution.word;
+                    keyword += '<span class="fa fa-fw fa-check"></span>';
+                    keyword += '</b>';
 
-                    this.answerWithKeywords = this.answerWithKeywords.replace(searchExpression, keyword, searchFlags);
-                }
-            }
-        }
+	            this.answerWithKeywords = this.answerWithKeywords.replace(searchExpression, keyword, searchFlags);
+	        }
+	    }
+	}
     }
     
     if (this.question.solutions.length === numAnswersFound) {

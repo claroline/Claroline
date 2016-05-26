@@ -2,22 +2,27 @@
  * Open Question Directive
  * Manages Question of types Open
  *
- * @returns {Object}
+ * @returns {object}
  * @constructor
  */
 var OpenQuestionDirective = function OpenQuestionDirective() {
-    return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
+    return {
+        restrict: 'E',
+        replace: true,
         controller: 'OpenQuestionCtrl',
         controllerAs: 'openQuestionCtrl',
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/open.html'
-    });
+        bindToController: true,
+        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/open.html',
+        scope: {
+            question : '=',
+            answer   : '=',
+            feedbackState : '='
+        }
+    };
 };
 
-// Extends AbstractQuestionDirective
-OpenQuestionDirective.prototype = Object.create(AbstractQuestionDirective.prototype);
-
-// Set up dependency injection (get DI from parent too)
-OpenQuestionDirective.$inject = AbstractQuestionDirective.$inject;
+// Set up dependency injection
+OpenQuestionDirective.$inject = [];
 
 // Register directive into AngularJS
 angular

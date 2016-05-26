@@ -134,7 +134,7 @@
         </div>
 
         <!-- Display Question Feedback -->
-        <div class="question-feedback" data-ng-if="questionShowCtrl.feedback.visible && questionShowCtrl.feedbackState !== 0 && questionShowCtrl.getGenericFeedback()">
+        <div class="question-feedback" data-ng-if="questionShowCtrl.feedback.visible && questionShowCtrl.feedbackState !== 0">
             <div class="alert alert-info">
                 <span>{{ questionShowCtrl.getGenericFeedback()|trans:{}:'ujm_sequence' }}</span>
             </div>

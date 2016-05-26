@@ -38,36 +38,26 @@
         <!-- Display no item message -->
         <div class="alert alert-info" data-ng-if="0 === paperListCtrl.filtered.length">
             <span class="fa fa-warning"></span>
-            {{ 'paper_list_no_paper'|trans:{}:'ujm_sequence' }}
+            {{ 'paper_list_no_paper'|trans:{}:'ujm_exo' }}
         </div>
     </div>
 
     <!-- List of Papers -->
     <table class="papers-list table table-striped table-hover" data-ng-if="paperListCtrl.filtered.length > 0" at-table at-list="paperListCtrl.filtered" at-paginated at-config="paperListCtrl.config">
-        <thead>
-            <tr>
-                <th at-attribute="user" data-ng-if="paperListCtrl.editEnabled">{{ 'paper_list_table_user'|trans:{}:'ujm_sequence' }}</th>
-                <th at-attribute="number">{{ 'paper_list_table_paper_number'|trans:{}:'ujm_sequence' }}</th>
-                <th at-attribute="start">{{ 'paper_list_table_start_date'|trans:{}:'ujm_sequence' }}</th>
-                <th at-attribute="end">{{ 'paper_list_table_end_date'|trans:{}:'ujm_sequence' }}</th>
-                <th at-attribute="interrupted">{{ 'paper_list_table_interrupted'|trans:{}:'ujm_sequence' }}</th>
-                <th at-attribute="score">{{ 'paper_list_table_score'|trans:{}:'ujm_sequence' }}</th>
-                <th at-attribute="id">{{ 'actions' | trans:{}:'ujm_exo' }}</th>
-            </tr>
-        </thead>
+        <thead></thead>
         <tbody>
             <tr>
                 <!-- User -->
-                <td data-ng-if="paperListCtrl.editEnabled" at-implicit at-attribute="user" at-sortable></td>
+                <td at-implicit at-attribute="user" at-sortable at-title="{{ 'paper_list_table_user'|trans:{}:'ujm_sequence' }}"></td>
 
                 <!-- Paper number -->
-                <td at-implicit at-attribute="number" at-sortable></td>
+                <td at-implicit at-attribute="number" at-sortable at-title="{{ 'paper_list_table_paper_number'|trans:{}:'ujm_sequence' }}"></td>
 
                 <!-- Date start -->
-                <td at-implicit at-attribute="start" at-sortable at-initial-sorting="asc"></td>
+                <td at-implicit at-attribute="start" at-sortable at-initial-sorting="asc" at-title="{{ 'paper_list_table_start_date'|trans:{}:'ujm_sequence' }}"></td>
 
                 <!-- Date end -->
-                <td at-attribute="end" at-sortable>
+                <td at-attribute="end" at-sortable at-title="{{ 'paper_list_table_end_date'|trans:{}:'ujm_sequence' }}">
                     <!-- Paper ended -->
                     <span data-ng-if="item.end">{{ item.end }}</span>
 
@@ -76,38 +66,28 @@
                 </td>
 
                 <!-- Has been interrupted ? -->
-                <td at-attribute="interrupted" at-sortable>
+                <td at-attribute="interrupted" at-sortable at-title="{{ 'paper_list_table_interrupted'|trans:{}:'ujm_sequence' }}">
                     <span data-ng-if="item.interrupted">{{ 'paper_list_table_interrupted_yes'|trans:{}:'ujm_sequence' }}</span>
                     <span data-ng-if="!item.interrupted">{{ 'paper_list_table_interrupted_no'|trans:{}:'ujm_sequence' }}</span>
                 </td>
 
                 <!-- Score -->
-                <td at-attribute="score" at-sortable class="text-right">
-                    <div data-ng-if="paperListCtrl.isScoreAvailable(item)">
-                        <!-- Manual correction alert -->
-                        <span class="manual-correction-flag text-danger" data-ng-if="paperListCtrl.needManualCorrection(item)" data-toggle="tooltip" title="{{ 'paper_need_manual_correction'|trans:{}:'ujm_exo' }}">
-                            <span class="fa fa-warning"></span>
-                        </span>
+                <td at-attribute="score" at-sortable at-title="{{ 'paper_list_table_score'|trans:{}:'ujm_sequence' }}">
+                    <span data-ng-if="item.end && (item.scoreTotal || 0 === item.scoreTotal)" class="label label-primary">
+                        {{ paperListCtrl.getPaperScore(item) + '/20' }}
+                    </span>
 
-                        <!-- Score -->
-                        <span class="label label-primary">
-                            {{ paperListCtrl.getPaperScore(item) + '/20' }}
-                        </span>
-                    </div>
-
-                    <em data-ng-if="!paperListCtrl.isScoreAvailable(item)">
-                        {{ 'paper_list_table_action_not_available'|trans:{}:'ujm_sequence' }}
-                    </em>
+                    <span data-ng-if="!item.end || (!item.scoreTotal && 0 !== item.scoreTotal)">-</span>
                 </td>
 
                 <!-- Actions -->
-                <td at-attribute="id">
-                    <a class="btn btn-default" data-ng-if="paperListCtrl.isCorrectionAvailable(item)" href="#/papers/{{item.id}}">
+                <td at-attribute="id" at-title="{{ 'actions' | trans:{}:'ujm_exo' }}">
+                    <a class="btn btn-default" data-ng-if="paperListCtrl.checkCorrectionAvailability(item)" href="#/papers/{{item.id}}">
                         <span class="fa fa-eye"></span>
                         <span class="sr-only">{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}</span>
                     </a>
 
-                    <em data-ng-if="!paperListCtrl.isCorrectionAvailable(item)">
+                    <em data-ng-if="!paperListCtrl.checkCorrectionAvailability(item)">
                         {{ 'paper_list_table_action_not_available'|trans:{}:'ujm_sequence' }}
                     </em>
                 </td>
@@ -115,7 +95,7 @@
         </tbody>
     </table>
 
-    <div class="panel-footer text-center" data-ng-if="paperListCtrl.filtered.length > 10">
+    <div class="panel-footer text-center" data-ng-if="paperListCtrl.filtered.length > 0">
         <at-pagination at-config="paperListCtrl.config" at-list="paperListCtrl.filtered"></at-pagination>
     </div>
 </div>
