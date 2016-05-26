@@ -1,10 +1,10 @@
 /**
  * Papers service
- * @param {Object}          $http
- * @param {Object}          $q
- * @param {ExerciseService} ExerciseService
- * @param {StepService}     StepService
- * @param {QuestionService} QuestionService
+ * @param {Object}           $http
+ * @param {Object}           $q
+ * @param {ExerciseService}  ExerciseService
+ * @param {StepService}      StepService
+ * @param {QuestionService}  QuestionService
  * @constructor
  */
 var PaperService = function PaperService($http, $q, ExerciseService, StepService, QuestionService) {
@@ -164,88 +164,30 @@ PaperService.prototype.deleteAll = function deleteAll(papers) {
 
 /**
  * Delete a Paper
+ * @param {Object} paper
  */
 PaperService.prototype.delete = function deletePaper(paper) {
 
 };
 
 /**
- * Check if the correction of the Exercise is available
- * @returns boolean
- * @todo finish implementation and replace the old check method
+ * Check whether a paper need manual correction
+ * @param {Object} paper
+ * @returns {Boolean}
  */
-PaperService.prototype.isCorrectionAvailable = function isCorrectionAvailable() {
-    var available = false;
-
-    if (this.ExerciseService.isEditEnabled()) {
-        // Always show correction for exercise's administrators
-        available = true;
-    } else {
-        // Use the configuration of the Exercise to know if it's available
-        var exercise = this.ExerciseService.getExercise();
-
-        switch (exercise.meta.correctionMode) {
-            // At the end of assessment
-            case 1:
-                break;
-
-            // After the last attempt
-            case 2:
-                break;
-
-            // From a fixed date
-            case 3:
-                /*if (this.exercise.)*/
-                break;
-
-            // Never
-            case 4:
-                available = false;
-                break;
-
-            // Show correction if nothing specified
-            default:
-                available = true;
-                break;
+PaperService.prototype.needManualCorrection = function needManualCorrection(paper) {
+    var needed = false;
+    if (paper.questions && 0 !== paper.questions.length) {
+        for(var i = 0; i < paper.questions.length; i++){
+            if (-1 === paper.questions[i].score) {
+                // The question has not been marked
+                needed = true;
+                break; // Stop searching
+            }
         }
     }
 
-    return available;
-};
-
-/**
- * Check if the score obtained by the User for the Exercise is available
- * @returns boolean
- * @todo finish implementation and replace the old check method
- */
-PaperService.prototype.isScoreAvailable = function isScoreAvailable() {
-    var available = false;
-
-    if (this.ExerciseService.isEditEnabled()) {
-        // Always show score for exercise's administrators
-        available = true;
-    } else {
-        // Use the configuration of the Exercise to know if it's available
-        var exercise = this.ExerciseService.getExercise();
-
-        switch (exercise.meta.markMode) {
-            // At the same time that the correction
-            case 1:
-                available = this.isCorrectionAvailable();
-                break;
-
-            // At the end of the assessment
-            case 2:
-                break;
-
-            // Show score if nothing specified
-            default:
-                available = true;
-                break;
-        }
-    }
-
-    return available;
+    return needed;
 };
 
 /**

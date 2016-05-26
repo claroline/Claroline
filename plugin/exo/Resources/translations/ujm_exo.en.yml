@@ -264,8 +264,8 @@ overview: Overview
 
 # P
 paper: Paper
-paper_legend: Papers which need manual correction
 paper_list: Paper list
+paper_need_manual_correction: This paper needs a manual correction
 metadata: Parameters
 partially: Partially correct
 penalty: Penalty

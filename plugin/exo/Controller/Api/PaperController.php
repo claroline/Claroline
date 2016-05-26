@@ -238,7 +238,7 @@ class PaperController
 
         $this->paperManager->finishPaper($paper);
 
-        return new JsonResponse('', 204);
+        return new JsonResponse($this->paperManager->exportPaper($paper), 200);
     }
 
     /**
