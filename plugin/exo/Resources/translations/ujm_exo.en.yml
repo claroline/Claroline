@@ -351,6 +351,7 @@ sort: Sort documents
 summative : Summative
 show_additional_info: Display additional information
 step: Step
+step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
 
 # T
 temporary_mark: Temporary mark
