@@ -29,7 +29,7 @@ security:
             anonymous: true
 
         api:
-            pattern:    ^/api
+            pattern:    /api/
             claro_api: true
             #fos_oauth: true
             #stateless:  true
@@ -57,6 +57,6 @@ security:
 
     access_control:
         - { path: ^/oauth/v2/auth_login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api,                  role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api,                  role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/connect, role: IS_AUTHENTICATED_ANONYMOUSLY }

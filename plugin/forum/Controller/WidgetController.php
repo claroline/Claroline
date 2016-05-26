@@ -3,41 +3,64 @@
 namespace Claroline\ForumBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig;
 use Claroline\ForumBundle\Form\Widget\LastMessageWidgetConfigType;
+use Claroline\ForumBundle\Manager\Manager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class WidgetController extends Controller
 {
+    private $authorization;
+    private $formFactory;
+    private $forumManager;
+    private $request;
+
     /**
-     * @Route("/widget/listmessages/{id}/config", name="claroline_forum_last_message_widget_configure", requirements={"id" = "\d+"})
-     * @Method("POST")
+     * @DI\InjectParams({
+     *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "formFactory"   = @DI\Inject("form.factory"),
+     *     "forumManager"  = @DI\Inject("claroline.manager.forum_manager"),
+     *     "requestStack"  = @DI\Inject("request_stack")
+     * })
      */
-    public function updateLastMessagesForumWidgetConfig(Request $request, WidgetInstance $widgetInstance)
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        FormFactoryInterface $formFactory,
+        Manager $forumManager,
+        RequestStack $requestStack
+    ) {
+        $this->authorization = $authorization;
+        $this->formFactory = $formFactory;
+        $this->forumManager = $forumManager;
+        $this->request = $requestStack->getCurrentRequest();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/widget/listmessages/{widgetInstance}/config",
+     *     name="claroline_forum_last_message_widget_configure"
+     * )
+     * @EXT\Method("POST")
+     */
+    public function updateLastMessagesForumWidgetConfig(WidgetInstance $widgetInstance)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('edit', $widgetInstance)) {
+        if (!$this->authorization->isGranted('edit', $widgetInstance)) {
             throw new AccessDeniedException();
         }
-
-        $lastMessageWidgetConfig = $this->get('claroline.manager.forum_widget')->getConfig($widgetInstance);
-
-        /** @var Form $form */
-        $form = $this->get('form.factory')->create(new LastMessageWidgetConfigType(), $lastMessageWidgetConfig);
-        $form->submit($request);
+        $lastMessageWidgetConfig = $this->forumManager->getConfig($widgetInstance);
+        $form = $this->formFactory->create(new LastMessageWidgetConfigType(), $lastMessageWidgetConfig);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $entityManager = $this->get('doctrine.orm.entity_manager');
+            $this->forumManager->persistLastMessageWidgetConfig($lastMessageWidgetConfig);
 
-            $entityManager->persist($lastMessageWidgetConfig);
-            $entityManager->flush();
-
-            return new Response('', Response::HTTP_NO_CONTENT);
+            return new Response('', 204);
         }
 
         return $this->render(

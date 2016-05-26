@@ -22,11 +22,13 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Security\User\EntityUserProvider;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
- * OAuthListener class.
- * This class is pretty much copied from oauthserverbundle. We use it to override what we need (and easy debug).
+ * This is the API Authentication class. It supports Cookies, HTTP, Anonymous & OAUTH authentication.
  *
  * @DI\Service("claroline.core_bundle.library.security.authentication.claroline_api_listener")
  */
@@ -48,18 +50,31 @@ class ClarolineApiListener implements ListenerInterface
     protected $serverService;
 
     /**
+     * @var EntityUserProvider
+     */
+    protected $userProvider;
+
+     /**
+      * @var EncoderFactoryInterface
+      */
+     protected $encodeFactory;
+
+    /**
      * @DI\InjectParams({
      *     "securityContext"       = @DI\Inject("security.context"),
      *     "authenticationManager" = @DI\Inject("security.authentication.manager"),
      *     "serverService"         = @DI\Inject("fos_oauth_server.server"),
-     *     "userProvider"          = @DI\Inject("security.user.provider.concrete.user_db")
+     *     "userProvider"          = @DI\Inject("security.user.provider.concrete.user_db"),
+     *     "encodeFactory"         = @DI\Inject("security.encoder_factory")
+     *
      * })
      */
     public function __construct(
         SecurityContextInterface $securityContext,
         AuthenticationManagerInterface $authenticationManager,
         OAuth2 $serverService,
-        EntityUserProvider $userProvider
+        EntityUserProvider $userProvider,
+        EncoderFactoryInterface $encodeFactory
     ) {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
@@ -67,6 +82,7 @@ class ClarolineApiListener implements ListenerInterface
         //always the same, copied from Symfony\Component\Security\Http\Firewall\ContextListener
         $this->sessionKey = '_security_main';
         $this->userProvider = $userProvider;
+        $this->encodeFactory = $encodeFactory;
     }
 
     /**
@@ -77,16 +93,101 @@ class ClarolineApiListener implements ListenerInterface
         $request = $event->getRequest();
 
         if (null === $oauthToken = $this->serverService->getBearerToken($event->getRequest(), true)) {
-            //if it's null, then we try to regular authentication...
-            $token = $this->handleCookie($event);
-
-            if ($token) {
-                $this->securityContext->setToken($token);
-
+            if ($this->tryCookieAuth($event)) {
                 return;
             }
+            if ($this->tryHTTPAuth($event)) {
+                return;
+            }
+
+            $this->authenticateAnonymous();
+        } else {
+            $this->tryOauthAuth($event, $oauthToken);
+        }
+    }
+
+    private function tryCookieAuth(GetResponseEvent $event)
+    {
+        $request = $event->getRequest();
+        $session = $request->hasPreviousSession() ? $request->getSession() : null;
+
+        if (!$session) {
+            return;
         }
 
+        $token = $session->get($this->sessionKey);
+        $token = unserialize($token);
+
+        if ($token instanceof TokenInterface) {
+            $this->securityContext->setToken($token);
+            $this->refreshUser($token);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function tryHTTPAuth(GetResponseEvent $event)
+    {
+        $request = $event->getRequest();
+        $username = $request->server->get('PHP_AUTH_USER');
+        $password = $request->server->get('PHP_AUTH_PW');
+
+        if (!$username || !$password) {
+            return false;
+        }
+
+        $user = $this->userProvider->loadUserByUsername($username);
+        $providerKey = 'main';
+
+        $token = new UsernamePasswordToken($user, $password, $providerKey, $user->getRoles());
+
+        $encoder = $this->encodeFactory->getEncoder($user);
+        $encodedPass = $encoder->encodePassword($password, $user->getSalt());
+
+        //the authenticationManager always never throw an Exception with the UsernamePasswordToken so we validate it manually
+        if ($user->getPassword() === $encodedPass) {
+            $this->securityContext->setToken($token);
+
+            return true;
+        }
+
+        $error = [
+                'error' => 'authentication_error',
+                'error_description' => 'Invalid username and password combination',
+            ];
+        $event->setResponse(new Response(json_encode($error)));
+
+        return false;
+    }
+
+    private function authenticateAnonymous()
+    {
+        $token = new AnonymousToken('main', 'anon.', array('ROLE_ANONYMOUS'));
+        $this->securityContext->setToken($token);
+
+       /*
+        * To do things properly, we should retrieve the anonymous key from the firewall ($firewall['anonymous'][key])
+        * It can be set in the security.yml manually or is randomly generated. I don't know how to retrieve the random one yet.
+        *
+        *    $token = new AnonymousToken($key, 'anon.', array('ROLE_ANONYMOUS'));
+        *
+        *    try {
+        *        $returnValue = $this->authenticationManager->authenticate($token);
+        *        if ($returnValue instanceof TokenInterface) {
+        *            $this->securityContext->setToken($returnValue);
+        *
+        *            return true;
+        *        }
+        *    } catch (AuthenticationException $e) {
+        *        return false;
+        *    }
+        */
+    }
+
+    private function tryOauthAuth(GetResponseEvent $event, $oauthToken)
+    {
         $token = new OAuthToken();
         $token->setToken($oauthToken);
         $returnValue = $this->authenticationManager->authenticate($token);
@@ -106,27 +207,6 @@ class ClarolineApiListener implements ListenerInterface
                 $event->setResponse($p->getHttpResponse());
             }
         }
-    }
-
-    public function handleCookie(GetResponseEvent $event)
-    {
-        $request = $event->getRequest();
-        $session = $request->hasPreviousSession() ? $request->getSession() : null;
-
-        if (!$session) {
-            return;
-        }
-
-        $token = $session->get($this->sessionKey);
-        $token = unserialize($token);
-
-        if ($token instanceof TokenInterface) {
-            $token = $this->refreshUser($token);
-        } elseif (null !== $token) {
-            $token = null;
-        }
-
-        return $token;
     }
 
     /**
