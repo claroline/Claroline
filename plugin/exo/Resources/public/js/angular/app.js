@@ -99,12 +99,10 @@ angular
                     controller  : 'StepListCtrl',
                     controllerAs: 'stepListCtrl',
                     resolve: {
-                        exerciseId: [
+                        exercise: [
                             'ExerciseService',
-                            function exerciseIdResolve(ExerciseService) {
-                                var exercise = ExerciseService.getExercise();
-
-                                return exercise ? exercise.id : null;
+                            function exerciseResolve(ExerciseService) {
+                                return ExerciseService.getExercise();
                             }
                         ],
 

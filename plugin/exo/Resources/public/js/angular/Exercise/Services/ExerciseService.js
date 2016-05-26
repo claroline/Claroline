@@ -245,7 +245,7 @@ ExerciseService.prototype.addStep = function addStep() {
     var deferred = this.$q.defer();
     this.$http
         .post(
-            Routing.generate('ujm_exercise_step_add', { id: this.exercise.id }),
+            Routing.generate('exercise_step_add', { id: this.exercise.id }),
             step
         )
         // Success callback

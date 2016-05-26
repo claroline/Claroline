@@ -1,14 +1,40 @@
 /**
  * Step Service
+ * @param {Object}          $http
+ * @param {Object}          $q
  * @param {QuestionService} QuestionService
  * @constructor
  */
-var StepService = function StepService(QuestionService) {
+var StepService = function StepService($http, $q, QuestionService) {
+    this.$http = $http;
+    this.$q = $q;
     this.QuestionService = QuestionService;
 };
 
 // Set up dependency injection
-StepService.$inject = [ 'QuestionService' ];
+StepService.$inject = [ '$http', 'QuestionService' ];
+
+/**
+ * Array of Step IDs ordered
+ * @param {Object} exercise
+ * @param {Array} order
+ */
+StepService.prototype.reorder = function reorder(exercise, order) {
+    var deferred = this.$q.defer();
+    this.$http
+        .put(
+            Routing.generate('exercise_step_reorder', { exerciseId: exercise.id, paperId: id }),
+            order
+        )
+        .success(function onSuccess(response) {
+            deferred.resolve(response);
+        })
+        .error(function onError(data, status) {
+            deferred.reject([]);
+        });
+
+    return deferred.promise;
+};
 
 /**
  * Get a Step question by its ID
