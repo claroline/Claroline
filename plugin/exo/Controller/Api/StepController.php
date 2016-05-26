@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
@@ -94,15 +95,30 @@ class StepController
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
      *
      * @param Exercise $exercise
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function reorderAction(Exercise $exercise)
+    public function reorderAction(Exercise $exercise, Request $request)
     {
         $this->assertHasPermission('ADMINISTRATE', $exercise);
 
+        $dataRaw = $request->getContent();
+        if (!empty($dataRaw)) {
+            $order = json_decode($dataRaw);
+            if (!is_array($order)) {
+                return new JsonResponse([
+                    'message' => 'Invalid data sent. Expected an array of IDs.'
+                ], 422);
+            }
 
-        return new JsonResponse([]);
+            $errors = $this->exerciseManager->reorderSteps($exercise, $order);
+            if (count($errors) !== 0) {
+                return new JsonResponse($errors, 422);
+            }
+        }
+
+        return new JsonResponse(null, 204);
     }
 
     private function assertHasPermission($permission, Exercise $exercise)

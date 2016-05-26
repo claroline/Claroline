@@ -14,11 +14,8 @@ var StepListCtrl = function StepListCtrl($scope, exercise, steps, dragulaService
     this.ExerciseService = ExerciseService;
     this.StepService     = StepService;
 
-
-    $scope.$on('order-steps.drop', function (e, el) {
-        console.log(this.steps);
-        console.log(e);
-        console.log(el);
+    $scope.$on('order-steps.drop', function dropStep() {
+        this.ExerciseService.reorderSteps();
     }.bind(this));
 };
 
@@ -29,7 +26,7 @@ StepListCtrl.$inject = [ '$scope', 'exercise', 'steps', 'dragulaService', 'Exerc
  * Current Exercise
  * @type {Object}
  */
-StepListCtrl.prototype.exerciseId = {};
+StepListCtrl.prototype.exercise = {};
 
 /**
  * List of Steps of the Exercise
@@ -47,7 +44,6 @@ StepListCtrl.prototype.addStep = function addStep() {
 StepListCtrl.prototype.removeStep = function removeStep(step) {
     this.ExerciseService.removeStep(step);
 };
-
 
 StepListCtrl.prototype.removeItem = function removeItem(step, item) {
     this.ExerciseService.removeItem(step, item);

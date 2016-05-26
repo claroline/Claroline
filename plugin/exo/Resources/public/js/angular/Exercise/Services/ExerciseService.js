@@ -225,6 +225,31 @@ ExerciseService.prototype.getNext = function getNext(step) {
 };
 
 /**
+ * Reorder the Steps of the current Exercise.
+ */
+ExerciseService.prototype.reorderSteps = function reorderSteps() {
+    // Only send the IDs of the steps
+    var order = this.exercise.steps.map(function getIds(step) {
+        return step.id;
+    });
+
+    var deferred = this.$q.defer();
+    this.$http
+        .put(
+            Routing.generate('exercise_step_reorder', { exerciseId: this.exercise.id }),
+            order
+        )
+        .success(function onSuccess(response) {
+            deferred.resolve(response);
+        })
+        .error(function onError(data, status) {
+            deferred.reject([]);
+        });
+
+    return deferred.promise;
+};
+
+/**
  * Add a new Step to the Exercise
  */
 ExerciseService.prototype.addStep = function addStep() {
@@ -252,8 +277,6 @@ ExerciseService.prototype.addStep = function addStep() {
         .success(function (response) {
             // Get the information of the Step
             step.id = response.id;
-
-            // TODO : display success message
 
             deferred.resolve(response);
         })
@@ -290,8 +313,6 @@ ExerciseService.prototype.removeStep = function removeStep(step) {
         )
         // Success callback
         .success(function (response) {
-            // TODO : display success message
-
             deferred.resolve(response);
         })
         // Error callback
@@ -325,8 +346,6 @@ ExerciseService.prototype.removeItem = function removeItem(step, item) {
         )
         // Success callback
         .success(function (response) {
-            // TODO : display success message
-
             deferred.resolve(response);
         })
         // Error callback

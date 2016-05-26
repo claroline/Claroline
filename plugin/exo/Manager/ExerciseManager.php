@@ -69,6 +69,39 @@ class ExerciseManager
     }
 
     /**
+     * Reorder the steps of an Exercise.
+     *
+     * @param Exercise $exercise
+     * @param array $order an ordered array of Step IDs
+     *
+     * @return array array of errors if something went wrong
+     */
+    public function reorderSteps(Exercise $exercise, array $order)
+    {
+        $steps = $exercise->getSteps();
+
+        /** @var Step $step */
+        foreach ($steps as $step) {
+            // Get new position of the Step
+            $pos = array_search($step->getId(), $order);
+            if (-1 === $pos) {
+                // We need all the steps, to keep the order coherent
+                return [
+                    'message' => 'Can not reorder the Exercise. Missing steps in order array.'
+                ];
+            }
+
+            $step->setOrder($pos);
+
+            $this->om->persist($step);
+        }
+
+        $this->om->flush();
+
+        return [];
+    }
+
+    /**
      * Publishes an exercise.
      *
      * @param Exercise $exercise
