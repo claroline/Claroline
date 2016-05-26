@@ -31,7 +31,8 @@ mysql:
 
 before_install:
   # keep a list of files impacted by the PR
-  - git diff-tree --no-commit-id --diff-filter=ACM --name-only -r ${TRAVIS_COMMIT_RANGE/.../ } > git_diff_files.txt
+  # (see https://github.com/melpa/melpa/blob/dd55c4b6e1da2a9c873b1b13cc6b558854f83dba/travis-changed-files)
+  - git diff --name-only --diff-filter=ACM $TRAVIS_COMMIT $TRAVIS_BRANCH > git_diff_files.txt
   # leave build/repo dir
   - cd ../..
   # increase php memory size (required for composer)
@@ -45,8 +46,8 @@ before_install:
 
 before_script:
   # get and configure claroline platform
-  - curl -L https://github.com/claroline/Claroline/archive/monolithic-build.tar.gz | tar xzv
-  - cd Claroline-monolithic-build
+  - curl -L https://github.com/claroline/Claroline/archive/master.tar.gz | tar xzv
+  - cd Claroline-master
   - php scripts/configure.php --default
   # override platform composer.json with build/repo local reference
   - rm -rf ../$TRAVIS_REPO_SLUG/.git
