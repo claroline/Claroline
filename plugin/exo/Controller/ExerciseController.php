@@ -326,44 +326,6 @@ class ExerciseController extends Controller
     }
 
     /**
-     * Add a Step to the Exercise.
-     *
-     * @EXT\Route(
-     *     "/{id}/step",
-     *     name="ujm_exercise_step_add",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
-     *
-     * @param Exercise $exercise
-     *
-     * @return JsonResponse
-     */
-    public function addStepAction(Exercise $exercise)
-    {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
-
-        $step = new Step();
-        $step->setText(' ');
-        $step->setNbQuestion('0');
-        $step->setDuration(0);
-        $step->setMaxAttempts(5);
-        $step->setOrder($exercise->getSteps()->count() + 1);
-
-        // Link the Step to the Exercise
-        $exercise->addStep($step);
-
-        $this->getDoctrine()->getManager()->persist($step);
-        $this->getDoctrine()->getManager()->flush();
-
-        return new JsonResponse([
-            'id' => $step->getId(),
-            'items' => [],
-        ]);
-    }
-
-    /**
      * Delete a Step from the Exercise.
      *
      * @EXT\Route(

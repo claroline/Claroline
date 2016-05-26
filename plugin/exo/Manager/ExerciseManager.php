@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
 use UJM\ExoBundle\Transfer\Json\Validator;
 
@@ -44,6 +45,27 @@ class ExerciseManager
         $this->om = $om;
         $this->validator = $validator;
         $this->stepManager = $stepManager;
+    }
+
+    /**
+     * Create and add a new Step to an Exercise
+     *
+     * @param Exercise $exercise
+     *
+     * @return Step
+     */
+    public function addStep(Exercise $exercise)
+    {
+        $step = new Step();
+        $step->setOrder($exercise->getSteps()->count() + 1);
+
+        // Link the Step to the Exercise
+        $exercise->addStep($step);
+
+        $this->om->persist($step);
+        $this->om->flush();
+
+        return $step;
     }
 
     /**
