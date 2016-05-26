@@ -21,7 +21,7 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-// Post Route Definition
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 
@@ -82,7 +82,7 @@ class ResourceController extends FOSRestController
 
         //not strict because it could be a string '0'
         $parent = $parent === 0 ?
-            /* 
+            /*
              * carreful, it won't work every time because not every user has a personal workspace.
              * we'll have to handle taht case later
              */
@@ -143,6 +143,16 @@ class ResourceController extends FOSRestController
      */
     public function getResourceNodeAction(ResourceNode $resourceNode)
     {
+        $collection = new ResourceCollection(array($resourceNode));
+        $this->checkAccess('OPEN', $collection);
+
         return $resourceNode;
+    }
+
+    public function checkAccess($permission, ResourceCollection $collection)
+    {
+        if (!$this->authorization->isGranted($permission, $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
     }
 }

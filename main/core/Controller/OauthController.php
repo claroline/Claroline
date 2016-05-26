@@ -43,6 +43,7 @@ class OauthController extends BaseAuthorizeController
         $lastUsername = $request->getSession()->get(SecurityContext::LAST_USERNAME);
         $user = $this->container->get('claroline.manager.user_manager')->getUserByUsername($lastUsername);
         $clientId = $this->container->get('request')->get('client_id');
+
         if ($clientId) {
             $this->container->get('session')->set('client_id', $clientId);
         }

@@ -2,35 +2,38 @@
  * Graphic Question Directive
  * Manages Question of type Graphic
  *
- * @param {Object} timeout
- * @returns {object}
+ * @param   {FeedbackService} FeedbackService
+ * @param   {Function}        $timeout
+ * @returns {Object}
  * @constructor
  */
-var GraphicQuestionDirective = function GraphicQuestionDirective($timeout) {
-    return {
-        restrict: 'E',
-        replace: true,
+var GraphicQuestionDirective = function GraphicQuestionDirective(FeedbackService, $timeout) {
+    return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
         controller: 'GraphicQuestionCtrl',
         controllerAs: 'graphicQuestionCtrl',
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/graphic.html',
-        scope: {
-            question : '=',
-            answer   : '=',
-            feedbackState : '='
-        },
-        bindToController: true,
-        link: function (scope, element, attr, graphicQuestionCtrl) {
-            // in case of coming from a js plumb question
-            $timeout(function(){
-                graphicQuestionCtrl.initPreviousAnswers();
-                graphicQuestionCtrl.initDragAndDrop();
-            });
+        link: {
+            post: function postLink(scope, element, attr, controller) {
+                // in case of coming from a js plumb question
+                $timeout(function(){
+                    controller.initPreviousAnswers();
+                    controller.initDragAndDrop();
+
+                    // Manually show feedback (as we override the default postLink method)
+                    if (FeedbackService.isVisible()) {
+                        controller.onFeedbackShow();
+                    }
+                });
+            }
         }
-    };
+    });
 };
 
-// Set up dependency injection
-GraphicQuestionDirective.$inject = [ '$timeout' ];
+// Extends AbstractQuestionDirective
+GraphicQuestionDirective.prototype = Object.create(AbstractQuestionDirective.prototype);
+
+// Set up dependency injection (get DI from parent too)
+GraphicQuestionDirective.$inject = AbstractQuestionDirective.$inject.concat([ '$timeout' ]);
 
 // Register directive into AngularJS
 angular
