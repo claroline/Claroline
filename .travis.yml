@@ -30,9 +30,8 @@ mysql:
   encoding: utf8
 
 before_install:
-  # keep a list of files impacted by the PR
-  # (see https://github.com/melpa/melpa/blob/dd55c4b6e1da2a9c873b1b13cc6b558854f83dba/travis-changed-files)
-  - git diff --name-only --diff-filter=ACM $TRAVIS_COMMIT $TRAVIS_BRANCH > git_diff_files.txt
+  # keep a list of files impacted by the PR (wouldn't work with direct push)
+  - git diff --name-only --diff-filter=AM $TRAVIS_BRANCH > git_diff_files.txt
   # leave build/repo dir
   - cd ../..
   # increase php memory size (required for composer)
