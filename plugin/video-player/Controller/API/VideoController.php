@@ -76,6 +76,7 @@ class VideoController extends FOSRestController
      */
     public function putTrackAction(Track $track)
     {
+        $this->throwExceptionIfNotGranted($track->getVideo(), 'EDIT');
         $data = $this->request->request->get('track');
         $isDefault = isset($data['is_default']) ? $data['is_default'] : false;
 

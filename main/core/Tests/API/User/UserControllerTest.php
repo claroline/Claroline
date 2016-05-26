@@ -390,7 +390,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->persister->flush();
 
         //test
-        $this->client->request('GET', "/api/users/{$userOrga->getId()}/roles/{$baseRole->getId()}/remove.json");
         $preCount = count($userOrga->getRoles());
         $this->logIn($adminOrga);
         $this->client->request('GET', "/api/users/{$userOrga->getId()}/roles/{$baseRole->getId()}/remove.json");
