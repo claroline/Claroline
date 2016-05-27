@@ -12,17 +12,17 @@
 namespace Claroline\MessageBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
- use FOS\RestBundle\Controller\Annotations\View;
- use JMS\DiExtraBundle\Annotation as DI;
- use Claroline\MessageBundle\Manager\MessageManager;
- use Claroline\CoreBundle\Manager\UserManager;
- use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use FOS\RestBundle\Controller\Annotations\View;
+use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\MessageBundle\Manager\MessageManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
- class ApiMessageController extends FOSRestController
- {
-     private $messageManager;
-     private $tokenStorage;
-     private $userManager;
+class ApiMessageController extends FOSRestController
+{
+    private $messageManager;
+    private $tokenStorage;
+    private $userManager;
 
    /**
     * @DI\InjectParams({
@@ -70,4 +70,4 @@ use FOS\RestBundle\Controller\FOSRestController;
 
         return $this->messageManager->getRemovedMessagesJson($user);
     }
- }
+}
