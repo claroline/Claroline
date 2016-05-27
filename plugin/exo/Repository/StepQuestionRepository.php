@@ -16,10 +16,10 @@ use UJM\ExoBundle\Entity\Question;
 class StepQuestionRepository extends EntityRepository
 {
     /**
-     * Get the StepQuestion that links the Question to an Exercise
+     * Get the StepQuestion that links the Question to an Exercise.
      *
      * @param Exercise $exercise
-     * @param string $questionId
+     * @param string   $questionId
      *
      * @return StepQuestion
      */
