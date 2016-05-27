@@ -1,0 +1,10 @@
+global_exclude_dirs:
+    - dev/Resources/travis
+
+exclude_patterns:
+    - merge.php
+    - import.php
+    - main/*/Migrations
+    - main/*/Tests
+    - plugin/*/Migrations
+    - plugin/*/Tests
