@@ -79,6 +79,14 @@ class ExerciseManager
     {
         $exercise->removeStep($step);
 
+        // Update steps order
+        $steps = $exercise->getSteps();
+        foreach ($steps as $pos => $stepToReorder) {
+            $step->setOrder($pos);
+
+            $this->om->persist($step);
+        }
+
         $this->om->remove($step);
         $this->om->flush();
     }
@@ -102,7 +110,7 @@ class ExerciseManager
             if (-1 === $pos) {
                 // We need all the steps, to keep the order coherent
                 return [
-                    'message' => 'Can not reorder the Exercise. Missing steps in order array.'
+                    'message' => 'Can not reorder the Exercise. Missing steps in order array.',
                 ];
             }
 
