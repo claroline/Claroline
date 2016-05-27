@@ -1,10 +1,10 @@
 /**
  * Papers service
- * @param {Object}          $http
- * @param {Object}          $q
- * @param {ExerciseService} ExerciseService
- * @param {StepService}     StepService
- * @param {QuestionService} QuestionService
+ * @param {Object}           $http
+ * @param {Object}           $q
+ * @param {ExerciseService}  ExerciseService
+ * @param {StepService}      StepService
+ * @param {QuestionService}  QuestionService
  * @constructor
  */
 var PaperService = function PaperService($http, $q, ExerciseService, StepService, QuestionService) {
@@ -17,6 +17,31 @@ var PaperService = function PaperService($http, $q, ExerciseService, StepService
 
 // Set up dependency injection
 PaperService.$inject = [ '$http', '$q', 'ExerciseService', 'StepService', 'QuestionService' ];
+
+/**
+ * Number of papers already done for the current Exercise
+ * @type {number}
+ */
+PaperService.prototype.nbPapers = 0;
+
+/**
+ * Get number of Papers
+ * @returns {number}
+ */
+PaperService.prototype.getNbPapers = function getNbPapers() {
+    return this.nbPapers;
+};
+
+/**
+ * Set number of Papers
+ * @param {number} count
+ * @returns {PaperService}
+ */
+PaperService.prototype.setNbPapers = function setNbPapers(count) {
+    this.nbPapers = count ? parseInt(count) : 0;
+
+    return this;
+};
 
 /**
  * Get one paper details
@@ -36,7 +61,7 @@ PaperService.prototype.get = function get(id) {
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'Correction get one error';
             var code = data && data.error && data.error.code ? data.error.code : 403;
-            var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
+            /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
             /*$window.location = url;*/
         });
 
@@ -54,13 +79,15 @@ PaperService.prototype.getAll = function getAll() {
     this.$http
         .get(Routing.generate('exercise_papers', { id: exercise.id }))
         .success(function (response) {
+            this.setNbPapers(response.length);
+
             deferred.resolve(response);
-        })
+        }.bind(this))
         .error(function (data, status) {
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'Papers get all error';
             var code = data && data.error && data.error.code ? data.error.code : 403;
-            var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
+            /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
 
             /*$window.location = url;*/
         });
@@ -123,8 +150,11 @@ PaperService.prototype.deleteAll = function deleteAll(papers) {
         .delete(Routing.generate('ujm_exercise_delete_papers', { id: exercise.id }))
         .success(function (response) {
             papers.splice(0, papers.length); // Empty the Papers list
+
+            this.setNbPapers(0);
+
             deferred.resolve(response);
-        })
+        }.bind(this))
         .error(function (data, status) {
             deferred.reject([]);
         });
@@ -134,88 +164,30 @@ PaperService.prototype.deleteAll = function deleteAll(papers) {
 
 /**
  * Delete a Paper
+ * @param {Object} paper
  */
 PaperService.prototype.delete = function deletePaper(paper) {
 
 };
 
 /**
- * Check if the correction of the Exercise is available
- * @returns boolean
- * @todo finish implementation and replace the old check method
+ * Check whether a paper need manual correction
+ * @param {Object} paper
+ * @returns {Boolean}
  */
-PaperService.prototype.isCorrectionAvailable = function isCorrectionAvailable() {
-    var available = false;
-
-    if (this.ExerciseService.isEditEnabled()) {
-        // Always show correction for exercise's administrators
-        available = true;
-    } else {
-        // Use the configuration of the Exercise to know if it's available
-        var exercise = this.ExerciseService.getExercise();
-
-        switch (exercise.meta.correctionMode) {
-            // At the end of assessment
-            case 1:
-                break;
-
-            // After the last attempt
-            case 2:
-                break;
-
-            // From a fixed date
-            case 3:
-                /*if (this.exercise.)*/
-                break;
-
-            // Never
-            case 4:
-                available = false;
-                break;
-
-            // Show correction if nothing specified
-            default:
-                available = true;
-                break;
+PaperService.prototype.needManualCorrection = function needManualCorrection(paper) {
+    var needed = false;
+    if (paper.questions && 0 !== paper.questions.length) {
+        for(var i = 0; i < paper.questions.length; i++){
+            if (-1 === paper.questions[i].score) {
+                // The question has not been marked
+                needed = true;
+                break; // Stop searching
+            }
         }
     }
 
-    return available;
-};
-
-/**
- * Check if the score obtained by the User for the Exercise is available
- * @returns boolean
- * @todo finish implementation and replace the old check method
- */
-PaperService.prototype.isScoreAvailable = function isScoreAvailable() {
-    var available = false;
-
-    if (this.ExerciseService.isEditEnabled()) {
-        // Always show score for exercise's administrators
-        available = true;
-    } else {
-        // Use the configuration of the Exercise to know if it's available
-        var exercise = this.ExerciseService.getExercise();
-
-        switch (exercise.meta.markMode) {
-            // At the same time that the correction
-            case 1:
-                available = this.isCorrectionAvailable();
-                break;
-
-            // At the end of the assessment
-            case 2:
-                break;
-
-            // Show score if nothing specified
-            default:
-                available = true;
-                break;
-        }
-    }
-
-    return available;
+    return needed;
 };
 
 /**

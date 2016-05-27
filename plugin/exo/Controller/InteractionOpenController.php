@@ -34,7 +34,7 @@ class InteractionOpenController extends Controller
         $vars['form'] = $form->createView();
         $vars['exoID'] = $attr->get('exoID');
 
-        return $this->render('UJMExoBundle:InteractionOpen:paper.html.twig', $vars);
+        return $this->render('UJMExoBundle:InteractionOpen:show.html.twig', $vars);
     }
 
     /**

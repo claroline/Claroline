@@ -85,8 +85,7 @@ angular.module('Correction').factory('CorrectionService', [
                                 availableScore = question.solutions[i].score;
                             }
                         }
-                    }
-                    else{
+                    } else {
                         for (var i = 0; i < question.solutions.length; i++) {
                             if(question.solutions[i].score > 0) {
                                 availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
@@ -157,7 +156,7 @@ angular.module('Correction').factory('CorrectionService', [
                             deferred.reject([]);
                             var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService end sequence error';
                             var code = data && data.error && data.error.code ? data.error.code : 403;
-                            var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
+                            /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
                             $window.location = url;
                         });
                 return deferred.promise;

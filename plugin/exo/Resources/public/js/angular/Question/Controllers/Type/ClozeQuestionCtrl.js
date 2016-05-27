@@ -24,6 +24,12 @@ ClozeQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'ClozeQuestion
 ClozeQuestionCtrl.prototype.holes = {};
 
 /**
+ * Tells wether the answers are all found, not found, or if only one misses
+ * @type {Integer}
+ */
+ClozeQuestionCtrl.prototype.feedbackState = -1;
+
+/**
  * Check whether a Hole is valid or not
  * @param   {Object} hole
  * @returns {Boolean}
@@ -86,6 +92,8 @@ ClozeQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
             }
         }
     }
+    
+    this.feedbackState = this.ClozeQuestionService.answersAllFound(this.question, this.answer);
 };
 
 // Register controller into AngularJS

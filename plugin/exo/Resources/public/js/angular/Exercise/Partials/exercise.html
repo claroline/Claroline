@@ -1,114 +1,120 @@
 <div class="exercise-container">
-    <!--<div class="panel panel-default">-->
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ exerciseCtrl.exercise.meta.title }}</h3>
-        </div>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ exerciseCtrl.exercise.meta.title }}</h3>
+    </div>
 
-        <nav class="navbar navbar-default navbar-static-top" data-ng-if="!exerciseCtrl.$route.current.hideMenu">
-            <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#exercise-navbar" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+    <nav class="navbar navbar-default navbar-static-top" data-ng-if="exerciseCtrl.editEnabled">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#exercise-navbar" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
 
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="exercise-navbar">
-                    <!-- Administration links -->
-                    <ul class="nav navbar-nav">
-                        <!-- Information about the Exercise -->
-                        <li data-ng-class="{ active: 'overview' === exerciseCtrl.$route.current.tab }">
-                            <a href="#/">
-                                <span class="fa fa-info"></span> {{ 'overview' | trans:{}:'ujm_exo' }}
-                            </a>
-                        </li>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="exercise-navbar">
+                <!-- Administration links -->
+                <ul class="nav navbar-nav">
+                    <!-- Information about the Exercise -->
+                    <li data-ng-class="{ active: 'overview' === exerciseCtrl.$route.current.tab }">
+                        <a href="#/">
+                            <span class="fa fa-info"></span> {{ 'overview' | trans:{}:'ujm_exo' }}
+                        </a>
+                    </li>
 
-                        <!-- Edit Exercise metadata -->
-                        <li data-ng-class="{ active: 'metadata' === exerciseCtrl.$route.current.tab }" data-ng-if="exerciseCtrl.editEnabled">
-                            <a href="#/edit">
-                                <span class="fa fa-pencil"></span> {{ 'metadata' | trans:{}:'ujm_exo' }}
-                            </a>
-                        </li>
+                    <!-- Edit Exercise metadata -->
+                    <li data-ng-class="{ active: 'metadata' === exerciseCtrl.$route.current.tab }">
+                        <a href="#/edit">
+                            <span class="fa fa-pencil"></span> {{ 'metadata' | trans:{}:'ujm_exo' }}
+                        </a>
+                    </li>
 
-                        <!-- Questions -->
-                        <li data-uib-dropdown="" data-ng-class="{ active: 'steps' === exerciseCtrl.$route.current.tab }" data-ng-if="exerciseCtrl.editEnabled">
-                            <a href="" data-uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
-                                <span class="fa fa-question"></span>
-                                {{ 'questions' | trans:{}:'ujm_exo' }}
-                                <span class="caret"></span>
-                            </a>
-                            <ul data-uib-dropdown-menu="">
-                                <!-- List of Exercise questions -->
-                                <li>
-                                    <a href="#/steps">
-                                        <span class="fa fa-fw fa-list"></span> {{ 'exercice_linked_question' | trans:{}:'ujm_exo' }}
-                                    </a>
-                                </li>
+                    <!-- Questions -->
+                    <li data-uib-dropdown="" data-ng-class="{ active: 'steps' === exerciseCtrl.$route.current.tab }">
+                        <a href="" data-uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="fa fa-question"></span>
+                            {{ 'questions' | trans:{}:'ujm_exo' }}
+                            <span class="caret"></span>
+                        </a>
+                        <ul data-uib-dropdown-menu="">
+                            <!-- List of Exercise questions -->
+                            <li>
+                                <a href="#/steps">
+                                    <span class="fa fa-fw fa-list"></span> {{ 'exercice_linked_question' | trans:{}:'ujm_exo' }}
+                                </a>
+                            </li>
 
-                                <!-- Import Questions -->
-                                <li>
-                                    <a href="{{ 'ujm_exercise_import_question' | path:{ id: exerciseCtrl.exercise.id, idExo: exerciseCtrl.exercise.id } }}">
-                                        <span class="fa fa-fw fa-download"></span> {{ 'import_questions' | trans:{}:'ujm_exo' }}
-                                    </a>
-                                </li>
+                            <!-- Import Questions -->
+                            <li>
+                                <a href="{{ 'ujm_exercise_import_question' | path:{ id: exerciseCtrl.exercise.id, idExo: exerciseCtrl.exercise.id } }}">
+                                    <span class="fa fa-fw fa-download"></span> {{ 'import_questions' | trans:{}:'ujm_exo' }}
+                                </a>
+                            </li>
 
-                                <!-- Export Questions -->
-                                <li>
-                                    <a href="{{ 'ujm_qti_export_exercise_questions' | path:{ exoID: exerciseCtrl.exercise.id, exoName: exerciseCtrl.exercise.meta.title } }}">
-                                        <span class="fa fa-fw fa-save"></span> {{ 'export_qti_exercise' | trans:{}:'ujm_exo' }}
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <!-- Export Questions -->
+                            <li>
+                                <a href="{{ 'ujm_qti_export_exercise_questions' | path:{ exoID: exerciseCtrl.exercise.id, exoName: exerciseCtrl.exercise.meta.title } }}">
+                                    <span class="fa fa-fw fa-save"></span> {{ 'export_qti_exercise' | trans:{}:'ujm_exo' }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
+                    <li>
                         <!-- Publish Exercise -->
-                        <li data-ng-if="!exerciseCtrl.exercise.meta.published && exerciseCtrl.editEnabled">
-                            <a href="" role="button" data-ng-click="exerciseCtrl.publish()">
-                                <span class="fa fa-share-square-o"></span> {{ 'publish' | trans:{}:'ujm_exo' }}
-                            </a>
-                        </li>
+                        <a href="" role="button" data-ng-click="exerciseCtrl.publish()" data-ng-if="!exerciseCtrl.exercise.meta.published">
+                            <span class="fa fa-fw fa-share-square-o"></span> {{ 'publish' | trans:{}:'ujm_exo' }}
+                        </a>
 
                         <!-- Unpublish Exercise (Only if there is no submitted paper on it) -->
-                        <li data-ng-if="exerciseCtrl.exercise.meta.published && 0 == exerciseCtrl.nbPapers && exerciseCtrl.editEnabled">
-                            <a href="" role="button" data-ng-click="exerciseCtrl.unpublish()">
-                                <span class="fa fa-times"></span> {{ 'unpublish' | trans:{}:'ujm_exo' }}
-                            </a>
-                        </li>
-                    </ul>
+                        <a href="" role="button" data-ng-click="exerciseCtrl.unpublish()" data-ng-if="exerciseCtrl.exercise.meta.published && 0 == exerciseCtrl.nbPapers">
+                            <span class="fa fa-fw fa-times"></span> {{ 'unpublish' | trans:{}:'ujm_exo' }}
+                        </a>
+                    </li>
+                </ul>
 
-                    <!-- Play the Exercise -->
-                    <a data-ng-if="(exerciseCtrl.nbPapers < exerciseCtrl.exercise.meta.maxAttempts || exerciseCtrl.exercise.meta.maxAttempts === 0) && exerciseCtrl.composeEnabled && exerciseCtrl.exercise.steps.length > 0" href="#/play" role="button" class="btn btn-primary navbar-btn navbar-right btn-start">
-                        <span class="fa fa-check-square-o"></span> {{ 'compose' | trans:{}:'ujm_exo' }}
-                    </a>
+                <!-- Play the Exercise -->
+                <a data-ng-if="exerciseCtrl.exercise.steps.length > 0" data-ng-disabled="'play' === exerciseCtrl.$route.current.tab" href="#/play" role="button" class="btn btn-primary navbar-btn navbar-right btn-start">
+                    <span class="fa fa-fw fa-play"></span> {{ 'exercise_try' | trans:{}:'ujm_exo' }}
+                </a>
 
-                    <div data-ng-if="exerciseCtrl.exercise.meta.maxAttempts && exerciseCtrl.nbPapers >= exerciseCtrl.exercise.meta.maxAttempts" class="navbar-right navbar-text">
-                        <span class="text-danger">
-                            <span class="fa fa-warning"></span>
-                        {{ 'attempt_info6' | trans:{}:'ujm_exo' }}
-                        </span>
-                    </div>
+                <ul class="nav navbar-nav navbar-right" data-ng-if="exerciseCtrl.exercise.steps.length > 0">
+                    <!-- Questions -->
+                    <li data-uib-dropdown="" data-ng-class="{ active: 'papers' === exerciseCtrl.$route.current.tab }">
+                        <a href="" data-uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="fa fa-fw fa-check-square-o"></span>
+                            {{ 'result' | trans:{}:'ujm_exo' }}
+                            <span class="caret"></span>
+                        </a>
+                        <ul data-uib-dropdown-menu="">
+                            <!-- Display results of the Exercise -->
+                            <li>
+                                <a href="#/papers">
+                                    <span class="fa fa-fw fa-list"></span> {{ 'results_list' | trans:{}:'ujm_exo' }}
+                                </a>
+                            </li>
 
-                    <ul class="nav navbar-nav navbar-right" data-ng-if="exerciseCtrl.exercise.steps.length > 0">
-                        <!-- Display results of the Exercise -->
-                        <li data-ng-class="{ active: 'papers' === exerciseCtrl.$route.current.tab }">
-                            <a href="#/papers">
-                                <span class="fa fa-list"></span> {{ 'result' | trans:{}:'ujm_exo' }}
-                            </a>
-                        </li>
+                            <!-- Display docimology -->
+                            <li data-ng-if="exerciseCtrl.editEnabled">
+                                <a href="{{ 'ujm_exercise_docimology' | path:{ id: exerciseCtrl.exercise.id } }}">
+                                    <span class="fa fa-fw fa-bar-chart"></span> {{ 'docimology' | trans:{}:'ujm_exo' }}
+                                </a>
+                            </li>
 
-                        <!-- Display docimology -->
-                        <li data-ng-if="exerciseCtrl.editEnabled">
-                            <a href="{{ 'ujm_exercise_docimology' | path:{ id: exerciseCtrl.exercise.id } }}">
-                                <span class="fa fa-bar-chart"></span> {{ 'docimology' | trans:{}:'ujm_exo' }}
-                            </a>
-                        </li>
-                    </ul>
-                </div><!-- /.navbar-collapse -->
-            </div><!-- /.container-fluid -->
-        </nav>
+                            <!-- Export results in CSV -->
+                            <li data-ng-if="exerciseCtrl.editEnabled">
+                                <a href="{{ 'exercise_papers_export' | path:{ id: exerciseCtrl.exercise.id } }}">
+                                    <span class="fa fa-fw fa-table"></span> {{ 'export_csv_results' | trans:{}:'ujm_exo' }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
 
-        <div data-ng-view="" data-ng-cloak=""></div>
-    <!--</div>-->
+    <div data-ng-view="" data-ng-cloak=""></div>
 </div>

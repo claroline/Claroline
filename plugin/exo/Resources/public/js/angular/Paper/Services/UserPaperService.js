@@ -1,25 +1,33 @@
 /**
  * UserPaper Service
- * Manages Paper of the  current User
- * @param {Object}       $http
- * @param {Object}       $q
- * @param {PaperService} PaperService
+ * Manages Paper of the current User
+ * @param {Object}          $http
+ * @param {Object}          $q
+ * @param {PaperService}    PaperService
+ * @param {ExerciseService} ExerciseService
  * @constructor
  */
-var UserPaperService = function UserPaperService($http, $q, PaperService) {
-    this.$http        = $http;
-    this.$q           = $q;
-    this.PaperService = PaperService;
+var UserPaperService = function UserPaperService($http, $q, PaperService, ExerciseService) {
+    this.$http           = $http;
+    this.$q              = $q;
+    this.PaperService    = PaperService;
+    this.ExerciseService = ExerciseService;
 };
 
 // Set up dependency injection
-UserPaperService.$inject = [ '$http', '$q', 'PaperService' ];
+UserPaperService.$inject = [ '$http', '$q', 'PaperService', 'ExerciseService' ];
 
 /**
  * Current paper of the User
  * @type {Object}
  */
-UserPaperService.prototype.paper = {};
+UserPaperService.prototype.paper = null;
+
+/**
+ * Number of papers already done by the User
+ * @type {number}
+ */
+UserPaperService.prototype.nbPapers = 0;
 
 /**
  * Get Paper
@@ -36,6 +44,25 @@ UserPaperService.prototype.getPaper = function getPaper() {
  */
 UserPaperService.prototype.setPaper = function setPaper(paper) {
     this.paper = paper;
+
+    return this;
+};
+
+/**
+ * Get number of Papers
+ * @returns {number}
+ */
+UserPaperService.prototype.getNbPapers = function getNbPapers() {
+    return this.nbPapers;
+};
+
+/**
+ * Set number of Papers
+ * @param {number} count
+ * @returns {UserPaperService}
+ */
+UserPaperService.prototype.setNbPapers = function setNbPapers(count) {
+    this.nbPapers = count ? parseInt(count) : 0;
 
     return this;
 };
@@ -65,25 +92,26 @@ UserPaperService.prototype.getQuestionPaper = function getQuestionPaper(question
 UserPaperService.prototype.start = function start(exercise) {
     var deferred = this.$q.defer();
 
-    this.$http.post(
-        Routing.generate('exercise_new_attempt', { id: exercise.id })
-    ).success(function(response){
-        // TODO : display message
+    if (!this.paper || this.paper.end) {
+        // Start a new Paper (or load an interrupted one)
+        this.$http.post(
+            Routing.generate('exercise_new_attempt', { id: exercise.id })
+        ).success(function(response){
+            this.paper = response;
+            deferred.resolve(this.paper);
+        }.bind(this)).error(function(data, status){
+            // TODO : display message
 
-        if (response && response.paper) {
-            this.paper = response.paper;
-
-            deferred.resolve(response.paper);
-        }
-    }.bind(this)).error(function(data, status){
-        // TODO : display message
-
-        deferred.reject([]);
-        var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error';
-        var code = data && data.error && data.error.code ? data.error.code : 403;
-        var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });
-        /*$window.location = url;*/
-    });
+            deferred.reject([]);
+            var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error';
+            var code = data && data.error && data.error.code ? data.error.code : 403;
+            /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
+            /*$window.location = url;*/
+        });
+    } else {
+        // Continue the current Paper
+        deferred.resolve(this.paper);
+    }
 
     return deferred.promise;
 };
@@ -99,21 +127,27 @@ UserPaperService.prototype.end = function end() {
         .put(
             Routing.generate('exercise_finish_paper', { id: this.paper.id })
         )
-        // Success callback
-        .success(function (response) {
-            // TODO : display message
 
-            deferred.resolve(this.paper);
+        // Success callback
+        .success(function onSuccess(response) {
+            // Update the number of finished papers
+            this.nbPapers++;
+
+            // Update the current User Paper with updated data (endDate particularly)
+            angular.merge(this.paper, response);
+
+            deferred.resolve(response);
         }.bind(this))
+
         // Error callback
-        .error(function (data, status) {
+        .error(function onError(data, status) {
             // TODO : display message
 
             deferred.reject([]);
 
             var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService end sequence error';
             var code = data && data.error && data.error.code ? data.error.code : 403;
-            var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
+            /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
             /*$window.location = url;*/
         });
 
@@ -130,7 +164,7 @@ UserPaperService.prototype.useHint = function useHint(question, hint) {
         .get(
             Routing.generate('exercise_hint', { paperId: this.paper.id, hintId: hint.id })
         )
-        .success(function (response) {
+        .success(function onSuccess(response) {
             // Update question Paper with used hint
             var questionPaper = this.getQuestionPaper(question);
 
@@ -142,11 +176,11 @@ UserPaperService.prototype.useHint = function useHint(question, hint) {
 
             deferred.resolve(response);
         }.bind(this))
-        .error(function (data, status) {
+        .error(function onError(data, status) {
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'QuestionService get hint error';
             var code = data && data.error && data.error.code ? data.error.code : 400;
-            var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});
+            /*var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});*/
             /*$window.location = url;*/
         });
 
@@ -173,6 +207,8 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
 
                 // At least one answer found
                 noAnswer = false;
+            } else {
+                stepAnswers[item.id] = '';
             }
         }
     }
@@ -217,13 +253,13 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
             }.bind(this))
 
             // Error callback
-            .error(function (data, status) {
+            .error(function onError(data, status) {
                 // TODO : display message
 
                 deferred.reject([]);
                 var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService submit answer error';
                 var code = data && data.error && data.error.code ? data.error.code : 403;
-                var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });
+                /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
                 //$window.location = url;
             });
     } else {
@@ -231,6 +267,107 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
     }
 
     return deferred.promise;
+};
+
+/**
+ * Check if the User is allowed to compose (max attempts of the Exercise is not reached)
+ * @returns {boolean}
+ */
+UserPaperService.prototype.isAllowedToCompose = function isAllowedToCompose() {
+    var allowed = true;
+
+    var exercise = this.ExerciseService.getExercise();
+    if (exercise.meta.maxAttempts && this.nbPapers >= exercise.meta.maxAttempts) {
+        // Max attempts reached => user can not do the exercise
+        allowed = false;
+    }
+
+    return allowed;
+};
+
+/**
+ * Check if the correction of the Exercise is available
+ * @param {Object} paper
+ * @returns {Boolean}
+ */
+UserPaperService.prototype.isCorrectionAvailable = function isCorrectionAvailable(paper) {
+    var available = false;
+
+    if (this.ExerciseService.isEditEnabled()) {
+        // Always show correction for exercise's administrators
+        available = true;
+    } else {
+        // Use the configuration of the Exercise to know if it's available
+        var exercise = this.ExerciseService.getExercise();
+
+        switch (exercise.meta.correctionMode) {
+            // At the end of assessment
+            case '1':
+                available = null !== paper.end;
+                break;
+
+            // After the last attempt
+            case '2':
+                available = (0 === exercise.meta.maxAttempts || this.nbPapers >= exercise.meta.maxAttempts);
+                break;
+
+            // From a fixed date
+            case '3':
+                var now = new Date();
+
+                var correctionDate = null;
+                if (null !== exercise.meta.correctionDate) {
+                    correctionDate = new Date(Date.parse(exercise.meta.correctionDate));
+                }
+
+                available = (null === correctionDate || now >= correctionDate);
+                break;
+
+            // Never
+            default:
+            case '4':
+                available = false;
+                break;
+        }
+    }
+
+    return available;
+};
+
+/**
+ * Check if the score obtained by the User for the Exercise is available
+ * @param {Object} paper
+ * @returns {Boolean}
+ */
+UserPaperService.prototype.isScoreAvailable = function isScoreAvailable(paper) {
+    var available = false;
+
+    if (this.ExerciseService.isEditEnabled()) {
+        // Always show score for exercise's administrators
+        available = true;
+    } else {
+        // Use the configuration of the Exercise to know if it's available
+        var exercise = this.ExerciseService.getExercise();
+
+        switch (exercise.meta.markMode) {
+            // At the same time that the correction
+            case '1':
+                available = this.isCorrectionAvailable(paper);
+                break;
+
+            // At the end of the assessment
+            case '2':
+                available = null !== paper.end;
+                break;
+
+            // Show score if nothing specified
+            default:
+                available = false;
+                break;
+        }
+    }
+
+    return available;
 };
 
 // Register service into AngularJS

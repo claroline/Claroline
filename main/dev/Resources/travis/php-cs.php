@@ -11,7 +11,7 @@ $pkgDir = realpath(__DIR__.'/../../../..');
 $targetFile = "{$pkgDir}/git_diff_files.txt";
 
 if (!file_exists($targetFile)) {
-    die("Cannot find file listing CS targets (looked for {$targetFile})\n");
+    echo "Cannot find file listing CS targets (looked for {$targetFile})\n";
     exit(1);
 }
 

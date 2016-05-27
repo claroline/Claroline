@@ -4,9 +4,8 @@
  * @param {QuestionService}  QuestionService
  * @param {FeedbackService}  FeedbackService
  * @param {UserPaperService} UserPaperService
- * @param {Function}         $timeout
  */
-var QuestionShowCtrl = function QuestionShowCtrl(QuestionService, FeedbackService, UserPaperService, $timeout) {
+var QuestionShowCtrl = function QuestionShowCtrl(QuestionService, FeedbackService, UserPaperService) {
     this.QuestionService  = QuestionService;
     this.FeedbackService  = FeedbackService;
     this.UserPaperService = UserPaperService;
@@ -16,15 +15,13 @@ var QuestionShowCtrl = function QuestionShowCtrl(QuestionService, FeedbackServic
 
     // Force the feedback when correction is shown
     if (this.includeCorrection && !this.FeedbackService.isEnabled()) {
-        $timeout(function () {
-            this.FeedbackService.enable();
-            this.FeedbackService.show();
-        }.bind(this));
+        this.FeedbackService.enable();
+        this.FeedbackService.show();
     }
 };
 
 // Set up dependency injection
-QuestionShowCtrl.$inject = [ 'QuestionService', 'FeedbackService', 'UserPaperService', '$timeout' ];
+QuestionShowCtrl.$inject = [ 'QuestionService', 'FeedbackService', 'UserPaperService' ];
 
 /**
  * Is the Question panel collapsed ?
@@ -50,6 +47,8 @@ QuestionShowCtrl.prototype.questionPaper = null;
  */
 QuestionShowCtrl.prototype.feedback = {};
 
+QuestionShowCtrl.prototype.feedbackState = -1;
+
 /**
  * Are the correction for the Question displayed ?
  * @type {boolean}
@@ -58,6 +57,18 @@ QuestionShowCtrl.prototype.includeCorrection = false;
 
 QuestionShowCtrl.prototype.mark = function mark() {
 
+};
+
+/**
+ * Get the generic feedback
+ * @returns {string}
+ */
+QuestionShowCtrl.prototype.getGenericFeedback = function getGenericFeedback() {
+    if (this.feedbackState === 1) {
+        return "one_answer_to_find";
+    } else if (this.feedbackState === 2) {
+        return "answers_not_found";
+    }
 };
 
 /**

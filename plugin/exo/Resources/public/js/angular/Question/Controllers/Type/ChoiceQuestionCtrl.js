@@ -6,7 +6,7 @@
  */
 var ChoiceQuestionCtrl = function ChoiceQuestionCtrl(FeedbackService, ChoiceQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
-
+    
     this.ChoiceQuestionService = ChoiceQuestionService;
 
     if (this.question.choices) {
@@ -25,6 +25,12 @@ ChoiceQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'ChoiceQuesti
  * @type {Array}
  */
 ChoiceQuestionCtrl.prototype.choices = [];
+
+/**
+ * Tells wether the answers are all found, not found, or if only one misses
+ * @type {Integer}
+ */
+ChoiceQuestionCtrl.prototype.feedbackState = -1;
 
 /**
  * Toggle the selected state of a Choice
@@ -133,6 +139,8 @@ ChoiceQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
             this.choices[i].valid = this.isChoiceValid(this.choices[i]);
         }
     }
+    
+    this.feedbackState = this.ChoiceQuestionService.answersAllFound(this.question, this.answer);
 };
 
 // Register controller into AngularJS

@@ -60,7 +60,11 @@ security:
 
     access_control:
         - { path: ^/oauth/v2/auth_login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+<<<<<<< HEAD
         - { path: ^/client, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, role: IS_AUTHENTICATED_FULLY }
+=======
+        - { path: ^/api,                  role: IS_AUTHENTICATED_ANONYMOUSLY }
+>>>>>>> 9d38643f7b452b5dffc604a7293f3f6ad871b016
         - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/connect, role: IS_AUTHENTICATED_ANONYMOUSLY }

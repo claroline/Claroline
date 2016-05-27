@@ -13,6 +13,7 @@ angular
         'ui.translation',
         'ui.tinymce',
         'ngBootbox',
+        'mgcrea.ngStrap.datepicker',
 
         // Exercise modules
         'Common',
@@ -28,11 +29,23 @@ angular
     .config([
         '$routeProvider',
         'cfpLoadingBarProvider',
-        function ExerciseAppConfig($routeProvider, cfpLoadingBarProvider) {
-            // please wait spinner config
+        '$datepickerProvider',
+        function ExerciseAppConfig($routeProvider, cfpLoadingBarProvider, $datepickerProvider) {
+            // Configure loader
             cfpLoadingBarProvider.latencyThreshold = 200;
             cfpLoadingBarProvider.includeBar       = false;
             cfpLoadingBarProvider.spinnerTemplate  = '<div class="loading">Loading&#8230;</div>';
+
+            // Configure DatePicker
+            angular.extend($datepickerProvider.defaults, {
+                dateFormat: 'dd/MM/yyyy',
+                dateType: 'string',
+                startWeek: 1,
+                iconLeft: 'fa fa-fw fa-chevron-left',
+                iconRight: 'fa fa-fw fa-chevron-right',
+                modelDateFormat: 'yyyy-MM-dd HH:mm:ss',
+                autoclose: true
+            });
 
             // Define routes
             $routeProvider
@@ -58,7 +71,6 @@ angular
                     },
 
                     // Active tab
-                    hideMenu: false,
                     tab: 'overview'
                 })
 
@@ -78,7 +90,6 @@ angular
                     },
 
                     // Active tab
-                    hideMenu: false,
                     tab: 'metadata'
                 })
 
@@ -106,7 +117,6 @@ angular
                         ]
                     },
 
-                    // Active tab
                     tab: 'steps'
                 })
 
@@ -116,7 +126,7 @@ angular
                     controller: 'PaperListCtrl',
                     controllerAs: 'paperListCtrl',
                     resolve: {
-                        papersPromise: [
+                        papers: [
                             'PaperService',
                             function papersResolve(PaperService) {
                                 return PaperService.getAll();
@@ -131,7 +141,6 @@ angular
                     },
 
                     // Active tab
-                    hideMenu: false,
                     tab: 'papers'
                 })
 
@@ -156,7 +165,6 @@ angular
                     },
 
                     // Active tab
-                    hideMenu: false,
                     tab: 'papers'
                 })
 
@@ -202,8 +210,8 @@ angular
                         ]
                     },
 
-                    // Hide management menu in player
-                    hideMenu: true
+                    // Active tab
+                    tab: 'play'
                 })
 
                 // Otherwise redirect User on Overview

@@ -36,6 +36,21 @@
                             <textarea data-ui-tinymce="exerciseMetadataCtrl.tinymceOptions" data-before-unload="off" id="exercise-description" class="form-control" data-ng-model="exerciseMetadataCtrl.exercise.meta.description"></textarea>
                         </div>
                     </div>
+
+                    <!-- Display/Hide metadata info to User -->
+                    <div class="form-group">
+                        <label for="exercise-metadata-visible" class="control-label col-md-4">{{ 'metadata_visible' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <div class="checkbox">
+                                <input type="checkbox" id="exercise-metadata-visible" data-ng-model="exerciseMetadataCtrl.exercise.meta.metadataVisible" />
+                            </div>
+
+                            <span class="help-block">
+                                <span class="fa fa-info-circle"></span>
+                                {{ 'metadata_visible_help' | trans:{}:'ujm_exo' }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -102,20 +117,28 @@
                     <div class="form-group">
                         <label for="exercise-correction-mode" class="control-label col-md-4">{{ 'availability_of_correction' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
-                            <select class="form-control" id="exercise-correction-mode" data-ng-model="exerciseParametersCtrl.exercise.meta.correctionMode">
-                                <option value="1">{{ 'at_the_end_of_assessment' | trans:{}:'ujm_exo' }}</option>
-                                <option value="2">{{ 'after_the_last_attempt' | trans:{}:'ujm_exo' }}</option>
-                                <option value="3">{{ 'from' | trans:{}:'ujm_exo' }}</option>
-                                <option value="4">{{ 'never' | trans:{}:'ujm_exo' }}</option>
+                            <select id="exercise-correction-mode"
+                                    class="form-control"
+                                    data-ng-model="exerciseMetadataCtrl.exercise.meta.correctionMode"
+                                    data-ng-options="k as v for (k, v) in exerciseMetadataCtrl.correctionModes">
                             </select>
                         </div>
                     </div>
 
                     <!-- Date of availability -->
-                    <div class="form-group" data-ng-if="3 == exerciseParametersCtrl.exercise.meta.correctionMode">
+                    <div class="form-group" datat-ng-class="{'has-error': exerciseMetadataCtrl.exercise.meta.correctionDate.$invalid}" data-ng-if="3 == exerciseMetadataCtrl.exercise.meta.correctionMode">
                         <label for="exercise-correction-date" class="control-label col-md-4">{{ 'correction_date'| trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
-                            <input type="text" id="exercise-correction-date" class="form-control" data-ng-model="exerciseMetadataCtrl.exercise.meta.correctionDate" />
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-fw fa-calendar"></span>
+                                </span>
+                                <input type="text"
+                                       id="exercise-correction-date"
+                                       class="form-control"
+                                       data-ng-model="exerciseMetadataCtrl.exercise.meta.correctionDate"
+                                       data-bs-datepicker="" />
+                            </div>
                         </div>
                     </div>
 
@@ -123,9 +146,10 @@
                     <div class="form-group">
                         <label for="exercise-mark-mode" class="control-label col-md-4">{{ 'availability_of_score'|trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
-                            <select class="form-control" id="exercise-mark-mode" data-ng-model="exerciseParametersCtrl.exercise.meta.markMode">
-                                <option value="1">{{ 'at_the_same_time_that_the_correction' | trans:{}:'ujm_exo' }}</option>
-                                <option value="2">{{ 'at_the_end_of_assessment' | trans:{}:'ujm_exo' }}</option>
+                            <select id="exercise-mark-mode"
+                                    class="form-control"
+                                    data-ng-model="exerciseMetadataCtrl.exercise.meta.markMode"
+                                    data-ng-options="k as v for (k, v) in exerciseMetadataCtrl.markModes">
                             </select>
                         </div>
                     </div>
@@ -156,7 +180,12 @@
                     <div class="form-group">
                         <label for="exercise-duration" class="control-label col-md-4">{{ 'duration' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-2">
-                            <input type="text" class="form-control" id="exercise-duration" data-ng-model="exerciseMetadataCtrl.exercise.meta.duration" />
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-fw fa-clock-o"></span>
+                                </span>
+                                <input type="text" class="form-control" id="exercise-duration" data-ng-model="exerciseMetadataCtrl.exercise.meta.duration" />
+                            </div>
                         </div>
                     </div>
 

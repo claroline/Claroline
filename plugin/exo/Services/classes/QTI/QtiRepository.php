@@ -1,21 +1,21 @@
 <?php
 
-/**
- * To create temporary repository for QTI files.
- */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
+use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\InteractionOpen;
+use UJM\ExoBundle\Entity\Step;
 
+/**
+ * To create temporary repository for QTI files.
+ */
 class QtiRepository
 {
-    private $user;
     private $userRootDir;
     private $userDir;
-    private $tokenStorageInterface;
+    private $tokenStorage;
     private $container;
     private $step = null;
     private $exerciseQuestions = array();
@@ -24,15 +24,13 @@ class QtiRepository
     /**
      * Constructor.
      *
-     *
-     * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorageInterface Dependency Injection
-     * @param \Symfony\Component\DependencyInjection\Container                                   $container
+     * @param TokenStorageInterface                            $tokenStorageInterface
+     * @param \Symfony\Component\DependencyInjection\Container $container
      */
     public function __construct(TokenStorageInterface $tokenStorageInterface, $container)
     {
-        $this->tokenStorageInterface = $tokenStorageInterface;
+        $this->tokenStorage = $tokenStorageInterface;
         $this->container = $container;
-        $this->user = $this->tokenStorageInterface->getToken()->getUser();
     }
 
      /**
@@ -49,7 +47,7 @@ class QtiRepository
      */
     public function getQtiUser()
     {
-        return $this->user;
+        return $this->tokenStorage->getToken()->getUser();
     }
 
     /**
@@ -61,7 +59,7 @@ class QtiRepository
     public function createDirQTI($directory = 'default', $clear = true)
     {
         $fs = new FileSystem();
-        $this->userRootDir = $this->container->getParameter('ujm.param.exo_directory').'/qti/'.$this->user->getUsername().'/';
+        $this->userRootDir = $this->container->getParameter('ujm.param.exo_directory').'/qti/'.$this->getQtiUser()->getUsername().'/';
         $this->userDir = $this->userRootDir.$directory.'/';
         if ($clear === true) {
             $this->removeDirectory();
@@ -79,20 +77,6 @@ class QtiRepository
      */
     public function removeDirectory()
     {
-        //        if (is_dir($this->userRootDir)) {
-//            exec('rm -rf '.$this->userRootDir.'*');
-//            $fs = new FileSystem();
-//            $iterator = new \DirectoryIterator($this->userRootDir);
-//
-//            foreach ($iterator as $el) {
-//                if ($el->isDir()) {
-//                    $fs->rmDir($el->getRealPath(), true);
-//                }
-//                if ($el->isFile()) {
-//                    $fs->rm($el->getRealPath());
-//                }
-//            }
-//        }
         $fs = new FileSystem();
         $fs->rmdir($this->userRootDir, true);
     }
@@ -114,69 +98,70 @@ class QtiRepository
     public function scanFiles()
     {
         $xmlFileFound = false;
-        if ($dh = opendir($this->getUserDir())) {
-            while (($file = readdir($dh)) !== false) {
-                if (substr($file, -4, 4) == '.xml'
-                        && $this->alreadyImported($file) === false) {
-                    $xmlFileFound = true;
-                    $document_xml = new \DomDocument();
-                    $document_xml->load($this->getUserDir().'/'.$file);
-                    foreach ($document_xml->getElementsByTagName('assessmentItem') as $ai) {
-                        $imported = false;
-                        $ib = $ai->getElementsByTagName('itemBody')->item(0);
-                        foreach ($ib->childNodes as $node) {
-                            if ($imported === false) {
-                                switch ($node->nodeName) {
-                                    case 'choiceInteraction': //qcm
-                                        $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionQCM');
-                                        $interX = $qtiImport->import($this, $ai);
-                                        $imported = true;
-                                        break;
-                                    case 'selectPointInteraction': //graphic with the tag selectPointInteraction
-                                        $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
-                                        $interX = $qtiImport->import($this, $ai);
-                                        $imported = true;
-                                        break;
-                                    case 'hotspotInteraction': //graphic with the tag hotspotInteraction
-                                        $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
-                                        $interX = $qtiImport->import($this, $ai);
-                                        $imported = true;
-                                        break;
-                                    case 'extendedTextInteraction': /*open (long or short)*/
-                                        $qtiImport = $this->longOrShort($ai);
-                                        $interX = $qtiImport->import($this, $ai);
-                                        $imported = true;
-                                        break;
-                                    case 'matchInteraction': //matching
-                                        $qtiImport = $this->container->get('ujm.exo_qti_import_matching');
-                                        $interX = $qtiImport->import($this, $ai);
-                                        $imported = true;
-                                        break;
-                                }
-                            }
-                        }
+        $info = '';
+        $iterator = new RecursiveDirectoryIterator($this->getUserDir(), \FilesystemIterator::SKIP_DOTS);
+        foreach (new \RecursiveIteratorIterator($iterator) as $file) {
+            if ($file->getExtension() == 'xml' && $this->alreadyImported(base64_encode($file)) === false) {
+                $xmlFileFound = true;
+                $document_xml = new \DomDocument();
+                $document_xml->load($file);
+                foreach ($document_xml->getElementsByTagName('assessmentItem') as $ai) {
+                    $imported = false;
+                    $ib = $ai->getElementsByTagName('itemBody')->item(0);
+                    foreach ($ib->childNodes as $node) {
                         if ($imported === false) {
-                            $other = $this->importOther($ai);
-                            $interX = $other[0];
-                            $imported = $other[1];
-                            if ($imported == false) {
-                                return 'qti unsupported format';
+                            switch ($node->nodeName) {
+                                case 'choiceInteraction': //qcm
+                                    $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionQCM');
+                                    $interX = $qtiImport->import($this, $ai);
+                                    $imported = true;
+                                    break;
+                                case 'selectPointInteraction': //graphic with the tag selectPointInteraction
+                                    $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
+                                    $interX = $qtiImport->import($this, $ai);
+                                    $imported = true;
+                                    break;
+                                case 'hotspotInteraction': //graphic with the tag hotspotInteraction
+                                    $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
+                                    $interX = $qtiImport->import($this, $ai);
+                                    $imported = true;
+                                    break;
+                                case 'extendedTextInteraction': /*open (long or short)*/
+                                    $qtiImport = $this->longOrShort($ai);
+                                    $interX = $qtiImport->import($this, $ai);
+                                    $imported = true;
+                                    break;
+                                case 'matchInteraction': //matching
+                                    $qtiImport = $this->container->get('ujm.exo_qti_import_matching');
+                                    $interX = $qtiImport->import($this, $ai);
+                                    $imported = true;
+                                    break;
                             }
                         }
-                        if ($this->step != null) {
-                            $this->exerciseQuestions[] = $file;
-                            $this->importedQuestions[$file] = $interX;
+                    }
+                    if ($imported === false) {
+                        $other = $this->importOther($ai);
+                        $interX = $other[0];
+                        $imported = $other[1];
+                        if ($imported == false) {
+                            $info .= $file.' qti unsupported format'."\n";
                         }
+                    }
+                    if ($this->step != null) {
+                        $this->exerciseQuestions[] = $file;
+                        $this->importedQuestions[$file] = $interX;
                     }
                 }
             }
-            if ($xmlFileFound === false) {
-                return 'qti xml not found';
-            }
-            closedir($dh);
+        }
+        if ($xmlFileFound === false) {
+            $info .= 'qti xml not found'."\n";
         }
 
         $this->removeDirectory();
+        if ($info != '') {
+            return $info;
+        }
 
         return true;
     }
@@ -297,10 +282,11 @@ class QtiRepository
     /**
      * Call scanFiles method for ExoImporter.
      *
+     * @param Step $step
      *
-     * @param UJM\ExoBundle\Entity\Step $step
+     * @return mixed
      */
-    public function scanFilesToImport(\UJM\ExoBundle\Entity\Step $step)
+    public function scanFilesToImport(Step $step)
     {
         $this->step = $step;
         $scanFile = $this->scanFiles();
@@ -312,16 +298,7 @@ class QtiRepository
     }
 
     /**
-     * @param UJM\ExoBundle\Entity\InteractionQCM or InteractionGraphic or .... $interX
-     */
-    private function addQuestionInExercise($interX, $order = -1)
-    {
-        $exoServ = $this->container->get('ujm.exo_exercise');
-        $exoServ->addQuestionInStep($interX->getQuestion(), $this->step, $order);
-    }
-
-    /**
-     *
+     * @param bool $ws
      */
     public function assocExerciseQuestion($ws = false)
     {
@@ -330,7 +307,8 @@ class QtiRepository
             if ($ws === false) {
                 $order = -1;
             }
-            $this->addQuestionInExercise($this->importedQuestions[$xmlName], $order);
+            $this->container->get('ujm.exo_exercise')->addQuestionInStep($this->importedQuestions[$xmlName]->getQuestion(), $this->step, $order);
+
             ++$order;
         }
     }

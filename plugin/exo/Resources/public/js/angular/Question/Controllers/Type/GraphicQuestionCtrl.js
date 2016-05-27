@@ -46,6 +46,12 @@ GraphicQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'GraphicQues
 GraphicQuestionCtrl.prototype.$image = null;
 
 /**
+ * Tells wether the answers are all found, not found, or if only one misses
+ * @type {Integer}
+ */
+GraphicQuestionCtrl.prototype.feedbackState = -1;
+
+/**
  * Definition of the crosshair
  * @type {{img: string, size: number}}
  */
@@ -65,6 +71,11 @@ GraphicQuestionCtrl.prototype.coords = []; // student answers
  * @type {Array}
  */
 GraphicQuestionCtrl.prototype.notFoundZones = [];
+
+/**
+ * @type {boolean}
+ */
+GraphicQuestionCtrl.prototype.notFoundZonesAreSet = false;
 
 /**
  * Get the full URL of the Image
@@ -196,10 +207,6 @@ GraphicQuestionCtrl.prototype.showRightAnswerZones = function showRightAnswerZon
             
             var offsetFromPanelX = $("#" + firstElementId).prop("x") - pointX;
             var offsetFromPanelY = $("#" + firstElementId).prop("y") - pointY;
-            
-            /*
-             * Il reste un souci, à partir du moment où on essaie de valider deux bonnes réponses pas en même temps
-             */
 
             var distance = Math.sqrt((centerX-pointX)*(centerX-pointX) + (centerY-pointY)*(centerY-pointY));
             distance = Math.round(distance);
@@ -218,6 +225,14 @@ GraphicQuestionCtrl.prototype.showRightAnswerZones = function showRightAnswerZon
                 this.notFoundZones.splice(this.notFoundZones.indexOf(this.question.solutions[i]), 1);
             }
         }
+    }
+    
+    if (this.notFoundZones.length === 0) {
+        this.feedbackState = 0;
+    } else if (this.notFoundZones.length === 1) {
+        this.feedbackState = 1;
+    } else {
+        this.feedbackState = 2;
     }
 };
 
@@ -282,10 +297,13 @@ GraphicQuestionCtrl.prototype.enableDraggable = function enableDraggable() {
  *
  */
 GraphicQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
-    for (var i=0; i < this.question.solutions.length; i++) {
-        this.notFoundZones.push(this.question.solutions[i]);
+    if (!this.notFoundZonesAreSet) {
+        for (var i=0; i < this.question.solutions.length; i++) {
+            this.notFoundZones.push(this.question.solutions[i]);
+        }
+        this.notFoundZonesAreSet = true;
     }
-
+    
     this.disableDraggable();
     this.showRightAnswerZones();
     this.setWrongFeedback();

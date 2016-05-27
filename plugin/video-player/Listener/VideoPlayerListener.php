@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Event\InjectJavascriptEvent;
 
 /**
  * @DI\Service("claroline.listener.video_player_listener")
@@ -48,11 +49,6 @@ class VideoPlayerListener extends ContainerAware
      */
     public function onOpenVideo(PlayFileEvent $event)
     {
-        $player = $this->ch->getParameter('video_player');
-        if ($player == null) {
-            $player = 'videojs';
-        }
-
         $path = $this->fileDir.DIRECTORY_SEPARATOR.$event->getResource()->getHashName();
         $content = $this->templating->render(
             'ClarolineVideoPlayerBundle::video.html.twig',
@@ -61,7 +57,7 @@ class VideoPlayerListener extends ContainerAware
                 'path' => $path,
                 'video' => $event->getResource(),
                 '_resource' => $event->getResource(),
-                'player' => $player,
+                'tracks' => $this->container->get('claroline.manager.video_player_manager')->getTracksByVideo($event->getResource()),
             )
         );
         $response = new Response($content);
@@ -82,5 +78,18 @@ class VideoPlayerListener extends ContainerAware
         $response = $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("inject_javascript_layout")
+     *
+     * @param InjectJavascriptEvent $event
+     *
+     * @return string
+     */
+    public function onInjectJs(InjectJavascriptEvent $event)
+    {
+        $content = $this->templating->render('ClarolineVideoPlayerBundle::scripts.html.twig', array());
+        $event->addContent($content);
     }
 }

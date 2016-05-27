@@ -1,0 +1,20 @@
+<div class="form-group">
+    <label class="control-label col-sm-2"> {{ dc.label }} </label>
+    <div class="input-group" class="col-sm-10">
+        <!-- https://github.com/angular-ui/bootstrap/issues/2219 -->
+        <fieldset ng-disabled="dc.field[2].disabled">
+            <input
+                type="text"
+                class="form-control"
+                uib-datepicker-popup="{{ dc.getDateFormat() }}"
+                ng-model="dc.ngModel"
+                is-open="dc.opened"
+                datepicker-options="dc.options"
+                close-text="Close"
+             />
+        </fieldset>
+        <span class="input-group-btn" ng-hide="{{ dc.disabled }}">
+          <button type="button" class="btn btn-default" ng-click="dc.open()"><i class="fa fa-calendar"></i></button>
+        </span>
+    </div>
+</div>
