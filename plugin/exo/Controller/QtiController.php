@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use  UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Exercise;
 
 class QtiController extends Controller
 {
@@ -48,7 +48,7 @@ class QtiController extends Controller
         } else {
             $qtiRepo->assocExerciseQuestion(false);
 
-            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exoID]) . '#/steps');
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps');
         }
     }
 
@@ -88,10 +88,10 @@ class QtiController extends Controller
 
         $file->move($qtiRepo->getUserDir(), $file->getClientOriginalName());
         $zip = new \ZipArchive();
-        if ($zip->open($qtiRepo->getUserDir() . $file->getClientOriginalName()) !== true) {
+        if ($zip->open($qtiRepo->getUserDir().$file->getClientOriginalName()) !== true) {
             return false;
         }
-        $res = zip_open($qtiRepo->getUserDir() . $file->getClientOriginalName());
+        $res = zip_open($qtiRepo->getUserDir().$file->getClientOriginalName());
         $zip->extractTo($qtiRepo->getUserDir());
 
         $i = 0;
@@ -130,7 +130,7 @@ class QtiController extends Controller
                     'pageNow' => 0,
                     'categoryToFind' => 'z',
                     'titleToFind' => 'z',
-                    'displayAll' => 0,)
+                    'displayAll' => 0 ,)
             );
         }
     }
@@ -152,9 +152,8 @@ class QtiController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-
-
-        $tmpFileName = $qtiRepo->getUserDir() . 'zip/' . $title . '_qestion_qti.zip';
+        
+        $tmpFileName = $qtiRepo->getUserDir().'zip/'.$title.'_qestion_qti.zip';
 
         $zip = new \ZipArchive();
         $zip->open($tmpFileName, \ZipArchive::CREATE);
@@ -203,8 +202,6 @@ class QtiController extends Controller
         $qtiSer = $this->container->get('ujm.exo_qti');
         $qtiRepo = $this->container->get('ujm.exo_qti_repository');
 
-
-
         foreach ($exercise->getSteps() as $step) {
             $questions = $questionRepo->findByStep($step);
 
@@ -217,10 +214,9 @@ class QtiController extends Controller
                 /** @var \DirectoryIterator $element */
                 foreach ($iterator as $element) {
                     if (!$element->isDot() && $element->isFile()) {
-                        $partDirectory = $title . '/' . $step->getOrder() . '/' . $step->getOrder() . '_question_' . $i . '/' . $element->getFilename();
+                        $partDirectory = $title.'/'.$step->getOrder().'/'.$step->getOrder().'_question_'.$i.'/'. $element->getFilename();
                         $zip->addFile($element->getPathname(), $partDirectory);
                     }
-
                 }
                 $i .= 'a';
             }

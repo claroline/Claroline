@@ -47,7 +47,6 @@ class QtiServices
      */
     public function sortPathOfQuestions(QtiRepository $qtiRepo, $stepDir = '')
     {
-        var_dump($stepDir);
         $pathQtiDir = $qtiRepo->getUserDir().'questions';
         if ($stepDir != '') {
             $pathQtiDir .= '/'.$stepDir;
@@ -56,9 +55,7 @@ class QtiServices
         //create array with sort file
         $dirs = array();
         foreach ($questions as $question) {
-            var_dump($question != '..');
             if ($question != '.' && $question != '..' && $question->getExtension() == '') {
-                echo('la');
                 $dirs[] = $pathQtiDir.'/'.$question->getFilename();
             }
         }
@@ -68,11 +65,11 @@ class QtiServices
         return $dirs;
     }
     /**
-         * create the directory questions to export an exercise and export the qti files.
-         *
-         * @param \UJM\ExoBundle\Entity\Question[] $questions
-         * @param int                              $numStep
-         */
+     * create the directory questions to export an exercise and export the qti files.
+     *
+     * @param \UJM\ExoBundle\Entity\Question[] $questions
+     * @param int                              $numStep
+     */
     public function createQuestionsDirectory(array $questions, $numStep)
     {
         $qtiRepo = $this->container->get('ujm.exo_qti_repository');

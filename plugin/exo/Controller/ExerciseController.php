@@ -299,7 +299,7 @@ class ExerciseController extends Controller
             $pageGoNow = $request->request->get('pageGoNow');
             $qid = $request->request->get('qid');
 
-            $result=$em->getRepository('UJMExoBundle:Step')->getMaxOrder($exo);
+            $result = $em->getRepository('UJMExoBundle:Step')->getMaxOrder($exo);
 
             $maxOrdre = (int) $result[0][1] + 1;
 
@@ -351,7 +351,7 @@ class ExerciseController extends Controller
         $step->setNbQuestion('0');
         $step->setDuration(0);
         $step->setMaxAttempts(5);
-        $result=$em->getRepository('UJMExoBundle:Step')->getMaxOrder($exercise);
+        $result = $em->getRepository('UJMExoBundle:Step')->getMaxOrder($exercise);
         $maxOrder = (int) $result[1] + 1;
         $step->setOrder($maxOrder);
 
