@@ -77,26 +77,48 @@ class StepManager
      */
     public function reorderQuestions(Step $step, array $order)
     {
-        foreach ($order as $questionId) {
-            $stepQuestion = $this->om->getRepository('UJMExoBundle::StepQuestion');
-            if ($stepQuestion->getStep() !== $step) {
-                // The question come from another Step => destroy old link and create a new One
+        $reorderToo = []; // List of Steps we need to reorder too (because we have transferred some Questions)
+        foreach ($order as $pos => $questionId) {
+            /** @var StepQuestion $stepQuestion */
+            $stepQuestion = $this->om->getRepository('UJMExoBundle:StepQuestion')->findByExerciseAndQuestion($step->getExercise(), $questionId);
+            if (!$stepQuestion) {
+                // Question is not linked to the Exercise, there is a problem with the order array
+                return [
+                    'message' => 'Can not reorder the Question. Unknown question found.',
+                ];
+            }
+
+            $oldStep = $stepQuestion->getStep();
+            if ($oldStep !== $step) {
+                // The question comes from another Step => destroy old link and create a new One
+                $oldStep->removeStepQuestion($stepQuestion);
+
+                $stepQuestion->setStep($step);
+
+                $reorderToo[] = $oldStep;
+            }
+
+            // Update order
+            $stepQuestion->setOrdre($pos);
+
+            $this->om->persist($stepQuestion);
+        }
+
+        if (!empty($reorderToo)) {
+            // In fact as the client call the server each time a Question is moved, there will be always one Step in this array
+            /** @var Step $stepToReorder */
+            foreach ($reorderToo as $stepToReorder) {
+                $stepQuestions = $stepToReorder->getStepQuestions();
+                /** @var StepQuestion $sqToReorder */
+                foreach ($stepQuestions as $pos => $sqToReorder) {
+                    $sqToReorder->setOrdre($pos);
+                }
             }
         }
 
-        $stepQuestions = $step->getStepQuestions();
-    }
+        $this->om->flush();
 
-    public function isQuestionInStep(Step $step, Question $question)
-    {
-        $found = false;
-        $stepQuestions = $step->getStepQuestions();
-        /** @var StepQuestion $stepQuestion */
-        foreach ($stepQuestions as $stepQuestion) {
-            /*if ($stepQuestion->)*/
-        }
-
-        return $found;
+        return [];
     }
 
     /**

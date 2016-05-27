@@ -16,7 +16,13 @@ var StepListCtrl = function StepListCtrl($scope, steps, dragulaService, Exercise
 
     dragulaService.options($scope, 'order-steps', {
         moves: function (el, container, handle) {
-            return handle.className === 'handle';
+            return 'handle' === handle.className;
+        }
+    });
+
+    dragulaService.options($scope, 'order-questions', {
+        moves: function (el, container, handle) {
+            return -1 !== el.className.indexOf('step-item');
         }
     });
 

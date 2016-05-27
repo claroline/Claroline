@@ -10,7 +10,7 @@
                                 <span class="fa fa-lg fa-ellipsis-v"></span>
                             </span>
                             <span>
-                                {{ 'step'|trans:{}:'ujm_exo' }} <b>#{{ $index + 1 }} ({{ step.id }})</b>
+                                {{ 'step'|trans:{}:'ujm_exo' }} <b>#{{ $index + 1 }}</b>
                                 <small>({{ 'step_items_count'|transChoice:step.items.length:{ count: step.items.length }:'ujm_exo' }})</small>
                             </span>
                         </h3>
@@ -39,7 +39,7 @@
                 <!-- List items of the Step -->
                 <table class="table table-striped table-bordered">
                     <tbody dragula="'order-questions'" dragula-model="step.items" data-step-id="{{ step.id }}">
-                        <tr data-ng-repeat="item in step.items">
+                        <tr class="step-item" data-ng-repeat="item in step.items">
                             <td class="col-md-10">
                                 <b class="text-info">[{{ item.type | trans:{}:'ujm_exo'}}]</b>
                                 {{ item.title }}
@@ -63,6 +63,13 @@
                                     <span class="fa fa-trash-o"></span>
                                     <span class="sr-only">{{ 'delete' | trans:{}:'ujm_exo' }}</span>
                                 </button>
+                            </td>
+                        </tr>
+
+                        <!-- No question flag (to be able to drag n drop a Question here) -->
+                        <tr class="no-item text-center" data-ng-if="step.items.length === 0">
+                            <td colspan="2">
+                                <em>{{ 'step_item_add'|trans:{}:'ujm_exo' }}</em>
                             </td>
                         </tr>
                     </tbody>
