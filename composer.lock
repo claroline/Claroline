@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "9d38643f7b452b5dffc604a7293f3f6ad871b016"
+                "reference": "624ecbd0eda3f5eff49c41d217c313251336b756"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/9d38643f7b452b5dffc604a7293f3f6ad871b016",
-                "reference": "9d38643f7b452b5dffc604a7293f3f6ad871b016",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/624ecbd0eda3f5eff49c41d217c313251336b756",
+                "reference": "624ecbd0eda3f5eff49c41d217c313251336b756",
                 "shasum": ""
             },
             "require": {
@@ -373,7 +373,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-05-26 16:52:33"
+            "time": "2016-05-27 11:59:35"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -6084,6 +6084,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
+            "abandoned": "Use friendsofphp/php-cs-fixer instead",
             "time": "2016-02-26 07:37:29"
         },
         {
