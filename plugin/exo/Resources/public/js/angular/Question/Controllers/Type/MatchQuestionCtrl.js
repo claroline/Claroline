@@ -5,14 +5,14 @@
  * @constructor
  */
 var MatchQuestionCtrl = function MatchQuestionCtrl(FeedbackService, $scope) {
+    AbstractQuestionCtrl.apply(this, arguments);
+    
     this.$scope = $scope;
 
     this.savedAnswers = [];
     for (var i=0; i<this.dropped.length; i++) {
         this.savedAnswers.push(this.dropped[i]);
     }
-
-    AbstractQuestionCtrl.apply(this, arguments);
 };
 
 // Extends AbstractQuestionCtrl

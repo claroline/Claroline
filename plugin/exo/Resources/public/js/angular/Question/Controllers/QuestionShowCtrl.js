@@ -4,9 +4,8 @@
  * @param {QuestionService}  QuestionService
  * @param {FeedbackService}  FeedbackService
  * @param {UserPaperService} UserPaperService
- * @param {Function}         $timeout
  */
-var QuestionShowCtrl = function QuestionShowCtrl(QuestionService, FeedbackService, UserPaperService, $timeout) {
+var QuestionShowCtrl = function QuestionShowCtrl(QuestionService, FeedbackService, UserPaperService) {
     this.QuestionService  = QuestionService;
     this.FeedbackService  = FeedbackService;
     this.UserPaperService = UserPaperService;
@@ -22,7 +21,7 @@ var QuestionShowCtrl = function QuestionShowCtrl(QuestionService, FeedbackServic
 };
 
 // Set up dependency injection
-QuestionShowCtrl.$inject = [ 'QuestionService', 'FeedbackService', 'UserPaperService', '$timeout' ];
+QuestionShowCtrl.$inject = [ 'QuestionService', 'FeedbackService', 'UserPaperService' ];
 
 /**
  * Is the Question panel collapsed ?

@@ -187,6 +187,7 @@ class Updater600200
     {
         $exoId = -1;
         $stepId = -1;
+        $orderStep = 1;
 
         $exoQuestion = $this->checkExoQuestion();
         $stepStmt = $this->connection->prepare("
@@ -208,6 +209,7 @@ class Updater600200
 
             $stepId = $this->connection->lastInsertId();
             $this->addQuestionStep($stepId, $eq['question_id'], 1);
+            ++$orderStep;
         }
     }
 

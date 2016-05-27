@@ -23,6 +23,13 @@ PaperShowCtrl.prototype.paper = {};
  */
 PaperShowCtrl.prototype.questions = [];
 
+/**
+ * Check whether a Paper needs a manual correction (if the score of one question is -1)
+ */
+PaperShowCtrl.prototype.needManualCorrection = function needManualCorrection() {
+    return this.PaperService.needManualCorrection(this.paper);
+};
+
 PaperShowCtrl.prototype.getQuestionPaper = function getQuestionPaper(question) {
     return this.PaperService.getQuestionPaper(this.paper, question);
 };

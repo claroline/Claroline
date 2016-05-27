@@ -13,10 +13,6 @@ var AbstractQuestionCtrl = function AbstractQuestionCtrl(FeedbackService) {
     this.FeedbackService
         .on('show', this.onFeedbackShow.bind(this))
         .on('hide', this.onFeedbackHide.bind(this));
-
-    if (this.FeedbackService.isVisible()) {
-        this.onFeedbackShow();
-    }
 };
 
 // Set up dependency injection

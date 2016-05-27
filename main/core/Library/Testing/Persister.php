@@ -58,7 +58,7 @@ class Persister
         $user->setFirstName($username);
         $user->setLastName($username);
         $user->setUsername($username);
-        $user->setPassword($username);
+        $user->setPlainPassword($username);
         $user->setMail($username.'@mail.com');
         $user->setGuid(uniqid());
         $user->addRole($roleUser);
