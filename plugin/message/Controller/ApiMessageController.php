@@ -9,24 +9,20 @@
  * file that was distributed with this source code.
  */
 
+namespace Claroline\MessageBundle\Controller;
 
- namespace Claroline\MessageBundle\Controller;
-
- use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\FOSRestController;
  use FOS\RestBundle\Controller\Annotations\View;
  use JMS\DiExtraBundle\Annotation as DI;
- use Nelmio\ApiDocBundle\Annotation\ApiDoc;
  use Claroline\MessageBundle\Manager\MessageManager;
- use Claroline\MessageBundle\Entity\Message;
  use Claroline\CoreBundle\Manager\UserManager;
- use Claroline\CoreBundle\Entity\User;
  use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
- class ApiMessageController extends FOSRestController {
-
-   private $messageManager;
-   private $tokenStorage;
-   private $userManager;
+ class ApiMessageController extends FOSRestController
+ {
+     private $messageManager;
+     private $tokenStorage;
+     private $userManager;
 
    /**
     * @DI\InjectParams({
@@ -35,7 +31,6 @@
     *     "userManager" = @DI\Inject("claroline.manager.user_manager")
     * })
     */
-
    public function _construct(MessageManager $messageManager, $tokenStorage, UserManager $userManager)
    {
        $this->messageManager = $messageManager;
@@ -54,10 +49,10 @@
        return $this->messageManager->getReceivedMessagesJson($user);
    }
 
-   /**
-    * @Route("/sent.{_format}", name="claro_sent_message", defaults={"_format":"json"})
-    * @View(serializerGroups={"api_message"})
-    */
+    /**
+     * @Route("/sent.{_format}", name="claro_sent_message", defaults={"_format":"json"})
+     * @View(serializerGroups={"api_message"})
+     */
     public function getSentAction()
     {
         $user = $this->tokenStorage->getToken()->getUser();
@@ -75,5 +70,4 @@
 
         return $this->messageManager->getRemovedMessagesJson($user);
     }
-
  }

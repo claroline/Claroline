@@ -12,8 +12,6 @@
 namespace Claroline\CoreBundle\Controller\API\Admin;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Manager\OauthManager;
@@ -23,7 +21,7 @@ class ClientController extends FOSRestController
 {
     private $oauthManager;
 
-	 /**
+   /**
     * @DI\InjectParams({
     *     "oauthManager" = @DI\Inject("claroline.manager.oauth_manager")
     * })
@@ -35,6 +33,7 @@ class ClientController extends FOSRestController
 
     /**
      * Get the client id and the client secret.
+     *
      * @Route("/idsecret.{_format}", name="claro_id_secret", defaults={"_format":"json"})
      */
     public function getIdsecretAction()
@@ -49,6 +48,7 @@ class ClientController extends FOSRestController
 
         /**
          * Check if access token is expired.
+         *
          * @Route("/expired.{_format}", name="claro_token_expired", defaults={"_format":"json"})
          */
         public function getExpiredAction()

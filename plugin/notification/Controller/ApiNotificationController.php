@@ -15,10 +15,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
 use JMS\DiExtraBundle\Annotation as DI;
 use Icap\NotificationBundle\Manager\NotificationManager;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Claroline\CoreBundle\Entity\Oauth\ClarolineAccess;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-
 
 class ApiNotificationController extends FOSRestController
 {
@@ -51,14 +48,16 @@ class ApiNotificationController extends FOSRestController
     }
 
    /**
-    * Mark all notifications as read
+    * Mark all notifications as read.
+    *
     * @Route("/notifications/read.{_format}", name="icap_notifications_read", defaults={"_format":"json"})
     * @View(serializerGroups={"api_notification"})
     */
-   public function getNotificationsReadAction(){
-         $user = $this->tokenStorage->getToken()->getUser();
-         $this->notificationManager->markAllNotificationsAsViewed($user->getId());
+   public function getNotificationsReadAction()
+   {
+       $user = $this->tokenStorage->getToken()->getUser();
+       $this->notificationManager->markAllNotificationsAsViewed($user->getId());
 
-         return $this->notificationManager->getUserNotifications($user->getId());
+       return $this->notificationManager->getUserNotifications($user->getId());
    }
 }

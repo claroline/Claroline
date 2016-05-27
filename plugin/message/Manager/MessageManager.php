@@ -226,7 +226,6 @@ class MessageManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-
     public function getReceivedMessagesJson(User $receiver, $search = '')
     {
         $query = $search === '' ?
@@ -251,7 +250,6 @@ class MessageManager
 
         return $this->pagerFactory->createPager($query, $page);
     }
-
 
     public function getSentMessagesJson(User $sender, $search = '', $page = 1)
     {
