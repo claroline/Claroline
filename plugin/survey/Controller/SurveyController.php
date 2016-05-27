@@ -1801,6 +1801,118 @@ class SurveyController extends Controller
         return $response;
     }
 
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/answers/management/page/{page}/max/{max}",
+     *     name="claro_survey_answers_management",
+     *     defaults={"page"=1, "max"=20},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function surveyAnswersManagementAction(Survey $survey, $page = 1, $max = 20)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+        $answers = $this->surveyManager->getSurveyAnswersBySurveyWithPager($survey, $page, $max);
+
+        return array(
+            'survey' => $survey,
+            'answers' => $answers,
+            'page' => $page,
+            'max' => $max,
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/all/answers/delete",
+     *     name="claro_survey_all_answers_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function allSurveyAnswersDeleteAction(Survey $survey)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+        $this->surveyManager->deleteAllSurveyAnswers($survey);
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/answers/delete",
+     *     name="claro_survey_answers_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "surveyAnswers",
+     *      class="ClarolineSurveyBundle:Answer\SurveyAnswer",
+     *      options={"multipleIds" = true, "name" = "surveyAnswersIds"}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function surveyAnswersDeleteAction(Survey $survey, array $surveyAnswers)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+        $this->surveyManager->deleteSurveyAnswers($surveyAnswers);
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "course/sessions/group/{group}/type/{type}/register",
+     *     name="claro_cursus_sessions_register_group",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "sessions",
+     *      class="ClarolineCursusBundle:CourseSession",
+     *      options={"multipleIds" = true, "name" = "sessionsIds"}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function sessionsRegisterGroupAction(Group $group, $type, array $sessions)
+    {
+        $this->checkToolAccess();
+        $results = $this->cursusManager->registerGroupToSessions($sessions, $group, $type);
+
+        if ($results['status'] === 'failed') {
+            $datas = $results['datas'];
+            $sessionFlashBag = $this->session->getFlashBag();
+
+            foreach ($datas as $data) {
+                $sessionFlashBag->add(
+                    'error',
+                    $this->translator->trans(
+                        'session_not_enough_place_msg',
+                        array(
+                            '%courseTitle%' => $data['courseTitle'],
+                            '%courseCode%' => $data['courseCode'],
+                            '%sessionName%' => $data['sessionName'],
+                            '%remainingPlaces%' => $data['remainingPlaces'],
+                        ),
+                        'cursus'
+                    )
+                );
+            }
+        }
+
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_cursus_group_sessions_management',
+                array('group' => $group->getId())
+            )
+        );
+    }
+
     private function showTypedQuestionResults(
         Survey $survey,
         Question $question,
