@@ -301,7 +301,7 @@ class ExerciseController extends Controller
 
             $result = $em->getRepository('UJMExoBundle:Step')->getMaxOrder($exo);
 
-            $maxOrdre = (int) $result[0][1] + 1;
+            $maxOrdre = (int) $result + 1;
 
             foreach ($qid as $q) {
                 $question = $this->getDoctrine()

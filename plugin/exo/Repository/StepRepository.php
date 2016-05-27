@@ -43,6 +43,6 @@ class StepRepository extends EntityRepository
             ->where('s.exercise = :exercise')
             ->setParameter(':exercise', $exo)
             ->getQuery()
-            ->getSingleResult();
+            ->getSingleScalarResult();
     }
 }
