@@ -290,6 +290,75 @@ $(document).ready(function() {
 
     });
 
+
+
+    // InnovaERV
+    // Ajout pour le traitement du clic sur le bouton "Oui, valider"
+    $('#modal_transmit_confirm').on('click', function(event) {
+
+        var selector = "#document_id_" + $(this).attr("data-document_id"); // Extract info from data-* attributes
+        var row = "row_" + $(this).attr("data-document_id"); // Extract info from data-* attributes
+        var documentId = $(this).attr("data-document_id");
+        var button = document.getElementById("delete_" + documentId);
+
+        $(button).hide();
+
+        $(selector).prop('checked', true); // Cocher la case "Valider"
+        $(selector).prop('disabled', true); // Ne pas pouvoir modifier cette ligne
+
+        // Récupération de l'id du document
+        var docId = $(this).attr("data-document_id");
+        var senderId = $(this).attr("data-document_sender_id");
+        var commentLength = $(this).attr("data-document_comment_length");
+        var docDropUserId = $(this).attr("data-document_docDropUser_id"); // Extract info from data-* attributes
+        var adminInnova = $(this).attr("data-document_adminInnova");
+
+        // Ajax : appel de la route qui va mettre Ã  jour la base de donnÃ©es
+        // Ajax : route "innova_collecticiel_validate_document" dans DocumentController
+        var req = "#request_id_" + $(this).attr("data-document_id"); // Extract info from data-* attributes
+
+        //
+        // Afficher les tests ici qui permettront de rafraîchir les données.
+        //
+        if (senderId != docDropUserId) {
+            var selector = "#delete_" + documentId;
+        } else if (commentLength == 0 && senderId == docDropUserId) {
+            var selector = "#cancel_" + documentId;
+        } else {
+            var selector = "#lock_" + documentId;
+        }
+        $(selector).css({
+            'display': 'inline'
+        });
+
+        // Ajout : vu avec Arnaud.
+        // Ajout de "complete" afin de mettre Ã  jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
+        $.ajax({
+            url: Routing.generate('innova_collecticiel_validate_transmit_evaluation', {
+                documentId: docId
+            }),
+            method: "POST",
+            data: {
+                documentId: docId
+            },
+            complete: function(data) {
+                $("#is-validate-" + docId).html(data.responseText);
+            }
+        });
+
+        // Fermeture de la modal
+        $('#transmit-modal').modal('hide');
+
+    });
+
+
+
+
+
+
+
+
+
     // InnovaERV
     // Ajout pour le traitement de la case à cocher lors de la soumission de documents
     $('#validate-modal-return-receipt').on('show.bs.modal', function(event) {
@@ -492,6 +561,15 @@ $(document).ready(function() {
         $('#validate-modal-notation').modal('hide');
 
     });
+
+
+
+
+
+
+
+
+
 
     // InnovaERV
     // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document

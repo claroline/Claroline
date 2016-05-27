@@ -376,8 +376,6 @@ class DropController extends DropzoneBaseController
      */
     public function dropsAwaitingAction(Dropzone $dropzone, $page)
     {
-        echo $dropzone->getMaximumNotation();
-
         $translator = $this->get('translator');
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropManager = $this->get('innova.manager.drop_manager');
@@ -415,6 +413,9 @@ class DropController extends DropzoneBaseController
         $haveCommentOrNotArray = array();
 
         foreach ($dropzone->getDrops() as $drop) {
+            $notationDocuments = $dropManager->getNotationForDocuments($drop);
+            $recordOrTransmitNotations = $dropManager->getRecordOrTransmitNotation($drop);
+
             // Nombre de commentaires non lus / Repo : Comment
             $nbCommentsPerUser = $commentRepo->countCommentNotRead($drop->getUser());
             // Nombre de demandes adressées / Repo : Document
@@ -498,6 +499,8 @@ class DropController extends DropzoneBaseController
             'haveCommentOrNotArray' => $haveCommentOrNotArray,
             'teacherCommentDocArray' => $teacherDocComments,
             'maximumNotation' => $dropzone->getMaximumNotation(),
+            'notationDocuments' => $notationDocuments,
+            'recordOrTransmitNotations' => $recordOrTransmitNotations,
         ));
 
         return $dataToView;

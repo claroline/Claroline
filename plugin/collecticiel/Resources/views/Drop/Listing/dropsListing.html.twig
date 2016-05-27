@@ -163,7 +163,11 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                 {% if (document.validate == 1) %}
                     {# Séparation de l'affichage de la vue. InnovaERV #}
                     {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig'
-                        with {'maximumNotation': maximumNotation}
+                        with {
+                        'maximumNotation' : maximumNotation,
+                        'notationDocument' : notationDocuments[document.id],
+                        'recordOrTransmitNotation' : recordOrTransmitNotations[document.id]
+                        }
                      %}
                 {% endif %}
             {% endfor %}

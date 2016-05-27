@@ -237,4 +237,42 @@ class DropManager
 
         return $notationDocuments;
     }
+
+    public function getRecordOrTransmitNotation(Drop $drop)
+    {
+        $recordOrTransmitNotationArray = array();
+
+        $dropzone = $drop->getDropzone();
+
+        foreach ($drop->getDocuments() as $document) {
+            $documentId = $document->getId();
+
+            // Ajout pour avoir si la notation a été transmise ou pas.
+            $recordOrTransmitNotations = $this
+                        ->em->getRepository('InnovaCollecticielBundle:Notation')
+                        ->findBy(
+                            array(
+                                'document' => $documentId,
+                                'dropzone' => $dropzone->getId(),
+                                 )
+                            );
+
+            $countRecordOrTransmitNotation = count($recordOrTransmitNotations);
+
+            if ($countRecordOrTransmitNotation == 0) {
+                $recordOrTransmitNotationArray[$documentId] = 99;
+            } else {
+                // Parcours des commentaires des documents sélectionnés
+                foreach ($recordOrTransmitNotations as $recordOrTransmitNotation) {
+                    if ($recordOrTransmitNotation->getRecordOrTransmit()) {
+                        $recordOrTransmitNotationArray[$documentId] = 1;
+                    } else {
+                        $recordOrTransmitNotationArray[$documentId] = 0;
+                    }
+                }
+            }
+        }
+
+        return $recordOrTransmitNotationArray;
+    }
 }

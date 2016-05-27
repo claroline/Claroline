@@ -110,7 +110,23 @@
 
         {# TODO : On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
         {% if dropzone.evaluation == 1  %}
-            <td class="centered"></td>
+            <td class="centered">
+                {#  0 : enregistrer et pas transmise #}
+                {#  1 : transmise #}
+                {# 99 : pas de notation #}
+                {% if recordOrTransmitNotation == 0  %}
+                    <a data-target="#transmit-modal"  data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
+                        <i data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Not Transmitted review'|trans({},'innova_collecticiel') }}" class="fa fa-mail-forward">
+                        </i>
+                    </a>
+                {% endif %}
+                {% if recordOrTransmitNotation == 1  %}
+                    <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Transmitted review'|trans({},'innova_collecticiel') }}" class="fa fa-mail-forward"></span>
+                {% endif %}
+                {% if recordOrTransmitNotation == 99  %}
+                    <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Transmitted review'|trans({},'innova_collecticiel') }}" class="fa fa-times"></span>
+                {% endif %}
+            </td>
         {% endif %}
     {% endif %}
 
@@ -121,3 +137,41 @@
     </div>
     </td>
 </tr>
+
+    {# Déclaration de la modal pour confirmation de la validation #}
+    <div class="modal fade" id="transmit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">
+                    {# Version commentaire #}
+                    {% if dropzone.evaluation != 1  %}
+                        {{ 'Commented document modal'|trans({}, 'innova_collecticiel') }}
+                    {# Version évaluation #}
+                    {% else %}
+                        {{ 'Evaluation document modal'|trans({}, 'innova_collecticiel') }}
+                    {% endif %}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    {# Version commentaire #}
+                    {% if dropzone.evaluation != 1  %}
+                        {{ 'Sure to ask comment for document'|trans({}, 'innova_collecticiel') }}
+                    {# Version évaluation #}
+                    {% else %}
+                        {{ 'Sure to ask evaluation for document'|trans({}, 'innova_collecticiel') }}
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
+                    <button data-document_id="titi"
+                            data-document_sender_id="99" 
+                            data-document_comment_length="99"
+                            data-document_docDropUser_id="99" 
+                            data-document_adminInnova="99" 
+                    id="modal_transmit_confirm" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
