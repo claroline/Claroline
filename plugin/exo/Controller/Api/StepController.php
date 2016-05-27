@@ -107,7 +107,7 @@ class StepController
         $this->exerciseManager->deleteStep($exercise, $step);
 
         // Return updated list of steps
-        return new JsonResponse($this->get('ujm.exo.exercise_manager')->exportSteps($exercise, false));
+        return new JsonResponse($this->exerciseManager->exportSteps($exercise, false));
     }
 
     /**

@@ -309,7 +309,7 @@ ExerciseService.prototype.removeStep = function removeStep(step) {
     var deferred = this.$q.defer();
     this.$http
         .delete(
-            Routing.generate('exercise_step_delete', { id: this.exercise.id, sid: step.id })
+            Routing.generate('exercise_step_delete', { exerciseId: this.exercise.id, id: step.id })
         )
         // Success callback
         .success(function (response) {
