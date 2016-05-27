@@ -207,7 +207,6 @@ class QtiController extends Controller
             $qtiSer->createQuestionsDirectory($questions, $step->getOrder());
             $dirs = $qtiSer->sortPathOfQuestions($qtiRepo, $step->getOrder());
             $i = 'a';
-            var_dump($dirs);
             foreach ($dirs as $dir) {
                 $iterator = new \DirectoryIterator($dir);
                 /** @var \DirectoryIterator $element */
