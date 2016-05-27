@@ -25,7 +25,7 @@ class Step
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="string", length=255)
+     * @ORM\Column(name="value", type="string", length=255, nullable=true)
      */
     private $text;
 
@@ -79,6 +79,7 @@ class Step
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="StepQuestion", mappedBy="step", cascade={"all"})
+     * @ORM\OrderBy({"ordre" = "ASC"})
      */
     private $stepQuestions;
 

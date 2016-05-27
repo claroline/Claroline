@@ -352,6 +352,8 @@ sort: Trier les documents
 summative : Sommatif
 show_additional_info: Afficher les informations supplémentaires
 step: Etape
+step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
+step_item_add: Glisser/déposer ou cliquer sur le bouton "+" pour ajouter des questions
 
 # T
 temporary_mark: Note temporaire

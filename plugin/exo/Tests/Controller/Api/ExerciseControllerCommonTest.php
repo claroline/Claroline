@@ -57,6 +57,19 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
         $this->qu1 = $this->persist->qcmQuestion('qu1', [$this->ch1, $this->ch2]);
         $this->hi1 = $this->persist->hint($this->qu1, 'hi1');
         $this->ex1 = $this->persist->exercise('ex1', [$this->qu1], $this->john);
+
+        // Set up Exercise permissions
+        // create 'open' mask in db
+        $type = $this->ex1->getResourceNode()->getResourceType();
+        $this->persist->maskDecoder($type, 'open', 1);
+        $this->om->flush();
+
+        $rightsManager = $this->client->getContainer()->get('claroline.manager.rights_manager');
+        $roleManager = $this->client->getContainer()->get('claroline.manager.role_manager');
+
+        // add open permissions to all users
+        $rightsManager->editPerms(1, $roleManager->getRoleByName('ROLE_USER'), $this->ex1->getResourceNode());
+
         $this->om->flush();
     }
 
@@ -124,20 +137,6 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
      */
     public function testAttemptMaxAttemptsReached()
     {
-
-        // create 'open' mask in db
-        $type = $this->ex1->getResourceNode()->getResourceType();
-        $this->persist->maskDecoder($type, 'open', 1);
-        $this->om->flush();
-
-        // get rights managers
-        $rightsManager = $this->client->getContainer()->get('claroline.manager.rights_manager');
-        $roleManager = $this->client->getContainer()->get('claroline.manager.role_manager');
-
-        // add open permissions to all users
-        $node = $this->ex1->getResourceNode();
-        $rightsManager->editPerms(1, $roleManager->getRoleByName('ROLE_USER'), $node, true);
-
         // set exercise max attempts
         $this->ex1->setMaxAttempts(1);
         // first attempt for bob

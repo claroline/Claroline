@@ -1,3 +1,39 @@
+.steps {
+    .handle {
+        cursor: move;
+        padding: 0 5px;
+    }
+
+    .step-item {
+        cursor: move;
+    }
+
+    .panel {
+        > .panel-heading {
+            border-bottom: none;
+
+            .panel-title {
+                span {
+                    vertical-align: middle;
+                    display: inline-block;
+                }
+            }
+
+            small {
+                display: block;
+            }
+
+            & + .table {
+                border-top: 1px solid @panel-inner-border;
+            }
+        }
+    }
+
+    .table > tbody > tr > td {
+        vertical-align: middle;
+    }
+}
+
 .step-container {
     > .step-title {
         margin-top: 0;
