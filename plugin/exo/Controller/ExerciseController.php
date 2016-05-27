@@ -299,7 +299,7 @@ class ExerciseController extends Controller
             $pageGoNow = $request->request->get('pageGoNow');
             $qid = $request->request->get('qid');
 
-            $result = $em->getRepository('UJMExoBundle:StepQuestion')->getMaxOrder($exo);
+            $result=$em->getRepository('UJMExoBundle:Step')->getMaxOrder($exo);
 
             $maxOrdre = (int) $result[0][1] + 1;
 
@@ -344,13 +344,16 @@ class ExerciseController extends Controller
     public function addStepAction(Exercise $exercise)
     {
         $this->assertHasPermission('ADMINISTRATE', $exercise);
+        $em = $this->getDoctrine()->getManager();
 
         $step = new Step();
         $step->setText(' ');
         $step->setNbQuestion('0');
         $step->setDuration(0);
         $step->setMaxAttempts(5);
-        $step->setOrder($exercise->getSteps()->count() + 1);
+        $result=$em->getRepository('UJMExoBundle:Step')->getMaxOrder($exercise);
+        $maxOrder = (int) $result[1] + 1;
+        $step->setOrder($maxOrder);
 
         // Link the Step to the Exercise
         $exercise->addStep($step);
