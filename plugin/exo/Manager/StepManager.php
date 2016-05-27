@@ -68,16 +68,35 @@ class StepManager
     }
 
     /**
-     * Reorder the Questions of a Step
+     * Reorder the Questions of a Step.
      *
      * @param Step $step
      * @param array $order an ordered array of Question IDs
      *
      * @return array array of errors if something went wrong
      */
-    public function reorderItems(Step $step, array $order)
+    public function reorderQuestions(Step $step, array $order)
     {
+        foreach ($order as $questionId) {
+            $stepQuestion = $this->om->getRepository('UJMExoBundle::StepQuestion');
+            if ($stepQuestion->getStep() !== $step) {
+                // The question come from another Step => destroy old link and create a new One
+            }
+        }
 
+        $stepQuestions = $step->getStepQuestions();
+    }
+
+    public function isQuestionInStep(Step $step, Question $question)
+    {
+        $found = false;
+        $stepQuestions = $step->getStepQuestions();
+        /** @var StepQuestion $stepQuestion */
+        foreach ($stepQuestions as $stepQuestion) {
+            /*if ($stepQuestion->)*/
+        }
+
+        return $found;
     }
 
     /**

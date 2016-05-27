@@ -24,11 +24,13 @@ var StepListCtrl = function StepListCtrl($scope, steps, dragulaService, Exercise
         this.ExerciseService.reorderSteps();
     }.bind(this));
 
-    $scope.$on('order-questions.drop-model', function dropStep(el, target, source) {
-        console.log(el);
-        console.log(target);
-        console.log(source);
-        /*this.StepService.reorderQuestions();*/
+    $scope.$on('order-questions.drop-model', function dropQuestion(el, target, source) {
+        // Can not find another to retrieve the model step
+        var stepId = source.attr('data-step-id');
+        var step = this.ExerciseService.getStep(stepId);
+        if (step) {
+            this.StepService.reorderItems(step);
+        }
     }.bind(this));
 };
 
