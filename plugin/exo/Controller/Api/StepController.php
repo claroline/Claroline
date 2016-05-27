@@ -131,18 +131,22 @@ class StepController
         $this->assertHasPermission('ADMINISTRATE', $exercise);
 
         $dataRaw = $request->getContent();
-        if (!empty($dataRaw)) {
-            $order = json_decode($dataRaw);
-            if (!is_array($order)) {
-                return new JsonResponse([
-                    'message' => 'Invalid data sent. Expected an array of Step IDs.',
-                ], 422);
-            }
+        if (empty($dataRaw)) {
+            return new JsonResponse([
+                'message' => 'No data sent.',
+            ], 422);
+        }
 
-            $errors = $this->exerciseManager->reorderSteps($exercise, $order);
-            if (count($errors) !== 0) {
-                return new JsonResponse($errors, 422);
-            }
+        $order = json_decode($dataRaw);
+        if (!is_array($order)) {
+            return new JsonResponse([
+                'message' => 'Invalid data sent. Expected an array of Step IDs.',
+            ], 422);
+        }
+
+        $errors = $this->exerciseManager->reorderSteps($exercise, $order);
+        if (count($errors) !== 0) {
+            return new JsonResponse($errors, 422);
         }
 
         return new JsonResponse(null, 204);
@@ -170,18 +174,22 @@ class StepController
         $this->assertHasPermission('ADMINISTRATE', $exercise);
 
         $dataRaw = $request->getContent();
-        if (!empty($dataRaw)) {
-            $order = json_decode($dataRaw);
-            if (!is_array($order)) {
-                return new JsonResponse([
-                    'message' => 'Invalid data sent. Expected an array of Question IDs.',
-                ], 422);
-            }
+        if (empty($dataRaw)) {
+            return new JsonResponse([
+                'message' => 'No data sent.',
+            ], 422);
+        }
 
-            $errors = $this->stepManager->reorderQuestions($step, $order);
-            if (count($errors) !== 0) {
-                return new JsonResponse($errors, 422);
-            }
+        $order = json_decode($dataRaw);
+        if (!is_array($order)) {
+            return new JsonResponse([
+                'message' => 'Invalid data sent. Expected an array of Question IDs.',
+            ], 422);
+        }
+
+        $errors = $this->stepManager->reorderQuestions($step, $order);
+        if (count($errors) !== 0) {
+            return new JsonResponse($errors, 422);
         }
 
         return new JsonResponse(null, 204);
