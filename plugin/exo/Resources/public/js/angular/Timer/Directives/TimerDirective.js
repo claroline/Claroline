@@ -7,7 +7,7 @@ var TimerDirective = function TimerDirective(TimerService) {
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Common/Partials/timer.html',
+        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Timer/Partials/timer.html',
         bindToController: true,
         controllerAs: 'timerCtrl',
         controller: function TimerCtrl() {},
@@ -46,5 +46,5 @@ TimerDirective.$inject = [ 'TimerService' ];
 
 // Register directive into AngularJS
 angular
-    .module('Common')
+    .module('Timer')
     .directive('timer', TimerDirective);
