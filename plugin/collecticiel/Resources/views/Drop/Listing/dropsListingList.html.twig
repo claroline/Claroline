@@ -108,26 +108,9 @@
             </td>
         {% endif %}
 
-        {# TODO : On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
         {% if dropzone.evaluation == 1  %}
-            <td class="centered">
-                {#  0 : enregistrer et pas transmise #}
-                {#  1 : transmise #}
-                {# 99 : pas de notation #}
-                {% if recordOrTransmitNotation == 0  %}
-                    <a data-target="#transmit-modal"  data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
-                        <i data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Not Transmitted review'|trans({},'innova_collecticiel') }}" class="fa fa-mail-forward">
-                        </i>
-                    </a>
-                {% endif %}
-                {% if recordOrTransmitNotation == 1  %}
-                    <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Transmitted review'|trans({},'innova_collecticiel') }}" class="fa fa-mail-forward"></span>
-                {% endif %}
-                {% if recordOrTransmitNotation == 99  %}
-                    <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Transmitted review'|trans({},'innova_collecticiel') }}" class="fa fa-times"></span>
-                {% endif %}
-            </td>
-        {% endif %}
+            {% include 'InnovaCollecticielBundle:Document:documentIsTransmit.html.twig' %}
+              {% endif %}
     {% endif %}
 
     <td class="centered no-sort sorting_disabled">
@@ -165,7 +148,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
-                    <button data-document_id="titi"
+                    <button data-document_id="{{document.id}}"
+                            data-dropzone_id="{{dropzone.id}}"
                             data-document_sender_id="99" 
                             data-document_comment_length="99"
                             data-document_docDropUser_id="99" 

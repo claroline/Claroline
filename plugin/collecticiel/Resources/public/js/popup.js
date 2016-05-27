@@ -308,6 +308,9 @@ $(document).ready(function() {
 
         // Récupération de l'id du document
         var docId = $(this).attr("data-document_id");
+        // Récupération du dropzone
+        var dropzoneId = $(this).attr("data-dropzone_id");
+
         var senderId = $(this).attr("data-document_sender_id");
         var commentLength = $(this).attr("data-document_comment_length");
         var docDropUserId = $(this).attr("data-document_docDropUser_id"); // Extract info from data-* attributes
@@ -335,11 +338,13 @@ $(document).ready(function() {
         // Ajout de "complete" afin de mettre Ã  jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
         $.ajax({
             url: Routing.generate('innova_collecticiel_validate_transmit_evaluation', {
-                documentId: docId
+                documentId: docId,
+                dropzoneId: dropzoneId,
             }),
             method: "POST",
             data: {
-                documentId: docId
+                documentId: docId,
+                dropzoneId: dropzoneId,
             },
             complete: function(data) {
                 $("#is-validate-" + docId).html(data.responseText);

@@ -12,10 +12,8 @@ use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Notation;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Innova\CollecticielBundle\Entity\Drop;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
-use Innova\CollecticielBundle\Event\Log\LogDropzoneValidateDocumentEvent;
 
 class NotationController extends DropzoneBaseController
 {
@@ -75,75 +73,56 @@ class NotationController extends DropzoneBaseController
 
     /**
      * @Route(
-     *      "/document/{documentId}",
+     *      "/document/{documentId}/dropzone/{dropzoneId}",
      *      name="innova_collecticiel_validate_transmit_evaluation",
      *      requirements={"documentId" = "\d+", "dropzoneId" = "\d+"},
      *      options={"expose"=true}
      * )
      * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "dropzoneId"})
      * @Template()
      */
-    public function ajaxValidateTransmitEvaluationDocumentAction(Document $document)
+    public function ajaxValidateTransmitEvaluationDocumentAction(Document $document, Dropzone $dropzone)
     {
 
         // Appel pour accés base         
         $em = $this->getDoctrine()->getManager();
 
         // Recherche en base des données du document à mettre à jour
-        $doc = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Document')->find($document->getId());
+        $document = $em->getRepository('InnovaCollecticielBundle:Document')->find($document->getId());
 
         // Mise à jour du booléen de Validation de false à true
-        $doc->setvalidate(true);
+        //$doc->setvalidate(true);
 
         // Récupération du dropID puis du dropZone
-        $dropId = $document->getDrop()->getId();
+        //$dropId = $document->getDrop()->getId();
 
-        $dropRepo = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop');
-        $drops = $dropRepo->findBy(array('id' => $dropId));
+        $dropzone = $em->getRepository('InnovaCollecticielBundle:DropZone')->find($dropzone->getId());
 
-        $dropzoneRepo = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:DropZone');
-        $dropzones = $dropzoneRepo->findBy(array('id' => $drops[0]->getDropzone()->getId()));
+        echo 'doc';
+        echo $document->getId();
+        echo $dropzone->getId();
+
+        // Ajout pour avoir si la notation a été transmise ou pas.
+        $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
+                    ->findBy(
+                            array(
+                                'document' => $document->getId(),
+                                'dropzone' => $dropzone->getId(),
+                                 )
+                            );
+
+        $notation[0]->setRecordOrTransmit(true);
 
         // Mise à jour de la base de données
-        //$em->persist($doc);
-        //$em->flush();
-
-        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
-        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzones[0]);
-
-        // Envoi notification. InnovaERV
-        $usersIds = array();
-
-        // Ici, on récupère le créateur du collecticiel = l'admin
-        if ($document->getType() == 'url') {
-            $userCreator = $document->getDrop()->getDropzone()->getResourceNode()->getCreator()->getId();
-        } else {
-            $userCreator = $document->getResourceNode()->getCreator()->getId();
-        }
-
-        // Ici, on récupère celui qui vient de déposer le nouveau document
-        //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
-        $userDropDocument = $document->getDrop()->getUser()->getId();
-        $userSenderDocument = $document->getSender()->getId();
-
-        if ($userCreator == $userSenderDocument) {
-            // Ici avertir l'étudiant qui a travaillé sur ce collecticiel
-            $usersIds[] = $userDropDocument;
-        } else {
-            // Ici avertir celui a qui créé le collecticiel
-            $usersIds[] = $userCreator;
-        }
-
-        $event = new LogDropzoneValidateDocumentEvent($document, $dropzones[0], $usersIds);
-
-        $this->get('event_dispatcher')->dispatch('log', $event);
+        $em->persist($notation[0]);
+        $em->flush();
 
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get('templating')->
-        render('InnovaCollecticielBundle:Document:documentIsValidate.html.twig',
+        render('InnovaCollecticielBundle:Document:documentIsTransmit.html.twig',
                 array('document' => $document,
-                      'collecticielOpenOrNot' => $collecticielOpenOrNot,
-                      'dropzone' => $dropzones[0],
+                      'dropzone' => $dropzone,
                     )
                );
 
