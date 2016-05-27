@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
+use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\InteractionOpen;
 use UJM\ExoBundle\Entity\Step;
@@ -98,66 +99,63 @@ class QtiRepository
     {
         $xmlFileFound = false;
         $info = '';
-        if ($dh = opendir($this->getUserDir())) {
-            while (($file = readdir($dh)) !== false) {
-                if (substr($file, -4, 4) == '.xml'
-                        && $this->alreadyImported($file) === false) {
-                    $xmlFileFound = true;
-                    $document_xml = new \DomDocument();
-                    $document_xml->load($this->getUserDir().'/'.$file);
-                    foreach ($document_xml->getElementsByTagName('assessmentItem') as $ai) {
-                        $imported = false;
-                        $ib = $ai->getElementsByTagName('itemBody')->item(0);
-                        foreach ($ib->childNodes as $node) {
-                            if ($imported === false) {
-                                switch ($node->nodeName) {
-                                    case 'choiceInteraction': //qcm
-                                        $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionQCM');
-                                        $interX = $qtiImport->import($this, $ai);
-                                        $imported = true;
-                                        break;
-                                    case 'selectPointInteraction': //graphic with the tag selectPointInteraction
-                                        $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
-                                        $interX = $qtiImport->import($this, $ai);
-                                        $imported = true;
-                                        break;
-                                    case 'hotspotInteraction': //graphic with the tag hotspotInteraction
-                                        $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
-                                        $interX = $qtiImport->import($this, $ai);
-                                        $imported = true;
-                                        break;
-                                    case 'extendedTextInteraction': /*open (long or short)*/
-                                        $qtiImport = $this->longOrShort($ai);
-                                        $interX = $qtiImport->import($this, $ai);
-                                        $imported = true;
-                                        break;
-                                    case 'matchInteraction': //matching
-                                        $qtiImport = $this->container->get('ujm.exo_qti_import_matching');
-                                        $interX = $qtiImport->import($this, $ai);
-                                        $imported = true;
-                                        break;
-                                }
-                            }
-                        }
+        $iterator = new RecursiveDirectoryIterator($this->getUserDir(), \FilesystemIterator::SKIP_DOTS);
+        foreach (new \RecursiveIteratorIterator($iterator) as $file) {
+            if ($file->getExtension() == 'xml' && $this->alreadyImported(base64_encode($file)) === false) {
+                $xmlFileFound = true;
+                $document_xml = new \DomDocument();
+                $document_xml->load($file);
+                foreach ($document_xml->getElementsByTagName('assessmentItem') as $ai) {
+                    $imported = false;
+                    $ib = $ai->getElementsByTagName('itemBody')->item(0);
+                    foreach ($ib->childNodes as $node) {
                         if ($imported === false) {
-                            $other = $this->importOther($ai);
-                            $interX = $other[0];
-                            $imported = $other[1];
-                            if ($imported == false) {
-                                $info .= $file.' qti unsupported format'."\n";
+                            switch ($node->nodeName) {
+                                case 'choiceInteraction': //qcm
+                                    $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionQCM');
+                                    $interX = $qtiImport->import($this, $ai);
+                                    $imported = true;
+                                    break;
+                                case 'selectPointInteraction': //graphic with the tag selectPointInteraction
+                                    $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
+                                    $interX = $qtiImport->import($this, $ai);
+                                    $imported = true;
+                                    break;
+                                case 'hotspotInteraction': //graphic with the tag hotspotInteraction
+                                    $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
+                                    $interX = $qtiImport->import($this, $ai);
+                                    $imported = true;
+                                    break;
+                                case 'extendedTextInteraction': /*open (long or short)*/
+                                    $qtiImport = $this->longOrShort($ai);
+                                    $interX = $qtiImport->import($this, $ai);
+                                    $imported = true;
+                                    break;
+                                case 'matchInteraction': //matching
+                                    $qtiImport = $this->container->get('ujm.exo_qti_import_matching');
+                                    $interX = $qtiImport->import($this, $ai);
+                                    $imported = true;
+                                    break;
                             }
                         }
-                        if ($this->step != null) {
-                            $this->exerciseQuestions[] = $file;
-                            $this->importedQuestions[$file] = $interX;
+                    }
+                    if ($imported === false) {
+                        $other = $this->importOther($ai);
+                        $interX = $other[0];
+                        $imported = $other[1];
+                        if ($imported == false) {
+                            $info .= $file.' qti unsupported format'."\n";
                         }
+                    }
+                    if ($this->step != null) {
+                        $this->exerciseQuestions[] = $file;
+                        $this->importedQuestions[$file] = $interX;
                     }
                 }
             }
-            if ($xmlFileFound === false) {
-                $info .= 'qti xml not found'."\n";
-            }
-            closedir($dh);
+        }
+        if ($xmlFileFound === false) {
+            $info .= 'qti xml not found'."\n";
         }
 
         $this->removeDirectory();

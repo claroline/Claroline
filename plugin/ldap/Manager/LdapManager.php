@@ -159,7 +159,7 @@ class LdapManager
     {
         $servers = isset($this->config['servers']) ? $this->config['servers'] : null;
 
-        if ((!$name or ($name && $name !== $data['name'])) &&
+        if ((!$name || ($name && $name !== $data['name'])) &&
             isset($data['name']) && isset($servers[$data['name']])
         ) {
             return true;
