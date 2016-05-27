@@ -59,6 +59,11 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
         $this->ex1 = $this->persist->exercise('ex1', [$this->qu1], $this->john);
 
         // Set up Exercise permissions
+        // create 'open' mask in db
+        $type = $this->ex1->getResourceNode()->getResourceType();
+        $this->persist->maskDecoder($type, 'open', 1);
+        $this->om->flush();
+
         $rightsManager = $this->client->getContainer()->get('claroline.manager.rights_manager');
         $roleManager = $this->client->getContainer()->get('claroline.manager.role_manager');
 
