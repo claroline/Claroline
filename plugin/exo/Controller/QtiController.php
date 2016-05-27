@@ -130,7 +130,7 @@ class QtiController extends Controller
                     'pageNow' => 0,
                     'categoryToFind' => 'z',
                     'titleToFind' => 'z',
-                    'displayAll' => 0 ,)
+                    'displayAll' => 0, )
             );
         }
     }
@@ -152,7 +152,6 @@ class QtiController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-        
         $tmpFileName = $qtiRepo->getUserDir().'zip/'.$title.'_qestion_qti.zip';
 
         $zip = new \ZipArchive();
@@ -214,7 +213,7 @@ class QtiController extends Controller
                 /** @var \DirectoryIterator $element */
                 foreach ($iterator as $element) {
                     if (!$element->isDot() && $element->isFile()) {
-                        $partDirectory = $title.'/'.$step->getOrder().'/'.$step->getOrder().'_question_'.$i.'/'. $element->getFilename();
+                        $partDirectory = $title.'/'.$step->getOrder().'/'.$step->getOrder().'_question_'.$i.'/'.$element->getFilename();
                         $zip->addFile($element->getPathname(), $partDirectory);
                     }
                 }
