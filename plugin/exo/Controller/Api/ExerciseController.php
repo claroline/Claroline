@@ -148,7 +148,7 @@ class ExerciseController
     public function papersAction(User $user, Exercise $exercise)
     {
         $this->assertHasPermission('OPEN', $exercise);
-        
+
         if ($this->isAdmin($exercise)) {
             return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
         }

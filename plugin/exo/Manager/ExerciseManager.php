@@ -49,7 +49,7 @@ class ExerciseManager
     }
 
     /**
-     * Create and add a new Step to an Exercise
+     * Create and add a new Step to an Exercise.
      *
      * @param Exercise $exercise
      *
@@ -73,7 +73,7 @@ class ExerciseManager
      * Delete a Step.
      *
      * @param Exercise $exercise
-     * @param Step $step
+     * @param Step     $step
      */
     public function deleteStep(Exercise $exercise, Step $step)
     {
@@ -95,7 +95,7 @@ class ExerciseManager
      * Reorder the steps of an Exercise.
      *
      * @param Exercise $exercise
-     * @param array $order an ordered array of Step IDs
+     * @param array    $order    an ordered array of Step IDs
      *
      * @return array array of errors if something went wrong
      */

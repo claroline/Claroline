@@ -49,8 +49,8 @@ class StepController
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
-     * @param ExerciseManager $exerciseManager
-     * @param StepManager $stepManager
+     * @param ExerciseManager               $exerciseManager
+     * @param StepManager                   $stepManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -122,7 +122,7 @@ class StepController
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
      *
      * @param Exercise $exercise
-     * @param Request $request
+     * @param Request  $request
      *
      * @return JsonResponse
      */
@@ -135,7 +135,7 @@ class StepController
             $order = json_decode($dataRaw);
             if (!is_array($order)) {
                 return new JsonResponse([
-                    'message' => 'Invalid data sent. Expected an array of Step IDs.'
+                    'message' => 'Invalid data sent. Expected an array of Step IDs.',
                 ], 422);
             }
 
@@ -158,10 +158,10 @@ class StepController
      * )
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
-
+     
      * @param Exercise $exercise
-     * @param Step $step
-     * @param Request $request
+     * @param Step     $step
+     * @param Request  $request
      *
      * @return JsonResponse
      */
@@ -174,7 +174,7 @@ class StepController
             $order = json_decode($dataRaw);
             if (!is_array($order)) {
                 return new JsonResponse([
-                    'message' => 'Invalid data sent. Expected an array of Question IDs.'
+                    'message' => 'Invalid data sent. Expected an array of Question IDs.',
                 ], 422);
             }
 

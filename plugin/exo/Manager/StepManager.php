@@ -70,7 +70,7 @@ class StepManager
     /**
      * Reorder the Questions of a Step.
      *
-     * @param Step $step
+     * @param Step  $step
      * @param array $order an ordered array of Question IDs
      *
      * @return array array of errors if something went wrong

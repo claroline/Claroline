@@ -307,7 +307,7 @@ class ExerciseController extends Controller
                 if (!empty($question)) {
                     // Create a step for one question in the exercise
                     $this->container->get('ujm.exo_exercise')->createStepForOneQuestion($exo, $question, $order);
-                    $order++;
+                    ++$order;
                 }
             }
 
