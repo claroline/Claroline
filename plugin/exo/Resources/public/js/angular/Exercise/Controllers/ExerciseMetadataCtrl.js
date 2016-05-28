@@ -3,15 +3,14 @@
  * Manages edition of the parameters of the Exercise
  * @param {Object}          $location
  * @param {ExerciseService} ExerciseService
- * @param {Object}          exercise - The exercise to Edit
  * @constructor
  */
-var ExerciseMetadataCtrl = function ExerciseMetadataCtrl($location, ExerciseService, exercise) {
+var ExerciseMetadataCtrl = function ExerciseMetadataCtrl($location, ExerciseService) {
     this.$location        = $location;
     this.ExerciseService = ExerciseService;
 
     // Create a copy of the exercise
-    angular.copy(exercise, this.exercise);
+    angular.copy(this.ExerciseService.getMetadata(), this.meta);
 
     this.correctionModes = this.ExerciseService.correctionModes;
     this.markModes       = this.ExerciseService.markModes;
@@ -49,7 +48,7 @@ var ExerciseMetadataCtrl = function ExerciseMetadataCtrl($location, ExerciseServ
 };
 
 // Set up dependency injection
-ExerciseMetadataCtrl.$inject = [ '$location', 'ExerciseService', 'exercise' ];
+ExerciseMetadataCtrl.$inject = [ '$location', 'ExerciseService' ];
 
 /**
  * Tiny MCE options
@@ -61,7 +60,7 @@ ExerciseMetadataCtrl.prototype.tinymceOptions = {};
  * A copy of the Exercise to edit (to not override Exercise data if User cancel the edition)
  * @type {Object}
  */
-ExerciseMetadataCtrl.prototype.exercise = {};
+ExerciseMetadataCtrl.prototype.meta = {};
 
 /**
  * List of available correction modes for Exercise
@@ -79,7 +78,7 @@ ExerciseMetadataCtrl.prototype.markModes = {};
  * Save modifications of the Exercise
  */
 ExerciseMetadataCtrl.prototype.save = function save() {
-    this.ExerciseService.save(this.exercise).then(function onSuccess() {
+    this.ExerciseService.save(this.meta).then(function onSuccess() {
         // Go back on the overview
         this.$location.path('/');
     }.bind(this));

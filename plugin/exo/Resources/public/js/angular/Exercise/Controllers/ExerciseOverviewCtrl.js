@@ -1,18 +1,20 @@
 /**
+ * Display the general information about the Exercise
  *
- * @param {Object} exercise
- * @param {boolean} editEnabled
+ * @param {ExerciseService}  ExerciseService
  * @param {UserPaperService} UserPaperService
  * @constructor
  */
-var ExerciseOverviewCtrl = function ExerciseOverviewCtrl(exercise, editEnabled, UserPaperService) {
-    this.exercise    = exercise;
-    this.editEnabled = editEnabled;
+var ExerciseOverviewCtrl = function ExerciseOverviewCtrl(ExerciseService, UserPaperService) {
+    this.ExerciseService = ExerciseService;
     this.UserPaperService = UserPaperService;
+
+    this.exercise    = this.ExerciseService.getExercise();
+    this.editEnabled = this.ExerciseService.isEditEnabled();
 };
 
 // Set up dependency injection
-ExerciseOverviewCtrl.$inject = [ 'exercise', 'editEnabled', 'UserPaperService' ];
+ExerciseOverviewCtrl.$inject = [ 'ExerciseService', 'UserPaperService' ];
 
 /**
  * Current Exercise
@@ -25,7 +27,7 @@ ExerciseOverviewCtrl.prototype.exercise = null;
  * we display him tools to do it
  * @type {boolean}
  */
-ExerciseCtrl.prototype.editEnabled = false;
+ExerciseOverviewCtrl.prototype.editEnabled = false;
 
 /**
  * Display/Hide additional info of the Exercise

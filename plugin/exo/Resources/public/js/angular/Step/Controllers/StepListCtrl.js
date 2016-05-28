@@ -1,18 +1,17 @@
 /**
  * List of steps of an Exercise
  * @param {Object}          $scope
- * @param {Array}           steps
  * @param {Object}          dragulaService
  * @param {ExerciseService} ExerciseService
  * @param {StepService}     StepService
  * @constructor
  */
-var StepListCtrl = function StepListCtrl($scope, steps, dragulaService, ExerciseService, StepService) {
-    this.steps           = steps;
+var StepListCtrl = function StepListCtrl($scope, dragulaService, ExerciseService, StepService) {
     this.ExerciseService = ExerciseService;
     this.StepService     = StepService;
 
-    this.exerciseId      = ExerciseService.getExercise().id;
+    this.exerciseId      = ExerciseService.getExercise().id; // Only used by PHP actions need to be removed at the end of refactoring
+    this.steps           = ExerciseService.getSteps();
 
     dragulaService.options($scope, 'order-steps', {
         moves: function (el, container, handle) {
@@ -41,7 +40,7 @@ var StepListCtrl = function StepListCtrl($scope, steps, dragulaService, Exercise
 };
 
 // Set p up dependency injection
-StepListCtrl.$inject = [ '$scope', 'steps', 'dragulaService', 'ExerciseService', 'StepService' ];
+StepListCtrl.$inject = [ '$scope', 'dragulaService', 'ExerciseService', 'StepService' ];
 
 /**
  * Id of the current Exercise (for PHP actions links)

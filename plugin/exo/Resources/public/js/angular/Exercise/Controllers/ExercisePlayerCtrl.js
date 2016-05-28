@@ -3,7 +3,6 @@
  * Plays and registers answers to an Exercise
  *
  * @param {Object}           $location
- * @param {Object}           exercise
  * @param {Object}           step
  * @param {Object}           paper
  * @param {CommonService}    CommonService
@@ -15,7 +14,6 @@
  */
 var ExercisePlayerCtrl = function ExercisePlayerCtrl(
     $location,
-    exercise,
     step,
     paper,
     CommonService,
@@ -33,7 +31,7 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl(
     this.TimerService     = TimerService;
 
     // Initialize some data
-    this.exercise = exercise; // Current exercise
+    this.exercise = this.ExerciseService.getExercise(); // Current exercise
     this.paper    = paper;    // Paper of the current User
 
     this.step     = step;
@@ -67,7 +65,6 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl(
 // Set up dependency injection
 ExercisePlayerCtrl.$inject = [
     '$location',
-    'exercise',
     'step',
     'paper',
     'CommonService',
