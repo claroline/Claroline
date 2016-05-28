@@ -6,16 +6,18 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class QtiServices
 {
-    private $container;
+    /**
+     * @var QtiRepository
+     */
+    private $qtiRepository;
 
     /**
-     * Constructor.
      *
-     * @param \Symfony\Component\DependencyInjection\Container $container
+     * @param QtiRepository       $qtiRepository
      */
-    public function __construct($container)
+    public function __construct(QtiRepository $qtiRepository)
     {
-        $this->container = $container;
+        $this->qtiRepository = $qtiRepository;
     }
     /**
      * For create a zip where questions while be integrate.
@@ -72,18 +74,18 @@ class QtiServices
      */
     public function createQuestionsDirectory(array $questions, $numStep)
     {
-        $qtiRepo = $this->container->get('ujm.exo_qti_repository');
+        //$qtiRepo = $this->qtiRepository->get('ujm.exo_qti_repository');
 
-        @mkdir($qtiRepo->getUserDir().'questions');
+        @mkdir($this->qtiRepository->getUserDir().'questions');
         $i = 'a';
-        @mkdir($qtiRepo->getUserDir().'questions/'.$numStep);
+        @mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep);
         foreach ($questions as $question) {
-            $qtiRepo->export($question);
-            @mkdir($qtiRepo->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i);
-            $iterator = new \DirectoryIterator($qtiRepo->getUserDir());
+            $this->qtiRepository->export($question);
+            @mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i);
+            $iterator = new \DirectoryIterator($this->qtiRepository->getUserDir());
             foreach ($iterator as $element) {
                 if (!$element->isDot() && $element->isFile()) {
-                    rename($qtiRepo->getUserDir().$element->getFilename(), $qtiRepo->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i.'/'.$element->getFilename());
+                    rename($this->qtiRepository->getUserDir().$element->getFilename(), $this->qtiRepository->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i.'/'.$element->getFilename());
                 }
             }
             $i .= 'a';
