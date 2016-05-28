@@ -139,6 +139,9 @@ formative : Formative
 
 # G
 graphic: Graphic
+graphic_area_shape_rect: Rectangle
+graphic_area_shape_circle: Circle
+graphic_area_shape_poly: Polygon
 graphic_creation: Graphic creation
 graphic_edition: Graphic edition
 graphic_help: Drag the crosshairs on the picture to mark your answer
@@ -179,6 +182,7 @@ info_search_type: If you want to do a search by type, you must used the followin
 instruction_add_hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
 instruction_matching: To set your correspondence, choose in the column "Correspondence" the number of one or more proposals to associate.
 in_valid_mark: Invalid score
+item_points: "[0,1] %count% point|]1,Inf[ %count% points"
 
 # K
 keep_same_question: Keep the same questions for a same user
@@ -303,6 +307,7 @@ question_title: Question title (optional)
 question_shared_with: This question is shared with users below
 question_need_manual_correction: This question needs a manual correction
 question_open_keywords_info: Your answer needs to contain the following keywords to get the points
+question_graphic_nb_pointers: "{0} There is no more pointer to place on the picture.|{1} There is still %count% pointer to place on the picture.|]1,Inf[ There are still %count% pointers to place on the picture."
 
 # R
 random_questions: Random order of questions
