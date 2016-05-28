@@ -64,12 +64,16 @@
                 <td at-implicit at-attribute="number" at-sortable></td>
 
                 <!-- Date start -->
-                <td at-implicit at-attribute="start" at-sortable at-initial-sorting="asc"></td>
+                <td at-attribute="start" at-sortable at-initial-sorting="asc">
+                    {{ item.start|date_string:'dd/MM/yyyy HH:mm:ss' }}
+                </td>
 
                 <!-- Date end -->
                 <td at-attribute="end" at-sortable>
                     <!-- Paper ended -->
-                    <span data-ng-if="item.end">{{ item.end }}</span>
+                    <span data-ng-if="item.end">
+                        {{ item.end|date_string:'dd/MM/yyyy HH:mm:ss' }}
+                    </span>
 
                     <!-- Paper interrupted -->
                     <span data-ng-if="!item.end">-</span>

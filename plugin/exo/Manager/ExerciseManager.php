@@ -381,7 +381,7 @@ class ExerciseManager
 
         $correctionDate = null;
         if (!empty($metadata->correctionDate) && CorrectionMode::AFTER_DATE == $metadata->correctionMode) {
-            $correctionDate = \DateTime::createFromFormat('Y-m-d H:i:s', $metadata->correctionDate);
+            $correctionDate = \DateTime::createFromFormat('Y-m-d\TH:i:s', $metadata->correctionDate);
         }
 
         $exercise->setDateCorrection($correctionDate);
@@ -405,15 +405,15 @@ class ExerciseManager
         $authorName = sprintf('%s %s', $creator->getFirstName(), $creator->getLastName());
 
         // Accessibility dates
-        $startDate = $node->getAccessibleFrom()  ? $node->getAccessibleFrom()->format('Y-m-d H:i:s')  : null;
-        $endDate = $node->getAccessibleUntil() ? $node->getAccessibleUntil()->format('Y-m-d H:i:s') : null;
-        $correctionDate = $exercise->getDateCorrection() ? $exercise->getDateCorrection()->format('Y-m-d H:i:s') : null;
+        $startDate = $node->getAccessibleFrom()  ? $node->getAccessibleFrom()->format('Y-m-d\TH:i:s')  : null;
+        $endDate = $node->getAccessibleUntil() ? $node->getAccessibleUntil()->format('Y-m-d\TH:i:s') : null;
+        $correctionDate = $exercise->getDateCorrection() ? $exercise->getDateCorrection()->format('Y-m-d\TH:i:s') : null;
 
         return [
             'authors' => [
                 ['name' => $authorName],
             ],
-            'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
+            'created' => $node->getCreationDate()->format('Y-m-d\TH:i:s'),
             'title' => $node->getName(),
             'description' => $exercise->getDescription(),
             'type' => $exercise->getType(),

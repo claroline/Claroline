@@ -49,8 +49,8 @@ class Validator
             if (count($errors) === 0) {
                 // Date correction
                 if (!empty($metadata->correctionDate)) {
-                    $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $metadata->correctionDate);
-                    if ($dateTime->format('Y-m-d H:i:s') !== $metadata->correctionDate) {
+                    $dateTime = \DateTime::createFromFormat('Y-m-d\TH:i:s', $metadata->correctionDate);
+                    if (!$dateTime || $dateTime->format('Y-m-d\TH:i:s') !== $metadata->correctionDate) {
                         $errors[] = [
                             'path' => 'dateCorrection',
                             'message' => 'Invalid date format',

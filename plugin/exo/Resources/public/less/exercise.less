@@ -12,7 +12,7 @@
     padding: 0 4px;
     button {
         outline: none;
-        border: 0px;
+        border: 0;
     }
     tbody button {
         padding: 6px;
@@ -55,6 +55,11 @@
         .table {
             /*border: none;*/
             margin-bottom: 0;
+
+            > tbody > tr > td,
+            > tbody > tr > th {
+                vertical-align: middle;
+            }
         }
 
         .toggle-exercise-info {
