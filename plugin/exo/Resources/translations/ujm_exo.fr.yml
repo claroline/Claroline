@@ -268,6 +268,7 @@ overview: Vue d'ensemble
 paper: Passage
 paper_need_manual_correction: Cette copie nécessite une correction manuelle
 paper_list: Liste des copies
+paper_count: "{0} aucune copie|{1} %count% copie|]1,Inf[ %count% copies"
 metadata: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité

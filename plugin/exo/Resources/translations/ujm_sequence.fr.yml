@@ -57,11 +57,11 @@ one_answer_to_find: XXXXX Il manque une bonne réponse
 
 # p
 paper_list: Liste des copies
-paper_list_no_paper: Aucune copie actuellement.
+paper_list_no_paper: Aucune copie trouvée.
 paper_search: Rechercher une copie
 paper_list_manual_correction_needed: Correction manuelle nécessaire
 paper_list_table_user: Utilisateur
-paper_list_table_paper_number: Numéro de copie
+paper_list_table_paper_number: '#'
 paper_list_table_start_date: Date de début
 paper_list_table_end_date: Date de fin
 paper_list_table_interrupted: Interrompue

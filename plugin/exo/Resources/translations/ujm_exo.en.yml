@@ -266,6 +266,7 @@ overview: Overview
 # P
 paper: Paper
 paper_list: Paper list
+paper_count: "{0} no paper|{1} %count% paper|]1,Inf[ %count% papers"
 paper_need_manual_correction: This paper needs a manual correction
 metadata: Parameters
 partially: Partially correct
