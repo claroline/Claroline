@@ -41,6 +41,7 @@ application/x.short+json: Ouverte
 badge_obtained: Félicitation ! Vous avez obtenu le badge de connaissances
 badge_no_obtained: Vous n'avez pas encore obtenu le badge de connaissance
 back: Retour
+back_to_overview: Retourner à la vue d'ensemble de l'Exercice
 back_to_the_list: Retour à la liste
 bank_of_questions: Banque de questions
 brief_search: Recherche rapide

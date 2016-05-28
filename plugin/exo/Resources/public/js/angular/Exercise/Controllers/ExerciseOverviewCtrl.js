@@ -33,22 +33,6 @@ ExerciseCtrl.prototype.editEnabled = false;
  */
 ExerciseOverviewCtrl.prototype.additionalInfo = false;
 
-/**
- * Get the number of papers already done by the User
- * @return number
- */
-ExerciseOverviewCtrl.prototype.getNbUserPapers = function getNbUserPapers() {
-    return this.UserPaperService.getNbPapers();
-};
-
-/**
- * Check if the current User can play the exercise
- * @return boolean
- */
-ExerciseOverviewCtrl.prototype.isComposeEnabled = function isComposeEnabled() {
-    return this.editEnabled || this.UserPaperService.isAllowedToCompose();
-};
-
 // Register controller into Angular JS
 angular
     .module('Exercise')

@@ -41,6 +41,7 @@ application/x.short+json: Open
 badge_obtained: Congratulations ! You got the badge of knowledge
 badge_no_obtained: You have not yet received the badge of knowledge
 back: Back
+back_to_overview: Go back the the Exercise overview
 back_to_the_list: Back to the list
 bank_of_questions: Bank of questions
 brief_search: Brief Search

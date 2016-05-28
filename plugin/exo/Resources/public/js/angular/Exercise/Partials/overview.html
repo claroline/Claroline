@@ -161,32 +161,8 @@
                     {{ 'edit'|trans:{}:'ujm_exo' }}
                 </a>
 
-                <!-- Attempts info -->
-                <div class="attempts" data-ng-if="exerciseOverviewCtrl.exercise.steps.length > 0 && exerciseOverviewCtrl.exercise.meta.maxAttempts > 0">
-
-                    <!-- Max attempts not reached -->
-                    <span data-ng-if="exerciseOverviewCtrl.isComposeEnabled()">
-                        {{ 'sequence_attempts_infos'|transChoice:5:{ count: exerciseOverviewCtrl.exercise.meta.maxAttempts }:'ujm_sequence'}}
-                        ({{ 'exercise_finished_attempts'|transChoice:exerciseOverviewCtrl.getNbUserPapers():{ count: exerciseOverviewCtrl.getNbUserPapers() }:'ujm_exo' }})
-                    </span>
-
-                    <!-- Max attempts reached -->
-                    <em data-ng-if="!exerciseOverviewCtrl.isComposeEnabled()">
-                        {{ 'attempt_info6'|trans:{}:'ujm_exo' }}
-                    </em>
-                </div>
-
-                <!-- Play button if Exercise is OK -->
-                <a href="#/play" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="exerciseOverviewCtrl.exercise.steps.length > 0 && exerciseOverviewCtrl.isComposeEnabled()">
-                    <span class="fa fa-fw fa-play"></span>
-                    <span data-ng-if="0 === exerciseOverviewCtrl.getNbUserPapers()">{{ 'exercise_start' | trans:{}:'ujm_exo' }}</span>
-                    <span data-ng-if="0 < exerciseOverviewCtrl.getNbUserPapers()">{{ 'exercise_restart' | trans:{}:'ujm_exo' }}</span>
-                </a>
-
-                <!-- Results of the Exercise -->
-                <a href="#/papers" class="btn btn-default btn-block" data-ng-if="0 < exerciseOverviewCtrl.getNbUserPapers()">
-                    <span class="fa fa-fw fa-check-square-o"></span> {{ 'result_show' | trans:{}:'ujm_exo' }}
-                </a>
+                <!-- Start button -->
+                <button-start data-paper-link="true" data-ng-if="exerciseOverviewCtrl.exercise.steps.length > 0"></button-start>
             </div>
         </div>
     </div>
