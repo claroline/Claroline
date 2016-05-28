@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Filesystem\Filesystem;
 
 class QtiServices
 {
@@ -74,14 +75,14 @@ class QtiServices
      */
     public function createQuestionsDirectory(array $questions, $numStep)
     {
-        //$qtiRepo = $this->qtiRepository->get('ujm.exo_qti_repository');
+        $fs = new Filesystem();
 
-        @mkdir($this->qtiRepository->getUserDir().'questions');
+        $fs->mkdir($this->qtiRepository->getUserDir().'questions');
         $i = 'a';
-        @mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep);
+        $fs->mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep);
         foreach ($questions as $question) {
             $this->qtiRepository->export($question);
-            @mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i);
+            $fs->mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i);
             $iterator = new \DirectoryIterator($this->qtiRepository->getUserDir());
             foreach ($iterator as $element) {
                 if (!$element->isDot() && $element->isFile()) {
