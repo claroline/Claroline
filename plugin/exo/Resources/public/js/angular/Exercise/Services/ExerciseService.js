@@ -131,13 +131,13 @@ ExerciseService.prototype.needManualCorrection = function needManualCorrection()
  * @param   {Object} exercise
  * @returns {Promise}
  */
-ExerciseService.prototype.save = function save(exercise) {
+ExerciseService.prototype.save = function save(metadata) {
     var deferred = this.$q.defer();
 
     this.$http
         .put(
-            Routing.generate('ujm_exercise_update_meta', { id: exercise.id }),
-            exercise.meta
+            Routing.generate('ujm_exercise_update_meta', { id: this.exercise.id }),
+            metadata
         )
         .success(function onSuccess(response) {
             // TODO : display message
@@ -154,6 +154,14 @@ ExerciseService.prototype.save = function save(exercise) {
         });
 
     return deferred.promise;
+};
+
+/**
+ * Get metadata of an Exercise
+ * @returns {Array}
+ */
+ExerciseService.prototype.getMetadata = function getSteps() {
+    return this.exercise.meta;
 };
 
 /**
