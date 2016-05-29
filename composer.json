@@ -235,7 +235,7 @@
             "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle",
             "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle",
             "Icap\\LessonBundle\\IcapLessonBundle",
-            "Claroline\\FlashCardBundle\\ClarolineFlashCardBundle"
+            "Claroline\\FlashCardBundle\\ClarolineFlashCardBundle",
             "UJM\\ExoBundle\\UJMExoBundle",
             "Icap\\LessonBundle\\IcapLessonBundle"
         ]
