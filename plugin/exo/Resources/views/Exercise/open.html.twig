@@ -6,7 +6,8 @@
 
     {# Exercise styles #}
     {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/ujm-exo.css'
-        '@UJMExoBundle/Resources/public/less/main.less'
+        'packages/angular-dragula/dist/dragula.min.css'
+        '@UJMExoBundle/Resources/less/main.less'
     %}
     <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -58,6 +59,7 @@
     {# Angular UI #}
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-angular-ui.js'
         'packages/angular-bootstrap/ui-bootstrap-tpls.min.js'
+        'packages/angular-dragula/dist/angular-dragula.min.js'
         'packages/angular-ui-tinymce/src/tinymce.js'
         'packages/angular-ui-translation/angular-translation.js'
         'packages/angular-ui-resource-picker/angular-resource-picker.js'

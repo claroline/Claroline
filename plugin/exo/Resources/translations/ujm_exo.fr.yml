@@ -41,6 +41,7 @@ application/x.short+json: Ouverte
 badge_obtained: Félicitation ! Vous avez obtenu le badge de connaissances
 badge_no_obtained: Vous n'avez pas encore obtenu le badge de connaissance
 back: Retour
+back_to_overview: Retourner à la vue d'ensemble de l'Exercice
 back_to_the_list: Retour à la liste
 bank_of_questions: Banque de questions
 brief_search: Recherche rapide
@@ -267,6 +268,7 @@ overview: Vue d'ensemble
 paper: Passage
 paper_need_manual_correction: Cette copie nécessite une correction manuelle
 paper_list: Liste des copies
+paper_count: "{0} aucune copie|{1} %count% copie|]1,Inf[ %count% copies"
 metadata: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité
@@ -352,6 +354,8 @@ sort: Trier les documents
 summative : Sommatif
 show_additional_info: Afficher les informations supplémentaires
 step: Etape
+step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
+step_item_add: Glisser/déposer ou cliquer sur le bouton "+" pour ajouter des questions
 
 # T
 temporary_mark: Note temporaire

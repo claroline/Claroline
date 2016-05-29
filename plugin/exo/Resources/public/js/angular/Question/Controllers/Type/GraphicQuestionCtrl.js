@@ -90,7 +90,6 @@ GraphicQuestionCtrl.prototype.getImageUrl = function getImageUrl() {
  */
 GraphicQuestionCtrl.prototype.initPreviousAnswers = function initPreviousAnswers() {
     for (var i = 0; i < this.coords.length; i++) {
-        // console.log('yep');
         // ensure that we are not in default values
         if (this.coords[i].x !== 'a' && this.coords[i].y !== 'a') {
             // crosshair
