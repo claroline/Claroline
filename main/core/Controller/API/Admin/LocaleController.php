@@ -13,9 +13,7 @@ namespace Claroline\CoreBundle\Controller\API\Admin;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use FOS\RestBundle\Controller\Annotations\Get;
 

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Optional;
 
-use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;

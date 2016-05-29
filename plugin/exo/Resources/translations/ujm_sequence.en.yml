@@ -58,11 +58,11 @@ one_answer_to_find: XXXXX There is one answer left to find
 
 # p
 paper_list: Paper list
-paper_list_no_paper: Currently no paper.
+paper_list_no_paper: No paper found.
 paper_search: Search a paper
 paper_list_manual_correction_needed: Manual correction needed
 paper_list_table_user: User
-paper_list_table_paper_number: Paper number
+paper_list_table_paper_number: '#'
 paper_list_table_start_date: Start date
 paper_list_table_end_date: End date
 paper_list_table_interrupted: Interrupted

@@ -43,7 +43,7 @@ angular
                 startWeek: 1,
                 iconLeft: 'fa fa-fw fa-chevron-left',
                 iconRight: 'fa fa-fw fa-chevron-right',
-                modelDateFormat: 'yyyy-MM-dd HH:mm:ss',
+                modelDateFormat: 'yyyy-MM-dd\THH:mm:ss',
                 autoclose: true
             });
 
@@ -54,23 +54,6 @@ angular
                     templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/overview.html',
                     controller  : 'ExerciseOverviewCtrl',
                     controllerAs: 'exerciseOverviewCtrl',
-                    resolve: {
-                        // Get the Exercise to Display
-                        exercise: [
-                            'ExerciseService',
-                            function exerciseResolve(ExerciseService) {
-                                return ExerciseService.getExercise();
-                            }
-                        ],
-                        editEnabled: [
-                            'ExerciseService',
-                            function editEnabledResolve(ExerciseService) {
-                                return ExerciseService.isEditEnabled();
-                            }
-                        ]
-                    },
-
-                    // Active tab
                     tab: 'overview'
                 })
 
@@ -79,17 +62,6 @@ angular
                     templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/metadata.html',
                     controller  : 'ExerciseMetadataCtrl',
                     controllerAs: 'exerciseMetadataCtrl',
-                    resolve: {
-                        // Get the Exercise to Edit
-                        exercise: [
-                            'ExerciseService',
-                            function exerciseResolve(ExerciseService) {
-                                return ExerciseService.getExercise();
-                            }
-                        ]
-                    },
-
-                    // Active tab
                     tab: 'metadata'
                 })
 
@@ -98,25 +70,6 @@ angular
                     templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Step/Partials/list.html',
                     controller  : 'StepListCtrl',
                     controllerAs: 'stepListCtrl',
-                    resolve: {
-                        exerciseId: [
-                            'ExerciseService',
-                            function exerciseIdResolve(ExerciseService) {
-                                var exercise = ExerciseService.getExercise();
-
-                                return exercise ? exercise.id : null;
-                            }
-                        ],
-
-                        // Get the list of Steps from the Exercise
-                        steps: [
-                            'ExerciseService',
-                            function stepsResolve(ExerciseService) {
-                                return ExerciseService.getSteps();
-                            }
-                        ]
-                    },
-
                     tab: 'steps'
                 })
 
@@ -130,12 +83,6 @@ angular
                             'PaperService',
                             function papersResolve(PaperService) {
                                 return PaperService.getAll();
-                            }
-                        ],
-                        exercise: [
-                            'ExerciseService',
-                            function exerciseResolve(ExerciseService) {
-                                return ExerciseService.getExercise();
                             }
                         ]
                     },
@@ -174,12 +121,6 @@ angular
                     controller  : 'ExercisePlayerCtrl',
                     controllerAs: 'exercisePlayerCtrl',
                     resolve: {
-                        exercise: [
-                            'ExerciseService',
-                            function exerciseResolve(ExerciseService) {
-                                return ExerciseService.getExercise();
-                            }
-                        ],
                         paper: [
                             'ExerciseService',
                             'UserPaperService',

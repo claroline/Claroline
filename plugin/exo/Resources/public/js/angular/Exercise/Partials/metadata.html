@@ -3,7 +3,7 @@
         <div class="panel-body">
             <!-- Type -->
             <label for="exercise-type" class="control-label sr-only">-- {{ 'select_type'|trans:{}:'ujm_exo' }} --</label>
-            <select class="form-control" id="exercise-type" data-ng-model="exerciseMetadataCtrl.exercise.meta.type">
+            <select class="form-control" id="exercise-type" data-ng-model="exerciseMetadataCtrl.meta.type">
                 <option value="">{{ 'type'|trans:{}:'ujm_exo' }}</option>
                 <option value="1">{{ 'summative' | trans:{}:'ujm_exo' }}</option>
                 <option value="2">{{ 'evaluative' | trans:{}:'ujm_exo' }}</option>
@@ -25,7 +25,7 @@
                     <div class="form-group">
                         <label for="exercise-title" class="control-label col-md-4">{{ 'title'|trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
-                            <input type="text" id="exercise-title" class="form-control" data-ng-model="exerciseMetadataCtrl.exercise.meta.title" />
+                            <input type="text" id="exercise-title" class="form-control" data-ng-model="exerciseMetadataCtrl.meta.title" />
                         </div>
                     </div>
 
@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <label for="exercise-description" class="control-label col-md-4">{{ 'description'|trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
-                            <textarea data-ui-tinymce="exerciseMetadataCtrl.tinymceOptions" data-before-unload="off" id="exercise-description" class="form-control" data-ng-model="exerciseMetadataCtrl.exercise.meta.description"></textarea>
+                            <textarea data-ui-tinymce="exerciseMetadataCtrl.tinymceOptions" data-before-unload="off" id="exercise-description" class="form-control" data-ng-model="exerciseMetadataCtrl.meta.description"></textarea>
                         </div>
                     </div>
 
@@ -42,7 +42,7 @@
                         <label for="exercise-metadata-visible" class="control-label col-md-4">{{ 'metadata_visible' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
-                                <input type="checkbox" id="exercise-metadata-visible" data-ng-model="exerciseMetadataCtrl.exercise.meta.metadataVisible" />
+                                <input type="checkbox" id="exercise-metadata-visible" data-ng-model="exerciseMetadataCtrl.meta.metadataVisible" />
                             </div>
 
                             <span class="help-block">
@@ -69,7 +69,7 @@
                         <label for="exercise-random" class="control-label col-md-4">{{ 'random_questions' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
-                                <input type="checkbox" id="exercise-random" data-ng-model="exerciseMetadataCtrl.exercise.meta.random" />
+                                <input type="checkbox" id="exercise-random" data-ng-model="exerciseMetadataCtrl.meta.random" />
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="col-md-2">
-                                    <input type="text" class="form-control" id="exercise-pick" data-ng-model="exerciseMetadataCtrl.exercise.meta.pick" />
+                                    <input type="text" class="form-control" id="exercise-pick" data-ng-model="exerciseMetadataCtrl.meta.pick" />
                                 </div>
                             </div>
 
@@ -92,11 +92,11 @@
                     </div>
 
                     <!-- Keep same questions ? -->
-                    <div class="form-group" data-ng-if="0 < exerciseMetadataCtrl.exercise.meta.pick">
+                    <div class="form-group" data-ng-if="0 < exerciseMetadataCtrl.meta.pick">
                         <label for="exercise-keep" class="control-label col-md-4">{{ 'keep_same_question' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
-                                <input type="checkbox" id="exercise-keep" data-ng-model="exerciseMetadataCtrl.exercise.meta.keepSameQuestion" />
+                                <input type="checkbox" id="exercise-keep" data-ng-model="exerciseMetadataCtrl.meta.keepSameQuestion" />
                             </div>
                         </div>
                     </div>
@@ -119,14 +119,14 @@
                         <div class="col-md-8">
                             <select id="exercise-correction-mode"
                                     class="form-control"
-                                    data-ng-model="exerciseMetadataCtrl.exercise.meta.correctionMode"
+                                    data-ng-model="exerciseMetadataCtrl.meta.correctionMode"
                                     data-ng-options="k as v for (k, v) in exerciseMetadataCtrl.correctionModes">
                             </select>
                         </div>
                     </div>
 
                     <!-- Date of availability -->
-                    <div class="form-group" datat-ng-class="{'has-error': exerciseMetadataCtrl.exercise.meta.correctionDate.$invalid}" data-ng-if="3 == exerciseMetadataCtrl.exercise.meta.correctionMode">
+                    <div class="form-group" datat-ng-class="{'has-error': exerciseMetadataCtrl.meta.correctionDate.$invalid}" data-ng-if="3 == exerciseMetadataCtrl.meta.correctionMode">
                         <label for="exercise-correction-date" class="control-label col-md-4">{{ 'correction_date'| trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="input-group">
@@ -136,7 +136,7 @@
                                 <input type="text"
                                        id="exercise-correction-date"
                                        class="form-control"
-                                       data-ng-model="exerciseMetadataCtrl.exercise.meta.correctionDate"
+                                       data-ng-model="exerciseMetadataCtrl.meta.correctionDate"
                                        data-bs-datepicker="" />
                             </div>
                         </div>
@@ -148,7 +148,7 @@
                         <div class="col-md-8">
                             <select id="exercise-mark-mode"
                                     class="form-control"
-                                    data-ng-model="exerciseMetadataCtrl.exercise.meta.markMode"
+                                    data-ng-model="exerciseMetadataCtrl.meta.markMode"
                                     data-ng-options="k as v for (k, v) in exerciseMetadataCtrl.markModes">
                             </select>
                         </div>
@@ -171,7 +171,7 @@
                         <label for="exercise-anonymous" class="control-label col-md-4">{{ 'anonymous' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
-                                <input type="checkbox" id="exercise-anonymous" data-ng-model="exerciseMetadataCtrl.exercise.meta.anonymous" />
+                                <input type="checkbox" id="exercise-anonymous" data-ng-model="exerciseMetadataCtrl.meta.anonymous" />
                             </div>
                         </div>
                     </div>
@@ -184,7 +184,7 @@
                                 <span class="input-group-addon">
                                     <span class="fa fa-fw fa-clock-o"></span>
                                 </span>
-                                <input type="text" class="form-control" id="exercise-duration" data-ng-model="exerciseMetadataCtrl.exercise.meta.duration" />
+                                <input type="text" class="form-control" id="exercise-duration" data-ng-model="exerciseMetadataCtrl.meta.duration" />
                             </div>
                         </div>
                     </div>
@@ -194,7 +194,7 @@
                         <label for="exercise-interrupt-btn" class="control-label col-md-4">{{ 'test_exit' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
-                                <input type="checkbox" id="exercise-interrupt-btn" data-ng-model="exerciseMetadataCtrl.exercise.meta.dispButtonInterrupt" />
+                                <input type="checkbox" id="exercise-interrupt-btn" data-ng-model="exerciseMetadataCtrl.meta.dispButtonInterrupt" />
                             </div>
                         </div>
                     </div>
@@ -203,16 +203,16 @@
                     <div class="form-group">
                         <label for="exercise-max-attempts" class="control-label col-md-4">{{ 'maximum_tries' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-2">
-                            <input type="text" class="form-control" id="exercise-max-attempts" data-ng-model="exerciseMetadataCtrl.exercise.meta.maxAttempts" />
+                            <input type="text" class="form-control" id="exercise-max-attempts" data-ng-model="exerciseMetadataCtrl.meta.maxAttempts" />
                         </div>
                     </div>
 
                     <!-- Lock attempt -->
-                    <div class="form-group" data-ng-if="0 < exerciseMetadataCtrl.exercise.meta.maxAttempts">
+                    <div class="form-group" data-ng-if="0 < exerciseMetadataCtrl.meta.maxAttempts">
                         <label for="exercise-lock-attempt" class="control-label col-md-4">{{ 'lock_attempt' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
-                                <input type="checkbox" id="exercise-lock-attempt" data-ng-model="exerciseMetadataCtrl.exercise.meta.lockAttempt" />
+                                <input type="checkbox" id="exercise-lock-attempt" data-ng-model="exerciseMetadataCtrl.meta.lockAttempt" />
                             </div>
                         </div>
                     </div>

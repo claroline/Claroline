@@ -68,6 +68,60 @@ class StepManager
     }
 
     /**
+     * Reorder the Questions of a Step.
+     *
+     * @param Step  $step
+     * @param array $order an ordered array of Question IDs
+     *
+     * @return array array of errors if something went wrong
+     */
+    public function reorderQuestions(Step $step, array $order)
+    {
+        $reorderToo = []; // List of Steps we need to reorder too (because we have transferred some Questions)
+        foreach ($order as $pos => $questionId) {
+            /** @var StepQuestion $stepQuestion */
+            $stepQuestion = $this->om->getRepository('UJMExoBundle:StepQuestion')->findByExerciseAndQuestion($step->getExercise(), $questionId);
+            if (!$stepQuestion) {
+                // Question is not linked to the Exercise, there is a problem with the order array
+                return [
+                    'message' => 'Can not reorder the Question. Unknown question found.',
+                ];
+            }
+
+            $oldStep = $stepQuestion->getStep();
+            if ($oldStep !== $step) {
+                // The question comes from another Step => destroy old link and create a new One
+                $oldStep->removeStepQuestion($stepQuestion);
+
+                $stepQuestion->setStep($step);
+
+                $reorderToo[] = $oldStep;
+            }
+
+            // Update order
+            $stepQuestion->setOrdre($pos);
+
+            $this->om->persist($stepQuestion);
+        }
+
+        if (!empty($reorderToo)) {
+            // In fact as the client call the server each time a Question is moved, there will be always one Step in this array
+            /** @var Step $stepToReorder */
+            foreach ($reorderToo as $stepToReorder) {
+                $stepQuestions = $stepToReorder->getStepQuestions();
+                /** @var StepQuestion $sqToReorder */
+                foreach ($stepQuestions as $pos => $sqToReorder) {
+                    $sqToReorder->setOrdre($pos);
+                }
+            }
+        }
+
+        $this->om->flush();
+
+        return [];
+    }
+
+    /**
      * Create a copy of a Step.
      *
      * @param Step $step

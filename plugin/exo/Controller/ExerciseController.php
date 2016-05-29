@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\Exercise;
@@ -296,105 +297,26 @@ class ExerciseController extends Controller
         $exoID = $request->request->get('exoID');
         if ($request->isXmlHttpRequest()) {
             $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-            $pageGoNow = $request->request->get('pageGoNow');
             $qid = $request->request->get('qid');
 
             $result = $em->getRepository('UJMExoBundle:StepQuestion')->getMaxOrder($exo);
 
-            $maxOrdre = (int) $result[0][1] + 1;
-
+            $order = (int) $result[0][1] + 1;
             foreach ($qid as $q) {
-                $question = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:Question')
-                    ->find($q);
-
-                if (count($question) > 0) {
-                    $question = $em->getRepository('UJMExoBundle:Question')->find($q);
-                    $order = (int) $maxOrdre;
-                    //Create a step for one question in the exercise
+                $question = $em->getRepository('UJMExoBundle:Question')->find($q);
+                if (!empty($question)) {
+                    // Create a step for one question in the exercise
                     $this->container->get('ujm.exo_exercise')->createStepForOneQuestion($exo, $question, $order);
-                    ++$maxOrdre;
+                    ++$order;
                 }
             }
-//            $em->flush();
+
             $url = (string) $this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps';
 
-            return new \Symfony\Component\HttpFoundation\Response($url);
+            return new Response($url);
         } else {
             return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
         }
-    }
-
-    /**
-     * Add a Step to the Exercise.
-     *
-     * @EXT\Route(
-     *     "/{id}/step",
-     *     name="ujm_exercise_step_add",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
-     *
-     * @param Exercise $exercise
-     *
-     * @return JsonResponse
-     */
-    public function addStepAction(Exercise $exercise)
-    {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
-
-        $step = new Step();
-        $step->setText(' ');
-        $step->setNbQuestion('0');
-        $step->setDuration(0);
-        $step->setMaxAttempts(5);
-        $step->setOrder($exercise->getSteps()->count() + 1);
-
-        // Link the Step to the Exercise
-        $exercise->addStep($step);
-
-        $this->getDoctrine()->getManager()->persist($step);
-        $this->getDoctrine()->getManager()->flush();
-
-        return new JsonResponse([
-            'id' => $step->getId(),
-            'items' => [],
-        ]);
-    }
-
-    /**
-     * Delete a Step from the Exercise.
-     *
-     * @EXT\Route(
-     *     "/{id}/step/{sid}",
-     *     name="ujm_exercise_step_delete",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("DELETE")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
-     *
-     * @param Exercise $exercise
-     * @param Step     $step
-     *
-     * @return JsonResponse
-     */
-    public function deleteStepAction(Exercise $exercise, $sid)
-    {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
-
-        $em = $this->getDoctrine()->getManager();
-        $step = $em->getRepository('UJMExoBundle:Step')->find($sid);
-        if (!empty($step)) {
-            $exercise->removeStep($step);
-
-            $em->remove($step);
-            $em->flush();
-        }
-
-        // Return updated list of steps
-        return new JsonResponse($this->get('ujm.exo.exercise_manager')->exportSteps($exercise, false));
     }
 
     /**
@@ -428,57 +350,6 @@ class ExerciseController extends Controller
         return new JsonResponse($this->get('ujm.exo.exercise_manager')->exportExercise($exercise, false));
     }
 
-    /**
-     * To change the order of the questions into an exercise.
-     *
-     * @EXT\Route(
-     *     "/{id}/question/update_order",
-     *     name="ujm_exercise_question_order",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     *
-     * @param Exercise $exercise
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function changeQuestionOrderAction(Exercise $exercise)
-    {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
-
-        $em = $this->getDoctrine()->getManager();
-        $request = $this->container->get('request');
-
-        if ($request->isXmlHttpRequest()) {
-            $order = $request->request->get('order');
-            $currentPage = $request->request->get('currentPage');
-            $questionMaxPerPage = $request->request->get('questionMaxPerPage');
-
-            if ($order && $currentPage && $questionMaxPerPage) {
-                $length = count($order);
-
-                $em = $this->getDoctrine()->getManager();
-                $exoQuestions = $em->getRepository('UJMExoBundle:StepQuestion')->findExoByOrder($exercise);
-
-                foreach ($exoQuestions as $exoQuestion) {
-                    for ($i = 0; $i < $length; ++$i) {
-                        if ($exoQuestion->getQuestion()->getId() == $order[$i]) {
-                            $newOrder = $i + 1 + (((int) $currentPage - 1) * (int) $questionMaxPerPage);
-                            $exoQuestion->setOrdre($newOrder);
-                        }
-                    }
-
-                    $em->persist($exoQuestion);
-                }
-
-                $em->flush();
-            }
-        }
-
-        return $this->redirect(
-            $this->generateUrl('ujm_exercise_open', ['id' => $exercise->getId()]).'#/steps'
-        );
-    }
     /**
      * To display the docimology's histograms.
      *
