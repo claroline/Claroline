@@ -3,6 +3,6 @@ claro_message_bundle:
     prefix:   message
     type:     annotation
 claro_message_bundle_api:
-    resource: "@ClarolineMessageBundle/Controller/ApiMessageController.php"
+    resource: "@ClarolineMessageBundle/Controller/API/MessageController.php"
     prefix: api
     type: annotation

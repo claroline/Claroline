@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\MessageBundle\Controller;
+namespace Claroline\MessageBundle\Controller\API;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
@@ -17,57 +17,50 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\CoreBundle\Entity\User;
 
-class ApiMessageController extends FOSRestController
+class MessageController extends FOSRestController
 {
     private $messageManager;
-    private $tokenStorage;
-    private $userManager;
 
    /**
     * @DI\InjectParams({
-    *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
-    *     "tokenStorage"        = @DI\Inject("security.token_storage"),
-    *     "userManager" = @DI\Inject("claroline.manager.user_manager")
+    *     "messageManager" = @DI\Inject("claroline.manager.message_manager")
     * })
     */
-   public function _construct(MessageManager $messageManager, $tokenStorage, UserManager $userManager)
+   public function _construct(MessageManager $messageManager)
    {
        $this->messageManager = $messageManager;
-       $this->tokenStorage = $tokenStorage;
-       $this->userManager = $userManager;
    }
 
    /**
     * @Route("/received.{_format}", name="claro_received_message", defaults={"_format":"json"})
     * @View(serializerGroups={"api_message"})
+    * @EXT\ParamConverter("user", converter="current_user")
     */
-   public function getReceivedAction()
+   public function getReceivedAction(User $user)
    {
-       $user = $this->tokenStorage->getToken()->getUser();
-
        return $this->messageManager->getReceivedMessagesJson($user);
    }
 
     /**
      * @Route("/sent.{_format}", name="claro_sent_message", defaults={"_format":"json"})
      * @View(serializerGroups={"api_message"})
+     * @EXT\ParamConverter("user", converter="current_user")
      */
-    public function getSentAction()
+    public function getSentAction(User $user)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-
         return $this->messageManager->getSentMessagesJson($user);
     }
 
     /**
      * @Route("/removed.{_format}", name="claro_removed_message", defaults={"_format":"json"})
      * @View(serializerGroups={"api_message"})
+     * @EXT\ParamConverter("user", converter="current_user")
      */
-    public function getRemovedAction()
+    public function getRemovedAction(User $user)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-
         return $this->messageManager->getRemovedMessagesJson($user);
     }
 }

@@ -412,4 +412,4 @@ claro_admin_widget:
 claro_client:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ClientController.php"
     type: annotation
-    prefix: client
+    prefix: api

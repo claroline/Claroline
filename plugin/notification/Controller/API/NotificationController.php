@@ -9,41 +9,37 @@
  * file that was distributed with this source code.
  */
 
-namespace Icap\NotificationBundle\Controller;
+namespace Icap\NotificationBundle\Controller\API;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
 use JMS\DiExtraBundle\Annotation as DI;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\CoreBundle\Entity\User;
 
-class ApiNotificationController extends FOSRestController
+class NotificationController extends FOSRestController
 {
     private $notificationManager;
-    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
-     *     "notificationManager" = @DI\Inject("icap.notification.manager"),
-     *     "tokenStorage"        = @DI\Inject("security.token_storage")
+     *     "notificationManager" = @DI\Inject("icap.notification.manager")
      * })
      */
-    public function __construct(
-        NotificationManager $notificationManager,
-         $tokenStorage)
+    public function __construct(NotificationManager $notificationManager)
     {
         $this->notificationManager = $notificationManager;
-        $this->tokenStorage = $tokenStorage;
     }
 
     /**
      * @Route("/notifications.{_format}", name="icap_notifications", defaults={"_format":"json"})
      * @View(serializerGroups={"api_notification"})
+     * @EXT\ParamConverter("user", converter="current_user")
      */
-    public function getNotificationsAction()
+    public function getNotificationsAction(User $user)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-
         return $this->notificationManager->getUserNotifications($user->getId());
     }
 
@@ -52,10 +48,10 @@ class ApiNotificationController extends FOSRestController
     *
     * @Route("/notifications/read.{_format}", name="icap_notifications_read", defaults={"_format":"json"})
     * @View(serializerGroups={"api_notification"})
+    * @EXT\ParamConverter("user", converter="current_user")
     */
-   public function getNotificationsReadAction()
+   public function getNotificationsReadAction(User $user)
    {
-       $user = $this->tokenStorage->getToken()->getUser();
        $this->notificationManager->markAllNotificationsAsViewed($user->getId());
 
        return $this->notificationManager->getUserNotifications($user->getId());

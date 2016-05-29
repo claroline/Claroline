@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Entity\Oauth;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\OAuthServerBundle\Entity\Client as BaseClient;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Accessor;
 
 /**
  * @ORM\Table(name="claro_api_client")
@@ -33,6 +35,7 @@ class Client extends BaseClient
      *
      * @ORM\Column(name="name", type="string", nullable=false)
      * @ORM\Column(unique=true)
+     * @Groups({"api_client"})
      */
     protected $name;
 
@@ -66,6 +69,18 @@ class Client extends BaseClient
 
     //for the form
     private $uri;
+
+    /**
+     * @Groups({"api_client"})
+     * @Accessor(getter="getSecret")
+     */
+    protected $clientSecret;
+
+    /**
+     * @Groups({"api_client"})
+     * @Accessor(getter="getConcatRandomId")
+     */
+    protected $clientId;
 
     public function __construct()
     {

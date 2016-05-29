@@ -34,30 +34,26 @@ class ClientController extends FOSRestController
     /**
      * Get the client id and the client secret.
      *
-     * @Route("/idsecret.{_format}", name="claro_id_secret", defaults={"_format":"json"})
+     * @Route("/client/public", name="claro_id_secret", defaults={"_format":"json"})
      */
     public function getIdsecretAction()
     {
-        $arr = $this->oauthManager->findVisibleClients();
-        $client = $arr[0];
-        $clientId = $client->getConcatRandomId();
-        $clientSecret = $client->getSecret();
-
-        return ['client_id' => $clientId, 'client_secret' => $clientSecret];
+        return $this->oauthManager->findUsernameClient();
     }
 
-        /**
-         * Check if access token is expired.
-         *
-         * @Route("/expired.{_format}", name="claro_token_expired", defaults={"_format":"json"})
-         */
-        public function getExpiredAction()
-        {
-            $arr = $this->oauthManager->findVisibleClients();
-            $client = $arr[0];
-            $tab = $client->getAccessTokens(); // all access tokens
-            $mostRecentToken = $tab[count($tab) - 1];
+    /**
+     * Check if access token is expired.
+     * Note from ngodfraind: I'm not sure this is correct because the most recent token might not be the one you want you want to check
+     * but I'd need to test it.
+     *
+     * @Route("/client/expired", name="claro_token_expired", defaults={"_format":"json"})
+     */
+    public function getExpiredAction()
+    {
+        $client = $this->oauthManager->findUsernameClient();
+        $tab = $client->getAccessTokens(); // all access tokens
+        $mostRecentToken = $tab[count($tab) - 1];
 
-            return ['hasExpired' => $mostRecentToken->hasExpired()];
-        }
+        return ['hasExpired' => $mostRecentToken->hasExpired()];
+    }
 }

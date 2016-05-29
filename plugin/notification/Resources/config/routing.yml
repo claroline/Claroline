@@ -3,6 +3,6 @@ icap_notification:
     type:     annotation
     prefix: /
 icap_notification_api:
-    resource: "@IcapNotificationBundle/Controller/ApiNotificationController.php"
+    resource: "@IcapNotificationBundle/Controller/API/NotificationController.php"
     type: annotation
     prefix: api
