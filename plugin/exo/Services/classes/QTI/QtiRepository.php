@@ -147,9 +147,10 @@ class QtiRepository
                             $info .= $file.' qti unsupported format'."\n";
                         }
                     }
+
                     if ($this->step != null) {
                         $this->exerciseQuestions[] = $file;
-                        $this->importedQuestions[$file] = $interX;
+                        $this->importedQuestions[$file->getFileName()] = $interX;
                     }
                 }
             }
@@ -307,7 +308,10 @@ class QtiRepository
             if ($ws === false) {
                 $order = -1;
             }
-            $this->container->get('ujm.exo_exercise')->addQuestionInStep($this->importedQuestions[$xmlName]->getQuestion(), $this->step, $order);
+
+            if (isset($this->importedQuestions[$xmlName->getFileName()])) {
+                $this->container->get('ujm.exo_exercise')->addQuestionInStep($this->importedQuestions[$xmlName->getFileName()]->getQuestion(), $this->step, $order);
+            }
 
             ++$order;
         }
