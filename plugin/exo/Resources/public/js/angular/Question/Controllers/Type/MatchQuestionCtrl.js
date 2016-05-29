@@ -1,13 +1,15 @@
 /**
  * Choice Question Controller
- * @param {FeedbackService} FeedbackService
- * @param {Object}          $scope
+ * @param {FeedbackService}      FeedbackService
+ * @param {Object}               $scope
+ * @param {MatchQuestionService} MatchQuestionService
  * @constructor
  */
-var MatchQuestionCtrl = function MatchQuestionCtrl(FeedbackService, $scope) {
+var MatchQuestionCtrl = function MatchQuestionCtrl(FeedbackService, $scope, MatchQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
     
     this.$scope = $scope;
+    this.MatchQuestionService = MatchQuestionService;
 
     this.savedAnswers = [];
     for (var i=0; i<this.dropped.length; i++) {
@@ -19,7 +21,7 @@ var MatchQuestionCtrl = function MatchQuestionCtrl(FeedbackService, $scope) {
 MatchQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype);
 
 // Set up dependency injection (get DI from parent too)
-MatchQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ '$scope' ]);
+MatchQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ '$scope', 'MatchQuestionService' ]);
 
 MatchQuestionCtrl.prototype.connections = []; // for toBind questions
 
@@ -472,40 +474,8 @@ MatchQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
     } else if (this.question.toBind) {
         this.colorBindings();
     }
-    
-    this.answersAllFound();
-};
 
-/**
- * 
- * @returns {answersAllFound}
- */
-MatchQuestionCtrl.prototype.answersAllFound = function answersAllFound() {
-    var answers_to_check;
-    if (this.question.toBind) {
-        answers_to_check = this.connections;
-    } else {
-        answers_to_check = this.dropped;
-    }
-    var numAnswersFound = 0;
-    for (var j=0; j<this.question.solutions.length; j++) {
-        for (var i=0; i<answers_to_check.length; i++) {
-            if (this.question.solutions[j].firstId === answers_to_check[i].source && this.question.solutions[j].secondId === answers_to_check[i].target) {
-                numAnswersFound++;
-            }
-        }
-    }
-    
-    if (numAnswersFound === this.question.solutions.length) {
-        // all answers have been found
-        this.feedbackState = 0;
-    } else if (numAnswersFound === this.question.solutions.length -1) {
-        // one answer remains to be found
-        this.feedbackState = 1;
-    } else {
-        // more answers remain to be found
-        this.feedbackState = 2;
-    }
+    this.feedbackState = this.MatchQuestionService.answersAllFound(this.question, this.answer);
 };
 
 /**

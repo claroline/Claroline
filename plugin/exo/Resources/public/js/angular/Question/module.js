@@ -1,5 +1,6 @@
 /**
  * Question module
  */
-angular.module('Question', []);
-
+angular.module('Question', [
+    'Image'
+]);

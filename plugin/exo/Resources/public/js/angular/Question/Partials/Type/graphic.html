@@ -1,47 +1,42 @@
 <div class="type-question-container graphic-question-container panel panel-default">
-    <div class="panel-body">
-        <!-- setpoint row -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="alert alert-info">
-                    <ul>
-                        <li>{{ 'graphic_setpoint_first'|trans:{}:'ujm_sequence' }}</li>
-                        <li>{{ 'graphic_setpoint_second'|trans:{}:'ujm_sequence' }}</li>
-                        <li>{{ 'graphic_setpoint_third'|trans:{}:'ujm_sequence' }}</li>
-                    </ul>
-                </div>
+    <div class="panel-body text-center">
+        <div class="row question-btns">
+            <!-- Number of pointers available -->
+            <div class="col-md-10 text-left">
+                {{ 'question_graphic_nb_pointers'|transChoice:(graphicQuestionCtrl.question.pointers - graphicQuestionCtrl.answer.length):{ count: graphicQuestionCtrl.question.pointers - graphicQuestionCtrl.answer.length }:'ujm_exo' }}
+            </div>
+
+            <!-- Reset button -->
+            <div class="col-md-2 text-right">
+                <button type="button" role="button" class="btn btn-sm btn-danger"
+                        data-ng-disabled="graphicQuestionCtrl.feedback.visible"
+                        data-ng-click="graphicQuestionCtrl.reset()">
+                    <span class="fa fa-refresh"></span>
+                    {{ 'reset'|trans:{}:'ujm_exo' }}
+                </button>
             </div>
         </div>
 
-        <div class="text-right" style="margin-bottom: 20px;">
-            <button type="button" role="button" class="btn btn-sm btn-danger" data-ng-disabled="graphicQuestionCtrl.feedback.visible" data-ng-click="graphicQuestionCtrl.reset()">
-                <span class="fa fa-refresh"></span>
-                {{ 'reset'|trans:{}:'ujm_exo' }}
-            </button>
-        </div>
+        <div class="img-box">
+            <!-- Answers -->
+            <img-pointer data-ng-repeat="answer in graphicQuestionCtrl.answer"
+                         data-ng-model="graphicQuestionCtrl.answer[$index]"
+                         data-img="graphicQuestionCtrl.$image"
+                         data-disabled="graphicQuestionCtrl.feedback.visible">
+            </img-pointer>
 
-        <div class="text-center">
-            <!-- Crosshairs to drag -->
-            <div class="crosshairs-list text-left" style="width: {{ graphicQuestionCtrl.question.width + graphicQuestionCtrl.crosshair.size + 2 }}px; min-height: {{ graphicQuestionCtrl.crosshair.size }}px;">
-                <span class="fa fa-hand-rock-o" data-toggle="tooltip" title="{{ 'graphic_help'|trans:{}:'ujm_exo' }}"></span>
-                <ul class="text-center">
-                    <li data-ng-repeat="coord in graphicQuestionCtrl.question.coords">
-                        <img id="crosshair_{{coord.id}}"
-                             class="crosshair draggable"
-                             data-ng-src="{{ graphicQuestionCtrl.crosshair.url }}" />
-                    </li>
-                </ul>
-            </div>
+            <!-- Solution -->
+            <img-areas data-areas="graphicQuestionCtrl.question.solutions"
+                       data-img="graphicQuestionCtrl.$image"
+                       data-ng-if="graphicQuestionCtrl.feedback.visible && graphicQuestionCtrl.question.solutions">
+            </img-areas>
 
-            <!-- Image -->
-            <div class="droppable-container">
-                <img id="document-img"
-                     alt="{{ graphicQuestionCtrl.question.document.label }}"
-                     width="{{ graphicQuestionCtrl.question.width }}"
-                     height="{{ graphicQuestionCtrl.question.height }}"
-                     style="margin: {{ graphicQuestionCtrl.crosshair.size / 2 }}px;"
-                     data-ng-src="{{ graphicQuestionCtrl.getImageUrl() }}" />
-            </div>
+            <!-- Question image -->
+            <img class="img-question img-responsive"
+                 data-ng-src="{{ graphicQuestionCtrl.getImageUrl() }}"
+                 alt="{{ graphicQuestionCtrl.question.image.label }}"
+                 data-original-width="{{ graphicQuestionCtrl.question.image.width }}"
+                 data-original-height="{{ graphicQuestionCtrl.question.image.height }}" />
         </div>
     </div>
 </div>

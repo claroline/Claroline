@@ -24,14 +24,10 @@ OpenQuestionService.prototype.initAnswer = function initAnswer() {
 
 /**
  * 
- * @returns {answersAllFound}
+ * @returns {number}
  */
 OpenQuestionService.prototype.answersAllFound = function answersAllFound(question, answer) {
     var numAnswersFound = 0;
-    var answerWithKeywords = answer ? answer : '';
-
-    // Get EOL
-    answerWithKeywords = answerWithKeywords.replace(/(\r\n|\n|\r)/gm, '<br/>');
 
     if ('long' !== question.typeOpen) {
         // Initialize answer with keywords

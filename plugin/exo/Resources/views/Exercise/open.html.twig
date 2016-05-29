@@ -22,8 +22,8 @@
     <div data-ng-app="ExerciseApp" data-ng-cloak="">
         <exercise
             data-exercise="{{ exercise | json_encode | raw | escape }}"
-            data-nb-papers ="{{ nbPapers }}"
-            data-nb-user-papers ="{{ nbUserPapers }}"
+            data-nb-papers="{{ nbPapers }}"
+            data-nb-user-papers="{{ nbUserPapers }}"
             data-edit-enabled="{{ editEnabled }}">
         </exercise>
     </div>
@@ -86,9 +86,16 @@
         '@UJMExoBundle/Resources/public/js/angular/*'
 
         '@UJMExoBundle/Resources/public/js/angular/Common/*'
-        '@UJMExoBundle/Resources/public/js/angular/Common/Directives/*'
         '@UJMExoBundle/Resources/public/js/angular/Common/Filters/*'
         '@UJMExoBundle/Resources/public/js/angular/Common/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Image/*'
+        '@UJMExoBundle/Resources/public/js/angular/Image/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Image/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Timer/*'
+        '@UJMExoBundle/Resources/public/js/angular/Timer/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Timer/Services/*'
 
         '@UJMExoBundle/Resources/public/js/angular/Exercise/*'
         '@UJMExoBundle/Resources/public/js/angular/Exercise/Controllers/*'
