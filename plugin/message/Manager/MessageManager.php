@@ -215,9 +215,11 @@ class MessageManager
      * @param string                            $search
      * @param int                               $page
      *
+     * @deprecated
+     *
      * @return \PagerFanta\PagerFanta
      */
-    public function getReceivedMessages(User $receiver, $search = '', $page = 1)
+    public function getReceivedMessagesPager(User $receiver, $search = '', $page = 1)
     {
         $query = $search === '' ?
             $this->userMessageRepo->findReceived($receiver, false) :
@@ -226,7 +228,7 @@ class MessageManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getReceivedMessagesJson(User $receiver, $search = '')
+    public function getReceivedMessages(User $receiver, $search = '')
     {
         $query = $search === '' ?
         $this->userMessageRepo->findReceived($receiver, false) :
@@ -242,7 +244,7 @@ class MessageManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getSentMessages(User $sender, $search = '', $page = 1)
+    public function getSentMessagesPager(User $sender, $search = '', $page = 1)
     {
         $query = $search === '' ?
             $this->userMessageRepo->findSent($sender, false) :
@@ -251,7 +253,7 @@ class MessageManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getSentMessagesJson(User $sender, $search = '', $page = 1)
+    public function getSentMessages(User $sender, $search = '', $page = 1)
     {
         $query = $search === '' ?
         $this->userMessageRepo->findSent($sender, false) :
@@ -267,7 +269,7 @@ class MessageManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getRemovedMessages(User $user, $search = '', $page = 1)
+    public function getRemovedMessagesPager(User $user, $search = '', $page = 1)
     {
         $query = $search === '' ?
             $this->userMessageRepo->findRemoved($user, false) :
@@ -276,7 +278,7 @@ class MessageManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getRemovedMessagesJson(User $user, $search = '', $page = 1)
+    public function getRemovedMessages(User $user, $search = '', $page = 1)
     {
         $query = $search === '' ?
         $this->userMessageRepo->findRemoved($user, false) :

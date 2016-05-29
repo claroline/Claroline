@@ -19,6 +19,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Entity\User;
 
+/**
+ * This class still needs to be able to handle pagination.
+ */
 class MessageController extends FOSRestController
 {
     private $messageManager;
@@ -40,7 +43,7 @@ class MessageController extends FOSRestController
     */
    public function getReceivedAction(User $user)
    {
-       return $this->messageManager->getReceivedMessagesJson($user);
+       return $this->messageManager->getReceivedMessages($user);
    }
 
     /**
@@ -50,7 +53,7 @@ class MessageController extends FOSRestController
      */
     public function getSentAction(User $user)
     {
-        return $this->messageManager->getSentMessagesJson($user);
+        return $this->messageManager->getSentMessages($user);
     }
 
     /**
@@ -60,6 +63,6 @@ class MessageController extends FOSRestController
      */
     public function getRemovedAction(User $user)
     {
-        return $this->messageManager->getRemovedMessagesJson($user);
+        return $this->messageManager->getRemovedMessages($user);
     }
 }

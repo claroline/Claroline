@@ -13,23 +13,33 @@ class NotificationControllerTest extends TransactionalTestCase
         $this->persister = $this->client->getContainer()->get('claroline.library.testing.persister');
     }
 
-        /**
-         * @Route("/notifications.{_format}", name="icap_notifications", defaults={"_format":"json"})
-         * @View(serializerGroups={"api_notification"})
-         * @EXT\ParamConverter("user", converter="current_user")
-         */
-        public function testGetNotificationsAction()
-        {
-        }
+    /**
+     * I don't know how to create notifications properly, so I'm only testing if it returns a 200 status code.
+     */
+    public function testGetNotificationsAction()
+    {
+        $user = $this->createUser('user');
+        $this->logIn($user);
+        $this->client->request('GET', '/icap_notification/api/notifications');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
 
-       /**
-        * Mark all notifications as read.
-        *
-        * @Route("/notifications/read.{_format}", name="icap_notifications_read", defaults={"_format":"json"})
-        * @View(serializerGroups={"api_notification"})
-        * @EXT\ParamConverter("user", converter="current_user")
-        */
-       public function testGetNotificationsReadAction()
-       {
-       }
+    /**
+     * I don't know how to create notifications properly, so I'm only testing if it returns a 200 status code.
+     */
+    public function testGetNotificationsReadAction()
+    {
+        $user = $this->createUser('user');
+        $this->logIn($user);
+        $this->client->request('GET', '/icap_notification/api/notifications/read');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    private function createUser($name)
+    {
+        $user = $this->persister->user($name);
+        $this->persister->persist($user);
+
+        return $user;
+    }
 }
