@@ -59,6 +59,13 @@ class ImportUserType extends AbstractType
                 'label' => 'send_mail',
                 'required' => false,
             )
+        )->add(
+            'enable_mail_notification',
+            'checkbox',
+            array(
+                'label' => 'user_enable_mail_notification_label',
+                'required' => false,
+            )
         );
 
         if ($this->showRoles) {

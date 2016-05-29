@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\ForumBundle\Repository\SubjectRepository")
  * @ORM\Table(name="claro_forum_subject")
  */
 class Subject

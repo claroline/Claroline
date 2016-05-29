@@ -1042,6 +1042,7 @@ use_stable_repo: 'Use the stable repository'
 use_test_repo: 'Use the testing repository'
 user: User
 user_accounts: 'User accounts'
+user_enable_mail_notification_label: 'Enable email notifications'
 user_creation: 'User creation'
 user_creation_success: 'The user account has been successfully created.'
 user_info: 'User informations'

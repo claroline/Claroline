@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -36,6 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -60,7 +60,7 @@ class UserManager
     private $validator;
     private $workspaceManager;
     private $uploadsDirectory;
-    private $transfertManager;
+    private $transferManager;
     private $container;
     private $authorization;
     private $organizationManager;
@@ -70,7 +70,7 @@ class UserManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "templateDir"            = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "uploadsDirectory"        = @DI\Inject("%claroline.param.uploads_directory%"),
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
      *     "objectManager"          = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
@@ -81,15 +81,15 @@ class UserManager
      *     "translator"             = @DI\Inject("translator"),
      *     "validator"              = @DI\Inject("validator"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
-     *     "transfertManager"       = @DI\Inject("claroline.manager.transfert_manager"),
+     *     "personalTemplate"       = @DI\Inject("%claroline.param.personal_template%"),
+     *     "transferManager"        = @DI\Inject("claroline.manager.transfer_manager"),
      *     "container"              = @DI\Inject("service_container"),
      *     "organizationManager"    = @DI\Inject("claroline.manager.organization.organization_manager"),
      *     "groupManager"           = @DI\Inject("claroline.manager.group_manager")
      * })
      */
     public function __construct(
-        $templateDir,
+        $uploadsDirectory,
         MailManager $mailManager,
         ObjectManager $objectManager,
         PagerFactory $pagerFactory,
@@ -100,9 +100,9 @@ class UserManager
         TranslatorInterface $translator,
         ValidatorInterface $validator,
         WorkspaceManager $workspaceManager,
-        TransfertManager $transfertManager,
+        TransferManager $transferManager,
         OrganizationManager $organizationManager,
-        $uploadsDirectory,
+        $personalTemplate,
         ContainerInterface $container,
         GroupManager $groupManager
     ) {
@@ -111,7 +111,7 @@ class UserManager
         $this->workspaceManager = $workspaceManager;
         $this->toolManager = $toolManager;
         $this->strictEventDispatcher = $strictEventDispatcher;
-        $this->personalWsTemplateFile = $templateDir.'personal.zip';
+        $this->personalWsTemplateFile = $personalTemplate;
         $this->translator = $translator;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->pagerFactory = $pagerFactory;
@@ -119,7 +119,7 @@ class UserManager
         $this->mailManager = $mailManager;
         $this->validator = $validator;
         $this->uploadsDirectory = $uploadsDirectory;
-        $this->transfertManager = $transfertManager;
+        $this->transferManager = $transferManager;
         $this->organizationManager = $organizationManager;
         $this->container = $container;
         $this->groupManager = $groupManager;
@@ -156,11 +156,6 @@ class UserManager
         }
 
         $this->objectManager->startFlushSuite();
-
-        if ($this->personalWorkspaceAllowed($additionnalRoles)) {
-            $this->setPersonalWorkspace($user, $model);
-        }
-
         $user->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $user->setEmailValidationHash($this->container->get('claroline.utilities.misc')->generateGuid());
         $this->objectManager->persist($user);
@@ -196,6 +191,10 @@ class UserManager
 
         $this->container->get('claroline.event.event_dispatcher')
             ->dispatch('user_created_event', 'UserCreated', array('user' => $user));
+
+        if ($this->personalWorkspaceAllowed($additionnalRoles)) {
+            $this->setPersonalWorkspace($user, $model);
+        }
 
         $this->objectManager->endFlushSuite();
 
@@ -335,7 +334,7 @@ class UserManager
      *
      * @return array
      */
-    public function importUsers(array $users, $sendMail = true, $logger = null, $additionalRoles = array())
+    public function importUsers(array $users, $sendMail = true, $logger = null, $additionalRoles = array(), $enableEmailNotifaction = false)
     {
         $returnValues = array();
         //keep these roles before the clear() will mess everything up. It's not what we want.
@@ -419,6 +418,8 @@ class UserManager
             $newUser->setPhone($phone);
             $newUser->setLocale($lg);
             $newUser->setAuthentication($authentication);
+            $newUser->setIsMailNotified($enableEmailNotifaction);
+
             $this->createUser($newUser, $sendMail, $additionalRoles, $model, $username.uniqid());
             $this->objectManager->persist($newUser);
             $returnValues[] = $firstName.' '.$lastName;
@@ -487,10 +488,12 @@ class UserManager
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform').' - '.$user->getUsername();
 
         if (!$model) {
-            $config = Configuration::fromTemplate($this->personalWsTemplateFile);
-            $config->setWorkspaceName($personalWorkspaceName);
-            $config->setWorkspaceCode($code);
-            $workspace = $this->transfertManager->createWorkspace($config, $user, true);
+            $workspace = new Workspace();
+            $workspace->setName($personalWorkspaceName);
+            $workspace->setCode($code);
+            $workspace->setCreator($user);
+            $template = new File($this->personalWsTemplateFile);
+            $workspace = $this->transferManager->createWorkspace($workspace, $template, true);
         } else {
             $workspace = $this->workspaceManager->createWorkspaceFromModel(
                 $model,
@@ -1204,10 +1207,11 @@ class UserManager
      * )
      *
      * @param array $users
+     * @param bool  $enableEmailNotification default to null so we have the option to not override it
      *
      * @return array
      */
-    public function updateImportedUsers(array $users, $additionalRoles = array())
+    public function updateImportedUsers(array $users, $additionalRoles = array(), $enableEmailNotification = null)
     {
         $returnValues = array();
         $lg = $this->platformConfigHandler->getParameter('locale_language');
@@ -1253,6 +1257,9 @@ class UserManager
                 $existingUser->setPhone($phone);
                 $existingUser->setLocale($lg);
                 $existingUser->setAuthentication($authentication);
+                if ($enableEmailNotification !== null) {
+                    $existingUser->setIsMailNotified($enableEmailNotification);
+                }
                 $this->objectManager->persist($existingUser);
                 $updatedUsers[] = $existingUser;
                 $returnValues[] = $firstName.' '.$lastName;
@@ -1566,22 +1573,43 @@ class UserManager
      */
     public function bindUserToOrganization()
     {
+        $limit = 2000;
+        $offset = 0;
+        $this->log('Add organizations to users...');
         $this->objectManager->startFlushSuite();
-        $users = $this->getAll();
+        $countUsers = $this->objectManager->count('ClarolineCoreBundle:User');
         $default = $this->organizationManager->getDefault();
         $i = 0;
+        $detach = [];
 
-        foreach ($users as $user) {
-            if (count($user->getOrganizations()) === 0) {
-                ++$i;
-                $this->log('Add default organization for user '.$user->getUsername());
-                $user->addOrganization($default);
-                $this->objectManager->persist($user);
+        while ($offset < $countUsers) {
+            $users = $this->userRepo->findBy(array(), null, $limit, $offset);
 
-                if ($i % self::MAX_EDIT_BATCH_SIZE == 0) {
-                    $this->objectManager->forceFlush();
+            foreach ($users as $user) {
+                if (count($user->getOrganizations()) === 0) {
+                    ++$i;
+                    $this->log('Add default organization for user '.$user->getUsername());
+                    $user->addOrganization($default);
+                    $this->objectManager->persist($user);
+                    $detach[] = $user;
+
+                    if ($i % 250 == 0) {
+                        $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
+                        $this->objectManager->forceFlush();
+
+                        foreach ($detach as $el) {
+                            $this->objectManager->detach($el);
+                        }
+
+                        $detach = [];
+                    }
+                } else {
+                    $this->log("Organization for user {$user->getUsername()} already exists");
+                    $this->objectManager->detach($user);
                 }
             }
+
+            $offset += $limit;
         }
 
         $this->objectManager->endFlushSuite();

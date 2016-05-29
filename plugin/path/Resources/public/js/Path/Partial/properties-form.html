@@ -66,7 +66,7 @@
                 <div class="row form-group">
                     <label class="control-label col-md-3" for="innova_path_description">{{ 'path_description'|trans:{}:'path_wizards' }}</label>
                     <div class="col-md-9">
-                        <input type="text" class="form-control" id="innova_path_description" name="innova_path[description]" placeholder="{{ 'description_help'|trans:{}:'path_wizards' }}" data-ng-model="pathEditCtrl.path.description" />
+                        <textarea data-ui-tinymce="pathEditCtrl.tinymceOptions" class="form-control" id="innova_path_description" name="innova_path[description]" placeholder="{{ 'description_help'|trans:{}:'path_wizards' }}" data-ng-model="pathEditCtrl.path.description"></textarea>
                     </div>
                 </div>
 
@@ -86,6 +86,16 @@
                     <div class="col-md-9">
                         <div class="checkbox">
                             <input type="checkbox" id="innova_path_summaryDisplayed" name="innova_path[summaryDisplayed]" data-ng-model="pathEditCtrl.path.summaryDisplayed" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Is a condition blocking all the following steps or just the next ? -->
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="innova_path_completeBlockingCondition">{{ 'path_complete_blocking_condition'|trans:{}:'path_wizards' }}</label>
+                    <div class="col-md-9">
+                        <div class="checkbox">
+                            <input type="checkbox" id="innova_path_completeBlockingCondition" name="innova_path[completeBlockingCondition]" data-ng-model="pathEditCtrl.path.completeBlockingCondition" />
                         </div>
                     </div>
                 </div>

@@ -156,6 +156,7 @@ class BlogManager
 
             $tagsDatas = $postsData['tags'];
             $tags = new ArrayCollection();
+
             foreach ($tagsDatas as $tagsData) {
                 $tag = $this->retrieveTag($tagsData['name']);
                 $tags->add($tag);
@@ -217,6 +218,8 @@ class BlogManager
     }
 
     /**
+     * This method is used by the workspace import function.
+     *
      * @param string $name
      *
      * @return Tag
@@ -225,12 +228,62 @@ class BlogManager
     {
         $tag = $this->objectManager->getRepository('IcapBlogBundle:Tag')->findOneByName($name);
 
-        if (null === $tag) {
-            $tag = new Tag();
-            $tag->setName($name);
+        if (!$tag) {
+            //let's look if it's scheduled for an Insert...
+            $tag = $this->getTagFromIdentityMapOrScheduledForInsert($name);
+
+            if (!$tag) {
+                $tag = new Tag();
+                $tag->setName($name);
+                $this->objectManager->persist($tag);
+            }
         }
 
         return $tag;
+    }
+
+    private function getTagFromIdentityMapOrScheduledForInsert($name)
+    {
+        $res = $this->getTagFromIdentityMap($name);
+
+        if ($res) {
+            return $res;
+        }
+
+        return $this->getTagScheduledForInsert($name);
+    }
+
+    private function getTagScheduledForInsert($name)
+    {
+        $scheduledForInsert = $this->objectManager->getUnitOfWork()->getScheduledEntityInsertions();
+
+        foreach ($scheduledForInsert as $entity) {
+            if (get_class($entity) === 'Icap\BlogBundle\Entity\Tag') {
+                if ($entity->getName() === $name) {
+                    return $entity;
+                }
+            }
+        }
+
+        return;
+    }
+
+    private function getTagFromIdentityMap($name)
+    {
+        $map = $this->objectManager->getUnitOfWork()->getIdentityMap();
+
+        if (!array_key_exists('Icap\BlogBundle\Entity\Tag', $map)) {
+            return;
+        }
+
+        //so it was in the identityMap hey !
+        foreach ($map['Icap\BlogBundle\Entity\Tag'] as $tag) {
+            if ($tag->getName() === $name) {
+                return $tag;
+            }
+        }
+
+        return;
     }
 
     /**

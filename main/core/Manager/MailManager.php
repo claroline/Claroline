@@ -66,7 +66,7 @@ class MailManager
      */
     public function isMailerAvailable()
     {
-        return $this->cacheManager->getParameter('is_mailer_available');
+        return $this->cacheManager->getParameter('is_mailer_available') && $this->getMailerFrom();
     }
 
     /**
@@ -176,6 +176,11 @@ class MailManager
      */
     public function send($subject, $body, array $users, $from = null, array $extra = array(), $force = false)
     {
+        if (count($users) === 0) {
+            //obviously, if we're not going to send anything to anyone, it's better to stop
+            return false;
+        }
+
         if ($this->isMailerAvailable()) {
             $body = $this->parseBodyUrl($body);
 

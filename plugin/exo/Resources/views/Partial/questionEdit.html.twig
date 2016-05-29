@@ -1,0 +1,11 @@
+<link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+
+{% set al = '' %}
+
+{% for key,value in linkedCategory %}
+    {% set al = al ~ key ~ '/' ~ value ~ ';' %}
+{% endfor %}
+
+<input type="hidden" id="categoryArray" value="{{al}}"/>
+
+{% include "UJMExoBundle:Partial:question.html.twig" %}

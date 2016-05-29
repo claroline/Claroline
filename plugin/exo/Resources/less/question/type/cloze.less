@@ -1,0 +1,24 @@
+.cloze-question-container {
+    .cloze {
+        > p {
+            margin: 0;
+        }
+
+        .cloze-hole {
+            display: inline-block;
+        }
+
+        .form-control {
+            display: inline;
+            width: inherit;
+
+            &.has-success {
+                border-color: @brand-success !important;
+            }
+
+            &.has-error {
+                border-color: @brand-danger !important;;
+            }
+        }
+    }
+}

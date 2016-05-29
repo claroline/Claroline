@@ -10,11 +10,12 @@ abstract class AbstractPathType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options = array())
     {
-        $builder->add('name',             'text',     array('required' => true));
-        $builder->add('description',      'text',     array('required' => false));
-        $builder->add('breadcrumbs',      'checkbox', array('required' => false));
-        $builder->add('summaryDisplayed', 'checkbox', array('required' => false));
-        $builder->add('structure',        'hidden',   array('required' => true));
+        $builder->add('name',                       'text',     array('required' => true));
+        $builder->add('description',                'tinymce',  array('required' => false));
+        $builder->add('breadcrumbs',                'checkbox', array('required' => false));
+        $builder->add('summaryDisplayed',           'checkbox', array('required' => false));
+        $builder->add('completeBlockingCondition',  'checkbox', array('required' => false));
+        $builder->add('structure',                  'hidden',   array('required' => true));
     }
 
     abstract public function getDefaultOptions();

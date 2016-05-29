@@ -1,0 +1,5 @@
+{% twig_js name="removePictureConfirm" %}
+
+{# no transchoice filter in twigjs... #}
+
+{{ 'warning'|trans({}, 'ujm_exo') }} ?

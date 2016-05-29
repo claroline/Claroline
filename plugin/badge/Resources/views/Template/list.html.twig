@@ -30,6 +30,9 @@
         {% include 'IcapBadgeBundle:Template:list_badges.html.twig'%}
     </div>
     <div class="tab-pane" id="users">
+        <a href="{{ path(parameters.csv_link, parameters.route_parameters) }}" role="button" class="btn btn-primary btn-md">
+            <span class="fa fa-download"></span> {{ 'csv_export'|trans({}, 'icap_badge') }}
+        </a>
         {% include 'IcapBadgeBundle:Template:list_badges_claim.html.twig'%}
         {% include 'IcapBadgeBundle:Template:list_users.html.twig'%}
     </div>

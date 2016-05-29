@@ -2,6 +2,7 @@
 
 namespace Claroline\ForumBundle\Entity\Widget;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,14 +28,20 @@ class LastMessageWidgetConfig
     protected $widgetInstance;
 
     /**
-     * @var bool
+     * @var boolean
      *
      * @ORM\Column(name="display_my_last_messages", type="boolean")
      */
     protected $displayMyLastMessages;
 
     /**
-     * @return int
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(name="forum_id", onDelete="SET NULL", nullable=true)
+     */
+    protected $forum;
+
+    /**
+     * @return integer
      */
     public function getId()
     {
@@ -51,18 +58,16 @@ class LastMessageWidgetConfig
 
     /**
      * @param WidgetInstance $widgetInstance
-     *
      * @return LastMessageWidgetConfig
      */
     public function setWidgetInstance(WidgetInstance $widgetInstance)
     {
         $this->widgetInstance = $widgetInstance;
-
         return $this;
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function getDisplayMyLastMessages()
     {
@@ -70,14 +75,22 @@ class LastMessageWidgetConfig
     }
 
     /**
-     * @param bool $displayMyLastMessages
-     *
+     * @param boolean $displayMyLastMessages
      * @return LastMessageWidgetConfig
      */
     public function setDisplayMyLastMessages($displayMyLastMessages)
     {
         $this->displayMyLastMessages = $displayMyLastMessages;
-
         return $this;
+    }
+
+    public function getForum()
+    {
+        return $this->forum;
+    }
+
+    public function setForum(ResourceNode $forum = null)
+    {
+        $this->forum = $forum;
     }
 }

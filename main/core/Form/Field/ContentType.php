@@ -36,7 +36,7 @@ class ContentType extends AbstractType
 
     /**
      * @InjectParams({
-     *     "localeManager" = @Inject("claroline.common.locale_manager"),
+     *     "localeManager" = @Inject("claroline.manager.locale_manager"),
      *     "contentManager" = @Inject("claroline.manager.content_manager")
      * })
      */
@@ -108,7 +108,7 @@ class ContentType extends AbstractType
         );
 
         foreach ($themeOptions as $option => $defaultValue) {
-            if (isset($options['theme_options']) and isset($options['theme_options'][$option])) {
+            if (isset($options['theme_options']) && isset($options['theme_options'][$option])) {
                 $view->vars[$option] = $options['theme_options'][$option];
             } else {
                 $view->vars[$option] = $defaultValue;

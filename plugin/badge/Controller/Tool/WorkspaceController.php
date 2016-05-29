@@ -18,12 +18,43 @@ use Symfony\Component\HttpFoundation\Response;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Rule\Validator;
+use Doctrine\ORM\EntityManager;
+use Icap\BadgeBundle\Manager\BadgeManager;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @Route("/workspace/{workspaceId}/badges")
  */
 class WorkspaceController extends Controller
 {
+    private $userManager;
+    private $ruleValidator;
+    private $entityManager;
+    private $badgeManager;
+
+    /**
+     * @DI\InjectParams({
+     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
+     *     "ruleValidator" = @DI\Inject("claroline.rule.validator"),
+     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "badgeManager" = @DI\Inject("icap_badge.manager.badge")
+     * })
+     */
+    public function __construct(
+        UserManager $userManager,
+        Validator $ruleValidator,
+        EntityManager $entityManager,
+        BadgeManager $badgeManager
+    ) {
+        $this->userManager = $userManager;
+        $this->ruleValidator = $ruleValidator;
+        $this->entityManager = $entityManager;
+        $this->badgeManager = $badgeManager;
+    }
+
     /**
      * @Route(
      *     "/{badgePage}/{claimPage}/{userPage}",
@@ -66,6 +97,7 @@ class WorkspaceController extends Controller
             'current_link' => 'icap_badge_workspace_tool_badges',
             'claim_link' => 'icap_badge_workspace_tool_manage_claim',
             'statistics_link' => 'icap_badge_workspace_tool_badges_statistics',
+            'csv_link' => 'icap_badge_workspace_export_csv',
             'totalBadges' => $totalBadges,
             'totalAwarding' => $userBadgeRepository->countAwardingByWorkspace($workspace),
             'totalBadgeAwarded' => $totalBadgeAwarded,
@@ -97,7 +129,7 @@ class WorkspaceController extends Controller
         $badge = new Badge();
         $badge->setWorkspace($workspace);
 
-        $locales = $this->get('claroline.common.locale_manager')->getAvailableLocales();
+        $locales = $this->get('claroline.manager.locale_manager')->getAvailableLocales();
         foreach ($locales as $locale) {
             $translation = new BadgeTranslation();
             $translation->setLocale($locale);
@@ -164,7 +196,9 @@ class WorkspaceController extends Controller
         $translator = $this->get('translator');
 
         try {
-            if ($this->get('icap_badge.form_handler.badge.workspace')->handleEdit($badge)) {
+            $unawardBadge = $request->query->get('unawardBadge') === 'true';
+
+            if ($this->get('icap_badge.form_handler.badge.workspace')->handleEdit($badge, $this->badgeManager, $unawardBadge)) {
                 $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', array(), 'icap_badge'));
 
                 return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
@@ -453,6 +487,134 @@ class WorkspaceController extends Controller
             'workspace' => $workspace,
             'statistics' => $statistics,
         );
+    }
+
+    /**
+     * @Route("/recalculate/{slug}", name="icap_badge_workspace_tool_badges_recalculate")
+     * @ParamConverter(
+     *     "workspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"id" = "workspaceId"}
+     * )
+     * @ParamConverter("badge", converter="badge_converter")
+     */
+    public function recalculateAction(Request $request, Workspace $workspace, Badge $badge)
+    {
+        $this->checkUserIsAllowed($workspace);
+
+        // Check rules for already awarded badges ?
+        $recalculateAlreadyAwarded = $request->query->get('recalculateAlreadyAwarded') === 'true';
+
+        // Get Users
+        $users = $recalculateAlreadyAwarded ?
+            $this->userManager->getUsersByWorkspaces([$workspace], 1, 1, false) :
+            $this->badgeManager->getUsersNotAwardedWithBadge($badge);
+
+        $nbRules = count($badge->getRules());
+
+        foreach ($users as $user) {
+            $resources = $this->ruleValidator->validate($badge, $user);
+            if (0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
+                // Add badge to user but delay flush. It will be performed later, outside foreach loop
+                $this->badgeManager->addBadgeToUser($badge, $user, null, null, true);
+            } else {
+                // Remove badge from user but delay flush. It will be performed later, outside foreach loop
+                $this->badgeManager->revokeBadgeFromUser($badge, $user, null, null, true);
+            }
+        }
+        $this->getDoctrine()->getManager()->flush();
+
+        $translator = $this->get('translator');
+        $successMessage = $translator->trans('recalculate_success', array(), 'icap_badge');
+        $this->get('session')->getFlashBag()->add('success', $successMessage);
+
+        return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
+    }
+
+    /**
+     * @Route("/export", name="icap_badge_workspace_export_csv")
+     * @ParamConverter(
+     *     "workspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"id" = "workspaceId"}
+     * )
+     *
+     * @param Request $request
+     *
+     * @return StreamedResponse
+     */
+    public function exportCSVAction(Request $request, Workspace $workspace)
+    {
+        $this->checkUserIsAllowed($workspace);
+
+        $locale = $request->getLocale();
+        $translator = $this->get('translator');
+        $userBadgeRepo = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
+
+        $users = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')
+            ->createQueryBuilder('u')
+            ->select('u')
+            ->join('u.roles', 'r')
+            ->andWhere('u.isEnabled = true')
+            ->leftJoin('r.workspace', 'w')
+            ->andWhere('r.workspace = :workspace')
+            ->setParameter('workspace', $workspace)
+            ->orderBy('u.lastName')
+            ->addOrderBy('u.firstName')
+            ->getQuery()
+            ->getResult();
+
+        $badges = $this->badgeManager->getWorkspaceBadgesOrderedByName($workspace, $locale);
+
+        $response = new StreamedResponse(function () use ($users, $badges, $locale, $translator, $userBadgeRepo) {
+            $handle = fopen('php://output', 'w+');
+
+            $userTrans = count($users) > 1 ?
+                $translator->trans('users', array(), 'platform') :
+                $translator->trans('user', array(), 'platform');
+            $badgeTrans = count($badges) > 1 ?
+                $translator->trans('badges', array(), 'icap_badge') :
+                $translator->trans('badge', array(), 'icap_badge');
+
+            fputcsv($handle, array(count($users).' '.strtolower($userTrans).', '.count($badges).' '.strtolower($badgeTrans)));
+
+            // Headers
+            $headers = array(
+                $translator->trans('username', array(), 'platform'),
+                $translator->trans('first_name', array(), 'platform'),
+                $translator->trans('last_name', array(), 'platform'),
+            );
+            foreach ($badges as $badge) {
+                array_push($headers, $badge->getTranslationForLocale($locale)->getName());
+            }
+            fputcsv($handle, $headers);
+
+            // Data
+            foreach ($users as $user) {
+                $line = array(
+                    $user->getUsername(),
+                    $user->getFirstname(),
+                    $user->getlastName(),
+                );
+                foreach ($badges as $badge) { // foreach iterates always in the same order
+                    $check = $userBadgeRepo->findOneByBadgeAndUser($badge, $user) ?
+                        'x' : '';
+                    array_push($line, $check);
+                }
+                fputcsv($handle, $line);
+            }
+
+            fclose($handle);
+
+        });
+
+        $dateStr = date('Y-m-d');
+        $response->headers->set('Content-Type', 'application/force-download');
+
+        $filename = $translator->trans('csv_filename', array(), 'icap_badge');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'_'.$dateStr.'.csv"');
+
+        return $response;
     }
 
     private function checkUserIsAllowed(Workspace $workspace)

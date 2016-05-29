@@ -3,7 +3,7 @@
  * @returns {PathEditCtrl}
  * @constructor
  */
-var PathEditCtrl = function PathEditCtrl($window, $route, $routeParams, PathService, HistoryService, ConfirmService, $scope) {
+var PathEditCtrl = function PathEditCtrl($window, $route, $routeParams, PathService, HistoryService, ConfirmService, $scope, tinymceConfig) {
     // Call parent constructor
     PathBaseCtrl.apply(this, arguments);
 
@@ -11,6 +11,7 @@ var PathEditCtrl = function PathEditCtrl($window, $route, $routeParams, PathServ
     this.confirmService = ConfirmService;
 
     this.historyDisabled = HistoryService.getDisabled();
+    this.tinymceOptions = tinymceConfig;
 
     // listen to path changes to update history
     $scope.$watch(
@@ -36,6 +37,9 @@ var PathEditCtrl = function PathEditCtrl($window, $route, $routeParams, PathServ
 // Extends the base controller
 PathEditCtrl.prototype = Object.create(PathBaseCtrl.prototype);
 PathEditCtrl.prototype.constructor = PathEditCtrl;
+
+// Dependency Injection
+PathEditCtrl.$inject = [ '$window', '$route', '$routeParams', 'PathService', 'HistoryService', 'ConfirmService', '$scope', 'tinymceConfig' ];
 
 /**
  * Is Path is modified since the last publishing

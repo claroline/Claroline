@@ -33,7 +33,7 @@ class ImportWorkspaceType extends AbstractType
         $builder->add(
             'workspace',
             'file',
-            array('label' => 'file', 'constraints' => array(new NotBlank()))
+            array('label' => 'file', 'constraints' => array(new NotBlank()), 'mapped' => false)
         );
         $builder->add(
             'description',

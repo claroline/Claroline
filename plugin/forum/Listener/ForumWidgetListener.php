@@ -16,11 +16,10 @@ use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig;
 use Claroline\ForumBundle\Form\Widget\LastMessageWidgetConfigType;
-use Claroline\ForumBundle\Manager\ForumWidgetManager;
+use Claroline\ForumBundle\Manager\Manager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -28,47 +27,28 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class ForumWidgetListener
 {
-    /**
-     * @var ForumWidgetManager
-     */
-    protected $forumWidgetManager;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    protected $formFactory;
-
-    /**
-     * @var EngineInterface
-     */
+    private $formFactory;
+    private $forumManager;
+    private $request;
     private $templatingEngine;
 
     /**
-     * @var null|\Symfony\Component\HttpFoundation\Request
-     */
-    private $request;
-
-    /**
-     * @var HttpKernelInterface
-     */
-    private $httpKernel;
-
-    /**
      * @DI\InjectParams({
-     *     "requestStack"   = @DI\Inject("request_stack"),
-     *     "httpKernel"     = @DI\Inject("http_kernel"),
-     *     "forumWidgetManager" =  @DI\Inject("claroline.manager.forum_widget"),
-     *     "formFactory" =  @DI\Inject("form.factory"),
-     *     "templatingEngine" = @DI\Inject("templating")
+     *     "formFactory"       = @DI\Inject("form.factory"),
+     *     "forumManager"      = @DI\Inject("claroline.manager.forum_manager"),
+     *     "requestStack"      = @DI\Inject("request_stack"),
+     *     "templatingEngine"  = @DI\Inject("templating")
      * })
      */
-    public function __construct(RequestStack $requestStack, HttpKernelInterface $httpKernel,
-        ForumWidgetManager $forumWidgetManager, FormFactoryInterface $formFactory, EngineInterface $templatingEngine)
-    {
-        $this->request = $requestStack->getCurrentRequest();
-        $this->httpKernel = $httpKernel;
-        $this->forumWidgetManager = $forumWidgetManager;
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        Manager $forumManager,
+        RequestStack $requestStack,
+        EngineInterface $templatingEngine
+    ) {
         $this->formFactory = $formFactory;
+        $this->forumManager = $forumManager;
+        $this->request = $requestStack->getCurrentRequest();
         $this->templatingEngine = $templatingEngine;
     }
 
@@ -84,21 +64,22 @@ class ForumWidgetListener
         if (!$this->request) {
             throw new NoHttpRequestException();
         }
+        $widgetInstance = $event->getInstance();
+        $workspace = $widgetInstance->getWorkspace();
 
-        $workspace = $event->getInstance()->getWorkspace();
-
-        $templatePath = 'ClarolineForumBundle:Forum:forumsWorkspaceWidget.html.twig';
-        $widgetType = 'workspace';
         if ($workspace == null) {
             $templatePath = 'ClarolineForumBundle:Forum:forumsDesktopWidget.html.twig';
             $widgetType = 'desktop';
+        } else {
+            $templatePath = 'ClarolineForumBundle:Forum:forumsWorkspaceWidget.html.twig';
+            $widgetType = 'workspace';
         }
-
+        $messages = $this->forumManager->getLastMessages($widgetInstance);
         $event->setContent($this->templatingEngine->render(
             $templatePath,
             array(
                 'widgetType' => $widgetType,
-                'messages' => $this->forumWidgetManager->getLastMessages($event->getInstance(), $workspace),
+                'messages' => $messages,
             )
         ));
         $event->stopPropagation();
@@ -110,14 +91,13 @@ class ForumWidgetListener
     public function onConfigure(ConfigureWidgetEvent $event)
     {
         $widgetInstance = $event->getInstance();
-        $lastMessageWidgetConfig = $this->forumWidgetManager->getConfig($widgetInstance);
+        $lastMessageWidgetConfig = $this->forumManager->getConfig($widgetInstance);
 
-        if ($lastMessageWidgetConfig === null) {
+        if (is_null($lastMessageWidgetConfig)) {
             $lastMessageWidgetConfig = new LastMessageWidgetConfig();
+            $lastMessageWidgetConfig->setWidgetInstance($widgetInstance);
         }
-
         $form = $this->formFactory->create(new LastMessageWidgetConfigType(), $lastMessageWidgetConfig);
-
         $content = $this->templatingEngine->render(
             'ClarolineForumBundle:Widget:lastMessageWidgetConfig.html.twig',
             array(

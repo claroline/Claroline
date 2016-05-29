@@ -1,0 +1,17 @@
+{% if inter.question.feedback != '' %}
+    <p>{{ inter.question.feedback|raw }}</p>
+    <hr/>
+{% endif %}
+
+<div>
+    {% if penalty > 0 %}
+        {{ 'penalty' | trans({}, 'ujm_exo') }} : {{ penalty }}.
+        <br/><hr/>
+    {% endif %}
+
+    {% if (inter.question.type == 'InteractionOpen' and inter.typeopenquestion == 'long') %}
+       {{ 'not_yet_mark' | trans({}, 'ujm_exo') }}.
+    {% else %}
+        {{ 'score' | trans({}, 'ujm_exo') }} : <span id="score">{{ score }}.</span>
+    {% endif %}
+</div>

@@ -93,6 +93,8 @@ claim_badge: 'Petición de una insignia'
 claim_badge_form: 'Formulario de petición de una insignia'
 claim_date: 'Fecha de petición'
 claiming: 'Petición|Peticiones'
+csv_export: 'CSV Export'
+csv_filename: 'badge_awardings'
 day: 'Día'
 dont_award: 'No atribuir'
 edit_badge: 'Editar la insignia ''%badge_name%'''
@@ -154,3 +156,12 @@ badges_number: Nombre des badges
 user_number: Nombre des utilisateurs
 import_export: Importar/Exportar
 expired_badge: Insignia caducado
+recalculate_modal_title: 'Start automatic badge awarding?'
+recalculate_modal_waning: '<strong>Caution!</strong> Automatic badge awarding is an expensive process which can''t trigger any user notification.'
+recalculate_modal_option_all_users: 'Badge can be unawarded if awarding rules are not met anymore.'
+recalculate_button_tooltip: 'Start automatic badge (un)awarding process if attribution rules have been modified.'
+recalculate_button: 'Recalculate awardings'
+recalculate_success: 'Automatic badge awarding done with success'
+unaward_modal_title: 'Edit badge'
+unaward_modal_option_all_users: 'Unaward badge if attribution rules are not met anymore.'
+unaward_modal_warning: '<strong>Don''t forget:</strong> should attibution rules have been modified, users who can claim for this badge can obtain it with automatic awarding process.'

@@ -1,0 +1,17 @@
+<div class="alert alert-warning" role="alert">
+    <span class="fa fa-clock-o"></span>
+
+    {{ 'timer'|trans:{}:'ujm_exo' }}
+
+    <span data-ng-show="timerCtrl.timer.remaining.hours != 0">
+        {{ timerCtrl.timer.remaining.hours }}h
+    </span>
+
+    <span data-ng-show="timerCtrl.timer.remaining.minutes != 0">
+        {{ timerCtrl.timer.remaining.minutes }}m
+    </span>
+
+    <span data-ng-show="timerCtrl.timer.remaining.minutes < 2 && timerCtrl.timer.remaining.hours == 0">
+        {{ timerCtrl.timer.remaining.seconds }}s
+    </span>
+</div>

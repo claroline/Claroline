@@ -1,0 +1,39 @@
+ujm_interactiongraphic_AddImg:
+    pattern:  /AjoutImg/{redirection}/{pageToGo}/{maxPage}/{nbItem}
+    defaults: { _controller: UJMExoBundle:WSRest:postPictureAdd, pageToGo: 1, maxPage: 10, nbItem: 1 }
+    requirements: { _method: post }
+
+ujm_interactiongraphic_edit:
+    pattern: /edit/{interaction}/{exoID}/{catID}/{user}
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:edit" }
+    requirements: { _method: post }
+
+ujm_interactiongraphic_create:
+    pattern:  /create
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:create" }
+    requirements: { _method: post }
+
+ujm_interactiongraphic_DisplayPic:
+    pattern:  /DisplayPic
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:displayPic" }
+    requirements:
+      _method: POST
+
+ujm_interactiongraphic_response:
+    pattern: /testGraphic
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:responseGraphic" }
+
+ujm_interactiongraphic_SavePic:
+    pattern:  /SavePic
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:savePic" }
+
+ujm_interactiongraphic_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:update" }
+    requirements: { _method: post }
+
+ujm_Picture_name_alreadyExist:
+    pattern:  /Picture/nameAlreadyExist
+    defaults: { _controller: "UJMExoBundle:WSRest:nameAlreadyExist" }
+    requirements:
+      _method: POST

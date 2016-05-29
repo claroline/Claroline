@@ -1,0 +1,21 @@
+ujm_category_create_pop:
+    pattern: /create_pop
+    defaults: { _controller: UJMExoBundle:Category:createPop }
+    requirements:
+      _method: POST
+
+ujm_category_new_pop:
+    pattern:  /new_pop/{edit}
+    defaults: { _controller: UJMExoBundle:Category:newPop, edit: 0 }
+
+ujm_category_drop:
+    pattern: /category/drop
+    defaults: {_controller: UJMExoBundle:Category:drop }
+    requirements:
+      _method: POST
+
+ujm_category_alter:
+    pattern: /category/alter
+    defaults: {_controller: UJMExoBundle:Category:alter }
+    requirements:
+      _method: POST

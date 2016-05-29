@@ -1,0 +1,150 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% block breadcrumb %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-briefcase',
+                    'name': 'desktop'|trans({}, 'platform'),
+                    'href': path('claro_desktop_open')
+                },
+                {
+                    'name': 'bank_of_questions' | trans({}, 'ujm_exo'),
+                    'href': path('ujm_question_index')
+                },
+                {
+                    'name': 'question' | trans({}, 'ujm_exo'),
+                    'href': ''
+                }
+            ])
+        }}
+    {% endblock %}
+{% else %}
+    {% block resourceBreadcrumb %}
+        <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+        <li class="active">{{ 'bank_of_questions' | trans({}, 'ujm_exo') }}</li>
+    {% endblock %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/matchingOverview.css') }}" type="text/css" rel="stylesheet"/>
+    {% if interactionToDisplayed.typeMatching.code == 1 %}
+        <link href="{{ asset('bundles/ujmexo/css/matchingBind.css') }}"  type="text/css" rel="stylesheet"/>
+        {% else %}
+        <link href="{{ asset('bundles/ujmexo/css/matchingDrag.css') }}"  type="text/css" rel="stylesheet"/>
+    {% endif %}
+{% endblock %}
+
+{% block title %} {{ 'paper' | trans({}, 'ujm_exo') }} {{ 'question' | trans({}, 'ujm_exo') }} {% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ interactionToDisplayed.question.title }}</h3>
+    </div>
+    <div class="panel-body">
+        {% if exoID == -1 %}
+            <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
+            </a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="list-group">
+        <div class="list-group-item">
+
+            {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
+
+            <form action="{{ path('ujm_interactionmatching_response') }}" method="post" {{ form_enctype(form) }}>
+                {{ form_widget(form) }}
+
+                <div id="divReset">
+                    <input type="button" name="resetAll"  id="resetAll" value="{{ "reset" | trans({}, 'ujm_exo') }}" class="btn btn-primary">
+                </div>
+                <center>
+                    <table class="all">
+                        <tr>
+                            {% if interactionToDisplayed.typeMatching.code == 2 %}
+                                <td>
+                                    {% for proposal in interactionToDisplayed.proposals %}
+                                        <div id="div_{{ proposal.id }}" class="origin" >
+                                            <ul>
+                                                <li id="draggable_{{ proposal.id }}" class="draggable"> {{ proposal.value | raw }} </li>
+                                            </ul>
+                                        </div>
+                                    {% endfor%}
+                                </td>
+                                <td style='padding: 20px;'>
+                                </td>
+                                <td>
+                                    {% for label in interactionToDisplayed.labels %}
+                                        <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
+                                            <ul>
+                                                <li class="lidroppable">{{ label.value | raw }}</li>
+                                            </ul>
+                                            <ul class="dragDropped">
+                                            </ul>
+                                        </div>
+                                    {% endfor %}
+                                </td>
+                            {% else %}
+                                <td>
+                                    {% for proposal in interactionToDisplayed.proposals %}
+                                        <div id="draggable_{{ proposal.id }}" class="origin" >
+                                            {{ proposal.value | raw }}
+                                        </div>
+                                    {% endfor%}
+                                </td>
+                                <td style='padding: 50px;'>
+                                </td>
+                                <td>
+                                    {% for label in interactionToDisplayed.labels %}
+                                        <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
+                                            {{ label.value | raw }}
+                                        </div>
+                                    {% endfor %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    </table>
+                </center>
+
+                {% if interactionToDisplayed.question.hints is not empty %}
+                    {% set tryInteraction = interactionToDisplayed %}
+                    {% include "UJMExoBundle:Partial:hintTryInteraction.html.twig" %}
+                {% endif %}
+
+                <div class="panel-footer">
+                    <input type="hidden" name="testMatching" value="testMatching" />
+                    <input type="hidden" name="interactionMatchingToValidated" value="{{ interactionToDisplayed.id }}" />
+                    <input type="hidden" name="exoID" value="{{ exoID }}" />
+                    <input type="hidden" id="jsonResponse" name ="jsonResponse" />
+                    <button type="submit" id="submit_response" class="btn btn-primary">{{ 'validate' | trans({}, 'ujm_exo') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
+
+    {% if interactionToDisplayed.typeMatching.code == 2 %}
+        <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplaydrag.js') }}"></script>
+    {% else %}
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplaybind.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/dom.jsPlumb-1.7.2-min.js') }}"></script>
+    {% endif %}
+{% endblock %}

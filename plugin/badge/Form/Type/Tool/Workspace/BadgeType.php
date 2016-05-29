@@ -31,7 +31,7 @@ class BadgeType extends AbstractType
     /**
      * @DI\InjectParams({
      *     "badgeRuleType"         = @DI\Inject("icap_badge.form.badge.workspace.rule"),
-     *     "localeManager"         = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager"         = @DI\Inject("claroline.manager.locale_manager"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */

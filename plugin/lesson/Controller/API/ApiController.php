@@ -14,15 +14,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Form\ChapterType;
-use Icap\LessonBundle\Form\DuplicateChapterType;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
@@ -38,7 +35,7 @@ class ApiController extends FOSRestController
 {
     /**
      * @DI\InjectParams({
-     *     "localeManager" = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager" = @DI\Inject("claroline.manager.locale_manager"),
      *     "formFactory"   = @DI\Inject("form.factory"),
      *     "request"       = @DI\Inject("request")
      * })
