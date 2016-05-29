@@ -1,17 +1,8 @@
 <div class="type-question-container graphic-question-container panel panel-default">
     <div class="panel-body text-center">
         <div class="row question-btns">
-            <!-- Reset button -->
-            <div class="col-md-2 text-left">
-                <button type="button" role="button" class="btn btn-sm btn-default"
-                        data-ng-disabled="graphicQuestionCtrl.feedback.visible">
-                    <span class="fa fa-info-circle"></span>
-                    {{ 'help'|trans:{}:'ujm_exo' }}
-                </button>
-            </div>
-
             <!-- Number of pointers available -->
-            <div class="col-md-8 text-center">
+            <div class="col-md-10 text-left">
                 {{ 'question_graphic_nb_pointers'|transChoice:(graphicQuestionCtrl.question.pointers - graphicQuestionCtrl.answer.length):{ count: graphicQuestionCtrl.question.pointers - graphicQuestionCtrl.answer.length }:'ujm_exo' }}
             </div>
 

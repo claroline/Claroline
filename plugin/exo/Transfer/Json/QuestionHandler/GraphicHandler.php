@@ -168,7 +168,7 @@ class GraphicHandler implements QuestionHandlerInterface
     public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
     {
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionGraphic')->findOneBy([
-            'question' => $question
+            'question' => $question,
         ]);
 
         $exportData->image = $this->exportImage($interaction->getPicture());
@@ -225,7 +225,7 @@ class GraphicHandler implements QuestionHandlerInterface
     }
 
     /**
-     * Export question areas
+     * Export question areas.
      *
      * @param Coords $coords
      *
@@ -238,7 +238,7 @@ class GraphicHandler implements QuestionHandlerInterface
         $exportData->color = $coords->getColor();
 
         $position = explode(',', $coords->getValue());
-        
+
         switch ($coords->getShape()) {
             case 'circle':
                 $exportData->shape = 'circle';
@@ -258,7 +258,7 @@ class GraphicHandler implements QuestionHandlerInterface
                     // top-left coords
                     $this->exportCoords($position),
                     // bottom-right coords
-                    $this->exportCoords([ $position[0] + $coords->getSize(), $position[1] + $coords->getSize() ])
+                    $this->exportCoords([$position[0] + $coords->getSize(), $position[1] + $coords->getSize()]),
                 ];
 
                 break;
@@ -285,7 +285,7 @@ class GraphicHandler implements QuestionHandlerInterface
     public function convertQuestionAnswers(Question $question, \stdClass $exportData)
     {
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionGraphic')->findOneBy([
-            'question' => $question
+            'question' => $question,
         ]);
 
         $exportData->solutions = $this->exportSolutions($interaction->getCoords()->toArray());
@@ -345,7 +345,7 @@ class GraphicHandler implements QuestionHandlerInterface
             ->findBy(array('interactionGraphic' => $interaction->getId()));
 
         $answer = implode(';', array_map(function ($coords) {
-            return (string) $coords['x'] . '-' . (string) $coords['y'];
+            return (string) $coords['x'].'-'.(string) $coords['y'];
         }, $data));
 
         // TODO : it would be easier to mark if we pass directly the decoded array of coords instead of the encode string
