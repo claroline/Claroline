@@ -154,7 +154,7 @@ class APISecurityTest extends TransactionalTestCase
     private function newClient($name, $grantTypes)
     {
         $client = $this->persister->OauthClient($name, $grantTypes);
-        $om->flush();
+        $this->persister->flush();
 
         return $client;
     }
