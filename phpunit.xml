@@ -34,6 +34,8 @@
             <!-- <directory>plugin/announcement/Tests/</directory> -->
             <!-- <directory>plugin/badge/Tests/</directory> -->
             <directory>plugin/collecticiel/Tests/</directory>
+            <directory>plugin/message/Tests/</directory>
+            <directory>plugin/notification/Tests/</directory>
             <directory>plugin/competency/Tests/</directory>
             <directory>plugin/cursus/Tests/</directory>
             <directory>plugin/dropzone/Tests/</directory>

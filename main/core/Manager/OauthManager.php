@@ -73,6 +73,40 @@ class OauthManager extends ClientManager
         );
     }
 
+    public function findUsernameClient()
+    {
+        $clients = $this->findAllClients();
+
+        //because the grant type is an array type, it's stored as a string in the database and we cannot do any query on it
+        //let's loop through the different clients then !
+
+        $excludedGrants = ['authorization_code', 'token', 'client_credentials'];
+        $authorizedClients = [];
+
+        foreach ($clients as $client) {
+            $authorizations = $client->getAllowedGrantTypes();
+            $exclude = false;
+            foreach ($authorizations as $authorization) {
+                if (in_array($authorization, $excludedGrants)) {
+                    $exclude = true;
+                }
+            }
+
+            if (!$exclude && in_array('password', $authorizations)) {
+                $authorizedClients[] = $client;
+            }
+        }
+
+        //if an authorized client has the refresh grant, he has priority. Doesn't matter who he is yet.
+        foreach ($authorizedClients as $authorizedClient) {
+            if (in_array('refresh', $authorizedClient->getAllowedGrantTypes())) {
+                return $authorizedClient;
+            }
+        }
+
+        return count($authorizedClients) > 0 ? $authorizedClients[0] : null;
+    }
+
     public function connect($host, $id, $secret, FriendRequest $friendRequest)
     {
         $url = $host.'/oauth/v2/token?client_id='.
