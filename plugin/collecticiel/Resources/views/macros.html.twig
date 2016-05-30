@@ -72,12 +72,14 @@ returnReceiptArray, teacherCommentDocArray, notationDocuments
                         </tr>
                     </thead>
                     <tbody>
+                        {% set maximumNotation = dropzone.maximumNotation %}
                         {% for index, document in drop.documents %}
                             {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig'
                             with {
                                     'returnReceiptArray': returnReceiptArray,
                                     'teacherCommentDocArray': teacherCommentDocArray,
                                     'notationDocuments': notationDocuments,
+                                    'maximumNotation': maximumNotation
                                  }
                             %}
                         {% endfor %}

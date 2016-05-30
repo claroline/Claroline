@@ -104,13 +104,22 @@
         </td>
     {% endif %}
 
-
+    {% if document.url is not null %}
+        {% set documentTitle = document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url %}
+    {% else %}
+        {% if document.title is not null %}
+            {% set documentTitle = document.title %}
+        {% else %}
+            {% set documentTitle = document.resourceNode.name %}
+        {% endif %}
+    {% endif %}
+    
     {# On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
     {% if dropzone.evaluation == 1  %}
         <td class="{{ classArray }} centered">
             <div class="btn-group">
                 {% if notationDocuments[document.id] != 0 %}
-                    {{ notationDocuments[document.id] ~ "/" ~ dropzone.maximumNotation }}
+                    {% include 'InnovaCollecticielBundle:Document:viewNotation.html.twig' %}
                 {% else %}
                     <i class="fa fa-times" aria-hidden="true"></i>
                 {% endif %}

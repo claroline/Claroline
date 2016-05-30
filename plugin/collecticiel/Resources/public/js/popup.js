@@ -168,7 +168,6 @@ $(document).ready(function() {
 
     });
 
-
     // InnovaERV
     // Ajout pour le traitement de la case Ã  cocher pour la crÃ©ation de commentaire Ã  la volÃ©e
     $('.comment_validate').on('click', function(event) {
@@ -290,8 +289,6 @@ $(document).ready(function() {
 
     });
 
-
-
     // InnovaERV
     // Ajout pour le traitement du clic sur le bouton "Oui, valider"
     $('#modal_transmit_confirm').on('click', function(event) {
@@ -355,14 +352,6 @@ $(document).ready(function() {
         $('#transmit-modal').modal('hide');
 
     });
-
-
-
-
-
-
-
-
 
     // InnovaERV
     // Ajout pour le traitement de la case à cocher lors de la soumission de documents
