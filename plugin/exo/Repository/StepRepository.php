@@ -16,7 +16,7 @@ class StepRepository extends EntityRepository
     /**
      * Returns the step default. (En attendant d'avoir la partie gestion des steps).
      *
-     * @param Exercice $exo
+     * @param Exercise $exo
      *
      * @return Question[]
      */
@@ -28,5 +28,21 @@ class StepRepository extends EntityRepository
             ->setParameter(':exercise', $exo)
             ->getQuery()
             ->getResult();
+    }
+    /**
+     * Returns the order max.
+     *
+     * @param Exercise $exo
+     *
+     * @return int[]
+     */
+    public function getMaxOrder(Exercise $exo)
+    {
+        return $this->createQueryBuilder('s')
+            ->select('max(s.order)')
+            ->where('s.exercise = :exercise')
+            ->setParameter(':exercise', $exo)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

@@ -167,6 +167,7 @@ export default class UserController {
             .then(d => {
                 this.users = d.data.users;
                 this.dataTableOptions.paging.count = d.data.total
+                this.dataTableOptions.paging.offset = 0
             }
         )
     }

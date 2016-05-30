@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
+{% set httpCode = 503 %}
+
 {% block title %}{{ parent() ~ ' - ' ~ 'internal_error' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block content %}

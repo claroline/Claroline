@@ -296,30 +296,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
     }
 
     /**
-     * create the directory questions to export an exercise and export the qti files.
-     *
-     * @param \UJM\ExoBundle\Entity\Question[] $questions
-     * @param int                              $numStep
-     */
-    private function createQuestionsDirectory(array $questions, $numStep)
-    {
-        @mkdir($this->qtiRepository->getUserDir().'questions');
-        $i = 'a';
-        @mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep);
-        foreach ($questions as $question) {
-            $this->qtiRepository->export($question);
-            @mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i);
-            $iterator = new \DirectoryIterator($this->qtiRepository->getUserDir());
-            foreach ($iterator as $element) {
-                if (!$element->isDot() && $element->isFile()) {
-                    rename($this->qtiRepository->getUserDir().$element->getFilename(), $this->qtiRepository->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i.'/'.$element->getFilename());
-                }
-            }
-            $i .= 'a';
-        }
-    }
-
-    /**
      * return steps of an exercise in an array.
      *
      * @param Exercise $object
@@ -347,7 +323,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
 
             $steps[] = $s;
             $questions = $questionRepo->findByStep($step);
-            $this->createQuestionsDirectory($questions, $step->getOrder());
+            $this->qtiService->createQuestionsDirectory($questions, $step->getOrder());
             $dirs = $this->qtiService->sortPathOfQuestions($this->qtiRepository, $step->getOrder());
 
             $i = 'a';

@@ -150,6 +150,7 @@ export default class GroupController {
         this.ClarolineSearchService.find('api_get_search_groups', searches, 0, this.dataTableOptions.paging.size).then(d => {
             this.groups = d.data.groups;
             this.dataTableOptions.paging.count = d.data.total;
+            this.dataTableOptions.paging.offset = 0
         })
     }
 
