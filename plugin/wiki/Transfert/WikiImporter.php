@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 3/9/15
  */
 
@@ -137,22 +137,26 @@ class WikiImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function format($data)
     {
-        foreach ($data['sections'] as $section) {
-            foreach ($section['contributions'] as $contribution) {
-                //look for the text with the exact same content (it's really bad I know but at least it works
-                 $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$contribution['contribution']['path']);
-                $entities = $this->om->getRepository('Icap\WikiBundle\Entity\Contribution')->findByText($text);
-                 //avoid circulary dependency
-                 $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+        if (isset($data['sections'])) {
+            foreach ($data['sections'] as $section) {
+                if (isset($data['contributions'])) {
+                    foreach ($section['contributions'] as $contribution) {
+                        //look for the text with the exact same content (it's really bad I know but at least it works
+                         $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$contribution['contribution']['path']);
+                        $entities = $this->om->getRepository('Icap\WikiBundle\Entity\Contribution')->findByText($text);
+                         //avoid circulary dependency
+                         $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
 
-                foreach ($entities as $entity) {
-                    $entity->setText($text);
-                    $this->om->persist($entity);
+                        foreach ($entities as $entity) {
+                            $entity->setText($text);
+                            $this->om->persist($entity);
+                        }
+                    }
                 }
             }
-        }
 
-        //this could be bad, but the corebundle can use a transaction and force flush itself anyway
-        $this->om->flush();
+            //this could be bad, but the corebundle can use a transaction and force flush itself anyway
+            $this->om->flush();
+        }
     }
 }

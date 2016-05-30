@@ -167,71 +167,128 @@ class GraphicHandler implements QuestionHandlerInterface
      */
     public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
     {
-        $repo = $this->om->getRepository('UJMExoBundle:InteractionGraphic');
-        $interaction = $repo->findOneBy(['question' => $question]);
+        $interaction = $this->om->getRepository('UJMExoBundle:InteractionGraphic')->findOneBy([
+            'question' => $question,
+        ]);
 
-        $coords = $interaction->getCoords()->toArray();
-
-        $picture = $this->om->getRepository('UJMExoBundle:Picture')->findOneBy(array('id' => $interaction->getPicture()));
-
-        $exportData->width = $picture->getWidth();
-        $exportData->height = $picture->getHeight();
-
-        $document = new \stdClass();
-        $document->id = $picture->getId();
-        $document->label = $picture->getLabel();
-        $document->url = $picture->getUrl();
-        $exportData->document = $document;
-
-        $exportData->coords = array_map(function ($coord) {
-            $coordData = new \stdClass();
-            $coordData->id = (string) $coord->getId();
-
-            return $coordData;
-        }, $coords);
-
+        $exportData->image = $this->exportImage($interaction->getPicture());
+        $exportData->pointers = $interaction->getCoords()->count();
         $exportData->scoreTotal = $this->graphicService->maxScore($interaction);
 
         if ($withSolution) {
-            $exportData->solutions = array_map(function ($coord) {
-                $solutionData = new \stdClass();
-                $solutionData->id = (string) $coord->getId();
-                $solutionData->value = $coord->getValue();
-                $solutionData->shape = $coord->getShape();
-                $solutionData->color = $coord->getColor();
-                $solutionData->size = $coord->getSize();
-                $solutionData->score = $coord->getScoreCoords();
-                if ($coord->getFeedback()) {
-                    $solutionData->feedback = $coord->getFeedback();
-                }
-
-                return $solutionData;
-            }, $coords);
+            $exportData->solutions = $this->exportSolutions($interaction->getCoords()->toArray());
         }
+
+        return $exportData;
+    }
+
+    /**
+     * Export question solutions.
+     *
+     * @param array $solutions
+     *
+     * @return \stdClass
+     */
+    private function exportSolutions(array $solutions)
+    {
+        return array_map(function (Coords $coords) {
+            $solutionData = new \stdClass();
+            $solutionData->area = $this->exportArea($coords);
+            $solutionData->score = $coords->getScoreCoords();
+            if ($coords->getFeedback()) {
+                $solutionData->feedback = $coords->getFeedback();
+            }
+
+            return $solutionData;
+        }, $solutions);
+    }
+
+    /**
+     * Export question image.
+     *
+     * @param Picture $picture
+     *
+     * @return \stdClass
+     */
+    private function exportImage(Picture $picture)
+    {
+        // Export Image
+        $image = new \stdClass();
+
+        $image->id = $picture->getId();
+        $image->url = $picture->getUrl();
+        $image->label = $picture->getLabel();
+        $image->width = $picture->getWidth();
+        $image->height = $picture->getHeight();
+
+        return $image;
+    }
+
+    /**
+     * Export question areas.
+     *
+     * @param Coords $coords
+     *
+     * @return \stdClass
+     */
+    private function exportArea(Coords $coords)
+    {
+        $exportData = new \stdClass();
+        $exportData->id = $coords->getId();
+        $exportData->color = $coords->getColor();
+
+        $position = explode(',', $coords->getValue());
+
+        switch ($coords->getShape()) {
+            case 'circle':
+                $exportData->shape = 'circle';
+
+                $exportData->radius = $coords->getSize() / 2;
+
+                // We store the top left corner, so we need to calculate the real center
+                $center = $this->exportCoords($position);
+                $center->x += $exportData->radius;
+                $center->y += $exportData->radius;
+                $exportData->center = $center;
+
+                break;
+            case 'square':
+                $exportData->shape = 'rect';
+                $exportData->coords = [
+                    // top-left coords
+                    $this->exportCoords($position),
+                    // bottom-right coords
+                    $this->exportCoords([$position[0] + $coords->getSize(), $position[1] + $coords->getSize()]),
+                ];
+
+                break;
+        }
+
+        return $exportData;
+    }
+
+    /**
+     * @param array $position
+     *
+     * @return \stdClass
+     */
+    private function exportCoords(array $position)
+    {
+        $exportData = new \stdClass();
+
+        $exportData->x = (int) $position[0];
+        $exportData->y = (int) $position[1];
 
         return $exportData;
     }
 
     public function convertQuestionAnswers(Question $question, \stdClass $exportData)
     {
-        $repo = $this->om->getRepository('UJMExoBundle:InteractionGraphic');
-        $graphic = $repo->findOneBy(['question' => $question]);
-        $coords = $graphic->getCoords()->toArray();
+        $interaction = $this->om->getRepository('UJMExoBundle:InteractionGraphic')->findOneBy([
+            'question' => $question,
+        ]);
 
-        $exportData->solutions = array_map(function ($coord) {
-            $solutionData = new \stdClass();
-            $solutionData->id = (string) $coord->getId();
-            $solutionData->value = $coord->getValue();
-            $solutionData->shape = $coord->getShape();
-            $solutionData->color = $coord->getColor();
-            $solutionData->size = $coord->getSize();
-            $solutionData->score = $coord->getScoreCoords();
-            if ($coord->getFeedback()) {
-                $solutionData->feedback = $coord->getFeedback();
-            }
-
-            return $solutionData;
-        }, $coords);
+        $exportData->solutions = $this->exportSolutions($interaction->getCoords()->toArray());
 
         return $exportData;
     }
@@ -243,9 +300,14 @@ class GraphicHandler implements QuestionHandlerInterface
     {
         $parts = explode(';', $response->getResponse());
 
-        return array_filter($parts, function ($part) {
-            return $part !== '';
-        });
+        $answers = [];
+        foreach ($parts as $coords) {
+            if ('' !== $coords) {
+                $answers[] = $this->exportCoords(explode('-', $coords));
+            }
+        }
+
+        return $answers;
     }
 
     /**
@@ -282,17 +344,17 @@ class GraphicHandler implements QuestionHandlerInterface
         $rightCoords = $this->om->getRepository('UJMExoBundle:Coords')
             ->findBy(array('interactionGraphic' => $interaction->getId()));
 
-        $answer = implode(',', $data);
+        $answer = implode(';', array_map(function ($coords) {
+            return (string) $coords['x'].'-'.(string) $coords['y'];
+        }, $data));
 
+        // TODO : it would be easier to mark if we pass directly the decoded array of coords instead of the encode string
         $mark = $this->graphicService->mark($answer, $rightCoords, 0);
         if ($mark < 0) {
             $mark = 0;
         }
 
-        // store answers like before x1-y1;x2-y2...
-        $result = count($data) > 0 ? implode(';', $data) : '';
-
-        $response->setResponse($result);
+        $response->setResponse($answer);
         $response->setMark($mark);
     }
 }

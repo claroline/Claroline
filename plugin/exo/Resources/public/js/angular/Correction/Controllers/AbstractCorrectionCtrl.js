@@ -27,4 +27,5 @@ AbstractCorrectionCtrl.prototype.answer = null;
 
 // Register controller into AngularJS
 angular
-    .module('AbstractCorrectionCtrl', AbstractCorrectionCtrl);
+    .module('Correction')
+    .controller('AbstractCorrectionCtrl', AbstractCorrectionCtrl);

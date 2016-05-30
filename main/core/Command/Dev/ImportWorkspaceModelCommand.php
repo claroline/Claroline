@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\HttpFoundation\File\File;
 use Psr\Log\LogLevel;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
@@ -84,7 +85,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
             LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         );
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-
+        $fs = new FileSystem();
         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
         $workspaceManager->setLogger($consoleLogger);
         $validator = $this->getContainer()->get('validator');
@@ -99,7 +100,9 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
         $workspace->setCreator($user);
         $workspace->setName($name);
         $workspace->setCode($code);
-        $file = new File($template);
+        $newpath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.uniqid();
+        $extractPath = $fs->copy($template, $newpath);
+        $file = new File($newpath);
         $workspaceManager->create($workspace, $file);
     }
 }

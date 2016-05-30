@@ -16,7 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Role;
 
 class LoadGroupData extends AbstractFixture implements ContainerAwareInterface
 {

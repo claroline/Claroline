@@ -203,7 +203,7 @@ class MessageController
      */
     public function listReceivedAction(User $receiver, $page, $search)
     {
-        $pager = $this->messageManager->getReceivedMessages($receiver, $search, $page);
+        $pager = $this->messageManager->getReceivedMessagesPager($receiver, $search, $page);
 
         return array(
             'pager' => $pager,
@@ -239,7 +239,7 @@ class MessageController
      */
     public function listSentAction(User $sender, $page, $search)
     {
-        $pager = $this->messageManager->getSentMessages($sender, $search, $page);
+        $pager = $this->messageManager->getSentMessagesPager($sender, $search, $page);
 
         return array('pager' => $pager, 'search' => $search);
     }
@@ -268,7 +268,7 @@ class MessageController
      */
     public function listRemovedAction(User $user, $page, $search)
     {
-        $pager = $this->messageManager->getRemovedMessages($user, $search, $page);
+        $pager = $this->messageManager->getRemovedMessagesPager($user, $search, $page);
 
         return array('pager' => $pager, 'search' => $search);
     }

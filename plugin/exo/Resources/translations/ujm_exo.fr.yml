@@ -41,6 +41,7 @@ application/x.short+json: Ouverte
 badge_obtained: Félicitation ! Vous avez obtenu le badge de connaissances
 badge_no_obtained: Vous n'avez pas encore obtenu le badge de connaissance
 back: Retour
+back_to_overview: Retourner à la vue d'ensemble de l'Exercice
 back_to_the_list: Retour à la liste
 bank_of_questions: Banque de questions
 brief_search: Recherche rapide
@@ -139,6 +140,9 @@ formative : Formatif
 
 # G
 graphic: Graphique
+graphic_area_shape_rect: Rectangle
+graphic_area_shape_circle: Cercle
+graphic_area_shape_poly: Polygone
 graphic_creation: Création d'une question graphique
 graphic_edition: Edition d'une question graphique
 graphic_help: Glisser les réticules sur l'image pour marques votre réponse
@@ -179,6 +183,7 @@ info_search_type: Si vous voulez faire une recherche par type, vous devez utilis
 instruction_add_hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un trou".
 instruction_matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
 in_valid_mark: Note invalide
+item_points: "[0,1] %count% point|]1,Inf[ %count% points"
 
 # K
 keep_same_question: Conserver les mêmes questions pour un même utilisateur
@@ -267,6 +272,7 @@ overview: Vue d'ensemble
 paper: Passage
 paper_need_manual_correction: Cette copie nécessite une correction manuelle
 paper_list: Liste des copies
+paper_count: "{0} aucune copie|{1} %count% copie|]1,Inf[ %count% copies"
 metadata: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité
@@ -302,6 +308,7 @@ question_title: Titre de la question (facultatif)
 question_shared_with: Cette question est partagée avec les utilisateurs suivants
 question_need_manual_correction: Cette question nécessite une correction manuelle
 question_open_keywords_info: Votre réponse doit contenir les mots clés suivant pour obtenir les points
+question_graphic_nb_pointers: "{0} Il ne reste plus aucun pointeur à placer sur l'image.|{1} Il reste %count% pointeur à placer sur l'image.|]1,Inf[ Il reste %count% pointeurs à placer sur l'image."
 
 # R
 random_questions: Ordre des questions aléatoire
@@ -352,6 +359,8 @@ sort: Trier les documents
 summative : Sommatif
 show_additional_info: Afficher les informations supplémentaires
 step: Etape
+step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
+step_item_add: Glisser/déposer ou cliquer sur le bouton "+" pour ajouter des questions
 
 # T
 temporary_mark: Note temporaire
