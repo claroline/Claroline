@@ -121,13 +121,15 @@ class GraphicImport extends QtiImport
      */
     protected function cpPicture($picture, $userDir)
     {
+        $path = $this->container->getParameter('claroline.param.uploads_directory');
+
         $src = $this->qtiRepos->getUserDir().'/'.$picture;
 
-        if (!is_dir('./uploads/ujmexo/')) {
-            mkdir('./uploads/ujmexo/');
+        if (!is_dir($path.'/ujmexo/')) {
+            mkdir($path.'/ujmexo/');
         }
-        if (!is_dir('./uploads/ujmexo/users_documents/')) {
-            mkdir('./uploads/ujmexo/users_documents/');
+        if (!is_dir($path.'/ujmexo/users_documents/')) {
+            mkdir($path.'/ujmexo/users_documents/');
         }
 
         if (!is_dir($userDir)) {
