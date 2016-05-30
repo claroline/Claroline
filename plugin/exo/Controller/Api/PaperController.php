@@ -230,9 +230,7 @@ class PaperController
      */
     public function finishPaperAction(User $user, Paper $paper)
     {
-        if ($user !== $paper->getUser()) {
-            throw new AccessDeniedHttpException();
-        }
+        $this->assertHasPaperAccess($user, $paper);
 
         $this->paperManager->finishPaper($paper);
 
@@ -252,8 +250,6 @@ class PaperController
      */
     public function exportPaperMinimalAction(User $user, Paper $paper)
     {
-        $this->assertHasPaperAccess($user, $paper);
-
         if (!$this->isAdmin($paper->getExercise()) && $paper->getUser() !== $user) {
             // Only administrator or the User attached can see a Paper
             throw new AccessDeniedHttpException();
@@ -277,7 +273,10 @@ class PaperController
      */
     public function exportPaperAction(User $user, Paper $paper)
     {
-        $this->assertHasPaperAccess($user, $paper);
+        if (!$this->isAdmin($paper->getExercise()) && $paper->getUser() !== $user) {
+            // Only administrator or the User attached can see a Paper
+            throw new AccessDeniedHttpException();
+        }
 
         return new JsonResponse([
             'questions' => $this->paperManager->exportPaperQuestions($paper, $this->isAdmin($paper->getExercise())),
@@ -327,7 +326,7 @@ class PaperController
 
     private function assertHasPaperAccess(User $user, Paper $paper)
     {
-        if (($paper->getEnd() || $user !== $paper->getUser()) && !$this->isAdmin($paper->getExercise())) {
+        if ($paper->getEnd() || $user !== $paper->getUser()) {
             throw new AccessDeniedHttpException();
         }
     }

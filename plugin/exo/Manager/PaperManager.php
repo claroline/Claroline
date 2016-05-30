@@ -249,7 +249,7 @@ class PaperManager
     }
 
     /**
-     * Close a Paper that is not finished (because the Exercise does not allow interruption)
+     * Close a Paper that is not finished (because the Exercise does not allow interruption).
      *
      * @param Paper $paper
      */
@@ -262,11 +262,13 @@ class PaperManager
         $paper->setInterupt(true); // keep track that the user has not finished
         $paper->setScore($this->calculateScore($paper->getId()));
 
+        $this->om->flush();
+
         $this->checkPaperEvaluated($paper);
     }
 
     /**
-     * Check if a Paper is full evaluated and dispatch a Log event if yes
+     * Check if a Paper is full evaluated and dispatch a Log event if yes.
      *
      * @param Paper $paper
      *

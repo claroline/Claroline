@@ -154,9 +154,10 @@ class ResponseRepository extends EntityRepository
     }
 
     /**
-     * Check if all the responses of a Paper have been evaluated
+     * Check if all the responses of a Paper have been evaluated.
      *
      * @param Paper $paper
+     *
      * @return bool
      */
     public function allPaperResponsesMarked(Paper $paper)
@@ -170,6 +171,6 @@ class ResponseRepository extends EntityRepository
             ->getQuery()
             ->getSingleScalarResult();
 
-        return 0 === $count;
+        return 0 === (int) $count;
     }
 }
