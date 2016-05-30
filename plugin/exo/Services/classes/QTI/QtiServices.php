@@ -14,7 +14,7 @@ class QtiServices
 
     /**
      *
-     * @param QtiRepository       $qtiRepository
+     * @param QtiRepository $qtiRepository
      */
     public function __construct(QtiRepository $qtiRepository)
     {
