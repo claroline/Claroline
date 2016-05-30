@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\StepQuestion;
 use UJM\ExoBundle\Entity\Question;
 
 /**
@@ -15,11 +16,31 @@ use UJM\ExoBundle\Entity\Question;
 class StepQuestionRepository extends EntityRepository
 {
     /**
+     * Get the StepQuestion that links the Question to an Exercise.
+     *
+     * @param Exercise $exercise
+     * @param string   $questionId
+     *
+     * @return StepQuestion
+     */
+    public function findByExerciseAndQuestion(Exercise $exercise, $questionId)
+    {
+        return $this->createQueryBuilder('sq')
+            ->join('sq.step', 's')
+            ->where('s.exercise = :exercise')
+            ->andWhere('sq.question = :questionId')
+            ->setParameter(':exercise', $exercise)
+            ->setParameter(':questionId', $questionId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
      * Returns the order max.
      *
-     * @param Exercice $exo
+     * @param Exercise $exo
      *
-     * @return Question[]
+     * @return StepQuestion[]
      */
     public function getMaxOrder(Exercise $exo)
     {
@@ -33,28 +54,9 @@ class StepQuestionRepository extends EntityRepository
     }
 
     /**
-     * Number of question for an exercise.
-     *
-     *
      * @param Exercise $exo if Exercise
      *
-     * Return aintger
-     */
-    public function getCountQuestion(Exercise $exo)
-    {
-        return $query = $this->createQueryBuilder('sq')
-                ->select('count(sq.ordre) as nbq')
-                ->join('sq.step', 's')
-                ->where('s.exercise = :exercise')
-                ->setParameter(':exercise', $exo)
-                ->getQuery()
-                ->getSingleResult();
-    }
-
-    /**
-     * @param Exercise $exo if Exercise
-     *
-     * Return StepQuestion
+     * @return StepQuestion[]
      */
     public function findExoByOrder(Exercise $exo)
     {
@@ -70,9 +72,10 @@ class StepQuestionRepository extends EntityRepository
     /**
      * Get StepQuestion with the question and exercise.
      *
-     * @param Exercise $exo if Exercise
+     * @param Exercise $exo
+     * @param Question $question
      *
-     * Return StepQuestion
+     * @return StepQuestion
      */
     public function findStepByExoQuestion(Exercise $exo, Question $question)
     {
@@ -92,9 +95,9 @@ class StepQuestionRepository extends EntityRepository
      * Exercises use the question.
      *
      *
-     * @param int $question Question
+     * @param Question $question
      *
-     * Return array[ExerciseQuestion]
+     * @return StepQuestion[]
      */
     public function getExercises(Question $question)
     {

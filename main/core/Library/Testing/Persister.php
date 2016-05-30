@@ -58,7 +58,7 @@ class Persister
         $user->setFirstName($username);
         $user->setLastName($username);
         $user->setUsername($username);
-        $user->setPassword($username);
+        $user->setPlainPassword($username);
         $user->setMail($username.'@mail.com');
         $user->setGuid(uniqid());
         $user->addRole($roleUser);
@@ -185,6 +185,16 @@ class Persister
         $this->om->persist($location);
 
         return $location;
+    }
+
+    public function OauthClient($name, $grantTypes)
+    {
+        $client = $this->container->get('claroline.manager.oauth_manager')->createClient();
+        $client->setName($name);
+        $client->setAllowedGrantTypes($grantTypes);
+        $this->om->persist($client);
+
+        return $client;
     }
 
     /**

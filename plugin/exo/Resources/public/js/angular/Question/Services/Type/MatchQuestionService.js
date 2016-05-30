@@ -35,7 +35,7 @@ MatchQuestionService.prototype.getCorrectAnswer = function getCorrectAnswer(ques
 
 /**
  * 
- * @returns {answersAllFound}
+ * @returns {number}
  */
 MatchQuestionService.prototype.answersAllFound = function answersAllFound(question, answers) {
     var numAnswersFound = 0;

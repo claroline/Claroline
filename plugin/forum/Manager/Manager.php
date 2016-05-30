@@ -13,10 +13,14 @@ namespace Claroline\ForumBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ForumBundle\Entity\Category;
@@ -24,6 +28,7 @@ use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Notification;
 use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig;
 use Claroline\ForumBundle\Event\Log\CloseSubjectEvent;
 use Claroline\ForumBundle\Event\Log\CreateCategoryEvent;
 use Claroline\ForumBundle\Event\Log\CreateMessageEvent;
@@ -47,7 +52,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -55,71 +61,90 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class Manager
 {
+    private $authorization;
+    private $container;
+    private $dispatcher;
+    private $mailManager;
+    private $maskManager;
+    private $messageManager;
     private $om;
     private $pagerFactory;
-    private $dispatcher;
-    private $notificationRepo;
-    private $subjectRepo;
-    private $messageRepo;
-    private $forumRepo;
-    private $roleRepo;
-    private $userRepo;
-    private $messageManager;
-    private $translator;
-    private $router;
-    private $mailManager;
-    private $container;
-    private $sc;
-    private $maskManager;
+    private $resourceManager;
     private $rightsManager;
+    private $router;
+    private $securityUtilities;
+    private $tokenStorage;
+    private $translator;
+    private $workspaceManager;
+
+    private $forumRepo;
+    private $lastMessageWidgetConfigRepo;
+    private $messageRepo;
+    private $notificationRepo;
+    private $roleRepo;
+    private $subjectRepo;
+    private $userRepo;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory"),
-     *     "dispatcher"     = @DI\Inject("event_dispatcher"),
-     *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
-     *     "translator"     = @DI\Inject("translator"),
-     *     "router"         = @DI\Inject("router"),
-     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
-     *     "container"      = @DI\Inject("service_container"),
-     *     "sc"             = @DI\Inject("security.context"),
-     *     "maskManager"    = @DI\Inject("claroline.manager.mask_manager"),
-     *     "rightsManager"  = @DI\Inject("claroline.manager.rights_manager")
+     *     "authorization"     = @DI\Inject("security.authorization_checker"),
+     *     "container"         = @DI\Inject("service_container"),
+     *     "dispatcher"        = @DI\Inject("event_dispatcher"),
+     *     "mailManager"       = @DI\Inject("claroline.manager.mail_manager"),
+     *     "maskManager"       = @DI\Inject("claroline.manager.mask_manager"),
+     *     "messageManager"    = @DI\Inject("claroline.manager.message_manager"),
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"      = @DI\Inject("claroline.pager.pager_factory"),
+     *     "resourceManager"   = @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"     = @DI\Inject("claroline.manager.rights_manager"),
+     *     "router"            = @DI\Inject("router"),
+     *     "securityUtilities" = @DI\Inject("claroline.security.utilities"),
+     *     "tokenStorage"      = @DI\Inject("security.token_storage"),
+     *     "translator"        = @DI\Inject("translator"),
+     *     "workspaceManager"  = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        ContainerInterface $container,
+        EventDispatcherInterface $dispatcher,
+        MailManager $mailManager,
+        MaskManager $maskManager,
+        MessageManager $messageManager,
         ObjectManager $om,
         PagerFactory $pagerFactory,
-        EventDispatcherInterface $dispatcher,
-        MessageManager $messageManager,
-        TranslatorInterface $translator,
+        ResourceManager $resourceManager,
+        RightsManager $rightsManager,
         RouterInterface $router,
-        MailManager $mailManager,
-        ContainerInterface $container,
-        SecurityContextInterface $sc,
-        MaskManager $maskManager,
-        RightsManager $rightsManager
+        Utilities $securityUtilities,
+        TokenStorageInterface $tokenStorage,
+        TranslatorInterface $translator,
+        WorkspaceManager $workspaceManager
     ) {
+        $this->authorization = $authorization;
+        $this->container = $container;
+        $this->dispatcher = $dispatcher;
+        $this->mailManager = $mailManager;
+        $this->maskManager = $maskManager;
+        $this->messageManager = $messageManager;
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
-        $this->notificationRepo = $om->getRepository('ClarolineForumBundle:Notification');
-        $this->subjectRepo = $om->getRepository('ClarolineForumBundle:Subject');
-        $this->messageRepo = $om->getRepository('ClarolineForumBundle:Message');
-        $this->forumRepo = $om->getRepository('ClarolineForumBundle:Forum');
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $this->dispatcher = $dispatcher;
-        $this->messageManager = $messageManager;
-        $this->translator = $translator;
-        $this->router = $router;
-        $this->mailManager = $mailManager;
-        $this->container = $container;
-        $this->sc = $sc;
-        $this->maskManager = $maskManager;
+        $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
+        $this->router = $router;
+        $this->securityUtilities = $securityUtilities;
+        $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
+        $this->workspaceManager = $workspaceManager;
+        $this->forumRepo = $om->getRepository('ClarolineForumBundle:Forum');
+        $this->lastMessageWidgetConfigRepo = $om->getRepository('ClarolineForumBundle:Widget\LastMessageWidgetConfig');
+        $this->messageRepo = $om->getRepository('ClarolineForumBundle:Message');
+        $this->notificationRepo = $om->getRepository('ClarolineForumBundle:Notification');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->subjectRepo = $om->getRepository('ClarolineForumBundle:Subject');
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
 
     /**
@@ -210,11 +235,11 @@ class Manager
         $forum = $subject->getCategory()->getForum();
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
-        if (!$this->sc->isGranted('post', $collection)) {
+        if (!$this->authorization->isGranted('post', $collection)) {
             throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
         }
 
-        $user = $this->sc->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $message->setCreator($user);
         $message->setAuthor($user->getFirstName().' '.$user->getLastName());
         $message->setSubject($subject);
@@ -673,14 +698,113 @@ class Manager
     }
 
     /**
-     * @param array $workspaces
      * @param array $roles
+     * @param int   $max
+     * @param array $subjects
      *
      * @return \Claroline\ForumBundle\Entity\Message[]
      */
-    public function getLastMessagesByWorkspacesAndRoles(array $workspaces, array $roles)
+    public function getLastMessagesByRoles(array $roles, $max = 10, $subjects = [])
     {
-        return $this->om->getRepository('ClarolineForumBundle:Message')
-            ->findNLastByWorkspacesAndRoles($workspaces, $roles);
+        return count($subjects) > 0 ?
+            $this->messageRepo->findNLastByRolesAndSubjects($roles, $subjects, $max) :
+            $this->messageRepo->findNLastByRoles($roles, $max);
+    }
+
+    /**
+     * @param array $workspaces
+     * @param array $roles
+     * @param int   $max
+     * @param array $subjects
+     *
+     * @return \Claroline\ForumBundle\Entity\Message[]
+     */
+    public function getLastMessagesByWorkspacesAndRoles(array $workspaces, array $roles, $max = 10, $subjects = [])
+    {
+        return count($subjects) > 0 ?
+            $this->messageRepo->findNLastByWorkspacesAndRolesAndSubjects($workspaces, $roles, $subjects, $max) :
+            $this->messageRepo->findNLastByWorkspacesAndRoles($workspaces, $roles, $max);
+    }
+
+    /**
+     * @param Forum $forum
+     * @param array $roles
+     * @param int   $max
+     * @param array $subjects
+     *
+     * @return \Claroline\ForumBundle\Entity\Message[]
+     */
+    public function getLastMessagesByForumAndRoles(Forum $forum, array $roles, $max = 10, $subjects = [])
+    {
+        return count($subjects) > 0 ?
+            $this->messageRepo->findNLastByForumAndRolesAndSubjects($forum, $roles, $subjects, $max) :
+            $this->messageRepo->findNLastByForumAndRoles($forum, $roles, $max);
+    }
+
+    /**
+     * @param WidgetInstance $widgetInstance
+     * 
+     * @return \Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig
+     */
+    public function getConfig(WidgetInstance $widgetInstance)
+    {
+        $lastMessageWidgetConfig = $this->lastMessageWidgetConfigRepo->findOneOrNullByWidgetInstance($widgetInstance);
+
+        if ($lastMessageWidgetConfig === null) {
+            $lastMessageWidgetConfig = new LastMessageWidgetConfig();
+            $lastMessageWidgetConfig->setWidgetInstance($widgetInstance);
+        }
+
+        return $lastMessageWidgetConfig;
+    }
+
+    /**
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return \Claroline\ForumBundle\Entity\Message[]
+     */
+    public function getLastMessages(WidgetInstance $widgetInstance)
+    {
+        $workspace = $widgetInstance->getWorkspace();
+        $config = $this->getConfig($widgetInstance);
+        $forum = null;
+        $participateOnly = false;
+        $mySubjects = [];
+
+        if (!is_null($config)) {
+            $resourceNode = $config->getForum();
+            $participateOnly = $config->getDisplayMyLastMessages();
+
+            if (!is_null($resourceNode)) {
+                $forum = $this->resourceManager->getResourceFromNode($resourceNode);
+            }
+        }
+        $token = $this->tokenStorage->getToken();
+        $roles = $this->securityUtilities->getRoles($token);
+
+        if ($participateOnly) {
+            $mySubjects = $this->getSubjectsByParticipant($token->getUser());
+        }
+
+        if (is_null($forum)) {
+            $messages = is_null($workspace) ?
+                $this->getLastMessagesByRoles($roles, 10, $mySubjects) :
+                $this->getLastMessagesByWorkspacesAndRoles([$workspace], $roles, 10, $mySubjects);
+        } else {
+            $messages = $this->getLastMessagesByForumAndRoles($forum, $roles, 10, $mySubjects);
+        }
+
+        return $messages;
+    }
+
+    public function persistLastMessageWidgetConfig(LastMessageWidgetConfig $config)
+    {
+        $this->om->persist($config);
+        $this->om->flush();
+    }
+
+    public function getSubjectsByParticipant(User $user)
+    {
+        return $this->subjectRepo->findSubjectsByParticipant($user);
     }
 }

@@ -3,7 +3,6 @@
  * Plays and registers answers to an Exercise
  *
  * @param {Object}           $location
- * @param {Object}           exercise
  * @param {Object}           step
  * @param {Object}           paper
  * @param {CommonService}    CommonService
@@ -15,7 +14,6 @@
  */
 var ExercisePlayerCtrl = function ExercisePlayerCtrl(
     $location,
-    exercise,
     step,
     paper,
     CommonService,
@@ -33,7 +31,7 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl(
     this.TimerService     = TimerService;
 
     // Initialize some data
-    this.exercise = exercise; // Current exercise
+    this.exercise = this.ExerciseService.getExercise(); // Current exercise
     this.paper    = paper;    // Paper of the current User
 
     this.step     = step;
@@ -67,7 +65,6 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl(
 // Set up dependency injection
 ExercisePlayerCtrl.$inject = [
     '$location',
-    'exercise',
     'step',
     'paper',
     'CommonService',
@@ -168,7 +165,7 @@ ExercisePlayerCtrl.prototype.submit = function submit() {
 ExercisePlayerCtrl.prototype.isButtonEnabled = function isButtonEnabled(button) {
     var buttonEnabled;
     if (button === 'retry') {
-        buttonEnabled = this.feedback.enabled && this.feedback.visible && this.currentStepTry !== this.step.maxAttempts && this.allAnswersFound !== 0;
+        buttonEnabled = this.feedback.enabled && this.feedback.visible && this.currentStepTry !== this.step.meta.maxAttempts && this.allAnswersFound !== 0;
     } else if (button === 'next') {
         buttonEnabled = !this.next || (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
     } else if (button === 'navigation') {
@@ -242,13 +239,13 @@ ExercisePlayerCtrl.prototype.end = function end() {
             this.UserPaperService
                 .end()
                 .then(function onSuccess() {
-                    if (this.checkCorrectionAvailability()) {
+                    if (this.UserPaperService.isCorrectionAvailable(this.paper)) {
                         // go to paper correction view
                         this.$location.path('/papers/' + this.paper.id);
                     }
                     else {
-                        // go to exercise home page
-                        this.$location.path('/');
+                        // go to exercise papers list (to let the User show his registered paper)
+                        this.$location.path('/papers');
                     }
                 }.bind(this));
         }.bind(this));
@@ -269,40 +266,6 @@ ExercisePlayerCtrl.prototype.interrupt = function interrupt() {
             // Return to exercise home
             this.$location.path('/');
         }.bind(this));
-};
-
-/**
- * Check if correction is available for an exercise
- * @returns {Boolean}
- * @todo To mode into ExerciseService
- */
-ExercisePlayerCtrl.prototype.checkCorrectionAvailability = function () {
-    var correctionMode = this.CommonService.getCorrectionMode(this.exercise.meta.correctionMode);
-
-    switch (correctionMode) {
-        case "test-end":
-            return true;
-            break;
-
-        case "last-try":
-            // check if current try is the last one ?
-            return this.paper.number === this.exercise.meta.maxAttempts;
-            break;
-
-        case "after-date":
-            var now = new Date();
-            var searched = new RegExp('-', 'g');
-            var correctionDate = new Date(Date.parse(this.exercise.meta.correctionDate.replace(searched, '/')));
-            return now >= correctionDate;
-            break;
-
-        case "never":
-            return false;
-            break;
-
-        default:
-            return false;
-    }
 };
 
 // Register controller into Angular JS
