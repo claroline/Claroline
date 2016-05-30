@@ -56,40 +56,35 @@
             <choice-question
                     data-ng-switch-when="application/x.choice+json"
                     data-question="questionShowCtrl.question"
-                    data-answer="questionShowCtrl.questionPaper.answer"
-                    data-feedback-state="questionShowCtrl.feedbackState">
+                    data-answer="questionShowCtrl.questionPaper.answer">
             </choice-question>
 
             <!-- Match Type -->
             <match-question
                     data-ng-switch-when="application/x.match+json"
                     data-question="questionShowCtrl.question"
-                    data-answer="questionShowCtrl.questionPaper.answer"
-                    data-feedback-state="questionShowCtrl.feedbackState">
+                    data-answer="questionShowCtrl.questionPaper.answer">
             </match-question>
 
             <!-- Cloze Type -->
             <cloze-question
                     data-ng-switch-when="application/x.cloze+json"
                     data-question="questionShowCtrl.question"
-                    data-answer="questionShowCtrl.questionPaper.answer"
-                    data-feedback-state="questionShowCtrl.feedbackState">
+                    data-answer="questionShowCtrl.questionPaper.answer">
             </cloze-question>
 
             <!-- Open Type -->
             <open-question
                     data-ng-switch-when="application/x.short+json"
                     data-question="questionShowCtrl.question"
-                    data-answer="questionShowCtrl.questionPaper.answer"
-                    data-feedback-state="questionShowCtrl.feedbackState">
+                    data-answer="questionShowCtrl.questionPaper.answer">
             </open-question>
 
             <!-- Graphic Type -->
             <graphic-question
                     data-ng-switch-when="application/x.graphic+json"
                     data-question="questionShowCtrl.question"
-                    data-answer="questionShowCtrl.questionPaper.answer"
-                    data-feedback-state="questionShowCtrl.feedbackState">
+                    data-answer="questionShowCtrl.questionPaper.answer">
             </graphic-question>
         </div>
 
@@ -134,7 +129,7 @@
         </div>
 
         <!-- Display Question Feedback -->
-        <div class="question-feedback" data-ng-if="questionShowCtrl.feedback.visible && questionShowCtrl.feedbackState !== 0 && questionShowCtrl.getGenericFeedback()">
+        <div class="question-feedback" data-ng-if="questionShowCtrl.feedback.visible && questionShowCtrl.feedback.state[questionShowCtrl.question.id] !== 0 && questionShowCtrl.feedback.state !== null && questionShowCtrl.getGenericFeedback()">
             <div class="alert alert-info">
                 <span>{{ questionShowCtrl.getGenericFeedback()|trans:{}:'ujm_sequence' }}</span>
             </div>

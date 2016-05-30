@@ -44,6 +44,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -71,6 +72,7 @@ class ParametersController extends Controller
     private $eventDispatcher;
     private $themeManager;
     private $pluginManager;
+    private $session;
 
     /**
      * @DI\InjectParams({
@@ -94,7 +96,8 @@ class ParametersController extends Controller
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "themeManager"       = @DI\Inject("claroline.manager.theme_manager"),
-     *     "pluginManager"      = @DI\Inject("claroline.manager.plugin_manager")
+     *     "pluginManager"      = @DI\Inject("claroline.manager.plugin_manager"),
+     *     "session"            = @DI\Inject("session")
      * })
      */
     public function __construct(
@@ -118,7 +121,8 @@ class ParametersController extends Controller
         WorkspaceManager $workspaceManager,
         StrictDispatcher $eventDispatcher,
         ThemeManager $themeManager,
-        PluginManager $pluginManager
+        PluginManager $pluginManager,
+        SessionInterface $session
     ) {
         $this->configHandler = $configHandler;
         $this->roleManager = $roleManager;
@@ -142,6 +146,7 @@ class ParametersController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->themeManager = $themeManager;
         $this->pluginManager = $pluginManager;
+        $this->session = $session;
     }
 
     /**
@@ -806,6 +811,48 @@ class ParametersController extends Controller
     }
 
     /**
+     * @EXT\Route("/maintenance/message/edit/form", name="claro_admin_parameters_maintenance_message_edit_form")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:maintenanceMessageEditForm.html.twig")
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function maintenanceMessageEditFormAction()
+    {
+        $maintenanceMessage = $this->getMaintenanceMessage();
+        $form = $this->formFactory->create(new AdminForm\MaintenanceMessageType($maintenanceMessage));
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/maintenance/message/edit", name="claro_admin_parameters_maintenance_message_edit")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:maintenanceMessageEditForm.html.twig")
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function maintenanceMessageEditAction()
+    {
+        $maintenanceMessage = $this->getMaintenanceMessage();
+        $form = $this->formFactory->create(new AdminForm\MaintenanceMessageType($maintenanceMessage));
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $message = $form->get('message')->getData();
+            $file = $this->container->getParameter('claroline.param.uploads_directory').DIRECTORY_SEPARATOR.'maintenance_message.php';
+            file_put_contents($file, $message);
+            $successMsg = $this->translator->trans('maintenance_message_edit_success', [], 'platform');
+            $flashBag = $this->session->getFlashBag();
+            $flashBag->add('success', $successMsg);
+
+            return new RedirectResponse($this->router->generate('claro_admin_parameters_maintenance'));
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
      * @EXT\Route(
      *     "/security/token/order/{order}/direction/{direction}",
      *     name="claro_admin_security_token_list",
@@ -1071,6 +1118,16 @@ class ParametersController extends Controller
             $type,
             $this->translator->trans($message, array(), 'platform')
         );
+    }
+
+    private function getMaintenanceMessage()
+    {
+        $file = $this->container->getParameter('claroline.param.uploads_directory').DIRECTORY_SEPARATOR.'maintenance_message.php';
+        $maintenanceContent = file_exists($file) ?
+            file_get_contents($file) :
+            '<p>Le site est temporairement en maintenance</p><p>The site is temporarily down for maintenance</p>';
+
+        return $maintenanceContent;
     }
 
     private function sendDatas($mode = 1)

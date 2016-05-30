@@ -53,8 +53,6 @@ QuestionShowCtrl.prototype.questionPaper = null;
  */
 QuestionShowCtrl.prototype.feedback = {};
 
-QuestionShowCtrl.prototype.feedbackState = -1;
-
 /**
  * Is edit enabled ?
  * @type {boolean}
@@ -89,9 +87,9 @@ QuestionShowCtrl.prototype.mark = function mark() {
  * @returns {string}
  */
 QuestionShowCtrl.prototype.getGenericFeedback = function getGenericFeedback() {
-    if (this.feedbackState === 1) {
+    if (this.feedback.state[this.question.id] === 1) {
         return "one_answer_to_find";
-    } else if (this.feedbackState === 2) {
+    } else if (this.feedback.state[this.question.id] === 2) {
         return "answers_not_found";
     }
 };

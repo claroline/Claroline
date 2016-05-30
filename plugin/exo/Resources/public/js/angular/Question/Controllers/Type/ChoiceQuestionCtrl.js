@@ -139,8 +139,6 @@ ChoiceQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
             this.choices[i].valid = this.isChoiceValid(this.choices[i]);
         }
     }
-    
-    this.feedbackState = this.ChoiceQuestionService.answersAllFound(this.question, this.answer);
 };
 
 // Register controller into AngularJS

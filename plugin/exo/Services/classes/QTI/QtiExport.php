@@ -141,7 +141,8 @@ abstract class QtiExport
     protected function qtiDescription()
     {
         $dom = new \DOMDocument();
-        $describe = $this->question->getDescription();
+        //For avoided to have a string only with spaces
+        $describe = ltrim($this->question->getDescription());
         if ($describe != null && $describe != '') {
             $body = $this->qtiExportObject($describe);
             foreach ($body->childNodes as $child) {
