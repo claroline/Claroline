@@ -313,6 +313,7 @@ duration: Durée
 edit: Modifier
 edit_facet: 'Editer une facette'
 edit_field: 'Editer un champ'
+edit_maintenance_message: 'Modifier le message de maintenance'
 edit_password: 'Modifier le mot de passe'
 edit_password_error: 'Une erreur est survenue pendant la modification du mot de passe.'
 edit_password_error_current: 'Votre mot de passe actuel n''est pas correct.'
@@ -537,6 +538,7 @@ mail_not_available: 'La fonction d''envoi de courriel n''est pas disponible.'
 mail_not_exist: 'Ce courriel n''existe pas '
 mail_sent: 'Un courriel vient de vous être envoyé. Vérifiez votre dossier spam au cas où celui-ci n''apparaîtrait pas dans votre boîte de réception.'
 maintenance: Maintenance
+maintenance_message_edit_success: Le message de maintenance a bien été modifié
 maintenance_mode_enabled: 'Le mode maintenance est activé'
 maintenance_mode_message: 'L''accès à la plateforme est désactivé pour les utilisateurs. Vous pouvez le réactiver dans la section maintenance des paramètres de l''administration.'
 make_my_public_profil_visible: 'Rendre mon profil public visible'
