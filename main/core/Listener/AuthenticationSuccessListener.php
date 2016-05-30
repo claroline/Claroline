@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -201,6 +202,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         if ($event->isMasterRequest()
             && !empty($route)
             && !$request->isXmlHttpRequest()
+            && !is_a($event->getResponse(), JsonResponse::class)
             && 'GET' === $request->getMethod()
             && 200 === $event->getResponse()->getStatusCode()
             && !$event->getResponse() instanceof StreamedResponse
