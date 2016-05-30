@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "9da73e3357629e3fbf2501b3f3f7435614513589"
+                "reference": "fb8f06edd70b08c0510f438d65ec3e9b585c24b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/9da73e3357629e3fbf2501b3f3f7435614513589",
-                "reference": "9da73e3357629e3fbf2501b3f3f7435614513589",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/fb8f06edd70b08c0510f438d65ec3e9b585c24b2",
+                "reference": "fb8f06edd70b08c0510f438d65ec3e9b585c24b2",
                 "shasum": ""
             },
             "require": {
@@ -300,6 +300,8 @@
                     "Icap\\WebsiteBundle\\IcapWebsiteBundle",
                     "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle",
                     "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle",
+                    "Icap\\LessonBundle\\IcapLessonBundle",
+                    "Claroline\\FlashCardBundle\\ClarolineFlashCardBundle",
                     "UJM\\ExoBundle\\UJMExoBundle",
                     "Icap\\LessonBundle\\IcapLessonBundle"
                 ]
@@ -353,7 +355,8 @@
                     "UJM\\ExoBundle\\": "plugin/exo",
                     "Innova\\VideoRecorderBundle\\": "plugin/video-recorder",
                     "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder",
-                    "Icap\\LessonBundle\\": "plugin/lesson"
+                    "Icap\\LessonBundle\\": "plugin/lesson",
+                    "Claroline\\FlashCardBundle\\": "plugin/flashcard"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -373,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-05-30 08:14:50"
+            "time": "2016-05-30 09:56:37"
         },
         {
             "name": "claroline/front-end-bundle",
