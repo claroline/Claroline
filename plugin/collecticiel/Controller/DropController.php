@@ -98,6 +98,7 @@ class DropController extends DropzoneBaseController
         $notationDocuments = $dropManager->getNotationForDocuments($drop);
         $notationCommentDocuments = $dropManager->getNotationCommentForDocuments($drop);
         $notationQualityDocuments = $dropManager->getNotationQualityForDocuments($drop);
+        $notationAssessorDocuments = $dropManager->getNotationAssessorForDocuments($drop);
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -120,6 +121,7 @@ class DropController extends DropzoneBaseController
             'notationDocumentsArray' => $notationDocuments,
             'notationCommentDocumentsArray' => $notationCommentDocuments,
             'notationQualityDocumentsArray' => $notationQualityDocuments,
+            'notationAssessorDocumentsArray' => $notationAssessorDocuments,
         );
     }
 

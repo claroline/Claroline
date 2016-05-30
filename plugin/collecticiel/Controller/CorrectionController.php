@@ -695,7 +695,6 @@ class CorrectionController extends DropzoneBaseController
                 // Parcours des commentaires des documents sélectionnés
                 foreach ($comments as $comment) {
                     $commentId = $comment->getId();
-    //                echo "Comment = " . $commentId . " - " . $correction->getUser()->getId();
 
                     $comments_read = $this
                             ->getDoctrine()

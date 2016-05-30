@@ -307,12 +307,12 @@ class DropManager
             $countExistNotation = count($notations);
 
             if ($countExistNotation == 0) {
-                $notationCommentTextDocuments[$documentId] = '-';
+                $notationCommentTextDocuments[$documentId] = '';
             } else {
                 // Parcours des commentaires des documents sélectionnés
                 foreach ($notations as $notation) {
                     if (strlen($notation->getCommentText()) == 0) {
-                        $notationCommentTextDocuments[$documentId] = '-';
+                        $notationCommentTextDocuments[$documentId] = '';
                     } else {
                         $notationCommentTextDocuments[$documentId]
                             = $notation->getCommentText();
@@ -354,17 +354,63 @@ class DropManager
             $countExistNotation = count($notations);
 
             if ($countExistNotation == 0) {
-                $notationQualityDocuments[$documentId] = '-';
+                $notationQualityDocuments[$documentId] = '';
             } else {
                 // Parcours des commentaires des documents sélectionnés
                 foreach ($notations as $notation) {
-                    $notationQualityDocuments[$documentId]
-                        = $notation->getQualityText();
+                    if (strlen($notation->getQualityText()) == 0) {
+                        $notationQualityDocuments[$documentId] = '';
+                    } else {
+                        $notationQualityDocuments[$documentId]
+                            = $notation->getQualityText();
+                    }
                 }
             }
         }
 
         return $notationQualityDocuments;
+    }
+
+    /**
+     * Handle QualityText for Documents.
+     *
+     * @param Drop $drop drop
+     *
+     * @return notationQualityDocuments
+     */
+    public function getNotationAssessorForDocuments(Drop $drop)
+    {
+        $notationAssessorDocuments = array();
+
+        $dropzone = $drop->getDropzone();
+
+        foreach ($drop->getDocuments() as $document) {
+            $documentId = $document->getId();
+
+            // Ajout pour avoir la notation.
+            $notations = $this
+                ->em->getRepository('InnovaCollecticielBundle:Notation')
+                ->findBy(
+                    array(
+                        'document' => $documentId,
+                        'dropzone' => $dropzone->getId(),
+                        )
+                );
+
+            // Nombre de notation pour le document et pour le dropzone
+            $countExistNotation = count($notations);
+
+            if ($countExistNotation == 0) {
+                $notationAssessorDocuments[$documentId] = '';
+            } else {
+                // Parcours des commentaires des documents sélectionnés
+                foreach ($notations as $notation) {
+                    $notationAssessorDocuments[$documentId] = $notation->getUser();
+                }
+            }
+        }
+
+        return $notationAssessorDocuments;
     }
 
     /**

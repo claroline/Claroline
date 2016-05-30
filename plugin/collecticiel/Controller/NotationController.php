@@ -99,10 +99,6 @@ class NotationController extends DropzoneBaseController
 
         $dropzone = $em->getRepository('InnovaCollecticielBundle:DropZone')->find($dropzone->getId());
 
-        echo 'doc';
-        echo $document->getId();
-        echo $dropzone->getId();
-
         // Ajout pour avoir si la notation a été transmise ou pas.
         $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
                     ->findBy(

@@ -119,11 +119,11 @@
         <td class="{{ classArray }} centered">
             <div class="btn-group">
                 {% if notationDocumentsArray[document.id] != 0 %}
-                {{ notationCommentDocumentsArray[document.id] }}
                     {% include 'InnovaCollecticielBundle:Document:viewNotation.html.twig'
                         with {
                         'notationCommentDocument': notationCommentDocumentsArray[document.id],
-                        'notationQualityDocument': notationQualityDocumentsArray[document.id]
+                        'notationQualityDocument': notationQualityDocumentsArray[document.id],
+                        'notationAssessorDocument': notationAssessorDocumentsArray[document.id]
                         }
                     %}
                 {% else %}
