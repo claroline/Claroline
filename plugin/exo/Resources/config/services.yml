@@ -154,6 +154,7 @@ services:
 
     ujm.exo_qti:
         class: UJM\ExoBundle\Services\classes\QTI\QtiServices
+        arguments: [@ujm.exo_qti_repository]
 
     ujm.exo_question:
         class: UJM\ExoBundle\Services\classes\QuestionService
