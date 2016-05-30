@@ -300,47 +300,4 @@ class PaperService
 
         return $array;
     }
-     /**
-      * To finish an assessment.
-      *
-      *
-      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface  $session
-      *
-      * @return \UJM\ExoBundle\Entity\Paper
-      */
-     public function finishExercise(SessionInterface $session)
-     {
-         $em = $this->doctrine->getManager();
-        /** @var \UJM\ExoBundle\Entity\Paper $paper */
-        $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
-         $paper->setInterupt(0);
-         $paper->setEnd(new \Datetime());
-         $em->persist($paper);
-         $em->flush();
-
-         $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
-
-         $session->remove('penalties');
-
-         return $paper;
-     }
-
-    /**
-     * To interupt an assessment.
-     *
-     *
-     * @param SessionInterface session
-     *
-     * @return \UJM\ExoBundle\Entity\Paper
-     */
-    public function interuptExercise(SessionInterface $session)
-    {
-        $em = $this->doctrine->getManager();
-        $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
-        $paper->setInterupt(1);
-        $em->persist($paper);
-        $em->flush();
-
-        return $paper;
-    }
 }

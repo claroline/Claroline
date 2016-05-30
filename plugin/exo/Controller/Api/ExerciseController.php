@@ -220,35 +220,6 @@ class ExerciseController
         return new JsonResponse($this->paperManager->countUserFinishedPapers($exercise, $user));
     }
 
-    /**
-     * Returns one paper.
-     * Also includes the complete definition and solution of each question
-     * associated with the exercise.
-     *
-     * @EXT\Route("/exercises/{exerciseId}/papers/{paperId}", name="exercise_paper")
-     * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
-     *
-     * @param User     $user
-     * @param Exercise $exercise
-     * @param Paper    $paper
-     *
-     * @return JsonResponse
-     */
-    public function paperAction(User $user, Exercise $exercise, Paper $paper)
-    {
-        if (!$this->isAdmin($exercise) && $paper->getUser() !== $user) {
-            // Only administrator or the User attached can see a Paper
-            throw new AccessDeniedHttpException();
-        }
-
-        return new JsonResponse([
-            'questions' => $this->paperManager->exportPaperQuestions($paper, $this->isAdmin($exercise)),
-            'paper' => $this->paperManager->exportPaper($paper, $this->isAdmin($exercise)),
-        ]);
-    }
-
     private function assertHasPermission($permission, Exercise $exercise)
     {
         $collection = new ResourceCollection([$exercise->getResourceNode()]);

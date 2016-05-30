@@ -5,14 +5,17 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\LinkHintPaper;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
 use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Library\Mode\MarkMode;
+use UJM\ExoBundle\Services\classes\PaperService;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -30,31 +33,38 @@ class PaperManager
     /**
      * @DI\InjectParams({
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
+     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
      *     "collector"          = @DI\Inject("ujm.exo.question_handler_collector"),
      *     "exerciseManager"    = @DI\Inject("ujm.exo.exercise_manager"),
      *     "questionManager"    = @DI\Inject("ujm.exo.question_manager"),
-     *     "translator"         = @DI\Inject("translator")
+     *     "translator"         = @DI\Inject("translator"),
+     *     "paperService"       = @DI\Inject("ujm.exo_paper")
      * })
      *
      * @param ObjectManager            $om
+     * @param EventDispatcherInterface $eventDispatcher
      * @param QuestionHandlerCollector $collector
      * @param ExerciseManager          $exerciseManager
      * @param QuestionManager          $questionManager
      * @param TranslatorInterface      $translator
+     * @param PaperService             $paperService
      */
     public function __construct(
         ObjectManager $om,
+        EventDispatcherInterface $eventDispatcher,
         QuestionHandlerCollector $collector,
         ExerciseManager $exerciseManager,
         QuestionManager $questionManager,
-        TranslatorInterface $translator
-
+        TranslatorInterface $translator,
+        PaperService $paperService
     ) {
         $this->om = $om;
+        $this->eventDispatcher = $eventDispatcher;
         $this->handlerCollector = $collector;
         $this->exerciseManager = $exerciseManager;
         $this->questionManager = $questionManager;
         $this->translator = $translator;
+        $this->paperService = $paperService;
     }
 
     /**
@@ -74,7 +84,14 @@ class PaperManager
         if (count($papers) === 0) {
             $paper = $this->createPaper($user, $exercise);
         } else {
-            $paper = $papers[0];
+            if (!$exercise->getDispButtonInterrupt()) {
+                // User is not allowed to continue is previous paper => open a new one and close the previous
+                $this->closePaper($papers[0]);
+
+                $paper = $this->createPaper($user, $exercise);
+            } else {
+                $paper = $papers[0];
+            }
         }
 
         return $this->exportPaper($paper);
@@ -141,7 +158,10 @@ class PaperManager
         }
 
         $handler->storeAnswerAndMark($question, $response, $data);
-        $this->applyPenalties($paper, $question, $response);
+        if (-1 !== $response->getMark()) {
+            // Only apply penalties if the answer has been marked
+            $this->applyPenalties($paper, $question, $response);
+        }
 
         $this->om->persist($response);
         $this->om->flush();
@@ -152,20 +172,25 @@ class PaperManager
      * @param Paper    $paper
      * @param int      $score
      */
-    public function recordOpenScore(Question $question, Paper $paper, $score)
+    public function recordScore(Question $question, Paper $paper, $score)
     {
         $response = $this->om->getRepository('UJMExoBundle:Response')
             ->findOneBy(['paper' => $paper, 'question' => $question]);
 
         $response->setMark($score);
 
+        // Apply penalties to the score
+        $this->applyPenalties($paper, $question, $response);
+
         $scorePaper = $paper->getScore();
-        $scoreExercise = $scorePaper + $score;
+        $scoreExercise = $scorePaper + $response->getMark();
         $paper->setScore($scoreExercise);
 
         $this->om->persist($paper);
         $this->om->persist($response);
         $this->om->flush();
+
+        $this->checkPaperEvaluated($paper);
     }
 
     /**
@@ -219,6 +244,49 @@ class PaperManager
         $paper->setScore($this->calculateScore($paper->getId()));
 
         $this->om->flush();
+
+        $this->checkPaperEvaluated($paper);
+    }
+
+    /**
+     * Close a Paper that is not finished (because the Exercise does not allow interruption).
+     *
+     * @param Paper $paper
+     */
+    public function closePaper(Paper $paper)
+    {
+        if (!$paper->getEnd()) {
+            $paper->setEnd(new \DateTime());
+        }
+
+        $paper->setInterupt(true); // keep track that the user has not finished
+        $paper->setScore($this->calculateScore($paper->getId()));
+
+        $this->om->flush();
+
+        $this->checkPaperEvaluated($paper);
+    }
+
+    /**
+     * Check if a Paper is full evaluated and dispatch a Log event if yes.
+     *
+     * @param Paper $paper
+     *
+     * @return $boolean
+     */
+    public function checkPaperEvaluated(Paper $paper)
+    {
+        $fullyEvaluated = $this->om->getRepository('UJMExoBundle:Response')->allPaperResponsesMarked($paper);
+        if ($fullyEvaluated) {
+            $event = new LogExerciseEvaluatedEvent($paper->getExercise(), [
+                'result' => $paper->getScore(),
+                'resultMax' => $this->paperService->getPaperTotalScore($paper->getId()),
+            ]);
+
+            $this->eventDispatcher->dispatch('log', $event);
+        }
+
+        return $fullyEvaluated;
     }
 
     private function calculateScore($paperId)

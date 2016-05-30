@@ -1,14 +1,20 @@
 /**
  * Question Show Controller
  * Displays a Question
+ * @param {Object}           $uibModal
+ * @param {ExerciseService}  ExerciseService
  * @param {QuestionService}  QuestionService
  * @param {FeedbackService}  FeedbackService
  * @param {UserPaperService} UserPaperService
  */
-var QuestionShowCtrl = function QuestionShowCtrl(QuestionService, FeedbackService, UserPaperService) {
+var QuestionShowCtrl = function QuestionShowCtrl($uibModal, ExerciseService, QuestionService, FeedbackService, UserPaperService) {
+    this.$uibModal = $uibModal;
+    this.ExerciseService  = ExerciseService;
     this.QuestionService  = QuestionService;
     this.FeedbackService  = FeedbackService;
     this.UserPaperService = UserPaperService;
+
+    this.editEnabled = this.ExerciseService.isEditEnabled();
 
     // Get feedback info to display the general feedback of the Question
     this.feedback = this.FeedbackService.get();
@@ -21,7 +27,7 @@ var QuestionShowCtrl = function QuestionShowCtrl(QuestionService, FeedbackServic
 };
 
 // Set up dependency injection
-QuestionShowCtrl.$inject = [ 'QuestionService', 'FeedbackService', 'UserPaperService' ];
+QuestionShowCtrl.$inject = [ '$uibModal', 'ExerciseService', 'QuestionService', 'FeedbackService', 'UserPaperService' ];
 
 /**
  * Is the Question panel collapsed ?
@@ -48,13 +54,32 @@ QuestionShowCtrl.prototype.questionPaper = null;
 QuestionShowCtrl.prototype.feedback = {};
 
 /**
+ * Is edit enabled ?
+ * @type {boolean}
+ */
+QuestionShowCtrl.prototype.editEnabled = false;
+
+/**
  * Are the correction for the Question displayed ?
  * @type {boolean}
  */
 QuestionShowCtrl.prototype.includeCorrection = false;
 
+/**
+ * Mark the question
+ */
 QuestionShowCtrl.prototype.mark = function mark() {
+    var question = this.question;
 
+    this.$uibModal.open({
+        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Paper/Partials/manual-mark.html',
+        controller: 'ManualMarkCtrl as manualMarkCtrl',
+        resolve: {
+            question: function questionResolve() {
+                return question;
+            }
+        }
+    });
 };
 
 /**

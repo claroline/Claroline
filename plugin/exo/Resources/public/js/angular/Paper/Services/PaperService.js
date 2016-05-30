@@ -19,6 +19,12 @@ var PaperService = function PaperService($http, $q, ExerciseService, StepService
 PaperService.$inject = [ '$http', '$q', 'ExerciseService', 'StepService', 'QuestionService' ];
 
 /**
+ * Contains the Paper to display
+ * @type {{paper: object, questions: object}}
+ */
+PaperService.prototype.current = null;
+
+/**
  * Number of papers already done for the current Exercise
  * @type {number}
  */
@@ -44,28 +50,43 @@ PaperService.prototype.setNbPapers = function setNbPapers(count) {
 };
 
 /**
- * Get one paper details
+ * Get the paper to display
+ * if we don't change current paper, it's loaded from memory, else we call the server to load it
+ *
+ *
  * @param   {String} id
  * @returns {Promise}
  */
-PaperService.prototype.get = function get(id) {
-    var exercise = this.ExerciseService.getExercise();
-
+PaperService.prototype.getCurrent = function getCurrent(id) {
     var deferred = this.$q.defer();
-    this.$http
-        .get(Routing.generate('exercise_paper', { exerciseId: exercise.id, paperId: id }))
-        .success(function (response) {
-            deferred.resolve(response);
-        })
-        .error(function (data, status) {
-            deferred.reject([]);
-            var msg = data && data.error && data.error.message ? data.error.message : 'Correction get one error';
-            var code = data && data.error && data.error.code ? data.error.code : 403;
-            /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
-            /*$window.location = url;*/
-        });
+
+    if (!this.current || !this.current.paper || id !== this.current.paper.id) {
+        // We need to load the paper from the server
+        this.$http
+            .get(Routing.generate('exercise_export_paper', { id: id }))
+            .success(function (response) {
+                this.current = response;
+
+                deferred.resolve(this.current);
+            }.bind(this))
+            .error(function (data, status) {
+                deferred.reject([]);
+                var msg = data && data.error && data.error.message ? data.error.message : 'Correction get one error';
+                var code = data && data.error && data.error.code ? data.error.code : 403;
+            });
+    } else {
+        // Send the current loaded paper
+        deferred.resolve(this.current);
+    }
 
     return deferred.promise;
+};
+
+/**
+ * Manually set the current paper
+ */
+PaperService.prototype.setCurrent = function setCurrent(current) {
+    this.current = current;
 };
 
 /**
@@ -87,9 +108,6 @@ PaperService.prototype.getAll = function getAll() {
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'Papers get all error';
             var code = data && data.error && data.error.code ? data.error.code : 403;
-            /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
-
-            /*$window.location = url;*/
         });
 
     return deferred.promise;
@@ -163,14 +181,6 @@ PaperService.prototype.deleteAll = function deleteAll(papers) {
 };
 
 /**
- * Delete a Paper
- * @param {Object} paper
- */
-PaperService.prototype.delete = function deletePaper(paper) {
-
-};
-
-/**
  * Check whether a paper need manual correction
  * @param {Object} paper
  * @returns {Boolean}
@@ -188,6 +198,28 @@ PaperService.prototype.needManualCorrection = function needManualCorrection(pape
     }
 
     return needed;
+};
+
+/**
+ * Save the score for a question
+ */
+PaperService.prototype.saveScore = function saveScore(question, score) {
+    var deferred = this.$q.defer();
+    this.$http
+        .put(
+            Routing.generate('exercise_save_score', { id: this.current.paper.id, questionId: question.id, score: score })
+        )
+        .success(function onSuccess(response) {
+            // Update paper instance
+            angular.merge(this.current.paper, response);
+
+            deferred.resolve(response);
+        }.bind(this))
+        .error(function onError(data, status) {
+            deferred.reject([]);
+        });
+
+    return deferred.promise;
 };
 
 /**
