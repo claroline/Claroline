@@ -96,40 +96,44 @@ class SupportListener
      */
     public function onExceptionActionMenuRender(ExceptionActionEvent $event)
     {
-        $user = $event->getUser();
-        $exceptionClassTemp = $event->getExceptionClass();
-        $messageTemp = $event->getMessage();
-        $fileTemp = $event->getFile();
-        $lineTemp = $event->getLine();
-        $urlTemp = $event->getUrl();
-        $refererTemp = $event->getReferer();
-        $exceptionClass = empty($exceptionClassTemp) ? '-' : $exceptionClassTemp;
-        $message = empty($messageTemp) ? '-' : $messageTemp;
-        $file = empty($fileTemp) ? '-' : $fileTemp;
-        $line = empty($lineTemp) ? '-' : $lineTemp;
-        $url = empty($urlTemp) ? '-' : $urlTemp;
-        $referer = empty($refererTemp) ? '-' : $refererTemp;
+        $httpCode = $event->getHttpCode();
 
-        $route = $this->router->generate(
-            'formalibre_ticket_from_issue_create_form',
-            array(
-                'user' => $user->getId(),
-                'exceptionClass' => $exceptionClass,
-                'message' => $message,
-                'file' => $file,
-                'line' => $line,
-                'url' => $url,
-                'referer' => $referer,
-            )
-        );
+        if ($httpCode === 400 || $httpCode === 500) {
+            $user = $event->getUser();
+            $exceptionClassTemp = $event->getExceptionClass();
+            $messageTemp = $event->getMessage();
+            $fileTemp = $event->getFile();
+            $lineTemp = $event->getLine();
+            $urlTemp = $event->getUrl();
+            $refererTemp = $event->getReferer();
+            $exceptionClass = empty($exceptionClassTemp) ? '-' : $exceptionClassTemp;
+            $message = empty($messageTemp) ? '-' : $messageTemp;
+            $file = empty($fileTemp) ? '-' : $fileTemp;
+            $line = empty($lineTemp) ? '-' : $lineTemp;
+            $url = empty($urlTemp) ? '-' : $urlTemp;
+            $referer = empty($refererTemp) ? '-' : $refererTemp;
 
-        $menu = $event->getMenu();
-        $menu->addChild(
-            $this->translator->trans('create_ticket_for_issue', array(), 'support'),
-            array('uri' => $route)
-        )->setExtra('icon', 'fa fa-share')
-        ->setExtra('display', 'modal_form');
+            $route = $this->router->generate(
+                'formalibre_ticket_from_issue_create_form',
+                array(
+                    'user' => $user->getId(),
+                    'exceptionClass' => $exceptionClass,
+                    'message' => $message,
+                    'file' => $file,
+                    'line' => $line,
+                    'url' => $url,
+                    'referer' => $referer,
+                )
+            );
 
-        return $menu;
+            $menu = $event->getMenu();
+            $menu->addChild(
+                $this->translator->trans('create_ticket_for_issue', array(), 'support'),
+                array('uri' => $route)
+            )->setExtra('icon', 'fa fa-share')
+            ->setExtra('display', 'modal_form');
+
+            return $menu;
+        }
     }
 }
