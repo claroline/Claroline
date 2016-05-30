@@ -59,6 +59,35 @@ StepService.prototype.getQuestion = function getQuestion(step, questionId) {
     return question;
 };
 
+/**
+ * Save modifications of the metadata of the Step
+ * @param   {Object} step
+ * @param   {Object} meta
+ * @returns {Promise}
+ */
+StepService.prototype.save = function save(step, meta) {
+    var exercise = this.ExerciseService.getExercise();
+    var deferred = this.$q.defer();
+    this.$http
+        .put(
+            Routing.generate('exercise_step_update_meta', { exerciseId: exercise.id, id: step.id }),
+            meta
+        )
+        .success(function onSuccess(response) {
+            // Inject updated data into the Exercise
+            angular.merge(step.meta, response.meta);
+
+            deferred.resolve(response);
+        })
+        .error(function onError(response, status) {
+            // TODO : display message
+
+            deferred.reject(response);
+        });
+
+    return deferred.promise;
+};
+
 // Register service into AngularJS
 angular
     .module('Step')

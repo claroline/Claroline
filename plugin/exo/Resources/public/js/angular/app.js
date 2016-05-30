@@ -22,6 +22,7 @@ angular
         'Question',
         'Paper',
         'Correction',
+        'Timer',
         'ngStorage'
     ])
 

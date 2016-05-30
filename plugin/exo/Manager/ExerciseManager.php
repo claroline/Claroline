@@ -354,7 +354,7 @@ class ExerciseManager
      */
     public function updateMetadata(Exercise $exercise, \stdClass $metadata)
     {
-        $errors = $this->validator->validateMetadata($metadata);
+        $errors = $this->validator->validateExerciseMetadata($metadata);
 
         if (count($errors) > 0) {
             throw new ValidationException('Exercise metadata are not valid', $errors);
