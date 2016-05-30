@@ -64,21 +64,40 @@
 
                             {% if app.user %}
                                 <div class="text-center">
-                                    {%
-                                        set menu = knp_menu_get(
-                                            'ClarolineCoreBundle:Builder:exceptionActionsMenu',
-                                            [],
-                                            {
-                                                'user': app.user,
-                                                'message': exception.getMessage(),
-                                                'exception_class': exception.getClass(),
-                                                'file': exception.getFile(),
-                                                'line': exception.getLine(),
-                                                'url': app.request.uri,
-                                                'referer': app.request.headers.get('referer')
-                                            }
-                                        )
-                                    %}
+                                    {% if httpCode is defined %}
+                                        {%
+                                            set menu = knp_menu_get(
+                                                'ClarolineCoreBundle:Builder:exceptionActionsMenu',
+                                                [],
+                                                {
+                                                    'user': app.user,
+                                                    'message': exception.getMessage(),
+                                                    'exception_class': exception.getClass(),
+                                                    'file': exception.getFile(),
+                                                    'line': exception.getLine(),
+                                                    'url': app.request.uri,
+                                                    'referer': app.request.headers.get('referer'),
+                                                    'httpCode': httpCode
+                                                }
+                                            )
+                                        %}
+                                    {% else %}
+                                        {%
+                                            set menu = knp_menu_get(
+                                                'ClarolineCoreBundle:Builder:exceptionActionsMenu',
+                                                [],
+                                                {
+                                                    'user': app.user,
+                                                    'message': exception.getMessage(),
+                                                    'exception_class': exception.getClass(),
+                                                    'file': exception.getFile(),
+                                                    'line': exception.getLine(),
+                                                    'url': app.request.uri,
+                                                    'referer': app.request.headers.get('referer')
+                                                }
+                                            )
+                                        %}
+                                    {% endif %}
                                     {{ knp_menu_render(menu, {}, 'exception_actions') }}
                                 </div>
                             {% endif %}
