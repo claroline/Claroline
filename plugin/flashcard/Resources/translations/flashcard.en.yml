@@ -1,0 +1,50 @@
+deck:
+  empty: No cards to show.
+cards:
+  add: Add a card
+  list: Show all cards
+card:
+  is_new: Not studied yet
+  suspend: Suspend learning process
+  unsuspend: Unsuspend learning process
+  repeat: Delet learning data
+note:
+  delete: Delete note
+  warning: Warning, this will delete all the cards linked to this note.
+notes:
+  add: Add a note
+note_type: Note model
+note_types:
+  add: Add a note model
+card_types: Card model
+card_type:
+  add: Add a card model
+  create_reverse: Create the reverse card model
+field:
+  name: Name of the field
+  names: Name of fields
+  add: Add a new field
+study:
+  begin: Study now
+  stop: Stop studying
+answer:
+  show: Show response
+  again: Again
+  hard: Hard
+  good: Good
+  easy: Easy
+errors:
+  line: line
+  title: Error
+  not_blank: This value cannot be empty.
+  not_unique: This value must be unique.
+  note:
+    creation_failure: Error when creating notes.
+  note_type:
+    edition_failure: Error when editing the model of notes.
+questions: Questions
+answers: Answers
+default_parameters: Default parameters
+new_cards: New cards
+card_to_review: Cards to review
+

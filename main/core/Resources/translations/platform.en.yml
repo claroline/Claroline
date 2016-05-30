@@ -312,6 +312,7 @@ duration: Duration
 edit: Edit
 edit_facet: 'Edit a facet'
 edit_field: 'Edit a field'
+edit_maintenance_message: 'Edit maintenance message'
 edit_password: 'Edit the password'
 edit_password_error: 'An error occured while editing the password.'
 edit_password_error_current: 'The current password is not correct.'
@@ -536,6 +537,7 @@ mail_not_available: 'The mail function is not available.'
 mail_not_exist: 'This mail does not exist'
 mail_sent: 'A email has been sent to your address. Check your inbox mail and your spam box.'
 maintenance: Maintenance
+maintenance_message_edit_success: The maintenance message has been edited successfully
 maintenance_mode_enabled: 'Maintenance mode is activated'
 maintenance_mode_message: 'The platform access is disabled. You can activate it in the maintenance section of administration parameters.'
 make_my_public_profil_visible: 'Make my public profile visible'

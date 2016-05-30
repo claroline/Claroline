@@ -184,7 +184,8 @@
             "UJM\\ExoBundle\\": "plugin/exo",
             "Innova\\VideoRecorderBundle\\": "plugin/video-recorder",
             "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder",
-            "Icap\\LessonBundle\\": "plugin/lesson"
+            "Icap\\LessonBundle\\": "plugin/lesson",
+            "Claroline\\FlashCardBundle\\": "plugin/flashcard"
         }
     },
     "extra": {
@@ -233,6 +234,8 @@
             "Icap\\WebsiteBundle\\IcapWebsiteBundle",
             "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle",
             "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle",
+            "Icap\\LessonBundle\\IcapLessonBundle",
+            "Claroline\\FlashCardBundle\\ClarolineFlashCardBundle",
             "UJM\\ExoBundle\\UJMExoBundle",
             "Icap\\LessonBundle\\IcapLessonBundle"
         ]

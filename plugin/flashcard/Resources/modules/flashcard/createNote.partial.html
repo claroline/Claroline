@@ -1,0 +1,81 @@
+<form name="createNoteForm" novalidate>
+
+  <div class="panel-body" >
+  
+    <div class="alert alert-danger"
+         data-ng-if="vm.errorMessage !== null">
+      <i class="fa fa-warning"></i>
+      {{ vm.errorMessage|trans:'flashcard' }}
+      <ul>
+        <li data-ng-repeat="error in vm.errors track by error.line">
+          {{ error.message|trans:'flashcard' }}
+          <span data-ng-if="error.line">
+            ({{ 'errors.line'|trans:'flashcard' }} {{ error.line }})
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div class="form-group"
+         data-ng-class="{ 'has-error': 
+         (createNoteForm.$submitted || createNoteForm.user.$dirty) && 
+         !createNoteForm.user.$valid }">
+      <label for="note-type">{{ 'note_type'|trans }}</label>
+      <select id="note-type"
+              class="form-control"
+              data-ng-model="vm.noteTypeChoosenId"
+              required>
+        <option 
+          data-ng-repeat="noteType in vm.noteTypes track by
+          noteType.name"
+          data-ng-click="vm.noteTypeChoosen = noteType"
+          value="{{ noteType.id }}">
+          {{ noteType.name }}
+        </option>
+      </select>
+      <p class="help-block"
+         data-ng-if="(createNoteForm.$submitted || createNoteForm.user.$dirty) && 
+         createNoteForm.user.$error.required">
+        {{ 'errors.not_blank'|trans:'results' }}
+      </p>
+      <p class="help-block"
+         data-ng-if="(createNoteForm.$submitted || createNoteForm.user.$dirty) && 
+         createNoteForm.user.$error.validUser">
+        {{ 'errors.unknown_user'|trans:'results' }}
+      </p>
+    </div>
+    <div class="form-group"
+         data-ng-if="vm.noteTypeChoosen !== undefined"
+         data-ng-repeat="fieldLabel in vm.noteTypeChoosen.field_labels">
+      <label for="field-{{ fieldLabel.id }}-value">{{ fieldLabel.name }}</label>
+      <input id="field-{{ fieldLabel.id }}-value"
+             type="text"
+             name="field-{{ fieldLabel.id }}-value"
+             class="form-control"
+             data-ng-model="vm.fieldValues[$index]"
+             required />
+      <p class="help-block"
+         data-ng-if="(createNoteForm.$submitted ||
+         createNoteForm.fieldValues[$index].$dirty) &&
+         createNoteForm.fieldValues[$index].$error.required">
+        {{ 'errors.not_blank'|trans:'flashcard' }}
+      </p>
+    </div>
+
+  </div>
+
+  <div class="panel-footer" data-ng-if="!vm.canEdit">
+    
+    <button type="submit"
+            class="btn btn-primary"
+            data-ng-disabled="!createNoteForm.$valid"
+            data-ng-click="vm.createNote(createNoteForm)">
+      {{ 'create'|trans }}
+    </button>
+    <a class="btn btn-default"
+       href="#/">
+      {{ 'cancel'|trans }}
+    </a>
+
+  </div>
+
+</form>
