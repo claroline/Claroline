@@ -64,11 +64,11 @@ class PaperController
      *     "paperManager"    = @DI\Inject("ujm.exo.paper_manager")
      * })
      *
-     * @param ObjectManager   $objectManager
+     * @param ObjectManager                 $objectManager
      * @param AuthorizationCheckerInterface $authorization
-     * @param StepManager     $stepManager
-     * @param QuestionManager $questionManager
-     * @param PaperManager    $paperManager
+     * @param StepManager                   $stepManager
+     * @param QuestionManager               $questionManager
+     * @param PaperManager                  $paperManager
      */
     public function __construct(
         ObjectManager   $objectManager,
@@ -240,13 +240,13 @@ class PaperController
     }
 
     /**
-     * Export the paper with minimal information (without the question linked)
+     * Export the paper with minimal information (without the question linked).
      *
      * @EXT\Route("/papers/{id}/minimal", name="exercise_export_paper_minimal")
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param User     $user
-     * @param Paper    $paper
+     * @param User  $user
+     * @param Paper $paper
      *
      * @return JsonResponse
      */
@@ -270,8 +270,8 @@ class PaperController
      * @EXT\Route("/papers/{id}", name="exercise_export_paper")
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param User     $user
-     * @param Paper    $paper
+     * @param User  $user
+     * @param Paper $paper
      *
      * @return JsonResponse
      */
@@ -286,12 +286,12 @@ class PaperController
     }
 
     /**
-     * Export the questions related to a paper
+     * Export the questions related to a paper.
      *
      * @EXT\Route("/papers/{id}/questions", name="exercise_export_paper_questions")
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param User $user
+     * @param User  $user
      * @param Paper $paper
      *
      * @return JsonResponse
@@ -304,7 +304,7 @@ class PaperController
     }
 
     /**
-     * Saves the score of a question that need manual correction
+     * Saves the score of a question that need manual correction.
      *
      * @EXT\Route("/papers/{id}/questions/{questionId}/score/{score}", name="exercise_save_score")
      * @EXT\Method("PUT")

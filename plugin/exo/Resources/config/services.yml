@@ -44,7 +44,7 @@ services:
 
     ujm.exo_exercise:
         class: UJM\ExoBundle\Services\classes\ExerciseServices
-        arguments: [@claroline.persistence.object_manager, @security.authorization_checker, @event_dispatcher, @doctrine, @service_container]
+        arguments: [@claroline.persistence.object_manager, @security.authorization_checker, @doctrine, @service_container]
 
     ujm.exo_InteractionGraphic:
         class: UJM\ExoBundle\Services\classes\Interactions\Graphic

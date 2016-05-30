@@ -15,7 +15,7 @@ use UJM\ExoBundle\Testing\RequestTrait;
 /**
  * Tests that are common to all exercise / question types.
  */
-class ExerciseControllerCommonTest extends TransactionalTestCase
+class PaperControllerTest extends TransactionalTestCase
 {
     use RequestTrait;
 
