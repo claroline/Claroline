@@ -27,7 +27,7 @@ class Step
      *
      * @ORM\Column(name="value", type="string", length=255, nullable=true)
      */
-    private $text;
+    private $text = '';
 
     /**
      * @var int
