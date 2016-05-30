@@ -141,7 +141,10 @@ class PaperManager
         }
 
         $handler->storeAnswerAndMark($question, $response, $data);
-        $this->applyPenalties($paper, $question, $response);
+        if (-1 !== $response->getMark()) {
+            // Only apply penalties if the answer has been marked
+            $this->applyPenalties($paper, $question, $response);
+        }
 
         $this->om->persist($response);
         $this->om->flush();
@@ -152,15 +155,18 @@ class PaperManager
      * @param Paper    $paper
      * @param int      $score
      */
-    public function recordOpenScore(Question $question, Paper $paper, $score)
+    public function recordScore(Question $question, Paper $paper, $score)
     {
         $response = $this->om->getRepository('UJMExoBundle:Response')
             ->findOneBy(['paper' => $paper, 'question' => $question]);
 
         $response->setMark($score);
 
+        // Apply penalties to the score
+        $this->applyPenalties($paper, $question, $response);
+
         $scorePaper = $paper->getScore();
-        $scoreExercise = $scorePaper + $score;
+        $scoreExercise = $scorePaper + $response->getMark();
         $paper->setScore($scoreExercise);
 
         $this->om->persist($paper);

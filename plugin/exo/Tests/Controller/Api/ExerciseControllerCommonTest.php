@@ -338,19 +338,4 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
         $this->assertEquals($pa3->getId(), $content[2]->id);
         $this->assertEquals($pa4->getId(), $content[3]->id);
     }
-
-    public function testUserPaper()
-    {
-        // create one paper
-        $pa1 = $this->persist->paper($this->bob, $this->ex1);
-        // create another one
-        $pa2 = $this->persist->paper($this->bob, $this->ex1);
-        $this->om->flush();
-
-        $this->request('GET', "/exercise/api/exercises/{$this->ex1->getId()}/papers/{$pa1->getId()}", $this->bob);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals($pa1->getId(), $content->paper->id);
-        $this->assertEquals(1, count($content->paper));
-    }
 }

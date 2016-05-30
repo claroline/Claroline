@@ -104,7 +104,7 @@ angular
                             function paperResolve($route, PaperService) {
                                 var promise = null;
                                 if ($route.current.params && $route.current.params.id) {
-                                    promise = PaperService.get($route.current.params.id);
+                                    promise = PaperService.getCurrent($route.current.params.id);
                                 }
 
                                 return promise;

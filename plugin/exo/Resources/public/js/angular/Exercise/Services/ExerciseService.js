@@ -128,7 +128,7 @@ ExerciseService.prototype.needManualCorrection = function needManualCorrection()
 
 /**
  * Save modifications of the metadata of the Exercise
- * @param   {Object} exercise
+ * @param   {Object} metadata
  * @returns {Promise}
  */
 ExerciseService.prototype.save = function save(metadata) {
