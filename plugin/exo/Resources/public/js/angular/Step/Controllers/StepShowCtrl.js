@@ -110,7 +110,7 @@ StepShowCtrl.prototype.getSuiteFeedback = function getSuiteFeedback() {
         }
     } else if (this.allAnswersFound === this.FeedbackService.MULTIPLE_ANSWERS_MISSING) {
         // toutes les réponses n'ont pas été trouvées
-        if (this.currentTry < this.step.maxAttempts) {
+        if (this.currentTry < this.step.meta.maxAttempts) {
             sentence = "some_answers_miss_try_again";
         } else {
             sentence = "max_attempts_reached_see_solution";

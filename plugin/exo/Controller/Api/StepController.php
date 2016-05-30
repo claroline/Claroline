@@ -86,11 +86,42 @@ class StepController
     }
 
     /**
+     * Update the properties of a Step.
+     *
+     * @EXT\Route(
+     *     "/steps/{id}",
+     *     name="exercise_step_update_meta",
+     *     requirements={"id"="\d+"},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("PUT")
+     *
+     * @param Exercise $exercise
+     * @param Step     $step
+     * @param Request  $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateMetadataAction(Exercise $exercise, Step $step, Request $request)
+    {
+        $this->assertHasPermission('ADMINISTRATE', $exercise);
+
+        // Get Exercise data from the Request
+        $dataRaw = $request->getContent();
+        if (!empty($dataRaw)) {
+            $this->stepManager->updateMetadata($step, json_decode($dataRaw));
+        }
+
+        return new JsonResponse($this->stepManager->exportStep($step, false));
+    }
+
+    /**
      * Delete a Step from the Exercise.
      *
      * @EXT\Route(
      *     "/steps/{id}",
      *     name="exercise_step_delete",
+     *     requirements={"id"="\d+"},
      *     options={"expose"=true}
      * )
      * @EXT\Method("DELETE")
@@ -119,7 +150,6 @@ class StepController
      *     options={"expose"=true}
      * )
      * @EXT\Method("PUT")
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
      *
      * @param Exercise $exercise
      * @param Request  $request
@@ -158,6 +188,7 @@ class StepController
      * @EXT\Route(
      *     "/steps/{id}/questions/reorder",
      *     name="exercise_question_reorder",
+     *     requirements={"id"="\d+"},
      *     options={"expose"=true}
      * )
      * @EXT\Method("PUT")

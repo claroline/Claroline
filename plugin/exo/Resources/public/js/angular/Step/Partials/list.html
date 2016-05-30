@@ -25,6 +25,14 @@
                             </a>
 
                             <button type="button"
+                                    class="btn btn-sm btn-default"
+                                    data-ng-click="stepListCtrl.editMetadata(step)"
+                                    data-toggle="tooltip" title="{{ 'edit_step' | trans:{}:'ujm_exo' }}">
+                                <span class="fa fa-pencil"></span>
+                                <span class="sr-only">{{ 'edit_step'|trans:{}:'ujm_exo' }}</span>
+                            </button>
+
+                            <button type="button"
                                     class="btn btn-sm btn-danger"
                                     data-ng-bootbox-confirm="{{ 'delete_of_my_exercise'|trans:{}:'ujm_exo'}}"
                                     data-ng-bootbox-confirm-action="stepListCtrl.removeStep(step)"
@@ -45,16 +53,16 @@
                                 {{ item.title }}
                             </td>
                             <td class="col-md-2 text-right">
-                                <!-- Edit Item button -->
-                                <a class="btn btn-sm btn-default" data-toggle="tooltip" title="{{ 'edit' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_edit' | path:{ id: item.id, exoID: stepListCtrl.exerciseId } }}">
-                                    <span class="fa fa-pencil"></span>
-                                    <span class="sr-only">{{ 'edit' | trans:{}:'ujm_exo' }}</span>
-                                </a>
-
                                 <!-- Export Item button -->
                                 <a class="btn btn-sm btn-default" data-toggle="tooltip" title="{{ 'Export' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_qti_export' | path:{ id: item.id } }}">
                                     <span class="fa fa-save"></span>
                                     <span class="sr-only">{{ 'Export' | trans:{}:'ujm_exo' }}</span>
+                                </a>
+
+                                <!-- Edit Item button -->
+                                <a class="btn btn-sm btn-default" data-toggle="tooltip" title="{{ 'edit' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_edit' | path:{ id: item.id, exoID: stepListCtrl.exerciseId } }}">
+                                    <span class="fa fa-pencil"></span>
+                                    <span class="sr-only">{{ 'edit' | trans:{}:'ujm_exo' }}</span>
                                 </a>
 
                                 <!-- Delete Item button -->

@@ -1,0 +1,30 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+        <span class="fa fa-pencil"></span>
+        {{ 'edit_step' | trans:{}:'ujm_exo' }}
+    </h4>
+</div>
+
+<div class="modal-body">
+    <form>
+        <div class="form-group">
+            <label for="step-description" class="control-label">{{ 'description'|trans:{}:'ujm_exo' }}</label>
+            <textarea data-ui-tinymce="stepMetadataCtrl.tinymceOptions" data-before-unload="off" id="step-description" class="form-control" data-ng-model="stepMetadataCtrl.meta.description"></textarea>
+        </div>
+
+        <!-- Maximum attempts -->
+        <div class="form-group">
+            <label for="step-max-attempts" class="control-label">{{ 'maximum_tries' | trans:{}:'ujm_exo' }}</label>
+            <input type="text" class="form-control" id="step-max-attempts" data-ng-model="stepMetadataCtrl.meta.maxAttempts" />
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="stepMetadataCtrl.save()">
+        {{ 'save' | trans:{}:'ujm_exo' }}
+    </button>
+    <button class="btn btn-default cancel" ng-click="stepMetadataCtrl.cancel()">
+        {{ 'cancel' | trans:{}:'ujm_exo' }}
+    </button>
+</div>
