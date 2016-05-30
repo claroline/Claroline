@@ -248,6 +248,7 @@ ExercisePlayerCtrl.prototype.end = function end() {
                         this.$location.path('/papers');
                     }
                 }.bind(this));
+            this.feedback.state = null;
         }.bind(this));
 };
 

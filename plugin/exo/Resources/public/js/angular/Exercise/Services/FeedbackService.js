@@ -32,11 +32,11 @@ FeedbackService.prototype.config = {
     visible: false,
     
     /**
-     * The state of the feedback
+     * The state of the feedback for each question
      * (0 : all found, 1 : partially found, 2 : error)
      * @type {integer}
      */
-    state: -1
+    state: {}
 };
 
 /**
