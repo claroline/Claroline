@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle:Exception:layout.html.twig' %}
 
+{% set httpCode = 400 %}
+
 {% block title %}{{ parent() ~ ' - ' ~ 'bad_request' | trans({}, 'platform') }}{% endblock %}
 
 {% block message %}
