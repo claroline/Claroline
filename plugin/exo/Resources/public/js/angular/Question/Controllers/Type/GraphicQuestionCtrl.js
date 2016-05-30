@@ -25,12 +25,6 @@ GraphicQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'GraphicQues
 GraphicQuestionCtrl.prototype.$image = null;
 
 /**
- * Tells whether the answers are all found, not found, or if only one misses
- * @type {Integer}
- */
-GraphicQuestionCtrl.prototype.feedbackState = -1;
-
-/**
  * Get the full URL of the Image
  * @returns {string}
  */
@@ -78,7 +72,7 @@ GraphicQuestionCtrl.prototype.areaHasPointer = function (area) {
  *
  */
 GraphicQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
-    this.feedbackState = this.GraphicQuestionService.answersAllFound(this.question, this.answer);
+    
 };
 
 /**
