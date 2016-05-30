@@ -504,11 +504,21 @@ MatchQuestionCtrl.prototype.updateStudentData = function () {
     }
 
     for (var i = 0; i < answers_to_check.length; i++) {
-        if (answers_to_check[i] !== '' && answers_to_check[i].source && answers_to_check[i].target) {
-            var answer = answers_to_check[i].source + ',' + answers_to_check[i].target;
-            this.answer.push(answer);
+        for (var j=0; j<this.question.firstSet.length; j++) {
+            for (var k=0; k<this.question.secondSet.length; k++) {
+                if (answers_to_check[i].source === this.question.firstSet[j].id && answers_to_check[i].target === this.question.secondSet[k].id) {
+                    var answer = answers_to_check[i].source + ',' + answers_to_check[i].target;
+                    this.answer.push(answer);
+                }
+            }
         }
     }
+    
+    console.log("---------");
+    console.log(this.question.id);
+    console.log(this.connections);
+    console.log(this.answer);
+    console.log(this.question);
 };
 
 /**
@@ -553,6 +563,7 @@ MatchQuestionCtrl.prototype.reset = function () {
  * problem when updating a previously given answer
  */
 MatchQuestionCtrl.prototype.addPreviousConnections = function addPreviousConnections() {
+    console.log(this.question.id);
     if (this.answer && this.answer.length > 0) {
         // init previously given answer
         var sets = this.answer;
@@ -642,11 +653,19 @@ MatchQuestionCtrl.prototype.handleBeforeDrop = function handleBeforeDrop(data) {
     } else {
         var sourceId = data.sourceId.replace('draggable_', '');
         var targetId = data.targetId.replace('droppable_', '');
-        var connection = {
-            source: sourceId,
-            target: targetId
-        };
-        this.connections.push(connection);
+        for (var i=0; i<this.question.firstSet.length; i++) {
+            if (this.question.firstSet[i].id === sourceId) {
+                for (var j=0; j<this.question.secondSet.length; j++) {
+                    if (this.question.secondSet[j].id === targetId) {
+                        var connection = {
+                            source: sourceId,
+                            target: targetId
+                        };
+                        this.connections.push(connection);
+                    }
+                }
+            }
+        }
     }
 
     this.updateStudentData();

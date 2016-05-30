@@ -212,6 +212,8 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
             }
         }
     }
+    
+    console.log(stepAnswers);
 
     if (!noAnswer) {
         // There are answers to post
