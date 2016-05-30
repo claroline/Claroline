@@ -1,8 +1,11 @@
 {% macro displayDocumentsList
-(drop, dropzone, width, mode, documentListText, adminInnova, collecticielOpenOrNot,
-returnReceiptArray, teacherCommentDocArray, notationDocuments
+(
+drop, dropzone, width, mode, documentListText, adminInnova,
+collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray,
+notationDocumentsArray, notationCommentDocumentsArray, notationQualityDocumentsArray
 )
 %}
+
     <div class="row">
         <div class="col-md-{{ width }}">
             {% if documentListText is not null %}
@@ -78,8 +81,10 @@ returnReceiptArray, teacherCommentDocArray, notationDocuments
                             with {
                                     'returnReceiptArray': returnReceiptArray,
                                     'teacherCommentDocArray': teacherCommentDocArray,
-                                    'notationDocuments': notationDocuments,
-                                    'maximumNotation': maximumNotation
+                                    'notationDocuments': notationDocumentsArray,
+                                    'maximumNotation': maximumNotation,
+                                    'notationCommentDocuments': notationCommentDocumentsArray,
+                                    'notationQualityDocuments': notationQualityDocumentsArray,
                                  }
                             %}
                         {% endfor %}

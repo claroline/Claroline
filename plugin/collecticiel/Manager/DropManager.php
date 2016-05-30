@@ -25,7 +25,8 @@ class DropManager
     private $notationRepo;
 
     /**
-     * @DI\InjectParams({
+     * @DI\InjectParams(
+     * {
      *     "container"       = @DI\Inject("service_container"),
      *     "em"              = @DI\Inject("doctrine.orm.entity_manager"),
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
@@ -45,6 +46,14 @@ class DropManager
         $this->notationRepo = $this->em->getRepository('InnovaCollecticielBundle:Notation');
     }
 
+    /**
+     * Handle Create Drop.
+     *
+     * @param Dropzone $dropzone dropzone
+     * @param User     $user     user
+     *
+     * @return drop
+     */
     public function create(Dropzone $dropzone, User $user)
     {
         $drop = new Drop();
@@ -62,6 +71,13 @@ class DropManager
         return $drop;
     }
 
+    /**
+     * Handle Save Drop.
+     *
+     * @param Drop $drop drop
+     *
+     * @return none
+     */
     public function saveDrop(Drop $drop)
     {
         $em->persist($drop);
@@ -70,6 +86,14 @@ class DropManager
         $this->eventDispatcher->dispatch('log', new LogDropEndEvent($drop->getDropzone(), $drop, $this->roleManager));
     }
 
+    /**
+     * Handle if Drop is finished or not.
+     *
+     * @param Dropzone $dropzone dropzone
+     * @param User     $user     user
+     *
+     * @return isFinished
+     */
     public function isDropFinished(Dropzone $dropzone, User $user)
     {
         return $isFinished = $this->dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true)) !== null
@@ -77,6 +101,14 @@ class DropManager
             : false;
     }
 
+    /**
+     * Get Drop For Dropzone/User.
+     *
+     * @param Dropzone $dropzone dropzone
+     * @param User     $user     user
+     *
+     * @return drop
+     */
     public function getDrop(Dropzone $dropzone, User $user)
     {
         // on récupère le drop existant ou on le créé s'il n'existe pas.
@@ -203,6 +235,13 @@ class DropManager
         return $teacherDocComments;
     }
 
+    /**
+     * Handle Notation for Documents.
+     *
+     * @param Drop $drop drop
+     *
+     * @return notationDocuments
+     */
     public function getNotationForDocuments(Drop $drop)
     {
         $notationDocuments = array();
@@ -214,13 +253,13 @@ class DropManager
 
             // Ajout pour avoir la notation.
             $notations = $this
-                        ->em->getRepository('InnovaCollecticielBundle:Notation')
-                        ->findBy(
-                            array(
-                                'document' => $documentId,
-                                'dropzone' => $dropzone->getId(),
-                                 )
-                            );
+                ->em->getRepository('InnovaCollecticielBundle:Notation')
+                ->findBy(
+                    array(
+                        'document' => $documentId,
+                        'dropzone' => $dropzone->getId(),
+                         )
+                );
 
             // Nombre de notation pour le document et pour le dropzone
             $countExistNotation = count($notations);
@@ -238,7 +277,104 @@ class DropManager
         return $notationDocuments;
     }
 
-    public function getRecordOrTransmitNotation(Drop $drop)
+    /**
+     * Handle CommentText for Documents.
+     *
+     * @param Drop $drop drop
+     *
+     * @return notationCommentTextDocuments
+     */
+    public function getNotationCommentForDocuments(Drop $drop)
+    {
+        $notationCommentTextDocuments = array();
+
+        $dropzone = $drop->getDropzone();
+
+        foreach ($drop->getDocuments() as $document) {
+            $documentId = $document->getId();
+
+            // Ajout pour avoir la notation.
+            $notations = $this
+                ->em->getRepository('InnovaCollecticielBundle:Notation')
+                ->findBy(
+                    array(
+                        'document' => $documentId,
+                        'dropzone' => $dropzone->getId(),
+                         )
+                );
+
+            // Nombre de notation pour le document et pour le dropzone
+            $countExistNotation = count($notations);
+
+            if ($countExistNotation == 0) {
+                $notationCommentTextDocuments[$documentId] = '-';
+            } else {
+                // Parcours des commentaires des documents sélectionnés
+                foreach ($notations as $notation) {
+                    if (strlen($notation->getCommentText()) == 0) {
+                        $notationCommentTextDocuments[$documentId] = '-';
+                    } else {
+                        $notationCommentTextDocuments[$documentId]
+                            = $notation->getCommentText();
+                    }
+                }
+            }
+        }
+
+        return $notationCommentTextDocuments;
+    }
+
+    /**
+     * Handle QualityText for Documents.
+     *
+     * @param Drop $drop drop
+     *
+     * @return notationQualityDocuments
+     */
+    public function getNotationQualityForDocuments(Drop $drop)
+    {
+        $notationQualityDocuments = array();
+
+        $dropzone = $drop->getDropzone();
+
+        foreach ($drop->getDocuments() as $document) {
+            $documentId = $document->getId();
+
+            // Ajout pour avoir la notation.
+            $notations = $this
+                ->em->getRepository('InnovaCollecticielBundle:Notation')
+                ->findBy(
+                    array(
+                        'document' => $documentId,
+                        'dropzone' => $dropzone->getId(),
+                        )
+                );
+
+            // Nombre de notation pour le document et pour le dropzone
+            $countExistNotation = count($notations);
+
+            if ($countExistNotation == 0) {
+                $notationQualityDocuments[$documentId] = '-';
+            } else {
+                // Parcours des commentaires des documents sélectionnés
+                foreach ($notations as $notation) {
+                    $notationQualityDocuments[$documentId]
+                        = $notation->getQualityText();
+                }
+            }
+        }
+
+        return $notationQualityDocuments;
+    }
+
+    /**
+     * Handle Record or Transnit Notation for Documents.
+     *
+     * @param Drop $drop drop
+     *
+     * @return recordOrTransmitNotationArray
+     */
+    public function recordOrTransmitNotationArray(Drop $drop)
     {
         $recordOrTransmitNotationArray = array();
 
@@ -249,13 +385,13 @@ class DropManager
 
             // Ajout pour avoir si la notation a été transmise ou pas.
             $recordOrTransmitNotations = $this
-                        ->em->getRepository('InnovaCollecticielBundle:Notation')
-                        ->findBy(
-                            array(
-                                'document' => $documentId,
-                                'dropzone' => $dropzone->getId(),
-                                 )
-                            );
+                ->em->getRepository('InnovaCollecticielBundle:Notation')
+                ->findBy(
+                    array(
+                    'document' => $documentId,
+                    'dropzone' => $dropzone->getId(),
+                     )
+                );
 
             $countRecordOrTransmitNotation = count($recordOrTransmitNotations);
 

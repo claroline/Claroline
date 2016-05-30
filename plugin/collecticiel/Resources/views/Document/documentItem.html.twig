@@ -118,8 +118,14 @@
     {% if dropzone.evaluation == 1  %}
         <td class="{{ classArray }} centered">
             <div class="btn-group">
-                {% if notationDocuments[document.id] != 0 %}
-                    {% include 'InnovaCollecticielBundle:Document:viewNotation.html.twig' %}
+                {% if notationDocumentsArray[document.id] != 0 %}
+                {{ notationCommentDocumentsArray[document.id] }}
+                    {% include 'InnovaCollecticielBundle:Document:viewNotation.html.twig'
+                        with {
+                        'notationCommentDocument': notationCommentDocumentsArray[document.id],
+                        'notationQualityDocument': notationQualityDocumentsArray[document.id]
+                        }
+                    %}
                 {% else %}
                     <i class="fa fa-times" aria-hidden="true"></i>
                 {% endif %}
