@@ -138,24 +138,30 @@ MatchQuestionCtrl.prototype.colorBindings = function colorBindings() {
     for (var i=0; i<this.connections.length; i++) {
         var rightAnswer = false;
         var c = jsPlumb.select({source: "draggable_" + this.connections[i].source, target: "droppable_" + this.connections[i].target});
-        for (var j=0; j<this.question.solutions.length; j++) {
-            if (this.connections[i].source === this.question.solutions[j].firstId && this.connections[i].target === this.question.solutions[j].secondId) {
-                rightAnswer = true;
-                c.setType("right");
-                /*
-                 * The following line adds the specific feedback on right bingings
-                 * We decided not to show it, as it can easily take too much space on the bindings
-                 * The best way would be to show it on hover
-                 * 
-                 * c.setLabel({label: this.question.solutions[j].feedback, cssClass: "label label-success"});
-                 */
-            }
-        }
-        if (!rightAnswer) {
-            if (this.feedback.visible) {
-                c.setType("wrong");
-            } else {
-                c.setType("default");
+        for (var k=0; k<this.question.firstSet.length; k++) {
+            for (var l=0; l<this.question.secondSet.length; l++) {
+                if (this.question.firstSet[k].id === this.connections[i].source && this.question.secondSet[l].id === this.connections[i].target) {
+                    for (var j=0; j<this.question.solutions.length; j++) {
+                        if (this.connections[i].source === this.question.solutions[j].firstId && this.connections[i].target === this.question.solutions[j].secondId) {
+                            rightAnswer = true;
+                            c.setType("right");
+                            /*
+                             * The following line adds the specific feedback on right bingings
+                             * We decided not to show it, as it can easily take too much space on the bindings
+                             * The best way would be to show it on hover
+                             * 
+                             * c.setLabel({label: this.question.solutions[j].feedback, cssClass: "label label-success"});
+                             */
+                        }
+                    }
+                    if (!rightAnswer) {
+                        if (this.feedback.visible) {
+                            c.setType("wrong");
+                        } else {
+                            c.setType("default");
+                        }
+                    }
+                }
             }
         }
     }
@@ -513,12 +519,6 @@ MatchQuestionCtrl.prototype.updateStudentData = function () {
             }
         }
     }
-    
-    console.log("---------");
-    console.log(this.question.id);
-    console.log(this.connections);
-    console.log(this.answer);
-    console.log(this.question);
 };
 
 /**
@@ -563,7 +563,11 @@ MatchQuestionCtrl.prototype.reset = function () {
  * problem when updating a previously given answer
  */
 MatchQuestionCtrl.prototype.addPreviousConnections = function addPreviousConnections() {
-    console.log(this.question.id);
+    console.log(this.answer);
+    console.log("solutions");
+    console.log(this.solutions);
+    console.log("question solutions");
+    console.log(this.question.solutions);
     if (this.answer && this.answer.length > 0) {
         // init previously given answer
         var sets = this.answer;
@@ -572,11 +576,12 @@ MatchQuestionCtrl.prototype.addPreviousConnections = function addPreviousConnect
                 var items = sets[i].split(',');
                 if (this.feedback.enabled || this.solutions) {
                     var created = false;
-                    for (var j=0; j<this.question.solutions.length; j++) {
-                        if (items[0] === this.question.solutions[j].firstId && items[1] === this.question.solutions[j].secondId) {
-                            var c = jsPlumb.connect({source: "draggable_" + items[0], target: "droppable_" + items[1], type: "right"});
-                            created = true;
-                            //c.setLabel({label: this.question.solutions[j].feedback, cssClass: "label label-success"});
+                    if (this.solutions) {
+                        for (var j=0; j<this.question.solutions.length; j++) {
+                            if (items[0] === this.question.solutions[j].firstId && items[1] === this.question.solutions[j].secondId) {
+                                var c = jsPlumb.connect({source: "draggable_" + items[0], target: "droppable_" + items[1], type: "right"});
+                                created = true;
+                            }
                         }
                     }
                     if (!created) {
