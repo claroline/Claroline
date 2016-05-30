@@ -34,12 +34,6 @@ MatchQuestionCtrl.prototype.orphanAnswersAreChecked = false;
 MatchQuestionCtrl.prototype.savedAnswers = [];
 
 /**
- * Tells wether the answers are all found, not found, or if only one misses
- * @type {Integer}
- */
-ChoiceQuestionCtrl.prototype.feedbackState = -1;
-
-/**
  *
  * @param item
  * @returns {boolean}
@@ -474,8 +468,6 @@ MatchQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
     } else if (this.question.toBind) {
         this.colorBindings();
     }
-
-    this.feedbackState = this.MatchQuestionService.answersAllFound(this.question, this.answer);
 };
 
 /**

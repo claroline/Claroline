@@ -159,7 +159,8 @@ abstract class QtiImport
                 $desc .= $this->domElementToString($img);
             }
         }
-        $this->question->setDescription($desc);
+        $describe = ltrim($desc);
+        $this->question->setDescription($describe);
     }
 
     /**

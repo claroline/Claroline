@@ -27,11 +27,11 @@ class ExerciseController extends Controller
      *     requirements={"id"="\d+"},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = false})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function openAction($user, Exercise $exercise)
+    public function openAction(User $user = null, Exercise $exercise)
     {
         $this->assertHasPermission('OPEN', $exercise);
 
@@ -299,9 +299,7 @@ class ExerciseController extends Controller
             $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
             $qid = $request->request->get('qid');
 
-            $result = $em->getRepository('UJMExoBundle:StepQuestion')->getMaxOrder($exo);
-
-            $order = (int) $result[0][1] + 1;
+            $order = $exo->getSteps()->count() + 1;
             foreach ($qid as $q) {
                 $question = $em->getRepository('UJMExoBundle:Question')->find($q);
                 if (!empty($question)) {
