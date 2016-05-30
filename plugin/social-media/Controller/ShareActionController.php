@@ -25,7 +25,7 @@ class ShareActionController extends Controller
 {
     /**
      * @Route("/share/form/{resourceId}", name="icap_socialmedia_share_form", )
-     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @ParamConverter("user", converter="current_user")
      * @ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"id" = "resourceId"})
      * @Template()
      *
@@ -51,7 +51,7 @@ class ShareActionController extends Controller
 
     /**
      * @Route("/share", name="icap_socialmedia_share")
-     * @ParamConverter("user", options={"authenticatedUser" = false})
+     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @Template()
      *
      * @param Request $request
