@@ -252,11 +252,12 @@ class HomeManager
      */
     public function createContent($translatedContent, $type = null, $father = null)
     {
-        if (isset($translatedContent['content']) &&
-            is_array($translatedContent['content']) &&
-            $id = $this->contentManager->createContent($translatedContent['content']) &&
-            $content = $this->content->find($id)
-        ) {
+        $id = isset($translatedContent['content']) && is_array($translatedContent['content']) ?
+            $this->contentManager->createContent($translatedContent['content']) :
+            null;
+        $content = $id ? $this->content->find($id) : null;
+
+        if (!is_null($content)) {
             if ($father) {
                 $father = $this->content->find($father);
                 $first = $this->subContent->findOneBy(array('back' => null, 'father' => $father));

@@ -28,8 +28,14 @@ if (!$maintenanceMode) {
                     <h3 class="panel-title">Maintenance</h3>
                 </div>
                 <div class="panel-body text-center">
-                    <p>Le site est temporairement en maintenance</p>
-                    <p>The site is temporarily down for maintenance</p>
+                    <?php
+                        if (file_exists(__DIR__.'/uploads/maintenance_message.php')) {
+                            include __DIR__.'/uploads/maintenance_message.php';
+                        } else {
+                            echo '<p>Le site est temporairement en maintenance</p>';
+                            echo '<p>The site is temporarily down for maintenance</p>';
+                        }
+                    ?>
                     <a class="btn" href="app.php"><span class="glyphicon glyphicon-refresh"></span></a>
                 </div>
             </div>
