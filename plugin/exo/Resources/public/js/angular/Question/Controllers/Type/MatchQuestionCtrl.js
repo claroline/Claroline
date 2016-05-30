@@ -563,11 +563,6 @@ MatchQuestionCtrl.prototype.reset = function () {
  * problem when updating a previously given answer
  */
 MatchQuestionCtrl.prototype.addPreviousConnections = function addPreviousConnections() {
-    console.log(this.answer);
-    console.log("solutions");
-    console.log(this.solutions);
-    console.log("question solutions");
-    console.log(this.question.solutions);
     if (this.answer && this.answer.length > 0) {
         // init previously given answer
         var sets = this.answer;
