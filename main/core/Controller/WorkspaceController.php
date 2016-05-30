@@ -165,20 +165,16 @@ class WorkspaceController extends Controller
      *     defaults={"search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = false})
      * @EXT\Template()
      *
      * Renders the workspace list page with its claroline layout.
      *
-     * @param $currentUser
      * @param $search
      *
      * @return Response
      */
-    public function listAction($currentUser, $search = '')
+    public function listAction($search = '')
     {
-        //        $user = $currentUser instanceof User ? $currentUser : null;
-
         return $this->tagManager->getDatasForWorkspaceList(false, $search);
     }
 
@@ -284,7 +280,7 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("currentUser", converter="current_user")
      *
      * @EXT\Template()
      *
@@ -892,7 +888,7 @@ class WorkspaceController extends Controller
      *     name="claro_workspace_remove_user_from_queue",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = false})
+     * @EXT\ParamConverter("user", converter="current_user")
      *
      * Removes user from Workspace registration queue.
      *
