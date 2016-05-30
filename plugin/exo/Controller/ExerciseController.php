@@ -299,10 +299,6 @@ class ExerciseController extends Controller
             $pageGoNow = $request->request->get('pageGoNow');
             $qid = $request->request->get('qid');
 
-            $result = $em->getRepository('UJMExoBundle:Step')->getMaxOrder($exo);
-
-            $maxOrdre = (int) $result + 1;
-
             foreach ($qid as $q) {
                 $question = $this->getDoctrine()
                     ->getManager()
@@ -311,10 +307,9 @@ class ExerciseController extends Controller
 
                 if (count($question) > 0) {
                     $question = $em->getRepository('UJMExoBundle:Question')->find($q);
-                    $order = (int) $maxOrdre;
+                    $order = $exo->getSteps()->count() + 1;
                     //Create a step for one question in the exercise
                     $this->container->get('ujm.exo_exercise')->createStepForOneQuestion($exo, $question, $order);
-                    ++$maxOrdre;
                 }
             }
 //            $em->flush();
