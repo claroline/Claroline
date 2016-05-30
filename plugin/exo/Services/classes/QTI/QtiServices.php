@@ -13,7 +13,6 @@ class QtiServices
     private $qtiRepository;
 
     /**
-     *
      * @param QtiRepository $qtiRepository
      */
     public function __construct(QtiRepository $qtiRepository)
