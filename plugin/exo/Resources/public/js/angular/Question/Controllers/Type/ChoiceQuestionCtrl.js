@@ -140,7 +140,7 @@ ChoiceQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
         }
     }
     
-    this.feedbackState = this.ChoiceQuestionService.answersAllFound(this.question, this.answer);
+    //this.feedbackState = this.ChoiceQuestionService.answersAllFound(this.question, this.answer);
 };
 
 // Register controller into AngularJS

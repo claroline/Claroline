@@ -23,12 +23,6 @@ OpenQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'OpenQuestionSe
 OpenQuestionCtrl.prototype.answerWithKeywords = '';
 
 /**
- * Tells wether the answers are all found, not found, or if only one misses
- * @type {Integer}
- */
-OpenQuestionCtrl.prototype.feedbackState = -1;
-
-/**
  * Callback executed when Feedback for the Question is shown
  */
 OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
@@ -59,8 +53,6 @@ OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
                 }
             }
         }
-
-        this.OpenQuestionService.answersAllFound(this.question, this.answer);
     }
 };
 
