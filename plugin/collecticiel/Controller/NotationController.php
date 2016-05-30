@@ -123,6 +123,7 @@ class NotationController extends DropzoneBaseController
         render('InnovaCollecticielBundle:Document:documentIsTransmit.html.twig',
                 array('document' => $document,
                       'dropzone' => $dropzone,
+                      'recordOrTransmitNotation' => 1,
                     )
                );
 

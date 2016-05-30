@@ -347,7 +347,7 @@ $(document).ready(function() {
                 dropzoneId: dropzoneId,
             },
             complete: function(data) {
-                $("#is-validate-" + docId).html(data.responseText);
+                $("#is-transmit-" + docId).html(data.responseText);
             }
         });
 
