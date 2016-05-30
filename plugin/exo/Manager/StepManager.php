@@ -7,6 +7,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\StepQuestion;
+use UJM\ExoBundle\Transfer\Json\ValidationException;
+use UJM\ExoBundle\Transfer\Json\Validator;
 
 /**
  * @DI\Service("ujm.exo.step_manager")
@@ -19,6 +21,11 @@ class StepManager
     private $om;
 
     /**
+     * @var Validator
+     */
+    private $validator;
+
+    /**
      * @var QuestionManager
      */
     private $questionManager;
@@ -28,18 +35,47 @@ class StepManager
      *
      * @DI\InjectParams({
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "validator"   = @DI\Inject("ujm.exo.json_validator"),
      *     "questionManager" = @DI\Inject("ujm.exo.question_manager")
      * })
      *
      * @param ObjectManager   $om
+     * @param Validator       $validator
      * @param QuestionManager $questionManager
      */
     public function __construct(
         ObjectManager $om,
+        Validator $validator,
         QuestionManager $questionManager)
     {
         $this->om = $om;
+        $this->validator = $validator;
         $this->questionManager = $questionManager;
+    }
+
+    /**
+     * Update the Step metadata.
+     *
+     * @param Step      $step
+     * @param \stdClass $metadata
+     *
+     * @throws ValidationException
+     */
+    public function updateMetadata(Step $step, \stdClass $metadata)
+    {
+        $errors = $this->validator->validateStepMetadata($metadata);
+
+        if (count($errors) > 0) {
+            throw new ValidationException('Step metadata are not valid', $errors);
+        }
+
+        // Update Step
+        $step->setText($metadata->description);
+        $step->setMaxAttempts(!empty($metadata->maxAttempts) ? (int) $metadata->maxAttempts : 0);
+
+        // Save to DB
+        $this->om->persist($step);
+        $this->om->flush();
     }
 
     /**
@@ -176,7 +212,10 @@ class StepManager
 
         return [
             'id' => $step->getId(),
-            'maxAttempts' => $step->getMaxAttempts(),
+            'meta' => [
+                'description' => $step->getText(),
+                'maxAttempts' => $step->getMaxAttempts(),
+            ],
             'items' => $items,
         ];
     }

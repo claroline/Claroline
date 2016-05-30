@@ -165,7 +165,7 @@ ExercisePlayerCtrl.prototype.submit = function submit() {
 ExercisePlayerCtrl.prototype.isButtonEnabled = function isButtonEnabled(button) {
     var buttonEnabled;
     if (button === 'retry') {
-        buttonEnabled = this.feedback.enabled && this.feedback.visible && this.currentStepTry !== this.step.maxAttempts && this.allAnswersFound !== 0;
+        buttonEnabled = this.feedback.enabled && this.feedback.visible && this.currentStepTry !== this.step.meta.maxAttempts && this.allAnswersFound !== 0;
     } else if (button === 'next') {
         buttonEnabled = !this.next || (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
     } else if (button === 'navigation') {
