@@ -126,7 +126,7 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
 
             foreach ($item['activity']['secondary_resources'] as $secondaryResource) {
                 //in a perfect world, this shouldn't happend
-                if ($created[$secondaryResource['uid']]) {
+                if (isset($created[$secondaryResource['uid']])) {
                     $parameters->addSecondaryResource($created[$secondaryResource['uid']]->getResourceNode());
                 }
             }

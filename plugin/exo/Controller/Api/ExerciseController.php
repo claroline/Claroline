@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Controller\Api;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -147,6 +147,8 @@ class ExerciseController
      */
     public function papersAction(User $user, Exercise $exercise)
     {
+        $this->assertHasPermission('OPEN', $exercise);
+
         if ($this->isAdmin($exercise)) {
             return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
         }

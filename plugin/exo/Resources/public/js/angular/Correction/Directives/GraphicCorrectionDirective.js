@@ -8,11 +8,6 @@ var GraphicCorrectionCtrl = function GraphicCorrectionCtrl($timeout) {
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Correction/Partials/graphic.html',
         scope: {
             question: '='
-        },
-        link: function (scope, element, attr, ctrl) {
-            $timeout(function(){
-                ctrl.createElements();
-            });
         }
     };
 };

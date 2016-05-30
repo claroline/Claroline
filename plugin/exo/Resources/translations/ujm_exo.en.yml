@@ -41,6 +41,7 @@ application/x.short+json: Open
 badge_obtained: Congratulations ! You got the badge of knowledge
 badge_no_obtained: You have not yet received the badge of knowledge
 back: Back
+back_to_overview: Go back the the Exercise overview
 back_to_the_list: Back to the list
 bank_of_questions: Bank of questions
 brief_search: Brief Search
@@ -99,6 +100,7 @@ duration: Duration
 edit: Edit
 edit_category: Edit a category
 edit_question: Edit a question
+edit_step: Edit information
 end_date: End date
 entry: Entry
 exercise: Exercise
@@ -138,6 +140,9 @@ formative : Formative
 
 # G
 graphic: Graphic
+graphic_area_shape_rect: Rectangle
+graphic_area_shape_circle: Circle
+graphic_area_shape_poly: Polygon
 graphic_creation: Graphic creation
 graphic_edition: Graphic edition
 graphic_help: Drag the crosshairs on the picture to mark your answer
@@ -178,6 +183,7 @@ info_search_type: If you want to do a search by type, you must used the followin
 instruction_add_hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
 instruction_matching: To set your correspondence, choose in the column "Correspondence" the number of one or more proposals to associate.
 in_valid_mark: Invalid score
+item_points: "[0,1] %count% point|]1,Inf[ %count% points"
 
 # K
 keep_same_question: Keep the same questions for a same user
@@ -265,6 +271,7 @@ overview: Overview
 # P
 paper: Paper
 paper_list: Paper list
+paper_count: "{0} no paper|{1} %count% paper|]1,Inf[ %count% papers"
 paper_need_manual_correction: This paper needs a manual correction
 metadata: Parameters
 partially: Partially correct
@@ -301,6 +308,7 @@ question_title: Question title (optional)
 question_shared_with: This question is shared with users below
 question_need_manual_correction: This question needs a manual correction
 question_open_keywords_info: Your answer needs to contain the following keywords to get the points
+question_graphic_nb_pointers: "{0} There is no more pointer to place on the picture.|{1} There is still %count% pointer to place on the picture.|]1,Inf[ There are still %count% pointers to place on the picture."
 
 # R
 random_questions: Random order of questions
@@ -351,6 +359,8 @@ sort: Sort documents
 summative : Summative
 show_additional_info: Display additional information
 step: Step
+step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
+step_item_add: Drag'n'drop or click the "+" button to add questions.
 
 # T
 temporary_mark: Temporary mark

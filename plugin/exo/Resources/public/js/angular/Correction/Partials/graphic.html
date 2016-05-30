@@ -1,10 +1,29 @@
 <div class="type-question-container graphic-question-container panel panel-default">
-    <div class="panel-body text-center">
-        <div class="droppable-container">
-            <img alt="{{ graphicCorrectionCtrl.question.document.label }}"
-                 width="{{ graphicCorrectionCtrl.question.width }}"
-                 height="{{ graphicCorrectionCtrl.question.height }}"
-                 data-ng-src="{{ graphicCorrectionCtrl.getImageUrl() }}" />
-        </div>
-    </div>
+    <table class="table table-striped">
+        <tbody>
+            <tr data-ng-repeat="solution in graphicCorrectionCtrl.question.solutions">
+                <td class="col-md-1 text-center">
+                    <div class="area-color" data-ng-style="{ 'background-color': graphicCorrectionCtrl.getAreaColor(solution.area) }"></div>
+                </td>
+
+                <td class="col-md-9">
+                    <!-- Shape of the area -->
+                    {{ ('graphic_area_shape_' + solution.area.shape)|trans:{}:'ujm_exo' }}
+                </td>
+
+                <td class="col-md-1 text-muted">
+                    <small>{{ 'item_points'|transChoice:solution.score:{count: solution.score}:'ujm_exo' }}</small>
+                </td>
+
+                <!-- Feedback -->
+                <td class="col-md-1 text-center">
+                    <span class="fa fa-comment feedback-info"
+                          title="{{ solution.feedback }}"
+                          data-ng-if="solution.feedback"
+                          data-toggle="tooltip">
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

@@ -215,15 +215,26 @@ class MessageManager
      * @param string                            $search
      * @param int                               $page
      *
+     * @deprecated
+     *
      * @return \PagerFanta\PagerFanta
      */
-    public function getReceivedMessages(User $receiver, $search = '', $page = 1)
+    public function getReceivedMessagesPager(User $receiver, $search = '', $page = 1)
     {
         $query = $search === '' ?
             $this->userMessageRepo->findReceived($receiver, false) :
             $this->userMessageRepo->findReceivedByObjectOrSender($receiver, $search, false);
 
         return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getReceivedMessages(User $receiver, $search = '')
+    {
+        $query = $search === '' ?
+        $this->userMessageRepo->findReceived($receiver, false) :
+        $this->userMessageRepo->findReceivedByObjectOrSender($receiver, $search, false);
+
+        return $query->getResult();
     }
 
     /**
@@ -233,13 +244,22 @@ class MessageManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getSentMessages(User $sender, $search = '', $page = 1)
+    public function getSentMessagesPager(User $sender, $search = '', $page = 1)
     {
         $query = $search === '' ?
             $this->userMessageRepo->findSent($sender, false) :
             $this->userMessageRepo->findSentByObject($sender, $search, false);
 
         return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getSentMessages(User $sender, $search = '', $page = 1)
+    {
+        $query = $search === '' ?
+        $this->userMessageRepo->findSent($sender, false) :
+        $this->userMessageRepo->findSentByObject($sender, $search, false);
+
+        return $query->getResult();
     }
 
     /**
@@ -249,13 +269,22 @@ class MessageManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getRemovedMessages(User $user, $search = '', $page = 1)
+    public function getRemovedMessagesPager(User $user, $search = '', $page = 1)
     {
         $query = $search === '' ?
             $this->userMessageRepo->findRemoved($user, false) :
             $this->userMessageRepo->findRemovedByObjectOrSender($user, $search, false);
 
         return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getRemovedMessages(User $user, $search = '', $page = 1)
+    {
+        $query = $search === '' ?
+        $this->userMessageRepo->findRemoved($user, false) :
+        $this->userMessageRepo->findRemovedByObjectOrSender($user, $search, false);
+
+        return $query->getResult();
     }
 
     /**
@@ -376,8 +405,8 @@ class MessageManager
         $content,
         $object,
         $sender = null,
-        $withMail = true
-    ) {
+        $withMail = true)
+    {
         $users = array();
 
         if ($subject instanceof User) {
