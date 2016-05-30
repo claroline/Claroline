@@ -97,8 +97,6 @@ MatchQuestionService.prototype.initBindMatchQuestion = function initBindMatchQue
         LogEnabled: true,
         PaintStyle: {strokeStyle: "#777", lineWidth: 4}
     });
-
-    jsPlumb.detachEveryConnection();
 };
 
 MatchQuestionService.prototype.initDragMatchQuestion = function initDragMatchQuestion() {
