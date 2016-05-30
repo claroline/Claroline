@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Mode\CorrectionMode;
+use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
 use UJM\ExoBundle\Transfer\Json\Validator;
 
@@ -45,6 +46,81 @@ class ExerciseManager
         $this->om = $om;
         $this->validator = $validator;
         $this->stepManager = $stepManager;
+    }
+
+    /**
+     * Create and add a new Step to an Exercise.
+     *
+     * @param Exercise $exercise
+     *
+     * @return Step
+     */
+    public function addStep(Exercise $exercise)
+    {
+        $step = new Step();
+        $step->setOrder($exercise->getSteps()->count() + 1);
+
+        // Link the Step to the Exercise
+        $exercise->addStep($step);
+
+        $this->om->persist($step);
+        $this->om->flush();
+
+        return $step;
+    }
+
+    /**
+     * Delete a Step.
+     *
+     * @param Exercise $exercise
+     * @param Step     $step
+     */
+    public function deleteStep(Exercise $exercise, Step $step)
+    {
+        $exercise->removeStep($step);
+
+        // Update steps order
+        $steps = $exercise->getSteps();
+        foreach ($steps as $pos => $stepToReorder) {
+            $step->setOrder($pos);
+
+            $this->om->persist($step);
+        }
+
+        $this->om->remove($step);
+        $this->om->flush();
+    }
+
+    /**
+     * Reorder the steps of an Exercise.
+     *
+     * @param Exercise $exercise
+     * @param array    $order    an ordered array of Step IDs
+     *
+     * @return array array of errors if something went wrong
+     */
+    public function reorderSteps(Exercise $exercise, array $order)
+    {
+        $steps = $exercise->getSteps();
+
+        /** @var Step $step */
+        foreach ($steps as $step) {
+            // Get new position of the Step
+            $pos = array_search($step->getId(), $order);
+            if (-1 === $pos) {
+                // We need all the steps, to keep the order coherent
+                return [
+                    'message' => 'Can not reorder the Exercise. Missing steps in order array.',
+                ];
+            }
+
+            $step->setOrder($pos);
+            $this->om->persist($step);
+        }
+
+        $this->om->flush();
+
+        return [];
     }
 
     /**
@@ -278,7 +354,7 @@ class ExerciseManager
      */
     public function updateMetadata(Exercise $exercise, \stdClass $metadata)
     {
-        $errors = $this->validator->validateMetadata($metadata);
+        $errors = $this->validator->validateExerciseMetadata($metadata);
 
         if (count($errors) > 0) {
             throw new ValidationException('Exercise metadata are not valid', $errors);
@@ -305,7 +381,7 @@ class ExerciseManager
 
         $correctionDate = null;
         if (!empty($metadata->correctionDate) && CorrectionMode::AFTER_DATE == $metadata->correctionMode) {
-            $correctionDate = \DateTime::createFromFormat('Y-m-d H:i:s', $metadata->correctionDate);
+            $correctionDate = \DateTime::createFromFormat('Y-m-d\TH:i:s', $metadata->correctionDate);
         }
 
         $exercise->setDateCorrection($correctionDate);
@@ -329,15 +405,15 @@ class ExerciseManager
         $authorName = sprintf('%s %s', $creator->getFirstName(), $creator->getLastName());
 
         // Accessibility dates
-        $startDate = $node->getAccessibleFrom()  ? $node->getAccessibleFrom()->format('Y-m-d H:i:s')  : null;
-        $endDate = $node->getAccessibleUntil() ? $node->getAccessibleUntil()->format('Y-m-d H:i:s') : null;
-        $correctionDate = $exercise->getDateCorrection() ? $exercise->getDateCorrection()->format('Y-m-d H:i:s') : null;
+        $startDate = $node->getAccessibleFrom()  ? $node->getAccessibleFrom()->format('Y-m-d\TH:i:s')  : null;
+        $endDate = $node->getAccessibleUntil() ? $node->getAccessibleUntil()->format('Y-m-d\TH:i:s') : null;
+        $correctionDate = $exercise->getDateCorrection() ? $exercise->getDateCorrection()->format('Y-m-d\TH:i:s') : null;
 
         return [
             'authors' => [
                 ['name' => $authorName],
             ],
-            'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
+            'created' => $node->getCreationDate()->format('Y-m-d\TH:i:s'),
             'title' => $node->getName(),
             'description' => $exercise->getDescription(),
             'type' => $exercise->getType(),

@@ -14,9 +14,9 @@
             </td>
             <td class="classic">
                 {% if choice.rightResponse %}
-                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                    <span class="fa fa-check-square-o"></span>
                 {% else %}
-                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                    <span class="fa fa-square-o"></span>
                 {% endif %}
             </td>
             <td class="classic">
@@ -26,12 +26,12 @@
                 {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
                     {# choice checked by student #}
                     {% if choice.rightResponse %}
-                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                        <span class="fa fa-check-square-o"></span>
                     {% else %}
-                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
+                        <span class="text-danger fa fa-check-square-o"></span>
                     {% endif %}
                 {% else %}
-                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                    <span class="fa fa-square-o"></span>
                 {% endif %}
             </td>
             <td class="classic">

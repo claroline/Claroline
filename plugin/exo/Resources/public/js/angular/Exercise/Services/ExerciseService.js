@@ -131,13 +131,13 @@ ExerciseService.prototype.needManualCorrection = function needManualCorrection()
  * @param   {Object} exercise
  * @returns {Promise}
  */
-ExerciseService.prototype.save = function save(exercise) {
+ExerciseService.prototype.save = function save(metadata) {
     var deferred = this.$q.defer();
 
     this.$http
         .put(
-            Routing.generate('ujm_exercise_update_meta', { id: exercise.id }),
-            exercise.meta
+            Routing.generate('ujm_exercise_update_meta', { id: this.exercise.id }),
+            metadata
         )
         .success(function onSuccess(response) {
             // TODO : display message
@@ -157,11 +157,19 @@ ExerciseService.prototype.save = function save(exercise) {
 };
 
 /**
+ * Get metadata of an Exercise
+ * @returns {Array}
+ */
+ExerciseService.prototype.getMetadata = function getSteps() {
+    return this.exercise.meta;
+};
+
+/**
  * Get steps of an Exercise
  * @returns {Array}
  */
 ExerciseService.prototype.getSteps = function getSteps() {
-    return (this.exercise && this.exercise.steps) ? this.exercise.steps : [];
+    return this.exercise.steps;
 };
 
 /**
@@ -225,6 +233,31 @@ ExerciseService.prototype.getNext = function getNext(step) {
 };
 
 /**
+ * Reorder the Steps of the current Exercise.
+ */
+ExerciseService.prototype.reorderSteps = function reorderSteps() {
+    // Only send the IDs of the steps
+    var order = this.exercise.steps.map(function getIds(step) {
+        return step.id;
+    });
+    
+    var deferred = this.$q.defer();
+    this.$http
+        .put(
+            Routing.generate('exercise_step_reorder', { exerciseId: this.exercise.id }),
+            order
+        )
+        .success(function onSuccess(response) {
+            deferred.resolve(response);
+        })
+        .error(function onError(data, status) {
+            deferred.reject([]);
+        });
+
+    return deferred.promise;
+};
+
+/**
  * Add a new Step to the Exercise
  */
 ExerciseService.prototype.addStep = function addStep() {
@@ -245,15 +278,13 @@ ExerciseService.prototype.addStep = function addStep() {
     var deferred = this.$q.defer();
     this.$http
         .post(
-            Routing.generate('ujm_exercise_step_add', { id: this.exercise.id }),
+            Routing.generate('exercise_step_add', { exerciseId: this.exercise.id }),
             step
         )
         // Success callback
         .success(function (response) {
             // Get the information of the Step
             step.id = response.id;
-
-            // TODO : display success message
 
             deferred.resolve(response);
         })
@@ -286,12 +317,10 @@ ExerciseService.prototype.removeStep = function removeStep(step) {
     var deferred = this.$q.defer();
     this.$http
         .delete(
-            Routing.generate('ujm_exercise_step_delete', { id: this.exercise.id, sid: step.id })
+            Routing.generate('exercise_step_delete', { exerciseId: this.exercise.id, id: step.id })
         )
         // Success callback
         .success(function (response) {
-            // TODO : display success message
-
             deferred.resolve(response);
         })
         // Error callback
@@ -325,8 +354,6 @@ ExerciseService.prototype.removeItem = function removeItem(step, item) {
         )
         // Success callback
         .success(function (response) {
-            // TODO : display success message
-
             deferred.resolve(response);
         })
         // Error callback

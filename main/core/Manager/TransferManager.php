@@ -387,7 +387,7 @@ class TransferManager
     private function setImporters(File $template, User $owner)
     {
         foreach ($this->listImporters as $importer) {
-            $importer->setRootPath(sys_get_temp_dir().DIRECTORY_SEPARATOR.$template->getBaseName());
+            $importer->setRootPath(sys_get_temp_dir().DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.$template->getBaseName());
             $importer->setOwner($owner);
             $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
             $importer->setConfiguration($data);

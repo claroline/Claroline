@@ -1125,9 +1125,11 @@ class WorkspaceManager
 
         $archive = new \ZipArchive();
         $fileName = $file->getBaseName();
-        $extractPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$fileName;
+        $extractPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.$fileName;
 
         if ($archive->open($file->getPathname())) {
+            $fs = new FileSystem();
+            $fs->mkdir($extractPath);
             if (!$archive->extractTo($extractPath)) {
                 throw new \Exception("The workspace archive couldn't be extracted");
             }
@@ -1145,7 +1147,7 @@ class WorkspaceManager
     public function removeTemplate(File $file)
     {
         $fileName = $file->getBaseName();
-        $extractPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$fileName;
+        $extractPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.$fileName;
         $fs = new FileSystem();
         $fs->remove($extractPath);
     }
