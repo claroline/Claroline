@@ -153,12 +153,8 @@ class APISecurityTest extends TransactionalTestCase
      */
     private function newClient($name, $grantTypes)
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
-        $client = $this->container->get('claroline.manager.oauth_manager')->createClient();
-        $client->setName($name);
-        $client->setAllowedGrantTypes($grantTypes);
-        $om->persist($client);
-        $om->flush();
+        $client = $this->persister->OauthClient($name, $grantTypes);
+        $this->persister->flush();
 
         return $client;
     }

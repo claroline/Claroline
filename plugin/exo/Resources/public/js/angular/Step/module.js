@@ -1,4 +1,6 @@
 /**
  * Step module
  */
-angular.module('Step', []);
+angular.module('Step', [
+    angularDragula(angular)
+]);

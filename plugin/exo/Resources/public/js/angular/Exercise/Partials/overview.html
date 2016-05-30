@@ -16,7 +16,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-8 col-md-offset-2">
                 <!-- Description of the exercise -->
                 <div class="exercise-description panel panel-default" data-ng-if="exerciseOverviewCtrl.exercise.meta.description">
                     <div class="panel-body" data-ng-bind-html="exerciseOverviewCtrl.exercise.meta.description"></div>
@@ -24,25 +24,45 @@
 
                 <!-- Information of the Exercise -->
                 <div class="panel panel-default" data-ng-if="exerciseOverviewCtrl.exercise.meta.metadataVisible">
-                    <table class="table table-striped">
+                    <table class="table table-striped table-bordered">
                         <!-- Display exercise general information -->
                         <tbody>
                             <!-- Start date -->
-                            <tr>
+                            <tr data-ng-if="exerciseOverviewCtrl.exercise.meta.startDate">
                                 <th class="text-right col-md-4" scope="row">{{ 'start_date' | trans:{}:'ujm_exo' }}</th>
-                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.startDate || '-' }}</td>
+                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.startDate|date_string:'dd/MM/yyyy' }}</td>
                             </tr>
 
                             <!-- End date -->
-                            <tr>
+                            <tr data-ng-if="exerciseOverviewCtrl.exercise.meta.endDate">
                                 <th class="text-right col-md-4" scope="row">{{ 'end_date' | trans:{}:'ujm_exo' }}</th>
-                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.endDate || '-' }}</td>
+                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.endDate|date_string:'dd/MM/yyyy' }}</td>
                             </tr>
 
                             <!-- Duration -->
-                            <tr>
+                            <tr data-ng-if="exerciseOverviewCtrl.exercise.meta.duration">
                                 <th class="text-right col-md-4" scope="row">{{ 'duration' | trans:{}:'ujm_exo' }}</th>
-                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.duration || '-' }}</td>
+                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.duration }}</td>
+                            </tr>
+
+                            <!-- When correction will be available ? -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'availability_of_correction' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.correctionMode">
+                                    <span data-ng-switch-when="1">{{ 'at_the_end_of_assessment'|trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-switch-when="2">{{ 'after_the_last_attempt'|trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-switch-when="3">{{ 'from'|trans:{}:'ujm_exo' }} <b>{{ exerciseOverviewCtrl.exercise.meta.correctionDate|date_string:'dd/MM/yyyy' }}</b></span>
+                                    <span data-ng-switch-when="4">{{ 'never'|trans:{}:'ujm_exo' }}</span>
+                                </td>
+                            </tr>
+
+                            <!-- When score will be available ? -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'availability_of_score' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.markMode">
+                                    <span data-ng-switch-when="1">{{ 'at_the_same_time_that_the_correction'|trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-switch-when="2">{{ 'at_the_end_of_assessment'|trans:{}:'ujm_exo' }}</span>
+                                </td>
                             </tr>
                         </tbody>
 
@@ -61,7 +81,7 @@
                             <!-- Creation date -->
                             <tr>
                                 <th class="text-right col-md-4" scope="row">{{ 'creation_date' | trans:{}:'ujm_exo' }}</th>
-                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.created | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.created|date_string:'dd/MM/yyyy HH:mm:ss' }}</td>
                             </tr>
 
                             <!-- Shuffle question order -->
@@ -86,26 +106,6 @@
                                 <th class="text-right col-md-4" scope="row">{{ 'keep_same_question' | trans:{}:'ujm_exo' }}</th>
                                 <td class="text-center col-md-8">
                                     <span class="fa" data-ng-class="{ 'fa-check-circle': exerciseOverviewCtrl.exercise.meta.pick, 'fa-times-circle': !exerciseOverviewCtrl.exercise.meta.pick }"></span>
-                                </td>
-                            </tr>
-
-                            <!-- When correction will be available ? -->
-                            <tr>
-                                <th class="text-right col-md-4" scope="row">{{ 'availability_of_correction' | trans:{}:'ujm_exo' }}</th>
-                                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.correctionMode">
-                                    <span data-ng-switch-when="1">{{ 'at_the_end_of_assessment'|trans:{}:'ujm_exo' }}</span>
-                                    <span data-ng-switch-when="2">{{ 'after_the_last_attempt'|trans:{}:'ujm_exo' }}</span>
-                                    <span data-ng-switch-when="3">{{ 'from'|trans:{}:'ujm_exo' }} <b>{{ exerciseOverviewCtrl.exercise.meta.correctionDate | date:'dd/MM/yyyy HH:mm:ss' }}</b></span>
-                                    <span data-ng-switch-when="4">{{ 'never'|trans:{}:'ujm_exo' }}</span>
-                                </td>
-                            </tr>
-
-                            <!-- When score will be available ? -->
-                            <tr>
-                                <th class="text-right col-md-4" scope="row">{{ 'availability_of_score' | trans:{}:'ujm_exo' }}</th>
-                                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.markMode">
-                                    <span data-ng-switch-when="1">{{ 'at_the_same_time_that_the_correction'|trans:{}:'ujm_exo' }}</span>
-                                    <span data-ng-switch-when="2">{{ 'at_the_end_of_assessment'|trans:{}:'ujm_exo' }}</span>
                                 </td>
                             </tr>
 
@@ -154,39 +154,15 @@
 
         <!-- Display a big button for those who can edit Exercise OR a big button to play the Exercise if no alert -->
         <div class="row">
-            <div class="col-md-6 col-md-offset-3 text-center">
+            <div class="col-md-8 col-md-offset-2 text-center">
                 <!-- Edit button if Exercise is empty -->
                 <a href="#/steps" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="exerciseOverviewCtrl.editEnabled && exerciseOverviewCtrl.exercise.steps.length === 0">
                     <span class="fa fa-pencil"></span>
                     {{ 'edit'|trans:{}:'ujm_exo' }}
                 </a>
 
-                <!-- Attempts info -->
-                <div class="attempts" data-ng-if="exerciseOverviewCtrl.exercise.steps.length > 0 && exerciseOverviewCtrl.exercise.meta.maxAttempts > 0">
-
-                    <!-- Max attempts not reached -->
-                    <span data-ng-if="exerciseOverviewCtrl.isComposeEnabled()">
-                        {{ 'sequence_attempts_infos'|transChoice:5:{ count: exerciseOverviewCtrl.exercise.meta.maxAttempts }:'ujm_sequence'}}
-                        ({{ 'exercise_finished_attempts'|transChoice:exerciseOverviewCtrl.getNbUserPapers():{ count: exerciseOverviewCtrl.getNbUserPapers() }:'ujm_exo' }})
-                    </span>
-
-                    <!-- Max attempts reached -->
-                    <em data-ng-if="!exerciseOverviewCtrl.isComposeEnabled()">
-                        {{ 'attempt_info6'|trans:{}:'ujm_exo' }}
-                    </em>
-                </div>
-
-                <!-- Play button if Exercise is OK -->
-                <a href="#/play" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="exerciseOverviewCtrl.exercise.steps.length > 0 && exerciseOverviewCtrl.isComposeEnabled()">
-                    <span class="fa fa-fw fa-play"></span>
-                    <span data-ng-if="0 === exerciseOverviewCtrl.getNbUserPapers()">{{ 'exercise_start' | trans:{}:'ujm_exo' }}</span>
-                    <span data-ng-if="0 < exerciseOverviewCtrl.getNbUserPapers()">{{ 'exercise_restart' | trans:{}:'ujm_exo' }}</span>
-                </a>
-
-                <!-- Results of the Exercise -->
-                <a href="#/papers" class="btn btn-default btn-block" data-ng-if="0 < exerciseOverviewCtrl.getNbUserPapers()">
-                    <span class="fa fa-fw fa-check-square-o"></span> {{ 'result_show' | trans:{}:'ujm_exo' }}
-                </a>
+                <!-- Start button -->
+                <button-start data-paper-link="true" data-ng-if="exerciseOverviewCtrl.exercise.steps.length > 0"></button-start>
             </div>
         </div>
     </div>

@@ -15,7 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
 
 /**
  * Loads a large amount of users.

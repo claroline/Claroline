@@ -52,6 +52,37 @@ class NotificationManager
      */
     protected $notificationPluginConfigurationManager;
 
+    /**
+     * Constructor.
+     *
+     * @DI\InjectParams({
+     *      "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "tokenStorage" = @DI\Inject("security.token_storage"),
+     *      "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *      "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *      "notificationParametersManager" = @DI\Inject("icap.notification.manager.notification_user_parameters"),
+     *      "notificationPluginConfigurationManager" = @DI\Inject("icap.notification.manager.plugin_configuration")
+     * })
+     */
+    public function __construct(
+        EntityManager $em,
+        TokenStorageInterface $tokenStorage,
+        EventDispatcherInterface $eventDispatcher,
+        PlatformConfigurationHandler $configHandler,
+        NotificationUserParametersManager $notificationParametersManager,
+        NotificationPluginConfigurationManager $notificationPluginConfigurationManager
+    ) {
+        $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->platformName = $configHandler->getParameter('name');
+        if ($this->platformName === null || empty($this->platformName)) {
+            $this->platformName = 'Claroline';
+        }
+        $this->notificationParametersManager = $notificationParametersManager;
+        $this->notificationPluginConfigurationManager = $notificationPluginConfigurationManager;
+    }
+
     private function getLoggedUser()
     {
         $doer = null;
@@ -191,37 +222,6 @@ class NotificationManager
     }
 
     /**
-     * Constructor.
-     *
-     * @DI\InjectParams({
-     *      "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "tokenStorage" = @DI\Inject("security.token_storage"),
-     *      "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *      "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *      "notificationParametersManager" = @DI\Inject("icap.notification.manager.notification_user_parameters"),
-     *      "notificationPluginConfigurationManager" = @DI\Inject("icap.notification.manager.plugin_configuration")
-     * })
-     */
-    public function __construct(
-        EntityManager $em,
-        TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $eventDispatcher,
-        PlatformConfigurationHandler $configHandler,
-        NotificationUserParametersManager $notificationParametersManager,
-        NotificationPluginConfigurationManager $notificationPluginConfigurationManager
-    ) {
-        $this->em = $em;
-        $this->tokenStorage = $tokenStorage;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->platformName = $configHandler->getParameter('name');
-        if ($this->platformName === null || empty($this->platformName)) {
-            $this->platformName = 'Claroline';
-        }
-        $this->notificationParametersManager = $notificationParametersManager;
-        $this->notificationPluginConfigurationManager = $notificationPluginConfigurationManager;
-    }
-
-    /**
      * @return EntityManager
      */
     public function getEntityManager()
@@ -341,7 +341,6 @@ class NotificationManager
                     $notificationViewer->setNotification($notification);
                     $notificationViewer->setViewerId($userId);
                     $notificationViewer->setStatus(false);
-
                     $this->getEntityManager()->persist($notificationViewer);
                 }
             }
@@ -414,18 +413,7 @@ class NotificationManager
      */
     public function getUserNotificationsList($userId, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $category = null)
     {
-        if ($notificationParameters == null) {
-            $notificationParameters = $this
-                ->notificationParametersManager
-                ->getParametersByUserId($userId);
-        }
-        $visibleTypes = $notificationParameters->getDisplayEnabledTypes();
-        if ($isRss) {
-            $visibleTypes = $notificationParameters->getRssEnabledTypes();
-        }
-        $query = $this
-            ->getNotificationViewerRepository()
-            ->findUserNotificationsQuery($userId, $visibleTypes, $category);
+        $query = $this->getUserNotifications($userId, $page, $maxResult, $isRss, $notificationParameters, false);
         $adapter = new DoctrineORMAdapter($query, false);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($maxResult);
@@ -443,6 +431,26 @@ class NotificationManager
             'notificationViews' => $notifications['views'],
             'colors' => $notifications['colors'],
         );
+    }
+
+    public function getUserNotifications($userId, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $executeQuery = true)
+    {
+        if ($notificationParameters == null) {
+            $notificationParameters = $this
+                ->notificationParametersManager
+                ->getParametersByUserId($userId);
+        }
+
+        if ($isRss) {
+            $visibleTypes = $notificationParameters->getRssEnabledTypes();
+        }
+        $visibleTypes = $notificationParameters->getDisplayEnabledTypes();
+
+        $query = $this
+            ->getNotificationViewerRepository()
+            ->findUserNotificationsQuery($userId, $visibleTypes);
+
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function getUserNotificationsListRss($rssId)

@@ -6,7 +6,8 @@
 
     {# Exercise styles #}
     {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/ujm-exo.css'
-        '@UJMExoBundle/Resources/public/less/main.less'
+        'packages/angular-dragula/dist/dragula.min.css'
+        '@UJMExoBundle/Resources/less/main.less'
     %}
     <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -21,8 +22,8 @@
     <div data-ng-app="ExerciseApp" data-ng-cloak="">
         <exercise
             data-exercise="{{ exercise | json_encode | raw | escape }}"
-            data-nb-papers ="{{ nbPapers }}"
-            data-nb-user-papers ="{{ nbUserPapers }}"
+            data-nb-papers="{{ nbPapers }}"
+            data-nb-user-papers="{{ nbUserPapers }}"
             data-edit-enabled="{{ editEnabled }}">
         </exercise>
     </div>
@@ -58,6 +59,7 @@
     {# Angular UI #}
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-angular-ui.js'
         'packages/angular-bootstrap/ui-bootstrap-tpls.min.js'
+        'packages/angular-dragula/dist/angular-dragula.min.js'
         'packages/angular-ui-tinymce/src/tinymce.js'
         'packages/angular-ui-translation/angular-translation.js'
         'packages/angular-ui-resource-picker/angular-resource-picker.js'
@@ -84,9 +86,16 @@
         '@UJMExoBundle/Resources/public/js/angular/*'
 
         '@UJMExoBundle/Resources/public/js/angular/Common/*'
-        '@UJMExoBundle/Resources/public/js/angular/Common/Directives/*'
         '@UJMExoBundle/Resources/public/js/angular/Common/Filters/*'
         '@UJMExoBundle/Resources/public/js/angular/Common/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Image/*'
+        '@UJMExoBundle/Resources/public/js/angular/Image/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Image/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Timer/*'
+        '@UJMExoBundle/Resources/public/js/angular/Timer/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Timer/Services/*'
 
         '@UJMExoBundle/Resources/public/js/angular/Exercise/*'
         '@UJMExoBundle/Resources/public/js/angular/Exercise/Controllers/*'

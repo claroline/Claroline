@@ -1,0 +1,50 @@
+deck:
+  empty: Il n'y a pas de cartes.
+cards:
+  add: Ajouter une carte
+  list: Voir toutes les cartes
+card:
+  is_new: Pas encore étudiée
+  suspend: Supendre l'étude de la carte
+  unsuspend: Continuer d'étudier la carte
+  repeat: Oublier l'apprentissage de la carte
+note:
+  delete: Supprimer la note
+  warning: Attention, supprimer la note supprimera aussi toutes les cartes qui y sont liées.
+notes:
+  add: Ajouter une note
+note_type: Modèle de note
+note_types:
+  add: Ajouter un modèle de note
+card_types: Modèles de cartes
+card_type:
+  add: Ajouter un modèle de carte
+  create_reverse: Créer le modèle de carte inverse
+field:
+  name: Nom du champ
+  names: Nom des champs
+  add: Ajouter un nouveau champ
+study:
+  begin: Commencer à étudier
+  stop: Arrêter d'étudier
+answer:
+  show: Afficher la réponse
+  again: Encore
+  hard: Difficile
+  good: Bon
+  easy: Facile
+errors:
+  line: ligne
+  title: Erreur
+  not_blank: Cette valeur ne peut pas être vide.
+  not_unique: Ce champs doit être unique.
+  note:
+    creation_failure: Impossible de créer la note.
+  note_type:
+    edition_failure: Impossible d'éditer le modèle de note.
+questions: Questions
+answers: Réponse
+default_parameters: Paramètres par défaut
+new_cards: Nouvelles cartes
+card_to_review: Cartes à réviser
+
