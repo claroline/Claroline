@@ -36,7 +36,7 @@ FeedbackService.prototype.config = {
      * (0 : all found, 1 : partially found, 2 : error)
      * @type {integer}
      */
-    state: []
+    state: {}
 };
 
 /**
