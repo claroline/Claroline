@@ -417,6 +417,8 @@ class DropController extends DropzoneBaseController
         $userNbTextToRead = array();
         $haveReturnReceiptOrNotArray = array();
         $haveCommentOrNotArray = array();
+        $notationDocuments = array();
+        $recordOrTransmitNotations = array();
 
         foreach ($dropzone->getDrops() as $drop) {
             $notationDocuments = $dropManager->getNotationForDocuments($drop);
