@@ -58,6 +58,12 @@ file. For an installation from scratch, the commands would be:
     cd Claroline
     php scripts/configure.php
     composer sync-dev
+    
+### 3. From web installer
+
+``` curl packages.claroline.net/releases/latest/claroline-6.x.x-dev.tar.gz | tar xzv ```
+
+Open /install.php from your webserver and follow the instructions.
 
 Upgrade
 -------
