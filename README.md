@@ -65,7 +65,7 @@ file. For an installation from scratch, the commands would be:
     cd claroline-7.0.0-rc1
     chmod 777 app/config
     
-Open /install.php from your webserver and follow the instructions.
+Open /web/install.php from your webserver and follow the instructions.
 
 Upgrade
 -------
