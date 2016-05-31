@@ -288,7 +288,7 @@ class InteractionHoleController extends Controller
         }
 
         $interSer = $this->container->get('ujm.exo_InteractionHole');
-        $res = $interSer->response($request);
+        $res = $interSer->responsePhp($request);
 
         $vars['score'] = $res['score'];
         $vars['penalty'] = $res['penalty'];

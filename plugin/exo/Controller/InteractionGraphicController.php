@@ -351,7 +351,7 @@ class InteractionGraphicController extends Controller
         }
 
         $exerciseSer = $this->container->get('ujm.exo_InteractionGraphic');
-        $res = $exerciseSer->response($request);
+        $res = $exerciseSer->responsePhp($request);
 
         $vars['point'] = $res['point']; // Score of the student without penalty
         $vars['penalty'] = $res['penalty']; // Penalty (hints)
