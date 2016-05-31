@@ -54,11 +54,6 @@ class UserPreference
      */
     private $user;
 
-    public function __construct()
-    {
-        // Not imlemented yet.
-    }
-
     /**
      * @param int $newCardDay
      *

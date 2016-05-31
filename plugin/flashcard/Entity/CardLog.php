@@ -93,7 +93,7 @@ class CardLog
      *
      * @return CardLog
      */
-    public function setDate(DateTime $date)
+    public function setDate(\DateTime $date)
     {
         $this->date = $date;
 
@@ -169,11 +169,11 @@ class CardLog
     }
 
     /**
-     * @param Date $dueDate
+     * @param DateTime $dueDate
      *
      * @return CardLog
      */
-    public function setDueDate(Date $dueDate)
+    public function setDueDate(\DateTime $dueDate)
     {
         $this->dueDate = $dueDate;
 
