@@ -1113,4 +1113,9 @@ class RoleManager
 
         $this->om->endFlushSuite();
     }
+
+    public function getUserRole(User $user)
+    {
+        return $this->roleRepo->findUserRoleByUser($user);
+    }
 }

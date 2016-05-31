@@ -1248,3 +1248,35 @@ cache_management_explanation: Your must empty your app/cache directory to finali
 required_by: Required by:
 require: Require:
 requirement_warning: Requierment warning
+csv_delete: Csv delete
+import_facets: Import facets
+csv: Csv
+csv_format_facets: Csv format:
+csv_format_facets_line_1: First line: facet list separated by semicolons (facet1;facet2;facet;...)
+csv_format_facets_line_end: Following lines: username;facet value1; facet value2;facet value2;...
+create_panel: New panel
+edit_panel: Edit panel
+is_main_facet_label: Put in general tab
+delete_panel: Remove panel
+delete_panel_confirm: Do you really want to remove this panel ?
+edit_mode: Edit mode
+display_mode: Display mode
+roles_panels_form_explanation: Edit the panel accessibility by role.
+delete_field: Removing a field
+delete_field_confirm: Do you really want to remove this field ?
+facet_imported: Facets imported
+radio: Radio button
+select: Select list
+checkboxes: Checkboxes
+facet_edited: Facet edition successfull
+facet_created: Facet creation successfull
+facet_removed: Facet suppression successfull
+facet_roles_edited: Facet roles edition successfull
+panel_created: Panel creation successfull
+panel_edited: Panel edition successfull
+panel_removed: Panel suppression successfull
+field_created: Field creation successfull
+field_edited: Field edition successfull
+field_removed: Field suppression successfull
+panel_roles_edited: Facet roles edition successfull
+profile_preference_edited: Profile preferences edition sucessfull

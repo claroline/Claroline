@@ -1,3 +1,4 @@
+
 export default class HelpBlockDirective {
   constructor ($parse, $compile) {
     this.scope = {}

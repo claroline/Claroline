@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Facet;
 
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\GeneralFacetPreferenceRepository")
@@ -24,31 +25,37 @@ class GeneralFacetPreference
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_facet_admin"})
      */
     protected $id;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"api_facet_admin"})
      */
     protected $baseData;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"api_facet_admin"})
      */
     protected $mail;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"api_facet_admin"})
      */
     protected $phone;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"api_facet_admin"})
      */
     protected $sendMail;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"api_facet_admin"})
      */
     protected $sendMessage;
 
@@ -58,6 +65,7 @@ class GeneralFacetPreference
      *     inversedBy="generalFacetPreference"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @Groups({"api_facet_admin"})
      */
     protected $role;
 

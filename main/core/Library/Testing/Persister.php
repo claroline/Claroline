@@ -10,6 +10,9 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Facet\Facet;
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -62,6 +65,7 @@ class Persister
         $user->setMail($username.'@mail.com');
         $user->setGuid(uniqid());
         $user->addRole($roleUser);
+        $user->setPublicUrl($username);
         $this->container->get('claroline.manager.role_manager')->createUserRole($user);
         $this->om->persist($user);
 
@@ -185,6 +189,38 @@ class Persister
         $this->om->persist($location);
 
         return $location;
+    }
+
+    public function facet($name, $forceCreationForm, $isMain)
+    {
+        return $this->container->get('claroline.manager.facet_manager')->createFacet($name, $forceCreationForm, $isMain);
+    }
+
+    public function panelFacet(Facet $facet, $name, $collapse)
+    {
+        return $this->container->get('claroline.manager.facet_manager')->addPanel($facet, $name, $collapse);
+    }
+
+    public function fieldFacet(PanelFacet $panelFacet, $name, $type, array $choices = array())
+    {
+        $this->om->startFlushSuite();
+        $field = $this->container->get('claroline.manager.facet_manager')->addField($panelFacet, $name, $type);
+
+        foreach ($choices as $choice) {
+            $this->container->get('claroline.manager.facet_manager')->addFacetFieldChoice($choice, $field);
+        }
+
+        $this->om->endFlushSuite();
+
+        return $field;
+    }
+
+    public function grantAdminToolAccess(User $user, $toolName)
+    {
+        $toolManager = $this->container->get('claroline.manager.tool_manager');
+        $tool = $toolManager->getAdminToolByName($toolName);
+        $role = $this->container->get('claroline.manager.role_manager')->getUserRole($user);
+        $toolManager->addRoleToAdminTool($tool, $role);
     }
 
     public function OauthClient($name, $grantTypes)

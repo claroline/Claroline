@@ -19,7 +19,8 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use Claroline\CoreBundle\Entity\Facet\FieldFacetRole;
+use Claroline\CoreBundle\Entity\Facet\PanelFacetRole;
+use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
 use Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -39,6 +40,7 @@ class FacetManager
     private $authorization;
     private $panelRepo;
     private $fieldRepo;
+    private $container;
 
     /**
      * @InjectParams({
@@ -46,13 +48,15 @@ class FacetManager
      *     "translator"      = @Inject("translator"),
      *     "authorization"   = @Inject("security.authorization_checker"),
      *     "tokenStorage"    = @Inject("security.token_storage"),
+     *     "container"       = @Inject("service_container")
      * })
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        $container
     ) {
         $this->om = $om;
         $this->translator = $translator;
@@ -60,6 +64,10 @@ class FacetManager
         $this->authorization = $authorization;
         $this->panelRepo = $om->getRepository('ClarolineCoreBundle:Facet\PanelFacet');
         $this->fieldRepo = $om->getRepository('ClarolineCoreBundle:Facet\FieldFacet');
+        $this->fieldValueRepo = $om->getRepository('ClarolineCoreBundle:Facet\FieldFacetValue');
+        $this->panelRoleRepo = $om->getRepository('ClarolineCoreBundle:Facet\PanelFacetRole');
+        $this->facetRepo = $om->getRepository('ClarolineCoreBundle:Facet\Facet');
+        $this->container = $container;
     }
 
     /**
@@ -67,14 +75,14 @@ class FacetManager
      *
      * @param $name
      */
-    public function createFacet($name, $forceCreationForm = false)
+    public function createFacet($name, $forceCreationForm = false, $isMain = false)
     {
         $this->om->startFlushSuite();
         $facet = new Facet();
         $facet->setName($name);
+        $facet->setIsMain($isMain);
         $facet->setForceCreationForm($forceCreationForm);
         $facet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\Facet'));
-        $this->initFacetPermissions($facet);
         $this->om->persist($facet);
         $this->om->endFlushSuite();
 
@@ -93,10 +101,11 @@ class FacetManager
         $this->reorderFacets();
     }
 
-    public function editFacet(Facet $facet, $name, $forceCreationForm = false)
+    public function editFacet(Facet $facet, $name, $forceCreationForm = false, $isMain = false)
     {
         $facet->setName($name);
         $facet->setForceCreationForm($forceCreationForm);
+        $facet->setIsMain($isMain);
         $this->om->persist($facet);
         $this->om->flush();
 
@@ -152,7 +161,6 @@ class FacetManager
         $fieldFacet->setName($name);
         $fieldFacet->setType($type);
         $fieldFacet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacet'));
-        $this->initFieldPermissions($fieldFacet);
         $this->om->persist($fieldFacet);
         $this->om->endFlushSuite();
 
@@ -187,12 +195,14 @@ class FacetManager
      *
      * @return FacetPanel
      */
-    public function editPanel(PanelFacet $panel)
+    public function editPanel(PanelFacet $panelFacet, $name, $collapse)
     {
-        $this->om->persist($panel);
+        $panelFacet->setName($name);
+        $panelFacet->setIsDefaultCollapsed($collapse);
+        $this->om->persist($panelFacet);
         $this->om->flush();
 
-        return $panel;
+        return $panelFacet;
     }
 
     /**
@@ -244,6 +254,7 @@ class FacetManager
      */
     public function setFieldValue(User $user, FieldFacet $field, $value, $force = false)
     {
+        //the voter should be updated
         if (!$this->authorization->isGranted('edit', $field) && !$force) {
             throw new AccessDeniedException();
         }
@@ -260,21 +271,18 @@ class FacetManager
         switch ($field->getType()) {
             case FieldFacet::DATE_TYPE:
                 $date = is_string($value) ?
-                    \DateTime::createFromFormat(
-                        $this->translator->trans('date_form_datepicker_php', array(), 'platform'),
-                        $value
-                    ) :
+                    new \DateTime($value) :
                     $value;
                 $fieldFacetValue->setDateValue($date);
                 break;
             case FieldFacet::FLOAT_TYPE:
                 $fieldFacetValue->setFloatValue($value);
                 break;
-            case FieldFacet::STRING_TYPE:
-                $fieldFacetValue->setStringValue($value);
+            case FieldFacet::CHECKBOXES_TYPE:
+                $fieldFacetValue->setArrayValue($value);
                 break;
             default:
-                throw new \Exception('The facet type '.$field->getType().' is unknown.');
+                $fieldFacetValue->setStringValue($value);
         }
 
         $this->om->persist($fieldFacetValue);
@@ -353,8 +361,8 @@ class FacetManager
 
         foreach ($fields as $field) {
             foreach ($ids as $key => $id) {
-                if ($id === $field->getId()) {
-                    $field->setPosition($key);
+                if ((int) $id === $field->getId()) {
+                    $field->setPosition($key + 1);
                     $this->om->persist($field);
                 }
             }
@@ -375,8 +383,8 @@ class FacetManager
 
         foreach ($panels as $panel) {
             foreach ($ids as $key => $id) {
-                if ($id === $panel->getId()) {
-                    $panel->setPosition($key);
+                if ((int) $id === $panel->getId()) {
+                    $panel->setPosition($key + 1);
                     $this->om->persist($panel);
                 }
             }
@@ -387,8 +395,11 @@ class FacetManager
 
     /**
      * Get the ordered fields of facet.
+     * unused.
      *
      * @param Facet $facet
+     *
+     * @deprecated
      */
     public function getFields(Facet $facet)
     {
@@ -407,102 +418,29 @@ class FacetManager
             ->findBy(array(), array('position' => 'ASC'));
     }
 
-    public function initFacetPermissions(Facet $facet)
-    {
-        $userAdminTool = $this->om
-            ->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')
-            ->findOneByName('user_management');
-
-        $roles = $this->om
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findByAdminTool($userAdminTool);
-
-        $facet->setRoles($roles);
-    }
-
     public function setFacetRoles(Facet $facet, array $roles)
     {
         $facet->setRoles($roles);
         $this->om->persist($facet);
         $this->om->flush();
+
+        return $facet;
     }
 
-    public function initFieldPermissions(FieldFacet $field)
+    public function setPanelFacetRole(PanelFacet $panelFacet, Role $role, $canOpen, $canEdit)
     {
-        $this->om->startFlushSuite();
-        $roles = $field->getPanelFacet()->getFacet()->getRoles();
+        $panelFacetRole = $this->panelRoleRepo->findOneBy(array('role' => $role, 'panelFacet' => $panelFacet));
 
-        foreach ($roles as $role) {
-            $ffr = new FieldFacetRole();
-            $ffr->setRole($role);
-            $ffr->setFieldFacet($field);
-            $ffr->setCanOpen(true);
-            $ffr->setCanEdit(false);
-            $this->om->persist($ffr);
+        if (!$panelFacetRole) {
+            $panelFacetRole = new PanelFacetRole();
+            $panelFacetRole->setRole($role);
+            $panelFacetRole->setPanelFacet($panelFacet);
         }
 
-        $this->om->endFlushSuite();
-    }
+        $panelFacetRole->setCanEdit($canEdit);
+        $panelFacetRole->setCanOpen($canOpen);
 
-    /**
-     * This function will allow to set on of the boolean property of FieldFacetRole
-     * for a fieldFacet and an array of roles.
-     *
-     * @param FieldFacet $fieldFacet
-     * @param array      $roles
-     * @param $property (canOpen | canEdit)
-     */
-    public function setFieldBoolProperty(FieldFacet $fieldFacet, array $roles, $property)
-    {
-
-        //find each fields sharing the same role as $fieldFacet
-        $fieldFacetsRole = $fieldFacet->getFieldFacetsRole();
-
-        //get the correct setter
-        $setterFunc = 'set'.ucfirst($property);
-
-        //initialize an array of roles wich are not linked to the field
-        $unknownRoles = array();
-        //initialize an array of fieldFacetRoles wich are going to have their property to true
-        $fieldFacetRolesToChange = array();
-
-        //initialize each of field facets property to false
-        foreach ($fieldFacetsRole as $fieldFacetRole) {
-            $fieldFacetRole->$setterFunc(false);
-        }
-
-        //find roles wich are not linked to a field
-        foreach ($roles as $role) {
-            $found = false;
-
-            foreach ($fieldFacetsRole as $fieldFacetRole) {
-                if ($fieldFacetRole->getRole()->getId() === $role->getId()) {
-                    $found = true;
-                    $fieldFacetRolesToChange[] = $fieldFacetRole;
-                }
-            }
-
-            if (!$found) {
-                $unknownRoles[] = $role;
-            }
-        }
-
-        //create a new FieldFacetRole for each missing role
-        foreach ($unknownRoles as $unknownRole) {
-            $ffr = new FieldFacetRole();
-            $ffr->setRole($unknownRole);
-            $ffr->setFieldFacet($fieldFacet);
-
-            //add the new fieldFacetRole to the list of retrieved fieldFacetRoles at the beginning
-            $fieldFacetRolesToChange[] = $ffr;
-        }
-
-        //set the property correctly
-        foreach ($fieldFacetRolesToChange as $ffr) {
-            $ffr->$setterFunc(true);
-            $this->om->persist($ffr);
-        }
-
+        $this->om->persist($panelFacetRole);
         $this->om->flush();
     }
 
@@ -511,24 +449,21 @@ class FacetManager
         return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->find($id);
     }
 
+    public function getFieldFacetByName($name)
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findOneByName($name);
+    }
+
     public function getFieldFacets()
     {
         return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findAll();
     }
 
-    public function getVisibleFieldFacets()
-    {
-        $token = $this->tokenStorage->getToken();
-        $tokenRoles = $token->getRoles();
-        $roles = array();
-
-        foreach ($tokenRoles as $tokenRole) {
-            $roles[] = $tokenRole->getRole();
-        }
-
-        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetRole')->findByRoles($roles);
-    }
-
+    /**
+     * Used by public profile application.
+     *
+     * @deprecated ?
+     */
     public function getVisibleFacets($max = null)
     {
         $token = $this->tokenStorage->getToken();
@@ -554,7 +489,8 @@ class FacetManager
             case FieldFacet::FLOAT_TYPE: return $ffv->getFloatValue();
             case FieldFacet::DATE_TYPE:
                 return $ffv->getDateValue()->format($this->translator->trans('date_form_datepicker_php', array(), 'platform'));
-            case FieldFacet::STRING_TYPE: return $ffv->getStringValue();
+            case FieldFacet::STRING_TYPE || FieldFacet::COUNTRY_TYPE || FieldFacet::SELECT_TYPE || FieldFacet::RADIO_TYPE: return $ffv->getStringValue();
+            case FieldFacet::CHECKBOXES_TYPE: return $ffv->getArrayValue();
             default: return 'error';
         }
     }
@@ -587,103 +523,9 @@ class FacetManager
         return $this->om->getRepository('ClarolineCoreBundle:Facet\GeneralFacetPreference')->findAll();
     }
 
-    /**
-     * Returns each facet wich are visible in the private profile.
-     *
-     * @todo change the implementation
-     *
-     * @return Facet[]
-     */
-    public function getPrivateVisibleFacets()
+    public function getFacetsByUser(User $user)
     {
-        $visibleFacets = $this->getVisibleFacets();
-        $visibleByOwner = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')
-            ->findBy(array('isVisibleByOwner' => true));
-        $private = [];
-
-        foreach ($visibleByOwner as $visible) {
-            $private[$visible->getPosition()] = array(
-                'position' => $visible->getPosition(),
-                'id' => $visible->getId(),
-                'name' => $visible->getName(),
-                'canOpen' => true,
-                'panels' => $visible->getPanelFacets(),
-            );
-        }
-
-        $data = [];
-
-        //merge both array and set canOpen to true when needed
-        foreach ($private as $el) {
-            $found = false;
-
-            foreach ($visibleFacets as $facet) {
-                if ($el['id'] === $facet['id']) {
-                    $canOpen = $facet['canOpen'] | $el['canOpen'];
-                    $data[] = array(
-                        'position' => $facet['position'],
-                        'id' => $facet['id'],
-                        'name' => $facet['name'],
-                        'canOpen' => $canOpen,
-                        'panels' => $facet['panels'],
-                    );
-                    $found = true;
-                }
-            }
-
-            if (!$found) {
-                $data[$el['position']] = $el;
-            }
-        }
-
-        $array = $data + $visibleFacets;
-        ksort($array);
-
-        return $array;
-    }
-
-    /**
-     * Return each field visible in the private profile.
-     * The fields are returned as an array wich is used in the facetPane.html.twig file.
-     * The array is has the same structure as the FieldFacetRoleRepository::findByRoles() method.
-     */
-    public function getPrivateVisibleFields()
-    {
-        $fields = $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findBy(array('isVisibleByOwner' => true));
-
-        $data = [];
-
-        foreach ($fields as $field) {
-            if ($this->authorization->isGranted('ROLE_ADMIN')) {
-                $canOpen = true;
-                $canEdit = true;
-            } else {
-                $canOpen = $field->getIsVisibleByOwner();
-                $canEdit = $field->getIsEditableByOwner();
-            }
-
-            $data[] = array(
-                'id' => $field->getId(),
-                'canOpen' => $canOpen,
-                'canEdit' => $canEdit,
-                'position' => $field->getPosition(),
-            );
-        }
-
-        $visibleFieldFacets = $this->getVisibleFieldFacets();
-
-        foreach ($data as $field) {
-            $found = false;
-
-            foreach ($visibleFieldFacets as $visibleFieldFacet) {
-                if ($field['id'] === $visibleFieldFacet['id']) {
-                    $data[$field['position']]['canOpen'] = $field['canOpen'] | $visibleFieldFacet['canOpen'];
-                    $data[$field['position']]['canEdit'] = $field['canEdit'] | $visibleFieldFacet['canEdit'];
-                }
-            }
-        }
-
-        return $data;
+        return $this->facetRepo->findByUser($user, $this->authorization->isGranted('ROLE_ADMIN'));
     }
 
     public function getVisiblePublicPreference()
@@ -699,6 +541,9 @@ class FacetManager
             ->getAdminPublicProfilePreferenceByRole($roles);
     }
 
+    /**
+     * @deprecated
+     */
     public function getAdminPublicPreference()
     {
         return $this->om->getRepository('ClarolineCoreBundle:Facet\GeneralFacetPreference')->findAll();
@@ -708,5 +553,58 @@ class FacetManager
     {
         return $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')
             ->findBy(array('forceCreationForm' => true));
+    }
+
+    public function addFacetFieldChoice($label, FieldFacet $field)
+    {
+        $choice = new FieldFacetChoice();
+        $choice->setFieldFacet($field);
+        $choice->setLabel($label);
+        $choice->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice'));
+        $this->om->persist($choice);
+        $this->om->flush();
+
+        return $choice;
+    }
+
+    /**
+     * Takes an array from the API/FacetController.php.
+     */
+    public function editFacetFieldChoice(array $choiceDef, FieldFacet $field)
+    {
+        $choice = $this->om->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice')->find($choiceDef['id']);
+
+        if ($choice) {
+            $choice->setLabel($choiceDef['label']);
+            $this->om->persist($choice);
+            $this->om->flush();
+        } else {
+            $choice = $this->addFacetFieldChoice($choiceDef['label'], $field);
+        }
+
+        return $choice;
+    }
+
+    public function removeFieldFacetChoice(FieldFacetChoice $choice)
+    {
+        $field = $choice->getFieldFacet();
+        $this->om->remove($choice);
+        //first flush is required altough bad
+        $this->om->flush();
+        $this->reorderChoices($field);
+    }
+
+    public function reorderChoices(FieldFacet $field)
+    {
+        $choices = $field->getFieldFacetChoices();
+        $order = 0;
+
+        foreach ($choices as $choice) {
+            $field->setPosition($order);
+            ++$order;
+            $this->om->persist($choice);
+        }
+
+        $this->om->flush();
     }
 }

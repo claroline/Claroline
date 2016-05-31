@@ -71,8 +71,7 @@ class VideoControllerTest extends TransactionalTestCase
         $file = $this->persister->file('video', 'video/mp4', true, $manager);
         $toEdit = $this->createTrack($file, 'en');
         $form = ['track' => ['default' => true, 'lang' => 'fr', 'label' => 'Français']];
-        //this is a post because the PUT was buggy
-        $this->client->request('POST', "/video-player/api/video/track/{$toEdit->getId()}", $form);
+        $this->client->request('PUT', "/video-player/api/video/track/{$toEdit->getId()}", $form);
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
         $this->assertEquals('fr', $data['lang']);

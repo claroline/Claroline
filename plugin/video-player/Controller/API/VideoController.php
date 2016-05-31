@@ -18,6 +18,7 @@ use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Controller\Annotations\Put;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\VideoPlayerBundle\Entity\Track;
 use Claroline\VideoPlayerBundle\Manager\VideoPlayerManager;
@@ -69,9 +70,7 @@ class VideoController extends FOSRestController
     }
 
     /**
-     * This is currently a post because the PUT doesn't work. I don't know why.
-     *
-     * @Post("/video/track/{track}", name="put_video_track", options={ "method_prefix" = false })
+     * @Put("/video/track/{track}", name="put_video_track", options={ "method_prefix" = false })
      * @View(serializerGroups={"api_resource"})
      */
     public function putTrackAction(Track $track)

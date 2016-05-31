@@ -273,8 +273,9 @@ claro_admin_plugin:
 
 claro_api:
     resource: "@ClarolineCoreBundle/Controller/API/User/ApiController.php"
+    type: rest
     prefix: api
-    type: annotation
+    defaults: {_format: json}
     options:
         expose: true
 
@@ -286,6 +287,21 @@ claro_user_api:
     options:
         expose: true
 
+claro_profile_api:
+    resource: "@ClarolineCoreBundle/Controller/API/User/ProfileController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_facet_api:
+    resource: "@ClarolineCoreBundle/Controller/API/User/FacetController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
 
 claro_workspace_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/WorkspaceController.php"
@@ -385,6 +401,14 @@ claro_event_api:
 
 claro_resources_api:
     resource: "@ClarolineCoreBundle/Controller/API/Resource/ResourceController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_roles_api:
+    resource: "@ClarolineCoreBundle/Controller/API/User/RoleController.php"
     type: rest
     prefix: api
     defaults: {_format: json}

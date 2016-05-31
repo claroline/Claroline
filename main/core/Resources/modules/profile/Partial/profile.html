@@ -1,0 +1,77 @@
+
+<script type="text/ng-template" id="facet_renderer.html">
+    <form role="form" class="form-horizontal">
+        <div class="panel-body">
+            <div class="panel-group" id="panel-facet-{{ facet.id }}" role="tablist">
+                <div class="panel panel-default" ng-repeat="(key, panel) in facet.panels">
+                    <div class="panel-heading" role="tab">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#panel-{{ panel.id }}" aria-expanded="true"  aria-controls="panel-facet-{{ panel.id }}">
+                                {{ panel.name }}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="panel-{{ panel.id }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="panel-{{ panel.id }}">
+                        <div class="panel-body">
+                            <div ng-repeat="(key, field) in panel.fields">
+                               <form-field field="[field.name, pc.fieldTypes[field.type - 1], { values: field.field_facet_choices, disabled: !(!pc.disabled && field.is_editable) }]" ng-model="field.user_field_value"></form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input ng-if="!pc.disabled" type="submit" ng-click="pc.onSubmit(facet)" class="btn btn-primary" aria-hidden="true" value="{{ 'edit'|trans:{}:'platform' }}"></input>
+        </div>
+    </form>
+</script>
+
+<div class="panel-body">
+  <button ng-click="pc.switchProfileMode()" class="btn btn-primary" style="margin-bottom: 10px;"> {{ pc.profileModeLabel }} </button>
+  <ul class="nav nav-tabs">
+      <li class="active"><a href="#general-profile" data-toggle="tab">{{ 'general'|trans:{}:'platform' }}</a> </li>
+      <li ng-if="!facet.is_main" ng-repeat="(key, facet) in pc.facets"> <a href="#facet-{{ facet.id}}" data-toggle="tab"> {{ facet.name }}</a> </i>
+  </ul>
+  <div id="facet-pane" class="tab-content">
+      <div class="tab-pane active" id="general-profile">
+          <div class="panel-body">
+              <div class="row">
+                  <aside class="col-md-2 profile_aside" role="complementary">
+                      <div class="avatar">
+                          <img ng-if="pc.user.picture"
+                               ng-src="{{ pc.picturePath | asset }}"
+                               class="profile_picture img-circle"
+                               alt="{{ pc.user.lastName + ' ' + pc.user.firstName }}"
+                               width="150px"
+                               height="150px"
+                          >
+                          <h1 ng-if="!pc.user.picture" class="profile_picture_placeholder"><i class="fa fa-user"></i></h1>
+                      </div>
+                      <div class="informations">
+                          <p class="text-center text-muted">
+                              {{ 'registered'|trans:{}:'platform' }} {{ pc.user.creationDate }}
+                          </p>
+                      </div>
+                  </aside>
+                  <div class="col-md-6 profile_informations">
+                      <h2>{{ pc.user.lastName }}  {{ pc.user.firstName }} </h2>
+                      <p><span class="fa fa-envelope"> <a href="mailto:{{ pc.user.mail }}" title="{{ pc.user.mail }}">{{ pc.user.mail }}</a></span></p>
+                      <p ng-if="pc.user.phone"><span class="fa fa-phone"></span> pc.{{ user.phone }}</p>
+                      <p ng-repeat="(key, link) in pc.arLinks"><a href="{{ link.url }}">
+                          {{ link.name|trans:{}: 'resource' }}
+                      </a></p>
+                      <div ng-if="pc.user.description" class="description_block">
+                          <p class="lead">Description de {{ pc.user.lastName + ' ' + pc.user.firstName }}</p>
+                          <div class="description"> {{ pc.user.description }} </div>
+                      </div>
+                  </div>
+              </div>
+              <div ng-if="facet.is_main" ng-repeat="(key, facet) in pc.facets">
+                  <form class="facet-main" ng-include="'facet_renderer.html'"></form>
+              </div>
+          </div>
+      </div>
+      <div class="tab-pane" id="facet-{{ facet.id }}"  ng-if="!facet.is_main" ng-repeat="(key, facet) in pc.facets">
+          <form ng-include="'facet_renderer.html'"></form>
+      </div>
+  </div>
+</div>

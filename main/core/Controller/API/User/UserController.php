@@ -435,6 +435,17 @@ class UserController extends FOSRestController
         $this->userManager->csvRemove($this->request->files->get('csv'));
     }
 
+     /**
+      * @View(serializerGroups={"api_user"})
+      * @Post("/users/csv/facets")
+      */
+     public function csvImportFacetsAction()
+     {
+         $this->throwsExceptionIfNotAdmin();
+
+         $this->userManager->csvFacets($this->request->files->get('csv'));
+     }
+
     private function isAdmin()
     {
         return $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');

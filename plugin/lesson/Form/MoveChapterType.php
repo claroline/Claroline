@@ -40,13 +40,7 @@ class MoveChapterType extends AbstractType
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($builder, $options) {
-                //var_dump($options['attr']['filter']);
-                //$filter = 1;
-                //if($options['attr']['filter'] != null){
-                    $filter = $options['attr']['filter'];
-                //}
-                //var_dump($filter);
-
+                $filter = $options['attr']['filter'];
                 $form = $event->getForm();
                 $data = $event->getData();
 

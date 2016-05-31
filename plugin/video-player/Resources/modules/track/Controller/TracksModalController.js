@@ -57,7 +57,7 @@ export default class TracksModalController {
       this.FormBuilderService.submit(
         Routing.generate('api_put_video_track', {track: track.id}),
         {track: track},
-        'POST'
+        'PUT'
       )
     })
   }

@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
+use Claroline\CoreBundle\Entity\Facet\Facet;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Doctrine\ORM\EntityManager;
@@ -27,6 +29,9 @@ class FacetVoter
 {
     private $em;
     private $container;
+
+    const VIEW = 'view';
+    const EDIT = 'edit';
 
     /**
      * @DI\InjectParams({
@@ -50,33 +55,56 @@ class FacetVoter
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         if ($object instanceof FieldFacet) {
-            return $this->fieldFacetVote($object, $token, $attributes[0]);
+            //fields right management is done at the Panel level
+            $object = $object->getPanelFacet();
+        }
+
+        if ($object instanceof PanelFacet) {
+            return $this->panelFacetVote($object, $token, strtolower($attributes[0]));
+        } elseif ($object instanceof Facet) {
+            //no implementation yet
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    private function fieldFacetVote(FieldFacet $fieldFacet, TokenInterface $token, $attribute)
+    private function panelFacetVote(PanelFacet $panel, TokenInterface $token, $action)
     {
-        $fieldFacetsByRole = $this->container->get('claroline.manager.facet_manager')->getVisibleFieldFacets();
-        $canEdit = false;
-        $canOpen = false;
+        switch ($action) {
+            case self::VIEW: return $this->checkPanelView($token, $panel);
+            case self::EDIT: return $this->checkPanelEdit($token, $panel);
+        }
 
-        foreach ($fieldFacetsByRole as $field) {
-            if ($field['id'] === $fieldFacet->getId()) {
-                $canEdit = $field['canEdit'];
-                $canOpen = $field['canOpen'];
+        return VoterInterface::ACCESS_DENIED;
+    }
+
+    public function checkPanelView(TokenInterface $token, PanelFacet $panel)
+    {
+        $userRoles = $token->getUser()->getRoles();
+        $panelRoles = $panel->getPanelFacetsRole();
+
+        foreach ($panelRoles as $panelRole) {
+            if (in_array($panelRole->getRole()->getName(), $userRoles)) {
+                if ($panelRole->canOpen()) {
+                    return  VoterInterface::ACCESS_GRANTED;
+                }
             }
         }
 
-        if (strtolower($attribute) === 'edit') {
-            return $fieldFacet->getIsEditableByOwner() | $canEdit ?
-                VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
-        }
+        return VoterInterface::ACCESS_DENIED;
+    }
 
-        if (strtolower($attribute) === 'open') {
-            return $fieldFacet->getIsVisibleByOwner() | $canOpen ?
-                VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+    public function checkPanelEdit(TokenInterface $token, PanelFacet $panel)
+    {
+        $userRoles = $token->getUser()->getRoles();
+        $panelRoles = $panel->getPanelFacetsRole();
+
+        foreach ($panelRoles as $panelRole) {
+            if (in_array($panelRole->getRole()->getName(), $userRoles)) {
+                if ($panelRole->canEdit()) {
+                    return  VoterInterface::ACCESS_GRANTED;
+                }
+            }
         }
 
         return VoterInterface::ACCESS_DENIED;

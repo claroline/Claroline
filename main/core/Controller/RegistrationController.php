@@ -136,7 +136,7 @@ class RegistrationController extends Controller
             foreach ($facets as $facet) {
                 foreach ($facet->getPanelFacets() as $panel) {
                     foreach ($panel->getFieldsFacet() as $field) {
-                        $this->facetManager->setFieldValue($user, $field, $form->get($field->getName())->getData(), true);
+                        $this->facetManager->setFieldValue($user, $field, $form->get($field->getPrettyName())->getData(), true);
                     }
                 }
             }
