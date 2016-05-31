@@ -27,8 +27,8 @@
                     {{ 'answer_of'|trans:{}:'ujm_exo' }}
                     {{ 'stat_users'|transChoice:stats.count:{count: stats.count}:'ujm_exo' }}
                     /
-                    {{ 'stat_users'|transChoice:stats.seen:{count: questionShowCtrl.question.stats.seen}:'ujm_exo' }}
-                    ({{ (stats.count * 100 / choiceCorrectionCtrl.question.stats.seen)|number:1 }}%)
+                    {{ 'stat_users'|transChoice:choiceCorrectionCtrl.question.stats.answered:{count: choiceCorrectionCtrl.question.stats.answered}:'ujm_exo' }}
+                    ({{ (stats.count * 100 / choiceCorrectionCtrl.question.stats.answered)|number:1 }}%)
                 </small>
             </td>
 

@@ -235,7 +235,7 @@ class QcmHandler implements QuestionHandlerInterface
                     $choices[$choiceId]->count = 0;
                 }
 
-                $choices[$choiceId]->count++;
+                ++$choices[$choiceId]->count;
             }
         }
 

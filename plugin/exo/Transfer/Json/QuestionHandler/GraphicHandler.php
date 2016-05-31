@@ -211,7 +211,7 @@ class GraphicHandler implements QuestionHandlerInterface
                             $areas[$area->id]->count = 0;
                         }
 
-                        $areas[$area->id]->count++;
+                        ++$areas[$area->id]->count;
                     }
                 }
             }

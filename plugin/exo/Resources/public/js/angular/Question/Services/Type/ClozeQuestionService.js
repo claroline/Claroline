@@ -149,6 +149,22 @@ ClozeQuestionService.prototype.getHoleSolution = function getHoleSolution(questi
     return solution;
 };
 
+ClozeQuestionService.prototype.getHoleStats = function (question, holeId) {
+    var stats = null;
+
+    if (question.stats && question.stats.solutions) {
+        for (var solution in question.stats.solutions) {
+            if (question.stats.solutions.hasOwnProperty(solution)) {
+                if (question.stats.solutions[solution].id === holeId) {
+                    stats = question.stats.solutions[solution];
+                }
+            }
+        }
+    }
+
+    return stats;
+};
+
 /**
  * Get the feedback for the Hole
  * @param   {Object} question

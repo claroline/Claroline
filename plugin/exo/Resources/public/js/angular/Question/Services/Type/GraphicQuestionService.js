@@ -69,6 +69,31 @@ GraphicQuestionService.prototype.answersAllFound = function answersAllFound(ques
     return feedbackState;
 };
 
+GraphicQuestionService.prototype.getAreaStats = function getAreaStats(question, areaId) {
+    var stats = null;
+
+    if (question.stats && question.stats.solutions) {
+        for (var area in question.stats.solutions) {
+            if (question.stats.solutions.hasOwnProperty(area)) {
+                if (question.stats.solutions[area].id = areaId) {
+                    stats = question.stats.solutions[area];
+                    break;
+                }
+            }
+        }
+
+        if (!stats) {
+            // No User have chosen this answer
+            stats = {
+                id: areaId,
+                count: 0
+            };
+        }
+    }
+
+    return stats;
+};
+
 // Register service into AngularJS
 angular
     .module('Question')

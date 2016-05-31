@@ -57,8 +57,6 @@ GraphicQuestionCtrl.prototype.isPointerValid = function isPointerValid(pointer) 
         }
     }
 
-    console.log(valid);
-
     return valid;
 };
 

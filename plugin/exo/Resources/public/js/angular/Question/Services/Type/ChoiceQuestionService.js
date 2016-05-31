@@ -179,12 +179,8 @@ ChoiceQuestionService.prototype.getChoiceScore = function getChoiceScore(questio
 ChoiceQuestionService.prototype.getChoiceStats = function getChoiceStats(question, choice) {
     var stats = null;
 
-    console.log(question.stats);
-
     if (question.stats && question.stats.solutions) {
-        console.log('test');
         for (var solution in question.stats.solutions) {
-            console.log('test');
             if (question.stats.solutions.hasOwnProperty(solution)) {
                 if (question.stats.solutions[solution].id == choice.id) {
                     stats = question.stats.solutions[solution];
@@ -192,9 +188,15 @@ ChoiceQuestionService.prototype.getChoiceStats = function getChoiceStats(questio
                 }
             }
         }
-    }
 
-    console.log(stats);
+        if (!stats) {
+            // No User have chosen this answer
+            stats = {
+                id: choice.id,
+                count: 0
+            };
+        }
+    }
 
     return stats;
 };

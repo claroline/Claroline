@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use MyProject\Proxies\__CG__\stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
@@ -433,7 +432,7 @@ class PaperManager
     }
 
     /**
-     * Export statistics related to a Paper questions
+     * Export statistics related to a Paper questions.
      *
      * @param $paper
      *

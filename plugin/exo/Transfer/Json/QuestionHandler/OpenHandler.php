@@ -183,7 +183,7 @@ class OpenHandler implements QuestionHandlerInterface
     public function generateStats(Question $question, array $answers)
     {
         $openQuestion = $this->om->getRepository('UJMExoBundle:InteractionOpen')->findOneBy([
-            'question' => $question
+            'question' => $question,
         ]);
 
         $keywords = [];
@@ -197,7 +197,7 @@ class OpenHandler implements QuestionHandlerInterface
                 /** @var WordResponse $keyword */
                 foreach ($openQuestion->getWordResponses() as $keyword) {
                     $flags = $keyword->getCaseSensitive() ? 'i' : '';
-                    if (1 === preg_match('/' . $keyword->getResponse() . '/' . $flags, $decoded)) {
+                    if (1 === preg_match('/'.$keyword->getResponse().'/'.$flags, $decoded)) {
                         if (!isset($keywords[$keyword->getId()])) {
                             // First answer to contain the keyword
                             $keywords[$keyword->getId()] = new \stdClass();
@@ -205,7 +205,7 @@ class OpenHandler implements QuestionHandlerInterface
                             $keywords[$keyword->getId()]->count = 0;
                         }
 
-                        $keywords[$keyword->getId()]->count++;
+                        ++$keywords[$keyword->getId()]->count;
                     }
                 }
             }

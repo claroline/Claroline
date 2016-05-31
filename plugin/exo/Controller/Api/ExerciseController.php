@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Manager\ExerciseManager;
 use UJM\ExoBundle\Manager\PaperManager;
 use UJM\ExoBundle\Manager\QuestionManager;
@@ -218,20 +217,6 @@ class ExerciseController
     public function countFinishedPaperAction(User $user, Exercise $exercise)
     {
         return new JsonResponse($this->paperManager->countUserFinishedPapers($exercise, $user));
-    }
-
-    /**
-     * Get information about Answers given by the Users for the current Exercise.
-     *
-     * @param Exercise $exercise
-     *
-     * @return JsonResponse
-     */
-    public function answerStatsAction(Exercise $exercise)
-    {
-        $this->assertHasPermission('OPEN', $exercise);
-
-        return new JsonResponse([]);
     }
 
     private function assertHasPermission($permission, Exercise $exercise)

@@ -128,7 +128,7 @@ class QuestionManager
     }
 
     /**
-     * Get question statistics inside an Exercise
+     * Get question statistics inside an Exercise.
      *
      * @param Question $question
      * @param Exercise $exercise
@@ -148,10 +148,10 @@ class QuestionManager
         // Number of Users that have responded to the question (no blank answer)
         $questionStats->answered = 0;
         if (!empty($answers)) {
-            /** @var Response $answer */
-            for ($i = 0; $i < $questionStats->seen; $i++) {
+            /* @var Response $answer */
+            for ($i = 0; $i < $questionStats->seen; ++$i) {
                 if (!empty($answers[$i]->getResponse())) {
-                    $questionStats->answered++;
+                    ++$questionStats->answered;
                 } else {
                     // Remove element (to avoid processing in custom handlers)
                     unset($answers[$i]);

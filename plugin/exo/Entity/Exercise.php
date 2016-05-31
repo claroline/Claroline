@@ -114,7 +114,8 @@ class Exercise extends AbstractResource
     private $metadataVisible = true;
 
     /**
-     * Show stats about User responses in the Correction
+     * Show stats about User responses in the Correction.
+     *
      * @var bool
      *
      * @ORM\Column(type="boolean")

@@ -272,7 +272,7 @@ class HoleHandler implements QuestionHandlerInterface
     public function generateStats(Question $question, array $answers)
     {
         $holeQuestion = $this->om->getRepository('UJMExoBundle:InteractionHole')->findOneBy([
-            'question' => $question
+            'question' => $question,
         ]);
 
         // Create an array with holeId => holeObject for easy search
@@ -301,14 +301,14 @@ class HoleHandler implements QuestionHandlerInterface
                     }
 
                     // Increment the hole answers count
-                    $holes[$holeAnswer->holeId]->answered++;
+                    ++$holes[$holeAnswer->holeId]->answered;
 
                     /** @var WordResponse $keyword */
                     foreach ($holesMap[$holeAnswer->holeId]->getWordResponses() as $keyword) {
                         // Check if the response match the current keyword
                         if ($holesMap[$holeAnswer->holeId]->getSelector()) {
                             // It's the ID of the keyword which is stored
-                            $found = $keyword->getId() === (int)$holeAnswer->holeId;
+                            $found = $keyword->getId() === (int) $holeAnswer->holeId;
                         } else {
                             if ($keyword->getCaseSensitive()) {
                                 $found = strtolower($keyword->getResponse()) === strtolower($holeAnswer->answerText);
@@ -325,7 +325,7 @@ class HoleHandler implements QuestionHandlerInterface
                                 $holes[$holeAnswer->holeId]->keywords[$keyword->getId()]->count = 0;
                             }
 
-                            $holes[$holeAnswer->holeId]->keywords[$keyword->getId()]->count++;
+                            ++$holes[$holeAnswer->holeId]->keywords[$keyword->getId()]->count;
 
                             break;
                         }

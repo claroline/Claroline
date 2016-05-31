@@ -29,6 +29,34 @@ ClozeCorrectionCtrl.prototype.getHoleFeedback = function getHoleFeedback(hole) {
     return this.ClozeQuestionService.getHoleFeedback(this.question, hole);
 };
 
+ClozeCorrectionCtrl.prototype.getHoleStats = function getHoleStats(holeId) {
+    return this.ClozeQuestionService.getHoleStats(this.question, holeId);
+};
+
+ClozeCorrectionCtrl.prototype.getKeywordStats = function getKeywordStats(keyword, holeStats) {
+    var stats = null;
+
+    if (holeStats && holeStats.keywords) {
+        for (var keywordId in holeStats.keywords) {
+            if (holeStats.keywords.hasOwnProperty(keywordId)) {
+                if (holeStats.keywords[keywordId].id == keyword.id) {
+                    stats = holeStats.keywords[keywordId];
+                }
+            }
+        }
+
+        if (!stats) {
+            // No User have chosen this answer
+            stats = {
+                id: keyword.id,
+                count: 0
+            };
+        }
+    }
+
+    return stats;
+};
+
 // Register controller into AngularJS
 angular
     .module('Correction')
