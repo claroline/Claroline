@@ -185,5 +185,5 @@ TimerService.prototype.destroy = function destroy(id) {
 
 // Register service into AngularJS
 angular
-    .module('Common')
+    .module('Timer')
     .service('TimerService', TimerService);
