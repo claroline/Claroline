@@ -13,7 +13,6 @@ namespace Claroline\WebInstaller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Installation\Settings\FirstAdminSettings;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -116,17 +115,15 @@ class Installer
         $installer->setLogger($logger);
         $output->writeln('Installing the platform from composer...');
 
-        //$kernel = $this->getContainer()->get('kernel');
         /*
+         * Set the app/config directory in the installation state.
+         */
+        $kernel = $container->get('kernel');
         $rootDir = $kernel->getRootDir();
-        $iniBupFile = $rootDir . '/config/bundles.bup.ini';
-        @unlink($iniBupFile);
-        $previous = $rootDir . '/config/previous-installed.json';
+        $previous = $rootDir.'/config/previous-installed.json';
         @unlink($previous);
         file_put_contents($previous, '[]');
-        */
-
-        $installer->installFromKernel(false);
+        $installer->updateFromComposerInfo();
     }
 
     private function createAdminUser(ContainerInterface $container, OutputInterface $output)
@@ -139,6 +136,7 @@ class Installer
         $user->setUsername($this->adminSettings->getUsername());
         $user->setPlainPassword($this->adminSettings->getPassword());
         $user->setMail($this->adminSettings->getEmail());
-        $userManager->createUserWithRole($user, PlatformRoles::ADMIN);
+        $roleAdmin = $container->get('claroline.manager.role_manager')->getRoleByName('ROLE_ADMIN');
+        $userManager->createUser($user, false, array($roleAdmin));
     }
 }
