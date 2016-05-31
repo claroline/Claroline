@@ -370,6 +370,19 @@ class SurveyManager
         $this->deleteSurveyAnswers($surveyAnswers);
     }
 
+    public function checkQuestionAnswersByQuestions(array $questions)
+    {
+        $datas = [];
+        $questionAnswers = $this->getQuestionAnswersByQuestions($questions);
+
+        foreach ($questionAnswers as $questionAnswer) {
+            $question = $questionAnswer->getQuestion();
+            $datas[$question->getId()] = true;
+        }
+
+        return $datas;
+    }
+
     /****************************************
      * Access to QuestionRepository methods *
      ****************************************/
@@ -568,6 +581,13 @@ class SurveyManager
         return $executeQuery ?
             $this->pagerFactory->createPagerFromArray($comments, $page, $max) :
             $this->pagerFactory->createPager($comments, $page, $max);
+    }
+
+    public function getQuestionAnswersByQuestions(array $questions, $executeQuery = true)
+    {
+        return count($questions) > 0 ?
+            $this->questionAnswerRepo->findQuestionAnswersByQuestions($questions, $executeQuery) :
+            array();
     }
 
     /*******************************************************

@@ -72,6 +72,7 @@ question_answers_deletion_warning: 'Si vous modifiez la question, toutes les ré
 question_creation: 'Création d''une question'
 question_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer cette question ?'
 question_delete_confirm_title: 'Suppression de la question'
+question_disabled_edit_button_info: Les questions dont le bouton d'édition est désactivé ne peuvent pas être modifiées car des réponses y sont associées.
 question_edition: 'Modification de la question'
 question_form_commentAllowed: 'Avec commentaire'
 question_form_commentLabel: 'Libellé du commentaire'
@@ -79,6 +80,7 @@ question_form_mandatory: 'Réponse requise'
 question_form_question: 'Question'
 question_form_title: 'Titre'
 question_form_type: 'Type de question'
+question_multi_survey_info: La question est peut-être utilisée dans un autre sondage.
 question_title_form_question: Titre
 questions_management: 'Gestion des questions'
 ratio: Ratio

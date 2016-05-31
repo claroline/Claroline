@@ -240,19 +240,25 @@ class SurveyController extends Controller
             ->getQuestionRelationsBySurvey($survey);
         $status = $this->computeStatus($survey);
         $questionResult = null;
+        $questions = [];
 
         foreach ($questionRelations as $relation) {
             $question = $relation->getQuestion();
 
             if ($question->getType() !== 'title') {
-                $questionResult = $question;
-                break;
+                $questions[] = $question;
+
+                if (is_null($questionResult)) {
+                    $questionResult = $question;
+                }
             }
         }
+        $answeredQuestions = $this->surveyManager->checkQuestionAnswersByQuestions($questions);
 
         return array(
             'survey' => $survey,
             'questionRelations' => $questionRelations,
+            'answeredQuestions' => $answeredQuestions,
             'status' => $status,
             'questionResult' => $questionResult,
         );
@@ -372,10 +378,17 @@ class SurveyController extends Controller
             $page,
             $max
         );
+        $questionsArray = [];
+
+        foreach ($questions as $question) {
+            $questionsArray[] = $question;
+        }
+        $answeredQuestions = $this->surveyManager->checkQuestionAnswersByQuestions($questionsArray);
 
         return array(
             'survey' => $survey,
             'questions' => $questions,
+            'answeredQuestions' => $answeredQuestions,
             'orderedBy' => $orderedBy,
             'order' => $order,
             'max' => $max,
@@ -612,6 +625,7 @@ class SurveyController extends Controller
         $source
     ) {
         $this->checkQuestionRight($survey, $question, 'EDIT');
+        $this->checkAnsweredQuestion($question);
         $form = $this->formFactory->create(
             new QuestionType(),
             $question
@@ -645,6 +659,7 @@ class SurveyController extends Controller
         $source
     ) {
         $this->checkQuestionRight($survey, $question, 'EDIT');
+        $this->checkAnsweredQuestion($question);
         $form = $this->formFactory->create(
             new QuestionType(),
             $question
@@ -2294,6 +2309,16 @@ class SurveyController extends Controller
         $questionWorkspaceId = $question->getWorkspace()->getId();
 
         if ($surveyWorkspaceId !== $questionWorkspaceId) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkAnsweredQuestion(Question $question)
+    {
+        $questionId = $question->getId();
+        $answeredQuestions = $this->surveyManager->checkQuestionAnswersByQuestions([$question]);
+
+        if (isset($answeredQuestions[$questionId]) && $answeredQuestions[$questionId]) {
             throw new AccessDeniedException();
         }
     }

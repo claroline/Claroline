@@ -72,6 +72,7 @@ question_answers_deletion_warning: 'By editing the question you will delete all 
 question_creation: 'Question creation'
 question_delete_confirm_message: 'Do you really want to delete this question ?'
 question_delete_confirm_title: 'Delete question'
+question_disabled_edit_button_info: The questions that have a disabled edit button cannot be edited because there are answers associated to them.
 question_edition: 'Question edition'
 question_form_commentAllowed: 'With comment'
 question_form_commentLabel: 'Comment label'
@@ -79,6 +80,7 @@ question_form_mandatory: 'Required answer'
 question_form_question: 'Question'
 question_form_title: 'Title'
 question_form_type: 'Question type'
+question_multi_survey_info: It is also possible that the question is used in another survey.
 question_title_form_question: Title
 questions_management: 'Questions management'
 ratio: Ratio

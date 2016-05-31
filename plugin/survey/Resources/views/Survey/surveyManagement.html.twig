@@ -82,24 +82,27 @@
             </div>
         </h3>
     </div>
-
-    {% if status == 'unpublished' %}
-        <br>
-        <div class="alert alert-info">
-            {{ 'how_to_publish_message'|trans({}, 'survey') }}
-        </div>
-    {% elseif status == 'published' %}
-        <br>
-        <div class="alert alert-success">
-            {{ 'published_survey_message'|trans({}, 'survey') }}
-        </div>
-    {% else %}
-        <br>
-        <div class="alert alert-danger">
-            {{ 'closed_survey_message'|trans({}, 'survey') }}
-        </div>
-    {% endif %}
     <div class="panel-body">
+        {% if status == 'unpublished' %}
+            <div class="alert alert-info">
+                {{ 'how_to_publish_message'|trans({}, 'survey') }}
+            </div>
+        {% elseif status == 'published' %}
+            <div class="alert alert-success">
+                {{ 'published_survey_message'|trans({}, 'survey') }}
+            </div>
+        {% else %}
+            <div class="alert alert-danger">
+                {{ 'closed_survey_message'|trans({}, 'survey') }}
+            </div>
+        {% endif %}
+
+        {% if questionRelations|length > 0 %}
+            <div class="alert alert-warning">
+                <p>{{ 'question_disabled_edit_button_info'|trans({}, 'survey') }}</p>
+                <p>{{ 'question_multi_survey_info'|trans({}, 'survey') }}</p>
+            </div>
+        {% endif %}
         <div>
             <a href="{{ path('claro_survey_question_create_form', {'survey': surveyId, 'source': 'survey'}) }}"
                class="btn btn-primary margin-bottom-md"
@@ -151,6 +154,7 @@
                 {% for relation in questionRelations %}
                     {% set question = relation.getQuestion() %}
                     {% set questionType = question.getType() %}
+                    {% set questionId = question.getId() %}
                     <tr data-question-relation-id="{{ relation.getId() }}">
                         <td>
                             <b>
@@ -163,10 +167,9 @@
                             {{ question.getQuestion()|raw }}
                         </td>
                         <td>
-
                             {% if questionType != 'title' %}
                                 <span class="btn btn-default view-question-btn"
-                                      data-question-id="{{ question.getId() }}"
+                                      data-question-id="{{ questionId }}"
                                       data-toggle="tooltip"
                                       data-placement="top"
                                       title="{{ 'view_question_btn_explanation'|trans({}, 'survey') }}"
@@ -183,16 +186,16 @@
                                 </span>
                                 <a href="{{ path(
                                         'claro_survey_question_edit_form',
-                                        {'question': question.getId(), 'survey': surveyId, 'source': 'survey'}
+                                        {'question': questionId, 'survey': surveyId, 'source': 'survey'}
                                     ) }}"
-                                    class="btn btn-default"
+                                    class="btn btn-default {% if answeredQuestions[questionId] is defined and answeredQuestions[questionId] %}disabled{% endif %}"
                                     data-toggle="tooltip"
                                     data-placement="top"
                                     title="{{ 'edit_question_btn_explanation'|trans({}, 'survey') }}"
                                 >
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <a href="{{ path('claro_survey_remove_question', {'survey': surveyId, 'question': question.getId()}) }}"
+                                <a href="{{ path('claro_survey_remove_question', {'survey': surveyId, 'question': questionId}) }}"
                                    class="btn btn-danger"
                                    data-toggle="tooltip"
                                    data-placement="top"
@@ -203,7 +206,7 @@
                             {% else %}
                                 <a href="{{ path(
                                         'claro_survey_question_title_edit_form',
-                                        {'question': question.getId(), 'survey': surveyId}
+                                        {'question': questionId, 'survey': surveyId}
                                     ) }}"
                                     class="btn btn-default"
                                     data-toggle="tooltip"
@@ -212,7 +215,7 @@
                                 >
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <a href="{{ path('claro_survey_question_title_delete', {'survey': surveyId, 'question': question.getId()}) }}"
+                                <a href="{{ path('claro_survey_question_title_delete', {'survey': surveyId, 'question': questionId}) }}"
                                    class="btn btn-danger"
                                    data-toggle="tooltip"
                                    data-placement="top"
