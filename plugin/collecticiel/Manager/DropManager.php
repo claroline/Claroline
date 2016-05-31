@@ -420,7 +420,7 @@ class DropManager
      *
      * @return recordOrTransmitNotationArray
      */
-    public function recordOrTransmitNotationArray(Drop $drop)
+    public function getRecordOrTransmitNotation(Drop $drop)
     {
         $recordOrTransmitNotationArray = array();
 
