@@ -41,8 +41,8 @@ A tarball containing everything needed for development and testing
 of the platform at [packages.claroline.net/releases][releases]. This is the
 fastest way to get started:
 
-    curl packages.claroline.net/releases/latest/claroline-6.x.x-dev.tar.gz | tar xzv
-    cd claroline-6.x.x-dev
+    curl packages.claroline.net/releases/latest/claroline-7.0.0-rc1.tar.gz | tar xzv
+    cd claroline-7.0.0-rc1
     php scripts/configure.php
     composer fast-install
 
@@ -61,8 +61,10 @@ file. For an installation from scratch, the commands would be:
     
 ### 3. From web installer
 
-``` curl packages.claroline.net/releases/latest/claroline-6.x.x-dev.tar.gz | tar xzv ```
-
+    curl packages.claroline.net/releases/latest/claroline-7.0.0-rc1.tar.gz | tar xzv 
+    cd claroline-7.0.0-rc1
+    chmod 777 app/config
+    
 Open /install.php from your webserver and follow the instructions.
 
 Upgrade
