@@ -68,10 +68,6 @@ class FieldValue
      */
     private $note;
 
-    public function __construct()
-    {
-    }
-
     /**
      * Get id.
      *

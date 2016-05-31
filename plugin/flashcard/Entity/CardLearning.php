@@ -249,11 +249,11 @@ class CardLearning
     }
 
     /**
-     * @param Date $dueDate
+     * @param \DateTime $dueDate
      *
      * @return CardLearning
      */
-    public function setDueDate(Date $dueDate)
+    public function setDueDate(\DateTime $dueDate)
     {
         $this->dueDate = $dueDate;
 
