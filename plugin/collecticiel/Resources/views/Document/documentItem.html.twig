@@ -104,6 +104,37 @@
         </td>
     {% endif %}
 
+    {% if document.url is not null %}
+        {% set documentTitle = document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url %}
+    {% else %}
+        {% if document.title is not null %}
+            {% set documentTitle = document.title %}
+        {% else %}
+            {% set documentTitle = document.resourceNode.name %}
+        {% endif %}
+    {% endif %}
+    
+    {# On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
+    {% if dropzone.evaluation == 1  %}
+        <td class="{{ classArray }} centered">
+            <div class="btn-group">
+                {% if notationDocumentsArray[document.id] != 0 %}
+                    {% include 'InnovaCollecticielBundle:Document:viewNotation.html.twig'
+                        with {
+                        'notationCommentDocument': notationCommentDocumentsArray[document.id],
+                        'notationQualityDocument': notationQualityDocumentsArray[document.id],
+                        'notationAssessorDocument': notationAssessorDocumentsArray[document.id]
+                        }
+                    %}
+                {% else %}
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                {% endif %}
+
+            </div>
+        </td>
+    {% endif %}
+
+
     {# #146 : changement de gestion des annulations et des suppressions, demande de JJQ #}
     {% if adminInnova %}
         {% if mode == 'complete' %}

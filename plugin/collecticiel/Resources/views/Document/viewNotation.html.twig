@@ -1,0 +1,141 @@
+<a href="#study-modal-evaluation" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
+    {{ notationDocuments[document.id] ~ "/" ~ dropzone.maximumNotation }}
+</a>
+
+{# Déclaration de la modal pour confirmation de la validation #}
+<div class="modal fade" id="study-modal-evaluation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group row col-md-9">
+                        {# Bloc "Rappel des instructions ..." #}
+                        {% if dropzone.instruction != null %}
+                            {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionTeacherNotation.html.twig' %}
+                        {% endif %}
+                    </div>
+                    <div class="form-group row col-md-3">
+                    </div>
+                </div>
+
+               <div class="row text-left">
+                    <div class="form-group row col-md-9">
+                        {{ 'Review on'|trans({}, 'innova_collecticiel') }}
+                    </div>
+                    <div class="form-group row col-md-3">
+                    </div>
+                </div>
+
+                {% if document.url is not null %}
+                    {% set documentTitle = document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url %}
+                {% else %}
+                    {% if document.title is not null %}
+                        {% set documentTitle = document.title %}
+                    {% else %}
+                        {% set documentTitle = document.resourceNode.name %}
+                    {% endif %}
+                {% endif %}
+                
+                <div class="row text-left">
+                    <div class="form-group row col-md-9">
+                    <table class="table table-responsive table-condensed well table-striped">
+                            <thead>
+                            </thead>
+                            <tbody class="table">
+                                <tr>
+                                    <td>{{ 'Type'|trans({}, 'innova_collecticiel') }}</td>
+                                    <td>{{ 'Document'|trans({}, 'innova_collecticiel') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
+                                    <td>{{ documentTitle }}</td>
+                                </tr>
+                              </tbody>
+                        </table>
+                    </div>
+                    <div class="form-group row col-md-3">
+                    </div>
+                </div>
+
+                <div class="row text-left">
+                    <div class="form-group row col-md-9">
+                        {{ 'Author'|trans({}, 'innova_collecticiel') }}
+                        {{ drop.user.firstName }} {{ drop.user.lastName }}
+                    </div>
+                    <div class="form-group row col-md-3">
+                    </div>
+                </div>
+
+                <p></p>
+
+                <div class="row text-left">
+                    <div class="form-group row col-md-9">
+                        {{ 'Assessor'|trans({}, 'innova_collecticiel') }}
+                        {{ notationAssessorDocument.firstName }} {{ notationAssessorDocument.lastName }}
+                    </div>
+                    <div class="form-group row col-md-3">
+                    </div>
+                </div>
+
+                <p></p>
+
+                <div class="row text-left">
+                    <div class="form-group row col-md-9">
+                        {{ 'Grade'|trans({}, 'innova_collecticiel') }}
+                        {{ notationDocuments[document.id] }}    
+                        {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
+                        {{ maximumNotation }}
+                        {{ ')' }}
+                    </div>
+                    <div class="form-group row col-md-3">
+                    </div>
+                </div>
+
+                <p></p>
+
+                <div class="row text-left">
+                    <div class="form-group row col-md-9">
+                        {{ 'Global comment'|trans({}, 'innova_collecticiel') }}
+                    </div>
+                </div>
+                <div class="row text-left">
+                    <div class="form-group row col-md-3">
+                        <label>
+                            {{ notationCommentDocument|raw }}
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row text-left">
+                    <div class="form-group row col-md-12">
+                    </div>
+                </div>
+
+                <div class="row text-left">
+                    <div class="form-group row col-md-9">
+                        {{ 'Quality argument'|trans({}, 'innova_collecticiel') }}
+                    </div>
+                </div>
+                <div class="row text-left">
+                    <div class="form-group row col-md-3">
+                        <label>
+                            {{ notationQualityDocument|raw }}
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary rest" id="cancel_button" data-dismiss="modal">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
+            </div>
+        </div>
+    </div>
+</div>

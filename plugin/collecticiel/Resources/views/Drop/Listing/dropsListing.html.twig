@@ -162,7 +162,13 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
             {% for document in drop.documents %}
                 {% if (document.validate == 1) %}
                     {# Séparation de l'affichage de la vue. InnovaERV #}
-                    {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig' %}
+                    {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig'
+                        with {
+                        'maximumNotation' : maximumNotation,
+                        'notationDocument' : notationDocuments[document.id],
+                        'recordOrTransmitNotation' : recordOrTransmitNotations[document.id]
+                        }
+                     %}
                 {% endif %}
             {% endfor %}
         {% endfor %}
@@ -175,11 +181,15 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
 <div class="modal fade" id="validate-modal-return-receipt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel">{{ 'Return receipt choice'|trans({}, 'innova_collecticiel') }}</h4>
-        </div>
-        <div class="modal-body">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    {{ 'Return receipt choice'|trans({}, 'innova_collecticiel') }}
+                </h4>
+            </div>
+            <div class="modal-body">
                 <div class="step-1">
                     <span>{{ 'user_picker.select_target'|trans({}, 'competency') }}:</span>
                     <br>
@@ -214,15 +224,13 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                         </label>
                     </div>
                 </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" id="cancel_button" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
-            <button data-dropzone_id="{{dropzone.id}}" id="modal_confirm_return_receipt" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
-        </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="cancel_button" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
+                <button data-dropzone_id="{{dropzone.id}}" id="modal_confirm_return_receipt" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
+            </div>
         </div>
     </div>
 </div>
 {# Fin de la déclaration de la modal pour confirmation de la validation #}
 
-<script src="{{ asset('bundles/innovacollecticiel/js/tooltip.js') }}"></script>
-<script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>

@@ -1,8 +1,12 @@
 {% macro displayDocumentsList
-(drop, dropzone, width, mode, documentListText, adminInnova,
-collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray
+(
+drop, dropzone, width, mode, documentListText, adminInnova,
+collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray,
+notationDocumentsArray, notationCommentDocumentsArray,
+notationQualityDocumentsArray, notationAssessorDocumentsArray
 )
 %}
+
     <div class="row">
         <div class="col-md-{{ width }}">
             {% if documentListText is not null %}
@@ -59,6 +63,9 @@ collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray
                                     <i class="fa fa-hand-o-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Return receipt'|trans({},'innova_collecticiel') }}">
                                 </th>
                             {% endif %}
+                            {% if dropzone.evaluation == 1  %}
+                                <th class="centered"><i class="fa fa-graduation-cap"></th>
+                            {% endif %}
                             {% if adminInnova %}
                                 <th class="no-sort"></th>
                             {% else %}
@@ -69,11 +76,17 @@ collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray
                         </tr>
                     </thead>
                     <tbody>
+                        {% set maximumNotation = dropzone.maximumNotation %}
                         {% for index, document in drop.documents %}
                             {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig'
                             with {
                                     'returnReceiptArray': returnReceiptArray,
-                                    'teacherCommentDocArray': teacherCommentDocArray
+                                    'teacherCommentDocArray': teacherCommentDocArray,
+                                    'notationDocuments': notationDocumentsArray,
+                                    'maximumNotation': maximumNotation,
+                                    'notationCommentDocuments': notationCommentDocumentsArray,
+                                    'notationQualityDocuments': notationQualityDocumentsArray,
+                                    'notationAssessorDocuments' : notationAssessorDocumentsArray,
                                  }
                             %}
                         {% endfor %}

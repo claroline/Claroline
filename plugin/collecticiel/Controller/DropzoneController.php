@@ -79,6 +79,13 @@ class DropzoneController extends DropzoneBaseController
             $resourceNodes = $dropzoneManager->updatePublished($resourceId, $form->get('published')->getData());
 
             $dropzone = $form->getData();
+
+            //https://github.com/claroline/Distribution/issues/300
+            //const EVALUATION_TYPE = 'noEvaluation'
+            if ($dropzone->getEvaluationType() != Dropzone::EVALUATION_TYPE) {
+                $dropzone->setEvaluation(1);
+            }
+
             $form = $this->handleFormErrors($form, $dropzone);
 
             if ($dropzone->getEditionState() < 2) {

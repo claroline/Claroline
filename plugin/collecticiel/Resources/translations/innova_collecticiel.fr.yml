@@ -1,4 +1,3 @@
-
 # a
 add_grading_scale_label: Ajouter un degré d'apréciation
 add_criteria_label: Ajouter une information/un critère
@@ -466,3 +465,16 @@ Very good : 'Très bien'
 Good : 'Satisfaisant'
 Insufficient : 'Insuffisant'
 Add grading scale : '+ Degré d''appréciation'
+Notation validation: 'Transmettre'
+Global comment: 'Commentaire global'
+Quality argument : 'Qualité de l''argumentation'
+To record : 'Enregistrer'
+To transmit : 'Transmettre'
+To post a review : 'Ajouter une évaluation'
+Review on : 'Évaluation apportée sur'
+Type: 'Type'
+Notation Max : '(sur '
+Transmitted review : 'Evaluation transmise'
+Not Transmitted review : 'Transmettre l''évaluation'
+Sure to transmit evaluation for document: 'Voulez-vous transmettre l''évaluation pour ce document ?'
+Assessor : 'Evaluateur :'

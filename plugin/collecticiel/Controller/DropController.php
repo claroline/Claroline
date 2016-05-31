@@ -95,6 +95,10 @@ class DropController extends DropzoneBaseController
         $canEdit = $dropzoneVoter->checkEditRight($dropzone);
         $activeRoute = $this->getRequest()->attributes->get('_route');
         $isOpen = $dropzoneManager->collecticielOpenOrNot($dropzone);
+        $notationDocuments = $dropManager->getNotationForDocuments($drop);
+        $notationCommentDocuments = $dropManager->getNotationCommentForDocuments($drop);
+        $notationQualityDocuments = $dropManager->getNotationQualityForDocuments($drop);
+        $notationAssessorDocuments = $dropManager->getNotationAssessorForDocuments($drop);
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -114,6 +118,10 @@ class DropController extends DropzoneBaseController
             'collecticielOpenOrNot' => $isOpen,
             'returnReceiptArray' => $returnReceipts,
             'teacherCommentDocArray' => $teacherComments,
+            'notationDocumentsArray' => $notationDocuments,
+            'notationCommentDocumentsArray' => $notationCommentDocuments,
+            'notationQualityDocumentsArray' => $notationQualityDocuments,
+            'notationAssessorDocumentsArray' => $notationAssessorDocuments,
         );
     }
 
@@ -388,6 +396,7 @@ class DropController extends DropzoneBaseController
         $commentRepo = $em->getRepository('InnovaCollecticielBundle:Comment');
         $documentRepo = $em->getRepository('InnovaCollecticielBundle:Document');
         $receiptRepo = $em->getRepository('InnovaCollecticielBundle:ReturnReceipt');
+        $notationRepo = $em->getRepository('InnovaCollecticielBundle:Notation');
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         $workspace = $dropzone->getResourceNode()->getWorkspace();
 
@@ -410,6 +419,9 @@ class DropController extends DropzoneBaseController
         $haveCommentOrNotArray = array();
 
         foreach ($dropzone->getDrops() as $drop) {
+            $notationDocuments = $dropManager->getNotationForDocuments($drop);
+            $recordOrTransmitNotations = $dropManager->getRecordOrTransmitNotation($drop);
+
             // Nombre de commentaires non lus / Repo : Comment
             $nbCommentsPerUser = $commentRepo->countCommentNotRead($drop->getUser());
             // Nombre de demandes adressées / Repo : Document
@@ -492,6 +504,9 @@ class DropController extends DropzoneBaseController
             'alertNbDocumentWithoutReturnReceipt' => $docWithoutReceiptCount,
             'haveCommentOrNotArray' => $haveCommentOrNotArray,
             'teacherCommentDocArray' => $teacherDocComments,
+            'maximumNotation' => $dropzone->getMaximumNotation(),
+            'notationDocuments' => $notationDocuments,
+            'recordOrTransmitNotations' => $recordOrTransmitNotations,
         ));
 
         return $dataToView;
