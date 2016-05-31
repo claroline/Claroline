@@ -100,14 +100,14 @@ class SettingChecker
 
         $category->addRequirement(
             'Parameter %parameter% should be equal or greater than %value% in your php.ini',
-            array('parameter' => 'max_execution_time', 'value' => 300),
-            (ini_get('max_execution_time') >= 300 || ini_get('max_execution_time') == 0) ? true : false
+            array('parameter' => 'max_execution_time', 'value' => 60),
+            (ini_get('max_execution_time') >= 60 || ini_get('max_execution_time') == 0) ? true : false
         );
 
         $category->addRecommendation(
             'Parameter %parameter% should be equal or greater than %value% in your php.ini',
-            array('parameter' => 'memory_limit', 'value' => '512M'),
-            $this->isGreaterOrEqual(ini_get('memory_limit'), '512M')
+            array('parameter' => 'memory_limit', 'value' => '256M'),
+            $this->isGreaterOrEqual(ini_get('memory_limit'), '256M')
         );
 
         $recommendedSettings = array(
