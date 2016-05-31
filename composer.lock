@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f62e7df2a851cc13c9961b68907c94c0",
-    "content-hash": "b00629a66d3a69d9449134b56ca4a373",
+    "hash": "2377f3fd76e56e3743b7be8c8c1d09ad",
+    "content-hash": "8c0efb1194fa01c75b9dc072b14ce305",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -116,7 +116,7 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "dev-master",
+            "version": "7.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
@@ -7263,7 +7263,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "claroline/distribution": 20,
         "phpmd/phpmd": 0
     },
     "prefer-stable": true,
