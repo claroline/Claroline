@@ -7,6 +7,7 @@ import 'angular-ui-router'
 import 'angular-breadcrumb'
 
 import UserController from './Controller/UserController'
+import UserInfoModalController from './Controller/UserInfoModalController'
 import RemoveByCsvModalController from './Controller/RemoveByCsvModalController'
 import ImportCsvFacetsController from './Controller/ImportCsvFacetsController'
 import UserAPIService from './Service/UserAPIService'
@@ -30,6 +31,7 @@ angular.module('UsersManager', [
     'ncy-angular-breadcrumb'
 ]) .controller('UserController', ['$http', 'ClarolineSearchService', 'ClarolineAPIService', '$uibModal', UserController])
    .controller('RemoveByCsvModalController', RemoveByCsvModalController)
+   .controller('UserInfoModalController', UserInfoModalController)
    .controller('ImportCsvFacetsController', ImportCsvFacetsController)
    .service('UserAPIService', UserAPIService)
    .config(Routing)

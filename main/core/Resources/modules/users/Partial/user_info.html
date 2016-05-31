@@ -1,0 +1,14 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="$close()">&times;</button>
+        <h4> {{ uimc.user.username }} </h4>
+    </div>
+    <div class="modal-body">
+        <ul class="list-group">
+          <li class="list-group-item"> {{ 'username'|trans:{}:'platform' }}: {{ uimc.user.username }} </li>
+          <li class="list-group-item"> {{ 'last_name'|trans:{}:'platform' }}: {{ uimc.user.lastName }} </li>
+          <li class="list-group-item"> {{ 'first_name'|trans:{}:'platform' }}: {{ uimc.user.firstName }}</li>
+          <li class="list-group-item"> {{ 'roles'|trans:{}:'platform' }}: {{ uimc.rolesList }} </li>
+        </ul>
+    </div>
+</div>

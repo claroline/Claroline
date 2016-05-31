@@ -1266,6 +1266,10 @@ cache_management_explanation: Votre dossier app/cache doit être vidé manuellem
 required_by: Requis par:
 require: Requiert:
 requirement_warning: Attention aux prérequis
+roles_updated: Roles mis à jour
+role_update: Mise à jour des rôles
+role_update_confirm:  Êtes-vous sûr de vouloir rajouter les rôles suivants [ %role_list ] aux utilisateurs [ %user_list% ] ?
+add_roles: Add roles
 csv_delete: Suppression par csv
 import_facets: Importer des facettes
 csv: Csv

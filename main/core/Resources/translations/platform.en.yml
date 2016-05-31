@@ -1248,6 +1248,10 @@ cache_management_explanation: Your must empty your app/cache directory to finali
 required_by: Required by:
 require: Require:
 requirement_warning: Requierment warning
+roles_updated: Roles updated
+role_update: Roles update
+role_update_confirm:  Do you really want to add the roles [ %role_list% ] to the users [ %user_list% ] ?
+add_roles: Add role
 csv_delete: Csv delete
 import_facets: Import facets
 csv: Csv

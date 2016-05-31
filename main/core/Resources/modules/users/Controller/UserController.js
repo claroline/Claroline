@@ -1,4 +1,6 @@
 import RemoveByCsvModalController from './RemoveByCsvModalController'
+import UserInfoModalController from './UserInfoModalController'
+import UserInfoHtml from '../Partial/user_info.html'
 
 export default class UserController {
     constructor($http, ClarolineSearchService, ClarolineAPIService, $uibModal) {
@@ -9,6 +11,8 @@ export default class UserController {
         this.search = ''
         this.savedSearch = []
         this.users = []
+        this.roles = []
+        this.selectedRoles = []
         this.selected = []
         this.alerts = []
         this.fields = []
@@ -44,6 +48,10 @@ export default class UserController {
                         return content + `<a class='btn btn-default' href='${route}'><i class='fa ${action.class}'></i></a>`
                     }, content)
 
+                    content += `
+                        <button class='btn btn-default' ng-click='uc.userInfo($row)'><i class='fa fa-info'></i></button>
+                    `
+
                     return `<div>${content}</div>`
                 }
             }
@@ -76,20 +84,34 @@ export default class UserController {
         $http.get(Routing.generate('api_get_user_fields'))
             .then(d => this.fields = d.data)
 
+        $http.get(Routing.generate('api_get_platform_roles'))
+            .then(d => this.roles = d.data)
+
         this._onSearch = this._onSearch.bind(this)
         this._initPwdCallback = this._initPwdCallback.bind(this)
         this._deleteCallback = this._deleteCallback.bind(this)
+        this._updateRolesCallback = this._updateRolesCallback.bind(this)
     }
 
     translate(key, data = {}) {
         return window.Translator.trans(key, data, 'platform');
     }
 
-    generateQsForSelected() {
+    generateQsForSelectedUsers() {
         let qs = '';
 
         for (let i = 0; i < this.selected.length; i++) {
             qs += 'userIds[]=' + this.selected[i].id + '&'
+        }
+
+        return qs
+    }
+
+    generateQsForSelectedRoles() {
+        let qs = '';
+
+        for (let i = 0; i < this.selected.length; i++) {
+            qs += 'roleIds[]=' + this.roles[i].id + '&'
         }
 
         return qs
@@ -110,7 +132,7 @@ export default class UserController {
     }
 
     clickDelete() {
-        const url = Routing.generate('api_delete_users') + '?' + this.generateQsForSelected();
+        const url = Routing.generate('api_delete_users') + '?' + this.generateQsForSelectedUsers();
 
         let users = ''
 
@@ -127,8 +149,22 @@ export default class UserController {
         );
     }
 
+    userInfo(user) {
+        console.log(user)
+        const modalInstance = this.$uibModal.open({
+            template: UserInfoHtml,
+            controller: UserInfoModalController,
+            controllerAs: 'uimc',
+            resolve: {
+                user: () => {
+                    return user
+                }
+            }
+        })
+    }
+
     initPassword() {
-        const url = Routing.generate('api_users_password_initialize') + '?' + this.generateQsForSelected();
+        const url = Routing.generate('api_users_password_initialize') + '?' + this.generateQsForSelectedUsers();
 
         let users = ''
 
@@ -161,6 +197,20 @@ export default class UserController {
         })
     }
 
+    addRolesToSelection() {
+        const url = Routing.generate('api_put_users_roles') + '?'  + this.generateQsForSelectedRoles() + this.generateQsForSelectedUsers()
+
+        const users = this.selected.map(s => s.username).join(', ')
+        const roles = this.roles.map(r => this.translate(r.translation_key)).join(', ')
+
+        this.ClarolineAPIService.confirm(
+            {url, method: 'PUT'},
+            this._updateRolesCallback,
+            this.translate('role_update'),
+            this.translate('role_update_confirm', {user_list: users, role_list: roles})
+        );
+    }
+
     importFacetsForm() {
         const modalInstance = this.$uibModal.open({
             template: require('../Partial/csv_facet.html'),
@@ -174,8 +224,6 @@ export default class UserController {
                 msg: this.translate('facet_imported')
             })
         })
-
-
     }
 
     _onSearch(searches) {
@@ -210,5 +258,15 @@ export default class UserController {
         this.dataTableOptions.paging.count -= this.selected.length;
         this.ClarolineAPI.removeElements(this.selected, this.users);
         this.selected.splice(0, this.selected.length);
+    }
+
+    _updateRolesCallback(data) {
+        data.forEach(user => {
+            this.ClarolineAPIService.replaceById(user, this.users)
+        })
+        this.alerts.push({
+            type: 'success',
+            msg: this.translate('roles_updated')
+        })
     }
 }

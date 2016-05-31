@@ -17,7 +17,7 @@ export default class FacetController {
     this.alerts = []
     this.$scope = $scope
     $http.get(Routing.generate('api_get_facets')).then(d => this.facets = d.data)
-    $http.get(Routing.generate('api_get_platform_roles')).then(d => this.platformRoles = d.data)
+    $http.get(Routing.generate('api_get_platform_roles_admin_excluded')).then(d => this.platformRoles = d.data)
     // build the profile preferences array. This could be done on the server side.
     $http.get(Routing.generate('api_get_profile_preferences')).then(d => {
       const missingRoles = this.platformRoles.filter(element => {

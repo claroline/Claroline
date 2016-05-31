@@ -27,6 +27,19 @@
                 <li><a href="{{ 'api_get_search_users'|path:{'_format': 'csv', 'page': 0, 'limit': 9999} }}"> {{ 'csv_export'|trans:{}:'platform' }} </a></li>
             </ul>
         </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-users"></i> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <!-- style from li > a from bootstrap -->
+                <li ng-repeat="(key, role) in uc.roles" style="display: block; padding: 3px 20px; clear: both; white-space: nowrap;">
+                    <input type="checkbox" checklist-model="uc.selectedRoles" checklist-value="role"> </input>
+                    {{ role.translation_key|trans:{}:'platform' }}
+                <li>
+            </ul>
+            <button class="btn btn-primary" ng-click="uc.addRolesToSelection()"> {{ 'add_roles'|trans:{}:'platform' }}</button>
+        </div>
     </div>
     <div align="center" class="action-bar">
         <div class="panel-body">

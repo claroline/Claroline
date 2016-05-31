@@ -38,6 +38,7 @@ use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Put;
 
 /**
  * @NamePrefix("api_")
@@ -306,6 +307,22 @@ class UserController extends FOSRestController
         $this->roleManager->associateRole($user, $role, false);
 
         return $user;
+    }
+
+    /**
+     * @View(serializerGroups={"api_user"})
+     * @Put("/users/roles/add", name="put_users_roles", options={ "method_prefix" = false })
+     */
+    public function putRolesToUsersAction()
+    {
+        $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $roles = $this->apiManager->getParameters('roleIds', 'Claroline\CoreBundle\Entity\Role');
+
+        //later make a voter on a user list
+        $this->throwsExceptionIfNotAdmin();
+        $this->roleManager->associateRolesToSubjects($users, $roles);
+
+        return $users;
     }
 
     /**
