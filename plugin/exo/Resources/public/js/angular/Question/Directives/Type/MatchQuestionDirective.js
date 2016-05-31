@@ -27,7 +27,7 @@ var MatchQuestionDirective = function MatchQuestionDirective(FeedbackService, $t
                             },
                             "default": {
                                 paintStyle:{ strokeStyle:"grey", lineWidth: 5 },
-                                hoverPaintStyle:{ strokeStyle:"grey", lineWidth: 6 }
+                                hoverPaintStyle:{ strokeStyle:"#FC0000", lineWidth: 6 }
                             }
                         });
 
@@ -40,12 +40,7 @@ var MatchQuestionDirective = function MatchQuestionDirective(FeedbackService, $t
                         // remove one connection
                         jsPlumb.bind("click", function (connection) {
                             var deletable = false;
-                            for (var i=0; i<connection._jsPlumb.types.length; i++) {
-                                if (connection._jsPlumb.types[i] === "default") {
-                                    deletable = true;
-                                }
-                            }
-                            if (deletable) {
+                            if (connection._jsPlumb.hoverPaintStyle.strokeStyle === "#FC0000") {
                                 controller.removeConnection(connection);
                             }
                         });
