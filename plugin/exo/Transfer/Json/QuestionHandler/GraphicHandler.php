@@ -183,6 +183,44 @@ class GraphicHandler implements QuestionHandlerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function generateStats(Question $question, array $answers)
+    {
+        $graphicQuestion = $this->om->getRepository('UJMExoBundle:InteractionGraphic')->findOneBy([
+            'question' => $question,
+        ]);
+
+        $areasMap = [];
+        foreach ($graphicQuestion->getCoords() as $area) {
+            $areasMap[$area->getId()] = $this->exportArea($area);
+        }
+
+        $areas = [];
+
+        /** @var Response $answer */
+        foreach ($answers as $answer) {
+            $decoded = $this->convertAnswerDetails($answer);
+
+            foreach ($decoded as $coords) {
+                foreach ($areasMap as $area) {
+                    if ($this->graphicService->isInArea($coords, $area)) {
+                        if (!isset($areas[$area->id])) {
+                            $areas[$area->id] = new \stdClass();
+                            $areas[$area->id]->id = $area->id;
+                            $areas[$area->id]->count = 0;
+                        }
+
+                        ++$areas[$area->id]->count;
+                    }
+                }
+            }
+        }
+
+        return $areas;
+    }
+
+    /**
      * Export question solutions.
      *
      * @param array $solutions

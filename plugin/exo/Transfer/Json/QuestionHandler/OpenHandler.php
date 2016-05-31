@@ -7,6 +7,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\InteractionOpen;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Entity\WordResponse;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -174,6 +175,43 @@ class OpenHandler implements QuestionHandlerInterface
         }, $responses->toArray());
 
         return $exportData;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generateStats(Question $question, array $answers)
+    {
+        $openQuestion = $this->om->getRepository('UJMExoBundle:InteractionOpen')->findOneBy([
+            'question' => $question,
+        ]);
+
+        $keywords = [];
+
+        /** @var Response $answer */
+        foreach ($answers as $answer) {
+            $decoded = $this->convertAnswerDetails($answer);
+
+            if ($openQuestion->getTypeOpenQuestion()->getValue() !== 'long') {
+                // This is impossible to generate stats on long response
+                /** @var WordResponse $keyword */
+                foreach ($openQuestion->getWordResponses() as $keyword) {
+                    $flags = $keyword->getCaseSensitive() ? 'i' : '';
+                    if (1 === preg_match('/'.$keyword->getResponse().'/'.$flags, $decoded)) {
+                        if (!isset($keywords[$keyword->getId()])) {
+                            // First answer to contain the keyword
+                            $keywords[$keyword->getId()] = new \stdClass();
+                            $keywords[$keyword->getId()]->id = $keyword->getId();
+                            $keywords[$keyword->getId()]->count = 0;
+                        }
+
+                        ++$keywords[$keyword->getId()]->count;
+                    }
+                }
+            }
+        }
+
+        return $keywords;
     }
 
     /**

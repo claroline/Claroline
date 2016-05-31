@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Manager\ExerciseManager;
 use UJM\ExoBundle\Manager\PaperManager;
 use UJM\ExoBundle\Manager\QuestionManager;

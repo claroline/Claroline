@@ -3,12 +3,13 @@
     <table class="table table-striped" data-ng-if="choiceCorrectionCtrl.question.choices">
         <!-- Choice row -->
         <tr data-ng-repeat="choice in choiceCorrectionCtrl.question.choices"
+            data-ng-init="solution = choiceCorrectionCtrl.getChoiceSolution(choice); stats = choiceCorrectionCtrl.getChoiceStats(choice);"
             data-ng-class="{'info': choiceCorrectionCtrl.isChoiceSelected(choice)}"
         >
             <!-- Checkbox / Radio button -->
             <td class="col-md-1 text-center">
                 <input
-                        type="{{ choiceQuestionCtrl.question.multiple ? 'checkbox' : 'radio' }}"
+                        type="{{ choiceCorrectionCtrl.question.multiple ? 'checkbox' : 'radio' }}"
                         value="{{ choice.id }}"
                         data-ng-checked="choiceCorrectionCtrl.isChoiceSelected(choice)"
                         data-ng-disabled="true"
@@ -16,18 +17,30 @@
             </td>
 
             <!-- Label -->
-            <td class="col-md-10 choice-label" data-ng-switch="(choice|simple_type)">
+            <td class="col-md-8 choice-label" data-ng-switch="(choice|simple_type)">
                 <img data-ng-switch-when="encoded-image" src="" data-ng-src="data:{{ choice.type }};{{ choice.encoding }}, {{ choice.data }}" />
                 <img data-ng-switch-when="web-image" src="" data-ng-src="{{ choice.url }}" />
                 <div data-ng-switch-when="simple-text">{{ choice.data }}</div>
                 <div data-ng-switch-when="html-text" data-ng-bind-html="choice.data | unsafe"></div>
+
+                <small data-ng-if="stats">
+                    {{ 'answer_of'|trans:{}:'ujm_exo' }}
+                    {{ 'stat_users'|transChoice:stats.count:{count: stats.count}:'ujm_exo' }}
+                    /
+                    {{ 'stat_users'|transChoice:choiceCorrectionCtrl.question.stats.answered:{count: choiceCorrectionCtrl.question.stats.answered}:'ujm_exo' }}
+                    ({{ (stats.count * 100 / choiceCorrectionCtrl.question.stats.answered)|number:1 }}%)
+                </small>
+            </td>
+
+            <td class="col-md-2 text-primary">
+                <small>{{ 'item_points'|transChoice:solution.score:{count: solution.score}:'ujm_exo' }}</small>
             </td>
 
             <!-- Feedback -->
             <td class="col-md-1 text-center">
                 <span class="fa fa-comment feedback-info"
-                      title="{{ choiceCorrectionCtrl.getChoiceFeedback(choice) }}"
-                      data-ng-if="choiceCorrectionCtrl.getChoiceFeedback(choice)"
+                      title="{{ solution.feedback }}"
+                      data-ng-if="solution.feedback"
                       data-toggle="tooltip">
                 </span>
             </td>

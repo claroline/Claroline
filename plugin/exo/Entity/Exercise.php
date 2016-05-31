@@ -114,6 +114,15 @@ class Exercise extends AbstractResource
     private $metadataVisible = true;
 
     /**
+     * Show stats about User responses in the Correction.
+     *
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $statistics = false;
+
+    /**
      * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
      */
     private $lockAttempt = false;
@@ -402,6 +411,26 @@ class Exercise extends AbstractResource
     public function isMetadataVisible()
     {
         return $this->metadataVisible;
+    }
+
+    /**
+     * Do the current exercise include statistics ?
+     *
+     * @return bool
+     */
+    public function hasStatistics()
+    {
+        return $this->statistics;
+    }
+
+    /**
+     * Set statistics.
+     *
+     * @param bool $statistics
+     */
+    public function setStatistics($statistics)
+    {
+        $this->statistics = $statistics;
     }
 
     /**

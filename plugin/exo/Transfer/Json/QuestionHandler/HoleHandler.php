@@ -9,6 +9,7 @@ use UJM\ExoBundle\Entity\Hole;
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Entity\WordResponse;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 
 /**
@@ -134,7 +135,6 @@ class HoleHandler implements QuestionHandlerInterface
             }
 
             $hole = new Hole();
-        //    $hole->setLabel($importData->holes[$i]->data);
             $hole->setOrdre($i);
 
             $hole->setInteractionHole($interaction);
@@ -256,15 +256,85 @@ class HoleHandler implements QuestionHandlerInterface
     {
         $parts = json_decode($response->getResponse());
 
+        $array = [];
         foreach ($parts as $key => $value) {
             $array[$key] = $value;
         }
 
-    //    $parts = explode(';', $response->getResponse());
-
         return array_filter($array, function ($part) {
             return $part !== '';
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generateStats(Question $question, array $answers)
+    {
+        $holeQuestion = $this->om->getRepository('UJMExoBundle:InteractionHole')->findOneBy([
+            'question' => $question,
+        ]);
+
+        // Create an array with holeId => holeObject for easy search
+        $holesMap = [];
+        /** @var Hole $hole */
+        foreach ($holeQuestion->getHoles() as $hole) {
+            $holesMap[$hole->getId()] = $hole;
+        }
+
+        $holes = [];
+
+        /** @var Response $answer */
+        foreach ($answers as $answer) {
+            // Manually decode data to make it easier to process
+            $decoded = $this->convertAnswerDetails($answer);
+
+            foreach ($decoded as $holeAnswer) {
+                if (!empty($holeAnswer->answerText)) {
+                    if (!isset($holes[$holeAnswer->holeId])) {
+                        $holes[$holeAnswer->holeId] = new \stdClass();
+                        $holes[$holeAnswer->holeId]->id = $holeAnswer->holeId;
+                        $holes[$holeAnswer->holeId]->answered = 0;
+
+                        // Answers counters for each keyword of the hole
+                        $holes[$holeAnswer->holeId]->keywords = [];
+                    }
+
+                    // Increment the hole answers count
+                    ++$holes[$holeAnswer->holeId]->answered;
+
+                    /** @var WordResponse $keyword */
+                    foreach ($holesMap[$holeAnswer->holeId]->getWordResponses() as $keyword) {
+                        // Check if the response match the current keyword
+                        if ($holesMap[$holeAnswer->holeId]->getSelector()) {
+                            // It's the ID of the keyword which is stored
+                            $found = $keyword->getId() === (int) $holeAnswer->holeId;
+                        } else {
+                            if ($keyword->getCaseSensitive()) {
+                                $found = strtolower($keyword->getResponse()) === strtolower($holeAnswer->answerText);
+                            } else {
+                                $found = $keyword->getResponse() === $holeAnswer->answerText;
+                            }
+                        }
+
+                        if ($found) {
+                            if (!isset($holes[$holeAnswer->holeId]->keywords[$keyword->getId()])) {
+                                // Initialize the Hole keyword counter if it's the first time we find it
+                                $holes[$holeAnswer->holeId]->keywords[$keyword->getId()] = new \stdClass();
+                                $holes[$holeAnswer->holeId]->keywords[$keyword->getId()]->id = $keyword->getId();
+                                $holes[$holeAnswer->holeId]->keywords[$keyword->getId()]->count = 0;
+                            }
+
+                            ++$holes[$holeAnswer->holeId]->keywords[$keyword->getId()]->count;
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $holes;
     }
 
     /**
@@ -275,10 +345,9 @@ class HoleHandler implements QuestionHandlerInterface
         if (!is_array($data)) {
             return ['Answer data must be an array, '.gettype($data).' given'];
         }
-        $count = 0;
 
         if (0 === $count = count($data)) {
-            return ['Answer data cannot be empty'];
+            return [];
         }
 
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
@@ -322,12 +391,10 @@ class HoleHandler implements QuestionHandlerInterface
             ->findOneByQuestion($question);
 
         $answers = [];
-        $i = 0;
         foreach ($data as $answer) {
-            if ($answer || $answer !== null) {
-                $answers[$i] = $answer;
+            if ($answer && $answer !== null && !empty($answer['answerText'])) {
+                $answers[] = $answer;
             }
-            ++$i;
         }
 
         $serviceHole = $this->container->get('ujm.exo.hole_service');

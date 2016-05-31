@@ -20,6 +20,7 @@ already_exist: Ce nom existe déjà.
 anonymous : Anonyme
 answer_coched: Aucune réponse attendue n\'est cochée
 answer_zone: Zone de réponse
+answer_of: réponse de
 attempt_info1: Vous avez droit à
 attempt_info2sing: essai
 attempt_info2plur: essais
@@ -360,8 +361,11 @@ sort: Trier les documents
 summative : Sommatif
 show_additional_info: Afficher les informations supplémentaires
 step: Etape
+statistics: Afficher les statistiques
 step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
 step_item_add: Glisser/déposer ou cliquer sur le bouton "+" pour ajouter des questions
+stat_users: "[0, 1] %count% utilisateur|]1,Inf[ %count% utilisateurs"
+stat_have_responded: ont répondu
 
 # T
 temporary_mark: Note temporaire

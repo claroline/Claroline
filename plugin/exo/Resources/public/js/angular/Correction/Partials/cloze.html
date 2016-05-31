@@ -1,4 +1,61 @@
 <div class="type-question-container cloze-question-container panel panel-default">
     <!-- The directive will append formatted text here -->
     <div class="cloze panel-body"></div>
+
+    <div class="panel-body">
+        <div class="panel panel-default"
+             data-ng-repeat="solution in clozeCorrectionCtrl.question.solutions"
+             data-ng-init="holeStats = clozeCorrectionCtrl.getHoleStats(solution.holeId)">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="3">
+                            {{ 'answer_zone'|trans:{}:'ujm_sequence' }} {{ $index + 1 }}
+
+                            <small data-ng-if="holeStats">
+                                {{ 'stat_users'|transChoice:holeStats.answered:{count: holeStats.answered}:'ujm_exo' }}
+                                /
+                                {{ 'stat_users'|transChoice:clozeCorrectionCtrl.question.stats.seen:{count: clozeCorrectionCtrl.question.stats.seen}:'ujm_exo' }}
+                                {{ 'stat_have_responded'|trans:{}:'ujm_exo' }}
+                                ({{ (holeStats.answered * 100 / clozeCorrectionCtrl.question.stats.seen)|number:1 }}%)
+                            </small>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr data-ng-repeat="keyword in solution.answers"
+                        data-ng-init="keywordStats = clozeCorrectionCtrl.getKeywordStats(keyword, holeStats)">
+                        <!-- Keyword -->
+                        <td class="col-md-9">
+                            <b>{{ keyword.text }}</b>
+                            <small data-ng-if="keyword.caseSensitive">({{ 'case_sensitive'|trans:{}:'ujm_exo' }})</small>
+
+                            <small data-ng-if="keywordStats">
+                                {{ 'answer_of'|trans:{}:'ujm_exo' }}
+                                {{ 'stat_users'|transChoice:keywordStats.count:{count: keywordStats.count}:'ujm_exo' }}
+                                /
+                                {{ 'stat_users'|transChoice:holeStats.answered:{count: holeStats.answered}:'ujm_exo' }}
+                                ({{ (keywordStats.count * 100 / holeStats.answered)|number:1 }}%)
+                            </small>
+                        </td>
+
+                        <!-- Score -->
+                        <td class="col-md-2 text-primary">
+                            <small>{{ 'item_points'|transChoice:keyword.score:{count: keyword.score}:'ujm_exo' }}</small>
+                        </td>
+
+                        <!-- Feedback -->
+                        <td class="col-md-1 text-center">
+                            <span class="fa fa-comment feedback-info"
+                                  title="{{ keyword.feedback }}"
+                                  data-ng-if="keyword.feedback"
+                                  data-toggle="tooltip">
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

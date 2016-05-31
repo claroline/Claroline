@@ -204,67 +204,60 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
 
             if (itemPaper && itemPaper.answer) {
                 stepAnswers[item.id] = itemPaper.answer;
-
-                // At least one answer found
-                noAnswer = false;
             } else {
                 stepAnswers[item.id] = '';
             }
         }
     }
 
-    if (!noAnswer) {
-        // There are answers to post
-        this.$http
-            .put(
-                Routing.generate('exercise_submit_step', { paperId: this.paper.id, stepId: step.id }),
-                { data: stepAnswers }
-            )
+    // There are answers to post
+    this.$http
+        .put(
+            Routing.generate('exercise_submit_step', { paperId: this.paper.id, stepId: step.id }),
+            { data: stepAnswers }
+        )
 
-            // Success callback
-            .success(function onSuccess(response) {
-                if (response) {
-                    for (var i = 0; i < response.length; i++) {
-                        if (response[i]) {
-                            var item = null;
+        // Success callback
+        .success(function onSuccess(response) {
+            if (response) {
+                for (var i = 0; i < response.length; i++) {
+                    if (response[i]) {
+                        var item = null;
 
-                            // Get item in Step
-                            for (var j = 0; j < step.items.length; j++) {
-                                if (response[i].question.id === step.items[j].id) {
-                                    item = step.items[j];
-                                    break; // Stop searching
-                                }
+                        // Get item in Step
+                        for (var j = 0; j < step.items.length; j++) {
+                            if (response[i].question.id === step.items[j].id) {
+                                item = step.items[j];
+                                break; // Stop searching
                             }
+                        }
 
-                            if (item) {
-                                // Update question with solutions and feedback
-                                item.solutions = response[i].question.solutions ? response[i].question.solutions : [];
-                                item.feedback  = response[i].question.feedback  ? response[i].question.feedback  : null;
+                        if (item) {
+                            // Update question with solutions and feedback
+                            item.solutions = response[i].question.solutions ? response[i].question.solutions : [];
+                            item.feedback  = response[i].question.feedback  ? response[i].question.feedback  : null;
 
-                                // Update paper with Score
-                                var paper = this.getQuestionPaper(item);
-                                paper.score = response[i].score;
-                            }
+                            // Update paper with Score
+                            var paper = this.getQuestionPaper(item);
+                            paper.score = response[i].score;
                         }
                     }
                 }
+            }
 
-                deferred.resolve(response);
-            }.bind(this))
+            deferred.resolve(response);
+        }.bind(this))
 
-            // Error callback
-            .error(function onError(data, status) {
-                // TODO : display message
+        // Error callback
+        .error(function onError(data, status) {
+            // TODO : display message
 
-                deferred.reject([]);
-                var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService submit answer error';
-                var code = data && data.error && data.error.code ? data.error.code : 403;
-                /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
-                //$window.location = url;
-            });
-    } else {
-        deferred.resolve(null);
-    }
+            deferred.reject([]);
+            var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService submit answer error';
+            var code = data && data.error && data.error.code ? data.error.code : 403;
+            /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
+            //$window.location = url;
+        });
 
     return deferred.promise;
 };

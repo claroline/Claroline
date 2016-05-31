@@ -73,7 +73,7 @@ StepShowCtrl.prototype.getQuestionPaper = function getQuestionPaper(question) {
  */
 StepShowCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
     this.allAnswersFound = this.FeedbackService.SOLUTION_FOUND;
-    for (var i=0; i<this.items.length; i++) {
+    for (var i = 0; i < this.items.length; i++) {
         var question = this.items[i];
         var answer = this.getQuestionPaper(question).answer;
         this.feedback.state[question.id] = this.QuestionService.getTypeService(question.type).answersAllFound(question, answer);
@@ -85,7 +85,7 @@ StepShowCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
 
 /**
  * 
- * @returns {undefined}Get the suite feedback sentence
+ * @returns {string} Get the suite feedback sentence
  */
 StepShowCtrl.prototype.getSuiteFeedback = function getSuiteFeedback() {
     var sentence = "";

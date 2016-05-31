@@ -26,28 +26,32 @@ ChoiceQuestionService.prototype.initAnswer = function initAnswer() {
  * Check if all, all but one, or not all answers are found
  */
 ChoiceQuestionService.prototype.answersAllFound = function answersAllFound(question, answer) {
-    var numAnswersFound = 0;
-    var numSolutions = 0;
-    for (var i=0; i<question.solutions.length; i++) {
-        if (question.solutions[i].score > 0) {
-            numSolutions++;
-        }
-        for (var j=0; j<answer.length; j++) {
-            if (question.solutions[i].id === answer[j] && question.solutions[i].score > 0) {
-                numAnswersFound++;
+    var feedbackState = -1;
+
+    if (question.solutions) {
+        var numAnswersFound = 0;
+        var numSolutions = 0;
+        for (var i=0; i<question.solutions.length; i++) {
+            if (question.solutions[i].score > 0) {
+                numSolutions++;
+            }
+            for (var j=0; j<answer.length; j++) {
+                if (question.solutions[i].id === answer[j] && question.solutions[i].score > 0) {
+                    numAnswersFound++;
+                }
             }
         }
-    }
-    var feedbackState = -1;
-    if (numAnswersFound === numSolutions) {
-        // all answers have been found
-        feedbackState = this.FeedbackService.SOLUTION_FOUND;
-    } else if (numAnswersFound === numSolutions -1 && question.multiple) {
-        // one answer remains to be found
-        feedbackState = this.FeedbackService.ONE_ANSWER_MISSING;
-    } else {
-        // more answers remain to be found
-        feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
+
+        if (numAnswersFound === numSolutions) {
+            // all answers have been found
+            feedbackState = this.FeedbackService.SOLUTION_FOUND;
+        } else if (numAnswersFound === numSolutions -1 && question.multiple) {
+            // one answer remains to be found
+            feedbackState = this.FeedbackService.ONE_ANSWER_MISSING;
+        } else {
+            // more answers remain to be found
+            feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
+        }
     }
     
     return feedbackState;
@@ -156,10 +160,45 @@ ChoiceQuestionService.prototype.getChoiceFeedback = function getChoiceFeedback(q
 };
 
 /**
- * 
+ * Get the Score of a Choice
+ * @param   {Object} question
+ * @param   {Object} choice
+ * @returns {String}
  */
-ChoiceQuestionService.prototype.getFeedbackState = function getFeedbackState() {
-    return this.feedbackState;
+ChoiceQuestionService.prototype.getChoiceScore = function getChoiceScore(question, choice) {
+    var feedback = '';
+
+    var solution = this.getChoiceSolution(question, choice);
+    if (solution) {
+        feedback = solution.feedback;
+    }
+
+    return feedback;
+};
+
+ChoiceQuestionService.prototype.getChoiceStats = function getChoiceStats(question, choice) {
+    var stats = null;
+
+    if (question.stats && question.stats.solutions) {
+        for (var solution in question.stats.solutions) {
+            if (question.stats.solutions.hasOwnProperty(solution)) {
+                if (question.stats.solutions[solution].id == choice.id) {
+                    stats = question.stats.solutions[solution];
+                    break;
+                }
+            }
+        }
+
+        if (!stats) {
+            // No User have chosen this answer
+            stats = {
+                id: choice.id,
+                count: 0
+            };
+        }
+    }
+
+    return stats;
 };
 
 // Register service into AngularJS

@@ -4,9 +4,11 @@ namespace UJM\ExoBundle\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
+use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
 use UJM\ExoBundle\Transfer\Json\Validator;
@@ -123,6 +125,45 @@ class QuestionManager
         $handler->convertInteractionDetails($question, $data, $withSolution, $forPaperList);
 
         return $data;
+    }
+
+    /**
+     * Get question statistics inside an Exercise.
+     *
+     * @param Question $question
+     * @param Exercise $exercise
+     *
+     * @return \stdClass
+     */
+    public function generateQuestionStats(Question $question, Exercise $exercise)
+    {
+        $questionStats = new \stdClass();
+
+        // We load all the answers for the question (we need to get the entities as the response in DB are not processable as is)
+        $answers = $this->om->getRepository('UJMExoBundle:Response')->findByExerciseAndQuestion($exercise, $question);
+
+        // Number of Users that have seen the question in their exercise
+        $questionStats->seen = count($answers);
+
+        // Number of Users that have responded to the question (no blank answer)
+        $questionStats->answered = 0;
+        if (!empty($answers)) {
+            /* @var Response $answer */
+            for ($i = 0; $i < $questionStats->seen; ++$i) {
+                if (!empty($answers[$i]->getResponse())) {
+                    ++$questionStats->answered;
+                } else {
+                    // Remove element (to avoid processing in custom handlers)
+                    unset($answers[$i]);
+                }
+            }
+
+            // Let the Handler of the question type parse and compile the data
+            $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
+            $questionStats->solutions = $handler->generateStats($question, $answers);
+        }
+
+        return $questionStats;
     }
 
     public function exportQuestionAnswers(Question $question)

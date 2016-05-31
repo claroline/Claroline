@@ -1,17 +1,26 @@
 <div class="type-question-container graphic-question-container panel panel-default">
     <table class="table table-striped">
         <tbody>
-            <tr data-ng-repeat="solution in graphicCorrectionCtrl.question.solutions">
+            <tr data-ng-repeat="solution in graphicCorrectionCtrl.question.solutions"
+                data-ng-init="stats = graphicCorrectionCtrl.getAreaStats(solution.id);">
                 <td class="col-md-1 text-center">
                     <div class="area-color" data-ng-style="{ 'background-color': graphicCorrectionCtrl.getAreaColor(solution.area) }"></div>
                 </td>
 
-                <td class="col-md-9">
+                <td class="col-md-8">
                     <!-- Shape of the area -->
-                    {{ ('graphic_area_shape_' + solution.area.shape)|trans:{}:'ujm_exo' }}
+                    <b>{{ ('graphic_area_shape_' + solution.area.shape)|trans:{}:'ujm_exo' }}</b>
+
+                    <small data-ng-if="stats">
+                        {{ 'answer_of'|trans:{}:'ujm_exo' }}
+                        {{ 'stat_users'|transChoice:stats.count:{count: stats.count}:'ujm_exo' }}
+                        /
+                        {{ 'stat_users'|transChoice:graphicCorrectionCtrl.question.stats.answered:{count: graphicCorrectionCtrl.question.stats.answered}:'ujm_exo' }}
+                        ({{ (stats.count * 100 / graphicCorrectionCtrl.question.stats.answered)|number:1 }}%)
+                    </small>
                 </td>
 
-                <td class="col-md-1 text-muted">
+                <td class="col-md-2 text-primary">
                     <small>{{ 'item_points'|transChoice:solution.score:{count: solution.score}:'ujm_exo' }}</small>
                 </td>
 

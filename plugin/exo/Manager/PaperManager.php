@@ -432,6 +432,24 @@ class PaperManager
     }
 
     /**
+     * Export statistics related to a Paper questions.
+     *
+     * @param $paper
+     *
+     * @return array
+     */
+    /*public function generatePaperStatistics(Paper $paper)
+    {
+        $exercise = $paper->getExercise();
+
+        $statistics = array_map(function ($question) use ($exercise) {
+            return $this->questionManager->generateQuestionStats($question, $exercise);
+        }, $this->getPaperQuestions($paper));
+
+        return $statistics;
+    }*/
+
+    /**
      * Export the Questions linked to the Paper.
      *
      * @param Paper $paper
@@ -443,11 +461,20 @@ class PaperManager
     {
         $solutionAvailable = $withSolution || $this->isSolutionAvailable($paper->getExercise(), $paper);
 
-        $questions = array_map(function ($question) use ($solutionAvailable) {
-            return $this->questionManager->exportQuestion($question, $solutionAvailable, true);
-        }, $this->getPaperQuestions($paper));
+        $export = [];
+        $questions = $this->getPaperQuestions($paper);
+        foreach ($questions as $question) {
+            $exportedQuestion = $this->questionManager->exportQuestion($question, $solutionAvailable, true);
 
-        return $questions;
+            $exportedQuestion->stats = null;
+            if ($paper->getExercise()->hasStatistics()) {
+                $exportedQuestion->stats = $this->questionManager->generateQuestionStats($question, $paper->getExercise());
+            }
+
+            $export[] = $exportedQuestion;
+        }
+
+        return $export;
     }
 
     /**

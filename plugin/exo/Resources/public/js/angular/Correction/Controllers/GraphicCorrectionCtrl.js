@@ -20,7 +20,11 @@ GraphicCorrectionCtrl.$inject = AbstractCorrectionCtrl.$inject.concat([ 'Graphic
 
 GraphicCorrectionCtrl.prototype.getAreaColor = function getAreaColor(area) {
     return this.ImageAreaService.COLORS[area.color];
-}
+};
+
+GraphicCorrectionCtrl.prototype.getAreaStats = function getAreaStats(areaId) {
+    return this.GraphicQuestionService.getAreaStats(this.question, areaId);
+};
 
 // Register controller into AngularJS
 angular

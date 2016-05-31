@@ -219,6 +219,32 @@ class QcmHandler implements QuestionHandlerInterface
     /**
      * {@inheritdoc}
      */
+    public function generateStats(Question $question, array $answers)
+    {
+        $choices = [];
+
+        /** @var Response $answer */
+        foreach ($answers as $answer) {
+            $decoded = $this->convertAnswerDetails($answer);
+
+            foreach ($decoded as $choiceId) {
+                if (!isset($choices[$choiceId])) {
+                    // First answer to have this solution
+                    $choices[$choiceId] = new \stdClass();
+                    $choices[$choiceId]->id = $choiceId;
+                    $choices[$choiceId]->count = 0;
+                }
+
+                ++$choices[$choiceId]->count;
+            }
+        }
+
+        return $choices;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function convertAnswerDetails(Response $response)
     {
         $parts = explode(';', $response->getResponse());

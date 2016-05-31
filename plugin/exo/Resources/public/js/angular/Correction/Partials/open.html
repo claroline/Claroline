@@ -1,15 +1,20 @@
 <div>
-    <em data-ng-if="'short' === openCorrectionCtrl.question.typeOpen">{{ 'question_open_keywords_info'|trans:{}:'ujm_exo' }}</em>
+    <em class="text-muted" data-ng-if="'short' === openCorrectionCtrl.question.typeOpen">{{ 'question_open_keywords_info'|trans:{}:'ujm_exo' }}</em>
     <div class="type-question-container open-question-container panel panel-default">
         <!-- For Short and One word : we display the list of expected keywords as correction -->
         <table class="table table-striped">
             <tr data-ng-repeat="keyword in openCorrectionCtrl.answer">
-                <td class="col-md-11">
+                <td class="col-md-9">
                     {{ keyword.word }}
                     <small data-ng-if="keyword.caseSensitive">({{ 'case_sensitive'|trans:{}:'ujm_exo' }})</small>
                 </td>
 
-                <!--<td class="center-text">{{ keyword.score }}</td>-->
+                <!-- Score -->
+                <td class="col-md-2 text-primary">
+                    <small>{{ 'item_points'|transChoice:keyword.score:{count: keyword.score}:'ujm_exo' }}</small>
+                </td>
+
+                <!-- Feedback -->
                 <td class="col-md-1 text-center">
                     <span class="fa fa-comment feedback-info"
                           title="{{ keyword.feedback }}"

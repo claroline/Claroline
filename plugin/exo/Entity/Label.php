@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UJM\ExoBundle\Entity\Label.
  *
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\LabelRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="ujm_label")
  */
 class Label
