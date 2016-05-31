@@ -258,7 +258,7 @@ class DropManager
                     array(
                         'document' => $documentId,
                         'dropzone' => $dropzone->getId(),
-                         )
+                    )
                 );
 
             // Nombre de notation pour le document et pour le dropzone
@@ -300,7 +300,7 @@ class DropManager
                     array(
                         'document' => $documentId,
                         'dropzone' => $dropzone->getId(),
-                         )
+                    )
                 );
 
             // Nombre de notation pour le document et pour le dropzone
@@ -347,7 +347,7 @@ class DropManager
                     array(
                         'document' => $documentId,
                         'dropzone' => $dropzone->getId(),
-                        )
+                    )
                 );
 
             // Nombre de notation pour le document et pour le dropzone
@@ -394,7 +394,7 @@ class DropManager
                     array(
                         'document' => $documentId,
                         'dropzone' => $dropzone->getId(),
-                        )
+                    )
                 );
 
             // Nombre de notation pour le document et pour le dropzone
@@ -434,9 +434,9 @@ class DropManager
                 ->em->getRepository('InnovaCollecticielBundle:Notation')
                 ->findBy(
                     array(
-                    'document' => $documentId,
-                    'dropzone' => $dropzone->getId(),
-                     )
+                        'document' => $documentId,
+                        'dropzone' => $dropzone->getId(),
+                    )
                 );
 
             $countRecordOrTransmitNotation = count($recordOrTransmitNotations);
