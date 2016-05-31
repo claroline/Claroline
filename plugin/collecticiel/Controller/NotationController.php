@@ -91,12 +91,6 @@ class NotationController extends DropzoneBaseController
         // Recherche en base des données du document à mettre à jour
         $document = $em->getRepository('InnovaCollecticielBundle:Document')->find($document->getId());
 
-        // Mise à jour du booléen de Validation de false à true
-        //$doc->setvalidate(true);
-
-        // Récupération du dropID puis du dropZone
-        //$dropId = $document->getDrop()->getId();
-
         $dropzone = $em->getRepository('InnovaCollecticielBundle:DropZone')->find($dropzone->getId());
 
         // Ajout pour avoir si la notation a été transmise ou pas.

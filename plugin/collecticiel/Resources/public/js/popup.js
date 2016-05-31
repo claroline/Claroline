@@ -556,15 +556,6 @@ $(document).ready(function() {
 
     });
 
-
-
-
-
-
-
-
-
-
     // InnovaERV
     // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document
     // Mise Ã  jour de la colonne "validate"
