@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "0b66c515b879d336e00f6877832e6245c780a1ee"
+                "reference": "7ef60b08fd9eda69d4cc229bde6b9e951f1e3717"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/0b66c515b879d336e00f6877832e6245c780a1ee",
-                "reference": "0b66c515b879d336e00f6877832e6245c780a1ee",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/7ef60b08fd9eda69d4cc229bde6b9e951f1e3717",
+                "reference": "7ef60b08fd9eda69d4cc229bde6b9e951f1e3717",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-05-31 12:33:36"
+            "time": "2016-05-31 14:25:00"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -4184,13 +4184,13 @@
             "target-dir": "Nelmio/ApiDocBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "7288ccad079b381e11ad261d1a8374902a27e385"
+                "url": "https://github.com/nelmiobackup/NelmioApiDocBundle.git",
+                "reference": "6793b701570f5f426678309910b2440c8f5d1d9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/7288ccad079b381e11ad261d1a8374902a27e385",
-                "reference": "7288ccad079b381e11ad261d1a8374902a27e385",
+                "url": "https://api.github.com/repos/nelmiobackup/NelmioApiDocBundle/zipball/6793b701570f5f426678309910b2440c8f5d1d9e",
+                "reference": "6793b701570f5f426678309910b2440c8f5d1d9e",
                 "shasum": ""
             },
             "require": {
@@ -4261,7 +4261,7 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2016-05-19 19:43:45"
+            "time": "2016-03-21 11:19:12"
         },
         {
             "name": "ocramius/proxy-manager",
