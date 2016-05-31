@@ -14,4 +14,15 @@ export default class UserAPIService {
             }
         )
     }
+
+    importCsvFacets(formData) {
+        return this.$http.post(
+            Routing.generate('api_csv_import_facets'),
+            formData,
+            {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            }
+        )
+    }
 }

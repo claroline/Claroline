@@ -44,7 +44,7 @@ Render a form
 
 
 ```
-    const data = this.FormBuilderService.formSerialize('myFormName', myModel)
+    const data = this.FormBuilderService.submit(url, parameters)
 
     this.$http.post(
       Routing.generate('this_is_a_route'),

@@ -240,6 +240,38 @@ class UserManager
         $this->objectManager->endFlushSuite();
     }
 
+    public function csvFacets($file)
+    {
+        $data = file_get_contents($file);
+        $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
+        $lines = str_getcsv($data, PHP_EOL);
+        $fields = array_shift($lines);
+        $fields = str_getcsv($fields, ';');
+        $facetManager = $this->container->get('claroline.manager.facet_manager');
+        $this->objectManager->startFlushSuite();
+        $i = 0;
+
+        foreach ($lines as $line) {
+            $values = str_getcsv($line, ';');
+            $username = array_shift($values);
+            $user = $this->getUserByUsername($username);
+
+            foreach ($fields as $key => $field) {
+                $fieldFacet = $facetManager->getFieldFacetByName($field);
+                $facetManager->setFieldValue($user, $fieldFacet, $values[$key], true);
+            }
+
+            ++$i;
+
+            if ($i % 100 === 0) {
+                $this->objectManager->forceFlush();
+                $this->objectManager->clear();
+            }
+        }
+
+        $this->objectManager->endFlushSuite();
+    }
+
     /**
      * Rename a user.
      *

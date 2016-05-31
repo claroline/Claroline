@@ -17,8 +17,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Entity\Content;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Form\Profile\ProfileFacetFieldsType;
 
 class BaseProfileType extends AbstractType
 {
@@ -41,11 +41,6 @@ class BaseProfileType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $attr = array();
-        $attr['class'] = 'datepicker input-small';
-        $attr['data-date-format'] = $this->translator->trans('date_form_datepicker_format', array(), 'platform');
-        $attr['autocomplete'] = 'off';
-
         $builder->add('firstName', 'text', array('label' => 'first_name'))
             ->add('lastName', 'text', array('label' => 'last_name'))
             ->add('username', 'text', array(
@@ -86,53 +81,8 @@ class BaseProfileType extends AbstractType
         }
 
         foreach ($this->facets as $facet) {
-            foreach ($facet->getPanelFacets() as $panel) {
-                foreach ($panel->getFieldsFacet() as $field) {
-                    switch ($field->getType()) {
-                        case FieldFacet::STRING_TYPE:
-                            $builder->add(
-                                $field->getName(),
-                                'text',
-                                array(
-                                    'label' => $this->translator->trans($field->getName(), array(), 'platform'),
-                                    'mapped' => false,
-                                    'required' => false,
-                                    'attr' => array('facet' => $facet->getName()),
-                                )
-                            );
-                            break;
-                        case FieldFacet::DATE_TYPE:
-                            $builder->add(
-                                $field->getName(),
-                                'datepicker',
-                                array(
-                                    'label' => $this->translator->trans($field->getName(), array(), 'platform'),
-                                    'required' => false,
-                                    'widget' => 'single_text',
-                                    'format' => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
-                                    'attr' => $attr,
-                                    'autoclose' => true,
-                                    'mapped' => false,
-                                    'attr' => array('facet' => $facet->getName()),
-                                )
-                            );
-                            break;
-                        case FieldFacet::FLOAT_TYPE:
-                            $builder->add(
-                                $field->getName(),
-                                'number',
-                                array(
-                                    'label' => $this->translator->trans($field->getName(), array(), 'platform'),
-                                    'mapped' => false,
-                                    'required' => false,
-                                    'attr' => array('facet' => $facet->getName()),
-                                )
-                            );
-                            break;
-
-                    }
-                }
-            }
+            $type = new ProfileFacetFieldsType($facet, $this->translator);
+            $type->buildForm($builder, $options);
         }
     }
 

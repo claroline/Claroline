@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Accessor;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\FieldFacetRepository")
@@ -25,24 +26,29 @@ class FieldFacet
     const STRING_TYPE = 1;
     const FLOAT_TYPE = 2;
     const DATE_TYPE = 3;
+    const RADIO_TYPE = 4;
+    const SELECT_TYPE = 5;
+    const CHECKBOXES_TYPE = 6;
+    const COUNTRY_TYPE = 7;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"admin"})
+     * @Groups({"api_facet_admin", "api_profile"})
      */
     protected $id;
 
     /**
      * @ORM\Column
      * @Assert\NotBlank()
-     * @Groups({"admin"})
+     * @Groups({"api_facet_admin", "api_profile"})
      */
     protected $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"api_facet_admin", "api_profile"})
      */
     protected $type;
 
@@ -66,31 +72,41 @@ class FieldFacet
 
     /**
      * @ORM\Column(type="integer", name="position")
+     * @Groups({"api_facet_admin", "api_profile"})
      */
     protected $position;
 
     /**
+     * @Groups({"api_facet_admin", "api_profile"})
+     * @Accessor(getter="getInputType")
+     */
+    protected $translationKey;
+
+    /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetRole",
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice",
      *     mappedBy="fieldFacet"
      * )
+     * @Groups({"api_facet_admin", "api_profile"})
      */
-    protected $fieldFacetsRole;
+    protected $fieldFacetChoices;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @Groups({"api_profile"})
+     * @Accessor(getter="getUserFieldValue")
      */
-    protected $isVisibleByOwner = true;
+    protected $userFieldValue;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @Groups({"api_profile"})
+     * @Accessor(getter="isEditable")
      */
-    protected $isEditableByOwner = false;
+    protected $isEditable;
 
     public function __construct()
     {
         $this->fieldsFacetValue = new ArrayCollection();
-        $this->fieldFacetsRole = new ArrayCollection();
+        $this->fieldFacetChoices = new ArrayCollection();
     }
 
     /**
@@ -98,6 +114,7 @@ class FieldFacet
      */
     public function setPanelFacet(PanelFacet $panelFacet)
     {
+        $panelFacet->addFieldFacet($this);
         $this->panelFacet = $panelFacet;
     }
 
@@ -144,6 +161,11 @@ class FieldFacet
         $this->fieldsFacetValue->add($fieldFacetValue);
     }
 
+    public function addFieldChoice(FieldFacetChoice $choice)
+    {
+        $this->fieldFacetChoices->add($choice);
+    }
+
     public function setPosition($position)
     {
         $this->position = $position;
@@ -160,6 +182,10 @@ class FieldFacet
             case self::FLOAT_TYPE: return 'number';
             case self::DATE_TYPE: return 'date';
             case self::STRING_TYPE: return 'text';
+            case self::RADIO_TYPE: return 'radio';
+            case self::SELECT_TYPE: return 'select';
+            case self::CHECKBOXES_TYPE: return 'checkbox';
+            case self::COUNTRY_TYPE: return 'country';
             default: return 'error';
         }
     }
@@ -170,32 +196,57 @@ class FieldFacet
             case self::FLOAT_TYPE: return 'number';
             case self::DATE_TYPE: return 'date';
             case self::STRING_TYPE: return 'text';
+            case self::RADIO_TYPE: return 'radio';
+            case self::SELECT_TYPE: return 'select';
+            case self::CHECKBOXES_TYPE: return 'checkbox';
+            case self::COUNTRY_TYPE: return 'country';
             default: return 'error';
         }
     }
 
-    public function getFieldFacetsRole()
+    public function getFieldFacetChoices()
     {
-        return $this->fieldFacetsRole;
+        return $this->fieldFacetChoices;
     }
 
-    public function setIsVisibleByOwner($boolean)
+    /**
+     * For serialization in user profile. It's easier that way.
+     */
+    public function setUserFieldValue(FieldFacetValue $val)
     {
-        $this->isVisibleByOwner = $boolean;
+        $this->userFieldValue = $val;
     }
 
-    public function getIsVisibleByOwner()
+    /**
+     * For serialization in user profile. It's easier that way.
+     */
+    public function getUserFieldValue()
     {
-        return $this->isVisibleByOwner;
+        return $this->userFieldValue ? $this->userFieldValue->getValue() : null;
     }
 
-    public function setIsEditableByOwner($boolean)
+    /**
+     * For serialization in user profile. It's easier that way.
+     */
+    public function setIsEditable($boolean)
     {
-        $this->isEditableByOwner = $boolean;
+        $this->isEditable = $boolean;
     }
 
-    public function getIsEditableByOwner()
+    /**
+     * For serialization in user profile. It's easier that way.
+     */
+    public function isEditable()
     {
-        return $this->isEditableByOwner;
+        return $this->isEditable;
+    }
+
+    public function getPrettyName()
+    {
+        $string = str_replace(' ', '-', $this->name); // Replaces all spaces with hyphens.
+        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+        $string = preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
+
+        return strtolower($string);
     }
 }

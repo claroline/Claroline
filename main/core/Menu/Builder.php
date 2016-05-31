@@ -30,8 +30,10 @@ class Builder extends ContainerAware
             ->setChildrenAttribute('class', 'dropdown-menu')
             ->setChildrenAttribute('role', 'menu');
 
-        $menu->addChild($translator->trans('my_profile', array(), 'platform'), array('route' => 'claro_profile_view'))
-            ->setAttribute('class', 'dropdown')
+        $menu->addChild(
+            $translator->trans('my_profile', array(), 'platform'),
+            array('uri' => $router->generate('claro_public_profile_view', array('publicUrl' => $tokenStorage->getToken()->getUser()->getPublicUrl())))
+        )->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-user');
         $menu->addChild(

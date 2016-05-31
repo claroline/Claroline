@@ -1,5 +1,5 @@
-<div class="form-group">
-    <label class="control-label col-sm-2"> {{ nc.label }} </label>
+<div>
+    <label class="control-label col-sm-2"> {{ nc.label|trans:{}:nc.translationDomain }} </label>
     <div class="col-sm-10">
         <input ng-disabled="nc.field[2].disabled" class="form-control" type="number" ng-model="nc.ngModel" name="{{ nc.name }}"></input>
         <help-block ng-model="nc.ngModel" field="nc.field"></help-block>

@@ -1,8 +1,17 @@
 export default class CountryController {
-  constructor () {
+  constructor ($scope) {
+    this.$scope = $scope
+
+    $scope.$watch(() => {return this.field}, (newValue, oldValue) => {
+      this.countryField = angular.copy(newValue)
+      this.countryField[1] = 'select'
+      this.countryField[2].values = this.getCountryList()
+    })
+
     this.countryField = angular.copy(this.field)
     this.countryField[1] = 'select'
     this.countryField[2].values = this.getCountryList()
+
   }
 
   getCountryList () {
