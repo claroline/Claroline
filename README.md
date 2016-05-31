@@ -63,7 +63,7 @@ file. For an installation from scratch, the commands would be:
 
     curl packages.claroline.net/releases/latest/claroline-7.0.0-rc1.tar.gz | tar xzv 
     cd claroline-7.0.0-rc1
-    chmod 777 app/config
+    cp app/config/parameters.yml.dist app/config/parameters.yml
     
 Open /web/install.php from your webserver and follow the instructions.
 
