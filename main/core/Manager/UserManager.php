@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -22,20 +23,20 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Manager\Exception\AddRoleException;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\ValidatorInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Claroline\BundleRecorder\Log\LoggableTrait;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -47,82 +48,86 @@ class UserManager
     const MAX_USER_BATCH_SIZE = 20;
     const MAX_EDIT_BATCH_SIZE = 100;
 
-    private $platformConfigHandler;
-    private $strictEventDispatcher;
+    private $container;
+    private $groupManager;
     private $mailManager;
     private $objectManager;
+    private $organizationManager;
     private $pagerFactory;
     private $personalWsTemplateFile;
+    private $platformConfigHandler;
     private $roleManager;
+    private $strictEventDispatcher;
+    private $tokenStorage;
     private $toolManager;
+    private $transferManager;
     private $translator;
-    private $userRepo;
+    private $uploadsDirectory;
     private $validator;
     private $workspaceManager;
-    private $uploadsDirectory;
-    private $transferManager;
-    private $container;
-    private $authorization;
-    private $organizationManager;
-    private $groupManager;
+
+    private $userRepo;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "uploadsDirectory"        = @DI\Inject("%claroline.param.uploads_directory%"),
+     *     "container"              = @DI\Inject("service_container"),
+     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
      *     "objectManager"          = @DI\Inject("claroline.persistence.object_manager"),
+     *     "organizationManager"    = @DI\Inject("claroline.manager.organization.organization_manager"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
+     *     "personalTemplate"       = @DI\Inject("%claroline.param.personal_template%"),
      *     "platformConfigHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "strictEventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
-     *     "translator"             = @DI\Inject("translator"),
-     *     "validator"              = @DI\Inject("validator"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "personalTemplate"       = @DI\Inject("%claroline.param.personal_template%"),
      *     "transferManager"        = @DI\Inject("claroline.manager.transfer_manager"),
-     *     "container"              = @DI\Inject("service_container"),
-     *     "organizationManager"    = @DI\Inject("claroline.manager.organization.organization_manager"),
-     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager")
+     *     "translator"             = @DI\Inject("translator"),
+     *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
+     *     "validator"              = @DI\Inject("validator"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
-        $uploadsDirectory,
+        ContainerInterface $container,
+        GroupManager $groupManager,
         MailManager $mailManager,
         ObjectManager $objectManager,
+        OrganizationManager $organizationManager,
         PagerFactory $pagerFactory,
+        $personalTemplate,
         PlatformConfigurationHandler $platformConfigHandler,
         RoleManager $roleManager,
         StrictDispatcher $strictEventDispatcher,
+        TokenStorageInterface $tokenStorage,
         ToolManager $toolManager,
-        TranslatorInterface $translator,
-        ValidatorInterface $validator,
-        WorkspaceManager $workspaceManager,
         TransferManager $transferManager,
-        OrganizationManager $organizationManager,
-        $personalTemplate,
-        ContainerInterface $container,
-        GroupManager $groupManager
+        TranslatorInterface $translator,
+        $uploadsDirectory,
+        ValidatorInterface $validator,
+        WorkspaceManager $workspaceManager
     ) {
-        $this->userRepo = $objectManager->getRepository('ClarolineCoreBundle:User');
-        $this->roleManager = $roleManager;
-        $this->workspaceManager = $workspaceManager;
-        $this->toolManager = $toolManager;
-        $this->strictEventDispatcher = $strictEventDispatcher;
-        $this->personalWsTemplateFile = $personalTemplate;
-        $this->translator = $translator;
-        $this->platformConfigHandler = $platformConfigHandler;
-        $this->pagerFactory = $pagerFactory;
-        $this->objectManager = $objectManager;
-        $this->mailManager = $mailManager;
-        $this->validator = $validator;
-        $this->uploadsDirectory = $uploadsDirectory;
-        $this->transferManager = $transferManager;
-        $this->organizationManager = $organizationManager;
         $this->container = $container;
         $this->groupManager = $groupManager;
+        $this->mailManager = $mailManager;
+        $this->objectManager = $objectManager;
+        $this->organizationManager = $organizationManager;
+        $this->pagerFactory = $pagerFactory;
+        $this->personalWsTemplateFile = $personalTemplate;
+        $this->platformConfigHandler = $platformConfigHandler;
+        $this->roleManager = $roleManager;
+        $this->strictEventDispatcher = $strictEventDispatcher;
+        $this->tokenStorage = $tokenStorage;
+        $this->toolManager = $toolManager;
+        $this->transferManager = $transferManager;
+        $this->translator = $translator;
+        $this->uploadsDirectory = $uploadsDirectory;
+        $this->validator = $validator;
+        $this->workspaceManager = $workspaceManager;
+        $this->userRepo = $objectManager->getRepository('ClarolineCoreBundle:User');
     }
 
     /**
@@ -189,8 +194,7 @@ class UserManager
             }
         }
 
-        $this->container->get('claroline.event.event_dispatcher')
-            ->dispatch('user_created_event', 'UserCreated', array('user' => $user));
+        $this->strictEventDispatcher->dispatch('user_created_event', 'UserCreated', array('user' => $user));
 
         if ($this->personalWorkspaceAllowed($additionnalRoles)) {
             $this->setPersonalWorkspace($user, $model);
@@ -488,8 +492,8 @@ class UserManager
                     }
                 }
 
-                if ($this->container->get('security.token_storage')->getToken()) {
-                    $this->objectManager->merge($this->container->get('security.token_storage')->getToken()->getUser());
+                if ($this->tokenStorage->getToken()) {
+                    $this->objectManager->merge($this->tokenStorage->getToken()->getUser());
                 }
             }
         }
@@ -1331,7 +1335,7 @@ class UserManager
     {
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->container->get('security.token_storage')->setToken($token);
+        $this->tokenStorage->setToken($token);
     }
 
     public function persistUserOptions(UserOptions $options)
@@ -1519,7 +1523,7 @@ class UserManager
 
         //Admin can see everything, but the others... well they can only see their own organizations.
         if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
+            $currentUser = $this->tokenStorage->getToken()->getUser();
             $qb->leftJoin('u.organizations', 'uo');
             $qb->leftJoin('uo.administrators', 'ua');
             $qb->andWhere('ua.id = :userId');
@@ -1753,5 +1757,39 @@ class UserManager
         $query = $this->userRepo->findGroupOutsidersByName($group, $search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
+    }
+
+    public function getResourceManagerDisplayMode($index)
+    {
+        $displayMode = 'default';
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user !== 'anon.') {
+            $options = $this->getUserOptions($user);
+            $details = $options->getDetails();
+
+            if (!is_null($details) && isset($details['resourceManagerDisplayMode']) && isset($details['resourceManagerDisplayMode'][$index])) {
+                $displayMode = $details['resourceManagerDisplayMode'][$index];
+            }
+        }
+
+        return $displayMode;
+    }
+
+    public function registerResourceManagerDisplayModeByUser(User $user, $index, $displayMode)
+    {
+        $options = $this->getUserOptions($user);
+        $details = $options->getDetails();
+
+        if (is_null($details)) {
+            $details = array();
+        }
+
+        if (!isset($details['resourceManagerDisplayMode'])) {
+            $details['resourceManagerDisplayMode'] = [];
+        }
+        $details['resourceManagerDisplayMode'][$index] = $displayMode;
+        $options->setDetails($details);
+        $this->persistUserOptions($options);
     }
 }

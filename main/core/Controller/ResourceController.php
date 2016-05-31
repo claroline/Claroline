@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Manager\UserManager;
 use Exception;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -57,6 +58,7 @@ class ResourceController
     private $fileManager;
     private $transferManager;
     private $formFactory;
+    private $userManager;
 
     /**
      * @DI\InjectParams({
@@ -73,7 +75,8 @@ class ResourceController
      *     "logManager"      = @DI\Inject("claroline.log.manager"),
      *     "fileManager"     = @DI\Inject("claroline.manager.file_manager"),
      *     "transferManager" = @DI\Inject("claroline.manager.transfer_manager"),
-     *     "formFactory"     = @DI\Inject("form.factory")
+     *     "formFactory"     = @DI\Inject("form.factory"),
+     *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
      * })
      */
     public function __construct(
@@ -90,7 +93,8 @@ class ResourceController
         LogManager $logManager,
         FileManager $fileManager,
         TransferManager $transferManager,
-        FormFactory $formFactory
+        FormFactory $formFactory,
+        UserManager $userManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -106,6 +110,7 @@ class ResourceController
         $this->fileManager = $fileManager;
         $this->transferManager = $transferManager;
         $this->formFactory = $formFactory;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -1135,9 +1140,23 @@ class ResourceController
         return array('form' => $form->createView(), 'directory' => $directory);
     }
 
-    public function deleteNodeConfirmAction(ResourceNode $node)
+    /**
+     * @EXT\Route(
+     *     "/resource/manager/{index}/display/mode/{displayMode}/register",
+     *     name="claro_resource_manager_display_mode_register",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function resourceManagerDisplayModeRegisterAction($index, $displayMode, User $user = null)
     {
-        throw new \Exception('hey');
+        if (!is_null($user)) {
+            $this->userManager->registerResourceManagerDisplayModeByUser($user, $index, $displayMode);
+        }
+
+        return new Response(200);
     }
 
     private function isUsurpatingWorkspaceRole(TokenInterface $token)

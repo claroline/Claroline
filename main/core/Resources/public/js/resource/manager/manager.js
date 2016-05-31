@@ -105,6 +105,8 @@
      *      (defaults to "en")
      * - zoom: a zoom value for thumbnails
      *      (defaults to "zoom100")
+     * - displayMode: a string to determine the view type (default thumbnail or list)
+     *      (defaults to "default")
      *
      * Note that if they're not provided, the manager will try to fetch the last six
      * parameters directly from the server before using their default values.
@@ -221,7 +223,9 @@
             currentDirectoryId: null,
             isTinyMce: parameters.isTinyMce || false,
             currentUsername: fetchedParameters.currentUsername,
-            currentUserId: fetchedParameters.currentUserId
+            currentUserId: fetchedParameters.currentUserId,
+            displayMode: parameters.displayMode || 'default',
+            workspaceId: parameters.workspaceId || null
         };
 
         if (mergedParameters.preFetchedDirectory) {

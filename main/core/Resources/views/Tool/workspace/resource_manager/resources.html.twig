@@ -30,9 +30,11 @@
                 "parentElement": $('div.section-content .panel'),
                 "breadcrumbElement": $('ul.breadcrumb'),
                 "isWorkspace": true,
+                "workspaceId" : {{ workspace.getId() }},
                 "webPath": "{{ getAssetPath() }}",
                 "language": "{{ app.request.locale }}",
                 "zoom": "{{ resourceZoom }}",
+                "displayMode": "{{ displayMode }}",
                 "pickerDirectoryId": "{{ app.session.get('pickerDirectoryId', '0') }}",
                 "preFetchedDirectory": {{ render(controller('ClarolineCoreBundle:Resource:openDirectory', { 'nodeId': directoryId}))|raw }},
                 "resourceTypes": {

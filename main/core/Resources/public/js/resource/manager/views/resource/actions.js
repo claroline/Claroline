@@ -46,7 +46,9 @@
             this.filters = null;
             this.isReadyToPaste = false;
             this.isCutMode = false;
-            this.displayMode = 'default';
+            this.displayMode = parameters.displayMode;
+            this.isWorkspace = parameters.isWorkspace;
+            this.workspaceId = parameters.workspaceId;
             this.isSearchMode = false;
             this.lastSearchedName = null;
             this.zoomValue = parameters.zoom;
@@ -335,7 +337,7 @@
                 && this.isReadyToPaste
                 && (!this.isCutMode || this.checkedNodes.directoryId !== event.id);
 
-            var listViewActivated = this.displayMode === 'default' ? false: true;
+            var listViewActivated = this.displayMode === 'list';
 
             $(this.el).html(Twig.render(ResourceManagerActions, {
                 resourceTypes: this.parameters.resourceTypes,
@@ -391,6 +393,7 @@
             var mode = chk.is(':checked') ? 'list': 'default';
             this.displayMode = mode;
             this.dispatcher.trigger('list-mode', {'viewName': this.parameters.viewName, 'mode': mode});
+            this.registerDisplayMode();
         },
         import: function () {
             this.dispatcher.trigger(
@@ -409,6 +412,16 @@
                     {ids: _.keys(this.checkedNodes.nodes)}
                 );
             }
+        },
+        registerDisplayMode: function () {
+            var index = this.isWorkspace ? this.workspaceId : 'desktop';
+            $.ajax({
+                url: Routing.generate(
+                    'claro_resource_manager_display_mode_register',
+                    {index: index, displayMode: this.displayMode}
+                ),
+                type: 'POST'
+            });
         }
     });
 })();

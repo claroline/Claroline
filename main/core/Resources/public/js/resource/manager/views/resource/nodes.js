@@ -41,7 +41,7 @@
             this.dispatcher = dispatcher;
             this.directoryId = '0';
             this.nodes = [];
-            this.listMode = 'default';
+            this.listMode = parameters.displayMode;
             this.zoomValue = this.parameters.zoom;
             this.dispatcher.on('change-zoom', this.zoom, this);
             _.each(this.outerEvents, function (method, event) {
@@ -198,23 +198,24 @@
             this.listMode = event.mode;
             //remove everything from the View
             this.$el.empty();
-            var orderedNodes = [];
+            var orderedNodesWithoutIndex = [];
+            var orderedNodesWithIndex = [];
 
-            var j = 1;
+            var j = 0;
             //first we need to order the nodes !
             for (var i in this.nodes) {
 
                 if (this.nodes[i].index_dir === null) {
-                    orderedNodes[j] = this.nodes[i];
+                    orderedNodesWithoutIndex[j] = this.nodes[i];
                     j++;
                 } else {
-                    orderedNodes[this.nodes[i].index_dir] = this.nodes[i];
+                    orderedNodesWithIndex[this.nodes[i].index_dir] = this.nodes[i];
                 }
             }
-
-            for (var i = 1; i < orderedNodes.length; i++) {
-                this.renderNode(orderedNodes[i]);
-            }
+            var orderedNodes = orderedNodesWithoutIndex.concat(orderedNodesWithIndex);
+            orderedNodes.forEach(function (node) {
+                this.renderNode(node);
+            }.bind(this));
         },
         renderNode: function(node) {
             //1023 is the "I can do everything" mask.
@@ -222,9 +223,9 @@
                 return;
             }
 
-            var view = (this.listMode === 'default') ?
-                new views.Thumbnail(this.parameters, this.dispatcher, this.zoomValue):
-                new views.ListViewElement(this.parameters, this.dispatcher, this.zoomValue);
+            var view = (this.listMode === 'list') ?
+                new views.ListViewElement(this.parameters, this.dispatcher, this.zoomValue):
+                new views.Thumbnail(this.parameters, this.dispatcher, this.zoomValue);
 
             view.render(node, true && this.directoryId !== '0');
             this.$el.append(view.$el);
