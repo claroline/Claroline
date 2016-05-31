@@ -8,7 +8,7 @@
 
             <!-- Score -->
             <div class="pull-right" data-ng-if="questionShowCtrl.includeCorrection || questionShowCtrl.feedback.enabled">
-                <!-- Display manual correction message -->
+                <!-- Display manual correction message for user -->
                 <small class="text-danger" data-ng-if="questionShowCtrl.feedback.visible && -1 === questionShowCtrl.questionPaper.score">
                     <span class="fa fa-warning"></span>
                     {{ 'question_need_manual_correction'|trans:{}:'ujm_exo' }}
@@ -134,6 +134,12 @@
                 <span>{{ questionShowCtrl.getGenericFeedback()|trans:{}:'ujm_sequence' }}</span>
             </div>
         </div>
+
+        <!-- Display manual correction link for admins -->
+        <button type="button" class="btn btn-default" data-ng-if="-1 === questionShowCtrl.questionPaper.score && questionShowCtrl.includeCorrection && questionShowCtrl.editEnabled" data-ng-click="questionShowCtrl.mark()">
+            <span class="fa fa-check-square"></span>
+            {{ 'mark_question'|trans:{}:'ujm_exo' }}
+        </button>
 
         <!-- Display Hints -->
         <div class="question-hints" data-ng-if="questionShowCtrl.question.hints">

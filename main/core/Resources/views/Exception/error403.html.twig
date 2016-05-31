@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle:Exception:layout.html.twig' %}
 
+{% set httpCode = 403 %}
+
 {% block title %}{{ parent() ~ ' - ' ~ 'unauthorized' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block message %}

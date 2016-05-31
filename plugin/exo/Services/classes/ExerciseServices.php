@@ -7,11 +7,7 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-// use UJM\ExoBundle\Entity\ExerciseQuestion;
-use UJM\ExoBundle\Entity\Paper;
-use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Step;
@@ -24,9 +20,6 @@ class ExerciseServices
 {
     protected $om;
     protected $authorizationChecker;
-
-    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
-    protected $eventDispatcher;
     protected $doctrine;
     protected $container;
 
@@ -36,20 +29,17 @@ class ExerciseServices
      *
      * @param \Claroline\CoreBundle\Persistence\ObjectManager                              $om
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface                  $eventDispatcher
      * @param \Doctrine\Bundle\DoctrineBundle\Registry                                     $doctrine
      * @param \Symfony\Component\DependencyInjection\Container                             $container
      */
     public function __construct(
         ObjectManager $om,
         AuthorizationCheckerInterface $authorizationChecker,
-        EventDispatcherInterface $eventDispatcher,
         Registry $doctrine,
         Container $container
     ) {
         $this->om = $om;
         $this->authorizationChecker = $authorizationChecker;
-        $this->eventDispatcher = $eventDispatcher;
         $this->doctrine = $doctrine;
         $this->container = $container;
     }
@@ -146,22 +136,6 @@ class ExerciseServices
         }
 
         return $tabScoresUser;
-    }
-
-    /**
-     * Trigger an event to log information after to execute an exercise if the score is not temporary.
-     *
-     *
-     * @param Paper $paper
-     */
-    public function manageEndOfExercise(Paper $paper)
-    {
-        $paperInfos = $this->container->get('ujm.exo_paper')->getInfosPaper($paper);
-
-        if (!$paperInfos['scoreTemp']) {
-            $event = new LogExerciseEvaluatedEvent($paper->getExercise(), $paperInfos);
-            $this->eventDispatcher->dispatch('log', $event);
-        }
     }
 
     /**

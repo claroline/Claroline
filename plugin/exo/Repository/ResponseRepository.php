@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use UJM\ExoBundle\Entity\Paper;
 
 /**
  * ResponseRepository.
@@ -130,7 +131,7 @@ class ResponseRepository extends EntityRepository
      * Get the score total for a paper.
      *
      *
-     * @param int $paperID id paper
+     * @param int $paperId id paper
      *
      * Return int
      */
@@ -150,5 +151,26 @@ class ResponseRepository extends EntityRepository
         $res = $query->getOneOrNullResult();
 
         return $res['score'];
+    }
+
+    /**
+     * Check if all the responses of a Paper have been evaluated.
+     *
+     * @param Paper $paper
+     *
+     * @return bool
+     */
+    public function allPaperResponsesMarked(Paper $paper)
+    {
+        $qb = $this->createQueryBuilder('r');
+
+        $count = $qb->select('COUNT(r)')
+            ->where('r.mark = -1')
+            ->andWhere('r.paper = :paper')
+            ->setParameter('paper', $paper)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return 0 === (int) $count;
     }
 }
