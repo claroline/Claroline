@@ -16,16 +16,14 @@ class Version20160525113210 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE ujm_exercise 
-            ADD statistics TINYINT(1) NOT NULL, 
-            DROP title
+            ADD statistics TINYINT(1) NOT NULL
         ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE ujm_exercise 
-            ADD title VARCHAR(255) NOT NULL COLLATE utf8_unicode_ci, 
+            ALTER TABLE ujm_exercise
             DROP statistics
         ");
     }
