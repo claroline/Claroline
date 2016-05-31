@@ -3,6 +3,8 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Entity\Paper;
 
@@ -126,6 +128,27 @@ class ResponseRepository extends EntityRepository
                       ->setParameters(array(1 => $exoId, 2 => $questionId));
 
         return $query->getResult();
+    }
+
+    /**
+     * Send the score for an exercise and an interaction.
+     *
+     * @param Exercise $exercise
+     * @param Question $question
+     *
+     * @return Response[]
+     */
+    public function findByExerciseAndQuestion(Exercise $exercise, Question $question)
+    {
+        $qb = $this->createQueryBuilder('r');
+
+        return $qb
+            ->join('r.paper', 'p', 'WITH', 'p.exercise = :exercise')
+            ->where('r.question = :question')
+            ->setParameter('exercise', $exercise)
+            ->setParameter('question', $question)
+            ->getQuery()
+            ->getResult();
     }
 
     /**

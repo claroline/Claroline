@@ -47,9 +47,17 @@
         </div>
 
         <!-- Display specificity of the Question -->
-        <h5 data-ng-if="questionShowCtrl.includeCorrection && questionShowCtrl.question.solutions && questionShowCtrl.question.solutions.length > 0">
+        <h5 data-ng-if="questionShowCtrl.includeCorrection && ((questionShowCtrl.question.solutions && questionShowCtrl.question.solutions.length > 0) || questionShowCtrl.question.stats)">
             <span class="fa fa-fw fa-user"></span>
             {{ 'paper_details_table_your_answer'|trans:{}:'ujm_sequence' }}
+
+            <small data-ng-if="questionShowCtrl.question.stats">
+                {{ 'stat_users'|transChoice:questionShowCtrl.question.stats.answered:{count: questionShowCtrl.question.stats.answered}:'ujm_exo' }}
+                /
+                {{ 'stat_users'|transChoice:questionShowCtrl.question.stats.seen:{count: questionShowCtrl.question.stats.seen}:'ujm_exo' }}
+                {{ 'stat_have_responded'|trans:{}:'ujm_exo' }}
+                ({{ (questionShowCtrl.question.stats.answered * 100 / questionShowCtrl.question.stats.seen)|number:1 }}%)
+            </small>
         </h5>
         <div data-ng-switch="questionShowCtrl.question.type">
             <!-- Choice Type -->

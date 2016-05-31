@@ -114,6 +114,28 @@ class Graphic extends Interaction
         return $score;
     }
 
+    public function isInArea(\stdClass $coords, \stdClass $area)
+    {
+        $in = false;
+
+        switch ($area->shape) {
+            case 'circle':
+                if (pow($coords->x - $area->center->x, 2) + pow($coords->y - $area->center->y, 2) <= pow($area->radius, 2)) {
+                    $in = true;
+                }
+                break;
+
+            case 'rect':
+                if ($coords->x >= $area->coords[0]->x && $coords->x <= $area->coords[1]->x
+                    && $coords->y >= $area->coords[0]->y && $coords->y <= $area->coords[1]->y) {
+                    $in = true;
+                }
+                break;
+        }
+
+        return $in;
+    }
+
     /**
      * implement the abstract method
      * Get score max possible for a graphic question.

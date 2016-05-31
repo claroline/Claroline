@@ -39,28 +39,31 @@ GraphicQuestionService.prototype.getCorrectAnswer = function getCorrectAnswer(qu
  *
  */
 GraphicQuestionService.prototype.answersAllFound = function answersAllFound(question, answers) {
-    var notFound = 0;
-    for (var i = 0; i < question.solutions.length; i++) {
-        for (var j = 0; j < answers.length; j++) {
-            var found = this.ImageAreaService.isInArea(question.solutions[i], answers[j]);
-            if (found) {
-                break;
+    var feedbackState = -1;
+
+    if (question.solutions) {
+        var notFound = 0;
+        for (var i = 0; i < question.solutions.length; i++) {
+            for (var j = 0; j < answers.length; j++) {
+                var found = this.ImageAreaService.isInArea(question.solutions[i], answers[j]);
+                if (found) {
+                    break;
+                }
+            }
+
+            if (!found) {
+                // zone has no answer
+                notFound++;
             }
         }
 
-        if (!found) {
-            // zone has no answer
-            notFound++;
+        if (0 === notFound) {
+            feedbackState = this.FeedbackService.SOLUTION_FOUND;
+        } else if (1 === notFound) {
+            feedbackState = this.FeedbackService.ONE_ANSWER_MISSING;
+        } else {
+            feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
         }
-    }
-    
-    var feedbackState = -1;
-    if (0 === notFound) {
-        feedbackState = this.FeedbackService.SOLUTION_FOUND;
-    } else if (1 === notFound) {
-        feedbackState = this.FeedbackService.ONE_ANSWER_MISSING;
-    } else {
-        feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
     }
     
     return feedbackState;

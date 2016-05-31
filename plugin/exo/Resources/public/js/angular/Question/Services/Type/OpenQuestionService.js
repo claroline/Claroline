@@ -27,11 +27,12 @@ OpenQuestionService.prototype.initAnswer = function initAnswer() {
  * @returns {number}
  */
 OpenQuestionService.prototype.answersAllFound = function answersAllFound(question, answer) {
-    var numAnswersFound = 0;
+    var feedbackState = -1;
 
     if ('long' !== question.typeOpen) {
-        // Initialize answer with keywords
         // Search used keywords in student answer
+        var numAnswersFound = 0;
+        
         for (var i = 0; i < question.solutions.length; i++) {
             var solution = question.solutions[i];
 
@@ -42,17 +43,16 @@ OpenQuestionService.prototype.answersAllFound = function answersAllFound(questio
                 numAnswersFound++;
             }
         }
+
+        if (question.solutions.length === numAnswersFound) {
+            feedbackState = this.FeedbackService.SOLUTION_FOUND;
+        } else if (question.solutions.length -1 === numAnswersFound) {
+            feedbackState = this.FeedbackService.ONE_ANSWER_MISSING;
+        } else {
+            feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
+        }
     } else {
         feedbackState = this.FeedbackService.SOLUTION_FOUND;
-    }
-    
-    var feedbackState = -1;
-    if (question.solutions.length === numAnswersFound) {
-        feedbackState = this.FeedbackService.SOLUTION_FOUND;
-    } else if (question.solutions.length -1 === numAnswersFound) {
-        feedbackState = this.FeedbackService.ONE_ANSWER_MISSING;
-    } else {
-        feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
     }
     
     return feedbackState;

@@ -58,7 +58,7 @@ class PaperController
      *
      * @DI\InjectParams({
      *     "objectManager"   = @DI\Inject("claroline.persistence.object_manager"),
-     *     "authorization"      = @DI\Inject("security.authorization_checker"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "stepManager"     = @DI\Inject("ujm.exo.step_manager"),
      *     "questionManager" = @DI\Inject("ujm.exo.question_manager"),
      *     "paperManager"    = @DI\Inject("ujm.exo.paper_manager")
