@@ -39,7 +39,7 @@ PaperShowCtrl.prototype.getQuestionPaper = function getQuestionPaper(question) {
  * @returns {Number}
  */
 PaperShowCtrl.prototype.getScore = function getScore() {
-    return this.PaperService.getPaperScore(this.paper);
+    return this.PaperService.getPaperScore(this.paper, this.questions);
 };
 
 // Register controller into Angular JS

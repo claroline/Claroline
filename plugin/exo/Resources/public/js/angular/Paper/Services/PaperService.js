@@ -225,11 +225,19 @@ PaperService.prototype.saveScore = function saveScore(question, score) {
 /**
  * Calculate the score of the Paper (/20)
  * @param   {Object} paper
+ * @param   {Array} questions
  * @returns {number}
  */
-PaperService.prototype.getPaperScore = function getPaperScore(paper) {
+PaperService.prototype.getPaperScore = function getPaperScore(paper, questions) {
     var score = 0.0; // final score
-    var scoreTotal = this.ExerciseService.getScoreTotal();
+    var scoreTotal = 0;
+
+    for (var i = 0; i < questions.length; i++) {
+        if (questions[i].scoreTotal) {
+            scoreTotal += questions[i].scoreTotal;
+        }
+    }
+
     var userScore = paper.scoreTotal;
     if (userScore) {
         score = userScore * 20 / scoreTotal;

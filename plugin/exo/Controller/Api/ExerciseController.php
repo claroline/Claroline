@@ -152,7 +152,7 @@ class ExerciseController
             return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
         }
 
-        return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));
+        return new JsonResponse($this->paperManager->exportExercisePapers($exercise, $user));
     }
 
     /**

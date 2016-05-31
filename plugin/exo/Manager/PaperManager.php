@@ -301,38 +301,42 @@ class PaperManager
      * Returns the papers for a given exercise, in a JSON format.
      *
      * @param Exercise $exercise
-     *
-     * @return array
-     */
-    public function exportExercisePapers(Exercise $exercise)
-    {
-        $papers = $this->om->getRepository('UJMExoBundle:Paper')
-            ->findBy(['exercise' => $exercise]);
-
-        $export = [];
-        foreach ($papers as $paper) {
-            $export[] = $this->exportPaper($paper, true);
-        }
-
-        return $export;
-    }
-
-    /**
-     * Returns the papers of a user for a given exercise, in a JSON format.
-     *
-     * @param Exercise $exercise
      * @param User     $user
      *
      * @return array
      */
-    public function exportUserPapers(Exercise $exercise, User $user)
+    public function exportExercisePapers(Exercise $exercise, User $user = null)
     {
+        $isAdmin = true;
+        $search = [
+            'exercise' => $exercise,
+        ];
+
+        if (!empty($user)) {
+            // Load papers for a single non admin User
+            $isAdmin = false;
+            $search['user'] = $user;
+        }
+
         $papers = $this->om->getRepository('UJMExoBundle:Paper')
-            ->findBy(['exercise' => $exercise, 'user' => $user]);
+            ->findBy($search);
 
-        $papers = array_map([$this, 'exportPaper'], $papers);
+        $exportPapers = [];
+        $exportQuestions = [];
+        foreach ($papers as $paper) {
+            $exportPapers[] = $this->exportPaper($paper, $isAdmin);
 
-        return $papers;
+            $paperQuestions = new \stdClass();
+            $paperQuestions->paperId = $paper->getId();
+            $paperQuestions->questions = $this->exportPaperQuestions($paper, $isAdmin);
+
+            $exportQuestions[] = $paperQuestions;
+        }
+
+        return [
+            'papers' => $exportPapers,
+            'questions' => $exportQuestions,
+        ];
     }
 
     /**
@@ -432,24 +436,6 @@ class PaperManager
     }
 
     /**
-     * Export statistics related to a Paper questions.
-     *
-     * @param $paper
-     *
-     * @return array
-     */
-    /*public function generatePaperStatistics(Paper $paper)
-    {
-        $exercise = $paper->getExercise();
-
-        $statistics = array_map(function ($question) use ($exercise) {
-            return $this->questionManager->generateQuestionStats($question, $exercise);
-        }, $this->getPaperQuestions($paper));
-
-        return $statistics;
-    }*/
-
-    /**
      * Export the Questions linked to the Paper.
      *
      * @param Paper $paper
@@ -491,8 +477,7 @@ class PaperManager
     {
         $responseRepo = $this->om->getRepository('UJMExoBundle:Response');
         $linkRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
-        $questions = $questionRepo->findByExercise($paper->getExercise());
+        $questions = $this->getPaperQuestions($paper);
         $paperQuestions = [];
 
         foreach ($questions as $question) {
@@ -538,7 +523,9 @@ class PaperManager
         $questions = [];
         foreach ($ids as $id) {
             $question = $this->om->getRepository('UJMExoBundle:Question')->find($id);
-            $questions[] = $question;
+            if ($question) {
+                $questions[] = $question;
+            }
         }
 
         return $questions;
@@ -558,6 +545,7 @@ class PaperManager
         $exercise = $paper->getExercise();
         $stepsQuestions = [];
 
+        $deleted = [];
         foreach ($exercise->getSteps() as $step) {
             $stepQuestions = [
                 'id' => $step->getId(),
@@ -566,13 +554,33 @@ class PaperManager
 
             // to keep the questions order
             foreach ($questions as $question) {
-                $sq = $this->om->getRepository('UJMExoBundle:StepQuestion')->findOneBy(array('step' => $step, 'question' => $question));
-                if ($sq) {
+                $sq = $this->om->getRepository('UJMExoBundle:StepQuestion')->findOneBy(['step' => $step, 'question' => $question]);
+                if ($sq && $sq->getQuestion()->getId()) {
                     $stepQuestions['items'][] = $sq->getQuestion()->getId();
+                } else {
+                    // Question is no longer in the Exercise
+                    $deleted[] = $question;
                 }
             }
 
-            $stepsQuestions[] = $stepQuestions;
+            // Step is not empty
+            if (!empty($stepQuestions['items'])) {
+                $stepsQuestions[] = $stepQuestions;
+            }
+        }
+
+        // Append deleted questions at the end of the Exercise
+        if (!empty($deleted)) {
+            $stepForDeleted = [
+                'id' => null,
+                'items' => [],
+            ];
+
+            foreach ($deleted as $question) {
+                $stepForDeleted['items'][] = $question->getId();
+            }
+
+            $stepsQuestions[] = $stepForDeleted;
         }
 
         return $stepsQuestions;

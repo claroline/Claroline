@@ -17,7 +17,8 @@ var PaperListCtrl = function PaperListCtrl($filter, CommonService, ExerciseServi
 
     this.editEnabled = this.ExerciseService.isEditEnabled();
     this.exercise    = this.ExerciseService.getExercise();
-    this.papers      = papers;
+    this.papers      = papers.papers;
+    this.questions   = papers.questions;
 
     this.filtered = this.papers;
 };
@@ -35,6 +36,8 @@ PaperListCtrl.prototype.editEnabled = false;
  * @type {Array}
  */
 PaperListCtrl.prototype.papers = [];
+
+PaperListCtrl.prototype.questions = [];
 
 /**
  * Current Exercise
@@ -106,7 +109,18 @@ PaperListCtrl.prototype.deletePaper = function deletePaper(paper) {
  * @returns {Number}
  */
 PaperListCtrl.prototype.getPaperScore = function getPaperScore(paper) {
-    return this.PaperService.getPaperScore(paper);
+    var questions = [];
+
+    // Search the correct set of Papers questions
+    for (var i = 0; i < this.questions.length; i++) {
+        if (this.questions[i].paperId === paper.id) {
+            questions = this.questions[i].questions;
+
+            break;
+        }
+    }
+
+    return this.PaperService.getPaperScore(paper, questions);
 };
 
 /**
