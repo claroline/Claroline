@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2377f3fd76e56e3743b7be8c8c1d09ad",
-    "content-hash": "8c0efb1194fa01c75b9dc072b14ce305",
+    "hash": "2159e9b2851437039960196805785062",
+    "content-hash": "1bf6d17300d368457e9c502213308aee",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -116,16 +116,16 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "7.x-dev",
+            "version": "7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "4fbc6f69460bf0090f3f4f7111602180c5c75d29"
+                "reference": "d20c1a20970ed742c9e2d76b2fe4677bd97a0e34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/4fbc6f69460bf0090f3f4f7111602180c5c75d29",
-                "reference": "4fbc6f69460bf0090f3f4f7111602180c5c75d29",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/d20c1a20970ed742c9e2d76b2fe4677bd97a0e34",
+                "reference": "d20c1a20970ed742c9e2d76b2fe4677bd97a0e34",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-05-31 16:09:19"
+            "time": "2016-06-01 03:51:04"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -1763,7 +1763,7 @@
                     "homepage": "https://github.com/friendsofsymfony/FOSJsRoutingBundle/contributors"
                 },
                 {
-                    "name": "William DURAND",
+                    "name": "William Durand",
                     "email": "william.durand1@gmail.com"
                 }
             ],
@@ -3604,7 +3604,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "KnpLabs",
+                    "name": "Knplabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
