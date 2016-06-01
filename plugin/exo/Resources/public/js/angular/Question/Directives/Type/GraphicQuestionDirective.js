@@ -12,6 +12,9 @@ var GraphicQuestionDirective = function GraphicQuestionDirective(FeedbackService
         controller: 'GraphicQuestionCtrl',
         controllerAs: 'graphicQuestionCtrl',
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/graphic.html',
+        scope: {
+            includeCorrection: '='
+        },
         link: {
             post: function postLink(scope, element, attr, controller) {
                 // Get a reference of the img object for pointers

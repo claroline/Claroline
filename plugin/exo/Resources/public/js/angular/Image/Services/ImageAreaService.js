@@ -77,7 +77,7 @@ ImageAreaService.prototype.isInArea = function isInArea(areaDefinition, coords) 
 
             break;
         case 'circle':
-            if (Math.sqrt(coords.x - area.center.x) + Math.sqrt(coords.y - area.center.y) <= Math.sqrt(area.radius)) {
+            if (Math.sqrt((coords.x - area.center.x)*(coords.x - area.center.x) + (coords.y - area.center.y)*(coords.y - area.center.y)) <= area.radius) {
                 inArea = true;
             }
 
