@@ -13,7 +13,7 @@
 
 if (!file_exists(__DIR__ . '/../app/config/parameters.yml')) {
     abort(
-        'The configuration file app/config/parameter.yml is missing '
+        'The configuration file app/config/parameters.yml is missing '
          . '(execute "php scripts/configure.php" to build it interactively)'
     );
 }
