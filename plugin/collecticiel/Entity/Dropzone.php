@@ -284,9 +284,9 @@ class Dropzone extends AbstractResource
     protected $evaluationType = self::EVALUATION_TYPE;
 
     /**
-     * @ORM\Column(name="maximum_notation", type="smallint", nullable=false, options={"default" = 20})
+     * @ORM\Column(name="maximum_notation", type="smallint", nullable=true, options={"default" = 0})
      */
-    protected $maximumNotation;
+    protected $maximumNotation = 0;
 
     /**
      * @var Event
