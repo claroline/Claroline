@@ -62,7 +62,7 @@ class QcmImport extends QtiImport
         $this->interactionQCM->setQuestion($this->question);
         $this->getShuffle();
         $this->getQCMType();
-        if ($rp->item(0) && $rp->item(0)->getElementsByTagName('responseCondition')->item(0)) {
+        if ($rp->item(0) && $rp->item(0)->getElementsByTagName('responseCondition')->item(0) && $rp->item(0)->getElementsByTagName('responseElse')->item(0)) {
             $this->interactionQCM->setWeightResponse(false);
             $this->getGlobalScore();
         } else {
