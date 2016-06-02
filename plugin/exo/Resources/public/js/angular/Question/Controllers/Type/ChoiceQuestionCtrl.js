@@ -96,7 +96,7 @@ ChoiceQuestionCtrl.prototype.isUniqueChoiceValid = function isUniqueChoiceValid(
     if (!this.question.multiple) {
         // Loop over all choice to see if the correct one has been selected
         for (var i = 0; i < this.choices.length; i++) {
-            if (1 === this.isChoiceValid(this.choices[i])) {
+            if (1 === this.choices[i].valid) {
                 valid = true;
                 break;
             }
