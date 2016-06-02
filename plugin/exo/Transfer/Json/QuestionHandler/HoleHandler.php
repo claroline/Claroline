@@ -308,7 +308,7 @@ class HoleHandler implements QuestionHandlerInterface
                         // Check if the response match the current keyword
                         if ($holesMap[$holeAnswer->holeId]->getSelector()) {
                             // It's the ID of the keyword which is stored
-                            $found = $keyword->getId() === (int) $holeAnswer->holeId;
+                            $found = $keyword->getId() === (int) $holeAnswer->answerText;
                         } else {
                             if ($keyword->getCaseSensitive()) {
                                 $found = strtolower($keyword->getResponse()) === strtolower($holeAnswer->answerText);

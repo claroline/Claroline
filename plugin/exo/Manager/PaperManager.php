@@ -12,6 +12,7 @@ use UJM\ExoBundle\Entity\LinkHintPaper;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Entity\StepQuestion;
 use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
 use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Library\Mode\MarkMode;
@@ -541,49 +542,49 @@ class PaperManager
     public function getStepsQuestions(Paper $paper)
     {
         $questions = $this->getPaperQuestions($paper);
-
         $exercise = $paper->getExercise();
-        $stepsQuestions = [];
 
-        $deleted = [];
-        foreach ($exercise->getSteps() as $step) {
-            $stepQuestions = [
-                'id' => $step->getId(),
-                'items' => [],
-            ];
+        // to keep the questions order
+        $deleted = []; // Questions not linked to the exercise anymore
+        $stepsQuestions = []; // Questions linked to a Step of the Exercise (the keys are the step IDs)
+        foreach ($questions as $question) {
+            // Check if the question is attached to a Step
 
-            // to keep the questions order
-            foreach ($questions as $question) {
-                $sq = $this->om->getRepository('UJMExoBundle:StepQuestion')->findOneBy(['step' => $step, 'question' => $question]);
-                if ($sq && $sq->getQuestion()->getId()) {
-                    $stepQuestions['items'][] = $sq->getQuestion()->getId();
-                } else {
-                    // Question is no longer in the Exercise
-                    $deleted[] = $question;
+            /** @var StepQuestion $stepQuestion */
+            $stepQuestion = $this->om->getRepository('UJMExoBundle:StepQuestion')->findByExerciseAndQuestion($exercise, $question->getId());
+            if ($stepQuestion) {
+                // Question linked to a Step
+                $step = $stepQuestion->getStep();
+                if (!isset($stepsQuestions[$step->getId()])) {
+                    $stepsQuestions[$step->getId()] = [];
                 }
-            }
 
-            // Step is not empty
-            if (!empty($stepQuestions['items'])) {
-                $stepsQuestions[] = $stepQuestions;
+                $stepsQuestions[$step->getId()][] = $question->getId();
+            } else {
+                $deleted[] = $question->getId();
+            }
+        }
+
+        $steps = [];
+        foreach ($exercise->getSteps() as $step) {
+            if (!empty($stepsQuestions[$step->getId()])) {
+                // Step has questions
+                $steps[] = [
+                    'id' => $step->getId(),
+                    'items' => $stepsQuestions[$step->getId()],
+                ];
             }
         }
 
         // Append deleted questions at the end of the Exercise
         if (!empty($deleted)) {
-            $stepForDeleted = [
-                'id' => null,
-                'items' => [],
+            $steps[] = [
+                'id' => 'deleted',
+                'items' => $deleted,
             ];
-
-            foreach ($deleted as $question) {
-                $stepForDeleted['items'][] = $question->getId();
-            }
-
-            $stepsQuestions[] = $stepForDeleted;
         }
 
-        return $stepsQuestions;
+        return $steps;
     }
 
     /**

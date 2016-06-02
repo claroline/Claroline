@@ -3,10 +3,19 @@
     <div class="type-question-container open-question-container panel panel-default">
         <!-- For Short and One word : we display the list of expected keywords as correction -->
         <table class="table table-striped">
-            <tr data-ng-repeat="keyword in openCorrectionCtrl.answer">
+            <tr data-ng-repeat="keyword in openCorrectionCtrl.answer"
+                data-ng-init="stats = openCorrectionCtrl.getKeywordStats(keyword)">
                 <td class="col-md-9">
-                    {{ keyword.word }}
+                    <b>{{ keyword.word }}</b>
                     <small data-ng-if="keyword.caseSensitive">({{ 'case_sensitive'|trans:{}:'ujm_exo' }})</small>
+
+                    <small data-ng-if="stats">
+                        {{ 'answer_of'|trans:{}:'ujm_exo' }}
+                        {{ 'stat_users'|transChoice:stats.count:{count: stats.count}:'ujm_exo' }}
+                        /
+                        {{ 'stat_users'|transChoice:openCorrectionCtrl.question.stats.answered:{count: openCorrectionCtrl.question.stats.answered}:'ujm_exo' }}
+                        ({{ (stats.count * 100 / openCorrectionCtrl.question.stats.answered)|number:1 }}%)
+                    </small>
                 </td>
 
                 <!-- Score -->

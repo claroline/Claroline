@@ -31,7 +31,7 @@ mysql:
 
 before_install:
   # keep a list of files impacted by the PR (wouldn't work with direct push)
-  - git diff --name-only --diff-filter=AM $TRAVIS_BRANCH > git_diff_files.txt
+  - git diff --name-only --diff-filter=AM origin/$TRAVIS_BRANCH > git_diff_files.txt
   # leave build/repo dir
   - cd ../..
   # increase php memory size (required for composer)
