@@ -214,7 +214,7 @@ function addChoice(container, deleteChoice, comment, edition) {
 }
 
 // Check if form is valid
-function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAnswer, inviteQuestion) {
+function check_form_qcm(answerCoched) {
         // If no expected answer is selected
     var nbr_rep_coched = 0;
     $('#newTable').find('tr:not(:first)').each(function () {
