@@ -212,6 +212,9 @@ class DropzoneController extends DropzoneBaseController
                 $dropzone->setEditionState(2);
             }
 
+            // https://github.com/claroline/Distribution/issues/502
+            $dropzone->setEvaluationType('ratingScale');
+
             // handle events (delete if needed, create & update)
             $dropzone = $dropzoneManager->handleEvents($dropzone, $user);
 
