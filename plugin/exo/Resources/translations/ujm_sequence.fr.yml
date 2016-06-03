@@ -2,7 +2,7 @@
 all_answers_found: Toutes vos réponses sont correctes. Passez à la suite.
 answer_zone: Zone de réponse
 answers_correct: Votre solution est maintenant correcte. Passez à la suite.
-answers_not_found: XXXXX Toutes les bonnes réponses n'ont pas été trouvées
+answers_not_found: Il reste plusieurs réponses à trouver
 answers_now_correct: Toutes vos réponses sont maintenant correctes. Passez à la suite.
 
 # b
@@ -53,7 +53,7 @@ need_correction: Cette réponse nécessite une correction manuelle
 note_question: Noter cette question
 
 # o
-one_answer_to_find: XXXXX Il manque une bonne réponse
+one_answer_to_find: Il reste une réponse à trouver
 
 # p
 paper_list: Liste des copies

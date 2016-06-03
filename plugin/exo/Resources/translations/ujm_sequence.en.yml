@@ -2,7 +2,7 @@
 all_answers_found: All your answers are correct. Move to the next step.
 answer_zone: Answer zone
 answers_correct: Your answer is now correct. Move to the next step.
-answers_not_found: XXXXX All answers were not found
+answers_not_found: All answers were not found
 answers_now_correct: All your answers are now correct. Move to the next step.
 
 # b
@@ -54,7 +54,7 @@ need_correction: This answer needs a manual correction
 note_question: Note this question
 
 # o
-one_answer_to_find: XXXXX There is one answer left to find
+one_answer_to_find: There is one answer left to find
 
 # p
 paper_list: Paper list
