@@ -20,7 +20,7 @@
                    data-include-correction="stepShowCtrl.solutionShown">
     </question-show>
     
-    <div class="alert alert-info" data-ng-if="stepShowCtrl.feedback.visible">
+    <div class="alert alert-info" data-ng-if="stepShowCtrl.feedback.visible && !stepShowCtrl.solutionShown">
         {{ stepShowCtrl.getSuiteFeedback()|trans:{}:'ujm_sequence' }}
     </div>
 
