@@ -109,7 +109,11 @@
         {% endif %}
 
         {% if dropzone.evaluation == 1  %}
-            {% include 'InnovaCollecticielBundle:Document:documentIsTransmit.html.twig' %}
+            <td class="centered" id="is-transmit-{{ document.id }}">
+                <div class="btn-group">
+                    {% include 'InnovaCollecticielBundle:Document:documentIsTransmit.html.twig' %}
+                </div>
+            </td>
         {% endif %}
     {% endif %}
 

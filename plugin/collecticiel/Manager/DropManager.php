@@ -192,17 +192,19 @@ class DropManager
         $docWithoutReceiptCount = 0;
         foreach ($drops as $drop) {
             foreach ($drop->getDocuments() as $document) {
-                $returnReceiptType = $this->receiptRepo->doneReturnReceiptForADocument($drop->getDropzone(), $document);
-                // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
-                $id = 0;
-                if (!empty($returnReceiptType)) {
-                    // Récupération de la valeur de l'accusé de réceptoin
-                    $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
-                    if ($id == 0) {
+                if ($document->getValidate()) {
+                    $returnReceiptType = $this->receiptRepo->doneReturnReceiptForADocument($drop->getDropzone(), $document);
+                    // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
+                    $id = 0;
+                    if (!empty($returnReceiptType)) {
+                        // Récupération de la valeur de l'accusé de réceptoin
+                        $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
+                        if ($id == 0) {
+                            ++$docWithoutReceiptCount;
+                        }
+                    } else {
                         ++$docWithoutReceiptCount;
                     }
-                } else {
-                    ++$docWithoutReceiptCount;
                 }
             }
         }
