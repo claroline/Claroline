@@ -8,6 +8,10 @@ var ClozeQuestionCtrl = function ClozeQuestionCtrl(FeedbackService, ClozeQuestio
     AbstractQuestionCtrl.apply(this, arguments);
 
     this.ClozeQuestionService = ClozeQuestionService;
+    
+    for (var i = 0; i < this.question.holes.length; i++) {
+        this.question.holes[i].valid = 0;
+    }
 };
 
 // Extends AbstractQuestionCtrl
