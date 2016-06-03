@@ -31,18 +31,22 @@ ChoiceQuestionService.prototype.answersAllFound = function answersAllFound(quest
     if (question.solutions) {
         var numAnswersFound = 0;
         var numSolutions = 0;
+        var uniqueSolutionFound = false;
         for (var i=0; i<question.solutions.length; i++) {
             if (question.solutions[i].score > 0) {
                 numSolutions++;
             }
             for (var j=0; j<answer.length; j++) {
                 if (question.solutions[i].id === answer[j] && question.solutions[i].score > 0) {
+                    if (question.solutions[i].rightResponse && !question.multiple) {
+                        uniqueSolutionFound = true;
+                    }
                     numAnswersFound++;
                 }
             }
         }
 
-        if (numAnswersFound === numSolutions) {
+        if (numAnswersFound === numSolutions || uniqueSolutionFound) {
             // all answers have been found
             feedbackState = this.FeedbackService.SOLUTION_FOUND;
         } else if (numAnswersFound === numSolutions -1 && question.multiple) {
@@ -77,7 +81,7 @@ ChoiceQuestionService.prototype.getCorrectAnswer = function getCorrectAnswer(que
                 }
             } else {
                 // Unique choice
-                if (null === betterFound || choice.score > betterFound.score) {
+                if (choice.rightResponse) {
                     // Correct choice not already found OR current choice has more point than the previous found
                     betterFound = choice;
                 }
@@ -112,11 +116,12 @@ ChoiceQuestionService.prototype.isChoiceValid = function isChoiceValid(question,
     var isValid = false;
 
     var choiceSolution = this.getChoiceSolution(question, choice);
-    if (choiceSolution.score > 0) {
+    console.log(choiceSolution);
+    if (choiceSolution.rightResponse) {
         // The current choice is part of the right response => User choice is Valid
         isValid = true;
     }
-
+console.log(isValid);
     return isValid;
 };
 
