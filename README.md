@@ -29,7 +29,7 @@ For a development installation, you'll need at least:
     - [ffmpeg][ffmpeg] (optional)
 - MySQL/MariaDB >=5.0
 - [composer][composer] (recent version)
-- [node.js][node] >= 5.5 (use can use https://github.com/creationix/nvm if your distribution doesn't include it)
+- [node.js][node] >= 5.5
 - [npm][npm] >= 3.7
 
 It's also highly recommended to develop on an UNIX-like OS.
