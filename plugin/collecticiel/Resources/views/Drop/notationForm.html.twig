@@ -1,21 +1,21 @@
 <form class="form-horizontal" role="form" method="POST"
  action="{{ path('innova_collecticiel_add_notation') }}">
           
-    <div class="innova_collecticiel_notation_form container form-group form-buttons">
+    <div class="innova_collecticiel_notation_form container">
 
         <div class="row">
-            <div class="form-group row col-md-6">
+            <div class="form-group col-md-6">
                 {# Bloc "Rappel des instructions ..." #}
                 {% if dropzone.instruction != null %}
                     {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionTeacher.html.twig' %}
                 {% endif %}
             </div>
-            <div class="form-group row col-md-6">
+            <div class="form-group col-md-6">
             </div>
         </div>
 
         <div class="row text-left">
-            <div class="form-group row col-md-6">
+            <div class="form-group col-md-6">
                 {{ 'Review on'|trans({}, 'innova_collecticiel') }}
             </div>
             <div class="form-group row col-md-6">
@@ -24,9 +24,7 @@
 
         <div class="row text-left">
             <div class="form-group row col-md-6">
-            <table class="table table-responsive table-condensed well table-striped">
-                    <thead>
-                    </thead>
+                <table class="table table-responsive table-condensed well table-striped">
                     <tbody class="table">
                         <tr>
                             <td>{{ 'Type'|trans({}, 'innova_collecticiel') }}</td>
@@ -67,26 +65,28 @@
         </div>
 
         <div class="row text-left">
-            <div class="form-group row col-md-6">
+            <div class="form-group col-md-6">
                 {{ 'Global comment'|trans({}, 'innova_collecticiel') }}
-                <label>
-                    <textarea id="innova_collecticiel_notation_form_commentText" name="innova_collecticiel_notation_form[commentText]" required="required" class="claroline-tiny-mce hide">
-                    </textarea>
-                </label>
-            </div>
-            <div class="form-group row col-md-6">
             </div>
         </div>
 
         <div class="row text-left">
-            <div class="form-group row col-md-6">
+            <div class="form-group col-md-6">
+                <textarea id="innova_collecticiel_notation_form_commentText" name="innova_collecticiel_notation_form[commentText]" required="required" class="claroline-tiny-mce hide">
+                </textarea>
+            </div>
+        </div>
+
+        <div class="row text-left">
+            <div class="form-group col-md-6">
                 {{ 'Quality argument'|trans({}, 'innova_collecticiel') }}
-                <label>
+            </div>
+        </div>
+
+        <div class="row text-left">
+            <div class="form-group col-md-6">
                     <textarea id="innova_collecticiel_notation_form_qualityText" name="innova_collecticiel_notation_form[qualityText]" required="required" class="claroline-tiny-mce hide">
                     </textarea>
-                </label>
-            </div>
-            <div class="form-group row col-md-6">
             </div>
         </div>
 
