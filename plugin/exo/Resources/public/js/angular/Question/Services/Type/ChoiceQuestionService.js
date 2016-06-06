@@ -116,12 +116,11 @@ ChoiceQuestionService.prototype.isChoiceValid = function isChoiceValid(question,
     var isValid = false;
 
     var choiceSolution = this.getChoiceSolution(question, choice);
-    console.log(choiceSolution);
     if (choiceSolution.rightResponse) {
         // The current choice is part of the right response => User choice is Valid
         isValid = true;
     }
-console.log(isValid);
+
     return isValid;
 };
 
