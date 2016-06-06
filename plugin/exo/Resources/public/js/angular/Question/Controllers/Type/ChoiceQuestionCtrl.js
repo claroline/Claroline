@@ -6,9 +6,9 @@
  */
 var ChoiceQuestionCtrl = function ChoiceQuestionCtrl(FeedbackService, ChoiceQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
-    
+
     this.ChoiceQuestionService = ChoiceQuestionService;
-    
+
     if (this.question.choices) {
         this.choices = this.question.choices;
         for (var i = 0; i < this.choices.length; i++) {
