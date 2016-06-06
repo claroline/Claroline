@@ -59,7 +59,7 @@
                             {% set authorPicture = (null == comment.author) ? null : comment.author.picture %}
                             {% set author = (null == comment.author) ? 'anonymous'|trans({}, 'platform') : comment.author.firstname ~ ' ' ~ comment.author.lastname %}
                             {% set dateText = (null == comment.updateDate)? comment.publicationDate|date('date_format'|trans({}, 'platform')) : 'modified_at'|trans({},'icap_blog') ~ ' ' ~ comment.updateDate|date('date_format'|trans({}, 'platform')) %}
-                            <li>{% if authorPicture is null %}<span class="fa fa-user"></span>{% else %}<img src="{{ asset('uploads/pictures/') ~ authorPicture }}" alt="{{ author }}" class="img-rounded user_picture">{% endif %}&nbsp;{% if null == comment.author %}{{ author }}{% else %}<a href="{{ path('claro_profile_view', {'userId': comment.author.id}) }}" title="{{ author }}">{{ author }}</a>{% endif %}</li>
+                            <li>{% if authorPicture is null %}<span class="fa fa-user"></span>{% else %}<img src="{{ asset('uploads/pictures/') ~ authorPicture }}" alt="{{ author }}" class="img-rounded user_picture">{% endif %}&nbsp;{% if null == comment.author %}{{ author }}{% else %}<a href="{{ path('claro_profile_view', {'user': comment.author.id}) }}" title="{{ author }}">{{ author }}</a>{% endif %}</li>
                             {% if isPublished %}<li><span class="fa fa-calendar"></span>  <small><time>{{ dateText }}</time></small></li>{% endif %}
                             <a name="comment-{{ comment.id }}"></a>
                         </ul>

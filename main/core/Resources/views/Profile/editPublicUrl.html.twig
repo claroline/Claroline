@@ -6,7 +6,7 @@
     {{ macros.flashBox() }}
     <div class="panel panel-default panel-user">
         <div class="panel-heading relative">
-            <a href="{{ path('claro_profile_view') }}" title="{{ 'back_to_profile'|trans({}, 'platform') }}" class="pull-right"><span class="fa fa-reply"></span> {{ 'back_to_profile'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}" title="{{ 'back_to_profile'|trans({}, 'platform') }}" class="pull-right"><span class="fa fa-reply"></span> {{ 'back_to_profile'|trans({}, 'platform') }}</a>
             <h3 class="panel-title">
                 {{ 'tune_your_public_profile_url'|trans({}, 'platform') }}
             </h3>
@@ -23,7 +23,7 @@
                 {{ form_errors(form) }}
                 {{ form_errors(form.public_url) }}
                 <div class="form-group public_profile_url">
-                    <label class="col-md-3 control-label">{{ path('claro_profile_view') }}</label>
+                    <label class="col-md-3 control-label">{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}</label>
                     <div class="col-md-4">
                         {{ form_widget(form.public_url) }}
                         <input type="hidden" value="{{ currentPublicUrl }}" id="current_public_profile_url">
@@ -45,7 +45,7 @@
             </div>
             <div class="panel-footer">
                 <button type="submit" class="btn btn-primary" id="tune_button" disabled="disabled">{{ 'tune'|trans({}, 'platform') }}</button>
-                <a href="{{ path('claro_profile_view') }}" class="btn btn-default" role="button">
+                <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}" class="btn btn-default" role="button">
                     {{ 'cancel' | trans({}, 'platform') }}
                 </a>
             </div>
