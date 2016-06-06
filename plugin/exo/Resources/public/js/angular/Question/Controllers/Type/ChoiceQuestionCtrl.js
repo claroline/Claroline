@@ -30,12 +30,6 @@ ChoiceQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'ChoiceQuesti
 ChoiceQuestionCtrl.prototype.choices = [];
 
 /**
- * Tells wether the answers are all found, not found, or if only one misses
- * @type {Integer}
- */
-ChoiceQuestionCtrl.prototype.feedbackState = -1;
-
-/**
  * Toggle the selected state of a Choice
  * @param {Object} choice
  */
