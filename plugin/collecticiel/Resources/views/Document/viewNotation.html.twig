@@ -14,120 +14,122 @@
             </div>
 
             <div class="modal-body">
-                <div class="row">
-                    <div class="form-group row col-md-9">
-                        {# Bloc "Rappel des instructions ..." #}
-                        {% if dropzone.instruction != null %}
-                            {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionTeacherNotation.html.twig' %}
-                        {% endif %}
+                <div class="innova_collecticiel_notation_form container">
+                    <div class="row">
+                        <div class="form-group row col-md-6">
+                            {# Bloc "Rappel des instructions ..." #}
+                            {% if dropzone.instruction != null %}
+                                {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionTeacherNotation.html.twig' %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group row col-md-6">
+                        </div>
                     </div>
-                    <div class="form-group row col-md-3">
-                    </div>
-                </div>
 
-               <div class="row text-left">
-                    <div class="form-group row col-md-9">
-                        {{ 'Review on'|trans({}, 'innova_collecticiel') }}
+                   <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                            {{ 'Review on'|trans({}, 'innova_collecticiel') }}
+                        </div>
+                        <div class="form-group row col-md-6">
+                        </div>
                     </div>
-                    <div class="form-group row col-md-3">
-                    </div>
-                </div>
 
-                {% if document.url is not null %}
-                    {% set documentTitle = document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url %}
-                {% else %}
-                    {% if document.title is not null %}
-                        {% set documentTitle = document.title %}
+                    {% if document.url is not null %}
+                        {% set documentTitle = document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url %}
                     {% else %}
-                        {% set documentTitle = document.resourceNode.name %}
+                        {% if document.title is not null %}
+                            {% set documentTitle = document.title %}
+                        {% else %}
+                            {% set documentTitle = document.resourceNode.name %}
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                
-                <div class="row text-left">
-                    <div class="form-group row col-md-9">
-                    <table class="table table-responsive table-condensed well table-striped">
-                            <thead>
-                            </thead>
-                            <tbody class="table">
-                                <tr>
-                                    <td>{{ 'Type'|trans({}, 'innova_collecticiel') }}</td>
-                                    <td>{{ 'Document'|trans({}, 'innova_collecticiel') }}</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
-                                    <td>{{ documentTitle }}</td>
-                                </tr>
-                              </tbody>
-                        </table>
+                    
+                    <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                        <table class="table table-responsive table-condensed well table-striped">
+                                <thead>
+                                </thead>
+                                <tbody class="table">
+                                    <tr>
+                                        <td>{{ 'Type'|trans({}, 'innova_collecticiel') }}</td>
+                                        <td>{{ 'Document'|trans({}, 'innova_collecticiel') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
+                                        <td>{{ documentTitle }}</td>
+                                    </tr>
+                                  </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group row col-md-6">
+                        </div>
                     </div>
-                    <div class="form-group row col-md-3">
-                    </div>
-                </div>
 
-                <div class="row text-left">
-                    <div class="form-group row col-md-9">
-                        {{ 'Author'|trans({}, 'innova_collecticiel') }}
-                        {{ drop.user.firstName }} {{ drop.user.lastName }}
+                    <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                            {{ 'Author'|trans({}, 'innova_collecticiel') }}
+                            {{ drop.user.firstName }} {{ drop.user.lastName }}
+                        </div>
+                        <div class="form-group row col-md-6">
+                        </div>
                     </div>
-                    <div class="form-group row col-md-3">
-                    </div>
-                </div>
 
-                <p></p>
+                    <p></p>
 
-                <div class="row text-left">
-                    <div class="form-group row col-md-9">
-                        {{ 'Assessor'|trans({}, 'innova_collecticiel') }}
-                        {{ notationAssessorDocument.firstName }} {{ notationAssessorDocument.lastName }}
+                    <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                            {{ 'Assessor'|trans({}, 'innova_collecticiel') }}
+                            {{ notationAssessorDocument.firstName }} {{ notationAssessorDocument.lastName }}
+                        </div>
+                        <div class="form-group row col-md-6">
+                        </div>
                     </div>
-                    <div class="form-group row col-md-3">
-                    </div>
-                </div>
 
-                <p></p>
+                    <p></p>
 
-                <div class="row text-left">
-                    <div class="form-group row col-md-9">
-                        {{ 'Grade'|trans({}, 'innova_collecticiel') }}
-                        {{ notationDocuments[document.id] }}    
-                        {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
-                        {{ maximumNotation }}
-                        {{ ')' }}
+                    <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                            {{ 'Grade'|trans({}, 'innova_collecticiel') }}
+                            {{ notationDocuments[document.id] }}    
+                            {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
+                            {{ maximumNotation }}
+                            {{ ')' }}
+                        </div>
+                        <div class="form-group row col-md-6">
+                        </div>
                     </div>
-                    <div class="form-group row col-md-3">
-                    </div>
-                </div>
 
-                <p></p>
+                    <p></p>
 
-                <div class="row text-left">
-                    <div class="form-group row col-md-9">
-                        {{ 'Global comment'|trans({}, 'innova_collecticiel') }}
+                    <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                            {{ 'Global comment'|trans({}, 'innova_collecticiel') }}
+                        </div>
                     </div>
-                </div>
-                <div class="row text-left">
-                    <div class="form-group row col-md-3">
-                        <label>
-                            {{ notationCommentDocument|raw }}
-                        </label>
+                    <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                            <label>
+                                {{ notationCommentDocument|raw }}
+                            </label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="row text-left">
-                    <div class="form-group row col-md-12">
+                    <div class="row text-left">
+                        <div class="form-group row col-md-12">
+                        </div>
                     </div>
-                </div>
 
-                <div class="row text-left">
-                    <div class="form-group row col-md-9">
-                        {{ 'Quality argument'|trans({}, 'innova_collecticiel') }}
+                    <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                            {{ 'Quality argument'|trans({}, 'innova_collecticiel') }}
+                        </div>
                     </div>
-                </div>
-                <div class="row text-left">
-                    <div class="form-group row col-md-3">
-                        <label>
-                            {{ notationQualityDocument|raw }}
-                        </label>
+                    <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                            <label>
+                                {{ notationQualityDocument|raw }}
+                            </label>
+                        </div>
                     </div>
                 </div>
 

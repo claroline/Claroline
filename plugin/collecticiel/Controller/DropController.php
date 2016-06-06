@@ -491,6 +491,9 @@ class DropController extends DropzoneBaseController
         $isAdmin = $dropzoneVoter->checkEditRight($dropzone);
         $docWithoutReceiptCount = $dropManager->countDocsWithoutReceipt($pager->getcurrentPageResults());
         $teacherDocComments = $dropManager->getTeacherComments($pager->getcurrentPageResults(), $workspace);
+        $notationCommentDocuments = $dropManager->getNotationCommentForDocuments($drop);
+        $notationQualityDocuments = $dropManager->getNotationQualityForDocuments($drop);
+        $notationAssessorDocuments = $dropManager->getNotationAssessorForDocuments($drop);
 
         $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -509,6 +512,9 @@ class DropController extends DropzoneBaseController
             'maximumNotation' => $dropzone->getMaximumNotation(),
             'notationDocuments' => $notationDocuments,
             'recordOrTransmitNotations' => $recordOrTransmitNotations,
+            'notationCommentDocumentsArray' => $notationCommentDocuments,
+            'notationQualityDocumentsArray' => $notationQualityDocuments,
+            'notationAssessorDocumentsArray' => $notationAssessorDocuments,
         ));
 
         return $dataToView;

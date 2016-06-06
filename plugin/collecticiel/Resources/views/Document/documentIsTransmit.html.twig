@@ -3,14 +3,146 @@
 {#  1 : enregistrer ET transmise #}
 {# 99 : pas de notation #}
 {% if recordOrTransmitNotation == 0  %}
-    <a data-target="#transmit-modal"  data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
+    <a data-target="#transmit-modal" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
         <i data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Not Transmitted review'|trans({},'innova_collecticiel') }}" class="fa fa-mail-forward">
         </i>
     </a>
 {% endif %}
+
 {% if recordOrTransmitNotation == 1  %}
-    <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Transmitted review'|trans({},'innova_collecticiel') }}" class="fa fa-mail-forward"></span>
+    <a data-target="#view-modal-evaluation" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
+   {{ notationDocuments[document.id] ~ "/" ~ dropzone.maximumNotation }}
+    </a>
 {% endif %}
+
 {% if recordOrTransmitNotation == 99  %}
     <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'No review'|trans({},'innova_collecticiel') }}" class="fa fa-times"></span>
 {% endif %}
+
+{# Déclaration de la modal pour saisir la notation #}
+<div class="modal" id="view-modal-evaluation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+			    <div class="innova_collecticiel_notation_form container">
+	                <div class="row">
+	                    <div class="form-group row col-md-6">
+	                        {# Bloc "Rappel des instructions ..." #}
+	                        {% if dropzone.instruction != null %}
+	                            {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionTeacherNotation.html.twig' %}
+	                        {% endif %}
+	                    </div>
+	                    <div class="form-group row col-md-6">
+	                    </div>
+	                </div>
+
+		            <div class="row text-left">
+	                    <div class="form-group row col-md-6">
+	                        {{ 'Review on'|trans({}, 'innova_collecticiel') }}
+	                    </div>
+	                    <div class="form-group row col-md-6">
+	                    </div>
+	                </div>
+
+	                {% if document.url is not null %}
+	                    {% set documentTitle = document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url %}
+	                {% else %}
+	                    {% if document.title is not null %}
+	                        {% set documentTitle = document.title %}
+	                    {% else %}
+	                        {% set documentTitle = document.resourceNode.name %}
+	                    {% endif %}
+	                {% endif %}
+	                
+	                <div class="row text-left">
+	                    <div class="form-group row col-md-6">
+	                    <table class="table table-responsive table-condensed well table-striped">
+	                            <thead>
+	                            </thead>
+	                            <tbody class="table">
+	                                <tr>
+	                                    <td>{{ 'Type'|trans({}, 'innova_collecticiel') }}</td>
+	                                    <td>{{ 'Document'|trans({}, 'innova_collecticiel') }}</td>
+	                                </tr>
+	                                <tr>
+	                                    <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
+	                                    <td>{{ documentTitle }}</td>
+	                                </tr>
+	                              </tbody>
+	                        </table>
+	                    </div>
+	                    <div class="form-group row col-md-6">
+	                    </div>
+	                </div>
+
+	                <div class="row text-left">
+	                    <div class="form-group row col-md-6">
+	                        {{ 'Author'|trans({}, 'innova_collecticiel') }}
+	                        {{ drop.user.firstName }} {{ drop.user.lastName }}
+	                    </div>
+	                    <div class="form-group row col-md-6">
+	                    </div>
+	                </div>
+
+	                <p></p>
+
+	                <div class="row text-left">
+	                    <div class="form-group row col-md-6">
+	                        {{ 'Grade'|trans({}, 'innova_collecticiel') }}
+	                        {{ notationDocuments[document.id] }}    
+	                        {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
+	                        {{ maximumNotation }}
+	                        {{ ')' }}
+	                    </div>
+	                    <div class="form-group row col-md-6">
+	                    </div>
+	                </div>
+
+	                <p></p>
+
+	                <div class="row text-left">
+	                    <div class="form-group row col-md-6">
+	                        {{ 'Global comment'|trans({}, 'innova_collecticiel') }}
+	                    </div>
+	                </div>
+	                <div class="row text-left">
+	                    <div class="form-group row col-md-6">
+	                        <label>
+	                            {{ notationCommentDocument|raw }}
+	                        </label>
+	                    </div>
+	                </div>
+
+	                <div class="row text-left">
+	                    <div class="form-group row col-md-12">
+	                    </div>
+	                </div>
+
+	                <div class="row text-left">
+	                    <div class="form-group row col-md-6">
+	                        {{ 'Quality argument'|trans({}, 'innova_collecticiel') }}
+	                    </div>
+	                </div>
+	                <div class="row text-left">
+	                    <div class="form-group row col-md-6">
+	                        <label>
+	                            {{ notationQualityDocument|raw }}
+	                        </label>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary rest" id="cancel_button" data-dismiss="modal">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
+            </div>
+        </div>
+    </div>
+</div>

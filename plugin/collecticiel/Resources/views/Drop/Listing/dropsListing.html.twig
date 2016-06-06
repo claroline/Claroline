@@ -232,8 +232,13 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                         with {
                         'maximumNotation' : maximumNotation,
                         'notationDocument' : notationDocuments[document.id],
-                        'recordOrTransmitNotation' : recordOrTransmitNotations[document.id]
+                        'recordOrTransmitNotation' : recordOrTransmitNotations[document.id],
+                        'notationAssessorDocument' : notationAssessorDocumentsArray[document.id],
+                        'notationCommentDocument': notationCommentDocumentsArray[document.id],
+                        'notationQualityDocument': notationQualityDocumentsArray[document.id],
                         }
+
+
                      %}
                 {% endif %}
             {% endfor %}
