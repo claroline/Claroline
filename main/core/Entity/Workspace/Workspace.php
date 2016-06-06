@@ -40,7 +40,7 @@ class Workspace
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("id")
      */
     protected $id;
@@ -48,14 +48,14 @@ class Workspace
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("name")
      */
     protected $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("description")
      */
     protected $description;
@@ -63,35 +63,35 @@ class Workspace
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("code")
      */
     protected $code;
 
     /**
      * @ORM\Column(type="string", nullable=false)
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("maxStorageSize")
      */
     protected $maxStorageSize = '1 TB';
 
     /**
      * @ORM\Column(type="integer", nullable=false)
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("maxUploadResources")
      */
     protected $maxUploadResources = 10000;
 
     /**
      * @ORM\Column(type="integer", nullable=false)
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("maxUsers")
      */
     protected $maxUsers = 10000;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("displayable")
      */
     protected $displayable = false;
@@ -136,77 +136,76 @@ class Workspace
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
      * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
-     * @Groups({"api"})
      * @SerializedName("creator")
      */
     protected $creator;
 
     /**
      * @ORM\Column(unique=true)
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("guid")
      */
     protected $guid;
 
     /**
      * @ORM\Column(name="self_registration", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("selfRegistration")
      */
     protected $selfRegistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("registrationValidation")
      */
     protected $registrationValidation = false;
 
     /**
      * @ORM\Column(name="self_unregistration", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("selfUnregistration")
      */
     protected $selfUnregistration = false;
 
     /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("creationDate")
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="is_personal", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("isPersonal")
      */
     protected $isPersonal = false;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("startDate")
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("endDate")
      */
     protected $endDate;
 
     /**
      * @ORM\Column(name="is_access_date", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("isAccessDate")
      */
     protected $isAccessDate = false;
 
     /**
      * @ORM\Column(name="workspace_type", type="integer", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api_workspace"})
      * @SerializedName("workspaceType")
      */
     protected $workspaceType;

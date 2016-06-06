@@ -9,33 +9,33 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\API\Admin;
+namespace Claroline\CoreBundle\Controller\API\Workspace;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
-use JMS\DiExtraBundle\Annotation as DI;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\HttpFoundation\File\File;
+use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
  * @NamePrefix("api_")
- * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
  */
 class WorkspaceController extends FOSRestController
 {
@@ -83,11 +83,22 @@ class WorkspaceController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_workspace"})
+     * @Get("/user/{user}/workspaces", name="get_user_workspaces", options={ "method_prefix" = false })
+     * @SEC\PreAuthorize("hasRole('ROLE_ADMIN')")
+     */
+    public function getUserWorkspacesAction(User $user)
+    {
+        return $this->workspaceManager->getWorkspacesByUser($user);
+    }
+
+    /**
+     * @View(serializerGroups={"api_workspace"})
      * @ApiDoc(
      *     description="Returns the workspaces list",
      *     views = {"workspace"}
      * )
+     * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function getWorkspacesAction()
     {
@@ -95,11 +106,12 @@ class WorkspaceController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_workspace"})
      * @ApiDoc(
      *     description="Returns a workspace",
      *     views = {"workspace"}
      * )
+     * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function getWorkspaceAction(Workspace $workspace)
     {
@@ -107,11 +119,12 @@ class WorkspaceController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_workspace"})
      * @ApiDoc(
      *     description="Returns a workspace with additional datas",
      *     views = {"workspace"}
      * )
+     * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function getWorkspaceAdditionalDatasAction(Workspace $workspace)
     {
@@ -133,6 +146,7 @@ class WorkspaceController extends FOSRestController
      *     description="Returns the non-personal workspaces list",
      *     views = {"workspace"}
      * )
+     * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function getNonPersonalWorkspacesAction()
     {
@@ -140,13 +154,14 @@ class WorkspaceController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_workspace"})
      * @ApiDoc(
      *     description="Create a workspace",
      *     views = {"workspace"},
      *     input="Claroline\CoreBundle\Form\WorkspaceType"
      * )
      * @Post("workspace/user/{user}", name="post_workspace", options={ "method_prefix" = false })
+     * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function postWorkspaceUserAction(User $user)
     {
@@ -173,6 +188,7 @@ class WorkspaceController extends FOSRestController
      *     description="Removes a workspace",
      *     views = {"workspace"}
      * )
+     * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function deleteWorkspaceAction(Workspace $workspace)
     {
@@ -182,13 +198,14 @@ class WorkspaceController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_workspace"})
      * @ApiDoc(
      *     description="Update a workspace",
      *     views = {"workspace"},
      *     input="Claroline\CoreBundle\Form\WorkspaceType"
      * )
      * @Put("workspace/{workspace}", name="put_workspace", options={ "method_prefix" = false })
+     * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function putWorkspaceAction(Workspace $workspace)
     {
@@ -207,12 +224,13 @@ class WorkspaceController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_workspace"})
      * @ApiDoc(
      *     description="Update a workspace owner",
      *     views = {"workspace"}
      * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
+     * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function putWorkspaceOwnerAction(Workspace $workspace, User $user)
     {
