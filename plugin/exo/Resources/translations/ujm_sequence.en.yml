@@ -2,7 +2,7 @@
 all_answers_found: All your answers are correct. Move to the next step.
 answer_zone: Answer zone
 answers_correct: Your answer is now correct. Move to the next step.
-answers_not_found: XXXXX All answers were not found
+answers_not_found: All answers were not found
 answers_now_correct: All your answers are now correct. Move to the next step.
 
 # b
@@ -12,7 +12,7 @@ btn_prev_step_label: Go to previous step
 btn_next_step_label: Go to next step
 btn_retry_step: Retry step
 btn_show_solution: Show solution
-btn_validate_step: Validate step
+btn_validate_step: Validate
 btn_toggle_all_paper_question_panels: Show / Hide all questions
 
 # c
@@ -54,7 +54,7 @@ need_correction: This answer needs a manual correction
 note_question: Note this question
 
 # o
-one_answer_to_find: XXXXX There is one answer left to find
+one_answer_to_find: There is one answer left to find
 
 # p
 paper_list: Paper list

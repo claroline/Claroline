@@ -96,7 +96,7 @@ MatchQuestionService.prototype.initBindMatchQuestion = function initBindMatchQue
         ConnectionsDetachable: false,
         Connector: "Straight",
         DropOptions: {tolerance: "touch"},
-        HoverPaintStyle: {strokeStyle: "red"},
+        HoverPaintStyle: {strokeStyle: "#FC0000"},
         LogEnabled: true,
         PaintStyle: {strokeStyle: "#777", lineWidth: 4}
     });

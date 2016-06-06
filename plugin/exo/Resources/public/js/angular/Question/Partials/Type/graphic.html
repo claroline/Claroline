@@ -26,9 +26,13 @@
             </img-pointer>
 
             <!-- Solution -->
+            <img-areas data-areas="graphicQuestionCtrl.solutionsFound"
+                       data-img="graphicQuestionCtrl.$image"
+                       data-ng-if="graphicQuestionCtrl.feedback.visible && graphicQuestionCtrl.solutionsFound && !graphicQuestionCtrl.includeCorrection">
+            </img-areas>
             <img-areas data-areas="graphicQuestionCtrl.question.solutions"
                        data-img="graphicQuestionCtrl.$image"
-                       data-ng-if="graphicQuestionCtrl.feedback.visible && graphicQuestionCtrl.question.solutions">
+                       data-ng-if="graphicQuestionCtrl.feedback.visible && graphicQuestionCtrl.question.solutions && graphicQuestionCtrl.includeCorrection">
             </img-areas>
 
             <!-- Question image -->

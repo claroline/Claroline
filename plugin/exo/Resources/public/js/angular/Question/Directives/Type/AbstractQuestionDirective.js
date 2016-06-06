@@ -10,8 +10,7 @@ var AbstractQuestionDirective = function AbstractQuestionDirective(FeedbackServi
         bindToController: true,
         scope: {
             question : '=',
-            answer   : '=',
-            feedbackState : '='
+            answer   : '='
         },
         link: {
             post: function postLink(scope, element, attrs, controller) {

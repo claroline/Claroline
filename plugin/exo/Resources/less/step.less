@@ -39,4 +39,10 @@
         margin-top: 0;
         margin-bottom: 20px; // Same as panel, but there is no var for this one :(
     }
+
+    .step-description {
+        > .panel-body > p {
+            margin-bottom: 0; // remove styles from the TinyMCE <p> wrapper
+        }
+    }
 }

@@ -2,7 +2,7 @@
 all_answers_found: Toutes vos réponses sont correctes. Passez à la suite.
 answer_zone: Zone de réponse
 answers_correct: Votre solution est maintenant correcte. Passez à la suite.
-answers_not_found: XXXXX Toutes les bonnes réponses n'ont pas été trouvées
+answers_not_found: Il reste plusieurs réponses à trouver
 answers_now_correct: Toutes vos réponses sont maintenant correctes. Passez à la suite.
 
 # b
@@ -12,7 +12,7 @@ btn_prev_step_label: Aller à l'étape précédente
 btn_next_step_label: Aller à l'étape suivante
 btn_retry_step: Réessayer l'étape
 btn_show_solution: Afficher la solution
-btn_validate_step: Valider l'étape
+btn_validate_step: Valider
 btn_toggle_all_paper_question_panels: Montrer / cacher les questions
 
 # c
@@ -46,14 +46,14 @@ label_no_labels_associated: Pas de label(s) associé(s)
 label_manual_correction_needed: Correction manuelle nécessaire!
 
 # m
-max_attempts_reached_see_solution: Vous avez atteint le maximum d'essais. Consultez la solution proposée et poursuivez.
+max_attempts_reached_see_solution: Vous avez atteint le maximum de tentatives. Consultez la solution proposée et poursuivez.
 
 # n
 need_correction: Cette réponse nécessite une correction manuelle
 note_question: Noter cette question
 
 # o
-one_answer_to_find: XXXXX Il manque une bonne réponse
+one_answer_to_find: Il reste une réponse à trouver
 
 # p
 paper_list: Liste des copies
@@ -96,7 +96,7 @@ question_show_hint_confirm: Êtes vous sûr de vouloir utiliser l'indice ? <br/>
 
 # s
 sequence_step: Etape
-sequence_attempts_infos: "[0, 1] Vous avez le droit à %count% essai|]1,Inf[ Vous avez le droit à %count% essais"
+sequence_attempts_infos: "[0, 1] Vous avez le droit à %count% tentatives|]1,Inf[ Vous avez le droit à %count% tentatives"
 sequence_nb_attempts: Essai N° %1%
 sequence_interrupt_sequence_confirm: Êtes vous sûr de vouloir interrompre l'exercice ?
 sequence_end_sequence_confirm: Êtes vous sûr de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.

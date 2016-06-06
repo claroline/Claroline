@@ -88,7 +88,8 @@
                             <tr>
                                 <th class="text-right col-md-4" scope="row">{{ 'random_questions' | trans:{}:'ujm_exo' }}</th>
                                 <td class="text-center col-md-8">
-                                    <span class="fa" data-ng-class="{ 'fa-check-circle': exerciseOverviewCtrl.exercise.meta.random, 'fa-times-circle': !exerciseOverviewCtrl.exercise.meta.random }"></span>
+                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.random">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.random">{{ 'no' | trans:{}:'ujm_exo' }}</span>
                                 </td>
                             </tr>
 
@@ -105,7 +106,8 @@
                             <tr>
                                 <th class="text-right col-md-4" scope="row">{{ 'keep_same_question' | trans:{}:'ujm_exo' }}</th>
                                 <td class="text-center col-md-8">
-                                    <span class="fa" data-ng-class="{ 'fa-check-circle': exerciseOverviewCtrl.exercise.meta.pick, 'fa-times-circle': !exerciseOverviewCtrl.exercise.meta.pick }"></span>
+                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.pick">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.pick">{{ 'no' | trans:{}:'ujm_exo' }}</span>
                                 </td>
                             </tr>
 
@@ -113,7 +115,8 @@
                             <tr>
                                 <th class="text-right col-md-4" scope="row">{{ 'anonymous' | trans:{}:'ujm_exo' }}</th>
                                 <td class="text-center col-md-8">
-                                    <span class="fa" data-ng-class="{ 'fa-check-circle': exerciseOverviewCtrl.exercise.meta.anonymous, 'fa-times-circle': !exerciseOverviewCtrl.exercise.meta.anonymous }"></span>
+                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.anonymous">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.anonymous">{{ 'no' | trans:{}:'ujm_exo' }}</span>
                                 </td>
                             </tr>
 
@@ -121,7 +124,8 @@
                             <tr>
                                 <th class="text-right col-md-4" scope="row">{{ 'test_exit' | trans:{}:'ujm_exo' }}</th>
                                 <td class="text-center col-md-8">
-                                    <span class="fa" data-ng-class="{ 'fa-check-circle': exerciseOverviewCtrl.exercise.meta.dispButtonInterrupt, 'fa-times-circle': !exerciseOverviewCtrl.exercise.meta.dispButtonInterrupt }"></span>
+                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.dispButtonInterrupt">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.dispButtonInterrupt">{{ 'no' | trans:{}:'ujm_exo' }}</span>
                                 </td>
                             </tr>
 
@@ -135,7 +139,8 @@
                             <tr data-ng-if="0 < exerciseOverviewCtrl.exercise.meta.maxAttempts">
                                 <th class="text-right col-md-4" scope="row">{{ 'lock_attempt' | trans:{}:'ujm_exo' }}</th>
                                 <td class="text-center col-md-8">
-                                    <span class="fa" data-ng-class="{ 'fa-check-circle': exerciseOverviewCtrl.exercise.meta.lockAttempt, 'fa-times-circle': !exerciseOverviewCtrl.exercise.meta.lockAttempt }"></span>
+                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.lockAttempt">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.lockAttempt">{{ 'no' | trans:{}:'ujm_exo' }}</span>
                                 </td>
                             </tr>
                         </tbody>

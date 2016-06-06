@@ -9,7 +9,7 @@
         </small>
     </h4>
 
-    <div class="panel panel-default" data-ng-if="0 !== stepShowCtrl.step.meta.description.length">
+    <div class="step-description panel panel-default" data-ng-if="0 !== stepShowCtrl.step.meta.description.length">
         <div class="panel-body" data-ng-bind-html="stepShowCtrl.step.meta.description"></div>
     </div>
 
@@ -20,7 +20,7 @@
                    data-include-correction="stepShowCtrl.solutionShown">
     </question-show>
     
-    <div class="alert alert-info" data-ng-if="stepShowCtrl.feedback.visible">
+    <div class="alert alert-info" data-ng-if="stepShowCtrl.feedback.visible && !stepShowCtrl.solutionShown">
         {{ stepShowCtrl.getSuiteFeedback()|trans:{}:'ujm_sequence' }}
     </div>
 

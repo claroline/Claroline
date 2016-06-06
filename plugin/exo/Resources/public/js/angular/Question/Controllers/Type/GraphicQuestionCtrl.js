@@ -25,6 +25,12 @@ GraphicQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'GraphicQues
 GraphicQuestionCtrl.prototype.$image = null;
 
 /**
+ * Are the correction for the Question displayed ?
+ * @type {boolean}
+ */
+GraphicQuestionCtrl.prototype.includeCorrection = false;
+
+/**
  * Get the full URL of the Image
  * @returns {string}
  */
@@ -61,16 +67,26 @@ GraphicQuestionCtrl.prototype.isPointerValid = function isPointerValid(pointer) 
 };
 
 GraphicQuestionCtrl.prototype.areaHasPointer = function (area) {
+    var hasPointer = false;
     for (var i = 0; i < this.answer.length; i++) {
-        this.ImageAreaService.isInArea(area, this.answer[i]);
+        if (this.ImageAreaService.isInArea(area, this.answer[i])) {
+            hasPointer = true;
+        }
     }
+    
+    return hasPointer;
 };
 
 /**
  *
  */
 GraphicQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
-    
+    this.solutionsFound = [];
+    for (var i = 0; i < this.question.solutions.length; i++) {
+        if (this.areaHasPointer(this.question.solutions[i])) {
+            this.solutionsFound.push(this.question.solutions[i]);
+        }
+    }
 };
 
 /**
