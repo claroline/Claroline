@@ -11,6 +11,7 @@
 
 {# InnovaERV : Fin ajout : Affichage ... #}
 <tr id="row_{{ document.id }}">
+
     {# Affichage de l'image de profil #}
     {% if dropzone.picture == 1  %}
         <td class="{{ classArray }}">
@@ -129,11 +130,12 @@
                 {% else %}
                     <i class="fa fa-times" aria-hidden="true"></i>
                 {% endif %}
-
             </div>
         </td>
     {% endif %}
 
+    {# Me dit s'il y a eu une évaluation/notation et au cas où si elle a été enregistrée ou transmise #}
+    {% set recordOrTransmitNotation = recordOrTransmitNotations[document.id] %}
 
     {# #146 : changement de gestion des annulations et des suppressions, demande de JJQ #}
     {% if adminInnova %}
@@ -142,7 +144,8 @@
                 {# Cas 1 #}
                 {# Si le document a été validé alors je ne peux pas le supprimer #}
                 <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" 
-                class="btn btn-danger btn-sm launch-modal del_btn_td" id="delete_{{ document.id }}" style="display:none;" >
+                class="btn btn-danger btn-sm launch-modal del_btn_td"
+                id="delete_{{ document.id }}" style="display:none;" >
                     {# Ajout de l'icône "supprimer" #}
                     <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Delete'|trans({},'innova_collecticiel') }}"></i>
                 </a>
@@ -166,6 +169,7 @@
                 <input type="hidden" value="1" id="adminInnova_{{document.id}}">
                 <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
                 <input type="hidden" value="{{teacherCommentDocArray[document.id]}}" id="teacher_comment_{{document.id}}">
+                <input type="hidden" value="{{recordOrTransmitNotation}}" id="record_transmission_{{document.id}}">
             </td>
         {% endif %}
     {% else %}
@@ -199,6 +203,7 @@
                 <input type="hidden" value="0" id="adminInnova_{{document.id}}">
                 <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
                 <input type="hidden" value="{{teacherCommentDocArray[document.id]}}" id="teacher_comment_{{document.id}}">
+                <input type="hidden" value="{{recordOrTransmitNotation}}" id="record_transmission_{{document.id}}">
                 </td>
             {% endif %}
         {% endif %}

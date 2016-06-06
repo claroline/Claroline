@@ -90,6 +90,7 @@ $(document).ready(function() {
         var adminInnova = document.getElementById('adminInnova_' + documentId).value;
         var returnReceiptId = document.getElementById('return_receipt_' + documentId).value;
         var teacherComment = document.getElementById('teacher_comment_' + documentId).value;
+        var recordTransmission = document.getElementById('record_transmission_' + documentId).value;
 
         //
         // Afficher les tests ici qui permettront de rafraîchir les données.
@@ -131,7 +132,7 @@ $(document).ready(function() {
 
             // #247 : l'élève ou l'enseignant ne peuvent rien faire s'il y a un commentaire enseignant sur le document
             // ou s'il y a un AR autre que 0.
-            if (returnReceiptId > 0 || teacherComment > 0) {
+            if (returnReceiptId > 0 || teacherComment > 0 || recordTransmission != 99) {
                 var selector = "#lock_" + documentId;
             }
 

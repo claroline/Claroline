@@ -83,6 +83,12 @@ class DropController extends DropzoneBaseController
             }
         }
 
+        $recordOrTransmitNotations = array();
+
+        foreach ($dropzone->getDrops() as $drop) {
+            $recordOrTransmitNotations = $dropManager->getRecordOrTransmitNotation($drop);
+        }
+
         $form_url = $this->createForm(new DocumentType(), null, array('documentType' => 'url'));
         $form_file = $this->createForm(new DocumentType(), null, array('documentType' => 'file'));
         $form_resource = $this->createForm(new DocumentType(), null, array('documentType' => 'resource'));
@@ -122,6 +128,7 @@ class DropController extends DropzoneBaseController
             'notationCommentDocumentsArray' => $notationCommentDocuments,
             'notationQualityDocumentsArray' => $notationQualityDocuments,
             'notationAssessorDocumentsArray' => $notationAssessorDocuments,
+            'recordOrTransmitNotationsArray' => $recordOrTransmitNotations,
         );
     }
 
