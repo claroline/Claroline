@@ -10,9 +10,7 @@
 {% endif %}
 
 {% if recordOrTransmitNotation == 1  %}
-    <a data-target="#view-modal-evaluation" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
    {{ notationDocuments[document.id] ~ "/" ~ dropzone.maximumNotation }}
-    </a>
 {% endif %}
 
 {% if recordOrTransmitNotation == 99  %}
@@ -32,6 +30,7 @@
 
             <div class="modal-body">
 			    <div class="innova_collecticiel_notation_form container">
+
 	                <div class="row">
 	                    <div class="form-group row col-md-6">
 	                        {# Bloc "Rappel des instructions ..." #}
