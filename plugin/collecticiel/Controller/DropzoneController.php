@@ -191,6 +191,7 @@ class DropzoneController extends DropzoneBaseController
         $dropzoneVoter->isAllowToEdit($dropzone);
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $gradingScaleManager = $this->get('innova.manager.gradingscale_manager');
+        $gradingCriteriaManager = $this->get('innova.manager.gradingcriteria_manager');
 
         if ($dropzone->getManualState() == 'notStarted') {
             $dropzone->setManualState('allowDrop');
@@ -203,6 +204,8 @@ class DropzoneController extends DropzoneBaseController
         if ($this->getRequest()->isMethod('POST')) {
             $tab = $this->getRequest()->request->get('innova_collecticiel_appreciation_form');
             $manageGradingScales = $gradingScaleManager->manageGradingScales($tab['gradingScales'], $dropzone);
+
+            $manageGradingCriterias = $gradingCriteriaManager->manageGradingCriterias($tab['gradingCriterias'], $dropzone);
 
             // see if manual planification option has changed.
             $oldManualPlanning = $dropzone->getManualPlanning();
