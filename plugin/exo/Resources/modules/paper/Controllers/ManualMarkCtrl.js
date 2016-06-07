@@ -8,15 +8,12 @@
  *
  * @constructor
  */
-var ManualMarkCtrl = function ManualMarkCtrl($uibModalInstance, PaperService, question) {
+function ManualMarkCtrl($uibModalInstance, PaperService, question) {
     this.$uibModalInstance = $uibModalInstance;
     this.PaperService = PaperService;
 
     this.question = question;
-};
-
-// Set up dependency injection
-ManualMarkCtrl.$inject = [ '$uibModalInstance', 'PaperService', 'question' ];
+}
 
 ManualMarkCtrl.prototype.question = null;
 
@@ -53,6 +50,4 @@ ManualMarkCtrl.prototype.cancel = function cancel() {
     this.$uibModalInstance.dismiss('cancel');
 };
 
-angular
-    .module('Paper')
-    .controller('ManualMarkCtrl', ManualMarkCtrl);
+export default ManualMarkCtrl

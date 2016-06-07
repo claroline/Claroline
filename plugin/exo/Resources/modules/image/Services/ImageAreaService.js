@@ -2,12 +2,7 @@
  * Image Area Service
  * @constructor
  */
-var ImageAreaService = function AreaService() {
-
-};
-
-// Set up dependency injection
-ImageAreaService.$inject = [];
+function AreaService() {}
 
 /**
  * Map color name to RGBA value
@@ -90,7 +85,4 @@ ImageAreaService.prototype.isInArea = function isInArea(areaDefinition, coords) 
     return inArea;
 };
 
-// Register service into AngularJS
-angular
-    .module('Image')
-    .service('ImageAreaService', ImageAreaService);
+export default ImageAreaService

@@ -6,15 +6,12 @@
  * @param {QuestionService} QuestionService
  * @constructor
  */
-var StepService = function StepService($http, $q, ExerciseService, QuestionService) {
+function StepService($http, $q, ExerciseService, QuestionService) {
     this.$http = $http;
     this.$q = $q;
     this.ExerciseService = ExerciseService;
     this.QuestionService = QuestionService;
-};
-
-// Set up dependency injection
-StepService.$inject = [ '$http', '$q', 'ExerciseService', 'QuestionService' ];
+}
 
 /**
  * Reorder the Steps of the current Exercise.
@@ -88,7 +85,4 @@ StepService.prototype.save = function save(step, meta) {
     return deferred.promise;
 };
 
-// Register service into AngularJS
-angular
-    .module('Step')
-    .service('StepService', StepService);
+export default StepService

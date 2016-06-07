@@ -18,4 +18,4 @@ function DateStringFilter($filter) {
     };
 }
 
-export DateStringFilter
+export default DateStringFilter

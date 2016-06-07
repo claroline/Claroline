@@ -7,16 +7,13 @@
  * @param {QuestionService}  QuestionService
  * @constructor
  */
-var PaperService = function PaperService($http, $q, ExerciseService, StepService, QuestionService) {
+function PaperService($http, $q, ExerciseService, StepService, QuestionService) {
     this.$http           = $http;
     this.$q              = $q;
     this.ExerciseService = ExerciseService;
     this.StepService     = StepService;
     this.QuestionService = QuestionService;
-};
-
-// Set up dependency injection
-PaperService.$inject = [ '$http', '$q', 'ExerciseService', 'StepService', 'QuestionService' ];
+}
 
 /**
  * Contains the Paper to display
@@ -312,7 +309,4 @@ PaperService.prototype.orderStepQuestions = function orderStepQuestions(paper, s
     return ordered;
 };
 
-// Register service into AngularJS
-angular
-    .module('Paper')
-    .service('PaperService', PaperService);
+export default PaperService

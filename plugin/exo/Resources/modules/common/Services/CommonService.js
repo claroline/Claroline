@@ -40,4 +40,4 @@ CommonService.prototype.getObjectSimpleType = function getObjectSimpleType(objec
     return simpleType;
 };
 
-export CommonService
+export default CommonService

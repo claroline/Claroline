@@ -7,15 +7,12 @@
  * @param {ExerciseService} ExerciseService
  * @constructor
  */
-var UserPaperService = function UserPaperService($http, $q, PaperService, ExerciseService) {
+function UserPaperService($http, $q, PaperService, ExerciseService) {
     this.$http           = $http;
     this.$q              = $q;
     this.PaperService    = PaperService;
     this.ExerciseService = ExerciseService;
-};
-
-// Set up dependency injection
-UserPaperService.$inject = [ '$http', '$q', 'PaperService', 'ExerciseService' ];
+}
 
 /**
  * Current paper of the User
@@ -363,7 +360,4 @@ UserPaperService.prototype.isScoreAvailable = function isScoreAvailable(paper) {
     return available;
 };
 
-// Register service into AngularJS
-angular
-    .module('Paper')
-    .service('UserPaperService', UserPaperService);
+export default UserPaperService

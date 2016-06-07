@@ -16,4 +16,4 @@ function RouterFilter() {
     };
 }
 
-export RouterFilter
+export default RouterFilter

@@ -7,7 +7,7 @@
  * @param {StepService}     StepService
  * @constructor
  */
-var StepListCtrl = function StepListCtrl($scope, $uibModal, dragulaService, ExerciseService, StepService) {
+function StepListCtrl($scope, $uibModal, dragulaService, ExerciseService, StepService) {
     this.ExerciseService = ExerciseService;
     this.StepService     = StepService;
     this.$uibModal = $uibModal;
@@ -39,10 +39,7 @@ var StepListCtrl = function StepListCtrl($scope, $uibModal, dragulaService, Exer
             this.StepService.reorderItems(step);
         }
     }.bind(this));
-};
-
-// Set p up dependency injection
-StepListCtrl.$inject = [ '$scope', '$uibModal', 'dragulaService', 'ExerciseService', 'StepService' ];
+}
 
 /**
  * Id of the current Exercise (for PHP actions links)
@@ -87,7 +84,4 @@ StepListCtrl.prototype.editMetadata = function editMetadata(step) {
     });
 };
 
-// Register controller into Angular JS
-angular
-    .module('Step')
-    .controller('StepListCtrl', StepListCtrl);
+export default StepListCtrl

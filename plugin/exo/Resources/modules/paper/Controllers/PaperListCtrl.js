@@ -8,7 +8,7 @@
  * @param {Array}            papers
  * @constructor
  */
-var PaperListCtrl = function PaperListCtrl($filter, CommonService, ExerciseService, PaperService, UserPaperService, papers) {
+function PaperListCtrl($filter, CommonService, ExerciseService, PaperService, UserPaperService, papers) {
     this.$filter = $filter;
     this.PaperService  = PaperService;
     this.CommonService = CommonService;
@@ -21,10 +21,7 @@ var PaperListCtrl = function PaperListCtrl($filter, CommonService, ExerciseServi
     this.questions   = papers.questions;
 
     this.filtered = this.papers;
-};
-
-// set up dependency injection
-PaperListCtrl.$inject = ['$filter', 'CommonService', 'ExerciseService', 'PaperService', 'UserPaperService', 'papers'];
+}
 
 /**
  * @type {boolean}
@@ -141,7 +138,4 @@ PaperListCtrl.prototype.isScoreAvailable = function isScoreAvailable(paper) {
     return this.UserPaperService.isScoreAvailable(paper);
 };
 
-// Register controller into AngularJS
-angular
-    .module('Paper')
-    .controller('PaperListCtrl', PaperListCtrl);
+export default PaperListCtrl

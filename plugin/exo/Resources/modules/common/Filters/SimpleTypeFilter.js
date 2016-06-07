@@ -14,4 +14,4 @@ function SimpleTypeFilter(CommonService) {
     };
 }
 
-export SimpleTypeFilter
+export default SimpleTypeFilter

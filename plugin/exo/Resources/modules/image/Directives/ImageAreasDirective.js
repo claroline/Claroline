@@ -3,7 +3,7 @@
  * @param {ImageAreaService} ImageAreaService
  * @constructor
  */
-var AreasDirective = function AreasDirective(ImageAreaService) {
+function AreasDirective(ImageAreaService) {
     return {
         restrict: 'E',
         replace: true,
@@ -51,12 +51,6 @@ var AreasDirective = function AreasDirective(ImageAreaService) {
             });
         }
     };
-};
+}
 
-// Set up dependency injection
-AreasDirective.$inject = [ 'ImageAreaService' ];
-
-// Register directive into Angular JS
-angular
-    .module('Image')
-    .directive('imgAreas', AreasDirective);
+export default AreasDirective

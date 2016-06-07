@@ -2,7 +2,7 @@
  * Step Show Directive
  * @constructor
  */
-var StepShowDirective = function StepShowDirective() {
+function StepShowDirective() {
     return {
         restrict: 'E',
         replace: true,
@@ -18,12 +18,6 @@ var StepShowDirective = function StepShowDirective() {
             allAnswersFound : '='
         }
     };
-};
+}
 
-// Set up dependency injection
-StepShowDirective.$inject = [];
-
-// Register directive into AngularJS
-angular
-    .module('Step')
-    .directive('stepShow', StepShowDirective);
+export default StepShowDirective

@@ -3,7 +3,7 @@
  * @param {TimerService} TimerService
  * @constructor
  */
-var TimerDirective = function TimerDirective(TimerService) {
+function TimerDirective(TimerService) {
     return {
         restrict: 'E',
         replace: true,
@@ -39,12 +39,6 @@ var TimerDirective = function TimerDirective(TimerService) {
             timerDestroy: '='
         }
     };
-};
+}
 
-// Set up dependency injection
-TimerDirective.$inject = [ 'TimerService' ];
-
-// Register directive into AngularJS
-angular
-    .module('Timer')
-    .directive('timer', TimerDirective);
+export default TimerDirective

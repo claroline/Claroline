@@ -5,23 +5,20 @@
  * @param {QuestionService} QuestionService
  * @constructor
  */
-var StepShowCtrl = function StepShowCtrl(UserPaperService, FeedbackService, QuestionService) {
+function StepShowCtrl(UserPaperService, FeedbackService, QuestionService) {
     this.UserPaperService = UserPaperService;
     this.FeedbackService = FeedbackService;
     this.QuestionService = QuestionService;
 
     // Get the order of items from the Paper of the User (in case they are shuffled)
     this.items = this.UserPaperService.orderQuestions(this.step);
-    
+
     // Get feedback info
     this.feedback = this.FeedbackService.get();
-    
+
     this.FeedbackService
         .on('show', this.onFeedbackShow.bind(this));
-};
-
-// Set up dependency injection
-StepShowCtrl.$inject = [ 'UserPaperService', 'FeedbackService', 'QuestionService' ];
+}
 
 /**
  * Current step
@@ -54,7 +51,7 @@ StepShowCtrl.prototype.stepIndex = 0;
 StepShowCtrl.prototype.solutionShown = false;
 
 /**
- * 
+ *
  * @type {Integer}
  */
 StepShowCtrl.prototype.allAnswersFound = -1;
@@ -84,7 +81,7 @@ StepShowCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
 };
 
 /**
- * 
+ *
  * @returns {string} Get the suite feedback sentence
  */
 StepShowCtrl.prototype.getSuiteFeedback = function getSuiteFeedback() {
@@ -116,11 +113,8 @@ StepShowCtrl.prototype.getSuiteFeedback = function getSuiteFeedback() {
             sentence = "max_attempts_reached_see_solution";
         }
     }
-    
+
     return sentence;
 };
 
-// Inject controller into AngularJS
-angular
-    .module('Step')
-    .controller('StepShowCtrl', StepShowCtrl);
+export default StepShowCtrl

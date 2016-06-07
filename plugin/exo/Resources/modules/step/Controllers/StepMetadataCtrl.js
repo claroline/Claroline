@@ -7,7 +7,7 @@
  * @param {StepService} StepService
  * @constructor
  */
-var StepMetadataCtrl = function StepMetadataCtrl(step, $uibModalInstance, TinyMceService, StepService) {
+function StepMetadataCtrl(step, $uibModalInstance, TinyMceService, StepService) {
     this.StepService = StepService;
     this.TinyMceService  = TinyMceService;
 
@@ -19,10 +19,7 @@ var StepMetadataCtrl = function StepMetadataCtrl(step, $uibModalInstance, TinyMc
 
     // Initialize TinyMCE
     this.tinymceOptions = TinyMceService.getConfig();
-};
-
-// Set up dependency injection
-StepMetadataCtrl.$inject = [ 'step', '$uibModalInstance', 'TinyMceService', 'StepService' ];
+}
 
 /**
  * Tiny MCE options
@@ -56,7 +53,4 @@ StepMetadataCtrl.prototype.cancel = function cancel() {
     this.$uibModalInstance.dismiss('cancel');
 };
 
-// Register controller into AngularJS
-angular
-    .module('Step')
-    .controller('StepMetadataCtrl', StepMetadataCtrl);
+export default StepMetadataCtrl

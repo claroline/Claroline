@@ -1,4 +1,4 @@
-var TimerService = function TimerService($timeout, $localStorage) {
+function TimerService($timeout, $localStorage) {
     this.$timeout      = $timeout;
     this.$localStorage = $localStorage;
 
@@ -6,10 +6,7 @@ var TimerService = function TimerService($timeout, $localStorage) {
     this.$localStorage.$default({
         timers: {}
     });
-};
-
-// Set up dependency injection
-TimerService.$inject = [ '$timeout', '$localStorage' ];
+}
 
 /**
  * Get the Timer identified by `id`
@@ -183,7 +180,4 @@ TimerService.prototype.destroy = function destroy(id) {
     }
 };
 
-// Register service into AngularJS
-angular
-    .module('Timer')
-    .service('TimerService', TimerService);
+export default TimerService

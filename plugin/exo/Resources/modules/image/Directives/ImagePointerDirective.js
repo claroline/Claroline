@@ -4,7 +4,7 @@
  *
  * @constructor
  */
-var ImagePointerDirective = function ImagePointerDirective($window, $document) {
+function ImagePointerDirective($window, $document) {
     return {
         restrict: 'E',
         replace: true,
@@ -157,12 +157,6 @@ var ImagePointerDirective = function ImagePointerDirective($window, $document) {
             });
         }
     };
-};
+}
 
-// Set up dependency injection
-ImagePointerDirective.$inject = [ '$window', '$document' ];
-
-// Register directive into Angular JS
-angular
-    .module('Image')
-    .directive('imgPointer', ImagePointerDirective);
+export default ImagePointerDirective

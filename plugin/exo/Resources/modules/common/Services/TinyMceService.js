@@ -36,4 +36,4 @@ TinyMceService.prototype.getConfig = function getConfig() {
     return config;
 };
 
-export TinyMceService
+export default TinyMceService
