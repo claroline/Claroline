@@ -7,7 +7,7 @@
  * @param {object}           $route
  * @constructor
  */
-var ExerciseCtrl = function ExerciseCtrl(ExerciseService, PaperService, UserPaperService, $route) {
+function ExerciseCtrl(ExerciseService, PaperService, UserPaperService, $route) {
     this.ExerciseService  = ExerciseService;
     this.PaperService     = PaperService;
     this.UserPaperService = UserPaperService;
@@ -24,9 +24,6 @@ var ExerciseCtrl = function ExerciseCtrl(ExerciseService, PaperService, UserPape
 
     this.$route = $route;
 };
-
-// Set up dependency injection
-ExerciseCtrl.$inject = [ 'ExerciseService', 'PaperService', 'UserPaperService', '$route' ];
 
 /**
  * Current Exercise
@@ -66,8 +63,3 @@ ExerciseCtrl.prototype.publish = function publish() {
 ExerciseCtrl.prototype.unpublish = function unpublish() {
     this.ExerciseService.unpublish();
 };
-
-// Register controller into AngularJS
-angular
-    .module('Exercise')
-    .controller('ExerciseCtrl', ExerciseCtrl);

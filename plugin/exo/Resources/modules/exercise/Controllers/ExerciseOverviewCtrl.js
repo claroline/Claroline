@@ -5,16 +5,13 @@
  * @param {UserPaperService} UserPaperService
  * @constructor
  */
-var ExerciseOverviewCtrl = function ExerciseOverviewCtrl(ExerciseService, UserPaperService) {
+function ExerciseOverviewCtrl(ExerciseService, UserPaperService) {
     this.ExerciseService = ExerciseService;
     this.UserPaperService = UserPaperService;
 
     this.exercise    = this.ExerciseService.getExercise();
     this.editEnabled = this.ExerciseService.isEditEnabled();
 };
-
-// Set up dependency injection
-ExerciseOverviewCtrl.$inject = [ 'ExerciseService', 'UserPaperService' ];
 
 /**
  * Current Exercise
@@ -34,8 +31,3 @@ ExerciseOverviewCtrl.prototype.editEnabled = false;
  * @type {boolean}
  */
 ExerciseOverviewCtrl.prototype.additionalInfo = false;
-
-// Register controller into Angular JS
-angular
-    .module('Exercise')
-    .controller('ExerciseOverviewCtrl', ExerciseOverviewCtrl);

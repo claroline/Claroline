@@ -4,13 +4,10 @@
  * @param {Object} $q
  * @constructor
  */
-var ExerciseService = function ExerciseService($http, $q) {
+function ExerciseService($http, $q) {
     this.$http = $http;
     this.$q    = $q;
 };
-
-// Set up dependency injection
-ExerciseService.$inject = [ '$http', '$q' ];
 
 /**
  * Current Exercise
@@ -438,8 +435,3 @@ ExerciseService.prototype.unpublish = function unpublish() {
 
     return deferred.promise;
 };
-
-// Register service into AngularJS
-angular
-    .module('Exercise')
-    .service('ExerciseService', ExerciseService);

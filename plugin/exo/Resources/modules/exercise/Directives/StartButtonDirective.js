@@ -2,7 +2,7 @@
  * Start (or restart) the Exercise button
  * @constructor
  */
-var StartButtonDirective = function StartButtonDirective() {
+function StartButtonDirective() {
     return {
         restrict: 'E',
         replace: true,
@@ -30,12 +30,4 @@ var StartButtonDirective = function StartButtonDirective() {
             }
         ]
     };
-};
-
-// Set up dependency injection
-StartButtonDirective.$inject = [];
-
-// Register directive into AngularJS
-angular
-    .module('Exercise')
-    .directive('buttonStart', StartButtonDirective);
+}

@@ -3,12 +3,9 @@
  * Manages feedback for Exercises
  * @constructor
  */
-var FeedbackService = function FeedbackService() {
+function FeedbackService() {
 
-};
-
-// Set up dependency injection
-FeedbackService.$inject = [];
+}
 
 FeedbackService.prototype.SOLUTION_FOUND = 0;
 FeedbackService.prototype.ONE_ANSWER_MISSING = 1;
@@ -185,8 +182,3 @@ FeedbackService.prototype.reset = function reset() {
 
     return this;
 };
-
-// Register service into AngularJS
-angular
-    .module('Exercise')
-    .service('FeedbackService', FeedbackService);

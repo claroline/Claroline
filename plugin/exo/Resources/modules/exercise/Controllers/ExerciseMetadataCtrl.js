@@ -6,7 +6,7 @@
  * @param {TinyMceService} TinyMceService
  * @constructor
  */
-var ExerciseMetadataCtrl = function ExerciseMetadataCtrl($location, ExerciseService, TinyMceService) {
+function ExerciseMetadataCtrl($location, ExerciseService, TinyMceService) {
     this.$location        = $location;
     this.ExerciseService = ExerciseService;
     this.TinyMceService = TinyMceService;
@@ -20,9 +20,6 @@ var ExerciseMetadataCtrl = function ExerciseMetadataCtrl($location, ExerciseServ
     // Initialize TinyMCE
     this.tinymceOptions = TinyMceService.getConfig();
 };
-
-// Set up dependency injection
-ExerciseMetadataCtrl.$inject = [ '$location', 'ExerciseService', 'TinyMceService' ];
 
 /**
  * Tiny MCE options
@@ -57,8 +54,3 @@ ExerciseMetadataCtrl.prototype.save = function save() {
         this.$location.path('/');
     }.bind(this));
 };
-
-// Register controller into AngularJS
-angular
-    .module('Exercise')
-    .controller('ExerciseMetadataCtrl', ExerciseMetadataCtrl);

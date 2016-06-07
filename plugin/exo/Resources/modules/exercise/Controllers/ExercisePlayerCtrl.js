@@ -12,7 +12,7 @@
  * @param {TimerService}     TimerService
  * @constructor
  */
-var ExercisePlayerCtrl = function ExercisePlayerCtrl(
+function ExercisePlayerCtrl(
     $location,
     step,
     paper,
@@ -61,18 +61,6 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl(
         this.timer = this.TimerService.new(this.exercise.id, this.exercise.meta.duration * 60, this.end.bind(this), true);
     }
 };
-
-// Set up dependency injection
-ExercisePlayerCtrl.$inject = [
-    '$location',
-    'step',
-    'paper',
-    'CommonService',
-    'ExerciseService',
-    'FeedbackService',
-    'UserPaperService',
-    'TimerService'
-];
 
 /**
  * Current played Exercise
@@ -268,8 +256,3 @@ ExercisePlayerCtrl.prototype.interrupt = function interrupt() {
             this.$location.path('/');
         }.bind(this));
 };
-
-// Register controller into Angular JS
-angular
-    .module('Exercise')
-    .controller('ExercisePlayerCtrl', ExercisePlayerCtrl);
