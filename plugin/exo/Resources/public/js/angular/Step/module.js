@@ -2,5 +2,11 @@
  * Step module
  */
 angular.module('Step', [
-    angularDragula(angular)
+    'ui.translation',
+    'ui.bootstrap',
+    'ui.tinymce',
+    'ngBootbox',
+    angularDragula(angular),
+    'Common',
+    'Question'
 ]);

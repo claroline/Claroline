@@ -138,14 +138,13 @@ class ProfileController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/",
+     *     "/show/{user}",
      *      name="claro_profile_view"
      * )
      * @SEC\Secure(roles="ROLE_USER")
      * @EXT\Template("ClarolineCoreBundle:Profile:publicProfile.html.twig")
-     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function viewAction(Request $request, User $loggedUser)
+    public function viewAction(Request $request, User $user)
     {
         return $this->publicProfileAction($request, $loggedUser->getPublicUrl());
     }
@@ -393,7 +392,7 @@ class ProfileController extends Controller
             }
 
             if ($selfEdit) {
-                return $this->redirect($this->generateUrl('claro_profile_view'));
+                return $this->redirect($this->generateUrl('claro_public_profile_view', array('publicUrl' => $user->getPublicUrl())));
             } else {
                 return $this->redirect($this->generateUrl('claro_admin_users_index'));
             }
@@ -441,7 +440,7 @@ class ProfileController extends Controller
                 $sessionFlashBag->add('error', $translator->trans('tune_public_url_error', array(), 'platform'));
             }
 
-            return $this->redirect($this->generateUrl('claro_profile_view'));
+            return $this->redirect($this->generateUrl('claro_public_profile_view', array('publicUrl' => $user->getPublicUrl())));
         }
 
         return array(

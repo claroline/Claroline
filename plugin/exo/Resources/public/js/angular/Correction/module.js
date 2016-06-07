@@ -1,4 +1,7 @@
 /**
  * Correction module
  */
-angular.module('Correction', []);
+angular.module('Correction', [
+    'ui.translation',
+    'Common'
+]);

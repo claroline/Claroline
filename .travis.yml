@@ -30,6 +30,9 @@ mysql:
   encoding: utf8
 
 before_install:
+  # ensure the target branch is present (original clone is shallowed/single-branched)
+  - git remote set-branches --add origin $TRAVIS_BRANCH
+  - git fetch origin
   # keep a list of files impacted by the PR (wouldn't work with direct push)
   - git diff --name-only --diff-filter=AM origin/$TRAVIS_BRANCH > git_diff_files.txt
   # leave build/repo dir

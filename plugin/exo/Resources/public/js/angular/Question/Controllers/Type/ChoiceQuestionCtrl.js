@@ -6,11 +6,14 @@
  */
 var ChoiceQuestionCtrl = function ChoiceQuestionCtrl(FeedbackService, ChoiceQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
-    
+
     this.ChoiceQuestionService = ChoiceQuestionService;
 
     if (this.question.choices) {
         this.choices = this.question.choices;
+        for (var i = 0; i < this.choices.length; i++) {
+            this.choices[i].valid = 0;
+        }
     }
 };
 
@@ -25,12 +28,6 @@ ChoiceQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'ChoiceQuesti
  * @type {Array}
  */
 ChoiceQuestionCtrl.prototype.choices = [];
-
-/**
- * Tells wether the answers are all found, not found, or if only one misses
- * @type {Integer}
- */
-ChoiceQuestionCtrl.prototype.feedbackState = -1;
 
 /**
  * Toggle the selected state of a Choice
@@ -96,7 +93,7 @@ ChoiceQuestionCtrl.prototype.isUniqueChoiceValid = function isUniqueChoiceValid(
     if (!this.question.multiple) {
         // Loop over all choice to see if the correct one has been selected
         for (var i = 0; i < this.choices.length; i++) {
-            if (1 === this.isChoiceValid(this.choices[i])) {
+            if (1 === this.choices[i].valid) {
                 valid = true;
                 break;
             }

@@ -8,6 +8,10 @@ var ClozeQuestionCtrl = function ClozeQuestionCtrl(FeedbackService, ClozeQuestio
     AbstractQuestionCtrl.apply(this, arguments);
 
     this.ClozeQuestionService = ClozeQuestionService;
+
+    for (var i = 0; i < this.question.holes.length; i++) {
+        this.question.holes[i].valid = 0;
+    }
 };
 
 // Extends AbstractQuestionCtrl
@@ -29,7 +33,7 @@ ClozeQuestionCtrl.prototype.holes = {};
  * @returns {Boolean}
  */
 ClozeQuestionCtrl.prototype.isHoleValid = function isHoleValid(hole) {
-    var answer   = this.getHoleAnswer(hole);
+    var answer = this.getHoleAnswer(hole);
     if (answer) {
         var correct = this.ClozeQuestionService.getHoleCorrectAnswer(this.question, hole);
         if (correct) {

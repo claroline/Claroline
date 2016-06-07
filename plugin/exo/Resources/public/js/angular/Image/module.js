@@ -1,4 +1,6 @@
 /**
  * Image module
  */
-angular.module('Image', []);
+angular.module('Image', [
+    'ui.bootstrap'
+]);

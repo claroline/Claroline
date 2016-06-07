@@ -77,11 +77,11 @@
                             </div>
                             <div>
                                 {% if creator.isEnabled() %}
-                                    <a href="{{path('claro_profile_view', {'userId': creator.getId()})}}">
+                                    <a href="{{path('claro_profile_view', {'user': creator.getId()})}}">
                                 {% endif %}
-                                        
+
                                 {{ message.getAuthor() }}
-                                        
+
                                 {% if creator.isEnabled() %}
                                     </a>
                                 {% endif %}
@@ -95,8 +95,8 @@
                             <div>
                                 <a href="{{ path('claro_forum_messages', {'subject': message.getSubject().getId()}) }}"
                                    class="pull-right"
-                                   data-toggle="tooltip" 
-                                   data-placement="left" 
+                                   data-toggle="tooltip"
+                                   data-placement="left"
                                    title="[{{ message.getSubject().getCategory().getName() }}] {{ message.getSubject().getTitle() }}"
                                 >
                                     <i class="fa fa-eye"></i>
