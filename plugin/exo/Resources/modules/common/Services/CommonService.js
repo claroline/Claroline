@@ -1,12 +1,7 @@
 /**
  * CommonService
  */
-var CommonService = function CommonService() {
-
-};
-
-// Set up dependency injection
-CommonService.$inject = [];
+function CommonService() {}
 
 /**
  * @param {object} object a javascript object with type property
@@ -45,10 +40,4 @@ CommonService.prototype.getObjectSimpleType = function getObjectSimpleType(objec
     return simpleType;
 };
 
-// Register service into Angular JS
-angular
-    .module('Common')
-    .service('CommonService', CommonService);
-
-
-
+export CommonService

@@ -3,7 +3,7 @@
  * @returns {function}
  * @constructor
  */
-var DateStringFilter = function DateStringFilter($filter) {
+function DateStringFilter($filter) {
     /**
      * Format the date in the given format
      * @param   {String} dateString
@@ -16,13 +16,6 @@ var DateStringFilter = function DateStringFilter($filter) {
 
         return $filter('date')(date, format, timezone);
     };
-};
+}
 
-// Set up dependency injection
-DateStringFilter.$inject = [ '$filter' ];
-
-// Register filter into Angular JS
-angular
-    .module('Common')
-    .filter('date_string', DateStringFilter);
-
+export DateStringFilter

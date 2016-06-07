@@ -3,7 +3,7 @@
  * @returns {function}
  * @constructor
  */
-var SimpleTypeFilter = function SimpleTypeFilter(CommonService) {
+function SimpleTypeFilter(CommonService) {
     /**
      * Get simple type for Object
      * @param  {Object} object
@@ -12,13 +12,6 @@ var SimpleTypeFilter = function SimpleTypeFilter(CommonService) {
     return function simpleType(object) {
         return CommonService.getObjectSimpleType(object);
     };
-};
+}
 
-// Set up dependency injection
-SimpleTypeFilter.$inject = [ 'CommonService' ];
-
-// Register filter into Angular JS
-angular
-    .module('Common')
-    .filter('simple_type', SimpleTypeFilter);
-
+export SimpleTypeFilter

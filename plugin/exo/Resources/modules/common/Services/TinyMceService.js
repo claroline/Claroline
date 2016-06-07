@@ -1,9 +1,4 @@
-var TinyMceService = function TinyMceService() {
-
-};
-
-// Set up dependency injection
-TinyMceService.$inject = [];
+function TinyMceService() {}
 
 TinyMceService.prototype.getConfig = function getConfig() {
     var config = {};
@@ -41,7 +36,4 @@ TinyMceService.prototype.getConfig = function getConfig() {
     return config;
 };
 
-// Register service into Angular JS
-angular
-    .module('Common')
-    .service('TinyMceService', TinyMceService);
+export TinyMceService
