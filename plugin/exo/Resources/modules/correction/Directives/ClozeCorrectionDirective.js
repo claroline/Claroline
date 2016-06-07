@@ -1,4 +1,4 @@
-var ClozeCorrectionDirective = function ClozeCorrectionDirective($compile) {
+function ClozeCorrectionDirective($compile) {
     return {
         restrict: 'E',
         replace: true,
@@ -56,11 +56,4 @@ var ClozeCorrectionDirective = function ClozeCorrectionDirective($compile) {
             }
         }
     };
-};
-
-// Set up dependency injection
-ClozeCorrectionDirective.$inject = [ '$compile' ];
-
-angular
-    .module('Correction')
-    .directive('clozeCorrection', ClozeCorrectionDirective);
+}

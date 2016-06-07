@@ -1,4 +1,4 @@
-var OpenCorrectionDirective = function OpenCorrectionDirective() {
+function OpenCorrectionDirective() {
     return {
         restrict: 'E',
         replace: true,
@@ -10,14 +10,4 @@ var OpenCorrectionDirective = function OpenCorrectionDirective() {
             question: '='
         }
     };
-};
-
-// Set up dependency injection
-OpenCorrectionDirective.$inject = [];
-
-// Register directive into AngularJS
-angular
-    .module('Correction')
-    .directive('openCorrection', OpenCorrectionDirective);
-
-
+}

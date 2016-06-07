@@ -1,4 +1,4 @@
-var MatchCorrectionDirective = function MatchCorrectionDirective() {
+function MatchCorrectionDirective() {
     return {
         restrict: 'E',
         replace: true,
@@ -14,11 +14,3 @@ var MatchCorrectionDirective = function MatchCorrectionDirective() {
         }
     };
 };
-
-// Set up dependency injection
-MatchCorrectionDirective.$inject = [];
-
-// Register directive into AngularJS
-angular
-    .module('Correction')
-    .directive('correctionMatch', MatchCorrectionDirective);

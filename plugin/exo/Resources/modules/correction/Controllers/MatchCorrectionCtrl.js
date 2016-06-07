@@ -4,7 +4,7 @@
  * @param {MatchQuestionService} MatchQuestionService
  * @constructor
  */
-var MatchCorrectionCtrl = function MatchCorrectionCtrl(QuestionService) {
+function MatchCorrectionCtrl(QuestionService, MatchQuestionService) {
     AbstractCorrectionCtrl.apply(this, arguments);
 
     this.MatchQuestionService = MatchQuestionService;
@@ -12,9 +12,6 @@ var MatchCorrectionCtrl = function MatchCorrectionCtrl(QuestionService) {
 
 // Extends AbstractQuestionCtrl
 MatchCorrectionCtrl.prototype = Object.create(AbstractCorrectionCtrl.prototype);
-
-// Set up dependency injection (get DI from parent too)
-MatchCorrectionCtrl.$inject = AbstractCorrectionCtrl.$inject.concat([ 'MatchQuestionService' ]);
 
 
 MatchCorrectionCtrl.prototype.studentAnswers = [];
@@ -195,8 +192,3 @@ MatchCorrectionCtrl.prototype.getCurrentItemFeedBack = function (label) {
         }
     }
 };
-
-// Register controller into AngularJS
-angular
-    .module('Correction')
-    .controller('MatchCorrectionCtrl', MatchCorrectionCtrl);

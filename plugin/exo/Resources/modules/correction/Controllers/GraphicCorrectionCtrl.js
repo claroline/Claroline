@@ -5,7 +5,7 @@
  * @param {ImageAreaService} ImageAreaService
  * @constructor
  */
-var GraphicCorrectionCtrl = function GraphicCorrectionCtrl(QuestionService, GraphicQuestionService, ImageAreaService) {
+function GraphicCorrectionCtrl(QuestionService, GraphicQuestionService, ImageAreaService) {
     AbstractCorrectionCtrl.apply(this, arguments);
 
     this.GraphicQuestionService = GraphicQuestionService;
@@ -15,9 +15,6 @@ var GraphicCorrectionCtrl = function GraphicCorrectionCtrl(QuestionService, Grap
 // Extends AbstractQuestionCtrl
 GraphicCorrectionCtrl.prototype = Object.create(AbstractCorrectionCtrl.prototype);
 
-// Set up dependency injection (get DI from parent too)
-GraphicCorrectionCtrl.$inject = AbstractCorrectionCtrl.$inject.concat([ 'GraphicQuestionService', 'ImageAreaService' ]);
-
 GraphicCorrectionCtrl.prototype.getAreaColor = function getAreaColor(area) {
     return this.ImageAreaService.COLORS[area.color];
 };
@@ -25,8 +22,3 @@ GraphicCorrectionCtrl.prototype.getAreaColor = function getAreaColor(area) {
 GraphicCorrectionCtrl.prototype.getAreaStats = function getAreaStats(areaId) {
     return this.GraphicQuestionService.getAreaStats(this.question, areaId);
 };
-
-// Register controller into AngularJS
-angular
-    .module('Correction')
-    .controller('GraphicCorrectionCtrl', GraphicCorrectionCtrl);

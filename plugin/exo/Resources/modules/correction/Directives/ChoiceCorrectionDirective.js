@@ -1,4 +1,4 @@
-var ChoiceCorrectionDirective = function ChoiceCorrectionDirective() {
+function ChoiceCorrectionDirective() {
     return {
         restrict: 'E',
         replace: true,
@@ -10,14 +10,4 @@ var ChoiceCorrectionDirective = function ChoiceCorrectionDirective() {
             question: '='
         }
     };
-};
-
-// Set up dependency injection
-ChoiceCorrectionDirective.$inject = [];
-
-// Register directive into AngularJS
-angular
-    .module('Correction')
-    .directive('choiceCorrection', ChoiceCorrectionDirective);
-
-
+}

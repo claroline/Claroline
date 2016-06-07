@@ -1,4 +1,4 @@
-var GraphicCorrectionCtrl = function GraphicCorrectionCtrl($timeout) {
+function GraphicCorrectionCtrl() {
     return {
         restrict: 'E',
         replace: true,
@@ -11,11 +11,3 @@ var GraphicCorrectionCtrl = function GraphicCorrectionCtrl($timeout) {
         }
     };
 };
-
-// Set up dependency injection
-GraphicCorrectionCtrl.$inject = [ '$timeout' ];
-
-// Register directive into AngularJS
-angular
-    .module('Correction')
-    .directive('graphicCorrection', GraphicCorrectionCtrl);

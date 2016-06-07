@@ -3,15 +3,12 @@
  * @param {QuestionService} QuestionService
  * @constructor
  */
-var AbstractCorrectionCtrl = function AbstractCorrectionCtrl(QuestionService) {
+function AbstractCorrectionCtrl(QuestionService) {
     this.QuestionService = QuestionService;
 
     // Create the correct answer from the Question solutions
     this.answer = this.QuestionService.getTypeService(this.question.type).getCorrectAnswer(this.question);
 };
-
-// Set up dependency injection
-AbstractCorrectionCtrl.$inject = [ 'QuestionService' ];
 
 /**
  * Current question
@@ -24,8 +21,3 @@ AbstractCorrectionCtrl.prototype.question = null;
  * @type {mixed}
  */
 AbstractCorrectionCtrl.prototype.answer = null;
-
-// Register controller into AngularJS
-angular
-    .module('Correction')
-    .controller('AbstractCorrectionCtrl', AbstractCorrectionCtrl);

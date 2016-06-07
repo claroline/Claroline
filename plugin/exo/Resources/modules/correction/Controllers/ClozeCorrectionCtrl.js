@@ -4,7 +4,7 @@
  * @param {ClozeQuestionService} ClozeQuestionService
  * @constructor
  */
-var ClozeCorrectionCtrl = function (QuestionService, ClozeQuestionService) {
+function ClozeCorrectionCtrl(QuestionService, ClozeQuestionService) {
     AbstractCorrectionCtrl.apply(this, arguments);
 
     this.ClozeQuestionService = ClozeQuestionService;
@@ -12,9 +12,6 @@ var ClozeCorrectionCtrl = function (QuestionService, ClozeQuestionService) {
 
 // Extends AbstractQuestionCtrl
 ClozeCorrectionCtrl.prototype = Object.create(AbstractCorrectionCtrl.prototype);
-
-// Set up dependency injection (get DI from parent too)
-ClozeCorrectionCtrl.$inject = AbstractCorrectionCtrl.$inject.concat([ 'ClozeQuestionService' ]);
 
 /**
  * Get the answer for a Hole
@@ -56,8 +53,3 @@ ClozeCorrectionCtrl.prototype.getKeywordStats = function getKeywordStats(keyword
 
     return stats;
 };
-
-// Register controller into AngularJS
-angular
-    .module('Correction')
-    .controller('ClozeCorrectionCtrl', ClozeCorrectionCtrl);

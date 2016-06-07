@@ -4,7 +4,7 @@
  * @param {OpenQuestionService} OpenQuestionService
  * @constructor
  */
-var OpenCorrectionCtrl = function OpenCorrectionCtrl(QuestionService, OpenQuestionService) {
+function OpenCorrectionCtrl(QuestionService, OpenQuestionService) {
     AbstractCorrectionCtrl.apply(this, arguments);
 
     this.OpenQuestionService = OpenQuestionService;
@@ -12,9 +12,6 @@ var OpenCorrectionCtrl = function OpenCorrectionCtrl(QuestionService, OpenQuesti
 
 // Extends AbstractQuestionCtrl
 OpenCorrectionCtrl.prototype = Object.create(AbstractCorrectionCtrl.prototype);
-
-// Set up dependency injection (get DI from parent too)
-OpenCorrectionCtrl.$inject = AbstractCorrectionCtrl.$inject.concat([ 'OpenQuestionService' ]);
 
 OpenCorrectionCtrl.prototype.getKeywordStats = function getKeywordStats(keyword) {
     var stats = null;
@@ -37,8 +34,3 @@ OpenCorrectionCtrl.prototype.getKeywordStats = function getKeywordStats(keyword)
 
     return stats;
 };
-
-// Register controller into AngularJS
-angular
-    .module('Correction')
-    .controller('OpenCorrectionCtrl', OpenCorrectionCtrl);
