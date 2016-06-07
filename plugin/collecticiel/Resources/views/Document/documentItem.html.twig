@@ -119,7 +119,8 @@
     {% if dropzone.evaluation == 1  %}
         <td class="{{ classArray }} centered">
             <div class="btn-group">
-                {% if notationDocumentsArray[document.id] != 0 %}
+                {% if notationDocumentsArray[document.id] != 0
+                and recordOrTransmitNotationsArray[document.id] == 1 %}
                     {% include 'InnovaCollecticielBundle:Document:viewNotation.html.twig'
                         with {
                         'notationCommentDocument': notationCommentDocumentsArray[document.id],
