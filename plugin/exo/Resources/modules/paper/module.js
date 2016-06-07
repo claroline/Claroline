@@ -4,7 +4,7 @@
 
 import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
-import 'at-table'
+import 'at-table/dist/angular-table'
 
 import './../common/module'
 
