@@ -1,4 +1,9 @@
 /**
  * Paper module
  */
-angular.module('Paper', []);
+angular.module('Paper', [
+    'ui.translation',
+    'ui.bootstrap',
+    'angular-table',
+    'Common'
+]);

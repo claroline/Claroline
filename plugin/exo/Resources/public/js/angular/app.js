@@ -4,26 +4,12 @@
 angular
     // Declare the new Application
     .module('ExerciseApp', [
-        // Libraries
-        'ngSanitize',
         'ngRoute',
         'angular-loading-bar',
-        'angular-table',
-        'ui.bootstrap',
-        'ui.translation',
-        'ui.tinymce',
-        'ngBootbox',
         'mgcrea.ngStrap.datepicker',
-
-        // Exercise modules
-        'Common',
-        'Step',
         'Exercise',
-        'Question',
-        'Paper',
-        'Correction',
-        'Timer',
-        'ngStorage'
+        'Step',
+        'Paper'
     ])
 
     // Configure application

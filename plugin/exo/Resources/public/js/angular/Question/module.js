@@ -2,5 +2,10 @@
  * Question module
  */
 angular.module('Question', [
-    'Image'
+    'ui.translation',
+    'ui.bootstrap',
+    'ngBootbox',
+    'Common',
+    'Image',
+    'Correction'
 ]);

@@ -11,7 +11,7 @@ var DateStringFilter = function DateStringFilter($filter) {
      * @param   {String} timezone
      * @returns {String}
      */
-    return function path(dateString, format, timezone) {
+    return function formatDateString(dateString, format, timezone) {
         var date = new Date(Date.parse(dateString));
 
         return $filter('date')(date, format, timezone);
