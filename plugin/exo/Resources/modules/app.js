@@ -1,6 +1,17 @@
 /**
  * Exercise Root Application
  */
+
+import angular from 'angular/index'
+
+import 'angular-route'
+import 'angular-loading-bar'
+import 'angular-strap'
+
+import './exercise/module'
+import './step/module'
+import './paper/module'
+
 angular
     // Declare the new Application
     .module('ExerciseApp', [
