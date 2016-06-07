@@ -76,7 +76,8 @@
     "prefer-stable": true,
     "config": {
         "github-protocols": ["https", "git", "ssh"],
-        "process-timeout": 3600
+        "process-timeout": 3600,
+        "discard-changes": true
     },
     "extra": {
         "symfony-app-dir": "app",
