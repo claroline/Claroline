@@ -54,3 +54,5 @@ OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
         }
     }
 };
+
+export default OpenQuestionCtrl

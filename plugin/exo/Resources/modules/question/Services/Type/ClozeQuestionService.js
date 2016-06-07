@@ -180,3 +180,5 @@ ClozeQuestionService.prototype.getHoleFeedback = function getHoleFeedback(questi
 
     return feedback;
 };
+
+export default ClozeQuestionService

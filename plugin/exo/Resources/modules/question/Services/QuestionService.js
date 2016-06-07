@@ -56,3 +56,5 @@ QuestionService.prototype.getQuestion = function getQuestion(questions, id) {
 
     return question;
 };
+
+export default QuestionService

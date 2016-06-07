@@ -1,4 +1,5 @@
 import AbstractQuestionDirective from './AbstractQuestionDirective'
+import match from './../../Partials/Type/match.html'
 
 /**
  * Match Question Directive
@@ -11,7 +12,7 @@ function MatchQuestionDirective(FeedbackService, $timeout, MatchQuestionService)
     return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
         controller: 'MatchQuestionCtrl',
         controllerAs: 'matchQuestionCtrl',
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/match.html',
+        template: match,
         link: {
             post: function postLink(scope, element, attr, controller) {
                 // init jsPlumb dom elements
@@ -89,3 +90,5 @@ function MatchQuestionDirective(FeedbackService, $timeout, MatchQuestionService)
 
 // Extends AbstractQuestionDirective
 MatchQuestionDirective.prototype = Object.create(AbstractQuestionDirective.prototype);
+
+export default MatchQuestionDirective

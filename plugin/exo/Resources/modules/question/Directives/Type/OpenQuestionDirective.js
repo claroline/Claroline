@@ -1,4 +1,5 @@
 import AbstractQuestionDirective from './AbstractQuestionDirective'
+import open from './../../Partials/Type/open.html'
 
 /**
  * Open Question Directive
@@ -11,7 +12,7 @@ function OpenQuestionDirective() {
     return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
         controller: 'OpenQuestionCtrl',
         controllerAs: 'openQuestionCtrl',
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/open.html'
+        template: open
     });
 }
 
@@ -20,3 +21,5 @@ OpenQuestionDirective.prototype = Object.create(AbstractQuestionDirective.protot
 
 // Set up dependency injection (get DI from parent too)
 OpenQuestionDirective.$inject = AbstractQuestionDirective.$inject;
+
+export default OpenQuestionDirective

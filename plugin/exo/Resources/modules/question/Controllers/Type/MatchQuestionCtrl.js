@@ -812,3 +812,5 @@ MatchQuestionCtrl.prototype.removeDropped = function removeDropped(sourceId, tar
         }
     }
 };
+
+export default MatchQuestionCtrl

@@ -1,4 +1,5 @@
 import AbstractQuestionDirective from './AbstractQuestionDirective'
+import graphic from './../../Partials/Type/graphic.html'
 
 /**
  * Graphic Question Directive
@@ -13,7 +14,7 @@ function GraphicQuestionDirective(FeedbackService, $window) {
     return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
         controller: 'GraphicQuestionCtrl',
         controllerAs: 'graphicQuestionCtrl',
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/graphic.html',
+        template: graphic,
         scope: {
             includeCorrection: '='
         },
@@ -64,3 +65,5 @@ function GraphicQuestionDirective(FeedbackService, $window) {
 
 // Extends AbstractQuestionDirective
 GraphicQuestionDirective.prototype = Object.create(AbstractQuestionDirective.prototype);
+
+export default GraphicQuestionDirective

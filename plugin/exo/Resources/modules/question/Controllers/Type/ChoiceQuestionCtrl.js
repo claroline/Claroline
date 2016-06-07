@@ -136,3 +136,4 @@ ChoiceQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
         }
     }
 };
+ export default ChoiceQuestionCtrl

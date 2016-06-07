@@ -1,3 +1,5 @@
+import metadata from './../Partials/metadata.html'
+
 /**
  * List of steps of an Exercise
  * @param {Object}          $scope
@@ -74,7 +76,7 @@ StepListCtrl.prototype.removeItem = function removeItem(step, item) {
  */
 StepListCtrl.prototype.editMetadata = function editMetadata(step) {
     this.$uibModal.open({
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Step/Partials/metadata.html',
+        template: metadata,
         controller: 'StepMetadataCtrl as stepMetadataCtrl',
         resolve: {
             step: function () {

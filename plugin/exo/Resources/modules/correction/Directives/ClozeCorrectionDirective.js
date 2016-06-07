@@ -1,3 +1,5 @@
+import cloze from './../Partials/cloze.html'
+
 export default function ClozeCorrectionDirective($compile) {
     return {
         restrict: 'E',
@@ -5,7 +7,7 @@ export default function ClozeCorrectionDirective($compile) {
         controller: 'ClozeCorrectionCtrl',
         controllerAs: 'clozeCorrectionCtrl',
         bindToController: true,
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Correction/Partials/cloze.html',
+        template: cloze,
         scope: {
             question: '='
         },

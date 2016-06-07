@@ -1,11 +1,13 @@
-function MatchCorrectionDirective() {
+import match from './../Partials/match.html'
+
+export default function MatchCorrectionDirective() {
     return {
         restrict: 'E',
         replace: true,
         controller: 'MatchCorrectionCtrl',
         controllerAs: 'matchCorrectionCtrl',
         bindToController: true,
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Correction/Partials/match.html',
+        template: match,
         scope: {
             question: '='
         },

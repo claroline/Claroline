@@ -1,15 +1,17 @@
+import show from './../Partials/show.html'
+
 /**
  * Question Show Directive
  * Displays a Question
  * @constructor
  */
-function QuestionShowDirective() {
+export default function QuestionShowDirective() {
     return {
         restrict: 'E',
         replace: true,
         controller: 'QuestionShowCtrl',
         controllerAs: 'questionShowCtrl',
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/show.html',
+        template: show,
         scope: {
             question: '=',
             questionPaper: '=',

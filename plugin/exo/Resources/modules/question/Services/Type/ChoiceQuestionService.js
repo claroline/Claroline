@@ -203,3 +203,5 @@ ChoiceQuestionService.prototype.getChoiceStats = function getChoiceStats(questio
 
     return stats;
 };
+
+export default ChoiceQuestionService

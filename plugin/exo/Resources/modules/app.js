@@ -12,6 +12,13 @@ import './exercise/module'
 import './step/module'
 import './paper/module'
 
+import player from './exercise/Partials/player.html'
+import overview from './exercise/Partials/overview.html'
+import metadata from './exercise/Partials/metadata.html'
+import stepList from './step/Partials/list.html'
+import paperList from './paper/Partials/list.html'
+import paperShow from './paper/Partials/show.html'
+
 angular
     // Declare the new Application
     .module('ExerciseApp', [
@@ -49,7 +56,7 @@ angular
             $routeProvider
                 // Overview
                 .when('/', {
-                    templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/overview.html',
+                    template: overview,
                     controller  : 'ExerciseOverviewCtrl',
                     controllerAs: 'exerciseOverviewCtrl',
                     tab: 'overview'
@@ -57,7 +64,7 @@ angular
 
                 // Edit Exercise parameters
                 .when('/edit', {
-                    templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/metadata.html',
+                    template : metadata,
                     controller  : 'ExerciseMetadataCtrl',
                     controllerAs: 'exerciseMetadataCtrl',
                     tab: 'metadata'
@@ -65,7 +72,7 @@ angular
 
                 // Display the list of Questions
                 .when('/steps', {
-                    templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Step/Partials/list.html',
+                    template: stepList,
                     controller  : 'StepListCtrl',
                     controllerAs: 'stepListCtrl',
                     tab: 'steps'
@@ -73,7 +80,7 @@ angular
 
                 // Display Papers list
                 .when('/papers', {
-                    templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Paper/Partials/list.html',
+                    template: paperList,
                     controller: 'PaperListCtrl',
                     controllerAs: 'paperListCtrl',
                     resolve: {
@@ -91,7 +98,7 @@ angular
 
                 // Display a Paper
                 .when('/papers/:id', {
-                    templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Paper/Partials/show.html',
+                    template: paperShow,
                     controller: 'PaperShowCtrl',
                     controllerAs: 'paperShowCtrl',
                     resolve: {
@@ -115,7 +122,7 @@ angular
 
                 // Respond to Exercise
                 .when('/play/:stepId?', {
-                    templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/player.html',
+                    template: player,
                     controller  : 'ExercisePlayerCtrl',
                     controllerAs: 'exercisePlayerCtrl',
                     resolve: {

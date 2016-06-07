@@ -90,3 +90,5 @@ ClozeQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
         }
     }
 };
+
+export default ClozeQuestionCtrl

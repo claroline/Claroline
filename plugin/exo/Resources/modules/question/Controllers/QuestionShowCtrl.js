@@ -1,3 +1,5 @@
+import mark from './../../paper/Partials/manual-mark.html'
+
 /**
  * Question Show Controller
  * Displays a Question
@@ -69,7 +71,7 @@ QuestionShowCtrl.prototype.mark = function mark() {
     var question = this.question;
 
     this.$uibModal.open({
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Paper/Partials/manual-mark.html',
+        template: mark,
         controller: 'ManualMarkCtrl as manualMarkCtrl',
         resolve: {
             question: function questionResolve() {
@@ -138,3 +140,5 @@ QuestionShowCtrl.prototype.getHintValue = function getHintValue(hint) {
 
     return value;
 };
+
+export default QuestionShowCtrl

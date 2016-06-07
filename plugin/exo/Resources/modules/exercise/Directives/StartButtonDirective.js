@@ -1,3 +1,5 @@
+import startButton from './../Partials/start-button.html'
+
 /**
  * Start (or restart) the Exercise button
  * @constructor
@@ -6,7 +8,7 @@ export default function StartButtonDirective() {
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/start-button.html',
+        template: startButton,
         scope: {
             paperLink: '=',
             overviewLink: '='

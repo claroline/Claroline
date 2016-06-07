@@ -1,3 +1,5 @@
+import exercise from './../Partials/exercise.html'
+
 /**
  * Exercise Directive
  * Displays the summary of the Exercise and the links to the available actions for current User
@@ -9,7 +11,7 @@ export default function ExerciseDirective() {
         replace: true,
         controller: 'ExerciseCtrl',
         controllerAs: 'exerciseCtrl',
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/exercise.html',
+        template: exercise,
         scope: {
             exercise       : '=', // The current Exercise to display
             nbPapers       : '@', // The number of Papers submitted for this Exercise

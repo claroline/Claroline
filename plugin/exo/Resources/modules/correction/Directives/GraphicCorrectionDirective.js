@@ -1,3 +1,5 @@
+import graphic from './../Partials/graphic.html'
+
 export default function GraphicCorrectionCtrl() {
     return {
         restrict: 'E',
@@ -5,7 +7,7 @@ export default function GraphicCorrectionCtrl() {
         controller: 'GraphicCorrectionCtrl',
         controllerAs: 'graphicCorrectionCtrl',
         bindToController: true,
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Correction/Partials/graphic.html',
+        template: graphic,
         scope: {
             question: '='
         }

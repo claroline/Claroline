@@ -88,3 +88,5 @@ OpenQuestionService.prototype.getCorrectAnswer = function getCorrectAnswer(quest
 
     return answer;
 };
+
+export default OpenQuestionService

@@ -1,3 +1,5 @@
+import choice from './../Partials/choice.html'
+
 export default function ChoiceCorrectionDirective() {
     return {
         restrict: 'E',
@@ -5,7 +7,7 @@ export default function ChoiceCorrectionDirective() {
         controller: 'ChoiceCorrectionCtrl',
         controllerAs: 'choiceCorrectionCtrl',
         bindToController: true,
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Correction/Partials/choice.html',
+        template: choice,
         scope: {
             question: '='
         }

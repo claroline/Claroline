@@ -1,4 +1,5 @@
 import AbstractQuestionDirective from './AbstractQuestionDirective'
+import choice from './../../Partials/Type/choice.html'
 
 /**
  * Choice Question Directive
@@ -11,9 +12,11 @@ function ChoiceQuestionDirective() {
     return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
         controller: 'ChoiceQuestionCtrl',
         controllerAs: 'choiceQuestionCtrl',
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/choice.html'
+        template: choice
     });
 }
 
 // Set up dependency injection (get DI from parent too)
 ChoiceQuestionDirective.$inject = AbstractQuestionDirective.$inject;
+
+export default ChoiceQuestionDirective

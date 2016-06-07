@@ -162,3 +162,5 @@ MatchQuestionService.prototype.initDragMatchQuestion = function initDragMatchQue
         });
     });
 };
+
+export default MatchQuestionService

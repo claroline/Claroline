@@ -1,3 +1,5 @@
+import pointer from './../Partials/img-pointer.html'
+
 /**
  * A draggable pointer
  * (we use jQuery to have access to the normalized .pageX, .pageY for mouse position)
@@ -8,7 +10,7 @@ function ImagePointerDirective($window, $document) {
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Image/Partials/img-pointer.html',
+        template: pointer,
         require: 'ngModel',
         scope: {
             img: '=',

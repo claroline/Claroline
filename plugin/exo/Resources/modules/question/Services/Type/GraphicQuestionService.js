@@ -92,3 +92,5 @@ GraphicQuestionService.prototype.getAreaStats = function getAreaStats(question, 
 
     return stats;
 };
+
+export default GraphicQuestionService

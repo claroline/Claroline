@@ -1,3 +1,5 @@
+import timer from './../Partials/timer.html'
+
 /**
  * Create a Timer
  * @param {TimerService} TimerService
@@ -7,7 +9,7 @@ function TimerDirective(TimerService) {
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Timer/Partials/timer.html',
+        template: timer,
         bindToController: true,
         controllerAs: 'timerCtrl',
         controller: function TimerCtrl() {},

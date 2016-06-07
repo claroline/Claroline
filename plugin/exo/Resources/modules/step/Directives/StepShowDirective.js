@@ -1,3 +1,5 @@
+import show from './../Partials/show.html'
+
 /**
  * Step Show Directive
  * @constructor
@@ -9,7 +11,7 @@ function StepShowDirective() {
         controller: 'StepShowCtrl',
         controllerAs: 'stepShowCtrl',
         bindToController: true,
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Step/Partials/show.html',
+        template: show,
         scope: {
             step            : '=',
             stepIndex       : '@',

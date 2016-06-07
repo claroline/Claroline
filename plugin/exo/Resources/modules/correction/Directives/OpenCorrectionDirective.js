@@ -1,3 +1,5 @@
+import open from './../Partials/open.html'
+
 export default function OpenCorrectionDirective() {
     return {
         restrict: 'E',
@@ -5,7 +7,7 @@ export default function OpenCorrectionDirective() {
         controller: 'OpenCorrectionCtrl',
         controllerAs: 'openCorrectionCtrl',
         bindToController: true,
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Correction/Partials/open.html',
+        template: open,
         scope: {
             question: '='
         }

@@ -1,4 +1,6 @@
 import AbstractQuestionDirective from './AbstractQuestionDirective'
+import cloze from './../../Partials/Type/cloze.html'
+
 /**
  * Cloze Question Directive
  * Manages Question of types Cloze
@@ -11,7 +13,7 @@ function ClozeQuestionDirective(FeedbackService, $compile) {
     return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
         controller: 'ClozeQuestionCtrl',
         controllerAs: 'clozeQuestionCtrl',
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/cloze.html',
+        template: cloze,
         link: {
             pre: function preLink(scope, element, attrs, controller) {
                 // Generate DOM for cloze
@@ -71,3 +73,5 @@ function ClozeQuestionDirective(FeedbackService, $compile) {
 
 // Extends AbstractQuestionDirective
 ClozeQuestionDirective.prototype = Object.create(AbstractQuestionDirective.prototype);
+
+export default ClozeQuestionDirective

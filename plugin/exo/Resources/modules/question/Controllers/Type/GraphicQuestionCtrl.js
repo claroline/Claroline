@@ -98,3 +98,5 @@ GraphicQuestionCtrl.prototype.onFeedbackHide = function onFeedbackHide() {
         this.answer.$invalid = false;
     }
 };
+
+export default GraphicQuestionCtrl
