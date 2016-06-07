@@ -1,6 +1,10 @@
-var AbstractQuestionService = function AbstractQuestionService() {
+/**
+ * Base question service
+ * @constructor
+ */
+function AbstractQuestionService() {
 
-};
+}
 
 // Set up dependency injection
 AbstractQuestionService.$inject = [];
@@ -20,8 +24,3 @@ AbstractQuestionService.prototype.initAnswer = function initAnswer() {
 AbstractQuestionService.prototype.getCorrectAnswer = function getCorrectAnswer(question) {
     console.error('Each instance of AbstractQuestionType must implement the `getCorrectAnswer`.');
 };
-
-// Register service into AngularJS
-angular
-    .module('Question')
-    .service('AbstractQuestionService', AbstractQuestionService);

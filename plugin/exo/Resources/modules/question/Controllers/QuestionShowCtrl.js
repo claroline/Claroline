@@ -7,7 +7,7 @@
  * @param {FeedbackService}  FeedbackService
  * @param {UserPaperService} UserPaperService
  */
-var QuestionShowCtrl = function QuestionShowCtrl($uibModal, ExerciseService, QuestionService, FeedbackService, UserPaperService) {
+function QuestionShowCtrl($uibModal, ExerciseService, QuestionService, FeedbackService, UserPaperService) {
     this.$uibModal = $uibModal;
     this.ExerciseService  = ExerciseService;
     this.QuestionService  = QuestionService;
@@ -25,9 +25,6 @@ var QuestionShowCtrl = function QuestionShowCtrl($uibModal, ExerciseService, Que
         this.FeedbackService.show();
     }
 };
-
-// Set up dependency injection
-QuestionShowCtrl.$inject = [ '$uibModal', 'ExerciseService', 'QuestionService', 'FeedbackService', 'UserPaperService' ];
 
 /**
  * Is the Question panel collapsed ?
@@ -141,8 +138,3 @@ QuestionShowCtrl.prototype.getHintValue = function getHintValue(hint) {
 
     return value;
 };
-
-// Register controller into AngularJS
-angular
-    .module('Question')
-    .controller('QuestionShowCtrl', QuestionShowCtrl);

@@ -1,10 +1,12 @@
+import './AbstractQuestionCtrl'
+
 /**
  * Choice Question Controller
  * @param {FeedbackService}       FeedbackService
  * @param {ChoiceQuestionService} ChoiceQuestionService
  * @constructor
  */
-var ChoiceQuestionCtrl = function ChoiceQuestionCtrl(FeedbackService, ChoiceQuestionService) {
+function ChoiceQuestionCtrl(FeedbackService, ChoiceQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
 
     this.ChoiceQuestionService = ChoiceQuestionService;
@@ -15,13 +17,10 @@ var ChoiceQuestionCtrl = function ChoiceQuestionCtrl(FeedbackService, ChoiceQues
             this.choices[i].valid = 0;
         }
     }
-};
+}
 
 // Extends AbstractQuestionCtrl
 ChoiceQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype);
-
-// Set up dependency injection (get DI from parent too)
-ChoiceQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'ChoiceQuestionService' ]);
 
 /**
  * Stores Choices to be able to toggle there state
@@ -137,8 +136,3 @@ ChoiceQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
         }
     }
 };
-
-// Register controller into AngularJS
-angular
-    .module('Question')
-    .controller('ChoiceQuestionCtrl', ChoiceQuestionCtrl);

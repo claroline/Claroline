@@ -1,3 +1,5 @@
+import './AbstractQuestionDirective'
+
 /**
  * Cloze Question Directive
  * Manages Question of types Cloze
@@ -5,7 +7,7 @@
  * @returns {object}
  * @constructor
  */
-var ClozeQuestionDirective = function ClozeQuestionDirective(FeedbackService, $compile) {
+function ClozeQuestionDirective(FeedbackService, $compile) {
     // Merge default directive config
     return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
         controller: 'ClozeQuestionCtrl',
@@ -66,15 +68,7 @@ var ClozeQuestionDirective = function ClozeQuestionDirective(FeedbackService, $c
             }
         }
     });
-};
+}
 
 // Extends AbstractQuestionDirective
 ClozeQuestionDirective.prototype = Object.create(AbstractQuestionDirective.prototype);
-
-// Set up dependency injection (get DI from parent too)
-ClozeQuestionDirective.$inject = AbstractQuestionDirective.$inject.concat([ '$compile' ]);
-
-// Register directive into AngularJS
-angular
-    .module('Question')
-    .directive('clozeQuestion', ClozeQuestionDirective);

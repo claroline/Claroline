@@ -3,7 +3,7 @@
  * @param {FeedbackService} FeedbackService
  * @constructor
  */
-var AbstractQuestionCtrl = function AbstractQuestionCtrl(FeedbackService) {
+function AbstractQuestionCtrl(FeedbackService) {
     this.FeedbackService = FeedbackService;
 
     // get feedback info
@@ -14,9 +14,6 @@ var AbstractQuestionCtrl = function AbstractQuestionCtrl(FeedbackService) {
         .on('show', this.onFeedbackShow.bind(this))
         .on('hide', this.onFeedbackHide.bind(this));
 };
-
-// Set up dependency injection
-AbstractQuestionCtrl.$inject = [ 'FeedbackService' ];
 
 /**
  * Current Question
@@ -55,8 +52,3 @@ AbstractQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
 AbstractQuestionCtrl.prototype.onFeedbackHide = function onFeedbackHide() {
     console.info('onFeedbackHide: Implement this method in your Type/*QuestionCtrl if you need custom logic.');
 };
-
-// Register controller into Angular JS
-angular
-    .module('Question')
-    .controller('AbstractQuestionCtrl', AbstractQuestionCtrl);

@@ -3,7 +3,7 @@
  * Displays a Question
  * @constructor
  */
-var QuestionShowDirective = function QuestionShowDirective() {
+function QuestionShowDirective() {
     return {
         restrict: 'E',
         replace: true,
@@ -18,12 +18,4 @@ var QuestionShowDirective = function QuestionShowDirective() {
         },
         bindToController: true
     };
-};
-
-// Set up dependency injection
-QuestionShowDirective.$inject = [];
-
-// Register directive into AngularJS
-angular
-    .module('Question')
-    .directive('questionShow', QuestionShowDirective);
+}

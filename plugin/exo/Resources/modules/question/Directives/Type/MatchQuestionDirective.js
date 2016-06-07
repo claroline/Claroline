@@ -1,3 +1,5 @@
+import './AbstractQuestionDirective'
+
 /**
  * Match Question Directive
  * Manages Question of types Match
@@ -5,7 +7,7 @@
  * @returns {Object}
  * @constructor
  */
-var MatchQuestionDirective = function MatchQuestionDirective(FeedbackService, $timeout, MatchQuestionService) {
+function MatchQuestionDirective(FeedbackService, $timeout, MatchQuestionService) {
     return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
         controller: 'MatchQuestionCtrl',
         controllerAs: 'matchQuestionCtrl',
@@ -83,15 +85,7 @@ var MatchQuestionDirective = function MatchQuestionDirective(FeedbackService, $t
             }
         }
     });
-};
+}
 
 // Extends AbstractQuestionDirective
 MatchQuestionDirective.prototype = Object.create(AbstractQuestionDirective.prototype);
-
-// Set up dependency injection (get DI from parent too)
-MatchQuestionDirective.$inject = AbstractQuestionDirective.$inject.concat([ '$timeout', 'MatchQuestionService' ]);
-
-// Register directive into AngularJS
-angular
-    .module('Question')
-    .directive('matchQuestion', MatchQuestionDirective);

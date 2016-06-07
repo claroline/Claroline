@@ -1,19 +1,18 @@
+import './AbstractQuestionService'
+
 /**
  * Match Question Service
  * @param {FeedbackService} FeedbackService
  * @constructor
  */
-var MatchQuestionService = function MatchQuestionService(FeedbackService) {
+function MatchQuestionService(FeedbackService) {
     AbstractQuestionService.apply(this, arguments);
     
     this.FeedbackService = FeedbackService;
-};
+}
 
 // Extends AbstractQuestionCtrl
 MatchQuestionService.prototype = Object.create(AbstractQuestionService.prototype);
-
-// Set up dependency injection (get DI from parent too)
-MatchQuestionService.$inject = AbstractQuestionService.$inject.concat(['FeedbackService']);
 
 /**
  * Initialize the answer object for the Question
@@ -163,8 +162,3 @@ MatchQuestionService.prototype.initDragMatchQuestion = function initDragMatchQue
         });
     });
 };
-
-// Register service into AngularJS
-angular
-    .module('Question')
-    .service('MatchQuestionService', MatchQuestionService);

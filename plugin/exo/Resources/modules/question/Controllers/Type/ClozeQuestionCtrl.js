@@ -1,10 +1,12 @@
+import './AbstractQuestionCtrl'
+
 /**
  * Cloze Question Controller
  * @param {FeedbackService}      FeedbackService
  * @param {ClozeQuestionService} ClozeQuestionService
  * @constructor
  */
-var ClozeQuestionCtrl = function ClozeQuestionCtrl(FeedbackService, ClozeQuestionService) {
+function ClozeQuestionCtrl(FeedbackService, ClozeQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
 
     this.ClozeQuestionService = ClozeQuestionService;
@@ -12,13 +14,10 @@ var ClozeQuestionCtrl = function ClozeQuestionCtrl(FeedbackService, ClozeQuestio
     for (var i = 0; i < this.question.holes.length; i++) {
         this.question.holes[i].valid = 0;
     }
-};
+}
 
 // Extends AbstractQuestionCtrl
 ClozeQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype);
-
-// Set up dependency injection (get DI from parent too)
-ClozeQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'ClozeQuestionService' ]);
 
 /**
  * Stores Holes to be able to toggle there state
@@ -91,8 +90,3 @@ ClozeQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
         }
     }
 };
-
-// Register controller into AngularJS
-angular
-    .module('Question')
-    .controller('ClozeQuestionCtrl', ClozeQuestionCtrl);

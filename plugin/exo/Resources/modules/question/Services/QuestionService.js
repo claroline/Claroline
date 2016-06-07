@@ -7,7 +7,7 @@
  * @param {OpenQuestionService}    OpenQuestionService
  * @constructor
  */
-var QuestionService = function QuestionService(
+function QuestionService(
     ChoiceQuestionService,
     ClozeQuestionService,
     GraphicQuestionService,
@@ -23,15 +23,6 @@ var QuestionService = function QuestionService(
     this.services['application/x.short+json']   = OpenQuestionService;
     this.services['application/x.graphic+json'] = GraphicQuestionService;
 };
-
-// Set up dependency injection
-QuestionService.$inject = [
-    'ChoiceQuestionService',
-    'ClozeQuestionService',
-    'GraphicQuestionService',
-    'MatchQuestionService',
-    'OpenQuestionService'
-];
 
 /**
  * Get the Service that manage the QuestionType
@@ -65,8 +56,3 @@ QuestionService.prototype.getQuestion = function getQuestion(questions, id) {
 
     return question;
 };
-
-// Register service into AngularJS
-angular
-    .module('Question')
-    .service('QuestionService', QuestionService);

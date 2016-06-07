@@ -1,3 +1,5 @@
+import './AbstractQuestionCtrl'
+
 /**
  * Graphic Question Controller
  * @param {FeedbackService}        FeedbackService
@@ -5,18 +7,15 @@
  * @param {ImageAreaService}       ImageAreaService
  * @constructor
  */
-var GraphicQuestionCtrl = function GraphicQuestionCtrl(FeedbackService, GraphicQuestionService, ImageAreaService) {
+function GraphicQuestionCtrl(FeedbackService, GraphicQuestionService, ImageAreaService) {
     AbstractQuestionCtrl.apply(this, arguments);
 
     this.GraphicQuestionService = GraphicQuestionService;
     this.ImageAreaService = ImageAreaService;
-};
+}
 
 // Extends AbstractQuestionCtrl
 GraphicQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype);
-
-// Set up dependency injection (get DI from parent too)
-GraphicQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'GraphicQuestionService', 'ImageAreaService' ]);
 
 /**
  * The current image of the question
@@ -99,7 +98,3 @@ GraphicQuestionCtrl.prototype.onFeedbackHide = function onFeedbackHide() {
         this.answer.$invalid = false;
     }
 };
-
-// Register controller into AngularJS
-angular.module('Question')
-    .controller('GraphicQuestionCtrl', GraphicQuestionCtrl);

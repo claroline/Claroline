@@ -1,19 +1,18 @@
+import './AbstractQuestionService'
+
 /**
  * Open Question Service
  * @param {FeedbackService}  FeedbackService
  * @constructor
  */
-var OpenQuestionService = function OpenQuestionService(FeedbackService) {
+function OpenQuestionService(FeedbackService) {
     AbstractQuestionService.apply(this, arguments);
     
     this.FeedbackService = FeedbackService;
-};
+}
 
 // Extends AbstractQuestionCtrl
 OpenQuestionService.prototype = Object.create(AbstractQuestionService.prototype);
-
-// Set up dependency injection (get DI from parent too)
-OpenQuestionService.$inject = AbstractQuestionService.$inject.concat(['FeedbackService']);
 
 /**
  * Initialize the answer object for the Question
@@ -89,8 +88,3 @@ OpenQuestionService.prototype.getCorrectAnswer = function getCorrectAnswer(quest
 
     return answer;
 };
-
-// Register service into AngularJS
-angular
-    .module('Question')
-    .service('OpenQuestionService', OpenQuestionService);

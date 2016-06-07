@@ -1,19 +1,18 @@
+import './AbstractQuestionService'
+
 /**
  * Choice Question Service
  * @param {FeedbackService} FeedbackService
  * @constructor
  */
-var ChoiceQuestionService = function ChoiceQuestionService(FeedbackService) {
+function ChoiceQuestionService(FeedbackService) {
     AbstractQuestionService.apply(this, arguments);
     
     this.FeedbackService = FeedbackService;
-};
+}
 
 // Extends AbstractQuestionCtrl
 ChoiceQuestionService.prototype = Object.create(AbstractQuestionService.prototype);
-
-// Set up dependency injection (get DI from parent too)
-ChoiceQuestionService.$inject = AbstractQuestionService.$inject.concat(['FeedbackService']);
 
 /**
  * Initialize the answer object for the Question
@@ -204,8 +203,3 @@ ChoiceQuestionService.prototype.getChoiceStats = function getChoiceStats(questio
 
     return stats;
 };
-
-// Register service into AngularJS
-angular
-    .module('Question')
-    .service('ChoiceQuestionService', ChoiceQuestionService);

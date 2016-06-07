@@ -1,21 +1,20 @@
+import './AbstractQuestionService'
+
 /**
  * Graphic Question Service
  * @param {FeedbackService} FeedbackService
  * @param {ImageAreaService} ImageAreaService
  * @constructor
  */
-var GraphicQuestionService = function GraphicQuestionService(FeedbackService, ImageAreaService) {
+function GraphicQuestionService(FeedbackService, ImageAreaService) {
     AbstractQuestionService.apply(this, arguments);
     
     this.FeedbackService = FeedbackService;
     this.ImageAreaService = ImageAreaService;
-};
+}
 
 // Extends AbstractQuestionCtrl
 GraphicQuestionService.prototype = Object.create(AbstractQuestionService.prototype);
-
-// Set up dependency injection (get DI from parent too)
-GraphicQuestionService.$inject = AbstractQuestionService.$inject.concat(['FeedbackService', 'ImageAreaService']);
 
 /**
  * Initialize the answer object for the Question
@@ -93,8 +92,3 @@ GraphicQuestionService.prototype.getAreaStats = function getAreaStats(question, 
 
     return stats;
 };
-
-// Register service into AngularJS
-angular
-    .module('Question')
-    .service('GraphicQuestionService', GraphicQuestionService);

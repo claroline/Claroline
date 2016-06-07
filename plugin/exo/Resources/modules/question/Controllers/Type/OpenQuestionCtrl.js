@@ -1,20 +1,19 @@
+import './AbstractQuestionCtrl'
+
 /**
  * Open Question Controller
  * @param {FeedbackService} FeedbackService
  * @param {OpenQuestionService} OpenQuestionService
  * @constructor
  */
-var OpenQuestionCtrl = function OpenQuestionCtrl(FeedbackService, OpenQuestionService) {
+function OpenQuestionCtrl(FeedbackService, OpenQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
 
     this.OpenQuestionService = OpenQuestionService;
-};
+}
 
 // Extends AbstractQuestionCtrl
 OpenQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype);
-
-// Set up dependency injection (get DI from parent too)
-OpenQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ 'OpenQuestionService' ]);
 
 /**
  * Answer of the student with highlighted keywords
@@ -55,8 +54,3 @@ OpenQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
         }
     }
 };
-
-// Register controller into AngularJS
-angular
-    .module('Question')
-    .controller('OpenQuestionCtrl', OpenQuestionCtrl);

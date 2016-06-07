@@ -3,7 +3,7 @@
  * @param {FeedbackService} FeedbackService
  * @constructor
  */
-var AbstractQuestionDirective = function AbstractQuestionDirective(FeedbackService) {
+function AbstractQuestionDirective(FeedbackService) {
     return {
         restrict: 'E',
         replace: true,
@@ -27,6 +27,3 @@ AbstractQuestionDirective.prototype.postLink = function link(scope, element, att
         controller.onFeedbackShow();
     }
 };
-
-// Set up dependency injection
-AbstractQuestionDirective.$inject = [ 'FeedbackService' ];

@@ -1,3 +1,5 @@
+import './AbstractQuestionDirective'
+
 /**
  * Graphic Question Directive
  * Manages Question of type Graphic
@@ -7,7 +9,7 @@
  * @returns {Object}
  * @constructor
  */
-var GraphicQuestionDirective = function GraphicQuestionDirective(FeedbackService, $window) {
+function GraphicQuestionDirective(FeedbackService, $window) {
     return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
         controller: 'GraphicQuestionCtrl',
         controllerAs: 'graphicQuestionCtrl',
@@ -58,15 +60,7 @@ var GraphicQuestionDirective = function GraphicQuestionDirective(FeedbackService
             }
         }
     });
-};
+}
 
 // Extends AbstractQuestionDirective
 GraphicQuestionDirective.prototype = Object.create(AbstractQuestionDirective.prototype);
-
-// Set up dependency injection (get DI from parent too)
-GraphicQuestionDirective.$inject = AbstractQuestionDirective.$inject.concat([ '$window' ]);
-
-// Register directive into AngularJS
-angular
-    .module('Question')
-    .directive('graphicQuestion', GraphicQuestionDirective);

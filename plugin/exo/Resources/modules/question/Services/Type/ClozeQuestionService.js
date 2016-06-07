@@ -1,19 +1,18 @@
+import './AbstractQuestionService'
+
 /**
  * Cloze Question Service
  * @param {FeedbackService} FeedbackService
  * @constructor
  */
-var ClozeQuestionService = function ClozeQuestionService(FeedbackService) {
+function ClozeQuestionService(FeedbackService) {
     AbstractQuestionService.apply(this, arguments);
     
     this.FeedbackService = FeedbackService;
-};
+}
 
 // Extends AbstractQuestionCtrl
 ClozeQuestionService.prototype = Object.create(AbstractQuestionService.prototype);
-
-// Set up dependency injection (get DI from parent too)
-ClozeQuestionService.$inject = AbstractQuestionService.$inject.concat(['FeedbackService']);
 
 /**
  * Initialize the answer object for the Question
@@ -181,8 +180,3 @@ ClozeQuestionService.prototype.getHoleFeedback = function getHoleFeedback(questi
 
     return feedback;
 };
-
-// Register service into AngularJS
-angular
-    .module('Question')
-    .service('ClozeQuestionService', ClozeQuestionService);

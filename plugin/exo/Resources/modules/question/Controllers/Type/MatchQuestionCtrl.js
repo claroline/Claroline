@@ -1,3 +1,5 @@
+import './AbstractQuestionCtrl'
+
 /**
  * Choice Question Controller
  * @param {FeedbackService}      FeedbackService
@@ -5,7 +7,7 @@
  * @param {MatchQuestionService} MatchQuestionService
  * @constructor
  */
-var MatchQuestionCtrl = function MatchQuestionCtrl(FeedbackService, $scope, MatchQuestionService) {
+function MatchQuestionCtrl(FeedbackService, $scope, MatchQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
     
     this.$scope = $scope;
@@ -15,13 +17,10 @@ var MatchQuestionCtrl = function MatchQuestionCtrl(FeedbackService, $scope, Matc
     for (var i=0; i<this.dropped.length; i++) {
         this.savedAnswers.push(this.dropped[i]);
     }
-};
+}
 
 // Extends AbstractQuestionCtrl
 MatchQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype);
-
-// Set up dependency injection (get DI from parent too)
-MatchQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ '$scope', 'MatchQuestionService' ]);
 
 MatchQuestionCtrl.prototype.connections = []; // for toBind questions
 
@@ -813,8 +812,3 @@ MatchQuestionCtrl.prototype.removeDropped = function removeDropped(sourceId, tar
         }
     }
 };
-
-// Register controller into Angular JS
-angular
-    .module('Question')
-    .controller('MatchQuestionCtrl', MatchQuestionCtrl);
