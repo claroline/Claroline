@@ -13,6 +13,7 @@ import 'ngBootbox'
 import './../common/module'
 import './../question/module'
 
+import StepService from './Services/StepService'
 import StepListCtrl from './Controllers/StepListCtrl'
 import StepMetadataCtrl from './Controllers/StepMetadataCtrl'
 import StepShowCtrl from './Controllers/StepShowCtrl'

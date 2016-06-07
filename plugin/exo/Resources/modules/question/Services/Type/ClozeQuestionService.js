@@ -1,4 +1,4 @@
-import './AbstractQuestionService'
+import AbstractQuestionService from './AbstractQuestionService'
 
 /**
  * Cloze Question Service
@@ -7,7 +7,7 @@ import './AbstractQuestionService'
  */
 function ClozeQuestionService(FeedbackService) {
     AbstractQuestionService.apply(this, arguments);
-    
+
     this.FeedbackService = FeedbackService;
 }
 
@@ -23,7 +23,7 @@ ClozeQuestionService.prototype.initAnswer = function initAnswer() {
 
 ClozeQuestionService.prototype.answersAllFound = function answersAllFound(question, answers) {
     var feedbackState = -1;
-    
+
     if (question.solutions) {
         var numAnswersFound = 0;
 
@@ -55,7 +55,7 @@ ClozeQuestionService.prototype.answersAllFound = function answersAllFound(questi
             feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
         }
     }
-    
+
     return feedbackState;
 };
 

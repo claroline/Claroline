@@ -1,3 +1,5 @@
+import AbstractCorrectionCtrl from './AbstractCorrectionCtrl'
+
 /**
  * Correction for Graphic Questions
  * @param {QuestionService}        QuestionService
@@ -22,3 +24,5 @@ GraphicCorrectionCtrl.prototype.getAreaColor = function getAreaColor(area) {
 GraphicCorrectionCtrl.prototype.getAreaStats = function getAreaStats(areaId) {
     return this.GraphicQuestionService.getAreaStats(this.question, areaId);
 };
+
+export default GraphicCorrectionCtrl

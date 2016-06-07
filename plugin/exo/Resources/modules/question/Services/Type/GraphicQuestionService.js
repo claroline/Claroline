@@ -1,4 +1,4 @@
-import './AbstractQuestionService'
+import AbstractQuestionService from './AbstractQuestionService'
 
 /**
  * Graphic Question Service
@@ -8,7 +8,7 @@ import './AbstractQuestionService'
  */
 function GraphicQuestionService(FeedbackService, ImageAreaService) {
     AbstractQuestionService.apply(this, arguments);
-    
+
     this.FeedbackService = FeedbackService;
     this.ImageAreaService = ImageAreaService;
 }
@@ -64,7 +64,7 @@ GraphicQuestionService.prototype.answersAllFound = function answersAllFound(ques
             feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
         }
     }
-    
+
     return feedbackState;
 };
 

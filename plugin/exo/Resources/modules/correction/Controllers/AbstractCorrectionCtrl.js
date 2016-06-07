@@ -21,3 +21,5 @@ AbstractCorrectionCtrl.prototype.question = null;
  * @type {mixed}
  */
 AbstractCorrectionCtrl.prototype.answer = null;
+
+export default AbstractCorrectionCtrl

@@ -1,3 +1,5 @@
+import AbstractCorrectionCtrl from './AbstractCorrectionCtrl'
+
 /**
  * Correction for Open Questions
  * @param {QuestionService}     QuestionService
@@ -34,3 +36,5 @@ OpenCorrectionCtrl.prototype.getKeywordStats = function getKeywordStats(keyword)
 
     return stats;
 };
+
+export default OpenCorrectionCtrl

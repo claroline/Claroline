@@ -2,7 +2,7 @@
  * Image Area Service
  * @constructor
  */
-function AreaService() {}
+function ImageAreaService() {}
 
 /**
  * Map color name to RGBA value

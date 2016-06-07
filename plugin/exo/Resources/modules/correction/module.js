@@ -2,7 +2,7 @@
  * Correction module
  */
 
-import 'angular-ui-translation'
+import 'angular-ui-translation/angular-translation'
 import './../common/module'
 
 import AbstractCorrectionCtrl from './Controllers/AbstractCorrectionCtrl'
@@ -19,10 +19,7 @@ import MatchCorrectionDirective from './Directives/MatchCorrectionDirective'
 import OpenCorrectionDirective from './Directives/OpenCorrectionDirective'
 
 angular
-    .module('Correction', [
-        'ui.translation',
-        'Common'
-    ])
+    .module('Correction', ['ui.translation', 'Common'])
     .controller('AbstractCorrectionCtrl', ['QuestionService', AbstractCorrectionCtrl])
     .controller('ChoiceCorrectionCtrl', ['QuestionService', 'ChoiceQuestionService', ChoiceCorrectionCtrl])
     .controller('ClozeCorrectionCtrl', ['QuestionService', 'ClozeQuestionService', ClozeCorrectionCtrl])

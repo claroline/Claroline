@@ -63,3 +63,5 @@ ExerciseCtrl.prototype.publish = function publish() {
 ExerciseCtrl.prototype.unpublish = function unpublish() {
     this.ExerciseService.unpublish();
 };
+
+export default ExerciseCtrl

@@ -237,7 +237,7 @@ ExerciseService.prototype.reorderSteps = function reorderSteps() {
     var order = this.exercise.steps.map(function getIds(step) {
         return step.id;
     });
-    
+
     var deferred = this.$q.defer();
     this.$http
         .put(
@@ -435,3 +435,5 @@ ExerciseService.prototype.unpublish = function unpublish() {
 
     return deferred.promise;
 };
+
+export default ExerciseService

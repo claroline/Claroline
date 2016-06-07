@@ -27,3 +27,5 @@ AbstractQuestionDirective.prototype.postLink = function link(scope, element, att
         controller.onFeedbackShow();
     }
 };
+
+export default AbstractQuestionDirective

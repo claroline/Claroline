@@ -31,3 +31,5 @@ ExerciseOverviewCtrl.prototype.editEnabled = false;
  * @type {boolean}
  */
 ExerciseOverviewCtrl.prototype.additionalInfo = false;
+
+export default ExerciseOverviewCtrl

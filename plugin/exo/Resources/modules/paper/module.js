@@ -12,6 +12,7 @@ import PaperService from './Services/PaperService'
 import UserPaperService from './Services/UserPaperService'
 import ManualMarkCtrl from './Controllers/ManualMarkCtrl'
 import PaperListCtrl from './Controllers/PaperListCtrl'
+import PaperShowCtrl from './Controllers/PaperShowCtrl'
 
 angular
   .module('Paper', [

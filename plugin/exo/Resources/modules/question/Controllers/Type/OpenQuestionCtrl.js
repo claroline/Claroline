@@ -1,4 +1,4 @@
-import './AbstractQuestionCtrl'
+import AbstractQuestionCtrl from './AbstractQuestionCtrl'
 
 /**
  * Open Question Controller

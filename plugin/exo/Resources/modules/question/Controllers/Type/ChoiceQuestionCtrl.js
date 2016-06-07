@@ -1,4 +1,4 @@
-import './AbstractQuestionCtrl'
+import AbstractQuestionCtrl from './AbstractQuestionCtrl'
 
 /**
  * Choice Question Controller

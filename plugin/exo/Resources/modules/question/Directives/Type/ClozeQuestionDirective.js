@@ -1,5 +1,4 @@
-import './AbstractQuestionDirective'
-
+import AbstractQuestionDirective from './AbstractQuestionDirective'
 /**
  * Cloze Question Directive
  * Manages Question of types Cloze

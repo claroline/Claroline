@@ -1,4 +1,4 @@
-import './AbstractQuestionDirective'
+import AbstractQuestionDirective from './AbstractQuestionDirective'
 
 /**
  * Open Question Directive

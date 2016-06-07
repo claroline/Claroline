@@ -1,4 +1,4 @@
-import './AbstractQuestionCtrl'
+import AbstractQuestionCtrl from './AbstractQuestionCtrl'
 
 /**
  * Graphic Question Controller
@@ -72,7 +72,7 @@ GraphicQuestionCtrl.prototype.areaHasPointer = function (area) {
             hasPointer = true;
         }
     }
-    
+
     return hasPointer;
 };
 

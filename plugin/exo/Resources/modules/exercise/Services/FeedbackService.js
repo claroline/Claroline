@@ -182,3 +182,5 @@ FeedbackService.prototype.reset = function reset() {
 
     return this;
 };
+
+export default FeedbackService

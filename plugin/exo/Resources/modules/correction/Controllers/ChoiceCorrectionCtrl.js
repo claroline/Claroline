@@ -1,3 +1,5 @@
+import AbstractCorrectionCtrl from './AbstractCorrectionCtrl'
+
 /**
  * Correction for Choice question
  * @param {QuestionService}       QuestionService
@@ -29,3 +31,5 @@ ChoiceCorrectionCtrl.prototype.getChoiceSolution = function getChoiceScore(choic
 ChoiceCorrectionCtrl.prototype.getChoiceStats = function getChoiceStats(choice) {
     return this.ChoiceQuestionService.getChoiceStats(this.question, choice);
 };
+
+export default ChoiceCorrectionCtrl

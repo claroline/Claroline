@@ -1,3 +1,5 @@
+import AbstractCorrectionCtrl from './AbstractCorrectionCtrl'
+
 /**
  * Correction for Match Questions
  * @param {QuestionService}      QuestionService
@@ -192,3 +194,5 @@ MatchCorrectionCtrl.prototype.getCurrentItemFeedBack = function (label) {
         }
     }
 };
+
+export default MatchCorrectionCtrl

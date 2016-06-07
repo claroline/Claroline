@@ -54,3 +54,5 @@ ExerciseMetadataCtrl.prototype.save = function save() {
         this.$location.path('/');
     }.bind(this));
 };
+
+export default ExerciseMetadataCtrl

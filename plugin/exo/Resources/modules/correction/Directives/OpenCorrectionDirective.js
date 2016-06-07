@@ -1,4 +1,4 @@
-function OpenCorrectionDirective() {
+export default function OpenCorrectionDirective() {
     return {
         restrict: 'E',
         replace: true,

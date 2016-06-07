@@ -1,4 +1,4 @@
-import './AbstractQuestionService'
+import AbstractQuestionService from './AbstractQuestionService'
 
 /**
  * Open Question Service
@@ -7,7 +7,7 @@ import './AbstractQuestionService'
  */
 function OpenQuestionService(FeedbackService) {
     AbstractQuestionService.apply(this, arguments);
-    
+
     this.FeedbackService = FeedbackService;
 }
 
@@ -22,7 +22,7 @@ OpenQuestionService.prototype.initAnswer = function initAnswer() {
 };
 
 /**
- * 
+ *
  * @returns {number}
  */
 OpenQuestionService.prototype.answersAllFound = function answersAllFound(question, answer) {
@@ -31,7 +31,7 @@ OpenQuestionService.prototype.answersAllFound = function answersAllFound(questio
     if ('long' !== question.typeOpen) {
         // Search used keywords in student answer
         var numAnswersFound = 0;
-        
+
         for (var i = 0; i < question.solutions.length; i++) {
             var solution = question.solutions[i];
 
@@ -53,7 +53,7 @@ OpenQuestionService.prototype.answersAllFound = function answersAllFound(questio
     } else {
         feedbackState = this.FeedbackService.SOLUTION_FOUND;
     }
-    
+
     return feedbackState;
 };
 

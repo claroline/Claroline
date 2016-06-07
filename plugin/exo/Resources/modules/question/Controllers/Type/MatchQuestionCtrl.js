@@ -1,4 +1,4 @@
-import './AbstractQuestionCtrl'
+import AbstractQuestionCtrl from './AbstractQuestionCtrl'
 
 /**
  * Choice Question Controller
@@ -9,7 +9,7 @@ import './AbstractQuestionCtrl'
  */
 function MatchQuestionCtrl(FeedbackService, $scope, MatchQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
-    
+
     this.$scope = $scope;
     this.MatchQuestionService = MatchQuestionService;
 
@@ -148,7 +148,7 @@ MatchQuestionCtrl.prototype.colorBindings = function colorBindings() {
                              * The following line adds the specific feedback on right bingings
                              * We decided not to show it, as it can easily take too much space on the bindings
                              * The best way would be to show it on hover
-                             * 
+                             *
                              * c.setLabel({label: this.question.solutions[j].feedback, cssClass: "label label-success"});
                              */
                         }

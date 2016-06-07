@@ -38,7 +38,7 @@ function ExercisePlayerCtrl(
     this.index    = this.ExerciseService.getIndex(step);
     this.previous = this.ExerciseService.getPrevious(step);
     this.next     = this.ExerciseService.getNext(step);
-    
+
     this.allAnswersFound = -1;
 
     // Reset feedback (hide feedback and reset registered callbacks of the Step)
@@ -161,7 +161,7 @@ ExercisePlayerCtrl.prototype.isButtonEnabled = function isButtonEnabled(button) 
     } else if (button === 'end') {
         buttonEnabled = (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
     }
-    
+
     return buttonEnabled;
 };
 
@@ -256,3 +256,5 @@ ExercisePlayerCtrl.prototype.interrupt = function interrupt() {
             this.$location.path('/');
         }.bind(this));
 };
+
+export default ExercisePlayerCtrl

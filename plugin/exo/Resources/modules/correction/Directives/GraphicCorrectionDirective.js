@@ -1,4 +1,4 @@
-function GraphicCorrectionCtrl() {
+export default function GraphicCorrectionCtrl() {
     return {
         restrict: 'E',
         replace: true,

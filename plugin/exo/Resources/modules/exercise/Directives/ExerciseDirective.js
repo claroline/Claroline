@@ -3,7 +3,7 @@
  * Displays the summary of the Exercise and the links to the available actions for current User
  * @constructor
  */
-function ExerciseDirective() {
+export default function ExerciseDirective() {
     return {
         restrict: 'E',
         replace: true,

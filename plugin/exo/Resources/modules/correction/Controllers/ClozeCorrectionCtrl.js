@@ -1,3 +1,5 @@
+import AbstractCorrectionCtrl from './AbstractCorrectionCtrl'
+
 /**
  * Correction for Cloze question
  * @param {QuestionService}      QuestionService
@@ -53,3 +55,5 @@ ClozeCorrectionCtrl.prototype.getKeywordStats = function getKeywordStats(keyword
 
     return stats;
 };
+
+export default ClozeCorrectionCtrl

@@ -1,4 +1,4 @@
-function ClozeCorrectionDirective($compile) {
+export default function ClozeCorrectionDirective($compile) {
     return {
         restrict: 'E',
         replace: true,

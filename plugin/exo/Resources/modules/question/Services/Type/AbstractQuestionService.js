@@ -24,3 +24,5 @@ AbstractQuestionService.prototype.initAnswer = function initAnswer() {
 AbstractQuestionService.prototype.getCorrectAnswer = function getCorrectAnswer(question) {
     console.error('Each instance of AbstractQuestionType must implement the `getCorrectAnswer`.');
 };
+
+export default AbstractQuestionService

@@ -52,3 +52,5 @@ AbstractQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
 AbstractQuestionCtrl.prototype.onFeedbackHide = function onFeedbackHide() {
     console.info('onFeedbackHide: Implement this method in your Type/*QuestionCtrl if you need custom logic.');
 };
+
+export default AbstractQuestionCtrl

@@ -2,7 +2,7 @@
  * Start (or restart) the Exercise button
  * @constructor
  */
-function StartButtonDirective() {
+export default function StartButtonDirective() {
     return {
         restrict: 'E',
         replace: true,

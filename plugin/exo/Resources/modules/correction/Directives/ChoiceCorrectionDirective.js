@@ -1,4 +1,4 @@
-function ChoiceCorrectionDirective() {
+export default function ChoiceCorrectionDirective() {
     return {
         restrict: 'E',
         replace: true,

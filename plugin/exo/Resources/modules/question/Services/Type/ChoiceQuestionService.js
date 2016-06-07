@@ -1,4 +1,4 @@
-import './AbstractQuestionService'
+import AbstractQuestionService from './AbstractQuestionService'
 
 /**
  * Choice Question Service
@@ -7,7 +7,7 @@ import './AbstractQuestionService'
  */
 function ChoiceQuestionService(FeedbackService) {
     AbstractQuestionService.apply(this, arguments);
-    
+
     this.FeedbackService = FeedbackService;
 }
 
@@ -56,7 +56,7 @@ ChoiceQuestionService.prototype.answersAllFound = function answersAllFound(quest
             feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING;
         }
     }
-    
+
     return feedbackState;
 };
 

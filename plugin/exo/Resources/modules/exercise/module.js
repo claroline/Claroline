@@ -17,10 +17,8 @@ import ExerciseCtrl from './Controllers/ExerciseCtrl'
 import ExerciseMetadataCtrl from './Controllers/ExerciseMetadataCtrl'
 import ExerciseOverviewCtrl from './Controllers/ExerciseOverviewCtrl'
 import ExercisePlayerCtrl from './Controllers/ExercisePlayerCtrl'
-
 import ExerciseDirective from './Directives/ExerciseDirective'
 import StartButtonDirective from './Directives/StartButtonDirective'
-
 import ExerciseService from './Services/ExerciseService'
 import FeedbackService from './Services/FeedbackService'
 
