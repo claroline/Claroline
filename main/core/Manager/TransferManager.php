@@ -112,7 +112,7 @@ class TransferManager
         $isValidated = false,
         $importRoles = true
     ) {
-        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
+        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
         $this->om->startFlushSuite();
         $data = $this->reorderData($data);
         $this->setImporters($template, $workspace->getCreator());
@@ -387,7 +387,7 @@ class TransferManager
     private function setImporters(File $template, User $owner)
     {
         foreach ($this->listImporters as $importer) {
-            $importer->setRootPath(sys_get_temp_dir().DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.$template->getBaseName());
+            $importer->setRootPath(sys_get_temp_dir().DIRECTORY_SEPARATOR.'tmp'.$template->getBasename());
             $importer->setOwner($owner);
             $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
             $importer->setConfiguration($data);
