@@ -143,6 +143,11 @@ claro_admin_home_tab:
     prefix: admin
     type: annotation
 
+claro_admin_portal_config:
+    resource: "@ClarolineCoreBundle/Controller/Administration/PortalConfigurationController.php"
+    prefix: admin/portal
+    type: annotation
+
 claro_resource:
     resource: "@ClarolineCoreBundle/Controller/ResourceController.php"
     prefix: resource
@@ -429,6 +434,11 @@ claro_locale_api:
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"
     prefix: contact
+    type: annotation
+
+claro_portal:
+    resource: "@ClarolineCoreBundle/Controller/PortalController.php"
+    prefix: portal
     type: annotation
 
 claro_admin_widget:

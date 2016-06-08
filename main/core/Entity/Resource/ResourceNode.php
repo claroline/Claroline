@@ -186,6 +186,11 @@ class ResourceNode
     protected $published = true;
 
     /**
+     * @ORM\Column(name="published_to_portal", type="boolean", options={"default": 0})
+     */
+    protected $publishedToPortal = false;
+
+    /**
      * @ORM\OneToMany(
      *  targetEntity="Claroline\CoreBundle\Entity\Log\Log",
      *  fetch="EXTRA_LAZY",
@@ -566,6 +571,16 @@ class ResourceNode
     public function setPublished($published)
     {
         $this->published = $published;
+    }
+
+    public function isPublishedToPortal()
+    {
+        return $this->publishedToPortal;
+    }
+
+    public function setPublishedToPortal($publishedToPortal)
+    {
+        $this->publishedToPortal = $publishedToPortal;
     }
 
     public function setIndex($index)

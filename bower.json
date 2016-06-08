@@ -48,6 +48,7 @@
     "jquery-sortable": "0.9.13",
     "jquery-ui": "1.11.4",
     "jquery.cookie": "1.4.1",
+    "lodash": "4.13.1",
     "mjolnic-bootstrap-colorpicker": "2.3.0",
     "moment": "2.11.2",
     "MathJax": "2.6.1",

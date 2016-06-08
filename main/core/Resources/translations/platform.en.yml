@@ -706,6 +706,14 @@ platform_widgets: 'Platform widgets'
 please_validate_your_account: 'An email was sent for you to activate your account'
 please_wait: 'Please wait...'
 port: Port
+portal: Portal
+portal_access_disabled: Access to portal is disabled because no resource type is enabled.
+portal_configuration_updated_success: Portal configuration successfully updated
+portal_no_published_resources: It seems that there are no resources published to portal.
+portal_resources_configuration: Choose the resources to be displayed on portal
+portal_search: Search open resources
+portal_search_total_results: '%totalItems% result(s) in ''%type%'' (ordered by relevance)'
+portal_short: Portal
 portfolio_url: 'Portfolio tool''s access url'
 position: Position
 positive_number_expected: 'This value should be a positive number'
@@ -735,6 +743,8 @@ public_workspaces: 'Public workspaces'
 publish: Publish
 publish_resource: 'Publish resource'
 published: Published
+published_to_portal: Published to portal
+published_to_portal_message: 'This option automatically allows anonymous users to acces the resource. You have to remove the anonymous rights in resource''s rights management section to restrict the acces again.'
 put_back_permissions_after_update: 'Don''t forget to put your original permissions after an update.'
 receiver: Receiver(s)
 recent_all_workspace_activities_overview: 'Overview of all recent activities in %workspaceName%'

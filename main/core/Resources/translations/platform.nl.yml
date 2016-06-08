@@ -679,6 +679,14 @@ platform_widgets: platform_widgets
 please_validate_your_account: please_validate_your_account
 please_wait: please_wait
 port: port
+portal: portal
+portal_access_disabled: portal_access_disabled
+portal_configuration_updated_success: portal_configuration_updated_success
+portal_no_published_resources: portal_no_published_resources
+portal_resources_configuration: portal_resources_configuration
+portal_search: portal_search
+portal_search_total_results: portal_search_total_results
+portal_short: portal_short
 portfolio_url: portfolio_url
 position: position
 positive_number_expected: positive_number_expected
@@ -708,6 +716,8 @@ public_workspaces: public_workspaces
 publish: publish
 publish_resource: publish_resource
 published: published
+published_to_portal: published_to_portal
+published_to_portal_message: published_to_portal_message
 put_back_permissions_after_update: put_back_permissions_after_update
 receiver: receiver
 recent_all_workspace_activities_overview: recent_all_workspace_activities_overview

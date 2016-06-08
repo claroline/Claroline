@@ -691,6 +691,14 @@ platform_widgets: 'Widgets de la plateforme'
 please_validate_your_account: 'Un email vient de vous être envoyé pour activer votre compte.'
 please_wait: 'Veuillez patienter...'
 port: Port
+portal: portal
+portal_access_disabled: portal_access_disabled
+portal_configuration_updated_success: portal_configuration_updated_success
+portal_no_published_resources: portal_no_published_resources
+portal_resources_configuration: portal_resources_configuration
+porta_search: portal_search
+portal_search_total_results: portal_search_total_results
+portal_short: portal_short
 portfolio_url: 'Url d''accès à l''outil de portfolio'
 position: Position
 positive_number_expected: 'Cette valeur doit être un nombre positif'
@@ -720,6 +728,8 @@ public_workspaces: 'Espaces d''activités publics'
 publish: Publié
 publish_resource: 'Publier la ressource'
 published: Publié
+published_to_portal: Publié sur le portail de ressources
+published_to_portal_message: published_to_portal_message
 put_back_permissions_after_update: 'N''oubliez pas de remettre les permissions d''origine après une mise à jour.'
 receiver: destinataire(s)
 recent_all_workspace_activities_overview: 'Aperçu de toutes les activités récentes de %workspaceName%'
