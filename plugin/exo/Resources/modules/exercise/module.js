@@ -34,11 +34,46 @@ angular
         'Paper',
         'Timer'
     ])
-    .controller('ExerciseCtrl', ['ExerciseService', 'PaperService', 'UserPaperService', '$route', ExerciseCtrl])
-    .controller('ExerciseMetadataCtrl', ['$location', 'ExerciseService', 'TinyMceService', ExerciseMetadataCtrl])
-    .controller('ExerciseOverviewCtrl', ['ExerciseService', 'UserPaperService', ExerciseOverviewCtrl])
-    .controller('ExercisePlayerCtrl', ['$location', 'step', 'paper', 'CommonService', 'ExerciseService', 'FeedbackService', 'UserPaperService', 'TimerService', ExercisePlayerCtrl])
-    .directive('exercise', [ExerciseDirective])
-    .directive('buttonStart', [StartButtonDirective])
-    .service('ExerciseService', ['$http', '$q', ExerciseService])
-    .service('FeedbackService', [FeedbackService])
+    .controller('ExerciseCtrl', [
+        'ExerciseService',
+        'PaperService',
+        'UserPaperService',
+        '$route',
+        ExerciseCtrl
+    ])
+    .controller('ExerciseMetadataCtrl', [
+        '$location',
+        'ExerciseService',
+        'TinyMceService',
+        ExerciseMetadataCtrl
+    ])
+    .controller('ExerciseOverviewCtrl', [
+        'ExerciseService',
+        'UserPaperService',
+        ExerciseOverviewCtrl
+    ])
+    .controller('ExercisePlayerCtrl', [
+        '$location',
+        'step',
+        'paper',
+        'CommonService',
+        'ExerciseService',
+        'FeedbackService',
+        'UserPaperService',
+        'TimerService',
+        ExercisePlayerCtrl
+    ])
+    .directive('exercise', [
+        ExerciseDirective
+    ])
+    .directive('buttonStart', [
+        StartButtonDirective
+    ])
+    .service('ExerciseService', [
+        '$http',
+        '$q',
+        ExerciseService
+    ])
+    .service('FeedbackService', [
+        FeedbackService
+    ])

@@ -20,14 +20,50 @@ import MatchCorrectionDirective from './Directives/MatchCorrectionDirective'
 import OpenCorrectionDirective from './Directives/OpenCorrectionDirective'
 
 angular
-    .module('Correction', ['ui.translation', 'Common', 'Question'])
-    .controller('ChoiceCorrectionCtrl', ['QuestionService', 'ChoiceQuestionService', ChoiceCorrectionCtrl])
-    .controller('ClozeCorrectionCtrl', ['QuestionService', 'ClozeQuestionService', ClozeCorrectionCtrl])
-    .controller('GraphicCorrectionCtrl', ['QuestionService', 'GraphicQuestionService', 'ImageAreaService', GraphicCorrectionCtrl])
-    .controller('MatchCorrectionCtrl', ['QuestionService', 'MatchQuestionService', MatchCorrectionCtrl])
-    .controller('OpenCorrectionCtrl', ['QuestionService', 'OpenQuestionService', OpenCorrectionCtrl])
-    .directive('choiceCorrection', [ChoiceCorrectionDirective])
-    .directive('clozeCorrection', ['$compile', ClozeCorrectionDirective])
-    .directive('graphicCorrection', [GraphicCorrectionDirective])
-    .directive('correctionMatch', [MatchCorrectionDirective])
-    .directive('openCorrection', [OpenCorrectionDirective])
+    .module('Correction', [
+        'ui.translation',
+        'Common',
+        'Question'
+    ])
+    .controller('ChoiceCorrectionCtrl', [
+        'QuestionService',
+        'ChoiceQuestionService',
+        ChoiceCorrectionCtrl
+    ])
+    .controller('ClozeCorrectionCtrl', [
+        'QuestionService',
+        'ClozeQuestionService',
+        ClozeCorrectionCtrl
+    ])
+    .controller('GraphicCorrectionCtrl', [
+        'QuestionService',
+        'GraphicQuestionService',
+        'ImageAreaService',
+        GraphicCorrectionCtrl
+    ])
+    .controller('MatchCorrectionCtrl', [
+        'QuestionService',
+        'MatchQuestionService',
+        MatchCorrectionCtrl
+    ])
+    .controller('OpenCorrectionCtrl', [
+        'QuestionService',
+        'OpenQuestionService',
+        OpenCorrectionCtrl
+    ])
+    .directive('choiceCorrection', [
+        ChoiceCorrectionDirective
+    ])
+    .directive('clozeCorrection', [
+        '$compile',
+        ClozeCorrectionDirective
+    ])
+    .directive('graphicCorrection', [
+        GraphicCorrectionDirective
+    ])
+    .directive('correctionMatch', [
+        MatchCorrectionDirective
+    ])
+    .directive('openCorrection', [
+        OpenCorrectionDirective
+    ])
