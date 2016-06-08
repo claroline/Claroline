@@ -470,22 +470,23 @@ $(document).ready(function() {
 
     // InnovaERV
     // Ajout pour le traitement de la modal de choix du type d'accusÃ© de rÃ©ception
-    $('#modal_confirm_notation_record').on('click', function(event) {
+    $('.modal_confirm_notation_record').on('click', function(event) {
         event.preventDefault();
+        event.stopPropagation();
 
-alert("ffdf");
+        var documentId = $(this).attr("data-document_id");
+
         // Récupération de l'id du document
         var evaluationType = $(this).attr("data_document_evaluationType");
 
         if (evaluationType == 'notation') {
             var commentText = "";
             var qualityText = "";
-            var note = document.getElementById('innova_collecticiel_notation_form_note').value;
+            var note = document.getElementById('innova_collecticiel_notation_form_note_'+documentId).value;
         }
-
         if (evaluationType == 'ratingScale') {
-            var commentText = document.getElementById('innova_collecticiel_notation_form_commentText').value;
-            var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText').value;
+            var commentText = document.getElementById('innova_collecticiel_notation_form_commentText_'+documentId).value;
+            var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText_'+documentId).value;
             var note = 0;
         }
 
@@ -515,19 +516,22 @@ alert("ffdf");
                 if (data_link !== 'false') {
                     document.location.href = data_link.link;
                 }
-
             }
         });
 
         // Fermeture de la modal
-        $('#validate-modal-notation').modal('hide');
+        $('.validate-modal-notation').modal('hide');
 
     });
 
     // InnovaERV
     // Ajout pour le traitement de la modal de choix du type d'accusé de réception
-    $('#modal_confirm_notation_transmit').on('click', function(event) {
+    $('.modal_confirm_notation_transmit').on('click', function(event) {
         event.preventDefault();
+        event.stopPropagation();
+
+        // Récupération de l'id du document
+        var documentId = $(this).attr("data-document_id");
 
         // Récupération de l'id du document
         var evaluationType = $(this).attr("data_document_evaluationType");
@@ -535,12 +539,12 @@ alert("ffdf");
         if (evaluationType == 'notation') {
             var commentText = "";
             var qualityText = "";
-            var note = document.getElementById('innova_collecticiel_notation_form_note').value;
+            var note = document.getElementById('innova_collecticiel_notation_form_note_'+documentId).value;
         }
 
         if (evaluationType == 'ratingScale') {
-            var commentText = document.getElementById('innova_collecticiel_notation_form_commentText').value;
-            var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText').value;
+            var commentText = document.getElementById('innova_collecticiel_notation_form_commentText_'+documentId).value;
+            var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText_'+documentId).value;
             var note = 0;
         }
 
@@ -551,6 +555,7 @@ alert("ffdf");
 
         // Récupération de l'id qui indique si transmission ou enregistrement
         var recordOrTransmit = $(this).attr("data-document_record_or_transmit");
+
         $.ajax({
             url: Routing.generate('innova_collecticiel_add_notation', {
                 documentId: documentId,
@@ -574,7 +579,7 @@ alert("ffdf");
         });
 
         // Fermeture de la modal
-        $('#validate-modal-notation').modal('hide');
+        $('.validate-modal-notation').modal('hide');
 
     });
 

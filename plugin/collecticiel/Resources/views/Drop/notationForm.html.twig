@@ -55,7 +55,7 @@
                 <div class="form-group row col-md-6">
                     {{ 'Grade'|trans({}, 'innova_collecticiel') }}
                     <label>
-                        <input id="innova_collecticiel_notation_form_note" name="innova_collecticiel_notation_form[note]" required="required" min="0" max="9999" class="form-control" type="integer"
+                        <input id="innova_collecticiel_notation_form_note_{{document.id}}" name="innova_collecticiel_notation_form[note]" required="required" min="0" max="9999" class="form-control" type="integer"
                         {% if recordOrTransmitNotation == 0 %}
                          placeholder="{{ notationDocument }}"
                         {% else %}
@@ -80,7 +80,7 @@
 
             <div class="row text-left">
                 <div class="form-group col-md-6">
-                    <textarea id="innova_collecticiel_notation_form_commentText" name="innova_collecticiel_notation_form[commentText]" required="required" class="claroline-tiny-mce hide"
+                    <textarea id="innova_collecticiel_notation_form_commentText_{{document.id}}" name="innova_collecticiel_notation_form[commentText]" required="required" class="claroline-tiny-mce hide"
                     {% if recordOrTransmitNotation == 0 %}placeholder="{{ notationCommentDocument }}" {% endif %}>
                     >
                     </textarea>
@@ -95,7 +95,7 @@
 
             <div class="row text-left">
                 <div class="form-group col-md-6">
-                        <textarea id="innova_collecticiel_notation_form_qualityText" name="innova_collecticiel_notation_form[qualityText]" required="required" class="claroline-tiny-mce hide"
+                        <textarea id="innova_collecticiel_notation_form_qualityText_{{document.id}}" name="innova_collecticiel_notation_form[qualityText]" required="required" class="claroline-tiny-mce hide"
                         {% if recordOrTransmitNotation == 0 %}placeholder="{{ notationQualityDocument }}" {% endif %}>
                         >
                         </textarea>

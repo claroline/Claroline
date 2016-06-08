@@ -47,18 +47,47 @@ class NotationController extends DropzoneBaseController
 
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
-        // Valorisation de l'évaluation/notation
-        $notation = new Notation();
-        $notation->setUser($user);
-        $notation->setDocument($document);
-        $notation->setDropzone($dropzone);
-        $notation->setNote($note);
-        $notation->setCommentText($commentText);
-        $notation->setQualityText($qualityText);
-        $notation->setRecordOrTransmit($recordOrTransmit);
+        if ($recordOrTransmit == 0) {
+            // Ajout pour avoir si la notation a été transmise ou pas.
+            $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
+                        ->findBy(
+                                array(
+                                    'document' => $document->getId(),
+                                    'dropzone' => $dropzone->getId(),
+                                     )
+                                );
 
-        // Insertion en base
-        $em->persist($notation);
+            if (!empty($notation)) {
+                $notation[0]->setNote($note);
+                // Mise à jour de la base de données
+                $em->persist($notation[0]);
+            } else {
+                // Valorisation de l'évaluation/notation
+                $notation = new Notation();
+                $notation->setUser($user);
+                $notation->setDocument($document);
+                $notation->setDropzone($dropzone);
+                $notation->setNote($note);
+                $notation->setCommentText($commentText);
+                $notation->setQualityText($qualityText);
+                $notation->setRecordOrTransmit($recordOrTransmit);
+                // Insertion en base
+                $em->persist($notation);
+            }
+        } else {
+            // Ajout pour avoir si la notation a été transmise ou pas.
+            $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
+                        ->findBy(
+                                array(
+                                    'document' => $document->getId(),
+                                    'dropzone' => $dropzone->getId(),
+                                     )
+                                );
+
+            $notation[0]->setRecordOrTransmit(true);
+            // Mise à jour de la base de données
+            $em->persist($notation[0]);
+        }
 
         $em->flush();
 
