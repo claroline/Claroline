@@ -12,7 +12,7 @@ function GraphicCorrectionCtrl(QuestionService, GraphicQuestionService, ImageAre
 
     this.GraphicQuestionService = GraphicQuestionService;
     this.ImageAreaService = ImageAreaService;
-};
+}
 
 // Extends AbstractQuestionCtrl
 GraphicCorrectionCtrl.prototype = Object.create(AbstractCorrectionCtrl.prototype);

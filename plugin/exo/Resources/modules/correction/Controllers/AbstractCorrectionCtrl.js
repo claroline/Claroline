@@ -8,7 +8,7 @@ function AbstractCorrectionCtrl(QuestionService) {
 
     // Create the correct answer from the Question solutions
     this.answer = this.QuestionService.getTypeService(this.question.type).getCorrectAnswer(this.question);
-};
+}
 
 /**
  * Current question

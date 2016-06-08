@@ -4,6 +4,7 @@
 
 import 'angular-ui-translation/angular-translation'
 import './../common/module'
+import './../question/module'
 
 import AbstractCorrectionCtrl from './Controllers/AbstractCorrectionCtrl'
 import ChoiceCorrectionCtrl from './Controllers/ChoiceCorrectionCtrl'
@@ -19,8 +20,7 @@ import MatchCorrectionDirective from './Directives/MatchCorrectionDirective'
 import OpenCorrectionDirective from './Directives/OpenCorrectionDirective'
 
 angular
-    .module('Correction', ['ui.translation', 'Common'])
-    .controller('AbstractCorrectionCtrl', ['QuestionService', AbstractCorrectionCtrl])
+    .module('Correction', ['ui.translation', 'Common', 'Question'])
     .controller('ChoiceCorrectionCtrl', ['QuestionService', 'ChoiceQuestionService', ChoiceCorrectionCtrl])
     .controller('ClozeCorrectionCtrl', ['QuestionService', 'ClozeQuestionService', ClozeCorrectionCtrl])
     .controller('GraphicCorrectionCtrl', ['QuestionService', 'GraphicQuestionService', 'ImageAreaService', GraphicCorrectionCtrl])
@@ -28,6 +28,6 @@ angular
     .controller('OpenCorrectionCtrl', ['QuestionService', 'OpenQuestionService', OpenCorrectionCtrl])
     .directive('choiceCorrection', [ChoiceCorrectionDirective])
     .directive('clozeCorrection', ['$compile', ClozeCorrectionDirective])
-    .directive('graphicCorrection', [GraphicCorrectionCtrl])
+    .directive('graphicCorrection', [GraphicCorrectionDirective])
     .directive('correctionMatch', [MatchCorrectionDirective])
     .directive('openCorrection', [OpenCorrectionDirective])
