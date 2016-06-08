@@ -473,10 +473,21 @@ $(document).ready(function() {
     $('#modal_confirm_notation_record').on('click', function(event) {
         event.preventDefault();
 
+alert("ffdf");
         // Récupération de l'id du document
-        var note = document.getElementById('innova_collecticiel_notation_form_note').value;
-        var commentText = document.getElementById('innova_collecticiel_notation_form_commentText').value;
-        var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText').value;
+        var evaluationType = $(this).attr("data_document_evaluationType");
+
+        if (evaluationType == 'notation') {
+            var commentText = "";
+            var qualityText = "";
+            var note = document.getElementById('innova_collecticiel_notation_form_note').value;
+        }
+
+        if (evaluationType == 'ratingScale') {
+            var commentText = document.getElementById('innova_collecticiel_notation_form_commentText').value;
+            var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText').value;
+            var note = 0;
+        }
 
         // Récupération de l'id du document
         var documentId = $(this).attr("data-document_id");
@@ -514,14 +525,24 @@ $(document).ready(function() {
     });
 
     // InnovaERV
-    // Ajout pour le traitement de la modal de choix du type d'accusÃ© de rÃ©ception
+    // Ajout pour le traitement de la modal de choix du type d'accusé de réception
     $('#modal_confirm_notation_transmit').on('click', function(event) {
         event.preventDefault();
 
         // Récupération de l'id du document
-        var note = document.getElementById('innova_collecticiel_notation_form_note').value;
-        var commentText = document.getElementById('innova_collecticiel_notation_form_commentText').value;
-        var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText').value;
+        var evaluationType = $(this).attr("data_document_evaluationType");
+
+        if (evaluationType == 'notation') {
+            var commentText = "";
+            var qualityText = "";
+            var note = document.getElementById('innova_collecticiel_notation_form_note').value;
+        }
+
+        if (evaluationType == 'ratingScale') {
+            var commentText = document.getElementById('innova_collecticiel_notation_form_commentText').value;
+            var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText').value;
+            var note = 0;
+        }
 
         // Récupération de l'id du document
         var documentId = $(this).attr("data-document_id");

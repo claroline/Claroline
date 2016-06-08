@@ -47,7 +47,7 @@ class NotationController extends DropzoneBaseController
 
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
-        // Valorisation du commentaire
+        // Valorisation de l'évaluation/notation
         $notation = new Notation();
         $notation->setUser($user);
         $notation->setDocument($document);
@@ -57,7 +57,7 @@ class NotationController extends DropzoneBaseController
         $notation->setQualityText($qualityText);
         $notation->setRecordOrTransmit($recordOrTransmit);
 
-        // Insertion en base de la notation
+        // Insertion en base
         $em->persist($notation);
 
         $em->flush();
@@ -93,6 +93,8 @@ class NotationController extends DropzoneBaseController
 
         $dropzone = $em->getRepository('InnovaCollecticielBundle:DropZone')->find($dropzone->getId());
 
+        $drop = $em->getRepository('InnovaCollecticielBundle:Drop')->find($document->getDrop());
+
         // Ajout pour avoir si la notation a été transmise ou pas.
         $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
                     ->findBy(
@@ -113,7 +115,12 @@ class NotationController extends DropzoneBaseController
         render('InnovaCollecticielBundle:Document:documentIsTransmit.html.twig',
                 array('document' => $document,
                       'dropzone' => $dropzone,
+                      'drop' => $drop,
                       'recordOrTransmitNotation' => 1,
+                      'notationDocument' => $notation[0]->getNote(),
+                      'maximumNotation' => $dropzone->getMaximumNotation(),
+                      'notationCommentDocument' => $notation[0]->getCommentText(),
+                      'notationQualityDocument' => $notation[0]->getQualityText(),
                     )
                );
 

@@ -10,7 +10,7 @@
 {% endif %}
 
 {% if recordOrTransmitNotation == 1  %}
-   {{ notationDocuments[document.id] ~ "/" ~ dropzone.maximumNotation }}
+   {{ notationDocument ~ "/" ~ dropzone.maximumNotation }}
 {% endif %}
 
 {% if recordOrTransmitNotation == 99  %}
@@ -18,7 +18,7 @@
 {% endif %}
 
 {# Déclaration de la modal pour saisir la notation #}
-<div class="modal" id="view-modal-evaluation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal" id="view-modal-evaluation_{{document.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -90,52 +90,57 @@
 	                    </div>
 	                </div>
 
-	                <p></p>
+			        {% if dropzone.evaluationType == "notation" %}
+		                <p></p>
 
-	                <div class="row text-left">
-	                    <div class="form-group row col-md-6">
-	                        {{ 'Grade'|trans({}, 'innova_collecticiel') }}
-	                        {{ notationDocuments[document.id] }}    
-	                        {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
-	                        {{ maximumNotation }}
-	                        {{ ')' }}
-	                    </div>
-	                    <div class="form-group row col-md-6">
-	                    </div>
-	                </div>
+		                <div class="row text-left">
+		                    <div class="form-group row col-md-6">
+		                        {{ 'Grade'|trans({}, 'innova_collecticiel') }}
+		                        {{ notationDocument }}    
+		                        {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
+		                        {{ maximumNotation }}
+		                        {{ ')' }}
+		                    </div>
+		                    <div class="form-group row col-md-6">
+		                    </div>
+		                </div>
+			        {% endif %}
 
-	                <p></p>
+			        {% if dropzone.evaluationType == "ratingScale" %}
+		                <p></p>
 
-	                <div class="row text-left">
-	                    <div class="form-group row col-md-6">
-	                        {{ 'Global comment'|trans({}, 'innova_collecticiel') }}
-	                    </div>
-	                </div>
-	                <div class="row text-left">
-	                    <div class="form-group row col-md-6">
-	                        <label>
-	                            {{ notationCommentDocument|raw }}
-	                        </label>
-	                    </div>
-	                </div>
+		                <div class="row text-left">
+		                    <div class="form-group row col-md-6">
+		                        {{ 'Global comment'|trans({}, 'innova_collecticiel') }}
+		                    </div>
+		                </div>
+		                <div class="row text-left">
+		                    <div class="form-group row col-md-6">
+		                        <label>
+		                            {{ notationCommentDocument|raw }}
+		                        </label>
+		                    </div>
+		                </div>
 
-	                <div class="row text-left">
-	                    <div class="form-group row col-md-12">
-	                    </div>
-	                </div>
+		                <div class="row text-left">
+		                    <div class="form-group row col-md-12">
+		                    </div>
+		                </div>
 
-	                <div class="row text-left">
-	                    <div class="form-group row col-md-6">
-	                        {{ 'Quality argument'|trans({}, 'innova_collecticiel') }}
-	                    </div>
-	                </div>
-	                <div class="row text-left">
-	                    <div class="form-group row col-md-6">
-	                        <label>
-	                            {{ notationQualityDocument|raw }}
-	                        </label>
-	                    </div>
-	                </div>
+		                <div class="row text-left">
+		                    <div class="form-group row col-md-6">
+		                        {{ 'Quality argument'|trans({}, 'innova_collecticiel') }}
+		                    </div>
+		                </div>
+		                <div class="row text-left">
+		                    <div class="form-group row col-md-6">
+		                        <label>
+		                            {{ notationQualityDocument|raw }}
+		                        </label>
+		                    </div>
+		                </div>
+			        {% endif %}
+
 	            </div>
 	        </div>
 

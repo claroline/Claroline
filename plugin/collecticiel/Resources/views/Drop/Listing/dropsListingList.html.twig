@@ -1,5 +1,5 @@
 {# Affichage du tableau de l'onglet "Demandes adressées" #}
-<tr>
+<tr id="{{ document.id }}">
     {# Affichage de l'image de profil #}
     {% if dropzone.picture == 1  %}
         <td>
@@ -103,7 +103,12 @@
             <td class="centered centering-columnsAR">
                 <div class="btn-group">
                     {# Afficher ici la valeur de la notation #}
-                    {% include 'InnovaCollecticielBundle:Document:notation.html.twig' %}
+                    {% include 'InnovaCollecticielBundle:Document:notation.html.twig' 
+                        with {
+                        'recordOrTransmitNotation': recordOrTransmitNotation,
+                        'notationDocument': notationDocument
+                        } 
+                        %}
                 </div>
             </td>
         {% endif %}
@@ -111,7 +116,9 @@
         {% if dropzone.evaluation == 1  %}
             <td class="centered centering-columnsAR" id="is-transmit-{{ document.id }}">
                 <div class="btn-group">
-                    {% include 'InnovaCollecticielBundle:Document:documentIsTransmit.html.twig' %}
+                    {% include 'InnovaCollecticielBundle:Document:documentIsTransmit.html.twig'
+                        with {'notationDocument': notationDocuments[document.id]} 
+                     %}
                 </div>
             </td>
         {% endif %}
@@ -141,7 +148,7 @@
                 {% endif %}
                 </h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body">{{document.id}}
                 {# Version commentaire #}
                 {% if dropzone.evaluation != 1  %}
                     {{ 'Sure to ask comment for document'|trans({}, 'innova_collecticiel') }}

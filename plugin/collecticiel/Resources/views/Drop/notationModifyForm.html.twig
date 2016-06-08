@@ -55,12 +55,7 @@
                 <div class="form-group row col-md-6">
                     {{ 'Grade'|trans({}, 'innova_collecticiel') }}
                     <label>
-                        <input id="innova_collecticiel_notation_form_note" name="innova_collecticiel_notation_form[note]" required="required" min="0" max="9999" class="form-control" type="integer"
-                        {% if recordOrTransmitNotation == 0 %}
-                         placeholder="{{ notationDocument }}"
-                        {% else %}
-                         placeholder="{{ '0' }}"
-                        {% endif %}>
+                        <input id="innova_collecticiel_notation_form_note" name="innova_collecticiel_notation_form[note]" required="required" min="0" max="9999" placeholder="{{ notationDocument }}" class="form-control" type="integer">
                     </label>
                     {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
                     {{ maximumNotation }}
@@ -80,9 +75,7 @@
 
             <div class="row text-left">
                 <div class="form-group col-md-6">
-                    <textarea id="innova_collecticiel_notation_form_commentText" name="innova_collecticiel_notation_form[commentText]" required="required" class="claroline-tiny-mce hide"
-                    {% if recordOrTransmitNotation == 0 %}placeholder="{{ notationCommentDocument }}" {% endif %}>
-                    >
+                    <textarea id="innova_collecticiel_notation_form_commentText" name="innova_collecticiel_notation_form[commentText]" required="required" value="{{ notationCommentDocument }}" class="claroline-tiny-mce hide">
                     </textarea>
                 </div>
             </div>
@@ -95,9 +88,7 @@
 
             <div class="row text-left">
                 <div class="form-group col-md-6">
-                        <textarea id="innova_collecticiel_notation_form_qualityText" name="innova_collecticiel_notation_form[qualityText]" required="required" class="claroline-tiny-mce hide"
-                        {% if recordOrTransmitNotation == 0 %}placeholder="{{ notationQualityDocument }}" {% endif %}>
-                        >
+                        <textarea id="innova_collecticiel_notation_form_qualityText" name="innova_collecticiel_notation_form[qualityText]" required="required" value="{{ notationQualityDocument }}" class="claroline-tiny-mce hide">
                         </textarea>
                 </div>
             </div>
