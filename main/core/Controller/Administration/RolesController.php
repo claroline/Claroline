@@ -22,8 +22,9 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
+use Claroline\CoreBundle\Form\RoleTranslationType;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -40,7 +41,7 @@ class RolesController extends Controller
      * @DI\InjectParams({
      *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
-     *     "formFactory" = @DI\Inject("claroline.form.factory"),
+     *     "formFactory" = @DI\Inject("form.factory"),
      *     "request"     = @DI\Inject("request"),
      *     "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
@@ -134,7 +135,7 @@ class RolesController extends Controller
      */
     public function createPlatformRoleModalFormAction()
     {
-        $form = $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION);
+        $form = $form = $this->formFactory->create(new RoleTranslationType());
 
         return array('form' => $form->createView());
     }
@@ -152,7 +153,7 @@ class RolesController extends Controller
      */
     public function createPlatformRoleAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION);
+        $form = $this->formFactory->create(new RoleTranslationType());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

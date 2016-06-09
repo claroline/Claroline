@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Form\ResourceNameType;
 
 /**
  * @DI\Service()
@@ -43,7 +44,7 @@ class AnnouncementListener
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"        = @DI\Inject("form.factory"),
      *     "httpKernel"         = @DI\Inject("http_kernel"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
@@ -77,11 +78,7 @@ class AnnouncementListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_RESOURCE_RENAME,
-            array(),
-            new AnnouncementAggregate()
-        );
+        $form = $this->formFactory->create(new ResourceNameType(), new AnnouncementAggregate());
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
@@ -106,11 +103,7 @@ class AnnouncementListener
             throw new NoHttpRequestException();
         }
 
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_RESOURCE_RENAME,
-            array(),
-            new AnnouncementAggregate()
-        );
+        $form = $this->formFactory->create(new ResourceNameType(), new AnnouncementAggregate());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

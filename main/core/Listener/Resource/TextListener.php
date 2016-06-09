@@ -15,7 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\Text;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
@@ -24,6 +23,7 @@ use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Form\TextType;
 
 /**
  * @DI\Service
@@ -51,8 +51,9 @@ class TextListener implements ContainerAwareInterface
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $formFactory = $this->container->get('claroline.form.factory');
-        $form = $formFactory->create(FormFactory::TYPE_RESOURCE_TEXT, array('text_'.rand(0, 1000000000)));
+        $formFactory = $this->container->get('form.factory');
+        $textType = new TextType('text_'.rand(0, 1000000000));
+        $form = $formFactory->create($textType);
         $response = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Text:createForm.html.twig',
             array(
@@ -76,7 +77,7 @@ class TextListener implements ContainerAwareInterface
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $keys = array_keys($request->request->all());
         $id = array_pop($keys);
-        $form = $this->container->get('claroline.form.factory')->create(FormFactory::TYPE_RESOURCE_TEXT, array($id));
+        $form = $this->container->get('form.factory')->create(new TextType($id));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -96,8 +97,7 @@ class TextListener implements ContainerAwareInterface
             return;
         }
 
-        $errorForm = $this->container->get('claroline.form.factory')
-            ->create(FormFactory::TYPE_RESOURCE_TEXT, array('text_'.rand(0, 1000000000)));
+        $errorForm = $this->container->get('form.factory')->create(new TextType('text_'.rand(0, 1000000000)));
         $errorForm->setData($form->getData());
         $children = $form->getIterator();
         $errorChildren = $errorForm->getIterator();

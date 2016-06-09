@@ -14,7 +14,6 @@ namespace Claroline\AgendaBundle\Listener;
 use Claroline\AgendaBundle\Manager\AgendaManager;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -31,7 +30,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
  */
 class AgendaListener
 {
-    private $formFactory;
     private $templating;
     private $tokenStorage;
     private $authorization;
@@ -43,7 +41,6 @@ class AgendaListener
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"    = @DI\Inject("claroline.form.factory"),
      *     "templating"     = @DI\Inject("templating"),
      *     "authorization"  = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"   = @DI\Inject("security.token_storage"),
@@ -55,7 +52,6 @@ class AgendaListener
      * })
      */
     public function __construct(
-        FormFactory $formFactory,
         TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
@@ -65,7 +61,6 @@ class AgendaListener
         HttpKernelInterface $httpKernel,
         AgendaManager $agendaManager
     ) {
-        $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;

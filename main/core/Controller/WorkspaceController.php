@@ -32,7 +32,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Form\ImportWorkspaceType;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Security\TokenUpdater;
@@ -52,6 +52,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Library\Logger\FileLogger;
 use Symfony\Component\HttpFoundation\File\File;
+use Claroline\CoreBundle\Form\WorkspaceType;
 
 /**
  * This controller is able to:
@@ -100,7 +101,7 @@ class WorkspaceController extends Controller
      *     "tokenStorage"              = @DI\Inject("security.token_storage"),
      *     "router"                    = @DI\Inject("router"),
      *     "utils"                     = @DI\Inject("claroline.security.utilities"),
-     *     "formFactory"               = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"               = @DI\Inject("form.factory"),
      *     "tokenUpdater"              = @DI\Inject("claroline.security.token_updater"),
      *     "widgetManager"             = @DI\Inject("claroline.manager.widget_manager"),
      *     "request"                   = @DI\Inject("request"),
@@ -321,9 +322,10 @@ class WorkspaceController extends Controller
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
         $user = $this->tokenStorage->getToken()->getUser();
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
+        $workspaceType = new WorkspaceType($user);
+        $form = $this->formFactory->create($workspaceType);
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -343,7 +345,8 @@ class WorkspaceController extends Controller
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
         $user = $this->tokenStorage->getToken()->getUser();
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user), new Workspace());
+        $workspaceType = new WorkspaceType($user);
+        $form = $this->formFactory->create($workspaceType);
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
         $modelLog = $this->container->getParameter('kernel.root_dir').'/logs/models.log';
@@ -375,7 +378,7 @@ class WorkspaceController extends Controller
             return new RedirectResponse($route);
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
