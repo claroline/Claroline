@@ -5,7 +5,8 @@
   "scripts": {
     "bower": "node_modules/bower/bin/bower update --allow-root",
     "themes": "node vendor/claroline/distribution/main/core/Resources/scripts/build-themes",
-    "webpack": "rm -rf web/dist/* && node_modules/webpack/bin/webpack.js --progress --profile --colors --display-error-details",
+    "uglify": "for f in web/dist/*.js; do echo \"Uglifying ${f}...\" && ./node_modules/.bin/uglifyjs $f -o $f; done",
+    "webpack": "rm -rf web/dist/* && node_modules/webpack/bin/webpack.js --progress --profile --colors --display-error-details && npm run uglify",
     "watch": "node_modules/webpack-dev-server/bin/webpack-dev-server.js --hot --inline --content-base web --claro-tgt=watch --display-error-details"
   },
   "dependencies": {
