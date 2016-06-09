@@ -10,7 +10,7 @@
     data-document_type="{{ document.type }}"
     id="document_id_{{ document.id }}" name="document_id_{{ document.id }}"
     class="document_validate">
-        <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To modify a review'|trans({},'innova_collecticiel') }}" class="fa fa-graduation-cap">
+        <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To modify a review'|trans({},'innova_collecticiel') }}">{{ notationDocuments[document.id] ~ "/" ~ dropzone.maximumNotation }}
         </span>
     </a>
 {% endif %}

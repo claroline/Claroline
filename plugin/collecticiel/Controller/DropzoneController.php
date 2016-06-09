@@ -85,6 +85,9 @@ class DropzoneController extends DropzoneBaseController
             if ($dropzone->getEvaluationType() != Dropzone::EVALUATION_TYPE) {
                 $dropzone->setEvaluation(1);
             }
+            if ($dropzone->getEvaluationType() == Dropzone::EVALUATION_TYPE) {
+                $dropzone->setEvaluation(0);
+            }
 
             $form = $this->handleFormErrors($form, $dropzone);
 
