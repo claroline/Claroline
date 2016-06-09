@@ -1,4 +1,4 @@
-import mark from './../../paper/Partials/manual-mark.html'
+import markTpl from './../../paper/Partials/manual-mark.html'
 
 /**
  * Question Show Controller
@@ -71,7 +71,7 @@ QuestionShowCtrl.prototype.mark = function mark() {
     var question = this.question;
 
     this.$uibModal.open({
-        template: mark,
+        template: markTpl,
         controller: 'ManualMarkCtrl as manualMarkCtrl',
         resolve: {
             question: function questionResolve() {
