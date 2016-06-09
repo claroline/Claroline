@@ -40,21 +40,94 @@ angular
         'Image',
         'Correction'
     ])
-    .controller('QuestionShowCtrl', ['$uibModal', 'ExerciseService', 'QuestionService', 'FeedbackService', 'UserPaperService', QuestionShowCtrl])
-    .controller('ChoiceQuestionCtrl', ['FeedbackService', 'ChoiceQuestionService', ChoiceQuestionCtrl])
-    .controller('ClozeQuestionCtrl', ['FeedbackService', 'ClozeQuestionService', ClozeQuestionCtrl])
-    .controller('GraphicQuestionCtrl', ['FeedbackService', 'GraphicQuestionService', 'ImageAreaService', GraphicQuestionCtrl])
-    .controller('MatchQuestionCtrl', ['FeedbackService', '$scope', 'MatchQuestionService', MatchQuestionCtrl])
-    .controller('OpenQuestionCtrl', ['FeedbackService', 'OpenQuestionService', OpenQuestionCtrl])
-    .directive('questionShow', [QuestionShowDirective])
-    .directive('choiceQuestion', ['FeedbackService', ChoiceQuestionDirective])
-    .directive('clozeQuestion', ['FeedbackService', '$compile', ClozeQuestionDirective])
-    .directive('graphicQuestion', ['FeedbackService', '$window', GraphicQuestionDirective])
-    .directive('matchQuestion', ['FeedbackService', '$timeout', 'MatchQuestionService', MatchQuestionDirective])
-    .directive('openQuestion', ['FeedbackService', OpenQuestionDirective])
-    .service('QuestionService', ['ChoiceQuestionService', 'ClozeQuestionService', 'GraphicQuestionService', 'MatchQuestionService', 'OpenQuestionService', QuestionService])
-    .service('ChoiceQuestionService', ['FeedbackService', ChoiceQuestionService])
-    .service('ClozeQuestionService', ['FeedbackService', ClozeQuestionService])
-    .service('GraphicQuestionService', ['FeedbackService', 'ImageAreaService', GraphicQuestionService])
-    .service('MatchQuestionService', ['FeedbackService', MatchQuestionService])
-    .service('OpenQuestionService', ['FeedbackService', OpenQuestionService])
+    .controller('QuestionShowCtrl', [
+        '$uibModal',
+        'ExerciseService',
+        'QuestionService',
+        'FeedbackService',
+        'UserPaperService',
+        QuestionShowCtrl
+    ])
+    .controller('ChoiceQuestionCtrl', [
+        'FeedbackService',
+        'ChoiceQuestionService',
+        ChoiceQuestionCtrl
+    ])
+    .controller('ClozeQuestionCtrl', [
+        'FeedbackService',
+        'ClozeQuestionService',
+        ClozeQuestionCtrl
+    ])
+    .controller('GraphicQuestionCtrl', [
+        'FeedbackService',
+        'GraphicQuestionService',
+        'ImageAreaService',
+        GraphicQuestionCtrl
+    ])
+    .controller('MatchQuestionCtrl', [
+        'FeedbackService',
+        '$scope',
+        'MatchQuestionService',
+        MatchQuestionCtrl
+    ])
+    .controller('OpenQuestionCtrl', [
+        'FeedbackService',
+        'OpenQuestionService',
+        OpenQuestionCtrl
+    ])
+    .directive('questionShow', [
+        QuestionShowDirective
+    ])
+    .directive('choiceQuestion', [
+        'FeedbackService',
+        ChoiceQuestionDirective
+    ])
+    .directive('clozeQuestion', [
+        'FeedbackService',
+        '$compile',
+        ClozeQuestionDirective
+    ])
+    .directive('graphicQuestion', [
+        'FeedbackService',
+        '$window',
+        GraphicQuestionDirective
+    ])
+    .directive('matchQuestion', [
+        'FeedbackService',
+        '$timeout',
+        'MatchQuestionService',
+        MatchQuestionDirective
+    ])
+    .directive('openQuestion', [
+        'FeedbackService',
+        OpenQuestionDirective
+    ])
+    .service('QuestionService', [
+        'ChoiceQuestionService',
+        'ClozeQuestionService',
+        'GraphicQuestionService',
+        'MatchQuestionService',
+        'OpenQuestionService',
+        QuestionService
+    ])
+    .service('ChoiceQuestionService', [
+        'FeedbackService',
+        ChoiceQuestionService
+    ])
+    .service('ClozeQuestionService', [
+        'FeedbackService',
+        ClozeQuestionService
+    ])
+    .service('GraphicQuestionService', [
+        'FeedbackService',
+        'ImageAreaService',
+        GraphicQuestionService
+    ])
+    .service('MatchQuestionService', [
+        'FeedbackService',
+        MatchQuestionService
+    ])
+    .service('OpenQuestionService', [
+        'FeedbackService',
+        OpenQuestionService
+    ])
