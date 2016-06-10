@@ -1,5 +1,5 @@
-import langs from '#/main/core/Resources/modules/form/Field/Lang/iso'
-import NotBlank from '#/main/core/Resources/modules/form/Validator/NotBlank'
+import langs from '#/main/core/form/Field/Lang/iso'
+import NotBlank from '#/main/core/form/Validator/NotBlank'
 import editTemplate from '../Partial/edit.html'
 
 export default class TracksModalController {

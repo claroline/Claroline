@@ -56,5 +56,6 @@
     <script>
         window.userId = {{ app.security.token.user.id }}
     </script>
+    <script src="{{ hotAsset('dist/commons.js') }}"></script>
     <script src="{{ hotAsset('dist/claroline-distribution-main-core-private-profile.js')}}"></script>
 {% endblock %}

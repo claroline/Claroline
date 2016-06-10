@@ -124,6 +124,7 @@
 </div>
 
 {% block javascripts %}
-  <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain':'innova_audio_recorder' }) }}"></script>
+  <script src="{{ url('bazinga_jstranslation_js', { 'domain':'innova_audio_recorder' }) }}"></script>
+  <script src="{{ hotAsset('dist/commons.js') }}"></script>
   <script src="{{ hotAsset('dist/claroline-distribution-plugin-audio-recorder-recorder.js') }}"></script>
 {% endblock %}

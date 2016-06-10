@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "list": "modules/lessons/lessons.js"
+      "list": "lessons/lessons.js"
     }
   }
 }

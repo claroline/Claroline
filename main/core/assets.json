@@ -1,12 +1,12 @@
 {
   "webpack": {
     "entry": {
-      "user-management": "modules/users/module",
-      "facet-management": "modules/facets/module",
-      "private-profile": "modules/profile/module",
-      "organization-management": "modules/organization/module",
-      "plugin-management": "modules/plugins/module",
-      "portal": "modules/portal/module"
+      "user-management": "users/module",
+      "facet-management": "facets/module",
+      "private-profile": "profile/module",
+      "organization-management": "organization/module",
+      "plugin-management": "plugins/module",
+      "portal": "portal/module"
     }
   }
 }

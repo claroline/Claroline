@@ -23,5 +23,6 @@
         window.workspaceUsers = {{ users|json_encode|raw }}
         window.isReadOnly = {{ canEdit ? 'false' : 'true' }}
     </script>
+    <script src="{{ hotAsset('dist/commons.js') }}"></script>
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-result-list.js') }}"></script>
 {% endblock %}

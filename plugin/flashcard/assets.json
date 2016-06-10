@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "list": "modules/flashcard/flashcard"
+      "list": "flashcard/flashcard"
     }
   }
 }

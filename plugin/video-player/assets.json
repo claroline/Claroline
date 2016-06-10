@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "track-management": "modules/track/module"
+      "track-management": "track/module"
     }
   }
 }

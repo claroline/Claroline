@@ -17,7 +17,7 @@ function configure(rootDir, packages, isWatchMode) {
   // first we must parse the webpack configs of each bundle
   // and prefix/normalize them to avoid name collisions
   const webpackPackages = packages.filter(def => def.assets && def.assets.webpack)
-  const bundles = webpackPackages.map(def => def.name)
+  const packageNames = webpackPackages.map(def => def.name)
   const normalizedPackages = normalizeNames(webpackPackages)
   const entries = extractEntries(normalizedPackages)
   const commons = extractCommons(normalizedPackages)
@@ -36,18 +36,21 @@ function configure(rootDir, packages, isWatchMode) {
   // in every environment, plugins are needed for things like bower
   // modules support, bundle resolution, common chunks extraction, etc.
   const plugins = [
-    makeBundleResolverPlugin(),
+    makeBundleResolverPlugin(rootDir),
     makeBowerPlugin(),
     makeAssetsPlugin(),
-    //makeBaseCommonsPlugin(),
+    makeBaseCommonsPlugin(),
     ...makeBundleCommonsPlugins(commons)
   ]
 
   // prod build has additional constraints
-  // TODO: use tree-shaking when webpack 2.0 is stable!
+  //
+  // TODO: use tree-shaking when webpack 2.0 is stable
+  // NOTE: uglify plugin isn't included due to problems with already minified
+  //       files (see https://github.com/webpack/webpack/issues/537).
+  //       Minification is handled as a separate step in the main package.json.
   if (isProd) {
     plugins.push(
-      //makeUglifyJsPlugin(),
       makeDedupePlugin(),
       makeDefinePlugin(),
       makeNoErrorsPlugin(),
@@ -70,7 +73,7 @@ function configure(rootDir, packages, isWatchMode) {
       headers: { "Access-Control-Allow-Origin": "*" }
     },
     _debug: {
-      'Detected webpack configs': bundles,
+      'Detected webpack configs': packageNames,
       'Compiled entries': entries,
       'Compiled common chunks': commons
     }
@@ -107,8 +110,8 @@ function extractEntries(packages) {
     .reduce((entries, def) => {
       Object.keys(def.assets.webpack.entry).forEach(entry => {
          def.meta ?
-           entries[`${def.name}-${def.assets.webpack.entry[entry].dir}-${entry}`] = `${def.assets.webpack.entry[entry].prefix}/Resources/${def.assets.webpack.entry[entry].name}`:
-           entries[`${def.name}-${entry}`] = `${def.path}/Resources/${def.assets.webpack.entry[entry]}`
+           entries[`${def.name}-${def.assets.webpack.entry[entry].dir}-${entry}`] = `${def.assets.webpack.entry[entry].prefix}/Resources/modules/${def.assets.webpack.entry[entry].name}`:
+           entries[`${def.name}-${entry}`] = `${def.path}/Resources/modules/${def.assets.webpack.entry[entry]}`
       })
 
       return entries
@@ -142,21 +145,24 @@ function makeBowerPlugin() {
 /**
  * This plugin adds a custom resolver that will try to convert internal
  * webpack requests for modules starting with "#/" (i.e by convention,
- * modules located in a claroline bundle) into requests with a resolved
- * absolute path.
+ * modules located in the distribution package) into requests with a resolved
+ * absolute path. Modules are expected to live in the "Resources/modules"
+ * directory of each bundle, so that part must be omitted from the import
+ * statement.
  *
- * Example usage: import Interceptors from '#/main/core/Resources/modules/interceptorsDefault'
+ * Example:
  *
- * @param availableBundles A list of available bundles
+ * import baz from '#/main/core/foo/bar'
+ *
+ * will be resolved to:
+ *
+ * /path/to/vendor/claroline/distribution/main/core/Resources/modules/foo/bar
  */
-function makeBundleResolverPlugin() {
+function makeBundleResolverPlugin(rootDir) {
   return new webpack.NormalModuleReplacementPlugin(/^#\//, request => {
-    const target = request.request.substr(2)
-    const parts = target.split('/')
-    request.request = path.resolve(
-      'vendor/claroline/distribution',
-      ...parts
-    )
+    const parts = request.request.substr(2).split('/')
+    const resolved = [...parts.slice(0, 2), 'Resources/modules', ...parts.slice(2)]
+    request.request = [rootDir, 'vendor/claroline/distribution', ...resolved].join('/')
   })
 }
 
@@ -167,7 +173,7 @@ function makeBundleResolverPlugin() {
 function makeBaseCommonsPlugin() {
   return new webpack.optimize.CommonsChunkPlugin({
     name: 'commons',
-    minChunks: 10
+    minChunks: 3
   })
 }
 
@@ -190,17 +196,6 @@ function makeAssetsPlugin() {
 function makeBundleCommonsPlugins(commons) {
   return commons.map(config => {
     return new webpack.optimize.CommonsChunkPlugin(config)
-  })
-}
-
-/**
- * This plugin minifies bundle files using UglifyJS.
- */
-function makeUglifyJsPlugin() {
-  return new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: false
-    }
   })
 }
 
