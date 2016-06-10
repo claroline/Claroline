@@ -49,5 +49,6 @@
         AngularApp.locale = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
     </script>
 
+    <script src="{{ hotAsset('dist/commons.js') }}"></script>
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-exo-app.js') }}"></script>
 {% endblock %}

@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "app": "modules/app"
+      "app": "app"
     }
   }
 }
