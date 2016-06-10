@@ -4,7 +4,7 @@
 
 import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
-import 'ngBootbox'
+import '#/main/core/modal/module'
 
 import './../common/module'
 import './../correction/module'
@@ -35,7 +35,7 @@ angular
     .module('Question', [
         'ui.translation',
         'ui.bootstrap',
-        'ngBootbox',
+        'ui.modal',
         'Common',
         'Image',
         'Correction'

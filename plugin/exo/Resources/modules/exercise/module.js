@@ -6,7 +6,7 @@ import 'angular-bootstrap'
 import 'angular-strap'
 import 'angular-ui-tinymce'
 import 'angular-ui-translation/angular-translation'
-import 'ngBootbox'
+import '#/main/core/modal/module'
 
 import './../common/module'
 import './../step/module'
@@ -27,7 +27,7 @@ angular
         'ui.translation',
         'ui.bootstrap',
         'ui.tinymce',
-        'ngBootbox',
+        'ui.modal',
         'mgcrea.ngStrap.datepicker',
         'Common',
         'Step',

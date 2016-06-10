@@ -166,8 +166,8 @@
                 <button type="button" role="button" class="btn btn-default"
                         data-ng-if="!questionShowCtrl.isHintUsed(hint)"
                         data-ng-disabled="questionShowCtrl.includeCorrection"
-                        ng-bootbox-confirm="{{ 'question_show_hint_confirm'|trans:{ 1: hint.penalty }:'ujm_sequence' }}"
-                        ng-bootbox-confirm-action="questionShowCtrl.showHint(hint)"
+                        data-confirm-modal="{{ 'question_show_hint_confirm'|trans:{ 1: hint.penalty }:'ujm_sequence' }}"
+                        data-confirm-modal-action="questionShowCtrl.showHint(hint)"
                 >
                     <span class="fa fa-fw fa-eye"></span>
                     {{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }} {{ $index + 1 }}

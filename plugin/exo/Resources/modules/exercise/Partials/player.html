@@ -86,8 +86,8 @@
         <!-- Interrupt Exercise -->
         <button type="button" role="button" class="btn btn-warning"
                 data-ng-if="!exercisePlayerCtrl.isLastStep && exercisePlayerCtrl.exercise.meta.dispButtonInterrupt"
-                ng-bootbox-confirm="{{ 'sequence_interrupt_sequence_confirm'|trans:{}:'ujm_sequence'}}"
-                ng-bootbox-confirm-action="exercisePlayerCtrl.interrupt()"
+                data-confirm-modal="{{ 'sequence_interrupt_sequence_confirm'|trans:{}:'ujm_sequence'}}"
+                data-confirm-modal-action="exercisePlayerCtrl.interrupt()"
         >
             <span class="fa fa-ban"></span>
             {{ 'btn_interrupt_sequence_label'|trans:{}:'ujm_sequence' }}
@@ -97,8 +97,8 @@
         <button type="button" role="button" class="btn btn-primary"
                 data-ng-if="!exercisePlayerCtrl.next"
                 data-ng-disabled="exercisePlayerCtrl.isButtonEnabled('end')"
-                ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}"
-                ng-bootbox-confirm-action="exercisePlayerCtrl.end()"
+                data-confirm-modal="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}"
+                data-confirm-modal-action="exercisePlayerCtrl.end()"
         >
             <span class="fa fa-sign-out"></span>
             {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}

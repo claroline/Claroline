@@ -34,8 +34,8 @@
 
                             <button type="button"
                                     class="btn btn-sm btn-danger"
-                                    data-ng-bootbox-confirm="{{ 'delete_of_my_exercise'|trans:{}:'ujm_exo'}}"
-                                    data-ng-bootbox-confirm-action="stepListCtrl.removeStep(step)"
+                                    data-confirm-modal="{{ 'delete_of_my_exercise'|trans:{}:'ujm_exo'}}"
+                                    data-confirm-modal-action="stepListCtrl.removeStep(step)"
                                     data-toggle="tooltip" title="{{ 'delete_question' | trans:{}:'ujm_exo' }}">
                                 <span class="fa fa-trash-o"></span>
                                 <span class="sr-only">{{ 'delete_question'|trans:{}:'ujm_exo' }}</span>
@@ -67,7 +67,8 @@
 
                                 <!-- Delete Item button -->
                                 <button type="button" class="btn btn-sm btn-danger" data-toggle="tooltip" title="{{ 'delete' | trans:{}:'ujm_exo' }}"
-                                        data-ng-bootbox-confirm="{{ 'delete_of_my_exercise'|trans:{}:'ujm_exo'}}" data-ng-bootbox-confirm-action="stepListCtrl.removeItem(step, item)">
+                                        data-confirm-modal="{{ 'delete_of_my_exercise'|trans:{}:'ujm_exo'}}"
+                                        data-confirm-modal-action="stepListCtrl.removeItem(step, item)">
                                     <span class="fa fa-trash-o"></span>
                                     <span class="sr-only">{{ 'delete' | trans:{}:'ujm_exo' }}</span>
                                 </button>

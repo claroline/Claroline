@@ -8,7 +8,7 @@ import registerDragula from "angular-dragula/dist/angular-dragula"
 import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
 import 'angular-ui-tinymce'
-import 'ngBootbox'
+import '#/main/core/modal/module'
 
 import './../common/module'
 import './../question/module'
@@ -26,7 +26,7 @@ angular
     'ui.translation',
     'ui.bootstrap',
     'ui.tinymce',
-    'ngBootbox',
+    'ui.modal',
     'dragula',
     'Common',
     'Question'
