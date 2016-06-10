@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "396fab60f3dcab87caf71d761993a2eee0c0f9d9"
+                "reference": "16623e7585a3a0640de284be43e375e374ade8da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/396fab60f3dcab87caf71d761993a2eee0c0f9d9",
-                "reference": "396fab60f3dcab87caf71d761993a2eee0c0f9d9",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/16623e7585a3a0640de284be43e375e374ade8da",
+                "reference": "16623e7585a3a0640de284be43e375e374ade8da",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-06-08 19:36:57"
+            "time": "2016-06-09 09:37:53"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -4185,12 +4185,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "d0eaafadcbaa671953e554c3074c57384745386f"
+                "reference": "6d16486abb8b209b269ad3259ccfcff4c31e42eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/d0eaafadcbaa671953e554c3074c57384745386f",
-                "reference": "d0eaafadcbaa671953e554c3074c57384745386f",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/6d16486abb8b209b269ad3259ccfcff4c31e42eb",
+                "reference": "6d16486abb8b209b269ad3259ccfcff4c31e42eb",
                 "shasum": ""
             },
             "require": {
@@ -4261,7 +4261,7 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2016-06-03 15:50:40"
+            "time": "2016-06-09 14:50:28"
         },
         {
             "name": "ocramius/proxy-manager",
