@@ -110,6 +110,14 @@ class QcmHandler implements QuestionHandlerInterface
     {
         $interaction = new InteractionQCM();
 
+        if ($importData->score->type === 'sum') {
+            $interaction->setWeightResponse(true);//weighted true
+        } elseif ($importData->score->type === 'fixed') {
+            $interaction->setWeightResponse(false);//no weighted false
+            $interaction->setScoreRightResponse($importData->score->success);
+            $interaction->setScoreFalseResponse($importData->score->failure);
+        }
+
         for ($i = 0, $max = count($importData->choices); $i < $max; ++$i) {
             // temporary limitation
             if ($importData->choices[$i]->type !== 'text/html') {
@@ -177,6 +185,16 @@ class QcmHandler implements QuestionHandlerInterface
         }, $choices);
 
         $exportData->scoreTotal = $this->container->get('ujm.exo.qcm_service')->maxScore($interaction);
+
+        if (!$interaction->getWeightResponse()) {
+            $exportData->score = [
+                'type' => 'fixed',
+                'success' => $interaction->getScoreRightResponse(),
+                'failure' => $interaction->getScoreFalseResponse(),
+            ];
+        } else {
+            $exportData->score = ['type' => 'sum'];
+        }
 
         if ($withSolution) {
             $exportData->solutions = array_map(function ($choice) {

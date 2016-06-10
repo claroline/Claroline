@@ -4,7 +4,12 @@
   "title": "Question ?",
   "description":null,
   "invite":"Question ?",
-  "scoreTotal": 1.5,
+  "scoreTotal" : 5,
+  "score": {
+    "type": "fixed",
+    "success": 5,
+    "failure": -1.5
+  },
   "choices": [
     {
       "id": "1",
@@ -27,15 +32,15 @@
   "solutions": [
     {
       "id": "1",
-      "score": 0
+      "score": -1
     },
     {
       "id": "2",
-      "score": 1.5
+      "score": 1
     },
     {
       "id": "3",
-      "score": -0.5
+      "score": 1
     }
   ]
 }
