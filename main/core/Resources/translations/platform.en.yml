@@ -171,6 +171,7 @@ communication: Communication
 completed: Completed
 configuration: Configuration
 configure: Configure
+confirm: OK
 confirm_send_data: 'We suggest to confirm your agreement to send data:'
 connections: Connections
 contact: Contact

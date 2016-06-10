@@ -171,6 +171,7 @@ communication: Communication
 completed: Terminé
 configuration: Configuration
 configure: Configurer
+confirm: OK
 confirm_send_data: 'Nous vous proposons de marquer votre accord pour l''envoi de données :'
 connections: 'Nb Cnx.'
 contact: Contact
