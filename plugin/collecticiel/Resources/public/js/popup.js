@@ -474,17 +474,20 @@ $(document).ready(function() {
         event.preventDefault();
         event.stopPropagation();
 
+        // Récupération de l'id du document
         var documentId = $(this).attr("data-document_id");
 
-        // Récupération de l'id du document
         var evaluationType = $(this).attr("data_document_evaluationType");
 
         if (evaluationType == 'notation') {
+            var appreciation = 0;
             var commentText = "";
             var qualityText = "";
             var note = document.getElementById('innova_collecticiel_notation_form_note_'+documentId).value;
         }
         if (evaluationType == 'ratingScale') {
+            // Récupération de la valeur de l'appréciation
+            var appreciation = document.getElementById('innova_collecticiel_notation_form_scaleName_'+documentId).value;
             var commentText = document.getElementById('innova_collecticiel_notation_form_commentText_'+documentId).value;
             var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText_'+documentId).value;
             var note = 0;
@@ -502,9 +505,10 @@ $(document).ready(function() {
             url: Routing.generate('innova_collecticiel_add_notation', {
                 documentId: documentId,
                 dropzoneId: dropzoneId,
-                note: note,
+                appreciation: appreciation,
                 commentText: commentText,
                 qualityText: qualityText,
+                note: note,
                 recordOrTransmit: recordOrTransmit,
             }),
             method: "GET",

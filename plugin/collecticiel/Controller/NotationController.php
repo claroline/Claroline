@@ -36,6 +36,7 @@ class NotationController extends DropzoneBaseController
         $note = $this->get('request')->query->get('note');
         $commentText = $this->get('request')->query->get('commentText');
         $qualityText = $this->get('request')->query->get('qualityText');
+        $appreciation = $this->get('request')->query->get('appreciation');
         $recordOrTransmit = $this->get('request')->query->get('recordOrTransmit');
 
         $em = $this->getDoctrine()->getManager();
@@ -71,6 +72,10 @@ class NotationController extends DropzoneBaseController
                 $notation->setCommentText($commentText);
                 $notation->setQualityText($qualityText);
                 $notation->setRecordOrTransmit($recordOrTransmit);
+
+                // TODO important : à enlever avant la prochaine version. JUST FOR TEST.
+                $notation->setCommentText($appreciation);
+
                 // Insertion en base
                 $em->persist($notation);
             }

@@ -404,6 +404,10 @@ class DropController extends DropzoneBaseController
         $documentRepo = $em->getRepository('InnovaCollecticielBundle:Document');
         $receiptRepo = $em->getRepository('InnovaCollecticielBundle:ReturnReceipt');
         $notationRepo = $em->getRepository('InnovaCollecticielBundle:Notation');
+
+        $scaleRepo = $em->getRepository('InnovaCollecticielBundle:GradingScale');
+        $scalesArray = $scaleRepo->getScaleArrayForDropzone($dropzone);
+
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         $workspace = $dropzone->getResourceNode()->getWorkspace();
 
@@ -522,6 +526,7 @@ class DropController extends DropzoneBaseController
             'notationCommentDocumentsArray' => $notationCommentDocuments,
             'notationQualityDocumentsArray' => $notationQualityDocuments,
             'notationAssessorDocumentsArray' => $notationAssessorDocuments,
+            'scalesArray' => $scalesArray,
         ));
 
         return $dataToView;

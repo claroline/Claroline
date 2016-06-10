@@ -72,6 +72,23 @@
         {% endif %}
 
         {% if dropzone.evaluationType == "ratingScale" %}
+
+            <div class="row text-left">
+                <div class="form-group col-md-6">
+                    {{ 'Appreciation'|trans({}, 'innova_collecticiel') }}
+                </div>
+            </div>
+
+            <div class="row text-left">
+                <div class="form-group col-md-6">
+                    <select id="innova_collecticiel_notation_form_scaleName_{{document.id}}" name="innova_collecticiel_notation_form[scaleName]" class="form-control">
+                        {% for scale in scalesArray %}
+                            <option value="{{ scale.id }}">{{ scale.scaleName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
             <div class="row text-left">
                 <div class="form-group col-md-6">
                     {{ 'Global comment'|trans({}, 'innova_collecticiel') }}
@@ -81,7 +98,7 @@
             <div class="row text-left">
                 <div class="form-group col-md-6">
                     <textarea id="innova_collecticiel_notation_form_commentText_{{document.id}}" name="innova_collecticiel_notation_form[commentText]" required="required" class="claroline-tiny-mce hide"
-                    {% if recordOrTransmitNotation == 0 %}placeholder="{{ notationCommentDocument }}" {% endif %}>
+                    {% if recordOrTransmitNotation == 0 %}placeholder="{{ notationCommentDocument }}" {% endif %}
                     >
                     </textarea>
                 </div>
@@ -96,7 +113,7 @@
             <div class="row text-left">
                 <div class="form-group col-md-6">
                         <textarea id="innova_collecticiel_notation_form_qualityText_{{document.id}}" name="innova_collecticiel_notation_form[qualityText]" required="required" class="claroline-tiny-mce hide"
-                        {% if recordOrTransmitNotation == 0 %}placeholder="{{ notationQualityDocument }}" {% endif %}>
+                        {% if recordOrTransmitNotation == 0 %}placeholder="{{ notationQualityDocument }}" {% endif %}
                         >
                         </textarea>
                 </div>
