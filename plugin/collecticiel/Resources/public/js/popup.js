@@ -474,10 +474,33 @@ $(document).ready(function() {
         event.preventDefault();
         event.stopPropagation();
 
+        var arrayCriteriaId = [];
+        var arrayCriteriaName = [];
+        var arrayCriteriaValue = [];
+
         // Récupération de l'id du document
         var documentId = $(this).attr("data-document_id");
 
         var evaluationType = $(this).attr("data_document_evaluationType");
+
+        var numberCriterias = $(this).attr("data-criteria_nb");
+        alert("numberCriterias");
+        alert(numberCriterias);
+
+        for (var i=0; i<numberCriterias; i++) {
+            alert("boucle");
+            var critereId = $(this).attr("data-criteria_"+i+"_id");
+            var critereName = $(this).attr("data-criteria_"+i+"_name");
+            alert(critereId);
+            alert(critereName);
+            alert(document.getElementById('innova_collecticiel_notation_form_'+critereName+'_'+documentId).value);
+
+            arrayCriteriaId.push(critereId);
+            arrayCriteriaName.push(critereName);
+            arrayCriteriaValue.push(document.getElementById('innova_collecticiel_notation_form_'+critereName+'_'+documentId).value);
+
+
+        }
 
         if (evaluationType == 'notation') {
             var appreciation = 0;
@@ -485,11 +508,17 @@ $(document).ready(function() {
             var qualityText = "";
             var note = document.getElementById('innova_collecticiel_notation_form_note_'+documentId).value;
         }
+
+//        alert(document.getElementById('innova_collecticiel_notation_form_scaleName_'+documentId).value;
+//            alert(document.getElementById('innova_collecticiel_notation_form_'+c0+'_16').value);
+//            alert(document.getElementById('innova_collecticiel_notation_form_'+c1+'_16').value);
+//die();
+
         if (evaluationType == 'ratingScale') {
             // Récupération de la valeur de l'appréciation
             var appreciation = document.getElementById('innova_collecticiel_notation_form_scaleName_'+documentId).value;
-            var commentText = document.getElementById('innova_collecticiel_notation_form_commentText_'+documentId).value;
-            var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText_'+documentId).value;
+            var commentText = "";
+            var qualityText = "";
             var note = 0;
         }
 
@@ -513,9 +542,12 @@ $(document).ready(function() {
             }),
             method: "GET",
             data: {
+                arrayCriteriaId: arrayCriteriaId,
+                arrayCriteriaName: arrayCriteriaName,
+                arrayCriteriaValue: arrayCriteriaValue
             },
             complete: function(data) {
-                var data_link = $.parseJSON(data.responseText)
+                var data_link = $.parseJSON(data.responseText);
 
                 if (data_link !== 'false') {
                     document.location.href = data_link.link;

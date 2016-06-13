@@ -72,7 +72,6 @@
         {% endif %}
 
         {% if dropzone.evaluationType == "ratingScale" %}
-
             <div class="row text-left">
                 <div class="form-group col-md-6">
                     {{ 'Appreciation'|trans({}, 'innova_collecticiel') }}
@@ -103,35 +102,23 @@
                 </div>
             </div>
 
-            <div class="row text-left">
-                <div class="form-group col-md-6">
-                    {{ 'Global comment'|trans({}, 'innova_collecticiel') }}
+            {% for criteria in criteriasArray %}
+                <div class="row text-left">
+                    <div class="form-group col-md-6">
+                        {{ criteria.criteriaName }}
+                    </div>
                 </div>
-            </div>
 
-            <div class="row text-left">
-                <div class="form-group col-md-6">
-                    <textarea id="innova_collecticiel_notation_form_commentText_{{document.id}}" name="innova_collecticiel_notation_form[commentText]" required="required" class="claroline-tiny-mce hide"
-                    {% if recordOrTransmitNotation == 0 %}placeholder="{{ notationCommentDocument }}" {% endif %}
-                    >
-                    </textarea>
-                </div>
-            </div>
-
-            <div class="row text-left">
-                <div class="form-group col-md-6">
-                    {{ 'Quality argument'|trans({}, 'innova_collecticiel') }}
-                </div>
-            </div>
-
-            <div class="row text-left">
-                <div class="form-group col-md-6">
-                        <textarea id="innova_collecticiel_notation_form_qualityText_{{document.id}}" name="innova_collecticiel_notation_form[qualityText]" required="required" class="claroline-tiny-mce hide"
-                        {% if recordOrTransmitNotation == 0 %}placeholder="{{ notationQualityDocument }}" {% endif %}
+                <div class="row text-left">
+                    <div class="form-group col-md-6">
+                        <textarea id="innova_collecticiel_notation_form_{{criteria.criteriaName}}_{{document.id}}" name="innova_collecticiel_notation_form[{{criteria.criteriaName}}]" required="required" class="claroline-tiny-mce hide"
+                        {% if recordOrTransmitNotation == 0 %}placeholder="{{criteria.criteriaName}}" {% endif %}
                         >
                         </textarea>
+                    </div>
                 </div>
-            </div>
+            {% endfor %}
+
         {% endif %}
 
     </div>

@@ -34,8 +34,8 @@ class NotationController extends DropzoneBaseController
         $documentId = $this->get('request')->query->get('documentId');
         $dropzoneId = $this->get('request')->query->get('dropzoneId');
         $note = $this->get('request')->query->get('note');
-        $commentText = $this->get('request')->query->get('commentText');
-        $qualityText = $this->get('request')->query->get('qualityText');
+//        $commentText = $this->get('request')->query->get('commentText');
+//        $qualityText = $this->get('request')->query->get('qualityText');
         $appreciation = $this->get('request')->query->get('appreciation');
         $recordOrTransmit = $this->get('request')->query->get('recordOrTransmit');
 
@@ -47,6 +47,36 @@ class NotationController extends DropzoneBaseController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+
+        // Récupération des documents sélectionnés
+        $arrayCriteriaId = $this->get('request')->query->get('arrayCriteriaId');
+        $arrayCriteriaIdToView = array();
+
+        $arrayCriteriaName = $this->get('request')->query->get('arrayCriteriaName');
+        $arrayCriteriaNameToView = array();
+
+        $arrayCriteriaValue = $this->get('request')->query->get('arrayCriteriaValue');
+        $arrayCriteriaValueToView = array();
+
+        $cpt = 0;
+
+        // Parcours des documents sélectionnés et insertion en base de données
+        if (!empty($arrayCriteriaId)) {
+            foreach ($arrayCriteriaId as $criteriaId) {
+            }
+        }
+
+                // Parcours des documents sélectionnés et insertion en base de données
+        if (!empty($arrayCriteriaName)) {
+            foreach ($arrayCriteriaName as $criteriaName) {
+            }
+        }
+
+                // Parcours des documents sélectionnés et insertion en base de données
+        if (!empty($arrayCriteriaValue)) {
+            foreach ($arrayCriteriaValue as $criteriaValue) {
+            }
+        }
 
         if ($recordOrTransmit == 0) {
             // Ajout pour avoir si la notation a été transmise ou pas.
@@ -70,8 +100,8 @@ class NotationController extends DropzoneBaseController
                 $notation->setDocument($document);
                 $notation->setDropzone($dropzone);
                 $notation->setNote($note);
-                $notation->setCommentText($commentText);
-                $notation->setQualityText($qualityText);
+                $notation->setCommentText('');
+                $notation->setQualityText('');
                 $notation->setRecordOrTransmit($recordOrTransmit);
                 $notation->setappreciation($appreciation);
 
