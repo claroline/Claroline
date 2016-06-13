@@ -107,7 +107,9 @@
                         with {
                         'recordOrTransmitNotation': recordOrTransmitNotation,
                         'notationDocument': notationDocument,
+                        'notationScaleDocument' : notationScaleDocument,
                         'scalesArray' : scalesArray,
+                        'notationAppreciationDocument': notationAppreciationDocument,
                         } 
                         %}
                 </div>
@@ -118,7 +120,10 @@
             <td class="centered centering-columnsAR" id="is-transmit-{{ document.id }}">
                 <div class="btn-group">
                     {% include 'InnovaCollecticielBundle:Document:documentIsTransmit.html.twig'
-                        with {'notationDocument': notationDocuments[document.id]} 
+                        with {
+                        'notationScaleDocument' : notationScaleDocument,
+                        'notationDocument': notationDocuments[document.id]
+                        } 
                      %}
                 </div>
             </td>

@@ -2,7 +2,8 @@
 /**
  * Created by : Eric VINCENT
  * Date: 05/2016.
- * Modifiey by : Add recordOrTransmit (05/2016).
+ * Modify by : Add recordOrTransmit (05/2016).
+ * Modify by : Add appreciation (06/2016).
  */
 
 namespace Innova\CollecticielBundle\Entity;
@@ -63,6 +64,11 @@ class Notation
      * @ORM\Column(name="note", type="integer", nullable=false)
      */
     protected $note = 0;
+
+    /**
+     * @ORM\Column(name="appreciation", type="integer", nullable=false)
+     */
+    protected $appreciation = 0;
 
     /**
      * @ORM\Column(name="comment_text",type="text", nullable=true)
@@ -285,5 +291,29 @@ class Notation
     public function getRecordOrTransmit()
     {
         return $this->recordOrTransmit;
+    }
+
+    /**
+     * Set appreciation.
+     *
+     * @param int $appreciation
+     *
+     * @return Notation
+     */
+    public function setAppreciation($appreciation)
+    {
+        $this->appreciation = $appreciation;
+
+        return $this;
+    }
+
+    /**
+     * Get appreciation.
+     *
+     * @return int
+     */
+    public function getAppreciation()
+    {
+        return $this->appreciation;
     }
 }

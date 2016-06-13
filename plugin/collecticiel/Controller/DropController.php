@@ -430,6 +430,10 @@ class DropController extends DropzoneBaseController
         $haveCommentOrNotArray = array();
         $notationDocuments = array();
         $recordOrTransmitNotations = array();
+        $notationCommentDocuments = array();
+        $notationQualityDocuments = array();
+        $notationAssessorDocuments = array();
+        $notationAppreciationDocuments = array();
 
         foreach ($dropzone->getDrops() as $drop) {
             $notationDocuments = $dropManager->getNotationForDocuments($drop);
@@ -470,6 +474,11 @@ class DropController extends DropzoneBaseController
             $dropUserId = $drop->getUser()->getId();
             $userToCommentCount[$dropUserId] = $nbCommentsPerUser;
             $userNbTextToRead[$dropUserId] = $nbTextToRead;
+
+            $notationCommentDocuments = $dropManager->getNotationCommentForDocuments($drop);
+            $notationQualityDocuments = $dropManager->getNotationQualityForDocuments($drop);
+            $notationAssessorDocuments = $dropManager->getNotationAssessorForDocuments($drop);
+            $notationAppreciationDocuments = $dropManager->getAppreciationForDocuments($drop);
         }
 
         // Calcul du nombre de documents sans accusé de réception
@@ -502,9 +511,6 @@ class DropController extends DropzoneBaseController
         $isAdmin = $dropzoneVoter->checkEditRight($dropzone);
         $docWithoutReceiptCount = $dropManager->countDocsWithoutReceipt($pager->getcurrentPageResults());
         $teacherDocComments = $dropManager->getTeacherComments($pager->getcurrentPageResults(), $workspace);
-        $notationCommentDocuments = $dropManager->getNotationCommentForDocuments($drop);
-        $notationQualityDocuments = $dropManager->getNotationQualityForDocuments($drop);
-        $notationAssessorDocuments = $dropManager->getNotationAssessorForDocuments($drop);
 
         $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -526,6 +532,7 @@ class DropController extends DropzoneBaseController
             'notationCommentDocumentsArray' => $notationCommentDocuments,
             'notationQualityDocumentsArray' => $notationQualityDocuments,
             'notationAssessorDocumentsArray' => $notationAssessorDocuments,
+            'notationAppreciationDocumentsArray' => $notationAppreciationDocuments,
             'scalesArray' => $scalesArray,
         ));
 

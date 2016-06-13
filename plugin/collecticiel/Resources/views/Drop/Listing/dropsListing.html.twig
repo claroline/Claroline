@@ -47,7 +47,7 @@ au div situé ci-dessous
         {% for key,value in teacherCommentDocArray %}
             {% if document.id == key %}
                 {% if notationDocuments[document.id] == 0 %}
-                    {% set alertNbDocumentWithoutGraduation = alertNbDocumentWithoutGraduation + 1 %}
+                    {% set alertNbDocumentWithoutComment = alertNbDocumentWithoutComment + 1 %}
                 {% endif %}
             {% set foundDocument = true  %}
             {% endif %}
@@ -74,12 +74,13 @@ au div situé ci-dessous
 {% for drop in pager.currentPageResults %}
     {% for document in drop.documents %}
         {% set foundDocument = false %}
-        {% for key,value in notationDocuments %}
+        {% for key,value in notationAppreciationDocumentsArray %}
             {% if document.id == key %}
-                {% if notationDocuments[document.id] == 0 %}
-                    {% set alertNbDocumentWithoutGraduation = alertNbDocumentWithoutGraduation + 1 %}
+                {% if notationAppreciationDocumentsArray[document.id] == 99 %}
+                    {% if (document.validate == 1) %}
+                        {% set alertNbDocumentWithoutGraduation = alertNbDocumentWithoutGraduation + 1 %}
+                    {% endif %}
                 {% endif %}
-            {% set foundDocument = true  %}
             {% endif %}
         {% endfor %}
     {% endfor %}
@@ -237,6 +238,8 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                         'notationAssessorDocument' : notationAssessorDocumentsArray[document.id],
                         'notationCommentDocument': notationCommentDocumentsArray[document.id],
                         'notationQualityDocument': notationQualityDocumentsArray[document.id],
+                        'notationAppreciationDocument': notationAppreciationDocumentsArray[document.id],
+                        'notationScaleDocument' : notationAppreciationDocumentsArray[document.id],
                         }
                      %}
                 {% endif %}

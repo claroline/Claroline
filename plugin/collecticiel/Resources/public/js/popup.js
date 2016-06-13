@@ -541,12 +541,14 @@ $(document).ready(function() {
         var evaluationType = $(this).attr("data_document_evaluationType");
 
         if (evaluationType == 'notation') {
+            var appreciation = 0;
             var commentText = "";
             var qualityText = "";
             var note = document.getElementById('innova_collecticiel_notation_form_note_'+documentId).value;
         }
 
         if (evaluationType == 'ratingScale') {
+            var appreciation = document.getElementById('innova_collecticiel_notation_form_scaleName_'+documentId).value;
             var commentText = document.getElementById('innova_collecticiel_notation_form_commentText_'+documentId).value;
             var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText_'+documentId).value;
             var note = 0;
@@ -564,6 +566,7 @@ $(document).ready(function() {
             url: Routing.generate('innova_collecticiel_add_notation', {
                 documentId: documentId,
                 dropzoneId: dropzoneId,
+                appreciation: appreciation,
                 note: note,
                 commentText: commentText,
                 qualityText: qualityText,

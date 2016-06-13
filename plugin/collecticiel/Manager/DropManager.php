@@ -374,6 +374,54 @@ class DropManager
     }
 
     /**
+     * Handle Appreciation for Documents.
+     *
+     * @param Drop $drop drop
+     *
+     * @return notationAppreciation
+     */
+    public function getAppreciationForDocuments(Drop $drop)
+    {
+        $notationAppreciation = array();
+
+        $dropzone = $drop->getDropzone();
+        $this->gradingScaleRepo = $this->em->getRepository('InnovaCollecticielBundle:GradingScale');
+
+        foreach ($drop->getDocuments() as $document) {
+            $documentId = $document->getId();
+
+            // Ajout pour avoir la notation.
+            $notations = $this
+                ->em->getRepository('InnovaCollecticielBundle:Notation')
+                ->findBy(
+                    array(
+                        'document' => $documentId,
+                        'dropzone' => $dropzone->getId(),
+                    )
+                );
+
+            // Nombre de notation pour le document et pour le dropzone
+            $countExistNotation = count($notations);
+
+            if ($countExistNotation == 0) {
+                $notationAppreciation[$documentId] = 99;
+            } else {
+                // Parcours des commentaires des documents sélectionnés
+                foreach ($notations as $notation) {
+                    if ($notation->getAppreciation() > 0) {
+                        $gradingScale = $this->gradingScaleRepo->find($notation->getAppreciation());
+                        $notationAppreciation[$documentId] = $gradingScale->getScaleName();
+                    } else {
+                        $notationAppreciation[$documentId] = 0;
+                    }
+                }
+            }
+        }
+
+        return $notationAppreciation;
+    }
+
+    /**
      * Handle QualityText for Documents.
      *
      * @param Drop $drop drop

@@ -57,9 +57,9 @@
                     <label>
                         <input id="innova_collecticiel_notation_form_note_{{document.id}}" name="innova_collecticiel_notation_form[note]" required="required" min="0" max="9999" class="form-control" type="integer"
                         {% if recordOrTransmitNotation == 0 %}
-                         placeholder="{{ notationDocument }}"
+                            placeholder="{{ notationDocument }}"
                         {% else %}
-                         placeholder="{{ '0' }}"
+                            placeholder="{{ '0' }}"
                         {% endif %}>
                     </label>
                     {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
@@ -82,9 +82,23 @@
             <div class="row text-left">
                 <div class="form-group col-md-6">
                     <select id="innova_collecticiel_notation_form_scaleName_{{document.id}}" name="innova_collecticiel_notation_form[scaleName]" class="form-control">
-                        {% for scale in scalesArray %}
-                            <option value="{{ scale.id }}">{{ scale.scaleName }}</option>
-                        {% endfor %}
+                        {% if notationAppreciationDocument > 0 %}
+                            <option value="0">-----</option>
+                            {% for scale in scalesArray %}
+                                {% if notationAppreciationDocument == scale.id %}
+                                    <option value="{{ scale.id }}" selected="selected">{{ scale.scaleName }}</option>
+                                }
+                                {% else %}
+                                    <option value="{{ scale.id }}">{{ scale.scaleName }}</option>
+                                }
+                                {% endif %}>
+                            {% endfor %}
+                        {% else %}
+                            <option value="0" selected="selected">-----</option>
+                            {% for scale in scalesArray %}
+                                <option value="{{ scale.id }}">{{ scale.scaleName }}</option>
+                            {% endfor %}
+                        {% endif %}>
                     </select>
                 </div>
             </div>

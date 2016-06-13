@@ -60,6 +60,7 @@ class NotationController extends DropzoneBaseController
 
             if (!empty($notation)) {
                 $notation[0]->setNote($note);
+                $notation[0]->setappreciation($appreciation);
                 // Mise à jour de la base de données
                 $em->persist($notation[0]);
             } else {
@@ -72,9 +73,7 @@ class NotationController extends DropzoneBaseController
                 $notation->setCommentText($commentText);
                 $notation->setQualityText($qualityText);
                 $notation->setRecordOrTransmit($recordOrTransmit);
-
-                // TODO important : à enlever avant la prochaine version. JUST FOR TEST.
-                $notation->setCommentText($appreciation);
+                $notation->setappreciation($appreciation);
 
                 // Insertion en base
                 $em->persist($notation);
@@ -90,6 +89,7 @@ class NotationController extends DropzoneBaseController
                                 );
 
             $notation[0]->setRecordOrTransmit(true);
+            $notation[0]->setappreciation($appreciation);
             // Mise à jour de la base de données
             $em->persist($notation[0]);
         }
@@ -144,6 +144,9 @@ class NotationController extends DropzoneBaseController
         $em->persist($notation[0]);
         $em->flush();
 
+        $gradingScale = $em->getRepository('InnovaCollecticielBundle:GradingScale')
+                      ->find($notation[0]->getAppreciation());
+
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get('templating')->
         render('InnovaCollecticielBundle:Document:documentIsTransmit.html.twig',
@@ -155,6 +158,7 @@ class NotationController extends DropzoneBaseController
                       'maximumNotation' => $dropzone->getMaximumNotation(),
                       'notationCommentDocument' => $notation[0]->getCommentText(),
                       'notationQualityDocument' => $notation[0]->getQualityText(),
+                      'notationScaleDocument' => $gradingScale->getScaleName(),
                     )
                );
 

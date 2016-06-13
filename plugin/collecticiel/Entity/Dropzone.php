@@ -3,13 +3,13 @@
  * Created by : Vincent SAISSET
  * Date: 21/08/13
  * Time: 15:18
- * Modifiey by : Eric VINCENT InnovaERV Add ReturnReceipt Column
- * Modifiey by : Eric VINCENT InnovaERV Add Evaluation Column
- * Modifiey by : Eric VINCENT InnovaERV Add Username and Picture Column
- * Modifiey by : Eric VINCENT InnovaERV Add EvaluationType Column (02/02/2016)
- * Modifiey by : Eric VINCENT InnovaERV Add MaximumNotation Column (16/03/2016)
- * Modifiey by : Eric VINCENT InnovaERV Add ArrayCollection GradingScale (04/2016)
- * Modifiey by : Eric VINCENT InnovaERV Add ArrayCollection GradingCriteria (04/2016).
+ * Modify by : Eric VINCENT InnovaERV Add ReturnReceipt Column
+ * Modify by : Eric VINCENT InnovaERV Add Evaluation Column
+ * Modify by : Eric VINCENT InnovaERV Add Username and Picture Column
+ * Modify by : Eric VINCENT InnovaERV Add EvaluationType Column (02/02/2016)
+ * Modify by : Eric VINCENT InnovaERV Add MaximumNotation Column (16/03/2016)
+ * Modify by : Eric VINCENT InnovaERV Add ArrayCollection GradingScale (04/2016)
+ * Modify by : Eric VINCENT InnovaERV Add ArrayCollection GradingCriteria (04/2016).
 */
 
 namespace Innova\CollecticielBundle\Entity;
