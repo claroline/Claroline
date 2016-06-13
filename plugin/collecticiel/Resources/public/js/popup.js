@@ -484,16 +484,10 @@ $(document).ready(function() {
         var evaluationType = $(this).attr("data_document_evaluationType");
 
         var numberCriterias = $(this).attr("data-criteria_nb");
-        alert("numberCriterias");
-        alert(numberCriterias);
 
         for (var i=0; i<numberCriterias; i++) {
-            alert("boucle");
             var critereId = $(this).attr("data-criteria_"+i+"_id");
             var critereName = $(this).attr("data-criteria_"+i+"_name");
-            alert(critereId);
-            alert(critereName);
-            alert(document.getElementById('innova_collecticiel_notation_form_'+critereName+'_'+documentId).value);
 
             arrayCriteriaId.push(critereId);
             arrayCriteriaName.push(critereName);
@@ -508,11 +502,6 @@ $(document).ready(function() {
             var qualityText = "";
             var note = document.getElementById('innova_collecticiel_notation_form_note_'+documentId).value;
         }
-
-//        alert(document.getElementById('innova_collecticiel_notation_form_scaleName_'+documentId).value;
-//            alert(document.getElementById('innova_collecticiel_notation_form_'+c0+'_16').value);
-//            alert(document.getElementById('innova_collecticiel_notation_form_'+c1+'_16').value);
-//die();
 
         if (evaluationType == 'ratingScale') {
             // Récupération de la valeur de l'appréciation
