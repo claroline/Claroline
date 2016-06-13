@@ -346,7 +346,7 @@ class WorkspaceController extends Controller
         $this->assertIsGranted('ROLE_WS_CREATOR');
         $user = $this->tokenStorage->getToken()->getUser();
         $workspaceType = new WorkspaceType($user);
-        $form = $this->formFactory->create($workspaceType);
+        $form = $this->formFactory->create($workspaceType, new Workspace());
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
         $modelLog = $this->container->getParameter('kernel.root_dir').'/logs/models.log';
