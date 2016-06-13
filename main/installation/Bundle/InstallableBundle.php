@@ -91,7 +91,7 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
         if (!$installed) {
             $up = DIRECTORY_SEPARATOR.'..';
             //usual package
-            $path = realpath($this->getPath().$up.$up.$up.$up.'/vendor/composer/installed.json');
+            $path = realpath($this->getPath().$up.$up.$up.'/vendor/composer/installed.json');
             //meta package
             if (!$path) {
                 $path = realpath($this->getPath().$up.$up.$up.$up.$up.'/vendor/composer/installed.json');
