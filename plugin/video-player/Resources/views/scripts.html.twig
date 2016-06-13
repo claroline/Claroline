@@ -1,21 +1,6 @@
-<script src="{{ asset('packages/video.js/dist/video.min.js') | raw }}"></script>
+<script src="{{ asset('packages/video.js/dist/video.min.js') }}"></script>
 <script>
-    videojs.options.flash.swf = "{{ asset('packages/video.js/dist/video-js.swf') | raw }}"
+    videojs.options.flash.swf = "{{ asset('packages/video.js/dist/video-js.swf') }}"
 </script>
-<script>
-    //search videos
-    var vids = document.getElementsByTagName('video');
-
-    // vids is an HTMLCollection
-    for (var i = 0; i < vids.length; i++) {
-        player = videojs(vids.item(i).id, {
-            techOrder: ['flash', 'html5'],
-            autoplay: false,
-            controls: true,
-            preload: "metadata"
-        }, function() {
-            //nothing
-        });
-    }
-</script>
-<link href="{{ asset('packages/video.js/dist/video-js.min.css') | raw }}" rel="stylesheet">
+<script src="{{ hotAsset('dist/claroline-distribution-plugin-video-player-video_watcher')}}"></script>
+<link href="{{ asset('packages/video.js/dist/video-js.min.css') }}" rel="stylesheet">
