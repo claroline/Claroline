@@ -313,6 +313,7 @@ question_title: Question title (optional)
 question_shared_with: This question is shared with users below
 question_need_manual_correction: This question needs a manual correction
 question_open_keywords_info: Your answer needs to contain the following keywords to get the points
+question_graphic_set_pointers: Click on the picture to place a pointer
 question_graphic_nb_pointers: "{0} There is no more pointer to place on the picture.|{1} There is still %count% pointer to place on the picture.|]1,Inf[ There are still %count% pointers to place on the picture."
 
 # R

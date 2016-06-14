@@ -313,6 +313,7 @@ question_title: Titre de la question (facultatif)
 question_shared_with: Cette question est partagée avec les utilisateurs suivants
 question_need_manual_correction: Cette question nécessite une correction manuelle
 question_open_keywords_info: Votre réponse doit contenir les mots clés suivant pour obtenir les points
+question_graphic_set_pointers: Cliquez sur l'image pour placer un pointeur
 question_graphic_nb_pointers: "{0} Il ne reste plus aucun pointeur à placer sur l'image.|{1} Il reste %count% pointeur à placer sur l'image.|]1,Inf[ Il reste %count% pointeurs à placer sur l'image."
 
 # R

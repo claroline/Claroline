@@ -3,7 +3,8 @@
         <div class="row question-btns">
             <!-- Number of pointers available -->
             <div class="col-md-10 text-left">
-                {{ 'question_graphic_nb_pointers'|transChoice:(graphicQuestionCtrl.question.pointers - graphicQuestionCtrl.answer.length):{ count: graphicQuestionCtrl.question.pointers - graphicQuestionCtrl.answer.length }:'ujm_exo' }}
+                <span>{{ 'question_graphic_nb_pointers'|transChoice:(graphicQuestionCtrl.question.pointers - graphicQuestionCtrl.answer.length):{ count: graphicQuestionCtrl.question.pointers - graphicQuestionCtrl.answer.length }:'ujm_exo' }}</span>
+                <span>{{ 'question_graphic_set_pointers'|trans:{}:'ujm_exo' }}</span>
             </div>
 
             <!-- Reset button -->
