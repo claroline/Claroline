@@ -485,17 +485,16 @@ $(document).ready(function() {
 
         var numberCriterias = $(this).attr("data-criteria_nb");
 
+        // Récupération des critères
         for (var i=0; i<numberCriterias; i++) {
             var critereId = $(this).attr("data-criteria_"+i+"_id");
             var critereName = $(this).attr("data-criteria_"+i+"_name");
-
             arrayCriteriaId.push(critereId);
             arrayCriteriaName.push(critereName);
             arrayCriteriaValue.push(document.getElementById('innova_collecticiel_notation_form_'+critereName+'_'+documentId).value);
-
-
         }
 
+        // Test suivant le cas : notation ou appréciations
         if (evaluationType == 'notation') {
             var appreciation = 0;
             var commentText = "";
