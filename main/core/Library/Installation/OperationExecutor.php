@@ -154,7 +154,11 @@ class OperationExecutor
                     }
                 }
             } else {
-                $foundBundle = $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundle);
+                try {
+                    $foundBundle = $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundle);
+                } catch (\Doctrine\DBAL\Exception\TableNotFoundException $e) {
+                    $foundBundle = false;
+                }
                 $previousPackage = $previous->findPackage($currentPackage->getName(), '*');
                 //old <= v6 package detection
                 if (!$previousPackage && !$foundBundle) {
