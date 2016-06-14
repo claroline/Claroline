@@ -23,6 +23,16 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+
+    <script type="text/javascript">
+        {# autofocus HTML has no effect in second and next loaded Bootstrap modals #}
+        $(function(){
+            $(document).on('shown.bs.modal', '.modal', function () {
+                $(this).find('[autofocus]').focus();
+            });
+        });
+    </script>
+
     <script type="text/javascript">
         $(function() {
             Claroline.ResourceManager.createFullManager({
