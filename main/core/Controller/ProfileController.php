@@ -139,14 +139,15 @@ class ProfileController extends Controller
     /**
      * @EXT\Route(
      *     "/show/{user}",
-     *      name="claro_profile_view"
+     *      name="claro_profile_view",
+     *      options={"expose"=true}
      * )
      * @SEC\Secure(roles="ROLE_USER")
      * @EXT\Template("ClarolineCoreBundle:Profile:publicProfile.html.twig")
      */
     public function viewAction(Request $request, User $user)
     {
-        return $this->publicProfileAction($request, $loggedUser->getPublicUrl());
+        return $this->publicProfileAction($request, $user->getPublicUrl());
     }
 
     /**

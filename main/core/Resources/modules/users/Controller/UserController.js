@@ -20,7 +20,16 @@ export default class UserController {
         this.$uibModal = $uibModal
 
         const columns = [
-            {name: this.translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
+            {
+                name: this.translate('username'),
+                isCheckboxColumn: true,
+                headerCheckbox: true,
+                cellRenderer: scope => {
+                    let content = `<a href="${Routing.generate('claro_profile_view', {user: scope.$row.id})}">${scope.$row.username}</a>`
+
+                    return `<span>${content}</span>`
+                }
+            },
             {name: this.translate('first_name'), prop: "firstName"},
             {name: this.translate('last_name'), prop:"lastName"},
             {name: this.translate('email'), prop: "mail"},
