@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Notation;
+use Innova\CollecticielBundle\Entity\ChoiceCriteria;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,25 +59,8 @@ class NotationController extends DropzoneBaseController
         $arrayCriteriaValue = $this->get('request')->query->get('arrayCriteriaValue');
         $arrayCriteriaValueToView = array();
 
-        $cpt = 0;
-
-        // Parcours des documents sélectionnés et insertion en base de données
-        if (!empty($arrayCriteriaId)) {
-            foreach ($arrayCriteriaId as $criteriaId) {
-            }
-        }
-
-        // Parcours des documents sélectionnés et insertion en base de données
-        if (!empty($arrayCriteriaName)) {
-            foreach ($arrayCriteriaName as $criteriaName) {
-            }
-        }
-
-        // Parcours des documents sélectionnés et insertion en base de données
-        if (!empty($arrayCriteriaValue)) {
-            foreach ($arrayCriteriaValue as $criteriaValue) {
-            }
-        }
+        // Pour insérer l'ID de la table Notation dans la tabke Choice_criteria
+        $notationId = 0;
 
         if ($recordOrTransmit == 0) {
             // Ajout pour avoir si la notation a été transmise ou pas.
@@ -93,6 +77,7 @@ class NotationController extends DropzoneBaseController
                 $notation[0]->setappreciation($appreciation);
                 // Mise à jour de la base de données
                 $em->persist($notation[0]);
+                $notationId = $notation[0]->getId();
             } else {
                 // Valorisation de l'évaluation/notation
                 $notation = new Notation();
@@ -122,10 +107,75 @@ class NotationController extends DropzoneBaseController
             $notation[0]->setappreciation($appreciation);
             // Mise à jour de la base de données
             $em->persist($notation[0]);
+            $notationId = $notation[0]->getId();
         }
 
         $em->flush();
-        echo $notation->getId();
+
+        if ($notationId == 0) {
+            // Ajout pour avoir si la notation a été transmise ou pas.
+            $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
+                        ->findBy(
+                                array(
+                                    'document' => $document->getId(),
+                                    'dropzone' => $dropzone->getId(),
+                                     )
+                                );
+            $notationId = $notation[0]->getId();
+        }
+
+        // Insertion dans la table ChoiceCriteria.
+        // Parcours des documents sélectionnés et insertion en base de données
+        if (!empty($arrayCriteriaId)) {
+            $cpt = 0;
+            foreach ($arrayCriteriaId as $criteriaId) {
+                $gradingCriteria = $em->getRepository('InnovaCollecticielBundle:GradingCriteria')->find($criteriaId);
+
+            // Ajout pour avoir si la notation a été transmise ou pas.
+                $choiceCriteriaArray = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
+                            ->findBy(
+                                    array(
+                                        'notation' => $notationId,
+                                        'gradingCriteria' => $criteriaId,
+                                         )
+                                    );
+
+                // Nombre de notation pour le document et pour le dropzone
+                $countExistCriteria = count($choiceCriteriaArray);
+
+                if ($countExistCriteria == 0) {
+                    $choiceCriteria = new ChoiceCriteria();
+                    $choiceCriteria->setGradingCriteria($gradingCriteria);
+                    $choiceCriteria->setNotation($notation[0]);
+                    $choiceCriteria->setChoiceText($arrayCriteriaValue[$cpt]);
+                    // Insertion en base
+                    $em->persist($choiceCriteria);
+
+                    ++$cpt;
+                } else {
+                    // $choiceCriteria = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
+                    //   ->find($choiceCriteriaArray[0]->getId());
+                    // $choiceCriteria->setChoiceText($arrayCriteriaValue[$cpt]);
+                    // // Insertion en base
+                    // $em->persist($choiceCriteria);
+                    // ++$cpt;
+                }
+            }
+        }
+
+        // // Parcours des documents sélectionnés et insertion en base de données
+        // if (!empty($arrayCriteriaName)) {
+        //     foreach ($arrayCriteriaName as $criteriaName) {
+        //     }
+        // }
+
+        // // Parcours des documents sélectionnés et insertion en base de données
+        // if (!empty($arrayCriteriaValue)) {
+        //     foreach ($arrayCriteriaValue as $criteriaValue) {
+        //     }
+        // }
+
+        $em->flush();
 
         // Redirection
         $url = $this->generateUrl('innova_collecticiel_drops_awaiting', array(

@@ -507,4 +507,51 @@ class DropManager
 
         return $recordOrTransmitNotationArray;
     }
+
+    /**
+     * Handle CommentText for Documents.
+     *
+     * @param Drop $drop drop
+     *
+     * @return notationCommentTextDocuments
+     */
+    public function getChoiceTextForDocuments(Drop $drop)
+    {
+        $notationChoiceTextDocuments = array();
+
+        $dropzone = $drop->getDropzone();
+
+        foreach ($drop->getDocuments() as $document) {
+            $documentId = $document->getId();
+
+            // Ajout pour avoir la notation.
+            $notations = $this
+                ->em->getRepository('InnovaCollecticielBundle:Notation')
+                ->findBy(
+                    array(
+                        'document' => $documentId,
+                        'dropzone' => $dropzone->getId(),
+                    )
+                );
+
+            // Nombre de notation pour le document et pour le dropzone
+            $countExistNotation = count($notations);
+
+            if ($countExistNotation == 0) {
+                $notationCommentTextDocuments[$documentId] = '';
+            } else {
+                // Parcours des commentaires des documents sélectionnés
+                foreach ($notations as $notation) {
+                    if (strlen($notation->getCommentText()) == 0) {
+                        $notationCommentTextDocuments[$documentId] = '';
+                    } else {
+                        $notationCommentTextDocuments[$documentId]
+                            = $notation->getCommentText();
+                    }
+                }
+            }
+        }
+
+        return $notationChoiceTextDocuments;
+    }
 }

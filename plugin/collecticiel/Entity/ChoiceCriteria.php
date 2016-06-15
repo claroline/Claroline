@@ -9,7 +9,7 @@ namespace Innova\CollecticielBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\ChoiceCriteriaRepository")
  * @ORM\Table(name="innova_collecticielbundle_choice_criteria")
  */
 class ChoiceCriteria
@@ -32,6 +32,18 @@ class ChoiceCriteria
      * @ORM\JoinColumn(name="criteria_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $gradingCriteria;
+
+    /**
+     * Lien avec la table Notation.
+     */
+    /**
+     * @ORM\ManyToOne(
+     *      targetEntity="Innova\CollecticielBundle\Entity\Notation",
+     *      inversedBy="choiceCriterias"
+     * )
+     * @ORM\JoinColumn(name="notation_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     */
+    protected $notation;
 
     /**
      * @ORM\Column(name="choice_text",type="text", nullable=true)
@@ -94,5 +106,29 @@ class ChoiceCriteria
     public function getGradingCriteria()
     {
         return $this->gradingCriteria;
+    }
+
+    /**
+     * Set notation.
+     *
+     * @param \Innova\CollecticielBundle\Entity\Notation $notation
+     *
+     * @return ChoiceCriteria
+     */
+    public function setNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    {
+        $this->notation = $notation;
+
+        return $this;
+    }
+
+    /**
+     * Get notation.
+     *
+     * @return \Innova\CollecticielBundle\Entity\Notation
+     */
+    public function getNotation()
+    {
+        return $this->notation;
     }
 }

@@ -50,6 +50,9 @@
             </div>
         </div>
 
+        {#          #}
+        {# Notation #}
+        {#          #}
         {% if dropzone.evaluationType == "notation" %}
             <div class="row text-left">
                 <div class="form-group row col-md-6">
@@ -71,6 +74,9 @@
             </div>
         {% endif %}
 
+        {#             #}
+        {# RatingScale #}
+        {#             #}
         {% if dropzone.evaluationType == "ratingScale" %}
             <div class="row text-left">
                 <div class="form-group col-md-6">
@@ -112,8 +118,11 @@
                 <div class="row text-left">
                     <div class="form-group col-md-6">
                         <textarea id="innova_collecticiel_notation_form_{{criteria.criteriaName}}_{{document.id}}" name="innova_collecticiel_notation_form[{{criteria.criteriaName}}]" required="required" class="claroline-tiny-mce hide"
-                        {% if recordOrTransmitNotation == 0 %}placeholder="{{criteria.criteriaName}}" {% endif %}
+                        {% if recordOrTransmitNotation == 0 %}value="{{criteria.criteriaName}}" {% endif %}
                         >
+                        {# Pour affichage de la valeur de l'accusé de réception #}
+                        {% render(controller('InnovaCollecticielBundle:ChoiceCriteria:renderChoiceText',
+                        {'gradingCriteriaId': criteria.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) %}
                         </textarea>
                     </div>
                 </div>
