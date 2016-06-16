@@ -89,7 +89,6 @@
                 data-document_record_or_transmit="0"
                 data_document_evaluationType="{{ dropzone.evaluationType }}"
 
-
                 {% for i, criteria in criteriasArray %}
                     data-criteria_{{i}}_id="{{criteria.id}}"
                     data-criteria_{{i}}_name="{{criteria.criteriaName}}"
@@ -107,6 +106,14 @@
                 data-document_sender_lastname="{{document.sender.lastname}}"
                 data-document_record_or_transmit="1"
                 data_document_evaluationType="{{ dropzone.evaluationType }}"
+
+                {% for i, criteria in criteriasArray %}
+                    data-criteria_{{i}}_id="{{criteria.id}}"
+                    data-criteria_{{i}}_name="{{criteria.criteriaName}}"
+                {% endfor %}
+
+                data-criteria_nb="{{criteriasArray|length}}"
+
                 type="button" class="btn btn-primary modal_confirm_notation_transmit">{{ 'To transmit'|trans({}, 'innova_collecticiel') }}</button>
             </div>
         </div>
