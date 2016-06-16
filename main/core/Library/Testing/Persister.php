@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\ProfileProperty;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -231,6 +232,17 @@ class Persister
         $this->om->persist($client);
 
         return $client;
+    }
+
+    public function profileProperty($property, $role, $isEditable = true)
+    {
+        $profileProperty = new ProfileProperty();
+        $profileProperty->setProperty($property);
+        $profileProperty->setIsEditable($isEditable);
+        $profileProperty->setRole($this->role($role));
+        $this->om->persist($profileProperty);
+
+        return $profileProperty;
     }
 
     /**

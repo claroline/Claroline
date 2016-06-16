@@ -20,6 +20,19 @@ class ProfilePropertyRepository extends EntityRepository
      */
     public function findAccessesByRoles(array $roles)
     {
+        if (in_array('ROLE_ADMIN', $roles)) {
+            return [
+                'administrativeCode' => true,
+                'description' => true,
+                'email' => true,
+                'firstName' => true,
+                'lastName' => true,
+                'phone' => true,
+                'picture' => true,
+                'username' => true,
+            ];
+        }
+
         $dql = '
             SELECT pp.property as property, MAX(pp.isEditable) as isEditable
             FROM Claroline\CoreBundle\Entity\ProfileProperty pp
