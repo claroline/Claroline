@@ -275,12 +275,12 @@ class Docimology
     {
         $paperSer = $this->container->get('ujm.exo_paper');
         $em = $this->doctrine->getManager();
-        if ($exercise->getNbQuestion() == 0) {
+        if ($exercise->getPickSteps() === 0) {
             $exoScoreMax = $this->container->get('ujm.exo_exercise')->getExerciseTotalScore($exercise);
         }
         $marks = $em->getRepository('UJMExoBundle:Response')->getExerciseMarks($exercise->getId(), 'noteExo');
         foreach ($marks as $mark) {
-            if ($exercise->getNbQuestion() > 0) {
+            if ($exercise->getPickSteps() > 0) {
                 $exoScoreMax = $this->container->get('ujm.exo_paper')->getPaperTotalScore($mark['paper']);
             }
             $scoreU = round(($mark['noteExo'] / $exoScoreMax) * 20, 2);

@@ -14,6 +14,7 @@ alert_ending: Are you sure you want to finish ? (You can't alter your answers an
 all: All
 allow_to_edit: Allow to edit
 all_question: All the questions
+all_question: All the steps
 already: This question is already shared with this user
 already_answered: You have already answered at this exercise
 already_exist: This name exist already
@@ -255,6 +256,8 @@ number_proposal: Number of the proposal
 number_of_papers: Number of papers
 number_questions_draw: Number of questions to draw (0 for all)
 number_questions_draw_help: Type 0 to draw all questions
+number_steps_draw: Number of steps to draw
+number_steps_draw_help: Type 0 to draw all steps
 numerical: Numerical
 numerical_response: Numerical response (value or interval)
 num_paper: Paper's number
@@ -313,6 +316,7 @@ question_open_keywords_info: Your answer needs to contain the following keywords
 question_graphic_nb_pointers: "{0} There is no more pointer to place on the picture.|{1} There is still %count% pointer to place on the picture.|]1,Inf[ There are still %count% pointers to place on the picture."
 
 # R
+random_steps: Random order of steps
 random_questions: Random order of questions
 raz: => To reset all pointers' position, press "c".
 square: square

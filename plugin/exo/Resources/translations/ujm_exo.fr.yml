@@ -14,6 +14,7 @@ alert_ending: Etes-vous sur de vouloir terminer ? (Vous ne pourrez plus modifier
 all: Tout
 allow_to_edit: Autoriser l'édition
 all_question: Toutes les questions
+all_step: Toutes les étapes
 already: Cette question est déjà partagée avec cet utilisateur
 already_answered: Vous avez déjà répondu à cet exercice
 already_exist: Ce nom existe déjà.
@@ -256,6 +257,8 @@ number_proposal: Numéro de la proposition
 number_of_papers: Nombre de copies
 number_questions_draw: Nombre de questions à tirer
 number_questions_draw_help: Tapez 0 pour tirer toutes les questions
+number_steps_draw: Nombre d'étapes à tirer
+number_steps_draw_help: Tapez 0 pour tirer toutes les étapes
 numerical: Numérique
 numerical_response: Réponse numérique
 num_paper: Numéro de la copie
@@ -314,6 +317,7 @@ question_graphic_nb_pointers: "{0} Il ne reste plus aucun pointeur à placer sur
 
 # R
 random_questions: Ordre des questions aléatoire
+random_steps: Ordre des étapes aléatoire
 raz: => Pour remettre à leurs position initiale tous les pointeurs, appuyez sur "c".
 square: Carré
 remove_advanced_edition: Edition simple

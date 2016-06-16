@@ -206,57 +206,6 @@ class ExerciseManager
     }
 
     /**
-     * Returns a question list according to the *shuffle* and
-     * *nbQuestions* parameters of an exercise, i.e. filtered
-     * and/or randomized if needed.
-     *
-     * @param Exercise $exercise
-     *
-     * @return array
-     */
-    public function pickQuestions(Exercise $exercise)
-    {
-        $steps = $this->pickSteps($exercise);
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
-        $finalQuestions = [];
-
-        foreach ($steps as $step) {
-            $originalQuestions = $questions = $questionRepo->findByStep($step);
-            $questionCount = count($questions);
-
-            if ($exercise->getShuffle() && $questionCount > 1) {
-                while ($questions === $originalQuestions) {
-                    shuffle($questions); // shuffle until we have a new order
-                }
-            }
-            $finalQuestions = array_merge($finalQuestions, $questions);
-        }
-
-        if (($questionToPick = $exercise->getNbQuestion()) > 0) {
-            while ($questionToPick > 0) {
-                $index = rand(0, count($finalQuestions) - 1);
-                unset($finalQuestions[$index]);
-                $finalQuestions = array_values($finalQuestions); // "re-index" the array
-                --$questionToPick;
-            }
-        }
-
-        return $finalQuestions;
-    }
-
-    /**
-     * Returns the step list of an exercise.
-     *
-     * @param Exercise $exercise
-     *
-     * @return array
-     */
-    public function pickSteps(Exercise $exercise)
-    {
-        return $this->om->getRepository('UJMExoBundle:Step')->findByExercise($exercise);
-    }
-
-    /**
      * Create a copy of an Exercise.
      *
      * @param Exercise $exercise
@@ -271,7 +220,7 @@ class ExerciseManager
         $newExercise->setName($exercise->getName());
         $newExercise->setDescription($exercise->getDescription());
         $newExercise->setShuffle($exercise->getShuffle());
-        $newExercise->setNbQuestion($exercise->getNbQuestion());
+        $newExercise->setPickSteps($exercise->getPickSteps());
         $newExercise->setDuration($exercise->getDuration());
         $newExercise->setDoprint($exercise->getDoprint());
         $newExercise->setMaxAttempts($exercise->getMaxAttempts());
@@ -367,9 +316,9 @@ class ExerciseManager
         // Update Exercise
         $exercise->setDescription($metadata->description);
         $exercise->setType($metadata->type);
-        $exercise->setNbQuestion($metadata->pick ? $metadata->pick : 0);
+        $exercise->setPickSteps($metadata->pick ? $metadata->pick : 0);
         $exercise->setShuffle($metadata->random);
-        $exercise->setKeepSameQuestion($metadata->keepSameQuestions);
+        $exercise->setKeepSteps($metadata->keepSteps);
         $exercise->setMaxAttempts($metadata->maxAttempts);
         $exercise->setLockAttempt($metadata->lockAttempt);
         $exercise->setDispButtonInterrupt($metadata->dispButtonInterrupt);
@@ -394,7 +343,7 @@ class ExerciseManager
 
     /**
      * Export metadata of the Exercise in a JSON-encodable format.
-     * 
+     *
      * @param Exercise $exercise
      *
      * @return array
@@ -418,9 +367,9 @@ class ExerciseManager
             'title' => $node->getName(),
             'description' => $exercise->getDescription(),
             'type' => $exercise->getType(),
-            'pick' => $exercise->getNbQuestion(),
+            'pick' => $exercise->getPickSteps(),
             'random' => $exercise->getShuffle(),
-            'keepSameQuestions' => $exercise->getKeepSameQuestion(),
+            'keepSteps' => $exercise->getKeepSteps(),
             'maxAttempts' => $exercise->getMaxAttempts(),
             'lockAttempt' => $exercise->getLockAttempt(),
             'dispButtonInterrupt' => $exercise->getDispButtonInterrupt(),
