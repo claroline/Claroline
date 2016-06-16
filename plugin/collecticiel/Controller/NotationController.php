@@ -219,6 +219,9 @@ class NotationController extends DropzoneBaseController
 
         $notation[0]->setRecordOrTransmit(true);
 
+        $note = $this->get('request')->query->get('note');
+        $notation[0]->setNote($note);
+
         // Mise à jour de la base de données
         $em->persist($notation[0]);
         $em->flush();

@@ -60,9 +60,9 @@
                     <label>
                         <input id="innova_collecticiel_notation_form_note_{{document.id}}" name="innova_collecticiel_notation_form[note]" required="required" min="0" max="9999" class="form-control" type="integer"
                         {% if recordOrTransmitNotation == 0 %}
-                            placeholder="{{ notationDocument }}"
+                            value="{{ notationDocument }}"
                         {% else %}
-                            placeholder="{{ '0' }}"
+                            value="{{ '0' }}"
                         {% endif %}>
                     </label>
                     {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
