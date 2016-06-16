@@ -103,6 +103,7 @@ class NotationController extends DropzoneBaseController
                                      )
                                 );
 
+            $notation[0]->setNote($note);
             $notation[0]->setRecordOrTransmit(true);
             $notation[0]->setappreciation($appreciation);
             // Mise à jour de la base de données
@@ -131,7 +132,7 @@ class NotationController extends DropzoneBaseController
             foreach ($arrayCriteriaId as $criteriaId) {
                 $gradingCriteria = $em->getRepository('InnovaCollecticielBundle:GradingCriteria')->find($criteriaId);
 
-            // Ajout pour avoir si la notation a été transmise ou pas.
+                // Ajout pour avoir si la notation a été transmise ou pas.
                 $choiceCriteriaArray = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
                             ->findBy(
                                     array(
@@ -143,23 +144,20 @@ class NotationController extends DropzoneBaseController
                 // Nombre de notation pour le document et pour le dropzone
                 $countExistCriteria = count($choiceCriteriaArray);
 
+                // Notation : création
                 if ($countExistCriteria == 0) {
                     $choiceCriteria = new ChoiceCriteria();
                     $choiceCriteria->setGradingCriteria($gradingCriteria);
                     $choiceCriteria->setNotation($notation[0]);
                     $choiceCriteria->setChoiceText($arrayCriteriaValue[$cpt]);
-                    // Insertion en base
-                    $em->persist($choiceCriteria);
-
-                    ++$cpt;
                 } else {
-                    // $choiceCriteria = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
-                    //   ->find($choiceCriteriaArray[0]->getId());
-                    // $choiceCriteria->setChoiceText($arrayCriteriaValue[$cpt]);
-                    // // Insertion en base
-                    // $em->persist($choiceCriteria);
-                    // ++$cpt;
+                    // Notation : mise à jour
+                    $choiceCriteria = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
+                      ->find($choiceCriteriaArray[0]->getId());
+                    $choiceCriteria->setChoiceText($arrayCriteriaValue[$cpt]);
                 }
+                $em->persist($choiceCriteria);
+                ++$cpt;
             }
         }
 
@@ -228,6 +226,12 @@ class NotationController extends DropzoneBaseController
         $gradingScale = $em->getRepository('InnovaCollecticielBundle:GradingScale')
                       ->find($notation[0]->getAppreciation());
 
+        if (!empty($gradingScale)) {
+            $notationScaleDocument = $gradingScale->getScaleName();
+        } else {
+            $notationScaleDocument = '';
+        }
+
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get('templating')->
         render('InnovaCollecticielBundle:Document:documentIsTransmit.html.twig',
@@ -239,7 +243,7 @@ class NotationController extends DropzoneBaseController
                       'maximumNotation' => $dropzone->getMaximumNotation(),
                       'notationCommentDocument' => $notation[0]->getCommentText(),
                       'notationQualityDocument' => $notation[0]->getQualityText(),
-                      'notationScaleDocument' => $gradingScale->getScaleName(),
+                      'notationScaleDocument' => $notationScaleDocument,
                     )
                );
 

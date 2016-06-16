@@ -333,7 +333,7 @@ $(document).ready(function() {
         });
 
         // Ajout : vu avec Arnaud.
-        // Ajout de "complete" afin de mettre Ã  jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
+        // Ajout de "complete" afin de mettre à jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
         $.ajax({
             url: Routing.generate('innova_collecticiel_validate_transmit_evaluation', {
                 documentId: docId,

@@ -3,6 +3,7 @@
 {#  1 : enregistrer ET transmise #}
 {# 99 : pas de notation/évaluation #}
 
+{{recordOrTransmitNotation  }}
 {# Consulter/Modifier une évaluation #}
 {% if recordOrTransmitNotation == 0  %}
     <a href="#validate-modal-notation_{{document.id}}" data-toggle="modal"
@@ -83,7 +84,6 @@
                 <button data-toggle="modal"
                 data-dropzone_id="{{dropzone.id}}" data-document_id="{{document.id}}"
                 data-document_url="{{document.url}}" data-document_title="{{document.title}}"
-                data-document_name="{{document.resourceNode.name}}"
                 data-document_sender_firstname="{{document.sender.firstname}}"
                 data-document_sender_lastname="{{document.sender.lastname}}"
                 data-document_record_or_transmit="0"
@@ -101,7 +101,6 @@
                 <button data-toggle="modal"
                 data-dropzone_id="{{dropzone.id}}" data-document_id="{{document.id}}"
                 data-document_url="{{document.url}}" data-document_title="{{document.title}}"
-                data-document_name="{{document.resourceNode.name}}"
                 data-document_sender_firstname="{{document.sender.firstname}}"
                 data-document_sender_lastname="{{document.sender.lastname}}"
                 data-document_record_or_transmit="1"
