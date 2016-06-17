@@ -40,15 +40,6 @@ class ChoiceCriteriaController extends DropzoneBaseController
             $choiceTextArray = $em->getRepository('InnovaCollecticielBundle:ChoiceCriteria')
             ->getChoiceTextForCriteriaAndNotation($gradingCriteria, $notationArray[0]);
 
-            // // Ajout pour avoir si la notation a été transmise ou pas.
-            // $choiceTextArray = $em->getRepository('InnovaCollecticielBundle:ChoiceCriteria')
-            //             ->findBy(
-            //                     array(
-            //                         'gradingCriteria' => $gradingCriteria->getId(),
-            //                         'notation' => $notationArray[0]->getId(),
-            //                          )
-            //                     );
-
             if (!empty($choiceTextArray)) {
                 // Récupération de la valeur de l'accusé de réceptoin
                 $choiceText = $choiceTextArray[0]->getChoiceText();

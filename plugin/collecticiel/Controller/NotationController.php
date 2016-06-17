@@ -35,8 +35,6 @@ class NotationController extends DropzoneBaseController
         $documentId = $this->get('request')->query->get('documentId');
         $dropzoneId = $this->get('request')->query->get('dropzoneId');
         $note = $this->get('request')->query->get('note');
-//        $commentText = $this->get('request')->query->get('commentText');
-//        $qualityText = $this->get('request')->query->get('qualityText');
         $appreciation = $this->get('request')->query->get('appreciation');
         $recordOrTransmit = $this->get('request')->query->get('recordOrTransmit');
 
