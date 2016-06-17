@@ -159,18 +159,6 @@ class NotationController extends DropzoneBaseController
             }
         }
 
-        // // Parcours des documents sélectionnés et insertion en base de données
-        // if (!empty($arrayCriteriaName)) {
-        //     foreach ($arrayCriteriaName as $criteriaName) {
-        //     }
-        // }
-
-        // // Parcours des documents sélectionnés et insertion en base de données
-        // if (!empty($arrayCriteriaValue)) {
-        //     foreach ($arrayCriteriaValue as $criteriaValue) {
-        //     }
-        // }
-
         $em->flush();
 
         // Redirection

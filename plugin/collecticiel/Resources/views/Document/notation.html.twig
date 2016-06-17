@@ -14,7 +14,11 @@
             {% if dropzone.evaluationType == "notation" %}
                 {{ notationDocuments[document.id] ~ "/" ~ dropzone.maximumNotation }}
             {% else %}
-                {{notationScaleDocument}}
+                {% if notationScaleDocument == '0' %}  
+                    <i class="fa fa-graduation-cap" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Review'|trans({},'innova_collecticiel') }}"></i>
+                {% else %}
+                    {{notationScaleDocument}}
+                {% endif %}
             {% endif %}
         </span>
     </a>

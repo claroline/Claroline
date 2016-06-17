@@ -26,6 +26,7 @@ class GradingScaleManager
         $this->container = $container;
         $this->em = $em;
         $this->gradingScaleRepo = $this->em->getRepository('InnovaCollecticielBundle:GradingScale');
+        $this->notationRepo = $this->em->getRepository('InnovaCollecticielBundle:Notation');
     }
 
     /**
@@ -71,6 +72,17 @@ class GradingScaleManager
             }
             if (!$found) {
                 $this->em->remove($scale);
+
+                $notationsArray = $this->notationRepo
+                    ->findBy(
+                            array(
+                                'appreciation' => $scale->getId(),
+                                 )
+                            );
+
+                foreach ($notationsArray as $notation) {
+                    $notation->setAppreciation(0);
+                }
             }
         }
     }
