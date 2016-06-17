@@ -87,19 +87,18 @@
             <div class="row text-left">
                 <div class="form-group col-md-6">
                     <select id="innova_collecticiel_notation_form_scaleName_{{document.id}}" name="innova_collecticiel_notation_form[scaleName]" class="form-control">
-                        {% if notationAppreciationDocument > 0 %}
+                        {# notationAppreciationDocument = 0 => notation sans critère #}
+                        {# notationAppreciationDocument = 99 => pas de notation #}
+                        {% if notationAppreciationDocument != '0' and notationAppreciationDocument != '99' %}
                             <option value="0">-----</option>
                             {% for scale in scalesArray %}
-                                {% if notationAppreciationDocument == scale.id %}
-                                    <option value="{{ scale.id }}" selected="selected">{{ scale.scaleName }}</option>
-                                }
-                                {% else %}
-                                    <option value="{{ scale.id }}">{{ scale.scaleName }}</option>
-                                }
-                                {% endif %}>
+                                <option value="{{ scale.id }}"
+                                    {% if notationAppreciationDocument == scale.scaleName %}selected{% endif %}>
+                                    {{ scale.scaleName }}
+                                 </option>
                             {% endfor %}
                         {% else %}
-                            <option value="0" selected="selected">-----</option>
+                            <option value="0" selected>-----</option>
                             {% for scale in scalesArray %}
                                 <option value="{{ scale.id }}">{{ scale.scaleName }}</option>
                             {% endfor %}
