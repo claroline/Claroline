@@ -20,7 +20,7 @@ export default class PluginController {
   }
 
   openPluginConfiguration (plugin) {
-    const route = Routing.generate('claro_admin_plugin_parameters', {pluginShortName: plugin.bundle_name})
+    const route = Routing.generate('claro_admin_plugin_parameters', {pluginShortName: plugin.bundle})
     // no angular support yet so we do a simple redirect.
     window.location = route
   }
