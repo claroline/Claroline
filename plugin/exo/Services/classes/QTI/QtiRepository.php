@@ -114,30 +114,28 @@ class QtiRepository
                                 case 'choiceInteraction': //qcm
                                     $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionQCM');
                                     $interX = $qtiImport->import($this, $ai);
-                                    $imported = true;
                                     break;
                                 case 'selectPointInteraction': //graphic with the tag selectPointInteraction
                                     $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
                                     $interX = $qtiImport->import($this, $ai);
-                                    $imported = true;
                                     break;
                                 case 'hotspotInteraction': //graphic with the tag hotspotInteraction
                                     $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
                                     $interX = $qtiImport->import($this, $ai);
-                                    $imported = true;
                                     break;
                                 case 'extendedTextInteraction': /*open (long or short)*/
                                     $qtiImport = $this->longOrShort($ai);
                                     $interX = $qtiImport->import($this, $ai);
-                                    $imported = true;
                                     break;
                                 case 'matchInteraction': //matching
                                     $qtiImport = $this->container->get('ujm.exo_qti_import_matching');
                                     $interX = $qtiImport->import($this, $ai);
-                                    $imported = true;
                                     break;
                             }
                         }
+                    }
+                    if (isset($interX) && $interX !== false) {
+                        $imported = true;
                     }
                     if ($imported === false) {
                         $other = $this->importOther($ai);
