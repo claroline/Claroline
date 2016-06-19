@@ -159,7 +159,7 @@ class ProfileController extends Controller
     {
         $facets = $this->facetManager->getVisibleFacets(5);
         $fieldFacetValues = $this->facetManager->getFieldValuesByUser($loggedUser);
-        $fieldFacets = $this->facetManager->getVisibleFieldFacets();
+        $fieldFacets = $this->facetManager->getVisibleFieldForCurrentUserFacets();
         $profileLinksEvent = new ProfileLinksEvent($loggedUser, $request->getLocale());
         $publicProfilePreferences = $this->facetManager->getVisiblePublicPreference();
         $this->get('event_dispatcher')->dispatch(

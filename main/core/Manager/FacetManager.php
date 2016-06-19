@@ -483,6 +483,13 @@ class FacetManager
         return $data;
     }
 
+    public function getVisibleFieldForCurrentUserFacets()
+    {
+        $roles = $this->tokenStorage->getToken()->getUser()->getEntityRoles();
+
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findByRoles($roles);
+    }
+
     public function getDisplayedValue(FieldFacetValue $ffv)
     {
         switch ($ffv->getFieldFacet()->getType()) {
