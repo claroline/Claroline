@@ -1355,13 +1355,12 @@ class ResourceManager
      *
      * @param array                      $criteria
      * @param string[] | RoleInterface[] $userRoles
-     * @param bool                       $isRecursive
      *
      * @return array
      */
-    public function getByCriteria(array $criteria, array $userRoles = null, $isRecursive = false)
+    public function getByCriteria(array $criteria, array $userRoles = null)
     {
-        return $this->resourceNodeRepo->findByCriteria($criteria, $userRoles, $isRecursive);
+        return $this->resourceNodeRepo->findByCriteria($criteria, $userRoles);
     }
 
     /**

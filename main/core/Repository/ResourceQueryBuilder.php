@@ -369,23 +369,6 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters nodes that are shortcuts and selects their target.
-     *
-     * @return ResourceQueryBuilder
-     */
-    public function whereIsShortcut()
-    {
-        $eol = PHP_EOL;
-        $this->joinRelativesClause = "JOIN rs.resourceNode node{$eol}".$this->joinRelativesClause;
-        $this->joinRelativesClause = "JOIN rs.target target{$eol}".$this->joinRelativesClause;
-        $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\ResourceShortcut rs{$eol}";
-        $this->selectClause .= ", target.id as target_id{$eol}";
-        $this->selectClause .= ", target.path as target_path{$eol}";
-
-        return $this;
-    }
-
-    /**
      * Filters the nodes that don't have a parent (roots).
      *
      * @return ResourceQueryBuilder
