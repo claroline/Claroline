@@ -42,7 +42,9 @@ class GradingScaleManager
         $this->deleteOldScales($tab, $dropzone);
         // handle update and add
 
-        foreach (array_keys($tab) as $key) {
+        // handle update and add
+        $tabKeys = array_keys($tab);
+        foreach ($tabKeys as $key) {
             // new
             if (empty($tab[$key]['id'])) {
                 $gradingScaleData = $this->insertGradingScale($tab[$key]['scaleName'], $dropzone);

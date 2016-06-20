@@ -39,8 +39,10 @@ class GradingCriteriaManager
     {
         // handle old scales deletion
         $this->deleteOldCriterias($tab, $dropzone);
+
         // handle update and add
-        foreach (array_keys($tab) as $key) {
+        $tabKeys = array_keys($tab);
+        foreach ($tabKeys as $key) {
             // new
             if (empty($tab[$key]['id'])) {
                 $gradingCriteriaData = $this->insertGradingCriteria($tab[$key]['criteriaName'], $dropzone);
