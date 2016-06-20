@@ -39,7 +39,7 @@ class GradingScaleManager
     public function manageGradingScales($tab, Dropzone $dropzone)
     {
         // handle old scales deletion
-        $this->deletOldScales($tab, $dropzone);
+        $this->deleteOldScales($tab, $dropzone);
         // handle update and add
 
         foreach (array_keys($tab) as $key) {
@@ -59,7 +59,7 @@ class GradingScaleManager
         return true;
     }
 
-    private function deletOldScales($data,  Dropzone $dropzone)
+    private function deleteOldScales($data,  Dropzone $dropzone)
     {
         $existing = $this->gradingScaleRepo->findByDropzone($dropzone);
         foreach ($existing as $scale) {

@@ -38,7 +38,7 @@ class GradingCriteriaManager
     public function manageGradingCriterias($tab, Dropzone $dropzone)
     {
         // handle old scales deletion
-        $this->deletOldCriterias($tab, $dropzone);
+        $this->deleteOldCriterias($tab, $dropzone);
         // handle update and add
         foreach (array_keys($tab) as $key) {
             // new
@@ -59,7 +59,7 @@ class GradingCriteriaManager
         return true;
     }
 
-    private function deletOldCriterias($data,  Dropzone $dropzone)
+    private function deleteOldCriterias($data,  Dropzone $dropzone)
     {
         $existing = $this->gradingCriteriaRepo->findByDropzone($dropzone);
 

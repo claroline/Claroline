@@ -55,16 +55,16 @@ class NotationController extends DropzoneBaseController
         // Pour insérer l'ID de la table Notation dans la tabke Choice_criteria
         $notationId = 0;
 
-        if ($recordOrTransmit == 0) {
-            // Ajout pour avoir si la notation a été transmise ou pas.
-            $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
-                        ->findBy(
-                                array(
-                                    'document' => $document->getId(),
-                                    'dropzone' => $dropzone->getId(),
-                                     )
-                                );
+        // Ajout pour avoir si la notation a été transmise ou pas.
+        $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
+                    ->findBy(
+                            array(
+                                'document' => $document->getId(),
+                                'dropzone' => $dropzone->getId(),
+                                 )
+                            );
 
+        if ($recordOrTransmit == 0) {
             if (!empty($notation)) {
                 $notation[0]->setNote($note);
                 $notation[0]->setappreciation($appreciation);
@@ -87,15 +87,6 @@ class NotationController extends DropzoneBaseController
                 $em->persist($notation);
             }
         } else {
-            // Ajout pour avoir si la notation a été transmise ou pas.
-            $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
-                        ->findBy(
-                                array(
-                                    'document' => $document->getId(),
-                                    'dropzone' => $dropzone->getId(),
-                                     )
-                                );
-
             $notation[0]->setNote($note);
             $notation[0]->setRecordOrTransmit(true);
             $notation[0]->setappreciation($appreciation);
@@ -189,7 +180,7 @@ class NotationController extends DropzoneBaseController
 
         $drop = $em->getRepository('InnovaCollecticielBundle:Drop')->find($document->getDrop());
 
-        // Ajout pour avoir si la notation a été transmise ou pas.
+        // Recherche des critères de la notation
         $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
                     ->findBy(
                             array(

@@ -495,14 +495,14 @@ $(document).ready(function() {
         }
 
         // Test suivant le cas : notation ou appréciations
-        if (evaluationType == 'notation') {
+        if (evaluationType === 'notation') {
             var appreciation = 0;
             var commentText = "";
             var qualityText = "";
             var note = document.getElementById('innova_collecticiel_notation_form_note_'+documentId).value;
         }
 
-        if (evaluationType == 'ratingScale') {
+        if (evaluationType === 'ratingScale') {
             // Récupération de la valeur de l'appréciation
             var appreciation = document.getElementById('innova_collecticiel_notation_form_scaleName_'+documentId).value;
             var commentText = "";
@@ -551,6 +551,7 @@ $(document).ready(function() {
     // InnovaERV
     // Ajout pour le traitement de la modal de choix du type d'accusé de réception
     $('.modal_confirm_notation_transmit').on('click', function(event) {
+
         event.preventDefault();
         event.stopPropagation();
 
@@ -560,17 +561,17 @@ $(document).ready(function() {
         // Récupération de l'id du document
         var evaluationType = $(this).attr("data_document_evaluationType");
 
-        if (evaluationType == 'notation') {
+        if (evaluationType === "notation") {
             var appreciation = 0;
             var commentText = "";
             var qualityText = "";
             var note = document.getElementById('innova_collecticiel_notation_form_note_'+documentId).value;
         }
 
-        if (evaluationType == 'ratingScale') {
+        if (evaluationType === "ratingScale") {
             var appreciation = document.getElementById('innova_collecticiel_notation_form_scaleName_'+documentId).value;
-            var commentText = document.getElementById('innova_collecticiel_notation_form_commentText_'+documentId).value;
-            var qualityText = document.getElementById('innova_collecticiel_notation_form_qualityText_'+documentId).value;
+            var commentText = "";
+            var qualityText = "";
             var note = 0;
         }
 

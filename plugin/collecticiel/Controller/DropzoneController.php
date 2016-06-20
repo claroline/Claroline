@@ -82,10 +82,10 @@ class DropzoneController extends DropzoneBaseController
 
             //https://github.com/claroline/Distribution/issues/300
             //const EVALUATION_TYPE = 'noEvaluation'
-            if ($dropzone->getEvaluationType() != Dropzone::EVALUATION_TYPE) {
+            if ($dropzone->getEvaluationType() !== Dropzone::EVALUATION_TYPE) {
                 $dropzone->setEvaluation(1);
             }
-            if ($dropzone->getEvaluationType() == Dropzone::EVALUATION_TYPE) {
+            if ($dropzone->getEvaluationType() === Dropzone::EVALUATION_TYPE) {
                 $dropzone->setEvaluation(0);
             }
 
