@@ -30,6 +30,7 @@ class FieldFacet
     const SELECT_TYPE = 5;
     const CHECKBOXES_TYPE = 6;
     const COUNTRY_TYPE = 7;
+    const EMAIL_TYPE = 8;
 
     /**
      * @ORM\Id
@@ -88,6 +89,7 @@ class FieldFacet
      *     mappedBy="fieldFacet"
      * )
      * @Groups({"api_facet_admin", "api_profile"})
+     * @ORM\OrderBy({"position" = "ASC"})
      */
     protected $fieldFacetChoices;
 
@@ -102,6 +104,12 @@ class FieldFacet
      * @Accessor(getter="isEditable")
      */
     protected $isEditable;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"api_profile", "api_facet_admin"})
+     */
+    protected $isRequired = false;
 
     public function __construct()
     {
@@ -186,6 +194,7 @@ class FieldFacet
             case self::SELECT_TYPE: return 'select';
             case self::CHECKBOXES_TYPE: return 'checkbox';
             case self::COUNTRY_TYPE: return 'country';
+            case self::EMAIL_TYPE: return 'email';
             default: return 'error';
         }
     }
@@ -200,6 +209,7 @@ class FieldFacet
             case self::SELECT_TYPE: return 'select';
             case self::CHECKBOXES_TYPE: return 'checkbox';
             case self::COUNTRY_TYPE: return 'country';
+            case self::EMAIL_TYPE: return 'email';
             default: return 'error';
         }
     }
@@ -239,6 +249,16 @@ class FieldFacet
     public function isEditable()
     {
         return $this->isEditable;
+    }
+
+    public function isRequired()
+    {
+        return $this->isRequired;
+    }
+
+    public function setIsRequired($isRequired)
+    {
+        $this->isRequired = $isRequired;
     }
 
     public function getPrettyName()

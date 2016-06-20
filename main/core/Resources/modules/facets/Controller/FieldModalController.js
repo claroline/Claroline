@@ -1,5 +1,5 @@
 export default class ModalController {
-  constructor (form, title, submit, model, $uibModalInstance, $http, FormBuilderService, ClarolineAPIService) {
+  constructor (form, title, submit, model, $uibModalInstance, $http, FormBuilderService, ClarolineAPIService, dragulaService, $scope) {
     this.form = form
     this.title = title
     this.submit = submit
@@ -7,9 +7,16 @@ export default class ModalController {
     this.$uibModalInstance = $uibModalInstance
     this.FormBuilderService = FormBuilderService
     this.ClarolineAPIService = ClarolineAPIService
+    this.dragulaService = dragulaService
     this.newChoice = {}
     this.$http = $http
     this.idChoice = 1
+
+    dragulaService.options($scope, 'field-bag', {
+      moves: function (el, container, handle) {
+        return handle.className === 'handle'
+      }
+    })
   }
 
   onSubmit (form) {
