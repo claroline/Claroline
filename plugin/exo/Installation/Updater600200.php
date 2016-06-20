@@ -36,20 +36,23 @@ class Updater600200
      */
     private function createTemporaryPicture()
     {
-        $this->log('Create ujm_picture_temp ...');
-        $this->connection->exec('
-            CREATE TABLE ujm_picture_temp (
-                id INT NOT NULL,
-                user_id INT DEFAULT NULL,
-                `label` VARCHAR(255) NOT NULL,
-                url VARCHAR(255) NOT NULL,
-                type VARCHAR(255) NOT NULL,
-                width INT NOT NULL,
-                height INT NOT NULL,
-                INDEX IDX_88AACC8AA76ED395 (user_id),
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ');
+        $schema = $this->connection->getSchemaManager();
+        if (!$schema->tablesExist('ujm_picture_temp')) {
+            $this->log('Create ujm_picture_temp ...');
+            $this->connection->exec('
+                CREATE TABLE ujm_picture_temp (
+                    id INT NOT NULL,
+                    user_id INT DEFAULT NULL,
+                    `label` VARCHAR(255) NOT NULL,
+                    url VARCHAR(255) NOT NULL,
+                    type VARCHAR(255) NOT NULL,
+                    width INT NOT NULL,
+                    height INT NOT NULL,
+                    INDEX IDX_88AACC8AA76ED395 (user_id),
+                    PRIMARY KEY(id)
+                ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ');
+        }
 
         $this->checkDocument();
     }
@@ -59,14 +62,17 @@ class Updater600200
      */
     private function createTemporaryInterGraph()
     {
-        $this->log('Create ujm_interaction_graphic_temp ...');
-        $this->connection->exec('
-            CREATE TABLE ujm_interaction_graphic_temp (
-                id INT NOT NULL,
-                document_id INT NOT NULL,
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ');
+        $schema = $this->connection->getSchemaManager();
+        if (!$schema->tablesExist('ujm_interaction_graphic_temp')) {
+            $this->log('Create ujm_interaction_graphic_temp ...');
+            $this->connection->exec('
+                CREATE TABLE ujm_interaction_graphic_temp (
+                    id INT NOT NULL,
+                    document_id INT NOT NULL,
+                    PRIMARY KEY(id)
+                ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ');
+        }
 
         $this->connection->exec('
             INSERT INTO ujm_interaction_graphic_temp (id, document_id)
@@ -170,14 +176,17 @@ class Updater600200
      */
     private function dropUnusedTables()
     {
-        $this->dropTables([
-            'ujm_document_interaction',
-            'ujm_document_question',
-            'ujm_document',
-            'ujm_exercise_question',
-            'ujm_picture_temp',
-            'ujm_interaction_graphic_temp',
-        ]);
+        $schema = $this->connection->getSchemaManager();
+        if ($schema->tablesExist(['ujm_document_question'])) {
+            $this->dropTables([
+                'ujm_document_interaction',
+                'ujm_document_question',
+                'ujm_document',
+                'ujm_exercise_question',
+                'ujm_picture_temp',
+                'ujm_interaction_graphic_temp',
+            ]);
+        }
     }
 
     /**

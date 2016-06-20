@@ -211,7 +211,7 @@ class WorkspaceAnalyticsController extends Controller
 
             $criteria['types'] = array('activity');
             $nodes = $this->resourceManager
-                ->getByCriteria($criteria, $userRoles, true);
+                ->getByCriteria($criteria, $userRoles);
             $resourceNodeIds = array();
 
             foreach ($nodes as $node) {

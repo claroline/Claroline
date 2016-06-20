@@ -1,7 +1,8 @@
 {
   "webpack": {
     "entry": {
-      "track-management": "modules/track/module"
+      "track-management": "modules/track/module",
+      "video_watcher": "public/js/watch_video"
     }
   }
 }

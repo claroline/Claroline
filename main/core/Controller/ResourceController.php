@@ -572,7 +572,9 @@ class ResourceController
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($fileName));
-        $response->headers->set('Content-Type', $mimeType);
+        if ($mimeType !== null) {
+            $response->headers->set('Content-Type', $mimeType);
+        }
         $response->headers->set('Connection', 'close');
         $response->send();
 
@@ -846,7 +848,7 @@ class ResourceController
         $userRoles = $this->roleManager->getStringRolesFromToken($this->tokenStorage->getToken());
 
         //by criteria recursive => infinite loop
-        $resources = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
+        $resources = $this->resourceManager->getByCriteria($criteria, $userRoles);
 
         return new JsonResponse(
             array(

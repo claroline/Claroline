@@ -5,6 +5,11 @@
   "description":null,
   "invite":"Question ?",
   "scoreTotal": 0,
+  "score": {
+    "type": "fixed",
+    "success": 5,
+    "failure": -1.5
+  },
   "choices": [
     {
       "id": "1",

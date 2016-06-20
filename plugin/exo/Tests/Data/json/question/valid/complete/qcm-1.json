@@ -5,6 +5,10 @@
   "description":null,
   "invite":"Question ?",
   "scoreTotal": 1.5,
+  "score":
+  {
+    "type": "sum"
+  },
   "choices": [
     {
       "id": "1",

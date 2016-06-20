@@ -26,6 +26,9 @@ class QcmImport extends QtiImport
         $this->qtiRepos = $qtiRepos;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
+        if ($this->qtiValidate() === false) {
+            return false;
+        }
         $this->createQuestion(InteractionQCM::TYPE);
         $this->createInteractionQCM();
 
@@ -221,5 +224,21 @@ class QcmImport extends QtiImport
         $reponseEsle = $rp->getElementsByTagName('responseElse')->item(0);
         $val = $reponseEsle->getElementsByTagName('baseValue')->item(0)->nodeValue;
         $this->interactionQCM->setScoreFalseResponse($val);
+    }
+
+    /**
+     * Implements the abstract method.
+     */
+    protected function qtiValidate()
+    {
+        if ($this->assessmentItem->getElementsByTagName('responseDeclaration')->item(0) == null) {
+            return false;
+        }
+        $ib = $this->assessmentItem->getElementsByTagName('itemBody')->item(0);
+        if ($ib->getElementsByTagName('choiceInteraction')->item(0) == null) {
+            return false;
+        }
+
+        return true;
     }
 }
