@@ -130,7 +130,15 @@ class LdapManager
      */
     public function getEntries($search)
     {
-        return ldap_get_entries($this->connect, $search);
+        $entries = ldap_get_entries($this->connect, $search);
+
+        array_walk_recursive($entries, function (&$item, $key) {
+            if (!mb_detect_encoding($item, 'utf-8', true)) {
+                $item = utf8_encode($item);
+            }
+        });
+
+        return $entries;
     }
 
     /**
