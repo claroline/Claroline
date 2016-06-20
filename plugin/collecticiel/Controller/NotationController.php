@@ -49,13 +49,8 @@ class NotationController extends DropzoneBaseController
 
         // Récupération des documents sélectionnés
         $arrayCriteriaId = $this->get('request')->query->get('arrayCriteriaId');
-        $arrayCriteriaIdToView = array();
-
         $arrayCriteriaName = $this->get('request')->query->get('arrayCriteriaName');
-        $arrayCriteriaNameToView = array();
-
         $arrayCriteriaValue = $this->get('request')->query->get('arrayCriteriaValue');
-        $arrayCriteriaValueToView = array();
 
         // Pour insérer l'ID de la table Notation dans la tabke Choice_criteria
         $notationId = 0;

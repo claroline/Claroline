@@ -119,13 +119,13 @@
     {% if dropzone.evaluation == 1  %}
         <td class="{{ classArray }} centered centering-columnsComment-study">
             <div class="short-div">
-                {% if notationDocumentsArray[document.id] != 0
-                and recordOrTransmitNotationsArray[document.id] == 1 %}
+                {% if recordOrTransmitNotationsArray[document.id] == 1 %}
                     {% include 'InnovaCollecticielBundle:Document:viewNotation.html.twig'
                         with {
                         'notationCommentDocument': notationCommentDocumentsArray[document.id],
                         'notationQualityDocument': notationQualityDocumentsArray[document.id],
-                        'notationAssessorDocument': notationAssessorDocumentsArray[document.id]
+                        'notationAssessorDocument': notationAssessorDocumentsArray[document.id],
+                        'notationScaleDocument': notationAppreciationDocumentsArray[document.id]
                         }
                     %}
                 {% else %}

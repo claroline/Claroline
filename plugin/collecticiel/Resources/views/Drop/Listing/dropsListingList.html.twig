@@ -102,6 +102,7 @@
         {% if dropzone.evaluation == 1  %}
             <td class="centered centering-columnsAR">
                 <div class="btn-group">
+                    {% include 'InnovaCollecticielBundle:Document:modalDisplayNotation.html.twig' %}
                     {# Afficher ici la valeur de la notation #}
                     {% include 'InnovaCollecticielBundle:Document:notation.html.twig' 
                         with {
@@ -177,3 +178,4 @@
         </div>
     </div>
 </div>
+

@@ -101,10 +101,16 @@ class DropController extends DropzoneBaseController
         $canEdit = $dropzoneVoter->checkEditRight($dropzone);
         $activeRoute = $this->getRequest()->attributes->get('_route');
         $isOpen = $dropzoneManager->collecticielOpenOrNot($dropzone);
+
         $notationDocuments = $dropManager->getNotationForDocuments($drop);
         $notationCommentDocuments = $dropManager->getNotationCommentForDocuments($drop);
         $notationQualityDocuments = $dropManager->getNotationQualityForDocuments($drop);
         $notationAssessorDocuments = $dropManager->getNotationAssessorForDocuments($drop);
+        $notationAppreciationDocuments = $dropManager->getAppreciationForDocuments($drop);
+
+        $em = $this->getDoctrine()->getManager();
+        $criteriaRepo = $em->getRepository('InnovaCollecticielBundle:GradingCriteria');
+        $criteriasArray = $criteriaRepo->getCriteriaArrayForDropzone($dropzone);
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -129,7 +135,9 @@ class DropController extends DropzoneBaseController
             'notationQualityDocumentsArray' => $notationQualityDocuments,
             'notationAssessorDocumentsArray' => $notationAssessorDocuments,
             'recordOrTransmitNotationsArray' => $recordOrTransmitNotations,
-        );
+            'notationAppreciationDocumentsArray' => $notationAppreciationDocuments,
+            'criteriasArray' => $criteriasArray,
+         );
     }
 
     private function addDropsStats(Dropzone $dropzone, $array)
