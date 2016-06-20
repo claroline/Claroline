@@ -198,7 +198,9 @@ abstract class QuestionHandler
      */
     protected function addAnExercise($inter)
     {
-        $this->exoServ->addQuestionInExercise($inter->getQuestion(), $this->exercise, $this->step);
+        if ($this->exercise) {
+            $this->exoServ->addQuestionInExercise($inter->getQuestion(), $this->exercise, $this->step);
+        }
     }
 
     /**

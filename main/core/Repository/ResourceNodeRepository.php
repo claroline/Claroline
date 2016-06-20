@@ -275,30 +275,14 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
      * these roles are matched.
      * WARNING: the recursive search is far from being optimized.
      *
-     * @param array $criteria    An array of search filters
-     * @param array $roles       An array of user's roles
-     * @param bool  $isRecursive Will the search follow links.
+     * @param array $criteria An array of search filters
+     * @param array $roles    An array of user's roles
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function findByCriteria(array $criteria, array $roles = null, $isRecursive = false)
+    public function findByCriteria(array $criteria, array $roles = null)
     {
         $this->builder->selectAsArray();
-
-        if ($isRecursive) {
-            $shortcuts = $this->findRecursiveDirectoryShortcuts($criteria, $roles);
-            $additionalRoots = array();
-
-            foreach ($shortcuts as $shortcut) {
-                $additionalRoots[] = $shortcut['target_path'];
-            }
-
-            $baseRoots = (count($criteria['roots']) > 0) ?
-                $criteria['roots'] : array();
-            $finalRoots = array_merge($additionalRoots, $baseRoots);
-            $criteria['roots'] = $finalRoots;
-        }
-
         $this->addFilters($this->builder, $criteria, $roles);
         $dql = $this->builder->orderByPath()->getDql();
         $query = $this->_em->createQuery($dql);
@@ -371,37 +355,6 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         $query->setParameter('nodeIds', $nodesIds);
 
         return $query->getResult();
-    }
-
-    /**
-     * Returns all the shortcuts targeting a directory (recursive).
-     *
-     * @param array $criteria
-     * @param array $roles
-     *
-     * @return array[array] An array of resources represented as arrays
-     *
-     * @todo find a proper way to prevent infinite recursion
-     */
-    public function findRecursiveDirectoryShortcuts(array $criteria, array $roles = null, $alreadyFound = array())
-    {
-        $this->builder->selectAsArray();
-        $this->addFilters($this->builder, $criteria, $roles);
-        $dql = $this->builder->whereIsShortcut()->getDql();
-        $query = $this->_em->createQuery($dql);
-        $query->setParameters($this->builder->getParameters());
-        $results = $query->getResult();
-
-        foreach ($results as $result) {
-            $criteria['roots'] = array($result['target_path']);
-            //if the result was already found, stop the recursion.
-            if (!in_array($result, $alreadyFound)) {
-                $results = array_merge($this->findRecursiveDirectoryShortcuts($criteria, $roles, $results), $results);
-                $results = array_map('unserialize', array_unique(array_map('serialize', $results)));
-            }
-        }
-
-        return $results;
     }
 
     public function findByMimeTypeAndParent($mimeType, ResourceNode $parent, array $roles)

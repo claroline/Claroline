@@ -515,8 +515,6 @@ class TeamManager
         foreach ($resourceTypes as $resourceType) {
             $rights[$teamManagerRoleName]['create'][] =
                 array('name' => $resourceType->getName());
-//            $rights[$teamRoleName]['create'][] =
-//                array('name' => $resourceType->getName());
         }
 
         foreach ($creatableResources as $creatableResource) {

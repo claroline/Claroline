@@ -168,23 +168,22 @@ class ExerciseServices
      * @param Exercise $exercise
      * @param Step     $step
      */
-    public function addQuestionInExercise($question, $exercise, $step)
+    public function addQuestionInExercise(Question $question, Exercise $exercise, Step $step = null)
     {
-        if (null != $exercise) {
-            if (null == $step) {
-                // Create a new Step to add the Question
-                $this->createStepForOneQuestion($exercise, $question, 1);
-            } else {
-                // Add the question to the existing Step
-                $em = $this->doctrine->getManager();
+        if (null === $step) {
+            // Create a new Step to add the Question
+            $this->createStepForOneQuestion($exercise, $question, 1);
+        } else {
+            // Add the question to the existing Step
+            $em = $this->doctrine->getManager();
 
-                $sq = new StepQuestion();
-                $sq->setStep($step);
-                $sq->setQuestion($question);
-                $sq->setOrdre($step->getNbQuestion() + 1);
-                $em->persist($sq);
-                $em->flush();
-            }
+            $sq = new StepQuestion();
+            $sq->setOrdre($step->getStepQuestions()->count() + 1);
+            $sq->setStep($step);
+            $sq->setQuestion($question);
+
+            $em->persist($sq);
+            $em->flush();
         }
     }
 
@@ -202,40 +201,17 @@ class ExerciseServices
     {
         if ($step != null) {
             $sq = new StepQuestion();
+
+            if ($order == -1) {
+                $order = $step->getStepQuestions()->count() + 1;
+            }
+
+            $sq->setOrdre($order);
             $sq->setStep($step);
             $sq->setQuestion($question);
 
-            if ($order == -1) {
-                $dql = 'SELECT max(sq.ordre) FROM UJM\ExoBundle\Entity\StepQuestion sq '
-                      .'WHERE sq.step='.$step->getId();
-                $query = $this->doctrine->getManager()->createQuery($dql);
-                $maxOrdre = $query->getResult();
-
-                $sq->setOrdre((int) $maxOrdre[0][1] + 1);
-            } else {
-                $sq->setOrdre($order);
-            }
-
             $this->om->persist($sq);
             $this->om->flush();
-        }
-    }
-
-    /**
-     * To know if an user is allowed to open an exercise.
-     *
-     *
-     * @param \UJM\ExoBundle\Entity\Exercise $exercise
-     *
-     * @return bool
-     */
-    public function allowToOpen($exercise)
-    {
-        $collection = new ResourceCollection(array($exercise->getResourceNode()));
-        if ($this->authorizationChecker->isGranted('OPEN', $collection)) {
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -275,8 +251,7 @@ class ExerciseServices
      * @param Question $question
      * @param int      $orderStep order of the step in the exercise
      */
-    public function createStepForOneQuestion(Exercise $exercise,
-            Question $question, $orderStep)
+    public function createStepForOneQuestion(Exercise $exercise, Question $question, $orderStep)
     {
         $em = $this->doctrine->getManager();
         $step = $this->createStep($exercise, $orderStep);
@@ -284,7 +259,7 @@ class ExerciseServices
         $sq = new StepQuestion();
         $sq->setStep($step);
         $sq->setQuestion($question);
-        $sq->setOrdre('1');
+        $sq->setOrdre(1);
         $em->persist($sq);
         $em->flush();
     }
@@ -303,7 +278,7 @@ class ExerciseServices
         $step = new Step();
         $step->setText(' ');
         $step->setExercise($exercise);
-        $step->setNbQuestion('0');
+        $step->setNbQuestion(0);
         $step->setDuration(0);
         $step->setMaxAttempts(0);
         $step->setOrder($orderStep);

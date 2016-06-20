@@ -57,7 +57,7 @@
                         <ul class="list-unstyled">
                         {% for field in panel.getFieldsFacet() %}
                             {% for fieldFacet in fieldFacets %}
-                                {% if fieldFacet.id == field.getId() and fieldFacet.canOpen == true %}
+                                {% if fieldFacet.getId() == field.getId() %}
                                     <li>
                                         <strong>{{ field.getName() }}</strong>
                                         {% set hasValue = false %}

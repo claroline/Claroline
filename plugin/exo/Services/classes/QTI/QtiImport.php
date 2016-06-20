@@ -354,4 +354,9 @@ abstract class QtiImport
      * abstract method to get the prompt.
      */
     abstract protected function getPrompt();
+
+    /**
+     * abstract method to validate the qti.
+     */
+    abstract protected function qtiValidate();
 }

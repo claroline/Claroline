@@ -4,7 +4,7 @@
  * @param {MatchQuestionService} MatchQuestionService
  * @constructor
  */
-var MatchCorrectionCtrl = function MatchCorrectionCtrl(QuestionService) {
+var MatchCorrectionCtrl = function MatchCorrectionCtrl(QuestionService, MatchQuestionService) {
     AbstractCorrectionCtrl.apply(this, arguments);
 
     this.MatchQuestionService = MatchQuestionService;
