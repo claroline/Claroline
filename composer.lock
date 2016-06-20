@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "39c029624ceef8671eb65f1dd50c3cf2e2007a82"
+                "reference": "6c8751991614f52388f5a908624a0f7d347b8f2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/39c029624ceef8671eb65f1dd50c3cf2e2007a82",
-                "reference": "39c029624ceef8671eb65f1dd50c3cf2e2007a82",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/6c8751991614f52388f5a908624a0f7d347b8f2d",
+                "reference": "6c8751991614f52388f5a908624a0f7d347b8f2d",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-06-14 13:52:29"
+            "time": "2016-06-19 16:31:31"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3604,7 +3604,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "Knplabs",
+                    "name": "KnpLabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
