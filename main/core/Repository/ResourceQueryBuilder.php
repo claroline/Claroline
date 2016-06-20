@@ -22,31 +22,42 @@ use Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException;
  */
 class ResourceQueryBuilder
 {
-    private $joinSingleRelatives = true;
-    private $resultAsArray = false;
-    private $leftJoinRights = false;
-    private $leftJoinLogs = false;
+    private $joinSingleRelatives;
+    private $resultAsArray;
+    private $leftJoinRights;
+    private $leftJoinLogs;
     private $selectClause;
     private $whereClause;
     private $orderClause;
     private $groupByClause;
-    private $joinClause = '';
-    private $parameters = array();
+    private $joinClause;
+    private $parameters;
     private $fromClause;
     private $joinRelativesClause;
-    private $leftJoinRoles = false;
+    private $leftJoinRoles;
     private $bundles;
 
-    public function __construct()
+    public function init()
     {
         $eol = PHP_EOL;
         $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node{$eol}";
+        $this->joinSingleRelatives = true;
+        $this->resultAsArray = false;
+        $this->leftJoinRights = false;
+        $this->leftJoinLogs = false;
+        $this->selectClause = null;
+        $this->whereClause = null;
+        $this->orderClause = null;
+        $this->groupByClause = null;
+        $this->joinClause = '';
+        $this->parameters = [];
+        $this->leftJoinRoles = false;
+        $this->bundles = [];
 
         $this->joinRelativesClause = "JOIN node.creator creator{$eol}".
             "JOIN node.resourceType resourceType{$eol}".
             "LEFT JOIN node.parent parent{$eol}".
             "LEFT JOIN node.icon icon{$eol}";
-        $this->bundles = [];
     }
 
     public function setBundles(array $bundles)
@@ -67,6 +78,7 @@ class ResourceQueryBuilder
      */
     public function selectAsEntity($joinSingleRelatives = false, $class = null)
     {
+        $this->init();
         $eol = PHP_EOL;
 
         if ($class) {
@@ -91,6 +103,7 @@ class ResourceQueryBuilder
      */
     public function selectAsArray($withMaxPermissions = false, $withLastOpenDate = false)
     {
+        $this->init();
         $this->resultAsArray = true;
         $this->joinSingleRelatives = true;
         $eol = PHP_EOL;
