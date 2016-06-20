@@ -41,6 +41,7 @@ class GradingScaleManager
         // handle old scales deletion
         $this->deletOldScales($tab, $dropzone);
         // handle update and add
+
         foreach (array_keys($tab) as $key) {
             // new
             if (empty($tab[$key]['id'])) {
@@ -73,6 +74,7 @@ class GradingScaleManager
             if (!$found) {
                 $this->em->remove($scale);
 
+                // Mise à jour de l'appréciation à zéro car le SCALE a été supprimé
                 $notationsArray = $this->notationRepo
                     ->findBy(
                             array(

@@ -206,6 +206,7 @@ class DropzoneController extends DropzoneBaseController
 
         if ($this->getRequest()->isMethod('POST')) {
             $tab = $this->getRequest()->request->get('innova_collecticiel_appreciation_form');
+
             $manageGradingScales = $gradingScaleManager->manageGradingScales($tab['gradingScales'], $dropzone);
 
             $manageGradingCriterias = $gradingCriteriaManager->manageGradingCriterias($tab['gradingCriterias'], $dropzone);

@@ -45,8 +45,10 @@ class GradingCriteriaManager
             if (empty($tab[$key]['id'])) {
                 $gradingCriteriaData = $this->insertGradingCriteria($tab[$key]['criteriaName'], $dropzone);
             } else {
-                $gradingCriteria = $this->gradingCriteriaRepo->find($tab[$key]['id']);
-                $gradingCriteriaData = $this->updateGradingCriteria($tab[$key]['criteriaName'], $gradingCriteria);
+                if (!empty($tab[$key]['criteriaName'])) {
+                    $gradingCriteria = $this->gradingCriteriaRepo->find($tab[$key]['id']);
+                    $gradingCriteriaData = $this->updateGradingCriteria($tab[$key]['criteriaName'], $gradingCriteria);
+                }
             }
 
             $this->em->persist($gradingCriteriaData);
@@ -60,13 +62,16 @@ class GradingCriteriaManager
     private function deletOldCriterias($data,  Dropzone $dropzone)
     {
         $existing = $this->gradingCriteriaRepo->findByDropzone($dropzone);
+
         foreach ($existing as $criteria) {
             $searchedId = $criteria->getId();
             $found = false;
             foreach ($data as $value) {
                 if ((int) $value['id'] === $searchedId) {
-                    $found = true;
-                    break;
+                    if (!empty($value['criteriaName'])) {
+                        $found = true;
+                        break;
+                    }
                 }
             }
             if (!$found) {
