@@ -36,18 +36,18 @@ class PostType extends AbstractType
             ->add('title', 'text', array(
                     'theme_options' => array('control_width' => 'col-md-12'),
                     'constraints' => new Assert\NotBlank(array(
-                        'message' => 'blog_post_need_title'
-                    ))
+                        'message' => 'blog_post_need_title',
+                    )),
                 )
             )
             ->add('content', 'tinymce', array(
                     'attr' => array(
-                        'style' => 'height: 300px;'
+                        'style' => 'height: 300px;',
                     ),
                     'theme_options' => array('control_width' => 'col-md-12'),
                     'constraints' => new Assert\NotBlank(array(
-                        'message' => 'blog_post_need_content'
-                    ))
+                        'message' => 'blog_post_need_content',
+                    )),
                 )
             )
             ->add('tags', 'tags')
@@ -57,19 +57,19 @@ class PostType extends AbstractType
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function(FormEvent $event) use ($authorizationChecker, $options) {
+            function (FormEvent $event) use ($authorizationChecker, $options) {
                 $form = $event->getForm();
                 $data = $event->getData();
                 $blog = $data->getBlog();
 
                 if ($authorizationChecker->isGranted('EDIT', $blog) || $authorizationChecker->isGranted('POST', $blog)) {
                     $form->add('publicationDate', 'datepicker', array(
-                            'required'      => false,
-                            'read_only'     => true,
-                            'component'     => true,
-                            'autoclose'     => true,
-                            'language'      => $options['language'],
-                            'format'        => $options['date_format']
+                            'required' => false,
+                            'read_only' => true,
+                            'component' => true,
+                            'autoclose' => true,
+                            'language' => $options['language'],
+                            'format' => $options['date_format'],
                        )
                     );
                 }
@@ -86,11 +86,11 @@ class PostType extends AbstractType
     {
         $resolver->setDefaults(array(
             'translation_domain' => 'icap_blog',
-            'data_class'      => 'Icap\BlogBundle\Entity\Post',
+            'data_class' => 'Icap\BlogBundle\Entity\Post',
             'csrf_protection' => true,
-            'intention'       => 'create_post',
-            'language'        => 'en',
-            'date_format'     => DateType::HTML5_FORMAT
+            'intention' => 'create_post',
+            'language' => 'en',
+            'date_format' => DateType::HTML5_FORMAT,
         ));
     }
 }

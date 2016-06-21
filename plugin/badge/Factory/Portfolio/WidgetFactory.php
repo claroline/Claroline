@@ -36,7 +36,7 @@ class WidgetFactory
     {
         $badgesWidget = new BadgesWidget();
         $badgesWidget
-            ->setLabel($this->translator->trans($widgetType . '_title', array(), 'icap_portfolio'));
+            ->setLabel($this->translator->trans($widgetType.'_title', array(), 'icap_portfolio'));
 
         return $badgesWidget;
     }
@@ -47,6 +47,7 @@ class WidgetFactory
     public function createBadgeWidgetType()
     {
         $widgetType = new WidgetType();
+
         return $widgetType
             ->setName('badges')
             ->setIcon('trophy');

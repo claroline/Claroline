@@ -73,18 +73,17 @@ class ModelController extends Controller
         RouterInterface $router,
         AuthorizationCheckerInterface $authorization,
         UserManager $userManager
-    )
-    {
-        $this->formFactory     = $formFactory;
-        $this->groupManager    = $groupManager;
-        $this->homeTabManager  = $homeTabManager;
-        $this->modelManager    = $modelManager;
-        $this->request         = $request;
+    ) {
+        $this->formFactory = $formFactory;
+        $this->groupManager = $groupManager;
+        $this->homeTabManager = $homeTabManager;
+        $this->modelManager = $modelManager;
+        $this->request = $request;
         $this->resourceManager = $resourceManager;
-        $this->roleManager     = $roleManager;
-        $this->router          = $router;
-        $this->authorization   = $authorization;
-        $this->userManager     = $userManager;
+        $this->roleManager = $roleManager;
+        $this->router = $router;
+        $this->authorization = $authorization;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -124,7 +123,7 @@ class ModelController extends Controller
         return array(
             'form' => $form->createView(),
             'action' => $action,
-            'title' => 'create_model'
+            'title' => 'create_model',
         );
     }
 
@@ -150,7 +149,7 @@ class ModelController extends Controller
             return new JsonResponse(
                 array(
                     'name' => $model->getName(),
-                    'id' => $model->getId()
+                    'id' => $model->getId(),
                 )
             );
         }
@@ -162,7 +161,7 @@ class ModelController extends Controller
             array(
                 'form' => $form->createView(),
                 'action' => $action,
-                'title' => 'create_model'
+                'title' => 'create_model',
             )
         );
     }
@@ -227,7 +226,7 @@ class ModelController extends Controller
             return new JsonResponse(
                 array(
                     'id' => $model->getId(),
-                    'name' => $model->getName()
+                    'name' => $model->getName(),
                 )
             );
         }
@@ -258,17 +257,17 @@ class ModelController extends Controller
         $links = [];
 
         foreach ($resourceModels as $resourceModel) {
-            $resourceModel->isCopy() ? $copied[] = $resourceModel: $links[] = $resourceModel;
+            $resourceModel->isCopy() ? $copied[] = $resourceModel : $links[] = $resourceModel;
         }
 
         $root = $this->resourceManager->getWorkspaceRoot($model->getWorkspace());
 
         return array(
-            'model'  => $model,
+            'model' => $model,
             'copied' => $copied,
-            'links'  => $links,
+            'links' => $links,
             'rootId' => $root->getId(),
-            'workspace' => $model->getWorkspace()
+            'workspace' => $model->getWorkspace(),
         );
     }
 
@@ -288,7 +287,7 @@ class ModelController extends Controller
 
         return array(
             'model' => $model,
-            'workspace' => $model->getWorkspace()
+            'workspace' => $model->getWorkspace(),
         );
     }
 
@@ -311,8 +310,8 @@ class ModelController extends Controller
      * Displays the list of users that the current user can send a message to,
      * optionally filtered by a search on first name and last name
      *
-     * @param integer $page
-     * @param string  $search
+     * @param int    $page
+     * @param string $search
      *
      * @return Response
      */
@@ -345,12 +344,8 @@ class ModelController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:groupShare.html.twig")
      *
-     *
-     * Displays the list of groups that the current user can send a message to,
-     * optionally filtered by a search on group name
-     *
-     * @param integer $page
-     * @param string  $search
+     * @param int    $page
+     * @param string $search
      *
      * @return Response
      */
@@ -367,7 +362,7 @@ class ModelController extends Controller
         return array(
             'groups' => $groups,
             'search' => $search,
-            'model' => $model
+            'model' => $model,
         );
     }
 
@@ -478,7 +473,7 @@ class ModelController extends Controller
         foreach ($resourceModels as $resourceModel) {
             $data[] = array(
                 'resourceModelId' => $resourceModel->getId(),
-                'name' => $resourceModel->getResourceNode()->getName()
+                'name' => $resourceModel->getResourceNode()->getName(),
             );
         }
 
@@ -507,7 +502,7 @@ class ModelController extends Controller
         foreach ($resourceModels as $resourceModel) {
             $data[] = array(
                 'resourceModelId' => $resourceModel->getId(),
-                'name' => $resourceModel->getResourceNode()->getName()
+                'name' => $resourceModel->getResourceNode()->getName(),
             );
         }
 
@@ -522,6 +517,7 @@ class ModelController extends Controller
      * )
      *
      * @param ResourceModel $resourceModel
+     *
      * @return JsonResponse
      */
     public function removeResourceModelAction(ResourceModel $resourceModel)
@@ -539,6 +535,7 @@ class ModelController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:homeTabsList.html.twig")
+     *
      * @param WorkspaceModel $model
      */
     public function listHomeTabsAction(WorkspaceModel $model)
@@ -555,7 +552,7 @@ class ModelController extends Controller
 
         return array(
             'homeTabsConfig' => $homeTabsConfig,
-            'homeTabIds' => $homeTabIds
+            'homeTabIds' => $homeTabIds,
         );
     }
 
@@ -570,8 +567,9 @@ class ModelController extends Controller
      *      class="ClarolineCoreBundle:Home\HomeTab",
      *      options={"multipleIds" = true}
      * )
+     *
      * @param WorkspaceModel $model
-     * @param HomeTab[] $homeTabs
+     * @param HomeTab[]      $homeTabs
      */
     public function linkHomeTabsToModelAction(WorkspaceModel $model, array $homeTabs)
     {
@@ -592,8 +590,9 @@ class ModelController extends Controller
      *     name="ws_model_tab_remove",
      *     options={"expose"=true}
      * )
+     *
      * @param WorkspaceModel $model
-     * @param HomeTab $homeTab
+     * @param HomeTab        $homeTab
      */
     public function unlinkHomeTab(WorkspaceModel $model, HomeTab $homeTab)
     {
@@ -614,12 +613,10 @@ class ModelController extends Controller
     public function retrieveRolesTranslationKeysFromWorkspaceModel(
         WorkspaceModel $model,
         User $user
-    )
-    {
+    ) {
         $users = $model->getUsers()->toArray();
 
         if (!in_array($user, $users)) {
-
             throw new AccessDeniedException();
         }
         $results = array();

@@ -11,7 +11,6 @@
 
 namespace Claroline\SurveyBundle\Entity;
 
-use Claroline\SurveyBundle\Entity\AbstractTypedQuestion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,7 +34,7 @@ class MultipleChoiceQuestion extends AbstractTypedQuestion
     protected $horizontal;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {

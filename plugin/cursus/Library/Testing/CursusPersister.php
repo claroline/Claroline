@@ -48,8 +48,7 @@ class CursusPersister
         Course $course = null,
         $order = 0,
         $blocking = false
-    )
-    {
+    ) {
         $cursus = new Cursus();
         $cursus->setTitle($name);
         $cursus->setCode($name);
@@ -104,7 +103,7 @@ class CursusPersister
 
         if (count($validators) > 0) {
             $status += CourseRegistrationQueue::WAITING_VALIDATOR;
-        } else if ($course->getRegistrationValidation()) {
+        } elseif ($course->getRegistrationValidation()) {
             $status += CourseRegistrationQueue::WAITING;
         }
         $courseQueue = new CourseRegistrationQueue();
@@ -133,7 +132,7 @@ class CursusPersister
 
         if (count($validators) > 0) {
             $status += CourseRegistrationQueue::WAITING_VALIDATOR;
-        } else if ($session->getRegistrationValidation()) {
+        } elseif ($session->getRegistrationValidation()) {
             $status += CourseRegistrationQueue::WAITING;
         }
         $sessionQueue = new CourseSessionRegistrationQueue();

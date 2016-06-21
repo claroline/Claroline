@@ -154,7 +154,7 @@ export default class UserListController {
         for (var i = 0; i < data.length; i++) {
             this.alerts.push({
                 type: 'success',
-                msg: this.translate('user_added', {'username': data[i].username})
+                msg: this.translate('user_added', {'user': data[i].username})
             });
         }
 

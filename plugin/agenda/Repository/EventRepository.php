@@ -12,14 +12,14 @@
 namespace Claroline\AgendaBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use  Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\User;
 
 class EventRepository extends EntityRepository
 {
     /*
     * Get all the user's events by collecting all the workspace where is allowed to write
     */
-    public function findByUser(User $user , $isTask)
+    public function findByUser(User $user, $isTask)
     {
         $dql = "
             SELECT e
@@ -56,7 +56,6 @@ class EventRepository extends EntityRepository
         $query->setParameter('isTask', $isTask);
         $query->setParameter('agenda', 'agenda_');
         $query->setParameter('open', 'open');
-
 
         return $query->getResult();
     }
@@ -142,7 +141,8 @@ class EventRepository extends EntityRepository
 
     /**
      * @param User $user
-     * @param boolean $isTask
+     * @param bool $isTask
+     *
      * @return array
      */
     public function findDesktop(User $user, $isTask)
@@ -162,16 +162,18 @@ class EventRepository extends EntityRepository
 
     public function findByWorkspaceId($workspaceId, $isTask = null, $limit = null)
     {
-        $isTaskSql = $isTask !== null ? 'AND e.isTask = '. $isTask: '';
-        $dql = "
-            SELECT e
-            FROM Claroline\AgendaBundle\Entity\Event e
-            WHERE e.workspace = :workspaceId
-            " . $isTaskSql . "
-            ORDER BY e.end DESC
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspaceId', $workspaceId);
+        $qb = $this->createQueryBuilder('e')
+            ->select('e')
+            ->where('e.workspace = :workspaceId')
+            ->orderBy('e.end', 'DESC');
+
+        if ($isTask !== null) {
+            $qb->andWhere('e.isTask = :isTask');
+            $qb->setParameter('isTask', $isTask);
+        }
+
+        $query = $qb->setParameter('workspaceId', $workspaceId)
+            ->getQuery();
 
         if ($limit > 0) {
             $query->setMaxResults($limit);
@@ -182,21 +184,22 @@ class EventRepository extends EntityRepository
 
     public function findLastEventsOrTasksByWorkspaceId($workspaceId, $isTask)
     {
-        $lastEventSql = !$isTask ? 'AND e.end > '. time() : '';
-        $dql = "
-            SELECT e
-            FROM Claroline\AgendaBundle\Entity\Event e
-            WHERE e.workspace = :workspaceId
-            AND e.isTask = :isTask
-            AND e.isTaskDone = false
-            " . $lastEventSql . "
-            ORDER BY e.start ASC
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspaceId', $workspaceId);
-        $query->setParameter('isTask', $isTask);
+        $qb = $this->createQueryBuilder('e')
+            ->select('e')
+            ->where('e.workspace = :workspaceId')
+            ->andWhere('e.isTask = :isTask')
+            ->andWhere('e.isTaskDone = false')
+            ->orderBy('e.start', 'ASC');
 
-        return $query->getResult();
+        if (!$isTask) {
+            $qb->andWhere('e.end > :time');
+            $qb->setParameter('time', time());
+        }
+
+        return $qb->setParameter('workspaceId', $workspaceId)
+            ->setParameter('isTask', $isTask)
+            ->getQuery()
+            ->getResult();
     }
 
     public function findByUserWithoutAllDay(User $user, $limit)

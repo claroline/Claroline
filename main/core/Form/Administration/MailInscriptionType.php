@@ -24,7 +24,7 @@ class MailInscriptionType extends AbstractType
             'content',
             array(
                 'data' => $builder->getData(),
-                'label' => 'content'
+                'label' => 'content',
             )
         );
     }

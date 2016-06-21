@@ -68,8 +68,7 @@ class DesktopController extends Controller
         ToolManager $toolManager,
         UserManager $userManager,
         WidgetManager $widgetManager
-    )
-    {
+    ) {
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
         $this->homeTabManager = $homeTabManager;
@@ -111,7 +110,6 @@ class DesktopController extends Controller
         }
 
         if ($isVisibleHomeTab) {
-
             if ($homeTab->getType() === 'admin_desktop') {
                 $adminConfigs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
 
@@ -123,7 +121,6 @@ class DesktopController extends Controller
                 }
 
                 foreach ($adminConfigs as $adminConfig) {
-
                     if ($adminConfig->isLocked()) {
                         if ($adminConfig->isVisible()) {
                             $configs[] = $adminConfig;
@@ -178,7 +175,6 @@ class DesktopController extends Controller
                 );
 
             foreach ($wdcs as $wdc) {
-
                 if ($wdc->getRow() === -1 || $wdc->getColumn() === -1) {
                     $initWidgetsPosition = true;
                     break;
@@ -213,7 +209,7 @@ class DesktopController extends Controller
             'initWidgetsPosition' => $initWidgetsPosition,
             'isWorkspace' => $isWorkspace,
             'editionMode' => $editionMode,
-            'isHomeLocked' => $isHomeLocked
+            'isHomeLocked' => $isHomeLocked,
         );
     }
 
@@ -242,6 +238,7 @@ class DesktopController extends Controller
      * @param string $toolName
      *
      * @throws \Exception
+     *
      * @return Response
      */
     public function openToolAction($toolName)

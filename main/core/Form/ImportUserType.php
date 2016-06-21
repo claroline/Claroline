@@ -41,8 +41,8 @@ class ImportUserType extends AbstractType
                 'constraints' => array(
                     new NotBlank(),
                     new File(),
-                    new CsvUser($this->mode)
-                )
+                    new CsvUser($this->mode),
+                ),
             )
         )->add(
             'mode',
@@ -50,14 +50,21 @@ class ImportUserType extends AbstractType
             array(
                 'label' => 'mode',
                 'choices' => array('create' => 'create_only', 'update' => 'create_and_update'),
-                'required' => true
+                'required' => true,
             )
         )->add(
             'sendMail',
             'checkbox',
             array(
                 'label' => 'send_mail',
-                'required' => false
+                'required' => false,
+            )
+        )->add(
+            'enable_mail_notification',
+            'checkbox',
+            array(
+                'label' => 'user_enable_mail_notification_label',
+                'required' => false,
             )
         );
 
@@ -76,12 +83,12 @@ class ImportUserType extends AbstractType
                     'property' => 'translationKey',
                     'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
                             $query = $er->createQueryBuilder('r')
-                                ->where("r.type = " . Role::PLATFORM_ROLE)
+                                ->where('r.type = '.Role::PLATFORM_ROLE)
                                 ->andWhere("r.name != 'ROLE_ANONYMOUS'")
                                 ->andWhere("r.name != 'ROLE_USER'");
 
                             return $query;
-                        }
+                        },
                 )
             );
         }
@@ -97,7 +104,7 @@ class ImportUserType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
                 )
         );
     }

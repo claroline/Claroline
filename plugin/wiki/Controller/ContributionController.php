@@ -9,20 +9,16 @@
 
 namespace Icap\WikiBundle\Controller;
 
-
 use Claroline\CoreBundle\Entity\User;
 use Icap\WikiBundle\Entity\Wiki;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Manager\ContributionManager;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Exception\MissingOptionsException;
@@ -31,7 +27,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ContributionController extends Controller
 {
     private $contributionManager;
-    
+
     /**
      * @DI\InjectParams({
      *     "contributionManager"        = @DI\Inject("icap.wiki.contribution_manager")
@@ -56,9 +52,9 @@ class ContributionController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function viewAction(Wiki $wiki, User $user, $sectionId, $contributionId) 
+    public function viewAction(Wiki $wiki, User $user, $sectionId, $contributionId)
     {
-        $this->checkAccess("OPEN", $wiki);
+        $this->checkAccess('OPEN', $wiki);
 
         $section = $this->getSection($wiki, $sectionId);
         $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
@@ -70,10 +66,9 @@ class ContributionController extends Controller
                 '_resource' => $wiki,
                 'contribution' => $contribution,
                 'section' => $section,
-                'workspace' => $wiki->getResourceNode()->getWorkspace()
+                'workspace' => $wiki->getResourceNode()->getWorkspace(),
             );
-        }
-        else {
+        } else {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
@@ -92,12 +87,12 @@ class ContributionController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function activeAction(Wiki $wiki, User $user, $sectionId, $contributionId) 
+    public function activeAction(Wiki $wiki, User $user, $sectionId, $contributionId)
     {
-        $this->checkAccess("EDIT", $wiki);
+        $this->checkAccess('EDIT', $wiki);
         $section = $this->getSection($wiki, $sectionId);
         $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
-        
+
         $contribution = $this->getContribution($section, $contributionId);
         $section->setActiveContribution($contribution);
         $em = $this->getDoctrine()->getManager();
@@ -109,10 +104,10 @@ class ContributionController extends Controller
                     'icap_wiki_section_history',
                     array(
                         'wikiId' => $wiki->getId(),
-                        'sectionId' => $section->getId()
+                        'sectionId' => $section->getId(),
                     )
                 )
-            );       
+            );
     }
 
     /**
@@ -128,9 +123,9 @@ class ContributionController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function compareAction(Request $request, Wiki $wiki, User $user, $sectionId) 
+    public function compareAction(Request $request, Wiki $wiki, User $user, $sectionId)
     {
-        $this->checkAccess("OPEN", $wiki);
+        $this->checkAccess('OPEN', $wiki);
         $section = $this->getSection($wiki, $sectionId);
         $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
         if ($section->getVisible() === true || $this->isUserGranted('EDIT', $wiki, $collection)) {
@@ -143,19 +138,15 @@ class ContributionController extends Controller
                         '_resource' => $wiki,
                         'contributions' => $contributions,
                         'section' => $section,
-                        'workspace' => $wiki->getResourceNode()->getWorkspace()
-                    );    
-                }
-                else {
+                        'workspace' => $wiki->getResourceNode()->getWorkspace(),
+                    );
+                } else {
                     throw new NotFoundHttpException();
                 }
+            } else {
+                throw new MissingOptionsException('Missing parameters', array());
             }
-            else {
-                throw new MissingOptionsException('Missing parameters',array());
-            }
-                
-        }
-        else {
+        } else {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }

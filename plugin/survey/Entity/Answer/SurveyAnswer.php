@@ -121,7 +121,7 @@ class SurveyAnswer
 
     public function incrementNbAnswers()
     {
-        $this->nbAnswers++;
+        ++$this->nbAnswers;
     }
 
     public function getQuestionsAnswers()

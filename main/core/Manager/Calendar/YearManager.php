@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Entity\Calendar\Year;
 /**
  * @DI\Service("claroline.manager.calendar.year_manager")
  */
-class YearManager 
+class YearManager
 {
     private $om;
     private $repo;

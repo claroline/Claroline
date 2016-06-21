@@ -25,8 +25,8 @@ class LogUserCreateEvent extends LogGenericEvent
             array(
                 'receiverUser' => array(
                     'lastName' => $receiver->getLastName(),
-                    'firstName' => $receiver->getFirstName()
-                )
+                    'firstName' => $receiver->getFirstName(),
+                ),
             ),
             $receiver
         );

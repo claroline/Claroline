@@ -50,8 +50,7 @@ class UserController extends Controller
         TranslatorInterface $translator,
         UserManager $userManager,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->facetManager = $facetManager;
         $this->groupManager = $groupManager;
         $this->roleManager = $roleManager;
@@ -69,7 +68,6 @@ class UserController extends Controller
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:User:user_search_workspace_results.html.twig")
-     *
      */
     public function userSearchInWorkspaceAction($workspaceId, $search)
     {
@@ -147,8 +145,7 @@ class UserController extends Controller
         $showGroups = 0,
         $showPlatformRoles = 0,
         $attachName = 1
-    )
-    {
+    ) {
         $adminRole = $this->roleManager->getRoleByUserAndRoleName(
             $authenticatedUser,
             'ROLE_ADMIN'
@@ -206,7 +203,7 @@ class UserController extends Controller
             'forcedRolesIds' => $forcedRolesIds,
             'forcedWorkspacesIds' => $forcedWorkspacesIds,
             'shownWorkspacesIds' => $shownWorkspacesIds,
-            'isAdmin' => $isAdmin
+            'isAdmin' => $isAdmin,
         );
     }
 
@@ -297,8 +294,7 @@ class UserController extends Controller
         $showGroups = 0,
         $showPlatformRoles = 0,
         $attachName = 1
-    )
-    {
+    ) {
         $withAllUsers = intval($showAllUsers) === 1;
         $withUsername = intval($showUsername) === 1;
         $withMail = intval($showMail) === 1;
@@ -349,7 +345,7 @@ class UserController extends Controller
             'showPlatformRoles' => $showPlatformRoles,
             'attachName' => $attachName,
             'profilePreferences' => $profilePreferences,
-            'shownWorkspaceIds' => $shownWorkspaceIds
+            'shownWorkspaceIds' => $shownWorkspaceIds,
         );
     }
 
@@ -364,8 +360,7 @@ class UserController extends Controller
     public function filtersListForUserPickerAction(
         User $authenticatedUser,
         $filterType
-    )
-    {
+    ) {
         $datas = array();
         $adminRole = $this->roleManager->getRoleByUserAndRoleName(
             $authenticatedUser,
@@ -419,7 +414,7 @@ class UserController extends Controller
 
                 foreach ($workspaces as $workspace) {
                     $id = $workspace->getId();
-                    $name = $workspace->getName() . ' [' . $workspace->getCode() . ']';
+                    $name = $workspace->getName().' ['.$workspace->getCode().']';
                     $datas[] = array('id' => $id, 'name' => $name);
                 }
                 break;
@@ -451,7 +446,7 @@ class UserController extends Controller
                     $role->getTranslationKey(),
                     array(),
                     'platform'
-                )
+                ),
             );
         }
 
@@ -474,7 +469,7 @@ class UserController extends Controller
             'username' => $user->getUsername(),
             'mail' => $user->getMail(),
             'phone' => $user->getPhone(),
-            'picture' => $user->getPicture()
+            'picture' => $user->getPicture(),
         );
 
         return new JsonResponse($datas, 200);
@@ -512,7 +507,7 @@ class UserController extends Controller
                 'personal_workspace_id' => is_null($user->getPersonalWorkspace()) ?
                     null :
                     $user->getPersonalWorkspace()->getId(),
-                'user_role_id' => is_null($userRole) ? null : $userRole->getId()
+                'user_role_id' => is_null($userRole) ? null : $userRole->getId(),
 
             );
         }

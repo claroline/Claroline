@@ -39,7 +39,7 @@ class Updater050003 extends Updater
     {
         $this->log('Moving thumbnail directory');
         $fs = new FileSystem();
-        $oldIconDir = $this->container->getParameter('claroline.param.web_dir') . '/thumbnails';
+        $oldIconDir = $this->container->getParameter('claroline.param.web_dir').'/thumbnails';
 
         try {
             $fs->rename($oldIconDir, $this->container->getParameter('claroline.param.thumbnails_directory'));
@@ -52,12 +52,11 @@ class Updater050003 extends Updater
         $icons = $iconRepository->findCustomIcons();
         $i = 1;
 
-        foreach ($icons as $icon)
-        {
+        foreach ($icons as $icon) {
             if (strpos($icon->getRelativeUrl(), 'uploads/') === false) {
-                $icon->setRelativeUrl('uploads/' . $icon->getRelativeUrl());
+                $icon->setRelativeUrl('uploads/'.$icon->getRelativeUrl());
                 $om->persist($icon);
-                $i++;
+                ++$i;
             }
 
             if ($i % 50 === 0) {
@@ -74,7 +73,7 @@ class Updater050003 extends Updater
     {
         $claroRoot = $this->container->getParameter('claroline.param.root_directory');
         $claroRoot .= '/templates';
-        $this->log('Removing old template directory ' . $claroRoot);
+        $this->log('Removing old template directory '.$claroRoot);
         $fs = new FileSystem();
         $fs->remove($claroRoot, true);
     }
@@ -85,8 +84,8 @@ class Updater050003 extends Updater
 
         $fileDir = $this->container->getParameter('claroline.param.files_directory');
         $defaultTemplate = $this->container->getParameter('claroline.param.default_template');
-        $newTemplateDir = $fileDir . '/templates';
-        $newTemplate = $newTemplateDir . '/default.zip';
+        $newTemplateDir = $fileDir.'/templates';
+        $newTemplate = $newTemplateDir.'/default.zip';
 
         $fs = new Filesystem();
         $fs->mkdir($newTemplateDir);
@@ -95,7 +94,7 @@ class Updater050003 extends Updater
 
     private function addingResourceIcons()
     {
-        $coreIconWebDirRelativePath = "bundles/clarolinecore/images/resources/icons/";
+        $coreIconWebDirRelativePath = 'bundles/clarolinecore/images/resources/icons/';
         $om = $this->container->get('doctrine.orm.entity_manager');
         $repo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $resourceImages = $this->container->get('claroline.manager.icon_manager')->getDefaultIconMap();
@@ -104,9 +103,9 @@ class Updater050003 extends Updater
             $imgs = $repo->findBy(array('mimeType' => $resourceImage[1]));
 
             if (count($imgs) === 0) {
-                $this->log('Adding icon for mime type ' . $resourceImage[1] . '...');
+                $this->log('Adding icon for mime type '.$resourceImage[1].'...');
                 $rimg = new ResourceIcon();
-                $rimg->setRelativeUrl($coreIconWebDirRelativePath . $resourceImage[0]);
+                $rimg->setRelativeUrl($coreIconWebDirRelativePath.$resourceImage[0]);
                 $rimg->setMimeType($resourceImage[1]);
                 $rimg->setShortcut(false);
                 $om->persist($rimg);

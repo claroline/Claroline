@@ -40,8 +40,8 @@ class ResourceOwnerFactory
     public function __construct(PlatformConfigurationHandler $configHandler, $httpUtils, $session)
     {
         $this->configHandler = $configHandler;
-        $this->httpUtils     = $httpUtils;
-        $this->session       = $session;
+        $this->httpUtils = $httpUtils;
+        $this->session = $session;
     }
 
     public function getFacebookResourceOwner()
@@ -52,15 +52,15 @@ class ResourceOwnerFactory
             array(
                 'client_id' => $this->configHandler->getParameter('facebook_client_id'),
                 'client_secret' => $this->configHandler->getParameter('facebook_client_secret'),
-                'infos_url' => "https://graph.facebook.com/me?fields=id,name,first_name,last_name,email",
+                'infos_url' => 'https://graph.facebook.com/me?fields=id,name,first_name,last_name,email',
                 'scope' => 'email',
                 'paths' => array(
                     'email' => 'email',
                     'firstname' => 'first_name',
                     'lastname' => 'last_name',
-                    'nickname' => 'name'
+                    'nickname' => 'name',
                 ),
-                'options' => array()
+                'options' => array(),
             ),
             'facebook',
             new SessionStorage($this->session)
@@ -79,7 +79,7 @@ class ResourceOwnerFactory
                 'client_secret' => $this->configHandler->getParameter('twitter_client_secret'),
                 'scope' => 'emailaddress',
                 'paths' => array(),
-                'options' => array()
+                'options' => array(),
             ),
             'twitter',
             new SessionStorage($this->session)
@@ -99,9 +99,9 @@ class ResourceOwnerFactory
                 'scope' => 'email profile',
                 'paths' => array(
                     'firstname' => 'given_name',
-                    'lastname'  => 'family_name'
+                    'lastname' => 'family_name',
                 ),
-                'options' => array()
+                'options' => array(),
             ),
             'google',
             new SessionStorage($this->session)
@@ -121,11 +121,11 @@ class ResourceOwnerFactory
                 'scope' => 'r_emailaddress r_basicprofile',
                 'paths' => array(
                     'firstname' => 'firstName',
-                    'lastname'  => 'lastName'
+                    'lastname' => 'lastName',
                 ),
                 'options' => array(
-                    'infos_url' => 'https://api.linkedin.com/v1/people/~:(id,first-name,last-name,formatted-name,email-address,picture-url)?format=json'
-                )
+                    'infos_url' => 'https://api.linkedin.com/v1/people/~:(id,first-name,last-name,formatted-name,email-address,picture-url)?format=json',
+                ),
             ),
             'linkedin',
             new SessionStorage($this->session)
@@ -145,9 +145,9 @@ class ResourceOwnerFactory
                 'scope' => 'wl.basic wl.emails',
                 'paths' => array(
                     'firstname' => 'first_name',
-                    'lastname'  => 'last_name'
+                    'lastname' => 'last_name',
                 ),
-                'options' => array()
+                'options' => array(),
             ),
             'windows_live',
             new SessionStorage($this->session)

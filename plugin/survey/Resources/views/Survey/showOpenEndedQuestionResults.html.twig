@@ -25,6 +25,16 @@
         <tr>
             <th class="text-center">{{ 'user'|trans({}, 'platform') }}</th>
             <th class="text-center">{{ 'answer'|trans({}, 'survey') }}</th>
+
+            {% if question.isCommentAllowed() %}
+                <th class="text-center">
+                    {% if question.getCommentLabel() is not empty %}
+                        {{ question.getCommentLabel() }}
+                    {% else %}
+                        {{ 'comments'|trans({}, 'survey') }}
+                    {% endif %}
+                </th>
+            {% endif %}
         </tr>
 
         {% for answer in answers %}
@@ -41,6 +51,10 @@
                 <td>
                     {{ answer.getContent()|raw }}
                 </td>
+
+                {% if question.isCommentAllowed() %}
+                    <td>{{ answer.getQuestionAnswer().getComment() }}</td>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>

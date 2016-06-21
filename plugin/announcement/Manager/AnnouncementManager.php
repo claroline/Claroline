@@ -47,14 +47,13 @@ class AnnouncementManager
         ObjectManager $om,
         MailManager $mailManager,
         StrictDispatcher $eventDispatcher
-    )
-    {
+    ) {
         $this->announcementRepo = $om->getRepository('ClarolineAnnouncementBundle:Announcement');
-        $this->om               = $om;
-        $this->mailManager      = $mailManager;
-        $this->userRepo         = $om->getRepository('ClarolineCoreBundle:User');
-        $this->roleRepo         = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->eventDispatcher  = $eventDispatcher;
+        $this->om = $om;
+        $this->mailManager = $mailManager;
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function insertAnnouncement(Announcement $announcement)
@@ -120,7 +119,7 @@ class AnnouncementManager
                 $announcement->getContent(),
                 $announcement->getTitle(),
                 null,
-                $targets
+                $targets,
             )
         );
     }
@@ -149,7 +148,7 @@ class AnnouncementManager
             }
         }
 
-        $roles[] = $this->roleRepo->findOneByName('ROLE_WS_MANAGER_' . $node->getWorkspace()->getGuid());
+        $roles[] = $this->roleRepo->findOneByName('ROLE_WS_MANAGER_'.$node->getWorkspace()->getGuid());
         //we must also add the ROLE_WS_MANAGER_{ws_guid}
 
         return $this->userRepo->findByRolesIncludingGroups($roles, false, 'id', 'ASC');

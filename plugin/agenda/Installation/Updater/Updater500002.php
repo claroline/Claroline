@@ -29,7 +29,7 @@ class Updater500002 extends Updater
             ->getRepository('Claroline\CoreBundle\Entity\Plugin')
             ->findOneBy([
                 'vendorName' => 'Claroline',
-                'bundleName' => 'AgendaBundle'
+                'bundleName' => 'AgendaBundle',
             ]);
 
         $this->updateExtension('tool', 'agenda', $plugin);

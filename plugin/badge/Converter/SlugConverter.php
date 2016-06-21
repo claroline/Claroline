@@ -6,11 +6,9 @@ use Icap\BadgeBundle\Repository\BadgeRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\User;
 
@@ -36,12 +34,12 @@ class SlugConverter implements ParamConverterInterface
      */
     public function __construct(EntityManager $entityManager, BadgeRepository $badgeRepository)
     {
-        $this->entityManager   = $entityManager;
+        $this->entityManager = $entityManager;
         $this->badgeRepository = $badgeRepository;
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidConfigurationException if the parameter name is missing
      * @throws AccessDeniedHttpException     if the current user is not authenticated
@@ -68,7 +66,7 @@ class SlugConverter implements ParamConverterInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function supports(ParamConverter $configuration)
     {
@@ -76,7 +74,7 @@ class SlugConverter implements ParamConverterInterface
             return false;
         }
 
-        if ("badge_converter" === $configuration->getConverter()) {
+        if ('badge_converter' === $configuration->getConverter()) {
             return true;
         }
 

@@ -12,7 +12,6 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CursusBundle\Entity\Course;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
@@ -32,7 +31,7 @@ class CourseRegistrationQueue
     const WAITING_USER = 2;
     const WAITING_VALIDATOR = 4;
     const WAITING_ORGANIZATION = 8;
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -184,22 +183,22 @@ class CourseRegistrationQueue
         $this->validator = $validator;
     }
 
-    function getOrganizationValidationDate()
+    public function getOrganizationValidationDate()
     {
         return $this->organizationValidationDate;
     }
 
-    function setOrganizationValidationDate($organizationValidationDate)
+    public function setOrganizationValidationDate($organizationValidationDate)
     {
         $this->organizationValidationDate = $organizationValidationDate;
     }
 
-    function getOrganizationAdmin()
+    public function getOrganizationAdmin()
     {
         return $this->organizationAdmin;
     }
 
-    function setOrganizationAdmin(User $organizationAdmin = null)
+    public function setOrganizationAdmin(User $organizationAdmin = null)
     {
         $this->organizationAdmin = $organizationAdmin;
     }

@@ -50,7 +50,7 @@ class TransportFactory
             $transport->setAuthMode($this->configHandler->getParameter('mailer_auth_mode'));
             // should probably be configurable too
             $transport->setTimeout(30);
-            $transport->setSourceIp(NULL);
+            $transport->setSourceIp(null);
 
             return $transport;
         } elseif ($type === 'gmail') {
@@ -77,9 +77,9 @@ class TransportFactory
                     array(
                         new \Swift_Transport_Esmtp_Auth_CramMd5Authenticator(),
                         new \Swift_Transport_Esmtp_Auth_LoginAuthenticator(),
-                        new \Swift_Transport_Esmtp_Auth_PlainAuthenticator()
+                        new \Swift_Transport_Esmtp_Auth_PlainAuthenticator(),
                     )
-                )
+                ),
             ),
             new \Swift_Events_SimpleEventDispatcher()
         );

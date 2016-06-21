@@ -9,11 +9,12 @@ class PortfolioWidgetRepository extends EntityRepository
 {
     /**
      * @param string $type
-     * @param integer $id
-     * @param User $user
-     * @param bool $executeQuery
+     * @param int    $id
+     * @param User   $user
+     * @param bool   $executeQuery
      *
      * @return \Doctrine\ORM\QueryBuilder|mixed
+     *
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
@@ -25,10 +26,10 @@ class PortfolioWidgetRepository extends EntityRepository
             ->andWhere('w.user = :user')
             ->setParameters([
                 'id' => $id,
-                'user' => $user
+                'user' => $user,
             ])
         ;
 
-        return $executeQuery ? $query->getQuery()->getSingleResult(): $query->getQuery();
+        return $executeQuery ? $query->getQuery()->getSingleResult() : $query->getQuery();
     }
 }

@@ -20,8 +20,8 @@ class EditMessageEvent extends AbstractLogResourceEvent
 
     /**
      * @param \Claroline\ForumBundle\Entity\Message $message
-     * @param string $oldContent
-     * @param string $newContent
+     * @param string                                $oldContent
+     * @param string                                $newContent
      */
     public function __construct(Message $message, $oldContent, $newContent)
     {
@@ -29,17 +29,17 @@ class EditMessageEvent extends AbstractLogResourceEvent
             'message' => array(
                 'id' => $message->getId(),
                 'old_content' => $oldContent,
-                'new_content' => $newContent
+                'new_content' => $newContent,
             ),
             'subject' => array(
-                'id' => $message->getSubject()->getId()
+                'id' => $message->getSubject()->getId(),
             ),
             'category' => array(
-                'id' => $message->getSubject()->getCategory()->getId()
+                'id' => $message->getSubject()->getCategory()->getId(),
             ),
             'forum' => array(
-                'id' => $message->getSubject()->getCategory()->getForum()->getId()
-            )
+                'id' => $message->getSubject()->getCategory()->getForum()->getId(),
+            ),
         );
 
         parent::__construct($message->getSubject()->getCategory()->getForum()->getResourceNode(), $details);

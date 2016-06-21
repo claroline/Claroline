@@ -29,16 +29,15 @@ class Validator
      *     "conflictValidator"  = @DI\Inject("hevinci.competency.data_conflict_validator")
      * })
      *
-     * @param JsonValidator             $jsonValidator
-     * @param DataConstraintValidator   $dataValidator
-     * @param DataConflictValidator     $conflictValidator
+     * @param JsonValidator           $jsonValidator
+     * @param DataConstraintValidator $dataValidator
+     * @param DataConflictValidator   $conflictValidator
      */
     public function __construct(
         JsonValidator $jsonValidator,
         DataConstraintValidator $dataValidator,
         DataConflictValidator $conflictValidator
-    )
-    {
+    ) {
         $this->jsonValidator = $jsonValidator;
         $this->dataValidator = $dataValidator;
         $this->conflictValidator = $conflictValidator;
@@ -46,13 +45,15 @@ class Validator
 
     /**
      * Validates a JSON representation of a competency framework contained
-     * in a string. Returns an array containing:
+     * in a string. Returns an array containing:.
      *
      * 1) The type of the errors returned (see class constants)
      * 2) An array containing error message strings
      *
      * @param string $frameworkData
+     *
      * @return array
+     *
      * @throws \RuntimeException if the file doesn't exist
      */
     public function validate($frameworkData)
@@ -62,7 +63,7 @@ class Validator
         if (json_last_error() !== JSON_ERROR_NONE) {
             return [
                 'type' => self::ERR_TYPE_JSON,
-                'errors' => [json_last_error_msg()]
+                'errors' => [json_last_error_msg()],
             ];
         }
 
@@ -75,27 +76,27 @@ class Validator
                         $error['message'],
                         $error['property'] !== '' ? " (path: {$error['property']})" : ''
                     );
-                }, $errors)
+                }, $errors),
             ];
         }
 
         if (count($errors = $this->dataValidator->validate($framework))) {
             return [
                 'type' => self::ERR_TYPE_INTERNAL,
-                'errors' => $errors
+                'errors' => $errors,
             ];
         }
 
         if (count($errors = $this->conflictValidator->validate($framework))) {
             return [
                 'type' => self::ERR_TYPE_CONFLICT,
-                'errors' => $errors
+                'errors' => $errors,
             ];
         }
 
         return [
             'type' => self::ERR_TYPE_NONE,
-            'errors' => []
+            'errors' => [],
         ];
     }
 }

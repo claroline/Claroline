@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * UserProgression
- * Represents the progression of a User in a Step
+ * Represents the progression of a User in a Step.
  *
  * @ORM\Table(name="innova_path_progression")
  * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\UserProgressionRepository")
@@ -15,26 +15,29 @@ use Doctrine\ORM\Mapping as ORM;
 class UserProgression implements \JsonSerializable
 {
     /**
-     * Default status when creating a new UserProgression
+     * Default status when creating a new UserProgression.
+     *
      * @var string
      */
     protected static $statusDefault = 'seen';
 
     /**
-     * List of available status
+     * List of available status.
+     *
      * @var array
      */
-    protected static $statusAvailable = array (
+    protected static $statusAvailable = array(
         'unseen',
         'seen',
         'to_do',
         'done',
-        'to_review'
+        'to_review',
     );
 
     /**
-     * Unique identifier
-     * @var integer
+     * Unique identifier.
+     *
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -43,7 +46,8 @@ class UserProgression implements \JsonSerializable
     protected $id;
 
     /**
-     * Step for which we track the progression
+     * Step for which we track the progression.
+     *
      * @var \Innova\PathBundle\Entity\Step
      *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step")
@@ -52,7 +56,8 @@ class UserProgression implements \JsonSerializable
     protected $step;
 
     /**
-     * User for which we track the progression
+     * User for which we track the progression.
+     *
      * @var \Claroline\CoreBundle\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -61,7 +66,8 @@ class UserProgression implements \JsonSerializable
     protected $user;
 
     /**
-     * Current state of the Step
+     * Current state of the Step.
+     *
      * @var string
      *
      * @ORM\Column(name="progression_status", type="string")
@@ -69,15 +75,16 @@ class UserProgression implements \JsonSerializable
     protected $status;
 
     /**
-     * Can the user access the step
-     * @var boolean
+     * Can the user access the step.
+     *
+     * @var bool
      *
      * @ORM\Column(name="authorized_access", type="boolean")
      */
     protected $authorized;
 
     /**
-     * CLass constructor
+     * CLass constructor.
      */
     public function __construct()
     {
@@ -86,7 +93,8 @@ class UserProgression implements \JsonSerializable
     }
 
     /**
-     * Get id
+     * Get id.
+     *
      * @return int
      */
     public function getId()
@@ -95,7 +103,8 @@ class UserProgression implements \JsonSerializable
     }
 
     /**
-     * Get Step
+     * Get Step.
+     *
      * @return \Innova\PathBundle\Entity\Step
      */
     public function getStep()
@@ -104,8 +113,10 @@ class UserProgression implements \JsonSerializable
     }
 
     /**
-     * Set Step
-     * @param  \Innova\PathBundle\Entity\Step $step
+     * Set Step.
+     *
+     * @param \Innova\PathBundle\Entity\Step $step
+     *
      * @return \Innova\PathBundle\Entity\UserProgression
      */
     public function setStep(Step $step)
@@ -116,7 +127,8 @@ class UserProgression implements \JsonSerializable
     }
 
     /**
-     * Get User
+     * Get User.
+     *
      * @return User
      */
     public function getUser()
@@ -125,8 +137,10 @@ class UserProgression implements \JsonSerializable
     }
 
     /**
-     * Set User
-     * @param  \Claroline\CoreBundle\Entity\User $user
+     * Set User.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return \Innova\PathBundle\Entity\UserProgression
      */
     public function setUser(User $user)
@@ -137,7 +151,8 @@ class UserProgression implements \JsonSerializable
     }
 
     /**
-     * Get status
+     * Get status.
+     *
      * @return string
      */
     public function getStatus()
@@ -146,8 +161,10 @@ class UserProgression implements \JsonSerializable
     }
 
     /**
-     * Set status
-     * @param  string $status
+     * Set status.
+     *
+     * @param string $status
+     *
      * @return \Innova\PathBundle\Entity\UserProgression
      */
     public function setStatus($status)
@@ -158,7 +175,8 @@ class UserProgression implements \JsonSerializable
     }
 
     /**
-     * Get the default status
+     * Get the default status.
+     *
      * @return string
      */
     public static function getDefaultStatus()
@@ -167,7 +185,8 @@ class UserProgression implements \JsonSerializable
     }
 
     /**
-     * Get the list of all available status
+     * Get the list of all available status.
+     *
      * @return array
      */
     public static function getAvailableStatus()
@@ -177,8 +196,8 @@ class UserProgression implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return array (
-            'id'     => $this->id,
+        return array(
+            'id' => $this->id,
             'userId' => $this->user->getId(),
             'stepId' => $this->step->getId(),
             'status' => $this->status,
@@ -187,9 +206,9 @@ class UserProgression implements \JsonSerializable
     }
 
     /**
-     * Set authorized
+     * Set authorized.
      *
-     * @param boolean $authorized
+     * @param bool $authorized
      *
      * @return UserProgression
      */
@@ -201,9 +220,9 @@ class UserProgression implements \JsonSerializable
     }
 
     /**
-     * Get authorized
+     * Get authorized.
      *
-     * @return boolean
+     * @return bool
      */
     public function getAuthorized()
     {

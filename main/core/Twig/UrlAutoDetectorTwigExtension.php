@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -14,8 +14,7 @@ namespace Claroline\CoreBundle\Twig;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class UrlAutoDetectorTwigExtension
- * @package Claroline\CoreBundle\Twig
+ * Class UrlAutoDetectorTwigExtension.
  *
  * @DI\Service
  * @DI\Tag("twig.extension")
@@ -40,8 +39,8 @@ class UrlAutoDetectorTwigExtension extends \Twig_Extension
                 $this,
                 'autoDetectUrls',
                 array(
-                    'pre_escape'    => 'html',
-                    'is_safe'       => array('html'),
+                    'pre_escape' => 'html',
+                    'is_safe' => array('html'),
                 )
             ),
         );
@@ -51,6 +50,7 @@ class UrlAutoDetectorTwigExtension extends \Twig_Extension
      * Find all urls in string and encapsulate them with <a> tag.
      *
      * @param $string
+     *
      * @return mixed|$string
      */
     public function autoDetectUrls($string)
@@ -65,6 +65,7 @@ class UrlAutoDetectorTwigExtension extends \Twig_Extension
      * For every url match in string encapsulate if needed and return string.
      *
      * @param array $matches
+     *
      * @return string
      */
     public function callbackReplace($matches)

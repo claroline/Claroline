@@ -35,8 +35,7 @@ class TagWidgetListener
     public function __construct(
         RequestStack $requestStack,
         HttpKernelInterface $httpKernel
-    )
-    {
+    ) {
         $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
@@ -45,12 +44,12 @@ class TagWidgetListener
      * @DI\Observe("widget_claroline_tag_resources_widget")
      *
      * @param DisplayWidgetEvent $event
+     *
      * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onResourcesTagsWidgetDisplay(DisplayWidgetEvent $event)
     {
         if (!$this->request) {
-
             throw new NoHttpRequestException();
         }
         $widgetInstance = $event->getInstance();
@@ -71,12 +70,12 @@ class TagWidgetListener
      * @DI\Observe("widget_claroline_tag_resources_widget_configuration")
      *
      * @param ConfigureWidgetEvent $event
+     *
      * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onResourcesTagsWidgetConfigure(ConfigureWidgetEvent $event)
     {
         if (!$this->request) {
-
             throw new NoHttpRequestException();
         }
         $widgetInstance = $event->getInstance();

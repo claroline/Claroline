@@ -22,10 +22,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\ActivityEvaluationEvent;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Rule\Entity\Rule;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -61,23 +59,22 @@ class ActivityManager
         RightsManager            $rightsManager,
         TokenStorageInterface    $tokenStorage,
         StrictDispatcher         $dispatcher
-    )
-    {
-        $this->om                     = $om;
+    ) {
+        $this->om = $om;
         $this->activityParametersRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityParameters');
-        $this->activityRepo           = $om->getRepository('ClarolineCoreBundle:Resource\Activity');
+        $this->activityRepo = $om->getRepository('ClarolineCoreBundle:Resource\Activity');
         $this->activityRuleActionRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRuleAction');
-        $this->activityRuleRepo       = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
-        $this->evaluationRepo         = $om->getRepository('ClarolineCoreBundle:Activity\Evaluation');
-        $this->pastEvaluationRepo     = $om->getRepository('ClarolineCoreBundle:Activity\PastEvaluation');
-        $this->roleRepo               = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->rightsManager          = $rightsManager;
-        $this->tokenStorage           = $tokenStorage;
-        $this->dispatcher             = $dispatcher;
+        $this->activityRuleRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
+        $this->evaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\Evaluation');
+        $this->pastEvaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\PastEvaluation');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->rightsManager = $rightsManager;
+        $this->tokenStorage = $tokenStorage;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
-     * Edit an activity
+     * Edit an activity.
      */
     public function editActivity(Activity $activity)
     {
@@ -89,7 +86,7 @@ class ActivityManager
     }
 
     /**
-     * Delete an activity
+     * Delete an activity.
      */
     public function deleteActivty(Activity $activity)
     {
@@ -98,7 +95,7 @@ class ActivityManager
     }
 
     /**
-     * Link a resource to an activity
+     * Link a resource to an activity.
      */
     public function addResource(Activity $activity, ResourceNode $resource)
     {
@@ -113,7 +110,7 @@ class ActivityManager
     }
 
     /**
-     * Remove the primary resource of an activity
+     * Remove the primary resource of an activity.
      */
     public function removePrimaryResource(Activity $activity)
     {
@@ -123,7 +120,7 @@ class ActivityManager
     }
 
     /**
-     * Remove a resource from an activity
+     * Remove a resource from an activity.
      */
     public function removeResource(Activity $activity, ResourceNode $resource)
     {
@@ -137,7 +134,7 @@ class ActivityManager
     }
 
     /**
-     * Copy an activity
+     * Copy an activity.
      */
     public function copyActivity(Activity $resource)
     {
@@ -155,7 +152,8 @@ class ActivityManager
     }
 
     /**
-     * Copy parameters
+     * Copy parameters.
+     *
      * @todo copy properties
      */
     public function copyParameters(Activity $resource)
@@ -174,8 +172,7 @@ class ActivityManager
         $maxDuration,
         $maxAttempts,
         $evaluationType
-    )
-    {
+    ) {
         $params->setMaxDuration($maxDuration);
         $params->setMaxAttempts($maxAttempts);
         $params->setEvaluationType($evaluationType);
@@ -189,8 +186,7 @@ class ActivityManager
         Log $currentLog,
         $rulesLogs,
         $activityStatus
-    )
-    {
+    ) {
         $evaluation = $this->evaluationRepo
             ->findEvaluationByUserAndActivityParams($user, $activityParams);
         $isFirstEvaluation = is_null($evaluation);
@@ -273,7 +269,7 @@ class ActivityManager
                         $pastEval->setDuration($duration);
                         $pastEval->setStatus($pastStatus);
 
-                        $nbAttempts++;
+                        ++$nbAttempts;
                         $totalTime = $this->computeActivityTotalTime(
                             $totalTime,
                             $duration
@@ -322,7 +318,7 @@ class ActivityManager
             $pastEval->setStatus($activityStatus);
         }
 
-        $nbAttempts++;
+        ++$nbAttempts;
         $totalTime = $this->computeActivityTotalTime($totalTime, $duration);
         $this->om->persist($pastEval);
 
@@ -361,8 +357,7 @@ class ActivityManager
         $activeFrom,
         $activeUntil,
         ResourceNode $resourceNode = null
-    )
-    {
+    ) {
         $rule = new ActivityRule();
         $rule->setActivityParameters($activityParams);
         $rule->setAction($action);
@@ -390,8 +385,7 @@ class ActivityManager
         $activeFrom,
         $activeUntil,
         ResourceNode $resourceNode = null
-    )
-    {
+    ) {
         $rule->setAction($action);
         $rule->setOccurrence($occurrence);
         $rule->setResult($result);
@@ -416,8 +410,9 @@ class ActivityManager
      * is available for display and edition even when the user hasn't actually
      * performed the activity.
      *
-     * @param User $user
+     * @param User               $user
      * @param ActivityParameters $activityParams
+     *
      * @return Evaluation
      */
     public function createBlankEvaluation(User $user, ActivityParameters $activityParams)
@@ -462,8 +457,7 @@ class ActivityManager
         $score,
         $scoreMin,
         $scoreMax
-    )
-    {
+    ) {
         if (!is_null($score)) {
             $currentScore = $evaluation->getNumScore();
             $currentScoreMax = $evaluation->getScoreMax();
@@ -518,7 +512,7 @@ class ActivityManager
         $log = $evaluation->getLog();
 
         if (!is_null($log)) {
-            $pastEval  = $this->pastEvaluationRepo
+            $pastEval = $this->pastEvaluationRepo
                 ->findPastEvaluationsByUserAndActivityParamsAndLog(
                     $user,
                     $activityParams,
@@ -538,12 +532,10 @@ class ActivityManager
         $ruleScoreMax,
         $score,
         $scoreMax
-    )
-    {
+    ) {
         $hasPassingScore = true;
 
         if (!is_null($ruleScore) && !is_null($score)) {
-
             if (empty($ruleScoreMax) || empty($scoreMax)) {
                 $hasPassingScore = ($score >= $ruleScore);
             } else {
@@ -564,7 +556,6 @@ class ActivityManager
         return $hasPassingScore;
     }
 
-
     /*****************************************
      *  Access to ActivityRepository methods *
      *****************************************/
@@ -572,8 +563,7 @@ class ActivityManager
     public function getActivityByWorkspace(
         Workspace $workspace,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->activityRepo->findActivityByWorkspace(
             $workspace,
             $executeQuery
@@ -583,10 +573,8 @@ class ActivityManager
     public function getActivitiesByResourceNodeIds(
         array $resourceNodeIds,
         $executeQuery = true
-    )
-    {
+    ) {
         if (count($resourceNodeIds) > 0) {
-
             return $this->activityRepo->findActivitiesByResourceNodeIds(
                 $resourceNodeIds,
                 $executeQuery
@@ -596,7 +584,6 @@ class ActivityManager
         return array();
     }
 
-
     /*********************************************
      *  Access to ActivityRuleRepository methods *
      *********************************************/
@@ -605,8 +592,7 @@ class ActivityManager
         $action,
         ResourceNode $resourceNode,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->activityRuleRepo->findActivityRuleByActionAndResource(
             $action,
             $resourceNode,
@@ -617,14 +603,12 @@ class ActivityManager
     public function getActivityRuleByActionWithNoResource(
         $action,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->activityRuleRepo->findActivityRuleByActionWithNoResource(
             $action,
             $executeQuery
         );
     }
-
 
     /***************************************************
      *  Access to ActivityRuleActionRepository methods *
@@ -638,8 +622,7 @@ class ActivityManager
     public function getRuleActionsByResourceType(
         ResourceType $resourceType = null,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->activityRuleActionRepo
             ->findRuleActionsByResourceType($resourceType, $executeQuery);
     }
@@ -656,7 +639,6 @@ class ActivityManager
             ->findAllDistinctActivityRuleActions($executeQuery);
     }
 
-
     /******************************************
      * Access to EvaluationRepository methods *
      ******************************************/
@@ -665,8 +647,7 @@ class ActivityManager
         User $user,
         ActivityParameters $activityParams,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->evaluationRepo->findEvaluationByUserAndActivityParams(
             $user,
             $activityParams,
@@ -678,10 +659,8 @@ class ActivityManager
         User $user,
         array $activityParams,
         $executeQuery = true
-    )
-    {
+    ) {
         if (count($activityParams) > 0) {
-
             return $this->evaluationRepo->findEvaluationsByUserAndActivityParameters(
                 $user,
                 $activityParams,
@@ -696,10 +675,8 @@ class ActivityManager
         array $users,
         ActivityParameters $activityParams,
         $executeQuery = true
-    )
-    {
+    ) {
         if (count($users) > 0) {
-
             return $this->evaluationRepo->findEvaluationsByUsersAndActivityParams(
                 $users,
                 $activityParams,
@@ -710,7 +687,6 @@ class ActivityManager
         return array();
     }
 
-
     /**********************************************
      * Access to PastEvaluationRepository methods *
      **********************************************/
@@ -719,8 +695,7 @@ class ActivityManager
         User $user,
         ActivityParameters $activityParams,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->pastEvaluationRepo->findPastEvaluationsByUserAndActivityParams(
             $user,
             $activityParams,
@@ -733,8 +708,7 @@ class ActivityManager
         ActivityParameters $activityParams,
         Log $log,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->pastEvaluationRepo
             ->findPastEvaluationsByUserAndActivityParamsAndLog(
                 $user,
@@ -746,7 +720,7 @@ class ActivityManager
 
     /**
      * What does it do ? I can't remember. It's annoying.
-     * Initialize the resource permissions of an activity
+     * Initialize the resource permissions of an activity.
      *
      * @param Activity $activity
      */
@@ -756,7 +730,7 @@ class ActivityManager
         $secondaries = [];
         $nodes = [];
         $token = $this->tokenStorage->getToken();
-        $user = $token === null ? $activity->getResourceNode()->getCreator(): $token->getUser();
+        $user = $token === null ? $activity->getResourceNode()->getCreator() : $token->getUser();
 
         if ($primary) {
             $nodes[] = $primary;
@@ -786,7 +760,7 @@ class ActivityManager
         foreach ($rights as $right) {
             $role = $right->getRole();
 
-            if (!strpos('_' . $role->getName(), 'ROLE_WS_MANAGER')
+            if (!strpos('_'.$role->getName(), 'ROLE_WS_MANAGER')
                 //the open value is always 1
                 && $right->getMask() & 1
             ) {

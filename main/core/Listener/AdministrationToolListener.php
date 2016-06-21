@@ -4,11 +4,8 @@ namespace Claroline\CoreBundle\Listener;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  *  @DI\Service()
@@ -96,7 +93,6 @@ class AdministrationToolListener
         $this->redirect($params, $event);
     }
 
-
     /**
      * @DI\Observe("administration_tool_desktop_tools")
      *
@@ -108,7 +104,6 @@ class AdministrationToolListener
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Tools:showTool';
         $this->redirect($params, $event);
     }
-
 
     /**
      * @DI\Observe("administration_tool_platform_logs")
@@ -122,7 +117,6 @@ class AdministrationToolListener
         $params['page'] = 1;
         $this->redirect($params, $event);
     }
-
 
     /**
      * @DI\Observe("administration_tool_platform_analytics")

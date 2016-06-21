@@ -32,16 +32,16 @@ class BadgeTransformer extends TwigTransformer
     }
 
     /**
-     * transform
+     * transform.
      *
-     * @param  \Icap\BadgeBundle\Entity\Badge $entity
-     * @param  string                         $format
+     * @param \Icap\BadgeBundle\Entity\Badge $entity
+     * @param string                         $format
      *
      * @return string
      */
     public function transform($entity, $format)
     {
-        $templatePath = __DIR__ . '/../../Resources/exporter/Badge';
+        $templatePath = __DIR__.'/../../Resources/exporter/Badge';
         $this->container->get('twig.loader')->addPath($templatePath);
 
         $templateNameFormat = $this->getTemplateNameFormat($entity, $format);

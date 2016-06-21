@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -58,8 +57,7 @@ class GroupManager
         StrictDispatcher $eventDispatcher,
         RoleManager $roleManager,
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->om = $om;
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
@@ -104,7 +102,7 @@ class GroupManager
      * @todo what does this method do ?
      *
      * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param Role[] $oldRoles
+     * @param Role[]                             $oldRoles
      */
     public function updateGroup(Group $group, array $oldRoles)
     {
@@ -141,7 +139,7 @@ class GroupManager
     {
         $addedUsers = array();
 
-        if(!$this->validateAddUsersToGroup($users, $group)) {
+        if (!$this->validateAddUsersToGroup($users, $group)) {
             throw new Exception\AddRoleException();
         }
 
@@ -194,7 +192,6 @@ class GroupManager
     }
 
     /**
-     *
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param array                              $users
      *
@@ -209,8 +206,8 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param integer $page
-     * @param integer $max
+     * @param int                                              $page
+     * @param int                                              $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -223,9 +220,9 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param string $search
-     * @param integer $page
-     * @param int $max
+     * @param string                                           $search
+     * @param int                                              $page
+     * @param int                                              $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -238,8 +235,8 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param integer $page
-     * @param int $max
+     * @param int                                              $page
+     * @param int                                              $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -262,7 +259,7 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
-     * @param string                                                     $search
+     * @param string                                             $search
      *
      * @return Group[]
      */
@@ -276,9 +273,9 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param string $search
-     * @param integer $page
-     * @param int $max
+     * @param string                                           $search
+     * @param int                                              $page
+     * @param int                                              $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -290,10 +287,10 @@ class GroupManager
     }
 
     /**
-     * @param integer $page
-     * @param integer $max
-     * @param string  $orderedBy
-     * @param string  $order
+     * @param int    $page
+     * @param int    $max
+     * @param string $orderedBy
+     * @param string $order
      *
      * @deprecated use api instead.
      *
@@ -307,10 +304,10 @@ class GroupManager
     }
 
     /**
-     * @param string  $search
-     * @param integer $page
-     * @param integer $max
-     * @param string  $orderedBy
+     * @param string $search
+     * @param int    $page
+     * @param int    $max
+     * @param string $orderedBy
      *
      * @deprecated use api instead.
      *
@@ -325,10 +322,10 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param integer $page
-     * @param int $max
-     * @param string $orderedBy
-     * @param null $order
+     * @param int                                 $page
+     * @param int                                 $max
+     * @param string                              $orderedBy
+     * @param null                                $order
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -340,10 +337,10 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Role[]                      $roles
+     * @param \Claroline\CoreBundle\Entity\Role[]              $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param integer $page
-     * @param int $max
+     * @param int                                              $page
+     * @param int                                              $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -356,10 +353,10 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param string $name
-     * @param integer $page
-     * @param int $max
-     * @param string $orderedBy
+     * @param string                              $name
+     * @param int                                 $page
+     * @param int                                 $max
+     * @param string                              $orderedBy
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -371,11 +368,11 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Role[]                      $roles
-     * @param string                                                   $name
+     * @param \Claroline\CoreBundle\Entity\Role[]              $roles
+     * @param string                                           $name
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param integer $page
-     * @param int $max
+     * @param int                                              $page
+     * @param int                                              $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -385,15 +382,14 @@ class GroupManager
         Workspace $workspace,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $query = $this->groupRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
-     * Returns users who don't have access to the model $model
+     * Returns users who don't have access to the model $model.
      *
      * @param WorkspaceModel $model
      */
@@ -405,7 +401,7 @@ class GroupManager
     }
 
     /**
-     * Returns users who don't have access to the model $model
+     * Returns users who don't have access to the model $model.
      *
      * @param WorkspaceModel $model
      */
@@ -465,7 +461,6 @@ class GroupManager
 
         //Admin can see everything, but the others... well they can only see their own organizations.
         if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-
             $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
             $qb->join('g.organizations', 'go');
             $qb->join('go.administrators', 'ga');
@@ -477,7 +472,7 @@ class GroupManager
             foreach ($search as $id => $el) {
                 if (in_array($key, $baseFieldsName)) {
                     $qb->andWhere("UPPER (g.{$key}) LIKE :{$key}{$id}");
-                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                    $qb->setParameter($key.$id, '%'.strtoupper($el).'%');
                 }
             }
         }
@@ -520,15 +515,16 @@ class GroupManager
                 if ($j < $rolesCount - 1) {
                     $rolesString .= ' ,';
                 }
-                $j++;
+                ++$j;
             }
             $content[$i]['roles'] = $rolesString;
-            $i++;
+            ++$i;
         }
+
         return $content;
     }
     /**
-     * @param integer $page
+     * @param int $page
      * @param int $max
      *
      * @return \PagerFanta\PagerFanta
@@ -536,18 +532,20 @@ class GroupManager
     public function getAllGroups($page, $max = 50)
     {
         $query = $this->groupRepo->findAll(false);
+
         return $this->pagerFactory->createPager($query, $page, $max);
     }
     /**
-     * @param integer $page
+     * @param int    $page
      * @param string $search
-     * @param int $max
+     * @param int    $max
      *
      * @return \PagerFanta\PagerFanta
      */
     public function getAllGroupsBySearch($page, $search, $max = 50)
     {
         $query = $this->groupRepo->findAllGroupsBySearch($search);
+
         return $this->pagerFactory->createPagerFromArray($query, $page, $max);
     }
     /**
@@ -560,6 +558,7 @@ class GroupManager
         if (count($names) > 0) {
             return $this->groupRepo->findGroupsByNames($names);
         }
+
         return array();
     }
 
@@ -567,8 +566,7 @@ class GroupManager
         $orderedBy = 'id',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->groupRepo->findAllGroups($orderedBy, $order, $executeQuery);
     }
 

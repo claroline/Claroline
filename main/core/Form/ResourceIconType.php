@@ -37,7 +37,7 @@ class ResourceIconType extends AbstractType
             array(
                 'required' => false,
                 'mapped' => false,
-                'label' => 'icon'
+                'label' => 'icon',
             )
         );
         $builder->add(
@@ -47,7 +47,7 @@ class ResourceIconType extends AbstractType
                 'disabled' => true,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
-                'label' => 'creation_date'
+                'label' => 'creation_date',
             )
         );
         $builder->add(
@@ -57,7 +57,7 @@ class ResourceIconType extends AbstractType
                 'data' => $this->creator,
                 'mapped' => false,
                 'disabled' => true,
-                'label' => 'creator'
+                'label' => 'creator',
             )
         );
     }

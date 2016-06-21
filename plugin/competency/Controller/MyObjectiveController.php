@@ -29,8 +29,8 @@ class MyObjectiveController
      *     "progressManager"    = @DI\Inject("hevinci.competency.progress_manager")
      * })
      *
-     * @param ObjectiveManager  $objectiveManager
-     * @param ProgressManager   $progressManager
+     * @param ObjectiveManager $objectiveManager
+     * @param ProgressManager  $progressManager
      */
     public function __construct(ObjectiveManager $objectiveManager, ProgressManager $progressManager)
     {
@@ -47,13 +47,14 @@ class MyObjectiveController
      * @EXT\Template
      *
      * @param User $user
+     *
      * @return array
      */
     public function objectivesAction(User $user)
     {
         return [
             'objectives' => $this->objectiveManager->loadSubjectObjectives($user),
-            'user' => $user
+            'user' => $user,
         ];
     }
 
@@ -65,6 +66,7 @@ class MyObjectiveController
      *
      * @param Objective $objective
      * @param User      $user
+     *
      * @return JsonResponse
      */
     public function userObjectiveCompetenciesAction(Objective $objective, User $user)
@@ -79,8 +81,9 @@ class MyObjectiveController
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      * @EXT\Template("HeVinciCompetencyBundle::competencyHistory.html.twig")
      *
-     * @param Competency    $competency
-     * @param User          $user
+     * @param Competency $competency
+     * @param User       $user
+     *
      * @return array
      */
     public function competencyUserHistoryAction(Competency $competency, User $user)
@@ -88,7 +91,7 @@ class MyObjectiveController
         return [
             'competency' => $competency,
             'user' => $user,
-            'logs' => $this->progressManager->listLeafCompetencyLogs($competency, $user)
+            'logs' => $this->progressManager->listLeafCompetencyLogs($competency, $user),
         ];
     }
 }

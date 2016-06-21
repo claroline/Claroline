@@ -11,7 +11,7 @@ class WidgetBlogList
      * @var WidgetListBlog[]
      */
     private $widgetListBlogs;
-    private $widgetDisplayListBlogs='b';
+    private $widgetDisplayListBlogs = 'b';
 
     public function __construct()
     {
@@ -49,7 +49,4 @@ class WidgetBlogList
 
         return $this;
     }
-
-
 }
- 

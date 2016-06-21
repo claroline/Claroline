@@ -1,0 +1,14 @@
+<nav class="flexnav" ng-style="vm.navStyle">
+    <div class="flexnav-header flexnav-toggle" ng-class="vm.options.buttonClass">
+        <button type="button" ng-style="vm.toggleStyle"
+                ng-click="vm.toggleCollapse()">
+          <i class="fa fa-bars"></i>
+        </button>
+        <span>{{vm.menu.title}}</span>
+    </div>
+    <div id="website-flexnav-menu" class="collapse flexnav-collapse" ng-class="{'collapse': vm.collapsed}">
+        <ul class="nav flexnav-nav with-js">
+            <ui-flexnav-submenu ng-repeat="item in vm.children" menu="item" level="{{ 0 }}"></ui-flexnav-submenu>
+        </ul>
+    </div>
+</nav>

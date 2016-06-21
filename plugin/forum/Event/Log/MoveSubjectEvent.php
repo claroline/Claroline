@@ -20,7 +20,7 @@ class MoveSubjectEvent extends AbstractLogResourceEvent
     const ACTION = 'resource-claroline_forum-move_subject';
 
     /**
-     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     * @param \Claroline\ForumBundle\Entity\Subject  $subject
      * @param \Claroline\ForumBundle\Entity\Category $oldCategory
      * @param \Claroline\ForumBundle\Entity\Category $newCategory
      */
@@ -28,15 +28,15 @@ class MoveSubjectEvent extends AbstractLogResourceEvent
     {
         $details = array(
             'subject' => array(
-                'id' => $subject->getId()
+                'id' => $subject->getId(),
             ),
             'category' => array(
                 'oldCategoryId' => $oldCategory->getId(),
                 'newCategoryId' => $newCategory->getId(),
             ),
             'forum' => array(
-                'id' => $subject->getCategory()->getForum()->getId()
-            )
+                'id' => $subject->getCategory()->getForum()->getId(),
+            ),
         );
 
         parent::__construct($subject->getCategory()->getForum()->getResourceNode(), $details);

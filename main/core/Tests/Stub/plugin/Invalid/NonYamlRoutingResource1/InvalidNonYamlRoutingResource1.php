@@ -18,7 +18,7 @@ class InvalidNonYamlRoutingResource1 extends PluginBundle
     public function getRoutingResourcesPaths()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $nonYamlPath = __DIR__ ."{$ds}Resources{$ds}config{$ds}routing.foo";
+        $nonYamlPath = __DIR__."{$ds}Resources{$ds}config{$ds}routing.foo";
 
         return $nonYamlPath;
     }

@@ -33,7 +33,7 @@ class CoursesWidgetConfigurationType extends AbstractType
                 },
                 'property' => 'titleAndCode',
                 'required' => false,
-                'label' => 'cursus'
+                'label' => 'cursus',
             )
         );
     }

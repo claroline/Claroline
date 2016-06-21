@@ -37,7 +37,7 @@ class Updater060700 extends Updater
             'Bootstrap Default',
             'Claroline Orange',
             'Claroline Gold',
-            'Claroline Dark'
+            'Claroline Dark',
         ];
 
         $themes = $this->om->getRepository('ClarolineCoreBundle:Theme\Theme')->findAll();
@@ -48,7 +48,7 @@ class Updater060700 extends Updater
                 $this->om->remove($theme);
             } elseif (empty($theme->getName())) {
                 // this is what happened when a custom theme couldn't be generated due to permission errors...
-                $this->log("Found empty theme (to be removed)...");
+                $this->log('Found empty theme (to be removed)...');
                 $this->om->remove($theme);
             }
         }

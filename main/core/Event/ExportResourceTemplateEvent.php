@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 class ExportResourceTemplateEvent extends Event implements DataConveyorEventInterface
@@ -48,7 +47,7 @@ class ExportResourceTemplateEvent extends Event implements DataConveyorEventInte
      * Expects an array of files.
      * Each item of the array is an array with the following keys:
      * 'archive_path' => '/pathname/in/archive'
-     * 'original_path' => '/pathname/in/project'
+     * 'original_path' => '/pathname/in/project'.
      *
      * @param array $files
      */

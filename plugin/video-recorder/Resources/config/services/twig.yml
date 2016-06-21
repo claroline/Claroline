@@ -1,0 +1,5 @@
+services:
+    innova_video_recorder.twig.video_recorder_extension:
+        class: Innova\VideoRecorderBundle\Twig\VideoRecorderExtension
+        tags:
+            - { name: twig.extension }

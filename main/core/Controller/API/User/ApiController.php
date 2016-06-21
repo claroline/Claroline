@@ -11,54 +11,45 @@
 
 namespace Claroline\CoreBundle\Controller\API\User;
 
-use FOS\RestBundle\Util\Codes;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\Annotations\View;
-use JMS\Serializer\SerializationContext;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
 
-class ApiController extends Controller
+/**
+ * @NamePrefix("api_")
+ */
+class ApiController extends FOSRestController
 {
     /**
-     * @Route("/connected_user")
+     * @View(serializerGroups={"api_user"})
+     * @Get("/connected_user", name="get_connected_user", options={ "method_prefix" = false })
      */
     public function connectedUserAction()
     {
-        /** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
-        $tokenStorage  = $this->container->get('security.token_storage');
+        /* @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
+        $tokenStorage = $this->container->get('security.token_storage');
         $token = $tokenStorage->getToken();
 
         if ($token) {
-            $user = $token->getUser();
-            $context = new SerializationContext();
-            $context->setGroups('api_user');
-            $data = $this->container->get('serializer')->serialize($user, 'json', $context);
-            $users = json_decode($data);
-
-            return new JsonResponse($users);
+            return $token->getUser();
         }
 
         throw new \Exception('No security token.');
     }
 
     /**
-     * @Route("/connected_roles")
+     * @View(serializerGroups={"api_roles"})
+     * @Get("/connected_roles", name="get_connected_roles", options={ "method_prefix" = false })
      */
-    public function connectedRoles()
+    public function connectedRolesAction()
     {
-        /** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
-        $tokenStorage  = $this->container->get('security.token_storage');
+        /* @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
+        $tokenStorage = $this->container->get('security.token_storage');
         $token = $tokenStorage->getToken();
 
         if ($token) {
-            $roles = $token->getRoles();
-            $context = new SerializationContext();
-            $context->setGroups('api_user');
-            $data = $this->container->get('serializer')->serialize($roles, 'json');
-            $roles = json_decode($data);
-
-            return new JsonResponse($roles);
+            return $token->getRoles();
         }
 
         throw new \Exception('No security token.');

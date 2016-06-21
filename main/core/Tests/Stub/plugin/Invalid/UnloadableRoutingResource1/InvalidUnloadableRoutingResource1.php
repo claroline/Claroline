@@ -18,7 +18,7 @@ class InvalidUnloadableRoutingResource1 extends PluginBundle
     public function getRoutingResourcesPaths()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $unloadableYamlPath = __DIR__ . "{$ds}Resources{$ds}config{$ds}routing.yml";
+        $unloadableYamlPath = __DIR__."{$ds}Resources{$ds}config{$ds}routing.yml";
 
         return $unloadableYamlPath;
     }

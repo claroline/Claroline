@@ -25,7 +25,7 @@ class SurveyType extends AbstractType
             'text',
             array(
                 'constraints' => new NotBlank(),
-                'label' => 'name'
+                'label' => 'name',
             )
         );
         $builder->add(

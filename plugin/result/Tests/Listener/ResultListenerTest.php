@@ -57,7 +57,6 @@ class ResultListenerTest extends TransactionalTestCase
         $this->listener->onCreate(new CreateResourceEvent());
     }
 
-
     public function testOnOpen()
     {
         $this->listener->setRequest(new Request());

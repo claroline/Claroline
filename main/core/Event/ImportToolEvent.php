@@ -26,13 +26,12 @@ class ImportToolEvent extends Event
     private $roles;
 
     /**
-     *
-     * @param Workspace $workspace The workspace
-     * @param array             $config    The config array from the template
-     * @param ResourceNode      $root      The workspace root
-     * @param User              $user      The creator
-     * @param array             $filePaths The requireded files from the template
-     * @param array             $roles     The role list wich is needed for the creation;
+     * @param Workspace    $workspace The workspace
+     * @param array        $config    The config array from the template
+     * @param ResourceNode $root      The workspace root
+     * @param User         $user      The creator
+     * @param array        $filePaths The requireded files from the template
+     * @param array        $roles     The role list wich is needed for the creation;
      */
     public function __construct(
         Workspace $workspace,
@@ -41,8 +40,7 @@ class ImportToolEvent extends Event
         User $user,
         array $filePaths,
         array $roles
-    )
-    {
+    ) {
         $this->workspace = $workspace;
         $this->config = $config;
         $this->root = $root;

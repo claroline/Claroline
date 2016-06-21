@@ -19,8 +19,8 @@ class OrmArrayAdapter implements AdapterInterface
     /**
      * Constructor.
      *
-     * @param Query $countQuery     The query for counting the whole result set
-     * @param Query $resultQuery    The query for fetching the whole result set
+     * @param Query $countQuery  The query for counting the whole result set
+     * @param Query $resultQuery The query for fetching the whole result set
      */
     public function __construct(Query $countQuery, Query $resultQuery)
     {

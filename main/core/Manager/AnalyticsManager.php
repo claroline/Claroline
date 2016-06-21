@@ -46,13 +46,12 @@ class AnalyticsManager
      */
     public function __construct(ObjectManager $objectManager)
     {
-        $this->om            = $objectManager;
-        $this->resourceRepo  = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
-        $this->resourceTypeRepo  = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $this->userRepo      = $objectManager->getRepository('ClarolineCoreBundle:User');
+        $this->om = $objectManager;
+        $this->resourceRepo = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
+        $this->resourceTypeRepo = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $this->userRepo = $objectManager->getRepository('ClarolineCoreBundle:User');
         $this->workspaceRepo = $objectManager->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->logRepository = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
-
     }
 
     public function getDefaultRange()
@@ -87,8 +86,7 @@ class AnalyticsManager
         $action = null,
         $unique = false,
         $workspaceIds = null
-    )
-    {
+    ) {
         if ($action === null) {
             $action = '';
         }
@@ -212,7 +210,7 @@ class AnalyticsManager
     }
 
     /**
-     * Retrieve user who connected at least one time on the application
+     * Retrieve user who connected at least one time on the application.
      *
      * @return mixed
      */
@@ -229,7 +227,7 @@ class AnalyticsManager
     }
 
     /**
-     * Retrieve analytics for workspace: chartData and resource statistics
+     * Retrieve analytics for workspace: chartData and resource statistics.
      */
     public function getWorkspaceAnalytics(Workspace $workspace)
     {
@@ -241,7 +239,7 @@ class AnalyticsManager
 
         return array('chartData' => $chartData,
             'resourceCount' => $resourcesByType,
-            'workspace' => $workspace
+            'workspace' => $workspace,
         );
     }
 }

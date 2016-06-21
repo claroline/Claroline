@@ -6,7 +6,6 @@ use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -46,7 +45,7 @@ class NotificationController extends Controller
                 $result
             );
         } else {
-            $category = $request->get("category");
+            $category = $request->get('category');
             if ($markViewed == true) {
                 $notificationManager->markAllNotificationsAsViewed($user->getId());
             }
@@ -64,7 +63,9 @@ class NotificationController extends Controller
      *      defaults={"_format":"xml"},
      *      name="icap_notification_rss"
      * )
+     *
      * @param $rssId
+     *
      * @return mixed
      */
     public function rssAction($rssId)
@@ -72,11 +73,11 @@ class NotificationController extends Controller
         $notificationManager = $this->getNotificationManager();
         try {
             $result = $notificationManager->getUserNotificationsListRss($rssId);
-            $result["systemName"] = $notificationManager->getPlatformName();
+            $result['systemName'] = $notificationManager->getPlatformName();
         } catch (NoResultException $nre) {
-            $result = array("error" => "no_rss_defined");
+            $result = array('error' => 'no_rss_defined');
         } catch (NotFoundHttpException $nfe) {
-            $result = array("error" => "zero_notifications");
+            $result = array('error' => 'zero_notifications');
         }
 
         return $this->render('IcapNotificationBundle:Notification:rss.xml.twig', $result);
@@ -87,6 +88,6 @@ class NotificationController extends Controller
      */
     private function getNotificationManager()
     {
-        return $this->get("icap.notification.manager");
+        return $this->get('icap.notification.manager');
     }
 }

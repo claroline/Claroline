@@ -15,13 +15,11 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Claroline\CoreBundle\Manager\Calendar\PeriodManager;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Form\Calendar\PeriodType;
-use Claroline\CoreBundle\Entity\Calendar\Period;
 use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
@@ -45,13 +43,12 @@ class PeriodController extends FOSRestController
         ApiManager           $apiManager,
         ObjectManager        $om,
         Request              $request
-    )
-    {
-        $this->formFactory     = $formFactory;
-        $this->periodManager   = $periodManager;
-        $this->om              = $om;
-        $this->request         = $request;
-        $this->apiManager      = $apiManager;
+    ) {
+        $this->formFactory = $formFactory;
+        $this->periodManager = $periodManager;
+        $this->om = $om;
+        $this->request = $request;
+        $this->apiManager = $apiManager;
     }
 
     /**
@@ -68,7 +65,7 @@ class PeriodController extends FOSRestController
         $form = $this->createForm($formType);
 
         return $this->apiManager->handleFormView(
-            'ClarolineCoreBundle:API:Calendar\createPeriodForm.html.twig', 
+            'ClarolineCoreBundle:API:Calendar\createPeriodForm.html.twig',
             $form
         );
     }

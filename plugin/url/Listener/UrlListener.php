@@ -21,9 +21,6 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
  * @DI\Service
@@ -54,7 +51,7 @@ class UrlListener
         TwigEngine $templating,
         ResourceManager $manager,
         UrlManager $urlManager
-    ){
+    ) {
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
@@ -76,7 +73,7 @@ class UrlListener
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig', array(
                 'form' => $form->createView(),
-                'resourceType' => 'hevinci_url'
+                'resourceType' => 'hevinci_url',
             )
         );
         $event->setResponseContent($content);
@@ -108,7 +105,7 @@ class UrlListener
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig', array(
                 'form' => $form->createView(),
-                'resourceType' => $event->getResourceType()
+                'resourceType' => $event->getResourceType(),
             )
         );
         $event->setErrorFormContent($content);
@@ -129,7 +126,7 @@ class UrlListener
         $url = $event->getResource();
 
         if ($url->getInternalUrl()) {
-            $event->setResponse(new RedirectResponse($this->request->getSchemeAndHttpHost() . $this->request->getScriptName() . $url->getUrl()));
+            $event->setResponse(new RedirectResponse($this->request->getSchemeAndHttpHost().$this->request->getScriptName().$url->getUrl()));
         } else {
             $event->setResponse(new RedirectResponse($url->getUrl()));
         }
@@ -175,7 +172,7 @@ class UrlListener
 
         $content = $this->templating->render('HeVinciUrlBundle:Url:form.html.twig', array(
             'form' => $form->createView(),
-            'node' => $event->getResource()->getResourceNode()->getId()
+            'node' => $event->getResource()->getResourceNode()->getId(),
         ));
 
         $event->setResponse(new Response($content));

@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Publish Path into the Application
+ * Publish Path into the Application.
  */
 class PublishCommand extends AbstractPublishCommand
 {

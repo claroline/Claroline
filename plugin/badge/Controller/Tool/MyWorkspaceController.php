@@ -38,9 +38,9 @@ class MyWorkspaceController extends Controller
         $this->checkUserIsAllowed($workspace);
 
         return array(
-            'workspace'  => $workspace,
-            'user'       => $loggedUser,
-            'badgePage'  => $badgePage
+            'workspace' => $workspace,
+            'user' => $loggedUser,
+            'badgePage' => $badgePage,
         );
     }
 
@@ -61,7 +61,7 @@ class MyWorkspaceController extends Controller
         $badgeClaim->setUser($user);
 
         try {
-            $flashBag   = $this->get('session')->getFlashBag();
+            $flashBag = $this->get('session')->getFlashBag();
             $translator = $this->get('translator');
 
             /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
@@ -92,20 +92,20 @@ class MyWorkspaceController extends Controller
         $this->checkUserIsAllowed($workspace);
 
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
-        $badgeRuleValidator = $this->get("claroline.rule.validator");
-        $validatedRules       = $badgeRuleValidator->validate($badge, $user);
-        $validateLogsLink   = array();
+        $badgeRuleValidator = $this->get('claroline.rule.validator');
+        $validatedRules = $badgeRuleValidator->validate($badge, $user);
+        $validateLogsLink = array();
 
         if (0 < $validatedRules['validRules']) {
             foreach ($validatedRules['rules'] as $ruleIndex => $validatedRule) {
                 foreach ($validatedRule['logs'] as $logIndex => $validateLog) {
                     $validatedRules['rules'][$ruleIndex]['logs'][$logIndex] = array(
                         'log' => $validateLog,
-                        'url' => null
+                        'url' => null,
                     );
 
                     $validationLink = null;
-                    $eventLogName   = sprintf('badge-%s-generate_validation_link', $validateLog->getAction());
+                    $eventLogName = sprintf('badge-%s-generate_validation_link', $validateLog->getAction());
 
                     $eventDispatcher = $this->get('event_dispatcher');
                     if ($eventDispatcher->hasListeners($eventLogName)) {
@@ -131,10 +131,10 @@ class MyWorkspaceController extends Controller
         }*/
 
         return array(
-            'workspace'    => $workspace,
-            'userBadge'      => $userBadge,
-            'badge'          => $badge,
-            'validatedRules' => $validatedRules
+            'workspace' => $workspace,
+            'userBadge' => $userBadge,
+            'badge' => $badge,
+            'validatedRules' => $validatedRules,
         );
     }
 

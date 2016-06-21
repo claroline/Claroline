@@ -11,13 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Calendar;
 
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 
 /**
@@ -98,7 +95,6 @@ class Year
         $this->periods = new ArrayCollection();
     }
 
-
     public function getId()
     {
         return $this->id;
@@ -156,12 +152,16 @@ class Year
 
     public function addLeave(Leave $leave)
     {
-        if (!$this->leaves->contains($leave)) $this->leaves->add($leave);
+        if (!$this->leaves->contains($leave)) {
+            $this->leaves->add($leave);
+        }
     }
 
     public function removeLeave(Leave $leave)
     {
-        if ($this->leaves->contains($leave)) $this->leaves->removeElement($leave);
+        if ($this->leaves->contains($leave)) {
+            $this->leaves->removeElement($leave);
+        }
     }
 
     public function setLeaves(ArrayCollection $leaves)
@@ -176,12 +176,16 @@ class Year
 
     public function addPeriod(Period $period)
     {
-        if (!$this->periods->contains($period)) $this->periods->add($period);
+        if (!$this->periods->contains($period)) {
+            $this->periods->add($period);
+        }
     }
 
     public function removePeriod(Period $period)
     {
-        if ($this->periods->contains($period)) $this->periods->removeElement($period);
+        if ($this->periods->contains($period)) {
+            $this->periods->removeElement($period);
+        }
     }
 
     public function setPeriod(ArrayCollection $periods)

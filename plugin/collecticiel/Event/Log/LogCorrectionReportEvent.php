@@ -3,29 +3,27 @@
 namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
-use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Correction;
 
-class LogCorrectionReportEvent extends AbstractLogResourceEvent implements NotifiableInterface {
-
+class LogCorrectionReportEvent extends AbstractLogResourceEvent implements NotifiableInterface
+{
     const ACTION = 'resource-innova_collecticiel-correction_report';
     protected $dropzone;
     protected $details;
     private $role_manager;
 
     /**
-     * @param Wiki $wiki
-     * @param Section $section
+     * @param Wiki         $wiki
+     * @param Section      $section
      * @param Contribution $contribution
-    */
+     */
     public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction, $roleManager)
     {
         $this->dropzone = $dropzone;
-        $this->role_manager =  $roleManager;
+        $this->role_manager = $roleManager;
         $this->details = array(
             'report' => array(
                 'drop' => $drop,
@@ -33,8 +31,8 @@ class LogCorrectionReportEvent extends AbstractLogResourceEvent implements Notif
                 'report_comment' => $correction->getReportComment(),
                 'dropzoneId' => $dropzone->getId(),
                 'dropId' => $drop->getId(),
-                'correctionId' => $correction->getId()
-            )
+                'correctionId' => $correction->getId(),
+            ),
         );
 
         parent::__construct($dropzone->getResourceNode(), $this->details);
@@ -51,7 +49,7 @@ class LogCorrectionReportEvent extends AbstractLogResourceEvent implements Notif
     /**
      * Get sendToFollowers boolean.
      * 
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -61,14 +59,15 @@ class LogCorrectionReportEvent extends AbstractLogResourceEvent implements Notif
 
     /**
      * Get includeUsers array of user ids.
-     * Reports are only reported to user witch have the manager role
+     * Reports are only reported to user witch have the manager role.
+     *
      * @return array
      */
     public function getIncludeUserIds()
     {
         // In order to get users with the manager role.
         //getting the  workspace.
-        
+
         $ResourceNode = $this->dropzone->getResourceNode();
         $workspace = $ResourceNode->getWorkspace();
         // getting the  Manager role
@@ -78,10 +77,10 @@ class LogCorrectionReportEvent extends AbstractLogResourceEvent implements Notif
         $users = $role->getUsers();
         $ids = array();
         foreach ($users as $user) {
-           array_push($ids,$user->getId());
+            array_push($ids, $user->getId());
         }
+
         return $ids;
-        
     }
 
     /**
@@ -111,11 +110,11 @@ class LogCorrectionReportEvent extends AbstractLogResourceEvent implements Notif
      */
     public function getIconKey()
     {
-        return "dropzone";
+        return 'dropzone';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -125,16 +124,16 @@ class LogCorrectionReportEvent extends AbstractLogResourceEvent implements Notif
         $notificationDetails['resource'] = array(
             'id' => $this->dropzone->getId(),
             'name' => $this->resource->getName(),
-            'type' => $this->resource->getResourceType()->getName()
+            'type' => $this->resource->getResourceType()->getName(),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

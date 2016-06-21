@@ -41,7 +41,7 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
         if ($role->getWorkspace()) {
             $details['workspace'] = array(
                 'name' => $role->getWorkspace()->getName(),
-                'id' => $role->getWorkspace()->getId()
+                'id' => $role->getWorkspace()->getId(),
             );
 
             $managerRole = $role->getWorkspace()->getManagerRole();
@@ -52,12 +52,12 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
             $details['receiverUser'] = array(
                 'firstName' => $subject->getFirstName(),
                 'lastName' => $subject->getLastName(),
-                'username' => $subject->getUsername()
+                'username' => $subject->getUsername(),
             );
             $this->receiver = $subject;
         } else {
             $details['receiverGroup'] = array(
-                'name' => $subject->getName()
+                'name' => $subject->getName(),
             );
 
             $this->receiverGroup = $subject;
@@ -80,13 +80,13 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -162,7 +162,6 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
             } else {
                 return $this::ACTION_WORKSPACE_USER;
             }
-
         } else {
             if ($this->role->getWorkspace() === null) {
                 return $this::ACTION_GROUP;
@@ -180,11 +179,11 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
     public function getIconKey()
     {
         //Icon key is null here because we need default icon for platform notifications
-        return null;
+        return;
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -196,9 +195,9 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

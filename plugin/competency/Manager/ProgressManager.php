@@ -94,6 +94,7 @@ class ProgressManager
      * Note: this method recomputes only the percentage of reached objectives.
      *
      * @param User|Group $subject
+     *
      * @return null|int
      */
     public function recomputeUserProgress($subject)
@@ -143,7 +144,8 @@ class ProgressManager
      * Returns user evaluation data for a given leaf competency.
      *
      * @param Competency $competency
-     * @param User $user
+     * @param User       $user
+     *
      * @return mixed
      */
     public function listLeafCompetencyLogs(Competency $competency, User $user)
@@ -163,7 +165,7 @@ class ProgressManager
     {
         $progress = $this->abilityProgressRepo->findOneBy([
             'ability' => $ability,
-            'user' => $user
+            'user' => $user,
         ]);
 
         if (!$progress) {
@@ -225,7 +227,7 @@ class ProgressManager
         if (!isset($this->cachedCompetencyProgresses[$competency->getId()])) {
             $progress = $this->competencyProgressRepo->findOneBy([
                 'competency' => $competency,
-                'user' => $user
+                'user' => $user,
             ]);
 
             if (!$progress) {
@@ -287,7 +289,7 @@ class ProgressManager
             }
         }
 
-        return null;
+        return;
     }
 
     private function getSiblingNodes(Competency $startNode, Competency $parent, array $related)
@@ -381,7 +383,7 @@ class ProgressManager
         if (!isset($this->cachedObjectiveProgresses[$objective->getId()])) {
             $progress = $this->objectiveProgressRepo->findOneBy([
                 'objective' => $objective,
-                'user' => $user
+                'user' => $user,
             ]);
 
             if (!$progress) {

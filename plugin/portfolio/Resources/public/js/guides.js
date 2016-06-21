@@ -45,7 +45,6 @@
         userSelect2Field.on("change", function(event) {
             var existingFieldValue = $('.form-collection input[value=' + event.val + ']');
             if (0 >= existingFieldValue.length) {
-                //console.log("change " + JSON.stringify({val: event.val, added: event.added, removed: event.removed}));
                 addingGuideButton.prop('disabled', false);
             }
             else {

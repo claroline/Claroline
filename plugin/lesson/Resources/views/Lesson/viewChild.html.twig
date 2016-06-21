@@ -1,0 +1,51 @@
+{% macro recursiveChapter(root, chapter, lesson, isRoot) %}
+    {% if isRoot %}
+        <ul class='jquery-sortable-list' data-list = '{{ root.id }}' id='lesson_menu' >
+    {% else %}
+        <ul class='' id = 'list_{{ root.id }}' data-list = '{{ root.id }}'>
+    {% endif %}
+    {% if root.__children|length %}
+        {% for child in root.__children %}
+            <li class='draggable-item' id = '{{ child.id }}' data-path = '{{ path('icap_lesson_move_chapter', { 'resourceId': lesson.id, 'chapterId': child.id })}}' >
+            <div class='menu-item {% if child.id == chapter.id %}active_chapter{% endif %}' id = 'menu_item_{{ child.id }}'>
+                    <i class='fa fa-caret-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
+                    {#<i data-handle = '{{ child.id }}' class="fa fa-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>#}
+                    <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.slug }) }}">{{ child.title }}</a>
+            </div>
+            {{ _self.recursiveChapter(child, chapter, lesson, false) }}
+            </li>
+        {% endfor %}
+    {% endif %}
+    </ul>
+{% endmacro %}
+
+
+{% if tree is defined and tree != null and tree.__children is defined and tree.__children|length %}
+           {# data-spy="affix"#}
+    <div class='panel panel-default menu_lesson ' data-offset-top="90" data-clampedwidth = '#lesson_left_column'>
+        <div class='chapter_list_header'>
+            </i>{{ 'chapter_list_header'|trans({}, 'icap_lesson') }}
+
+            <div class="icon_chapter_list_header">
+                {% if is_granted('EDIT', node) %}
+                <button id='enable_move' role="button" data-status='enable' class='btn-xs btn btn-default lesson_tooltip menu_lesson_button' data-original-title='{{ 'enabled_move'|trans({}, 'icap_lesson') }}'><i class="fa fa-arrows text-primary" ></i></button>
+                {%  endif  %}
+                <button id='collapse_all' role="button" class='btn-xs btn btn-default lesson_tooltip menu_lesson_button collapse' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'><i class=" fa fa-long-arrow-up text-primary" ></i><i class="fa fa-minus text-primary"></i></button>
+                <button id='expand_all' role="button" class='btn-xs btn btn-default lesson_tooltip menu_lesson_button expand hidden' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'><i class="fa fa-long-arrow-down text-primary"></i><i class="fa fa-reorder text-primary"></i></button>
+            </div>
+
+
+        </div>
+        {{ _self.recursiveChapter(tree, chapter, _resource, true) }}
+        <br />
+
+{#        <form id='moveform' action ='{{ path('icap_lesson_move_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}' method='post' style='display:none;'>
+            {{ form_rest(form) }}
+        </form>#}
+        <div style='display:none;' id = 'moveChapterFormContainer'>
+            {% include 'IcapLessonBundle:Lesson:choiceMoveChapterForm.html.twig' %}
+        </div>
+    </div>
+{% else %}
+    {{ 'There is no chapter'|trans({}, 'icap_lesson') }}
+{% endif %}

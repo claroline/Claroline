@@ -59,7 +59,7 @@ class TemplateEngine
             }
 
             ob_start();
-            require $dir . '/' . $template;
+            require $dir.'/'.$template;
 
             return ob_get_clean();
         };

@@ -3,7 +3,6 @@
 namespace Icap\PortfolioBundle\Repository\Widget;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 
 class WidgetTypeRepository extends EntityRepository
 {

@@ -48,4 +48,4 @@ class TextManager
 
         return $text;
     }
-} 
+}

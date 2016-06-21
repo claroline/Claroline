@@ -23,6 +23,7 @@ class ResultRepository extends EntityRepository
      *
      * @param User      $user
      * @param Workspace $workspace
+     *
      * @return array
      */
     public function findByUserAndWorkspace(User $user, Workspace $workspace)
@@ -39,13 +40,13 @@ class ResultRepository extends EntityRepository
             JOIN m.user u
             WHERE w = :workspace
             AND u = :user
-            ORDER BY n.creationDate DESC
+            ORDER BY n.creationDate DESC, n.id
         ';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameters([
             'workspace' => $workspace,
-            'user' => $user
+            'user' => $user,
         ]);
 
         return $query->getArrayResult();

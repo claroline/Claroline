@@ -17,10 +17,10 @@ class DocumentType extends AbstractType
             $builder->add('document', 'tinymce', array(
                 'required' => true,
             ));
-        } else if ($options['documentType'] == 'file') {
+        } elseif ($options['documentType'] == 'file') {
             $this->setName('icap_dropzone_document_file_form_file');
             $builder->add('document', 'file', array('required' => true, 'label' => 'file document'));
-        } else if ($options['documentType'] == 'resource') {
+        } elseif ($options['documentType'] == 'resource') {
             $this->setName('icap_dropzone_document_file_form_resource');
             $builder->add(
                 'document',
@@ -28,7 +28,7 @@ class DocumentType extends AbstractType
                 array(
                     'required' => true,
                     'label' => '',
-                    'label_attr' => array('style' => 'display: none;')
+                    'label_attr' => array('style' => 'display: none;'),
                 )
             );
         } else {

@@ -1,9 +1,8 @@
 <?php
+
 namespace Icap\DropzoneBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
@@ -32,17 +31,16 @@ class CorrectionManager
         $this->em = $em;
     }
 
-
     /**
-     *  Calculate the grad of a copy
+     *  Calculate the grad of a copy.
      *
-     * @param Dropzone $dropzone
+     * @param Dropzone   $dropzone
      * @param Correction $correction
+     *
      * @return float|int
      */
     public function calculateCorrectionTotalGrade(Dropzone $dropzone, Correction $correction)
     {
-
         $nbCriteria = count($dropzone->getPeerReviewCriteria());
         $maxGrade = $dropzone->getTotalCriteriaColumn() - 1;
         $sumGrades = 0;
@@ -52,7 +50,6 @@ class CorrectionManager
 
         $totalGrade = 0;
         if ($nbCriteria != 0) {
-
             $totalGrade = $sumGrades / ($nbCriteria);
             $totalGrade = ($totalGrade * 20) / ($maxGrade);
         }
@@ -60,7 +57,7 @@ class CorrectionManager
         return $totalGrade;
     }
 
-    public function recalculateScoreForCorrections(Dropzone $dropzone, Array $corrections)
+    public function recalculateScoreForCorrections(Dropzone $dropzone, array $corrections)
     {
         $this->container->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
         // recalculate the score for all corrections
@@ -80,6 +77,4 @@ class CorrectionManager
             }
         }
     }
-
-
 }

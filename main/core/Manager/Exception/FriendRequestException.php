@@ -15,12 +15,14 @@ class FriendRequestException extends \Exception
 {
     private $url;
 
-    public function __construct($message, $url) {
+    public function __construct($message, $url)
+    {
         parent::__construct($message);
         $this->url = $url;
     }
 
-    public function getUrl() {
+    public function getUrl()
+    {
         return $this->url;
     }
 }

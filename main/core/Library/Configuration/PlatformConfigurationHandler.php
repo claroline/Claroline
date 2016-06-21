@@ -11,10 +11,9 @@
 
 namespace Claroline\CoreBundle\Library\Configuration;
 
-use \RuntimeException;
+use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -26,6 +25,7 @@ class PlatformConfigurationHandler
 {
     private $configFile;
     private $parameters;
+
     public static $defaultParameters = array(
         'name' => 'claroline',
         'nameActive' => true,
@@ -46,7 +46,8 @@ class PlatformConfigurationHandler
         'mailer_auth_mode' => null,
         'terms_of_service' => true,
         'google_meta_tag' => null,
-        'redirect_after_login' => false,
+        'redirect_after_login_option' => PlatformConfiguration::DEFAULT_REDIRECT_OPTION,
+        'redirect_after_login_url' => null,
         'session_storage_type' => 'native',
         'session_db_table' => null,
         'session_db_id_col' => null,
@@ -56,7 +57,7 @@ class PlatformConfigurationHandler
         'session_db_user' => null,
         'session_db_password' => null,
         'form_captcha' => true,
-        'platform_limit_date' => 1559350861,//1 june 2019
+        'platform_limit_date' => 1559350861, //1 june 2019
         'platform_init_date' => 1388534461, //1 june 2014
         'account_duration' => null,
         'username_regex' => '/^[a-zA-Z0-9@\-_\.]*$/',
@@ -91,7 +92,7 @@ class PlatformConfigurationHandler
         'is_pdf_export_active' => false,
         'google_geocoding_client_id' => null,
         'google_geocoding_signature' => null,
-        'google_geocoding_key' => null
+        'google_geocoding_key' => null,
     );
     private $lockedParameters;
 
@@ -119,7 +120,9 @@ class PlatformConfigurationHandler
 
     public function getParameter($parameter)
     {
-        if ($this->hasParameter($parameter)) return $this->parameters[$parameter];
+        if ($this->hasParameter($parameter)) {
+            return $this->parameters[$parameter];
+        }
     }
 
     public function setParameter($parameter, $value)
@@ -140,13 +143,17 @@ class PlatformConfigurationHandler
         $toMerge = array();
 
         foreach ($parameters as $key => $value) {
-
             if (!isset($this->lockedParameters[$key])) {
                 $toMerge[$key] = $value;
             }
         }
         $this->parameters = array_merge($this->parameters, $toMerge);
         $this->saveParameters();
+    }
+
+    public function isRedirectOption($option)
+    {
+        return $this->parameters['redirect_after_login_option'] == $option;
     }
 
     public function getPlatformConfig()
@@ -170,7 +177,8 @@ class PlatformConfigurationHandler
         $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
         $config->setMailerPort($this->parameters['mailer_port']);
         $config->setGoogleMetaTag($this->parameters['google_meta_tag']);
-        $config->setRedirectAfterLogin($this->parameters['redirect_after_login']);
+        $config->setRedirectAfterLoginOption($this->parameters['redirect_after_login_option']);
+        $config->setRedirectAfterLoginUrl($this->parameters['redirect_after_login_url']);
         $config->setSessionStorageType($this->parameters['session_storage_type']);
         $config->setSessionDbTable($this->parameters['session_db_table']);
         $config->setSessionDbIdCol($this->parameters['session_db_id_col']);

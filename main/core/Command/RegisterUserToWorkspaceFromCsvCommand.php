@@ -28,7 +28,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                     'csv_workspace_registration_path',
                     InputArgument::REQUIRED,
                     'The absolute path to the csv file.'
-                )
+                ),
             )
         );
     }
@@ -36,11 +36,10 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $params = array(
-            'csv_workspace_registration_path' => 'Absolute path to the csv file: '
+            'csv_workspace_registration_path' => 'Absolute path to the csv file: ',
         );
 
         foreach ($params as $argument => $argumentName) {
-
             if (!$input->getArgument($argument)) {
                 $input->setArgument(
                     $argument, $this->askArgument($output, $argumentName)
@@ -55,7 +54,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
             $output,
             $argumentName,
             function ($argument) {
-            
+
                 if (empty($argument)) {
                     throw new \Exception('This argument is required');
                 }
@@ -77,7 +76,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
 
         $file = $input->getArgument('csv_workspace_registration_path');
         $lines = str_getcsv(file_get_contents($file), PHP_EOL);
-        
+
         $om->startFlushSuite();
 
         $i = 1;
@@ -101,7 +100,6 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                     );
 
                     if (count($roles) === 1) {
-
                         if ($action === 'register') {
                             $roleManager->associateRole($user, $roles[0]);
                             $output->writeln(
@@ -112,8 +110,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                             $output->writeln(
                                 "<info> Line $i: {User [$username] has been unregistered from role [$roleKey] of workspace [$workspaceCode].} </info>"
                             );
-                        }
-                        else {
+                        } else {
                             $output->writeln(
                                 "<error> Line $i: {Unknown action [$action]. Allowed actions are [register] and [unregister]} </error>"
                             );
@@ -128,12 +125,11 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                         );
                     }
                 } else {
-
-                    if (is_null($user)){
+                    if (is_null($user)) {
                         $output->writeln("<error> Line $i: {User [$username] doesn't exist.} </error>");
                     }
 
-                    if (is_null($workspace)){
+                    if (is_null($workspace)) {
                         $output->writeln("<error> Line $i: {Workspace [$workspaceCode] doesn't exist.} </error>");
                     }
                 }
@@ -145,7 +141,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                 $om->forceFlush();
                 $om->clear();
             }
-            $i++;
+            ++$i;
         }
         $om->endFlushSuite();
     }

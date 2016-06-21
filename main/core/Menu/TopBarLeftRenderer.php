@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Menu;
 
-use Knp\Menu\FactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use JMS\DiExtraBundle\Annotation as DI;
 use Knp\Menu\Renderer\ListRenderer;
 use Knp\Menu\ItemInterface;
@@ -34,14 +32,13 @@ class TopBarLeftRenderer extends ListRenderer
         $matcher,
         $defaultOptions,
         $charset
-    )
-    {
+    ) {
         parent::__construct($matcher, $defaultOptions, $charset);
     }
 
     protected function renderLinkElement(ItemInterface $item, array $options)
     {
-        $uri = $item->getExtra('href') ? $item->getExtra('href'): $item->getUri();
+        $uri = $item->getExtra('href') ? $item->getExtra('href') : $item->getUri();
 
         return sprintf(
             '<a role="menuitem" href="%s" title="%s"><i class="%s"></i><span class="break-hide"> %s</span> <span class="badge">%s</span></a><div>%s</div>',

@@ -21,13 +21,13 @@ class ConsoleLogger
     {
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         );
 
         $formatLevelMap = array(
-            LogLevel::DEBUG    => SfLogger::ERROR,
-            LogLevel::NOTICE   => SfLogger::INFO
+            LogLevel::DEBUG => SfLogger::ERROR,
+            LogLevel::NOTICE => SfLogger::INFO,
         );
 
         $consoleLogger = new SfLogger($output, $verbosityLevelMap, $formatLevelMap);

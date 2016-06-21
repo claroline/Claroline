@@ -14,7 +14,6 @@ namespace Claroline\MigrationBundle\Generator;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
@@ -32,8 +31,8 @@ class Generator
     /**
      * Constructor.
      *
-     * @param \Doctrine\ORM\EntityManager       $em
-     * @param \Doctrine\ORM\Tools\SchemaTool    $tool
+     * @param \Doctrine\ORM\EntityManager    $em
+     * @param \Doctrine\ORM\Tools\SchemaTool $tool
      */
     public function __construct(EntityManager $em, SchemaTool $tool)
     {
@@ -44,8 +43,8 @@ class Generator
     /**
      * Generates bundle migration queries (up and down) for a given SQL platform.
      *
-     * @param \Symfony\Component\HttpKernel\Bundle\Bundle    $bundle
-     * @param \Doctrine\DBAL\Platforms\AbstractPlatform      $platform
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     * @param \Doctrine\DBAL\Platforms\AbstractPlatform   $platform
      *
      * @return array
      */
@@ -63,7 +62,7 @@ class Generator
 
         return array(
             self::QUERIES_UP => $upQueries,
-            self::QUERIES_DOWN => $downQueries
+            self::QUERIES_DOWN => $downQueries,
         );
     }
 
@@ -86,7 +85,7 @@ class Generator
         return array(
             'fromSchema' => clone $this->schemas['fromSchema'],
             'toSchema' => clone $this->schemas['toSchema'],
-            'metadata' => $this->schemas['metadata']
+            'metadata' => $this->schemas['metadata'],
         );
     }
 

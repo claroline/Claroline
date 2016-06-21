@@ -63,7 +63,7 @@ class WidgetListener
      */
     public function onWidgetFormView(WidgetFormViewEvent $widgetFormViewEvent)
     {
-        $widgetFormViewEvent->setFormView($this->templatingEngine->render('IcapBadgeBundle:Portfolio/form:' . $widgetFormViewEvent->getWidgetType() . '.html.twig'));
+        $widgetFormViewEvent->setFormView($this->templatingEngine->render('IcapBadgeBundle:Portfolio/form:'.$widgetFormViewEvent->getWidgetType().'.html.twig'));
     }
 
     /**
@@ -83,7 +83,7 @@ class WidgetListener
      */
     public function onWidgetView(WidgetViewEvent $widgetViewEvent)
     {
-        $widgetViewEvent->setView($this->templatingEngine->render('IcapBadgeBundle:Portfolio:' . $widgetViewEvent->getWidgetType() . '.html.twig', array('widget' => $widgetViewEvent->getWidget())));
+        $widgetViewEvent->setView($this->templatingEngine->render('IcapBadgeBundle:Portfolio:'.$widgetViewEvent->getWidgetType().'.html.twig', array('widget' => $widgetViewEvent->getWidget())));
     }
 
     /**
@@ -93,7 +93,7 @@ class WidgetListener
      */
     public function onWidgetForm(WidgetFormEvent $widgetFormEvent)
     {
-        $widgetFormEvent->setForm($this->formFactory->create('icap_badge_portfolio_widget_form_' . $widgetFormEvent->getWidgetType(), $widgetFormEvent->getData()));
+        $widgetFormEvent->setForm($this->formFactory->create('icap_badge_portfolio_widget_form_'.$widgetFormEvent->getWidgetType(), $widgetFormEvent->getData()));
     }
 
     /**

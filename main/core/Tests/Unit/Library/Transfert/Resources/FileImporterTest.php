@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Library;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Mockery as m;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources\FileImporter;
 use Symfony\Component\Yaml\Yaml;
 
@@ -36,7 +35,7 @@ class FileImporterTest extends MockeryTestCase
             $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         }
 
-        $data = Yaml::parse(file_get_contents($basePath . '/'. $path));
+        $data = Yaml::parse(file_get_contents($basePath.'/'.$path));
         $this->fileImporter->setRootPath($basePath);
         $this->fileImporter->validate($data);
     }
@@ -47,16 +46,16 @@ class FileImporterTest extends MockeryTestCase
         return array(
             //valid (the file path is correct)
             array(
-                'basePath' =>  __DIR__.'/../../../../Stub/transfert/valid/full',
+                'basePath' => __DIR__.'/../../../../Stub/transfert/valid/full',
                 'path' => 'tools/resources/files01.yml',
-                'isExceptionExpected' => false
+                'isExceptionExpected' => false,
             ),
             //invalid (the file path is wrong)
             array(
-                'basePath' =>  __DIR__.'/../../../../Stub/transfert/invalid/files',
+                'basePath' => __DIR__.'/../../../../Stub/transfert/invalid/files',
                 'path' => 'nopath.yml',
-                'isExceptionExpected' => true
-            )
+                'isExceptionExpected' => true,
+            ),
         );
     }
 }

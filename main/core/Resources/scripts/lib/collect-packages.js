@@ -86,7 +86,7 @@ function getMetaEntries(targetDir) {
         Object.keys(data.webpack.entry).forEach(entry => {
           var parts = dir.split("/");
           var lastDir = parts[parts.length - 1];
-          metadata.webpack.entry[entry] = {
+          metadata.webpack.entry[`${bundle}-${entry}`]  = {
             name: data.webpack.entry[entry],
             prefix: `${dir}/${bundle}`,
             dir: lastDir,

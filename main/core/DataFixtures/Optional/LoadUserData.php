@@ -49,7 +49,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -57,7 +57,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $objectManager)
     {
@@ -71,16 +71,16 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
         foreach ($this->users as $names => $role) {
             $namesArray = explode(' ', $names);
             $firstName = $namesArray[0];
-            $lastName = (isset($namesArray[1])) ? $namesArray[1]: '';
+            $lastName = (isset($namesArray[1])) ? $namesArray[1] : '';
             $username = $firstName.ucfirst($lastName);
             $user = new User();
             $user->setAdministrativeCode('UCL-'.$username.'-'.rand(0, 1000));
             $user->setFirstName($firstName);
-            $lastName = ($lastName == '') ? 'Doe': $lastName;
+            $lastName = ($lastName == '') ? 'Doe' : $lastName;
             $user->setLastName($lastName);
             $user->setUserName($username);
             $user->setPlainPassword($username);
-            $user->setMail('mail_' . uniqid() . '@claroline.net');
+            $user->setMail('mail_'.uniqid().'@claroline.net');
             $objectManager->persist($user);
             $roleManager->associateRole($user, $this->getReference("role/{$role}"));
 

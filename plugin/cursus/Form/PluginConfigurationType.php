@@ -39,7 +39,7 @@ class PluginConfigurationType extends AbstractType
             'widget' => 'single_text',
             'attr' => $attr,
             'input' => 'datetime',
-            'label' => 'default_session_start_date'
+            'label' => 'default_session_start_date',
         );
         $defaultStartDate = $this->configHandler->getParameter('cursusbundle_default_session_start_date');
 
@@ -76,7 +76,7 @@ class PluginConfigurationType extends AbstractType
             'content',
             array(
                 'data' => $builder->getData(),
-                'theme_options' => array('contentTitle' => true)
+                'theme_options' => array('contentTitle' => true),
             )
         );
     }

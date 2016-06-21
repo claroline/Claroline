@@ -64,7 +64,6 @@ class ResourceRightsRepository extends EntityRepository
         }
 
         return $mask;
-
     }
 
     /**
@@ -127,7 +126,7 @@ class ResourceRightsRepository extends EntityRepository
         $query->setParameter('resourceId', $resource->getId());
         $query->setParameter(
             'resourceManagerRole',
-            'ROLE_WS_MANAGER_' . $resource->getWorkspace()->getGuid()
+            'ROLE_WS_MANAGER_'.$resource->getWorkspace()->getGuid()
         );
         $query->setParameter('roleType', Role::USER_ROLE);
 
@@ -186,8 +185,7 @@ class ResourceRightsRepository extends EntityRepository
         ResourceNode $resource,
         array $keys,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT rights
             FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights

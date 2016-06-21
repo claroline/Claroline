@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Base entity for all resources.
@@ -29,9 +28,14 @@ use JMS\Serializer\Annotation\SerializedName;
  */
 class ResourceNode
 {
+    /**
+     * @var string
+     */
     const PATH_SEPARATOR = '`';
 
     /**
+     * @var int
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -40,23 +44,31 @@ class ResourceNode
     protected $id;
 
     /**
+     * @var string
+     *
      * @ORM\Column(nullable=true)
      */
     protected $license;
 
     /**
+     * @var \DateTime
+     *
      * @ORM\Column(name="creation_date", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
     protected $creationDate;
 
     /**
+     * @var \DateTime
+     *
      * @ORM\Column(name="modification_date", type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
     protected $modificationDate;
 
     /**
+     * @var ArrayCollection
+     *
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
      *     inversedBy="abstractResources",
@@ -67,6 +79,8 @@ class ResourceNode
     protected $resourceType;
 
     /**
+     * @var \Claroline\CoreBundle\Entity\User
+     *
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     inversedBy="resourceNodes",
@@ -77,6 +91,8 @@ class ResourceNode
     protected $creator;
 
     /**
+     * @var ResourceIcon
+     *
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon",
      *     cascade={"persist"}
@@ -86,6 +102,8 @@ class ResourceNode
     protected $icon;
 
     /**
+     * @var string
+     *
      * @Gedmo\TreePathSource
      * @ORM\Column()
      * @Assert\NotBlank()
@@ -94,6 +112,8 @@ class ResourceNode
     protected $name;
 
     /**
+     * @var ResourceNode
+     *
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -112,6 +132,8 @@ class ResourceNode
     protected $lvl;
 
     /**
+     * @var ArrayCollection|ResourceNode[]
+     *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     mappedBy="parent",
@@ -121,6 +143,8 @@ class ResourceNode
     protected $children;
 
     /**
+     * @var ArrayCollection|ResourceShortcut[]
+     *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceShortcut",
      *     mappedBy="target",
@@ -130,6 +154,8 @@ class ResourceNode
     protected $shortcuts;
 
     /**
+     * @var \Claroline\CoreBundle\Entity\Workspace\Workspace
+     *
      * @ORM\ManyToOne(
      *      targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *      inversedBy="resources"
@@ -139,6 +165,8 @@ class ResourceNode
     protected $workspace;
 
     /**
+     * @var string
+     *
      * @Gedmo\TreePath(separator="`")
      * @ORM\Column(length=3000, nullable=true)
      *
@@ -147,6 +175,8 @@ class ResourceNode
     protected $path;
 
     /**
+     * @var ArrayCollection|ResourceRights[]
+     *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceRights",
      *     mappedBy="resourceNode"
@@ -155,38 +185,54 @@ class ResourceNode
     protected $rights;
 
     /**
+     * @var int
+     *
      * @ORM\Column(name="value", nullable=true, type="integer")
      */
     protected $index;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="mime_type", nullable=true)
      */
     protected $mimeType;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="class", length=256)
      */
     protected $class;
 
     /**
+     * @var \DateTime
+     *
      * @ORM\Column(name="accessible_from", type="datetime", nullable=true)
      */
     protected $accessibleFrom;
 
     /**
+     * @var \DateTime
      * @ORM\Column(name="accessible_until", type="datetime", nullable=true)
      */
     protected $accessibleUntil;
 
+    /**
+     * @var string
+     */
     private $pathForCreationLog = '';
 
     /**
+     * @var bool
+     *
      * @ORM\Column(name="published", type="boolean", options={"default": 1})
      */
     protected $published = true;
 
     /**
+     * @var ArrayCollection|\Claroline\CoreBundle\Entity\Log\Log[]
+     *
      * @ORM\OneToMany(
      *  targetEntity="Claroline\CoreBundle\Entity\Log\Log",
      *  fetch="EXTRA_LAZY",
@@ -196,16 +242,22 @@ class ResourceNode
     protected $logs;
 
     /**
+     * @var string
+     *
      * @ORM\Column(nullable=true)
      */
     protected $author;
 
     /**
+     * @var bool
+     *
      * @ORM\Column(type="boolean", options={"default": 1})
      */
     protected $active = true;
 
     /**
+     * @var string
+     *
      * @ORM\Column()
      */
     protected $guid;
@@ -220,7 +272,7 @@ class ResourceNode
     /**
      * Returns the resource id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -229,9 +281,9 @@ class ResourceNode
 
     /**
      * Sets the resource id.
-     * Required by the ResourceController when it creates a fictionnal root
+     * Required by the ResourceController when it creates a fictional root.
      *
-     * @param integer $id
+     * @param int $id
      */
     public function setId($id)
     {
@@ -292,6 +344,11 @@ class ResourceNode
         return $this->modificationDate;
     }
 
+    /**
+     * Sets the resource modification date.
+     *
+     * @param \DateTime $date
+     */
     public function setModificationDate(\DateTime $date)
     {
         $this->modificationDate = $date;
@@ -340,7 +397,7 @@ class ResourceNode
     /**
      * Returns the children resource instances.
      *
-     * @return \Doctrine\Common\ArrayCollection|ResourceNode[]
+     * @return ArrayCollection|ResourceNode[]
      */
     public function getChildren()
     {
@@ -367,12 +424,22 @@ class ResourceNode
         return $this->workspace;
     }
 
+    /**
+     * Returns the resource icon.
+     *
+     * @return ResourceIcon
+     */
     public function getIcon()
     {
         return $this->icon;
     }
 
-    public function setIcon($icon)
+    /**
+     * Sets the resource icon.
+     *
+     * @param ResourceIcon $icon
+     */
+    public function setIcon(ResourceIcon $icon)
     {
         $this->icon = $icon;
     }
@@ -380,7 +447,7 @@ class ResourceNode
     /**
      * Sets the parent resource.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $parent
+     * @param ResourceNode $parent
      */
     public function setParent(ResourceNode $parent = null)
     {
@@ -390,7 +457,7 @@ class ResourceNode
     /**
      * Returns the parent resource.
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
+     * @return ResourceNode
      */
     public function getParent()
     {
@@ -400,7 +467,7 @@ class ResourceNode
     /**
      * Return the lvl value of the resource in the tree.
      *
-     * @return integer
+     * @return int
      */
     public function getLvl()
     {
@@ -410,7 +477,8 @@ class ResourceNode
     /**
      * Returns the "raw" path of the resource
      * (the path merge names and ids of all items).
-     * Eg.: "Root-1/subdir-2/file.txt-3/"
+     * Eg.: "Root-1/sub_dir-2/file.txt-3/".
+     *
      * @return string
      */
     public function getPath()
@@ -420,8 +488,9 @@ class ResourceNode
 
     /**
      * Returns the path cleaned from its ids.
-     * Eg.: "Root/subdir/file.txt"
-     * @return
+     * Eg.: "Root/sub_dir/file.txt".
+     *
+     * @return string
      */
     public function getPathForDisplay()
     {
@@ -431,14 +500,15 @@ class ResourceNode
     /**
      * Sets the resource name.
      *
-     * @param  string $name
-     * @throws an     exception if the name contains the path separator ('/').
+     * @param string $name
+     *
+     * @throws \InvalidArgumentException if the name contains the path separator ('/').
      */
     public function setName($name)
     {
         if (strpos(self::PATH_SEPARATOR, $name) !== false) {
             throw new \InvalidArgumentException(
-                'Invalid character "' . self::PATH_SEPARATOR . '" in resource name.'
+                'Invalid character "'.self::PATH_SEPARATOR.'" in resource name.'
             );
         }
 
@@ -456,7 +526,7 @@ class ResourceNode
     }
 
     /**
-     * Convert a path for display: remove ids.
+     * Converts a path for display: remove ids.
      *
      * @param string $path
      *
@@ -464,65 +534,121 @@ class ResourceNode
      */
     public static function convertPathForDisplay($path)
     {
-        $pathForDisplay = preg_replace('/-\d+' . self::PATH_SEPARATOR . '/', ' / ', $path);
+        $pathForDisplay = preg_replace('/-\d+'.self::PATH_SEPARATOR.'/', ' / ', $path);
 
         if ($pathForDisplay !== null && strlen($pathForDisplay) > 0) {
-            $pathForDisplay = substr_replace($pathForDisplay, "", -3);
+            $pathForDisplay = substr_replace($pathForDisplay, '', -3);
         }
 
         return $pathForDisplay;
     }
 
+    /**
+     * Returns the resource shortcuts.
+     *
+     * @return ResourceShortcut[]|ArrayCollection
+     */
     public function getShortcuts()
     {
         return $this->shortcuts;
     }
 
+    /**
+     * Returns the resource rights.
+     *
+     * @return ResourceRights[]|ArrayCollection
+     */
     public function getRights()
     {
         return $this->rights;
     }
 
+    /**
+     * Add rights to the resource.
+     *
+     * @param ResourceRights $right
+     */
     public function addRight(ResourceRights $right)
     {
         $this->rights->add($right);
     }
 
+    /**
+     * Returns the resource mime-type.
+     *
+     * @return string
+     */
     public function getMimeType()
     {
         return $this->mimeType;
     }
 
+    /**
+     * Sets the resource mime-type.
+     *
+     * @param string $mimeType
+     */
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
     }
 
+    /**
+     * Returns the resource class name.
+     *
+     * @return string
+     */
     public function getClass()
     {
         return $this->class;
     }
 
+    /**
+     * Sets the resource class name.
+     *
+     * @param string $class
+     */
     public function setClass($class)
     {
         $this->class = $class;
     }
+
+    /**
+     * Returns the resource accessible from date.
+     *
+     * @return \DateTime
+     */
     public function getAccessibleFrom()
     {
         return $this->accessibleFrom;
     }
 
-    public function setAccessibleFrom($accessibleFrom)
+    /**
+     * Sets the resource accessible from date.
+     *
+     * @param \DateTime $accessibleFrom
+     */
+    public function setAccessibleFrom(\DateTime $accessibleFrom = null)
     {
         $this->accessibleFrom = $accessibleFrom;
     }
 
+    /**
+     * Returns the resource accessible until date.
+     *
+     * @return \DateTime
+     */
     public function getAccessibleUntil()
     {
         return $this->accessibleUntil;
     }
 
-    public function setAccessibleUntil($accessibleUntil)
+    /**
+     * Sets the resource accessible until date.
+     *
+     * @param \DateTime $accessibleUntil
+     */
+    public function setAccessibleUntil(\DateTime $accessibleUntil = null)
     {
         $this->accessibleUntil = $accessibleUntil;
     }
@@ -531,7 +657,7 @@ class ResourceNode
      * This is required for logging the resource path at the creation.
      * Do not use this function otherwise.
      *
-     * @return type
+     * @param string $path
      */
     public function setPathForCreationLog($path)
     {
@@ -542,13 +668,18 @@ class ResourceNode
      * This is required for logging the resource path at the creation.
      * Do not use this function otherwise.
      *
-     * @return type
+     * @return string
      */
     public function getPathForCreationLog()
     {
         return $this->pathForCreationLog;
     }
 
+    /**
+     * Add a child resource node.
+     *
+     * @param ResourceNode $resourceNode
+     */
     public function addChild(ResourceNode $resourceNode)
     {
         if (!$this->children->contains($resourceNode)) {
@@ -556,41 +687,81 @@ class ResourceNode
         }
     }
 
+    /**
+     * Returns whether the resource is published.
+     *
+     * @return bool
+     */
     public function isPublished()
     {
         return $this->published;
     }
 
+    /**
+     * Sets the resource published state.
+     *
+     * @param $published
+     */
     public function setPublished($published)
     {
         $this->published = $published;
     }
 
+    /**
+     * Sets the resource index.
+     *
+     * @param int $index
+     */
     public function setIndex($index)
     {
         $this->index = $index;
     }
 
+    /**
+     * Returns the resource index.
+     *
+     * @return int
+     */
     public function getIndex()
     {
         return $this->index;
     }
 
+    /**
+     * Returns the resource author.
+     *
+     * @return string
+     */
     public function getAuthor()
     {
         return $this->author;
     }
 
+    /**
+     * Sets the resource author.
+     *
+     * @param string $author
+     */
     public function setAuthor($author)
     {
         $this->author = $author;
     }
 
+    /**
+     * Returns whether the resource is active.
+     *
+     * @return bool
+     */
     public function isActive()
     {
         return $this->active;
     }
 
+    /**
+     * Sets the resource active state.
+     *
+     * @param $active
+     */
     public function setActive($active)
     {
         $this->active = $active;
@@ -598,18 +769,30 @@ class ResourceNode
 
     /**
      * toString method.
-     * used to display the no path in forms
+     * used to display the no path in forms.
+     *
+     * @return string
      */
     public function __toString()
     {
         return $this->getPathForDisplay();
     }
 
+    /**
+     * Sets the resource GUID.
+     *
+     * @param string $guid
+     */
     public function setGuid($guid)
     {
         $this->guid = $guid;
     }
 
+    /**
+     * Returns the resource GUID.
+     *
+     * @return string
+     */
     public function getGuid()
     {
         return $this->guid;

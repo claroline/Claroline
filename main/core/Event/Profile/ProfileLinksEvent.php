@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -10,7 +10,6 @@
  */
 
 namespace Claroline\CoreBundle\Event\Profile;
-
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
@@ -47,4 +46,4 @@ class ProfileLinksEvent extends Event
     {
         return $this->locale;
     }
-} 
+}

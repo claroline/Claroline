@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class LoadRequiredData extends AbstractFixture implements ContainerAwareInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -29,14 +29,14 @@ class LoadRequiredData extends AbstractFixture implements ContainerAwareInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $om)
     {
         $messagePlugin = $this->getPluginFromIdentityMapOrScheduledForInsert(
             $om,
             'Claroline',
-            'MessageBundle'   
+            'MessageBundle'
         );
 
         if (!is_null($messagePlugin)) {
@@ -85,15 +85,12 @@ class LoadRequiredData extends AbstractFixture implements ContainerAwareInterfac
         ObjectManager $om,
         $vendorName,
         $bundleName
-    )
-    {
+    ) {
         $result = $this->getPluginFromIdentityMap($om, $vendorName, $bundleName);
 
         if (!is_null($result)) {
-
             return $result;
         } else {
-
             return $this->getPluginScheduledForInsert($om, $vendorName, $bundleName);
         }
     }
@@ -102,18 +99,14 @@ class LoadRequiredData extends AbstractFixture implements ContainerAwareInterfac
         ObjectManager $om,
         $vendorName,
         $bundleName
-    )
-    {
+    ) {
         $result = null;
         $map = $om->getUnitOfWork()->getIdentityMap();
 
         if (array_key_exists('Claroline\CoreBundle\Entity\Plugin', $map)) {
-
             foreach ($map['Claroline\CoreBundle\Entity\Plugin'] as $plugin) {
-
                 if ($plugin->getVendorName() === $vendorName &&
                     $plugin->getBundleName() === $bundleName) {
-
                     $result = $plugin;
                     break;
                 }
@@ -127,17 +120,14 @@ class LoadRequiredData extends AbstractFixture implements ContainerAwareInterfac
         ObjectManager $om,
         $vendorName,
         $bundleName
-    )
-    {
+    ) {
         $result = null;
         $scheduledForInsert = $om->getUnitOfWork()->getScheduledEntityInsertions();
 
         foreach ($scheduledForInsert as $entity) {
-
             if (get_class($entity) === 'Claroline\CoreBundle\Entity\Plugin' &&
                 $entity->getVendorName() === $vendorName &&
                 $entity->getBundleName() === $bundleName) {
-
                 $result = $entity;
                 break;
             }

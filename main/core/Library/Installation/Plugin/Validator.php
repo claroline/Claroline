@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 use Claroline\CoreBundle\Library\PluginBundle;
 
 /**
@@ -45,7 +45,7 @@ class Validator
             }
         }
 
-        $this->checkers   = $checkers;
+        $this->checkers = $checkers;
         $this->updateMode = false;
     }
 

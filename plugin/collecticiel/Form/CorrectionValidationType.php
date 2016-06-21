@@ -10,7 +10,6 @@ class CorrectionValidationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
     }
 
     public function getName()
@@ -21,7 +20,7 @@ class CorrectionValidationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'translation_domain' => 'innova_collecticiel'
+            'translation_domain' => 'innova_collecticiel',
         ));
     }
 }

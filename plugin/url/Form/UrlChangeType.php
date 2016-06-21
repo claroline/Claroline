@@ -11,7 +11,7 @@ class UrlChangeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $option)
     {
-       $builder->add(
+        $builder->add(
             'url',
             'url',
             array(
@@ -19,8 +19,8 @@ class UrlChangeType extends AbstractType
                 'label' => 'Url',
                 'constraints' => new Assert\NotBlank(),
                 'attr' => [
-                    'placeholder' => 'http://example.com'
-                ]
+                    'placeholder' => 'http://example.com',
+                ],
             )
         );
     }

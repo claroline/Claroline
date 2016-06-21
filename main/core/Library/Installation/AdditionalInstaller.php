@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Claroline\CoreBundle\Library\Installation\Updater\MaintenancePageUpdater;
-use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -154,10 +152,6 @@ class AdditionalInstaller extends BaseInstaller
                 $updater = new Updater\Updater030300($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-            case version_compare($currentVersion, '3.4.0', '<'):
-                $updater = new Updater\Updater030400($this->container);
-                $updater->setLogger($this->logger);
-                $updater->postUpdate();
             case version_compare($currentVersion, '3.5.2', '<'):
                 $updater = new Updater\Updater030502($this->container);
                 $updater->setLogger($this->logger);
@@ -218,10 +212,6 @@ class AdditionalInstaller extends BaseInstaller
                 $updater = new Updater\Updater050114($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-            case version_compare($currentVersion, '6.0.0', '<'):
-                $updater = new Updater\Updater060000($this->container);
-                $updater->setLogger($this->logger);
-                $updater->postUpdate();
             case version_compare($currentVersion, '6.3.0', '<'):
                 $updater = new Updater\Updater060300($this->container);
                 $updater->setLogger($this->logger);
@@ -248,6 +238,10 @@ class AdditionalInstaller extends BaseInstaller
                     $updater->postUpdate();
             case version_compare($currentVersion, '6.8.0', '<'):
                 $updater = new Updater\Updater060800($this->container, $this->logger);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+            case version_compare($currentVersion, '7.0.0', '<'):
+                $updater = new Updater\Updater070000($this->container, $this->logger);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
         }

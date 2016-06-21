@@ -20,13 +20,14 @@ use Doctrine\ORM\EntityRepository;
 
 class ForumRepository extends EntityRepository
 {
-      /**
-       * Deep magic goes here.
-       * Gets a subject with some of its last messages datas.
-       *
-       * @param ResourceInstance $forum
-       * @return type
-       */
+    /**
+     * Deep magic goes here.
+     * Gets a subject with some of its last messages datas.
+     *
+     * @param ResourceInstance $forum
+     *
+     * @return type
+     */
     public function findSubjects(Category $category, $getQuery = false)
     {
         $dql = "
@@ -72,7 +73,7 @@ class ForumRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('categoryId', $category->getId());
 
-        return ($getQuery) ? $query: $query->getResult();
+        return ($getQuery) ? $query : $query->getResult();
     }
 
     public function findCategories(Forum $forum, $getQuery = false)
@@ -124,7 +125,6 @@ class ForumRepository extends EntityRepository
         $merged = $categories;
 
         foreach ($categories as $key => $category) {
-
             $merged[$key]['last_message_created'] = null;
             $merged[$key]['last_message_creator_lastname'] = null;
             $merged[$key]['last_message_creator_firstname'] = null;
@@ -182,7 +182,7 @@ class ForumRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('content', '%'.$content.'%');
 
-        return ($getQuery) ? $query: $query->getResult();
+        return ($getQuery) ? $query : $query->getResult();
     }
 
     public function findSubjectsWithNoAuthor($executeQuery = true)
@@ -201,8 +201,7 @@ class ForumRepository extends EntityRepository
     public function findLastMessagesBySubjectsIds(
         array $subjectsIds,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT m
             FROM Claroline\ForumBundle\Entity\Message m
@@ -227,10 +226,8 @@ class ForumRepository extends EntityRepository
         Forum $forum,
         array $users,
         $executeQuery = true
-    )
-    {
+    ) {
         if (count($users) === 0) {
-
             return array();
         } else {
             $dql = '
@@ -256,8 +253,7 @@ class ForumRepository extends EntityRepository
     public function findNonSelfNotificationsByForum(
         Forum $forum,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT n
             FROM Claroline\ForumBundle\Entity\Notification n
@@ -276,8 +272,7 @@ class ForumRepository extends EntityRepository
         ResourceNode $node,
         $orderedBy = 'id',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT l
             FROM Claroline\CoreBundle\Entity\Log\Log l
@@ -292,6 +287,5 @@ class ForumRepository extends EntityRepository
         $query->setParameter('node', $node);
 
         return $query->getResult();
-
     }
 }

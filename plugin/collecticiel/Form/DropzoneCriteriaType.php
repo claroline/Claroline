@@ -5,6 +5,7 @@ namespace Innova\CollecticielBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DropzoneCriteriaType extends AbstractType
 {
@@ -12,13 +13,15 @@ class DropzoneCriteriaType extends AbstractType
     {
         $builder
             ->add('goBack', 'hidden', array(
-                'mapped' => false
+                'mapped' => false,
             ))
-            ->add('correctionInstruction', 'tinymce', array('required' => false))
-            ->add('totalCriteriaColumn', 'number', array('required' => true))
-// Voir issue 252 InnovaERV
-//            ->add('allowCommentInCorrection', 'checkbox', array('required' => false))
-//            ->add('forceCommentInCorrection', 'checkbox', array('required' => false))
+
+// Ajout du nom du critère
+            ->add('name', 'text', array(
+                'constraints' => new NotBlank(),
+                'required' => true,
+            ))
+
             ->add('recalculateGrades', 'hidden', array('mapped' => false));
     }
 

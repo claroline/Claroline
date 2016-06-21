@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 

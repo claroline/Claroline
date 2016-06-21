@@ -11,9 +11,10 @@ class AbilityProgressRepository extends EntityRepository
      * Returns progress entities for a given user which are related to
      * a set of abilities and have a particular status.
      *
-     * @param User      $user
-     * @param array     $abilities
-     * @param string    $status
+     * @param User   $user
+     * @param array  $abilities
+     * @param string $status
+     *
      * @return array
      */
     public function findByAbilitiesAndStatus(User $user, array $abilities, $status)
@@ -27,7 +28,7 @@ class AbilityProgressRepository extends EntityRepository
             ->setParameters([
                 ':user' => $user,
                 ':abilities' => $abilities,
-                ':status' => $status
+                ':status' => $status,
             ])
             ->getQuery()
             ->getResult();

@@ -34,8 +34,7 @@ class TagRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $strictSearch = false
-    )
-    {
+    ) {
         $searchTest = $strictSearch ? '= :search' : 'LIKE :search';
 
         $dql = "
@@ -62,8 +61,7 @@ class TagRepository extends EntityRepository
         $withPlatform = false,
         $orderedBy = 'name',
         $order = 'ASC'
-    )
-    {
+    ) {
         if ($withPlatform) {
             $dql = "
                 SELECT t
@@ -71,7 +69,7 @@ class TagRepository extends EntityRepository
                 WHERE t.user = :user
                 OR t.user IS NULL
                 ORDER BY t.{$orderedBy} {$order}
-            " ;
+            ";
         } else {
             $dql = "
                 SELECT t
@@ -93,8 +91,7 @@ class TagRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $strictSearch = false
-    )
-    {
+    ) {
         $searchTest = $strictSearch ? '= :search' : 'LIKE :search';
 
         if ($withPlatform) {
@@ -165,8 +162,7 @@ class TagRepository extends EntityRepository
         $withPlatform = false,
         $orderedBy = 'name',
         $order = 'ASC'
-    )
-    {
+    ) {
         if (is_null($user)) {
             $dql = "
                 SELECT t
@@ -183,7 +179,6 @@ class TagRepository extends EntityRepository
             ";
             $query = $this->_em->createQuery($dql);
         } else {
-
             if ($withPlatform) {
                 $dql = "
                     SELECT t

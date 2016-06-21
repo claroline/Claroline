@@ -16,6 +16,13 @@ class PlatformConfiguration
     const REGISTRATION_MAIL_VALIDATION_NONE = 0;
     const REGISTRATION_MAIL_VALIDATION_PARTIAL = 1;
     const REGISTRATION_MAIL_VALIDATION_FULL = 2;
+    const DEFAULT_REDIRECT_OPTION = 'DESKTOP';
+    public static $REDIRECT_OPTIONS = array(
+        'DESKTOP' => 'DESKTOP',
+        'LAST' => 'LAST',
+        'URL' => 'URL',
+        'WORKSPACE_TAG' => 'WORKSPACE_TAG',
+    );
 
     private $name;
     private $nameActive;
@@ -35,7 +42,8 @@ class PlatformConfiguration
     private $mailerPassword;
     private $mailerAuthMode;
     private $googleMetaTag;
-    private $redirectAfterLogin;
+    private $redirectAfterLoginOption;
+    private $redirectAfterLoginUrl;
     private $sessionStorageType;
     private $sessionDbTable;
     private $sessionDbIdCol;
@@ -390,18 +398,28 @@ class PlatformConfiguration
         return $this->googleMetaTag;
     }
 
-    public function setRedirectAfterLogin($redirectAfterLogin)
+    public function setRedirectAfterLoginOption($redirectAfterLoginOption)
     {
-        $this->redirectAfterLogin = $redirectAfterLogin;
+        $this->redirectAfterLoginOption = $redirectAfterLoginOption;
     }
 
-    public function getRedirectAfterLogin()
+    public function getRedirectAfterLoginOption()
     {
-        return $this->redirectAfterLogin;
+        return $this->redirectAfterLoginOption;
+    }
+
+    public function setRedirectAfterLoginUrl($redirectAfterLoginUrl)
+    {
+        $this->redirectAfterLoginUrl = $redirectAfterLoginUrl;
+    }
+
+    public function getRedirectAfterLoginUrl()
+    {
+        return $this->redirectAfterLoginUrl;
     }
 
     /**
-     * @param boolean $nameActive
+     * @param bool $nameActive
      */
     public function setNameActive($nameActive)
     {
@@ -409,7 +427,7 @@ class PlatformConfiguration
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isNameActive()
     {
@@ -603,7 +621,7 @@ class PlatformConfiguration
 
     public function getRegistrationMailValidation()
     {
-        return $this->registrationMailValidation ;
+        return $this->registrationMailValidation;
     }
 
     public function setShowHelpButton($showHelpButton)

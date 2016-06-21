@@ -191,8 +191,7 @@ class HomeTabConfigRepository extends EntityRepository
     public function findVisibleWorkspaceHomeTabConfigsByWorkspaceAndRoles(
         Workspace $workspace,
         array $roleNames
-    )
-    {
+    ) {
         $dql = "
             SELECT htc, ht
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
@@ -291,8 +290,7 @@ class HomeTabConfigRepository extends EntityRepository
         $type,
         $homeTabOrder,
         $newHomeTabOrder
-    )
-    {
+    ) {
         $dql = "
             UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             SET htc.tabOrder = :newHomeTabOrder
@@ -313,8 +311,7 @@ class HomeTabConfigRepository extends EntityRepository
         User $user,
         $homeTabOrder,
         $newHomeTabOrder
-    )
-    {
+    ) {
         $dql = "
             UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             SET htc.tabOrder = :newHomeTabOrder
@@ -335,8 +332,7 @@ class HomeTabConfigRepository extends EntityRepository
         Workspace $workspace,
         $homeTabOrder,
         $newHomeTabOrder
-    )
-    {
+    ) {
         $dql = "
             UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             SET htc.tabOrder = :newHomeTabOrder
@@ -356,8 +352,7 @@ class HomeTabConfigRepository extends EntityRepository
     public function findHomeTabConfigsByWorkspaceAndHomeTabs(
         Workspace $workspace,
         array $homeTabs
-    )
-    {
+    ) {
         $dql = "
             SELECT htc
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
@@ -377,8 +372,7 @@ class HomeTabConfigRepository extends EntityRepository
     public function checkHomeTabVisibilityByIdAndWorkspace(
         $homeTabId,
         Workspace $workspace
-    )
-    {
+    ) {
         $dql = "
             SELECT htc.id
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc

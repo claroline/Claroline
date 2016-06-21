@@ -3,15 +3,12 @@
 namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
-use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
-use Innova\CollecticielBundle\Entity\Correction;
 
-class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements NotifiableInterface {
-
+class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements NotifiableInterface
+{
     const ACTION = 'resource-innova_collecticiel-drop_grade_available';
     protected $dropzone;
     protected $drop;
@@ -19,7 +16,8 @@ class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements Not
 
     /**
      * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
-     * @param \Innova\CollecticielBundle\Entity\Drop $drop
+     * @param \Innova\CollecticielBundle\Entity\Drop     $drop
+     *
      * @internal param \Innova\CollecticielBundle\Event\Log\Wiki $wiki
      * @internal param \Innova\CollecticielBundle\Event\Log\Section $section
      * @internal param \Innova\CollecticielBundle\Event\Log\Contribution $contribution
@@ -50,7 +48,7 @@ class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements Not
     /**
      * Get sendToFollowers boolean.
      * 
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -60,7 +58,8 @@ class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements Not
 
     /**
      * Get includeUsers array of user ids.
-     * Reports are only reported to user witch have the manager role
+     * Reports are only reported to user witch have the manager role.
+     *
      * @return array
      */
     public function getIncludeUserIds()
@@ -68,10 +67,9 @@ class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements Not
         // notify only the drop's owner.
         $ids = array();
         $id = $this->drop->getUser()->getId();
-        array_push($ids,$id);
+        array_push($ids, $id);
 
         return $ids;
-        
     }
 
     /**
@@ -101,11 +99,11 @@ class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements Not
      */
     public function getIconKey()
     {
-        return "dropzone";
+        return 'dropzone';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -115,16 +113,16 @@ class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements Not
         $notificationDetails['resource'] = array(
             'id' => $this->dropzone->getId(),
             'name' => $this->resource->getName(),
-            'type' => $this->resource->getResourceType()->getName()
+            'type' => $this->resource->getResourceType()->getName(),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

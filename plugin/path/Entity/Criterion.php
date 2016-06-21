@@ -3,10 +3,9 @@
 namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Innova\PathBundle\Entity\Criteriagroup;
 
 /**
- * Criterion
+ * Criterion.
  *
  * @ORM\Table(name="innova_stepcondition_criterion")
  * @ORM\Entity
@@ -14,7 +13,7 @@ use Innova\PathBundle\Entity\Criteriagroup;
 class Criterion implements \JsonSerializable
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -37,7 +36,8 @@ class Criterion implements \JsonSerializable
     private $data;
 
     /**
-     * Criteriagroup
+     * Criteriagroup.
+     *
      * @var \Innova\PathBundle\Entity\Criteriagroup
      *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Criteriagroup", inversedBy="criteria", cascade={"persist"})
@@ -45,9 +45,9 @@ class Criterion implements \JsonSerializable
     protected $criteriagroup;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -55,7 +55,7 @@ class Criterion implements \JsonSerializable
     }
 
     /**
-     * Set ctype
+     * Set ctype.
      *
      * @param string $ctype
      *
@@ -69,7 +69,7 @@ class Criterion implements \JsonSerializable
     }
 
     /**
-     * Get ctype
+     * Get ctype.
      *
      * @return string
      */
@@ -79,7 +79,7 @@ class Criterion implements \JsonSerializable
     }
 
     /**
-     * Set data
+     * Set data.
      *
      * @param string $data
      *
@@ -93,7 +93,7 @@ class Criterion implements \JsonSerializable
     }
 
     /**
-     * Get data
+     * Get data.
      *
      * @return string
      */
@@ -103,8 +103,10 @@ class Criterion implements \JsonSerializable
     }
 
     /**
-     * Set criteriagroup
-     * @param  \Innova\PathBundle\Entity\Criteriagroup $criteriagroup
+     * Set criteriagroup.
+     *
+     * @param \Innova\PathBundle\Entity\Criteriagroup $criteriagroup
+     *
      * @return \Innova\PathBundle\Entity\Criterion
      */
     public function setCriteriagroup(Criteriagroup $criteriagroup = null)
@@ -121,7 +123,8 @@ class Criterion implements \JsonSerializable
     }
 
     /**
-     * Get criteriagroup
+     * Get criteriagroup.
+     *
      * @return \Innova\PathBundle\Entity\Criterion
      */
     public function getCriteriagroup()
@@ -132,11 +135,11 @@ class Criterion implements \JsonSerializable
     public function jsonSerialize()
     {
         // Initialize data array
-        $jsonArray = array (
-            'id'     => $this->id,                   // A local ID for the criterion in the criteriagroup
+        $jsonArray = array(
+            'id' => $this->id,                   // A local ID for the criterion in the criteriagroup
             'critid' => $this->id,                   // The real ID of the criterion into the DB
-            'type'   => $this->getCtype(),           // criterion type
-            'data'   => $this->getData(),            // criterion data
+            'type' => $this->getCtype(),           // criterion type
+            'data' => $this->getData(),            // criterion data
         );
 
         return $jsonArray;

@@ -33,7 +33,7 @@ class ResourceNameType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
                 )
         );
     }

@@ -42,8 +42,7 @@ class ProfilePropertyManager
         RoleManager $roleManager,
         Utilities $secUtils,
         $container
-    )
-    {
+    ) {
         $this->om = $om;
         $this->roleManager = $roleManager;
         $this->secUtils = $secUtils;
@@ -52,7 +51,7 @@ class ProfilePropertyManager
     }
 
     /**
-     * Add the default properties accesses for each roles
+     * Add the default properties accesses for each roles.
      */
     public function addDefaultProperties()
     {
@@ -67,10 +66,10 @@ class ProfilePropertyManager
     }
 
     /**
-     * Public function add a property for each roles
+     * Public function add a property for each roles.
      *
-     * @param string  $property
-     * @param boolean $editable
+     * @param string $property
+     * @param bool   $editable
      */
     public function addProperties($property, $editable)
     {
@@ -80,16 +79,18 @@ class ProfilePropertyManager
             $prop = $this->profilePropertyRepo
                 ->findBy(array('property' => $property, 'role' => $role));
 
-            if (count($prop) === 0) $this->addProperty($property, $editable, $role);
+            if (count($prop) === 0) {
+                $this->addProperty($property, $editable, $role);
+            }
         }
     }
 
     /**
-     * Create a property entity
+     * Create a property entity.
      *
-     * @param string  $property
-     * @param boolean $editable
-     * @param Role    $role
+     * @param string $property
+     * @param bool   $editable
+     * @param Role   $role
      */
     public function addProperty($property, $editable, Role $role)
     {
@@ -110,7 +111,7 @@ class ProfilePropertyManager
     }
 
     /**
-     * Get the property access for an list of roles
+     * Get the property access for an list of roles.
      *
      * @param array $rolenames
      */

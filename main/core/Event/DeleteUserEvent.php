@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\User;
 
 /**
- * Event dispatched when a user is deleted
+ * Event dispatched when a user is deleted.
  */
 class DeleteUserEvent extends Event
 {

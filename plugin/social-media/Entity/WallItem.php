@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -21,7 +21,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class WallItem
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -54,7 +54,7 @@ class WallItem
     protected $comment = null;
 
     /**
-     * @var \DateTime $creationDate
+     * @var \DateTime
      *
      * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
@@ -70,7 +70,7 @@ class WallItem
     protected $user;
 
     /**
-     * @var bool $visible
+     * @var bool
      *
      * @ORM\Column(type="boolean", name="visible")
      */
@@ -94,6 +94,7 @@ class WallItem
 
     /**
      * @param \Icap\SocialmediaBundle\Entity\LikeAction $like
+     *
      * @return $this
      */
     public function setLike($like)
@@ -113,6 +114,7 @@ class WallItem
 
     /**
      * @param \Icap\SocialmediaBundle\Entity\ShareAction $share
+     *
      * @return $this
      */
     public function setShare($share)
@@ -132,6 +134,7 @@ class WallItem
 
     /**
      * @param \Icap\SocialmediaBundle\Entity\CommentAction $comment
+     *
      * @return $this
      */
     public function setComment($comment)
@@ -151,6 +154,7 @@ class WallItem
 
     /**
      * @param \DateTime $creationDate
+     *
      * @return $this
      */
     public function setCreationDate($creationDate)
@@ -170,6 +174,7 @@ class WallItem
 
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return $this
      */
     public function setUser($user)
@@ -180,7 +185,7 @@ class WallItem
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getVisible()
     {
@@ -188,7 +193,8 @@ class WallItem
     }
 
     /**
-     * @param boolean $visible
+     * @param bool $visible
+     *
      * @return $this
      */
     public function setVisible($visible)
@@ -197,4 +203,4 @@ class WallItem
 
         return $this;
     }
-} 
+}

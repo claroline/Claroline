@@ -11,7 +11,6 @@
 
 namespace Claroline\SurveyBundle\Entity\Answer;
 
-use Claroline\SurveyBundle\Entity\Answer\SurveyAnswer;
 use Claroline\SurveyBundle\Entity\Question;
 use Doctrine\ORM\Mapping as ORM;
 

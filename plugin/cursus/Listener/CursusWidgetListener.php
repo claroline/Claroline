@@ -35,8 +35,7 @@ class CursusWidgetListener
     public function __construct(
         RequestStack $requestStack,
         HttpKernelInterface $httpKernel
-    )
-    {
+    ) {
         $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
@@ -45,12 +44,12 @@ class CursusWidgetListener
      * @DI\Observe("widget_claroline_cursus_courses_registration_widget")
      *
      * @param DisplayWidgetEvent $event
+     *
      * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onCoursesRegistrationWidgetDisplay(DisplayWidgetEvent $event)
     {
         if (!$this->request) {
-
             throw new NoHttpRequestException();
         }
         $widgetInstance = $event->getInstance();
@@ -71,12 +70,12 @@ class CursusWidgetListener
      * @DI\Observe("widget_claroline_cursus_my_courses")
      *
      * @param DisplayWidgetEvent $event
+     *
      * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onMyCoursesWidgetDisplay(DisplayWidgetEvent $event)
     {
         if (!$this->request) {
-
             throw new NoHttpRequestException();
         }
         $widgetInstance = $event->getInstance();
@@ -97,12 +96,12 @@ class CursusWidgetListener
      * @DI\Observe("widget_claroline_cursus_courses_registration_widget_configuration")
      *
      * @param ConfigureWidgetEvent $event
+     *
      * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onConfigure(ConfigureWidgetEvent $event)
     {
         if (!$this->request) {
-
             throw new NoHttpRequestException();
         }
         $widgetInstance = $event->getInstance();

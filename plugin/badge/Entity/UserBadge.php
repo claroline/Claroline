@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Type
+ * Type.
  *
  * @ORM\Table(
  *      name="claro_user_badge",
@@ -18,7 +18,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class UserBadge
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -30,8 +30,8 @@ class UserBadge
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-    */
+      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     */
     protected $user;
 
     /**
@@ -39,7 +39,7 @@ class UserBadge
      *
      * @ORM\ManyToOne(targetEntity="Icap\BadgeBundle\Entity\Badge", inversedBy="userBadges")
      * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-    */
+     */
     protected $badge;
 
     /**
@@ -51,11 +51,11 @@ class UserBadge
     protected $issuedAt;
 
     /**
-     * @var User $issuer
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="issuer_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
-    */
+      * @ORM\JoinColumn(name="issuer_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
     protected $issuer;
 
     /**
@@ -66,7 +66,7 @@ class UserBadge
     protected $expiredAt;
 
     /**
-     * @var string $comment
+     * @var string
      *
      * @ORM\Column(type="text", nullable=true)
      */
@@ -228,7 +228,7 @@ class UserBadge
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIsShared()
     {
@@ -236,7 +236,7 @@ class UserBadge
     }
 
     /**
-     * @param boolean $isShared
+     * @param bool $isShared
      *
      * @return UserBadge
      */

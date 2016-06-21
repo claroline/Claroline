@@ -11,7 +11,6 @@
 
 namespace Claroline\MigrationBundle\Migrator;
 
-use Mockery as m;
 use Claroline\MigrationBundle\Tests\MockeryTestCase;
 
 class MigratorTest extends MockeryTestCase

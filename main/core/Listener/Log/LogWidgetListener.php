@@ -67,14 +67,13 @@ class LogWidgetListener
         FormFactory $formFactory,
         LogWorkspaceWidgetConfigType $logWorkspaceWidgetConfigForm,
         ObjectManager $om
-    )
-    {
-        $this->logManager                   = $logManager;
-        $this->workspaceManager             = $workspaceManager;
-        $this->twig                         = $twig;
-        $this->formFactory                  = $formFactory;
+    ) {
+        $this->logManager = $logManager;
+        $this->workspaceManager = $workspaceManager;
+        $this->twig = $twig;
+        $this->formFactory = $formFactory;
         $this->logWorkspaceWidgetConfigForm = $logWorkspaceWidgetConfigForm;
-        $this->om                           = $om;
+        $this->om = $om;
     }
 
     /**
@@ -86,7 +85,7 @@ class LogWidgetListener
     {
         $instance = $event->getInstance();
         $params = ($instance->isDesktop()) ?
-            $this->logManager->getDesktopWidgetList($instance):
+            $this->logManager->getDesktopWidgetList($instance) :
             $this->logManager->getWorkspaceWidgetList($instance);
         $view = $this->twig->render('ClarolineCoreBundle:Log:no_action_found.html.twig', array());
 
@@ -142,16 +141,16 @@ class LogWidgetListener
                 'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'instance' => $instance
+                    'instance' => $instance,
                 )
             );
         } else {
-            $form    = $this->formFactory->create($this->logWorkspaceWidgetConfigForm, $config);
+            $form = $this->formFactory->create($this->logWorkspaceWidgetConfigForm, $config);
             $content = $this->twig->render(
                 'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig',
                 array(
-                    'form'      => $form->createView(),
-                    'instance' => $instance
+                    'form' => $form->createView(),
+                    'instance' => $instance,
                 )
             );
         }

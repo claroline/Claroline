@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  */
 class Forum extends AbstractResource
 {
-
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\ForumBundle\Entity\Category",

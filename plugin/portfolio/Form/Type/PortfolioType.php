@@ -17,7 +17,7 @@ class PortfolioType extends AbstractType
     {
         $builder
             ->add('commentsViewAt', 'datetime', array(
-                    'widget' => 'single_text'
+                    'widget' => 'single_text',
                 ))
             ->add('comments', 'text', array('mapped' => false))
             ->add('widgets', 'text', array('mapped' => false))
@@ -33,10 +33,10 @@ class PortfolioType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\Portfolio',
+                'data_class' => 'Icap\PortfolioBundle\Entity\Portfolio',
                 'translation_domain' => 'icap_portfolio',
-                'csrf_protection'    => false,
-                'date_format'        => DateTimeType::HTML5_FORMAT
+                'csrf_protection' => false,
+                'date_format' => DateTimeType::HTML5_FORMAT,
             )
         );
     }

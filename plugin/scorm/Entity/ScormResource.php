@@ -11,9 +11,6 @@
 
 namespace Claroline\ScormBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Doctrine\ORM\Mapping as ORM;
-
 interface ScormResource
 {
 }

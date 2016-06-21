@@ -57,7 +57,7 @@ class RoutingChecker implements CheckerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @param PluginBundle $plugin
      */
@@ -162,7 +162,7 @@ class RoutingChecker implements CheckerInterface
             if (preg_match("/^{$bundlePath}/", $path) === 0) {
                 $this->errors[] = new ValidationError(
                     "{$this->pluginFqcn} : Invalid routing file '{$path}' "
-                    . "(must be located within the bundle).",
+                    .'(must be located within the bundle).',
                     self::INVALID_ROUTING_LOCATION
                 );
             }
@@ -170,7 +170,7 @@ class RoutingChecker implements CheckerInterface
             if ('yml' != $ext = pathinfo($path, PATHINFO_EXTENSION)) {
                 $this->errors[] = new ValidationError(
                     "{$this->pluginFqcn} : Unsupported '{$ext}' extension for "
-                    . "routing file '{$path}'(use .yml).",
+                    ."routing file '{$path}'(use .yml).",
                     self::INVALID_ROUTING_EXTENSION
                 );
             }
@@ -181,7 +181,7 @@ class RoutingChecker implements CheckerInterface
             } catch (ParseException $ex) {
                 $this->errors[] = new ValidationError(
                     "{$this->pluginFqcn} : Unloadable YAML routing file "
-                    . "(parse exception message : '{$ex->getMessage()}')",
+                    ."(parse exception message : '{$ex->getMessage()}')",
                     self::INVALID_YAML_ROUTING_FILE
                 );
             }

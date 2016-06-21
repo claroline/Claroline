@@ -22,8 +22,7 @@ class LogSurveyAnswer extends LogGenericEvent
     public function __construct(
         Survey $survey,
         User $user = null
-    )
-    {
+    ) {
         parent::__construct(
             self::ACTION,
             array(),

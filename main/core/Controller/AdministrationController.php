@@ -18,7 +18,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use \Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AdministrationController extends Controller
 {
@@ -39,8 +39,7 @@ class AdministrationController extends Controller
         ToolManager $toolManager,
         TokenStorageInterface $tokenStorage,
         $container
-    )
-    {
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->toolManager = $toolManager;
         $this->tokenStorage = $tokenStorage;
@@ -84,7 +83,7 @@ class AdministrationController extends Controller
     public function openAdministrationToolAction($toolName)
     {
         $event = $this->eventDispatcher->dispatch(
-            'administration_tool_' . $toolName,
+            'administration_tool_'.$toolName,
             'OpenAdministrationTool',
             array('toolName' => $toolName)
         );
@@ -94,6 +93,7 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Template("ClarolineCoreBundle:Administration:left_bar.html.twig")
+     *
      * @return array
      */
     public function renderLeftBarAction()

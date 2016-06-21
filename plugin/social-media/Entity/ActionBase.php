@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -17,12 +17,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @ORM\MappedSuperclass
  * Class ActionBase
- * @package Icap\SocialmediaBundle\Entity
  */
 class ActionBase
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -31,21 +30,21 @@ class ActionBase
     protected $id;
 
     /**
-     * @var string $url
+     * @var string
      *
      * @ORM\Column(type="string", nullable=true)
      */
     protected $url = null;
 
     /**
-     * @var string $url
+     * @var string
      *
      * @ORM\Column(type="string", nullable=true)
      */
     protected $title = null;
 
     /**
-     * @var \DateTime $creationDate
+     * @var \DateTime
      *
      * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
@@ -86,6 +85,7 @@ class ActionBase
 
     /**
      * @param string $url
+     *
      * @return $this
      */
     public function setUrl($url)
@@ -105,6 +105,7 @@ class ActionBase
 
     /**
      * @param string $title
+     *
      * @return $this
      */
     public function setTitle($title)
@@ -124,6 +125,7 @@ class ActionBase
 
     /**
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     *
      * @return $this
      */
     public function setResource($resource)
@@ -143,6 +145,7 @@ class ActionBase
 
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return $this
      */
     public function setUser($user)
@@ -162,6 +165,7 @@ class ActionBase
 
     /**
      * @param \DateTime $creationDate
+     *
      * @return $this
      */
     public function setCreationDate($creationDate)
@@ -170,6 +174,4 @@ class ActionBase
 
         return $this;
     }
-
-
-} 
+}

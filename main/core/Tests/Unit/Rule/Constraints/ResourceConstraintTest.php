@@ -20,7 +20,7 @@ class ResourceConstraintTest extends MockeryTestCase
 {
     public function testIsNotApplicableTo()
     {
-        $badgeRule          = new BadgeRule();
+        $badgeRule = new BadgeRule();
         $resourceConstraint = new ResourceConstraint();
 
         $this->assertFalse($resourceConstraint->isApplicableTo($badgeRule));

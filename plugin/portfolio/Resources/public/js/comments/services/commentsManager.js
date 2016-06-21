@@ -15,7 +15,7 @@ commentsApp
                 var success = function() {
                 };
                 var failed = function(error) {
-                    console.error('Error occured while saving comment');
+                    //on error logs are ok imo.
                     console.log(error);
                 }
 

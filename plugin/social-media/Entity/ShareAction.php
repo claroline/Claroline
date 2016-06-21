@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -17,12 +17,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="icap__socialmedia_share")
  * @ORM\Entity(repositoryClass="Icap\SocialmediaBundle\Repository\ShareActionRepository")
  * Class ShareAction
- * @package Icap\SocialmediaBundle\Entity
  */
 class ShareAction extends ActionBase
 {
     /**
-     * @var string $network
+     * @var string
      *
      * @ORM\Column(type="string", nullable=true)
      */
@@ -38,6 +37,7 @@ class ShareAction extends ActionBase
 
     /**
      * @param string $network
+     *
      * @return $this
      */
     public function setNetwork($network)
@@ -46,4 +46,4 @@ class ShareAction extends ActionBase
 
         return $this;
     }
-} 
+}

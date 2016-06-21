@@ -18,7 +18,7 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 
 /**
- * {@inheritDoc}
+ * {@inheritdoc}
  */
 class TemplateLocator extends BaseTemplateLocator
 {
@@ -29,22 +29,21 @@ class TemplateLocator extends BaseTemplateLocator
     /**
      * Constructor.
      *
-     * @param FileLocatorInterface  $locator
-     * @param ThemeManager          $themeManager
-     * @param string                $cacheDir
+     * @param FileLocatorInterface $locator
+     * @param ThemeManager         $themeManager
+     * @param string               $cacheDir
      */
     public function __construct(
         FileLocatorInterface $locator,
         ThemeManager $themeManager,
         $cacheDir = null
-    )
-    {
+    ) {
         parent::__construct($locator, $cacheDir);
         $this->themeManager = $themeManager;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function locate($template, $currentPath = null, $first = true)
     {
@@ -87,7 +86,7 @@ class TemplateLocator extends BaseTemplateLocator
     private function locateTemplate(TemplateReferenceInterface $template, $bundle, $theme, $currentPath)
     {
         $newTemplate = clone $template;
-        $controller  = $template->get('controller');
+        $controller = $template->get('controller');
 
         if (null !== $theme) {
             if ($controller) {
@@ -119,6 +118,6 @@ class TemplateLocator extends BaseTemplateLocator
     {
         $plugin = $theme->getPlugin();
 
-        return $plugin ? $plugin->getSfName(): 'ClarolineCoreBundle';
+        return $plugin ? $plugin->getSfName() : 'ClarolineCoreBundle';
     }
 }

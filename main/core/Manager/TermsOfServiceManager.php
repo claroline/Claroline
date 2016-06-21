@@ -13,9 +13,6 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\ContentManager;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -46,8 +43,7 @@ class TermsOfServiceManager
         ContentManager $contentManager,
         UserManager $userManager,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->configHandler = $configHandler;
         $this->container = $container;
         $this->contentManager = $contentManager;
@@ -78,8 +74,8 @@ class TermsOfServiceManager
     /**
      * Checks if terms are available in at least one language in a set of translated terms.
      *
-     * @param array $translatedTerms    An associative array in which each key is a language code
-     *                                  and each value an associative array with a "content" key.
+     * @param array $translatedTerms An associative array in which each key is a language code
+     *                               and each value an associative array with a "content" key.
      *
      * @return bool
      */
@@ -97,8 +93,8 @@ class TermsOfServiceManager
     /**
      * Persists (creates/updates) terms of service in the database.
      *
-     * @param array $translatedTerms    An associative array in which each key is a language code
-     *                                  and each value an associative array with a "content" key.
+     * @param array $translatedTerms An associative array in which each key is a language code
+     *                               and each value an associative array with a "content" key.
      */
     public function setTermsOfService(array $translatedTerms)
     {
@@ -137,16 +133,16 @@ class TermsOfServiceManager
             $type = 3;
             $token = $this->configHandler->getParameter('token');
 
-            $postDatas = "name=$name" .
-                "&url=$platformUrl" .
-                "&lang=$lang" .
-                "&country=$country" .
-                "&email=$supportEmail" .
-                "&version=$version" .
-                "&workspaces=$nbNonPersonalWorkspaces" .
-                "&personal_workspaces=$nbPersonalWorkspaces" .
-                "&users=$nbUsers" .
-                "&stats_type=$type" .
+            $postDatas = "name=$name".
+                "&url=$platformUrl".
+                "&lang=$lang".
+                "&country=$country".
+                "&email=$supportEmail".
+                "&version=$version".
+                "&workspaces=$nbNonPersonalWorkspaces".
+                "&personal_workspaces=$nbPersonalWorkspaces".
+                "&users=$nbUsers".
+                "&stats_type=$type".
                 "&token=$token";
 
             $curl = curl_init($url);
@@ -163,13 +159,12 @@ class TermsOfServiceManager
     {
         $ds = DIRECTORY_SEPARATOR;
         $version = '-';
-        $installedFile = $this->container->getParameter('kernel.root_dir') .
-            $ds . '..' . $ds . 'vendor' . $ds . 'composer' . $ds . 'installed.json';
+        $installedFile = $this->container->getParameter('kernel.root_dir').
+            $ds.'..'.$ds.'vendor'.$ds.'composer'.$ds.'installed.json';
         $jsonString = file_get_contents($installedFile);
         $bundles = json_decode($jsonString, true);
 
         foreach ($bundles as $bundle) {
-
             if (isset($bundle['name']) && $bundle['name'] === 'claroline/core-bundle') {
                 $version = $bundle['version'];
                 break;

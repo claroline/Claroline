@@ -31,8 +31,8 @@ class FormFactoryTest extends MockeryTestCase
             array(
                 'fooType' => array(
                     'formType' => 'DOMDocument',
-                    'entity' => 'stdClass'
-                )
+                    'entity' => 'stdClass',
+                ),
             )
         );
     }

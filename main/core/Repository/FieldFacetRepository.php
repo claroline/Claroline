@@ -12,8 +12,25 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 
 class FieldFacetRepository extends EntityRepository
 {
+    public function findByRoles(array $roles)
+    {
+        $dql = '
+            SELECT ff
+            FROM Claroline\CoreBundle\Entity\Facet\FieldFacet ff
+            JOIN ff.panelFacet panel
+            JOIN panel.panelFacetsRole pfr
+            WHERE pfr.canOpen = true
+            AND pfr.role in (:roles)
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        $query->setParameter('roles', $roles);
+        $res = $query->getResult();
+
+        return $res;
+    }
 }

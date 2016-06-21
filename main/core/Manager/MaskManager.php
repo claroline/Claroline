@@ -26,7 +26,7 @@ class MaskManager
     private static $defaultMenus = array(
         'export' => array('download' => false),
         'delete' => array('delete' => false),
-        'administrate' => array('edit-rights' => true, 'open-tracking' => false, 'rename' => true, 'edit-properties' => true)
+        'administrate' => array('edit-rights' => true, 'open-tracking' => false, 'rename' => true, 'edit-properties' => true),
     );
 
     private $om;
@@ -48,7 +48,7 @@ class MaskManager
     /**
      * Returns an array containing the permission for a mask and a resource type.
      *
-     * @param integer                                            $mask
+     * @param int                                                $mask
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
      *
      * @return array
@@ -59,7 +59,7 @@ class MaskManager
         $perms = array();
 
         foreach ($decoders as $decoder) {
-            $perms[$decoder->getName()] = ($mask & $decoder->getValue()) ? true: false;
+            $perms[$decoder->getName()] = ($mask & $decoder->getValue()) ? true : false;
         }
 
         return $perms;
@@ -67,14 +67,14 @@ class MaskManager
 
     /**
      * Encode a mask for an array of permission and a resource type.
-     * The array of permissions should be defined that way:
+     * The array of permissions should be defined that way:.
      *
      * array('open' => true, 'edit' => false, ...)
      *
      * @param array                                              $perms
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
      *
-     * @return integer
+     * @return int
      */
     public function encodeMask($perms, ResourceType $type)
     {
@@ -83,7 +83,7 @@ class MaskManager
 
         foreach ($decoders as $decoder) {
             if (isset($perms[$decoder->getName()])) {
-                $mask += $perms[$decoder->getName()] ? $decoder->getValue(): 0;
+                $mask += $perms[$decoder->getName()] ? $decoder->getValue() : 0;
             }
         }
 
@@ -122,7 +122,7 @@ class MaskManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
-     * @param integer                                            $value
+     * @param int                                                $value
      *
      * @return MaskDecoder
      */
@@ -155,7 +155,7 @@ class MaskManager
     {
         $createdPerms = array();
 
-        for ($i = 0, $size = count(self::$defaultActions); $i < $size; $i++) {
+        for ($i = 0, $size = count(self::$defaultActions); $i < $size; ++$i) {
             $maskDecoder = new MaskDecoder();
             $maskDecoder->setValue(pow(2, $i));
             $maskDecoder->setName(self::$defaultActions[$i]);

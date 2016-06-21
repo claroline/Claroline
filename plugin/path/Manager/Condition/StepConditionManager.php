@@ -5,44 +5,46 @@ namespace Innova\PathBundle\Manager\Condition;
 use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\StepCondition;
-use Innova\PathBundle\Entity\Criterion;
 use Innova\PathBundle\Entity\Criteriagroup;
-use Innova\PathBundle\Manager\Condition\CriteriaManager;
 
 /**
  * StepConditionManager
- * Manages access conditions to the Steps of a Path
+ * Manages access conditions to the Steps of a Path.
  */
 class StepConditionManager
 {
     /**
-     * Object manager
-     * @var \Doctrine\Common\Persistence\ObjectManager $om
+     * Object manager.
+     *
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
     protected $om;
 
     /**
-     * Criteria Manager
+     * Criteria Manager.
+     *
      * @var \Innova\PathBundle\Manager\Condition\CriteriaManager
      */
     protected $criteriaManager;
 
     /**
-     * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager $om
+     * Class constructor.
+     *
+     * @param \Doctrine\Common\Persistence\ObjectManager           $om
      * @param \Innova\PathBundle\Manager\Condition\CriteriaManager $criteriaManager
      */
     public function __construct(ObjectManager $om, CriteriaManager $criteriaManager)
     {
-        $this->om              = $om;
+        $this->om = $om;
         $this->criteriaManager = $criteriaManager;
     }
 
     /**
-     * Create a new StepCondition from JSON structure
+     * Create a new StepCondition from JSON structure.
      *
-     * @param  \Innova\PathBundle\Entity\Step $step Parent path of the condition
-     * @param  \stdClass                      $conditionStructure
+     * @param \Innova\PathBundle\Entity\Step $step               Parent path of the condition
+     * @param \stdClass                      $conditionStructure
+     *
      * @return \Innova\PathBundle\Entity\StepCondition Edited condition
      */
     public function create(Step $step, \stdClass $conditionStructure)
@@ -51,12 +53,13 @@ class StepConditionManager
     }
 
     /**
-     * Update an existing condition from JSON structure
+     * Update an existing condition from JSON structure.
      *
-     * @param  \Innova\PathBundle\Entity\Step $step Parent step of the condition
-     * @param  \Innova\PathBundle\Entity\StepCondition $condition Current condition to edit
-     * @param \stdClass $conditionStructure
-     * @return \Innova\PathBundle\Entity\StepCondition            Edited condition
+     * @param \Innova\PathBundle\Entity\Step          $step               Parent step of the condition
+     * @param \Innova\PathBundle\Entity\StepCondition $condition          Current condition to edit
+     * @param \stdClass                               $conditionStructure
+     *
+     * @return \Innova\PathBundle\Entity\StepCondition Edited condition
      */
     public function edit(Step $step, StepCondition $condition, \stdClass $conditionStructure)
     {
@@ -81,9 +84,11 @@ class StepConditionManager
     }
 
     /**
-     * Update or create the Criteria of a StepCondition
+     * Update or create the Criteria of a StepCondition.
+     *
      * @param StepCondition $condition The condition to Update
      * @param array         $criteria  The list of criteria of the StepCondition
+     *
      * @return array
      */
     public function updateCriteriaGroups(StepCondition $condition, $level = 0, Criteriagroup $parent = null, array $criteria = array())
@@ -115,17 +120,19 @@ class StepConditionManager
                 $processedGroups = array_merge($processedGroups, $childrenGroups);
             }
 
-            $currentOrder++;
+            ++$currentOrder;
         }
 
         return $processedGroups;
     }
 
     /**
-     * Clean Criteria Gorups which no longer exist in the current Condition
+     * Clean Criteria Gorups which no longer exist in the current Condition.
+     *
      * @param \Innova\PathBundle\Entity\StepCondition $condition
-     * @param  array $neededGroups
-     * @param  array $existingGoups
+     * @param array                                   $neededGroups
+     * @param array                                   $existingGoups
+     *
      * @return \Innova\PathBundle\Manager\Condition\StepConditionManager
      */
     public function cleanCriteriaGroups(StepCondition $condition, array $neededGroups = array(), array $existingGoups = array())

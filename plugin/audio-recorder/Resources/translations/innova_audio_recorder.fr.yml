@@ -1,0 +1,32 @@
+# c
+creating_resource: Création de la ressource...
+
+# d
+download_audio: Télécharger le fichier audio
+db_meter: Niveau du micro
+
+# e
+end_recording_message: L’enregistrement est terminé<br/>Il a été placé dans votre liste temporaire
+end_recording_message_maxtime_reached: L’enregistrement a atteint la durée maximale autorisée<br/>Il a été interrompu et placé dans votre liste temporaire
+
+# m
+my_recordings: Mes enregistrements (temporaires)
+max_try_threshold_reached: La liste temporaire est pleine<br/>Supprimez des fichiers pour vous enregistrer à nouveau
+max_recording_time: Temps maximum d'enregistrement :
+
+# n
+nb_try_label: Essais n°
+
+
+# o
+ok: Valider
+
+# r
+resource_name: Nom :
+resource_name_placeholder: Le nom de la resource est obligatoire.
+resource_creation_error: Une erreur est survenue lors de la création de la ressource.
+resource_creation_error_download: Utilisez le bouton de téléchargement pour sauvegarder votre fichier localement.
+
+# s
+start_recording: Démarrer
+stop_recording: Stop

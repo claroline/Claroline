@@ -9,12 +9,10 @@
 
 namespace Icap\DropzoneBundle\Listener;
 
-
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Icap\DropzoneBundle\Entity\Document;
 use Proxies\__CG__\Icap\DropzoneBundle\Entity\Dropzone;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DeleteListener extends ContainerAware
 {
@@ -25,11 +23,11 @@ class DeleteListener extends ContainerAware
             if ($entity->getResourceNode() != null) {
                 $this->container->get('claroline.manager.resource_manager')->delete($entity->getResourceNode());
             }
-        } else if ($entity instanceof Drop) {
+        } elseif ($entity instanceof Drop) {
             if ($entity->getHiddenDirectory() != null) {
                 $this->container->get('claroline.manager.resource_manager')->delete($entity->getHiddenDirectory());
             }
-        } else if ($entity instanceof Dropzone) {
+        } elseif ($entity instanceof Dropzone) {
             if ($entity->getHiddenDirectory() != null) {
                 $this->container->get('claroline.manager.resource_manager')->delete($entity->getHiddenDirectory());
             }

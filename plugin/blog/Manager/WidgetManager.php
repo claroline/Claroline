@@ -16,11 +16,11 @@ class WidgetManager
     /** @var EntityManager  */
     private $entityManager;
 
-   /**
-    * @DI\InjectParams({
-    *    "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
-    * })
-    */
+    /**
+     * @DI\InjectParams({
+     *    "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
+     * })
+     */
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -60,7 +60,7 @@ class WidgetManager
     public function getResourceNodeIds(WidgetInstance $widgetInstance)
     {
         /** @var \Icap\BlogBundle\Entity\WidgetListBlog[] $widgetListBlogs */
-        $widgetListBlogs =  $this->getWidgetListBlogs($widgetInstance);
+        $widgetListBlogs = $this->getWidgetListBlogs($widgetInstance);
 
         $resourceNodeIds = array();
 
@@ -161,7 +161,7 @@ class WidgetManager
             ->getRepository('IcapBlogBundle:WidgetListOptions')
             ->findOneByWidgetInstance($widgetInstance);
 
-        if($widgetListOptions === null) {
+        if ($widgetListOptions === null) {
             $widgetListOptions = new WidgetListOptions();
             $widgetListOptions->setWidgetInstance($widgetInstance);
         }
@@ -169,4 +169,3 @@ class WidgetManager
         return $widgetListOptions;
     }
 }
- 

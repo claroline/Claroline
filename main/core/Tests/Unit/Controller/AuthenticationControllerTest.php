@@ -143,13 +143,13 @@ class AuthenticationControllerTest extends MockeryTestCase
             array(
                 'responseClass' => '\Claroline\CoreBundle\Library\HttpFoundation\XmlResponse',
                 'format' => 'xml',
-                'header' => 'text/xml'
+                'header' => 'text/xml',
             ),
             array(
                 'responseClass' => '\Symfony\Component\HttpFoundation\JsonResponse',
                 'format' => 'json',
-                'header' => 'application/json'
-           )
+                'header' => 'application/json',
+           ),
         );
     }
 }

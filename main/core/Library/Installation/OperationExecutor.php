@@ -16,7 +16,6 @@ use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
-use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Composer\Json\JsonFile;
 use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledFilesystemRepository;
@@ -57,15 +56,13 @@ class OperationExecutor
         InstallationManager $baseInstaller,
         Installer $pluginInstaller,
         ObjectManager $om
-    )
-    {
+    ) {
         $this->kernel = $kernel;
         $this->baseInstaller = $baseInstaller;
         $this->pluginInstaller = $pluginInstaller;
-        $this->previousRepoFile = $this->kernel->getRootDir() . '/config/previous-installed.json';
-        $this->installedRepoFile = $this->kernel->getRootDir() . '/../vendor/composer/installed.json';
-        $this->bundleFile = $this->kernel->getRootDir() . '/config/bundles.ini';
-        $this->bupBundleFile = $this->kernel->getRootDir() . '/config/bundles.bup.ini';
+        $this->previousRepoFile = $this->kernel->getRootDir().'/config/previous-installed.json';
+        $this->installedRepoFile = $this->kernel->getRootDir().'/../vendor/composer/installed.json';
+        $this->bundleFile = $this->kernel->getRootDir().'/config/bundles.ini';
         $this->detector = new Detector();
         $this->om = $om;
     }
@@ -114,54 +111,62 @@ class OperationExecutor
 
         $previous = $this->openRepository($this->previousRepoFile);
         $current = $this->openRepository($this->installedRepoFile);
-        $operations = [];
-        $previousBundles = array_keys(parse_ini_file($this->bupBundleFile));
-
-        $previousBundles = array_filter($previousBundles, function($var) {
-            if (in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var))) {
-                $parts = explode('\\', $var);
-
-                if ($var !== 'Claroline\CoreBundle\ClarolineCoreBundle') {
-                    $this->log('<fg=blue>' . $var . ' is already installed.</fg=blue>');
-                    $this->log('If something goes wrong, you can trigger these operations manually:');
-                    $this->log('Installation: php app/console claroline:plugin:install ' . $parts[0] . ' ' . $parts[1]);
-                    $this->log('Single update: php app/console claroline:test_update ' . $parts[0] . $parts[1]);
-                }
-
-                return true;
-            } else {
-                return false;
-            }
-        });
 
         /** @var PackageInterface $currentPackage */
         foreach ($current->getCanonicalPackages() as $currentPackage) {
-            $jsonpath = $this->kernel->getRootDir() . '/../vendor/' . $currentPackage->getName() . '/composer.json';
-            $json = json_decode(file_get_contents($jsonpath), true);
-            //this is a meta package
-            if (array_key_exists('bundles', $json)) {
+            $extra = $currentPackage->getExtra();
+            //this is a meta package if the bundles key exists
+            if (array_key_exists('bundles', $extra)) {
                 //this is only valid for installable bundles
-                $bundles = array_filter($json['bundles'], function($var) {
-                    return in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var)) ?  true: false;
+                $bundles = array_filter($extra['bundles'], function ($var) {
+                    return in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var)) ?  true : false;
                 });
+
                 foreach ($bundles as $bundle) {
-                    if (in_array($bundle, $previousBundles) === true) {
+
+                    //if the corebundle is already installed, we can do database checks to be sure a plugin is already installed
+                    //and not simply set to false in bundles.ini in previous versions.
+                    $foundBundle = false;
+
+                    if ($this->findPreviousPackage('Claroline\CoreBundle\ClarolineCoreBundle')) {
+                        //do the bundle already exists ?
+                        $foundBundle = $bundle === 'Claroline\CoreBundle\ClarolineCoreBundle' ?
+                            true :
+                            $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundle);
+                    }
+
+                    $previousPackage = $this->findPreviousPackage($bundle);
+
+                    if ($previousPackage && $foundBundle) {
                         $operations[$bundle] = new Operation(Operation::UPDATE, $currentPackage, $bundle);
-                        $previousPackage = $this->findPreviousPackage($currentPackage);
                         $operations[$bundle]->setFromVersion($previousPackage->getVersion());
                         $operations[$bundle]->setToVersion($currentPackage->getVersion());
                     } else {
-                        $operations[$bundle] = new Operation(Operation::INSTALL, $currentPackage, $bundle);
+                        //if we found something in the database, it means it was removed from composer.json and not properly uninstalled
+                        if ($foundBundle) {
+                            $operations[$bundle] = new Operation(Operation::UPDATE, $currentPackage, $bundle);
+                            //we don't know wich version it came from so we trigger everything, we only know it's already here
+                            $operations[$bundle]->setFromVersion('0.0.0');
+                            $operations[$bundle]->setToVersion($currentPackage->getVersion());
+                        } else {
+                            $operations[$bundle] = new Operation(Operation::INSTALL, $currentPackage, $bundle);
+                        }
                     }
                 }
             } else {
+                try {
+                    $foundBundle = $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundle);
+                } catch (\Doctrine\DBAL\Exception\TableNotFoundException $e) {
+                    $foundBundle = false;
+                }
+                $previousPackage = $previous->findPackage($currentPackage->getName(), '*');
                 //old <= v6 package detection
-                if (!($previousPackage = $previous->findPackage($currentPackage->getName(), '*'))) {
+                if (!$previousPackage && !$foundBundle) {
                     $this->log("Installation of {$currentPackage->getName()} required");
                     $operation = $this->buildOperation(Operation::INSTALL, $currentPackage);
+                    $operation->setToVersion($currentPackage->getVersion());
                     $operations[$operation->getBundleFqcn()] = $operation;
-                } elseif ($currentPackage->getVersion() !== $previousPackage->getVersion()
-                    || $currentPackage->isDev()) {
+                } else {
                     $this->log(sprintf(
                         'Update of %s from %s to %s required',
                         $previousPackage->getName(),
@@ -189,7 +194,7 @@ class OperationExecutor
 
         foreach ($bundles as $bundle) {
             $bundleClass = $bundle->getNamespace() ?
-                $bundle->getNamespace() . '\\' . $bundle->getName() :
+                $bundle->getNamespace().'\\'.$bundle->getName() :
                 $bundle->getName();
 
             if (isset($operations[$bundleClass])) {
@@ -209,6 +214,7 @@ class OperationExecutor
      * is deleted.
      *
      * @param Operation[] $operations
+     *
      * @throws \RuntimeException if the the previous repository file is not writable
      */
     public function execute(array $operations)
@@ -255,8 +261,9 @@ class OperationExecutor
     }
 
     /**
-     * @param string    $repoFile
-     * @param bool      $filter
+     * @param string $repoFile
+     * @param bool   $filter
+     *
      * @return InstalledFilesystemRepository
      */
     private function openRepository($repoFile, $filter = true)
@@ -290,7 +297,7 @@ class OperationExecutor
 
         foreach ($this->kernel->getBundles() as $bundle) {
             $fqcn = $bundle->getNamespace() ?
-                $bundle->getNamespace() . '\\' . $bundle->getName() :
+                $bundle->getNamespace().'\\'.$bundle->getName() :
                 $bundle->getName();
             $byFqcn[$fqcn] = $bundle;
         }
@@ -298,23 +305,44 @@ class OperationExecutor
         return $byFqcn;
     }
 
-    private function findPreviousPackage($currentPackage)
+    private function findPreviousPackage($bundle)
     {
         $previous = $this->openRepository($this->previousRepoFile);
 
         foreach ($previous->getCanonicalPackages() as $package) {
-            if ($package->getName() === $currentPackage->getName()) return $package;
+            $extra = $package->getExtra();
+
+            if ($extra && array_key_exists('bundles', $extra)) {
+                //Otherwise convert the name in a dirty little way
+                //If it's a metapackage, check in the bundle list
+                foreach ($extra['bundles'] as $installedBundle) {
+                    if ($installedBundle === $bundle) {
+                        return $package;
+                    }
+                }
+            } else {
+                $bundleParts = explode('\\', $bundle);
+
+                //magic !
+                if (preg_replace('/[^A-Za-z0-9]/', '', $package->getPrettyName()) === strtolower($bundleParts[2])) {
+                    return $package;
+                }
+            }
         }
+
+        //Not found. We return null and we'll try to install it later on.
+        return;
     }
 
     private function buildOperation($type, PackageInterface $package)
     {
-        $vendorDir = $this->kernel->getRootDir() . '/../vendor';
+        $vendorDir = $this->kernel->getRootDir().'/../vendor';
         $targetDir = $package->getTargetDir() ?: '';
         $packageDir = empty($targetDir) ?
             $package->getPrettyName() :
             "{$package->getName()}/{$targetDir}";
         $fqcn = $this->detector->detectBundle("{$vendorDir}/{$packageDir}");
+
         return new Operation($type, $package, $fqcn);
     }
 }

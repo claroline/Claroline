@@ -16,8 +16,8 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\Renderer\ListRenderer;
 
 /**
- * Class GroupAdditionalActionsMenu
- * @package Claroline\CoreBundle\Menu
+ * Class GroupAdditionalActionsMenu.
+ *
  * @DI\Service("claroline.menu.group_additional_actions_renderer")
  * @DI\Tag("knp_menu.renderer", attributes = {"name" = "knp_menu.renderer", "alias"="group_additional_actions"})
  */
@@ -34,16 +34,15 @@ class GroupAdditionalActionsMenu extends ListRenderer
         $matcher,
         $defaultOptions,
         $charset
-    )
-    {
-        $defaultOptions['leaf_class'] = $defaultOptions["branch_class"] = "btn btn-default group-additional-action";
+    ) {
+        $defaultOptions['leaf_class'] = $defaultOptions['branch_class'] = 'btn btn-default group-additional-action';
         parent::__construct($matcher, $defaultOptions, $charset);
     }
 
     protected function renderLinkElement(ItemInterface $item, array $options)
     {
-        $uri = $item->getExtra('href') ? $item->getExtra('href'): $item->getUri();
-        $displayMode = $item->getExtra('display') ? $item->getExtra('display'): 'normal';
+        $uri = $item->getExtra('href') ? $item->getExtra('href') : $item->getUri();
+        $displayMode = $item->getExtra('display') ? $item->getExtra('display') : 'normal';
 
         return sprintf(
             '<i class="%s group-action" data-url="%s" data-toggle="tooltip" data-placement="left" title="%s" data-display-mode="%s"></i>',

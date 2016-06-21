@@ -21,7 +21,7 @@ class FrameworkType extends AbstractType
             ->add('description', 'textarea', [
                 'label' => 'description',
                 'attr' => ['class' => 'form-control'],
-                'constraints' => [new NotBlank()]
+                'constraints' => [new NotBlank()],
             ])
             ->add('scale', 'entity', [
                 'class' => 'HeVinci\CompetencyBundle\Entity\Scale',
@@ -45,9 +45,9 @@ class FrameworkType extends AbstractType
                 new UniqueEntity([
                     'fields' => 'name',
                     'repositoryMethod' => 'findRootsByName',
-                    'em' => 'default'
-                ])
-            ]
+                    'em' => 'default',
+                ]),
+            ],
         ]);
     }
 }

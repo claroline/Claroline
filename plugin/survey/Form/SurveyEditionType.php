@@ -29,7 +29,7 @@ class SurveyEditionType extends AbstractType
             array(
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd'
+                'format' => 'yyyy-MM-dd',
             )
         );
         $builder->add(
@@ -38,7 +38,7 @@ class SurveyEditionType extends AbstractType
             array(
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd'
+                'format' => 'yyyy-MM-dd',
             )
         );
         $builder->add(

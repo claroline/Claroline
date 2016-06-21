@@ -6,7 +6,6 @@ use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioWidget;
 use Icap\PortfolioBundle\Event\WidgetDataEvent;
 use Icap\PortfolioBundle\Manager\WidgetTypeManager;
-use Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -55,12 +54,12 @@ class WidgetFactory
         if ($this->widgetTypeManager->isWidgetTypeExists($widgetType)) {
             $widgetDataEvent = new WidgetDataEvent($widgetType);
 
-            $this->eventDispatcher->dispatch('icap_portfolio_widget_data_' . $widgetType, $widgetDataEvent);
+            $this->eventDispatcher->dispatch('icap_portfolio_widget_data_'.$widgetType, $widgetDataEvent);
 
             return $widgetDataEvent->getWidget();
         }
 
-        throw new \InvalidArgumentException("Unknown type of widget.");
+        throw new \InvalidArgumentException('Unknown type of widget.');
     }
 
     /**
@@ -74,14 +73,13 @@ class WidgetFactory
         /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
         $widget = new $widgetNamespace();
         $widget
-            ->setLabel($this->translator->trans($widgetType . '_title', array(), 'icap_portfolio'));
+            ->setLabel($this->translator->trans($widgetType.'_title', array(), 'icap_portfolio'));
 
         return $widget;
     }
 
     /**
      * @param Portfolio $portfolio
-     *
      * @param string    $type
      *
      * @return \Icap\PortfolioBundle\Entity\PortfolioWidget
@@ -101,4 +99,3 @@ class WidgetFactory
         return $portfolioWidget;
     }
 }
- 

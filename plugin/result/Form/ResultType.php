@@ -29,14 +29,14 @@ class ResultType extends AbstractType
         $builder
             ->add('name', 'text', [
                 'label' => 'title',
-                'constraints' => new NotBlank()
+                'constraints' => new NotBlank(),
             ])
             ->add('total', 'integer', [
                 'label' => 'maximum_mark',
                 'translation_domain' => 'results',
                 'constraints' => [new NotBlank(), new Range(['min' => 1])],
                 'attr' => ['min' => 1],
-                'data' => 20
+                'data' => 20,
             ]);
     }
 

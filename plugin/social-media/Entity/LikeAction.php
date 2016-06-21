@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -18,9 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Icap\SocialmediaBundle\Repository\LikeActionRepository")
  *
  * Class LikeAction
- * @package Icap\SocialmediaBundle\Entity
  */
 class LikeAction extends ActionBase
 {
-
-} 
+}

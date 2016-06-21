@@ -53,7 +53,7 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -61,7 +61,7 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
@@ -78,7 +78,7 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
             $fileName = array_pop($filePathParts);
             $extension = pathinfo($filePath, PATHINFO_EXTENSION);
             $hashName = "{$ut->generateGuid()}.{$extension}";
-            $targetFilePath = $filesDirectory . DIRECTORY_SEPARATOR . $hashName;
+            $targetFilePath = $filesDirectory.DIRECTORY_SEPARATOR.$hashName;
             $file = new File();
             $file->setName($fileName);
             $file->setHashName($hashName);

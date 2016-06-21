@@ -1,8 +1,8 @@
 <?php
+
 namespace Icap\BlogBundle\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 
 class UpdaterMaster extends Updater
@@ -19,8 +19,9 @@ class UpdaterMaster extends Updater
         $this->UpdateMissingSlug();
     }
 
-    public function UpdateMissingSlug(){
-        $tags = $this->entityManager->getRepository("IcapBlogBundle:Tag")->findBy(array('slug' => null));
+    public function UpdateMissingSlug()
+    {
+        $tags = $this->entityManager->getRepository('IcapBlogBundle:Tag')->findBy(array('slug' => null));
 
         foreach ($tags as $tag) {
             $tag->setSlug(uniqid());
@@ -32,5 +33,4 @@ class UpdaterMaster extends Updater
         }
         $this->entityManager->flush();
     }
-
 }

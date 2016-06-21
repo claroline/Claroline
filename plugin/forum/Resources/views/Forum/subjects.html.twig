@@ -185,21 +185,13 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts
-        debug=false
-        vars=["locale"]
-        "@ClarolineForumBundle/Resources/views/removeSubjectConfirm.html.twigjs"
-        filter="twig_js"
-    %}
-        <script language="javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 
     {% if isModerator %}
         <script>
             function createValidationBox() {
                 var html = Twig.render(
                     ModalWindow,
-                    {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeSubjectConfirm, {'nbItems': 1})}
+                    {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Translator.trans('remove_subject_confirm_message', {}, 'forum')}
                 );
                 $('body').append(html);
             }

@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Entity\Calendar\Event;
 /**
  * @DI\Service("claroline.manager.calendar.event_manager")
  */
-class EventManager 
+class EventManager
 {
     private $om;
     private $repo;
@@ -53,7 +53,7 @@ class EventManager
     }
 
     //repositories method
-    
+
     public function getAll()
     {
         return $this->repo->findAll();

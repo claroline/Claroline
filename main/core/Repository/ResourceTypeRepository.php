@@ -12,9 +12,20 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class ResourceTypeRepository extends EntityRepository
+class ResourceTypeRepository extends EntityRepository implements ContainerAwareInterface
 {
+    private $container;
+    private $bundles = [];
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+        $this->bundles = $this->container->get('claroline.manager.plugin_manager')->getEnabled(true);
+    }
+
     /**
      * Returns all the resource types introduced by plugins.
      *
@@ -24,9 +35,11 @@ class ResourceTypeRepository extends EntityRepository
     {
         $dql = '
             SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-            WHERE rt.plugin IS NOT NULL
+            JOIN rt.plugin p
+            WHERE CONCAT(p.vendorName, p.bundleName) IN (:bundles)
         ';
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('bundles', $this->bundles);
 
         return $query->getResult();
     }
@@ -35,6 +48,7 @@ class ResourceTypeRepository extends EntityRepository
      * Returns the number of existing resources for each resource type.
      *
      * @param null $workspace
+     *
      * @return array
      */
     public function countResourcesByType($workspace = null)
@@ -66,15 +80,20 @@ class ResourceTypeRepository extends EntityRepository
     {
         $dql = '
           SELECT rt, ma FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-          LEFT JOIN rt.actions ma';
+          LEFT JOIN rt.actions ma
+          LEFT JOIN rt.plugin p
+          WHERE CONCAT(p.vendorName, p.bundleName) IN (:bundles)
+          OR rt.plugin is NULL';
 
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('bundles', $this->bundles);
 
         return $query->getResult();
     }
 
     /**
      * @param array $excludedTypeNames
+     *
      * @return array
      */
     public function findTypeNamesNotIn(array $excludedTypeNames)

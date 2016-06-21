@@ -40,4 +40,4 @@ class Updater020210 extends Updater
         $em->persist($forumType);
         $em->flush();
     }
-} 
+}

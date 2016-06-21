@@ -3,8 +3,8 @@
 
 {% block section_content %}
     <div class="panel panel-default">
-        <div class="panel-body"> 
-            
+        <div class="panel-body">
+
             <div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
@@ -12,7 +12,7 @@
                   <li role="presentation"><a href="{{path("formalibre_presence_horaire")}}">Horaire Type</a></li>
                 </ul>
             </div>
-            
+
             <br /><br />
             <h3>{{"config_periode"|trans({},"presences")}}</h3>
             <form method="post" {{ form_enctype(NewSchoolYearForm) }} action="{{path("formalibre_presence_admin_add_school_year")}}">
@@ -20,7 +20,7 @@
                     <div class="col-md-2">
                         {{"choix_nom"|trans({},"presences")}}:
                         {{form_widget(NewSchoolYearForm.name)}}
-                    </div>    
+                    </div>
                     <div class="col-md-1">
                         {{"date_debut"|trans({},"presences")}}:
                         <span data-toggle="tooltip"
@@ -28,7 +28,7 @@
                               data-title="Indiquer le premier jour d'ouverture de l'établissement">
                             {{form_widget(NewSchoolYearForm.beginDate)}}
                         </span>
-                    </div> 
+                    </div>
                     <div class="col-md-1">
                         {{"date_fin"|trans({},"presences")}}:
                         <span data-toggle="tooltip"
@@ -36,7 +36,7 @@
                               data-title="Indiquer le dernier jour d'ouverture de l'établissement">
                             {{form_widget(NewSchoolYearForm.endDate)}}
                         </span>
-                    </div> 
+                    </div>
                     <div class="col-md-1">
                         {{"heure_ouverture"|trans({},"presences")}}:
                         <span data-toggle="tooltip"
@@ -44,7 +44,7 @@
                               data-title="Indiquer l'heure d'ouverture de l'établissement">
                             {{form_widget(NewSchoolYearForm.beginHour)}}
                         </span>
-                    </div> 
+                    </div>
                     <div class="col-md-1">
                         {{"heure_ouverture"|trans({},"presences")}}:
                        <span data-toggle="tooltip"
@@ -52,21 +52,21 @@
                               data-title="Indiquer l'heure de fermeture de l'établissement">
                             {{form_widget(NewSchoolYearForm.endHour)}}
                         </span>
-                    </div> 
+                    </div>
                      <div class="col-md-2">
                         {{"actual_periode"|trans({},"presences")}}
                         {{form_widget(NewSchoolYearForm.actual)}}
-                    </div> 
+                    </div>
                     <div class="col-md-2">
-                        <button type="submit" 
+                        <button type="submit"
                                    class="btn btn-primary"
                                    name="NewSchoolYearForm[valider2]">
                               {{"ajouter"|trans({},"presences")}}
                         </button>
-                    </div> 
+                    </div>
                 </div>
             </form>
-                    </br><br />        
+                    </br><br />
             <div class="table-responsive">
                 <table class="table">
                     <tr>
@@ -95,19 +95,19 @@
                             <td>
                                 <span class="btn btn-default modifier-schoolYear-btn"
                                                            data-school-year-id="{{oneSchoolYear.getId()}}"
-                                                           data-toggle="tooltip" 
-                                                           data-placement="bottom" 
-                                                           title="" 
-                                                           data-original-title="Modifier" 
+                                                           data-toggle="tooltip"
+                                                           data-placement="bottom"
+                                                           title=""
+                                                           data-original-title="Modifier"
                                                            role="button">
                                     <i class="fa fa-pencil"></i>
                                 </span>
                                  <a class="btn btn-default supprimer-schoolYear-btn"
                                                            data-school-year-id="{{oneSchoolYear.getId()}}"
-                                                           data-toggle="tooltip" 
-                                                           data-placement="bottom" 
-                                                           title="" 
-                                                           data-original-title="Supprimer" 
+                                                           data-toggle="tooltip"
+                                                           data-placement="bottom"
+                                                           title=""
+                                                           data-original-title="Supprimer"
                                                            role="button">
                                     <i class="fa fa-times"></i>
                                 </a>
@@ -124,25 +124,25 @@
                     <div class="col-md-3">
                         {{"choix_nom"|trans({},"presences")}}
                         {{form_widget(NewStatusForm.name)}}
-                    </div>    
+                    </div>
                     <div class="col-md-3">
                         {{"choix_couleur"|trans({},"presences")}}
                         {{form_widget(NewStatusForm.color)}}
-                    </div> 
+                    </div>
                     <div class="col-md-2">
                         {{"mise_evidence"|trans({},"presences")}}
                         {{form_widget(NewStatusForm.principalStatus)}}
-                    </div> 
+                    </div>
                     <div class="col-md-3">
-                        <button type="submit" 
+                        <button type="submit"
                                    class="btn btn-primary"
                                    name="NewStatusForm[valider]">
                               {{"ajouter"|trans({},"presences")}}
                         </button>
-                    </div> 
+                    </div>
                 </div>
             </form>
-            </br><br />        
+            </br><br />
             <div class="table-responsive">
                 <table class="table">
                     <tr>
@@ -168,19 +168,19 @@
                             <td>
                                 <span class="btn btn-default modifier-status-btn"
                                                            data-status-id="{{onestatus.getId()}}"
-                                                           data-toggle="tooltip" 
-                                                           data-placement="bottom" 
-                                                           title="" 
-                                                           data-original-title="Modifier" 
+                                                           data-toggle="tooltip"
+                                                           data-placement="bottom"
+                                                           title=""
+                                                           data-original-title="Modifier"
                                                            role="button">
                                     <i class="fa fa-pencil"></i>
                                 </span>
                                  <a class="btn btn-default supprimer-status-btn"
                                                            data-status-id="{{onestatus.getId()}}"
-                                                           data-toggle="tooltip" 
-                                                           data-placement="bottom" 
-                                                           title="" 
-                                                           data-original-title="Supprimer" 
+                                                           data-toggle="tooltip"
+                                                           data-placement="bottom"
+                                                           title=""
+                                                           data-original-title="Supprimer"
                                                            role="button">
                                     <i class="fa fa-times"></i>
                                 </a>
@@ -194,7 +194,7 @@
             <h3>{{"config_droits"|trans({},"presences")}}</h3>
             <div class="table-responsive">
                 <table class="table">
-                    
+
                     <tr>
                         <th>{{"roles"|trans({},"presences")}}</th>
                         {% for onename in rightName%}
@@ -210,27 +210,27 @@
                             <td>{{role.getTranslationKey()|trans({},"platform")}}</td>
                             {% for onename in rightNameId%}
                                 <td>
-                                    <input 
+                                    <input
                                         data-right-id="{{right['right'].getId()}}"
                                         data-one-name="{{onename}}"
                                         class="rightCheckbox"
-                                        type="checkbox" 
+                                        type="checkbox"
                                            {% if right[onename] %}
                                                checked
                                            {% endif %}>
                                 </td>
-                                
+
                             {% endfor %}
                         </tr>
                         {% endif %}
                     {% endfor %}
-                    
+
                 </table>
             </div>
         </div>
     </div>
-                  
-                  
+
+
 {% endblock %}
 
 {% block stylesheets %}
@@ -240,24 +240,24 @@
 
 {% block javascripts %}
     {{ parent() }}
-    
+
     <script>
-        
+
         $(".rightCheckbox").on("change",function(){
-      
+
             var rightId=$(this).data("right-id");
             var name=$(this).data("one-name");
-            
+
             $.ajax({
                 url: Routing.generate('formalibre_presence_admin_right',{'right':rightId,'rightValue':name}),
                 type:'POST'
             })
-          
-            
-            
+
+
+
         });
-        
-        
+
+
     </script>
     <script type="text/javascript" src="{{ asset('packages/moment/min/moment-with-locales.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('packages/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
@@ -276,10 +276,10 @@
                             },
                             function() {}
                                 );
-   
-    });      
+
+    });
         $(".supprimer-status-btn").on("click",function(){
-            var statusId=$(this).data("status-id");         
+            var statusId=$(this).data("status-id");
             window.Claroline.Modal.confirmRequest(
                             Routing.generate("formalibre_status_supprimer",{"theStatus":statusId}),
                             function() {
@@ -289,9 +289,9 @@
                             "Etes-vous certain de vouloir supprimer ce status ?",
                             "Supression status"
                                 );
-                   
+
         });
-                
+
     </script>
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script>
@@ -358,12 +358,11 @@
                             },
                             function() {}
                                 );
-   
-    });    
-    
+
+    });
+
     $(".supprimer-schoolYear-btn").on("click",function(){
        var schoolYearId=$(this).data("school-year-id");
-       console.log(schoolYearId);
         window.Claroline.Modal.confirmRequest(
                             Routing.generate("formalibre_school_year_supprimer",{"theSchoolYear":schoolYearId}),
                             function() {
@@ -373,10 +372,10 @@
                             "Etes-vous certain de vouloir supprimer cette année ? Cela effacera également les presences liées à cette année.",
                             "Supression année"
                                 );
-   
-    });  
-                
+
+    });
+
     </script>
-        
+
 
 {% endblock javascripts %}

@@ -2,7 +2,6 @@
 
 namespace Icap\PortfolioBundle\Form\Type;
 
-use Doctrine\ORM\EntityRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,10 +17,10 @@ class PortfolioGroupType extends AbstractType
         $builder
             ->add('group', 'zenstruck_ajax_entity',
                 array(
-                    'class'          => 'ClarolineCoreBundle:Group',
+                    'class' => 'ClarolineCoreBundle:Group',
                     'use_controller' => true,
-                    'property'       => 'name',
-                    'repo_method'    => 'findByNameForAjax'
+                    'property' => 'name',
+                    'repo_method' => 'findByNameForAjax',
                 )
             );
     }
@@ -35,8 +34,8 @@ class PortfolioGroupType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\PortfolioGroup',
-                'translation_domain' => 'icap_portfolio'
+                'data_class' => 'Icap\PortfolioBundle\Entity\PortfolioGroup',
+                'translation_domain' => 'icap_portfolio',
             )
         );
     }

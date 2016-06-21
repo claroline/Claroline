@@ -2,7 +2,7 @@
 /**
  * Created by : Vincent SAISSET
  * Date: 21/08/13
- * Time: 15:58
+ * Time: 15:58.
  */
 
 namespace Icap\DropzoneBundle\Entity;
@@ -14,7 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Icap\DropzoneBundle\Repository\DocumentRepository")
  * @ORM\Table(name="icap__dropzonebundle_document")
  */
-class Document {
+class Document
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -134,7 +135,7 @@ class Document {
         $json = array(
             'id' => $this->getId(),
             'type' => $this->getType(),
-            'url' => $this->getUrl()
+            'url' => $this->getUrl(),
         );
         if ($this->getResourceNode() !== null) {
             $json['resourceNode'] = array(

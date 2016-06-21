@@ -21,8 +21,7 @@ class EvaluationRepository extends EntityRepository
         User $user,
         ActivityParameters $activityParams,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT e
             FROM Claroline\CoreBundle\Entity\Activity\Evaluation e
@@ -34,15 +33,14 @@ class EvaluationRepository extends EntityRepository
         $query->setParameter('user', $user);
         $query->setParameter('activityParameters', $activityParams);
 
-        return $executeQuery ? $query->getOneOrNullResult(): $query;
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
     public function findEvaluationsByUserAndActivityParameters(
         User $user,
         array $activityParams,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT e
             FROM Claroline\CoreBundle\Entity\Activity\Evaluation e
@@ -54,15 +52,14 @@ class EvaluationRepository extends EntityRepository
         $query->setParameter('user', $user);
         $query->setParameter('activityParameters', $activityParams);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findEvaluationsByUsersAndActivityParams(
         array $users,
         ActivityParameters $activityParams,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT e
             FROM Claroline\CoreBundle\Entity\Activity\Evaluation e
@@ -74,6 +71,6 @@ class EvaluationRepository extends EntityRepository
         $query->setParameter('activityParameters', $activityParams);
         $query->setParameter('users', $users);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

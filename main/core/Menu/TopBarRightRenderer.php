@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Menu;
 
-use Knp\Menu\FactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use JMS\DiExtraBundle\Annotation as DI;
 use Knp\Menu\Renderer\ListRenderer;
 use Knp\Menu\ItemInterface;
@@ -23,7 +21,6 @@ use Knp\Menu\ItemInterface;
  */
 class TopBarRightRenderer extends ListRenderer
 {
-
     /**
      * @DI\InjectParams({
      *     "matcher"        = @DI\Inject("knp_menu.matcher"),
@@ -35,8 +32,7 @@ class TopBarRightRenderer extends ListRenderer
         $matcher,
         $defaultOptions,
         $charset
-    )
-    {
+    ) {
         parent::__construct($matcher, $defaultOptions, $charset);
     }
 
@@ -44,7 +40,7 @@ class TopBarRightRenderer extends ListRenderer
     {
         return sprintf(
             '<a role="menuitem" href="%s"><i class="%s"></i><span> %s</span></a>',
-            $this->escape($item->getUri() . $item->getExtra('uri-add')),
+            $this->escape($item->getUri().$item->getExtra('uri-add')),
             $item->getExtra('icon'),
             $this->renderLabel($item, $options)
         );

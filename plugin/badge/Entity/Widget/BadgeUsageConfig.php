@@ -26,19 +26,19 @@ class BadgeUsageConfig
     protected $widgetInstance;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(type="smallint")
      */
     protected $numberLastAwardedBadge;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(type="smallint")
      */
     protected $numberMostAwardedBadge;
 
     /**
-     * @var boolean
+     * @var bool
      * @ORM\Column(type="boolean")
      */
     protected $simple_view;
@@ -112,7 +112,7 @@ class BadgeUsageConfig
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isSimpleView()
     {
@@ -120,11 +120,10 @@ class BadgeUsageConfig
     }
 
     /**
-     * @param boolean $simple_view
+     * @param bool $simple_view
      */
     public function setSimpleView($simple_view)
     {
         $this->simple_view = $simple_view;
     }
 }
- 

@@ -33,8 +33,7 @@ class TagToolListener
     public function __construct(
         HttpKernelInterface $httpKernel,
         RequestStack $requestStack
-    )
-    {
+    ) {
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
     }

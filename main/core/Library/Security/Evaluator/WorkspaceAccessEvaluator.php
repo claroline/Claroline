@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Library\Security\Evaluator;
 
-use Doctrine\ORM\EntityManagerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -30,8 +29,7 @@ class WorkspaceAccessEvaluator
     public function __construct(
         Request $request,
         AuthorizationCheckerInterface $authorization
-    )
-    {
+    ) {
         $this->request = $request;
         $this->authorization = $authorization;
     }
@@ -40,13 +38,17 @@ class WorkspaceAccessEvaluator
      * @DI\SecurityFunction("canAccessWorkspace(attr)")
      *
      * @param string $toolName
+     *
      * @throws \Exception
+     *
      * @return bool
      */
     public function canAccessWorkspace($attr)
     {
         $workspace = $this->request->attributes->get('workspace');
-        if (!$workspace) throw new \Exception('There is no workspace in the request to use for the canAccessWorkspace evaluator.');
+        if (!$workspace) {
+            throw new \Exception('There is no workspace in the request to use for the canAccessWorkspace evaluator.');
+        }
 
         if ($workspace) {
             if (false === $this->authorization->isGranted($attr, $workspace)) {

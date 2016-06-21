@@ -17,7 +17,6 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\Utilities as SecurityUtilities;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -47,8 +46,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
         AuthorizationCheckerInterface $authorization,
         SecurityUtilities $ut,
         TokenStorageInterface $tokenStorage
-    )
-    {
+    ) {
         $this->wm = $wm;
         $this->em = $em;
         $this->ut = $ut;
@@ -65,7 +63,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
             'get_workspaces_accesses' => new \Twig_Function_Method($this, 'getAccesses'),
             'has_role_access_to_workspace' => new \Twig_Function_Method($this, 'hasRoleAccess'),
             'has_access_to_workspace' => new \Twig_Function_Method($this, 'hasAccess'),
-            'has_role_in_workspace' => new \Twig_Function_Method($this, 'hasRoleInWorkspace')
+            'has_role_in_workspace' => new \Twig_Function_Method($this, 'hasRoleInWorkspace'),
         );
     }
 
@@ -81,7 +79,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
         $tools = $repo->findDisplayedByRolesAndWorkspace(array($role), $workspace);
 
-        return count($tools) > 0 ? true: false;
+        return count($tools) > 0 ? true : false;
     }
 
     public function hasAccess($workspaceId)
@@ -100,7 +98,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
         $repo = $this->em->getRepository('ClarolineCoreBundle:Role');
         $workspaceRoles = $repo->findRolesByWorkspaceAndRoleNames($workspace, $roles);
 
-        return count($workspaceRoles) > 0 ? true: false;
+        return count($workspaceRoles) > 0 ? true : false;
     }
 
     /**

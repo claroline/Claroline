@@ -35,12 +35,12 @@ class AuthenticationManager
     {
         $this->container = $container;
         $this->fileTypes = '/\.yml$/';
-        $this->driverPath = $container->getParameter('kernel.root_dir') . '/config/Authentication/';
+        $this->driverPath = $container->getParameter('kernel.root_dir').'/config/Authentication/';
         $this->finder = new Finder();
     }
 
     /**
-     * Get authentication drivers
+     * Get authentication drivers.
      */
     public function getDrivers()
     {
@@ -52,9 +52,9 @@ class AuthenticationManager
             $driver = str_replace('.yml', '', $file->getRelativePathname());
             $service = $this->getService($driver);
 
-            if ($service and $servers = $service->getServers()) {
+            if ($service && $servers = $service->getServers()) {
                 foreach ($servers as $server) {
-                    $drivers[$driver . ':' . $server] = $driver . ':' . $server;
+                    $drivers[$driver.':'.$server] = $driver.':'.$server;
                 }
             }
         }
@@ -63,7 +63,7 @@ class AuthenticationManager
     }
 
     /**
-     * Authenticate
+     * Authenticate.
      *
      * @param $driver The name of the driver including the server, example: claroline.ldap:server1
      */
@@ -71,7 +71,7 @@ class AuthenticationManager
     {
         $service = $this->getService($driver);
 
-        if ($service and $service->authenticate($this->getServerName($driver), $user, $password)) {
+        if ($service && $service->authenticate($this->getServerName($driver), $user, $password)) {
             return true;
         }
     }
@@ -84,31 +84,29 @@ class AuthenticationManager
     }
 
     /**
-     * Return authentication driver manager
+     * Return authentication driver manager.
      *
      * @param $driver The name of the driver including the server, example: claroline.ldap:server1
      */
     public function getService($driver)
     {
-        if ($driver = explode(':', $driver) and
-            isset($driver[0]) and
-            $driver = explode('.', $driver[0]) and
-            isset($driver[1])
-        ) {
-            return $this->container->get($driver[0] . '.' . $driver[1] . '_bundle.manager.' . $driver[1] . '_manager');
+        $parts = $driver = explode(':', $driver);
+        $driver = explode('.', $parts[0]);
+
+        if (isset($driver[1])) {
+            return $this->container->get($driver[0].'.'.$driver[1].'_bundle.manager.'.$driver[1].'_manager');
         }
     }
 
     /**
-     * Return server name
+     * Return server name.
      *
      * @param $driver The name of the driver including the server, example: claroline.ldap:server1
      */
     public function getServerName($driver)
     {
-        if ($driver = explode(':', $driver) and isset($driver[1])) {
+        if ($driver = explode(':', $driver) && isset($driver[1])) {
             return $driver[1];
         }
     }
-
 }

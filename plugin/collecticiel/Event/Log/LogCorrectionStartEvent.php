@@ -8,8 +8,8 @@ use Innova\CollecticielBundle\Entity\Correction;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
 
-class LogCorrectionStartEvent extends AbstractLogResourceEvent {
-
+class LogCorrectionStartEvent extends AbstractLogResourceEvent
+{
     const ACTION = 'resource-innova_collecticiel-correction_start';
 
     /**
@@ -25,10 +25,10 @@ class LogCorrectionStartEvent extends AbstractLogResourceEvent {
         }
 
         $details = array(
-            'dropzone'  => array(
+            'dropzone' => array(
                 'id' => $dropzone->getId(),
             ),
-            'drop'  => array(
+            'drop' => array(
                 'id' => $drop->getId(),
                 'documents' => $documentsDetails,
                 'owner' => array(
@@ -36,9 +36,9 @@ class LogCorrectionStartEvent extends AbstractLogResourceEvent {
                     'lastName' => $drop->getUser()->getLastName(),
                     'firstName' => $drop->getUser()->getFirstName(),
                     'username' => $drop->getUser()->getUsername(),
-                )
+                ),
             ),
-            'correction' => $correction->toArray(false)
+            'correction' => $correction->toArray(false),
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

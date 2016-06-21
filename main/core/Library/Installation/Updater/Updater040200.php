@@ -12,9 +12,6 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
-use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 
 class Updater040200 extends Updater
 {

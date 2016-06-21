@@ -16,7 +16,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
 class ActivityRuleType extends AbstractType
 {
@@ -26,8 +25,7 @@ class ActivityRuleType extends AbstractType
     public function __construct(
         ActivityManager $activityManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->activityManager = $activityManager;
         $this->translator = $translator;
     }
@@ -39,7 +37,7 @@ class ActivityRuleType extends AbstractType
 
         foreach ($ruleActions as $ruleAction) {
             $actions[$ruleAction['action']] = $this->translator->trans(
-                'log_' . $ruleAction['action'] . '_filter',
+                'log_'.$ruleAction['action'].'_filter',
                 array(),
                 'log'
             );
@@ -51,7 +49,7 @@ class ActivityRuleType extends AbstractType
             array(
                 'choices' => $actions,
                 'required' => true,
-                'label' => 'action'
+                'label' => 'action',
             )
         );
         $builder->add(
@@ -60,7 +58,7 @@ class ActivityRuleType extends AbstractType
             array(
                 'attr' => array('min' => 1),
                 'required' => true,
-                'label' => 'occurence'
+                'label' => 'occurence',
             )
         );
         $builder->add(
@@ -69,7 +67,7 @@ class ActivityRuleType extends AbstractType
             array(
                 'attr' => array('min' => 0),
                 'required' => false,
-                'label' => 'result'
+                'label' => 'result',
             )
         );
         $builder->add(
@@ -78,7 +76,7 @@ class ActivityRuleType extends AbstractType
             array(
                 'label' => '/',
                 'attr' => array('min' => 1),
-                'required' => false
+                'required' => false,
             )
         );
         $builder->add(
@@ -93,7 +91,7 @@ class ActivityRuleType extends AbstractType
                 'attr' => array('class' => 'activity-rule-option-date'),
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd'
+                'format' => 'yyyy-MM-dd',
             )
         );
         $builder->add(
@@ -103,7 +101,7 @@ class ActivityRuleType extends AbstractType
                 'attr' => array('class' => 'activity-rule-option-date'),
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd'
+                'format' => 'yyyy-MM-dd',
             )
         );
     }

@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 
 /**
- * Loads configuration for the Path Bundle
+ * Loads configuration for the Path Bundle.
  */
 class InnovaPathExtension extends Extension
 {
@@ -17,7 +17,7 @@ class InnovaPathExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $locator = new FileLocator(__DIR__ . '/../Resources/config/services');
+        $locator = new FileLocator(__DIR__.'/../Resources/config/services');
         $loader = new YamlFileLoader($container, $locator);
 
         $loader->load('listeners.yml');
@@ -25,7 +25,7 @@ class InnovaPathExtension extends Extension
         $loader->load('controllers.yml');
         $loader->load('form_types.yml');
         $loader->load('importers.yml');
-        
+
         return $this;
     }
 }

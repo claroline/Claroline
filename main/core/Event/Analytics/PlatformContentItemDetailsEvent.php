@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Event\Analytics;
 
 use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Event\MandatoryEventInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\Event;
 
 class PlatformContentItemDetailsEvent extends Event implements DataConveyorEventInterface, MandatoryEventInterface
@@ -29,7 +28,7 @@ class PlatformContentItemDetailsEvent extends Event implements DataConveyorEvent
     private $content = '';
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPopulated()
     {

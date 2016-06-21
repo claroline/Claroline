@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use HeVinci\CompetencyBundle\Validator as CustomAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as BR;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -56,7 +55,7 @@ class Objective implements \JsonSerializable
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -100,6 +99,7 @@ class Objective implements \JsonSerializable
 
     /**
      * @param User $user
+     *
      * @return bool
      */
     public function hasUser(User $user)
@@ -129,6 +129,7 @@ class Objective implements \JsonSerializable
 
     /**
      * @param Group $group
+     *
      * @return bool
      */
     public function hasGroup(Group $group)
@@ -161,7 +162,7 @@ class Objective implements \JsonSerializable
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'hasChildren' => $this->objectiveCompetencies->count() > 0
+            'hasChildren' => $this->objectiveCompetencies->count() > 0,
         ];
     }
 }

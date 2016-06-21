@@ -63,9 +63,9 @@ class Updater020900 extends Updater
             $rowBadgeRules = $this->conn->query('SELECT * FROM claro_badge_rule_temp');
 
             foreach ($rowBadgeRules as $badgeRule) {
-                $result = $badgeRule['result'] ? $this->conn->quote($badgeRule['result']): 'NULL';
-                $resultComparison = $badgeRule['resultComparison'] ? $badgeRule['resultComparison']: 'NULL';
-                $resourceId = $badgeRule['resource_id'] ? $badgeRule['resource_id']: 'NULL';
+                $result = $badgeRule['result'] ? $this->conn->quote($badgeRule['result']) : 'NULL';
+                $resultComparison = $badgeRule['resultComparison'] ? $badgeRule['resultComparison'] : 'NULL';
+                $resourceId = $badgeRule['resource_id'] ? $badgeRule['resource_id'] : 'NULL';
 
                 $this->conn->query(
                     "INSERT INTO claro_badge_rule VALUES (
@@ -94,9 +94,8 @@ class Updater020900 extends Updater
         $this->om->startFlushSuite();
 
         for ($i = 0, $count = count($users); $i < $count; ++$i) {
-
             $user = $users[$i];
-            $this->log('updating ' . $user->getUsername() . '...');
+            $this->log('updating '.$user->getUsername().'...');
             $user->setIsEnabled(true);
             $user->setIsMailNotified(false);
             $this->om->persist($user);
@@ -117,10 +116,10 @@ class Updater020900 extends Updater
         //mails
         $frTitle = 'Inscription à %platform_name%';
         $frContent = "<div>Votre nom d'utilisateur est %username%</div></br>";
-        $frContent .= "<div>Votre mot de passe est %password%</div>";
+        $frContent .= '<div>Votre mot de passe est %password%</div>';
         $enTitle = 'Registration to %platform_name%';
-        $enContent = "<div>You username is %username%</div></br>";
-        $enContent .= "<div>Your password is %password%</div>";
+        $enContent = '<div>You username is %username%</div></br>';
+        $enContent .= '<div>Your password is %password%</div>';
         $type = 'claro_mail_registration';
         $content = new Content();
         $content->setTitle($enTitle);
@@ -156,8 +155,8 @@ class Updater020900 extends Updater
             copy($sourcePath, $targetPath);
         } else {
             $msg = 'WARNING: This updater cannot modify the front controller web/app.php '
-                . 'due to file permissions issues. If you want to benefit from the new '
-                . "maintenance mode, replace the file '{$targetPath}' by '{$sourcePath}'.";
+                .'due to file permissions issues. If you want to benefit from the new '
+                ."maintenance mode, replace the file '{$targetPath}' by '{$sourcePath}'.";
             $this->log("<comment>{$msg}</comment>");
         }
     }

@@ -61,7 +61,7 @@ class WebResourceImporter extends Importer implements ConfigurationInterface
                                         ->ifTrue(
                                             function ($v) use ($rootPath) {
                                                 return call_user_func_array(
-                                                    __CLASS__ . '::fileNotExists',
+                                                    __CLASS__.'::fileNotExists',
                                                     array($v, $rootPath)
                                                 );
                                             }
@@ -78,7 +78,7 @@ class WebResourceImporter extends Importer implements ConfigurationInterface
 
     public function supports($type)
     {
-        return $type == 'yml' ? true: false;
+        return $type == 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -92,7 +92,7 @@ class WebResourceImporter extends Importer implements ConfigurationInterface
         $ds = DIRECTORY_SEPARATOR;
 
         foreach ($array['data'] as $item) {
-            $tmpFile = new UploadedFile($this->getRootPath() . $ds . $item['file']['path'], $name, null, null, null, true);
+            $tmpFile = new UploadedFile($this->getRootPath().$ds.$item['file']['path'], $name, null, null, null, true);
 
             return $this->container->get('claroline.listener.web_resource_listener')->create($tmpFile, $workspace);
         }
@@ -105,14 +105,14 @@ class WebResourceImporter extends Importer implements ConfigurationInterface
     public function export(Workspace $workspace, array &$_files, $object)
     {
         $hash = $object->getHashName();
-        $uid = uniqid() . '.' . pathinfo($hash, PATHINFO_EXTENSION);
+        $uid = uniqid().'.'.pathinfo($hash, PATHINFO_EXTENSION);
         $_files[$uid] = $this->container
-            ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash;
+            ->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$hash;
         $data = array();
 
         if (file_exists($_files[$uid])) {
             $data = array(array('file' => array(
-                'path' => $uid
+                'path' => $uid,
             )));
         }
 
@@ -128,6 +128,6 @@ class WebResourceImporter extends Importer implements ConfigurationInterface
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        return !file_exists($rootpath . $ds . $v);;
+        return !file_exists($rootpath.$ds.$v);
     }
 }

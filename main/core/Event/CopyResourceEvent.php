@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Event;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\EventDispatcher\Event;
-use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
@@ -27,7 +26,8 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
     private $isPopulated = false;
 
     /**
-     * If true the copy will be published
+     * If true the copy will be published.
+     *
      * @var bool
      */
     private $publish = false;
@@ -36,12 +36,12 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
      * Constructor.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode     $parent
      */
     public function __construct(AbstractResource $resource, ResourceNode $parent)
     {
         $this->resource = $resource;
-        $this->parent   = $parent;
+        $this->parent = $parent;
 
         // By default, use the same published state as the copied node
         if ($this->resource->getResourceNode()) {
@@ -50,7 +50,8 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
     }
 
     /**
-     * Returns the new parent of the resource
+     * Returns the new parent of the resource.
+     *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
     public function getParent()
@@ -96,6 +97,7 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
 
     /**
      * Is the copied resource need to be published or not ?
+     *
      * @return bool
      */
     public function getPublish()

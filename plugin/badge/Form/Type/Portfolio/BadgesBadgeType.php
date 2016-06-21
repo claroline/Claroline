@@ -17,16 +17,16 @@ class BadgesBadgeType extends AbstractType
         $builder
             ->add('name', 'text', array(
                 'required' => false,
-                'mapped'   => false
+                'mapped' => false,
             ))
             ->add('img', 'text', array(
                 'required' => false,
-                'mapped'   => false
+                'mapped' => false,
             ))
             ->add('badge', 'entity', array(
-                'class'    => 'IcapBadgeBundle:Badge',
+                'class' => 'IcapBadgeBundle:Badge',
                 'property' => 'name',
-                'required' => false
+                'required' => false,
             ));
     }
 

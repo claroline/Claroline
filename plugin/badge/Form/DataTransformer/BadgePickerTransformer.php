@@ -41,10 +41,10 @@ class BadgePickerTransformer implements DataTransformerInterface
 
             foreach ($value as $entity) {
                 $transformedData[] = array(
-                    'id'          => $entity->getId(),
-                    'text'        => $entity->getName(),
-                    'icon'        => $entity->getWebPath(),
-                    'description' => $entity->getDescription()
+                    'id' => $entity->getId(),
+                    'text' => $entity->getName(),
+                    'icon' => $entity->getWebPath(),
+                    'description' => $entity->getDescription(),
                 );
             }
 
@@ -53,26 +53,27 @@ class BadgePickerTransformer implements DataTransformerInterface
 
         if ($value instanceof Badge) {
             return array(
-                'id'          => $value->getId(),
-                'text'        => $value->getName(),
-                'icon'        => $value->getWebPath(),
-                'description' => $value->getDescription()
+                'id' => $value->getId(),
+                'text' => $value->getName(),
+                'icon' => $value->getWebPath(),
+                'description' => $value->getDescription(),
             );
         }
 
-        return null;
+        return;
     }
 
     /**
-     * @param integer $badgeId
+     * @param int $badgeId
      *
      * @return Badge|null
+     *
      * @throws \Symfony\Component\Form\Exception\TransformationFailedException
      */
     public function reverseTransform($badgeId)
     {
         if (!$badgeId) {
-            return null;
+            return;
         }
 
         $badge = $this->badgeManager->getById($badgeId);

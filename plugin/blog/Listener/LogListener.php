@@ -27,7 +27,7 @@ class LogListener extends ContainerAware
                 'listItemView' => $this->container->get('templating')->render(
                     'IcapBlogBundle:Log:log_list_item.html.twig',
                     array('log' => $event->getLog())
-                )
+                ),
             )
         );
 

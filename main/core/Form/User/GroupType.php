@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Form\User;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -31,7 +30,7 @@ class GroupType extends AngularType
             'text',
             array(
                 'label' => 'name',
-                'constraints' => new NotBlank()
+                'constraints' => new NotBlank(),
             )
         );
     }
@@ -44,7 +43,9 @@ class GroupType extends AngularType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $default = array('translation_domain' => 'platform');
-        if ($this->forApi) $default['csrf_protection'] = false;
+        if ($this->forApi) {
+            $default['csrf_protection'] = false;
+        }
         $default['ng-model'] = 'group';
 
         $resolver->setDefaults($default);

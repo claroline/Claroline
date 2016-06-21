@@ -27,18 +27,19 @@ class ExceptionActionEvent extends Event
     private $line;
     private $url;
     private $referer;
-
+    private $httpCode;
 
     /**
      * @param \Knp\Menu\FactoryInterface $factory
-     * @param \Knp\Menu\ItemInterface $menu
-     * @param User $user
-     * @param string $message
-     * @param string $exceptionClass
-     * @param string $file
-     * @param string $line
-     * @param string $url
-     * @param string $referer
+     * @param \Knp\Menu\ItemInterface    $menu
+     * @param User                       $user
+     * @param string                     $message
+     * @param string                     $exceptionClass
+     * @param string                     $file
+     * @param string                     $line
+     * @param string                     $url
+     * @param string                     $referer
+     * @param int                        $httpCode
      */
     public function __construct(
         FactoryInterface $factory,
@@ -49,9 +50,9 @@ class ExceptionActionEvent extends Event
         $file,
         $line,
         $url,
-        $referer
-    )
-    {
+        $referer,
+        $httpCode = null
+    ) {
         $this->factory = $factory;
         $this->menu = $menu;
         $this->user = $user;
@@ -61,6 +62,7 @@ class ExceptionActionEvent extends Event
         $this->line = $line;
         $this->url = $url;
         $this->referer = $referer;
+        $this->httpCode = $httpCode;
     }
 
     /**
@@ -112,5 +114,15 @@ class ExceptionActionEvent extends Event
     public function getReferer()
     {
         return $this->referer;
+    }
+
+    public function getHttpCode()
+    {
+        return $this->httpCode;
+    }
+
+    public function setHttpCode($httpCode)
+    {
+        $this->httpCode = $httpCode;
     }
 }

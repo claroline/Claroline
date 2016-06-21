@@ -53,7 +53,7 @@ class Updater040100 extends Updater
             $workspace->setMaxUploadResources(Workspace::DEFAULT_MAX_FILE_COUNT);
             $em->persist($workspace);
 
-            $i++;
+            ++$i;
 
             if ($i % self::MAX_BATCH_SIZE === 0) {
                 $em->flush();
@@ -77,7 +77,7 @@ class Updater040100 extends Updater
         foreach ($directories as $directory) {
             $directory->setIsUploadDestination(true);
             $em->persist($directory);
-            $i++;
+            ++$i;
 
             if ($i % self::MAX_BATCH_SIZE === 0) {
                 $em->flush();
@@ -123,7 +123,7 @@ class Updater040100 extends Updater
         foreach ($pws as $pw) {
             $pw->setIsPersonal(true);
             $em->persist($pw);
-            $i++;
+            ++$i;
 
             if ($i % self::MAX_BATCH_SIZE === 0) {
                 $em->flush();

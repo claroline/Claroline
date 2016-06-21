@@ -33,7 +33,7 @@ class DoctrineDebug extends ContainerAware
         $this->debugVendor = null;
     }
     /**
-     * Gets all the entities to flush
+     * Gets all the entities to flush.
      *
      * @param OnFlushEventArgs $eventArgs Event args
      */
@@ -50,14 +50,17 @@ class DoctrineDebug extends ContainerAware
 
                 foreach ($stack as $call) {
                     if (isset($call['file'])) {
-                        
-                    $file = $call['file'];
+                        $file = $call['file'];
                         if ($this->debugLevel === self::DEBUG_CLAROLINE) {
-                            if (strpos($file, 'Claroline')) $this->logTrace($call);
+                            if (strpos($file, 'Claroline')) {
+                                $this->logTrace($call);
+                            }
                         } elseif ($this->debugLevel === self::DEBUG_ALL) {
                             $this->logTrace($call);
-                        } elseif($this->debugLevel === self::DEBUG_VENDOR) {
-                            if (strpos($file, $this->debugVendor)) $this->logTrace($call);
+                        } elseif ($this->debugLevel === self::DEBUG_VENDOR) {
+                            if (strpos($file, $this->debugVendor)) {
+                                $this->logTrace($call);
+                            }
                         }
                     }
                 }
@@ -69,7 +72,7 @@ class DoctrineDebug extends ContainerAware
 
     private function logTrace(array $call)
     {
-        $this->log('Function "' . $call['function'] . '" was called from file ' . $call['file'] . ' on line ' . $call['line'] . '.', LogLevel::DEBUG);
+        $this->log('Function "'.$call['function'].'" was called from file '.$call['file'].' on line '.$call['line'].'.', LogLevel::DEBUG);
     }
 
     public function setLogger(LoggerInterface $logger)

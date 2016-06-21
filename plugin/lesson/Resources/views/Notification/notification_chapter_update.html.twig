@@ -1,0 +1,1 @@
+<a href="{{ path('icap_lesson_chapter', {'resourceId' : notification.details.resource.id, 'chapterId' : notification.details.chapter.chapter}) }}">{{ notification.actionKey|trans({'%lesson%' : notification.details.resource.name, '%chapter%' : notification.details.chapter.title}, 'notification') }}</a>

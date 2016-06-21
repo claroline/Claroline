@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class AtLeastOneTranslation extends Constraint
 {
-    public $message = "badge_need_at_least_one_translation";
+    public $message = 'badge_need_at_least_one_translation';
 
     public function getTargets()
     {

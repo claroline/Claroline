@@ -31,8 +31,7 @@ class SendMessageEvent extends Event
         AbstractRoleSubject $receiver = null,
         array $users = array(),
         $withMail = true
-    )
-    {
+    ) {
         $this->sender = $sender;
         $this->content = $content;
         $this->object = $object;
@@ -90,14 +89,13 @@ class SendMessageEvent extends Event
     {
         $this->users = $users;
     }
-    
-    function getWithMail()
+
+    public function getWithMail()
     {
-        
         return $this->withMail;
     }
 
-    function setWithMail($withMail)
+    public function setWithMail($withMail)
     {
         $this->withMail = $withMail;
     }

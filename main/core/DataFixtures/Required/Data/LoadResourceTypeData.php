@@ -41,7 +41,7 @@ class LoadResourceTypeData implements RequiredFixture
             array('directory', true),
             array('text', true),
             array('resource_shortcut', false),
-            array('activity', true)
+            array('activity', true),
         );
 
         $types[] = array();

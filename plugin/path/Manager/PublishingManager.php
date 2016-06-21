@@ -4,75 +4,81 @@ namespace Innova\PathBundle\Manager;
 
 use Claroline\CoreBundle\Manager\RightsManager;
 use Doctrine\Common\Persistence\ObjectManager;
-use Innova\PathBundle\Entity\Criterion;
-use Innova\PathBundle\Entity\Criteriagroup;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Entity\StepCondition;
-use Innova\PathBundle\Manager\Condition\StepConditionManager;
 
 /**
- * Manage Publishing of the paths
+ * Manage Publishing of the paths.
  */
 class PublishingManager
 {
     /**
-     * Current entity manage for data persist
-     * @var \Doctrine\Common\Persistence\ObjectManager $om
+     * Current entity manage for data persist.
+     *
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
     protected $om;
 
     /**
-     * Resource Manager
+     * Resource Manager.
+     *
      * @var \Claroline\CoreBundle\Manager\ResourceManager
      */
     protected $resourceManager;
 
     /**
-     * innova step manager
+     * innova step manager.
+     *
      * @var \Innova\PathBundle\Manager\StepManager
      */
     protected $stepManager;
 
     /**
-     * Rights Manager
+     * Rights Manager.
+     *
      * @var \Claroline\CoreBundle\Manager\RightsManager
      */
     protected $rightsManager;
 
     /**
-     * Path to publish
+     * Path to publish.
+     *
      * @var \Innova\PathBundle\Entity\Path\Path
      */
     protected $path;
 
     /**
-     * JSON structure of the path
+     * JSON structure of the path.
+     *
      * @var \stdClass
      */
     protected $pathStructure;
 
     /**
-     * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager      $objectManager
-     * @param \Innova\PathBundle\Manager\StepManager          $stepManager
-     * @param \Claroline\CoreBundle\Manager\RightsManager     $rightsManager
+     * Class constructor.
+     *
+     * @param \Doctrine\Common\Persistence\ObjectManager  $objectManager
+     * @param \Innova\PathBundle\Manager\StepManager      $stepManager
+     * @param \Claroline\CoreBundle\Manager\RightsManager $rightsManager
      */
     public function __construct(
         ObjectManager        $objectManager,
         StepManager          $stepManager,
         RightsManager        $rightsManager)
     {
-        $this->om                   = $objectManager;
-        $this->stepManager          = $stepManager;
-        $this->rightsManager        = $rightsManager;
+        $this->om = $objectManager;
+        $this->stepManager = $stepManager;
+        $this->rightsManager = $rightsManager;
     }
 
     /**
-     * Initialize a new Publishing
-     * @param  \Innova\PathBundle\Entity\Path\Path          $path
+     * Initialize a new Publishing.
+     *
+     * @param \Innova\PathBundle\Entity\Path\Path $path
+     *
      * @throws \Exception
+     *
      * @return \Innova\PathBundle\Manager\PublishingManager
      */
     protected function start(Path $path)
@@ -85,19 +91,20 @@ class PublishingManager
 
         // Decode structure
         $this->pathStructure = json_decode($pathStructure);
-        $this->path          = $path;
+        $this->path = $path;
 
         return $this;
     }
 
     /**
      * End of the Publishing
-     * Remove temp data from current service
+     * Remove temp data from current service.
+     *
      * @return \Innova\PathBundle\Manager\PublishingManager
      */
     protected function end()
     {
-        $this->path          = null;
+        $this->path = null;
         $this->pathStructure = null;
 
         return $this;
@@ -105,10 +112,13 @@ class PublishingManager
 
     /**
      * Publish path
-     * Create all needed Entities from JSON structure created by the Editor
-     * @param  \Innova\PathBundle\Entity\Path\Path $path
+     * Create all needed Entities from JSON structure created by the Editor.
+     *
+     * @param \Innova\PathBundle\Entity\Path\Path $path
+     *
      * @throws \Exception
-     * @return boolean
+     *
+     * @return bool
      */
     public function publish(Path $path)
     {
@@ -156,11 +166,13 @@ class PublishingManager
     }
 
     /**
-     * Publish steps for the path
-     * @param  integer                        $level
-     * @param  \Innova\PathBundle\Entity\Step $parent
-     * @param  array                          $steps
-     * @param  array                          $propagatedResources
+     * Publish steps for the path.
+     *
+     * @param int                            $level
+     * @param \Innova\PathBundle\Entity\Step $parent
+     * @param array                          $steps
+     * @param array                          $propagatedResources
+     *
      * @return array
      */
     protected function publishSteps($level = 0, Step $parent = null, array $steps = array(), $propagatedResources = array())
@@ -197,9 +209,9 @@ class PublishingManager
                         if (!empty($resource->propagateToChildren) && $resource->propagateToChildren) {
                             // Resource is propagated
                             $currentPropagatedResources[] = array(
-                                'id'         => $resource->id,
+                                'id' => $resource->id,
                                 'resourceId' => $resource->resourceId,
-                                'lvl'        => $level,
+                                'lvl' => $level,
                             );
                         }
                     }
@@ -214,17 +226,19 @@ class PublishingManager
                 $processedSteps = array_merge($processedSteps, $childrenSteps);
             }
 
-            $currentOrder++;
+            ++$currentOrder;
         }
 
         return $processedSteps;
     }
 
     /**
-     * Manage resource inheritance
-     * @param  \Innova\PathBundle\Entity\Step               $step
-     * @param  array                                        $propagatedResources
-     * @param  array                                        $excludedResources
+     * Manage resource inheritance.
+     *
+     * @param \Innova\PathBundle\Entity\Step $step
+     * @param array                          $propagatedResources
+     * @param array                          $excludedResources
+     *
      * @return \Innova\PathBundle\Manager\PublishingManager
      */
     protected function publishPropagatedResources(Step $step, array $propagatedResources = array(), array $excludedResources = array())
@@ -273,9 +287,11 @@ class PublishingManager
     }
 
     /**
-     * Clean steps which no longer exist in the current path
-     * @param  array                                        $neededSteps
-     * @param  array                                        $existingSteps
+     * Clean steps which no longer exist in the current path.
+     *
+     * @param array $neededSteps
+     * @param array $existingSteps
+     *
      * @return \Innova\PathBundle\Manager\PublishingManager
      */
     protected function cleanSteps(array $neededSteps = array(), array $existingSteps = array())
@@ -301,7 +317,8 @@ class PublishingManager
     }
 
     /**
-     * Check that all Activities and Resources as at least same rights than the Path
+     * Check that all Activities and Resources as at least same rights than the Path.
+     *
      * @return \Innova\PathBundle\Manager\PublishingManager
      */
     protected function manageRights()
@@ -325,8 +342,10 @@ class PublishingManager
     }
 
     /**
-     * Retrieve all ResourceNodes of a Path
-     * @param  array $steps
+     * Retrieve all ResourceNodes of a Path.
+     *
+     * @param array $steps
+     *
      * @return array
      */
     protected function retrieveAllNodes(array $steps)

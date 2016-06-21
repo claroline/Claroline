@@ -24,7 +24,7 @@ class LogGroupUpdateEvent extends LogGenericEvent implements MandatoryEventInter
      *      'propertyName1' => ['property old value 1', 'property new value 1'],
      *      'propertyName2' => ['property old value 2', 'property new value 2'],
      *      etc.
-     * )
+     * ).
      *
      * Please respect lower caml case naming convention for property names
      */
@@ -35,8 +35,8 @@ class LogGroupUpdateEvent extends LogGenericEvent implements MandatoryEventInter
             array(
                 'receiverGroup' => array(
                     'name' => $receiverGroup->getName(),
-                    'changeSet' => $changeSet
-                )
+                    'changeSet' => $changeSet,
+                ),
             ),
             null,
             $receiverGroup

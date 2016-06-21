@@ -28,7 +28,7 @@ class ForumType extends AbstractType
                 'choices' => array(true => 'yes', false => 'no'),
                 'expanded' => false,
                 'multiple' => false,
-                'label' => 'notifications'
+                'label' => 'notifications',
             )
         );
     }
@@ -42,7 +42,7 @@ class ForumType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'translation_domain' => 'forum'
+                'translation_domain' => 'forum',
             )
         );
     }

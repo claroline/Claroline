@@ -55,8 +55,7 @@ class WidgetController extends Controller
         RoleManager $roleManager,
         TranslatorInterface $translator,
         WidgetManager $widgetManager
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
@@ -73,7 +72,6 @@ class WidgetController extends Controller
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
-     *
      */
     public function widgetsManagementAction()
     {
@@ -110,7 +108,6 @@ class WidgetController extends Controller
         return array('form' => $form->createView(), 'widget' => $widget);
     }
 
-
     /**
      * @EXT\Route(
      *     "widget/{widget}/edit",
@@ -135,7 +132,6 @@ class WidgetController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-
             return array('form' => $form->createView(), 'widget' => $widget);
         }
     }

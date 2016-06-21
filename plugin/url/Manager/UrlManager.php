@@ -24,7 +24,7 @@ class UrlManager
     public function __construct(
         ObjectManager $objectManager,
         RequestStack $requestStack
-    ){
+    ) {
         $this->objectManager = $objectManager;
         $this->request = $requestStack;
     }
@@ -32,7 +32,7 @@ class UrlManager
     public function setUrl(Url $url)
     {
         $address = $url->getUrl();
-        $baseUrl = $this->request->getCurrentRequest()->getSchemeAndHttpHost() . $this->request->getCurrentRequest()->getScriptName();
+        $baseUrl = $this->request->getCurrentRequest()->getSchemeAndHttpHost().$this->request->getCurrentRequest()->getScriptName();
         $baseUrlEscapeQuote = preg_quote($baseUrl);
         $url->setInternalUrl(false);
 

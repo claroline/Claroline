@@ -29,8 +29,8 @@ class ActivityType extends AbstractType
                 array(
                     'required' => false,
                     'attr' => array(
-                        'data-blacklist' => 'activity,directory'
-                    )
+                        'data-blacklist' => 'activity,directory',
+                    ),
                 )
             )->add(
                 'published',
@@ -39,7 +39,7 @@ class ActivityType extends AbstractType
                     'required' => true,
                     'mapped' => false,
                     'attr' => array('checked' => 'checked'),
-                    'label' => 'publish_resource'
+                    'label' => 'publish_resource',
                )
             );
     }

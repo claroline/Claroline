@@ -38,7 +38,7 @@ class LogCreateDelegateViewEvent extends Event implements DataConveyorEventInter
     }
 
     /**
-     * Returns the response content (creation form as string)
+     * Returns the response content (creation form as string).
      *
      * @return string
      */

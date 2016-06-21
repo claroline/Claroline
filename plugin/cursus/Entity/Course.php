@@ -35,7 +35,7 @@ class Course
      * @Groups({"api_cursus", "api_bulletin"})
      */
     protected $id;
-    
+
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
@@ -43,7 +43,7 @@ class Course
      * @SerializedName("code")
      */
     protected $code;
-    
+
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
@@ -58,7 +58,7 @@ class Course
      * @SerializedName("description")
      */
     protected $description;
-    
+
     /**
      * @ORM\Column(name="public_registration", type="boolean")
      * @Groups({"api", "api_cursus"})
@@ -93,7 +93,7 @@ class Course
      */
     protected $tutorRoleName;
 
-     /**
+    /**
      * @ORM\Column(name="learner_role_name", nullable=true)
      */
     protected $learnerRoleName;
@@ -292,12 +292,12 @@ class Course
         $this->userValidation = $userValidation;
     }
 
-    function getOrganizationValidation()
+    public function getOrganizationValidation()
     {
         return $this->organizationValidation;
     }
 
-    function setOrganizationValidation($organizationValidation)
+    public function setOrganizationValidation($organizationValidation)
     {
         $this->organizationValidation = $organizationValidation;
     }
@@ -318,7 +318,8 @@ class Course
     }
 
     /**
-     * Adds a validator to the course
+     * Adds a validator to the course.
+     *
      * @param \Claroline\CoreBundle\Entity\User $validator
      */
     public function addValidator(User $validator)
@@ -331,7 +332,8 @@ class Course
     }
 
     /**
-     * Removes a validator from the course
+     * Removes a validator from the course.
+     *
      * @param \Claroline\CoreBundle\Entity\User $validator
      */
     public function removeValidator(User $validator)
@@ -350,6 +352,6 @@ class Course
 
     public function __toString()
     {
-        return $this->getTitle() . ' [' . $this->getCode() . ']';
+        return $this->getTitle().' ['.$this->getCode().']';
     }
 }

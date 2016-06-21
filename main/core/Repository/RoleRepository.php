@@ -55,8 +55,7 @@ class RoleRepository extends EntityRepository
         $search = '',
         $orderedBy = 'id',
         $order = 'ASC'
-    )
-    {
+    ) {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
@@ -120,7 +119,7 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.users u
-            WHERE u.id = {$user->getId()} AND r.type = " . Role::PLATFORM_ROLE;
+            WHERE u.id = {$user->getId()} AND r.type = ".Role::PLATFORM_ROLE;
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
@@ -131,14 +130,20 @@ class RoleRepository extends EntityRepository
      *
      * @return array[Role]
      */
-    public function findAllPlatformRoles()
+    public function findAllPlatformRoles($includeRoleUser = true)
     {
         $queryBuilder = $this
             ->createQueryBuilder('role')
-            ->andWhere("role.type = :roleType")
-            ->setParameter("roleType", Role::PLATFORM_ROLE);
+            ->andWhere('role.type = :roleType')
+            ->setParameter('roleType', Role::PLATFORM_ROLE);
         $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name', '?1')))
             ->setParameter(1, 'ROLE_ANONYMOUS');
+
+        if (!$includeRoleUser) {
+            $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name', '?2')))
+                ->setParameter(2, 'ROLE_USER');
+        }
+
         $query = $queryBuilder->getQuery();
 
         return $query->getResult();
@@ -203,8 +208,7 @@ class RoleRepository extends EntityRepository
     public function findRolesByWorkspaceAndRoleNames(
         Workspace $workspace,
         array $roles
-    )
-    {
+    ) {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace w
@@ -291,8 +295,8 @@ class RoleRepository extends EntityRepository
     {
         $queryBuilder = $this
             ->createQueryBuilder('role')
-            ->andWhere("role.type = :roleType")
-            ->setParameter("roleType", Role::PLATFORM_ROLE);
+            ->andWhere('role.type = :roleType')
+            ->setParameter('roleType', Role::PLATFORM_ROLE);
         if (!$includeAnonymous) {
             $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name', '?1')))
                 ->setParameter(1, 'ROLE_ANONYMOUS');
@@ -321,7 +325,6 @@ class RoleRepository extends EntityRepository
     public function findAllWhereWorkspaceIsDisplayableAndInList(array $workspaces)
     {
         if (count($workspaces) === 0) {
-
             return array();
         } else {
             $dql = "
@@ -356,8 +359,7 @@ class RoleRepository extends EntityRepository
     public function findRolesWithRightsByResourceNode(
         ResourceNode $resourceNode,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT r
             FROM Claroline\CoreBundle\Entity\Role r
@@ -373,15 +375,14 @@ class RoleRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('resourceNode', $resourceNode);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findRoleByWorkspaceCodeAndTranslationKey(
         $workspaceCode,
         $translationKey,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT r
             FROM Claroline\CoreBundle\Entity\Role r
@@ -401,8 +402,7 @@ class RoleRepository extends EntityRepository
         $workspaceCode,
         $translationKey,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT r
             FROM Claroline\CoreBundle\Entity\Role r
@@ -445,7 +445,7 @@ class RoleRepository extends EntityRepository
     /**
      * Returns all user-type roles.
      *
-     * @param boolean $executeQuery
+     * @param bool $executeQuery
      *
      * @return array[Role]|query
      */
@@ -467,14 +467,14 @@ class RoleRepository extends EntityRepository
      * Returns user-type role of an user.
      *
      * @param User $user
-     * @param boolean $executeQuery
+     * @param bool $executeQuery
      *
      * @return array[Role]|query
      */
     public function findUserRoleByUser(User $user, $executeQuery = true)
     {
         $username = $user->getUsername();
-        $roleName = 'ROLE_USER_' . strtoupper($username);
+        $roleName = 'ROLE_USER_'.strtoupper($username);
 
         $dql = '
             SELECT r
@@ -506,7 +506,6 @@ class RoleRepository extends EntityRepository
         $query->setParameter('keys', $keys);
 
         return $executeQuery ? $query->getResult() : $query;
-
     }
 
     public function findWorkspaceRoleWithToolAccess(Workspace $workspace)
@@ -531,7 +530,7 @@ class RoleRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
-        $query->setParameter('managerRoleName', 'ROLE_WS_MANAGER_' . $workspace->getGuid());
+        $query->setParameter('managerRoleName', 'ROLE_WS_MANAGER_'.$workspace->getGuid());
         $query->setParameter('openValue', ToolMaskDecoder::$defaultValues['open']);
 
         return $query->getResult();
@@ -541,8 +540,7 @@ class RoleRepository extends EntityRepository
         Workspace $workspace,
         $translationKey,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT r
             FROM Claroline\CoreBundle\Entity\Role r
@@ -558,7 +556,7 @@ class RoleRepository extends EntityRepository
         $query->setParameter('key', strtoupper($translationKey));
         $query->setParameter(
             'roleName',
-            'ROLE_WS_' . strtoupper($translationKey) . '_' . $workspace->getGuid()
+            'ROLE_WS_'.strtoupper($translationKey).'_'.$workspace->getGuid()
         );
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;

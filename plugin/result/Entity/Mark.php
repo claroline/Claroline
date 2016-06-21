@@ -45,9 +45,9 @@ class Mark implements \JsonSerializable
     private $result;
 
     /**
-     * @param Result    $result
-     * @param User      $user
-     * @param string    $value
+     * @param Result $result
+     * @param User   $user
+     * @param string $value
      */
     public function __construct(Result $result, User $user, $value)
     {
@@ -103,8 +103,8 @@ class Mark implements \JsonSerializable
         return [
             'id' => $this->user->getId(),
             'name' => "{$this->user->getFirstName()} {$this->user->getLastName()}",
-            'mark'=> $this->value,
-            'markId' => $this->id
+            'mark' => $this->value,
+            'markId' => $this->id,
         ];
     }
 }

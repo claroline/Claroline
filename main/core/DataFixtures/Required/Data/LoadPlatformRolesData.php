@@ -25,7 +25,7 @@ class LoadPlatformRolesData implements RequiredFixture
      * - anonymous user         (fixture ref : role/anonymous)
      * - registered user        (fixture ref : role/user)
      *     - workspace creator  (fixture ref : role/ws_creator)
-     *     - administrator      (fixture ref : role/admin)
+     *     - administrator      (fixture ref : role/admin).
      *
      * @param ObjectManager $manager
      */

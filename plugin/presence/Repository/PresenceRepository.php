@@ -13,9 +13,9 @@ use Doctrine\ORM\EntityRepository;
 
 class PresenceRepository extends EntityRepository
 {
-    public function OrderByNumPeriod($session,$date) {
-        
-         $dql = '
+    public function OrderByNumPeriod($session, $date)
+    {
+        $dql = '
             SELECT p
             FROM FormaLibre\PresenceBundle\Entity\Presence p
             JOIN p.period pp
@@ -29,12 +29,11 @@ class PresenceRepository extends EntityRepository
         $query->setParameter('date', $date);
 
         return $query->getResult();
-        
     }
-    
-    public function OrderByStudent($session,$date,$period) {
-        
-         $dql = '
+
+    public function OrderByStudent($session, $date, $period)
+    {
+        $dql = '
             SELECT p
             FROM FormaLibre\PresenceBundle\Entity\Presence p
             JOIN p.userStudent u
@@ -49,9 +48,9 @@ class PresenceRepository extends EntityRepository
         $query->setParameter('date', $date);
         $query->setParameter('period', $period);
 
-        return $query->getResult();   
+        return $query->getResult();
     }
-    
+
     public function findBySchoolYear($year)
     {
         $dql = '
@@ -61,11 +60,11 @@ class PresenceRepository extends EntityRepository
             JOIN pe.schoolYearId s
             WHERE s.schoolYearName = :year
         ';
-        
+
         $query = $this->_em->createQuery($dql);
         $query->setParameter('year', $year->getSchoolYearName());
 
-        return $query->getResult();   
+        return $query->getResult();
     }
 
     public function findPresencesByUserAndSession(User $user, array $sessions)
@@ -90,8 +89,7 @@ class PresenceRepository extends EntityRepository
         User $user,
         array $sessions,
         $statusName
-    )
-    {
+    ) {
         $dql = '
             SELECT p
             FROM FormaLibre\PresenceBundle\Entity\Presence p

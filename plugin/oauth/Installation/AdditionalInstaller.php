@@ -4,7 +4,7 @@ namespace Icap\OAuthBundle\Installation;
 
 use Claroline\InstalationBundle\Additional\AdditinalInstaller as BaseInstaller;
 
-class AdditionalInsaller extends BaseInstaller
+class AdditionalInstaller extends BaseInstaller
 {
     private $logger;
 

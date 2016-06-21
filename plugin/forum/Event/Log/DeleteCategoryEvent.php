@@ -25,11 +25,11 @@ class DeleteCategoryEvent extends AbstractLogResourceEvent
     {
         $details = array(
             'category' => array(
-                'id' => $category->getId()
+                'id' => $category->getId(),
             ),
             'forum' => array(
-                'id' => $category->getForum()->getId()
-            )
+                'id' => $category->getForum()->getId(),
+            ),
         );
 
         parent::__construct($category->getForum()->getResourceNode(), $details);

@@ -1,0 +1,39 @@
+
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+{{
+    macros.breadcrumbs([
+        {
+            'icon': 'fa fa-cog',
+            'name': 'administration'|trans({}, 'platform'),
+            'href': path('claro_admin_parameters_index')
+        },
+        {
+            'name': 'parameters'|trans({}, 'platform'),
+            'href': path('claro_admin_parameters_index')
+        },
+        {
+        	'name': 'plugins'|trans({}, 'platform'),
+        	'href': ''
+        }
+    ])
+}}
+{% endblock %}
+{% block section_content %}
+    <div id="plugin-panel" class="panel panel-default" ng-app="PluginManager">
+        <div class="panel panel-body">
+            <plugin-manager></plugin-manager>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-plugin-management.js') }}"></script>
+{% endblock %}

@@ -4,7 +4,6 @@ namespace Icap\PortfolioBundle\Entity\Widget;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Icap\PortfolioBundle\Entity\Portfolio;
 
 /**
  * @ORM\Table(name="icap__portfolio_abstract_widget")
@@ -15,7 +14,7 @@ use Icap\PortfolioBundle\Entity\Portfolio;
 abstract class AbstractWidget
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -31,7 +30,7 @@ abstract class AbstractWidget
     protected $label;
 
     /**
-     * @var \Datetime $createdAt
+     * @var \Datetime
      *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
@@ -39,7 +38,7 @@ abstract class AbstractWidget
     protected $createdAt;
 
     /**
-     * @var \Datetime $updatedAt
+     * @var \Datetime
      *
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
@@ -67,7 +66,7 @@ abstract class AbstractWidget
     protected $widgetType = null;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -176,9 +175,9 @@ abstract class AbstractWidget
     public function getCommonData()
     {
         return array(
-            'id'     => $this->getId(),
-            'type'   => $this->getWidgetType(),
-            'label'  => $this->getLabel()
+            'id' => $this->getId(),
+            'type' => $this->getWidgetType(),
+            'label' => $this->getLabel(),
         );
     }
 

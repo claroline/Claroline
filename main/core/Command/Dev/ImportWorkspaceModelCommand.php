@@ -15,11 +15,12 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\HttpFoundation\File\File;
 use Psr\Log\LogLevel;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
@@ -35,7 +36,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
                 new InputArgument('archive_path', InputArgument::REQUIRED, 'The absolute path to the zip file.'),
                 new InputArgument('owner_username', InputArgument::REQUIRED, 'The owner username'),
                 new InputArgument('code', InputArgument::REQUIRED, 'The workspace code'),
-                new InputArgument('name', InputArgument::REQUIRED, 'The workspace name')
+                new InputArgument('name', InputArgument::REQUIRED, 'The workspace name'),
             )
         );
     }
@@ -47,7 +48,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
             'archive_path' => 'Absolute path to the zip file: ',
             'owner_username' => 'The workspace owner username: ',
             'code' => 'The workspace code: ',
-            'name' => 'The workspace name: '
+            'name' => 'The workspace name: ',
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -80,11 +81,11 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
     {
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         );
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-
+        $fs = new FileSystem();
         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
         $workspaceManager->setLogger($consoleLogger);
         $validator = $this->getContainer()->get('validator');
@@ -95,15 +96,13 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
         $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsername($username);
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->getContainer()->get('security.context')->setToken($token);
-        $config = Configuration::fromTemplate($template);
-        $config->setWorkspaceName($name);
-        $config->setWorkspaceCode($code);
-        $config->setDisplayable(true);
-        $config->setSelfRegistration(true);
-        $config->setRegistrationValidation(true);
-        $config->setSelfUnregistration(true);
-        $config->setWorkspaceDescription(true);
-        $workspaceManager->create($config, $user);
-        $workspaceManager->importRichText();
+        $workspace = new Workspace();
+        $workspace->setCreator($user);
+        $workspace->setName($name);
+        $workspace->setCode($code);
+        $newpath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.uniqid();
+        $extractPath = $fs->copy($template, $newpath);
+        $file = new File($newpath);
+        $workspaceManager->create($workspace, $file);
     }
 }

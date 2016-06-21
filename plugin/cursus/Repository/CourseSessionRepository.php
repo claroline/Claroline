@@ -23,8 +23,7 @@ class CourseSessionRepository extends EntityRepository
         $orderedBy = 'creationDate',
         $order = 'DESC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT cs
             FROM Claroline\CursusBundle\Entity\CourseSession cs
@@ -43,8 +42,7 @@ class CourseSessionRepository extends EntityRepository
         $orderedBy = 'creationDate',
         $order = 'DESC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT cs
             FROM Claroline\CursusBundle\Entity\CourseSession cs
@@ -64,8 +62,7 @@ class CourseSessionRepository extends EntityRepository
         $orderedBy = 'creationDate',
         $order = 'DESC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT cs
             FROM Claroline\CursusBundle\Entity\CourseSession cs
@@ -84,8 +81,7 @@ class CourseSessionRepository extends EntityRepository
         $orderedBy = 'creationDate',
         $order = 'DESC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT cs
             FROM Claroline\CursusBundle\Entity\CourseSession cs
@@ -104,8 +100,7 @@ class CourseSessionRepository extends EntityRepository
         $orderedBy = 'creationDate',
         $order = 'DESC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT cs
             FROM Claroline\CursusBundle\Entity\CourseSession cs
@@ -126,8 +121,7 @@ class CourseSessionRepository extends EntityRepository
         $orderedBy = 'creationDate',
         $order = 'DESC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT cs
             FROM Claroline\CursusBundle\Entity\CourseSession cs

@@ -16,7 +16,7 @@ use Doctrine\Common\NotifyPropertyChanged;
 use Gedmo\Timestampable\TimestampableListener as BaseListener;
 
 /**
- * This listener overrides its parent's original behaviour in two ways:
+ * This listener overrides its parent's original behaviour in two ways:.
  *
  * - it performs a special check for ResourceNode entities, avoiding
  *   timestamp changes if the modified properties are only related to

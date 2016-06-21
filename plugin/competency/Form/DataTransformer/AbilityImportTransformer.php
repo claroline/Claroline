@@ -22,6 +22,7 @@ class AbilityImportTransformer implements DataTransformerInterface
      * Method without any effect implemented to satisfy DataTransformerInterface.
      *
      * @param mixed $value
+     *
      * @return mixed
      */
     public function transform($value)
@@ -36,6 +37,7 @@ class AbilityImportTransformer implements DataTransformerInterface
      * by ExistingAbilityValidator will fail later.
      *
      * @param array $fields
+     *
      * @return null|Ability
      */
     public function reverseTransform($fields)

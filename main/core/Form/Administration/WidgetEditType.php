@@ -38,9 +38,9 @@ class WidgetEditType extends AbstractType
                 'required' => true,
                 'constraints' => array(
                     new NotBlank(),
-                    new Range(array('min' => 1, 'max' => 12))
+                    new Range(array('min' => 1, 'max' => 12)),
                 ),
-                'attr' => array('min' => 1, 'max' => 12)
+                'attr' => array('min' => 1, 'max' => 12),
             )
         );
         $builder->add(
@@ -51,9 +51,9 @@ class WidgetEditType extends AbstractType
                 'required' => true,
                 'constraints' => array(
                     new NotBlank(),
-                    new Range(array('min' => 1))
+                    new Range(array('min' => 1)),
                 ),
-                'attr' => array('min' => 1)
+                'attr' => array('min' => 1),
             )
         );
 
@@ -67,8 +67,8 @@ class WidgetEditType extends AbstractType
                     'choice_translation_domain' => true,
                     'query_builder' => function (EntityRepository $er) {
                         $queryBuilder = $er->createQueryBuilder('r')
-                            ->andWhere("r.type = :roleType")
-                            ->setParameter("roleType", Role::PLATFORM_ROLE);
+                            ->andWhere('r.type = :roleType')
+                            ->setParameter('roleType', Role::PLATFORM_ROLE);
                         $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('r.name', '?1')))
                             ->setParameter(1, 'ROLE_ANONYMOUS');
 
@@ -77,7 +77,7 @@ class WidgetEditType extends AbstractType
                     'property' => 'translationKey',
                     'expanded' => true,
                     'multiple' => true,
-                    'required' => false
+                    'required' => false,
                 )
             );
         }

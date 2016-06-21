@@ -2,10 +2,8 @@
 
 namespace Icap\PortfolioBundle\Importer;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
-use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 use Icap\PortfolioBundle\Entity\Widget\ExperienceWidget;
 use Icap\PortfolioBundle\Entity\Widget\FormationsWidget;
 use Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource;
@@ -13,7 +11,6 @@ use Icap\PortfolioBundle\Entity\Widget\SkillsWidget;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill;
 use Icap\PortfolioBundle\Entity\Widget\TextWidget;
 use Icap\PortfolioBundle\Entity\Widget\UserInformationWidget;
-use Icap\PortfolioBundle\Transformer\XmlToArray;
 
 class Leap2aImporter implements ImporterInterface
 {
@@ -38,6 +35,7 @@ class Leap2aImporter implements ImporterInterface
      * @param User   $user
      *
      * @return \Icap\PortfolioBundle\Entity\Portfolio
+     *
      * @throws \InvalidArgumentException
      */
     public function import($content, User $user)
@@ -55,6 +53,7 @@ class Leap2aImporter implements ImporterInterface
      * @param User              $user
      *
      * @return Portfolio
+     *
      * @throws \Exception
      */
     public function retrievePortfolioFromXml(\SimpleXMLElement $xml, User $user)
@@ -67,7 +66,7 @@ class Leap2aImporter implements ImporterInterface
 
         $portfolio = new Portfolio();
         $portfolio
-            ->setTitle((string)$portfolioTitleNodes[0])
+            ->setTitle((string) $portfolioTitleNodes[0])
             ->setUser($user)
             ->setWidgets($this->retrieveWidgets($xml));
 
@@ -78,6 +77,7 @@ class Leap2aImporter implements ImporterInterface
      * @param \SimpleXmlElement $nodes
      *
      * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     *
      * @throws \Exception
      */
     public function retrieveWidgets(\SimpleXMLElement $nodes)
@@ -98,7 +98,7 @@ class Leap2aImporter implements ImporterInterface
         $widgetRowNumber = 1;
         foreach ($widgets as $widget) {
             $widget->setRow($widgetRowNumber);
-            $widgetRowNumber++;
+            ++$widgetRowNumber;
         }
 
         return $widgets;
@@ -108,38 +108,39 @@ class Leap2aImporter implements ImporterInterface
      * @param \SimpleXMLElement $nodes
      *
      * @return SkillsWidget[]
+     *
      * @throws \Exception
      */
     protected function extractSkillsWidgets(\SimpleXMLElement $nodes)
     {
-        $skillsWidgets     = [];
+        $skillsWidgets = [];
         $skillsWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:selection' and category/@term='Abilities']");
 
         foreach ($skillsWidgetNodes as $skillsWidgetNode) {
             $skillsWidget = new SkillsWidget();
-            $skillsWidgetTitle = $skillsWidgetNode->xpath("title");
+            $skillsWidgetTitle = $skillsWidgetNode->xpath('title');
 
             if (0 === count($skillsWidgetTitle)) {
                 throw new \Exception('Entry has no title.');
             }
 
-            $skillsWidget->setLabel((string)$skillsWidgetTitle[0]);
+            $skillsWidget->setLabel((string) $skillsWidgetTitle[0]);
 
             $skillsWidgetSkills = [];
 
             foreach ($skillsWidgetNode->xpath("link[@rel='leap2:has_part']/@href") as $relatedSkillAttributes) {
-                $relatedSkillArrayAttributes = (array)$relatedSkillAttributes;
+                $relatedSkillArrayAttributes = (array) $relatedSkillAttributes;
                 $relatedSkillNodes = $nodes->xpath(sprintf("entry[id[.='%s']]", $relatedSkillArrayAttributes['@attributes']['href']));
 
                 if (0 === count($relatedSkillNodes)) {
-                    throw new \Exception("Unable to find skills.");
+                    throw new \Exception('Unable to find skills.');
                 }
-                $relatedSkillNode = (array)$relatedSkillNodes[0];
+                $relatedSkillNode = (array) $relatedSkillNodes[0];
 
-                $relatedSkillNodeLink = (array)$relatedSkillNode['link'];
+                $relatedSkillNodeLink = (array) $relatedSkillNode['link'];
 
-                if ((string)$skillsWidgetNode->xpath("id")[0] !== $relatedSkillNodeLink['@attributes']['href']) {
-                    throw new \Exception("Inconsistency in skills relation for skills widget.");
+                if ((string) $skillsWidgetNode->xpath('id')[0] !== $relatedSkillNodeLink['@attributes']['href']) {
+                    throw new \Exception('Inconsistency in skills relation for skills widget.');
                 }
 
                 $skillsWidgetSkill = new SkillsWidgetSkill();
@@ -158,22 +159,23 @@ class Leap2aImporter implements ImporterInterface
      * @param \SimpleXMLElement $nodes
      *
      * @return FormationsWidget[]
+     *
      * @throws \Exception
      */
     protected function extractFormationsWidgets(\SimpleXMLElement $nodes)
     {
-        $formationsWidgets      = [];
+        $formationsWidgets = [];
         $formationsWidgetsNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:activity' and category/@term='Education']");
 
         foreach ($formationsWidgetsNodes as $formationsWidgetsNode) {
             $formationsWidget = new FormationsWidget();
-            $formationsWidgetTitle = $formationsWidgetsNode->xpath("title");
+            $formationsWidgetTitle = $formationsWidgetsNode->xpath('title');
 
             if (0 === count($formationsWidgetTitle)) {
                 throw new \Exception('Entry has no title.');
             }
 
-            $formationWidgetLabel = (string)$formationsWidgetTitle[0];
+            $formationWidgetLabel = (string) $formationsWidgetTitle[0];
             $formationsWidget
                 ->setLabel($formationWidgetLabel)
                 ->setName($formationWidgetLabel);
@@ -181,23 +183,23 @@ class Leap2aImporter implements ImporterInterface
             $formationsWidgetStartDate = $formationsWidgetsNode->xpath("leap2:date[@leap2:point='start']");
 
             if (0 < count($formationsWidgetStartDate)) {
-                $formationsWidget->setStartDate(new \DateTime((string)$formationsWidgetStartDate[0]));
+                $formationsWidget->setStartDate(new \DateTime((string) $formationsWidgetStartDate[0]));
             }
 
             $formationsWidgetEndDate = $formationsWidgetsNode->xpath("leap2:date[@leap2:point='end']");
 
             if (0 < count($formationsWidgetEndDate)) {
-                $formationsWidget->setEndDate(new \DateTime((string)$formationsWidgetEndDate[0]));
+                $formationsWidget->setEndDate(new \DateTime((string) $formationsWidgetEndDate[0]));
             }
 
             $formationsWidgetResources = [];
 
             foreach ($formationsWidgetsNode->xpath("link[@rel='leap2:has_part']/@href") as $relatedResourceAttributes) {
-                $relatedResourceArrayAttributes = (array)$relatedResourceAttributes;
+                $relatedResourceArrayAttributes = (array) $relatedResourceAttributes;
                 $relatedResourceNodes = $nodes->xpath(sprintf("entry[id[.='%s']]", $relatedResourceArrayAttributes['@attributes']['href']));
 
                 if (0 === count($relatedResourceNodes)) {
-                    throw new \Exception("Unable to find resources.");
+                    throw new \Exception('Unable to find resources.');
                 }
                 $relatedResourceNode = $relatedResourceNodes[0];
 
@@ -207,10 +209,10 @@ class Leap2aImporter implements ImporterInterface
                     throw new \Exception("Inconsistency in resources relation, resource isn't related to any formation widget.");
                 }
 
-                $relatedResourceHrefArrayNodes = (array)$relatedResourceHrefNodes[0];
+                $relatedResourceHrefArrayNodes = (array) $relatedResourceHrefNodes[0];
 
-                if ((string)$formationsWidgetsNode->xpath("id")[0] !== $relatedResourceHrefArrayNodes['@attributes']['href']) {
-                    throw new \Exception("Inconsistency in resources relation for formation widget.");
+                if ((string) $formationsWidgetsNode->xpath('id')[0] !== $relatedResourceHrefArrayNodes['@attributes']['href']) {
+                    throw new \Exception('Inconsistency in resources relation for formation widget.');
                 }
 
                 $relatedResourceSelfHrefNodes = $relatedResourceNode->xpath("link[@rel='self']/@href");
@@ -219,7 +221,7 @@ class Leap2aImporter implements ImporterInterface
                     throw new \Exception("Resource doesn't have a self link.");
                 }
 
-                $relatedResourceSelfHrefArrayNodes = (array)$relatedResourceSelfHrefNodes[0];
+                $relatedResourceSelfHrefArrayNodes = (array) $relatedResourceSelfHrefNodes[0];
                 $formationsWidgetResource = new FormationsWidgetResource();
                 $formationsWidgetResource
                     ->setUriLabel($relatedResourceNode->title)
@@ -242,18 +244,18 @@ class Leap2aImporter implements ImporterInterface
     private function extractUserInformationWidgets(\SimpleXMLElement $nodes)
     {
         $userInformationWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:person']");
-        $userInformationWidgets     = [];
+        $userInformationWidgets = [];
 
         if (0 < count($userInformationWidgetNodes)) {
             $birthDateNode = $userInformationWidgetNodes[0]->xpath("leap2:persondata[@leap2:field='dob']");
-            $birthDate     = (string)$birthDateNode[0];
+            $birthDate = (string) $birthDateNode[0];
 
             $cityNode = $userInformationWidgetNodes[0]->xpath("leap2:persondata[@leap2:field='other' and @leap2:label='city']");
-            $city     = (string)$cityNode[0];
+            $city = (string) $cityNode[0];
 
             $userInformationWidget = new UserInformationWidget();
             $userInformationWidget
-                ->setLabel((string)$userInformationWidgetNodes[0]->title)
+                ->setLabel((string) $userInformationWidgetNodes[0]->title)
                 ->setBirthDate(new \DateTime($birthDate))
                 ->setCity($city);
 
@@ -270,14 +272,14 @@ class Leap2aImporter implements ImporterInterface
      */
     private function extractTextWidgets(\SimpleXMLElement $nodes)
     {
-        $textWidgets     = [];
+        $textWidgets = [];
         $textWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:entry']");
 
         foreach ($textWidgetNodes as $textWidgetNode) {
             $textWidget = new TextWidget();
             $textWidget
-                ->setLabel((string)$textWidgetNode->title)
-                ->setText((string)$textWidgetNode->content);
+                ->setLabel((string) $textWidgetNode->title)
+                ->setText((string) $textWidgetNode->content);
 
             $textWidgets[] = $textWidget;
         }
@@ -297,36 +299,36 @@ class Leap2aImporter implements ImporterInterface
 
         foreach ($experienceWidgetNodes as $experienceWidgetNode) {
             $experienceWidget = new ExperienceWidget();
-            $experienceWidgetTitleNode = $experienceWidgetNode->xpath("title");
+            $experienceWidgetTitleNode = $experienceWidgetNode->xpath('title');
 
             if (0 === count($experienceWidgetTitleNode)) {
                 throw new \Exception('Entry has no title.');
             }
 
-            $experienceWidgetLabel = (string)$experienceWidgetTitleNode[0];
+            $experienceWidgetLabel = (string) $experienceWidgetTitleNode[0];
 
             $websiteNode = $experienceWidgetNodes[0]->xpath("leap2:orgdata[@leap2:field='website']");
-            $website = (string)$websiteNode[0];
+            $website = (string) $websiteNode[0];
 
             $companyNameNode = $experienceWidgetNodes[0]->xpath("leap2:orgdata[@leap2:field='legal_org_name']");
-            $companyName = (string)$companyNameNode[0];
+            $companyName = (string) $companyNameNode[0];
 
-            $postNode = $experienceWidgetNodes[0]->xpath("leap2:myrole");
-            $post = (string)$postNode[0];
+            $postNode = $experienceWidgetNodes[0]->xpath('leap2:myrole');
+            $post = (string) $postNode[0];
 
             $experienceWidgetStartDate = $experienceWidgetNode->xpath("leap2:date[@leap2:point='start']");
             if (0 < count($experienceWidgetStartDate)) {
-                $experienceWidget->setStartDate(new \DateTime((string)$experienceWidgetStartDate[0]));
+                $experienceWidget->setStartDate(new \DateTime((string) $experienceWidgetStartDate[0]));
             }
 
             $experienceWidgetEndDate = $experienceWidgetNode->xpath("leap2:date[@leap2:point='end']");
             if (0 < count($experienceWidgetEndDate)) {
-                $experienceWidget->setEndDate(new \DateTime((string)$experienceWidgetEndDate[0]));
+                $experienceWidget->setEndDate(new \DateTime((string) $experienceWidgetEndDate[0]));
             }
 
             $experienceWidget
                 ->setLabel($experienceWidgetLabel)
-                ->setDescription((string)$experienceWidgetNode->content)
+                ->setDescription((string) $experienceWidgetNode->content)
                 ->setWebsite($website)
                 ->setCompanyName($companyName)
                 ->setPost($post);

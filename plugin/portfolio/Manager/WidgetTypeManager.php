@@ -2,8 +2,6 @@
 
 namespace Icap\PortfolioBundle\Manager;
 
-use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
-use Icap\PortfolioBundle\Factory\WidgetFactory;
 use Icap\PortfolioBundle\Repository\Widget\WidgetTypeRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -98,4 +96,3 @@ class WidgetTypeManager
         return $isWidgetTypeExists;
     }
 }
- 

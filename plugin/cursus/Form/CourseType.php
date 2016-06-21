@@ -31,8 +31,7 @@ class CourseType extends AbstractType
         User $user,
         CursusManager $cursusManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->cursusManager = $cursusManager;
         $this->translator = $translator;
         $this->user = $user;
@@ -50,7 +49,7 @@ class CourseType extends AbstractType
             array(
                 'required' => true,
                 'label' => 'title',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
         $builder->add(
@@ -59,7 +58,7 @@ class CourseType extends AbstractType
             array(
                 'required' => true,
                 'label' => 'code',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
         $builder->add(
@@ -68,7 +67,7 @@ class CourseType extends AbstractType
             array(
                 'required' => false,
                 'label' => 'description',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
         $builder->add(
@@ -78,7 +77,7 @@ class CourseType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'label' => 'icon',
-                'constraints' => array(new Image())
+                'constraints' => array(new Image()),
             )
         );
         $builder->add(
@@ -86,7 +85,7 @@ class CourseType extends AbstractType
             'checkbox',
             array(
                 'required' => true,
-                'label' => 'public_registration'
+                'label' => 'public_registration',
             )
         );
         $builder->add(
@@ -94,7 +93,7 @@ class CourseType extends AbstractType
             'checkbox',
             array(
                 'required' => true,
-                'label' => 'public_unregistration'
+                'label' => 'public_unregistration',
             )
         );
         $builder->add(
@@ -107,7 +106,7 @@ class CourseType extends AbstractType
                 'required' => false,
                 'label' => 'workspace',
                 'translation_domain' => 'platform',
-                'multiple' => false
+                'multiple' => false,
             )
         );
         $builder->add(
@@ -125,7 +124,7 @@ class CourseType extends AbstractType
                 },
                 'property' => 'name',
                 'required' => false,
-                'label' => 'workspace_model'
+                'label' => 'workspace_model',
             )
         );
         $builder->add(
@@ -134,7 +133,7 @@ class CourseType extends AbstractType
             array(
                 'required' => false,
                 'attr' => array('class' => 'role-name-txt'),
-                'label' => 'tutor_role_name'
+                'label' => 'tutor_role_name',
             )
         );
         $builder->add(
@@ -143,7 +142,7 @@ class CourseType extends AbstractType
             array(
                 'required' => false,
                 'attr' => array('class' => 'role-name-txt'),
-                'label' => 'learner_role_name'
+                'label' => 'learner_role_name',
             )
         );
         $builder->add(
@@ -152,10 +151,10 @@ class CourseType extends AbstractType
             array(
                 'required' => false,
                 'constraints' => array(
-                    new Range(array('min' => 0))
+                    new Range(array('min' => 0)),
                 ),
                 'attr' => array('min' => 0),
-                'label' => 'max_users'
+                'label' => 'max_users',
             )
         );
         $builder->add(
@@ -163,7 +162,7 @@ class CourseType extends AbstractType
             'checkbox',
             array(
                 'required' => true,
-                'label' => 'user_validation'
+                'label' => 'user_validation',
             )
         );
         $builder->add(
@@ -171,7 +170,7 @@ class CourseType extends AbstractType
             'checkbox',
             array(
                 'required' => true,
-                'label' => 'organization_validation'
+                'label' => 'organization_validation',
             )
         );
         $builder->add(
@@ -179,7 +178,7 @@ class CourseType extends AbstractType
             'checkbox',
             array(
                 'required' => true,
-                'label' => 'registration_validation'
+                'label' => 'registration_validation',
             )
         );
         $builder->add(
@@ -192,7 +191,7 @@ class CourseType extends AbstractType
                 'multiple' => true,
                 'attach_name' => false,
                 'forced_roles' => $validatorsRoles,
-                'label' => $this->translator->trans('validators', array(), 'cursus')
+                'label' => $this->translator->trans('validators', array(), 'cursus'),
             )
         );
     }

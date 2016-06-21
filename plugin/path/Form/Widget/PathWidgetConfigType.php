@@ -2,11 +2,8 @@
 
 namespace Innova\PathBundle\Form\Widget;
 
-use Claroline\TagBundle\Form\TagType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PathWidgetConfigType extends AbstractType
@@ -16,34 +13,34 @@ class PathWidgetConfigType extends AbstractType
         return 'innova_path_widget_config';
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options = array ())
+    public function buildForm(FormBuilderInterface $builder, array $options = array())
     {
         $builder->add('status', 'choice', array(
-            'choices'   => array(
-                'draft'     => 'draft',
+            'choices' => array(
+                'draft' => 'draft',
                 'published' => 'published',
-                'modified'  => 'modified',
+                'modified' => 'modified',
             ),
-            'multiple'  => true,
+            'multiple' => true,
             'required' => false,
         ));
 
         $builder->add('removeTags', 'hidden', array(
-            'mapped'   => false,
+            'mapped' => false,
             'required' => false,
         ));
 
         $builder->add('tags', 'text', array(
-            'mapped'   => false,
+            'mapped' => false,
             'required' => false,
         ));
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array (
+        $resolver->setDefaults(array(
             'data_class' => 'Innova\PathBundle\Entity\PathWidgetConfig',
-            'translation_domain' => 'widget'
+            'translation_domain' => 'widget',
         ));
 
         return $this;

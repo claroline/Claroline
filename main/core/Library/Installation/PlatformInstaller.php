@@ -13,8 +13,6 @@ namespace Claroline\CoreBundle\Library\Installation;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
-use Claroline\CoreBundle\Library\PluginBundle;
-use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -59,14 +57,14 @@ class PlatformInstaller
         Refresher $refresher,
         KernelInterface $kernel,
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->operationExecutor = $opExecutor;
         $this->baseInstaller = $baseInstaller;
         $this->pluginInstaller = $pluginInstaller;
         $this->refresher = $refresher;
         $this->kernel = $kernel;
         $this->container = $container;
+        $this->bundles = parse_ini_file($this->container->getParameter('kernel.root_dir').'/config/bundles.ini');
     }
 
     /**
@@ -125,10 +123,9 @@ class PlatformInstaller
             if ($code !== 0) {
                 throw new \Exception(
                     'Database cannot be created : check that the parameters you provided '
-                    . 'are correct and/or that you have sufficient permissions.'
+                    .'are correct and/or that you have sufficient permissions.'
                 );
             }
-
         }
     }
 
@@ -138,9 +135,9 @@ class PlatformInstaller
         $directories = array(
             $this->container->getParameter('claroline.param.thumbnails_directory'),
             $this->container->getParameter('claroline.param.uploads_directory'),
-            $this->container->getParameter('claroline.param.uploads_directory') . '/badges',
-            $this->container->getParameter('claroline.param.uploads_directory') . '/logos',
-            $this->container->getParameter('claroline.param.uploads_directory') . '/pictures'
+            $this->container->getParameter('claroline.param.uploads_directory').'/badges',
+            $this->container->getParameter('claroline.param.uploads_directory').'/logos',
+            $this->container->getParameter('claroline.param.uploads_directory').'/pictures',
         );
 
         foreach ($directories as $directory) {

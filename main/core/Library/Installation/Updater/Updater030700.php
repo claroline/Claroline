@@ -12,7 +12,6 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 
 class Updater030700 extends Updater
 {
@@ -51,12 +50,12 @@ class Updater030700 extends Updater
         $toRemove = array(
             '/maintenance.html.php',
             '/upgrade/download_log.php',
-            '/upgrade/upgrade.html.php'
+            '/upgrade/upgrade.html.php',
         );
 
         foreach ($toRemove as $file) {
-            $this->log('Removing ' . $webDir . $file .  '...');
-            @unlink($webDir . $file);
+            $this->log('Removing '.$webDir.$file.'...');
+            @unlink($webDir.$file);
         }
     }
 }

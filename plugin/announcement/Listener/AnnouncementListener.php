@@ -60,8 +60,7 @@ class AnnouncementListener
         ResourceManager $resourceManager,
         TwigEngine $templating,
         UrlGeneratorInterface $router
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
         $this->om = $om;
@@ -87,7 +86,7 @@ class AnnouncementListener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'claroline_announcement_aggregate'
+                'resourceType' => 'claroline_announcement_aggregate',
             )
         );
         $event->setResponseContent($content);
@@ -98,6 +97,7 @@ class AnnouncementListener
      * @DI\Observe("create_claroline_announcement_aggregate")
      *
      * @param CreateResourceEvent $event
+     *
      * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onCreate(CreateResourceEvent $event)
@@ -125,7 +125,7 @@ class AnnouncementListener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'claroline_announcement_aggregate'
+                'resourceType' => 'claroline_announcement_aggregate',
             )
         );
         $event->setErrorFormContent($content);

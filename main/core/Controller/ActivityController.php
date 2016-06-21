@@ -64,8 +64,7 @@ class ActivityController
         ActivityManager $activityManager,
         ResourceManager $resourceManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->authorization = $authorization;
         $this->formFactory = $formFactory;
         $this->request = $request->getMasterRequest();
@@ -94,7 +93,7 @@ class ActivityController
             $rule = new ActivityRule();
         }
 
-        $form = $this->formFactory->create(new ActivityType, $resource);
+        $form = $this->formFactory->create(new ActivityType(), $resource);
         $form->handleRequest($this->request);
 
         $formParams = $this->formFactory->create(
@@ -117,7 +116,6 @@ class ActivityController
         if ($form->isValid()
             && $formParams->isValid()
             && ($formRule->get('action')->getData() === 'none' || $formRule->isValid())) {
-
             $this->activityManager->editActivity($form->getData());
             $evaluationType = $formParams->get('evaluation_type')->getData();
 
@@ -129,25 +127,24 @@ class ActivityController
             );
 
             if ($formRule->get('action')->getData() === 'none') {
-
-                    if ($hasRule) {
-                        $this->activityManager->deleteActivityRule($rule);
-                    }
-                } else {
-                    $primaryResource = $form->get('primaryResource')->getData();
-                    $resourceNode = !is_null($primaryResource) ?
+                if ($hasRule) {
+                    $this->activityManager->deleteActivityRule($rule);
+                }
+            } else {
+                $primaryResource = $form->get('primaryResource')->getData();
+                $resourceNode = !is_null($primaryResource) ?
                         $primaryResource :
                         null;
-                    $action = $formRule->get('action')->getData();
-                    $occurrence = $formRule->get('occurrence')->getData();
-                    $result = $formRule->get('result')->getData();
-                    $resultMax = $formRule->get('resultMax')->getData();
-                    $isResultVisible = $formRule->get('isResultVisible')->getData();
-                    $activeFrom = $formRule->get('activeFrom')->getData();
-                    $activeUntil = $formRule->get('activeUntil')->getData();
+                $action = $formRule->get('action')->getData();
+                $occurrence = $formRule->get('occurrence')->getData();
+                $result = $formRule->get('result')->getData();
+                $resultMax = $formRule->get('resultMax')->getData();
+                $isResultVisible = $formRule->get('isResultVisible')->getData();
+                $activeFrom = $formRule->get('activeFrom')->getData();
+                $activeUntil = $formRule->get('activeUntil')->getData();
 
-                    if ($hasRule) {
-                        $this->activityManager->updateActivityRule(
+                if ($hasRule) {
+                    $this->activityManager->updateActivityRule(
                             $rule,
                             $action,
                             $occurrence,
@@ -158,8 +155,8 @@ class ActivityController
                             $activeUntil,
                             $resourceNode
                         );
-                    } else {
-                        $this->activityManager->createActivityRule(
+                } else {
+                    $this->activityManager->createActivityRule(
                             $params,
                             $action,
                             $occurrence,
@@ -170,9 +167,9 @@ class ActivityController
                             $activeUntil,
                             $resourceNode
                         );
-                    }
                 }
             }
+        }
 
             //set the permissions for each resources
             $this->activityManager->initializePermissions($resource);
@@ -183,7 +180,7 @@ class ActivityController
             'formParams' => $formParams->createView(),
             'params' => $params,
             'formRule' => $formRule->createView(),
-            'defaultRuleStartingDate' => $resource->getResourceNode()->getCreationDate()->format('Y-m-d')
+            'defaultRuleStartingDate' => $resource->getResourceNode()->getCreationDate()->format('Y-m-d'),
         );
     }
 
@@ -203,7 +200,7 @@ class ActivityController
                         'id' => $resource->getId(),
                         'name' => $resource->getName(),
                         'type' => $resource->getResourceType()->getName(),
-                        'mimeType' => $resource->getMimeType()
+                        'mimeType' => $resource->getMimeType(),
                     )
                 )
             );
@@ -262,12 +259,12 @@ class ActivityController
      * Creates a rule and associates it to the activity
      *
      * @param ActivityParameters $activityParams
-     * @param string $action
-     * @param int $occurrence
-     * @param string $result
-     * @param datetime $activeFrom
-     * @param datetime $activeUntil
-     * @param ResourceNode $resourceNode
+     * @param string             $action
+     * @param int                $occurrence
+     * @param string             $result
+     * @param datetime           $activeFrom
+     * @param datetime           $activeUntil
+     * @param ResourceNode       $resourceNode
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -279,8 +276,7 @@ class ActivityController
         $activeFrom,
         $activeUntil,
         ResourceNode $resourceNode = null
-    )
-    {
+    ) {
         $this->activityManager->createActivityRule(
             $activityParams,
             $action,
@@ -346,7 +342,7 @@ class ActivityController
      *
      * Display evaluations of the activity for the current user
      *
-     * @param User $currentUser
+     * @param User               $currentUser
      * @param ActivityParameters $params
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -354,8 +350,7 @@ class ActivityController
     public function displayActivityEvaluationAction(
         User $currentUser,
         ActivityParameters $params
-    )
-    {
+    ) {
         $evaluation =
             $this->activityManager->getEvaluationByUserAndActivityParams($currentUser, $params) ?:
             $this->activityManager->createBlankEvaluation($currentUser, $params);
@@ -366,7 +361,6 @@ class ActivityController
 
         if ($params->getEvaluationType() === 'automatic' &&
             count($params->getRules()) > 0) {
-
             $rule = $params->getRules()->first();
             $score = $rule->getResult();
             $scoreMax = $rule->getResultMax();
@@ -375,7 +369,7 @@ class ActivityController
                 $ruleScore = $score;
 
                 if (!is_null($scoreMax)) {
-                    $ruleScore .= ' / ' . $scoreMax;
+                    $ruleScore .= ' / '.$scoreMax;
                 }
 
                 $ruleResultVisible = $rule->getIsResultVisible();
@@ -388,7 +382,7 @@ class ActivityController
             'evaluation' => $evaluation,
             'pastEvals' => $pastEvals,
             'ruleScore' => $ruleScore,
-            'isResultVisible' => $isResultVisible
+            'isResultVisible' => $isResultVisible,
         );
     }
 
@@ -409,8 +403,7 @@ class ActivityController
     public function editActivityEvaluationAction(
         User $currentUser,
         Evaluation $evaluation
-    )
-    {
+    ) {
         $isWorkspaceManager = false;
         $activityParams = $evaluation->getActivityParameters();
         $activity = $activityParams->getActivity();
@@ -422,7 +415,6 @@ class ActivityController
         }
 
         if (!$isWorkspaceManager) {
-
             throw new AccessDeniedException();
         }
 
@@ -438,7 +430,7 @@ class ActivityController
 
         return array(
             'form' => $form->createView(),
-            'evaluation' => $evaluation
+            'evaluation' => $evaluation,
         );
     }
 
@@ -459,8 +451,7 @@ class ActivityController
     public function editActivityPastEvaluationAction(
         User $currentUser,
         PastEvaluation $pastEvaluation
-    )
-    {
+    ) {
         $isWorkspaceManager = false;
         $activityParams = $pastEvaluation->getActivityParameters();
         $activity = $activityParams->getActivity();
@@ -472,7 +463,6 @@ class ActivityController
         }
 
         if (!$isWorkspaceManager) {
-
             throw new AccessDeniedException();
         }
 
@@ -488,7 +478,7 @@ class ActivityController
 
         return array(
             'form' => $form->createView(),
-            'pastEvaluation' => $pastEvaluation
+            'pastEvaluation' => $pastEvaluation,
         );
     }
 
@@ -502,11 +492,10 @@ class ActivityController
     private function isWorkspaceManager(Workspace $workspace, array $roleNames)
     {
         $isWorkspaceManager = false;
-        $managerRole = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
+        $managerRole = 'ROLE_WS_MANAGER_'.$workspace->getGuid();
 
         if (in_array('ROLE_ADMIN', $roleNames) ||
             in_array($managerRole, $roleNames)) {
-
             $isWorkspaceManager = true;
         }
 

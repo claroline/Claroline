@@ -60,7 +60,8 @@ class Recorder
     public function register(PluginBundle $plugin, array $pluginConfiguration)
     {
         $pluginFqcn = get_class($plugin);
-        $this->dbWriter->insert($plugin, $pluginConfiguration);
+
+        return $this->dbWriter->insert($plugin, $pluginConfiguration);
     }
 
     /**
@@ -91,7 +92,7 @@ class Recorder
      *
      * @param \Claroline\CoreBundle\Library\PluginBundle $plugin
      *
-     * @return boolean
+     * @return bool
      */
     public function isRegistered(PluginBundle $plugin)
     {

@@ -5,7 +5,6 @@ namespace Icap\PortfolioBundle\Manager;
 use Claroline\CoreBundle\Entity\user;
 use Doctrine\Common\Persistence\ObjectManager;
 use Icap\PortfolioBundle\Importer\Importer;
-use Icap\PortfolioBundle\Importer\ImporterInterface;
 use Icap\PortfolioBundle\Importer\Leap2aImporter;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -36,7 +35,7 @@ class ImportManager
     {
         if (0 === count($importers)) {
             $importers = [
-                new Leap2aImporter()
+                new Leap2aImporter(),
             ];
         }
 
@@ -56,6 +55,7 @@ class ImportManager
 
     /**
      * @return ObjectManager
+     *
      * @throws \Exception
      */
     public function getEntityManager()
@@ -63,6 +63,7 @@ class ImportManager
         if (null === $this->entityManager) {
             throw new \Exception('No entity manager, you can only simulate an import.');
         }
+
         return $this->entityManager;
     }
 
@@ -84,6 +85,7 @@ class ImportManager
      * @param string $format
      *
      * @return \Icap\PortfolioBundle\Entity\Portfolio|null
+     *
      * @throws \Exception
      */
     protected function import($content, User $user, $format)
@@ -101,6 +103,7 @@ class ImportManager
      * @param string $format
      *
      * @return \Icap\PortfolioBundle\Entity\Portfolio|null
+     *
      * @throws \Exception
      */
     public function simulateImport($content, User $user, $format)
@@ -114,11 +117,12 @@ class ImportManager
      * @param string $format
      *
      * @return \Icap\PortfolioBundle\Entity\Portfolio|null
+     *
      * @throws \Exception
      */
     public function doImport($content, User $user, $format)
     {
-        $portfolio     = $this->simulateImport($content, $user, $format);
+        $portfolio = $this->simulateImport($content, $user, $format);
         $entityManager = $this->getEntityManager();
 
         $entityManager->persist($portfolio);

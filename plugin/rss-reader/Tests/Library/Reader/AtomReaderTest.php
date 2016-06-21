@@ -11,7 +11,7 @@
 
 namespace Claroline\RssReaderBundle\Library\Reader;
 
-use \SimpleXMLElement;
+use SimpleXMLElement;
 
 class AtomReaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class AtomReaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->reader = new AtomReader();
         $this->reader->setFeed(
-            new SimpleXMLElement(file_get_contents(__DIR__ . '/../../Stub/files/feed_burner.atom'))
+            new SimpleXMLElement(file_get_contents(__DIR__.'/../../Stub/files/feed_burner.atom'))
         );
     }
 

@@ -32,8 +32,7 @@ class SecurityTokenRepository extends EntityRepository
         $clientName,
         $token,
         $ip
-    )
-    {
+    ) {
         $dql = "
             SELECT st
             FROM Claroline\CoreBundle\Entity\SecurityToken st

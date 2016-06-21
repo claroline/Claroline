@@ -24,7 +24,7 @@ class AdminAnalyticsTopType extends AbstractType
                 'top_type', 'choice', array(
                     'label' => 'show',
                     'attr' => array(
-                        'class' => 'input-sm'
+                        'class' => 'input-sm',
                     ),
                     'choices' => array(
                         'top_extension' => 'top_extension',
@@ -35,9 +35,9 @@ class AdminAnalyticsTopType extends AbstractType
                         'top_users_workspaces_owners' => 'top_users_workspaces_owners',
                         'top_users_workspaces_enrolled' => 'top_users_workspaces_enrolled',
                         'top_users_connections' => 'top_users_connections',
-                        'top_media_views' => 'top_media_views'
+                        'top_media_views' => 'top_media_views',
                     ),
-                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-4')
+                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-4'),
                 )
             )
             ->add(
@@ -47,7 +47,7 @@ class AdminAnalyticsTopType extends AbstractType
                     'label' => 'for_period',
                     'required' => false,
                     'attr' => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-4')
+                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-4'),
                 )
             )
             ->add(
@@ -58,9 +58,9 @@ class AdminAnalyticsTopType extends AbstractType
                         '20' => '20',
                         '30' => '30',
                         '50' => '50',
-                        '100' => '100'
+                        '100' => '100',
                     ),
-                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3')
+                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3'),
                 )
             );
     }
@@ -76,7 +76,7 @@ class AdminAnalyticsTopType extends AbstractType
         ->setDefaults(
             array(
                 'translation_domain' => 'platform',
-                'csrf_protection'   => false
+                'csrf_protection' => false,
             )
         );
     }

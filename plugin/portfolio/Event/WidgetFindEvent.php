@@ -14,7 +14,7 @@ class WidgetFindEvent extends Event
     protected $widget;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $widgetId;
 

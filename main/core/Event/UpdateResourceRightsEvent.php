@@ -35,4 +35,4 @@ class UpdateResourceRightsEvent extends Event
     {
         return $this->rights;
     }
-} 
+}

@@ -58,7 +58,7 @@ class NoDuplicateValidatorTest extends UnitTestCase
     /**
      * @dataProvider validValueProvider
      *
-     * @param mixed $value
+     * @param mixed       $value
      * @param NoDuplicate $constraint
      */
     public function testValidate($value, NoDuplicate $constraint)
@@ -78,7 +78,7 @@ class NoDuplicateValidatorTest extends UnitTestCase
 
         return [
             [['foo', 'bar', 'baz'], new NoDuplicate()],
-            [new ArrayCollection([$levelOne, $levelTwo]), $levelConstraint]
+            [new ArrayCollection([$levelOne, $levelTwo]), $levelConstraint],
         ];
     }
 }

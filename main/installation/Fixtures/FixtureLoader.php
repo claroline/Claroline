@@ -27,7 +27,7 @@ class FixtureLoader
      * Constructor.
      *
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     * @param \Doctrine\Common\DataFixtures\Executor\ORMExecutor $executor
+     * @param \Doctrine\Common\DataFixtures\Executor\ORMExecutor        $executor
      */
     public function __construct(ContainerInterface $container, ORMExecutor $executor)
     {
@@ -42,7 +42,7 @@ class FixtureLoader
      *
      * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
      *
-     * @return boolean True if some fixtures have been found and executed, false otherwise
+     * @return bool True if some fixtures have been found and executed, false otherwise
      */
     public function load(BundleInterface $bundle, $fixturesDirectory = 'DataFixtures')
     {

@@ -1,4 +1,5 @@
 <?php
+
 namespace Icap\PortfolioBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
@@ -16,6 +17,6 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
-        $event->addTypes("portfolio");
+        $event->addTypes('portfolio');
     }
-} 
+}

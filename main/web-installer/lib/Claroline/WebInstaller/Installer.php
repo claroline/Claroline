@@ -13,7 +13,6 @@ namespace Claroline\WebInstaller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Installation\Settings\FirstAdminSettings;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,8 +35,7 @@ class Installer
         Writer $writer,
         $kernelFile,
         $kernelClass
-    )
-    {
+    ) {
         $this->adminSettings = $adminSettings;
         $this->writer = $writer;
         $this->kernelFile = $kernelFile;
@@ -47,8 +45,8 @@ class Installer
 
     public function install()
     {
-        $this->logFilename = 'install-' . time() . '.log';
-        $logFile = $this->appDir . '/logs/' . $this->logFilename;
+        $this->logFilename = 'install-'.time().'.log';
+        $logFile = $this->appDir.'/logs/'.$this->logFilename;
         $output = new StreamOutput(fopen($logFile, 'a'));
 
         try {
@@ -60,20 +58,25 @@ class Installer
             $kernel = new $this->kernelClass('prod', false);
             $kernel->boot();
             $container = $kernel->getContainer();
-            $this->launchInstaller($container, $output);
+            $sqlFile = $this->appDir.'/../claroline.sql';
+
+            if (file_exists($sqlFile)) {
+                $output->writeln('Importing database from prebuilt sql file...');
+                $container->get('doctrine.orm.entity_manager')->getConnection()->exec(file_get_contents($sqlFile));
+            } else {
+                $this->launchInstaller($container, $output);
+            }
+
             $this->createAdminUser($container, $output);
-            //with command line... but it's broken. The other one works.
-            //exec('php ' . $container->getParameter('kernel.root_dir') . DIRECTORY_SEPARATOR . 'console assetic:dump');
             $refresher = $container->get('claroline.installation.refresher');
             $refresher->setOutput($output);
             $refresher->installAssets();
-            $refresher->dumpAssets('prod');
             $this->writer->writeInstallFlag();
             $this->hasSucceeded = true;
         } catch (\Exception $ex) {
             $output->writeln('[ERROR] An exception has been thrown during installation');
-            $output->writeln('Message: ' . $ex->getMessage());
-            $output->writeln('Trace: ' . $ex->getTraceAsString());
+            $output->writeln('Message: '.$ex->getMessage());
+            $output->writeln('Trace: '.$ex->getTraceAsString());
         }
     }
 
@@ -91,7 +94,7 @@ class Installer
     {
         $output->writeln('Clearing the cache...');
 
-        if (is_dir($directory = $this->appDir . '/cache')) {
+        if (is_dir($directory = $this->appDir.'/cache')) {
             $fileSystem = new Filesystem();
             $cacheIterator = new \DirectoryIterator($directory);
 
@@ -110,12 +113,21 @@ class Installer
         $installer->setOutput($output);
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         );
         $logger = new ConsoleLogger($output, $verbosityLevelMap);
         $installer->setLogger($logger);
         $output->writeln('Installing the platform from composer...');
+
+        /*
+         * Set the app/config directory in the installation state.
+         */
+        $kernel = $container->get('kernel');
+        $rootDir = $kernel->getRootDir();
+        $previous = $rootDir.'/config/previous-installed.json';
+        @unlink($previous);
+        file_put_contents($previous, '[]');
         $installer->updateFromComposerInfo();
     }
 
@@ -129,6 +141,7 @@ class Installer
         $user->setUsername($this->adminSettings->getUsername());
         $user->setPlainPassword($this->adminSettings->getPassword());
         $user->setMail($this->adminSettings->getEmail());
-        $userManager->createUserWithRole($user, PlatformRoles::ADMIN);
+        $roleAdmin = $container->get('claroline.manager.role_manager')->getRoleByName('ROLE_ADMIN');
+        $userManager->createUser($user, false, array($roleAdmin));
     }
 }

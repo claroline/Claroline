@@ -21,13 +21,13 @@ class InterventionStatusType extends AbstractType
                 'choice_translation_domain' => true,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('s')
-                        ->where("s.type = 0")
+                        ->where('s.type = 0')
                         ->orderBy('s.order', 'ASC');
                 },
                 'property' => 'name',
                 'expanded' => false,
                 'multiple' => false,
-                'required' => true
+                'required' => true,
             )
         );
         $builder->add(
@@ -35,7 +35,7 @@ class InterventionStatusType extends AbstractType
             'tinymce',
             array(
                 'required' => true,
-                'label' => 'client_message'
+                'label' => 'client_message',
             )
         );
         $builder->add(
@@ -43,7 +43,7 @@ class InterventionStatusType extends AbstractType
             'tinymce',
             array(
                 'required' => true,
-                'label' => 'internal_message'
+                'label' => 'internal_message',
             )
         );
     }

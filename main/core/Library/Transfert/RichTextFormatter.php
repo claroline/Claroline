@@ -16,12 +16,12 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Manager\TransfertManager;
+use Claroline\CoreBundle\Manager\TransferManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 /**
  * @DI\Service("claroline.importer.rich_text_formatter")
@@ -40,26 +40,28 @@ class RichTextFormatter
     private $maskManager;
     private $resourceManagerImporter;
     private $eventDispatcher;
+    private $config;
 
     /**
      * @DI\InjectParams({
      *     "router"          = @DI\Inject("router"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "transferManager" = @DI\Inject("claroline.manager.transfert_manager"),
+     *     "transferManager" = @DI\Inject("claroline.manager.transfer_manager"),
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "config"          = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
         UrlGeneratorInterface $router,
         ResourceManager $resourceManager,
         ObjectManager $om,
-        TransfertManager $transferManager,
+        TransferManager $transferManager,
         MaskManager $maskManager,
-        StrictDispatcher $eventDispatcher
-    )
-    {
+        StrictDispatcher $eventDispatcher,
+        PlatformConfigurationHandler $config
+    ) {
         $data = array();
         $this->resourceManagerImporter = null;
         $this->resourceManagerData = array();
@@ -70,6 +72,7 @@ class RichTextFormatter
         $this->transferManager = $transferManager;
         $this->maskManager = $maskManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->config = $config;
     }
 
     /**
@@ -88,7 +91,7 @@ class RichTextFormatter
         preg_match_all(self::REGEX_PLACEHOLDER, $text, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {
-            $uid = (int)$match[1];
+            $uid = (int) $match[1];
             //meh, fix the following lines late
             $parent = $this->findParentFromDataUid($uid);
             $el = $this->findItemFromUid($uid);
@@ -97,7 +100,7 @@ class RichTextFormatter
                     array(
                         'parent' => $parent,
                         'name' => $el['name'],
-                        'resourceType' => $this->resourceManager->getResourceTypeByName($el['type'])
+                        'resourceType' => $this->resourceManager->getResourceTypeByName($el['type']),
                     )
                 );
 
@@ -135,7 +138,7 @@ class RichTextFormatter
 
             if ($ext === 'txt') {
                 $text = $this->setPlaceHolder($file, $_data, $formattedFiles);
-                $newFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid() . 'txt';
+                $newFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid().'txt';
                 file_put_contents($newFile, $text);
             }
 
@@ -158,13 +161,12 @@ class RichTextFormatter
         $baseUrl = $this->router->getContext()->getBaseUrl();
 
         //first regex
-        $regex = '#' . $baseUrl . '/file/resource/media/([^\'"]+)#';
+        $regex = '#'.$baseUrl.'/file/resource/media/([^\'"]+)#';
 
         preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 
         if (count($matches) > 0) {
             foreach ($matches as $match) {
-
                 if (!$this->getItemFromUid($match[1], $_data)) {
                     $this->createDataFolder($_data);
                     $node = $this->resourceManager->getNode($match[1]);
@@ -179,8 +181,8 @@ class RichTextFormatter
                         );
                         $el['item']['parent'] = 'data_folder';
                         $el['item']['roles'] = array(array('role' => array(
-                            'name'   => 'ROLE_USER',
-                            'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('file'))
+                            'name' => 'ROLE_USER',
+                            'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('file')),
                         )));
                         $_data['data']['items'][] = $el;
                     }
@@ -191,7 +193,7 @@ class RichTextFormatter
         }
 
         //second regex
-        $regex = '#' . $baseUrl . '/resource/open/([^/]+)/([^\'"]+)#';
+        $regex = '#'.$baseUrl.'/resource/open/([^/]+)/([^\'"]+)#';
         preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 
         if (count($matches) > 0) {
@@ -254,7 +256,9 @@ class RichTextFormatter
         //this resource already has been persisted before, let's find it !
         //first we find the item in the data
         $itemData = $this->findItemFromUid($uid);
-        if ($itemData) return $this->getResourceNodeFromPathData($this->getResourcePathFromItem($itemData));
+        if ($itemData) {
+            return $this->getResourceNodeFromPathData($this->getResourcePathFromItem($itemData));
+        }
     }
 
     public function getResourceNodeFromPathData(array $path)
@@ -278,7 +282,9 @@ class RichTextFormatter
     {
         if (isset($this->resourceManagerData['data']['items'])) {
             foreach ($this->resourceManagerData['data']['items'] as $item) {
-                if ($item['item']['uid'] === $uid) return $item['item'];
+                if ($item['item']['uid'] === $uid) {
+                    return $item['item'];
+                }
             }
         }
     }
@@ -287,7 +293,9 @@ class RichTextFormatter
     {
         if (isset($resManagerData['data']['items'])) {
             foreach ($resManagerData['data']['items'] as $item) {
-                if ($item['item']['uid'] === $uid) return $item['item'];
+                if ($item['item']['uid'] === $uid) {
+                    return $item['item'];
+                }
             }
         }
     }
@@ -300,7 +308,9 @@ class RichTextFormatter
     {
         if (isset($this->resourceManagerData['data']['directories'])) {
             foreach ($this->resourceManagerData['data']['directories'] as $item) {
-                if ($item['directory']['uid'] === $uid) return $item['directory'];
+                if ($item['directory']['uid'] === $uid) {
+                    return $item['directory'];
+                }
             }
         }
     }
@@ -309,7 +319,9 @@ class RichTextFormatter
     {
         if (isset($resManagerData['data']['directories'])) {
             foreach ($resManagerData['data']['directories'] as $item) {
-                if ($item['directory']['uid'] === $uid) return $item['directory'];
+                if ($item['directory']['uid'] === $uid) {
+                    return $item['directory'];
+                }
             }
         }
     }
@@ -328,17 +340,38 @@ class RichTextFormatter
 
     /**
      * @todo find the method wich generate the url from tinymce
+     *
      * @param ResourceNode $node
      */
     public function generateDisplayedUrlForTinyMce(ResourceNode $node)
     {
-        if (strpos('_' . $node->getMimeType(), 'image') > 0) {
-            $url = $this->router->generate('claro_file_get_media', array('node' => $node->getId()));
+        //ie: /path/to/web/app_dev.php
+        $baseUrl = $this->config->getParameter('base_url');
+
+        //http://stackoverflow.com/questions/173851/what-is-the-canonical-way-to-determine-commandline-vs-http-execution-of-a-php-s
+        //we need to configure the router if we're doing the import by cli.
+        if ($baseUrl && php_sapi_name() === 'cli') {
+            $context = $this->router->getContext();
+            $context->setBaseUrl($baseUrl);
+        }
+
+        if (strpos('_'.$node->getMimeType(), 'image') > 0) {
+            $url = $this->router->generate(
+                'claro_file_get_media',
+                array('node' => $node->getId()),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
             return "<img style='max-width: 100%;' src='{$url}' alt='{$node->getName()}'>";
         }
 
-        if (strpos('_' . $node->getMimeType(), 'video') > 0) {
-            $url = $this->router->generate('claro_file_get_media', array('node' => $node->getId()));
+        if (strpos('_'.$node->getMimeType(), 'video') > 0) {
+            $url = $this->router->generate(
+                'claro_file_get_media',
+                array('node' => $node->getId()),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
             return "<source type='{$node->getMimeType()}' src='{$url}'></source>";
         }
 
@@ -346,8 +379,9 @@ class RichTextFormatter
             'claro_resource_open',
             array(
                 'resourceType' => $node->getResourceType()->getName(),
-                'node' => $node->getId()
-            )
+                'node' => $node->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
         );
 
         return "<a href='{$url}'>{$node->getName()}</a>";
@@ -366,37 +400,43 @@ class RichTextFormatter
             }
         }
 
-        return null;
+        return;
     }
 
     public function createDataFolder(array &$_data)
     {
-        if ($this->dataFolderExists($_data)) return null;
+        if ($this->dataFolderExists($_data)) {
+            return;
+        }
 
         $roles = array();
-        $roles[] = array('role' =>array(
-            'name'   => 'ROLE_USER',
-            'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('directory'))
+        $roles[] = array('role' => array(
+            'name' => 'ROLE_USER',
+            'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('directory')),
         ));
 
         $parentId = $_data['data']['root']['uid'];
 
         $_data['data']['directories'][] = array('directory' => array(
-            'name'      => 'data_folder',
-            'creator'   => null,
-            'parent'    => $parentId,
+            'name' => 'data_folder',
+            'creator' => null,
+            'parent' => $parentId,
             'published' => true,
-            'uid'       => 'data_folder',
-            'roles'     => $roles,
-            'index'     => null
+            'uid' => 'data_folder',
+            'roles' => $roles,
+            'index' => null,
         ));
     }
 
     private function dataFolderExists($data)
     {
-        if (!isset($data['data']['directories'])) return false;
+        if (!isset($data['data']['directories'])) {
+            return false;
+        }
         foreach ($data['data']['directories'] as $directory) {
-            if ($directory['directory']['uid'] === 'data_folder') return true;
+            if ($directory['directory']['uid'] === 'data_folder') {
+                return true;
+            }
         }
 
         return false;

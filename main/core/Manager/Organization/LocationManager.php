@@ -38,8 +38,7 @@ class LocationManager
         ObjectManager $om,
         PlatformConfigurationHandler $ch,
         CurlManager $cm
-    )
-    {
+    ) {
         $this->om = $om;
         $this->repo = $om->getRepository('ClarolineCoreBundle:Organization\Location');
         $this->ch = $ch;
@@ -94,10 +93,10 @@ class LocationManager
     {
         //this will only work for western europe because the format may be different for other countries... big switch
         //may be needed...
-        $address = $location->getStreetNumber() . '+' . $location->getStreet() . '+' . $location->getPc() . '+'. $location->getTown() . '+' . $location->getCountry();
+        $address = $location->getStreetNumber().'+'.$location->getStreet().'+'.$location->getPc().'+'.$location->getTown().'+'.$location->getCountry();
         $address = urlencode($address);
-        $query = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . $address . '&key=' . $this->ch->getParameter('google_geocoding_key');
+        $query = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$this->ch->getParameter('google_geocoding_key');
 
         return $this->cm->exec($query);
     }
-} 
+}

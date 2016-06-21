@@ -52,7 +52,7 @@ class HomeTabType extends AbstractType
                     'property' => 'translationKey',
                     'expanded' => true,
                     'multiple' => true,
-                    'required' => false
+                    'required' => false,
                 )
             );
         } elseif ($this->isAdmin) {
@@ -74,7 +74,7 @@ class HomeTabType extends AbstractType
                     'property' => 'translationKey',
                     'expanded' => true,
                     'multiple' => true,
-                    'required' => false
+                    'required' => false,
                 )
             );
         }
@@ -89,7 +89,7 @@ class HomeTabType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
     }

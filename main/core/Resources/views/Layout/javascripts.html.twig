@@ -47,12 +47,6 @@
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleGroupLabel.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeWorkspacesConfirm.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/noRoleSelected.html.twigjs"
-    "@ClarolineCoreBundle/Resources/views/Administration/Facet/facetTab.html.twigjs"
-    "@ClarolineCoreBundle/Resources/views/Administration/Facet/facetTabInnerHtml.html.twigjs"
-    "@ClarolineCoreBundle/Resources/views/Administration/Facet/facetPane.html.twigjs"
-    "@ClarolineCoreBundle/Resources/views/Administration/Facet/fieldElement.html.twigjs"
-    "@ClarolineCoreBundle/Resources/views/Administration/Facet/fieldElementInnerHtml.html.twigjs"
-    "@ClarolineCoreBundle/Resources/views/Administration/Facet/panelElement.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/Administration/Roles/renderRoleRow.html.twig"
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/modelRow.html.twig"
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/userRow.html.twig"
@@ -78,6 +72,8 @@
     'js/translations/resource/*.js'
     'js/translations/home/*.js'
     'js/translations/platform/*.js'
+    'js/translations/error/*.js'
+    'js/translations/validators/*.js'
     %}<script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
@@ -144,7 +140,7 @@
 
 <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script><!-- this is not duplicated file -->
-<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+<script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-core-tinymce.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/resource_picker_button.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/resource_picker.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/resource_upload_button.js') }}"></script>

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,6 +8,7 @@
  * 
  * Date: 4/23/15
  */
+
 namespace Icap\SocialmediaBundle\Library\SocialShare;
 
 use Icap\SocialmediaBundle\Library\SocialShare\Networks\Facebook;
@@ -35,6 +36,7 @@ class SocialShare
 
     /**
      * @param $name
+     *
      * @return NetworkInterface
      */
     public function getNetwork($name)
@@ -46,4 +48,4 @@ class SocialShare
     {
         $this->networks[$network->getName()] = $network;
     }
-} 
+}

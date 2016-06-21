@@ -73,7 +73,7 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
         $this->executor->setRepositoryFiles($this->repo('empty'), $this->repo('repo-1'));
         $this->kernel->expects($this->once())->method('getBundles')->willReturn([
             $this->mockBundle('Foo'),
-            $this->mockBundle('Bar')
+            $this->mockBundle('Bar'),
         ]);
 
         $operations = $this->executor->buildOperationList();
@@ -92,7 +92,7 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
     {
         $this->executor->setRepositoryFiles($this->repo('repo-1'), $this->repo('repo-2'));
         $this->kernel->expects($this->once())->method('getBundles')->willReturn([
-            $this->mockBundle('Foo')
+            $this->mockBundle('Foo'),
         ]);
 
         $operations = $this->executor->buildOperationList();
@@ -111,7 +111,7 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
         $this->kernel->expects($this->once())->method('getBundles')->willReturn([
             $this->mockBundle('Foo'),
             $this->mockBundle('Quz'),
-            $this->mockBundle('Bar')
+            $this->mockBundle('Bar'),
         ]);
         $operations = $this->executor->buildOperationList();
         $this->assertEquals(2, count($operations));
@@ -175,7 +175,7 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
         $this->kernel->expects($this->once())->method('getBundles')->willReturn([
             $this->mockBundle('Foo'),
             $this->mockBundle('Quz', true),
-            $this->mockBundle('Bar', true)
+            $this->mockBundle('Bar', true),
         ]);
 
         $this->baseInstaller->expects($this->once())
@@ -203,7 +203,7 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
     {
         return $this->buildRepoPaths([
             ['empty', 'non-existent'],
-            ['non-existent', 'empty']
+            ['non-existent', 'empty'],
         ]);
     }
 
@@ -211,7 +211,7 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
     {
         return $this->buildRepoPaths([
             ['empty', 'not-json'],
-            ['not-json', 'empty']
+            ['not-json', 'empty'],
         ]);
     }
 
@@ -233,7 +233,7 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
 
     private function repo($name)
     {
-        return __DIR__ . '/../../../Stub/repo/' . $name . '.json';
+        return __DIR__.'/../../../Stub/repo/'.$name.'.json';
     }
 
     private function mockBundle($fqcn, $plugin = false)

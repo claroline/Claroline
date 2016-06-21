@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle:Exception:layout.html.twig' %}
 
+{% set httpCode = 404 %}
+
 {% block title %}{{ parent() ~ ' - ' ~ '404' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block message %}

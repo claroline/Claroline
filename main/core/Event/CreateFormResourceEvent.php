@@ -12,8 +12,6 @@
 namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Claroline\CoreBundle\Event\DataConveyorEventInterface;
-use Claroline\CoreBundle\Event\MandatoryEventInterface;
 
 /**
  * Event dispatched by the resource controller when a resource creation form is asked.
@@ -36,7 +34,7 @@ class CreateFormResourceEvent extends Event implements DataConveyorEventInterfac
     }
 
     /**
-     * Returns the response content (creation form as string)
+     * Returns the response content (creation form as string).
      *
      * @return string
      */

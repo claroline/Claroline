@@ -27,21 +27,21 @@ class PortfolioImport extends AbstractType
         $builder->add('content', 'file', [
             'theme_options' => [
                 'label_width' => 'col-md-5',
-                'control_width' => 'col-md-7'
-            ]
+                'control_width' => 'col-md-7',
+            ],
         ]);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $product = $event->getData();
             $form = $event->getForm();
 
             $form->add('format', 'choice', [
-                'choices'  => $this->availableImportFormats,
+                'choices' => $this->availableImportFormats,
                 'expanded' => true,
                 'theme_options' => [
                     'label_width' => 'col-md-5',
-                    'control_width' => 'col-md-7'
-                ]
+                    'control_width' => 'col-md-7',
+                ],
             ]);
         });
     }
@@ -55,10 +55,10 @@ class PortfolioImport extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\ImportData',
+                'data_class' => 'Icap\PortfolioBundle\Entity\ImportData',
                 'translation_domain' => 'icap_portfolio',
-                'csrf_protection'    => false,
-                'date_format'        => DateTimeType::HTML5_FORMAT
+                'csrf_protection' => false,
+                'date_format' => DateTimeType::HTML5_FORMAT,
             )
         );
     }

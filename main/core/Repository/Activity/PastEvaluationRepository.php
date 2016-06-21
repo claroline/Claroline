@@ -22,8 +22,7 @@ class PastEvaluationRepository extends EntityRepository
         User $user,
         ActivityParameters $activityParams,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT e
             FROM Claroline\CoreBundle\Entity\Activity\PastEvaluation e
@@ -36,7 +35,7 @@ class PastEvaluationRepository extends EntityRepository
         $query->setParameter('user', $user);
         $query->setParameter('activityParameters', $activityParams);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findPastEvaluationsByUserAndActivityParamsAndLog(
@@ -44,8 +43,7 @@ class PastEvaluationRepository extends EntityRepository
         ActivityParameters $activityParams,
         Log $log,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT e
             FROM Claroline\CoreBundle\Entity\Activity\PastEvaluation e
@@ -59,6 +57,6 @@ class PastEvaluationRepository extends EntityRepository
         $query->setParameter('activityParameters', $activityParams);
         $query->setParameter('log', $log);
 
-        return $executeQuery ? $query->getOneOrNullResult(): $query;
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 }

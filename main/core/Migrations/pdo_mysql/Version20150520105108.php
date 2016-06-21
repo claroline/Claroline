@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2015/05/20 10:51:09
  */
@@ -14,7 +14,7 @@ class Version20150520105108 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_contact_category (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT DEFAULT NULL, 
@@ -24,7 +24,7 @@ class Version20150520105108 extends AbstractMigration
                 UNIQUE INDEX contact_unique_user_category (user_id, category_name), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
+        ');
         $this->addSql("
             CREATE TABLE claro_contact_options (
                 id INT AUTO_INCREMENT NOT NULL, 
@@ -34,7 +34,7 @@ class Version20150520105108 extends AbstractMigration
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_contact (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT DEFAULT NULL, 
@@ -44,8 +44,8 @@ class Version20150520105108 extends AbstractMigration
                 UNIQUE INDEX contact_unique_user_contact (user_id, contact_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE claro_contact_categories (
                 contact_id INT NOT NULL, 
                 category_id INT NOT NULL, 
@@ -53,66 +53,66 @@ class Version20150520105108 extends AbstractMigration
                 INDEX IDX_69F02FC412469DE2 (category_id), 
                 PRIMARY KEY(contact_id, category_id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_contact_category 
             ADD CONSTRAINT FK_2C48C9BBA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_contact_options 
             ADD CONSTRAINT FK_BBCE147CA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_contact 
             ADD CONSTRAINT FK_2C215B9FA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_contact 
             ADD CONSTRAINT FK_2C215B9FE7A1254A FOREIGN KEY (contact_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_contact_categories 
             ADD CONSTRAINT FK_69F02FC4E7A1254A FOREIGN KEY (contact_id) 
             REFERENCES claro_contact (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_contact_categories 
             ADD CONSTRAINT FK_69F02FC412469DE2 FOREIGN KEY (category_id) 
             REFERENCES claro_contact_category (id) 
             ON DELETE CASCADE
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_contact_categories 
             DROP FOREIGN KEY FK_69F02FC412469DE2
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_contact_categories 
             DROP FOREIGN KEY FK_69F02FC4E7A1254A
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_contact_category
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_contact_options
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_contact
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_contact_categories
-        ");
+        ');
     }
 }

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -73,8 +72,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         ToolManager $toolManager,
         ToolRightsManager $toolRightsManager,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $request;
@@ -95,6 +93,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolRoles.html.twig")
      *
      * @param Workspace $workspace
+     *
      * @return array
      */
     public function workspaceToolsRolesAction(Workspace $workspace)
@@ -108,7 +107,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
             'workspace' => $workspace,
             'toolPermissions' => $toolsDatas['existingTools'],
             'maskDecoders' => $toolsDatas['maskDecoders'],
-            'pwsToolConfigs' => $pwsToolConfigs
+            'pwsToolConfigs' => $pwsToolConfigs,
         );
     }
 
@@ -121,7 +120,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolNameModalForm.html.twig")
      *
      * @param Workspace $workspace
-     * @param Tool              $tool
+     * @param Tool      $tool
      *
      * @return Response
      */
@@ -133,7 +132,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         return array(
             'form' => $this->formFactory->create(new WorkspaceOrderToolEditType(), $ot)->createView(),
             'workspace' => $workspace,
-            'wot' => $ot
+            'wot' => $ot,
         );
     }
 
@@ -146,7 +145,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceOrderToolEdit.html.twig")
      *
-     * @param Workspace $workspace
+     * @param Workspace   $workspace
      * @param OrderedTool $workspaceOrderTool
      *
      * @return Response
@@ -164,7 +163,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
                 array(
                     'tool_id' => $workspaceOrderTool->getTool()->getId(),
                     'ordered_tool_id' => $workspaceOrderTool->getId(),
-                    'name' => $workspaceOrderTool->getName()
+                    'name' => $workspaceOrderTool->getName(),
                 )
             );
         }
@@ -172,7 +171,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         return array(
             'form' => $form->createView(),
             'workspace' => $workspace,
-            'wot' => $workspaceOrderTool
+            'wot' => $workspaceOrderTool,
         );
     }
 
@@ -183,10 +182,11 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *     defaults={"type"=0},
      *     options={"expose"=true}
      * )
-     * @param Workspace $workspace
+     *
+     * @param Workspace   $workspace
      * @param OrderedTool $orderedTool
      * @param OrderedTool $otherOrderedTool
-     * @param string $mode
+     * @param string      $mode
      * @param int type
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -197,32 +197,27 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         OrderedTool $otherOrderedTool,
         $mode,
         $type = 0
-    )
-    {
+    ) {
         $this->checkAccess($workspace);
 
         if ($orderedTool->getWorkspace() === $workspace &&
             $otherOrderedTool->getWorkspace() === $workspace) {
-
             $order = $orderedTool->getOrder();
             $otherOrder = $otherOrderedTool->getOrder();
 
             if ($mode === 'previous') {
-
                 if ($otherOrder > $order) {
                     $newOrder = $otherOrder;
                 } else {
                     $newOrder = $otherOrder + 1;
                 }
             } elseif ($mode === 'next') {
-
                 if ($otherOrder > $order) {
                     $newOrder = $otherOrder - 1;
                 } else {
                     $newOrder = $otherOrder;
                 }
             } else {
-
                 return new Response('Bad Request', 400);
             }
 
@@ -234,7 +229,6 @@ class WorkspaceToolsParametersController extends AbstractParametersController
 
             return new Response('success', 204);
         } else {
-
             throw new AccessDeniedException();
         }
     }
@@ -245,9 +239,10 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *     name="claro_workspace_inverse_ordered_tool_right",
      *     options={"expose"=true}
      * )
+     *
      * @param OrderedTool $orderedTool
-     * @param Role $role
-     * @param string $action
+     * @param Role        $role
+     * @param string      $action
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -255,8 +250,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         OrderedTool $orderedTool,
         Role $role,
         $action
-    )
-    {
+    ) {
         $workspace = $orderedTool->getWorkspace();
         $this->checkAccess($workspace);
 
@@ -282,7 +276,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
 
         return array(
             'form' => $form->createView(),
-            'workspace' => $workspace
+            'workspace' => $workspace,
         );
     }
 
@@ -326,10 +320,9 @@ class WorkspaceToolsParametersController extends AbstractParametersController
                 )
             );
         } else {
-
             return array(
                 'form' => $form->createView(),
-                'workspace' => $workspace
+                'workspace' => $workspace,
             );
         }
     }

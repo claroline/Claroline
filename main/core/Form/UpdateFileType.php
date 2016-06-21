@@ -31,8 +31,8 @@ class UpdateFileType extends AbstractType
                 'label' => 'file',
                 'constraints' => array(
                     new NotBlank(),
-                    new File()
-                )
+                    new File(),
+                ),
             )
         );
     }
@@ -47,7 +47,7 @@ class UpdateFileType extends AbstractType
         $resolver
             ->setDefaults(
                 array(
-                    'translation_domain' => 'platform'
+                    'translation_domain' => 'platform',
                 )
             );
     }

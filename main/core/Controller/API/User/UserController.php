@@ -29,17 +29,16 @@ use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Claroline\CoreBundle\Library\Security\Collection\UserCollection;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Put;
 
 /**
  * @NamePrefix("api_")
@@ -51,7 +50,7 @@ class UserController extends FOSRestController
      *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
      *     "formFactory"            = @DI\Inject("form.factory"),
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager"          = @DI\Inject("claroline.manager.locale_manager"),
      *     "request"                = @DI\Inject("request"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
@@ -75,23 +74,22 @@ class UserController extends FOSRestController
         ProfilePropertyManager $profilePropertyManager,
         MailManager $mailManager,
         ApiManager $apiManager
-    )
-    {
-        $this->authenticationManager  = $authenticationManager;
-        $this->eventDispatcher        = $eventDispatcher;
-        $this->formFactory            = $formFactory;
-        $this->localeManager          = $localeManager;
-        $this->request                = $request;
-        $this->userManager            = $userManager;
-        $this->groupManager           = $groupManager;
-        $this->roleManager            = $roleManager;
-        $this->om                     = $om;
-        $this->userRepo               = $om->getRepository('ClarolineCoreBundle:User');
-        $this->roleRepo               = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->groupRepo              = $om->getRepository('ClarolineCoreBundle:Group');
+    ) {
+        $this->authenticationManager = $authenticationManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
+        $this->localeManager = $localeManager;
+        $this->request = $request;
+        $this->userManager = $userManager;
+        $this->groupManager = $groupManager;
+        $this->roleManager = $roleManager;
+        $this->om = $om;
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->profilePropertyManager = $profilePropertyManager;
-        $this->mailManager            = $mailManager;
-        $this->apiManager             = $apiManager;
+        $this->mailManager = $mailManager;
+        $this->apiManager = $apiManager;
     }
 
     /**
@@ -257,6 +255,52 @@ class UserController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Returns a user",
+     *     views = {"user"}
+     * )
+     * @Get("/user/{user}/public", name="get_public_user", options={ "method_prefix" = false })
+     */
+    public function getPublicUserAction(User $user)
+    {
+        $settingsProfile = $this->profilePropertyManager->getAccessesForCurrentUser();
+        $publicUser = [];
+
+        foreach ($settingsProfile as $property => $isEditable) {
+            if ($isEditable || $user === $this->container->get('security.token_storage')->getToken()->getUser()) {
+                switch ($property) {
+                    case 'administrativeCode':
+                        $publicUser['administrativeCode'] = $user->getAdministrativeCode();
+                        break;
+                    case 'description':
+                        $publicUser['description'] = $user->getAdministrativeCode();
+                        break;
+                    case 'email':
+                        $publicUser['email'] = $user->getMail();
+                        break;
+                    case 'firstName':
+                        $publicUser['firstName'] = $user->getFirstName();
+                        break;
+                    case 'lastName':
+                        $publicUser['lastName'] = $user->getLastName();
+                        break;
+                    case 'phone':
+                        $publicUser['phone'] = $user->getPhone();
+                        break;
+                    case 'picture':
+                        $publicUser['picture'] = $user->getPicture();
+                        break;
+                    case 'username':
+                        $publicUser['username'] = $user->getUsername();
+                        break;
+                }
+            }
+        }
+
+        return $publicUser;
+    }
+
+    /**
      * @View()
      * @ApiDoc(
      *     description="Removes a user",
@@ -309,6 +353,22 @@ class UserController extends FOSRestController
         $this->roleManager->associateRole($user, $role, false);
 
         return $user;
+    }
+
+    /**
+     * @View(serializerGroups={"api_user"})
+     * @Put("/users/roles/add", name="put_users_roles", options={ "method_prefix" = false })
+     */
+    public function putRolesToUsersAction()
+    {
+        $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $roles = $this->apiManager->getParameters('roleIds', 'Claroline\CoreBundle\Entity\Role');
+
+        //later make a voter on a user list
+        $this->throwsExceptionIfNotAdmin();
+        $this->roleManager->associateRolesToSubjects($users, $roles);
+
+        return $users;
     }
 
     /**
@@ -438,6 +498,17 @@ class UserController extends FOSRestController
         $this->userManager->csvRemove($this->request->files->get('csv'));
     }
 
+     /**
+      * @View(serializerGroups={"api_user"})
+      * @Post("/users/csv/facets")
+      */
+     public function csvImportFacetsAction()
+     {
+         $this->throwsExceptionIfNotAdmin();
+
+         $this->userManager->csvFacets($this->request->files->get('csv'));
+     }
+
     private function isAdmin()
     {
         return $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
@@ -445,7 +516,9 @@ class UserController extends FOSRestController
 
     private function throwsExceptionIfNotAdmin()
     {
-        if (!$this->isAdmin()) throw new AccessDeniedException("This action can only be done by the administrator");
+        if (!$this->isAdmin()) {
+            throw new AccessDeniedException('This action can only be done by the administrator');
+        }
     }
 
     private function isUserGranted($action, $object)
@@ -455,7 +528,7 @@ class UserController extends FOSRestController
 
     private function throwExceptionIfNotGranted($action, $users)
     {
-        $collection = is_array($users) ? new UserCollection($users): new UserCollection(array($users));
+        $collection = is_array($users) ? new UserCollection($users) : new UserCollection(array($users));
         $isGranted = $this->isUserGranted($action, $collection);
 
         if (!$isGranted) {

@@ -5,9 +5,7 @@ namespace Icap\BadgeBundle\Controller\Api;
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Repository\BadgeRepository;
 use FOS\RestBundle\View\ViewHandler;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -39,7 +37,7 @@ class BadgeController
     public function __construct(BadgeRepository $badgeRepository, ViewHandler $viewHandler)
     {
         $this->badgeRepository = $badgeRepository;
-        $this->viewHandler     = $viewHandler;
+        $this->viewHandler = $viewHandler;
     }
 
     /**
@@ -65,7 +63,7 @@ class BadgeController
         $badge = $this->badgeRepository->find($id);
 
         if (null === $badge) {
-            throw new NotFoundHttpException("Badge not found");
+            throw new NotFoundHttpException('Badge not found');
         }
 
         $view = View::create()

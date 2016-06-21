@@ -19,7 +19,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\DataFixtures\Required\LoadRequiredFixturesData;
 
 class RemoteTestingController extends Controller
@@ -51,7 +50,7 @@ class RemoteTestingController extends Controller
         $om->startFlushSuite();
 
         // reset default template
-        $defaultTemplatePath = $this->container->getParameter('kernel.root_dir') . '/../templates/default.zip';
+        $defaultTemplatePath = $this->container->getParameter('kernel.root_dir').'/../templates/default.zip';
         TemplateBuilder::buildDefault($defaultTemplatePath);
 
         // install plugin fixtures
@@ -67,10 +66,10 @@ class RemoteTestingController extends Controller
         $om->endFlushSuite();
         $end = new \DateTime();
         $diff = $start->diff($end);
-        $duration = $diff->i > 0 ? $diff->i . 'm ' : '';
-        $duration .= $diff->s . 's';
+        $duration = $diff->i > 0 ? $diff->i.'m ' : '';
+        $duration .= $diff->s.'s';
 
-        return new Response('Platform reinstalled (duration: ' . $duration . ')');
+        return new Response('Platform reinstalled (duration: '.$duration.')');
     }
 
     /**
@@ -81,6 +80,7 @@ class RemoteTestingController extends Controller
      * @EXT\Method("POST")
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function loadFixtureAction(Request $request)

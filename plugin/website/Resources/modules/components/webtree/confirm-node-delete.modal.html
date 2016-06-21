@@ -1,0 +1,7 @@
+<div class="modal-body">
+    <div>{{ 'confirm_delete_message'|trans:'icap_website':{'title': vm.activeNode.title} }}</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" data-ng-click="vm.deleteActiveNode(true)">{{ 'confirm'|trans:'icap_website' }}</button>
+    <button class="btn btn-default" data-ng-click="vm.dismissModal()">{{ 'cancel'|trans:'icap_website' }}</button>
+</div>

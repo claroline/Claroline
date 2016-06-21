@@ -34,8 +34,7 @@ class RichTextFormatListener
         ObjectManager $om,
         RichTextFormatter $formatter,
         ResourceManager $resourceManager
-    )
-    {
+    ) {
         $this->router = $router;
         $this->om = $om;
         $this->formatter = $formatter;
@@ -52,7 +51,7 @@ class RichTextFormatListener
         $text = $event->getText();
         $baseUrl = $this->router->getContext()->getBaseUrl();
         //innova path is a plugin but it's an important one...
-        $regex = '#' . $baseUrl . '/innova_path/player/([^\#]+)([^\'"]+)#';
+        $regex = '#'.$baseUrl.'/innova_path/player/([^\#]+)([^\'"]+)#';
         preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 
         if (count($matches) > 0) {
@@ -76,7 +75,7 @@ class RichTextFormatListener
         $baseUrl = $this->router->getContext()->getBaseUrl();
 
         foreach ($matches as $match) {
-            $uid = (int)$match[1];
+            $uid = (int) $match[1];
             $parent = $this->formatter->findParentFromDataUid($uid);
             $el = $this->formatter->findItemFromUid($uid);
             $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')

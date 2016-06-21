@@ -16,31 +16,34 @@ use Innova\PathBundle\Manager\Condition\StepConditionManager;
 class StepManager
 {
     /**
-     * Current session
+     * Current session.
+     *
      * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
      */
     protected $session;
 
     /**
-     * Translation manager
+     * Translation manager.
+     *
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     protected $translator;
 
     /**
-     *
-     * @var \Doctrine\Common\Persistence\ObjectManager $om
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
     protected $om;
 
     /**
-     * Resource Manager
+     * Resource Manager.
+     *
      * @var \Claroline\CoreBundle\Manager\ResourceManager
      */
     protected $resourceManager;
 
     /**
-     * Class constructor
+     * Class constructor.
+     *
      * @param \Doctrine\Common\Persistence\ObjectManager                 $om
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \Symfony\Component\Translation\TranslatorInterface         $translator
@@ -54,31 +57,35 @@ class StepManager
         ResourceManager      $resourceManager,
         StepConditionManager $stepConditionManager)
     {
-        $this->om                   = $om;
-        $this->session              = $session;
-        $this->translator           = $translator;
-        $this->resourceManager      = $resourceManager;
+        $this->om = $om;
+        $this->session = $session;
+        $this->translator = $translator;
+        $this->resourceManager = $resourceManager;
         $this->stepConditionManager = $stepConditionManager;
     }
 
     /**
-     * Get a step by ID
-     * @param  integer   $stepId
+     * Get a step by ID.
+     *
+     * @param int $stepId
+     *
      * @return null|Step
      */
     public function get($stepId)
     {
-        return $this->om->getRepository("InnovaPathBundle:Step")->findOneById($stepId);
+        return $this->om->getRepository('InnovaPathBundle:Step')->findOneById($stepId);
     }
 
     /**
-     * Create a new step from JSON structure
-     * @param  \Innova\PathBundle\Entity\Path\Path $path          Parent path of the step
-     * @param  integer                             $level         Depth of the step in the path
-     * @param  \Innova\PathBundle\Entity\Step      $parent        Parent step of the step
-     * @param  integer                             $order         Order of the step relative to its siblings
-     * @param  \stdClass                           $stepStructure Data about the step
-     * @return \Innova\PathBundle\Entity\Step      Edited step
+     * Create a new step from JSON structure.
+     *
+     * @param \Innova\PathBundle\Entity\Path\Path $path          Parent path of the step
+     * @param int                                 $level         Depth of the step in the path
+     * @param \Innova\PathBundle\Entity\Step      $parent        Parent step of the step
+     * @param int                                 $order         Order of the step relative to its siblings
+     * @param \stdClass                           $stepStructure Data about the step
+     *
+     * @return \Innova\PathBundle\Entity\Step Edited step
      */
     public function create(Path $path, $level = 0, Step $parent = null, $order = 0, \stdClass $stepStructure)
     {
@@ -88,14 +95,16 @@ class StepManager
     }
 
     /**
-     * Update an existing step from JSON structure
-     * @param  \Innova\PathBundle\Entity\Path\Path $path          Parent path of the step
-     * @param  integer                             $level         Depth of the step in the path
-     * @param  \Innova\PathBundle\Entity\Step      $parent        Parent step of the step
-     * @param  integer                             $order         Order of the step relative to its siblings
-     * @param  \stdClass                           $stepStructure Data about the step
-     * @param  \Innova\PathBundle\Entity\Step      $step          Current step to edit
-     * @return \Innova\PathBundle\Entity\Step      Edited step
+     * Update an existing step from JSON structure.
+     *
+     * @param \Innova\PathBundle\Entity\Path\Path $path          Parent path of the step
+     * @param int                                 $level         Depth of the step in the path
+     * @param \Innova\PathBundle\Entity\Step      $parent        Parent step of the step
+     * @param int                                 $order         Order of the step relative to its siblings
+     * @param \stdClass                           $stepStructure Data about the step
+     * @param \Innova\PathBundle\Entity\Step      $step          Current step to edit
+     *
+     * @return \Innova\PathBundle\Entity\Step Edited step
      */
     public function edit(Path $path, $level = 0, Step $parent = null, $order = 0, \stdClass $stepStructure, Step $step)
     {
@@ -122,8 +131,9 @@ class StepManager
     }
 
     /**
-     * Update or create Access condition
-     * @param Step $step
+     * Update or create Access condition.
+     *
+     * @param Step      $step
      * @param \stdClass $stepStructure
      */
     public function updateCondition(Step $step, \stdClass $stepStructure)
@@ -135,7 +145,7 @@ class StepManager
             if (empty($stepStructure->condition->scid) || (!empty($oldCondition) && $stepStructure->condition->scid !== $oldCondition->getId())) {
                 // Condition has never been published or has been replaced by a new one
                 $condition = $this->stepConditionManager->create($step, $stepStructure->condition);
-            } else {
+            } elseif ($oldCondition) {
                 // Update existing condition
                 $condition = $this->stepConditionManager->edit($step, $oldCondition, $stepStructure->condition);
             }
@@ -149,10 +159,13 @@ class StepManager
     }
 
     /**
-     * Update or Create the Activity linked to the Step
-     * @param  \Innova\PathBundle\Entity\Step               $step
-     * @param  \stdClass                                    $stepStructure
+     * Update or Create the Activity linked to the Step.
+     *
+     * @param \Innova\PathBundle\Entity\Step $step
+     * @param \stdClass                      $stepStructure
+     *
      * @return \Innova\PathBundle\Manager\PublishingManager
+     *
      * @throws \LogicException
      */
     public function updateActivity(Step $step, \stdClass $stepStructure)
@@ -180,7 +193,7 @@ class StepManager
             $name = $stepStructure->name;
         } else {
             // Create a default name
-            $name = Step::DEFAULT_NAME . ' ' . $step->getOrder();
+            $name = Step::DEFAULT_NAME.' '.$step->getOrder();
         }
         $activity->setName($name);
         $activity->setTitle($name);
@@ -194,9 +207,9 @@ class StepManager
             if (!empty($resource)) {
                 $activity->setPrimaryResource($resource);
             } else {
-                $warning = $this->translator->trans('warning_primary_resource_deleted', array('resourceId' => $stepStructure->primaryResource[0]->resourceId, 'resourceName' => $stepStructure->primaryResource[0]->name), "innova_tools");
+                $warning = $this->translator->trans('warning_primary_resource_deleted', array('resourceId' => $stepStructure->primaryResource[0]->resourceId, 'resourceName' => $stepStructure->primaryResource[0]->name), 'innova_tools');
                 $this->session->getFlashBag()->add('warning', $warning);
-                $stepStructure->primaryResource = array ();
+                $stepStructure->primaryResource = array();
             }
         } elseif ($activity->getPrimaryResource()) {
             // Step had a resource which has been deleted
@@ -231,9 +244,11 @@ class StepManager
     }
 
     /**
-     * Update parameters of the Step
-     * @param Step $step
+     * Update parameters of the Step.
+     *
+     * @param Step      $step
      * @param \stdClass $stepStructure
+     *
      * @return $this
      */
     public function updateParameters(Step $step, \stdClass $stepStructure)
@@ -272,9 +287,11 @@ class StepManager
     }
 
     /**
-     * Update secondary Resources of the Step
+     * Update secondary Resources of the Step.
+     *
      * @param ActivityParameters $parameters
-     * @param \stdClass $stepStructure
+     * @param \stdClass          $stepStructure
+     *
      * @return $this
      */
     public function updateSecondaryResources(ActivityParameters $parameters, \stdClass $stepStructure)
@@ -293,11 +310,11 @@ class StepManager
                     $parameters->addSecondaryResource($resourceNode);
                     $publishedResources[] = $resourceNode;
                 } else {
-                    $warning = $this->translator->trans('warning_compl_resource_deleted', array('resourceId' => $resource->resourceId, 'resourceName' => $resource->name), "innova_tools");
+                    $warning = $this->translator->trans('warning_compl_resource_deleted', array('resourceId' => $resource->resourceId, 'resourceName' => $resource->name), 'innova_tools');
                     $this->session->getFlashBag()->add('warning', $warning);
                 }
 
-                $i++;
+                ++$i;
             }
         }
 
@@ -312,14 +329,16 @@ class StepManager
     }
 
     /**
-     * Import a Step
-     * @param Path $path
+     * Import a Step.
+     *
+     * @param Path  $path
      * @param array $data
      * @param array $createdResources
      * @param array $createdSteps
+     *
      * @return array
      */
-    public function import(Path $path, array $data, array $createdResources = array (), array $createdSteps = array ())
+    public function import(Path $path, array $data, array $createdResources = array(), array $createdSteps = array())
     {
         $step = new Step();
 
@@ -330,6 +349,7 @@ class StepManager
 
         $step->setLvl($data['lvl']);
         $step->setOrder($data['order']);
+        $step->setActivityHeight(0);
 
         // Link Step to its Activity
         if (!empty($data['activityNodeId']) && !empty($createdResources[$data['activityNodeId']])) {
@@ -338,7 +358,7 @@ class StepManager
         }
 
         if (!empty($data['inheritedResources'])) {
-            foreach($data['inheritedResources'] as $inherited) {
+            foreach ($data['inheritedResources'] as $inherited) {
                 if (!empty($createdResources[$inherited['resource']])) {
                     // Check if the resource has been created (in case of the Resource has no Importer, it may not exist)
                     $inheritedResource = new InheritedResource();
@@ -359,8 +379,10 @@ class StepManager
     }
 
     /**
-     * Transform Step data to export it
-     * @param  \Innova\PathBundle\Entity\Step $step
+     * Transform Step data to export it.
+     *
+     * @param \Innova\PathBundle\Entity\Step $step
+     *
      * @return array
      */
     public function export(Step $step)
@@ -368,21 +390,21 @@ class StepManager
         $parent = $step->getParent();
         $activity = $step->getActivity();
 
-        $data = array (
-            'uid'                => $step->getId(),
-            'parent'             => !empty($parent)   ? $parent->getId()                      : null,
-            'activityId'         => !empty($activity) ? $activity->getId()                    : null,
-            'activityNodeId'     => !empty($activity) ? $activity->getResourceNode()->getId() : null,
-            'order'              => $step->getOrder(),
-            'lvl'                => $step->getLvl(),
-            'inheritedResources' => array (),
+        $data = array(
+            'uid' => $step->getId(),
+            'parent' => !empty($parent)   ? $parent->getId()                      : null,
+            'activityId' => !empty($activity) ? $activity->getId()                    : null,
+            'activityNodeId' => !empty($activity) ? $activity->getResourceNode()->getId() : null,
+            'order' => $step->getOrder(),
+            'lvl' => $step->getLvl(),
+            'inheritedResources' => array(),
         );
 
         $inheritedResources = $step->getInheritedResources();
         foreach ($inheritedResources as $inherited) {
-            $data['inheritedResources'][] = array (
+            $data['inheritedResources'][] = array(
                 'resource' => $inherited->getResource()->getId(),
-                'lvl'      => $inherited->getLvl(),
+                'lvl' => $inherited->getLvl(),
             );
         }
 

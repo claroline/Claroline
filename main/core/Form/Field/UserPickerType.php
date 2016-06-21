@@ -42,8 +42,7 @@ class UserPickerType extends AbstractType
         TranslatorInterface $translator,
         UserManager $userManager,
         UserPickerTransfromer $userPickerTransformer
-    )
-    {
+    ) {
         $this->translator = $translator;
         $this->userManager = $userManager;
         $this->userPickerTransformer = $userPickerTransformer;
@@ -117,7 +116,7 @@ class UserPickerType extends AbstractType
                 'forced_groups' => array(),
                 'forced_roles' => array(),
                 'forced_workspaces' => array(),
-                'shown_workspaces' => array()
+                'shown_workspaces' => array(),
             )
         );
     }

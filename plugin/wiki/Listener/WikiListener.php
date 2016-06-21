@@ -2,21 +2,14 @@
 
 namespace Icap\WikiBundle\Listener;
 
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\LogCreateDelegateViewEvent;
-
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
-
 use Icap\WikiBundle\Entity\Wiki;
-use Icap\WikiBundle\Entity\Section;
-use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Form\WikiType;
 
 class WikiListener extends ContainerAware
@@ -28,14 +21,14 @@ class WikiListener extends ContainerAware
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'icap_wiki'
+                'resourceType' => 'icap_wiki',
             )
         );
 
         $event->setResponseContent($content);
         $event->stopPropagation();
     }
-    
+
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
@@ -50,14 +43,14 @@ class WikiListener extends ContainerAware
                 'ClarolineCoreBundle:Resource:createForm.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'resourceType' => 'icap_wiki'
+                    'resourceType' => 'icap_wiki',
                 )
             );
             $event->setErrorFormContent($content);
         }
         $event->stopPropagation();
     }
-    
+
     public function onOpen(OpenResourceEvent $event)
     {
         $route = $this->container
@@ -75,7 +68,7 @@ class WikiListener extends ContainerAware
         $em = $this->container->get('claroline.persistence.object_manager');
         $em->remove($event->getResource());
         $em->flush();
-        $event->stopPropagation(); 
+        $event->stopPropagation();
     }
 
     public function onCopy(CopyResourceEvent $event)
@@ -86,6 +79,6 @@ class WikiListener extends ContainerAware
         $newWiki = $this->container->get('icap.wiki.manager')->copyWiki($wiki, $loggedUser);
 
         $event->setCopy($newWiki);
-        $event->stopPropagation(); 
+        $event->stopPropagation();
     }
 }

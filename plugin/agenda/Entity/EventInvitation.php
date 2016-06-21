@@ -6,21 +6,20 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * EventUsers
+ * EventUsers.
  *
  * @ORM\Table(name="claro_event_invitation")
  * @ORM\Entity
  */
 class EventInvitation
 {
-
     const IGNORE = 0;
     const JOIN = 1;
     const MAYBE = 2;
     const RESIGN = 3;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -29,11 +28,11 @@ class EventInvitation
     private $id;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(type="smallint")
      */
-    private $status = EventInvitation::IGNORE;
+    private $status = self::IGNORE;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\AgendaBundle\Entity\Event", inversedBy="eventInvitations")
@@ -64,9 +63,9 @@ class EventInvitation
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -74,7 +73,7 @@ class EventInvitation
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -88,7 +87,7 @@ class EventInvitation
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -98,7 +97,7 @@ class EventInvitation
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -112,7 +111,7 @@ class EventInvitation
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -122,7 +121,7 @@ class EventInvitation
     }
 
     /**
-     * Set event
+     * Set event.
      *
      * @param \Claroline\AgendaBundle\Entity\Event $event
      *
@@ -136,7 +135,7 @@ class EventInvitation
     }
 
     /**
-     * Get event
+     * Get event.
      *
      * @return \Claroline\AgendaBundle\Entity\Event
      */
@@ -146,7 +145,7 @@ class EventInvitation
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
      *
@@ -160,7 +159,7 @@ class EventInvitation
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
@@ -170,9 +169,9 @@ class EventInvitation
     }
 
     /**
-     * Set status
+     * Set status.
      *
-     * @param integer $status
+     * @param int $status
      *
      * @return EventInvitation
      */
@@ -184,9 +183,9 @@ class EventInvitation
     }
 
     /**
-     * Get status
+     * Get status.
      *
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {

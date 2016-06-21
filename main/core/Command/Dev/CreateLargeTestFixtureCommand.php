@@ -62,7 +62,7 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
                     'number_roots',
                     InputArgument::OPTIONAL,
                     'The number of roots.'
-                )
+                ),
             )
         );
     }
@@ -75,7 +75,7 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
             'number_directory' => 'number directory per level  (recommanded: 10).',
             'number_file' => 'number file per level (recommanded: 5).',
             'depth' => 'depth (recommanded: 2).',
-            'number_roots' => 'numberRoots'
+            'number_roots' => 'numberRoots',
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -108,8 +108,8 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
     {
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         );
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
 
@@ -145,9 +145,9 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
         $durationResource = $fixture->load($em);
 
         $output->writeLn('********************************************************');
-        $output->writeLn("Time elapsed for the user creation: " . $durationUser);
-        $output->writeLn("Time elapsed for the workspace creation: " . $durationWorkspace);
-        $output->writeLn("Time elapsed for the resource creation: " . $durationResource);
+        $output->writeLn('Time elapsed for the user creation: '.$durationUser);
+        $output->writeLn('Time elapsed for the workspace creation: '.$durationWorkspace);
+        $output->writeLn('Time elapsed for the resource creation: '.$durationResource);
         $output->writeln('Done');
     }
 }

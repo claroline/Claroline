@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Config\Definition\Processor;
-use Claroline\CoreBundle\Library\Installation\Plugin\Configuration;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -41,7 +40,7 @@ class ConfigurationChecker implements CheckerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @param PluginBundle $plugin
      *
@@ -50,7 +49,7 @@ class ConfigurationChecker implements CheckerInterface
     public function check(PluginBundle $plugin, $updateMode = false)
     {
         if (!is_file($plugin->getConfigFile())) {
-            $error  = new ValidationError('config.yml file missing');
+            $error = new ValidationError('config.yml file missing');
             $errors = array($error);
 
             return $errors;
@@ -71,7 +70,7 @@ class ConfigurationChecker implements CheckerInterface
         foreach ($listTool as $tool) {
             $toolPlugin = $tool->getPlugin();
 
-            $tools[] = sprintf("%s%s", ($toolPlugin ? $toolPlugin->getBundleFQCN() . '-' : ''), $tool->getName());
+            $tools[] = sprintf('%s%s', ($toolPlugin ? $toolPlugin->getBundleFQCN().'-' : ''), $tool->getName());
         }
 
         $resourceActions = array();
@@ -88,7 +87,7 @@ class ConfigurationChecker implements CheckerInterface
         foreach ($listWidget as $widget) {
             $widgetPlugin = $widget->getPlugin();
 
-            $widgets[] = sprintf("%s%s", ($widgetPlugin ? $widgetPlugin->getBundleFQCN() . '-' : ''), $widget->getName());
+            $widgets[] = sprintf('%s%s', ($widgetPlugin ? $widgetPlugin->getBundleFQCN().'-' : ''), $widget->getName());
         }
 
         $processor = new Processor();
@@ -98,7 +97,7 @@ class ConfigurationChecker implements CheckerInterface
         try {
             $this->processedConfiguration = $processor->processConfiguration($configuration, $config);
         } catch (\Exception $e) {
-            $error  = new ValidationError($e->getMessage());
+            $error = new ValidationError($e->getMessage());
 
             return array($error);
         }

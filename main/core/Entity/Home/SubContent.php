@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Content;
 
 /**
- * SubContent
+ * SubContent.
  *
  * @ORM\Entity()
  * @ORM\Table(name="claro_subcontent")
@@ -23,7 +23,7 @@ use Claroline\CoreBundle\Entity\Content;
 class SubContent
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -33,13 +33,13 @@ class SubContent
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Content")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $father;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Content")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $child;
 
@@ -84,9 +84,9 @@ class SubContent
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -94,9 +94,10 @@ class SubContent
     }
 
     /**
-     * Set size
+     * Set size.
      *
      * @param string $size
+     *
      * @return SubContent
      */
     public function setSize($size)
@@ -107,7 +108,7 @@ class SubContent
     }
 
     /**
-     * Get size
+     * Get size.
      *
      * @return string
      */
@@ -117,9 +118,10 @@ class SubContent
     }
 
     /**
-     * Set father
+     * Set father.
      *
      * @param \Claroline\CoreBundle\Entity\Content $father
+     *
      * @return SubContent
      */
     public function setFather(Content $father)
@@ -130,7 +132,7 @@ class SubContent
     }
 
     /**
-     * Get father
+     * Get father.
      *
      * @return \Claroline\CoreBundle\Entity\Content
      */
@@ -140,9 +142,10 @@ class SubContent
     }
 
     /**
-     * Set child
+     * Set child.
      *
      * @param \Claroline\CoreBundle\Entity\Content $child
+     *
      * @return SubContent
      */
     public function setChild(Content $child)
@@ -153,7 +156,7 @@ class SubContent
     }
 
     /**
-     * Get child
+     * Get child.
      *
      * @return \Claroline\CoreBundle\Entity\Content
      */
@@ -163,7 +166,7 @@ class SubContent
     }
 
     /**
-     * Get child alias
+     * Get child alias.
      *
      * @return \Claroline\CoreBundle\Entity\Content
      */
@@ -173,9 +176,10 @@ class SubContent
     }
 
     /**
-     * Set next
+     * Set next.
      *
      * @param \Claroline\CoreBundle\Entity\Home\SubContent $next
+     *
      * @return SubContent
      */
     public function setNext(SubContent $next = null)
@@ -186,7 +190,7 @@ class SubContent
     }
 
     /**
-     * Get next
+     * Get next.
      *
      * @return \Claroline\CoreBundle\Entity\Home\SubContent
      */
@@ -196,9 +200,10 @@ class SubContent
     }
 
     /**
-     * Set back
+     * Set back.
      *
      * @param \Claroline\CoreBundle\Entity\Home\SubContent $back
+     *
      * @return SubContent
      */
     public function setBack(SubContent $back = null)
@@ -209,7 +214,7 @@ class SubContent
     }
 
     /**
-     * Get back
+     * Get back.
      *
      * @return \Claroline\CoreBundle\Entity\Home\SubContent
      */

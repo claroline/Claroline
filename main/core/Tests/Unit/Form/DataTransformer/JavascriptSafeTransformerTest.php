@@ -37,7 +37,7 @@ class JavascriptSafeTransformerTest extends \PHPUnit_Framework_TestCase
             array('<a href="/bar"  onmouseup="alert(789)"  alt="bar">link</a>', '<a href="/bar"  alt="bar">link</a>'),
             array('<p ONKEYup="++i">test</p>', '<p >test</p>'),
             array("<select onselect='a = \"foo\"'>...</select>", '<select >...</select>'),
-            array('<html><body color="blue">Correct</body></html>', '<html><body color="blue">Correct</body></html>')
+            array('<html><body color="blue">Correct</body></html>', '<html><body color="blue">Correct</body></html>'),
         );
     }
 }

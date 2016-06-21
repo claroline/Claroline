@@ -49,7 +49,6 @@ class AdminTagController extends Controller
      */
     public function adminTagsManagementAction()
     {
-
         return array();
     }
 
@@ -69,8 +68,7 @@ class AdminTagController extends Controller
         $order = 'ASC',
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $datas = array();
         $datas['#'] = array();
         $tags = $this->tagManager->getPlatformTags(
@@ -119,7 +117,7 @@ class AdminTagController extends Controller
             $datas[$firstChar][$tagName]['objects'][$objectClass][] = array(
                 'id' => $objectId,
                 'name' => $objectName,
-                'tagged_object_id' => $taggedObject->getId()
+                'tagged_object_id' => $taggedObject->getId(),
             );
         }
 
@@ -130,7 +128,7 @@ class AdminTagController extends Controller
             'orderedBy' => $orderedBy,
             'order' => $order,
             'page' => $page,
-            'max' => $max
+            'max' => $max,
         );
     }
 

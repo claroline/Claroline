@@ -23,8 +23,6 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\ExportDirectoryTemplateEvent;
-use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\RightsManager;
@@ -66,8 +64,7 @@ class DirectoryListener
         FormFactoryInterface $formFactory,
         TwigEngine $templating,
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
@@ -85,12 +82,12 @@ class DirectoryListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->formFactory->create(new DirectoryType, new Directory());
+        $form = $this->formFactory->create(new DirectoryType(), new Directory());
         $response = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'directory'
+                'resourceType' => 'directory',
             )
         );
         $event->setResponseContent($response);
@@ -121,7 +118,7 @@ class DirectoryListener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'directory'
+                'resourceType' => 'directory',
             )
         );
         $event->setErrorFormContent($content);

@@ -25,7 +25,7 @@ class CategoryType extends AbstractType
             'text',
             array(
                 'constraints' => new NotBlank(),
-                'label' => 'name'
+                'label' => 'name',
             )
         );
     }

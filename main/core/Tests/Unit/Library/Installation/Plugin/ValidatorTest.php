@@ -23,7 +23,7 @@ class ValidatorTest extends MockeryTestCase
         $this->setExpectedException('InvalidArgumentException');
         $checkers = array(
             'regular' => $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface'),
-            'wrong' => new \stdClass()
+            'wrong' => new \stdClass(),
         );
 
         new Validator($checkers);

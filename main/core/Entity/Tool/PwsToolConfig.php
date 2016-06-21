@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

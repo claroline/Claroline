@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Library;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Mockery as m;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\HomeImporter;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -62,8 +61,8 @@ class HomeImporterTest extends MockeryTestCase
             array(
                 'basePath' => __DIR__.'/../../../Stub/transfert/valid/full',
                 'configPath' => 'tools/home.yml',
-                'isExceptionExpected' => false
-            )
+                'isExceptionExpected' => false,
+            ),
         );
     }
-} 
+}

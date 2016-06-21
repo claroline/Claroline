@@ -12,9 +12,9 @@ class CorrectionReportType extends AbstractType
     {
         $builder->add('reportComment', 'tinymce', array(
             'label_attr' => array(
-                'style' => 'display: none;'
+                'style' => 'display: none;',
             ),
-            'required' => true
+            'required' => true,
         ));
     }
 
@@ -26,7 +26,7 @@ class CorrectionReportType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'translation_domain' => 'icap_dropzone'
+            'translation_domain' => 'icap_dropzone',
         ));
     }
 }

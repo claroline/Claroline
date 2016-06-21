@@ -10,7 +10,6 @@ class BadgeCollectionRepository extends EntityRepository
 {
     /**
      * @param User $user
-     *
      * @param bool $executeQuery
      *
      * @return Query|array
@@ -27,6 +26,6 @@ class BadgeCollectionRepository extends EntityRepository
             )
             ->setParameter('userId', $user->getId());
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

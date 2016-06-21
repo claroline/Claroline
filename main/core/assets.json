@@ -2,7 +2,11 @@
   "webpack": {
     "entry": {
       "user-management": "modules/users/module",
-      "organization-management": "modules/organization/module"
+      "facet-management": "modules/facets/module",
+      "private-profile": "modules/profile/module",
+      "organization-management": "modules/organization/module",
+      "plugin-management": "modules/plugins/module",
+      "tinymce": "modules/tinymce/tinymce"
     }
   }
 }

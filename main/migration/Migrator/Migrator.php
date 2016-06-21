@@ -45,6 +45,7 @@ class Migrator
      * Returns the current version of a bundle.
      *
      * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     *
      * @return string
      */
     public function getCurrentVersion(Bundle $bundle)
@@ -55,11 +56,12 @@ class Migrator
     /**
      * Returns an array containing:
      * - the current version of a bundle
-     * - the list of available versions for that bundle
+     * - the list of available versions for that bundle.
      *
      * Array values are index with Migrator::STATUS_* constants.
      *
      * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     *
      * @return array
      */
     public function getMigrationStatus(Bundle $bundle)
@@ -77,7 +79,7 @@ class Migrator
 
         return array(
             self::STATUS_CURRENT => $currentVersion,
-            self::STATUS_AVAILABLE => $availableVersions
+            self::STATUS_AVAILABLE => $availableVersions,
         );
     }
 
@@ -86,14 +88,14 @@ class Migrator
      * either an explicit version string or Migrator::VERSION_* class constant.
      * Direction must be a Migrator::DIRECTION_* class constant.
      *
-     * @param \Symfony\Component\HttpKernel\Bundle\Bundle   $bundle
-     * @param string                                        $version
-     * @param string                                        $direction
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     * @param string                                      $version
+     * @param string                                      $direction
      *
      * @return array The sql queries executed during the migration
      *
-     * @throws InvalidVersionException      if the specified version is not valid
-     * @throws InvalidDirectionException    if the target version is not in the specified direction
+     * @throws InvalidVersionException   if the specified version is not valid
+     * @throws InvalidDirectionException if the target version is not in the specified direction
      */
     public function migrate(Bundle $bundle, $version, $direction)
     {
@@ -125,8 +127,8 @@ class Migrator
             }
 
             return $nearestVersion === false ? array() : $migration->migrate($nearestVersion);
-        } elseif(!is_numeric($version)) {
-          throw new InvalidVersionException($version);
+        } elseif (!is_numeric($version)) {
+            throw new InvalidVersionException($version);
         } elseif ($version > $currentVersion && $direction === self::DIRECTION_DOWN
             || $version < $currentVersion && $direction === self::DIRECTION_UP) {
             throw new InvalidDirectionException($direction);
@@ -146,7 +148,7 @@ class Migrator
         $migrationsDir = "{$bundle->getPath()}/Migrations/{$driverName}";
         $migrationsName = "{$bundle->getName()} migration";
         $migrationsNamespace = "{$bundle->getNamespace()}\\Migrations\\{$driverName}";
-        $migrationsTableName = 'doctrine_' . strtolower($bundle->getName()) . '_versions';
+        $migrationsTableName = 'doctrine_'.strtolower($bundle->getName()).'_versions';
 
         $config = new Configuration($this->connection);
         $config->setName($migrationsName);

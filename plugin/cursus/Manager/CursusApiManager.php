@@ -35,8 +35,7 @@ class CursusApiManager
     public function __construct(
         ApiManager $apiManager,
         ObjectManager $om
-    )
-    {
+    ) {
         $this->apiManager = $apiManager;
         $this->om = $om;
 
@@ -48,7 +47,7 @@ class CursusApiManager
         $targetPlatformUrl = $this->friendRepo->findOneByName($platformName);
         $url = is_null($cursusId) ?
             'clarolinecursusbundle/api/all/cursus.json' :
-            'clarolinecursusbundle/api/cursuses/' . $cursusId . '.json';
+            'clarolinecursusbundle/api/cursuses/'.$cursusId.'.json';
         $serverOutput = $this->apiManager->url($targetPlatformUrl, $url);
 
         return json_decode($serverOutput, true);
@@ -66,10 +65,10 @@ class CursusApiManager
     public function registerUserToCursusHierarchy($platformName, User $user, $cursusId)
     {
         $targetPlatformUrl = $this->friendRepo->findOneByName($platformName);
-        $url = 'clarolinecursusbundle/api/users/' .
-            $user->getId() .
-            '/tos/' .
-            $cursusId .
+        $url = 'clarolinecursusbundle/api/users/'.
+            $user->getId().
+            '/tos/'.
+            $cursusId.
             '/cursus/hierarchy/add.json';
         $serverOutput = $this->apiManager->url($targetPlatformUrl, $url);
 

@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use \Mockery as m;
+use Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Entity\User;
@@ -163,13 +163,13 @@ class RegistrationControllerTest extends MockeryTestCase
             array(
                 'responseClass' => '\Claroline\CoreBundle\Library\HttpFoundation\XmlResponse',
                 'format' => 'xml',
-                'header' => 'text/xml'
+                'header' => 'text/xml',
             ),
             array(
                 'responseClass' => '\Symfony\Component\HttpFoundation\JsonResponse',
                 'format' => 'json',
-                'header' => 'application/json'
-           )
+                'header' => 'application/json',
+           ),
         );
     }
 }

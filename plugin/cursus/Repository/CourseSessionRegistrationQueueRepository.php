@@ -51,8 +51,7 @@ class CourseSessionRegistrationQueueRepository extends EntityRepository
         CourseSession $session,
         User $user,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT q
             FROM Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue q
@@ -96,7 +95,7 @@ class CourseSessionRegistrationQueueRepository extends EntityRepository
 
         return $query->getResult();
     }
-    
+
     public function findAllUnvalidatedSessionQueues()
     {
         $dql = '

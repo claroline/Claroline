@@ -34,8 +34,7 @@ class Updater060200 extends Updater
                 $config->setMigrationsDirectory('claro_badge'); // idem
                 $version = new Version($config, '20150929141509', 'stdClass');
                 $version->markMigrated();
-            }
-            else {
+            } else {
                 $this->log('Deleting badges tables for portfolio...');
                 $connection->getSchemaManager()->dropTable('icap__portfolio_widget_badges_badge');
                 $connection->getSchemaManager()->dropTable('icap__portfolio_widget_badges');

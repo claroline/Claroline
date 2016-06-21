@@ -2,8 +2,6 @@
 
 namespace Icap\BlogBundle\Entity;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class BlogOptions
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -46,7 +44,7 @@ class BlogOptions
     protected $authorizeAnonymousComment = false;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="smallint", name="post_per_page")
      */
@@ -95,7 +93,7 @@ class BlogOptions
     protected $bannerBackgroundColor = '#FFFFFF';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="smallint", name="banner_height")
      * @Assert\GreaterThanOrEqual(value = 100)
@@ -151,7 +149,7 @@ class BlogOptions
      *
      * @ORM\Column(type="string", name="display_list_widget_blog_right", nullable=false, options={"default" = "01112131415161"})
      */
-    protected $listWidgetBlog = "01112131415161";
+    protected $listWidgetBlog = '01112131415161';
 
     /**
      * @var bool
@@ -165,7 +163,7 @@ class BlogOptions
      *
      * @ORM\Column(type="smallint", name="max_tag", nullable=false, options={"default" = 50})
      */
-    protected $maxTag=50;
+    protected $maxTag = 50;
 
     /**
      * @return int
@@ -196,7 +194,7 @@ class BlogOptions
     }
 
     /**
-     * @param boolean $authorizeAnonymousComment
+     * @param bool $authorizeAnonymousComment
      *
      * @return BlogOptions
      */
@@ -208,7 +206,7 @@ class BlogOptions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getAuthorizeAnonymousComment()
     {
@@ -216,7 +214,7 @@ class BlogOptions
     }
 
     /**
-     * @param boolean $authorizeComment
+     * @param bool $authorizeComment
      *
      * @return BlogOptions
      */
@@ -228,7 +226,7 @@ class BlogOptions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getAuthorizeComment()
     {
@@ -236,7 +234,7 @@ class BlogOptions
     }
 
     /**
-     * @param boolean $autoPublishComment
+     * @param bool $autoPublishComment
      *
      * @return BlogOptions
      */
@@ -248,7 +246,7 @@ class BlogOptions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getAutoPublishComment()
     {
@@ -256,7 +254,7 @@ class BlogOptions
     }
 
     /**
-     * @param boolean $autoPublishPost
+     * @param bool $autoPublishPost
      *
      * @return BlogOptions
      */
@@ -268,7 +266,7 @@ class BlogOptions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getAutoPublishPost()
     {
@@ -296,7 +294,7 @@ class BlogOptions
     }
 
     /**
-     * @param boolean $displayTitle
+     * @param bool $displayTitle
      *
      * @return BlogOptions
      */
@@ -308,7 +306,7 @@ class BlogOptions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDisplayTitle()
     {
@@ -416,7 +414,7 @@ class BlogOptions
     }
 
     /**
-     * @param boolean $bannerActivate
+     * @param bool $bannerActivate
      *
      * @return BlogOptions
      */
@@ -428,7 +426,7 @@ class BlogOptions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isBannerActivate()
     {
@@ -496,7 +494,7 @@ class BlogOptions
     }
 
     /**
-     * @param boolean $displayPostViewCounter
+     * @param bool $displayPostViewCounter
      *
      * @return BlogOptions
      */
@@ -508,7 +506,7 @@ class BlogOptions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDisplayPostViewCounter()
     {
@@ -525,16 +523,18 @@ class BlogOptions
 
     /**
      * @param int $maxTag
+     *
      * @return BlogOptions
      */
     public function setMaxTag($maxTag)
     {
         $this->maxTag = $maxTag;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isTagTopMode()
     {
@@ -542,7 +542,8 @@ class BlogOptions
     }
 
     /**
-     * @param boolean $tagTopMode
+     * @param bool $tagTopMode
+     *
      * @return BlogOptions
      */
     public function setTagTopMode($tagTopMode)

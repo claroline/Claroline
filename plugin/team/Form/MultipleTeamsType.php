@@ -33,7 +33,7 @@ class MultipleTeamsType extends AbstractType
             'text',
             array(
                 'required' => true,
-                'constraints' => new NotBlank()
+                'constraints' => new NotBlank(),
             )
         );
         $builder->add(
@@ -48,7 +48,7 @@ class MultipleTeamsType extends AbstractType
                 'attr' => array('min' => 1),
                 'required' => true,
                 'constraints' => new NotBlank(),
-                'data' => 1
+                'data' => 1,
             )
         );
         $builder->add(
@@ -59,8 +59,8 @@ class MultipleTeamsType extends AbstractType
                 'mapped' => false,
                 'label' => 'default_resource',
                 'attr' => array(
-                    'data-restrict-for-owner' => 1
-                )
+                    'data-restrict-for-owner' => 1,
+                ),
             )
         );
         $builder->add(
@@ -68,7 +68,7 @@ class MultipleTeamsType extends AbstractType
             'integer',
             array(
                 'attr' => array('min' => 0),
-                'required' => false
+                'required' => false,
             )
         );
         $builder->add(
@@ -77,11 +77,11 @@ class MultipleTeamsType extends AbstractType
             array(
                 'choices' => array(
                     true => 'public',
-                    false => 'private'
+                    false => 'private',
                 ),
                 'required' => true,
                 'data' => $this->params->getIsPublic(),
-                'attr' => array('class' => 'advanced-param')
+                'attr' => array('class' => 'advanced-param'),
             )
         );
         $builder->add(
@@ -90,7 +90,7 @@ class MultipleTeamsType extends AbstractType
             array(
                 'required' => true,
                 'data' => $this->params->getSelfRegistration(),
-                'attr' => array('class' => 'advanced-param')
+                'attr' => array('class' => 'advanced-param'),
             )
         );
         $builder->add(
@@ -99,7 +99,7 @@ class MultipleTeamsType extends AbstractType
             array(
                 'required' => true,
                 'data' => $this->params->getSelfUnregistration(),
-                'attr' => array('class' => 'advanced-param')
+                'attr' => array('class' => 'advanced-param'),
             )
         );
         $builder->add(
@@ -114,7 +114,7 @@ class MultipleTeamsType extends AbstractType
                 'label' => 'user_creatable_resources',
                 'class' => 'ClarolineCoreBundle:Resource\ResourceType',
                 'property' => 'name',
-                'attr' => array('class' => 'advanced-param')
+                'attr' => array('class' => 'advanced-param'),
             )
         );
     }

@@ -98,7 +98,7 @@ class BlogImporter extends Importer implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    function getName()
+    public function getName()
     {
         return 'icap_blog';
     }
@@ -106,7 +106,7 @@ class BlogImporter extends Importer implements ConfigurationInterface
     /**
      * @param array $data
      */
-    function validate(array $data)
+    public function validate(array $data)
     {
         $processor = new Processor();
         $result = $processor->processConfiguration($this, $data);
@@ -118,7 +118,7 @@ class BlogImporter extends Importer implements ConfigurationInterface
      *
      * @return \Icap\BlogBundle\Entity\Blog
      */
-    function import(array $data, $name)
+    public function import(array $data, $name)
     {
         return $this->blogManager->importBlog($data, $this->getRootPath(), $this->getOwner());
     }
@@ -130,7 +130,7 @@ class BlogImporter extends Importer implements ConfigurationInterface
      *
      * @return array
      */
-    function export(Workspace $workspace, array &$files, $object)
+    public function export(Workspace $workspace, array &$files, $object)
     {
         return $this->blogManager->exportBlog($workspace, $files, $object);
     }

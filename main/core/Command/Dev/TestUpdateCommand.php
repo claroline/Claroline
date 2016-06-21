@@ -31,7 +31,7 @@ class TestUpdateCommand extends ContainerAwareCommand
             array(
                 new InputArgument('bundle', InputArgument::REQUIRED, 'bundle'),
                 new InputArgument('from_version', InputArgument::REQUIRED, 'from version'),
-                new InputArgument('to_version', InputArgument::REQUIRED, 'to version')
+                new InputArgument('to_version', InputArgument::REQUIRED, 'to version'),
             )
         );
     }
@@ -41,7 +41,7 @@ class TestUpdateCommand extends ContainerAwareCommand
         $params = array(
             'from_version' => 'from version: ',
             'to_version' => 'to version: ',
-            'bundle' => 'bundle: '
+            'bundle' => 'bundle: ',
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -80,8 +80,8 @@ class TestUpdateCommand extends ContainerAwareCommand
 
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         );
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
 

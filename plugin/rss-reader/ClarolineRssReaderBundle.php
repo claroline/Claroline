@@ -23,7 +23,7 @@ class ClarolineRssReaderBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'rss-reader');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'rss-reader');
     }
 
     public function hasMigrations()

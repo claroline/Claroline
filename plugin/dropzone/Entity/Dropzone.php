@@ -2,7 +2,7 @@
 /**
  * Created by : Vincent SAISSET
  * Date: 21/08/13
- * Time: 15:18
+ * Time: 15:18.
  */
 
 namespace Icap\DropzoneBundle\Entity;
@@ -11,7 +11,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,21 +19,20 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dropzone extends AbstractResource
 {
+    const MANUAL_STATE_NOT_STARTED = 'notStarted';
+    const MANUAL_STATE_PEER_REVIEW = 'peerReview';
+    const MANUAL_STATE_ALLOW_DROP = 'allowDrop';
+    const MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW = 'allowDropAndPeerReview';
+    const MANUAL_STATE_FINISHED = 'finished';
 
-    const MANUAL_STATE_NOT_STARTED = "notStarted";
-    const MANUAL_STATE_PEER_REVIEW = "peerReview";
-    const MANUAL_STATE_ALLOW_DROP = "allowDrop";
-    const MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW = "allowDropAndPeerReview";
-    const MANUAL_STATE_FINISHED = "finished";
-
-    const AUTO_CLOSED_STATE_WAITING = "waiting";
-    const AUTO_CLOSED_STATE_CLOSED ="autoClosed";
+    const AUTO_CLOSED_STATE_WAITING = 'waiting';
+    const AUTO_CLOSED_STATE_CLOSED = 'autoClosed';
 
     /**
      * 1 = common
      * 2 = criteria
      * 3 = participant
-     * 4 = finished
+     * 4 = finished.
      *
      * @ORM\Column(name="edition_state", type="smallint", nullable=false)
      */
@@ -44,7 +42,6 @@ class Dropzone extends AbstractResource
      * @ORM\Column(type="text", nullable=true)
      */
     protected $instruction = null;
-
 
     /**
      * @ORM\Column(name="correction_instruction",type="text", nullable=true)
@@ -151,6 +148,7 @@ class Dropzone extends AbstractResource
 
     /**
      * Rendre le champ de commentaire dans la correction obligatoire.
+     *
      * @var bool
      *
      * @ORM\Column(name="force_comment_in_correction",type="boolean",nullable=false)
@@ -163,7 +161,6 @@ class Dropzone extends AbstractResource
      *
      * @var bool
      * @ORM\Column(name="diplay_corrections_to_learners",type="boolean",nullable=false)
-     *
      */
     protected $diplayCorrectionsToLearners = false;
 
@@ -218,12 +215,10 @@ class Dropzone extends AbstractResource
     protected $autoCloseOpenedDropsWhenTimeIsUp = 0;
 
     /**
-     * @var String
+     * @var string
      * @ORM\Column(name="auto_close_state",type="string",nullable=false,options={"default" = "waiting"})
      */
     protected $autoCloseState = self::AUTO_CLOSED_STATE_WAITING;
-
-
 
     /**
      * @ORM\OneToOne(
@@ -236,7 +231,7 @@ class Dropzone extends AbstractResource
 
     /**
      * @var bool
-     * Notify Evaluation admins when a someone made a drop
+     *           Notify Evaluation admins when a someone made a drop
      *
      * @ORM\Column(name="notify_on_drop",type="boolean",nullable=false,options={"default" = false})
      */
@@ -244,7 +239,7 @@ class Dropzone extends AbstractResource
 
     /**
      * @var Event
-     * Event for Workspace Agenda linked to DROP phase
+     *            Event for Workspace Agenda linked to DROP phase
      *
      * @ORM\OneToOne(
      *    targetEntity="Claroline\AgendaBundle\Entity\Event",cascade={"remove"})
@@ -255,7 +250,7 @@ class Dropzone extends AbstractResource
 
     /**
      * @var Event
-     * Event for Workspace Agenda linked to Correction phase.
+     *            Event for Workspace Agenda linked to Correction phase.
      *
      * @ORM\OneToOne(
      *    targetEntity="Claroline\AgendaBundle\Entity\Event",cascade={"remove"})
@@ -300,7 +295,6 @@ class Dropzone extends AbstractResource
     {
         return $this->eventDrop;
     }
-
 
     /**
      * @param mixed $editionState
@@ -356,8 +350,9 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * when there is no comment allowed, the comment can't be mandatory
-     * @param boolean $forceCommentInCorrection
+     * when there is no comment allowed, the comment can't be mandatory.
+     *
+     * @param bool $forceCommentInCorrection
      */
     public function setForceCommentInCorrection($forceCommentInCorrection)
     {
@@ -369,13 +364,12 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getForceCommentInCorrection()
     {
         return $this->forceCommentInCorrection;
     }
-
 
     /**
      * @return mixed
@@ -571,11 +565,10 @@ class Dropzone extends AbstractResource
             self::MANUAL_STATE_PEER_REVIEW,
             self::MANUAL_STATE_ALLOW_DROP,
             self::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW,
-            self::MANUAL_STATE_FINISHED);
+            self::MANUAL_STATE_FINISHED, );
         if (array_search($manualState, $ms_tab_values) !== false) {
             $this->manualState = $manualState;
         }
-
     }
 
     /**
@@ -674,7 +667,6 @@ class Dropzone extends AbstractResource
         $this->displayNotationToLearners = $displayNotationToLearners;
     }
 
-
     /**
      * @return mixed
      */
@@ -685,6 +677,7 @@ class Dropzone extends AbstractResource
 
     /**
      * @param $diplayCorrectionsToLearners
+     *
      * @internal param bool $displayNotationToLearners
      */
     public function setDiplayCorrectionsToLearners($diplayCorrectionsToLearners)
@@ -699,7 +692,6 @@ class Dropzone extends AbstractResource
     {
         return $this->allowCorrectionDeny;
     }
-
 
     public function setAllowCorrectionDeny($allowCorrectionDeny)
     {
@@ -777,7 +769,6 @@ class Dropzone extends AbstractResource
         } else {
             $now = new \DateTime();
 
-
             return $now->getTimestamp() < $this->getStartAllowDrop()->getTimestamp() && ($this->getStartReview() == null || $now->getTimestamp() < $this->getStartReview()->getTimestamp());
         }
     }
@@ -785,29 +776,29 @@ class Dropzone extends AbstractResource
     public function isAllowDrop()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == $this::MANUAL_STATE_ALLOW_DROP or $this->manualState == $this::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW;
+            return $this->manualState == $this::MANUAL_STATE_ALLOW_DROP || $this->manualState == $this::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW;
         } else {
             $now = new \DateTime();
 
-            return $now->getTimestamp() >= $this->startAllowDrop->getTimestamp() and $now->getTimestamp() < $this->endAllowDrop->getTimestamp();
+            return $now->getTimestamp() >= $this->startAllowDrop->getTimestamp() && $now->getTimestamp() < $this->endAllowDrop->getTimestamp();
         }
     }
-
 
     /**
      * Only return if we are in a peerReview phase, if you want to get the evaluation mode
      * do dropzone->peerReview().
+     *
      * @return bool
      */
     public function isPeerReview()
     {
         if ($this->peerReview) {
             if ($this->manualPlanning) {
-
                 return $this->manualState == $this::MANUAL_STATE_PEER_REVIEW || $this->manualState == $this::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW;
             } else {
                 $now = new \DateTime();
-                return $this->startReview != null && $this->endReview != null && $now->getTimestamp() >= $this->startReview->getTimestamp() and $now->getTimestamp() < $this->endReview->getTimestamp();
+
+                return $this->startReview != null && $this->endReview != null && $now->getTimestamp() >= $this->startReview->getTimestamp() && $now->getTimestamp() < $this->endReview->getTimestamp();
             }
         } else {
             return false;
@@ -878,9 +869,10 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * Add criterion
+     * Add criterion.
      *
      * @param \Icap\DropzoneBundle\Entity\Criterion $criterion
+     *
      * @return Dropzone
      */
     public function addCriterion(Criterion $criterion)
@@ -892,7 +884,7 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * @param boolean $autoCloseOpenedDropsWhenTimeIsUp
+     * @param bool $autoCloseOpenedDropsWhenTimeIsUp
      */
     public function setAutoCloseOpenedDropsWhenTimeIsUp($autoCloseOpenedDropsWhenTimeIsUp)
     {
@@ -900,7 +892,7 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getAutoCloseOpenedDropsWhenTimeIsUp()
     {
@@ -909,18 +901,19 @@ class Dropzone extends AbstractResource
 
     /**
      * Param that indicate if all drop have already been auto closed or not.
-     * @param String $autoCloseState
+     *
+     * @param string $autoCloseState
      */
     public function setAutoCloseState($autoCloseState)
     {
-        $authorizedValues = array(self::AUTO_CLOSED_STATE_CLOSED,self::AUTO_CLOSED_STATE_WAITING);
-        if(in_array($autoCloseState,$authorizedValues)) {
+        $authorizedValues = array(self::AUTO_CLOSED_STATE_CLOSED, self::AUTO_CLOSED_STATE_WAITING);
+        if (in_array($autoCloseState, $authorizedValues)) {
             $this->autoCloseState = $autoCloseState;
         }
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getAutoCloseState()
     {
@@ -928,7 +921,7 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * @param boolean $notifyOnDrop
+     * @param bool $notifyOnDrop
      */
     public function setNotifyOnDrop($notifyOnDrop)
     {
@@ -936,12 +929,10 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getNotifyOnDrop()
     {
         return $this->notifyOnDrop;
     }
-
-
 }

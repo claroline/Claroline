@@ -25,14 +25,14 @@ class LogResourceUpdateEvent extends LogGenericEvent
      *      'propertyName1' => ['property old value 1', 'property new value 1'],
      *      'propertyName2' => ['property old value 2', 'property new value 2'],
      *      etc.
-     * )
+     * ).
      *
      * Please respect lower caml case naming convention for property names
      */
     public function __construct(ResourceNode $node, $changeSet)
     {
         $action = self::ACTION;
-        if ($changeSet != null and count($changeSet) == 1 and array_key_exists('name', $changeSet)) {
+        if ($changeSet != null && count($changeSet) == 1 && array_key_exists('name', $changeSet)) {
             $action = self::ACTION_RENAME;
         }
 
@@ -42,15 +42,15 @@ class LogResourceUpdateEvent extends LogGenericEvent
                 'resource' => array(
                     'name' => $node->getName(),
                     'path' => $node->getPathForDisplay(),
-                    'changeSet' => $changeSet
+                    'changeSet' => $changeSet,
                 ),
                 'workspace' => array(
-                    'name' => $node->getWorkspace()->getName()
+                    'name' => $node->getWorkspace()->getName(),
                 ),
                 'owner' => array(
                     'lastName' => $node->getCreator()->getLastName(),
-                    'firstName' => $node->getCreator()->getFirstName()
-                )
+                    'firstName' => $node->getCreator()->getFirstName(),
+                ),
             ),
             null,
             null,
@@ -66,6 +66,6 @@ class LogResourceUpdateEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 }

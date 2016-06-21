@@ -46,8 +46,8 @@ class MessageType extends AbstractType
                     'mapped' => true,
                     'constraints' => array(
                         new NotBlank(),
-                        new SendToNames()
-                    )
+                        new SendToNames(),
+                    ),
                 )
             )
             ->add(

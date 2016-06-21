@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2015/09/29 02:15:12
  */
@@ -14,13 +14,13 @@ class Version20150929141509 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE icap__portfolio_widget_badges (
                 id INT NOT NULL, 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__portfolio_widget_badges_badge (
                 id INT AUTO_INCREMENT NOT NULL, 
                 badge_id INT NOT NULL, 
@@ -29,36 +29,36 @@ class Version20150929141509 extends AbstractMigration
                 INDEX IDX_25D41B98FBE885E2 (widget_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__portfolio_widget_badges 
             ADD CONSTRAINT FK_C1AF804BBF396750 FOREIGN KEY (id) 
             REFERENCES icap__portfolio_abstract_widget (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__portfolio_widget_badges_badge 
             ADD CONSTRAINT FK_25D41B98F7A2C2FC FOREIGN KEY (badge_id) 
             REFERENCES claro_badge (id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__portfolio_widget_badges_badge 
             ADD CONSTRAINT FK_25D41B98FBE885E2 FOREIGN KEY (widget_id) 
             REFERENCES icap__portfolio_widget_badges (id)
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE icap__portfolio_widget_badges_badge 
             DROP FOREIGN KEY FK_25D41B98FBE885E2
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__portfolio_widget_badges
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__portfolio_widget_badges_badge
-        ");
+        ');
     }
 }

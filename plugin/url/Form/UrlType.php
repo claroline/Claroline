@@ -17,7 +17,7 @@ class UrlType extends AbstractType
             array(
                 'required' => true,
                 'label' => 'name',
-                'constraints' => new Assert\NotBlank()
+                'constraints' => new Assert\NotBlank(),
             )
         );
 
@@ -29,8 +29,8 @@ class UrlType extends AbstractType
                 'label' => 'Url',
                 'constraints' => new Assert\NotBlank(),
                 'attr' => [
-                    'placeholder' => 'http://example.com'
-                ]
+                    'placeholder' => 'http://example.com',
+                ],
             )
         );
     }

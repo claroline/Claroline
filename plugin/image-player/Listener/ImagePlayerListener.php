@@ -26,15 +26,15 @@ class ImagePlayerListener extends ContainerAware
         );
 
         $path = $this->container->getParameter('claroline.param.files_directory')
-            . DIRECTORY_SEPARATOR
-            . $event->getResource()->getHashName();
+            .DIRECTORY_SEPARATOR
+            .$event->getResource()->getHashName();
         $content = $this->container->get('templating')->render(
             'ClarolineImagePlayerBundle::image.html.twig',
             array(
                 'path' => $path,
                 'image' => $event->getResource(),
                 '_resource' => $event->getResource(),
-                'images' => $images
+                'images' => $images,
             )
         );
 

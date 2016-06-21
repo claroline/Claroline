@@ -21,7 +21,7 @@ class ClarolineTeamBundle extends PluginBundle
         $config = new ConfigurationBuilder();
 
         return $config->addRoutingResource(
-            __DIR__ . '/Resources/config/routing.yml',
+            __DIR__.'/Resources/config/routing.yml',
             null,
             'team'
         );

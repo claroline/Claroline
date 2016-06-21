@@ -12,12 +12,12 @@ class ScaleTest extends UnitTestCase
         $scale = new Scale();
         $scale->setLevels(new ArrayCollection([
            $this->makeLevel('A', 1),
-           $this->makeLevel('B', 2)
+           $this->makeLevel('B', 2),
         ]));
         $scale->setLevels(new ArrayCollection([
            $this->makeLevel('A', 1),
            $this->makeLevel('B', 2),
-           $this->makeLevel('C', 3)
+           $this->makeLevel('C', 3),
         ]));
         $this->assertEquals(3, $scale->getLevels()->count());
     }

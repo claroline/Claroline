@@ -47,8 +47,8 @@ class TinyMceUploadModalType extends AbstractType
                 'mapped' => false,
                 'constraints' => array(
                     new NotBlank(),
-                    new File()
-                )
+                    new File(),
+                ),
            )
         );
         if (count($this->destinations) > 1) {
@@ -58,7 +58,7 @@ class TinyMceUploadModalType extends AbstractType
                 array(
                     'label' => 'destination',
                     'mapped' => false,
-                    'choices' => $this->destinations
+                    'choices' => $this->destinations,
                 )
             );
         }
@@ -69,7 +69,7 @@ class TinyMceUploadModalType extends AbstractType
                 array(
                     'label' => 'uncompress_file',
                     'mapped' => false,
-                    'required' => false
+                    'required' => false,
                 )
             );
         }
@@ -80,7 +80,7 @@ class TinyMceUploadModalType extends AbstractType
                 'label' => 'published',
                 'required' => true,
                 'mapped' => false,
-                'attr' => array('checked' => 'checked')
+                'attr' => array('checked' => 'checked'),
            )
         );
     }
@@ -95,7 +95,7 @@ class TinyMceUploadModalType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
                 )
         );
     }

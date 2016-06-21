@@ -17,7 +17,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ToolType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('displayName', 'text', array('label' => 'name'));
@@ -34,7 +33,7 @@ class ToolType extends AbstractType
         ->setDefaults(
             array(
                 'classe' => 'Claroline\CoreBundle\Entity\Tool\Tool.php',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
                 )
         );
     }

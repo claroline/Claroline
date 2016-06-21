@@ -56,7 +56,7 @@ class ColorChooser
         '#FF3E00',
         '#C9112F',
         '#FF65B3',
-        '#5BC4BE'
+        '#5BC4BE',
     );
     protected $alphabet = array(
         'a',
@@ -84,7 +84,7 @@ class ColorChooser
         'w',
         'x',
         'y',
-        'z'
+        'z',
     );
     protected $needleArray = array();
     protected $colorOjectArray = array();
@@ -107,7 +107,7 @@ class ColorChooser
             //Stock needle in needle array
             array_push($this->needleArray, $needle);
             $colorForNeedle = $this->getColorForNeedle($needle);
-            $this->colorOjectArray[$name] = (object) array("color" => $colorForNeedle, "key" => $needle, "name" => $name);
+            $this->colorOjectArray[$name] = (object) array('color' => $colorForNeedle, 'key' => $needle, 'name' => $name);
 
             return $colorForNeedle;
         }
@@ -153,7 +153,7 @@ class ColorChooser
     private function getColorForNeedle($needle)
     {
         $score = 0;
-        for ($i = 0; $i < strlen($needle); $i++) {
+        for ($i = 0; $i < strlen($needle); ++$i) {
             $score += array_search($needle[$i], $this->alphabet);
         }
         $colorIndex = $score % count($this->colorArray);

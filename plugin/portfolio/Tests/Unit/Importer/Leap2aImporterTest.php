@@ -17,8 +17,8 @@ class Leap2aImporterTest extends MockeryTestCase
     public function testLeap2aImportMissingTitle()
     {
         $importer = new Leap2aImporter();
-        $user     = new User();
-        $array    = array();
+        $user = new User();
+        $array = array();
 
         $this->setExpectedException('Exception');
 
@@ -28,7 +28,7 @@ class Leap2aImporterTest extends MockeryTestCase
     public function testImport()
     {
         $importer = new Leap2aImporter();
-        $user     = new User();
+        $user = new User();
         $portfolioTitle = uniqid();
         $content = <<<CONTENT
 <?xml version="1.0" encoding="utf-8"?>
@@ -155,15 +155,15 @@ TEST;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $skillsWidgetSkillId   = mt_rand();
+        $skillsWidgetSkillId = mt_rand();
         $skillsWidgetSkillName = uniqid();
 
-        $skillsWidgetSkillId2   = mt_rand();
+        $skillsWidgetSkillId2 = mt_rand();
         $skillsWidgetSkillName2 = uniqid();
 
-        $skillsWidgetId        = mt_rand();
+        $skillsWidgetId = mt_rand();
         $skillsWidgetUpdatedAtText = (new \DateTime())->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
-        $skillsWidgetLabel     = uniqid();
+        $skillsWidgetLabel = uniqid();
 
         $content = <<<CONTENT
 <?xml version="1.0" encoding="utf-8"?>
@@ -244,13 +244,13 @@ CONTENT;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $formationsWidgetId        = mt_rand();
+        $formationsWidgetId = mt_rand();
         $formationsWidgetStartedAt = new \DateTime();
         $formationsWidgetStartedAtText = (new \DateTime())->format(\DateTime::ATOM);
         $formationsWidgetUpdatedAtText = $formationsWidgetStartedAt->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
-        $formationsWidgetEndedAtText   = $formationsWidgetStartedAt->add(new \DateInterval('P4D'))->format(\DateTime::ATOM);
-        $formationsWidgetLabel     = uniqid();
-        $formationsWidgetContent   = uniqid();
+        $formationsWidgetEndedAtText = $formationsWidgetStartedAt->add(new \DateInterval('P4D'))->format(\DateTime::ATOM);
+        $formationsWidgetLabel = uniqid();
+        $formationsWidgetContent = uniqid();
 
         $formationsWidgetResourceId = mt_rand();
         $formationsWidgetResourceName = uniqid();
@@ -332,18 +332,18 @@ CONTENT;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $experienceWidgetId            = mt_rand();
-        $experienceWidgetStartedAt     = new \DateTime();
+        $experienceWidgetId = mt_rand();
+        $experienceWidgetStartedAt = new \DateTime();
         $experienceWidgetStartedAtText = (new \DateTime())->format(\DateTime::ATOM);
         $experienceWidgetUpdatedAtText = $experienceWidgetStartedAt->add(new \DateInterval('P2D'))
             ->format(\DateTime::ATOM);
-        $experienceWidgetEndedAtText   = $experienceWidgetStartedAt->add(new \DateInterval('P4D'))
+        $experienceWidgetEndedAtText = $experienceWidgetStartedAt->add(new \DateInterval('P4D'))
             ->format(\DateTime::ATOM);
-        $experienceWidgetLabel         = uniqid();
-        $experienceWidgetPost          = uniqid();
-        $experienceWidgetCompanyName   = uniqid();
-        $experienceWidgetWebsite       = uniqid();
-        $experienceWidgetDescription   = uniqid();
+        $experienceWidgetLabel = uniqid();
+        $experienceWidgetPost = uniqid();
+        $experienceWidgetCompanyName = uniqid();
+        $experienceWidgetWebsite = uniqid();
+        $experienceWidgetDescription = uniqid();
 
         $content = <<<CONTENT
 <?xml version="1.0" encoding="utf-8"?>
@@ -408,10 +408,10 @@ CONTENT;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $formationsWidgetId        = mt_rand();
+        $formationsWidgetId = mt_rand();
         $formationsWidgetUpdatedAtText = (new \DateTime())->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
-        $formationsWidgetLabel     = uniqid();
-        $formationsWidgetContent   = uniqid();
+        $formationsWidgetLabel = uniqid();
+        $formationsWidgetContent = uniqid();
 
         $formationsWidgetResourceId = mt_rand();
         $formationsWidgetResourceName = uniqid();
@@ -492,13 +492,13 @@ CONTENT;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $formationsWidgetId        = mt_rand(0, PHP_INT_MAX / 2);
+        $formationsWidgetId = mt_rand(0, PHP_INT_MAX / 2);
         $formationsWidgetStartedAt = new \DateTime();
         $formationsWidgetStartedAtText = (new \DateTime())->format(\DateTime::ATOM);
         $formationsWidgetUpdatedAtText = $formationsWidgetStartedAt->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
-        $formationsWidgetEndedAtText   = $formationsWidgetStartedAt->add(new \DateInterval('P4D'))->format(\DateTime::ATOM);
-        $formationsWidgetLabel     = uniqid();
-        $formationsWidgetContent   = uniqid();
+        $formationsWidgetEndedAtText = $formationsWidgetStartedAt->add(new \DateInterval('P4D'))->format(\DateTime::ATOM);
+        $formationsWidgetLabel = uniqid();
+        $formationsWidgetContent = uniqid();
 
         $formationsWidgetResourceId = mt_rand();
         $formationsWidgetResourceName = uniqid();
@@ -543,7 +543,7 @@ CONTENT;
 </feed>
 CONTENT;
 
-        $this->setExpectedException('Exception', "Inconsistency in resources relation for formation widget.");
+        $this->setExpectedException('Exception', 'Inconsistency in resources relation for formation widget.');
 
         $importedPortfolio = $importer->import($content, $user);
     }
@@ -560,12 +560,12 @@ CONTENT;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $userInformationsWidgetId      = mt_rand();
+        $userInformationsWidgetId = mt_rand();
         $userInformationsWidgetUpdatedAtText = (new \DateTime())->format(\DateTime::ATOM);
-        $userInformationsWidgetLabel         = uniqid();
+        $userInformationsWidgetLabel = uniqid();
 
         $bithDate = (new \DateTime('1986/11/29'))->format(\DateTime::ATOM);
-        $city  = uniqid();
+        $city = uniqid();
 
         $content = <<<CONTENT
 <?xml version="1.0" encoding="utf-8"?>
@@ -624,9 +624,9 @@ CONTENT;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $textWidgetId      = mt_rand();
+        $textWidgetId = mt_rand();
         $textWidgetUpdatedAtText = (new \DateTime())->format(\DateTime::ATOM);
-        $textWidgetLabel         = uniqid();
+        $textWidgetLabel = uniqid();
         $textWidgetContent = '<p>Just a text content.</p>';
 
         $content = <<<CONTENT
@@ -681,23 +681,23 @@ CONTENT;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $skillsWidgetSkillId   = mt_rand();
+        $skillsWidgetSkillId = mt_rand();
         $skillsWidgetSkillName = uniqid();
 
-        $skillsWidgetSkillId2   = mt_rand();
+        $skillsWidgetSkillId2 = mt_rand();
         $skillsWidgetSkillName2 = uniqid();
 
-        $skillsWidgetId        = mt_rand();
+        $skillsWidgetId = mt_rand();
         $skillsWidgetUpdatedAtText = (new \DateTime())->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
-        $skillsWidgetLabel     = uniqid();
+        $skillsWidgetLabel = uniqid();
 
-        $formationsWidgetId        = mt_rand();
+        $formationsWidgetId = mt_rand();
         $formationsWidgetStartedAt = new \DateTime();
         $formationsWidgetStartedAtText = (new \DateTime())->format(\DateTime::ATOM);
         $formationsWidgetUpdatedAtText = $formationsWidgetStartedAt->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
-        $formationsWidgetEndedAtText   = $formationsWidgetStartedAt->add(new \DateInterval('P4D'))->format(\DateTime::ATOM);
-        $formationsWidgetLabel     = uniqid();
-        $formationsWidgetContent   = uniqid();
+        $formationsWidgetEndedAtText = $formationsWidgetStartedAt->add(new \DateInterval('P4D'))->format(\DateTime::ATOM);
+        $formationsWidgetLabel = uniqid();
+        $formationsWidgetContent = uniqid();
 
         $formationsWidgetResourceId = mt_rand();
         $formationsWidgetResourceName = uniqid();

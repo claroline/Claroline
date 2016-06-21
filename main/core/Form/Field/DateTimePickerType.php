@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Claroline\CoreBundle\Form\Field;
 
 use Symfony\Component\Form\AbstractType;
@@ -25,9 +26,9 @@ class DateTimePickerType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['component'] = $options['component'];
-        $view->vars['options']   = array(
+        $view->vars['options'] = array(
             'autoclose' => $options['autoclose'],
-            'language'  => $options['language'],
+            'language' => $options['language'],
             'date_format' => $options['format'],
         );
     }
@@ -36,13 +37,13 @@ class DateTimePickerType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'date_widget'       => 'single_text',
-                'time_widget'       => 'single_text',
-                'with_seconds'      => false,
-                'language'          => 'en',
-                'component'         => true,
-                'autoclose'         => true,
-                'date_format'       => DateType::HTML5_FORMAT,
+                'date_widget' => 'single_text',
+                'time_widget' => 'single_text',
+                'with_seconds' => false,
+                'language' => 'en',
+                'component' => true,
+                'autoclose' => true,
+                'date_format' => DateType::HTML5_FORMAT,
             )
         );
     }

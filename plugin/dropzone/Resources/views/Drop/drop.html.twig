@@ -172,7 +172,6 @@
                 $('.disabled-during-add').attr('disabled', 'disabled');
 
                 var launchResourcePicker = $(this).hasClass('launch-resource-picker');
-                console.log(launchResourcePicker);
 
                 $.get($(this).attr('href'))
                         .always(function () {
@@ -185,9 +184,7 @@
                                 Claroline.ResourceManager.picker('dropPicker');
 
                                 $('#modal-picker').on('hidden.bs.modal', function () {
-                                    console.log('hidden modal');
                                     if (resourceNodeId == null) {
-                                        console.log('hidden modal => cancel');
                                         $('.cancel-inline').trigger('click');
                                     }
                                 });
@@ -205,9 +202,7 @@
                 e.preventDefault();
                 Claroline.ResourceManager.picker('dropPicker');
                 $('#modal-picker').unbind('hidden.bs.modal').on('hidden.bs.modal', function () {
-                    console.log('hidden modal');
                     if (resourceNodeId == null) {
-                        console.log('hidden modal => cancel');
                         //$('.cancel-inline').trigger('click');
                     }
                 });

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<!-- see https://phpmd.org/rules/index.html -->
+<!-- see http://phpmd.org/documentation/creating-a-ruleset.html -->
+<!-- see https://github.com/phpmd/phpmd -->
+
+<ruleset name="Claroline distribution PHPMD rule set" xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:noNamespaceSchemaLocation=" http://pmd.sf.net/ruleset_xml_schema.xsd">
+    <description>Code checks</description>
+
+    <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod"/>
+
+    <!-- MUST HAVE -->
+
+    <!-- <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable"/> -->
+    <!-- <rule ref="rulesets/design.xml/ExitExpression"/> -->
+    <!-- <rule ref="rulesets/design.xml/EvalExpression"/> -->
+
+    <!-- NICE TO HAVE -->
+
+    <!-- <rule ref="rulesets/codesize.xml/ExcessiveMethodLength"/> -->
+    <!-- <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/> -->
+    <!-- <rule ref="rulesets/naming.xml/BooleanGetMethodName/> -->
+    <!-- <rule ref="rulesets/controversial.xml"/> -->
+    <!-- <rule ref="rulesets/design.xml"/> -->
+
+</ruleset>

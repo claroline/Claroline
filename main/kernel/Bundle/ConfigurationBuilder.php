@@ -24,7 +24,7 @@ class ConfigurationBuilder
     {
         $this->containerResources[] = array(
             self::RESOURCE_OBJECT => $resource,
-            self::RESOURCE_TYPE => $type
+            self::RESOURCE_TYPE => $type,
         );
 
         return $this;
@@ -40,7 +40,7 @@ class ConfigurationBuilder
         $this->routingResources[] = array(
             self::RESOURCE_OBJECT => $resource,
             self::RESOURCE_TYPE => $type,
-            self::ROUTING_PREFIX => $prefix
+            self::ROUTING_PREFIX => $prefix,
         );
 
         return $this;

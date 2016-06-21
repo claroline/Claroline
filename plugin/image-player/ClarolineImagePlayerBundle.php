@@ -18,6 +18,5 @@ class ClarolineImagePlayerBundle extends PluginBundle
     public function hasMigrations()
     {
         return false;
-    }    
+    }
 }
-

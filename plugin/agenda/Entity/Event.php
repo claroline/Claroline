@@ -83,7 +83,7 @@ class Event
      */
     private $isTaskDone = false;
 
-     /**
+    /**
      * @ORM\Column(nullable=true)
      */
     private $priority;
@@ -284,9 +284,9 @@ class Event
     }
 
     /**
-     * Set allDay
+     * Set allDay.
      *
-     * @param boolean $allDay
+     * @param bool $allDay
      *
      * @return Event
      */
@@ -298,9 +298,9 @@ class Event
     }
 
     /**
-     * Get allDay
+     * Get allDay.
      *
-     * @return boolean
+     * @return bool
      */
     public function getAllDay()
     {
@@ -308,9 +308,9 @@ class Event
     }
 
     /**
-     * Get isTaskDone
+     * Get isTaskDone.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsTaskDone()
     {
@@ -318,9 +318,9 @@ class Event
     }
 
     /**
-     * Get isEditable
+     * Get isEditable.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsEditable()
     {
@@ -328,7 +328,7 @@ class Event
     }
 
     /**
-     * Add eventInvitation
+     * Add eventInvitation.
      *
      * @param \Claroline\AgendaBundle\Entity\EventInvitation $eventInvitation
      *
@@ -342,7 +342,7 @@ class Event
     }
 
     /**
-     * Remove eventInvitation
+     * Remove eventInvitation.
      *
      * @param \Claroline\AgendaBundle\Entity\EventInvitation $eventInvitation
      */
@@ -352,7 +352,7 @@ class Event
     }
 
     /**
-     * Get eventInvitations
+     * Get eventInvitations.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -368,7 +368,7 @@ class Event
         foreach ($this->getEventInvitations() as $eventInvitation) {
             $guests[] = [
                 'user_name' => $eventInvitation->getUser()->getUserName(),
-                'status' => $eventInvitation->getStatus()
+                'status' => $eventInvitation->getStatus(),
             ];
 
             if ($eventInvitation->getUser() === $user) {
@@ -386,10 +386,10 @@ class Event
             'isTask' => $this->isTask(),
             'isTaskDone' => $this->isTaskDone(),
             'owner' => $this->getUser()->getUsername(),
-            'description' =>  $invitation && !is_null($invitation->getDescription()) ? $invitation->getDescription() : $this->getDescription(),
+            'description' => $invitation && !is_null($invitation->getDescription()) ? $invitation->getDescription() : $this->getDescription(),
             'workspace_id' => $this->getWorkspace() ? $this->getWorkspace()->getId() : null,
             'workspace_name' => $this->getWorkspace() ? $this->getWorkspace()->getName() : null,
-            'className' => 'event_' . $this->getId(),
+            'className' => 'event_'.$this->getId(),
             'isEditable' => $this->isEditable() !== false && !$invitation,
             'durationEditable' => !$this->isTask() && $this->isEditable() !== false && !$invitation, // If it's a task, disable resizing
             'invitations' => $guests,
@@ -399,7 +399,7 @@ class Event
                 'join' => EventInvitation::JOIN,
                 'maybe' => EventInvitation::MAYBE,
                 'resign' => EventInvitation::RESIGN,
-            ] //We have to passed the status list of the eventInvitation for the popover render because twig.js doesn't have the constant function
+            ], //We have to passed the status list of the eventInvitation for the popover render because twig.js doesn't have the constant function
         ];
     }
 }

@@ -34,8 +34,7 @@ class AdministrationManager
      */
     public function __construct(
         ObjectManager $om
-    )
-    {
+    ) {
         $this->om = $om;
         $this->repo = $this->om->getRepository('Claroline\CoreBundle\Entity\Action\AdditionalAction');
     }
@@ -44,11 +43,10 @@ class AdministrationManager
     {
         $actions = array(
             array('edit', 'fa-pencil', 'edit', 'admin_user_action'),
-            array('show_workspaces', 'fa-book', 'show_workspaces', 'admin_user_action')
+            array('show_workspaces', 'fa-book', 'show_workspaces', 'admin_user_action'),
         );
 
         foreach ($actions as $action) {
-
             if (count($this->repo->findBy(array('action' => $action[0], 'type' => $action[3]))) === 0) {
                 $this->log("Adding action {$action[0]} {$action[3]}...");
                 $aa = new AdditionalAction();

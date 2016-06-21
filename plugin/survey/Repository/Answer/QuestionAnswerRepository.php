@@ -22,8 +22,7 @@ class QuestionAnswerRepository extends EntityRepository
         SurveyAnswer $surveyAnswer,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT qa
             FROM Claroline\SurveyBundle\Entity\Answer\QuestionAnswer qa
@@ -41,8 +40,7 @@ class QuestionAnswerRepository extends EntityRepository
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT COUNT(qa) AS nb_answers
             FROM Claroline\SurveyBundle\Entity\Answer\QuestionAnswer qa
@@ -61,8 +59,7 @@ class QuestionAnswerRepository extends EntityRepository
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT qa.comment AS comment
             FROM Claroline\SurveyBundle\Entity\Answer\QuestionAnswer qa
@@ -74,6 +71,20 @@ class QuestionAnswerRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('survey', $survey);
         $query->setParameter('question', $question);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findQuestionAnswersByQuestions(array $questions, $executeQuery = true)
+    {
+        $dql = '
+            SELECT qa
+            FROM Claroline\SurveyBundle\Entity\Answer\QuestionAnswer qa
+            JOIN qa.question q
+            WHERE q IN (:questions)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('questions', $questions);
 
         return $executeQuery ? $query->getResult() : $query;
     }

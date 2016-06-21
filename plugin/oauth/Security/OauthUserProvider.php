@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\User;
  */
 class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProviderInterface
 {
-
     private $em;
     private $utilities;
     /**
@@ -31,6 +30,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
      *   "session"      = @DI\Inject("session"),
      *   "utilities"    = @DI\Inject("claroline.utilities.misc")
      * })
+     *
      * @param $em
      * @param Session $session
      * @param $utilities
@@ -39,8 +39,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
         $em,
         Session $session,
         $utilities
-    )
-    {
+    ) {
         $this->em = $em;
         $this->session = $session;
         $this->utilities = $utilities;
@@ -63,6 +62,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
         if ($oauthUser === null) {
             throw new UsernameNotFoundException();
         }
+
         return $oauthUser->getUser();
     }
 
@@ -79,7 +79,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
             return $user;
         } catch (\Exception $e) {
             $name = $response->getRealName();
-            $nameArray = explode(" ", $name, 2);
+            $nameArray = explode(' ', $name, 2);
             $firstName = $response->getFirstName();
             $lastName = $response->getLastName();
             if (empty($firstName) || empty($lastName)) {
@@ -98,18 +98,17 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
 
             $this->session->set('icap.oauth.user', $user);
             $resourceOwnerArray = array(
-                'name'  => $resourceOwner->getName(),
-                'id'    => $content['id']
+                'name' => $resourceOwner->getName(),
+                'id' => $content['id'],
             );
             $this->session->set('icap.oauth.resource_owner', $resourceOwnerArray);
 
             throw $e;
         }
-
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function refreshUser(UserInterface $user)
     {
@@ -121,7 +120,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supportsClass($class)
     {
@@ -134,9 +133,9 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
         $user = $this->em->getRepository('ClarolineCoreBundle:User')->findByName($username);
 
         if (count($user) === 0) {
-            return ($username);
+            return $username;
         } else {
-            return $username . count($user);
+            return $username.count($user);
         }
     }
 }

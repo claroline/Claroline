@@ -31,7 +31,7 @@ class Updater060500 extends Updater
         $emailConfirm = $ch->getParameter('registration_mail_validation');
         $ch->setParameter(
             'registration_mail_validation',
-            $emailConfirm === true ? 2: 1
+            $emailConfirm === true ? 2 : 1
         );
 
         $entities = $this->om->getRepository('ClarolineCoreBundle:User')->findAll();
@@ -44,7 +44,7 @@ class Updater060500 extends Updater
                 $entity->setEmailValidationHash($this->ut->generateGuid());
                 $this->om->persist($entity);
             }
-            $i++;
+            ++$i;
 
             if ($i % 300 === 0) {
                 $this->log("Flushing [{$i}/{$totalObjects}]");
@@ -57,7 +57,4 @@ class Updater060500 extends Updater
         $this->om->clear();
         $this->log('done !');
     }
-
-
 }
-

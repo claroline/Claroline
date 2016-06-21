@@ -78,8 +78,7 @@ class AuthenticationController
         RouterInterface $router,
         PlatformConfigurationHandler $ch,
         StrictDispatcher $dispatcher
-    )
-    {
+    ) {
         $this->request = $request;
         $this->userManager = $userManager;
         $this->encoderFactory = $encoderFactory;
@@ -119,7 +118,7 @@ class AuthenticationController
                 'last_username' => $lastUsername,
                 'error' => false,
                 'is_expired' => true,
-                'selfRegistrationAllowed' => $selfRegistrationAllowed
+                'selfRegistrationAllowed' => $selfRegistrationAllowed,
             );
         }
 
@@ -136,7 +135,7 @@ class AuthenticationController
             'error' => $error,
             'is_expired' => false,
             'selfRegistrationAllowed' => $selfRegistrationAllowed,
-            'showRegisterButton' => $showRegisterButton
+            'showRegisterButton' => $showRegisterButton,
         );
     }
 
@@ -157,10 +156,9 @@ class AuthenticationController
         }
 
         return array(
-            'error' =>
-                $this->translator->trans('mail_not_available', array(), 'platform')
-                . ' '
-                . $this->translator->trans('mail_config_problem', array(), 'platform')
+            'error' => $this->translator->trans('mail_not_available', array(), 'platform')
+                .' '
+                .$this->translator->trans('mail_config_problem', array(), 'platform'),
         );
     }
 
@@ -184,7 +182,7 @@ class AuthenticationController
 
             if (!empty($user)) {
                 $user->setHashTime(time());
-                $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
+                $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
                 $user->setResetPasswordHash($password);
                 $this->om->persist($user);
                 $this->om->flush();
@@ -192,25 +190,25 @@ class AuthenticationController
                 if ($this->mailManager->sendForgotPassword($user)) {
                     return array(
                         'user' => $user,
-                        'form' => $form->createView()
+                        'form' => $form->createView(),
                     );
                 }
 
                 return array(
                     'error' => $this->translator->trans('mail_config_problem', array(), 'platform'),
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
                 );
             }
 
             return array(
                 'error' => $this->translator->trans('mail_not_exist', array(), 'platform'),
-                'form' => $form->createView()
+                'form' => $form->createView(),
             );
         }
 
         return array(
             'error' => $this->translator->trans('wrong_captcha', array(), 'platform'),
-            'form' => $form->createView()
+            'form' => $form->createView(),
         );
     }
 
@@ -240,7 +238,7 @@ class AuthenticationController
         if ($currentTime - (3600 * 24) < $user->getHashTime()) {
             return array(
                 'hash' => $hash,
-                'form' => $form->createView()
+                'form' => $form->createView(),
             );
         }
 
@@ -279,7 +277,7 @@ class AuthenticationController
 
         return array(
             'hash' => $hash,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         );
     }
 
@@ -373,7 +371,7 @@ class AuthenticationController
 
         $eventContent = $event->getContent();
         if (!empty($eventContent)) {
-            $eventContent = '<div class="external_authentication"><hr>' . $eventContent . '</div>';
+            $eventContent = '<div class="external_authentication"><hr>'.$eventContent.'</div>';
         }
 
         return new Response($eventContent);

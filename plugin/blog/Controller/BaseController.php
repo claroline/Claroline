@@ -2,7 +2,6 @@
 
 namespace Icap\BlogBundle\Controller;
 
-use Claroline\CoreBundle\Event\Log\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\BlogBundle\Entity\Blog;
@@ -27,20 +26,18 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class BaseController extends Controller
 {
-    const BLOG_TYPE         = 'icap_blog';
-    const BLOG_POST_TYPE    = 'icap_blog_post';
+    const BLOG_TYPE = 'icap_blog';
+    const BLOG_POST_TYPE = 'icap_blog_post';
     const BLOG_COMMENT_TYPE = 'icap_blog_comment';
 
     /**
      * @param string $permissions
-     *
      * @param Blog   $blog
-     *
      * @param string $comparison
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
-    protected function checkAccess($permissions, Blog $blog, $comparison = "AND")
+    protected function checkAccess($permissions, Blog $blog, $comparison = 'AND')
     {
         $isGranted = true;
 
@@ -50,10 +47,9 @@ class BaseController extends Controller
 
         foreach ($permissions as $permission) {
             $currentIsGranted = $this->get('security.authorization_checker')->isGranted($permission, $blog);
-            if ("OR" === $comparison) {
+            if ('OR' === $comparison) {
                 $isGranted = $isGranted || $currentIsGranted;
-            }
-            else {
+            } else {
                 $isGranted = $isGranted && $currentIsGranted;
             }
         }
@@ -66,35 +62,32 @@ class BaseController extends Controller
         $this->get('event_dispatcher')->dispatch('log', $logEvent);
     }
 
-
     public function orderPanelsAction(Blog $blog)
     {
         $panelInfo = $this->get('icap_blog.manager.blog')->getPanelInfos();
         $mask = $blog->getOptions()->getListWidgetBlog();
         $orderPanelsTable = array();
 
-        for($maskPosition=0, $entreTableau=0; $maskPosition<strlen($mask); $maskPosition+=2, $entreTableau++)
-        {
+        for ($maskPosition = 0, $entreTableau = 0; $maskPosition < strlen($mask); $maskPosition += 2, $entreTableau++) {
             $orderPanelsTable[] = array(
-                "nameTemplate" => $panelInfo[$mask{$maskPosition}],
-                "visibility" => (int) $mask{$maskPosition+1}
+                'nameTemplate' => $panelInfo[$mask{$maskPosition}],
+                'visibility' => (int) $mask{$maskPosition + 1},
             );
         }
 
         return $this->render(
             'IcapBlogBundle::aside.html.twig',
             array(
-                'orderPanelInfos' => $orderPanelsTable, 
+                'orderPanelInfos' => $orderPanelsTable,
                 'blog' => $blog,
-                'archives' => $this->getArchiveDatas($blog)
+                'archives' => $this->getArchiveDatas($blog),
             )
         );
     }
 
     /**
      * @param string $permission
-     *
-     * @param Blog $blog
+     * @param Blog   $blog
      *
      * @return bool
      */
@@ -115,7 +108,7 @@ class BaseController extends Controller
      */
     protected function getArchiveDatas(Blog $blog)
     {
-        $postDatas    = $this->get('icap.blog.post_repository')->findArchiveDatasByBlog($blog);
+        $postDatas = $this->get('icap.blog.post_repository')->findArchiveDatasByBlog($blog);
         $archiveDatas = array();
 
         $translator = $this->get('translator');
@@ -127,13 +120,13 @@ class BaseController extends Controller
 
             if (!isset($archiveDatas[$year][$month])) {
                 $archiveDatas[$year][$month] = array(
-                    'year'          => $year,
-                    'month'         => $translator->trans('month.' . date("F", mktime(0, 0, 0, $month, 10)), array(), 'platform'),
-                    'count'         => 1,
-                    'urlParameters' => $month . '-' . $year
+                    'year' => $year,
+                    'month' => $translator->trans('month.'.date('F', mktime(0, 0, 0, $month, 10)), array(), 'platform'),
+                    'count' => 1,
+                    'urlParameters' => $month.'-'.$year,
                 );
             } else {
-                $archiveDatas[$year][$month]['count']++;
+                ++$archiveDatas[$year][$month]['count'];
             }
         }
 
@@ -159,7 +152,6 @@ class BaseController extends Controller
 
     /**
      * @param Blog  $blog
-     *
      * @param array $changeSet
      *
      * @return Controller
@@ -168,12 +160,11 @@ class BaseController extends Controller
     {
         $logEvent = new LogResourceUpdateEvent($blog->getResourceNode(), $changeSet);
 
-       return $this->dispatch($logEvent);
+        return $this->dispatch($logEvent);
     }
 
     /**
      * @param BlogOptions $blogOptions
-     *
      * @param array       $changeSet
      *
      * @return Controller
@@ -187,7 +178,6 @@ class BaseController extends Controller
 
     /**
      * @param BlogOptions $blogOptions
-     *
      * @param array       $changeSet
      *
      * @return Controller
@@ -201,7 +191,6 @@ class BaseController extends Controller
 
     /**
      * @param Blog $blog
-     *
      * @param Post $post
      *
      * @return Controller
@@ -227,7 +216,6 @@ class BaseController extends Controller
 
     /**
      * @param Post  $post
-     *
      * @param array $changeSet
      *
      * @return Controller
@@ -265,7 +253,6 @@ class BaseController extends Controller
 
     /**
      * @param Post    $post
-     *
      * @param Comment $comment
      *
      * @return Controller
@@ -279,7 +266,6 @@ class BaseController extends Controller
 
     /**
      * @param Post    $post
-     *
      * @param Comment $comment
      *
      * @return Controller
@@ -292,11 +278,10 @@ class BaseController extends Controller
     }
 
     /**
-     * @param Post $post
-     *
+     * @param Post    $post
      * @param Comment $comment
-     *
      * @param $changeSet
+     *
      * @return Controller
      */
     protected function dispatchCommentUpdateEvent(Post $post, Comment $comment, $changeSet)
@@ -307,9 +292,9 @@ class BaseController extends Controller
     }
 
     /**
-     * @param Post $post
-     *
+     * @param Post    $post
      * @param Comment $comment
+     *
      * @return Controller
      */
     protected function dispatchCommentPublishEvent(Post $post, Comment $comment)
@@ -317,6 +302,5 @@ class BaseController extends Controller
         $event = new LogCommentPublishEvent($post, $comment);
 
         return $this->dispatch($event);
-
     }
 }

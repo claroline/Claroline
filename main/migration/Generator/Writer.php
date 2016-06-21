@@ -30,16 +30,15 @@ class Writer
     /**
      * Constructor.
      *
-     * @param \Symfony\Component\Filesystem\Filesystem  $fileSystem
-     * @param Twig_Environment                          $environment
-     * @param \Symfony\Bundle\TwigBundle\TwigEngine     $engine
+     * @param \Symfony\Component\Filesystem\Filesystem $fileSystem
+     * @param Twig_Environment                         $environment
+     * @param \Symfony\Bundle\TwigBundle\TwigEngine    $engine
      */
     public function __construct(
         Filesystem $fileSystem,
         Twig_Environment $environment,
         TwigEngine $engine
-    )
-    {
+    ) {
         $this->fileSystem = $fileSystem;
         $this->twigEnvironment = $environment;
         $this->twigEngine = $engine;
@@ -48,10 +47,10 @@ class Writer
     /**
      * Writes a bundle migration class for a given driver.
      *
-     * @param \Symfony\Component\HttpKernel\Bundle\Bundle   $bundle
-     * @param string                                        $driverName
-     * @param string                                        $version
-     * @param array                                         $queries
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     * @param string                                      $driverName
+     * @param string                                      $version
+     * @param array                                       $queries
      */
     public function writeMigrationClass(Bundle $bundle, $driverName, $version, array $queries)
     {
@@ -75,7 +74,7 @@ class Writer
                 'namespace' => $namespace,
                 'class' => $class,
                 'upQueries' => $queries[Generator::QUERIES_UP],
-                'downQueries' => $queries[Generator::QUERIES_DOWN]
+                'downQueries' => $queries[Generator::QUERIES_DOWN],
             )
         );
 
@@ -87,9 +86,10 @@ class Writer
      * Deletes bundle migration classes for a given driver which are above a
      * reference version.
      *
-     * @param \Symfony\Component\HttpKernel\Bundle\Bundle   $bundle
-     * @param string                                        $driverName
-     * @param string                                        $referenceVersion
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     * @param string                                      $driverName
+     * @param string                                      $referenceVersion
+     *
      * @return array The migration files that were deleted
      */
     public function deleteUpperMigrationClasses(Bundle $bundle, $driverName, $referenceVersion)

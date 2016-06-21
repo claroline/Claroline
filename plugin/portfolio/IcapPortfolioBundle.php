@@ -3,7 +3,6 @@
 namespace Icap\PortfolioBundle;
 
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\InstallationBundle\Bundle\InstallableBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Icap\PortfolioBundle\Installation\AdditionalInstaller;
 use Claroline\CoreBundle\Library\PluginBundle;
@@ -15,7 +14,7 @@ class IcapPortfolioBundle extends PluginBundle implements ConfigurationProviderI
     {
         $config = new ConfigurationBuilder();
 
-        if (file_exists($routingFile = $this->getPath() . '/Resources/config/routing.yml')) {
+        if (file_exists($routingFile = $this->getPath().'/Resources/config/routing.yml')) {
             $config->addRoutingResource($routingFile);
         }
 
@@ -28,16 +27,24 @@ class IcapPortfolioBundle extends PluginBundle implements ConfigurationProviderI
         $config = new ConfigurationBuilder();
         $emptyConfigs = array(
             'Innova\AngularJSBundle\InnovaAngularJSBundle',
+            'Innova\AngularUIResourcePickerBundle\InnovaAngularUIResourcePickerBundle',
+            'Innova\AngularUITinyMCEBundle\InnovaAngularUITinyMCEBundle',
         );
         if (in_array($bundleClass, $emptyConfigs)) {
             return $config;
         }
+
         return false;
     }
 
     public function getRequiredFixturesDirectory($environment)
     {
         return 'DataFixtures/Required';
+    }
+
+    public function getRequiredPlugins()
+    {
+        return ['Claroline\\TeamBundle\\ClarolineTeamBundle'];
     }
 
     public function getAdditionalInstaller()

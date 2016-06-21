@@ -18,7 +18,7 @@ interface ImporterInterface
 
     /**
      * @param string $content
-     * @param User    $user
+     * @param User   $user
      *
      * @return mixed
      */

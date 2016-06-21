@@ -1,8 +1,8 @@
 <?php
+
 namespace Icap\BadgeBundle\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 
@@ -45,13 +45,13 @@ class Updater040100 extends Updater
                     /** @var \Icap\BadgeBundle\Entity\UserBadge $userBadge */
                     $userBadge = $userBadgeRepository->findOneBy([
                         'user' => $badgeCollection->getUser(),
-                        'badge' => $this->entityManager->getReference('IcapBadgeBundle:Badge', $rowBadgeCollection['badge_id'])
+                        'badge' => $this->entityManager->getReference('IcapBadgeBundle:Badge', $rowBadgeCollection['badge_id']),
                     ]);
 
                     if (null !== $userBadge) {
-                        $this->connection->insert("claro_badge_collection_user_badges", [
+                        $this->connection->insert('claro_badge_collection_user_badges', [
                             'badgecollection_id' => $rowBadgeCollection['badgecollection_id'],
-                            'userbadge_id' => $userBadge->getId()
+                            'userbadge_id' => $userBadge->getId(),
                         ]);
                     }
                 }

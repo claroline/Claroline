@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -16,8 +16,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
- * Class LogListener
- * @package Icap\SocialmediaBundle\Listener
+ * Class LogListener.
  *
  * @DI\Service
  */
@@ -27,6 +26,7 @@ class LogListener extends ContainerAware
      * @DI\InjectParams({
      *      "container" = @DI\Inject("service_container")
      * })
+     *
      * @param $container
      */
     public function __construct($container)
@@ -68,7 +68,7 @@ class LogListener extends ContainerAware
                 'listItemView' => $this->container->get('templating')->render(
                     'IcapSocialmediaBundle:Log:log_list_item.html.twig',
                     array('log' => $event->getLog())
-                )
+                ),
             )
         );
 

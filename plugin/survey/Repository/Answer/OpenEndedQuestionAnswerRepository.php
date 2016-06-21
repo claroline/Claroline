@@ -22,8 +22,7 @@ class OpenEndedQuestionAnswerRepository extends EntityRepository
     public function findOpenEndedAnswerByQuestionAnswer(
         QuestionAnswer $questionAnswer,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT oeqa
             FROM Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer oeqa
@@ -40,8 +39,7 @@ class OpenEndedQuestionAnswerRepository extends EntityRepository
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT oeqa
             FROM Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer oeqa
@@ -63,8 +61,7 @@ class OpenEndedQuestionAnswerRepository extends EntityRepository
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT oeqa
             FROM Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer oeqa

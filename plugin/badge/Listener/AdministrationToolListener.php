@@ -4,8 +4,6 @@ namespace Icap\BadgeBundle\Listener;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Claroline\CoreBundle\Listener\AdministrationToolListener as BaseAdministrationToolListener;
 
 /**

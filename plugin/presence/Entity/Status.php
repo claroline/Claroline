@@ -5,7 +5,7 @@ namespace FormaLibre\PresenceBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Status
+ * Status.
  *
  * @ORM\Table(name="formalibre_presencebundle_status")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Status
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -35,19 +35,17 @@ class Status
      */
     private $statusColor;
 
-   /**
+    /**
      * @var string
      *
      * @ORM\Column(name="statusByDefault", type="boolean" )
      */
     private $statusByDefault = false;
-    
-    
-    
+
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -55,7 +53,7 @@ class Status
     }
 
     /**
-     * Set statusName
+     * Set statusName.
      *
      * @param string $statusName
      *
@@ -69,7 +67,7 @@ class Status
     }
 
     /**
-     * Get statusName
+     * Get statusName.
      *
      * @return string
      */
@@ -79,7 +77,7 @@ class Status
     }
 
     /**
-     * Set statusColor
+     * Set statusColor.
      *
      * @param string $statusColor
      *
@@ -93,7 +91,7 @@ class Status
     }
 
     /**
-     * Get statusColor
+     * Get statusColor.
      *
      * @return string
      */
@@ -101,18 +99,14 @@ class Status
     {
         return $this->statusColor;
     }
-    
-    
-    function getStatusByDefault() 
+
+    public function getStatusByDefault()
     {
         return $this->statusByDefault;
     }
-    
 
-    function setStatusByDefault($statusByDefault) 
+    public function setStatusByDefault($statusByDefault)
     {
         $this->statusByDefault = $statusByDefault;
     }
-  
 }
-

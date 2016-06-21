@@ -22,8 +22,6 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -59,7 +57,7 @@ class TextListener implements ContainerAwareInterface
             'ClarolineCoreBundle:Text:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'text'
+                'resourceType' => 'text',
             )
         );
         $event->setResponseContent($response);
@@ -115,7 +113,7 @@ class TextListener implements ContainerAwareInterface
             'ClarolineCoreBundle:Text:createForm.html.twig',
             array(
                 'form' => $errorForm->createView(),
-                'resourceType' => 'text'
+                'resourceType' => 'text',
             )
         );
         $event->setErrorFormContent($content);
@@ -164,7 +162,7 @@ class TextListener implements ContainerAwareInterface
             array(
                 'text' => $revisionRepo->getLastRevision($text)->getContent(),
                 '_resource' => $text,
-                'isEditGranted' => $isGranted
+                'isEditGranted' => $isGranted,
             )
         );
         $response = new Response($content);

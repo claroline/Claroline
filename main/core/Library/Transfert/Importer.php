@@ -68,7 +68,7 @@ abstract class Importer
             }
         }
 
-        return null;
+        return;
     }
 
     public function setOwner(User $user)
@@ -112,7 +112,7 @@ abstract class Importer
             'ROLE_WS_MANAGER',
             'ROLE_WS_CREATOR',
             'ROLE_ADMIN',
-            'ROLE_ANONYMOUS'
+            'ROLE_ANONYMOUS',
         );
     }
 
@@ -143,7 +143,7 @@ abstract class Importer
 
     public function setExtendedData(&$_data)
     {
-        $this->_data =& $_data;
+        $this->_data = &$_data;
     }
 
     //this is only supposed to keep backward compatibility... damn references !
@@ -153,15 +153,15 @@ abstract class Importer
         return $this->_data;
     }
 
-    abstract function getName();
+    abstract public function getName();
 
-    abstract function validate(array $data);
+    abstract public function validate(array $data);
 
-    /**
-     * @param Workspace $workspace
-     * @param array $files
-     * @param mixed $object
-     * @param mixed $data
-     */
-     abstract function export(Workspace $workspace, array &$files, $object);
+     /**
+      * @param Workspace $workspace
+      * @param array $files
+      * @param mixed $object
+      * @param mixed $data
+      */
+     abstract public function export(Workspace $workspace, array &$files, $object);
 }

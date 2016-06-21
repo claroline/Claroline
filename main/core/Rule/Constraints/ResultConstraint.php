@@ -26,10 +26,10 @@ class ResultConstraint extends AbstractConstraint
      */
     public function validate()
     {
-        $isValid               = true;
+        $isValid = true;
         $resultComparisonTypes = Rule::getResultComparisonTypes();
-        $nbOccurence           = $this->getRule()->getOccurrence();
-        $nbValidatedLogs       = 0;
+        $nbOccurence = $this->getRule()->getOccurrence();
+        $nbValidatedLogs = 0;
         $ruleResult = $this->getRule()->getResult();
         $ruleResultMax = $this->getRule()->getResultMax();
 
@@ -58,7 +58,7 @@ class ResultConstraint extends AbstractConstraint
                     $resultComparisonTypes[$this->getRule()->getResultComparison()]
                 )
             ) {
-                $nbValidatedLogs++;
+                ++$nbValidatedLogs;
             }
         }
 
@@ -70,7 +70,7 @@ class ResultConstraint extends AbstractConstraint
      */
     public function isApplicableTo(Rule $rule)
     {
-        return (null !== $rule->getResult());
+        return null !== $rule->getResult();
     }
 
     /**
@@ -86,12 +86,10 @@ class ResultConstraint extends AbstractConstraint
         $ruleScoreMax,
         $score,
         $scoreMax
-    )
-    {
+    ) {
         $realResults = array('rule' => null, 'log' => null);
 
         if (!is_null($ruleScore) && !is_null($score)) {
-
             if (empty($ruleScoreMax) || empty($scoreMax)) {
                 $realResults['rule'] = $ruleScore;
                 $realResults['log'] = $score;

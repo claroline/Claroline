@@ -23,9 +23,9 @@ class BlogInfosType extends AbstractType
     {
         $resolver->setDefaults(array(
             'translation_domain' => 'icap_blog',
-            'data_class'      => 'Icap\BlogBundle\Entity\Blog',
+            'data_class' => 'Icap\BlogBundle\Entity\Blog',
             'csrf_protection' => true,
-            'intention'       => 'edit_blog_infos'
+            'intention' => 'edit_blog_infos',
         ));
     }
 }

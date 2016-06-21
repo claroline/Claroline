@@ -12,8 +12,6 @@
 namespace Claroline\CoreBundle\Library\Widgets;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-
-use Mockery as m;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets\TextImporter;
 use Symfony\Component\Yaml\Yaml;
 
@@ -35,4 +33,4 @@ class TextImporterTest extends MockeryTestCase
         $data = Yaml::parse(file_get_contents($configPath));
         $this->importer->validate($data);
     }
-} 
+}

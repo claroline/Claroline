@@ -33,9 +33,10 @@ class LogHiddenWorkspaceWidgetConfig
     protected $user;
 
     /**
-     * Set workspaceId
+     * Set workspaceId.
      *
-     * @param  integer                        $workspaceId
+     * @param int $workspaceId
+     *
      * @return LogHiddenWorkspaceWidgetConfig
      */
     public function setWorkspaceId($workspaceId)
@@ -46,9 +47,9 @@ class LogHiddenWorkspaceWidgetConfig
     }
 
     /**
-     * Get workspaceId
+     * Get workspaceId.
      *
-     * @return integer
+     * @return int
      */
     public function getWorkspaceId()
     {
@@ -56,9 +57,10 @@ class LogHiddenWorkspaceWidgetConfig
     }
 
     /**
-     * Set user
+     * Set user.
      *
-     * @param  \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return LogHiddenWorkspaceWidgetConfig
      */
     public function setUser(\Claroline\CoreBundle\Entity\User $user)
@@ -69,7 +71,7 @@ class LogHiddenWorkspaceWidgetConfig
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return \Claroline\CoreBundle\Entity\User
      */

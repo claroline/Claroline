@@ -13,7 +13,7 @@ use Icap\HtmlDiff\HtmlDiff;
  */
 class ContributionManager
 {
-	/** @var \Icap\WikiBundle\Repository\ContributionRepository */
+    /** @var \Icap\WikiBundle\Repository\ContributionRepository */
     protected $contributionRepository;
 
     /**
@@ -29,21 +29,22 @@ class ContributionManager
     /**
      * @return \Icap\WikiBundle\Repository\ContributionRepository
      */
-    public function getContributionRepository ()
+    public function getContributionRepository()
     {
         return $this->contributionRepository;
     }
 
     /**
      * @param Section $section
-     * @param array $ids
+     * @param array   $ids
+     *
      * @return array $contributions
      */
-    public function compareContributions (Section $section, $ids)
+    public function compareContributions(Section $section, $ids)
     {
-    	$contributions = $this->contributionRepository->findyBySectionAndIds($section, $ids);
-    	$titleDiff = new HtmlDiff($contributions[0]->getTitle(), $contributions[1]->getTitle(), false); 
-    	$textDiff = new HtmlDiff($contributions[0]->getText(), $contributions[1]->getText(), true);
+        $contributions = $this->contributionRepository->findyBySectionAndIds($section, $ids);
+        $titleDiff = new HtmlDiff($contributions[0]->getTitle(), $contributions[1]->getTitle(), false);
+        $textDiff = new HtmlDiff($contributions[0]->getText(), $contributions[1]->getText(), true);
         $contribution = new Contribution();
         $contribution->setText($textDiff->outputDiff()->toString());
         $contribution->setTitle($titleDiff->outputDiff()->toString());
@@ -51,6 +52,6 @@ class ContributionManager
         $contribution->setCreationDate($contributions[1]->getCreationDate());
         $contributions[1] = $contribution;
 
-    	return $contributions;
+        return $contributions;
     }
 }

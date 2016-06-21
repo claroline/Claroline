@@ -41,7 +41,7 @@ class CompetencyType extends AbstractType
             'translation_domain' => 'platform',
             'data_class' => 'HeVinci\CompetencyBundle\Entity\Competency',
             'parent_competency' => null,
-            'constraints' => [$this->uniqueNameConstraint]
+            'constraints' => [$this->uniqueNameConstraint],
         ]);
     }
 }

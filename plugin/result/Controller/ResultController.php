@@ -48,8 +48,7 @@ class ResultController
         ResultManager $manager,
         FormHandler $handler,
         AuthorizationCheckerInterface $checker
-    )
-    {
+    ) {
         $this->manager = $manager;
         $this->formHandler = $handler;
         $this->checker = $checker;
@@ -61,6 +60,7 @@ class ResultController
      * @EXT\Template
      *
      * @param Result $result
+     *
      * @return array
      */
     public function resultAction(Result $result, User $user)
@@ -75,7 +75,7 @@ class ResultController
             '_resource' => $result,
             'marks' => $this->manager->getMarks($result, $user, $canEdit),
             'users' => $this->manager->getUsers($result, $canEdit),
-            'canEdit' => $canEdit
+            'canEdit' => $canEdit,
         ];
     }
 
@@ -84,9 +84,10 @@ class ResultController
      * @EXT\ParamConverter("user", options={"id"= "userId"})
      * @EXT\Method("POST")
      *
-     * @param Request   $request
-     * @param Result    $result
-     * @param User      $user
+     * @param Request $request
+     * @param Result  $result
+     * @param User    $user
+     *
      * @return JsonResponse
      */
     public function createMarkAction(Request $request, Result $result, User $user)
@@ -116,6 +117,7 @@ class ResultController
      * @EXT\Method("DELETE")
      *
      * @param Mark $mark
+     *
      * @return JsonResponse
      */
     public function deleteMarkAction(Mark $mark)
@@ -130,8 +132,9 @@ class ResultController
      * @EXT\Route("/marks/{id}", name="claro_edit_mark")
      * @EXT\Method("PUT")
      *
-     * @param Request   $request
-     * @param Mark      $mark
+     * @param Request $request
+     * @param Mark    $mark
+     *
      * @return JsonResponse
      */
     public function editMarkAction(Request $request, Mark $mark)
@@ -164,8 +167,9 @@ class ResultController
      * )
      * @EXT\Method("POST")
      *
-     * @param Result    $result
-     * @param Request   $request
+     * @param Result  $result
+     * @param Request $request
+     *
      * @return JsonResponse
      */
     public function importAction(Request $request, Result $result, $type)

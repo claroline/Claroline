@@ -43,17 +43,17 @@ class ClaimBadgeType extends AbstractType
         /** @var \Claroline\CoreBundle\Entity\User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $locale = (null === $user->getLocale()) ? $this->platformConfigHandler->getParameter("locale_language") : $user->getLocale();
+        $locale = (null === $user->getLocale()) ? $this->platformConfigHandler->getParameter('locale_language') : $user->getLocale();
 
         $builder
             ->add('badge', 'zenstruck_ajax_entity', array(
-                'attr'           => array('class' => 'fullwidth'),
-                'theme_options'  => array('control_width' => 'col-md-3'),
-                'placeholder'    => $this->translator->trans('badge_form_badge_selection', array(), 'icap_badge'),
-                'class'          => 'IcapBadgeBundle:Badge',
+                'attr' => array('class' => 'fullwidth'),
+                'theme_options' => array('control_width' => 'col-md-3'),
+                'placeholder' => $this->translator->trans('badge_form_badge_selection', array(), 'icap_badge'),
+                'class' => 'IcapBadgeBundle:Badge',
                 'use_controller' => true,
-                'repo_method'    => sprintf('findByNameForAjax'),
-                'extra_data'     => array('userId' => $user->getId(), 'locale' => $locale)
+                'repo_method' => sprintf('findByNameForAjax'),
+                'extra_data' => array('userId' => $user->getId(), 'locale' => $locale),
             ));
     }
 
@@ -66,8 +66,8 @@ class ClaimBadgeType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\BadgeBundle\Entity\BadgeClaim',
-                'translation_domain' => 'icap_badge'
+                'data_class' => 'Icap\BadgeBundle\Entity\BadgeClaim',
+                'translation_domain' => 'icap_badge',
             )
         );
     }

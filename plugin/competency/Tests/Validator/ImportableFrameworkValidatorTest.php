@@ -43,6 +43,7 @@ class ImportableFrameworkValidatorTest extends UnitTestCase
 
     /**
      * @dataProvider managerValidationProvider
+     *
      * @param string $errorType
      * @param array  $errors
      */
@@ -53,7 +54,7 @@ class ImportableFrameworkValidatorTest extends UnitTestCase
             ->with('{}')
             ->willReturn([
                 'type' => $errorType,
-                'errors' => $errors
+                'errors' => $errors,
             ]);
         $builder = $this->mock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
         $builder->expects($this->any())
@@ -75,7 +76,7 @@ class ImportableFrameworkValidatorTest extends UnitTestCase
             [Validator::ERR_TYPE_JSON, ['a', 'b']],
             [Validator::ERR_TYPE_SCHEMA, ['a', 'b']],
             [Validator::ERR_TYPE_INTERNAL, ['a', 'b']],
-            [Validator::ERR_TYPE_CONFLICT, ['a', 'b', 'c']]
+            [Validator::ERR_TYPE_CONFLICT, ['a', 'b', 'c']],
         ];
     }
 }

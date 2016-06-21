@@ -1,12 +1,11 @@
 <?php
+
 namespace Icap\PortfolioBundle\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\InstallationBundle\Updater\Updater;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
-use Icap\PortfolioBundle\Entity\Widget\WidgetType;
 
 class Updater040201 extends Updater
 {
@@ -46,7 +45,7 @@ class Updater040201 extends Updater
         $countUser = $userRepository->countAllEnabledUsers();
         $index = 0;
 
-        $this->log(sprintf("%d ordered tools to add for users - %s", $countUser, date('Y/m/d H:i:s')));
+        $this->log(sprintf('%d ordered tools to add for users - %s', $countUser, date('Y/m/d H:i:s')));
 
         foreach ($users as $row) {
             $user = $row[0];
@@ -54,7 +53,7 @@ class Updater040201 extends Updater
             $orderedTool = $orderedToolRepo->findOneBy([
                 'tool' => $tool,
                 'user' => $user,
-                'type' => 1
+                'type' => 1,
             ]);
 
             if (null === $orderedTool) {
@@ -66,19 +65,19 @@ class Updater040201 extends Updater
                 $orderedTool->setOrder(1);
                 $orderedTool->setType(1);
                 $this->entityManager->persist($orderedTool);
-                $index++;
+                ++$index;
 
                 if ($index % 200 === 0) {
                     $this->entityManager->flush();
                     $this->entityManager->clear($orderedTool);
-                    $this->log(sprintf("    %d ordered tools added - %s", 200, date('Y/m/d H:i:s')));
+                    $this->log(sprintf('    %d ordered tools added - %s', 200, date('Y/m/d H:i:s')));
                 }
             }
         }
         if ($index % 200 !== 0) {
             $this->entityManager->flush();
             $this->entityManager->clear();
-            $this->log(sprintf("    %d ordered tools added - %s", $index % 200, date('Y/m/d H:i:s')));
+            $this->log(sprintf('    %d ordered tools added - %s', $index % 200, date('Y/m/d H:i:s')));
         }
     }
 }

@@ -11,14 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Security\Collection;
 
-use Claroline\CoreBundle\Entity\User;
-
 /**
  * This is the class used by the UserVoter to take access decisions.
  */
 class GroupCollection
 {
-
     private $groups;
     private $errors;
 

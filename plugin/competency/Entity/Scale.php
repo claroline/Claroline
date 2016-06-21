@@ -68,7 +68,7 @@ class Scale implements \JsonSerializable
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -122,6 +122,7 @@ class Scale implements \JsonSerializable
 
     /**
      * @see $frameworkCount
+     *
      * @param int $count
      */
     public function setFrameworkCount($count)
@@ -131,6 +132,7 @@ class Scale implements \JsonSerializable
 
     /**
      * @see $frameworkCount
+     *
      * @return int
      */
     public function getFrameworkCount()
@@ -140,6 +142,7 @@ class Scale implements \JsonSerializable
 
     /**
      * @see $abilityCount
+     *
      * @param int $count
      */
     public function setAbilityCount($count)
@@ -149,6 +152,7 @@ class Scale implements \JsonSerializable
 
     /**
      * @see $abilityCount
+     *
      * @return int
      */
     public function getAbilityCount()
@@ -162,7 +166,7 @@ class Scale implements \JsonSerializable
             'id' => $this->id,
             'name' => $this->name,
             'frameworkCount' => $this->frameworkCount,
-            'abilityCount' => $this->abilityCount
+            'abilityCount' => $this->abilityCount,
         ];
     }
 }

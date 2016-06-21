@@ -23,11 +23,12 @@ class WidgetInstanceType extends AbstractType
     private $withRole;
     private $roles;
 
-    public function __construct($isDesktop = true, $withRole = false, array $roles = array())
+    public function __construct($bundles = array(), $isDesktop = true, $withRole = false, array $roles = array())
     {
         $this->isDesktop = $isDesktop;
         $this->withRole = $withRole;
         $this->roles = $roles;
+        $this->bundles = $bundles;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -35,6 +36,7 @@ class WidgetInstanceType extends AbstractType
         $datas['is_desktop'] = $this->isDesktop;
         $datas['with_role'] = $this->withRole;
         $datas['roles'] = $this->roles;
+        $bundles = $this->bundles;
 
         $builder->add('name', 'text', array('constraints' => new NotBlank()));
         $builder->add(
@@ -46,19 +48,19 @@ class WidgetInstanceType extends AbstractType
                 'expanded' => false,
                 'multiple' => false,
                 'constraints' => new NotBlank(),
-                'query_builder' => function (WidgetRepository $widgetRepo) use ($datas) {
+                'query_builder' => function (WidgetRepository $widgetRepo) use ($datas, $bundles) {
                     if ($datas['is_desktop']) {
-
                         if ($datas['with_role']) {
-
                             return $widgetRepo->createQueryBuilder('w')
                                 ->join('w.roles', 'r')
                                 ->where('w.isDisplayableInDesktop = true')
-                                ->andWhere("r IN (:roles)")
-                                ->setParameter('roles', $datas['roles']);
-
+                                ->andWhere('r IN (:roles)')
+                                ->leftJoin('w.plugin', 'p')
+                                ->andWhere('CONCAT(p.vendorName, p.bundleName) IN (:bundles)')
+                                ->orWhere('w.plugin is null')
+                                ->setParameter('roles', $datas['roles'])
+                                ->setParameter('bundles', $bundles);
                         } else {
-
                             return $widgetRepo->createQueryBuilder('w')
                                 ->where('w.isDisplayableInDesktop = true');
                         }
@@ -66,7 +68,7 @@ class WidgetInstanceType extends AbstractType
                         return $widgetRepo->createQueryBuilder('w')
                             ->where('w.isDisplayableInWorkspace = true');
                     }
-                }
+                },
             )
         );
     }

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,11 +30,11 @@ class ToolMaskDecoder
     public static $defaultValues = array('open' => 1, 'edit' => 2);
     public static $defaultDeniedIconClass = array(
         'open' => 'fa fa-eye-slash',
-        'edit' => 'fa fa-edit'
+        'edit' => 'fa fa-edit',
     );
     public static $defaultGrantedIconClass = array(
         'open' => 'fa fa-eye',
-        'edit' => 'fa fa-edit'
+        'edit' => 'fa fa-edit',
     );
 
     /**

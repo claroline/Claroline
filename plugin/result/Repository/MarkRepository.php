@@ -22,6 +22,7 @@ class MarkRepository extends EntityRepository
      * with a given result.
      *
      * @param Result $result
+     *
      * @return array
      */
     public function findByResult(Result $result)
@@ -48,8 +49,9 @@ class MarkRepository extends EntityRepository
      * Returns an array representation of the mark associated
      * with a result for a given user.
      *
-     * @param Result    $result
-     * @param User      $user
+     * @param Result $result
+     * @param User   $user
+     *
      * @return array
      */
     public function findByResultAndUser(Result $result, User $user)
@@ -70,7 +72,7 @@ class MarkRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameters([
             'result' => $result,
-            'user' => $user
+            'user' => $user,
         ]);
 
         return $query->getArrayResult();

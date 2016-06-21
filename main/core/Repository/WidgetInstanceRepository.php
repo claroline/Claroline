@@ -14,76 +14,76 @@ namespace Claroline\CoreBundle\Repository;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class WidgetInstanceRepository extends EntityRepository
+class WidgetInstanceRepository extends EntityRepository implements ContainerAwareInterface
 {
+    private $container;
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
     public function findAdminDesktopWidgetInstance(array $excludedWidgetInstances)
     {
-        $dql = "
-            SELECT wdc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetInstance wdc
-            WHERE wdc.isAdmin = true
-            AND wdc.isDesktop = true
-            AND wdc NOT IN (:excludedWidgetInstances)
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('excludedWidgetInstances', $excludedWidgetInstances);
-
-        return $query->getResult();
+        return $this->buildBaseQuery($excludedWidgetInstances)
+            ->where('wdc.isAdmin = true')
+            ->where('wdc.isDesktop = true')
+            ->getQuery()
+            ->getResult();
     }
 
     public function findAdminWorkspaceWidgetInstance(array $excludedWidgetInstances)
     {
-        $dql = "
-            SELECT wdc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetInstance wdc
-            WHERE wdc.isAdmin = true
-            AND wdc.isDesktop = false
-            AND wdc NOT IN (:excludedWidgetInstances)
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('excludedWidgetInstances', $excludedWidgetInstances);
-
-        return $query->getResult();
+        return $this->buildBaseQuery($excludedWidgetInstances)
+            ->where('wdc.isAdmin = true')
+            ->where('wdc.isDesktop = false')
+            ->getQuery()
+            ->getResult();
     }
 
-    public function findDesktopWidgetInstance(
-        User $user,
-        array $excludedWidgetInstances
-    )
+    public function findDesktopWidgetInstance(User $user, array $excludedWidgetInstances)
     {
-        $dql = "
-            SELECT wdc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetInstance wdc
-            WHERE wdc.user = :user
-            AND wdc.isAdmin = false
-            AND wdc.isDesktop = true
-            AND wdc NOT IN (:excludedWidgetInstances)
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('user', $user);
-        $query->setParameter('excludedWidgetInstances', $excludedWidgetInstances);
-
-        return $query->getResult();
+        return $this->buildBaseQuery($excludedWidgetInstances)
+            ->where('wdc.user = :user')
+            ->where('wdc.isAdmin = false')
+            ->where('wdc.isDesktop = true')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
     }
 
-    public function findWorkspaceWidgetInstance(
-        Workspace $workspace,
-        array $excludedWidgetInstances
-    )
+    public function findWorkspaceWidgetInstance(Workspace $workspace, array $excludedWidgetInstances)
     {
-        $dql = "
-            SELECT wdc
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetInstance wdc
-            WHERE wdc.workspace = :workspace
-            AND wdc.isAdmin = false
-            AND wdc.isDesktop = false
-            AND wdc NOT IN (:excludedWidgetInstances)
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('excludedWidgetInstances', $excludedWidgetInstances);
+        return $this->buildBaseQuery($excludedWidgetInstances)
+            ->where('wdc.workspace = :workspace')
+            ->where('wdc.isAdmin = false')
+            ->where('wdc.isDesktop = false')
+            ->setParameter('workspace', $workspace)
+            ->getQuery()
+            ->getResult();
+    }
 
-        return $query->getResult();
+    private function buildBaseQuery(array $excludedWidgetInstances)
+    {
+        $bundles = $this->container
+            ->get('claroline.manager.plugin_manager')
+            ->getEnabled(true);
+
+        return $this->createQueryBuilder('wdc')
+            ->select('wdc')
+            ->join('wdc.widget', 'widget')
+            ->leftJoin('widget.plugin', 'plugin')
+            ->where('wdc NOT IN (:excludedWidgetInstances)')
+            ->andWhere($qb->expr()->orX(
+                'CONCAT(plugin.vendorName, plugin.bundleName) IN (:bundles)',
+                'widget.plugin IS NULL'
+            ))
+            ->setParameters([
+                'excludedWidgetInstances' => $excludedWidgetInstances,
+                'bundles' => $bundles,
+            ]);
     }
 }

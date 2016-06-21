@@ -11,7 +11,7 @@
 
 namespace Claroline\RssReaderBundle\Library\Reader;
 
-use \SimpleXMLElement;
+use SimpleXMLElement;
 use Claroline\RssReaderBundle\Library\FeedReaderInterface;
 use Claroline\RssReaderBundle\Library\FeedInfo;
 use Claroline\RssReaderBundle\Library\FeedItem;
@@ -24,7 +24,7 @@ class RssReader implements FeedReaderInterface
     private $feed;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supports($feedType)
     {
@@ -32,7 +32,7 @@ class RssReader implements FeedReaderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setFeed(SimpleXMLElement $feed)
     {
@@ -40,7 +40,7 @@ class RssReader implements FeedReaderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFeedInfo()
     {
@@ -60,7 +60,7 @@ class RssReader implements FeedReaderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @todo Add support for enclosures
      */

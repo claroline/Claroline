@@ -17,14 +17,16 @@ class BundleHandler extends BaseHandler
 {
     private $registeredBundles;
     private $configDir;
+    private $prevInstalled;
+    private $bupIniFile;
 
     public function __construct($configDir, LoggerInterface $logger = null)
     {
         $this->configDir = $configDir;
-        $bundleFile = $configDir . '/bundles.ini';
+        $bundleFile = $configDir.'/bundles.ini';
         parent::__construct($bundleFile, $logger);
         $this->registeredBundles = parse_ini_file($this->targetFile);
-        $this->bupIniFile = $configDir . '/bundles.bup.ini';
+        $this->prevInstalled = $configDir.'/previous-installed.json';
     }
 
     public function writeBundleFile(array $bundleFqcns)
@@ -45,23 +47,15 @@ class BundleHandler extends BaseHandler
         $this->doWriteBundleFile();
     }
 
-    public function removeBupIniFile()
-    {
-        @unlink($this->bupIniFile);
-    }
-
     private function doWriteBundleFile()
     {
-        $this->log('Saving old bundle file...', '');
-        @unlink($this->bupIniFile);
-        copy($this->targetFile, $this->bupIniFile);
         $this->log('Writing bundle file...', '');
 
         $content = '';
 
         foreach ($this->registeredBundles as $bundle => $isEnabled) {
             $isEnabled = $isEnabled ? 'true' : 'false';
-            $content .= "{$bundle} = {$isEnabled}" . PHP_EOL;
+            $content .= "{$bundle} = {$isEnabled}".PHP_EOL;
         }
 
         file_put_contents($this->targetFile, $content);

@@ -3,13 +3,11 @@
 namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
-use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Document;
 
-class LogDropzoneManualRequestSentEvent extends AbstractLogResourceEvent implements NotifiableInterface {
-
+class LogDropzoneManualRequestSentEvent extends AbstractLogResourceEvent implements NotifiableInterface
+{
     const ACTION = 'resource-innova_collecticiel-dropzone_manual_request_sent';
     protected $document;
     protected $newState;
@@ -17,24 +15,20 @@ class LogDropzoneManualRequestSentEvent extends AbstractLogResourceEvent impleme
     private $userIds = array();
 
     /**
-     * @param Wiki $wiki
-     * @param Section $section
+     * @param Wiki         $wiki
+     * @param Section      $section
      * @param Contribution $contribution
-    */
+     */
     public function __construct(Document $document, $newstate, $userIds)
     {
         $this->document = $document;
         $this->newState = $newstate;
         $this->userIds = $userIds;
         $this->details = array(
-                'newState'=> $newstate
+                'newState' => $newstate,
         );
 
-
-
-
-
-/**        parent::__construct($dropzone->getResourceNode(), $this->details); */
+/*        parent::__construct($dropzone->getResourceNode(), $this->details); */
     }
 
     /**
@@ -52,7 +46,7 @@ class LogDropzoneManualRequestSentEvent extends AbstractLogResourceEvent impleme
     /**
      * Get sendToFollowers boolean.
      * 
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -61,12 +55,13 @@ class LogDropzoneManualRequestSentEvent extends AbstractLogResourceEvent impleme
 
     /**
      * Get includeUsers array of user ids.
-     * Reports are only reported to user witch have the manager role
+     * Reports are only reported to user witch have the manager role.
+     *
      * @return array
      */
     public function getIncludeUserIds()
     {
-       return $this->userIds; 
+        return $this->userIds;
     }
 
     /**
@@ -96,11 +91,11 @@ class LogDropzoneManualRequestSentEvent extends AbstractLogResourceEvent impleme
      */
     public function getIconKey()
     {
-        return "document";
+        return 'document';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -110,16 +105,16 @@ class LogDropzoneManualRequestSentEvent extends AbstractLogResourceEvent impleme
         $notificationDetails['resource'] = array(
             'id' => $this->document->getId(),
             'name' => $this->resource->getName(),
-            'type' => $this->resource->getResourceType()->getName()
+            'type' => $this->resource->getResourceType()->getName(),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

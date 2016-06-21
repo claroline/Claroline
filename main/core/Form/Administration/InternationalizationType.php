@@ -40,7 +40,7 @@ class InternationalizationType extends AbstractType
                 'label' => 'languages',
                 'expanded' => true,
                 'multiple' => true,
-                'data' => $this->activated
+                'data' => $this->activated,
             )
         );
     }

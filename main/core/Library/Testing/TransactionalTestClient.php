@@ -29,8 +29,7 @@ class TransactionalTestClient extends Client
         array $server = array(),
         History $history = null,
         CookieJar $cookieJar = null
-    )
-    {
+    ) {
         parent::__construct($kernel, $server, $history, $cookieJar);
         $this->connection = $this->getContainer()->get('doctrine.dbal.default_connection');
     }

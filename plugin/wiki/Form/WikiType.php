@@ -24,7 +24,7 @@ class WikiType extends AbstractType
             'translation_domain' => 'icap_wiki',
             'data_class' => 'Icap\WikiBundle\Entity\Wiki',
             'csrf_protection' => true,
-            'intention' => 'create_wiki'
+            'intention' => 'create_wiki',
         ));
     }
 }

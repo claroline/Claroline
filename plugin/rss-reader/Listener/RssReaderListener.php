@@ -23,7 +23,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 
-
 /**
  * @DI\Service
  */
@@ -50,8 +49,7 @@ class RssReaderListener
         TwigEngine $templating,
         ReaderProvider $rssReader,
         ObjectManager $om
-    )
-    {
+    ) {
         $this->rssManager = $rssManager;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
@@ -89,14 +87,14 @@ class RssReaderListener
             $config = new Config();
         }
 
-        $form = $this->formFactory->create(new ConfigType, $config);
+        $form = $this->formFactory->create(new ConfigType(), $config);
 
-           $content = $this->templating->render(
+        $content = $this->templating->render(
                 'ClarolineRssReaderBundle::formRss.html.twig',
                 array(
                     'form' => $form->createView(),
                     'isAdmin' => $instance->isAdmin(),
-                    'config' => $instance
+                    'config' => $instance,
                 )
            );
         $event->setContent($content);
@@ -107,7 +105,9 @@ class RssReaderListener
         // TODO : handle feed format exception...
         $content = strstr(@file_get_contents($rssConfig->getUrl()), '<?xml');
 
-        if ($content === false) return $this->templating->render('ClarolineRssReaderBundle::invalid.html.twig');
+        if ($content === false) {
+            return $this->templating->render('ClarolineRssReaderBundle::invalid.html.twig');
+        }
 
         try {
             $items = $this->rssReader
@@ -125,7 +125,6 @@ class RssReaderListener
             'ClarolineRssReaderBundle::rss.html.twig',
             array('rss' => $items, 'widgetId' => $widgetId)
         );
-
     }
 
     /**

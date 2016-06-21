@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
@@ -27,7 +26,7 @@ class FieldFacetValue
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_user"})
+     * @Groups({"api_user", "api_profile"})
      */
     protected $id;
 
@@ -45,6 +44,11 @@ class FieldFacetValue
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $dateValue;
+
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    protected $arrayValue;
 
     /**
      * @ORM\ManyToOne(
@@ -67,8 +71,8 @@ class FieldFacetValue
     protected $fieldFacet;
 
     /**
-     * @Groups({"api_user"})
-     * @Accessor(getter="getValue") 
+     * @Groups({"api_user", "api_profile"})
+     * @Accessor(getter="getValue")
      */
     protected $value;
 
@@ -123,6 +127,16 @@ class FieldFacetValue
         return $this->stringValue;
     }
 
+    public function setArrayValue(array $arrayValue)
+    {
+        $this->arrayValue = $arrayValue;
+    }
+
+    public function getArrayValue()
+    {
+        return $this->arrayValue;
+    }
+
     /**
      * @param User $user
      */
@@ -144,8 +158,8 @@ class FieldFacetValue
         switch ($this->getFieldFacet()->getType()) {
             case FieldFacet::FLOAT_TYPE: return $this->getFloatValue();
             case FieldFacet::DATE_TYPE: return $this->getDateValue();
-            case FieldFacet::STRING_TYPE: return $this->getStringValue();
-            default: return "error";
+            case FieldFacet::CHECKBOXES_TYPE: return $this->getArrayValue();
+            default: return $this->getStringValue();
         }
     }
-} 
+}

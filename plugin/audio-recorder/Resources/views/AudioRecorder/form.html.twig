@@ -1,0 +1,129 @@
+{% block stylesheets %}
+  {% stylesheets debug=false filter="cssrewrite, cssmin" output="vendor/claroline/plugin/audiorecorder/css/audio-recorder.min.css"
+   "@InnovaAudioRecorderBundle/Resources/style/audio-recorder.css"
+  %}
+      <link rel="stylesheet" href="{{ asset_url }}" screen="media"/>
+  {% endstylesheets %}
+{% endblock %}
+
+<!-- MODAL FORM -->
+<div class="modal-dialog audio-recorder-creation-modal" id="audio-recorder-modal">
+  <form id="arForm" action="{{ path('claro_resource_create', {'resourceType':resourceType, 'parentId':'_nodeId'}) }}" enctype="multipart/form-data">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">
+          <i class="fa fa-microphone"></i>&nbsp;{{ 'innova_audio_recorder'|trans({}, 'resource') }}</h4>
+      </div>
+      <div class="modal-body">
+        <div id="form-content">
+          <!-- resource name -->
+          <div class="form-inline">
+            <div class="form-group">
+              <label for="resource-name-input">{{ 'resource_name'|trans({}, 'innova_audio_recorder') }}</label>
+              <input required="required" id="resource-name-input" type="text" value="recorded-audio-{{'now'|date('YmdHs')}}" class="form-control" name="resourceName" placeholder="">
+            </div>
+          </div>
+          <hr/>
+          <div id="audioRecorderRow" class="row">
+            <div class="pull-left mic-icon">
+              <i class="fa fa-microphone fa-5x"></i>
+              <canvas id="db-meter" title="{{ 'db_meter'|trans({}, 'innova_audio_recorder') }}"></canvas>
+            </div>
+            <div class="col-md-12 text-center">
+              <button type="button" role="button" class="btn btn-primary" id="audio-record-start" disabled title="{{ 'start_recording'|trans({}, 'innova_audio_recorder') }}">{{ 'start_recording'|trans({}, 'innova_audio_recorder') }}</button>
+              <button type="button" role="button" class="btn btn-warning" id="audio-record-stop" title="{{ 'stop_recording'|trans({}, 'innova_audio_recorder') }}" style="display:none;">{{ 'stop_recording'|trans({}, 'innova_audio_recorder') }}</button>
+            </div>
+          </div>
+          <!-- timer -->
+          <div class="row current-time-row">
+            <div class="col-md-12 text-center">
+              <span class="current-time">
+                0&nbsp;s
+              </span>
+              {% if maxTime > 0 %}
+                <span>&nbsp;({{maxTime | hmsTime}})</span>
+              {% endif %}
+            </div>
+          </div>
+          <!-- stop recording info -->
+          <div class="row stop-recording-message" style="display:none;">
+            <div class="col-md-12 text-center">
+              <hr/>
+              <div class="alert-info">
+                {{ 'end_recording_message'|trans({}, 'innova_audio_recorder') | raw }}
+              </div>
+            </div>
+          </div>
+          <!-- max attempt reached -->
+          <div class="row max-try-reached" style="display:none;">
+            <div class="col-md-12 text-center">
+              <hr/>
+              <div class="alert-info">
+                {{ 'max_try_threshold_reached'|trans({}, 'innova_audio_recorder') | raw }}
+              </div>
+            </div>
+          </div>
+          <!-- max time reached -->
+          <div class="row max-time-reached" style="display:none;">
+            <div class="col-md-12 text-center">
+              <hr/>
+              <div class="alert-info">
+                {{ 'end_recording_message_maxtime_reached'|trans({}, 'innova_audio_recorder') | raw }}
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <!-- my recordings -->
+          <div class="row">
+            <div class="col-md-12">
+              <div id="audio-records-container">
+                <h3>
+                  <small>{{ 'my_recordings'|trans({}, 'innova_audio_recorder') }}</small>
+                </h3>
+                <table class="table">
+                  {% for index in 0..maxTry - 1 %}
+                    <tr id="tr-preview-{{index}}" class="recorded-audio-row" data-index="{{index}}">
+                      <td><strong>{{index + 1}}.</strong></td>
+                      <td class="actions"></td>
+                      <td class="text-right"><input type="radio" name="audio-selected" disabled class="select"></td>
+                    </tr>
+                  {% endfor %}
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- progress bar -->
+        <div class="row progress-row" style="display:none;">
+          <div class="col-md-12">
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <span class="sr-only"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- error -->
+        <div class="row error-row" style="display:none;">
+          <div class="col-md-12">
+            <div class="alert alert-danger">
+              {{ 'resource_creation_error'|trans({}, 'innova_audio_recorder') }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div id="progress"></div>
+        <button type="button" role="button" id="submitButton" disabled="disabled" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+      </div>
+    </div>
+  </form>
+  <input type="hidden" id="maxTime" value="{{maxTime}}">
+  <input type="hidden" id="maxTry" value="{{maxTry}}">
+</div>
+
+{% block javascripts %}
+  <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain':'innova_audio_recorder' }) }}"></script>
+  <script src="{{ hotAsset('dist/claroline-distribution-plugin-audio-recorder-recorder.js') }}"></script>
+{% endblock %}

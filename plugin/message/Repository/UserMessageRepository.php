@@ -21,7 +21,7 @@ class UserMessageRepository extends EntityRepository
      * Finds UserMessage marked as sent by a user.
      *
      * @param User $user
-     * @param boolean $executeQuery
+     * @param bool $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -46,7 +46,7 @@ class UserMessageRepository extends EntityRepository
      * Finds UserMessage received by a user.
      *
      * @param User $user
-     * @param boolean $executeQuery
+     * @param bool $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -71,7 +71,7 @@ class UserMessageRepository extends EntityRepository
      * Finds UserMessage removed by a user.
      *
      * @param User $user
-     * @param boolean $executeQuery
+     * @param bool $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -95,9 +95,9 @@ class UserMessageRepository extends EntityRepository
      * Finds UserMessage received by a user, filtered by a search
      * on the object or on the username of the sender.
      *
-     * @param User $receiver
+     * @param User   $receiver
      * @param string $objectOrSenderUsernameSearch
-     * @param boolean $executeQuery
+     * @param bool   $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -105,8 +105,7 @@ class UserMessageRepository extends EntityRepository
         User $receiver,
         $objectOrSenderUsernameSearch,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT um, m, u
             FROM Claroline\MessageBundle\Entity\UserMessage um
@@ -122,7 +121,7 @@ class UserMessageRepository extends EntityRepository
             ORDER BY m.date DESC
         ";
         $query = $this->_em->createQuery($dql);
-        $searchParameter = '%' . strtoupper($objectOrSenderUsernameSearch) . '%';
+        $searchParameter = '%'.strtoupper($objectOrSenderUsernameSearch).'%';
         $query->setParameter('search', $searchParameter);
 
         return $executeQuery ? $query->getResult() : $query;
@@ -131,9 +130,9 @@ class UserMessageRepository extends EntityRepository
     /**
      * Finds UserMessage sent by a user, filtered by a search on the object.
      *
-     * @param User $sender
+     * @param User   $sender
      * @param string $objectSearch
-     * @param boolean $executeQuery
+     * @param bool   $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -151,7 +150,7 @@ class UserMessageRepository extends EntityRepository
             ORDER BY m.date DESC
         ";
         $query = $this->_em->createQuery($dql);
-        $searchParameter = '%' . strtoupper($objectSearch) . '%';
+        $searchParameter = '%'.strtoupper($objectSearch).'%';
         $query->setParameter('search', $searchParameter);
 
         return $executeQuery ? $query->getResult() : $query;
@@ -161,9 +160,9 @@ class UserMessageRepository extends EntityRepository
      * Finds UserMessage removed by a user, filtered by a search
      * on the object or on the username of the sender.
      *
-     * @param User $user
+     * @param User   $user
      * @param string $objectOrSenderUsernameSearch
-     * @param boolean $executeQuery
+     * @param bool   $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -171,8 +170,7 @@ class UserMessageRepository extends EntityRepository
         User $user,
         $objectOrSenderUsernameSearch,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT um, m, u
             FROM Claroline\MessageBundle\Entity\UserMessage um
@@ -188,7 +186,7 @@ class UserMessageRepository extends EntityRepository
             ORDER BY m.date DESC
         ";
         $query = $this->_em->createQuery($dql);
-        $searchParameter = '%' . strtoupper($objectOrSenderUsernameSearch) . '%';
+        $searchParameter = '%'.strtoupper($objectOrSenderUsernameSearch).'%';
         $query->setParameter('search', $searchParameter);
 
         return $executeQuery ? $query->getResult() : $query;
@@ -197,7 +195,7 @@ class UserMessageRepository extends EntityRepository
     /**
      * Finds UserMessage received or sent by a user, filtered by specific messages.
      *
-     * @param User $user
+     * @param User           $user
      * @param array[Message] $messages
      *
      * @return array[UserMessage]

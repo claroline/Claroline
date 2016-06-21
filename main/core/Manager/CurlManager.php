@@ -12,8 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Entity\Oauth\Client;
 use Symfony\Component\Form\AbstractType;
 
 /**
@@ -57,7 +55,7 @@ class CurlManager
 
     private function setPutCurl($ch, $payload)
     {
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->urlify($payload));
     }
 

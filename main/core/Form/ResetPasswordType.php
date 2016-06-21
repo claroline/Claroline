@@ -27,7 +27,7 @@ class ResetPasswordType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($this->resetPwd) {
-            $builder->add('password','password');
+            $builder->add('password', 'password');
         }
         $builder->add(
             'plainPassword',
@@ -36,7 +36,7 @@ class ResetPasswordType extends AbstractType
                 'type' => 'password',
                 'invalid_message' => 'password_mismatch',
                 'first_options' => array('label' => 'new_password'),
-                'second_options' => array('label' => 'repeat_password')
+                'second_options' => array('label' => 'repeat_password'),
             )
         );
     }
@@ -50,7 +50,7 @@ class ResetPasswordType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
     }

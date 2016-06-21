@@ -53,9 +53,9 @@ class LevelTransformerTest extends UnitTestCase
                 new ArrayCollection([
                     $this->makeLevel('Foo'),
                     $this->makeLevel('Bar'),
-                    $this->makeLevel('Baz')
+                    $this->makeLevel('Baz'),
                 ]),
-                "Foo\nBar\nBaz\n"
+                "Foo\nBar\nBaz\n",
             ],
         ];
     }
@@ -65,7 +65,7 @@ class LevelTransformerTest extends UnitTestCase
         return [
             ["Foo\nBar\nBaz", ['Foo', 'Bar', 'Baz']],
             ["  Foo\n\nBar\n   ", ['Foo', 'Bar']],
-            ["\nFoo Bar\n   ", ['Foo Bar']]
+            ["\nFoo Bar\n   ", ['Foo Bar']],
         ];
     }
 

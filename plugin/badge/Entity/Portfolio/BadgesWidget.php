@@ -4,9 +4,7 @@ namespace Icap\BadgeBundle\Entity\Portfolio;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="icap__portfolio_widget_badges")
@@ -62,7 +60,7 @@ class BadgesWidget extends AbstractWidget
     public function getData()
     {
         $data = array(
-            'children' => array()
+            'children' => array(),
         );
 
         foreach ($this->getBadges() as $userBadge) {
@@ -78,7 +76,7 @@ class BadgesWidget extends AbstractWidget
     public function getEmpty()
     {
         return array(
-            'children' => array()
+            'children' => array(),
         );
     }
 

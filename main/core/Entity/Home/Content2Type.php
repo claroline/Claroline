@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Content;
 
 /**
- * Content2Type
+ * Content2Type.
  *
  * @ORM\Entity()
  * @ORM\Table(name="claro_content2type")
@@ -23,7 +23,7 @@ use Claroline\CoreBundle\Entity\Content;
 class Content2Type
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -33,14 +33,14 @@ class Content2Type
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Content")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-    */
+      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
     private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Type")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-    */
+     */
     private $type;
 
     /**
@@ -51,22 +51,22 @@ class Content2Type
     private $size;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(type="boolean")
      */
     private $collapse;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Type")
-    * @ORM\JoinColumn(onDelete="CASCADE")
-    */
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Type")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
     private $next;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Type")
-    * @ORM\JoinColumn(onDelete="CASCADE")
-    */
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Type")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
     private $back;
 
     /**
@@ -80,9 +80,9 @@ class Content2Type
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -90,9 +90,10 @@ class Content2Type
     }
 
     /**
-     * Set size
+     * Set size.
      *
      * @param string $size
+     *
      * @return Content2Type
      */
     public function setSize($size)
@@ -103,7 +104,7 @@ class Content2Type
     }
 
     /**
-     * Get size
+     * Get size.
      *
      * @return string
      */
@@ -113,9 +114,10 @@ class Content2Type
     }
 
     /**
-     * Set collapse
+     * Set collapse.
      *
-     * @param boolean $collapse
+     * @param bool $collapse
+     *
      * @return Content2Type
      */
     public function setCollapse($collapse)
@@ -126,9 +128,9 @@ class Content2Type
     }
 
     /**
-     * Get collapse
+     * Get collapse.
      *
-     * @return boolean
+     * @return bool
      */
     public function isCollapse()
     {
@@ -136,9 +138,10 @@ class Content2Type
     }
 
     /**
-     * Set content
+     * Set content.
      *
-     * @param  \Claroline\CoreBundle\Entity\Content $content
+     * @param \Claroline\CoreBundle\Entity\Content $content
+     *
      * @return Content2Type
      */
     public function setContent(Content $content)
@@ -149,7 +152,7 @@ class Content2Type
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return \Claroline\CoreBundle\Entity\Content
      */
@@ -159,9 +162,10 @@ class Content2Type
     }
 
     /**
-     * Set type
+     * Set type.
      *
-     * @param  \Claroline\CoreBundle\Entity\Home\Type $type
+     * @param \Claroline\CoreBundle\Entity\Home\Type $type
+     *
      * @return Content2Type
      */
     public function setType(Type $type)
@@ -172,7 +176,7 @@ class Content2Type
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return \Claroline\CoreBundle\Entity\Home\Type
      */
@@ -182,9 +186,10 @@ class Content2Type
     }
 
     /**
-     * Set next
+     * Set next.
      *
-     * @param  \Claroline\CoreBundle\Entity\Home\Content2Type $next
+     * @param \Claroline\CoreBundle\Entity\Home\Content2Type $next
+     *
      * @return Content2Type
      */
     public function setNext(Content2Type $next = null)
@@ -195,7 +200,7 @@ class Content2Type
     }
 
     /**
-     * Get next
+     * Get next.
      *
      * @return \Claroline\CoreBundle\Entity\Home\Content2Type
      */
@@ -205,9 +210,10 @@ class Content2Type
     }
 
     /**
-     * Set back
+     * Set back.
      *
-     * @param  \Claroline\CoreBundle\Entity\Home\Content2Type $back
+     * @param \Claroline\CoreBundle\Entity\Home\Content2Type $back
+     *
      * @return Content2Type
      */
     public function setBack(Content2Type $back = null)
@@ -218,7 +224,7 @@ class Content2Type
     }
 
     /**
-     * Get back
+     * Get back.
      *
      * @return \Claroline\CoreBundle\Entity\Home\Content2Type
      */
@@ -227,7 +233,7 @@ class Content2Type
         return $this->back;
     }
 
-     /**
+    /**
      * Detach a content from a type, this function can be used for reorder or delete contents.
      */
     public function detach()

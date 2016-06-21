@@ -5,7 +5,7 @@ namespace FormaLibre\PresenceBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Status
+ * Status.
  *
  * @ORM\Table(name="formalibre_presencebundle_schoolYear")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SchoolYear
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -31,84 +31,92 @@ class SchoolYear
      * @ORM\Column(name="schoolYear_begin",type="date")
      */
     protected $schoolYearBegin;
-     /**
+    /**
      * @ORM\Column(name="schoolYear_end",type="date")
      */
     protected $schoolYearEnd;
-        /**
+    /**
      * @ORM\Column(name="schoolDay_begin_hour",type="time")
      */
     protected $schoolDayBeginHour;
-    
+
     /**
      * @ORM\Column(name="schoolDay_end_hour",type="time")
      */
     protected $schoolDayEndHour;
-     /**
+    /**
      * @var string
      *
      * @ORM\Column(name="schoolYearActual", type="boolean" )
      */
     private $schoolYearActual = false;
-    
-    function getId() {
+
+    public function getId()
+    {
         return $this->id;
     }
 
-    function getSchoolYearName() {
+    public function getSchoolYearName()
+    {
         return $this->schoolYearName;
     }
 
-    function getSchoolYearBegin() {
+    public function getSchoolYearBegin()
+    {
         return $this->schoolYearBegin;
     }
 
-    function getSchoolYearEnd() {
+    public function getSchoolYearEnd()
+    {
         return $this->schoolYearEnd;
     }
 
-    function getSchoolDayBeginHour() {
+    public function getSchoolDayBeginHour()
+    {
         return $this->schoolDayBeginHour;
     }
 
-    function getSchoolDayEndHour() {
+    public function getSchoolDayEndHour()
+    {
         return $this->schoolDayEndHour;
     }
 
-    function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
-    function setSchoolYearName($schoolYearName) {
+    public function setSchoolYearName($schoolYearName)
+    {
         $this->schoolYearName = $schoolYearName;
     }
 
-    function setSchoolYearBegin($schoolYearBegin) {
+    public function setSchoolYearBegin($schoolYearBegin)
+    {
         $this->schoolYearBegin = $schoolYearBegin;
     }
 
-    function setSchoolYearEnd($schoolYearEnd) {
+    public function setSchoolYearEnd($schoolYearEnd)
+    {
         $this->schoolYearEnd = $schoolYearEnd;
     }
 
-    function setSchoolDayBeginHour($schoolDayBeginHour) {
+    public function setSchoolDayBeginHour($schoolDayBeginHour)
+    {
         $this->schoolDayBeginHour = $schoolDayBeginHour;
     }
 
-    function setSchoolDayEndHour($schoolDayEndHour) {
+    public function setSchoolDayEndHour($schoolDayEndHour)
+    {
         $this->schoolDayEndHour = $schoolDayEndHour;
     }
-    function getSchoolYearActual() {
+    public function getSchoolYearActual()
+    {
         return $this->schoolYearActual;
     }
 
-    function setSchoolYearActual($schoolYearActual) {
+    public function setSchoolYearActual($schoolYearActual)
+    {
         $this->schoolYearActual = $schoolYearActual;
     }
-
- 
-
-
-
 }
-

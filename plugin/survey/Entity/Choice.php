@@ -11,7 +11,6 @@
 
 namespace Claroline\SurveyBundle\Entity;
 
-use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -47,7 +46,7 @@ class Choice
     protected $other = false;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -87,7 +86,7 @@ class Choice
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isOther()
     {
@@ -95,7 +94,7 @@ class Choice
     }
 
     /**
-     * @param boolean $other
+     * @param bool $other
      */
     public function setOther($other)
     {

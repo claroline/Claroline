@@ -8,8 +8,8 @@ use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
 
-class LogDocumentCreateEvent extends AbstractLogResourceEvent {
-
+class LogDocumentCreateEvent extends AbstractLogResourceEvent
+{
     const ACTION = 'resource-innova_collecticiel-document_create';
 
     /**
@@ -25,12 +25,12 @@ class LogDocumentCreateEvent extends AbstractLogResourceEvent {
         }
 
         $details = array(
-            'dropzone'  => array(
+            'dropzone' => array(
                 'id' => $dropzone->getId(),
             ),
-            'drop'  => array(
+            'drop' => array(
                 'id' => $drop->getId(),
-                'documents' => $documentsDetails
+                'documents' => $documentsDetails,
             ),
             'document' => $document->toArray(),
         );

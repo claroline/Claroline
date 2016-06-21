@@ -35,7 +35,7 @@ class AppearanceType extends AbstractType
                 array(
                     'required' => false,
                     'label' => 'show_name_in_top_bar',
-                    'disabled' => isset($this->lockedParams['nameActive'])
+                    'disabled' => isset($this->lockedParams['nameActive']),
                 )
             )
             ->add(
@@ -44,7 +44,7 @@ class AppearanceType extends AbstractType
                 array(
                     'required' => false,
                     'disabled' => isset($this->lockedParams['footer']),
-                    'label' => 'footer'
+                    'label' => 'footer',
                 )
             )
             ->add(
@@ -53,7 +53,7 @@ class AppearanceType extends AbstractType
                 array(
                     'choices' => $this->themes,
                     'disabled' => isset($this->lockedParams['theme']),
-                    'label' => 'theme'
+                    'label' => 'theme',
                 )
             );
     }

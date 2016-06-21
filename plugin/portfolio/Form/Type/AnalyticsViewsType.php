@@ -45,14 +45,14 @@ class AnalyticsViewsType extends AbstractType
         $builder
             ->add(
                 'range', 'daterange', array(
-                    'label' => $this->translator->trans('period', [], 'icap_portfolio') . ' :',
+                    'label' => $this->translator->trans('period', [], 'icap_portfolio').' :',
                     'required' => true,
                     'attr' => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3')
+                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3'),
                 )
             );
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             if ($this->withPortfolioSelect) {
                 $form = $event->getForm();
                 $user = $this->user;
@@ -62,14 +62,14 @@ class AnalyticsViewsType extends AbstractType
                         'portfolio', 'entity', array(
                             'class' => 'IcapPortfolioBundle:Portfolio',
                             'property' => 'title',
-                            'query_builder' => function(EntityRepository $entityRepository) use ($user) {
+                            'query_builder' => function (EntityRepository $entityRepository) use ($user) {
                                 return $entityRepository->createQueryBuilder('p')
                                     ->where('p.user = :user')
                                     ->setParameter('user', $user);
                             },
                             'label' => 'show',
                             'attr' => array('class' => 'input-sm'),
-                            'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3')
+                            'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3'),
                         )
                     );
             }
@@ -86,7 +86,7 @@ class AnalyticsViewsType extends AbstractType
         $resolver->setDefaults(
             array(
                 'translation_domain' => 'icap_portfolio',
-                'csrf_protection' => false
+                'csrf_protection' => false,
             )
         );
     }

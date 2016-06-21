@@ -62,7 +62,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
                                     ->ifTrue(
                                         function ($v) use ($rootPath) {
                                             return call_user_func_array(
-                                                __CLASS__ . '::fileNotExists',
+                                                __CLASS__.'::fileNotExists',
                                                 array($v, $rootPath)
                                             );
                                         }
@@ -79,7 +79,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function supports($type)
     {
-        return $type == 'yml' ? true: false;
+        return $type == 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -93,7 +93,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
         $ds = DIRECTORY_SEPARATOR;
 
         foreach ($array['data'] as $item) {
-            $content = file_get_contents($this->getRootPath() . $ds . $item['file']['path']);
+            $content = file_get_contents($this->getRootPath().$ds.$item['file']['path']);
 
             return $this->container->get('claroline.manager.text_manager')->create(
                 $content,
@@ -107,7 +107,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        return !file_exists($rootpath . $ds . $v);
+        return !file_exists($rootpath.$ds.$v);
     }
 
     public function export(Workspace $workspace, array &$_files, $object)
@@ -115,12 +115,12 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
         $content = $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\Revision')
             ->getLastRevision($object)->getContent();
 
-        $uid = uniqid() . '.txt';
-        $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
+        $uid = uniqid().'.txt';
+        $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$uid;
         file_put_contents($tmpPath, $content);
         $_files[$uid] = $tmpPath;
         $data = array(array('file' => array(
-            'path' => $uid
+            'path' => $uid,
         )));
 
         return $data;
@@ -135,7 +135,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
     {
         if (isset($data[0])) {
             if ($path = $data[0]['file']['path']) {
-                $content = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
+                $content = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$path);
                 $entities = $this->om->getRepository('ClarolineCoreBundle:Resource\Revision')->findByContent($content);
 
                 foreach ($entities as $entity) {

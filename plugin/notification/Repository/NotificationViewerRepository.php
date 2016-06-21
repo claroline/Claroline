@@ -4,7 +4,6 @@ namespace Icap\NotificationBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Icap\NotificationBundle\Entity\NotificationUserParameters;
 
 class NotificationViewerRepository extends EntityRepository
 {
@@ -15,7 +14,7 @@ class NotificationViewerRepository extends EntityRepository
             ->join('notificationViewer.notification', 'notification')
             ->andWhere('notificationViewer.viewerId = :viewerId')
             ->orderBy('notification.creationDate', 'DESC')
-            ->setParameter("viewerId", $viewerId);
+            ->setParameter('viewerId', $viewerId);
         $this->addVisibleTypesRestriction($queryBuilder, $visibleTypes);
         $this->addCategoryRestriction($queryBuilder, $category);
 
@@ -35,7 +34,7 @@ class NotificationViewerRepository extends EntityRepository
 
     public function markAllAsViewed($userId)
     {
-        $queryBuilder = $this->createQueryBuilder("notificationViewer");
+        $queryBuilder = $this->createQueryBuilder('notificationViewer');
         $queryBuilder
             ->update()
             ->set('notificationViewer.status', true)
@@ -62,7 +61,7 @@ class NotificationViewerRepository extends EntityRepository
 
     private function addVisibleTypesRestriction($qb, $visibleTypes)
     {
-        if (count($visibleTypes) >0) {
+        if (count($visibleTypes) > 0) {
             foreach ($visibleTypes as $name => $val) {
                 if (!$val) {
                     $qb->andWhere(
@@ -81,12 +80,12 @@ class NotificationViewerRepository extends EntityRepository
     private function addCategoryRestriction(QueryBuilder $qb, $category)
     {
         if ($category != null) {
-            if ($category != "system") {
-                $qb->andWhere("notification.iconKey = :category")
-                    ->setParameter("category", $category);
+            if ($category != 'system') {
+                $qb->andWhere('notification.iconKey = :category')
+                    ->setParameter('category', $category);
             } else {
                 $qb->andWhere(
-                  $qb->expr()->isNull("notification.iconKey")
+                  $qb->expr()->isNull('notification.iconKey')
                 );
             }
         }

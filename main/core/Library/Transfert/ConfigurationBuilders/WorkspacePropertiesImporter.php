@@ -37,7 +37,7 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
         $this->om = $om;
     }
 
-    public function  getConfigTreeBuilder()
+    public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('properties');
@@ -78,26 +78,26 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
         $this->validateCode($configuration['code']);
     }
 
-    function validateCode($code)
+    public function validateCode($code)
     {
         $ws = $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findByCode($code);
 
         if ($ws !== array()) {
-            throw new \Exception('The code ' . $code . ' already exists');
+            throw new \Exception('The code '.$code.' already exists');
         }
     }
 
-    function validateOwner($owner)
+    public function validateOwner($owner)
     {
         $manifest = $this->getConfiguration();
 
-        if (isset ($manifest['members'])) {
-            if (isset ($manifest['members']['owner'])) {
+        if (isset($manifest['members'])) {
+            if (isset($manifest['members']['owner'])) {
                 if ($manifest['members']['owner']['username'] === $owner) {
                     return true;
                 }
 
-                throw new \Exception('The user ' . $owner . ' was not found');
+                throw new \Exception('The user '.$owner.' was not found');
             }
         }
 

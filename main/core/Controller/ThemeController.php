@@ -46,8 +46,7 @@ class ThemeController
         ThemeManager $manager,
         FormFactoryInterface $factory,
         RouterInterface $router
-    )
-    {
+    ) {
         $this->manager = $manager;
         $this->formFactory = $factory;
         $this->router = $router;
@@ -61,7 +60,7 @@ class ThemeController
     {
         return [
             'isReadOnly' => !$this->manager->isThemeDirWritable(),
-            'themes' => $this->manager->listThemes()
+            'themes' => $this->manager->listThemes(),
         ];
     }
 
@@ -91,6 +90,7 @@ class ThemeController
      * @EXT\Template("ClarolineCoreBundle:Theme:form.html.twig")
      *
      * @param Request $request
+     *
      * @return RedirectResponse|array
      */
     public function createThemeAction(Request $request)

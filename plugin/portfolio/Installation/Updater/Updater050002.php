@@ -1,13 +1,10 @@
 <?php
+
 namespace Icap\PortfolioBundle\Installation\Updater;
 
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\InstallationBundle\Updater\Updater;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
-use Icap\PortfolioBundle\Entity\Widget\WidgetType;
 
 class Updater050002 extends Updater
 {
@@ -41,27 +38,30 @@ class Updater050002 extends Updater
         if ($this->connection->getSchemaManager()->tablesExist(array('icap__portfolio_widget_title'))) {
             $this->log('Restoring portfolio titles...');
             $rowPortfolioTitles = $this->connection->query('SELECT * FROM icap__portfolio_widget_title');
+            $sql = 'SELECT aw.id, aw.user_id FROM icap__portfolio_abstract_widget aw WHERE id = :id';
+            $stmt = $this->connection->prepare($sql);
 
             foreach ($rowPortfolioTitles as $rowPortfolioTitle) {
-                $rowAbstractWidgets = $this->connection->query('SELECT aw.id, aw.user_id FROM icap__portfolio_abstract_widget aw WHERE id = ' . $rowPortfolioTitle['id']);
-                foreach ($rowAbstractWidgets as $rowAbstractWidget) {
+                $stmt->bindValue('id', $rowPortfolioTitle['id']);
+                $stmt->execute();
+
+                foreach ($stmt->fetchAll() as $rowAbstractWidget) {
                     $this->connection->update('icap__portfolio',
                         [
                             'title' => $rowPortfolioTitle['title'],
-                            'slug' => $rowPortfolioTitle['slug']
+                            'slug' => $rowPortfolioTitle['slug'],
                         ],
                         [
-                            'id' => $rowAbstractWidget['user_id']
-
+                            'id' => $rowAbstractWidget['user_id'],
                         ]);
                 }
 
                 $this->connection->delete('icap__portfolio_abstract_widget',
                     [
-                        'id' => $rowPortfolioTitle['id']
+                        'id' => $rowPortfolioTitle['id'],
                     ]);
 
-                $nbPortfolioProcessed++;
+                ++$nbPortfolioProcessed;
 
                 if ($nbPortfolioProcessed >= 10) {
                     $totalPortfolioProcessed += $nbPortfolioProcessed;
@@ -73,7 +73,7 @@ class Updater050002 extends Updater
 
             $this->connection->delete('icap__portfolio_widget_type',
                 [
-                    'name' => 'title'
+                    'name' => 'title',
                 ]);
 
             $this->connection->getSchemaManager()->dropTable('icap__portfolio_widget_title');
@@ -89,15 +89,15 @@ class Updater050002 extends Updater
 
         $rowAbstractWidgets = $this->connection->query('SELECT aw.id, aw.user_id FROM icap__portfolio_abstract_widget aw');
         foreach ($rowAbstractWidgets as $rowAbstractWidget) {
-            $this->connection->query(sprintf("UPDATE icap__portfolio_abstract_widget aw
+            $this->connection->query(sprintf('UPDATE icap__portfolio_abstract_widget aw
                 SET aw.user_id = (
                     SELECT p.user_id
                     FROM icap__portfolio p
                     WHERE p.id = %d
                 )
-                WHERE aw.id = %d", $rowAbstractWidget['user_id'], $rowAbstractWidget['id']));
+                WHERE aw.id = %d', $rowAbstractWidget['user_id'], $rowAbstractWidget['id']));
 
-            $nbWidgetProcessed++;
+            ++$nbWidgetProcessed;
 
             if ($nbWidgetProcessed >= 10) {
                 $totalWidgetProcessed += $nbWidgetProcessed;

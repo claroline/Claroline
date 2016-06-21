@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2015/05/06 09:11:17
  */
@@ -14,7 +14,7 @@ class Version20150506091116 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_badge_collection (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT DEFAULT NULL, 
@@ -25,8 +25,8 @@ class Version20150506091116 extends AbstractMigration
                 UNIQUE INDEX slug_idx (slug), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE claro_badge_collection_user_badges (
                 badgecollection_id INT NOT NULL, 
                 userbadge_id INT NOT NULL, 
@@ -36,8 +36,8 @@ class Version20150506091116 extends AbstractMigration
                     badgecollection_id, userbadge_id
                 )
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE claro_badge_translation (
                 id INT AUTO_INCREMENT NOT NULL, 
                 badge_id INT DEFAULT NULL, 
@@ -52,7 +52,7 @@ class Version20150506091116 extends AbstractMigration
                 UNIQUE INDEX badge_slug_translation_unique_idx (slug, locale, badge_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
+        ');
         $this->addSql("
             CREATE TABLE claro_badge (
                 id INT AUTO_INCREMENT NOT NULL, 
@@ -68,7 +68,7 @@ class Version20150506091116 extends AbstractMigration
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_badge_claim (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
@@ -79,8 +79,8 @@ class Version20150506091116 extends AbstractMigration
                 UNIQUE INDEX badge_claim_unique (user_id, badge_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE claro_user_badge (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
@@ -95,8 +95,8 @@ class Version20150506091116 extends AbstractMigration
                 UNIQUE INDEX user_badge_unique (user_id, badge_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE claro_badge_rule (
                 id INT AUTO_INCREMENT NOT NULL, 
                 badge_id INT DEFAULT NULL, 
@@ -115,8 +115,8 @@ class Version20150506091116 extends AbstractMigration
                 INDEX IDX_805FCB8F89329D25 (resource_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE claro_widget_badge_usage_config (
                 id INT AUTO_INCREMENT NOT NULL, 
                 numberLastAwardedBadge SMALLINT NOT NULL, 
@@ -125,144 +125,144 @@ class Version20150506091116 extends AbstractMigration
                 INDEX IDX_9A2EA78BAB7B5A55 (widgetInstance_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_collection 
             ADD CONSTRAINT FK_BB3FD2DDA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_collection_user_badges 
             ADD CONSTRAINT FK_85F018D4134B8A11 FOREIGN KEY (badgecollection_id) 
             REFERENCES claro_badge_collection (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_collection_user_badges 
             ADD CONSTRAINT FK_85F018D4DBE73D8B FOREIGN KEY (userbadge_id) 
             REFERENCES claro_user_badge (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_translation 
             ADD CONSTRAINT FK_849BC831F7A2C2FC FOREIGN KEY (badge_id) 
             REFERENCES claro_badge (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge 
             ADD CONSTRAINT FK_74F39F0F82D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_claim 
             ADD CONSTRAINT FK_487A496AA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_claim 
             ADD CONSTRAINT FK_487A496AF7A2C2FC FOREIGN KEY (badge_id) 
             REFERENCES claro_badge (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_user_badge 
             ADD CONSTRAINT FK_7EBB381FA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_user_badge 
             ADD CONSTRAINT FK_7EBB381FF7A2C2FC FOREIGN KEY (badge_id) 
             REFERENCES claro_badge (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_user_badge 
             ADD CONSTRAINT FK_7EBB381FBB9D6FEE FOREIGN KEY (issuer_id) 
             REFERENCES claro_user (id) 
             ON DELETE SET NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_rule 
             ADD CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id) 
             REFERENCES claro_badge (id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_rule 
             ADD CONSTRAINT FK_805FCB8F16F956BA FOREIGN KEY (associated_badge) 
             REFERENCES claro_badge (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_rule 
             ADD CONSTRAINT FK_805FCB8F89329D25 FOREIGN KEY (resource_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_widget_badge_usage_config 
             ADD CONSTRAINT FK_9A2EA78BAB7B5A55 FOREIGN KEY (widgetInstance_id) 
             REFERENCES claro_widget_instance (id) 
             ON DELETE CASCADE
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_badge_collection_user_badges 
             DROP FOREIGN KEY FK_85F018D4134B8A11
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_translation 
             DROP FOREIGN KEY FK_849BC831F7A2C2FC
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_claim 
             DROP FOREIGN KEY FK_487A496AF7A2C2FC
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_user_badge 
             DROP FOREIGN KEY FK_7EBB381FF7A2C2FC
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_rule 
             DROP FOREIGN KEY FK_805FCB8FF7A2C2FC
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_rule 
             DROP FOREIGN KEY FK_805FCB8F16F956BA
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_badge_collection_user_badges 
             DROP FOREIGN KEY FK_85F018D4DBE73D8B
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_badge_collection
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_badge_collection_user_badges
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_badge_translation
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_badge
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_badge_claim
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_user_badge
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_badge_rule
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_widget_badge_usage_config
-        ");
+        ');
     }
 }

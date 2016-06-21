@@ -49,7 +49,7 @@ class TextWidget extends AbstractWidget
     public function getData()
     {
         return array(
-            'text' => $this->getText()
+            'text' => $this->getText(),
         );
     }
 
@@ -59,7 +59,7 @@ class TextWidget extends AbstractWidget
     public function getEmpty()
     {
         return array(
-            'text' => null
+            'text' => null,
         );
     }
 }

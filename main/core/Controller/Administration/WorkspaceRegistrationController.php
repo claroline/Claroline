@@ -26,7 +26,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -66,8 +65,7 @@ class WorkspaceRegistrationController extends Controller
         UserManager $userManager,
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->groupManager = $groupManager;
         $this->roleManager = $roleManager;
@@ -105,16 +103,16 @@ class WorkspaceRegistrationController extends Controller
                 ->getDatasForWorkspaceList(false, $search, $max);
 
             return array(
-                'workspaces'    => $datas['workspaces'],
-                'tags'          => $datas['tags'],
+                'workspaces' => $datas['workspaces'],
+                'tags' => $datas['tags'],
                 'tagWorkspaces' => $datas['tagWorkspaces'],
-                'hierarchy'     => $datas['hierarchy'],
-                'rootTags'      => $datas['rootTags'],
-                'displayable'   => $datas['displayable'],
+                'hierarchy' => $datas['hierarchy'],
+                'rootTags' => $datas['rootTags'],
+                'displayable' => $datas['displayable'],
                 'nonPersonalWs' => $datas['nonPersonalWs'],
-                'personalWs'    => $datas['personalWs'],
-                'search'        => '',
-                'max'           => $max
+                'personalWs' => $datas['personalWs'],
+                'search' => '',
+                'max' => $max,
             );
         } else {
             $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1);
@@ -190,8 +188,8 @@ class WorkspaceRegistrationController extends Controller
      *
      * Renders the user list in a pager for registration.
      *
-     * @param integer $page
-     * @param string  $search
+     * @param int    $page
+     * @param string $search
      *
      * @return Response
      */
@@ -221,8 +219,8 @@ class WorkspaceRegistrationController extends Controller
      *
      * Renders the group list in a pager for registration.
      *
-     * @param integer $page
-     * @param string  $search
+     * @param int    $page
+     * @param string $search
      *
      * @return Response
      */
@@ -263,8 +261,7 @@ class WorkspaceRegistrationController extends Controller
         $roleKey,
         array $workspaces,
         array $users
-    )
-    {
+    ) {
         foreach ($workspaces as $workspace) {
             $role = $this->roleManager->getRoleByTranslationKeyAndWorkspace($roleKey, $workspace);
 
@@ -276,18 +273,18 @@ class WorkspaceRegistrationController extends Controller
         $msg = '';
 
         foreach ($users as $user) {
-            $msg .= $user->getFirstName() . ' ' . $user->getLastName() . ' ';
+            $msg .= $user->getFirstName().' '.$user->getLastName().' ';
             $msg .= $this->translator->trans(
                 'has_been_suscribed_with_role',
                 array(),
                 'platform'
             );
-            $msg .= ' "' .
+            $msg .= ' "'.
                 $this->translator->trans(
                     $roleKey,
                     array(),
                     'platform'
-                ) .
+                ).
                 '"-;-';
         }
 
@@ -322,8 +319,7 @@ class WorkspaceRegistrationController extends Controller
         $roleKey,
         array $workspaces,
         array $groups
-    )
-    {
+    ) {
         foreach ($workspaces as $workspace) {
             $role = $this->roleManager->getRoleByTranslationKeyAndWorkspace($roleKey, $workspace);
 
@@ -335,18 +331,18 @@ class WorkspaceRegistrationController extends Controller
         $msg = '';
 
         foreach ($groups as $group) {
-            $msg .= '"' . $group->getName() . '" ';
+            $msg .= '"'.$group->getName().'" ';
             $msg .= $this->translator->trans(
                 'has_been_suscribed_with_role_group',
                 array(),
                 'platform'
             );
-            $msg .= ' "' .
+            $msg .= ' "'.
                 $this->translator->trans(
                     $roleKey,
                     array(),
                     'platform'
-                ) .
+                ).
                 '"-;-';
         }
 
@@ -379,25 +375,24 @@ class WorkspaceRegistrationController extends Controller
     public function subscribeMultipleUsersToOneWorkspaceAction(
         array $roles,
         array $users
-    )
-    {
+    ) {
         $msg = '';
 
         foreach ($users as $user) {
             foreach ($roles as $role) {
                 $this->roleManager->associateRole($user, $role);
-                $msg .= $user->getFirstName() . ' ' . $user->getLastName() . ' ';
+                $msg .= $user->getFirstName().' '.$user->getLastName().' ';
                 $msg .= $this->translator->trans(
                     'has_been_suscribed_with_role',
                     array(),
                     'platform'
                 );
-                $msg .= ' "' .
+                $msg .= ' "'.
                     $this->translator->trans(
                         $role->getTranslationKey(),
                         array(),
                         'platform'
-                    ) .
+                    ).
                     '"-;-';
             }
         }
@@ -423,7 +418,7 @@ class WorkspaceRegistrationController extends Controller
      *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
      *
-     * @param Role[] $roles
+     * @param Role[]  $roles
      * @param Group[] $groups
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -431,25 +426,24 @@ class WorkspaceRegistrationController extends Controller
     public function subscribeMultipleGroupsToOneWorkspaceAction(
         array $roles,
         array $groups
-    )
-    {
+    ) {
         $msg = '';
 
         foreach ($groups as $group) {
             foreach ($roles as $role) {
                 $this->roleManager->associateRole($group, $role);
-                $msg .= '"' . $group->getName() . '" ';
+                $msg .= '"'.$group->getName().'" ';
                 $msg .= $this->translator->trans(
                     'has_been_suscribed_with_role_group',
                     array(),
                     'platform'
                 );
-                $msg .= ' "' .
+                $msg .= ' "'.
                     $this->translator->trans(
                         $role->getTranslationKey(),
                         array(),
                         'platform'
-                    ) .
+                    ).
                     '"-;-';
             }
         }
@@ -467,11 +461,11 @@ class WorkspaceRegistrationController extends Controller
      * @EXT\Template()
      *
      * @param Workspace $workspace
-     * @param string $search
-     * @param int $page
-     * @param int $max
-     * @param string $orderedBy
-     * @param string $order
+     * @param string    $search
+     * @param int       $page
+     * @param int       $max
+     * @param string    $orderedBy
+     * @param string    $order
      *
      * @return Response
      */
@@ -482,8 +476,7 @@ class WorkspaceRegistrationController extends Controller
         $max = 50,
         $orderedBy = 'username',
         $order = 'ASC'
-    )
-    {
+    ) {
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $pager = $search === '' ?
             $this->userManager->getByRolesIncludingGroups(
@@ -508,7 +501,7 @@ class WorkspaceRegistrationController extends Controller
             'search' => $search,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
         );
     }
 
@@ -522,11 +515,11 @@ class WorkspaceRegistrationController extends Controller
      * @EXT\Template()
      *
      * @param Workspace $workspace
-     * @param string $search
-     * @param int $page
-     * @param int $max
-     * @param string $orderedBy
-     * @param string $order
+     * @param string    $search
+     * @param int       $page
+     * @param int       $max
+     * @param string    $orderedBy
+     * @param string    $order
      *
      * @return Response
      */
@@ -537,8 +530,7 @@ class WorkspaceRegistrationController extends Controller
         $max = 50,
         $orderedBy = 'name',
         $order = 'ASC'
-    )
-    {
+    ) {
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $pager = ($search === '') ?
             $this->groupManager->getGroupsByRoles(
@@ -563,7 +555,7 @@ class WorkspaceRegistrationController extends Controller
             'search' => $search,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
         );
     }
 
@@ -580,20 +572,19 @@ class WorkspaceRegistrationController extends Controller
      * )
      *
      * @param Workspace $workspace
-     * @param User[] $users
+     * @param User[]    $users
      *
      * @return Response
      */
     public function unsubscribeMultipleUsersFromWorkspaceAction(
         Workspace $workspace,
         array $users
-    )
-    {
+    ) {
         $this->roleManager->resetWorkspaceRoleForSubjects($users, $workspace);
         $sessionFlashBag = $this->session->getFlashBag();
 
         foreach ($users as $user) {
-            $msg = $user->getFirstName() . ' ' . $user->getLastName() . ' ';
+            $msg = $user->getFirstName().' '.$user->getLastName().' ';
             $msg .= $this->translator->trans(
                 'has_been_unregistered_from_workspace',
                 array(),
@@ -618,20 +609,19 @@ class WorkspaceRegistrationController extends Controller
      * )
      *
      * @param Workspace $workspace
-     * @param Group[] $groups
+     * @param Group[]   $groups
      *
      * @return Response
      */
     public function unsubscribeMultipleGroupsFromWorkspaceAction(
         Workspace $workspace,
         array $groups
-    )
-    {
+    ) {
         $this->roleManager->resetWorkspaceRoleForSubjects($groups, $workspace);
         $sessionFlashBag = $this->session->getFlashBag();
 
         foreach ($groups as $group) {
-            $msg = $group->getName() . ' ';
+            $msg = $group->getName().' ';
             $msg .= $this->translator->trans(
                 'has_been_unregistered_from_workspace',
                 array(),

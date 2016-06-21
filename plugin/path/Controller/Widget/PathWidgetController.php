@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Innova\PathBundle\Entity\PathWidgetConfig;
 
 /**
- * Class PathWidgetConfigController
+ * Class PathWidgetConfigController.
  *
  * @Route(
  *      "/",
@@ -28,7 +28,8 @@ use Innova\PathBundle\Entity\PathWidgetConfig;
 class PathWidgetController
 {
     /**
-     * Current Entity Manager
+     * Current Entity Manager.
+     *
      * @var \Doctrine\Common\Persistence\ObjectManager
      */
     protected $om;
@@ -44,7 +45,8 @@ class PathWidgetController
     protected $authorizationChecker;
 
     /**
-     * Current path manager
+     * Current path manager.
+     *
      * @var \Innova\PathBundle\Manager\PathManager
      */
     protected $pathManager;
@@ -55,7 +57,7 @@ class PathWidgetController
     protected $tagManager;
 
     /**
-     * Class constructor
+     * Class constructor.
      *
      * @param \Doctrine\Common\Persistence\ObjectManager                                   $om
      * @param \Symfony\Component\Form\FormFactoryInterface                                 $formFactory
@@ -70,19 +72,21 @@ class PathWidgetController
         PathManager                   $pathManager,
         TagManager                    $tagManager)
     {
-        $this->om                   = $om;
-        $this->formFactory          = $formFactory;
+        $this->om = $om;
+        $this->formFactory = $formFactory;
         $this->authorizationChecker = $authorizationChecker;
-        $this->pathManager          = $pathManager;
-        $this->tagManager           = $tagManager;
+        $this->pathManager = $pathManager;
+        $this->tagManager = $tagManager;
     }
 
     /**
-     * Update or create the configuration of a Widget instance
+     * Update or create the configuration of a Widget instance.
      *
-     * @param WidgetInstance $widgetInstance
+     * @param WidgetInstance                            $widgetInstance
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     *
      * @return array
      *
      * @Route(
@@ -114,7 +118,7 @@ class PathWidgetController
             if (!empty($tagsToRemove)) {
                 // Search the Tag by ID
                 $existingTags = $config->getTags()->toArray();
-                $toRemoveArray = array_filter($existingTags, function($entry) use ($tagsToRemove) {
+                $toRemoveArray = array_filter($existingTags, function ($entry) use ($tagsToRemove) {
                     return in_array($entry->getId(), $tagsToRemove);
                 });
 
@@ -128,7 +132,7 @@ class PathWidgetController
             if (!empty($tags)) {
                 // Ge the list of Tags from data String
                 $tags = explode(',', $tags);
-                $uniqueTags = array ();
+                $uniqueTags = array();
                 foreach ($tags as $tag) {
                     $value = trim($tag);
                     if (!empty($value)) {
@@ -150,10 +154,10 @@ class PathWidgetController
             return new Response('success', 204);
         }
 
-        return array (
-            'form'     => $form->createView(),
+        return array(
+            'form' => $form->createView(),
             'instance' => $widgetInstance,
-            'tags'     => $this->tagManager->getPlatformTags(),
+            'tags' => $this->tagManager->getPlatformTags(),
         );
     }
-} 
+}

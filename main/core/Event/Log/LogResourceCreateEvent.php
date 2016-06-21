@@ -32,15 +32,15 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
                     'name' => $node->getName(),
                     'path' => $node->getPathForCreationLog(),
                     'guid' => $node->getGuid(),
-                    'resourceType' => $node->getResourceType()->getName()
+                    'resourceType' => $node->getResourceType()->getName(),
                 ),
                 'workspace' => array(
-                    'name' => $node->getWorkspace() ? $node->getWorkspace()->getName(): ' - '
+                    'name' => $node->getWorkspace() ? $node->getWorkspace()->getName() : ' - ',
                 ),
                 'owner' => array(
                     'lastName' => $node->getCreator()->getLastName(),
-                    'firstName' => $node->getCreator()->getFirstName()
-                )
+                    'firstName' => $node->getCreator()->getFirstName(),
+                ),
             ),
             null,
             null,
@@ -61,13 +61,13 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -118,11 +118,11 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
     public function getIconKey()
     {
         //Icon key is null here because we need default icon for platform notifications
-        return null;
+        return;
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -134,9 +134,9 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

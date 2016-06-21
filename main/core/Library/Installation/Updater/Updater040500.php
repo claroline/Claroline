@@ -60,7 +60,7 @@ class Updater040500 extends Updater
 
         $nbNodes = 0;
         $currentBatchNodes = 0;
-        $refreshOutputInterval = (int)round($totalNodes / 50);
+        $refreshOutputInterval = (int) round($totalNodes / 50);
         if (0 === $refreshOutputInterval) {
             $refreshOutputInterval = 1;
         }
@@ -75,18 +75,18 @@ class Updater040500 extends Updater
             $node = $row[0];
             $resourceManager->reorder($node, true);
 
-            $nbNodes++;
-            $currentBatchNodes++;
+            ++$nbNodes;
+            ++$currentBatchNodes;
 
             if ($refreshOutputInterval === $currentBatchNodes) {
-                $this->log('    ' . $nbNodes . ' resource ordered - ' . date('Y/m/d H:i:s') . ' - ' . $this->convert(memory_get_usage(true)));
+                $this->log('    '.$nbNodes.' resource ordered - '.date('Y/m/d H:i:s').' - '.$this->convert(memory_get_usage(true)));
                 $currentBatchNodes = 0;
                 $this->objectManager->clear();
             }
         }
 
         if (0 < $currentBatchNodes) {
-            $this->log('    ' . $nbNodes . ' resource ordered - ' . date('Y/m/d H:i:s') . ' - ' . $this->convert(memory_get_usage(true)));
+            $this->log('    '.$nbNodes.' resource ordered - '.date('Y/m/d H:i:s').' - '.$this->convert(memory_get_usage(true)));
         }
 
         $this->log('Resource order updated.');
@@ -94,7 +94,8 @@ class Updater040500 extends Updater
 
     public function convert($size)
     {
-        $unit=array('b','kb','mb','gb','tb','pb');
-        return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+        $unit = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
+
+        return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2).' '.$unit[$i];
     }
 }

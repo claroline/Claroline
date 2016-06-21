@@ -51,7 +51,7 @@ class MessageRepository extends NestedTreeRepository
      *
      * @param User $user
      *
-     * @return integer
+     * @return int
      */
     public function countUnread(User $user)
     {

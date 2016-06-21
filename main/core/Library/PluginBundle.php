@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Library;
 
 use Claroline\InstallationBundle\Bundle\InstallableBundle;
-use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 /**
@@ -43,7 +42,7 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     {
         $config = new ConfigurationBuilder();
 
-        if (file_exists($routingFile = $this->getPath() . '/Resources/config/routing.yml')) {
+        if (file_exists($routingFile = $this->getPath().'/Resources/config/routing.yml')) {
             $config->addRoutingResource($routingFile, null, strtolower($this->getName()));
         }
 
@@ -51,14 +50,14 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     }
 
     /**
-     * Deprecated: use getConfiguration instead
+     * Deprecated: use getConfiguration instead.
      *
      * @deprecated
      */
     public function getRoutingResourcesPaths()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $path = $this->getPath() . $ds . 'Resources' . $ds . 'config' . $ds . 'routing.yml';
+        $path = $this->getPath().$ds.'Resources'.$ds.'config'.$ds.'routing.yml';
 
         if (file_exists($path)) {
             return array($path);
@@ -68,7 +67,7 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     }
 
     /**
-     * Deprecated: use getConfiguration instead
+     * Deprecated: use getConfiguration instead.
      *
      * @deprecated
      */
@@ -90,7 +89,7 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     public function getConfigFile()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $defaultFilePath = $this->getPath() . $ds . 'Resources' . $ds . 'config' . $ds . 'config.yml';
+        $defaultFilePath = $this->getPath().$ds.'Resources'.$ds.'config'.$ds.'config.yml';
 
         if (file_exists($defaultFilePath)) {
             return $defaultFilePath;
@@ -110,5 +109,44 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     public function getAssetsFolder()
     {
         return strtolower(str_replace('Bundle', '', $this->getVendorName().$this->getBundleName()));
+    }
+
+    /**
+     * Returns the list of PHP extensions required by this plugin.
+     *
+     * Example: ['ldap', 'zlib']
+     *
+     * @return array
+     */
+    public function getRequiredExtensions()
+    {
+        return [];
+    }
+
+    /**
+     * Returns the list of Claroline plugins required by this plugin. Each plugin
+     * in the list must be represented by its fully qualified namespace.
+     *
+     * @return array
+     */
+    public function getRequiredPlugins()
+    {
+        return [];
+    }
+
+    /**
+     * Returns the list of extra requirements to be met before enabling the plugin.
+     *
+     * Each requirement must be an array containing the two following keys:
+     *
+     *   - "test":          An anonymous function checking that the requirement is met.
+     *                      Must return true if the check is successful, false otherwise.
+     *   - "failure_msg":   A text indicating what went wrong if the test has failed.
+     *
+     * @return array
+     */
+    public function getExtraRequirements()
+    {
+        return [];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -48,7 +48,7 @@ class NotificationPluginConfigurationController extends Controller
     public function postAction(Request $request, User $user)
     {
         $configManager = $this->getNotificationPluginConfigurationManager();
-        try{
+        try {
             $form = $configManager->processForm($request);
             $this->addFlash('success', 'successfully_saved_configuration');
         } catch (InvalidNotificationFormException $infe) {

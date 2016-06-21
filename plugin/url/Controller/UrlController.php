@@ -34,7 +34,7 @@ class UrlController extends Controller
         ObjectManager $om,
         RequestStack $requestStack,
         UrlManager $urlManager
-    ){
+    ) {
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
@@ -59,14 +59,14 @@ class UrlController extends Controller
         $url = $em->getRepository('HeVinciUrlBundle:Url')
             ->findOneBy(array('resourceNode' => $node->getId()));
 
-        if (!$url){
+        if (!$url) {
             throw new \Exception("This resource doesn't exist.");
         }
 
         $form = $this->formFactory->create(new UrlChangeType(), $url);
         $form->handleRequest($this->request);
 
-        if ($form->isValid()){
+        if ($form->isValid()) {
             $this->urlManager->setUrl($form->getData());
             $em->flush();
 

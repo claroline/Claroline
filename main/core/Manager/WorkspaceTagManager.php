@@ -16,8 +16,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\WorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\RelWorkspaceTagRepository;
@@ -60,8 +58,7 @@ class WorkspaceTagManager
         WorkspaceManager $workspaceManager,
         ObjectManager $om,
         PagerFactory $pagerFactory
-    )
-    {
+    ) {
         $this->tagRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag');
         $this->relTagRepo = $om->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag');
         $this->tagHierarchyRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy');
@@ -104,8 +101,7 @@ class WorkspaceTagManager
     public function linkWorkspace(
         WorkspaceTag $tag,
         Workspace $workspace = null
-    )
-    {
+    ) {
         $tag->setWorkspace($workspace);
         $this->om->persist($tag);
         $this->om->flush();
@@ -206,8 +202,7 @@ class WorkspaceTagManager
         WorkspaceTag $tag,
         $page,
         $search
-    )
-    {
+    ) {
         $datas = $this->tagRepo->findPossibleAdminChildrenByName($tag, $search);
 
         return $this->pagerFactory->createPagerFromArray($datas, $page);
@@ -230,8 +225,7 @@ class WorkspaceTagManager
         WorkspaceTag $tag,
         $page,
         $search
-    )
-    {
+    ) {
         $datas = $this->tagRepo
             ->findPossibleChildrenByName($user, $tag, $search);
 
@@ -303,7 +297,7 @@ class WorkspaceTagManager
         return $this->tagRepo->findOneBy(
             array(
                 'name' => $name,
-                'user' => $user
+                'user' => $user,
             )
         );
     }
@@ -332,8 +326,7 @@ class WorkspaceTagManager
         Workspace $workspace,
         WorkspaceTag $tag,
         User $user
-    )
-    {
+    ) {
         return $this->relTagRepo->findOneByWorkspaceAndTagAndUser($workspace, $tag, $user);
     }
 
@@ -404,7 +397,7 @@ class WorkspaceTagManager
 
     public function getHierarchiesByUserAndTag(WorkspaceTag $tag, User $user = null)
     {
-        return $this->tagHierarchyRepo->findBy(array('user' => $user , 'tag' => $tag));
+        return $this->tagHierarchyRepo->findBy(array('user' => $user, 'tag' => $tag));
     }
 
     public function getHierarchiesByTag(WorkspaceTag $tag)
@@ -417,8 +410,7 @@ class WorkspaceTagManager
         $search = '',
         $max = 20,
         $wsMax = 10
-    )
-    {
+    ) {
         if (empty($search)) {
             $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
         } else {
@@ -435,7 +427,6 @@ class WorkspaceTagManager
 
         // create an array: tagId => [associated_workspace_relation]
         foreach ($relTagWorkspace as $tagWs) {
-
             if (empty($tagWorkspaces[$tagWs['tag_id']])) {
                 $tagWorkspaces[$tagWs['tag_id']] = array();
             }
@@ -448,12 +439,9 @@ class WorkspaceTagManager
 
         // create an array : tagId => [direct_children_id]
         foreach ($tagsHierarchy as $tagHierarchy) {
-
             if ($tagHierarchy->getLevel() === 1) {
-
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
                     $hierarchy[$tagHierarchy->getParent()->getId()] = array();
                 }
                 $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
@@ -508,7 +496,7 @@ class WorkspaceTagManager
             'nonPersonalWs' => $nonPersonalWs,
             'personalWs' => $personalWs,
             'max' => $max,
-            'wsMax' => $wsMax
+            'wsMax' => $wsMax,
         );
     }
 
@@ -520,7 +508,6 @@ class WorkspaceTagManager
         $tagWorkspaces = array();
 
         foreach ($relTagWorkspace as $tagWs) {
-
             if (empty($tagWorkspaces[$tagWs['tag_id']])) {
                 $tagWorkspaces[$tagWs['tag_id']] = array();
             }
@@ -532,12 +519,9 @@ class WorkspaceTagManager
 
         // create an array : tagId => [direct_children_id]
         foreach ($tagsHierarchy as $tagHierarchy) {
-
             if ($tagHierarchy->getLevel() === 1) {
-
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
                     $hierarchy[$tagHierarchy->getParent()->getId()] = array();
                 }
                 $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
@@ -577,17 +561,17 @@ class WorkspaceTagManager
      */
     public function getDatasForSelfRegistrationWorkspaceList(User $user, $search = '')
     {
-        $workspaceQueue =  $this->workspaceQueueRepo->findByUser($user);
+        $workspaceQueue = $this->workspaceQueueRepo->findByUser($user);
         $listworkspacePending = array();
 
-        foreach ($workspaceQueue as $w ) {
+        foreach ($workspaceQueue as $w) {
             $listworkspacePending[$w->getWorkspace()->getId()] = $w->getWorkspace()->getId();
         }
 
         if (empty($search)) {
             $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration($user);
         } else {
-             $workspaces = $this->workspaceRepo
+            $workspaces = $this->workspaceRepo
                  ->findWorkspacesWithSelfRegistrationBySearch($user, $search);
         }
         $tags = $this->getNonEmptyAdminTags();
@@ -602,7 +586,6 @@ class WorkspaceTagManager
 
         // create an array: tagId => [associated_workspace_relation]
         foreach ($relTagWorkspace as $tagWs) {
-
             if (empty($tagWorkspaces[$tagWs['tag_id']])) {
                 $tagWorkspaces[$tagWs['tag_id']] = array();
             }
@@ -615,12 +598,9 @@ class WorkspaceTagManager
 
         // create an array : tagId => [direct_children_id]
         foreach ($tagsHierarchy as $tagHierarchy) {
-
             if ($tagHierarchy->getLevel() === 1) {
-
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
                     $hierarchy[$tagHierarchy->getParent()->getId()] = array();
                 }
                 $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
@@ -652,17 +632,18 @@ class WorkspaceTagManager
             'rootTags' => $rootTags,
             'displayable' => $displayable,
             'listworkspacePending' => $listworkspacePending,
-            'search' => $search
+            'search' => $search,
         );
     }
 
     /**
-     * Checks if given tag or at least one of its children is associated to a workspace
+     * Checks if given tag or at least one of its children is associated to a workspace.
      *
-     * @param  integer $tagId
-     * @param  array   $tagWorkspaces
-     * @param  array   $hierarchy
-     * @return boolean
+     * @param int   $tagId
+     * @param array $tagWorkspaces
+     * @param array $hierarchy
+     *
+     * @return bool
      */
     private function isTagDisplayable(WorkspaceTag $tag, array $tagWorkspaces, array $hierarchy)
     {
@@ -671,15 +652,12 @@ class WorkspaceTagManager
 
         if ((isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0)
             || !is_null($tag->getWorkspace())) {
-
             $displayable = true;
         } else {
-
             if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
                 $children = $hierarchy[$tagId];
 
                 foreach ($children as $child) {
-
                     $displayable = $this->isTagDisplayable($child, $tagWorkspaces, $hierarchy);
 
                     if ($displayable) {

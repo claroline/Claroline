@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use \Mockery as m;
+use Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -170,7 +170,7 @@ class RoleManagerTest extends MockeryTestCase
         $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $roles = array(
             'ROLE_WS_USER' => 'user',
-            'ROLE_WS_MANAGER' => 'superuser'
+            'ROLE_WS_MANAGER' => 'superuser',
         );
 
         $this->om->shouldReceive('startFlushSuite')->once();
@@ -189,7 +189,7 @@ class RoleManagerTest extends MockeryTestCase
 
         $expectedResult = array(
             'ROLE_WS_USER' => $roleUser,
-            'ROLE_WS_MANAGER' => $roleManager
+            'ROLE_WS_MANAGER' => $roleManager,
         );
         $this->assertEquals($result, $expectedResult);
     }
@@ -209,7 +209,7 @@ class RoleManagerTest extends MockeryTestCase
     public function testCheckWorkspaceRoleEditionThrowsExceptionForUser()
     {
         $roleManager = $this->getManager(array('getManagerRole'));
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $managerRole = m::mock('Claroline\CoreBundle\Entity\Role');
         $roles = array($managerRole);
         $user = m::mock('Claroline\CoreBundle\Entity\User');
@@ -323,7 +323,7 @@ class RoleManagerTest extends MockeryTestCase
         $manager = $this->getManager(array('associateRole'));
         $subject = new \Claroline\CoreBundle\Entity\Group();
         $subjects = array($subject);
-        $managerRole = new \Claroline\CoreBundle\Entity\Role;
+        $managerRole = new \Claroline\CoreBundle\Entity\Role();
         $roles = array($managerRole);
 
         $this->om->shouldReceive('startFlushSuite')->once();
@@ -509,7 +509,7 @@ class RoleManagerTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\CoreBundle\Manager\RoleManager' . $stringMocked,
+            'Claroline\CoreBundle\Manager\RoleManager'.$stringMocked,
             array($this->securityContext, $this->om, $this->dispatcher)
         );
     }

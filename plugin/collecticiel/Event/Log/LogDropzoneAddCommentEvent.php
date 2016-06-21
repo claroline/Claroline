@@ -3,13 +3,12 @@
 namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Comment;
 
-class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements NotifiableInterface {
-
+class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements NotifiableInterface
+{
     const ACTION = 'resource-innova_collecticiel-dropzone_add_comment';
 
     protected $dropzone;
@@ -18,17 +17,16 @@ class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements Not
     private $userIds = array();
 
     /**
-     * @param Wiki $wiki
-     * @param Section $section
+     * @param Wiki         $wiki
+     * @param Section      $section
      * @param Contribution $contribution
-    */
+     */
     public function __construct(Dropzone $dropzone, $newstate, $userIds, Comment $comment)
     {
-
         $this->dropzone = $dropzone;
-        $this->comment  = $comment;
+        $this->comment = $comment;
         $this->newState = $dropzone->getResourceNode()->getName();
-        $this->userIds  = $userIds;
+        $this->userIds = $userIds;
 
         $this->details = array(
 //            'newState'=> $this->newState
@@ -59,7 +57,7 @@ class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements Not
     /**
      * Get sendToFollowers boolean.
      * 
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -68,12 +66,13 @@ class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements Not
 
     /**
      * Get includeUsers array of user ids.
-     * Reports are only reported to user witch have the manager role
+     * Reports are only reported to user witch have the manager role.
+     *
      * @return array
      */
     public function getIncludeUserIds()
     {
-       return $this->userIds; 
+        return $this->userIds;
     }
 
     /**
@@ -103,33 +102,32 @@ class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements Not
      */
     public function getIconKey()
     {
-        return "dropzone";
+        return 'dropzone';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
     public function getNotificationDetails()
     {
-
         $notificationDetails = array_merge($this->details, array());
 
         $notificationDetails['resource'] = array(
             'id' => $this->dropzone->getId(),
-            'name' => $this->firstName . " " . $this->lastName, // $this->resource->getName(),
-            'type' => $this->dropzone->getResourceNode()->getName() .
-            " : " . substr(strip_tags($this->comment->getCommentText()), 0, 10)
+            'name' => $this->firstName.' '.$this->lastName, // $this->resource->getName(),
+            'type' => $this->dropzone->getResourceNode()->getName().
+            ' : '.substr(strip_tags($this->comment->getCommentText()), 0, 10),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

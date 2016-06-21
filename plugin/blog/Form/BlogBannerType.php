@@ -15,27 +15,27 @@ class BlogBannerType extends AbstractType
                 'required' => false,
             ))
             ->add('banner_background_color', 'text', array(
-                'theme_options' => array('label_width' => '')
+                'theme_options' => array('label_width' => ''),
             ))
             ->add('banner_height', 'text', array(
                 'theme_options' => array('label_width' => ''),
                 'attr' => array(
-                    'class'    => 'input-sm',
-                    'data-min' => 100
-                )
+                    'class' => 'input-sm',
+                    'data-min' => 100,
+                ),
             ))
             ->add('file', 'file', array(
-                'label'         => 'icap_blog_banner_form_banner_background_image',
+                'label' => 'icap_blog_banner_form_banner_background_image',
                 'theme_options' => array('label_width' => ''),
-                'required'      => false
+                'required' => false,
             ))
             ->add('banner_background_image_position', 'text', array(
                 'theme_options' => array('label_width' => ''),
-                'required'      => false
+                'required' => false,
             ))
             ->add('banner_background_image_repeat', 'text', array(
                 'theme_options' => array('label_width' => ''),
-                'required'      => false
+                'required' => false,
             ))
         ;
     }
@@ -49,10 +49,10 @@ class BlogBannerType extends AbstractType
     {
         $resolver->setDefaults(array(
            'translation_domain' => 'icap_blog',
-            'data_class'        => 'Icap\BlogBundle\Entity\BlogOptions',
-            'csrf_protection'   => true,
-            'intention'         => 'configure_banner_blog',
-            'no_captcha'        => true
+            'data_class' => 'Icap\BlogBundle\Entity\BlogOptions',
+            'csrf_protection' => true,
+            'intention' => 'configure_banner_blog',
+            'no_captcha' => true,
         ));
     }
 }

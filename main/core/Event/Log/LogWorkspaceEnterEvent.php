@@ -24,8 +24,8 @@ class LogWorkspaceEnterEvent extends LogGenericEvent implements LogNotRepeatable
             self::ACTION,
             array(
                 'workspace' => array(
-                    'name' => $workspace->getName()
-                )
+                    'name' => $workspace->getName(),
+                ),
             ),
             null,
             null,
@@ -48,6 +48,6 @@ class LogWorkspaceEnterEvent extends LogGenericEvent implements LogNotRepeatable
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 }

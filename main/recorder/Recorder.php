@@ -38,8 +38,7 @@ class Recorder
         BundleHandler $bundleHandler,
         array $aliases,
         $vendorDir
-    )
-    {
+    ) {
         $this->localRepo = $localRepo;
         $this->detector = $detector;
         $this->bundleHandler = $bundleHandler;

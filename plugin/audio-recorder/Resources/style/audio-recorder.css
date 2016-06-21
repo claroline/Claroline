@@ -1,0 +1,19 @@
+#db-meter {
+  background: #eee;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  width: 15px;
+  height: 55px;
+  margin-left: 10px
+}
+.mic-icon {
+  position: absolute;
+  margin-left: 10px
+}
+.current-time-row {
+  margin-top: 10px
+}
+.recording-time {
+  font-size: 1em;
+  color: #aaa
+}

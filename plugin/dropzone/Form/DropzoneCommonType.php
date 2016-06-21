@@ -12,25 +12,24 @@ class DropzoneCommonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $defaultDateTimeOptions = array(
-            'required'      => false,
-            'read_only'     => false,
-            'component'     => true,
-            'autoclose'     => true,
-            'language'      => $options['language'],
-            'date_format'   => $options['date_format']
+            'required' => false,
+            'read_only' => false,
+            'component' => true,
+            'autoclose' => true,
+            'language' => $options['language'],
+            'date_format' => $options['date_format'],
         );
 
         $builder
             ->add('stayHere', 'hidden', array(
-                'mapped' => false
+                'mapped' => false,
             ))
             ->add('autoCloseForManualStates', 'hidden', array(
-                "mapped" => false
+                'mapped' => false,
             ))
             ->add('instruction', 'tinymce', array(
-                'required' => false
+                'required' => false,
             ))
-
 
             ->add('allowWorkspaceResource', 'checkbox', array('required' => false))
             ->add('allowUpload', 'checkbox', array('required' => false))
@@ -41,31 +40,31 @@ class DropzoneCommonType extends AbstractType
                 'required' => true,
                 'choices' => array(
                     'Standard evaluation' => false,
-                    'Peer review evaluation' => true
+                    'Peer review evaluation' => true,
                 ),
                 'choices_as_values' => true,
                 'expanded' => true,
-                'multiple' => false
+                'multiple' => false,
             ))
             ->add('expectedTotalCorrection', 'integer', array('required' => true))
 
             ->add('displayNotationToLearners', 'checkbox', array('required' => false))
-            ->add('diplayCorrectionsToLearners','checkbox', array('required' => false))
-            ->add('allowCorrectionDeny','checkbox',array('required'=>false))
+            ->add('diplayCorrectionsToLearners', 'checkbox', array('required' => false))
+            ->add('allowCorrectionDeny', 'checkbox', array('required' => false))
             ->add('displayNotationMessageToLearners', 'checkbox', array('required' => false))
-            ->add('successMessage','tinymce',array('required' => false))
-            ->add('failMessage','tinymce',array('required' => false))
+            ->add('successMessage', 'tinymce', array('required' => false))
+            ->add('failMessage', 'tinymce', array('required' => false))
             ->add('minimumScoreToPass', 'integer', array('required' => true))
 
             ->add('manualPlanning', 'choice', array(
                 'required' => true,
                 'choices' => array(
                     'manualPlanning' => true,
-                    'sheduleByDate' => false
+                    'sheduleByDate' => false,
                 ),
                 'choices_as_values' => true,
                 'expanded' => true,
-                'multiple' => false
+                'multiple' => false,
             ))
 
             ->add('manualState', 'choice', array(
@@ -78,9 +77,9 @@ class DropzoneCommonType extends AbstractType
                 ),
                 'choices_as_values' => true,
                 'expanded' => true,
-                'multiple' => false
+                'multiple' => false,
             ))
-            ->add('autoCloseOpenedDropsWhenTimeIsUp','checkbox', array('required' => false))
+            ->add('autoCloseOpenedDropsWhenTimeIsUp', 'checkbox', array('required' => false))
             ->add('notifyOnDrop', 'checkbox', array('required' => false))
             /*
              *
@@ -93,7 +92,6 @@ class DropzoneCommonType extends AbstractType
             ->add('endAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
             ->add('startReview', 'datetimepicker', $defaultDateTimeOptions)
             ->add('endReview', 'datetimepicker', $defaultDateTimeOptions);
-
     }
 
     public function getName()

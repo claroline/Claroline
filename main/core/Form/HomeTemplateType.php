@@ -24,7 +24,6 @@ class HomeTemplateType extends AbstractType
         $contents = is_dir($templatesDir) ? scandir($templatesDir) : array();
 
         foreach ($contents as $content) {
-
             if (!is_dir($content)) {
                 $this->templates[$content] = $content;
             }
@@ -39,7 +38,7 @@ class HomeTemplateType extends AbstractType
             array(
                 'required' => false,
                 'choices' => $this->templates,
-                'label' => 'template'
+                'label' => 'template',
             )
         );
     }

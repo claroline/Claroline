@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Library\Testing\StubPluginTrait;
-use Claroline\CoreBundle\Library\Installation\Plugin\ValidationError;
 use Symfony\Component\Yaml\Parser;
 
 class ConfigurationCheckerTest extends MockeryTestCase
@@ -43,7 +42,7 @@ class ConfigurationCheckerTest extends MockeryTestCase
     {
         $pluginFqcn = 'Invalid\NonExistentConfigFile1\InvalidNonExistentConfigFile1';
         $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
-        $this->assertContains("config.yml file missing", $errors[0]->getMessage());
+        $this->assertContains('config.yml file missing', $errors[0]->getMessage());
     }
 
     public function testCheckerReturnsAnErrorOnMissingResourceKey()

@@ -107,7 +107,7 @@ class Resource
         if (!$maxTime || empty($maxTime)) {
             $maxTime = '00:00:00';
         } elseif (count(explode(':', $maxTime)) === 2) {
-            $maxTime = $maxTime . ':00';
+            $maxTime = $maxTime.':00';
         }
 
         $this->maxTimeReservation = $maxTime;

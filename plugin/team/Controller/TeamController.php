@@ -59,8 +59,7 @@ class TeamController extends Controller
         UrlGeneratorInterface $router,
         AuthorizationCheckerInterface $authorization,
         TeamManager $teamManager
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
@@ -77,7 +76,7 @@ class TeamController extends Controller
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param Workspace $workspace
-     * @param User $user
+     * @param User      $user
      */
     public function indexAction(Workspace $workspace, User $user)
     {
@@ -108,15 +107,14 @@ class TeamController extends Controller
      * @EXT\Template()
      *
      * @param Workspace $workspace
-     * @param User $user
+     * @param User      $user
      */
     public function managerMenuAction(
         Workspace $workspace,
         User $user,
         $orderedBy = 'name',
         $order = 'ASC'
-    )
-    {
+    ) {
         $this->checkWorkspaceManager($workspace, $user);
 
         $params = $this->teamManager->getParametersByWorkspace($workspace);
@@ -141,7 +139,7 @@ class TeamController extends Controller
             'orderedBy' => $orderedBy,
             'order' => $order,
             'nbUsers' => $nbUsers,
-            'params' => $params
+            'params' => $params,
         );
     }
 
@@ -156,15 +154,14 @@ class TeamController extends Controller
      * @EXT\Template()
      *
      * @param Workspace $workspace
-     * @param User $user
+     * @param User      $user
      */
     public function userMenuAction(
         Workspace $workspace,
         User $user,
         $orderedBy = 'name',
         $order = 'ASC'
-    )
-    {
+    ) {
         $this->checkToolAccess($workspace);
 
         $params = $this->teamManager->getParametersByWorkspace($workspace);
@@ -196,7 +193,7 @@ class TeamController extends Controller
             'order' => $order,
             'nbUsers' => $nbUsers,
             'params' => $params,
-            'nbTeams' => count($userTeams)
+            'nbTeams' => count($userTeams),
         );
     }
 
@@ -223,7 +220,7 @@ class TeamController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'workspace' => $workspace
+            'workspace' => $workspace,
         );
     }
 
@@ -263,10 +260,9 @@ class TeamController extends Controller
                 )
             );
         } else {
-
             return array(
                 'form' => $form->createView(),
-                'workspace' => $workspace
+                'workspace' => $workspace,
             );
         }
     }
@@ -289,7 +285,6 @@ class TeamController extends Controller
         $isTeamManager = $this->isTeamManager($team, $user);
 
         if (!$isWorkspaceManager && !$isTeamManager) {
-
             throw new AccessDeniedException();
         }
         $form = $this->formFactory->create(new TeamEditType(), $team);
@@ -297,7 +292,7 @@ class TeamController extends Controller
         return array(
             'form' => $form->createView(),
             'team' => $team,
-            'workspace' => $workspace
+            'workspace' => $workspace,
         );
     }
 
@@ -319,7 +314,6 @@ class TeamController extends Controller
         $isTeamManager = $this->isTeamManager($team, $user);
 
         if (!$isWorkspaceManager && !$isTeamManager) {
-
             throw new AccessDeniedException();
         }
         $oldIsPublic = $team->getIsPublic();
@@ -336,11 +330,10 @@ class TeamController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-
             return array(
                 'form' => $form->createView(),
                 'team' => $team,
-                'workspace' => $workspace
+                'workspace' => $workspace,
             );
         }
     }
@@ -384,7 +377,7 @@ class TeamController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'workspace' => $workspace
+            'workspace' => $workspace,
         );
     }
 
@@ -428,10 +421,9 @@ class TeamController extends Controller
                 )
             );
         } else {
-
             return array(
                 'form' => $form->createView(),
-                'workspace' => $workspace
+                'workspace' => $workspace,
             );
         }
     }
@@ -450,8 +442,7 @@ class TeamController extends Controller
         Team $team,
         User $user,
         User $manager
-    )
-    {
+    ) {
         $workspace = $team->getWorkspace();
         $this->checkWorkspaceManager($workspace, $manager);
         $params = $this->teamManager->getParametersByWorkspace($workspace);
@@ -483,14 +474,12 @@ class TeamController extends Controller
         Team $team,
         User $user,
         User $manager
-    )
-    {
+    ) {
         $workspace = $team->getWorkspace();
         $isWorkspaceManager = $this->isWorkspaceManager($workspace, $manager);
         $isTeamManager = $this->isTeamManager($team, $manager);
 
         if (!$isWorkspaceManager && !$isTeamManager) {
-
             throw new AccessDeniedException();
         }
         $this->teamManager->unregisterUserFromTeam($team, $user);
@@ -517,8 +506,7 @@ class TeamController extends Controller
         Team $team,
         array $users,
         User $manager
-    )
-    {
+    ) {
         $this->checkWorkspaceManager($team->getWorkspace(), $manager);
         $this->teamManager->registerUsersToTeam($team, $users);
 
@@ -544,8 +532,7 @@ class TeamController extends Controller
         Team $team,
         array $users,
         User $manager
-    )
-    {
+    ) {
         $this->checkWorkspaceManager($team->getWorkspace(), $manager);
         $this->teamManager->unregisterUsersFromTeam($team, $users);
 
@@ -573,8 +560,7 @@ class TeamController extends Controller
         array $teams,
         User $manager,
         $withDirectory = 0
-    )
-    {
+    ) {
         $this->checkWorkspaceManager($workspace, $manager);
         $deleteDirectory = (intval($withDirectory) === 1);
         $this->teamManager->deleteTeams($teams, $deleteDirectory);
@@ -601,8 +587,7 @@ class TeamController extends Controller
         Workspace $workspace,
         array $teams,
         User $manager
-    )
-    {
+    ) {
         $this->checkWorkspaceManager($workspace, $manager);
         $this->teamManager->emptyTeams($teams);
 
@@ -628,8 +613,7 @@ class TeamController extends Controller
         Workspace $workspace,
         array $teams,
         User $manager
-    )
-    {
+    ) {
         $this->checkWorkspaceManager($workspace, $manager);
         $this->teamManager->fillTeams($workspace, $teams);
 
@@ -701,8 +685,7 @@ class TeamController extends Controller
     public function teamParamsEditFormAction(
         WorkspaceTeamParameters $params,
         User $user
-    )
-    {
+    ) {
         $workspace = $params->getWorkspace();
         $this->checkWorkspaceManager($workspace, $user);
         $form = $this->formFactory->create(new TeamParamsType(), $params);
@@ -710,7 +693,7 @@ class TeamController extends Controller
         return array(
             'form' => $form->createView(),
             'params' => $params,
-            'workspace' => $workspace
+            'workspace' => $workspace,
         );
     }
 
@@ -727,8 +710,7 @@ class TeamController extends Controller
     public function teamParamsEditAction(
         WorkspaceTeamParameters $params,
         User $user
-    )
-    {
+    ) {
         $workspace = $params->getWorkspace();
         $this->checkWorkspaceManager($workspace, $user);
         $form = $this->formFactory->create(new TeamParamsType(), $params);
@@ -744,11 +726,10 @@ class TeamController extends Controller
                 )
             );
         } else {
-
             return array(
                 'form' => $form->createView(),
                 'params' => $params,
-                'workspace' => $workspace
+                'workspace' => $workspace,
             );
         }
     }
@@ -766,12 +747,12 @@ class TeamController extends Controller
      *
      * Displays the list of users who are registered to the workspace.
      *
-     * @param Team $team
-     * @param string  $search
-     * @param integer $page
-     * @param integer $max
-     * @param string  $orderedBy
-     * @param string  $order
+     * @param Team   $team
+     * @param string $search
+     * @param int    $page
+     * @param int    $max
+     * @param string $orderedBy
+     * @param string $order
      */
     public function registrationUserslistAction(
         Team $team,
@@ -781,8 +762,7 @@ class TeamController extends Controller
         $max = 50,
         $orderedBy = 'firstName',
         $order = 'ASC'
-    )
-    {
+    ) {
         $workspace = $team->getWorkspace();
         $this->checkWorkspaceManager($workspace, $user);
 
@@ -830,7 +810,7 @@ class TeamController extends Controller
             'order' => $order,
             'registered' => $registered,
             'nbTeams' => $nbTeams,
-            'params' => $params
+            'params' => $params,
         );
     }
 
@@ -847,12 +827,12 @@ class TeamController extends Controller
      *
      * Displays the list of users who are registered to the workspace.
      *
-     * @param Team $team
-     * @param string  $search
-     * @param integer $page
-     * @param integer $max
-     * @param string  $orderedBy
-     * @param string  $order
+     * @param Team   $team
+     * @param string $search
+     * @param int    $page
+     * @param int    $max
+     * @param string $orderedBy
+     * @param string $order
      */
     public function registrationUnregisteredUserslistAction(
         Team $team,
@@ -862,8 +842,7 @@ class TeamController extends Controller
         $max = 50,
         $orderedBy = 'firstName',
         $order = 'ASC'
-    )
-    {
+    ) {
         $workspace = $team->getWorkspace();
         $this->checkWorkspaceManager($workspace, $user);
 
@@ -905,7 +884,7 @@ class TeamController extends Controller
             'orderedBy' => $orderedBy,
             'order' => $order,
             'params' => $params,
-            'nbTeams' => $nbTeams
+            'nbTeams' => $nbTeams,
         );
     }
 
@@ -975,7 +954,7 @@ class TeamController extends Controller
             'workspace' => $workspace,
             'users' => $users,
             'team' => $team,
-            'params' => $params
+            'params' => $params,
         );
     }
 
@@ -998,7 +977,6 @@ class TeamController extends Controller
         $isTeamManager = $this->isTeamManager($team, $currentUser);
 
         if (!$isTeamMember && !$isTeamManager) {
-
             throw new AccessDeniedException();
         }
         $users = $team->getUsers();
@@ -1011,7 +989,7 @@ class TeamController extends Controller
             'team' => $team,
             'params' => $params,
             'isTeamMember' => $isTeamMember,
-            'isTeamManager' => $isTeamManager
+            'isTeamManager' => $isTeamManager,
         );
     }
 
@@ -1029,8 +1007,7 @@ class TeamController extends Controller
         Team $team,
         User $user,
         User $manager
-    )
-    {
+    ) {
         $workspace = $team->getWorkspace();
         $this->checkWorkspaceManager($workspace, $manager);
         $this->teamManager->registerManagerToTeam($team, $user);
@@ -1051,8 +1028,7 @@ class TeamController extends Controller
     public function managerUnregisterManagerFromTeamAction(
         Team $team,
         User $manager
-    )
-    {
+    ) {
         $this->checkWorkspaceManager($team->getWorkspace(), $manager);
         $this->teamManager->unregisterManagerFromTeam($team);
 
@@ -1062,7 +1038,6 @@ class TeamController extends Controller
     private function checkToolAccess(Workspace $workspace)
     {
         if (!$this->authorization->isGranted('claroline_team_tool', $workspace)) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1070,7 +1045,6 @@ class TeamController extends Controller
     private function checkWorkspaceManager(Workspace $workspace, User $user)
     {
         if (!$this->isWorkspaceManager($workspace, $user)) {
-
             throw new AccessDeniedException();
         }
     }
@@ -1078,12 +1052,11 @@ class TeamController extends Controller
     private function isWorkspaceManager(Workspace $workspace, User $user)
     {
         $isWorkspaceManager = false;
-        $managerRole = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
+        $managerRole = 'ROLE_WS_MANAGER_'.$workspace->getGuid();
         $roleNames = $user->getRoles();
 
         if (in_array('ROLE_ADMIN', $roleNames) ||
             in_array($managerRole, $roleNames)) {
-
             $isWorkspaceManager = true;
         }
 

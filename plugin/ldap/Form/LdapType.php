@@ -28,8 +28,8 @@ class LdapType extends AbstractType
                 'label' => 'name',
                 'constraints' => array(
                     new NotBlank(),
-                    new regex('/^[\w ]*$/')
-                )
+                    new regex('/^[\w ]*$/'),
+                ),
             )
         )
         ->add(
@@ -37,7 +37,7 @@ class LdapType extends AbstractType
             'text',
             array(
                 'label' => 'host',
-                'constraints' => array(new NotBlank())
+                'constraints' => array(new NotBlank()),
             )
         )
         ->add('port', 'number', array('label' => 'port'))
@@ -51,16 +51,16 @@ class LdapType extends AbstractType
                 'choices' => array('1' => '1', '2' => '2', '3' => '3'),
                 'required' => true,
                 'label' => 'protocol_version',
-                'data' => 3
+                'data' => 3,
             )
         );
         $builder->add('append_dn', 'checkbox', array(
-            'label'     => 'append_dn',
-            'required'  => false,
+            'label' => 'append_dn',
+            'required' => false,
         ));
         $builder->add('auto_creation', 'checkbox', array(
-            'label'     => 'auto_creation',
-            'required'  => false,
+            'label' => 'auto_creation',
+            'required' => false,
         ));
     }
 

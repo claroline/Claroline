@@ -21,8 +21,7 @@ class SurveyAnswerRepository extends EntityRepository
         Survey $survey,
         User $user,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT sa
             FROM Claroline\SurveyBundle\Entity\Answer\SurveyAnswer sa

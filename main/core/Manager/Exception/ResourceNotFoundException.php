@@ -13,5 +13,4 @@ namespace Claroline\CoreBundle\Manager\Exception;
 
 class ResourceNotFoundException extends \Exception
 {
-
 }

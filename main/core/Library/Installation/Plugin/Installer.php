@@ -15,10 +15,10 @@ use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
+use Claroline\CoreBundle\Manager\PluginManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This class is used to perform the (un-)installation of a plugin.
@@ -42,23 +42,28 @@ class Installer
      * @param InstallationManager $installer
      *
      * @DI\InjectParams({
-     *     "validator" = @DI\Inject("claroline.plugin.validator"),
-     *     "recorder"  = @DI\Inject("claroline.plugin.recorder"),
-     *     "installer" = @DI\Inject("claroline.installation.manager"),
-     *     "om"        = @DI\Inject("claroline.persistence.object_manager")
+     *     "validator"     = @DI\Inject("claroline.plugin.validator"),
+     *     "recorder"      = @DI\Inject("claroline.plugin.recorder"),
+     *     "installer"     = @DI\Inject("claroline.installation.manager"),
+     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pluginManager" = @DI\Inject("claroline.manager.plugin_manager"),
+     *     "translator"    = @DI\Inject("translator")
      * })
      */
     public function __construct(
         Validator $validator,
         Recorder $recorder,
         InstallationManager $installer,
-        ObjectManager $om
-    )
-    {
+        ObjectManager $om,
+        PluginManager $pluginManager,
+        TranslatorInterface $translator
+    ) {
         $this->validator = $validator;
         $this->recorder = $recorder;
         $this->baseInstaller = $installer;
         $this->om = $om;
+        $this->pluginManager = $pluginManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -84,8 +89,27 @@ class Installer
         $this->checkInstallationStatus($plugin, false);
         $this->validatePlugin($plugin);
         $this->log('Saving plugin configuration...');
-        $this->recorder->register($plugin, $this->validator->getPluginConfiguration());
+        $pluginEntity = $this->recorder->register($plugin, $this->validator->getPluginConfiguration());
         $this->baseInstaller->install($plugin);
+
+        if (!$this->pluginManager->isReady($pluginEntity)) {
+            $errors = $this->pluginManager->getMissingRequirements($pluginEntity);
+
+            foreach ($errors['extensions'] as $extension) {
+                $this->log(sprintf('<fg=red>Extension %s missing for %s !</fg=red>', $extension, $plugin->getName()));
+            }
+
+            foreach ($errors['plugins'] as $bundle) {
+                $this->log(sprintf('<fg=red>The plugin %s is required for %s ! You must enable it first to use %s.</fg=red>', $bundle, $plugin->getName(), $plugin->getName()));
+            }
+
+            foreach ($errors['extras'] as $extra) {
+                $this->log(sprintf('<fg=red>The plugin %s has extra requirements ! %s.</fg=red>', $plugin->getName(), $this->translator->trans($extra, array(), 'error')));
+            }
+
+            $this->log(sprintf('<fg=red>Disabling %s...</fg=red>', $plugin->getName()));
+            $this->pluginManager->disable($pluginEntity);
+        }
     }
 
     /**
@@ -105,8 +129,8 @@ class Installer
      * Upgrades/downgrades a plugin to a specific version.
      *
      * @param PluginBundleInterface $plugin
-     * @param string       $currentVersion
-     * @param string       $targetVersion
+     * @param string                $currentVersion
+     * @param string                $targetVersion
      */
     public function update(PluginBundleInterface $plugin, $currentVersion, $targetVersion)
     {
@@ -139,10 +163,10 @@ class Installer
 
         if (0 !== count($errors)) {
             $report = "Plugin '{$plugin->getNamespace()}' cannot be installed, due to the "
-                . "following validation errors :" . PHP_EOL;
+                .'following validation errors :'.PHP_EOL;
 
             foreach ($errors as $error) {
-                $report .= $error->getMessage() . PHP_EOL;
+                $report .= $error->getMessage().PHP_EOL;
             }
 
             throw new \Exception($report);

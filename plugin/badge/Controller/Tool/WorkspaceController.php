@@ -4,7 +4,6 @@ namespace Icap\BadgeBundle\Controller\Tool;
 
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Entity\BadgeClaim;
-use Icap\BadgeBundle\Entity\BadgeRule;
 use Icap\BadgeBundle\Entity\BadgeTranslation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -19,12 +18,43 @@ use Symfony\Component\HttpFoundation\Response;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Rule\Validator;
+use Doctrine\ORM\EntityManager;
+use Icap\BadgeBundle\Manager\BadgeManager;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @Route("/workspace/{workspaceId}/badges")
  */
 class WorkspaceController extends Controller
 {
+    private $userManager;
+    private $ruleValidator;
+    private $entityManager;
+    private $badgeManager;
+
+    /**
+     * @DI\InjectParams({
+     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
+     *     "ruleValidator" = @DI\Inject("claroline.rule.validator"),
+     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "badgeManager" = @DI\Inject("icap_badge.manager.badge")
+     * })
+     */
+    public function __construct(
+        UserManager $userManager,
+        Validator $ruleValidator,
+        EntityManager $entityManager,
+        BadgeManager $badgeManager
+    ) {
+        $this->userManager = $userManager;
+        $this->ruleValidator = $ruleValidator;
+        $this->entityManager = $entityManager;
+        $this->badgeManager = $badgeManager;
+    }
+
     /**
      * @Route(
      *     "/{badgePage}/{claimPage}/{userPage}",
@@ -49,37 +79,37 @@ class WorkspaceController extends Controller
         /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
         $userBadgeRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge');
 
-        $totalBadges       = $badgeRepository->countByWorkspace($workspace);
+        $totalBadges = $badgeRepository->countByWorkspace($workspace);
         $totalBadgeAwarded = $userBadgeRepository->countAwardedBadgeByWorkspace($workspace);
 
         $parameters = array(
-            'badgePage'    => $badgePage,
-            'claimPage'    => $claimPage,
-            'userPage'    => $userPage,
-            'workspace'    => $workspace,
-            'add_link'     => 'icap_badge_workspace_tool_badges_add',
-            'edit_link'    => array(
-                'url'    => 'icap_badge_workspace_tool_badges_edit',
-                'suffix' => '#!edit'
+            'badgePage' => $badgePage,
+            'claimPage' => $claimPage,
+            'userPage' => $userPage,
+            'workspace' => $workspace,
+            'add_link' => 'icap_badge_workspace_tool_badges_add',
+            'edit_link' => array(
+                'url' => 'icap_badge_workspace_tool_badges_edit',
+                'suffix' => '#!edit',
             ),
-            'delete_link'      => 'icap_badge_workspace_tool_badges_delete',
-            'view_link'        => 'icap_badge_workspace_tool_badges_edit',
-            'current_link'     => 'icap_badge_workspace_tool_badges',
-            'claim_link'       => 'icap_badge_workspace_tool_manage_claim',
-            'statistics_link'  => 'icap_badge_workspace_tool_badges_statistics',
-            'totalBadges'          => $totalBadges,
-            'totalAwarding'        => $userBadgeRepository->countAwardingByWorkspace($workspace),
-            'totalBadgeAwarded'    => $totalBadgeAwarded,
+            'delete_link' => 'icap_badge_workspace_tool_badges_delete',
+            'view_link' => 'icap_badge_workspace_tool_badges_edit',
+            'current_link' => 'icap_badge_workspace_tool_badges',
+            'claim_link' => 'icap_badge_workspace_tool_manage_claim',
+            'statistics_link' => 'icap_badge_workspace_tool_badges_statistics',
+            'csv_link' => 'icap_badge_workspace_export_csv',
+            'totalBadges' => $totalBadges,
+            'totalAwarding' => $userBadgeRepository->countAwardingByWorkspace($workspace),
+            'totalBadgeAwarded' => $totalBadgeAwarded,
             'totalBadgeNotAwarded' => $totalBadges - $totalBadgeAwarded,
             'route_parameters' => array(
-                'workspaceId' => $workspace->getId()
+                'workspaceId' => $workspace->getId(),
             ),
         );
 
-
         return array(
-            'workspace'   => $workspace,
-            'parameters'  => $parameters
+            'workspace' => $workspace,
+            'parameters' => $parameters,
         );
     }
 
@@ -99,7 +129,7 @@ class WorkspaceController extends Controller
         $badge = new Badge();
         $badge->setWorkspace($workspace);
 
-        $locales = $this->get('claroline.common.locale_manager')->getAvailableLocales();
+        $locales = $this->get('claroline.manager.locale_manager')->getAvailableLocales();
         foreach ($locales as $locale) {
             $translation = new BadgeTranslation();
             $translation->setLocale($locale);
@@ -126,8 +156,8 @@ class WorkspaceController extends Controller
 
         return array(
             'workspace' => $workspace,
-            'form'  => $this->get('icap_badge.form.badge.workspace')->createView(),
-            'badge' => $badge
+            'form' => $this->get('icap_badge.form.badge.workspace')->createView(),
+            'badge' => $badge,
         );
     }
 
@@ -144,14 +174,14 @@ class WorkspaceController extends Controller
     public function editAction(Request $request, Workspace $workspace, Badge $badge, $page = 1)
     {
         if (null === $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         $this->checkUserIsAllowed($workspace);
 
-        $query   = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findByBadge($badge, false);
+        $query = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findByBadge($badge, false);
         $adapter = new DoctrineORMAdapter($query);
-        $pager   = new Pagerfanta($adapter);
+        $pager = new Pagerfanta($adapter);
 
         try {
             $pager->setCurrentPage($page);
@@ -166,7 +196,9 @@ class WorkspaceController extends Controller
         $translator = $this->get('translator');
 
         try {
-            if ($this->get('icap_badge.form_handler.badge.workspace')->handleEdit($badge)) {
+            $unawardBadge = $request->query->get('unawardBadge') === 'true';
+
+            if ($this->get('icap_badge.form_handler.badge.workspace')->handleEdit($badge, $this->badgeManager, $unawardBadge)) {
                 $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', array(), 'icap_badge'));
 
                 return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
@@ -179,9 +211,9 @@ class WorkspaceController extends Controller
 
         return array(
             'workspace' => $workspace,
-            'form'      => $this->get('icap_badge.form.badge.workspace')->createView(),
-            'badge'     => $badge,
-            'pager'     => $pager
+            'form' => $this->get('icap_badge.form.badge.workspace')->createView(),
+            'badge' => $badge,
+            'pager' => $pager,
         );
     }
 
@@ -198,7 +230,7 @@ class WorkspaceController extends Controller
     public function deleteAction(Workspace $workspace, Badge $badge)
     {
         if (null === $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         $this->checkUserIsAllowed($workspace);
@@ -240,7 +272,7 @@ class WorkspaceController extends Controller
     public function awardAction(Request $request, Workspace $workspace, Badge $badge, User $loggedUser)
     {
         if (null === $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         $this->checkUserIsAllowed($workspace);
@@ -255,8 +287,8 @@ class WorkspaceController extends Controller
                 try {
                     $doctrine = $this->getDoctrine();
 
-                    $group   = $form->get('group')->getData();
-                    $user    = $form->get('user')->getData();
+                    $group = $form->get('group')->getData();
+                    $user = $form->get('user')->getData();
                     $comment = $form->get('comment')->getData();
 
                     /** @var \Claroline\CoreBundle\Entity\User[] $users */
@@ -310,8 +342,8 @@ class WorkspaceController extends Controller
 
         return array(
             'workspace' => $workspace,
-            'badge'     => $badge,
-            'form'      => $form->createView()
+            'badge' => $badge,
+            'form' => $form->createView(),
         );
     }
 
@@ -328,7 +360,7 @@ class WorkspaceController extends Controller
     public function unawardAction(Request $request, Workspace $workspace, Badge $badge, User $user)
     {
         if (null === $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         $this->checkUserIsAllowed($workspace);
@@ -383,7 +415,7 @@ class WorkspaceController extends Controller
     public function manageClaimAction(Workspace $workspace, BadgeClaim $badgeClaim, $validate = false)
     {
         if (null === $badgeClaim->getBadge()->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         $this->checkUserIsAllowed($workspace);
@@ -441,20 +473,148 @@ class WorkspaceController extends Controller
         /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
         $userBadgeRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge');
 
-        $totalBadges       = $badgeRepository->countByWorkspace($workspace);
+        $totalBadges = $badgeRepository->countByWorkspace($workspace);
         $totalBadgeAwarded = $userBadgeRepository->countAwardedBadgeByWorkspace($workspace);
 
         $statistics = array(
-            'totalBadges'          => $totalBadges,
-            'totalAwarding'        => $userBadgeRepository->countAwardingByWorkspace($workspace),
-            'totalBadgeAwarded'    => $totalBadgeAwarded,
-            'totalBadgeNotAwarded' => $totalBadges - $totalBadgeAwarded
+            'totalBadges' => $totalBadges,
+            'totalAwarding' => $userBadgeRepository->countAwardingByWorkspace($workspace),
+            'totalBadgeAwarded' => $totalBadgeAwarded,
+            'totalBadgeNotAwarded' => $totalBadges - $totalBadgeAwarded,
         );
 
         return array(
-            'workspace'  => $workspace,
-            'statistics' => $statistics
+            'workspace' => $workspace,
+            'statistics' => $statistics,
         );
+    }
+
+    /**
+     * @Route("/recalculate/{slug}", name="icap_badge_workspace_tool_badges_recalculate")
+     * @ParamConverter(
+     *     "workspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"id" = "workspaceId"}
+     * )
+     * @ParamConverter("badge", converter="badge_converter")
+     */
+    public function recalculateAction(Request $request, Workspace $workspace, Badge $badge)
+    {
+        $this->checkUserIsAllowed($workspace);
+
+        // Check rules for already awarded badges ?
+        $recalculateAlreadyAwarded = $request->query->get('recalculateAlreadyAwarded') === 'true';
+
+        // Get Users
+        $users = $recalculateAlreadyAwarded ?
+            $this->userManager->getUsersByWorkspaces([$workspace], 1, 1, false) :
+            $this->badgeManager->getUsersNotAwardedWithBadge($badge);
+
+        $nbRules = count($badge->getRules());
+
+        foreach ($users as $user) {
+            $resources = $this->ruleValidator->validate($badge, $user);
+            if (0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
+                // Add badge to user but delay flush. It will be performed later, outside foreach loop
+                $this->badgeManager->addBadgeToUser($badge, $user, null, null, true);
+            } else {
+                // Remove badge from user but delay flush. It will be performed later, outside foreach loop
+                $this->badgeManager->revokeBadgeFromUser($badge, $user, null, null, true);
+            }
+        }
+        $this->getDoctrine()->getManager()->flush();
+
+        $translator = $this->get('translator');
+        $successMessage = $translator->trans('recalculate_success', array(), 'icap_badge');
+        $this->get('session')->getFlashBag()->add('success', $successMessage);
+
+        return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
+    }
+
+    /**
+     * @Route("/export", name="icap_badge_workspace_export_csv")
+     * @ParamConverter(
+     *     "workspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"id" = "workspaceId"}
+     * )
+     *
+     * @param Request $request
+     *
+     * @return StreamedResponse
+     */
+    public function exportCSVAction(Request $request, Workspace $workspace)
+    {
+        $this->checkUserIsAllowed($workspace);
+
+        $locale = $request->getLocale();
+        $translator = $this->get('translator');
+        $userBadgeRepo = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
+
+        $users = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')
+            ->createQueryBuilder('u')
+            ->select('u')
+            ->join('u.roles', 'r')
+            ->andWhere('u.isEnabled = true')
+            ->leftJoin('r.workspace', 'w')
+            ->andWhere('r.workspace = :workspace')
+            ->setParameter('workspace', $workspace)
+            ->orderBy('u.lastName')
+            ->addOrderBy('u.firstName')
+            ->getQuery()
+            ->getResult();
+
+        $badges = $this->badgeManager->getWorkspaceBadgesOrderedByName($workspace, $locale);
+
+        $response = new StreamedResponse(function () use ($users, $badges, $locale, $translator, $userBadgeRepo) {
+            $handle = fopen('php://output', 'w+');
+
+            $userTrans = count($users) > 1 ?
+                $translator->trans('users', array(), 'platform') :
+                $translator->trans('user', array(), 'platform');
+            $badgeTrans = count($badges) > 1 ?
+                $translator->trans('badges', array(), 'icap_badge') :
+                $translator->trans('badge', array(), 'icap_badge');
+
+            fputcsv($handle, array(count($users).' '.strtolower($userTrans).', '.count($badges).' '.strtolower($badgeTrans)));
+
+            // Headers
+            $headers = array(
+                $translator->trans('username', array(), 'platform'),
+                $translator->trans('first_name', array(), 'platform'),
+                $translator->trans('last_name', array(), 'platform'),
+            );
+            foreach ($badges as $badge) {
+                array_push($headers, $badge->getTranslationForLocale($locale)->getName());
+            }
+            fputcsv($handle, $headers);
+
+            // Data
+            foreach ($users as $user) {
+                $line = array(
+                    $user->getUsername(),
+                    $user->getFirstname(),
+                    $user->getlastName(),
+                );
+                foreach ($badges as $badge) { // foreach iterates always in the same order
+                    $check = $userBadgeRepo->findOneByBadgeAndUser($badge, $user) ?
+                        'x' : '';
+                    array_push($line, $check);
+                }
+                fputcsv($handle, $line);
+            }
+
+            fclose($handle);
+
+        });
+
+        $dateStr = date('Y-m-d');
+        $response->headers->set('Content-Type', 'application/force-download');
+
+        $filename = $translator->trans('csv_filename', array(), 'icap_badge');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'_'.$dateStr.'.csv"');
+
+        return $response;
     }
 
     private function checkUserIsAllowed(Workspace $workspace)

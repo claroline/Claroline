@@ -32,36 +32,36 @@ class ResourceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array(
-                'label' => 'form.name'
+                'label' => 'form.name',
             )
         );
 
         $builder->add('description', 'textarea', array(
-            'label' => 'form.description'
+            'label' => 'form.description',
         ));
 
         $builder->add('localisation', 'text', array(
-            'label' => 'form.localisation'
+            'label' => 'form.localisation',
         ));
 
         $builder->add('maxTimeReservation', 'time', array(
             'input' => 'string',
             'widget' => 'single_text',
-            'label' => 'form.maxTime'
+            'label' => 'form.maxTime',
         ));
 
         $builder->add('quantity', 'integer', array(
             'label' => 'form.quantity',
             'empty_data' => 1,
             'attr' => [
-                'min' => 1
-            ]
+                'min' => 1,
+            ],
         ));
 
         $builder->add('color', 'text', [
             'label' => 'form.color',
             'required' => false,
-            'empty_data' => '#3a87ad'
+            'empty_data' => '#3a87ad',
         ]);
     }
 
@@ -75,7 +75,7 @@ class ResourceType extends AbstractType
         $resolver->setDefaults(
             array(
                 'class' => 'FormaLibre\ReservationBundle\Entity\Resource',
-                'translation_domain' => 'reservation'
+                'translation_domain' => 'reservation',
             )
         );
     }

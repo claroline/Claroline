@@ -150,7 +150,7 @@ class AnnouncementManagerTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\AnnouncementBundle\Manager\AnnouncementManager' . $stringMocked,
+            'Claroline\AnnouncementBundle\Manager\AnnouncementManager'.$stringMocked,
             array($this->om)
         );
     }

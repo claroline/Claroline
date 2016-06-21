@@ -1,0 +1,11 @@
+<li id="{{vm.menu.id}}" ng-style="vm.style" ng-class="{'flexnav-dropdown':vm.hasChildren, 'flexnav-dropdown-submenu':vm.hasChildren && vm.level>0, 'open':!vm.collapsed}">
+    <span class="submenu-visual-container" ng-mouseover="vm.over()" ng-mouseleave="vm.leave()" ng-click="vm.toggleCollapse()">
+        <a ng-href="{{vm.buildHref()}}" target="{{!vm.menu.target?'':'_blank'}}" title="{{ vm.menu.title }}"
+            ng-click="vm.itemClicked($event)">
+            {{ vm.menu.title }}
+        </a>
+    </span>
+    <ul ng-if="vm.hasChildren" class="flexnav-dropdown-menu">
+        <ui-flexnav-submenu ng-repeat="item in vm.children" menu="item" level="{{vm.level * 1 + 1}}"></ui-flexnav-submenu>
+    </ul>
+</li>

@@ -27,8 +27,8 @@ class AdminWorkspaceTagType extends AbstractType
             array(
                 'constraints' => array(
                     new NotBlank(),
-                    new AdminWorkspaceTagUniqueName()
-                )
+                    new AdminWorkspaceTagUniqueName(),
+                ),
             )
         );
     }

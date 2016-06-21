@@ -55,7 +55,9 @@ class Updater030601 extends Updater
         //remove the "write perm" text.
         $textType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('text');
         $mask = $this->mm->getDecoder($textType, 'write');
-        if ($mask) $this->om->remove($mask);
+        if ($mask) {
+            $this->om->remove($mask);
+        }
 
         $fileType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('file');
         $menuItem = $this->mm->getMenuFromNameAndResourceType('update_file', $fileType);
@@ -66,4 +68,4 @@ class Updater030601 extends Updater
 
         $this->om->flush();
     }
-} 
+}

@@ -1,9 +1,4 @@
-<audio width="100%" controls="controls" preload='none'>
+<audio width="100%" controls="controls" preload='auto'>
     <source src="{{ path('claro_file_get_media', {'node': node.getId}) }}" type="{{ node.getMimeType() }}">
-    <!-- In case of the browser does not support the video tag: -->
-    <object width="100%" height="400">
-        <param name="audio" value="{{ path('claro_file_get_media', {'node': node.getId}) }}">
-        <embed src="{{ path('claro_file_get_media', {'node': node.getId}) }}"></embed>
-    </object>
 </audio>
 <a href="{{ path('claro_resource_open', {'resourceType': node.getResourceType().getName(), 'node' : node.getId()}) }}">{{ node.getName() }}</a>

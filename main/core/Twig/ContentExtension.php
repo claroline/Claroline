@@ -15,8 +15,6 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Tag;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @Service
@@ -39,7 +37,7 @@ class ContentExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'getContent' => new \Twig_Function_Method($this, 'getContent')
+            'getContent' => new \Twig_Function_Method($this, 'getContent'),
         );
     }
 
@@ -52,5 +50,4 @@ class ContentExtension extends \Twig_Extension
     {
         return $this->content->getContent(array('type' => $type));
     }
-
 }

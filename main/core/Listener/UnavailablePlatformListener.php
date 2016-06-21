@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Claroline\CoreBundle\Listener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -41,8 +41,7 @@ class UnavailablePlatformListener
         PlatformConfigurationHandler $ch,
         TokenStorageInterface $tokenStorage,
         HttpKernelInterface $kernel
-    )
-    {
+    ) {
         $this->templating = $templating;
         $this->ch = $ch;
         $this->tokenStorage = $tokenStorage;
@@ -86,7 +85,7 @@ class UnavailablePlatformListener
             'claro_index',
             '_profiler',
             'claro_security_login',
-            'claro_security_login_check'
+            'claro_security_login_check',
         );
     }
 }

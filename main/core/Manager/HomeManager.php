@@ -57,8 +57,7 @@ class HomeManager
         $persistence,
         $formFactory,
         $configHandler
-    )
-    {
+    ) {
         $this->graph = $graph;
         $this->manager = $persistence;
         $this->contentManager = $contentManager;
@@ -74,7 +73,7 @@ class HomeManager
     }
 
     /**
-     * Get Content
+     * Get Content.
      *
      * @return array
      */
@@ -108,7 +107,7 @@ class HomeManager
         $content = $this->getContentByType($type->getName(), $father, $region);
         $array = null;
 
-        if ($content and ($type->isPublish() or $admin)) {
+        if ($content && ($type->isPublish() || $admin)) {
             $array = array();
             $array['content'] = $content;
             $array['type'] = $type->getName();
@@ -142,7 +141,6 @@ class HomeManager
         $type = $this->type->findOneBy(array('name' => $type));
 
         if ($type) {
-
             if ($father) {
                 $father = $this->content->find($father);
                 $first = $this->subContent->findOneBy(
@@ -155,7 +153,7 @@ class HomeManager
             }
 
             if ($first) {
-                for ($i = 0; $i < $type->getMaxContentPage() and $first != null; $i++) {
+                for ($i = 0; $i < $type->getMaxContentPage() && $first != null; ++$i) {
                     $variables = array();
                     $variables['content'] = $first->getContent();
                     $variables['size'] = $first->getSize();
@@ -203,7 +201,7 @@ class HomeManager
                     'size' => $first->getSize(),
                     'menu' => '',
                     'type' => $type,
-                    'region' => $region->getName()
+                    'region' => $region->getName(),
                 );
 
                 $first = $first->getNext();
@@ -226,7 +224,7 @@ class HomeManager
     }
 
     /**
-     * Get the types
+     * Get the types.
      *
      * @return array An array of Type entity.
      */
@@ -236,7 +234,9 @@ class HomeManager
     }
 
     /**
-     * Get the open graph contents of a web page by his URL
+     * Get the open graph contents of a web page by his URL.
+     *
+     * @param string $url
      *
      * @return array
      */
@@ -252,11 +252,12 @@ class HomeManager
      */
     public function createContent($translatedContent, $type = null, $father = null)
     {
-        if (isset($translatedContent['content']) and
-            is_array($translatedContent['content']) and
-            $id = $this->contentManager->createContent($translatedContent['content']) and
-            $content = $this->content->find($id)
-        ) {
+        $id = isset($translatedContent['content']) && is_array($translatedContent['content']) ?
+            $this->contentManager->createContent($translatedContent['content']) :
+            null;
+        $content = $id ? $this->content->find($id) : null;
+
+        if (!is_null($content)) {
             if ($father) {
                 $father = $this->content->find($father);
                 $first = $this->subContent->findOneBy(array('back' => null, 'father' => $father));
@@ -281,18 +282,16 @@ class HomeManager
 
     /**
      * Update a content.
-     *
-     * @return This function doesn't return anything.
      */
     public function updateContent($content, $translatedContent = null, $size = null, $type = null)
     {
-        if (isset($translatedContent['content' . $content->getId()]) and
-            is_array($translatedContent['content' . $content->getId()])
+        if (isset($translatedContent['content'.$content->getId()]) &&
+            is_array($translatedContent['content'.$content->getId()])
         ) {
-            $this->contentManager->updateContent($content, $translatedContent['content' . $content->getId()]);
+            $this->contentManager->updateContent($content, $translatedContent['content'.$content->getId()]);
         }
 
-        if ($size and $type) {
+        if ($size && $type) {
             $type = $this->type->findOneBy(array('name' => $type));
             $contentType = $this->contentType->findOneBy(array('content' => $content, 'type' => $type));
             $contentType->setSize($size);
@@ -303,8 +302,6 @@ class HomeManager
 
     /**
      * Reorder Contents.
-     *
-     * @return This function doesn't return anything.
      */
     public function reorderContent($type, $a, $b = null, $father = null)
     {
@@ -334,7 +331,7 @@ class HomeManager
     }
 
     /**
-     * Get content node (type or sub content object)
+     * Get content node (type or sub content object).
      */
     public function getNode($type, $content = null, $father = null)
     {
@@ -354,29 +351,28 @@ class HomeManager
     }
 
     /**
-     * Move a content from a type to another
+     * Move a content from a type to another.
      *
-     * @param content The content to move
-     * @param page The page type where move the content
-     *
-     * @return This function doesn't return anything.
+     * @param string content The content to move
+     * @param Type $type
+     * @param Type $page The page type where move the content
      */
     public function moveContent($content, $type, $page)
     {
-        $contenType = $this->contentType->findOneBy(array('type' => $type, 'content' => $content));
+        $contentType = $this->contentType->findOneBy(array('type' => $type, 'content' => $content));
 
-        $contenType->detach();
-        $contenType->setType($page);
-        $contenType->setFirst($this->contentType->findOneBy(array('type' => $page, 'back' => null)));
+        $contentType->detach();
+        $contentType->setType($page);
+        $contentType->setFirst($this->contentType->findOneBy(array('type' => $page, 'back' => null)));
 
-        $this->manager->persist($contenType);
+        $this->manager->persist($contentType);
         $this->manager->flush();
     }
 
     /**
-     * Delete a content and his childs.
+     * Delete a content and his children.
      *
-     * @return This function doesn't return anything.
+     * @param string $content
      */
     public function deleteContent($content)
     {
@@ -396,6 +392,8 @@ class HomeManager
     /**
      * Create a type.
      *
+     * @param string $name
+     *
      * @return Type
      */
     public function createType($name)
@@ -408,7 +406,10 @@ class HomeManager
     }
 
     /**
-     * Rename a type
+     * Rename a type.
+     *
+     * @param Type   $type
+     * @param string $name
      *
      * @return Type
      */
@@ -421,6 +422,9 @@ class HomeManager
         return $type;
     }
 
+    /**
+     * @param Type $type
+     */
     public function persistType(Type $type)
     {
         $this->manager->persist($type);
@@ -429,6 +433,10 @@ class HomeManager
 
     /**
      * Verify if a type exist.
+     *
+     * @param string $name
+     *
+     * @return bool
      */
     public function typeExist($name)
     {
@@ -444,7 +452,7 @@ class HomeManager
     /**
      * Delete a type and his childs.
      *
-     * @return This function doesn't return anything.
+     * @param Type $type a content type
      */
     public function deleteType($type)
     {
@@ -459,17 +467,17 @@ class HomeManager
     }
 
     /**
-     * Publish content type page
+     * Publish content type page.
      *
-     * @param $type a content type
+     * @param Type $type a content type
      *
-     * @return boolean
+     * @return bool
      */
     public function publishType($type)
     {
         $publish = true;
 
-        if ($type instanceof Type and $type->getName() !== 'home' and $type->getName() !== 'menu') {
+        if ($type instanceof Type && $type->getName() !== 'home' && $type->getName() !== 'menu') {
             if ($type->isPublish()) {
                 $publish = false;
             }
@@ -501,7 +509,6 @@ class HomeManager
             $this->manager->remove($entity);
             $this->manager->flush();
         }
-
     }
 
     /**
@@ -513,7 +520,7 @@ class HomeManager
     {
         $regions = $this->contentRegion->findBy(array('content' => $content));
 
-        if (count($regions) === 1 and $regions[0]->getRegion()->getName() === $region->getName()) {
+        if (count($regions) === 1 && $regions[0]->getRegion()->getName() === $region->getName()) {
             $this->deleteRegions($content, $regions);
         } else {
             $this->deleteRegions($content, $regions);
@@ -548,7 +555,7 @@ class HomeManager
     {
         $variables = array('type' => $type);
 
-        if ($id and !$content) {
+        if ($id && !$content) {
             $content = $this->content->find($id);
             $variables['content'] = $content;
         }
@@ -577,19 +584,19 @@ class HomeManager
     }
 
     /**
-     * Check if a string is a valid URL
+     * Check if a string is a valid URL.
      *
      * @param $url the string to validate
      *
-     * @return boolean
+     * @return bool
      */
     public function isValidUrl($url)
     {
-        return (filter_var($url, FILTER_VALIDATE_URL) !== false);
+        return filter_var($url, FILTER_VALIDATE_URL) !== false;
     }
 
     /**
-     * Get the home parameters
+     * Get the home parameters.
      */
     public function getHomeParameters()
     {
@@ -597,12 +604,12 @@ class HomeManager
             'homeMenu' => $this->configHandler->getParameter('home_menu'),
             'footerLogin' => $this->configHandler->getParameter('footer_login'),
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
-            'headerLocale' => $this->configHandler->getParameter('header_locale')
+            'headerLocale' => $this->configHandler->getParameter('header_locale'),
         );
     }
 
     /**
-     * Save the home parameters
+     * Save the home parameters.
      */
     public function saveHomeParameters($homeMenu, $footerLogin, $footerWorkspaces, $headerLocale)
     {
@@ -610,8 +617,8 @@ class HomeManager
             array(
                 'home_menu' => is_numeric($homeMenu) ? intval($homeMenu) : null,
                 'footer_login' => ($footerLogin === 'true'),
-            'footer_workspaces' => ($footerWorkspaces === 'true'),
-                'header_locale' => ($headerLocale === 'true')
+                'footer_workspaces' => ($footerWorkspaces === 'true'),
+                'header_locale' => ($headerLocale === 'true'),
             )
         );
     }

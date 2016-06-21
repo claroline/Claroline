@@ -85,7 +85,7 @@ class DatabaseChecker
             'user' => $this->settings->getUser(),
             'password' => $this->settings->getPassword(),
             'port' => $this->settings->getPort(),
-            'charset' => $this->settings->getCharset()
+            'charset' => $this->settings->getCharset(),
         );
 
         if ($useDatabase) {

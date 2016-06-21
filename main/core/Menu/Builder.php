@@ -30,8 +30,10 @@ class Builder extends ContainerAware
             ->setChildrenAttribute('class', 'dropdown-menu')
             ->setChildrenAttribute('role', 'menu');
 
-        $menu->addChild($translator->trans('my_profile', array(), 'platform'), array('route' => 'claro_profile_view'))
-            ->setAttribute('class', 'dropdown')
+        $menu->addChild(
+            $translator->trans('my_profile', array(), 'platform'),
+            array('uri' => $router->generate('claro_public_profile_view', array('publicUrl' => $tokenStorage->getToken()->getUser()->getPublicUrl())))
+        )->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-user');
         $menu->addChild(
@@ -80,9 +82,9 @@ class Builder extends ContainerAware
             }
             $event = new ConfigureMenuEvent($factory, $menu, $tool);
 
-            if ($dispatcher->hasListeners('claroline_top_bar_right_menu_configure_desktop_tool_' . $toolName)) {
+            if ($dispatcher->hasListeners('claroline_top_bar_right_menu_configure_desktop_tool_'.$toolName)) {
                 $dispatcher->dispatch(
-                    'claroline_top_bar_right_menu_configure_desktop_tool_' . $toolName,
+                    'claroline_top_bar_right_menu_configure_desktop_tool_'.$toolName,
                     $event
                 );
             } else {
@@ -103,7 +105,7 @@ class Builder extends ContainerAware
         if ($hasRoleExtension->isImpersonated()) {
             $route = array(
                 'route' => 'claro_desktop_open',
-                'routeParameters' => array('_switch' => 'exit')
+                'routeParameters' => array('_switch' => 'exit'),
             );
         } else {
             $route = array('route' => 'claro_security_logout');
@@ -128,10 +130,10 @@ class Builder extends ContainerAware
         $menu = $factory->createItem('root')
             ->setChildrenAttribute('class', 'nav navbar-nav');
 
-         if ($configHandler->getParameter('name') == "" && $configHandler->getParameter('logo') == "") {
-             $menu->addChild($translator->trans('home', array(), 'platform'), array('route' => 'claro_index'))
+        if ($configHandler->getParameter('name') == '' && $configHandler->getParameter('logo') == '') {
+            $menu->addChild($translator->trans('home', array(), 'platform'), array('route' => 'claro_index'))
                 ->setExtra('icon', 'fa fa-home');
-         }
+        }
 
         $menu->addChild($translator->trans('desktop', array(), 'platform'), array('route' => 'claro_desktop_open'))
             ->setAttribute('role', 'presentation')
@@ -178,9 +180,9 @@ class Builder extends ContainerAware
                 }
                 $event = new ConfigureMenuEvent($factory, $menu, $tool);
 
-                if ($dispatcher->hasListeners('claroline_top_bar_left_menu_configure_desktop_tool_' . $toolName)) {
+                if ($dispatcher->hasListeners('claroline_top_bar_left_menu_configure_desktop_tool_'.$toolName)) {
                     $dispatcher->dispatch(
-                        'claroline_top_bar_left_menu_configure_desktop_tool_' . $toolName,
+                        'claroline_top_bar_left_menu_configure_desktop_tool_'.$toolName,
                         $event
                     );
                 } else {
@@ -212,20 +214,20 @@ class Builder extends ContainerAware
             $translator->trans('menu_bar', array(), 'platform'),
             array(
                 'route' => 'claro_tool_properties',
-                'routeParameters' => array('type' => 0)
+                'routeParameters' => array('type' => 0),
             ));
 
         $menu->addChild(
             $translator->trans('user_menu', array(), 'platform'),
             array(
                 'route' => 'claro_tool_properties',
-                'routeParameters' => array('type' => 1)
+                'routeParameters' => array('type' => 1),
             ));
 
         $menu->addChild(
             $translator->trans('desktop_parameters', array(), 'platform'),
             array(
-                'route' => 'claro_user_options_edit_form'
+                'route' => 'claro_user_options_edit_form',
             ));
 
         //allowing the menu to be extended
@@ -330,6 +332,7 @@ class Builder extends ContainerAware
         $line = $options['line'];
         $url = $options['url'];
         $referer = $options['referer'];
+        $httpCode = isset($options['httpCode']) ? $options['httpCode'] : null;
         $menu = $factory->createItem('exception-actions')
             ->setChildrenAttribute('class', 'btn-group menu exception-actions-menu');
 
@@ -344,7 +347,8 @@ class Builder extends ContainerAware
                 $file,
                 $line,
                 $url,
-                $referer
+                $referer,
+                $httpCode
             )
         );
 

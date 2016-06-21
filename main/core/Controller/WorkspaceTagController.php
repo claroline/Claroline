@@ -56,8 +56,7 @@ class WorkspaceTagController extends Controller
         FormFactory $formFactory,
         Utilities $utils,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->workspaceManager = $workspaceManager;
         $this->tagManager = $tagManager;
         $this->tokenStorage = $tokenStorage;
@@ -140,8 +139,7 @@ class WorkspaceTagController extends Controller
         User $currentUser,
         WorkspaceTag $tag,
         $childrenString
-    )
-    {
+    ) {
         $children = explode(',', $childrenString);
 
         if (is_array($children) && count($children) > 0) {
@@ -329,7 +327,7 @@ class WorkspaceTagController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'workspaceTag' => $workspaceTag
+            'workspaceTag' => $workspaceTag,
         );
     }
 
@@ -370,7 +368,7 @@ class WorkspaceTagController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'workspaceTag' => $workspaceTag
+            'workspaceTag' => $workspaceTag,
         );
     }
 
@@ -395,8 +393,7 @@ class WorkspaceTagController extends Controller
     public function workspaceTagEditFormAction(
         User $currentUser,
         WorkspaceTag $workspaceTag
-    )
-    {
+    ) {
         $form = $this->formFactory->create(
             FormFactory::TYPE_WORKSPACE_TAG,
             array(),
@@ -405,7 +402,7 @@ class WorkspaceTagController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'workspaceTag' => $workspaceTag
+            'workspaceTag' => $workspaceTag,
         );
     }
 
@@ -429,8 +426,7 @@ class WorkspaceTagController extends Controller
     public function workspaceTagEditAction(
         User $currentUser,
         WorkspaceTag $workspaceTag
-    )
-    {
+    ) {
         $form = $this->formFactory->create(
             FormFactory::TYPE_WORKSPACE_TAG,
             array(),
@@ -447,7 +443,7 @@ class WorkspaceTagController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'workspaceTag' => $workspaceTag
+            'workspaceTag' => $workspaceTag,
         );
     }
 
@@ -520,7 +516,7 @@ class WorkspaceTagController extends Controller
             if (!isset($levelsArray[$childTagId][$level])) {
                 $levelsArray[$childTagId][$level] = 0;
             }
-            $levelsArray[$childTagId][$level]++;
+            ++$levelsArray[$childTagId][$level];
         }
 
         foreach ($parentHierarchies as $parentHierarchy) {
@@ -539,8 +535,7 @@ class WorkspaceTagController extends Controller
                 if ($currentParent === $parentWorkspaceTag &&
                     isset($levelCount[$currentTagId][$level]) &&
                     $levelCount[$currentTagId][$level] > 0) {
-
-                    $levelCount[$currentTagId][$level]--;
+                    --$levelCount[$currentTagId][$level];
                     unset($multiHierarchies[$index]);
                     $this->tagManager->deleteTagHierarchy($singleHierarchy);
                 }
@@ -619,7 +614,7 @@ class WorkspaceTagController extends Controller
             if (!isset($levelsArray[$childTagId][$level])) {
                 $levelsArray[$childTagId][$level] = 0;
             }
-            $levelsArray[$childTagId][$level]++;
+            ++$levelsArray[$childTagId][$level];
         }
 
         foreach ($parentHierarchies as $parentHierarchy) {
@@ -638,8 +633,7 @@ class WorkspaceTagController extends Controller
                 if ($currentParent === $parentWorkspaceTag &&
                     isset($levelCount[$currentTagId][$level]) &&
                     $levelCount[$currentTagId][$level] > 0) {
-
-                    $levelCount[$currentTagId][$level]--;
+                    --$levelCount[$currentTagId][$level];
                     unset($multiHierarchies[$index]);
                     $this->tagManager->deleteTagHierarchy($singleHierarchy);
                 }
@@ -680,8 +674,7 @@ class WorkspaceTagController extends Controller
         WorkspaceTag $workspaceTag,
         $page,
         $search
-    )
-    {
+    ) {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
@@ -694,7 +687,7 @@ class WorkspaceTagController extends Controller
         return array(
             'workspaceTag' => $workspaceTag,
             'possibleChildren' => $possibleChildrenPager,
-            'search' => $search
+            'search' => $search,
         );
     }
 
@@ -731,8 +724,7 @@ class WorkspaceTagController extends Controller
         WorkspaceTag $workspaceTag,
         $page,
         $search
-    )
-    {
+    ) {
         $possibleChildrenPager = $search === '' ?
             $this->tagManager
                 ->getPossibleChildrenPager($currentUser, $workspaceTag, $page) :
@@ -746,7 +738,7 @@ class WorkspaceTagController extends Controller
         return array(
             'workspaceTag' => $workspaceTag,
             'possibleChildren' => $possibleChildrenPager,
-            'search' => $search
+            'search' => $search,
         );
     }
 
@@ -778,8 +770,7 @@ class WorkspaceTagController extends Controller
     public function removeAdminWorkspaceTagFromWorkspace(
         Workspace $workspace,
         WorkspaceTag $workspaceTag
-    )
-    {
+    ) {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
@@ -820,8 +811,7 @@ class WorkspaceTagController extends Controller
         User $currentUser,
         Workspace $workspace,
         WorkspaceTag $workspaceTag
-    )
-    {
+    ) {
         $relWorkspaceTag = $this->tagManager->getTagRelationByWorkspaceAndTagAndUser(
             $workspace,
             $workspaceTag,
@@ -879,12 +869,9 @@ class WorkspaceTagController extends Controller
         $hierarchy = array();
 
         foreach ($tagsHierarchy as $tagHierarchy) {
-
             if ($tagHierarchy->getLevel() === 1) {
-
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
                     $hierarchy[$tagHierarchy->getParent()->getId()] = array();
                 }
                 $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
@@ -896,7 +883,7 @@ class WorkspaceTagController extends Controller
             'workspaces' => $workspaces,
             'workspacesTags' => $workspacesTags,
             'hierarchy' => $hierarchy,
-            'rootTags' => $rootTags
+            'rootTags' => $rootTags,
         );
     }
 
@@ -944,12 +931,9 @@ class WorkspaceTagController extends Controller
         $hierarchy = array();
 
         foreach ($tagsHierarchy as $tagHierarchy) {
-
             if ($tagHierarchy->getLevel() === 1) {
-
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
                     $hierarchy[$tagHierarchy->getParent()->getId()] = array();
                 }
                 $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
@@ -962,7 +946,7 @@ class WorkspaceTagController extends Controller
             'workspaces' => $workspaces,
             'workspacesTags' => $workspacesTags,
             'hierarchy' => $hierarchy,
-            'rootTags' => $rootTags
+            'rootTags' => $rootTags,
         );
     }
 
@@ -987,8 +971,7 @@ class WorkspaceTagController extends Controller
     public function associateMultipleAdminTagsToMultipleWorkspacesAction(
         array $workspaces,
         array $tags
-    )
-    {
+    ) {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
@@ -1006,14 +989,14 @@ class WorkspaceTagController extends Controller
                         array(),
                         'platform'
                     );
-                    $msg .= ' [' . $workspace->getName()
-                        . ' (' . $workspace->getCode() . ')] ';
+                    $msg .= ' ['.$workspace->getName()
+                        .' ('.$workspace->getCode().')] ';
                     $msg .= $this->translator->trans(
                         'has_been_put_in_category',
                         array(),
                         'platform'
                     );
-                    $msg .= ' [' . $tag->getName() . ']';
+                    $msg .= ' ['.$tag->getName().']';
                     $this->get('session')->getFlashBag()->add('success', $msg);
                 } else {
                     // Set success flashbag message
@@ -1022,14 +1005,14 @@ class WorkspaceTagController extends Controller
                         array(),
                         'platform'
                     );
-                    $msg .= ' [' . $workspace->getName()
-                        . ' (' . $workspace->getCode() . ')] ';
+                    $msg .= ' ['.$workspace->getName()
+                        .' ('.$workspace->getCode().')] ';
                     $msg .= $this->translator->trans(
                         'is_already_in_category',
                         array(),
                         'platform'
                     );
-                    $msg .= ' [' . $tag->getName() . ']';
+                    $msg .= ' ['.$tag->getName().']';
                     $this->get('session')->getFlashBag()->add('error', $msg);
                 }
             }
@@ -1061,8 +1044,7 @@ class WorkspaceTagController extends Controller
         User $currentUser,
         array $workspaces,
         array $tags
-    )
-    {
+    ) {
         foreach ($workspaces as $workspace) {
             foreach ($tags as $tag) {
                 $relWsTag = $this->tagManager->getTagRelationByWorkspaceAndTagAndUser(
@@ -1079,14 +1061,14 @@ class WorkspaceTagController extends Controller
                         array(),
                         'platform'
                     );
-                    $msg .= ' [' . $workspace->getName()
-                        . ' (' . $workspace->getCode() . ')] ';
+                    $msg .= ' ['.$workspace->getName()
+                        .' ('.$workspace->getCode().')] ';
                     $msg .= $this->translator->trans(
                         'has_been_put_in_category',
                         array(),
                         'platform'
                     );
-                    $msg .= ' [' . $tag->getName() . ']';
+                    $msg .= ' ['.$tag->getName().']';
                     $this->get('session')->getFlashBag()->add('success', $msg);
                 } else {
                     // Set success flashbag message
@@ -1095,14 +1077,14 @@ class WorkspaceTagController extends Controller
                         array(),
                         'platform'
                     );
-                    $msg .= ' [' . $workspace->getName()
-                        . ' (' . $workspace->getCode() . ')] ';
+                    $msg .= ' ['.$workspace->getName()
+                        .' ('.$workspace->getCode().')] ';
                     $msg .= $this->translator->trans(
                         'is_already_in_category',
                         array(),
                         'platform'
                     );
-                    $msg .= ' [' . $tag->getName() . ']';
+                    $msg .= ' ['.$tag->getName().']';
                     $this->get('session')->getFlashBag()->add('error', $msg);
                 }
             }
@@ -1120,7 +1102,6 @@ class WorkspaceTagController extends Controller
      * @EXT\Template()
      *
      * Display list of admin workspace tags
-     *
      */
     public function organizeAdminWorkspaceTagAction()
     {
@@ -1132,12 +1113,9 @@ class WorkspaceTagController extends Controller
         $hierarchy = array();
 
         foreach ($tagsHierarchy as $tagHierarchy) {
-
             if ($tagHierarchy->getLevel() === 1) {
-
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
                     $hierarchy[$tagHierarchy->getParent()->getId()] = array();
                 }
                 $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
@@ -1146,7 +1124,7 @@ class WorkspaceTagController extends Controller
 
         return array(
             'hierarchy' => $hierarchy,
-            'rootTags' => $rootTags
+            'rootTags' => $rootTags,
         );
     }
 
@@ -1160,7 +1138,6 @@ class WorkspaceTagController extends Controller
      * @EXT\Template()
      *
      * Display list of workspace tags
-     *
      */
     public function organizeWorkspaceTagAction(User $currentUser)
     {
@@ -1169,12 +1146,9 @@ class WorkspaceTagController extends Controller
         $hierarchy = array();
 
         foreach ($tagsHierarchy as $tagHierarchy) {
-
             if ($tagHierarchy->getLevel() === 1) {
-
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
                     $hierarchy[$tagHierarchy->getParent()->getId()] = array();
                 }
                 $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
@@ -1183,7 +1157,7 @@ class WorkspaceTagController extends Controller
 
         return array(
             'hierarchy' => $hierarchy,
-            'rootTags' => $rootTags
+            'rootTags' => $rootTags,
         );
     }
 
@@ -1273,8 +1247,7 @@ class WorkspaceTagController extends Controller
     public function adminWorkspaceTagLinkWorkspaceAction(
         WorkspaceTag $workspaceTag,
         Workspace $workspace = null
-    )
-    {
+    ) {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
@@ -1309,8 +1282,7 @@ class WorkspaceTagController extends Controller
         $linkedWorkspaceId,
         $page,
         $search
-    )
-    {
+    ) {
         $workspaces = ($search === '') ?
             $this->workspaceManager
                 ->getDisplayableWorkspacesPager($page) :
@@ -1320,7 +1292,7 @@ class WorkspaceTagController extends Controller
         return array(
             'linkedWorkspaceId' => $linkedWorkspaceId,
             'workspaces' => $workspaces,
-            'search' => $search
+            'search' => $search,
         );
     }
 }

@@ -9,13 +9,10 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Icap\OAuthBundle\Model;
-
 
 class Configuration
 {
-
     private $clientId;
     private $clientSecret;
     private $clientActive;
@@ -27,9 +24,8 @@ class Configuration
         $this->clientActive = $active;
     }
 
-
     /**
-     * @param integer $clientId
+     * @param int $clientId
      */
     public function setClientId($clientId)
     {
@@ -37,7 +33,7 @@ class Configuration
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getClientId()
     {
@@ -45,7 +41,7 @@ class Configuration
     }
 
     /**
-     * @param integer $clientSecret
+     * @param int $clientSecret
      */
     public function setClientSecret($clientSecret)
     {
@@ -53,7 +49,7 @@ class Configuration
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getClientSecret()
     {
@@ -61,7 +57,7 @@ class Configuration
     }
 
     /**
-     * @param boolean $clientActive
+     * @param bool $clientActive
      */
     public function setClientActive($clientActive)
     {
@@ -69,18 +65,17 @@ class Configuration
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isClientActive()
     {
         return $this->clientActive;
     }
 
-    static public function resourceOwners()
+    public static function resourceOwners()
     {
         $resourceOwners = ['Facebook', 'Twitter', 'Google', 'Linkedin', 'Windows Live'];
 
         return $resourceOwners;
     }
-
 }

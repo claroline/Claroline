@@ -51,7 +51,7 @@ class ExportToolEvent extends Event
      * Expects an array of files.
      * Each item of the array is an array with the following keys:
      * 'archive_path' => '/pathname/in/archive'
-     * 'original_path' => '/pathname/in/project'
+     * 'original_path' => '/pathname/in/project'.
      *
      * @param array $files
      */

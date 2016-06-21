@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Type
+ * Type.
  *
  * @ORM\Table(
  *      name="claro_badge_claim",
@@ -18,7 +18,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class BadgeClaim
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -30,8 +30,8 @@ class BadgeClaim
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-    */
+      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     */
     protected $user;
 
     /**
@@ -39,7 +39,7 @@ class BadgeClaim
      *
      * @ORM\ManyToOne(targetEntity="Icap\BadgeBundle\Entity\Badge", inversedBy="badgeClaims")
      * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-    */
+     */
     protected $badge;
 
     /**

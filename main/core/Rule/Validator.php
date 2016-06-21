@@ -11,17 +11,8 @@
 
 namespace Claroline\CoreBundle\Rule;
 
-use Claroline\CoreBundle\Rule\Constraints\ActionConstraint;
-use Claroline\CoreBundle\Rule\Constraints\BadgeConstraint;
 use Claroline\CoreBundle\Rule\Constraints\AbstractConstraint;
-use Claroline\CoreBundle\Rule\Constraints\DoerConstraint;
-use Claroline\CoreBundle\Rule\Constraints\OccurenceConstraint;
-use Claroline\CoreBundle\Rule\Constraints\ReceiverConstraint;
-use Claroline\CoreBundle\Rule\Constraints\RuleActiveDateConstraint;
-use Claroline\CoreBundle\Rule\Constraints\ResourceConstraint;
-use Claroline\CoreBundle\Rule\Constraints\ResultConstraint;
 use Claroline\CoreBundle\Rule\Entity\Rule;
-use Claroline\CoreBundle\Rule\Rulable;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
@@ -51,7 +42,7 @@ class Validator
     public function __construct(LogRepository $logRepository)
     {
         $this->logRepository = $logRepository;
-        $this->constraints   = new ArrayCollection();
+        $this->constraints = new ArrayCollection();
     }
 
     /**
@@ -112,9 +103,9 @@ class Validator
                 $checkedLogs = $this->validateRule($rule, $restriction);
 
                 if (false !== $checkedLogs) {
-                    $return['validRules']++;
+                    ++$return['validRules'];
                     $return['rules'][] = array(
-                        'rule' => $rule, 'logs' => $checkedLogs
+                        'rule' => $rule, 'logs' => $checkedLogs,
                     );
                 }
             }
@@ -132,7 +123,7 @@ class Validator
     public function validateRule(Rule $rule, array $restrictions = array())
     {
         /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $usedConstraints */
-        $usedConstraints    = array();
+        $usedConstraints = array();
         $existedConstraints = $this->getConstraints();
 
         foreach ($existedConstraints as $existedConstraint) {
@@ -142,7 +133,7 @@ class Validator
         }
 
         $validatedConstraints = 0;
-        $nbConstraints        = count($usedConstraints);
+        $nbConstraints = count($usedConstraints);
 
         $associatedLogs = $this->getAssociatedLogs($usedConstraints, $restrictions);
 
@@ -150,7 +141,7 @@ class Validator
             $usedConstraint->setAssociatedLogs($associatedLogs);
 
             if ($usedConstraint->validate()) {
-                $validatedConstraints++;
+                ++$validatedConstraints;
             }
         }
 
@@ -171,7 +162,7 @@ class Validator
 
         foreach ($restrictions as $key => $restriction) {
             $queryBuilder
-                ->andWhere(sprintf("l.%s = :%s", $key, $key))
+                ->andWhere(sprintf('l.%s = :%s', $key, $key))
                 ->setParameter($key, $restriction);
         }
 

@@ -11,5 +11,3 @@ angular.module('ClarolineAPI', ['ui.bootstrap', 'ui.bootstrap.tpls', 'ui.html-tr
     .config(Interceptors)
     .controller('ConfirmModalController', ['callback', 'urlObject', 'title', 'content', '$http', '$uibModalInstance', ConfirmModalController])
     .service('ClarolineAPIService', ClarolineAPIService)
-
-//ClarolineAPIService.$inject('$http', '$httpParamSerializer', '$uibModal')

@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service
@@ -33,7 +32,7 @@ class ThemeExtension extends \Twig_Extension
     }
 
     /**
-     * Get filters of the service
+     * Get filters of the service.
      *
      * @return \Twig_Filter_Method
      */
@@ -41,7 +40,7 @@ class ThemeExtension extends \Twig_Extension
     {
         return array(
             'getThemePath' => new \Twig_Filter_Method($this, 'getThemePath'),
-            'asset_exists' =>  new \Twig_Function_Method($this, 'assetExists')
+            'asset_exists' => new \Twig_Function_Method($this, 'assetExists'),
         );
     }
 
@@ -51,6 +50,7 @@ class ThemeExtension extends \Twig_Extension
      * @param \DateTime $start The initial time.
      *
      * @return \String
+     *
      *                 @see Symfony\Component\Translation\Translator
      */
     public function getThemePath($name)
@@ -61,23 +61,21 @@ class ThemeExtension extends \Twig_Extension
             return $theme->getPath();
         }
 
-        return "";
+        return '';
     }
 
     public function assetExists($path)
     {
-        $webRoot = realpath($this->kernel->getRootDir() . '/../web/');
-        $toCheck = realpath($webRoot . $path);
+        $webRoot = realpath($this->kernel->getRootDir().'/../web/');
+        $toCheck = realpath($webRoot.$path);
 
         // check if the file exists
-        if (!is_file($toCheck))
-        {
+        if (!is_file($toCheck)) {
             return false;
         }
 
         // check if file is well contained in web/ directory (prevents ../ in paths)
-        if (strncmp($webRoot, $toCheck, strlen($webRoot)) !== 0)
-        {
+        if (strncmp($webRoot, $toCheck, strlen($webRoot)) !== 0) {
             return false;
         }
 
@@ -92,6 +90,5 @@ class ThemeExtension extends \Twig_Extension
     public function getName()
     {
         return 'theme_extension';
-
     }
 }

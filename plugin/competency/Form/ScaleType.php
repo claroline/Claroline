@@ -29,7 +29,7 @@ class ScaleType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'platform',
-            'data_class' => 'HeVinci\CompetencyBundle\Entity\Scale'
+            'data_class' => 'HeVinci\CompetencyBundle\Entity\Scale',
         ]);
     }
 }

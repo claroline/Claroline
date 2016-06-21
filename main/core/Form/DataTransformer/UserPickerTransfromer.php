@@ -45,7 +45,7 @@ class UserPickerTransfromer implements DataTransformerInterface
             foreach ($value as $user) {
                 $transformedData[] = array(
                     'id' => $user->getId(),
-                    'name' => $user->getFirstName() . ' ' . $user->getLastName()
+                    'name' => $user->getFirstName().' '.$user->getLastName(),
                 );
             }
 
@@ -53,28 +53,26 @@ class UserPickerTransfromer implements DataTransformerInterface
         }
 
         if ($value instanceof User) {
-
             return array(
                 'id' => $value->getId(),
-                'name' => $value->getFirstName() . ' ' . $value->getLastName(),
+                'name' => $value->getFirstName().' '.$value->getLastName(),
             );
         }
 
-        return null;
+        return;
     }
 
     public function reverseTransform($userId)
     {
         if (empty($userId)) {
-            return ($this->options['multiple']) ? array(): null;
+            return ($this->options['multiple']) ? array() : null;
         } elseif (strpos($userId, ',')) {
             $ids = explode(',', $userId);
             $users = $this->getByIds($ids);
 
             if (count($users) === 0) {
-                return ($this->options['multiple']) ? array(): null;
+                return ($this->options['multiple']) ? array() : null;
             } else {
-
                 return $users;
             }
         } else {
@@ -82,8 +80,7 @@ class UserPickerTransfromer implements DataTransformerInterface
             if (is_null($user)) {
                 throw new TransformationFailedException();
             } else {
-
-                return ($this->options['multiple']) ? array($user): $user;
+                return ($this->options['multiple']) ? array($user) : $user;
             }
         }
     }
@@ -108,5 +105,4 @@ class UserPickerTransfromer implements DataTransformerInterface
     {
         $this->options = $options;
     }
-
 }

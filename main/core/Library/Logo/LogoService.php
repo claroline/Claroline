@@ -32,7 +32,7 @@ class LogoService
      */
     public function __construct($path)
     {
-        $this->path = $path . '/';
+        $this->path = $path.'/';
         $this->fileTypes = '/\.jpg$|\.png$|\.gif$|\.jpeg$/';
         $this->finder = new Finder();
     }
@@ -54,7 +54,7 @@ class LogoService
      */
     public function createLogo(UploadedFile $file)
     {
-        if ($file->getMimeType() and strpos($file->getMimeType(), 'image/') === 0) {
+        if ($file->getMimeType() && strpos($file->getMimeType(), 'image/') === 0) {
             $file->move($this->path, uniqid().'.'.$file->guessExtension());
         }
     }

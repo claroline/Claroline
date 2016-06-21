@@ -38,7 +38,7 @@ class ReceiverConstraint extends AbstractConstraint
     {
         $userTypes = Rule::getUserTypes();
 
-        return (null !== $rule->getUser() && Rule::RECEIVER_USER === $userTypes[$rule->getUserType()]);
+        return null !== $rule->getUser() && Rule::RECEIVER_USER === $userTypes[$rule->getUserType()];
     }
 
     /**

@@ -24,4 +24,4 @@ class IcsFile extends Constraint
     {
         return 'ics_file_validator';
     }
-} 
+}

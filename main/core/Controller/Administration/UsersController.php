@@ -42,7 +42,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -76,7 +75,7 @@ class UsersController extends Controller
      *     "configHandler"          = @DI\Inject("claroline.config.platform_config_handler"),
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"            = @DI\Inject("form.factory"),
-     *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager"          = @DI\Inject("claroline.manager.locale_manager"),
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
      *     "request"                = @DI\Inject("request"),
      *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
@@ -109,8 +108,7 @@ class UsersController extends Controller
         TranslatorInterface $translator,
         UserManager $userManager,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->authenticationManager = $authenticationManager;
         $this->configHandler = $configHandler;
         $this->eventDispatcher = $eventDispatcher;
@@ -170,7 +168,7 @@ class UsersController extends Controller
         return array(
             'form_complete_user' => $form->createView(),
             'error' => $error,
-            'unavailableRoles' => $unavailableRoles
+            'unavailableRoles' => $unavailableRoles,
         );
     }
 
@@ -267,9 +265,9 @@ class UsersController extends Controller
      * )
      * @EXT\Template
      *
-     * @param User    $user
-     * @param integer $page
-     * @param integer $max
+     * @param User $user
+     * @param int  $page
+     * @param int  $max
      *
      * @return array
      */
@@ -289,7 +287,6 @@ class UsersController extends Controller
      */
     public function importAction()
     {
-
         $form = $this->formFactory->create(new ImportUserType(true));
         $form->handleRequest($this->request);
         $mode = $form->get('mode')->getData();
@@ -302,6 +299,7 @@ class UsersController extends Controller
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
             $sendMail = $form->get('sendMail')->getData();
+            $enableEmailNotification = $form->get('enable_mail_notification')->getData();
             $data = file_get_contents($file);
             $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
             $lines = str_getcsv($data, PHP_EOL);
@@ -310,23 +308,24 @@ class UsersController extends Controller
             $sessionFlashBag = $this->session->getFlashBag();
 
             foreach ($lines as $line) {
+                if (trim($line) !== '') {
+                    if ($mode === 'update') {
+                        $datas = str_getcsv($line, ';');
+                        $username = $datas[2];
+                        $email = $datas[4];
+                        $existingUser = $this->userManager->getUserByUsernameOrMail(
+                            $username,
+                            $email
+                        );
 
-                if ($mode === 'update') {
-                    $datas = str_getcsv($line, ';');
-                    $username = $datas[2];
-                    $email = $datas[4];
-                    $existingUser = $this->userManager->getUserByUsernameOrMail(
-                        $username,
-                        $email
-                    );
-
-                    if (is_null($existingUser)) {
-                        $users[] = $datas;
+                        if (is_null($existingUser)) {
+                            $users[] = $datas;
+                        } else {
+                            $toUpdate[] = $datas;
+                        }
                     } else {
-                        $toUpdate[] = $datas;
+                        $users[] = str_getcsv($line, ';');
                     }
-                } else {
-                    $users[] = str_getcsv($line, ';');
                 }
             }
 
@@ -335,7 +334,6 @@ class UsersController extends Controller
             $total = $this->userManager->countUsersByRoleIncludingGroup($roleUser);
 
             if ($total + count($users) > $max) {
-
                 return array('form' => $form->createView(), 'error' => 'role_user unavailable');
             }
 
@@ -346,10 +344,9 @@ class UsersController extends Controller
                 $total = $this->userManager->countUsersByRoleIncludingGroup($additionalRole);
 
                 if ($total + count($users) > $max) {
-
                     return array(
                         'form' => $form->createView(),
-                        'error' => $additionalRole->getName() . ' unavailable'
+                        'error' => $additionalRole->getName().' unavailable',
                     );
                 }
             }
@@ -357,11 +354,12 @@ class UsersController extends Controller
             if (count($toUpdate) > 0) {
                 $updatedNames = $this->userManager->updateImportedUsers(
                     $toUpdate,
-                    $additionalRoles->toArray()
+                    $additionalRoles->toArray(),
+                    $enableEmailNotification
                 );
 
                 foreach ($updatedNames as $name) {
-                    $msg =  '<' . $name . '> ';
+                    $msg = '<'.$name.'> ';
                     $msg .= $this->translator->trans(
                         'has_been_updated',
                         array(),
@@ -370,15 +368,17 @@ class UsersController extends Controller
                     $sessionFlashBag->add('success', $msg);
                 }
             }
+
             $createdNames = $this->userManager->importUsers(
                 $users,
                 $sendMail,
                 null,
-                $additionalRoles
+                $additionalRoles,
+                $enableEmailNotification
             );
 
             foreach ($createdNames as $name) {
-                $msg =  '<' . $name . '> ';
+                $msg = '<'.$name.'> ';
                 $msg .= $this->translator->trans(
                     'has_been_created',
                     array(),
@@ -400,7 +400,7 @@ class UsersController extends Controller
      */
     public function export($format)
     {
-        $exporter = $this->container->get('claroline.exporter.' . $format);
+        $exporter = $this->container->get('claroline.exporter.'.$format);
         $exporterManager = $this->container->get('claroline.manager.exporter_manager');
         $file = $exporterManager->export('Claroline\CoreBundle\Entity\User', $exporter);
         $response = new StreamedResponse();
@@ -413,7 +413,7 @@ class UsersController extends Controller
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=users.' . $format);
+        $response->headers->set('Content-Disposition', 'attachment; filename=users.'.$format);
 
         switch ($format) {
             case 'csv': $response->headers->set('Content-Type', 'text/csv'); break;
@@ -443,9 +443,9 @@ class UsersController extends Controller
 
         return array(
             'personalWsToolConfigs' => $personalWsToolConfigs,
-            'roles'                 => $roles,
-            'tools'                 => $tools,
-            'maskDecoders'          => $maskDecoders
+            'roles' => $roles,
+            'tools' => $tools,
+            'maskDecoders' => $maskDecoders,
         );
     }
 
@@ -465,7 +465,7 @@ class UsersController extends Controller
 
         return array(
             'roles' => $roles,
-            'rights' => $rights
+            'rights' => $rights,
         );
     }
 
@@ -541,7 +541,6 @@ class UsersController extends Controller
         }
 
         return new JsonResponse(array(), 200);
-
     }
 
     /**
@@ -606,13 +605,14 @@ class UsersController extends Controller
      */
     public function executeUserAdminAction(User $user, AdditionalAction $action)
     {
-        $event = $this->eventDispatcher->dispatch($action->getType() . '_' . $action->getAction(), 'AdminUserAction', array('user' => $user));
+        $event = $this->eventDispatcher->dispatch($action->getType().'_'.$action->getAction(), 'AdminUserAction', array('user' => $user));
 
         return $event->getResponse();
     }
 
     /**
-     * This method should be moved
+     * This method should be moved.
+     *
      * @EXT\Route(
      *     "/{group}/admin/action/{action}",
      *     name="admin_group_action",
@@ -621,7 +621,7 @@ class UsersController extends Controller
      */
     public function executeGroupAdminAction(Group $group, AdditionalAction $action)
     {
-        $event = $this->eventDispatcher->dispatch($action->getType() . '_' . $action->getAction(), 'AdminGroupAction', array('group' => $group));
+        $event = $this->eventDispatcher->dispatch($action->getType().'_'.$action->getAction(), 'AdminGroupAction', array('group' => $group));
 
         return $event->getResponse();
     }

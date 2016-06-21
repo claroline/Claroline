@@ -11,9 +11,9 @@
 
 namespace Claroline\LdapBundle\Manager;
 
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-
 use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Inject;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 
@@ -27,9 +27,14 @@ class LdapManager
     private $config;
     private $connect;
 
-    public function __construct()
+    /**
+     * @InjectParams({
+     *     "authenticationDir" = @Inject("%claroline.param.authentication_directory%")
+     * })
+     */
+    public function __construct($authenticationDir)
     {
-        $this->path = __DIR__ . '/../../../../../../app/config/Authentication/claroline.ldap.yml';
+        $this->path = $authenticationDir.'claroline.ldap.yml';
         $this->yml = new Parser();
         $this->dumper = new Dumper();
         $this->config = $this->parseYml();
@@ -37,9 +42,10 @@ class LdapManager
 
     /**
      * This method create the LDAP link identifier on success and test the connection.
+     *
      * @param server   An array containing LDAP informations as host, port or dn.
      *
-     * @return boolean
+     * @return bool
      */
     public function connect($server, $user = null, $password = null)
     {
@@ -54,7 +60,7 @@ class LdapManager
 
             if ($this->connect && $user && $password) {
                 return ldap_bind($this->connect, $user, $password);
-            } else if ($this->connect) {
+            } elseif ($this->connect) {
                 return ldap_bind($this->connect);
             }
         }
@@ -71,7 +77,7 @@ class LdapManager
     public function findUser($server, $user)
     {
         $server = $this->get($server);
-        $filter = '(&(objectClass=' . $server['objectClass'] . '))';
+        $filter = '(&(objectClass='.$server['objectClass'].'))';
         $search = ldap_search(
             $this->connect,
             $this->prepareUsername($server, $user),
@@ -81,7 +87,7 @@ class LdapManager
                 $server['firstName'],
                 $server['lastName'],
                 $server['email'],
-                'userpassword'
+                'userpassword',
             )
         );
 
@@ -136,7 +142,7 @@ class LdapManager
      */
     public function get($name = null)
     {
-        if ($name and isset($this->config['servers'][$name])) {
+        if ($name && isset($this->config['servers'][$name])) {
             return $this->config['servers'][$name];
         }
     }
@@ -147,14 +153,14 @@ class LdapManager
      * @param name The name of the server
      * @param data An array containing LDAP informations as host, port or dn
      *
-     * @return boolean
+     * @return bool
      */
     public function exists($name, $data)
     {
         $servers = isset($this->config['servers']) ? $this->config['servers'] : null;
 
-        if ((!$name or ($name and $name !== $data['name'])) and
-            isset($data['name']) and isset($servers[$data['name']])
+        if ((!$name || ($name && $name !== $data['name'])) &&
+            isset($data['name']) && isset($servers[$data['name']])
         ) {
             return true;
         }
@@ -168,7 +174,7 @@ class LdapManager
      */
     public function deleteIfReplace($name, $data)
     {
-        if ($name and isset($data['name']) and $name !== $data['name']) {
+        if ($name && isset($data['name']) && $name !== $data['name']) {
             $this->deleteServer($name);
         }
     }
@@ -178,11 +184,11 @@ class LdapManager
      *
      * @param name The name of the server.
      *
-     * @return boolean
+     * @return bool
      */
     public function deleteServer($name)
     {
-        if (isset($this->config['servers']) and isset($this->config['servers'][$name])) {
+        if (isset($this->config['servers']) && isset($this->config['servers'][$name])) {
             unset($this->config['servers'][$name]);
 
             return $this->saveConfig();
@@ -190,15 +196,15 @@ class LdapManager
     }
 
     /**
-     * Save the LDAP mapping settings
+     * Save the LDAP mapping settings.
      *
      * @param settings The settings array containing mapping
      *
-     * @return boolean
+     * @return bool
      */
     public function saveSettings($settings)
     {
-        if (isset($settings['name']) and isset($this->config['servers'][$settings['name']])) {
+        if (isset($settings['name']) && isset($this->config['servers'][$settings['name']])) {
             return $this->saveConfig(array_merge($this->config['servers'][$settings['name']], $settings));
         }
     }
@@ -212,7 +218,7 @@ class LdapManager
      */
     public function saveConfig($server = null)
     {
-        if (is_array($server) and isset($server['name'])) {
+        if (is_array($server) && isset($server['name'])) {
             $this->config['servers'][$server['name']] = $server;
         }
 
@@ -220,7 +226,7 @@ class LdapManager
     }
 
     /**
-     * Get LDAP opbject classes
+     * Get LDAP opbject classes.
      *
      * @param server An array containing LDAP informations as host, port or dn
      */
@@ -242,7 +248,7 @@ class LdapManager
     }
 
     /**
-     * Get list of LDAP users
+     * Get list of LDAP users.
      *
      * @param server An array containing LDAP informations as host, port or dn
      */
@@ -250,8 +256,8 @@ class LdapManager
     {
         $users = array();
 
-        if (isset($server['objectClass']) and
-            $search = $this->search($server, '(&(objectClass=' . $server['objectClass'] . '))')
+        if (isset($server['objectClass']) &&
+            $search = $this->search($server, '(&(objectClass='.$server['objectClass'].'))')
         ) {
             $users = $this->getEntries($search);
         }
@@ -260,7 +266,7 @@ class LdapManager
     }
 
     /**
-     * Get list of LDAP users
+     * Get list of LDAP users.
      *
      * @param server An array containing LDAP informations as host, port or dn
      */
@@ -268,8 +274,8 @@ class LdapManager
     {
         $groups = array();
 
-        if (isset($server['group']) and
-            $search = $this->search($server, '(&(objectClass=' . $server['group'] . '))')
+        if (isset($server['group']) &&
+            $search = $this->search($server, '(&(objectClass='.$server['group'].'))')
         ) {
             $groups = $this->getEntries($search);
         }
@@ -280,7 +286,7 @@ class LdapManager
     /**
      * Return the LDAP configurations.
      *
-     * @return Array
+     * @return array
      */
     public function getConfig()
     {
@@ -288,13 +294,13 @@ class LdapManager
     }
 
     /**
-     * Return a list of available servers
+     * Return a list of available servers.
      */
     public function getServers()
     {
         $servers = array();
 
-        if (isset($this->config['servers']) and is_array($this->config['servers'])) {
+        if (isset($this->config['servers']) && is_array($this->config['servers'])) {
             foreach ($this->config['servers'] as $server) {
                 $servers[] = $server['name'];
             }
@@ -309,7 +315,7 @@ class LdapManager
     public function userMapping($server)
     {
         foreach (['userName', 'firstName', 'lastName', 'email', 'password'] as $field) {
-            if (!(isset($server[$field]) and $server[$field] !== '')) {
+            if (!(isset($server[$field]) && $server[$field] !== '')) {
                 return false;
             }
         }
@@ -320,7 +326,7 @@ class LdapManager
     /**
      * Parse .yml file into LDAP configuration array.
      *
-     * @return Array
+     * @return array
      */
     private function parseYml()
     {
@@ -332,11 +338,11 @@ class LdapManager
     }
 
     /**
-     * Authenticate ldap user
+     * Authenticate ldap user.
      *
      * @param name The name of the server.
      *
-     * @return boolean
+     * @return bool
      */
     public function authenticate($name, $user, $password)
     {
@@ -350,7 +356,7 @@ class LdapManager
     private function prepareUsername($server, $user)
     {
         if ($server['append_dn']) {
-            return $server['userName'] . '=' . $user . ',' . $server['dn'];
+            return $server['userName'].'='.$user.','.$server['dn'];
         }
 
         return $user;

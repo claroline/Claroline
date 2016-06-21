@@ -14,7 +14,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
 {
     /**
      * We need to inject the whole service container
-     * if we try to only inject PathManager, there is a crash because of a circular reference into services
+     * if we try to only inject PathManager, there is a crash because of a circular reference into services.
      *
      * @var ContainerInterface
      */
@@ -58,6 +58,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
                         ->scalarNode('structure')->end()
                         ->booleanNode('breadcrumbs')->end()
                         ->booleanNode('summaryDisplayed')->end()
+                        ->booleanNode('completeBlockingCondition')->end()
                         ->booleanNode('modified')->end()
                         ->booleanNode('published')->end()
                     ->end()
@@ -102,7 +103,8 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
     }
 
     /**
-     * Replace IDs with the new ones in texts and path structure
+     * Replace IDs with the new ones in texts and path structure.
+     *
      * @param $data
      */
     public function format($data)
@@ -110,7 +112,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
         if (!empty($data['path']) && !empty($data['path']['structure'])) {
             if (!$data['path']['published'] || $data['path']['modified']) {
                 // Only process Path structure if Path is not published or if has pending modification
-                $structure = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $data['path']['structure']);
+                $structure = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$data['path']['structure']);
                 $entities = $this->container->get('doctrine.orm.entity_manager')->getRepository('InnovaPathBundle:Path\Path')->findByStructure($structure);
 
                 foreach ($entities as $entity) {
@@ -139,7 +141,8 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
     }
 
     /**
-     * Replace IDS with the new ones in step structure
+     * Replace IDS with the new ones in step structure.
+     *
      * @param \stdClass $step
      */
     protected function formatStep(\stdClass $step)
@@ -159,7 +162,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
     public function import(array $data, $name, $created)
     {
         // Retrieve the structure of the Path from file
-        $structure = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $data['data']['path']['structure']);
+        $structure = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$data['data']['path']['structure']);
 
         return $this->container->get('innova_path.manager.path')->import($structure, $data, $created);
     }

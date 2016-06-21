@@ -7,33 +7,34 @@ use Doctrine\ORM\Mapping as ORM;
 class Statusable
 {
     const STATUS_UNPUBLISHED = 0;
-    const STATUS_PUBLISHED   = 1;
+    const STATUS_PUBLISHED = 1;
 
     /**
      * @var array
      */
     protected $statusList = array(
         self::STATUS_PUBLISHED,
-        self::STATUS_UNPUBLISHED
+        self::STATUS_UNPUBLISHED,
     );
 
     /**
-     * @var int $status
+     * @var int
      *
      * @ORM\Column(type="smallint")
      */
     protected $status = self::STATUS_UNPUBLISHED;
 
     /**
-     * @param integer $status
+     * @param int $status
      *
      * @return Statusable
+     *
      * @throws \InvalidArgumentException
      */
     public function setStatus($status)
     {
         if (!in_array($status, $this->statusList)) {
-            throw new \InvalidArgumentException(sprintf("Invalid status for %s.", __CLASS__));
+            throw new \InvalidArgumentException(sprintf('Invalid status for %s.', __CLASS__));
         }
         $this->status = $status;
 

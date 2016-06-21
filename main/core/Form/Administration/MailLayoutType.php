@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Form\Administration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Validator\Constraints\InscriptionMail;
 
 class MailLayoutType extends AbstractType
 {
@@ -26,10 +25,9 @@ class MailLayoutType extends AbstractType
             array(
                 'data' => $builder->getData(),
                 'theme_options' => array('contentTitle' => false),
-                'label' => 'content'
+                'label' => 'content',
             )
         );
-
     }
 
     public function getName()

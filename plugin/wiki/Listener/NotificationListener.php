@@ -2,7 +2,6 @@
 
 namespace Icap\WikiBundle\Listener;
 
-use Claroline\CoreBundle\Event\Log\CreateFormResourceEvent;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
@@ -15,9 +14,9 @@ class NotificationListener extends ContainerAware
         $content = $this->container->get('templating')->render(
             'IcapWikiBundle:Notification:notification_item.html.twig',
             array(
-                'notification'  => $notification,
-                'status'        => $notificationView->getStatus(),
-                'systemName'    => $event->getSystemName()
+                'notification' => $notification,
+                'status' => $notificationView->getStatus(),
+                'systemName' => $event->getSystemName(),
             )
         );
 

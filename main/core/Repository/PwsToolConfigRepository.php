@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 class PwsToolConfigRepository extends EntityRepository
 {
     /**
-     * Returns the configuration for a user and it's rights (masks already calculated)
+     * Returns the configuration for a user and it's rights (masks already calculated).
      *
      * @param array $roleNames
      *
@@ -38,8 +38,9 @@ class PwsToolConfigRepository extends EntityRepository
 
         foreach ($pwsToolConfigs as $pwsToolConfig) {
             $data[$pwsToolConfig->getTool()->getId()]['toolConfig'] = $pwsToolConfig;
-            if (!isset($data[$pwsToolConfig->getTool()->getId()]['mask']))
+            if (!isset($data[$pwsToolConfig->getTool()->getId()]['mask'])) {
                 $data[$pwsToolConfig->getTool()->getId()]['mask'] = 0;
+            }
             $data[$pwsToolConfig->getTool()->getId()]['mask'] |= $pwsToolConfig->getMask();
         }
 

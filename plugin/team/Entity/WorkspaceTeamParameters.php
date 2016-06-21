@@ -114,6 +114,4 @@ class WorkspaceTeamParameters
     {
         $this->maxTeams = $maxTeams;
     }
-
-
 }

@@ -15,23 +15,22 @@ class DeleteSectionType extends AbstractType
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
-                $form = $event->getForm();               
+                $form = $event->getForm();
                 $data = $event->getData();
 
                 if ($data->hasChildren()) {
                     $form->add('children', 'checkbox', array(
                         'required' => false,
-                        'mapped' => false
+                        'mapped' => false,
                     ));
-                }
-                else {
-                    $form ->add('children', 'hidden', array(
+                } else {
+                    $form->add('children', 'hidden', array(
                         'required' => false,
-                        'mapped' => false
+                        'mapped' => false,
                     ));
                 }
             }
-        );            
+        );
     }
 
     public function getName()
@@ -43,7 +42,7 @@ class DeleteSectionType extends AbstractType
     {
         $resolver->setDefaults(array(
             'translation_domain' => 'icap_wiki',
-            'data_class' => 'Icap\WikiBundle\Entity\Section'
+            'data_class' => 'Icap\WikiBundle\Entity\Section',
         ));
     }
 }

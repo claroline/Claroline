@@ -1,0 +1,68 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block title %} {{ 'shared_user' | trans({}, 'ujm_exo') }} {% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'shared_user' | trans({}, 'ujm_exo') }}</h3>
+    </div>
+
+    <div class="panel-body">
+        <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
+        </a>
+    </div>
+
+    <div class="list-group">
+        <div class="list-group-item">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'shared_with' | trans({}, 'ujm_exo') }} ...</h3>
+                </div>
+
+                <div class="panel-body">
+                    {{ 'user_shared' | trans({}, 'ujm_exo') }} :
+                    <div class="panel-body">
+                        <div class="input-group">
+                            <input class="form-control" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}"
+                                onkeydown="if (event.keyCode == 13) { search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1);return false; }">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" id="search-user-button" onClick="search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1)">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="searchUserList">
+                {% if divResultSearch is defined %}
+                    {{ divResultSearch | raw }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div id="QID" style="display: none;">{{ questionID }}</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/question.js') }}"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            if (document.getElementById('search')) {
+                document.getElementById('search-user-txt').value = document.getElementById('search').value;
+            }
+        };
+    </script>
+{% endblock %}

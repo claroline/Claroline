@@ -12,7 +12,7 @@ class HeVinciCompetencyBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml');
     }
 
     public function getAdditionalInstaller()

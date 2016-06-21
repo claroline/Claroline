@@ -31,8 +31,7 @@ class ProfilePicsFileValidator extends ConstraintValidator
     public function __construct(
         UserManager $userManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->userManager = $userManager;
         $this->translator = $translator;
     }
@@ -42,17 +41,17 @@ class ProfilePicsFileValidator extends ConstraintValidator
         if ($value !== null) {
             $archive = new \ZipArchive();
             if (true === $archive->open($value->getPathName())) {
-                for ($i = 0; $i < $archive->numFiles; $i++) {
+                for ($i = 0; $i < $archive->numFiles; ++$i) {
                     $file = $archive->getNameIndex($i);
                     $fileName = basename($file);
-                    $username = preg_replace("/\.[^.]+$/", "", $fileName);
+                    $username = preg_replace("/\.[^.]+$/", '', $fileName);
                     $user = $this->userManager->getUserByUsername($username);
                     if (!$user) {
                         $msg = $this->translator->trans(
-                            "username_doesnt_exist",
+                            'username_doesnt_exist',
                             array('%username%' => $username),
                             'validators'
-                        ) . ' ';
+                        ).' ';
                         $this->context->addViolation($msg);
                     }
                     //check if the name exists and so on

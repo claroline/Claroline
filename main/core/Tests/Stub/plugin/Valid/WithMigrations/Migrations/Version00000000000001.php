@@ -18,20 +18,20 @@ class Version00000000000001 extends BundleMigration
 {
     public function up(Schema $schema)
     {
-        $table = $schema->createTable($this->getTablePrefix() . '_stuffs');
+        $table = $schema->createTable($this->getTablePrefix().'_stuffs');
 
         $this->addId($table);
         $table->addColumn(
             'name',
             'string',
             array(
-                'length' => 50
+                'length' => 50,
             )
         );
     }
 
     public function down(Schema $schema)
     {
-        $schema->dropTable($this->getTablePrefix() . '_stuffs');
+        $schema->dropTable($this->getTablePrefix().'_stuffs');
     }
 }

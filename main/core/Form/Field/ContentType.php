@@ -22,7 +22,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -37,7 +36,7 @@ class ContentType extends AbstractType
 
     /**
      * @InjectParams({
-     *     "localeManager" = @Inject("claroline.common.locale_manager"),
+     *     "localeManager" = @Inject("claroline.manager.locale_manager"),
      *     "contentManager" = @Inject("claroline.manager.content_manager")
      * })
      */
@@ -60,12 +59,11 @@ class ContentType extends AbstractType
             $translatedContent = $builder->getData();
         }
 
-        if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
+        if (isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce']) {
             $this->tinymce = false;
         }
 
         if (!empty($this->langs)) {
-
             foreach ($this->langs as $lang) {
                 if (isset($translatedContent[$lang])) {
                     $builder->add(
@@ -73,7 +71,7 @@ class ContentType extends AbstractType
                         'base_content',
                         array(
                             'theme_options' => array('tinymce' => $this->tinymce),
-                            'data' => $translatedContent[$lang]
+                            'data' => $translatedContent[$lang],
                         )
                     );
                 } else {
@@ -106,11 +104,11 @@ class ContentType extends AbstractType
             'contentTitle' => true,
             'contentText' => true,
             'titlePlaceHolder' => 'optional_title',
-            'textPlaceHolder' => 'create_content'
+            'textPlaceHolder' => 'create_content',
         );
 
         foreach ($themeOptions as $option => $defaultValue) {
-            if (isset($options['theme_options']) and isset($options['theme_options'][$option])) {
+            if (isset($options['theme_options']) && isset($options['theme_options'][$option])) {
                 $view->vars[$option] = $options['theme_options'][$option];
             } else {
                 $view->vars[$option] = $defaultValue;

@@ -19,8 +19,7 @@ class ChoiceRepository extends EntityRepository
     public function findChoicesByQuestion(
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT c
             FROM Claroline\SurveyBundle\Entity\Choice c

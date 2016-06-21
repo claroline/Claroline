@@ -17,24 +17,24 @@ class FormationsFormationType extends AbstractType
         $builder
             ->add('id', 'integer', array(
                 'required' => false,
-                'mapped'   => false
+                'mapped' => false,
             ))
             ->add('name', 'text', array(
                 'required' => false,
-                'mapped'   => false
+                'mapped' => false,
             ))
             ->add('resource', 'entity', array(
-                'class'    => 'ClarolineCoreBundle:Resource\ResourceNode',
+                'class' => 'ClarolineCoreBundle:Resource\ResourceNode',
                 'property' => 'name',
-                'required' => false
+                'required' => false,
             ))
             ->add('uri', 'text', array(
                 'required' => false,
-                'mapped'   => false
+                'mapped' => false,
             ))
             ->add('uriLabel', 'text', array(
                 'required' => false,
-                'mapped'   => false
+                'mapped' => false,
             ));
     }
 
@@ -47,9 +47,9 @@ class FormationsFormationType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource',
+                'data_class' => 'Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource',
                 'translation_domain' => 'icap_portfolio',
-                'csrf_protection'    => false,
+                'csrf_protection' => false,
             )
         );
     }

@@ -28,12 +28,12 @@ class UserBadgeController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-        return $this->processForm($request, $userBadge, "PATCH");
+        return $this->processForm($request, $userBadge, 'PATCH');
     }
 
-    private function processForm(Request $request, UserBadge $userBadge, $method = "PUT")
+    private function processForm(Request $request, UserBadge $userBadge, $method = 'PUT')
     {
-        $form = $this->createForm($this->get("icap_badge.form.user_badge"), $userBadge, array("method" => $method));
+        $form = $this->createForm($this->get('icap_badge.form.user_badge'), $userBadge, array('method' => $method));
 
         $formParameters = $request->request->get($form->getName());
 
@@ -57,20 +57,21 @@ class UserBadgeController extends Controller
             $data = array(
                 'user_badge' => array(
                     'id' => $userBadge->getId(),
-                    'url' => $this->generateUrl("icap_badge_badge_share_view", array(
-                        "username" => $userBadge->getUser()->getUsername(),
-                        "badgeSlug" => $userBadge->getBadge()->getSlug()
+                    'url' => $this->generateUrl('icap_badge_badge_share_view', array(
+                        'username' => $userBadge->getUser()->getUsername(),
+                        'badgeSlug' => $userBadge->getBadge()->getSlug(),
                     )),
-                    'is_shared' => $userBadge->isIsShared()
-                )
+                    'is_shared' => $userBadge->isIsShared(),
+                ),
             );
 
             $view->setData($data);
 
-            return $this->get("fos_rest.view_handler")->handle($view);
+            return $this->get('fos_rest.view_handler')->handle($view);
         }
 
         $view = View::create($form, 400);
-        return $this->get("fos_rest.view_handler")->handle($view);
+
+        return $this->get('fos_rest.view_handler')->handle($view);
     }
 }

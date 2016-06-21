@@ -20,8 +20,7 @@ class Scorm2004ScoTrackingRepository extends EntityRepository
     public function findAllTrackingsByUserAndResource(
         User $user,
         Scorm2004Resource $resource
-    )
-    {
+    ) {
         $dql = '
             SELECT t
             FROM Claroline\ScormBundle\Entity\Scorm2004ScoTracking t

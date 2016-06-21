@@ -7,10 +7,10 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
-* @ORM\Entity
-* @ORM\Table(name="icap__wiki")
-* @ORM\HasLifecycleCallbacks()
-*/
+ * @ORM\Entity
+ * @ORM\Table(name="icap__wiki")
+ * @ORM\HasLifecycleCallbacks()
+ */
 class Wiki extends AbstractResource
 {
     /**
@@ -48,15 +48,15 @@ class Wiki extends AbstractResource
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getMode()
     {
-        return (($this->mode !== null)?$this->mode:0);
+        return ($this->mode !== null) ? $this->mode : 0;
     }
 
     /**
-     * @param integer $mode
+     * @param int $mode
      */
     public function setMode($mode)
     {
@@ -66,13 +66,13 @@ class Wiki extends AbstractResource
     public function getPathArray()
     {
         $path = $this->getResourceNode()->getPath();
-        $pathItems = explode("`", $path);
+        $pathItems = explode('`', $path);
         $pathArray = array();
         foreach ($pathItems as $item) {
-            preg_match("/-([0-9]+)$/", $item, $matches);
+            preg_match('/-([0-9]+)$/', $item, $matches);
             if (count($matches) > 0) {
                 $id = substr($matches[0], 1);
-                $name = preg_replace("/-([0-9]+)$/", "", $item);
+                $name = preg_replace('/-([0-9]+)$/', '', $item);
                 $pathArray[] = array('id' => $id, 'name' => $name);
             }
         }
@@ -93,7 +93,8 @@ class Wiki extends AbstractResource
     /**
      * @ORM\PostPersist
      */
-    public function createRoot(LifecycleEventArgs $event){
+    public function createRoot(LifecycleEventArgs $event)
+    {
         if ($this->getRoot() == null) {
             $em = $event->getEntityManager();
             $rootSection = $this->getRoot();
@@ -102,8 +103,7 @@ class Wiki extends AbstractResource
                 $rootSection->setWiki($this);
                 if ($this->getResourceNode() !== null) {
                     $rootSection->setAuthor($this->getResourceNode()->getCreator());
-                }
-                else  {
+                } else {
                     $rootSection->setAuthor($this->getWikiCreator());
                 }
                 $this->setRoot($rootSection);

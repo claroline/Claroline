@@ -2,8 +2,6 @@
 
 namespace HeVinci\FavouriteBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Tag;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -27,20 +25,20 @@ class ResourcePathExtension extends \Twig_Extension
      */
     public function __construct(RegistryInterface $doctrine, UrlGeneratorInterface $generator)
     {
-        $this->doctrine  = $doctrine;
+        $this->doctrine = $doctrine;
         $this->generator = $generator;
     }
 
     public function getFullResourcePath($fullPath)
     {
         $segments = explode('`', $fullPath);
-        unset($segments[count($segments)-1]);
+        unset($segments[count($segments) - 1]);
 
         $fullResourcePath = array();
 
         foreach ($segments as $segment) {
             $segmentsOfNode = explode('-', $segment);
-            $nodeId = $segmentsOfNode[count($segmentsOfNode)-1];
+            $nodeId = $segmentsOfNode[count($segmentsOfNode) - 1];
 
             $node = $this->doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                 ->find($nodeId);
@@ -48,19 +46,19 @@ class ResourcePathExtension extends \Twig_Extension
 
             if ($resourceTypeName === 'directory') {
                 $routing = $this->generator->generate('claro_desktop_open_tool', array(
-                    'toolName' => 'resource_manager'
+                    'toolName' => 'resource_manager',
                 ));
-                $routing .= '#resources/' . $nodeId;
+                $routing .= '#resources/'.$nodeId;
             } else {
                 $routing = $this->generator->generate('claro_resource_open', array(
                     'resourceType' => $resourceTypeName,
-                    'node' => $nodeId
+                    'node' => $nodeId,
                 ));
             }
 
             $fullResourcePath[] = array(
-                'nodeName' => substr($segment, 0, -(strlen($nodeId)+1)),
-                'nodeOpenUrl' => $routing
+                'nodeName' => substr($segment, 0, -(strlen($nodeId) + 1)),
+                'nodeOpenUrl' => $routing,
             );
         }
 
@@ -70,7 +68,7 @@ class ResourcePathExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'getFullResourcePath' => new \Twig_Function_Method($this, 'getFullResourcePath')
+            'getFullResourcePath' => new \Twig_Function_Method($this, 'getFullResourcePath'),
         );
     }
 

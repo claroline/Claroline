@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle:Exception:layout.html.twig' %}
 
+{% set httpCode = 500 %}
+
 {% block title %}{{ parent() ~ ' - ' ~ 'internal_error' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block message %}

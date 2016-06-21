@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Manager\Exception;
 
-
 class AddRoleException extends \Exception
 {
-
-} 
+}

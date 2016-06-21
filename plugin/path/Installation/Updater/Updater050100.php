@@ -6,7 +6,7 @@ use Claroline\InstallationBundle\Updater\Updater;
 
 /**
  * Remove unused Widget
- * Remove unused Tool
+ * Remove unused Tool.
  */
 class Updater050100 extends Updater
 {
@@ -29,7 +29,7 @@ class Updater050100 extends Updater
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         // Retrieve the widget
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy(array (
+        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy(array(
             'name' => 'innova_my_paths_widget',
         ));
 
@@ -45,7 +45,7 @@ class Updater050100 extends Updater
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         // Retrieve the tool
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(array (
+        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(array(
             'name' => 'innova_path',
         ));
 

@@ -22,6 +22,6 @@ class PortfolioCommentRepository extends EntityRepository
             ->setMaxResults($nbResult)
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder->getQuery();
     }
 }

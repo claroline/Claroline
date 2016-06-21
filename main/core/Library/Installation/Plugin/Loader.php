@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use \RuntimeException;
+use RuntimeException;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -33,8 +33,9 @@ class Loader
     /**
      * Searches a plugin bundle by its FQCN and returns an instance of it.
      *
-     * @param  string           $pluginFqcn
-     * @param  string           $pluginPath
+     * @param string $pluginFqcn
+     * @param string $pluginPath
+     *
      * @throws RuntimeException if the plugin class cannot be found or instantiated
      *
      * @return PluginBundle
@@ -49,7 +50,7 @@ class Loader
         if (!file_exists($pluginPath)) {
             throw new RuntimeException(
                 "No bundle class file matches the FQCN '{$pluginFqcn}' "
-                . '(expected path was : ' . $pluginPath . ')',
+                .'(expected path was : '.$pluginPath.')',
                 self::NO_PLUGIN_FOUND
             );
         }
@@ -84,6 +85,6 @@ class Loader
             );
         }
 
-        return new $pluginFqcn;
+        return new $pluginFqcn();
     }
 }

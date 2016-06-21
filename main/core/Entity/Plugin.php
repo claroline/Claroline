@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\PluginRepository")
@@ -29,6 +30,7 @@ class Plugin
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_plugin"})
      */
     protected $id;
 
@@ -36,6 +38,7 @@ class Plugin
      * @ORM\Column(name="vendor_name", length=50)
      * @Assert\NotBlank()
      * @Assert\Length(max=50)
+     * @Groups({"api_plugin"})
      */
     protected $vendorName;
 
@@ -43,11 +46,13 @@ class Plugin
      * @ORM\Column(name="short_name", length=50)
      * @Assert\NotBlank()
      * @Assert\Length(max=50)
+     * @Groups({"api_plugin"})
      */
     protected $bundleName;
 
     /**
      * @ORM\Column(name="has_options", type="boolean")
+     * @Groups({"api_plugin"})
      */
     protected $hasOptions = false;
 
@@ -71,7 +76,7 @@ class Plugin
 
     public function getShortName()
     {
-        return strtolower($this->getVendorName() . str_replace('Bundle', '', $this->getBundleName()));
+        return strtolower($this->getVendorName().str_replace('Bundle', '', $this->getBundleName()));
     }
 
     public function getVendorName()
@@ -96,7 +101,7 @@ class Plugin
 
     public function getSfName()
     {
-        return $this->vendorName . $this->bundleName;
+        return $this->vendorName.$this->bundleName;
     }
 
     public function setHasOptions($hasOptions)

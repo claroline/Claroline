@@ -32,16 +32,15 @@ class Manager
     /**
      * Constructor.
      *
-     * @param \Claroline\MigrationBundle\Generator\Generator    $generator
-     * @param \Claroline\MigrationBundle\Generator\Writer       $writer
-     * @param \Claroline\MigrationBundle\Migrator\Migrator      $migrator
+     * @param \Claroline\MigrationBundle\Generator\Generator $generator
+     * @param \Claroline\MigrationBundle\Generator\Writer    $writer
+     * @param \Claroline\MigrationBundle\Migrator\Migrator   $migrator
      */
     public function __construct(
         Generator $generator,
         Writer $writer,
         Migrator $migrator
-    )
-    {
+    ) {
         $this->generator = $generator;
         $this->migrator = $migrator;
         $this->writer = $writer;
@@ -58,7 +57,9 @@ class Manager
         $platforms = $this->getAvailablePlatforms();
         $version = date('YmdHis');
         $this->log("Generating migrations classes for '{$bundle->getName()}'...");
-        if (!$output) $output = $bundle;
+        if (!$output) {
+            $output = $bundle;
+        }
 
         foreach ($platforms as $driverName => $platform) {
             $queries = $this->generator->generateMigrationQueries($bundle, $platform);
@@ -102,8 +103,8 @@ class Manager
      * Upgrades a bundle to a specified version. The version can be either an
      * explicit version string or a Migrator::VERSION_* constant.
      *
-     * @param \Symfony\Component\HttpKernel\Bundle\Bundle    $bundle
-     * @param string                                        $version
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     * @param string                                      $version
      */
     public function downgradeBundle(Bundle $bundle, $version)
     {
@@ -151,7 +152,7 @@ class Manager
         $platforms = array();
 
         foreach ($this->getSupportedDrivers() as $driverName => $driverClass) {
-            $driver = new $driverClass;
+            $driver = new $driverClass();
             $platforms[$driverName] = $driver->getDatabasePlatform();
         }
 
@@ -161,7 +162,7 @@ class Manager
     private function getSupportedDrivers()
     {
         return array(
-            'pdo_mysql' => 'Doctrine\DBAL\Driver\PDOMySql\Driver'
+            'pdo_mysql' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
         );
     }
 

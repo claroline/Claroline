@@ -34,16 +34,16 @@ class ExporterTest extends MockeryTestCase
         parent::setUp();
 
         $templateLoader = new Twig_Loader_Array(array(
-            'IcapPortfolioBundle:export:export.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/export.leap2a.twig'),
-            'IcapPortfolioBundle:export\leap2a:badges.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/badges.leap2a.twig'),
-            'IcapPortfolioBundle:export\leap2a:skills.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/skills.leap2a.twig'),
-            'IcapPortfolioBundle:export\leap2a:text.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/text.leap2a.twig'),
-            'IcapPortfolioBundle:export\leap2a:userInformation.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/userInformation.leap2a.twig'),
-            'IcapPortfolioBundle:export\leap2a:formations.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/formations.leap2a.twig'),
-            'IcapPortfolioBundle:export\leap2a:experience.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/experience.leap2a.twig')
+            'IcapPortfolioBundle:export:export.leap2a.twig' => file_get_contents(__DIR__.'/../../../Resources/views/export/export.leap2a.twig'),
+            'IcapPortfolioBundle:export\leap2a:badges.leap2a.twig' => file_get_contents(__DIR__.'/../../../Resources/views/export/leap2a/badges.leap2a.twig'),
+            'IcapPortfolioBundle:export\leap2a:skills.leap2a.twig' => file_get_contents(__DIR__.'/../../../Resources/views/export/leap2a/skills.leap2a.twig'),
+            'IcapPortfolioBundle:export\leap2a:text.leap2a.twig' => file_get_contents(__DIR__.'/../../../Resources/views/export/leap2a/text.leap2a.twig'),
+            'IcapPortfolioBundle:export\leap2a:userInformation.leap2a.twig' => file_get_contents(__DIR__.'/../../../Resources/views/export/leap2a/userInformation.leap2a.twig'),
+            'IcapPortfolioBundle:export\leap2a:formations.leap2a.twig' => file_get_contents(__DIR__.'/../../../Resources/views/export/leap2a/formations.leap2a.twig'),
+            'IcapPortfolioBundle:export\leap2a:experience.leap2a.twig' => file_get_contents(__DIR__.'/../../../Resources/views/export/leap2a/experience.leap2a.twig'),
         ));
 
-        $this->twigEnvironment  = new Twig_Environment($templateLoader);
+        $this->twigEnvironment = new Twig_Environment($templateLoader);
 
         $this->twigEngine = new TwigEngine($this->twigEnvironment, new TemplateNameParser());
     }
@@ -56,8 +56,8 @@ class ExporterTest extends MockeryTestCase
     protected function createRoutingExtension($urlToReturn)
     {
         $routeCollection = new RouteCollection();
-        $requestContext  = new RequestContext();
-        $urlGenerator    = new UrlGenerator($routeCollection, $requestContext);
+        $requestContext = new RequestContext();
+        $urlGenerator = new UrlGenerator($routeCollection, $requestContext);
 
         $routingTwigExtension = $this->mock('Symfony\Bridge\Twig\Extension\RoutingExtension[getUrl]', array($urlGenerator));
         $routingTwigExtension->shouldReceive('getUrl')->andReturn($urlToReturn);

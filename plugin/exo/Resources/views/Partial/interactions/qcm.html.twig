@@ -1,0 +1,32 @@
+<div>
+<div class="form-group row">
+<div id="QCMweightChoice">
+    {{ form_label(form.weightResponse) }}
+    <div id="weightChoiceCheckbox" class="col-md-1">{{ form_widget(form.weightResponse) }}</div>
+</div>
+<!-- disabled -->
+    <div id="scoreReponse">
+        <label id="labelRightResponse" class="control-label col-md-1">{{'score_right_label' | trans({}, 'ujm_exo') }}</label>
+        <div class="col-md-2 {% if not form.scoreRightResponse.vars.valid %} has-error{% endif %}">
+            {{ form_widget(form.scoreRightResponse) }}
+            {{ form_errors(form.scoreRightResponse) }}
+        </div>
+        <label id="labelFalseResponse" class="control-label col-md-1">{{ 'score_false_label' | trans({}, 'ujm_exo') }}</label>
+        <div class="col-md-2 {% if not form.scoreFalseResponse.vars.valid %} has-error{% endif %}">
+            {{ form_widget(form.scoreFalseResponse) }}
+            {{ form_errors(form.scoreFalseResponse) }}
+        </div>
+    </div>
+</div>
+<!-- disabled off-->
+
+<div id="QCMshuffle" class="form-group row">
+    {{ form_label(form.shuffle) }}
+    <div class="col-md-9">{{ form_widget(form.shuffle) }}</div>
+</div>
+{{ form_row(form.typeQCM) }}
+<div id="choiceError" class="{% if not form.choices.vars.valid %} has-error{% endif %}"></div>
+<div id="tableChoice"></div>
+{{ form_errors(form.choices) }}
+{{ form_row(form.choices) | replace({"col-md-3": "col-md-12"}) | raw }}
+</div>

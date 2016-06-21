@@ -24,7 +24,7 @@ class TicketType extends AbstractType
             array(
                 'required' => true,
                 'label' => 'title',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
 
@@ -35,7 +35,7 @@ class TicketType extends AbstractType
                 array(
                     'required' => false,
                     'label' => 'additional_infos',
-                    'translation_domain' => 'support'
+                    'translation_domain' => 'support',
                 )
             );
         } else {
@@ -45,7 +45,7 @@ class TicketType extends AbstractType
                 array(
                     'required' => true,
                     'label' => 'description',
-                    'translation_domain' => 'platform'
+                    'translation_domain' => 'platform',
                 )
             );
         }
@@ -66,7 +66,7 @@ class TicketType extends AbstractType
                     'property' => 'formName',
                     'expanded' => false,
                     'multiple' => false,
-                    'required' => true
+                    'required' => true,
                 )
             );
         }
@@ -75,7 +75,7 @@ class TicketType extends AbstractType
             'email',
             array(
                 'required' => true,
-                'label' => 'contact_email'
+                'label' => 'contact_email',
             )
         );
         $builder->add(
@@ -83,7 +83,7 @@ class TicketType extends AbstractType
             'text',
             array(
                 'required' => true,
-                'label' => 'contact_phone'
+                'label' => 'contact_phone',
             )
         );
     }

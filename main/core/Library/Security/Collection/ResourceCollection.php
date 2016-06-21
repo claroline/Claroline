@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
  */
 class ResourceCollection
 {
-
     private $resources;
     private $errors;
     private $attributes;

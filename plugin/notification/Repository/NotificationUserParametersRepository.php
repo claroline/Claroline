@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -10,7 +10,6 @@
  */
 
 namespace Icap\NotificationBundle\Repository;
-
 
 use Doctrine\ORM\EntityRepository;
 
@@ -22,8 +21,8 @@ class NotificationUserParametersRepository extends EntityRepository
         $qb
             ->select('parameters')
             ->andWhere('parameters.userId = :userId')
-            ->setParameter("userId", $userId);
+            ->setParameter('userId', $userId);
 
         return $qb->getQuery()->getSingleResult();
     }
-} 
+}

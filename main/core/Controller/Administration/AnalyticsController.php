@@ -21,7 +21,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -51,8 +50,7 @@ class AnalyticsController extends Controller
         FormFactory $formFactory,
         AnalyticsManager $analyticsManager,
         Request $request
-    )
-    {
+    ) {
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
         $this->formFactory = $formFactory;
@@ -87,7 +85,7 @@ class AnalyticsController extends Controller
             'usersCount' => $usersCount,
             'mostViewedWS' => $mostViewedWS,
             'mostViewedMedia' => $mostViewedMedia,
-            'mostDownloadedResources' => $mostDownloadedResources
+            'mostDownloadedResources' => $mostDownloadedResources,
         );
     }
 
@@ -111,8 +109,8 @@ class AnalyticsController extends Controller
             FormFactory::TYPE_ADMIN_ANALYTICS_CONNECTIONS,
             array(),
             array(
-                "range" => $this->analyticsManager->getDefaultRange(),
-                "unique" => "false"
+                'range' => $this->analyticsManager->getDefaultRange(),
+                'unique' => 'false',
             )
         );
 
@@ -134,7 +132,7 @@ class AnalyticsController extends Controller
         return array(
             'connections' => $connections,
             'form_criteria' => $criteriaForm->createView(),
-            'activeUsers' => $activeUsers
+            'activeUsers' => $activeUsers,
         );
     }
 
@@ -160,7 +158,7 @@ class AnalyticsController extends Controller
             ->countResourcesByType();
 
         /** @var \Claroline\CoreBundle\Event\Analytics\PlatformContentItemEvent $event */
-        $event = $this->get("claroline.event.event_dispatcher")->dispatch(
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
             'administration_analytics_platform_content_item_add',
             'Analytics\PlatformContentItem'
         );
@@ -168,7 +166,7 @@ class AnalyticsController extends Controller
         return array(
             'wsCount' => $wsCount,
             'resourceCount' => $resourceCount,
-            'otherItems' => $event->getItems()
+            'otherItems' => $event->getItems(),
         );
     }
 
@@ -183,7 +181,6 @@ class AnalyticsController extends Controller
      *
      * Displays platform analytics top activity page
      *
-     *
      * @param Request $request
      * @param $topType
      *
@@ -197,9 +194,9 @@ class AnalyticsController extends Controller
             FormFactory::TYPE_ADMIN_ANALYTICS_TOP,
             array(),
             array(
-                "top_type" => $topType,
-                "top_number" => 30,
-                "range" => $this->analyticsManager->getDefaultRange()
+                'top_type' => $topType,
+                'top_number' => 30,
+                'range' => $this->analyticsManager->getDefaultRange(),
             )
         );
 
@@ -212,7 +209,7 @@ class AnalyticsController extends Controller
 
         return array(
             'form_criteria' => $criteriaForm->createView(),
-            'list_data' => $listData
+            'list_data' => $listData,
         );
     }
 
@@ -225,8 +222,8 @@ class AnalyticsController extends Controller
     public function analyticsItemAction($item)
     {
         /** @var \Claroline\CoreBundle\Event\Analytics\PlatformContentItemDetailsEvent $event */
-        $event = $this->get("claroline.event.event_dispatcher")->dispatch(
-            'administration_analytics_platform_content_item_details_' . $item,
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            'administration_analytics_platform_content_item_details_'.$item,
             'Analytics\PlatformContentItemDetails'
         );
 

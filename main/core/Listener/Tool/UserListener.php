@@ -38,6 +38,7 @@ class UserListener
      * @DI\Observe("open_tool_workspace_users")
      *
      * @param DisplayToolEvent $event
+     *
      * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onDisplay(DisplayToolEvent $event)
@@ -55,7 +56,7 @@ class UserListener
                 'page' => 1,
                 'search' => '',
                 'max' => 50,
-                'order' => 'id'
+                'order' => 'id',
             )
         );
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

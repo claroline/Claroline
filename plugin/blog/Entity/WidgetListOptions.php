@@ -12,7 +12,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 class WidgetListOptions
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -43,6 +43,7 @@ class WidgetListOptions
     public function setWidgetInstance(WidgetInstance $widgetInstance)
     {
         $this->widgetInstance = $widgetInstance;
+
         return $this;
     }
 
@@ -54,6 +55,7 @@ class WidgetListOptions
     public function setDisplayStyle($displayStyle)
     {
         $this->displayStyle = $displayStyle;
+
         return $this;
     }
 

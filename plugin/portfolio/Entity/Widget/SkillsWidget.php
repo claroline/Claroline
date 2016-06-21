@@ -4,8 +4,6 @@ namespace Icap\PortfolioBundle\Entity\Widget;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="icap__portfolio_widget_skills")
@@ -61,7 +59,7 @@ class SkillsWidget extends AbstractWidget
     public function getData()
     {
         $data = array(
-            'children' => array()
+            'children' => array(),
         );
 
         foreach ($this->getSkills() as $skill) {
@@ -77,7 +75,7 @@ class SkillsWidget extends AbstractWidget
     public function getEmpty()
     {
         return array(
-            'children' => array()
+            'children' => array(),
         );
     }
 

@@ -5,7 +5,6 @@ namespace Icap\BadgeBundle\Controller\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Icap\BadgeBundle\Entity\Badge;
-use Icap\BadgeBundle\Entity\Widget\BadgeUsageConfig;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BadgeController extends Controller
@@ -13,7 +12,7 @@ class BadgeController extends Controller
     public function myWorkspaceBadgeAction(Workspace $workspace, User $loggedUser, $badgePage)
     {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
-        $badgeRuleValidator = $this->get("claroline.rule.validator");
+        $badgeRuleValidator = $this->get('claroline.rule.validator');
 
         /** @var \Icap\BadgeBundle\Entity\Badge[] $workspaceBadges */
         $workspaceBadges = $this->getDoctrine()->getManager()->getRepository('IcapBadgeBundle:Badge')->findByWorkspace($workspace);
@@ -38,14 +37,13 @@ class BadgeController extends Controller
                 $nbBadgeRules = count($workspaceBadge->getRules());
                 $validatedRules = $badgeRuleValidator->validate($workspaceBadge, $loggedUser);
 
-                if(0 < $nbBadgeRules && 0 < $validatedRules['validRules']) {
+                if (0 < $nbBadgeRules && 0 < $validatedRules['validRules']) {
                     if ($validatedRules['validRules'] >= $nbBadgeRules) {
                         $finishedBadges[] = $workspaceBadge;
                     } else {
                         $inProgressBadges[] = $workspaceBadge;
                     }
-                }
-                else {
+                } else {
                     $availableBadges[] = $workspaceBadge;
                 }
             }
@@ -55,11 +53,10 @@ class BadgeController extends Controller
         $displayedBadges = array();
         foreach ($ownedBadges as $ownedBadge) {
             $displayedBadges[] = array(
-                'type'  => 'owned',
-                'badge' => $ownedBadge
+                'type' => 'owned',
+                'badge' => $ownedBadge,
             );
         }
-
 
         $claimedBadges = [];
 
@@ -73,41 +70,40 @@ class BadgeController extends Controller
         foreach ($finishedBadges as $finishedBadge) {
             $badgeType = 'finished';
 
-            if(isset($claimedBadges[$finishedBadge->getId()])) {
+            if (isset($claimedBadges[$finishedBadge->getId()])) {
                 $badgeType = 'claimed';
             }
 
             $displayedBadges[] = array(
-                'type'  => $badgeType,
-                'badge' => $finishedBadge
+                'type' => $badgeType,
+                'badge' => $finishedBadge,
             );
         }
 
         foreach ($inProgressBadges as $inProgressBadge) {
             $displayedBadges[] = array(
-                'type'  => 'inprogress',
-                'badge' => $inProgressBadge
+                'type' => 'inprogress',
+                'badge' => $inProgressBadge,
             );
         }
 
         foreach ($availableBadges as $availableBadge) {
             $displayedBadges[] = array(
-                'type'  => 'available',
-                'badge' => $availableBadge
+                'type' => 'available',
+                'badge' => $availableBadge,
             );
         }
 
-
         /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
         $pagerFactory = $this->get('claroline.pager.pager_factory');
-        $badgePager   = $pagerFactory->createPagerFromArray($displayedBadges, $badgePage, 10);
+        $badgePager = $pagerFactory->createPagerFromArray($displayedBadges, $badgePage, 10);
 
         return $this->render(
             'IcapBadgeBundle:Template:Tool/list.html.twig',
             array(
-                'badgePager'     => $badgePager,
-                'workspace'      => $workspace,
-                'badgePage'      => $badgePage
+                'badgePager' => $badgePager,
+                'workspace' => $workspace,
+                'badgePage' => $badgePage,
             )
         );
     }

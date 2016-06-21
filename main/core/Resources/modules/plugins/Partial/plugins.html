@@ -1,0 +1,33 @@
+<div>
+    <div class="panel">
+        <button class="btn btn-warning" ng-click="cpc.onCacheWarningClick()"> <i class="fa fa-warning"> {{ 'cache_management'|trans:{}:'platform' }} </i></button>
+    </div>
+    <table class="table">
+        <tr>
+            <td> {{ 'activate'|trans:{}: 'platform' }} </td>
+            <td> {{ 'name'|trans:{}: 'platform'}} </td>
+            <td> {{ 'version'|trans:{}: 'platform'}} </td>
+            <td> {{ 'origin'|trans:{}: 'platform' }} </td>
+            <td> {{ 'actions'|trans:{}: 'platform' }} </td>
+        </tr>
+        <tr ng-repeat="(key, plugin) in cpc.plugins" ng-class="{'danger': !plugin.is_ready, 'warning': plugin.is_locked}">
+        	<td>
+                <input type="checkbox"
+                    ng-model="plugin.is_loaded"
+                    ng-checked="plugin.is_loaded"
+                    ng-disabled="!plugin.is_ready || plugin.is_locked"
+                    ng-change="cpc.onCheckboxChange(plugin)">
+                </input>
+            </td>
+            <td> {{ plugin.name }} </td>
+            <td> {{ plugin.version }} </td>
+            <td> {{ plugin.origin }} </td>
+            <td>
+                <button class="btn btn-default" ng-disabled="true" ><i class="fa fa-download"></i></button>
+                <button class="btn btn-default" ng-disabled="plugin.description !== null"><i class="fa fa-info-circle"></i></button>
+                <button class="btn btn-default" ng-disabled="!plugin.has_options" ng-click="cpc.openPluginConfiguration(plugin)"><i class="fa fa-cog"></i></button>
+                <button class="btn btn-default" ng-if="!plugin.is_ready || plugin.is_locked" ng-click="cpc.onWarningClick(plugin)"><i class="fa fa-warning"></i></button>
+            </td>
+        </tr>
+    </table>
+</div>

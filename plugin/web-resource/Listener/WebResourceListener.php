@@ -33,7 +33,8 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 class WebResourceListener
 {
     /**
-     * Service container
+     * Service container.
+     *
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     private $container;
@@ -44,18 +45,20 @@ class WebResourceListener
     private $zip;
 
     /**
-     * Path to directory where zip files are stored
+     * Path to directory where zip files are stored.
+     *
      * @var string
      */
     private $zipPath;
 
     /**
-     * Path to directory where uploaded files are stored
+     * Path to directory where uploaded files are stored.
+     *
      * @var string
      */
     private $filesPath;
 
-    private $defaultIndexFiles = array (
+    private $defaultIndexFiles = array(
         'web/SCO_0001/default.html',
         'web/SCO_0001/default.htm',
         'web/index.html',
@@ -65,7 +68,8 @@ class WebResourceListener
     );
 
     /**
-     * Class constructor
+     * Class constructor.
+     *
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container")
      * })
@@ -75,8 +79,8 @@ class WebResourceListener
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->zipPath = $this->container->getParameter('claroline.param.uploads_directory') . '/webresource/';
-        $this->filesPath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
+        $this->zipPath = $this->container->getParameter('claroline.param.uploads_directory').'/webresource/';
+        $this->filesPath = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR;
         $this->tokenStorage = $this->container->get('security.token_storage');
         $this->workspaceManager = $this->container->get('claroline.manager.workspace_manager');
     }
@@ -88,12 +92,12 @@ class WebResourceListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new FileType, new File());
+        $form = $this->container->get('form.factory')->create(new FileType(), new File());
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'claroline_web_resource'
+                'resourceType' => 'claroline_web_resource',
             )
         );
 
@@ -110,7 +114,7 @@ class WebResourceListener
     {
         $request = $this->container->get('request');
         $workspace = $event->getParent()->getWorkspace();
-        $form = $this->container->get('form.factory')->create(new FileType, new File());
+        $form = $this->container->get('form.factory')->create(new FileType(), new File());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -129,7 +133,7 @@ class WebResourceListener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => $event->getResourceType()
+                'resourceType' => $event->getResourceType(),
             )
         );
         $event->setErrorFormContent($content);
@@ -145,15 +149,15 @@ class WebResourceListener
     {
         $hash = $event->getResource()->getHashName();
         $rootFile = $this->guessRootFileFromUnzipped($this->zipPath.$hash);
-        $rootPath = $this->zipPath . $hash . '/' . $rootFile;
+        $rootPath = $this->zipPath.$hash.'/'.$rootFile;
 
         $content = $this->container->get('templating')->render(
             'ClarolineWebResourceBundle::webResource.html.twig',
             array(
                 'workspace' => $event->getResource()->getResourceNode()->getWorkspace(),
-                'path' => $hash . '/' . $this->guessRootFileFromUnzipped($this->zipPath.$hash),
+                'path' => $hash.'/'.$this->guessRootFileFromUnzipped($this->zipPath.$hash),
                 'resource' => $event->getResource(),
-                '_resource' => $event->getResource()
+                '_resource' => $event->getResource(),
             )
         );
 
@@ -206,18 +210,20 @@ class WebResourceListener
     }
 
     /**
-     * Get all HTML files from a zip archive
+     * Get all HTML files from a zip archive.
+     *
      * @param string $directory
+     *
      * @return array
      */
     private function getHTMLFiles($directory)
     {
-        $dir = new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS|RecursiveDirectoryIterator::NEW_CURRENT_AND_KEY);
+        $dir = new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::NEW_CURRENT_AND_KEY);
         $files = new \RecursiveIteratorIterator($dir);
 
-        $allowedExtensions = array ('htm', 'html');
+        $allowedExtensions = array('htm', 'html');
 
-        $list = array ();
+        $list = array();
         foreach ($files as $file) {
             if (in_array($file->getExtension(), $allowedExtensions)) {
                 // HTML File found
@@ -230,9 +236,12 @@ class WebResourceListener
     }
 
     /**
-     * Try to retrieve root file of the WebResource from the zip archive
+     * Try to retrieve root file of the WebResource from the zip archive.
+     *
      * @param UploadedFile $file
+     *
      * @return string
+     *
      * @throws \Exception
      */
     private function guessRootFile(UploadedFile $file)
@@ -250,7 +259,7 @@ class WebResourceListener
 
         // No default index file found => scan archive
         // Extract content into tmp dir
-        $tmpDir = $this->zipPath . 'tmp/' . $file->getClientOriginalName() . '/';
+        $tmpDir = $this->zipPath.'tmp/'.$file->getClientOriginalName().'/';
 
         $this->getZip()->extractTo($tmpDir);
         $this->getZip()->close();
@@ -266,12 +275,14 @@ class WebResourceListener
             return array_shift($htmlFiles);
         }
 
-        return null;
+        return;
     }
 
     /**
-     * Try to retrieve root file of the WebResource from the unzipped directory
+     * Try to retrieve root file of the WebResource from the unzipped directory.
+     *
      * @param string $hash
+     *
      * @return string
      */
     private function guessRootFileFromUnzipped($hash)
@@ -292,17 +303,18 @@ class WebResourceListener
         }
 
         // Unable to find an unique HTML file
-        return null;
+        return;
     }
 
     /**
      * Get ZipArchive object.
+     *
      * @return \ZipArchive
      */
     private function getZip()
     {
         if (!$this->zip instanceof \ZipArchive) {
-            $this->zip = new \ZipArchive;
+            $this->zip = new \ZipArchive();
         }
 
         return $this->zip;
@@ -312,6 +324,7 @@ class WebResourceListener
      * Returns a new hash for a file.
      *
      * @param mixed mixed The extension of the file or an Claroline\CoreBundle\Entity\Resource\File
+     *
      * @return string
      */
     private function getHash($mixed)
@@ -320,14 +333,15 @@ class WebResourceListener
             $mixed = pathinfo($mixed->getHashName(), PATHINFO_EXTENSION);
         }
 
-        return $this->container->get('claroline.utilities.misc')->generateGuid() . '.' . $mixed;
+        return $this->container->get('claroline.utilities.misc')->generateGuid().'.'.$mixed;
     }
 
     /**
      * Checks if a UploadedFile is a zip and contains index.html file.
      *
      * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
-     * @return boolean
+     *
+     * @return bool
      */
     private function isZip(UploadedFile $file)
     {
@@ -371,7 +385,7 @@ class WebResourceListener
         if (!file_exists($this->zipPath.$hash)) {
             mkdir($this->zipPath.$hash, 0777, true);
         }
-        $this->getZip()->open($this->filesPath . $hash);
+        $this->getZip()->open($this->filesPath.$hash);
         $this->getZip()->extractTo($this->zipPath.$hash);
         $this->getZip()->close();
     }
@@ -406,7 +420,7 @@ class WebResourceListener
      */
     private function unzipDelete($dir)
     {
-        foreach (glob($dir . '/*') as $file) {
+        foreach (glob($dir.'/*') as $file) {
             if (is_dir($file)) {
                 $this->unzipDelete($file);
             } else {

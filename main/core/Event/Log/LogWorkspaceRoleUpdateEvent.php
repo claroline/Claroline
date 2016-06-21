@@ -22,7 +22,7 @@ class LogWorkspaceRoleUpdateEvent extends LogGenericEvent
      *      'propertyName1' => ['property old value 1', 'property new value 1'],
      *      'propertyName2' => ['property old value 2', 'property new value 2'],
      *      etc.
-     * )
+     * ).
      *
      * Please respect lower caml case naming convention for property names
      */
@@ -33,11 +33,11 @@ class LogWorkspaceRoleUpdateEvent extends LogGenericEvent
             array(
                 'role' => array(
                     'name' => $role->getName(),
-                    'changeSet' => $changeSet
+                    'changeSet' => $changeSet,
                 ),
                 'workspace' => array(
-                    'name' => $role->getWorkspace()->getName()
-                )
+                    'name' => $role->getWorkspace()->getName(),
+                ),
             ),
             null,
             null,
@@ -54,6 +54,6 @@ class LogWorkspaceRoleUpdateEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 }

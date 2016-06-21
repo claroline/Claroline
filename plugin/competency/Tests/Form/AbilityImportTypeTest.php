@@ -65,7 +65,7 @@ class AbilityImportTypeTest extends FormTestCase
 
         $formData = [
             'ability' => 'Foo',
-            'level' => $level->getId()
+            'level' => $level->getId(),
         ];
 
         $form = $this->factory->create(new AbilityImportType($this->om), null, ['competency' => $parent]);

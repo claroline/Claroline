@@ -12,7 +12,6 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\InstallationBundle\Updater\Updater;
-use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Updater060800 extends Updater

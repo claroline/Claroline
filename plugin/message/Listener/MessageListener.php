@@ -52,8 +52,7 @@ class MessageListener
         TranslatorInterface $translator,
         RequestStack $requestStack,
         HttpKernelInterface $httpKernel
-    )
-    {
+    ) {
         $this->messageManager = $messageManager;
         $this->router = $router;
         $this->tokenStorage = $tokenStorage;
@@ -83,7 +82,7 @@ class MessageListener
             $messageMenuLink = $menu->addChild(
                 $this->translator->trans('messages', array(), 'platform'),
                 array('route' => 'claro_message_list_received')
-            )->setExtra('icon', 'fa fa-' . $tool->getClass())
+            )->setExtra('icon', 'fa fa-'.$tool->getClass())
             ->setExtra('title', $messageTitle);
 
             if ($countUnreadMessages > 0) {
@@ -103,13 +102,13 @@ class MessageListener
     {
         $user = $event->getUser();
 
-            $menu = $event->getMenu();
-            $messageMenuLink = $menu->addChild(
+        $menu = $event->getMenu();
+        $messageMenuLink = $menu->addChild(
                 $this->translator->trans('messages', array(), 'platform'),
                 array('route' => 'claro_message_show')
             )
             ->setExtra('icon', 'fa fa-envelope')
-            ->setExtra('qstring', 'userIds[]=' . $user->getId())
+            ->setExtra('qstring', 'userIds[]='.$user->getId())
             ->setExtra('title', $this->translator->trans('message', array(), 'platform'));
     }
 
@@ -163,7 +162,7 @@ class MessageListener
     {
         $user = $event->getUser();
         $url = $this->router->generate('claro_message_show', array('message' => 0))
-            . '?userIds[]=' . $user->getId();
+            .'?userIds[]='.$user->getId();
 
         $menu = $event->getMenu();
         $menu->addChild(

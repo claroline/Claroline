@@ -32,15 +32,14 @@ class ExporterManager
     public function __construct(
         ObjectManager $om,
         TranslatorInterface $trans
-    )
-    {
+    ) {
         $this->om = $om;
         $this->trans = $trans;
     }
 
     /**
      * This function will export properties from the class $class whose typing hint is
-     * "string", "integer", "\DateTime"
+     * "string", "integer", "\DateTime".
      *
      * @param $class a class entity class to be exported
      * @param $exporter the exporter object to use
@@ -56,7 +55,7 @@ class ExporterManager
     }
 
     /**
-     * We add the facets to the user export
+     * We add the facets to the user export.
      */
     private function exportUsers($exporter, array $extra)
     {
@@ -94,7 +93,7 @@ class ExporterManager
 
             foreach ($fieldFacetsName as $fieldFacetName) {
                 $found = false;
-                foreach($user->getFieldsFacetValue() as $fieldFacetValue) {
+                foreach ($user->getFieldsFacetValue() as $fieldFacetValue) {
                     if ($fieldFacetValue->getFieldFacet()->getName() === $fieldFacetName) {
                         $found = true;
                         $data[$user->getId()][$fieldFacetName] = $this->formatValue($fieldFacetValue->getValue());
@@ -155,15 +154,15 @@ class ExporterManager
             }
         }
 
-        return null;
+        return;
     }
 
     private function findPossibleGettersForVar($varname)
     {
-        $getters   = [];
-        $getters[] = 'get' . ucfirst($varname);
-        $getters[] = 'has' . ucfirst($varname);
-        $getters[] = 'is' . ucfirst($varname);
+        $getters = [];
+        $getters[] = 'get'.ucfirst($varname);
+        $getters[] = 'has'.ucfirst($varname);
+        $getters[] = 'is'.ucfirst($varname);
         $getters[] = $varname;
 
         return $getters;

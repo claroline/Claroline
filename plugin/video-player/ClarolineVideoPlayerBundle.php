@@ -20,12 +20,11 @@ class ClarolineVideoPlayerBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'video-player');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'video-player');
     }
 
     public function hasMigrations()
     {
-        return false;
+        return true;
     }
 }
-

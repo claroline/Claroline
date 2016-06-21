@@ -48,18 +48,18 @@ class PostListener
         ) {
             $details = array(
                 'post' => array(
-                    'blog'      => $blog->getId(),
-                    'title'     => $post->getTitle(),
-                    'slug'      => $post->getSlug(),
+                    'blog' => $blog->getId(),
+                    'title' => $post->getTitle(),
+                    'slug' => $post->getSlug(),
                     'published' => $post->isPublished(),
-                    'author'    => $post->getAuthor()->getFirstName()." ".$post->getAuthor()->getLastName(),
-                    'authorId'  => $post->getAuthor()->getId()
+                    'author' => $post->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName(),
+                    'authorId' => $post->getAuthor()->getId(),
                 ),
                 'resource' => array(
-                    'id'    => $blog->getId(),
-                    'name'  => $blog->getResourceNode()->getName(),
-                    'type'  => $blog->getResourceNode()->getResourceType()->getName()
-                )
+                    'id' => $blog->getId(),
+                    'name' => $blog->getResourceNode()->getName(),
+                    'type' => $blog->getResourceNode()->getResourceType()->getName(),
+                ),
             );
             $notification = $this->notificationManager->createNotification(
                 'resource-icap_blog-post-user_tagged',
@@ -71,7 +71,8 @@ class PostListener
         }
     }
 
-    public function prePersist(Post $post, LifecycleEventArgs $event){
+    public function prePersist(Post $post, LifecycleEventArgs $event)
+    {
         if ($post->getContent() != null) {
             $userPicker = new UserPickerContent($post->getContent());
             $post->setUserPicker($userPicker);
@@ -79,11 +80,13 @@ class PostListener
         }
     }
 
-    public function preUpdate(Post $post, LifecycleEventArgs $event){
+    public function preUpdate(Post $post, LifecycleEventArgs $event)
+    {
         $this->prePersist($post, $event);
     }
 
-    public function postUpdate(Post $post, LifecycleEventArgs $event){
+    public function postUpdate(Post $post, LifecycleEventArgs $event)
+    {
         $this->postPersist($post, $event);
     }
 }

@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Library\View;
 
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExporterViewHandler
@@ -26,7 +25,7 @@ class ExporterViewHandler
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=file.' . $format);
+        $response->headers->set('Content-Disposition', 'attachment; filename=file.'.$format);
 
         switch ($format) {
             case 'csv': $response->headers->set('Content-Type', 'text/csv'); break;

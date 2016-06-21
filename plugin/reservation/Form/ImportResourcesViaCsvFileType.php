@@ -7,7 +7,6 @@ use Symfony\Component\Form\AbstractType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -25,7 +24,7 @@ class ImportResourcesViaCsvFileType extends AbstractType
                 new File(),
                 new CsvResource(),
             ),
-            'mapped' => false
+            'mapped' => false,
         ]);
     }
 
@@ -37,7 +36,7 @@ class ImportResourcesViaCsvFileType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'reservation'
+            'translation_domain' => 'reservation',
         ]);
     }
 }

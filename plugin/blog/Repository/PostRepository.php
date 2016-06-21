@@ -29,7 +29,7 @@ class PostRepository extends EntityRepository
             ->setParameter('blogId', $blog->getId())
         ;
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
@@ -38,6 +38,7 @@ class PostRepository extends EntityRepository
      * @param bool   $executeQuery
      *
      * @throws TooMuchResultException
+     *
      * @return array|\Doctrine\ORM\QueryBuilder
      */
     public function searchByBlog(Blog $blog, $search, $executeQuery = true)
@@ -52,35 +53,35 @@ class PostRepository extends EntityRepository
             'te', 'tes', 'ton', 'ta', 'se', 'ses', 'son', 'sa', 'ça', 'un', 'une', 'ou', 'donc', 'il', 'elle',
             'on', 'nous', 'vous', 'ils', 'elles', 'eux', 'mien', 'sien', 'pour', 'que', 'qui', 'quand', 'quoi', 'quel',
             'quels', 'quelle', 'quelles', 'par', 'tout', 'tous', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
         );
 
         $searchParameters = explode(' ', trim($search));
-        $titleCondition   = '';
+        $titleCondition = '';
         $contentCondition = '';
-        $hasWords         = false;
+        $hasWords = false;
         foreach ($searchParameters as $key => $searchParameter) {
             if (false === in_array($searchParameter, $forbiddenWords)) {
                 $hasWords = true;
                 $titleCondition .= "post.title LIKE :titleSearch$key";
                 $contentCondition .= "post.content LIKE :contentSearch$key";
                 if ($key < count($searchParameters) - 1) {
-                    $titleCondition .= " AND ";
-                    $contentCondition .= " AND ";
+                    $titleCondition .= ' AND ';
+                    $contentCondition .= ' AND ';
                 }
 
-                $query->setParameter('titleSearch' . $key, '%' . $searchParameter . '%');
-                $query->setParameter('contentSearch' . $key, '%' . $searchParameter . '%');
+                $query->setParameter('titleSearch'.$key, '%'.$searchParameter.'%');
+                $query->setParameter('contentSearch'.$key, '%'.$searchParameter.'%');
             }
         }
 
         if ($hasWords) {
-            $query->andWhere('(' . $titleCondition . ') OR (' . $contentCondition . ')');
+            $query->andWhere('('.$titleCondition.') OR ('.$contentCondition.')');
         } else {
             throw new TooMuchResultException();
         }
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findAllPublicByBlog(Blog $blog)
@@ -107,9 +108,9 @@ class PostRepository extends EntityRepository
      */
     public function findCalendarDatas(Blog $blog, $startDate, $endDate, $executeQuery = true)
     {
-        $startDateTime    = new \DateTime($startDate);
+        $startDateTime = new \DateTime($startDate);
         $currentTimestamp = time();
-        $endDateTime      = new \DateTime($endDate);
+        $endDateTime = new \DateTime($endDate);
 
         if ($currentTimestamp < $endDate) {
             $endDateTime->setTimestamp($currentTimestamp);
@@ -128,7 +129,7 @@ class PostRepository extends EntityRepository
             ->getQuery()
         ;
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
@@ -149,7 +150,7 @@ class PostRepository extends EntityRepository
             ->getQuery()
         ;
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
@@ -174,7 +175,7 @@ class PostRepository extends EntityRepository
             ->setParameter('status', POST::STATUS_PUBLISHED)
         ;
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
@@ -197,13 +198,14 @@ class PostRepository extends EntityRepository
      * @param QueryBuilder $query
      *
      * @return QueryBuilder
+     *
      * @throws \InvalidArgumentException
      */
     public function createCriteriaQueryBuilder($criterias, QueryBuilder $query)
     {
-        $tag    = $criterias['tag'];
+        $tag = $criterias['tag'];
         $author = $criterias['author'];
-        $date   = $criterias['date'];
+        $date = $criterias['date'];
         $blogId = $criterias['blogId'];
 
         if (null !== $tag) {
@@ -218,9 +220,9 @@ class PostRepository extends EntityRepository
                 ->setParameter('authorId', $author->getId())
             ;
         } elseif (null !== $date) {
-            $dates     = explode('-', $date);
+            $dates = explode('-', $date);
             $startDate = new \DateTime();
-            $endDate   = new \DateTime();
+            $endDate = new \DateTime();
 
             $countDateParts = count($dates);
             if (2 === $countDateParts) {
@@ -228,14 +230,12 @@ class PostRepository extends EntityRepository
                     ->setDate($dates[1], $dates[0], 1)
                     ->setTime(0, 0);
                 $endDate->setTimestamp(strtotime('+1 month', $startDate->getTimestamp()));
-            }
-            elseif (2 < $countDateParts) {
+            } elseif (2 < $countDateParts) {
                 $startDate
                     ->setDate($dates[2], $dates[1], $dates[0])
                     ->setTime(0, 0);
                 $endDate->setTimestamp(strtotime('+1 day', $startDate->getTimestamp()));
-            }
-            else {
+            } else {
                 throw new \InvalidArgumentException('Invalid format for date filter argument');
             }
 

@@ -28,8 +28,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Log
 {
     const doerTypeAnonymous = 'anonymous';
-    const doerTypeUser      = 'user';
-    const doerTypePlatform  = 'platform';
+    const doerTypeUser = 'user';
+    const doerTypePlatform = 'platform';
 
     /**
      * @ORM\Id
@@ -163,18 +163,18 @@ class Log
     protected $otherElementId;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
-        $this->doerPlatformRoles  = new ArrayCollection();
+        $this->doerPlatformRoles = new ArrayCollection();
         $this->doerWorkspaceRoles = new ArrayCollection();
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -182,9 +182,10 @@ class Log
     }
 
     /**
-     * Set action
+     * Set action.
      *
-     * @param  string $action
+     * @param string $action
+     *
      * @return Log
      */
     public function setAction($action)
@@ -195,7 +196,7 @@ class Log
     }
 
     /**
-     * Get action
+     * Get action.
      *
      * @return string
      */
@@ -219,7 +220,7 @@ class Log
     }
 
     /**
-     * Get dateLog
+     * Get dateLog.
      *
      * @return \DateTime
      */
@@ -229,9 +230,10 @@ class Log
     }
 
     /**
-     * Set details
+     * Set details.
      *
-     * @param  array $details
+     * @param array $details
+     *
      * @return Log
      */
     public function setDetails($details)
@@ -242,7 +244,7 @@ class Log
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -252,9 +254,10 @@ class Log
     }
 
     /**
-     * Set doerType
+     * Set doerType.
      *
-     * @param  string $doerType
+     * @param string $doerType
+     *
      * @return Log
      */
     public function setDoerType($doerType)
@@ -265,7 +268,7 @@ class Log
     }
 
     /**
-     * Get doerType
+     * Get doerType.
      *
      * @return string
      */
@@ -275,9 +278,10 @@ class Log
     }
 
     /**
-     * Set doerIp
+     * Set doerIp.
      *
-     * @param  string $doerIp
+     * @param string $doerIp
+     *
      * @return Log
      */
     public function setDoerIp($doerIp)
@@ -288,7 +292,7 @@ class Log
     }
 
     /**
-     * Get doerIp
+     * Get doerIp.
      *
      * @return string
      */
@@ -298,7 +302,7 @@ class Log
     }
 
     /**
-     * Set doerSessionId
+     * Set doerSessionId.
      *
      * @param string $doerSessionId
      *
@@ -312,7 +316,7 @@ class Log
     }
 
     /**
-     * Get doerSessionId
+     * Get doerSessionId.
      *
      * @return string
      */
@@ -322,9 +326,10 @@ class Log
     }
 
     /**
-     * Set doer
+     * Set doer.
      *
-     * @param  User $doer
+     * @param User $doer
+     *
      * @return Log
      */
     public function setDoer(User $doer = null)
@@ -335,7 +340,7 @@ class Log
     }
 
     /**
-     * Get doer
+     * Get doer.
      *
      * @return User
      */
@@ -345,9 +350,10 @@ class Log
     }
 
     /**
-     * Add doerPlatformRoles
+     * Add doerPlatformRoles.
      *
-     * @param  Role $doerPlatformRoles
+     * @param Role $doerPlatformRoles
+     *
      * @return Log
      */
     public function addDoerPlatformRole(Role $doerPlatformRoles)
@@ -358,7 +364,7 @@ class Log
     }
 
     /**
-     * Remove doerPlatformRoles
+     * Remove doerPlatformRoles.
      *
      * @param Role $doerPlatformRoles
      */
@@ -368,7 +374,7 @@ class Log
     }
 
     /**
-     * Get doerPlatformRoles
+     * Get doerPlatformRoles.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -378,9 +384,10 @@ class Log
     }
 
     /**
-     * Add doerWorkspaceRoles
+     * Add doerWorkspaceRoles.
      *
-     * @param  Role $doerWorkspaceRoles
+     * @param Role $doerWorkspaceRoles
+     *
      * @return Log
      */
     public function addDoerWorkspaceRole(Role $doerWorkspaceRoles)
@@ -391,7 +398,7 @@ class Log
     }
 
     /**
-     * Remove doerWorkspaceRoles
+     * Remove doerWorkspaceRoles.
      *
      * @param Role $doerWorkspaceRoles
      */
@@ -401,7 +408,7 @@ class Log
     }
 
     /**
-     * Get doerWorkspaceRoles
+     * Get doerWorkspaceRoles.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -411,9 +418,10 @@ class Log
     }
 
     /**
-     * Set receiver
+     * Set receiver.
      *
-     * @param  User $receiver
+     * @param User $receiver
+     *
      * @return Log
      */
     public function setReceiver(User $receiver = null)
@@ -424,7 +432,7 @@ class Log
     }
 
     /**
-     * Get receiver
+     * Get receiver.
      *
      * @return User
      */
@@ -434,9 +442,10 @@ class Log
     }
 
     /**
-     * Set receiverGroup
+     * Set receiverGroup.
      *
-     * @param  Group $receiverGroup
+     * @param Group $receiverGroup
+     *
      * @return Log
      */
     public function setReceiverGroup(Group $receiverGroup = null)
@@ -447,7 +456,7 @@ class Log
     }
 
     /**
-     * Get receiverGroup
+     * Get receiverGroup.
      *
      * @return Group
      */
@@ -457,9 +466,10 @@ class Log
     }
 
     /**
-     * Set owner
+     * Set owner.
      *
-     * @param  User $owner
+     * @param User $owner
+     *
      * @return Log
      */
     public function setOwner(User $owner = null)
@@ -470,7 +480,7 @@ class Log
     }
 
     /**
-     * Get owner
+     * Get owner.
      *
      * @return User
      */
@@ -480,9 +490,10 @@ class Log
     }
 
     /**
-     * Set workspace
+     * Set workspace.
      *
-     * @param  Workspace $workspace
+     * @param Workspace $workspace
+     *
      * @return Log
      */
     public function setWorkspace(Workspace $workspace = null)
@@ -493,7 +504,7 @@ class Log
     }
 
     /**
-     * Get workspace
+     * Get workspace.
      *
      * @return Workspace
      */
@@ -503,9 +514,10 @@ class Log
     }
 
     /**
-     * Set resource
+     * Set resource.
      *
-     * @param  ResourceNode $resourceNode
+     * @param ResourceNode $resourceNode
+     *
      * @return Log
      */
     public function setResourceNode(ResourceNode $resourceNode = null)
@@ -516,7 +528,7 @@ class Log
     }
 
     /**
-     * Get resource
+     * Get resource.
      *
      * @return ResourceNode
      */
@@ -526,9 +538,10 @@ class Log
     }
 
     /**
-     * Set resourceType
+     * Set resourceType.
      *
-     * @param  ResourceType $resourceType
+     * @param ResourceType $resourceType
+     *
      * @return Log
      */
     public function setResourceType(ResourceType $resourceType = null)
@@ -539,7 +552,7 @@ class Log
     }
 
     /**
-     * Get resourceType
+     * Get resourceType.
      *
      * @return ResourceType
      */
@@ -549,9 +562,10 @@ class Log
     }
 
     /**
-     * Set role
+     * Set role.
      *
-     * @param  Role $role
+     * @param Role $role
+     *
      * @return Log
      */
     public function setRole(Role $role = null)
@@ -562,7 +576,7 @@ class Log
     }
 
     /**
-     * Get role
+     * Get role.
      *
      * @return Role
      */
@@ -572,9 +586,10 @@ class Log
     }
 
     /**
-     * Set toolName
+     * Set toolName.
      *
-     * @param  string $toolName
+     * @param string $toolName
+     *
      * @return Log
      */
     public function setToolName($toolName)
@@ -585,7 +600,7 @@ class Log
     }
 
     /**
-     * Get toolName
+     * Get toolName.
      *
      * @return string
      */
@@ -607,7 +622,7 @@ class Log
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDisplayedInAdmin()
     {
@@ -615,7 +630,7 @@ class Log
     }
 
     /**
-     * @param boolean $isDisplayedInWorkspace
+     * @param bool $isDisplayedInWorkspace
      *
      * @return Log
      */
@@ -627,7 +642,7 @@ class Log
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDisplayedInWorkspace()
     {
@@ -635,7 +650,7 @@ class Log
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getOtherElementId()
     {
@@ -643,7 +658,7 @@ class Log
     }
 
     /**
-     * @param integer $otherElementId
+     * @param int $otherElementId
      *
      * @return Log
      */

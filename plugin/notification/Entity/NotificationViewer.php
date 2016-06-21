@@ -3,6 +3,7 @@
 namespace Icap\NotificationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass="Icap\NotificationBundle\Repository\NotificationViewerRepository")
@@ -14,12 +15,14 @@ class NotificationViewer
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Groups({"api_notification"})
      */
     protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\NotificationBundle\Entity\Notification")
      * @ORM\JoinColumn(name="notification_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @JMS\Groups({"api_notification"})
      */
     protected $notification;
 
@@ -30,13 +33,14 @@ class NotificationViewer
 
     /**
      * @ORM\Column(type="boolean", name="status", nullable=true)
+     * @JMS\Groups({"api_notification"})
      */
     protected $status;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -44,9 +48,10 @@ class NotificationViewer
     }
 
     /**
-     * Set notification
+     * Set notification.
      *
      * @param \Icap\NotificationBundle\Entity\Notification $notification
+     *
      * @return NotificationViewer
      */
     public function setNotification(Notification $notification)
@@ -57,7 +62,7 @@ class NotificationViewer
     }
 
     /**
-     * Get notification
+     * Get notification.
      *
      * @return \Icap\NotificationBundle\Entity\Notification
      */
@@ -67,9 +72,10 @@ class NotificationViewer
     }
 
     /**
-     * Set viewerId
+     * Set viewerId.
      *
-     * @param integer $viewerId
+     * @param int $viewerId
+     *
      * @return NotificationViewer
      */
     public function setViewerId($viewerId)
@@ -80,9 +86,9 @@ class NotificationViewer
     }
 
     /**
-     * Get viewerId
+     * Get viewerId.
      *
-     * @return integer
+     * @return int
      */
     public function getViewerId()
     {
@@ -90,9 +96,10 @@ class NotificationViewer
     }
 
     /**
-     * Set status
+     * Set status.
      *
-     * @param boolean $status
+     * @param bool $status
+     *
      * @return NotificationViewer
      */
     public function setStatus($status)
@@ -103,13 +110,12 @@ class NotificationViewer
     }
 
     /**
-     * Get status
+     * Get status.
      *
-     * @return boolean
+     * @return bool
      */
     public function getStatus()
     {
         return $this->status;
     }
-
 }

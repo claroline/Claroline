@@ -1,0 +1,11 @@
+services:
+    icap.listener.website_listener:
+        class: Icap\WebsiteBundle\Listener\WebsiteListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_form_icap_website, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_icap_website, method: onCreate }
+            - { name: kernel.event_listener, event: open_icap_website, method: onOpen }
+            - { name: kernel.event_listener, event: delete_icap_website, method: onDelete }
+            - { name: kernel.event_listener, event: copy_icap_website, method: onCopy }

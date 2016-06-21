@@ -27,7 +27,6 @@ use Claroline\SurveyBundle\Manager\SurveyManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -64,8 +63,7 @@ class SurveyListener
         UrlGeneratorInterface $router,
         SurveyManager $surveyManager,
         TwigEngine $templating
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
         $this->om = $om;
@@ -87,7 +85,7 @@ class SurveyListener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'claroline_survey'
+                'resourceType' => 'claroline_survey',
             )
         );
         $event->setResponseContent($content);
@@ -117,7 +115,7 @@ class SurveyListener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'claroline_survey'
+                'resourceType' => 'claroline_survey',
             )
         );
         $event->setErrorFormContent($content);

@@ -19,7 +19,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class IniFileManager
 {
     /**
-     * @param array $parameters
+     * @param array  $parameters
      * @param string $iniFile
      *
      * @throws \Exception
@@ -29,6 +29,9 @@ class IniFileManager
         $content = '';
 
         foreach ($parameters as $key => $value) {
+            if (is_bool($value)) {
+                $value = $value ? 'true' : 'false';
+            }
             $content .= "{$key} = {$value}\n";
         }
 
@@ -59,6 +62,15 @@ class IniFileManager
 
     public function getValues($iniFile)
     {
-        return file_exists($iniFile) ? parse_ini_file($iniFile): [];
+        $values = [];
+
+        if (file_exists($iniFile)) {
+            $values = parse_ini_file($iniFile);
+            foreach ($values as &$value) {
+                $value = (bool) $value ? true : false;
+            }
+        }
+
+        return $values;
     }
 }

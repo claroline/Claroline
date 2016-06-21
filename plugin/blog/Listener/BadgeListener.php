@@ -41,35 +41,34 @@ class BadgeListener
     public function onBagdeCreateValidationLink($event)
     {
         $content = null;
-        $log     = $event->getLog();
+        $log = $event->getLog();
 
-        switch($log->getAction())
-        {
+        switch ($log->getAction()) {
             case LogPostCreateEvent::ACTION:
             case LogPostDeleteEvent::ACTION:
             case LogPostReadEvent::ACTION:
             case LogPostUpdateEvent::ACTION:
                 $logDetails = $event->getLog()->getDetails();
                 $parameters = array(
-                    'blogId'   => $logDetails['post']['blog'],
-                    'postSlug' => $logDetails['post']['slug']
+                    'blogId' => $logDetails['post']['blog'],
+                    'postSlug' => $logDetails['post']['slug'],
                 );
 
-                $url     = $this->router->generate('icap_blog_post_view', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
-                $title   = $logDetails['post']['title'];
+                $url = $this->router->generate('icap_blog_post_view', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+                $title = $logDetails['post']['title'];
                 $content = sprintf('<a href="%s" title="%s">%s</a>', $url, $title, $title);
                 break;
             case LogCommentCreateEvent::ACTION:
             case LogCommentDeleteEvent::ACTION:
                 $logDetails = $event->getLog()->getDetails();
                 $parameters = array(
-                    'blogId'   => $logDetails['post']['blog'],
-                    'postSlug' => $logDetails['post']['slug']
+                    'blogId' => $logDetails['post']['blog'],
+                    'postSlug' => $logDetails['post']['slug'],
                 );
 
-                $url     = $this->router->generate('icap_blog_post_view', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
-                $title   = $logDetails['post']['title'];
-                $anchor  = isset($logDetails['comment']['id']) ? '#comment-' . $logDetails['comment']['id'] : '';
+                $url = $this->router->generate('icap_blog_post_view', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+                $title = $logDetails['post']['title'];
+                $anchor = isset($logDetails['comment']['id']) ? '#comment-'.$logDetails['comment']['id'] : '';
                 $content = sprintf('<a href="%s%s" title="%s">%s</a>', $url, $anchor, $title, $title);
                 break;
         }

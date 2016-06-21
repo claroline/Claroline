@@ -37,13 +37,12 @@ class CursusListener
         HttpKernelInterface $httpKernel,
         RequestStack $requestStack,
         ObjectManager $om
-    )
-    {
+    ) {
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
         $this->om = $om;
     }
-    
+
     /**
      * @DI\Observe("administration_tool_claroline_cursus_tool")
      *
@@ -59,7 +58,7 @@ class CursusListener
         $event->setResponse($response);
         $event->stopPropagation();
     }
-    
+
     /**
      * @DI\Observe("plugin_options_cursusbundle")
      *

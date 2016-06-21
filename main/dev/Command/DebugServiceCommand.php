@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Listener\DoctrineDebug;
 
 /**
- * Debug a manager
+ * Debug a manager.
  */
 class DebugServiceCommand extends ContainerAwareCommand
 {
@@ -33,7 +33,7 @@ class DebugServiceCommand extends ContainerAwareCommand
                 new InputArgument('owner', InputArgument::REQUIRED, 'The user doing the action'),
                 new InputArgument('service_name', InputArgument::REQUIRED, 'The service name'),
                 new InputArgument('method_name', InputArgument::REQUIRED, 'The method name'),
-                new InputArgument('parameters', InputArgument::IS_ARRAY, 'The method parameters')
+                new InputArgument('parameters', InputArgument::IS_ARRAY, 'The method parameters'),
             )
         );
         $this->addOption(
@@ -49,7 +49,7 @@ class DebugServiceCommand extends ContainerAwareCommand
         $params = array(
             'owner' => 'The user doing the action: ',
             'service_name' => 'The service name: ',
-            'method_name' => 'The method name: '
+            'method_name' => 'The method name: ',
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -80,10 +80,11 @@ class DebugServiceCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $consoleLogger = ConsoleLogger::get($output);
         $manager = $this->getContainer()->get($input->getArgument('service_name'));
-        if (method_exists($manager, 'setLogger')) $manager->setLogger($consoleLogger);
+        if (method_exists($manager, 'setLogger')) {
+            $manager->setLogger($consoleLogger);
+        }
         $method = $input->getArgument('method_name');
         $om = $this->getContainer()->get('claroline.persistence.object_manager');
 
@@ -99,11 +100,11 @@ class DebugServiceCommand extends ContainerAwareCommand
         $args = array();
         $class = get_class($manager);
 
-        for ($i = 0; $i < count($variables); $i++) {
+        for ($i = 0; $i < count($variables); ++$i) {
             $param = new \ReflectionParameter(array($class, $method), $i);
             $pclass = $param->getClass();
             $args[] = $pclass ?
-                $om->getRepository($pclass->name)->find($variables[$i]): $variables[$i];
+                $om->getRepository($pclass->name)->find($variables[$i]) : $variables[$i];
         }
 
         call_user_func_array(array($manager, $method), $args);

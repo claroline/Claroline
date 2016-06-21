@@ -24,15 +24,15 @@ class ThemeType extends AbstractType
         $builder
             ->add('name', 'text', [
                 'label' => 'name',
-                'constraints' => [new NotBlank()]
+                'constraints' => [new NotBlank()],
             ])
             ->add('stylesheet', 'file', [
                 'label' => 'stylesheet',
                 'translation_domain' => 'theme',
                 'constraints' => [
                     new NotBlank(),
-                    new File(['maxSize' => '300k'])
-                ]
+                    new File(['maxSize' => '300k']),
+                ],
             ]);
     }
 

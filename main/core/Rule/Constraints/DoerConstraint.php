@@ -38,7 +38,7 @@ class DoerConstraint extends AbstractConstraint
     {
         $userTypes = Rule::getUserTypes();
 
-        return (null !== $rule->getUser() && Rule::DOER_USER === $userTypes[$rule->getUserType()]);
+        return null !== $rule->getUser() && Rule::DOER_USER === $userTypes[$rule->getUserType()];
     }
 
     /**

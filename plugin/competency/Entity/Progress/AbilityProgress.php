@@ -108,6 +108,7 @@ class AbilityProgress
 
     /**
      * @param Activity $activity
+     *
      * @return bool
      */
     public function hasPassedActivity(Activity $activity)
@@ -122,7 +123,7 @@ class AbilityProgress
     {
         if (!$this->hasPassedActivity($activity)) {
             $this->passedActivityIds[] = $activity->getId();
-            $this->passedActivityCount++;
+            ++$this->passedActivityCount;
         }
     }
 
@@ -156,7 +157,7 @@ class AbilityProgress
     public function setUser(User $user)
     {
         $this->user = $user;
-        $this->userName = $user->getFirstName() . ' ' . $user->getLastName();
+        $this->userName = $user->getFirstName().' '.$user->getLastName();
     }
 
     /**

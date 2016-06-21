@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Tag;
 
@@ -25,7 +23,7 @@ class VersionCompareExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'version_compare' => new \Twig_Function_Method($this, 'versionCompare')
+            'version_compare' => new \Twig_Function_Method($this, 'versionCompare'),
         );
     }
 
@@ -38,4 +36,4 @@ class VersionCompareExtension extends \Twig_Extension
     {
         return version_compare($old, $new, $operator);
     }
-} 
+}

@@ -11,7 +11,7 @@ trait RequestTrait
     {
         if (!$this->client instanceof Client) {
             throw new \Exception(
-                'This method requires a client property of type ' .
+                'This method requires a client property of type '.
                 'Symfony\Component\BrowserKit\Client'
             );
         }
@@ -19,7 +19,7 @@ trait RequestTrait
         $server = $user ?
             [
                 'PHP_AUTH_USER' => $user->getUsername(),
-                'PHP_AUTH_PW' => $user->getPlainPassword()
+                'PHP_AUTH_PW' => $user->getPlainPassword(),
             ] :
             [];
 

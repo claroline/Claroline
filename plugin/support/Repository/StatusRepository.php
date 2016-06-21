@@ -46,7 +46,6 @@ class StatusRepository extends EntityRepository
         $query->setParameter('type', $type);
 
         return $query->getResult();
-
     }
 
     public function findOrderOfLastStatus()

@@ -13,7 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class PortfolioComment
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -42,7 +42,7 @@ class PortfolioComment
     protected $message;
 
     /**
-     * @var \Datetime $sendingDate
+     * @var \Datetime
      *
      * @ORM\Column(type="datetime", name="sending_date")
      * @Gedmo\Timestampable(on="create")
@@ -154,17 +154,17 @@ class PortfolioComment
      */
     public function getData()
     {
-        $sender    = $this->getSender();
+        $sender = $this->getSender();
 
         return array(
-            'id'      => $this->getId(),
-            'sender'  => array(
-                'lastName'  => $sender->getLastName(),
+            'id' => $this->getId(),
+            'sender' => array(
+                'lastName' => $sender->getLastName(),
                 'firstName' => $sender->getFirstName(),
-                'avatar'    => (null === $sender->getPicture()) ? null : 'uploads/pictures/' . $sender->getPicture()
+                'avatar' => (null === $sender->getPicture()) ? null : 'uploads/pictures/'.$sender->getPicture(),
             ),
             'message' => $this->getMessage(),
-            'date'    => $this->getSendingDate()->format(DATE_W3C)
+            'date' => $this->getSendingDate()->format(DATE_W3C),
         );
     }
 }

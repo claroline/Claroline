@@ -21,14 +21,6 @@
             errorContainer.hide();
         });
 
-        $(".badge_container").draggable({
-            helper: "clone",
-            revert: "invalid",
-            scroll: false,
-            cursor: "move",
-            zIndex: 100
-        });
-
         var clarobadgeDragOptions = {
             scroll: false,
             revert: "invalid",
@@ -37,8 +29,8 @@
         clarobadgeDragOptions.start = function(event, ui) {
             var collectionContainer = $(event.target).parents('li.collection');
             $(event.target)
-                .before(collectionContainer.find(".loading_badge"))
-                .data("dropped", false);
+              .before(collectionContainer.find(".loading_badge"))
+              .data("dropped", false);
             collectionContainer.after(deletingCollectionBadgeElement);
             deletingCollectionBadgeElement.show();
         };
@@ -80,28 +72,28 @@
             });
 
             collectionUpdateRequest
-                .success(function(data) {
-                    draggable.hide("fast", function() {
-                        $(this).remove();
+              .success(function(data) {
+                  draggable.hide("fast", function() {
+                      $(this).remove();
 
-                        var nbBadges = $(".badges .clarobadge", collectionContainer).length;
-                        if (0 == nbBadges) {
-                            $(".no_badge", collectionContainer).show();
-                        }
-                    });
-                })
-                .fail(function() {
-                    displayError('remove_badge_from_collection_error');
-                    draggable.animate({'top':'0px', 'left': '0px'}, 500, 'easeInOutCubic');
-                    draggable.effect("highlight", {color: '#d9534f'}, 1500);
-                    $("img", droppingZone).hide();
-                    $("span", droppingZone).show();
-                })
-                .always(function() {
-                    $("img", droppingZone).hide();
-                    $("span", droppingZone).show();
-                    deletingCollectionBadgeElement.hide("slow");
-                });
+                      var nbBadges = $(".badges .clarobadge", collectionContainer).length;
+                      if (0 == nbBadges) {
+                          $(".no_badge", collectionContainer).show();
+                      }
+                  });
+              })
+              .fail(function() {
+                  displayError('remove_badge_from_collection_error');
+                  draggable.animate({'top':'0px', 'left': '0px'}, 500, 'easeInOutCubic');
+                  draggable.effect("highlight", {color: '#d9534f'}, 1500);
+                  $("img", droppingZone).hide();
+                  $("span", droppingZone).show();
+              })
+              .always(function() {
+                  $("img", droppingZone).hide();
+                  $("span", droppingZone).show();
+                  deletingCollectionBadgeElement.hide("slow");
+              });
         }
 
         var dropOptions = {
@@ -158,16 +150,16 @@
             });
 
             collectionUpdateRequest
-                .success(function(data) {
-                    doAddBadgeToCollection(collectionContainer, badgeElement);
-                })
-                .fail(function() {
-                    displayError('add_badge_to_collection_error');
-                    if (0 == nbBadges) {
-                        collectionContainer.find(".no_badge").show();
-                    }
-                    loadingBadge.hide();
-                });
+              .success(function(data) {
+                  doAddBadgeToCollection(collectionContainer, badgeElement);
+              })
+              .fail(function() {
+                  displayError('add_badge_to_collection_error');
+                  if (0 == nbBadges) {
+                      collectionContainer.find(".no_badge").show();
+                  }
+                  loadingBadge.hide();
+              });
         }
 
         function doAddBadgeToCollection(collectionContainer, badgeElement) {
@@ -188,15 +180,15 @@
             var collectionCreationRequest = $.post(apiUrl, {'badge_collection_form[name]': $(".collection_title_input", newCollection).val()});
 
             collectionCreationRequest
-                .success(function(data) {
-                    addCollection(newCollection, data)
-                })
-                .fail(function() {
-                    displayError('add_collection_error');
-                })
-                .always(function () {
-                    addButton.button('reset');
-                });
+              .success(function(data) {
+                  addCollection(newCollection, data)
+              })
+              .fail(function() {
+                  displayError('add_collection_error');
+              })
+              .always(function () {
+                  addButton.button('reset');
+              });
         });
 
         function addCollection(newCollection, data) {
@@ -206,19 +198,19 @@
             }
             else {
                 existedCollection
-                    .filter(".editing")
-                    .each(function(index, element) {
-                        doUpdateCollectionTitle($(element));
-                    });
+                  .filter(".editing")
+                  .each(function(index, element) {
+                      doUpdateCollectionTitle($(element));
+                  });
             }
 
             $(newCollection).attr("data-id", data.collection.id);
 
             newCollection
-                .droppable(dropOptions)
-                .appendTo($("#collections_list"))
-                .show('fast')
-                .css("overflow", "visible"); // a bug in the jquery version we use add overflow hidden to the element at the end of the animation
+              .droppable(dropOptions)
+              .appendTo($("#collections_list"))
+              .show('fast')
+              .css("overflow", "visible"); // a bug in the jquery version we use add overflow hidden to the element at the end of the animation
 
             collectionsList.animate({scrollTop: newCollection.offset().top}, 500, 'easeInOutCubic');
 
@@ -233,15 +225,15 @@
         });
 
         $(collectionsList)
-            .on('click', '.btn-edit',function(event){
-                makeCollectionTitleEditable($(event.target).parents('li.collection'));
-            })
-            .on('click', '.btn-success',function(event){
-                updateCollectionTitle($(event.target).parents('li.collection'));
-            })
-            .on('click', '.btn-edit-cancel',function(event){
-                doUpdateCollectionTitle($(event.target).parents('li.collection'));
-            });
+          .on('click', '.btn-edit',function(event){
+              makeCollectionTitleEditable($(event.target).parents('li.collection'));
+          })
+          .on('click', '.btn-success',function(event){
+              updateCollectionTitle($(event.target).parents('li.collection'));
+          })
+          .on('click', '.btn-edit-cancel',function(event){
+              doUpdateCollectionTitle($(event.target).parents('li.collection'));
+          });
 
         function updateCollectionTitle(collectionContainer) {
             var editButton = $(".btn-success", collectionContainer);
@@ -259,16 +251,16 @@
             });
 
             collectionUpdateRequest
-                .success(function(data) {
-                    doUpdateCollectionTitle(collectionContainer);
-                })
-                .fail(function() {
-                    displayError('edit_title_collection_error');
-                })
-                .always(function () {
-                    editButton.button('reset');
-                    collectionTitleInput.removeAttr('disabled');
-                });
+              .success(function(data) {
+                  doUpdateCollectionTitle(collectionContainer);
+              })
+              .fail(function() {
+                  displayError('edit_title_collection_error');
+              })
+              .always(function () {
+                  editButton.button('reset');
+                  collectionTitleInput.removeAttr('disabled');
+              });
         }
 
         function doUpdateCollectionTitle(collectionContainer) {
@@ -276,8 +268,8 @@
             var collectionTitleInput = $(".collection_title_input", collectionContainer);
 
             collectionTitle
-                .html(collectionTitleInput.val())
-                .show();
+              .html(collectionTitleInput.val())
+              .show();
 
             collectionTitleInput.hide();
             collectionContainer.removeClass('editing');
@@ -324,15 +316,15 @@
             });
 
             collectionDeleteRequest
-                .success(function(data) {
-                    deleteCollection(collectionContainer);
-                })
-                .fail(function() {
-                    displayError('delete_collection_error');
-                })
-                .always(function() {
-                    deletingCollectionElement.hide();
-                });
+              .success(function(data) {
+                  deleteCollection(collectionContainer);
+              })
+              .fail(function() {
+                  displayError('delete_collection_error');
+              })
+              .always(function() {
+                  deletingCollectionElement.hide();
+              });
         }
 
         function deleteCollection(collectionContainer) {
@@ -366,9 +358,9 @@
 
             var exitingCollection = $(".collection.editing", collectionsList);
             exitingCollection
-                .each(function(index, element) {
-                    doUpdateCollectionTitle($(element));
-                });
+              .each(function(index, element) {
+                  doUpdateCollectionTitle($(element));
+              });
 
             var collectionUpdateRequest = $.ajax({
                 url: apiUrl + collectionContainer.attr("data-id"),
@@ -379,21 +371,21 @@
             });
 
             collectionUpdateRequest
-                .success(function(data) {
-                    updateSharedState(sharedLink, sharedState);
+              .success(function(data) {
+                  updateSharedState(sharedLink, sharedState);
 
-                    if (1 == sharedState) {
-                        sharedLink.parent().find(".share_collection").attr("href", data.collection.slug);
-                    }
-                })
-                .fail(function() {
-                    updateSharedState(sharedLink, (0 == sharedState)? 1 : 0);
-                    var errorMessage = "edit_is_shared_collection_error";
-                    if (1 == sharedState) {
-                        errorMessage = "edit_is_unshared_collection_error";
-                    }
-                    displayError(errorMessage);
-                });
+                  if (1 == sharedState) {
+                      sharedLink.parent().find(".share_collection").attr("href", data.collection.slug);
+                  }
+              })
+              .fail(function() {
+                  updateSharedState(sharedLink, (0 == sharedState)? 1 : 0);
+                  var errorMessage = "edit_is_shared_collection_error";
+                  if (1 == sharedState) {
+                      errorMessage = "edit_is_unshared_collection_error";
+                  }
+                  displayError(errorMessage);
+              });
         });
 
         function updateSharedState(sharedLink, sharedState) {
@@ -429,21 +421,21 @@
             });
 
             badgeUpdateRequest
-                .success(function(data) {
-                    updateBadgeSharedState(sharedLink, sharedState);
+              .success(function(data) {
+                  updateBadgeSharedState(sharedLink, sharedState);
 
-                    if (1 == sharedState) {
-                        sharedLink.parent().find(".share_badge").attr("href", data.user_badge.url);
-                    }
-                })
-                .fail(function() {
-                    updateBadgeSharedState(sharedLink, (0 == sharedState)? 1 : 0);
-                    var errorMessage = "edit_is_shared_badge_error";
-                    if (1 == sharedState) {
-                        errorMessage = "edit_is_unshared_badge_error";
-                    }
-                    displayError(errorMessage);
-                });
+                  if (1 == sharedState) {
+                      sharedLink.parent().find(".share_badge").attr("href", data.user_badge.url);
+                  }
+              })
+              .fail(function() {
+                  updateBadgeSharedState(sharedLink, (0 == sharedState)? 1 : 0);
+                  var errorMessage = "edit_is_shared_badge_error";
+                  if (1 == sharedState) {
+                      errorMessage = "edit_is_unshared_badge_error";
+                  }
+                  displayError(errorMessage);
+              });
         });
 
         function updateBadgeSharedState(sharedLink, sharedState) {

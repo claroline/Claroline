@@ -18,13 +18,13 @@ class Updater021400 extends Updater
 
     public function __construct($container)
     {
-        $this->container     = $container;
+        $this->container = $container;
         $this->objectManager = $container->get('claroline.persistence.object_manager');
         $ds = DIRECTORY_SEPARATOR;
         $this->oldCachePath = $container
-            ->getParameter('kernel.root_dir') . $ds . 'cache' . $ds . 'claroline.cache.php';
+            ->getParameter('kernel.root_dir').$ds.'cache'.$ds.'claroline.cache.php';
         $this->newCachePath = $container
-                ->getParameter('kernel.root_dir') . $ds . 'cache' . $ds . 'claroline.cache.ini';
+                ->getParameter('kernel.root_dir').$ds.'cache'.$ds.'claroline.cache.ini';
     }
 
     public function postUpdate()
@@ -50,7 +50,7 @@ class Updater021400 extends Updater
             array('desktop_tools', 'icon-pencil'),
             array('platform_logs', 'icon-reorder'),
             array('platform_analytics', 'icon-bar-chart'),
-            array('roles_management', 'icon-group')
+            array('roles_management', 'icon-group'),
         );
 
         $existingTools = $this->objectManager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll();

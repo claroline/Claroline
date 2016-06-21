@@ -5,7 +5,6 @@ namespace Icap\BlogBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
@@ -17,7 +16,7 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
 class Comment extends Statusable
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -26,14 +25,14 @@ class Comment extends Statusable
     protected $id;
 
     /**
-     * @var string $message
+     * @var string
      *
      * @ORM\Column(type="text")
      */
     protected $message;
 
     /**
-     * @var \Datetime $creationDate
+     * @var \Datetime
      *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", name="creation_date")
@@ -41,7 +40,7 @@ class Comment extends Statusable
     protected $creationDate;
 
     /**
-     * @var \Datetime $publicationDate
+     * @var \Datetime
      *
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="status", value="1")
@@ -49,7 +48,7 @@ class Comment extends Statusable
     protected $publicationDate;
 
     /**
-     * @var \Datetime $updateDate
+     * @var \Datetime
      *
      * @ORM\Column(type="datetime", name="update_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="message")
@@ -57,7 +56,7 @@ class Comment extends Statusable
     protected $updateDate;
 
     /**
-     * @var User $author
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -78,9 +77,9 @@ class Comment extends Statusable
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -88,9 +87,10 @@ class Comment extends Statusable
     }
 
     /**
-     * Set message
+     * Set message.
      *
-     * @param  string  $message
+     * @param string $message
+     *
      * @return Comment
      */
     public function setMessage($message)
@@ -101,7 +101,7 @@ class Comment extends Statusable
     }
 
     /**
-     * Get message
+     * Get message.
      *
      * @return string
      */
@@ -111,9 +111,10 @@ class Comment extends Statusable
     }
 
     /**
-     * Set creationDate
+     * Set creationDate.
      *
-     * @param  \DateTime $creationDate
+     * @param \DateTime $creationDate
+     *
      * @return Comment
      */
     public function setCreationDate($creationDate)
@@ -124,7 +125,7 @@ class Comment extends Statusable
     }
 
     /**
-     * Get creationDate
+     * Get creationDate.
      *
      * @return \DateTime
      */
@@ -134,9 +135,10 @@ class Comment extends Statusable
     }
 
     /**
-     * Set author
+     * Set author.
      *
-     * @param  User    $author
+     * @param User $author
+     *
      * @return Comment
      */
     public function setAuthor(User $author = null)
@@ -147,7 +149,7 @@ class Comment extends Statusable
     }
 
     /**
-     * Get author
+     * Get author.
      *
      * @return User
      */
@@ -157,9 +159,10 @@ class Comment extends Statusable
     }
 
     /**
-     * Set post
+     * Set post.
      *
-     * @param  Post    $post
+     * @param Post $post
+     *
      * @return Comment
      */
     public function setPost(Post $post = null)
@@ -170,7 +173,7 @@ class Comment extends Statusable
     }
 
     /**
-     * Get post
+     * Get post.
      *
      * @return Post
      */
@@ -221,6 +224,7 @@ class Comment extends Statusable
 
     /**
      * @param UserPickerContent $userPicker
+     *
      * @return $this
      */
     public function setUserPicker(UserPickerContent $userPicker)

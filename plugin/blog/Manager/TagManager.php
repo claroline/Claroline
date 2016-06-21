@@ -12,7 +12,7 @@ class TagManager
     protected $tagRepository;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param \Icap\BlogBundle\Repository\TagRepository $tagRepository
      */
@@ -43,10 +43,11 @@ class TagManager
     }
 
     /**
-     * Load or Create tag following to a given string or list of names
+     * Load or Create tag following to a given string or list of names.
      *
-     * @param  string or array $tagNames
-     * @return array           tags
+     * @param string or array $tagNames
+     *
+     * @return array tags
      */
     public function loadOrCreateTags($tagNames)
     {
@@ -63,9 +64,10 @@ class TagManager
     }
 
     /**
-     * Load or Create tag following to a given name
+     * Load or Create tag following to a given name.
      *
-     * @param  string                      $name
+     * @param string $name
+     *
      * @return \Icap\BlogBundle\Entity\Tag
      */
     public function loadOrCreateTag($name)
@@ -79,9 +81,10 @@ class TagManager
     }
 
     /**
-     * Load a tag following to its name
+     * Load a tag following to its name.
      *
-     * @param  string                      $name
+     * @param string $name
+     *
      * @return \Icap\BlogBundle\Entity\Tag
      */
     public function loadTag($name)
@@ -90,10 +93,11 @@ class TagManager
     }
 
     /**
-     * Load a blog tags, calculating their weights
+     * Load a blog tags, calculating their weights.
      *
      * @param \Icap\BlogBundle\Entity\Blog $blog
      * @param int max
+     *
      * @return array tags
      */
     public function loadByBlog(Blog $blog, $max = null)
@@ -113,7 +117,7 @@ class TagManager
                 $tag = $result[0];
 
                 if ($diff > 10) {
-                    $weight = round(((intval($result['frequency']) - $minWeight)/$diff)*9 + 1);
+                    $weight = round(((intval($result['frequency']) - $minWeight) / $diff) * 9 + 1);
                 } else {
                     $weight = intval($result['frequency']) - $minWeight + 1;
                 }
@@ -122,7 +126,7 @@ class TagManager
                     'name' => $tag->getName(),
                     'slug' => $tag->getSlug(),
                     'weight' => $weight,
-                    'countPosts' => intval($result['countPosts'])
+                    'countPosts' => intval($result['countPosts']),
                 ];
                 array_push($tags, $tagArray);
             }
@@ -132,9 +136,10 @@ class TagManager
     }
 
     /**
-     * Create, not persist, tag given its name
+     * Create, not persist, tag given its name.
      *
-     * @param  String     $name
+     * @param string $name
+     *
      * @return TagManager the generated Tag
      */
     public function createTag($name)

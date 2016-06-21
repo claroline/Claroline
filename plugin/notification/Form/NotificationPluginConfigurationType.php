@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -17,8 +17,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class NotificationPluginConfigurationType
- * @package Icap\NotificationBundle\Form
+ * Class NotificationPluginConfigurationType.
  *
  * @DI\FormType
  */
@@ -30,26 +29,26 @@ class NotificationPluginConfigurationType extends AbstractType
             ->add('dropdownItems', 'integer',
                 array(
                     'label' => 'dropdown_items',
-                    'theme_options' => array('control_width' => 'col-md-2')
+                    'theme_options' => array('control_width' => 'col-md-2'),
                 )
             )
             ->add('maxPerPage', 'integer',
                 array(
                     'label' => 'max_per_page',
-                    'theme_options' => array('control_width' => 'col-md-2')
+                    'theme_options' => array('control_width' => 'col-md-2'),
                 )
             )
             ->add('purgeEnabled', 'checkbox',
                 array(
                     'required' => false,
                     'label' => 'purge_enabled',
-                    'theme_options' => array('control_width' => 'col-md-2')
+                    'theme_options' => array('control_width' => 'col-md-2'),
                 )
             )
             ->add('purgeAfterDays', 'integer',
                 array(
                     'label' => 'purge_after_days',
-                    'theme_options' => array('control_width' => 'col-md-2')
+                    'theme_options' => array('control_width' => 'col-md-2'),
                 )
             );
     }
@@ -69,8 +68,8 @@ class NotificationPluginConfigurationType extends AbstractType
         $resolver->setDefaults(
             array(
                 'translation_domain' => 'notification',
-                'data_class'         => 'Icap\NotificationBundle\Entity\NotificationPluginConfiguration',
-                'csrf_protection'    => true
+                'data_class' => 'Icap\NotificationBundle\Entity\NotificationPluginConfiguration',
+                'csrf_protection' => true,
             )
         );
     }

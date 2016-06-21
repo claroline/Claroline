@@ -2,11 +2,9 @@
 
 namespace Icap\BlogBundle\Form;
 
-use Icap\BlogBundle\Form\DataTransformer\IntToBlogTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zenstruck\Bundle\FormBundle\Form\DataTransformer\AjaxEntityTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -20,8 +18,8 @@ class WidgetTagListBlogType extends AbstractType
         $builder
             ->add('resourceNode', 'resourcePicker', array(
                 'theme_options' => array(
-                    'label_width'   => 'col-md-6',
-                    'control_width' => 'col-md-6'
+                    'label_width' => 'col-md-6',
+                    'control_width' => 'col-md-6',
                 ),
                 'attr' => array(
                     'data-is-picker-multi-select-allowed' => 0,
@@ -29,14 +27,14 @@ class WidgetTagListBlogType extends AbstractType
                     'data-type-white-list' => 'icap_blog',
                 ),
                 'display_browse_button' => false,
-                'display_download_button' => false
+                'display_download_button' => false,
             ))
             ->add('tag_cloud', 'choice', array(
-                'choices'       => array("0" => "classic", "1" => "3D", "2" => "advanced"),
-                'required'      => false,
-                'expanded'      => true,
-                'multiple'      => false,
-                'empty_value'   => false
+                'choices' => array('0' => 'classic', '1' => '3D', '2' => 'advanced'),
+                'required' => false,
+                'expanded' => true,
+                'multiple' => false,
+                'empty_value' => false,
             ));
     }
 
@@ -49,8 +47,8 @@ class WidgetTagListBlogType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\BlogBundle\Entity\WidgetTagListBlog',
-                'translation_domain' => 'icap_blog'
+                'data_class' => 'Icap\BlogBundle\Entity\WidgetTagListBlog',
+                'translation_domain' => 'icap_blog',
             )
         );
     }

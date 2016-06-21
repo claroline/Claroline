@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Claroline\CoreBundle\Entity\User;
 
 class FacetRepository extends EntityRepository
 {
@@ -30,18 +31,17 @@ class FacetRepository extends EntityRepository
             SELECT facet FROM Claroline\CoreBundle\Entity\Facet\Facet facet
             ORDER BY facet.position
         ";
-        $query = $this->_em->createQuery($dql);
+            $query = $this->_em->createQuery($dql);
         } else {
-
-        $dql = "
+            $dql = "
             SELECT facet FROM Claroline\CoreBundle\Entity\Facet\Facet facet
             JOIN facet.roles role
             WHERE role.name IN (:rolenames)
             ORDER BY facet.position
         ";
 
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('rolenames', $roleNames);
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('rolenames', $roleNames);
         }
         if ($max != null) {
             $query->setMaxResults($max);
@@ -49,4 +49,24 @@ class FacetRepository extends EntityRepository
 
         return $query->getResult();
     }
-} 
+
+    public function findByUser(User $user, $showAll = false)
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->leftJoin('f.panelFacets', 'pf')
+            ->leftJoin('pf.fieldsFacet', 'ff')
+            ->leftJoin('ff.fieldsFacetValue', 'ffv');
+
+        if (!$showAll) {
+            $qb
+               ->join('f.roles', 'frole')
+               ->join('pf.panelFacetsRole', 'pfr')
+               ->andWhere('frole in (:roles)')
+               ->andWhere('pfr.role in (:roles)')
+               ->andWhere('pfr.canOpen = true')
+               ->setParameter('roles', $user->getEntityRoles());
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+}

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity\Contact;
 
-use Claroline\CoreBundle\Entity\Contact\Category;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;

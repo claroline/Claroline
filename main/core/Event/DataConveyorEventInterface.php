@@ -20,7 +20,7 @@ interface DataConveyorEventInterface
     /**
      * Checks if the event has been populated.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPopulated();
 }

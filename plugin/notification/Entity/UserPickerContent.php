@@ -4,8 +4,8 @@ namespace Icap\NotificationBundle\Entity;
 
 class UserPickerContent
 {
-    private $originalText = "";
-    private $finalText = "";
+    private $originalText = '';
+    private $finalText = '';
     private $userIds = array();
 
     public function __construct($text)

@@ -24,7 +24,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -52,13 +51,12 @@ class RolesController extends Controller
         FormFactory              $formFactory,
         Request                  $request,
         ObjectManager            $om
-    )
-    {
-        $this->toolManager   = $toolManager;
-        $this->roleManager   = $roleManager;
-        $this->formFactory   = $formFactory;
-        $this->request       = $request;
-        $this->om            = $om;
+    ) {
+        $this->toolManager = $toolManager;
+        $this->roleManager = $roleManager;
+        $this->formFactory = $formFactory;
+        $this->request = $request;
+        $this->om = $om;
     }
 
     /**
@@ -94,7 +92,7 @@ class RolesController extends Controller
      * @EXT\Method("POST")
      *
      * @param AdminTool $tool
-     * @param Role $role
+     * @param Role      $role
      *
      * @return \Claroline\CoreBundle\Controller\Administration\Response
      */
@@ -113,7 +111,7 @@ class RolesController extends Controller
      * @EXT\Method("POST")
      *
      * @param AdminTool $tool
-     * @param Role $role
+     * @param Role      $role
      *
      * @return \Claroline\CoreBundle\Controller\Administration\Response
      */
@@ -166,7 +164,7 @@ class RolesController extends Controller
                     'id' => $role->getId(),
                     'maxUsers' => $role->getMaxUsers(),
                     'translationKey' => $role->getTranslationKey(),
-                    'count' => 0
+                    'count' => 0,
                 )
             );
         }
@@ -209,7 +207,7 @@ class RolesController extends Controller
             array(
                 'name' => $role->getName(),
                 'limit' => $role->getMaxUsers(),
-                'translationKey' => $role->getTranslationKey()
+                'translationKey' => $role->getTranslationKey(),
             )
         );
     }
@@ -223,6 +221,7 @@ class RolesController extends Controller
      * @EXT\Method("POST")
      *
      * @param Role $role
+     *
      * @return JsonResponse
      */
     public function initializeRoleLimitAction(Role $role)
@@ -233,7 +232,7 @@ class RolesController extends Controller
             array(
                 'name' => $role->getName(),
                 'limit' => $role->getMaxUsers(),
-                'translationKey' => $role->getTranslationKey()
+                'translationKey' => $role->getTranslationKey(),
             )
         );
     }
@@ -247,6 +246,7 @@ class RolesController extends Controller
      * @EXT\Method("POST")
      *
      * @param Role $role
+     *
      * @return JsonResponse
      */
     public function increaseRoleMaxUsers(Role $role, $amount)
@@ -257,7 +257,7 @@ class RolesController extends Controller
                     'name' => $role->getName(),
                     'limit' => $role->getMaxUsers(),
                     'translationKey' => $role->getTranslationKey(),
-                    'error' => 'negative_amount_increased'
+                    'error' => 'negative_amount_increased',
                 ),
                 500
             );
@@ -268,7 +268,7 @@ class RolesController extends Controller
             array(
                 'name' => $role->getName(),
                 'limit' => $role->getMaxUsers(),
-                'translationKey' => $role->getTranslationKey()
+                'translationKey' => $role->getTranslationKey(),
             )
         );
     }
@@ -282,6 +282,7 @@ class RolesController extends Controller
      * @EXT\Method("POST")
      *
      * @param Role $role
+     *
      * @return JsonResponse
      */
     public function editRoleNameAction(Role $role, $name)
@@ -291,7 +292,7 @@ class RolesController extends Controller
                 array(
                     'name' => $role->getName(),
                     'limit' => $role->getMaxUsers(),
-                    'translationKey' => $role->getTranslationKey()
+                    'translationKey' => $role->getTranslationKey(),
                 ),
                 500
             );
@@ -304,7 +305,7 @@ class RolesController extends Controller
             array(
                 'name' => $role->getName(),
                 'limit' => $role->getMaxUsers(),
-                'translationKey' => $role->getTranslationKey()
+                'translationKey' => $role->getTranslationKey(),
             )
         );
     }
@@ -318,6 +319,7 @@ class RolesController extends Controller
      * @EXT\Method("GET")
      *
      * @param Role $role
+     *
      * @return JsonResponse
      */
     public function invertPersonalWorkspaceCreationAction(Role $role)

@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Activity\AbstractEvaluation;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Manager\ActivityManager;
 use Claroline\CoreBundle\Rule\Validator;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -35,8 +34,7 @@ class ActivityRuleListener
     public function __construct(
         ActivityManager $activityManager,
         Validator $ruleValidator
-    )
-    {
+    ) {
         $this->activityManager = $activityManager;
         $this->ruleValidator = $ruleValidator;
     }
@@ -52,7 +50,7 @@ class ActivityRuleListener
         $dateLog = $log->getDateLog();
         $action = $log->getAction();
         $resourceNode = $log->getResourceNode();
-        $user =  $log->getDoer();
+        $user = $log->getDoer();
 
         if (!is_null($user)) {
             $activityRules = is_null($resourceNode) ?

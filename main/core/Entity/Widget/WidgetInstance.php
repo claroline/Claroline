@@ -66,7 +66,6 @@ class WidgetInstance
      */
     protected $icon;
 
-
     public function getId()
     {
         return $this->id;
@@ -138,8 +137,8 @@ class WidgetInstance
     public function serializeForWidgetPicker()
     {
         $return = array(
-            'id'    => $this->id,
-            'name'  => $this->name
+            'id' => $this->id,
+            'name' => $this->name,
         );
 
         return $return;

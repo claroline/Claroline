@@ -85,6 +85,7 @@ class ActivityManagerTest extends UnitTestCase
 
     /**
      * @dataProvider targetProvider
+     *
      * @param mixed $target
      */
     public function testRemoveLink($target)
@@ -96,12 +97,11 @@ class ActivityManagerTest extends UnitTestCase
         $this->assertFalse($target->isLinkedToActivity($activity));
     }
 
-
     public function targetProvider()
     {
         return [
             [new Ability()],
-            [new Competency()]
+            [new Competency()],
         ];
     }
 }

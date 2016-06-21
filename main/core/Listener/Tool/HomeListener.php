@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -46,8 +45,7 @@ class HomeListener
         HomeTabManager $homeTabManager,
         TwigEngine $templating,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->container = $container;
         $this->httpKernel = $httpKernel;
         $this->homeTabManager = $homeTabManager;
@@ -64,7 +62,7 @@ class HomeListener
     {
         $params = array(
             '_controller' => 'ClarolineCoreBundle:Tool\Home:displayDesktopHomeTab',
-            'tabId' => -1
+            'tabId' => -1,
         );
         $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
@@ -82,7 +80,7 @@ class HomeListener
         $params = array(
             '_controller' => 'ClarolineCoreBundle:Workspace:displayWorkspaceHomeTab',
             'workspace' => $event->getWorkspace()->getId(),
-            'tabId' => -1
+            'tabId' => -1,
         );
         $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

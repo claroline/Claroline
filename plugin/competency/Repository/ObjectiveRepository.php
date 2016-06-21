@@ -32,8 +32,9 @@ class ObjectiveRepository extends EntityRepository
      * Returns the objectives assigned to a user. Objectives assigned to
      * groups whose the user is a member of are also returned.
      *
-     * @param User  $user
-     * @param bool  $asArray
+     * @param User $user
+     * @param bool $asArray
+     *
      * @return array
      */
     public function findByUser(User $user, $asArray = true)
@@ -72,6 +73,7 @@ class ObjectiveRepository extends EntityRepository
      * Returns an array representation of the objectives assigned to a group.
      *
      * @param Group $group
+     *
      * @return array
      */
     public function findByGroup(Group $group)
@@ -91,8 +93,9 @@ class ObjectiveRepository extends EntityRepository
      * given competency. Objectives assigned to groups whose the
      * user is a member of are also returned.
      *
-     * @param Competency    $competency
-     * @param User          $user
+     * @param Competency $competency
+     * @param User       $user
+     *
      * @return array
      */
     public function findByCompetencyAndUser(Competency $competency, User $user)
@@ -115,7 +118,7 @@ class ObjectiveRepository extends EntityRepository
             ))
             ->setParameters([
                 'competency' => $competency,
-                'user' => $user
+                'user' => $user,
             ])
             ->distinct()
             ->getQuery()
@@ -126,6 +129,7 @@ class ObjectiveRepository extends EntityRepository
      * Returns all the users and group members who have a given objective.
      *
      * @param Objective $objective
+     *
      * @return array
      */
     public function findUsersWithObjective(Objective $objective)
@@ -158,6 +162,7 @@ class ObjectiveRepository extends EntityRepository
      * who have that objective are counted.
      *
      * @param Objective $objective
+     *
      * @return \Doctrine\ORM\Query
      */
     public function getUsersWithObjectiveCountQuery(Objective $objective = null, Group $group = null)
@@ -172,6 +177,7 @@ class ObjectiveRepository extends EntityRepository
      * who have that objective are included.
      *
      * @param Objective $objective
+     *
      * @return \Doctrine\ORM\Query
      */
     public function getUsersWithObjectiveQuery(Objective $objective = null)
@@ -185,6 +191,7 @@ class ObjectiveRepository extends EntityRepository
      * only the groups which have that objective are counted.
      *
      * @param Objective $objective
+     *
      * @return \Doctrine\ORM\Query
      */
     public function getGroupsWithObjectiveCountQuery(Objective $objective = null)
@@ -198,6 +205,7 @@ class ObjectiveRepository extends EntityRepository
      * only the groups which have that objective are counted.
      *
      * @param Objective $objective
+     *
      * @return \Doctrine\ORM\Query
      */
     public function getGroupsWithObjectiveQuery(Objective $objective = null)
@@ -209,6 +217,7 @@ class ObjectiveRepository extends EntityRepository
      * Returns the query object for counting all the members of a group.
      *
      * @param Group $group
+     *
      * @return \Doctrine\ORM\Query
      */
     public function getGroupUsersQuery(Group $group)
@@ -221,6 +230,7 @@ class ObjectiveRepository extends EntityRepository
      * including progress data.
      *
      * @param Group $group
+     *
      * @return \Doctrine\ORM\Query
      */
     public function getGroupUsersCountQuery(Group $group)

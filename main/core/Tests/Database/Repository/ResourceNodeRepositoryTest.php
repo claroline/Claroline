@@ -28,7 +28,7 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         self::createWorkspace('ws_2');
         self::createRole('ROLE_1', self::get('ws_1'));
         self::createRole('ROLE_2', self::get('ws_2'));
-        self::$roleManagerName = 'ROLE_WS_MANAGER_' . self::get('ws_1')->getGuid();
+        self::$roleManagerName = 'ROLE_WS_MANAGER_'.self::get('ws_1')->getGuid();
         self::createRole(self::$roleManagerName);
         self::createUser('john', array(self::get('ROLE_1'), self::get('ROLE_2')));
         self::createUser('jane', array(self::get('ROLE_2')));
@@ -250,7 +250,7 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         $infos = self::$repo->findWorkspaceInfoByIds(
             array(
                 self::get('dir_4')->getResourceNode()->getId(),
-                self::get('dir_5')->getResourceNode()->getId()
+                self::get('dir_5')->getResourceNode()->getId(),
             )
         );
         $this->assertEquals(2, count($infos));

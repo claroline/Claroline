@@ -4,8 +4,6 @@ namespace Icap\BlogBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
-use Icap\BlogBundle\Entity\Blog;
-use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
@@ -42,7 +40,7 @@ class WidgetBlog
     protected $widgetInstance;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {

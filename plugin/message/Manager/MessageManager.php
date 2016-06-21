@@ -52,8 +52,7 @@ class MessageManager
         MailManager $mailManager,
         ObjectManager $om,
         PagerFactory $pagerFactory
-    )
-    {
+    ) {
         $this->mailManager = $mailManager;
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
@@ -69,9 +68,9 @@ class MessageManager
      *
      * @param $content      The message content
      * @param $object       The message object
-     * @param User[] $users The users receiving the message
-     * @param null $sender  The user sending the message
-     * @param null $parent  The message parent (is it's a discussion)
+     * @param User[] $users  The users receiving the message
+     * @param null   $sender The user sending the message
+     * @param null   $parent The message parent (is it's a discussion)
      *
      * @return Message
      */
@@ -85,7 +84,7 @@ class MessageManager
         $stringTo = '';
 
         foreach ($users as $user) {
-            $stringTo .= $user->getUsername() . ';';
+            $stringTo .= $user->getUsername().';';
         }
 
         $message->setTo($stringTo);
@@ -95,7 +94,7 @@ class MessageManager
 
     /**
      * @param \Claroline\MessageBundle\Entity\Message $message
-     * @param boolean setAsSent
+     * @param bool setAsSent
      *
      * @return \Claroline\MessageBundle\Entity\Message
      */
@@ -103,8 +102,7 @@ class MessageManager
         Message $message,
         $setAsSent = true,
         $sendMail = true
-    )
-    {
+    ) {
         if (substr($receiversString = $message->getTo(), -1, 1) === ';') {
             $receiversString = substr_replace($receiversString, '', -1);
         }
@@ -214,28 +212,39 @@ class MessageManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\User $receiver
-     * @param string $search
-     * @param integer $page
+     * @param string                            $search
+     * @param int                               $page
+     *
+     * @deprecated
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getReceivedMessages(User $receiver, $search = '', $page = 1)
+    public function getReceivedMessagesPager(User $receiver, $search = '', $page = 1)
     {
         $query = $search === '' ?
-            $this->userMessageRepo->findReceived($receiver, false):
+            $this->userMessageRepo->findReceived($receiver, false) :
             $this->userMessageRepo->findReceivedByObjectOrSender($receiver, $search, false);
 
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    public function getReceivedMessages(User $receiver, $search = '')
+    {
+        $query = $search === '' ?
+        $this->userMessageRepo->findReceived($receiver, false) :
+        $this->userMessageRepo->findReceivedByObjectOrSender($receiver, $search, false);
+
+        return $query->getResult();
+    }
+
     /**
      * @param \Claroline\CoreBundle\Entity\User $sender
-     * @param string $search
-     * @param integer $page
+     * @param string                            $search
+     * @param int                               $page
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getSentMessages(User $sender, $search = '', $page = 1)
+    public function getSentMessagesPager(User $sender, $search = '', $page = 1)
     {
         $query = $search === '' ?
             $this->userMessageRepo->findSent($sender, false) :
@@ -244,20 +253,38 @@ class MessageManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    public function getSentMessages(User $sender, $search = '', $page = 1)
+    {
+        $query = $search === '' ?
+        $this->userMessageRepo->findSent($sender, false) :
+        $this->userMessageRepo->findSentByObject($sender, $search, false);
+
+        return $query->getResult();
+    }
+
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string $search
-     * @param integer $page
+     * @param string                            $search
+     * @param int                               $page
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getRemovedMessages(User $user, $search = '', $page = 1)
+    public function getRemovedMessagesPager(User $user, $search = '', $page = 1)
     {
         $query = $search === '' ?
-            $this->userMessageRepo->findRemoved($user, false):
+            $this->userMessageRepo->findRemoved($user, false) :
             $this->userMessageRepo->findRemovedByObjectOrSender($user, $search, false);
 
         return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getRemovedMessages(User $user, $search = '', $page = 1)
+    {
+        $query = $search === '' ?
+        $this->userMessageRepo->findRemoved($user, false) :
+        $this->userMessageRepo->findRemovedByObjectOrSender($user, $search, false);
+
+        return $query->getResult();
     }
 
     /**
@@ -274,7 +301,7 @@ class MessageManager
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
      *
-     * @return integer
+     * @return int
      */
     public function getNbUnreadMessages(User $user)
     {
@@ -282,7 +309,7 @@ class MessageManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User         $user
      * @param \Claroline\MessageBundle\Entity\Message[] $messages
      */
     public function markAsRead(User $user, array $messages)
@@ -323,8 +350,8 @@ class MessageManager
     /**
      * Generates a string containing the usernames from a list of users.
      *
-     * @param \Claroline\CoreBundle\Entity\User[] $receivers
-     * @param \Claroline\CoreBundle\Entity\Group[] $groups
+     * @param \Claroline\CoreBundle\Entity\User[]      $receivers
+     * @param \Claroline\CoreBundle\Entity\Group[]     $groups
      * @param \Claroline\CoreBundle\Entity\Workspace[] $workspaces
      *
      * @return string
@@ -340,13 +367,13 @@ class MessageManager
         $string = implode(';', $usernames);
 
         foreach ($groups as $group) {
-            $el = '{' . $group->getName() .'}';
-            $string .= $string === '' ? $el: ';' . $el;
+            $el = '{'.$group->getName().'}';
+            $string .= $string === '' ? $el : ';'.$el;
         }
 
         foreach ($workspaces as $workspace) {
-            $el = '[' . $workspace->getCode() .']';
-            $string .= $string === '' ? $el: ';' . $el;
+            $el = '['.$workspace->getCode().']';
+            $string .= $string === '' ? $el : ';'.$el;
         }
 
         return $string;
@@ -359,11 +386,11 @@ class MessageManager
 
     /**
      * @param \Claroline\MessageBundle\Entity\Message[] $userMessages
-     * @param string $flag
+     * @param string                                    $flag
      */
     private function markMessages(array $userMessages, $flag)
     {
-        $method = 'markAs' . $flag;
+        $method = 'markAs'.$flag;
 
         foreach ($userMessages as $userMessage) {
             $userMessage->$method();
@@ -378,8 +405,7 @@ class MessageManager
         $content,
         $object,
         $sender = null,
-        $withMail = true
-    )
+        $withMail = true)
     {
         $users = array();
 

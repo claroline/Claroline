@@ -18,9 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\User;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 use Claroline\CoreBundle\Entity\Calendar\TimeSlot;
-
 use Claroline\CoreBundle\Entity\Calendar\Year;
 
 /**
@@ -160,16 +158,16 @@ class Organization
      * @ORM\Column(name="is_default", type="boolean")
      */
     protected $default = false;
-    
+
     public function __construct()
     {
-        $this->locations      = new ArrayCollection();
-        $this->departments    = new ArrayCollection();
-        $this->users          = new ArrayCollection();
-        $this->groups         = new ArrayCollection();
+        $this->locations = new ArrayCollection();
+        $this->departments = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->groups = new ArrayCollection();
         $this->administrators = new ArrayCollection();
-        $this->timeSlots      = new ArrayCollection();
-        $this->years          = new ArrayCollection();
+        $this->timeSlots = new ArrayCollection();
+        $this->years = new ArrayCollection();
     }
 
     public function getId()
@@ -191,7 +189,6 @@ class Organization
     {
         return $this->departments;
     }
-
 
     public function setPosition($position)
     {
@@ -241,9 +238,9 @@ class Organization
     public function addAdministrator(User $user)
     {
         if (!$this->administrators->contains($user)) {
-            $this->administrators->add($user);  
+            $this->administrators->add($user);
             $user->addAdministratedOrganization($this);
-        } 
+        }
     }
 
     public function removeAdministrator(User $user)
@@ -266,12 +263,16 @@ class Organization
 
     public function addTimeSlot(TimeSlot $timeSlot)
     {
-        if (!$this->timeSlots->contains($timeSlot)) $this->timeSlots->add($timeSlot);
+        if (!$this->timeSlots->contains($timeSlot)) {
+            $this->timeSlots->add($timeSlot);
+        }
     }
 
     public function removeTimeSlot(TimeSlot $timeSlot)
     {
-        if ($this->timeSlots->contains($timeSlot)) $this->timeSlots->removeElement($timeSlot);
+        if ($this->timeSlots->contains($timeSlot)) {
+            $this->timeSlots->removeElement($timeSlot);
+        }
     }
 
     public function setTimeSlots(ArrayCollection $timeSlots)
@@ -286,12 +287,16 @@ class Organization
 
     public function addYear(Year $year)
     {
-        if (!$this->years->contains($year)) $this->years->add($year);
+        if (!$this->years->contains($year)) {
+            $this->years->add($year);
+        }
     }
 
     public function removeYear(Year $year)
     {
-        if ($this->years->contains($year)) $this->years->removeElement($year);
+        if ($this->years->contains($year)) {
+            $this->years->removeElement($year);
+        }
     }
 
     public function setYears(ArrayCollection $years)

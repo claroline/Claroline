@@ -21,8 +21,7 @@ class CursusRepository extends NestedTreeRepository
         $orderedBy = 'cursusOrder',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Cursus c
@@ -38,8 +37,7 @@ class CursusRepository extends NestedTreeRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Cursus c
@@ -60,17 +58,16 @@ class CursusRepository extends NestedTreeRepository
         $orderedBy = 'id',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
-    	$dql = "
+    ) {
+        $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Cursus c
             WHERE c.parent IS NULL
             ORDER BY c.{$orderedBy} {$order}
         ";
-    	$query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
 
-    	return $executeQuery ? $query->getResult() : $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findSearchedRootCursus(
@@ -78,9 +75,8 @@ class CursusRepository extends NestedTreeRepository
         $orderedBy = 'id',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
-    	$dql = "
+    ) {
+        $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Cursus c
             WHERE c.parent IS NULL
@@ -91,38 +87,38 @@ class CursusRepository extends NestedTreeRepository
             )
             ORDER BY c.{$orderedBy} {$order}
         ";
-    	$query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
         $upperSearch = strtoupper($search);
         $query->setParameter('search', "%{$upperSearch}%");
 
-    	return $executeQuery ? $query->getResult() : $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findLastRootCursusOrder($executeQuery = true)
     {
-    	$dql = '
+        $dql = '
             SELECT Max(c.cursusOrder)
             FROM Claroline\CursusBundle\Entity\Cursus c
             WHERE c.parent IS NULL
         ';
-    	$query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
 
-    	return $executeQuery ?
+        return $executeQuery ?
             $query->getSingleScalarResult() :
             $query;
     }
 
     public function findLastCursusOrderByParent(Cursus $cursus, $executeQuery = true)
     {
-    	$dql = '
+        $dql = '
             SELECT Max(c.cursusOrder)
             FROM Claroline\CursusBundle\Entity\Cursus c
             WHERE c.parent = :parent
         ';
-    	$query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
         $query->setParameter('parent', $cursus);
 
-    	return $executeQuery ?
+        return $executeQuery ?
             $query->getSingleScalarResult() :
             $query;
     }
@@ -132,8 +128,7 @@ class CursusRepository extends NestedTreeRepository
         $orderedBy = 'cursusOrder',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Cursus c
@@ -151,8 +146,7 @@ class CursusRepository extends NestedTreeRepository
         $orderedBy = 'cursusOrder',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT c
             FROM Claroline\CursusBundle\Entity\Cursus c
@@ -176,8 +170,7 @@ class CursusRepository extends NestedTreeRepository
         $orderedBy = 'cursusOrder',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT c
             FROM Claroline\CursusBundle\Entity\Cursus c
@@ -198,8 +191,7 @@ class CursusRepository extends NestedTreeRepository
         Cursus $parent,
         array $courses,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT c
             FROM Claroline\CursusBundle\Entity\Cursus c
@@ -218,8 +210,7 @@ class CursusRepository extends NestedTreeRepository
         Cursus $parent,
         $cursusOrder,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             UPDATE Claroline\CursusBundle\Entity\Cursus c
             SET c.cursusOrder = c.cursusOrder + 1
@@ -236,8 +227,7 @@ class CursusRepository extends NestedTreeRepository
     public function updateCursusOrderWithoutParent(
         $cursusOrder,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             UPDATE Claroline\CursusBundle\Entity\Cursus c
             SET c.cursusOrder = c.cursusOrder + 1
@@ -299,8 +289,7 @@ class CursusRepository extends NestedTreeRepository
         $orderedBy = 'cursusOrder',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Cursus c
@@ -319,8 +308,7 @@ class CursusRepository extends NestedTreeRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Cursus c

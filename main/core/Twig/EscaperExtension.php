@@ -22,7 +22,6 @@ class EscaperExtension extends \Twig_Extension
 {
     protected $content;
 
-
     public function getFilters()
     {
         return array(
@@ -39,5 +38,4 @@ class EscaperExtension extends \Twig_Extension
     {
         return str_replace('"', '\"', $content);
     }
-
 }

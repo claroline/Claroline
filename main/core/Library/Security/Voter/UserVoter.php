@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -28,9 +27,9 @@ use Claroline\CoreBundle\Library\Security\Collection\UserCollection;
 class UserVoter implements VoterInterface
 {
     const CREATE = 'create';
-    const EDIT   = 'edit';
+    const EDIT = 'edit';
     const DELETE = 'delete';
-    const VIEW   = 'view';
+    const VIEW = 'view';
 
     private $ch;
     private $om;
@@ -45,11 +44,10 @@ class UserVoter implements VoterInterface
      * })
      */
     public function __construct(
-        ObjectManager $om, 
+        ObjectManager $om,
         PlatformConfigurationHandler $ch,
         UserManager $userManager
-    )
-    {
+    ) {
         $this->om = $om;
         $this->ch = $ch;
         $this->userManager = $userManager;
@@ -58,8 +56,10 @@ class UserVoter implements VoterInterface
     //ROLE_ADMIN can always do anything, so we don't have to check that.
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        if (!$object instanceof User && !$object instanceof UserCollection) return VoterInterface::ACCESS_ABSTAIN;
-        $users = $object instanceof UserCollection ? $object->getUsers(): array($object);
+        if (!$object instanceof User && !$object instanceof UserCollection) {
+            return VoterInterface::ACCESS_ABSTAIN;
+        }
+        $users = $object instanceof UserCollection ? $object->getUsers() : array($object);
         $action = strtolower($attributes[0]);
 
         switch ($action) {
@@ -75,7 +75,9 @@ class UserVoter implements VoterInterface
     private function checkCreation($users)
     {
         //the we can create user. Case closed
-        if ($this->ch->getParameter('allow_self_registration')) return VoterInterface::ACCESS_GRANTED;
+        if ($this->ch->getParameter('allow_self_registration')) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
 
         //maybe more tests
     }
@@ -83,27 +85,33 @@ class UserVoter implements VoterInterface
     private function checkEdit($token, $users)
     {
         foreach ($users as $user) {
-            if (!$this->isOrganizationManager($token, $user)) return VoterInterface::ACCESS_DENIED;
+            if (!$this->isOrganizationManager($token, $user)) {
+                return VoterInterface::ACCESS_DENIED;
+            }
         }
-        
+
         return VoterInterface::ACCESS_GRANTED;
     }
 
     private function checkView($token, $users)
     {
         foreach ($users as $user) {
-            if (!$this->isOrganizationManager($token, $user)) return VoterInterface::ACCESS_DENIED;
+            if (!$this->isOrganizationManager($token, $user)) {
+                return VoterInterface::ACCESS_DENIED;
+            }
         }
-        
+
         return VoterInterface::ACCESS_GRANTED;
     }
 
     private function checkDelete($token, $users)
     {
         foreach ($users as $user) {
-            if (!$this->isOrganizationManager($token, $user)) return VoterInterface::ACCESS_DENIED;
+            if (!$this->isOrganizationManager($token, $user)) {
+                return VoterInterface::ACCESS_DENIED;
+            }
         }
-        
+
         return VoterInterface::ACCESS_GRANTED;
     }
 
@@ -115,7 +123,9 @@ class UserVoter implements VoterInterface
 
         foreach ($adminOrganizations as $adminOrganization) {
             foreach ($userOrganizations as $userOrganization) {
-                if ($userOrganization === $adminOrganization) return true;
+                if ($userOrganization === $adminOrganization) {
+                    return true;
+                }
             }
         }
 

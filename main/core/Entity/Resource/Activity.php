@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -52,9 +50,10 @@ class Activity extends AbstractResource
     protected $parameters;
 
     /**
-     * Set title
+     * Set title.
      *
-     * @param  string  $title
+     * @param string $title
+     *
      * @return Activity
      */
     public function setTitle($title)
@@ -65,7 +64,7 @@ class Activity extends AbstractResource
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -74,11 +73,11 @@ class Activity extends AbstractResource
         return $this->title;
     }
 
-
     /**
-     * Set description
+     * Set description.
      *
-     * @param  string  $description
+     * @param string $description
+     *
      * @return activity
      */
     public function setDescription($description)
@@ -91,7 +90,7 @@ class Activity extends AbstractResource
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -101,7 +100,7 @@ class Activity extends AbstractResource
     }
 
     /**
-     * Get resource node
+     * Get resource node.
      *
      * @return string
      */
@@ -111,9 +110,10 @@ class Activity extends AbstractResource
     }
 
     /**
-     * Set resource node
+     * Set resource node.
      *
-     * @param  ResourceNode  $primaryResource
+     * @param ResourceNode $primaryResource
+     *
      * @return activity
      */
     public function setPrimaryResource($primaryResource = null)
@@ -124,7 +124,7 @@ class Activity extends AbstractResource
     }
 
     /**
-     * Get parameters
+     * Get parameters.
      *
      * @return string
      */
@@ -134,9 +134,10 @@ class Activity extends AbstractResource
     }
 
     /**
-     * Set parameters
+     * Set parameters.
      *
-     * @param  ActivityParameters  $parameters
+     * @param ActivityParameters $parameters
+     *
      * @return activity
      */
     public function setParameters(ActivityParameters $parameters)

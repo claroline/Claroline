@@ -27,7 +27,7 @@ class FrontController extends Controller
     public function viewAction(Badge $badge)
     {
         return array(
-            'badge' => $badge
+            'badge' => $badge,
         );
     }
 }

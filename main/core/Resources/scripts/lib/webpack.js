@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const failPlugin = require('webpack-fail-plugin')
+const assetsPlugin = require('assets-webpack-plugin')
 
 /**
  * Builds a webpack configuration suitable for export.
@@ -18,7 +19,6 @@ function configure(rootDir, packages, isWatchMode) {
   const webpackPackages = packages.filter(def => def.assets && def.assets.webpack)
   const bundles = webpackPackages.map(def => def.name)
   const normalizedPackages = normalizeNames(webpackPackages)
-  const normalizedBundles = normalizedPackages.map(def => def.name)
   const entries = extractEntries(normalizedPackages)
   const commons = extractCommons(normalizedPackages)
 
@@ -26,7 +26,7 @@ function configure(rootDir, packages, isWatchMode) {
   const output = {
     path: path.resolve(rootDir, 'web/dist'),
     publicPath: 'http://localhost:8080/dist',
-    filename: '[name].js'
+    filename: '[name]-[hash].js'
   }
 
   // third-party modules are taken from the web/packages directory,
@@ -36,8 +36,9 @@ function configure(rootDir, packages, isWatchMode) {
   // in every environment, plugins are needed for things like bower
   // modules support, bundle resolution, common chunks extraction, etc.
   const plugins = [
-    makeBundleResolverPlugin(normalizedBundles),
+    makeBundleResolverPlugin(),
     makeBowerPlugin(),
+    makeAssetsPlugin(),
     //makeBaseCommonsPlugin(),
     ...makeBundleCommonsPlugins(commons)
   ]
@@ -106,7 +107,7 @@ function extractEntries(packages) {
     .reduce((entries, def) => {
       Object.keys(def.assets.webpack.entry).forEach(entry => {
          def.meta ?
-           entries[`${def.name}-${def.assets.webpack.entry[entry].dir}-${def.assets.webpack.entry[entry].bundle}-${entry}`] = `${def.assets.webpack.entry[entry].prefix}/Resources/${def.assets.webpack.entry[entry].name}`:
+           entries[`${def.name}-${def.assets.webpack.entry[entry].dir}-${entry}`] = `${def.assets.webpack.entry[entry].prefix}/Resources/${def.assets.webpack.entry[entry].name}`:
            entries[`${def.name}-${entry}`] = `${def.path}/Resources/${def.assets.webpack.entry[entry]}`
       })
 
@@ -144,19 +145,18 @@ function makeBowerPlugin() {
  * modules located in a claroline bundle) into requests with a resolved
  * absolute path.
  *
+ * Example usage: import Interceptors from '#/main/core/Resources/modules/interceptorsDefault'
+ *
  * @param availableBundles A list of available bundles
  */
-function makeBundleResolverPlugin(availableBundles) {
+function makeBundleResolverPlugin() {
   return new webpack.NormalModuleReplacementPlugin(/^#\//, request => {
     const target = request.request.substr(2)
     const parts = target.split('/')
-
-    if (availableBundles[parts[0]]) {
-      request.request = path.resolve(
-        availableBundles[parts[0]],
-        ...parts.slice(1)
-      )
-    }
+    request.request = path.resolve(
+      'vendor/claroline/distribution',
+      ...parts
+    )
   })
 }
 
@@ -169,6 +169,18 @@ function makeBaseCommonsPlugin() {
     name: 'commons',
     minChunks: 10
   })
+}
+
+/**
+ * This plugin outputs information about generated assets in a dedicated file
+ * ("webpack-assets.json" by default). This is useful to retrieve assets names
+ * when a hash has been used for cache busting.
+ */
+function makeAssetsPlugin() {
+  return new assetsPlugin({
+    fullPath: false,
+    prettyPrint: true
+  });
 }
 
 /**

@@ -7,7 +7,6 @@ angular.module('ui.badgePicker', [])
             mode: "user"
         };
         var successCallback = function(nodes) {
-            console.log(nodes);
             return null;
         };
 

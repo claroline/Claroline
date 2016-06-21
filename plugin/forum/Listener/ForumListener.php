@@ -18,26 +18,21 @@ use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteUserEvent;
 use Claroline\CoreBundle\Event\ResourceCreatedEvent;
-use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
-use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\ForumBundle\Entity\Forum;
-use Claroline\ForumBundle\Entity\Subject;
-use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Form\ForumType;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class ForumListener extends ContainerAware
 {
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new ForumType, new Forum());
+        $form = $this->container->get('form.factory')->create(new ForumType(), new Forum());
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'claroline_forum'
+                'resourceType' => 'claroline_forum',
             )
         );
         $event->setResponseContent($content);
@@ -47,7 +42,7 @@ class ForumListener extends ContainerAware
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
-        $form = $this->container->get('form.factory')->create(new ForumType, new Forum());
+        $form = $this->container->get('form.factory')->create(new ForumType(), new Forum());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -63,7 +58,7 @@ class ForumListener extends ContainerAware
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'claroline_forum'
+                'resourceType' => 'claroline_forum',
             )
         );
         $event->setErrorFormContent($content);
@@ -108,10 +103,10 @@ class ForumListener extends ContainerAware
         $notifications = $notificationRepo->findOneBy(array('user' => $event->getUser()));
         if (count($notifications) > 0) {
             foreach ($notifications as $notification) {
-            $em->remove($notification);
-        }
+                $em->remove($notification);
+            }
             $em->flush();
-        }            
+        }
     }
 
     public function onResourceCreated(ResourceCreatedEvent $event)

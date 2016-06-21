@@ -80,7 +80,6 @@ $(document).ready(function () {
             type: $form.attr('method'),
             data: $form.serialize(),
             success: function (data) {
-                console.log(data);
                 $.get($('.add-criterion-button').attr('href'))
                     .done(function (data) {
                         resetTiny();

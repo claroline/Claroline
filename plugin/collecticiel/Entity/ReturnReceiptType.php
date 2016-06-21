@@ -1,20 +1,20 @@
 <?php
 /**
  * Created by : VINCENT Eric
- * Date: 10/05/2015
+ * Date: 10/05/2015.
 */
 
 namespace Innova\CollecticielBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\ReturnReceiptTypeRepository")
  * @ORM\Table(name="innova_collecticielbundle_return_receipt_type")
  */
-class ReturnReceiptType {
-
+class ReturnReceiptType
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -28,8 +28,8 @@ class ReturnReceiptType {
     protected $typeName;
 
     /**
-     * Lien avec la table ReturnReceipt
-    */
+     * Lien avec la table ReturnReceipt.
+     */
     /**
      * @ORM\OneToMany(
      *      targetEntity="Innova\CollecticielBundle\Entity\ReturnReceipt",
@@ -39,17 +39,17 @@ class ReturnReceiptType {
     protected $returnreceipts;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
-        $this->returnreceipts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->returnreceipts = new ArrayCollection();
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -57,7 +57,7 @@ class ReturnReceiptType {
     }
 
     /**
-     * Set typeName
+     * Set typeName.
      *
      * @param string $typeName
      *
@@ -71,7 +71,7 @@ class ReturnReceiptType {
     }
 
     /**
-     * Get typeName
+     * Get typeName.
      *
      * @return string
      */
@@ -81,7 +81,7 @@ class ReturnReceiptType {
     }
 
     /**
-     * Add returnreceipt
+     * Add returnreceipt.
      *
      * @param \Innova\CollecticielBundle\Entity\ReturnReceipt $returnreceipt
      *
@@ -95,7 +95,7 @@ class ReturnReceiptType {
     }
 
     /**
-     * Remove returnreceipt
+     * Remove returnreceipt.
      *
      * @param \Innova\CollecticielBundle\Entity\ReturnReceipt $returnreceipt
      */
@@ -105,7 +105,7 @@ class ReturnReceiptType {
     }
 
     /**
-     * Get returnreceipts
+     * Get returnreceipts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

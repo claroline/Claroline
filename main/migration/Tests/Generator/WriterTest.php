@@ -40,11 +40,11 @@ class WriterTest extends MockeryTestCase
                     'path' => array(
                         'Migrations' => array(
                             'some_driver' => array(
-                                'Versionsome_version.php' => ''
-                            )
-                        )
-                    )
-                )
+                                'Versionsome_version.php' => '',
+                            ),
+                        ),
+                    ),
+                ),
             )
         );
         $this->twigEnvironment->shouldReceive('addExtension')->once()->with(
@@ -55,15 +55,15 @@ class WriterTest extends MockeryTestCase
             )
         );
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
-        $bundle->shouldReceive('getPath')->once()->andReturn(vfsStream::url('root') . '/bundle/path');
+        $bundle->shouldReceive('getPath')->once()->andReturn(vfsStream::url('root').'/bundle/path');
         $bundle->shouldReceive('getNamespace')->once()->andReturn('Bundle\Namespace');
         $this->fileSystem->shouldReceive('exists')
             ->once()
-            ->with(vfsStream::url('root') . '/bundle/path/Migrations/some_driver')
+            ->with(vfsStream::url('root').'/bundle/path/Migrations/some_driver')
             ->andReturn(false);
         $this->fileSystem->shouldReceive('mkdir')
             ->once()
-            ->with(vfsStream::url('root') . '/bundle/path/Migrations/some_driver');
+            ->with(vfsStream::url('root').'/bundle/path/Migrations/some_driver');
         $this->twigEngine->shouldReceive('render')
             ->once()
             ->with(
@@ -72,13 +72,13 @@ class WriterTest extends MockeryTestCase
                     'namespace' => 'Bundle\Namespace\Migrations\some_driver',
                     'class' => 'Versionsome_version',
                     'upQueries' => 'queries up',
-                    'downQueries' => 'queries down'
+                    'downQueries' => 'queries down',
                 )
             )
             ->andReturn('migration class content');
         $this->fileSystem->shouldReceive('touch')
             ->once()
-            ->with(vfsStream::url('root') . '/bundle/path/Migrations/some_driver/Versionsome_version.php');
+            ->with(vfsStream::url('root').'/bundle/path/Migrations/some_driver/Versionsome_version.php');
 
         $writer = new Writer($this->fileSystem, $this->twigEnvironment, $this->twigEngine);
         $writer->writeMigrationClass(
@@ -89,7 +89,7 @@ class WriterTest extends MockeryTestCase
         );
         $this->assertEquals(
             'migration class content',
-            file_get_contents(vfsStream::url('root') . '/bundle/path/Migrations/some_driver/Versionsome_version.php')
+            file_get_contents(vfsStream::url('root').'/bundle/path/Migrations/some_driver/Versionsome_version.php')
         );
     }
 
@@ -105,16 +105,16 @@ class WriterTest extends MockeryTestCase
                             'some_driver' => array(
                                 'Version1.php' => '',
                                 'Version2.php' => '',
-                                'Version3.php' => ''
-                            )
-                        )
-                    )
-                )
+                                'Version3.php' => '',
+                            ),
+                        ),
+                    ),
+                ),
             )
         );
         $this->twigEnvironment->shouldReceive('addExtension');
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
-        $bundlePath = vfsStream::url('root') . '/bundle/path';
+        $bundlePath = vfsStream::url('root').'/bundle/path';
         $bundle->shouldReceive('getPath')->once()->andReturn($bundlePath);
         $this->fileSystem->shouldReceive('remove')
             ->once()

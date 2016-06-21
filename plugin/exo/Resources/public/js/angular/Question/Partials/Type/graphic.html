@@ -1,0 +1,47 @@
+<div class="type-question-container graphic-question-container panel panel-default">
+    <div class="panel-body text-center">
+        <div class="row question-btns">
+            <!-- Number of pointers available -->
+            <div class="col-md-10 text-left">
+                <span>{{ 'question_graphic_nb_pointers'|transChoice:(graphicQuestionCtrl.question.pointers - graphicQuestionCtrl.answer.length):{ count: graphicQuestionCtrl.question.pointers - graphicQuestionCtrl.answer.length }:'ujm_exo' }}</span>
+                <span>{{ 'question_graphic_set_pointers'|trans:{}:'ujm_exo' }}</span>
+            </div>
+
+            <!-- Reset button -->
+            <div class="col-md-2 text-right">
+                <button type="button" role="button" class="btn btn-sm btn-danger"
+                        data-ng-disabled="graphicQuestionCtrl.feedback.visible"
+                        data-ng-click="graphicQuestionCtrl.reset()">
+                    <span class="fa fa-refresh"></span>
+                    {{ 'reset'|trans:{}:'ujm_exo' }}
+                </button>
+            </div>
+        </div>
+
+        <div class="img-box">
+            <!-- Answers -->
+            <img-pointer data-ng-repeat="answer in graphicQuestionCtrl.answer"
+                         data-ng-model="graphicQuestionCtrl.answer[$index]"
+                         data-img="graphicQuestionCtrl.$image"
+                         data-disabled="graphicQuestionCtrl.feedback.visible">
+            </img-pointer>
+
+            <!-- Solution -->
+            <img-areas data-areas="graphicQuestionCtrl.solutionsFound"
+                       data-img="graphicQuestionCtrl.$image"
+                       data-ng-if="graphicQuestionCtrl.feedback.visible && graphicQuestionCtrl.solutionsFound && !graphicQuestionCtrl.includeCorrection">
+            </img-areas>
+            <img-areas data-areas="graphicQuestionCtrl.question.solutions"
+                       data-img="graphicQuestionCtrl.$image"
+                       data-ng-if="graphicQuestionCtrl.feedback.visible && graphicQuestionCtrl.question.solutions && graphicQuestionCtrl.includeCorrection">
+            </img-areas>
+
+            <!-- Question image -->
+            <img class="img-question img-responsive"
+                 data-ng-src="{{ graphicQuestionCtrl.getImageUrl() }}"
+                 alt="{{ graphicQuestionCtrl.question.image.label }}"
+                 data-original-width="{{ graphicQuestionCtrl.question.image.width }}"
+                 data-original-height="{{ graphicQuestionCtrl.question.image.height }}" />
+        </div>
+    </div>
+</div>

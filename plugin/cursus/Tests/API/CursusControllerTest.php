@@ -22,7 +22,7 @@ use Claroline\CursusBundle\Library\Testing\CursusPersister;
  * - create database
  * - php app/console claroline:init_test_schema --env=test
  * - php app/console doctrine:schema:update --force --env=test
- * - SYMFONY_DEPRECATIONS_HELPER=weak bin/phpunit vendor/claroline/cursus-bundle/Tests/API/CursusControllerTest.php -c app/phpunit.xml
+ * - SYMFONY_DEPRECATIONS_HELPER=weak bin/phpunit vendor/claroline/cursus-bundle/Tests/API/CursusControllerTest.php -c app/phpunit.xml.
  *
  ****************************************************************************************************
  *
@@ -66,7 +66,6 @@ use Claroline\CursusBundle\Library\Testing\CursusPersister;
  *          |
  *          |---- cursus_BB (Course)
  *                    * [NO SESSION]
- *
  */
 class CursusControllerTest extends TransactionalTestCase
 {
@@ -118,14 +117,14 @@ class CursusControllerTest extends TransactionalTestCase
         $this->cursusPersister = $this->client->getContainer()->get('claroline.library.testing.cursuspersister');
 
         // Creates Courses
-        $this->courseAAA =  $this->cursusPersister->course('course_AAA');
-        $this->courseAAB =  $this->cursusPersister->course('course_AAB');
-        $this->courseAACA =  $this->cursusPersister->course('course_AACA');
-        $this->courseABA =  $this->cursusPersister->course('course_ABA');
-        $this->courseABB =  $this->cursusPersister->course('course_ABB');
-        $this->courseAC =  $this->cursusPersister->course('course_AC');
-        $this->courseBA =  $this->cursusPersister->course('course_BA');
-        $this->courseBB =  $this->cursusPersister->course('course_BB');
+        $this->courseAAA = $this->cursusPersister->course('course_AAA');
+        $this->courseAAB = $this->cursusPersister->course('course_AAB');
+        $this->courseAACA = $this->cursusPersister->course('course_AACA');
+        $this->courseABA = $this->cursusPersister->course('course_ABA');
+        $this->courseABB = $this->cursusPersister->course('course_ABB');
+        $this->courseAC = $this->cursusPersister->course('course_AC');
+        $this->courseBA = $this->cursusPersister->course('course_BA');
+        $this->courseBB = $this->cursusPersister->course('course_BB');
 
         // Creates Cursus
         $this->rootCursusB = $this->cursusPersister->cursus('root_cursus_B', null, null, 2);
@@ -180,7 +179,7 @@ class CursusControllerTest extends TransactionalTestCase
     {
         // Test with cursusAA
         $AAId = $this->cursusAA->getId();
-        $this->client->request('GET', '/clarolinecursusbundle/api/datas/' . $AAId . '/for/cursus/registration.json');
+        $this->client->request('GET', '/clarolinecursusbundle/api/datas/'.$AAId.'/for/cursus/registration.json');
 //        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
 //        $content = $this->client->getResponse()->getContent();
 //        $datas = json_decode($content, true);
@@ -205,7 +204,7 @@ class CursusControllerTest extends TransactionalTestCase
     {
         // Test with search : "B"
         $search = 'B';
-        $this->client->request('GET', '/clarolinecursusbundle/api/datas/' . $search . '/for/searched/cursus/registration.json');
+        $this->client->request('GET', '/clarolinecursusbundle/api/datas/'.$search.'/for/searched/cursus/registration.json');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $content = $this->client->getResponse()->getContent();
         $datas = json_decode($content, true);
@@ -230,7 +229,7 @@ class CursusControllerTest extends TransactionalTestCase
     {
         // Test for cursus_AA
         $cursusId = $this->cursusAA->getId();
-        $this->client->request('GET', '/clarolinecursusbundle/api/datas/' . $cursusId . '/for/cursus/hierarchy.json');
+        $this->client->request('GET', '/clarolinecursusbundle/api/datas/'.$cursusId.'/for/cursus/hierarchy.json');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $content = $this->client->getResponse()->getContent();
         $datas = json_decode($content, true);
@@ -343,7 +342,7 @@ class CursusControllerTest extends TransactionalTestCase
     {
         // Test with a cursus without course
         $BId = $this->rootCursusB->getId();
-        $this->client->request('GET', '/clarolinecursusbundle/api/sessions/' . $BId . '/for/cursus/list.json');
+        $this->client->request('GET', '/clarolinecursusbundle/api/sessions/'.$BId.'/for/cursus/list.json');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $content = $this->client->getResponse()->getContent();
         $datas = json_decode($content, true);
@@ -361,7 +360,7 @@ class CursusControllerTest extends TransactionalTestCase
         $ids[] = $this->cursusAAC->getId();
         $ids[] = $this->cursusAACA->getId();
         $cursusIdsTxt = implode(',', $ids);
-        $this->client->request('GET', '/clarolinecursusbundle/api/sessions/' . $cursusIdsTxt . '/for/cursus/list.json');
+        $this->client->request('GET', '/clarolinecursusbundle/api/sessions/'.$cursusIdsTxt.'/for/cursus/list.json');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $content2 = $this->client->getResponse()->getContent();
         $datas2 = json_decode($content2, true);

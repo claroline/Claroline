@@ -9,11 +9,11 @@ use Icap\PortfolioBundle\Entity\Widget\WidgetType;
 class LoadRequiredFixturesData extends AbstractFixture
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
-        /**
+        /*
          * array format:
          *   - name
          *   - icon class
@@ -23,7 +23,7 @@ class LoadRequiredFixturesData extends AbstractFixture
             array('text', 'align-left'),
             array('skills', 'bookmark'),
             array('formations', 'graduation-cap'),
-            array('experience', 'briefcase')
+            array('experience', 'briefcase'),
         );
 
         foreach ($widgetTypes as $widgetType) {

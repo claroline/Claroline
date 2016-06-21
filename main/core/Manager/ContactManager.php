@@ -50,8 +50,7 @@ class ContactManager
         $search = '',
         $orderedBy = 'lastName',
         $order = 'ASC'
-    )
-    {
+    ) {
         $users = array();
 
         if (empty($search)) {
@@ -85,8 +84,7 @@ class ContactManager
         $max = 50,
         $orderedBy = 'lastName',
         $order = 'ASC'
-    )
-    {
+    ) {
         $contacts = $this->getUserContacts($user, $search, $orderedBy, $order);
 
         return $this->pagerFactory->createPagerFromArray($contacts, $page, $max);
@@ -97,8 +95,7 @@ class ContactManager
         Category $category,
         $orderedBy = 'lastName',
         $order = 'ASC'
-    )
-    {
+    ) {
         $users = array();
         $contacts = $this->getContactsByUserAndCategory(
             $user,
@@ -121,8 +118,7 @@ class ContactManager
         $max = 50,
         $orderedBy = 'lastName',
         $order = 'ASC'
-    )
-    {
+    ) {
         $contacts = $this->getUserContactsByCategory($user, $category, $orderedBy, $order);
 
         return $this->pagerFactory->createPagerFromArray($contacts, $page, $max);
@@ -148,7 +144,7 @@ class ContactManager
                 'show_username' => true,
                 'show_mail' => false,
                 'show_phone' => false,
-                'show_picture' => true
+                'show_picture' => true,
             );
             $options->setOptions($defaultValues);
             $this->om->persist($options);
@@ -209,8 +205,7 @@ class ContactManager
         User $user,
         Category $category,
         array $contacts
-    )
-    {
+    ) {
         $this->om->startFlushSuite();
 
         foreach ($contacts as $contact) {
@@ -234,8 +229,7 @@ class ContactManager
         $order = 'ASC',
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $contacts = array();
         $contacts['all_my_contacts'] = array();
 
@@ -281,12 +275,11 @@ class ContactManager
         $orderedBy = 'lastName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->contactRepo->findContactsByUser(
             $user,
             $orderedBy,
-            $order, 
+            $order,
             $executeQuery
         );
     }
@@ -299,8 +292,7 @@ class ContactManager
         $orderedBy = 'lastName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->contactRepo->findContactsByUserAndSearch(
             $user,
             $search,
@@ -316,8 +308,7 @@ class ContactManager
         User $user,
         User $contact,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->contactRepo->findContactByUserAndContact(
             $user,
             $contact,
@@ -331,8 +322,7 @@ class ContactManager
         $orderedBy = 'lastName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->contactRepo->findContactsByUserAndCategory(
             $user,
             $category,
@@ -351,8 +341,7 @@ class ContactManager
         $orderedBy = 'order',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->categoryRepo->findCategoriesByUser(
             $user,
             $orderedBy,
@@ -370,7 +359,6 @@ class ContactManager
     {
         return $this->categoryRepo->findOrderOfLastCategoryByUser($user);
     }
-
 
     /***************************************
      * Access to OptionsRepository methods *

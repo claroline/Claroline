@@ -20,14 +20,14 @@ use Doctrine\ORM\Mapping as ORM;
 class CursusDisplayedWord
 {
     public static $defaultKey = array('cursus', 'course', 'session');
-    
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
+
     /**
      * @ORM\Column(unique=true)
      */
@@ -37,7 +37,7 @@ class CursusDisplayedWord
      * @ORM\Column(name="displayed_name", nullable=true)
      */
     protected $displayedWord;
-    
+
     public function getId()
     {
         return $this->id;

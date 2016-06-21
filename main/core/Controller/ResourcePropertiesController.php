@@ -33,7 +33,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ResourcePropertiesController extends Controller
 {
-
     private $formFactory;
     private $tokenStorage;
     private $authorization;
@@ -61,8 +60,7 @@ class ResourcePropertiesController extends Controller
         Request $request,
         StrictDispatcher $dispatcher,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -122,7 +120,7 @@ class ResourcePropertiesController extends Controller
             return new JsonResponse(
                 array(
                     'id' => $node->getId(),
-                    'name' => $node->getName()
+                    'name' => $node->getName(),
                 )
             );
         }
@@ -159,7 +157,7 @@ class ResourcePropertiesController extends Controller
         return array(
             'form' => $form->createView(),
             'nodeId' => $node->getId(),
-            'isDir' => $isDir
+            'isDir' => $isDir,
         );
     }
 
@@ -174,9 +172,11 @@ class ResourcePropertiesController extends Controller
      *
      * Changes the resource properties.
      *
-     * @param ResourceNode $node
+     * @param ResourceNode                      $node
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     *
      * @return SResponse
      */
     public function changePropertiesAction(ResourceNode $node, User $user)
@@ -226,7 +226,7 @@ class ResourcePropertiesController extends Controller
         return array(
             'form' => $form->createView(),
             'nodeId' => $node->getId(),
-            'isDir' => $isDir
+            'isDir' => $isDir,
         );
     }
 
@@ -259,7 +259,7 @@ class ResourcePropertiesController extends Controller
         return array(
             'form' => $form->createView(),
             'nodeId' => $node->getId(),
-            'isDir' => $isDir
+            'isDir' => $isDir,
         );
     }
 
@@ -274,9 +274,11 @@ class ResourcePropertiesController extends Controller
      *
      * Changes the resource properties.
      *
-     * @param ResourceNode $node
+     * @param ResourceNode                      $node
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     *
      * @return SResponse
      */
     public function iconEditAction(ResourceNode $node, User $user)
@@ -305,7 +307,7 @@ class ResourcePropertiesController extends Controller
         return array(
             'form' => $form->createView(),
             'nodeId' => $node->getId(),
-            'isDir' => $isDir
+            'isDir' => $isDir,
         );
     }
 

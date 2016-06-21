@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\MappedSuperclass
@@ -22,6 +23,7 @@ abstract class AbstractResource
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_resource"})
      */
     protected $id;
 
@@ -36,7 +38,7 @@ abstract class AbstractResource
     protected $mimeType;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -60,7 +62,7 @@ abstract class AbstractResource
     }
 
     /**
-     * For forms (otherwise name won't exist)
+     * For forms (otherwise name won't exist).
      *
      * TODO: this should be removed
      *

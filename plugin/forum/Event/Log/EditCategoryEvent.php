@@ -20,20 +20,20 @@ class EditCategoryEvent extends AbstractLogResourceEvent
 
     /**
      * @param \Claroline\ForumBundle\Entity\Category $category
-     * @param string $oldName
-     * @param string $newName
+     * @param string                                 $oldName
+     * @param string                                 $newName
      */
     public function __construct(Category $category, $oldName, $newName)
     {
         $details = array(
             'category' => array(
-                'id' => $category->getId()
+                'id' => $category->getId(),
             ),
             'forum' => array(
-                'id' => $category->getForum()->getId()
+                'id' => $category->getForum()->getId(),
             ),
-            'oldName' =>  $oldName,
-            'newName' => $newName
+            'oldName' => $oldName,
+            'newName' => $newName,
         );
 
         parent::__construct($category->getForum()->getResourceNode(), $details);

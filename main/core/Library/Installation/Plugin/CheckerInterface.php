@@ -22,7 +22,8 @@ interface CheckerInterface
     /**
      * Performs the validation of a plugin.
      *
-     * @param  \Claroline\CoreBundle\Library\PluginBundle $plugin
+     * @param \Claroline\CoreBundle\Library\PluginBundle $plugin
+     *
      * @return null|array[ValidationError]
      *
      * @todo Add the "update mode" as second arugment

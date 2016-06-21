@@ -6,7 +6,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Icap\BlogBundle\Entity\BlogOptions;
 
 /**
  * @ORM\Table(name="icap__blog")
@@ -31,7 +30,7 @@ class Blog extends AbstractResource
     protected $options;
 
     /**
-     * @var string $infos
+     * @var string
      *
      * @ORM\Column(type="text", nullable=true)
      */
@@ -68,7 +67,7 @@ class Blog extends AbstractResource
 
         foreach ($this->getPosts() as $post) {
             if (Statusable::STATUS_PUBLISHED === $post->getStatus()) {
-                $countPublishedPosts++;
+                ++$countPublishedPosts;
             }
         }
 
@@ -97,7 +96,6 @@ class Blog extends AbstractResource
         return $this->options;
     }
 
-
     /**
      * @param ArrayCollection $posts
      *
@@ -122,15 +120,6 @@ class Blog extends AbstractResource
     {
         return $this->posts;
     }
-
-
-
-
-
-
-
-
-
 
     /**
      * @return bool
@@ -180,8 +169,8 @@ class Blog extends AbstractResource
         $authors = array();
 
         foreach ($this->getPosts() as $post) {
-            $postAuthor                           = $post->getAuthor();
-            $authors[$postAuthor->getUsername()]  = $postAuthor;
+            $postAuthor = $post->getAuthor();
+            $authors[$postAuthor->getUsername()] = $postAuthor;
         }
 
         return $authors;

@@ -49,8 +49,7 @@ class InstallationManager
         Manager $migrationManager,
         FixtureLoader $fixtureLoader,
         $environment
-    )
-    {
+    ) {
         $this->container = $container;
         $this->migrationManager = $migrationManager;
         $this->fixtureLoader = $fixtureLoader;
@@ -59,7 +58,7 @@ class InstallationManager
 
     public function install(InstallableInterface $bundle, $requiredOnly = true)
     {
-        $this->log(sprintf("<comment>Installing %s...</comment>", $bundle->getName()));
+        $this->log(sprintf('<comment>Installing %s %s... </comment>', $bundle->getName(), $bundle->getVersion()));
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
@@ -90,11 +89,15 @@ class InstallationManager
 
     public function update(InstallableInterface $bundle, $currentVersion, $targetVersion)
     {
-        if (strpos($currentVersion, 'dev') === 0) $currentVersion = '9999999-' . $currentVersion;
-        if (strpos($targetVersion, 'dev') === 0) $targetVersion = '9999999-' . $targetVersion;
+        if (strpos($currentVersion, 'dev') === 0) {
+            $currentVersion = '9999999-'.$currentVersion;
+        }
+        if (strpos($targetVersion, 'dev') === 0) {
+            $targetVersion = '9999999-'.$targetVersion;
+        }
 
         $this->log(sprintf(
-            "<comment>Updating %s from %s to %s...</comment>",
+            '<comment>Updating %s from %s to %s...</comment>',
             $bundle->getName(),
             $currentVersion,
             $targetVersion
@@ -119,7 +122,7 @@ class InstallationManager
 
     public function uninstall(InstallableInterface $bundle)
     {
-        $this->log(sprintf("<comment>Uninstalling %s...</comment>", $bundle->getName()));
+        $this->log(sprintf('<comment>Uninstalling %s...</comment>', $bundle->getName()));
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {

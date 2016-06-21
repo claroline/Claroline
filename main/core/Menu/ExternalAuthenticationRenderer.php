@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Menu;
 
-use Knp\Menu\FactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use JMS\DiExtraBundle\Annotation as DI;
 use Knp\Menu\Renderer\ListRenderer;
 use Knp\Menu\ItemInterface;
@@ -34,8 +32,7 @@ class ExternalAuthenticationRenderer extends ListRenderer
         $matcher,
         $defaultOptions,
         $charset
-    )
-    {
+    ) {
         parent::__construct($matcher, $defaultOptions, $charset);
     }
 

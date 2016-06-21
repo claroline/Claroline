@@ -24,7 +24,7 @@ class TeamParamsType extends AbstractType
             'integer',
             array(
                 'attr' => array('min' => 0),
-                'required' => false
+                'required' => false,
             )
         );
         $builder->add(
@@ -33,9 +33,9 @@ class TeamParamsType extends AbstractType
             array(
                 'choices' => array(
                     true => 'public',
-                    false => 'private'
+                    false => 'private',
                 ),
-                'required' => true
+                'required' => true,
             )
         );
         $builder->add(

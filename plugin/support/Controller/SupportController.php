@@ -54,8 +54,7 @@ class SupportController extends Controller
         RouterInterface $router,
         SupportManager $supportManager,
         ToolManager $toolManager
-    )
-    {
+    ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
@@ -82,8 +81,7 @@ class SupportController extends Controller
         $max = 50,
         $orderedBy = 'num',
         $order = 'DESC'
-    )
-    {
+    ) {
         $tickets = $this->supportManager->getTicketsByUser(
             $authenticatedUser,
             $search,
@@ -94,7 +92,7 @@ class SupportController extends Controller
             $max
         );
         $withCredits = $this->supportManager->getConfigurationCreditOption();
-        
+
         if ($withCredits) {
             $datasEvent = new GenericDatasEvent($authenticatedUser);
             $this->eventDispatcher->dispatch('formalibre_request_nb_remaining_credits', $datasEvent);
@@ -113,7 +111,7 @@ class SupportController extends Controller
             'orderedBy' => $orderedBy,
             'order' => $order,
             'withCredits' => $withCredits,
-            'nbCredits' => $nbCredits
+            'nbCredits' => $nbCredits,
         );
     }
 
@@ -169,7 +167,6 @@ class SupportController extends Controller
                 $this->router->generate('formalibre_support_index')
             );
         } else {
-
             return array('form' => $form->createView());
         }
     }
@@ -190,7 +187,7 @@ class SupportController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'ticket' => $ticket
+            'ticket' => $ticket,
         );
     }
 
@@ -217,10 +214,9 @@ class SupportController extends Controller
                 $this->router->generate('formalibre_support_index')
             );
         } else {
-
             return array(
                 'form' => $form->createView(),
-                'ticket' => $ticket
+                'ticket' => $ticket,
             );
         }
     }
@@ -241,7 +237,7 @@ class SupportController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'ticket' => $ticket
+            'ticket' => $ticket,
         );
     }
 
@@ -266,10 +262,9 @@ class SupportController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-
             return array(
                 'form' => $form->createView(),
-                'ticket' => $ticket
+                'ticket' => $ticket,
             );
         }
     }
@@ -319,7 +314,7 @@ class SupportController extends Controller
         return array(
             'ticket' => $ticket,
             'currentUser' => $authenticatedUser,
-            'currentStatus' => $currentStatus
+            'currentStatus' => $currentStatus,
         );
     }
 
@@ -371,7 +366,6 @@ class SupportController extends Controller
 
             return new JsonResponse('success', 201);
         } else {
-
             return array('form' => $form->createView(), 'ticket' => $ticket);
         }
     }
@@ -411,8 +405,7 @@ class SupportController extends Controller
         $line,
         $url,
         $referer
-    )
-    {
+    ) {
         $this->checkUser($authenticatedUser, $user);
         $ticket = new Ticket();
         $ticket->setContactMail($user->getMail());
@@ -434,7 +427,7 @@ class SupportController extends Controller
             'file' => $file,
             'line' => $line,
             'url' => $url,
-            'referer' => $referer
+            'referer' => $referer,
         );
     }
 
@@ -457,8 +450,7 @@ class SupportController extends Controller
         $line,
         $url,
         $referer
-    )
-    {
+    ) {
         $this->checkUser($authenticatedUser, $user);
         $ticket = new Ticket();
         $ticket->setUser($user);
@@ -468,12 +460,12 @@ class SupportController extends Controller
         if ($form->isValid()) {
             $content = $ticket->getDescription();
             $content .=
-                "<br><br>--------------------------------------------------------<br><br>" .
-                "Uncaught PHP $exceptionClass Exception: \"$message\" at $file line $line" .
-                '<br><br>URL : ' .
-                $url .
-                '<br>Referer : ' .
-                $referer .
+                '<br><br>--------------------------------------------------------<br><br>'.
+                "Uncaught PHP $exceptionClass Exception: \"$message\" at $file line $line".
+                '<br><br>URL : '.
+                $url.
+                '<br>Referer : '.
+                $referer.
                 '<br><br>--------------------------------------------------------<br><br>';
             $ticket->setDescription($content);
             $num = $this->supportManager->generateTicketNum($authenticatedUser);
@@ -496,7 +488,6 @@ class SupportController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-
             return array(
                 'form' => $form->createView(),
                 'user' => $user,
@@ -505,7 +496,7 @@ class SupportController extends Controller
                 'file' => $file,
                 'line' => $line,
                 'url' => $url,
-                'referer' => $referer
+                'referer' => $referer,
             );
         }
     }
@@ -513,7 +504,6 @@ class SupportController extends Controller
     private function checkTicketAccess(User $user, Ticket $ticket)
     {
         if ($user->getId() !== $ticket->getUser()->getId()) {
-
             throw new AccessDeniedException();
         }
     }
@@ -525,7 +515,6 @@ class SupportController extends Controller
         if ($user->getId() !== $ticket->getUser()->getId() ||
             count($interventions) > 0 ||
             $ticket->getLevel() !== 0) {
-
             throw new AccessDeniedException();
         }
     }
@@ -533,7 +522,6 @@ class SupportController extends Controller
     private function checkUser(User $authenticateUser, User $user)
     {
         if ($user->getId() !== $authenticateUser->getId()) {
-
             throw new AccessDeniedException();
         }
     }

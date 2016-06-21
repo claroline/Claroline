@@ -15,13 +15,11 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use FormaLibre\InvoiceBundle\Entity\Product;
-use FormaLibre\InvoiceBundle\Entity\PriceSolution;
 
 class LoadParametersData extends AbstractFixture implements ContainerAwareInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -29,7 +27,7 @@ class LoadParametersData extends AbstractFixture implements ContainerAwareInterf
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {

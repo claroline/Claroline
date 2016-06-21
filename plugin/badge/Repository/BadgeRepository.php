@@ -13,7 +13,6 @@ class BadgeRepository extends EntityRepository
 {
     /**
      * @param User $user
-     *
      * @param bool $executeQuery
      *
      * @return Query|array
@@ -30,13 +29,12 @@ class BadgeRepository extends EntityRepository
             )
             ->setParameter('userId', $user->getId());
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
      * @param null|string $locale
-     *
-     * @param bool $executeQuery
+     * @param bool        $executeQuery
      *
      * @return QueryBuilder|array
      */
@@ -53,8 +51,7 @@ class BadgeRepository extends EntityRepository
 
     /**
      * @param string $slug
-     *
-     * @param bool $executeQuery
+     * @param bool   $executeQuery
      *
      * @return array
      */
@@ -70,7 +67,7 @@ class BadgeRepository extends EntityRepository
             )
             ->setParameter('slug', $slug);
 
-        return $executeQuery ? $query->getSingleResult(): $query;
+        return $executeQuery ? $query->getSingleResult() : $query;
     }
 
     /**
@@ -82,7 +79,7 @@ class BadgeRepository extends EntityRepository
      */
     public function findByNameAndLocale($name, $locale, $executeQuery = true)
     {
-        $name  = strtoupper($name);
+        $name = strtoupper($name);
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT b, t
@@ -95,7 +92,7 @@ class BadgeRepository extends EntityRepository
             ->setParameter('name', "%{$name}%")
             ->setParameter('locale', $locale);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
@@ -108,7 +105,7 @@ class BadgeRepository extends EntityRepository
      */
     public function findByNameLocaleAndUserId($name, $locale, $userId, $executeQuery = true)
     {
-        $name  = strtoupper($name);
+        $name = strtoupper($name);
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT b, t
@@ -127,7 +124,7 @@ class BadgeRepository extends EntityRepository
             ->setParameter('name', "%{$name}%")
             ->setParameter('locale', $locale);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
@@ -151,7 +148,6 @@ class BadgeRepository extends EntityRepository
 
     /**
      * @param string $search
-     *
      * @param string $data
      *
      * @return array
@@ -167,9 +163,9 @@ class BadgeRepository extends EntityRepository
 
         foreach ($badges as $badge) {
             $resultArray[] = array(
-                'id'   => $badge->getId(),
+                'id' => $badge->getId(),
                 'text' => $badge->getName($locale),
-                'icon' => '<img src="/'.$badge->getWebPath().'" style="max-height:20px; max-width:20px;"/>'
+                'icon' => '<img src="/'.$badge->getWebPath().'" style="max-height:20px; max-width:20px;"/>',
             );
         }
 
@@ -177,14 +173,14 @@ class BadgeRepository extends EntityRepository
     }
 
     /**
-     * @param  array           $params
+     * @param array $params
+     *
      * @return ArrayCollection
      */
     public function extract($params)
     {
         $search = $params['search'];
         if ($search !== null) {
-
             $query = $this->findByNameAndLocale($search, $params['extra']['locale'], false);
 
             return $query
@@ -198,7 +194,7 @@ class BadgeRepository extends EntityRepository
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param bool                                                     $executeQuery
+     * @param bool                                             $executeQuery
      *
      * @return Query|array
      */
@@ -214,13 +210,13 @@ class BadgeRepository extends EntityRepository
             )
             ->setParameter('workspaceId', $workspace->getId());
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
      * @param Workspace $workspace
      *
-     * @return integer
+     * @return int
      */
     public function countByWorkspace(Workspace $workspace)
     {
@@ -245,7 +241,7 @@ class BadgeRepository extends EntityRepository
     public function orderByName(QueryBuilder $queryBuilder, $rootAlias, $locale)
     {
         $queryBuilder
-            ->join(sprintf("%s.translations", $rootAlias), 'bt')
+            ->join(sprintf('%s.translations', $rootAlias), 'bt')
             ->andWhere('bt.locale = :locale')
             ->orderBy('bt.name', 'ASC')
             ->setParameter('locale', $locale);
@@ -263,11 +259,10 @@ class BadgeRepository extends EntityRepository
     public function filterByWorkspace(QueryBuilder $queryBuilder, $rootAlias, $workspace)
     {
         if (null === $workspace) {
-            $queryBuilder->andWhere(sprintf("%s.workspace IS NULL", $rootAlias));
-        }
-        else {
+            $queryBuilder->andWhere(sprintf('%s.workspace IS NULL', $rootAlias));
+        } else {
             $queryBuilder
-                ->andWhere(sprintf("%s.workspace = :workspace", $rootAlias))
+                ->andWhere(sprintf('%s.workspace = :workspace', $rootAlias))
                 ->setParameter('workspace', $workspace);
         }
 
@@ -275,9 +270,9 @@ class BadgeRepository extends EntityRepository
     }
 
     /**
-     * @param QueryBuilder   $queryBuilder
-     * @param string         $rootAlias
-     * @param array          $blacklist Badge id we don't want to be retrieve
+     * @param QueryBuilder $queryBuilder
+     * @param string       $rootAlias
+     * @param array        $blacklist    Badge id we don't want to be retrieve
      *
      * @return QueryBuilder
      */
@@ -291,8 +286,8 @@ class BadgeRepository extends EntityRepository
             }
 
             $queryBuilder
-                ->andWhere(sprintf("%s.id NOT IN (:badgeIds)", $rootAlias))
-                ->setParameter('badgeIds', join(',', $blacklistedBadgeIds));
+                ->andWhere(sprintf('%s.id NOT IN (:badgeIds)', $rootAlias))
+                ->setParameter('badgeIds', implode(',', $blacklistedBadgeIds));
         }
 
         return $queryBuilder;
@@ -309,7 +304,7 @@ class BadgeRepository extends EntityRepository
     {
         $queryBuilder
             ->join('badge.userBadges', 'ub')
-            ->andWhere("ub.user = :user")
+            ->andWhere('ub.user = :user')
             ->setParameter('user', $user);
 
         return $queryBuilder;

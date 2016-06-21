@@ -6,7 +6,10 @@
         	{% for child in form %}
                 <div>
                 	<div class="wiki-mode-option-label">
-                		{{ form_label(child) }}
+                        <label>
+                            {{ form_widget(child) }}
+                            <span>{{ child.vars['label']|trans({}, translation_domain)|raw }}</span>
+                        </label>
                 	</div>
                 	<div class="wiki-mode-option-text">
                 		<small class="text-muted">{{(child.vars.label~'_message')|trans({}, translation_domain)}}</small>

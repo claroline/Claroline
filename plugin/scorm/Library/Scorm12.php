@@ -24,12 +24,14 @@ use JMS\DiExtraBundle\Annotation as DI;
 class Scorm12
 {
     /**
-     * Looks for the organization to use
+     * Looks for the organization to use.
      *
      * @param \DOMDocument $dom
+     *
      * @return array of Scorm12Sco
+     *
      * @throws InvalidScormArchiveException If a default organization
-     *         is defined and not found
+     *                                      is defined and not found
      */
     public function parseOrganizationsNode(\DOMDocument $dom)
     {
@@ -42,39 +44,32 @@ class Scorm12
 
             if (!is_null($organizations->attributes)
                 && !is_null($organizations->attributes->getNamedItem('default'))) {
-
                 $defaultOrganization = $organizations->attributes->getNamedItem('default')->nodeValue;
             } else {
                 $defaultOrganization = null;
             }
             // No default organization is defined
             if (is_null($defaultOrganization)) {
-
                 while (!is_null($organization)
                     && $organization->nodeName !== 'organization') {
-
                     $organization = $organization->nextSibling;
                 }
 
                 if (is_null($organization)) {
-
                     return $this->parseResourceNodes($resources);
                 }
             }
             // A default organization is defined
             // Look for it
             else {
-
                 while (!is_null($organization)
                     && ($organization->nodeName !== 'organization'
                         || is_null($organization->attributes->getNamedItem('identifier'))
                         || $organization->attributes->getNamedItem('identifier')->nodeValue !== $defaultOrganization)) {
-
                     $organization = $organization->nextSibling;
                 }
 
                 if (is_null($organization)) {
-
                     throw new InvalidScormArchiveException('default_organization_not_found_message');
                 }
             }
@@ -84,24 +79,24 @@ class Scorm12
     }
 
     /**
-     * Creates defined structure of SCOs
+     * Creates defined structure of SCOs.
      *
-     * @param \DOMNode $source
+     * @param \DOMNode     $source
      * @param \DOMNodeList $resources
+     *
      * @return array of Scorm12Sco
+     *
      * @throws InvalidScormArchiveException
      */
     private function parseItemNodes(
         \DOMNode $source,
         \DOMNodeList $resources,
         Scorm12Sco $parentSco = null
-    )
-    {
+    ) {
         $item = $source->firstChild;
         $scos = array();
 
         while (!is_null($item)) {
-
             if ($item->nodeName === 'item') {
                 $sco = new Scorm12Sco();
                 $scos[] = $sco;
@@ -123,17 +118,17 @@ class Scorm12
      * Initializes parameters of the SCO defined in attributes of the node.
      * It also look for the associated resource if it is a SCO and not a block.
      *
-     * @param Scorm12Sco $sco
-     * @param \DOMNode $item
+     * @param Scorm12Sco   $sco
+     * @param \DOMNode     $item
      * @param \DOMNodeList $resources
+     *
      * @throws InvalidScormArchiveException
      */
     private function findAttrParams(
         Scorm12Sco $sco,
         \DOMNode $item,
         \DOMNodeList $resources
-    )
-    {
+    ) {
         $identifier = $item->attributes->getNamedItem('identifier');
         $isVisible = $item->attributes->getNamedItem('isvisible');
         $identifierRef = $item->attributes->getNamedItem('identifierref');
@@ -172,9 +167,11 @@ class Scorm12
     /**
      * Searches for the resource with the given id and retrieve URL to its content.
      *
-     * @param string $identifierref id of the resource associated to the SCO
+     * @param string       $identifierref id of the resource associated to the SCO
      * @param \DOMNodeList $resources
+     *
      * @return string URL to the resource associated to the SCO
+     *
      * @throws InvalidScormArchiveException
      */
     public function findEntryUrl($identifierref, \DOMNodeList $resources)
@@ -189,7 +186,6 @@ class Scorm12
                     $href = $resource->attributes->getNamedItem('href');
 
                     if (is_null($href)) {
-
                         throw new InvalidScormArchiveException('sco_resource_without_href_message');
                     }
 
@@ -200,17 +196,15 @@ class Scorm12
         throw new InvalidScormArchiveException('sco_without_resource_message');
     }
 
-
     /**
-     * Initializes parameters of the SCO defined in children nodes
+     * Initializes parameters of the SCO defined in children nodes.
      *
      * @param Scorm12Sco $sco
-     * @param \DOMNode $item
+     * @param \DOMNode   $item
      */
     private function findNodeParams(Scorm12Sco $sco, \DOMNode $item)
     {
         while (!is_null($item)) {
-
             switch ($item->nodeName) {
                 case 'title':
                     $sco->setTitle($item->nodeValue);
@@ -228,7 +222,6 @@ class Scorm12
                         || $action === 'exit,no message'
                         || $action === 'continue,message'
                         || $action === 'continue,no message') {
-
                         $sco->setTimeLimitAction($action);
                     }
                     break;

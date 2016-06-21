@@ -28,8 +28,7 @@ class Writer
         $mainParameterFile,
         $platformParameterFile,
         $installFlagFile
-    )
-    {
+    ) {
         $this->templateFile = $mainTemplateFile;
         $this->mainFile = $mainParameterFile;
         $this->platformFile = $platformParameterFile;
@@ -60,8 +59,7 @@ class Writer
         DatabaseSettings $dbSettings,
         PlatformSettings $platformSettings,
         MailingSettings $mailSettings
-    )
-    {
+    ) {
         $defaultTemplateContent = file_get_contents($this->templateFile);
         $defaultParameters = Yaml::parse($defaultTemplateContent);
         $parameters = array(
@@ -79,7 +77,7 @@ class Writer
             'mailer_user' => $mailSettings->getTransportOption('username'),
             'mailer_password' => $mailSettings->getTransportOption('password'),
             'locale' => $platformSettings->getLanguage(),
-            'secret' => md5(rand(0, 10000000))
+            'secret' => md5(rand(0, 10000000)),
         );
         $parameters = array_merge($defaultParameters['parameters'], $parameters);
         $this->doWrite(array('parameters' => $parameters), $this->mainFile);
@@ -90,12 +88,11 @@ class Writer
         $country = null,
         $hasConfirmedSendDatas = false,
         $token = null
-    )
-    {
+    ) {
         $parameters = array(
             'name' => $settings->getName(),
             'support_email' => $settings->getSupportEmail(),
-            'locale_language' => $settings->getLanguage()
+            'locale_language' => $settings->getLanguage(),
         );
 
         if (!empty($country)) {

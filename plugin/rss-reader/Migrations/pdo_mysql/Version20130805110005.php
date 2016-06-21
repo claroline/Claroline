@@ -15,7 +15,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2013/08/05 11:00:05
  */
@@ -23,7 +23,7 @@ class Version20130805110005 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_rssreader_configuration (
                 id INT AUTO_INCREMENT NOT NULL, 
                 workspace_id INT DEFAULT NULL, 
@@ -35,23 +35,23 @@ class Version20130805110005 extends AbstractMigration
                 INDEX IDX_8D6D1C54A76ED395 (user_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_rssreader_configuration 
             ADD CONSTRAINT FK_8D6D1C5482D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_rssreader_configuration 
             ADD CONSTRAINT FK_8D6D1C54A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             DROP TABLE claro_rssreader_configuration
-        ");
+        ');
     }
 }

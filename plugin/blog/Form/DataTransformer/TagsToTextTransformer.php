@@ -1,9 +1,9 @@
 <?php
+
 namespace Icap\BlogBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Icap\BlogBundle\Manager\TagManager;
-use Icap\BlogBundle\Entity\Tag;
 
 class TagsToTextTransformer implements DataTransformerInterface
 {
@@ -23,7 +23,8 @@ class TagsToTextTransformer implements DataTransformerInterface
     /**
      * Transforms objects (tags) to a string.
      *
-     * @param  Tags|null $tags
+     * @param Tags|null $tags
+     *
      * @return string
      */
     public function transform($tags)
@@ -43,8 +44,9 @@ class TagsToTextTransformer implements DataTransformerInterface
     /**
      * Transforms a string to an array of tags.
      *
-     * @param  string $tagNames
-     * @return array  of strings (names for tags)
+     * @param string $tagNames
+     *
+     * @return array of strings (names for tags)
      */
     public function reverseTransform($tagNames)
     {
@@ -56,5 +58,4 @@ class TagsToTextTransformer implements DataTransformerInterface
 
         return $this->tagManager->loadOrCreateTags($tagNamesArray);
     }
-
 }

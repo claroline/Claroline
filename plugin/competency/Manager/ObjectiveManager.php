@@ -46,8 +46,7 @@ class ObjectiveManager
         CompetencyManager $competencyManager,
         ProgressManager $progressManager,
         PagerFactory $pagerFactory
-    )
-    {
+    ) {
         $this->om = $om;
         $this->competencyManager = $competencyManager;
         $this->progressManager = $progressManager;
@@ -62,6 +61,7 @@ class ObjectiveManager
      * Persists a learning objective.
      *
      * @param Objective $objective
+     *
      * @return Objective
      */
     public function persistObjective(Objective $objective)
@@ -86,6 +86,7 @@ class ObjectiveManager
      * and abilities, if any.
      *
      * @param Objective $objective
+     *
      * @return array
      */
     public function loadObjectiveCompetencies(Objective $objective)
@@ -100,6 +101,7 @@ class ObjectiveManager
      *
      * @param Objective $objective
      * @param User      $user
+     *
      * @return array
      */
     public function loadUserObjectiveCompetencies(Objective $objective, User $user)
@@ -171,17 +173,19 @@ class ObjectiveManager
      * the newly associated competency if the link doesn't already exist.
      * Otherwise, returns false.
      *
-     * @param Objective     $objective
-     * @param Competency    $competency
-     * @param Level         $level
+     * @param Objective  $objective
+     * @param Competency $competency
+     * @param Level      $level
+     *
      * @return mixed array|bool
+     *
      * @throws \LogicException if the level doesn't belong to the root competency scale
      */
     public function linkCompetency(Objective $objective, Competency $competency, Level $level)
     {
         $link = $this->objectiveCompetencyRepo->findOneBy([
             'competency' => $competency,
-            'objective' => $objective
+            'objective' => $objective,
         ]);
 
         if ($link) {
@@ -234,6 +238,7 @@ class ObjectiveManager
      *
      * @param Objective $objective
      * @param int       $page
+     *
      * @return Pagerfanta
      */
     public function listUsersWithObjective(Objective $objective = null, $page = 1)
@@ -248,6 +253,7 @@ class ObjectiveManager
      *
      * @param Objective $objective
      * @param int       $page
+     *
      * @return Pagerfanta
      */
     public function listGroupsWithObjective(Objective $objective = null, $page = 1)
@@ -260,6 +266,7 @@ class ObjectiveManager
      *
      * @param Group $group
      * @param int   $page
+     *
      * @return Pagerfanta
      */
     public function listGroupUsers(Group $group, $page = 1)
@@ -275,9 +282,11 @@ class ObjectiveManager
      * Assigns an objective to a user or a group. If the objective has already
      * been assigned, returns false. Otherwise, returns true.
      *
-     * @param Objective     $objective
-     * @param User|Group    $subject
+     * @param Objective  $objective
+     * @param User|Group $subject
+     *
      * @return bool
+     *
      * @throws \Exception if the subject is not an instance of User or Group
      */
     public function assignObjective(Objective $objective, $subject)
@@ -302,7 +311,9 @@ class ObjectiveManager
      * Returns an array representation of the objectives assigned to a user or a group.
      *
      * @param User|Group $subject
+     *
      * @return array
+     *
      * @throws \Exception if the subject is not an instance of User or Group
      */
     public function loadSubjectObjectives($subject)
@@ -318,6 +329,7 @@ class ObjectiveManager
      *
      * @param Objective $objective
      * @param Group     $group
+     *
      * @return array
      */
     public function removeGroupObjective(Objective $objective, Group $group)
@@ -333,7 +345,8 @@ class ObjectiveManager
      * re-computed percentage of user progression.
      *
      * @param Objective $objective
-     * @param User $user
+     * @param User      $user
+     *
      * @return bool|int
      */
     public function removeUserObjective(Objective $objective, User $user)

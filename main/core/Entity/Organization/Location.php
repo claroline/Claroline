@@ -16,7 +16,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity()
@@ -26,7 +25,7 @@ use JMS\Serializer\Annotation\SerializedName;
 class Location
 {
     const TYPE_DEPARTMENT = 1;
-    const TYPE_USER       = 2;
+    const TYPE_USER = 2;
 
     /**
      * @ORM\Id
@@ -102,7 +101,6 @@ class Location
      */
     protected $phone;
 
-
     /**
      * @var User[]|ArrayCollection
      *
@@ -128,7 +126,7 @@ class Location
 
     public function __construct()
     {
-        $this->users  = new ArrayCollection();
+        $this->users = new ArrayCollection();
         $this->organizations = new ArrayCollection();
     }
 

@@ -36,8 +36,7 @@ class ImportResourceTemplateEvent extends Event
         array $roles,
         array $createdResources = array(),
         array $files = array()
-    )
-    {
+    ) {
         $this->parent = $parent;
         $this->config = $config;
         $this->user = $user;
@@ -61,7 +60,6 @@ class ImportResourceTemplateEvent extends Event
     public function setResource(AbstractResource $resource)
     {
         $this->resource = $resource;
-
     }
 
     public function getResource()
@@ -113,7 +111,7 @@ class ImportResourceTemplateEvent extends Event
      * Expects an array of files.
      * Each item of the array is an array with the following keys:
      * 'archive_path' => '/pathname/in/archive'
-     * 'original_path' => '/pathname/in/extracted/dir'
+     * 'original_path' => '/pathname/in/extracted/dir'.
      *
      * @param array $files
      */

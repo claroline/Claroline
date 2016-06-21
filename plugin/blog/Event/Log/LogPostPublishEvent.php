@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -10,7 +10,6 @@
  */
 
 namespace Icap\BlogBundle\Event\Log;
-
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
@@ -30,13 +29,13 @@ class LogPostPublishEvent extends AbstractLogResourceEvent implements Notifiable
 
         $this->details = array(
             'post' => array(
-                'blog'      => $this->blog->getId(),
-                'title'     => $post->getTitle(),
-                'slug'      => $post->getSlug(),
+                'blog' => $this->blog->getId(),
+                'title' => $post->getTitle(),
+                'slug' => $post->getSlug(),
                 'published' => $post->isPublished(),
-                'author'    => $post->getAuthor()->getFirstName()." ".$post->getAuthor()->getLastName(),
-                'authorId'  => $post->getAuthor()->getId()
-            )
+                'author' => $post->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName(),
+                'authorId' => $post->getAuthor()->getId(),
+            ),
         );
 
         parent::__construct($this->blog->getResourceNode(), $this->details);
@@ -53,7 +52,7 @@ class LogPostPublishEvent extends AbstractLogResourceEvent implements Notifiable
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -99,11 +98,11 @@ class LogPostPublishEvent extends AbstractLogResourceEvent implements Notifiable
      */
     public function getIconKey()
     {
-        return "blog";
+        return 'blog';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -113,19 +112,19 @@ class LogPostPublishEvent extends AbstractLogResourceEvent implements Notifiable
         $notificationDetails['resource'] = array(
             'id' => $this->blog->getId(),
             'name' => $this->resource->getName(),
-            'type' => $this->resource->getResourceType()->getName()
+            'type' => $this->resource->getResourceType()->getName(),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {
         return true;
     }
-} 
+}

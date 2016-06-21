@@ -11,7 +11,7 @@
 
 namespace Claroline\MigrationBundle\Generator;
 
-use \SqlFormatter as BaseFormatter;
+use SqlFormatter as BaseFormatter;
 
 /**
  * Light extension of the original SqlFormatter, allowing to override its new line
@@ -35,7 +35,7 @@ class SqlFormatter extends BaseFormatter
     {
         $keyword_map = array(
             self::KEYWORD_NEWLINE => &self::$reserved_newline,
-            self::KEYWORD_TOPLEVEL => &self::$reserved_toplevel
+            self::KEYWORD_TOPLEVEL => &self::$reserved_toplevel,
         );
 
         foreach ($keywords as $keyword => $type) {

@@ -31,4 +31,4 @@ class RuleConstraintsConfigPass implements CompilerPassInterface
             $ruleValidator->addMethodCall('addConstraint', array(new Reference($id)));
         }
     }
-} 
+}

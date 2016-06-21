@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Rule\Entity\Rule;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class BadgeRule
+ * Class BadgeRule.
  *
  * @ORM\Table(name="claro_badge_rule")
  * @ORM\Entity(repositoryClass="Icap\BadgeBundle\Repository\BadgeRuleRepository")
@@ -72,8 +72,8 @@ class BadgeRule extends Rule
     public function __clone()
     {
         if ($this->id) {
-            $this->id              = null;
-            $this->badge           = null;
+            $this->id = null;
+            $this->badge = null;
             $this->associatedBadge = null;
         }
     }

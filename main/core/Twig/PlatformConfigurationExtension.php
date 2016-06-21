@@ -38,7 +38,7 @@ class PlatformConfigurationExtension extends Twig_Extension
     public function getGlobals()
     {
         return array(
-            'config' => $this->configHandler
+            'config' => $this->configHandler,
         );
     }
 

@@ -19,7 +19,7 @@ class OccurenceConstraintTest extends MockeryTestCase
 {
     public function testIsNotApplicableTo()
     {
-        $badgeRule           = new BadgeRule();
+        $badgeRule = new BadgeRule();
         $occurenceConstraint = new ResultConstraint();
 
         $this->assertFalse($occurenceConstraint->isApplicableTo($badgeRule));
@@ -27,7 +27,7 @@ class OccurenceConstraintTest extends MockeryTestCase
 
     public function testIsApplicableTo()
     {
-        $badgeRule           = new BadgeRule();
+        $badgeRule = new BadgeRule();
         $badgeRule->setOccurrence(rand(0, PHP_INT_MAX));
 
         $occurenceConstraint = new ResultConstraint();
@@ -39,7 +39,7 @@ class OccurenceConstraintTest extends MockeryTestCase
     {
         $badgeRule = new BadgeRule();
 
-        $associatedLogs      = array();
+        $associatedLogs = array();
         $occurenceConstraint = new OccurenceConstraint();
         $occurenceConstraint
             ->setRule($badgeRule)

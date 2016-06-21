@@ -84,4 +84,4 @@ class ResourceModel
     {
         return $this->model;
     }
-} 
+}

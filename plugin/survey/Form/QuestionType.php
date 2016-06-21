@@ -34,9 +34,9 @@ class QuestionType extends AbstractType
                 'choices' => array(
                     'open_ended' => 'open_ended',
                     'multiple_choice_single' => 'multiple_choice_single_answer',
-                    'multiple_choice_multiple' => 'multiple_choice_multiple_answers'
+                    'multiple_choice_multiple' => 'multiple_choice_multiple_answers',
                 ),
-                'required' => true
+                'required' => true,
             )
         );
         $builder->add(

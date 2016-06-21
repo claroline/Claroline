@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Entity\User;
 
 abstract class LogGenericEvent extends Event implements RestrictionnableInterface
 {
-    const DISPLAYED_ADMIN     = 'admin';
+    const DISPLAYED_ADMIN = 'admin';
     const DISPLAYED_WORKSPACE = 'workspace';
 
     const PLATFORM_EVENT_TYPE = 'platform';
@@ -47,7 +47,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     protected $isWorkspaceEnterEvent = false;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $otherElementId = null;
 
@@ -66,25 +66,24 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         $toolName = null,
         $isWorkspaceEnterEvent = false,
         $elementId = null
-    )
-    {
-        $this->action                 = $action;
-        $this->details                = $details;
-        $this->receiver               = $receiver;
-        $this->receiverGroup          = $receiverGroup;
-        $this->resource               = $resource;
-        $this->role                   = $role;
-        $this->workspace              = $workspace;
-        $this->owner                  = $owner;
-        $this->toolName               = $toolName;
-        $this->isWorkspaceEnterEvent  = $isWorkspaceEnterEvent;
-        $this->otherElementId         = $elementId;
+    ) {
+        $this->action = $action;
+        $this->details = $details;
+        $this->receiver = $receiver;
+        $this->receiverGroup = $receiverGroup;
+        $this->resource = $resource;
+        $this->role = $role;
+        $this->workspace = $workspace;
+        $this->owner = $owner;
+        $this->toolName = $toolName;
+        $this->isWorkspaceEnterEvent = $isWorkspaceEnterEvent;
+        $this->otherElementId = $elementId;
 
         $this->setVisibilityFromRestriction();
     }
 
     /**
-     * Returns the action's name
+     * Returns the action's name.
      */
     public function getAction()
     {
@@ -92,7 +91,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Returns details (array) containing the particular info of the action
+     * Returns details (array) containing the particular info of the action.
      */
     public function getDetails()
     {
@@ -100,7 +99,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Returns the action's target user
+     * Returns the action's target user.
      */
     public function getReceiver()
     {
@@ -108,7 +107,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Returns the action's target group
+     * Returns the action's target group.
      */
     public function getReceiverGroup()
     {
@@ -116,7 +115,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Returns the action's target resource
+     * Returns the action's target resource.
      */
     public function getResource()
     {
@@ -124,7 +123,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Returns the action's target role
+     * Returns the action's target role.
      */
     public function getRole()
     {
@@ -132,7 +131,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Returns the action's target workspace
+     * Returns the action's target workspace.
      */
     public function getWorkspace()
     {
@@ -140,7 +139,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Returns the action's target owner (from resource)
+     * Returns the action's target owner (from resource).
      */
     public function getOwner()
     {
@@ -148,7 +147,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Returns the action's target tool's name
+     * Returns the action's target tool's name.
      */
     public function getToolName()
     {
@@ -169,14 +168,14 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         if (($restrictions = $this->getRestriction())
             && count($restrictions) === 1
             && $restrictions[0] === self::DISPLAYED_ADMIN) {
-          $this->isDisplayedInWorkspace = false;
+            $this->isDisplayedInWorkspace = false;
         }
 
         return $this;
     }
 
     /**
-     * Return the visibility in admin for the associated log
+     * Return the visibility in admin for the associated log.
      *
      * @return bool
      */
@@ -186,7 +185,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Return the visibility in workspace for the associated log
+     * Return the visibility in workspace for the associated log.
      *
      * @return bool
      */
@@ -196,7 +195,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Return the visibility in workspace for the associated log
+     * Return the visibility in workspace for the associated log.
      *
      * @return bool
      */
@@ -206,7 +205,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * @param boolean $isDisplayedInAdmin
+     * @param bool $isDisplayedInAdmin
      *
      * @return LogGenericEvent
      */
@@ -218,7 +217,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * @param boolean $isDisplayedInWorkspace
+     * @param bool $isDisplayedInWorkspace
      *
      * @return LogGenericEvent
      */
@@ -230,7 +229,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Used when the doer isn't the logged user
+     * Used when the doer isn't the logged user.
      *
      * @param User $doer
      */
@@ -248,7 +247,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getOtherElementId()
     {
@@ -256,7 +255,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * @param integer $otherElementId
+     * @param int $otherElementId
      *
      * @return LogGenericEvent
      */

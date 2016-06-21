@@ -4,15 +4,12 @@ namespace Icap\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
 use Icap\BlogBundle\Entity\WidgetBlog;
 use Icap\BlogBundle\Entity\WidgetBlogList;
 use Icap\BlogBundle\Entity\WidgetTagListBlog;
-use Icap\BlogBundle\Listener\BlogListener;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -41,7 +38,7 @@ class WidgetController extends BaseController
         $originalWidgetListBlogs = new ArrayCollection($originalWidgetListBlogs);
 
         $widgetListOptions = $this->getWidgetManager()->getWidgetListOptions($widgetInstance);
-        
+
         $widgetBlogList = new WidgetBlogList();
         $widgetBlogList->setWidgetListBlogs($originalWidgetListBlogs);
         $widgetBlogList->setWidgetDisplayListBlogs($widgetListOptions->getDisplayStyle());
@@ -63,8 +60,7 @@ class WidgetController extends BaseController
             foreach ($widgetListBlogs as $widgetListBlog) {
                 if ($originalWidgetListBlogs->contains($widgetListBlog)) {
                     $originalWidgetListBlogs->removeElement($widgetListBlog);
-                }
-                else {
+                } else {
                     $widgetListBlog->setWidgetInstance($widgetInstance);
                     $entityManager->persist($widgetListBlog);
                 }
@@ -85,8 +81,8 @@ class WidgetController extends BaseController
         return $this->render(
             'IcapBlogBundle:widget:listConfigure.html.twig',
             array(
-                'form'           => $form->createView(),
-                'widgetInstance' => $widgetInstance
+                'form' => $form->createView(),
+                'widgetInstance' => $widgetInstance,
             )
         );
     }
@@ -128,8 +124,8 @@ class WidgetController extends BaseController
         return $this->render(
             'IcapBlogBundle:widget:blogConfigure.html.twig',
             array(
-                'form'           => $form->createView(),
-                'widgetInstance' => $widgetInstance
+                'form' => $form->createView(),
+                'widgetInstance' => $widgetInstance,
             )
         );
     }
@@ -171,8 +167,8 @@ class WidgetController extends BaseController
         return $this->render(
             'IcapBlogBundle:widget:tagListBlogConfigure.html.twig',
             array(
-                'form'           => $form->createView(),
-                'widgetInstance' => $widgetInstance
+                'form' => $form->createView(),
+                'widgetInstance' => $widgetInstance,
             )
         );
     }

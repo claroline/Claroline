@@ -27,7 +27,7 @@ class ThemeManager
         'Claroline',
         'Claroline Black',
         'Claroline Mint',
-        'Claroline Ruby'
+        'Claroline Ruby',
     ];
 
     private $om;
@@ -41,19 +41,18 @@ class ThemeManager
      *     "kernelDir"  = @DI\Inject("%kernel.root_dir%")
      * })
      *
-     * @param ObjectManager                 $om
-     * @param PlatformConfigurationHandler  $config
-     * @param string                        $kernelDir
+     * @param ObjectManager                $om
+     * @param PlatformConfigurationHandler $config
+     * @param string                       $kernelDir
      */
     public function __construct(
         ObjectManager $om,
         PlatformConfigurationHandler $config,
         $kernelDir
-    )
-    {
+    ) {
         $this->om = $om;
         $this->config = $config;
-        $this->themeDir = $kernelDir . '/../web/themes';
+        $this->themeDir = $kernelDir.'/../web/themes';
     }
 
     /**
@@ -81,6 +80,7 @@ class ThemeManager
      * Returns the names of all the registered themes.
      *
      * @param bool $customOnly
+     *
      * @return string[]
      */
     public function listThemeNames($customOnly = false)
@@ -113,6 +113,7 @@ class ThemeManager
      * Deletes a theme, including its css directory.
      *
      * @param Theme $theme
+     *
      * @throws \Exception if the theme is not a custom theme
      */
     public function deleteTheme(Theme $theme)
@@ -145,8 +146,8 @@ class ThemeManager
     /**
      * Creates a custom theme based on a css file.
      *
-     * @param string    $name
-     * @param File      $file
+     * @param string $name
+     * @param File   $file
      */
     public function createCustomTheme($name, File $file)
     {

@@ -47,7 +47,7 @@ class AbilityTypeTest extends FormTestCase
         $formData = [
             'name' => 'Foo',
             'level' => $level->getId(),
-            'minActivityCount' => 2
+            'minActivityCount' => 2,
         ];
 
         $form = $this->factory->create(new AbilityType(), null, ['competency' => $parent]);

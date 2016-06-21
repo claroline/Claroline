@@ -24,11 +24,11 @@ class LogWorkspaceRoleDeleteEvent extends LogGenericEvent
             self::ACTION,
             array(
                 'role' => array(
-                    'name' => $role->getName()
+                    'name' => $role->getName(),
                 ),
                 'workspace' => array(
-                    'name' => $role->getWorkspace()->getName()
-                )
+                    'name' => $role->getWorkspace()->getName(),
+                ),
             ),
             null,
             null,
@@ -43,6 +43,6 @@ class LogWorkspaceRoleDeleteEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 }

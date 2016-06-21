@@ -48,6 +48,7 @@ class ConfigureMenuListener
      * @DI\Observe("claroline_top_bar_left_menu_configure")
      *
      * @param \Claroline\CoreBundle\Menu\ConfigureMenuEvent $event
+     *
      * @return \Knp\Menu\ItemInterface $menu
      */
     public function onTopBarLeftMenuConfigure(ConfigureMenuEvent $event)
@@ -88,6 +89,7 @@ class ConfigureMenuListener
      * @DI\Observe("claroline_desktop_parameters_menu_configure")
      *
      * @param \Claroline\CoreBundle\Menu\ConfigureMenuEvent $event
+     *
      * @return \Knp\Menu\ItemInterface $menu
      */
     public function onDesktopParametersMenuConfigure(ConfigureMenuEvent $event)

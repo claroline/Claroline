@@ -20,7 +20,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @DI\Service("claroline.form.agenda")
@@ -63,7 +62,7 @@ class AgendaType extends AbstractType
         $builder
             ->add('title', 'text', [
                 'label' => 'form.title',
-                'required' => true
+                'required' => true,
             ])
         ;
 
@@ -71,20 +70,20 @@ class AgendaType extends AbstractType
             $builder
                 ->add('isTask', 'checkbox', [
                     'label' => 'form.task',
-                    'required' => false
+                    'required' => false,
                 ])
 
                 ->add('isAllDay', 'checkbox', [
                     'label' => 'form.all_day',
-                    'required' => false
+                    'required' => false,
                 ])
 
                 ->add('start', 'text', [
-                    'label' => 'form.start'
+                    'label' => 'form.start',
                 ])
 
                 ->add('end', 'text', [
-                    'label' => 'form.end'
+                    'label' => 'form.end',
                 ])
             ;
         }
@@ -96,13 +95,13 @@ class AgendaType extends AbstractType
                 'required' => false,
                 'choices' => $this->getWorkspacesByUser(),
                 'empty_value' => $this->translator->trans('desktop', [], 'platform'),
-                'property' => 'name'
+                'property' => 'name',
             ]);
         }
 
         $builder
             ->add('description', 'tinymce', [
-                'label' => 'form.description'
+                'label' => 'form.description',
             ])
         ;
 
@@ -113,15 +112,15 @@ class AgendaType extends AbstractType
                     'choices' => [
                         '#FF0000' => 'high',
                         '#01A9DB' => 'medium',
-                        '#848484' => 'low'
-                    ]
+                        '#848484' => 'low',
+                    ],
                 ])
 
                 ->add('users', 'userpicker', [
                     'label' => 'form.invitations',
                     'translation_domain' => 'agenda',
                     'multiple' => true,
-                    'mapped' => false
+                    'mapped' => false,
                 ])
             ;
         }
@@ -141,10 +140,10 @@ class AgendaType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'workspace' => new Workspace() ,
+                'workspace' => new Workspace(),
                 'user' => new User(),
                 'class' => 'Claroline\AgendaBundle\Entity\Event',
-                'translation_domain' => 'agenda'
+                'translation_domain' => 'agenda',
             )
         );
     }

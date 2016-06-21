@@ -60,7 +60,7 @@ class FileImporter extends Importer implements ConfigurationInterface
                                     ->ifTrue(
                                         function ($v) use ($rootPath) {
                                             return call_user_func_array(
-                                                __CLASS__ . '::fileNotExists',
+                                                __CLASS__.'::fileNotExists',
                                                 array($v, $rootPath)
                                             );
                                         }
@@ -78,7 +78,7 @@ class FileImporter extends Importer implements ConfigurationInterface
 
     public function supports($type)
     {
-        return $type == 'yml' ? true: false;
+        return $type == 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -93,7 +93,7 @@ class FileImporter extends Importer implements ConfigurationInterface
 
         foreach ($array['data'] as $item) {
             $file = new File();
-            $tmpFile = new SfFile($this->getRootPath() . $ds . $item['file']['path']);
+            $tmpFile = new SfFile($this->getRootPath().$ds.$item['file']['path']);
 
             return $this->container->get('claroline.listener.file_listener')->createFile(
                 $file, $tmpFile,  $name, $item['file']['mime_type'], $workspace
@@ -108,15 +108,15 @@ class FileImporter extends Importer implements ConfigurationInterface
     public function export(Workspace $workspace, array &$_files, $object)
     {
         $hash = $object->getHashName();
-        $uid = uniqid() . '.' . pathinfo($hash, PATHINFO_EXTENSION);
+        $uid = uniqid().'.'.pathinfo($hash, PATHINFO_EXTENSION);
         $_files[$uid] = $this->container
-            ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash;
+            ->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$hash;
         $data = array();
 
         if (file_exists($_files[$uid])) {
             $data = array(array('file' => array(
                 'path' => $uid,
-                'mime_type' =>  $object->getResourceNode()->getMimeType()
+                'mime_type' => $object->getResourceNode()->getMimeType(),
             )));
         }
 
@@ -132,6 +132,6 @@ class FileImporter extends Importer implements ConfigurationInterface
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        return !file_exists($rootpath . $ds . $v);;
+        return !file_exists($rootpath.$ds.$v);
     }
 }

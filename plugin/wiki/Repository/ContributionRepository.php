@@ -6,15 +6,16 @@ use Doctrine\ORM\EntityRepository;
 use Icap\WikiBundle\Entity\Section;
 
 class ContributionRepository extends EntityRepository
-{    
-	/**
+{
+    /**
      * @param Section $section
+     *
      * @return array $contributions
      */
     public function getSectionHistoryQuery(Section $section)
     {
         $queryBuilder = $this->createQueryBuilder('contribution')
-        	->orderBy('contribution.creationDate', 'DESC')
+            ->orderBy('contribution.creationDate', 'DESC')
             ->andWhere('contribution.section = :section')
             ->setParameter('section', $section);
 
@@ -23,6 +24,7 @@ class ContributionRepository extends EntityRepository
 
     /**
      * @param Section $section
+     *
      * @return array $contributions
      */
     public function findAllButActiveForSection(Section $section)
@@ -39,14 +41,15 @@ class ContributionRepository extends EntityRepository
 
     /**
      * @param Section $section
-     * @param array $ids
+     * @param array   $ids
+     *
      * @return array $contributions
      */
     public function findyBySectionAndIds(Section $section, $ids)
     {
         $queryBuilder = $this->createQueryBuilder('contribution');
         $queryBuilder
-        	->orderBy('contribution.creationDate', 'ASC')
+            ->orderBy('contribution.creationDate', 'ASC')
             ->andWhere('contribution.section = :section')
             ->setParameter('section', $section)
             ->andWhere($queryBuilder->expr()->in('contribution.id', $ids));

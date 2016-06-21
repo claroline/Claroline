@@ -14,7 +14,6 @@ namespace Claroline\ForumBundle\Transfert;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\ForumBundle\Entity\Forum;
@@ -44,7 +43,7 @@ class ForumImporter extends Importer implements ConfigurationInterface
         $this->om = $om;
     }
 
-    public function  getConfigTreeBuilder()
+    public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('data');
@@ -137,7 +136,7 @@ class ForumImporter extends Importer implements ConfigurationInterface
                     foreach ($subject['subject']['messages'] as $message) {
                         $messageEntity = new Message();
                         $content = file_get_contents(
-                            $this->getRootPath() . DIRECTORY_SEPARATOR . $message['message']['path']
+                            $this->getRootPath().DIRECTORY_SEPARATOR.$message['message']['path']
                         );
 
                         $messageEntity->setContent($content);
@@ -178,8 +177,8 @@ class ForumImporter extends Importer implements ConfigurationInterface
             $data[] = array(
                 'category' => array(
                     'name' => $category->getName(),
-                    'subjects' => array()
-                )
+                    'subjects' => array(),
+                ),
             );
         }
 

@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Tag;
 
@@ -25,7 +23,7 @@ class FileExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'is_writable' => new \Twig_Function_Method($this, 'isWritable')
+            'is_writable' => new \Twig_Function_Method($this, 'isWritable'),
         );
     }
 
@@ -38,5 +36,4 @@ class FileExtension extends \Twig_Extension
     {
         return is_writable($path);
     }
-
 }

@@ -27,7 +27,7 @@ class MailType extends AbstractType
                 array(
                     'required' => true,
                     'constraints' => new Email(),
-                    'label' => 'receiver'
+                    'label' => 'receiver',
                 )
             )
             ->add('object', 'text', array('label' => 'object'))

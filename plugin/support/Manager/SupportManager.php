@@ -52,8 +52,7 @@ class SupportManager
         RouterInterface $router,
         TranslatorInterface $translator,
         UserManager $userManager
-    )
-    {
+    ) {
         $this->mailManager = $mailManager;
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
@@ -170,22 +169,20 @@ class SupportManager
         $updated = false;
 
         foreach ($allStatus as $oneStatus) {
-
             if ($oneStatus === $status) {
                 continue;
             } elseif ($oneStatus->getId() === $nextId) {
                 $status->setOrder($order);
                 $updated = true;
                 $this->om->persist($status);
-                $order++;
+                ++$order;
                 $oneStatus->setOrder($order);
                 $this->om->persist($oneStatus);
-                $order++;
-
+                ++$order;
             } else {
                 $oneStatus->setOrder($order);
                 $this->om->persist($oneStatus);
-                $order++;
+                ++$order;
             }
         }
 
@@ -201,13 +198,12 @@ class SupportManager
         $configs = $this->configurationRepo->findAll();
 
         if (count($configs) > 0) {
-
             $config = $configs[0];
         } else {
             $config = new Configuration();
             $details = array(
                 'with_credits' => false,
-                'contacts' => array()
+                'contacts' => array(),
             );
             $config->setDetails($details);
             $this->persistConfiguration($config);
@@ -243,35 +239,34 @@ class SupportManager
         Ticket $ticket,
         $type = '',
         Comment $comment = null
-    )
-    {
+    ) {
         $receivers = array();
         $extra = array();
 
         switch ($type) {
-            
+
             case 'new_ticket' :
                 $contactIds = $this->getConfigurationContactsOption();
 
                 if (count($contactIds) > 0) {
                     $receivers = $this->userManager->getUsersByIds($contactIds);
-                    $subject = '[' .
-                        $this->translator->trans('new_ticket', array(), 'support') .
-                        '][' .
-                        $user->getFirstName() .
-                        ' ' .
-                        $user->getLastName() .
-                        '] ' .
+                    $subject = '['.
+                        $this->translator->trans('new_ticket', array(), 'support').
+                        ']['.
+                        $user->getFirstName().
+                        ' '.
+                        $user->getLastName().
+                        '] '.
                         $ticket->getTitle();
-                    $content = $ticket->getDescription() .
-                        '<br><br>' .
-                        $this->translator->trans('mail', array(), 'platform') .
-                        ' : ' .
-                        $ticket->getContactMail() .
-                        '<br>' .
-                        $this->translator->trans('phone', array(), 'platform') .
-                        ' : ' .
-                        $ticket->getContactPhone() .
+                    $content = $ticket->getDescription().
+                        '<br><br>'.
+                        $this->translator->trans('mail', array(), 'platform').
+                        ' : '.
+                        $ticket->getContactMail().
+                        '<br>'.
+                        $this->translator->trans('phone', array(), 'platform').
+                        ' : '.
+                        $ticket->getContactPhone().
                         '<br><br>';
                 }
                 break;
@@ -281,23 +276,23 @@ class SupportManager
 
                 if (count($contactIds) > 0) {
                     $receivers = $this->userManager->getUsersByIds($contactIds);
-                    $subject = '[' .
-                        $this->translator->trans('ticket_edition', array(), 'support') .
-                        '][' .
-                        $user->getFirstName() .
-                        ' ' .
-                        $user->getLastName() .
-                        '] ' .
+                    $subject = '['.
+                        $this->translator->trans('ticket_edition', array(), 'support').
+                        ']['.
+                        $user->getFirstName().
+                        ' '.
+                        $user->getLastName().
+                        '] '.
                         $ticket->getTitle();
-                    $content = $ticket->getDescription() .
-                        '<br><br>' .
-                        $this->translator->trans('mail', array(), 'platform') .
-                        ' : ' .
-                        $ticket->getContactMail() .
-                        '<br>' .
-                        $this->translator->trans('phone', array(), 'platform') .
-                        ' : ' .
-                        $ticket->getContactPhone() .
+                    $content = $ticket->getDescription().
+                        '<br><br>'.
+                        $this->translator->trans('mail', array(), 'platform').
+                        ' : '.
+                        $ticket->getContactMail().
+                        '<br>'.
+                        $this->translator->trans('phone', array(), 'platform').
+                        ' : '.
+                        $ticket->getContactPhone().
                         '<br><br>';
                 }
                 break;
@@ -307,32 +302,32 @@ class SupportManager
 
                 if (count($contactIds) > 0) {
                     $receivers = $this->userManager->getUsersByIds($contactIds);
-                    $subject = '[' .
-                        $this->translator->trans('ticket_deletion', array(), 'support') .
-                        '][' .
-                        $user->getFirstName() .
-                        ' ' .
-                        $user->getLastName() .
-                        '] ' .
+                    $subject = '['.
+                        $this->translator->trans('ticket_deletion', array(), 'support').
+                        ']['.
+                        $user->getFirstName().
+                        ' '.
+                        $user->getLastName().
+                        '] '.
                         $ticket->getTitle();
-                    $content = $this->translator->trans('ticket_deletion', array(), 'support') .
+                    $content = $this->translator->trans('ticket_deletion', array(), 'support').
                         '<br><br>';
                 }
                 break;
-                
+
             case 'new_admin_comment' :
                 $extra['to'] = array($ticket->getContactMail());
 
                 if (!is_null($comment)) {
-                    $subject = '[' .
-                        $this->translator->trans('new_comment', array(), 'support') .
-                        '][' .
-                        $this->translator->trans('ticket', array(), 'support') .
-                        ' #' .
-                        $ticket->getNum() .
-                        '] ' .
+                    $subject = '['.
+                        $this->translator->trans('new_comment', array(), 'support').
+                        ']['.
+                        $this->translator->trans('ticket', array(), 'support').
+                        ' #'.
+                        $ticket->getNum().
+                        '] '.
                         $ticket->getTitle();
-                    $content = $comment->getContent() . '<br><br>';
+                    $content = $comment->getContent().'<br><br>';
                 }
                 break;
 
@@ -341,27 +336,27 @@ class SupportManager
 
                 if (count($contactIds) > 0 && !is_null($comment)) {
                     $receivers = $this->userManager->getUsersByIds($contactIds);
-                    $subject = '[' .
-                        $this->translator->trans('new_comment', array(), 'support') .
-                        '][' .
-                        $user->getFirstName() .
-                        ' ' .
-                        $user->getLastName() .
-                        '] ' .
+                    $subject = '['.
+                        $this->translator->trans('new_comment', array(), 'support').
+                        ']['.
+                        $user->getFirstName().
+                        ' '.
+                        $user->getLastName().
+                        '] '.
                         $ticket->getTitle();
-                    $content = $comment->getContent() .
-                        '<br><br>' .
-                        $this->translator->trans('mail', array(), 'platform') .
-                        ' : ' .
-                        $ticket->getContactMail() .
-                        '<br>' .
-                        $this->translator->trans('phone', array(), 'platform') .
-                        ' : ' .
-                        $ticket->getContactPhone() .
+                    $content = $comment->getContent().
+                        '<br><br>'.
+                        $this->translator->trans('mail', array(), 'platform').
+                        ' : '.
+                        $ticket->getContactMail().
+                        '<br>'.
+                        $this->translator->trans('phone', array(), 'platform').
+                        ' : '.
+                        $ticket->getContactPhone().
                         '<br><br>';
                 }
                 break;
-            
+
             default :
                 break;
         }
@@ -370,7 +365,6 @@ class SupportManager
             $this->mailManager->send($subject, $content, $receivers, null, $extra);
         }
     }
-
 
     /**************************************
      * Access to TicketRepository methods *
@@ -383,8 +377,7 @@ class SupportManager
         $withPager = true,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $tickets = empty($search) ?
             $this->ticketRepo->findAllTickets($orderedBy, $order) :
             $this->ticketRepo->findAllSearchedTickets($search, $orderedBy, $order);
@@ -402,8 +395,7 @@ class SupportManager
         $withPager = true,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $tickets = empty($search) ?
             $this->ticketRepo->findTicketsByUser($user, $orderedBy, $order) :
             $this->ticketRepo->findSearchedTicketByUser($user, $search, $orderedBy, $order);
@@ -422,8 +414,7 @@ class SupportManager
         $withPager = true,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $tickets = empty($search) ?
             $this->ticketRepo->findTicketsByLevel($type, $level, $orderedBy, $order) :
             $this->ticketRepo->findSearchedTicketsByLevel($type, $level, $search, $orderedBy, $order);
@@ -442,8 +433,7 @@ class SupportManager
         $withPager = true,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $tickets = empty($search) ?
             $this->ticketRepo->findTicketsByInterventionUser($type, $user, $orderedBy, $order) :
             $this->ticketRepo->findSearchedTicketsByInterventionUser($type, $user, $search, $orderedBy, $order);
@@ -462,8 +452,7 @@ class SupportManager
         $withPager = true,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $tickets = empty($search) ?
             $this->ticketRepo->findActiveTicketsByInterventionUser($type, $user, $orderedBy, $order) :
             $this->ticketRepo->findSearchedActiveTicketsByInterventionUser($type, $user, $search, $orderedBy, $order);
@@ -481,8 +470,7 @@ class SupportManager
         $withPager = true,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $tickets = empty($search) ?
             $this->ticketRepo->findTicketsWithoutIntervention($type, $orderedBy, $order) :
             $this->ticketRepo->findSearchedTicketsWithoutIntervention($type, $search, $orderedBy, $order);
@@ -501,8 +489,7 @@ class SupportManager
         $withPager = true,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $tickets = empty($search) ?
             $this->ticketRepo->findTicketsWithoutInterventionByLevel($level, $type, $orderedBy, $order) :
             $this->ticketRepo->findSearchedTicketsWithoutInterventionByLevel($level, $type, $search, $orderedBy, $order);
@@ -521,8 +508,7 @@ class SupportManager
         $withPager = true,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $tickets = empty($search) ?
             $this->ticketRepo->findTicketsByInterventionStatus($type, $status, $orderedBy, $order) :
             $this->ticketRepo->findSearchedTicketsByInterventionStatus($type, $status, $search, $orderedBy, $order);
@@ -531,7 +517,6 @@ class SupportManager
             $this->pagerFactory->createPagerFromArray($tickets, $page, $max) :
             $tickets;
     }
-
 
     /************************************
      * Access to TypeRepository methods *
@@ -544,8 +529,7 @@ class SupportManager
         $withPager = false,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $types = empty($search) ?
             $this->typeRepo->findAllTypes($orderedBy, $order) :
             $this->typeRepo->findAllSearchedTypes($search, $orderedBy, $order);
@@ -560,8 +544,6 @@ class SupportManager
         return $this->typeRepo->findOneByName($name);
     }
 
-
-
     /**************************************
      * Access to StatusRepository methods *
      **************************************/
@@ -573,8 +555,7 @@ class SupportManager
         $withPager = false,
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $status = empty($search) ?
             $this->statusRepo->findAllStatus($orderedBy, $order) :
             $this->statusRepo->findAllSearchedStatus($search, $orderedBy, $order);
@@ -594,7 +575,6 @@ class SupportManager
         return $this->statusRepo->findOrderOfLastStatus();
     }
 
-
     /********************************************
      * Access to InterventionRepository methods *
      ********************************************/
@@ -603,8 +583,7 @@ class SupportManager
         Ticket $ticket,
         $orderedBy = 'startDate',
         $order = 'ASC'
-    )
-    {
+    ) {
         return $this->interventionRepo->findUnfinishedInterventionByTicket(
             $ticket,
             $orderedBy,

@@ -23,25 +23,31 @@
             <!--
             <directory>main/*/Tests/</directory>
             <directory>plugin/*/Tests/</directory>
+            <directory>main/core/Tests/API/Admin</directory>
             -->
-
             <!-- Uncomment the following elements individually in the meantime -->
 
-            <!-- <directory>main/core/Tests/</directory> -->
+            <directory>main/core/Tests/API/</directory>
+            <directory>main/core/Tests/Security/</directory>
             <directory>main/migration/Tests/</directory>
             <!-- <directory>plugin/activity-tool/Tests/</directory> -->
             <!-- <directory>plugin/announcement/Tests/</directory> -->
             <!-- <directory>plugin/badge/Tests/</directory> -->
             <directory>plugin/collecticiel/Tests/</directory>
+            <directory>plugin/message/Tests/</directory>
+            <directory>plugin/notification/Tests/</directory>
             <directory>plugin/competency/Tests/</directory>
             <directory>plugin/cursus/Tests/</directory>
             <directory>plugin/dropzone/Tests/</directory>
             <directory>plugin/favourite/Tests/</directory>
             <directory>plugin/forum/Tests/</directory>
+            <directory>plugin/website/Tests/</directory>
+            <directory>plugin/video-player/Tests/</directory>
             <!-- <directory>plugin/portfolio/Tests/</directory> -->
             <directory>plugin/result/Tests/</directory>
             <directory>plugin/rss-reader/Tests/</directory>
             <directory>plugin/url/Tests/</directory>
+            <directory>plugin/exo/Tests/</directory>
 
         </testsuite>
     </testsuites>

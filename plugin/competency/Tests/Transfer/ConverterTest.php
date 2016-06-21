@@ -8,6 +8,7 @@ class ConverterTest extends RepositoryTestCase
 {
     /**
      * @dataProvider frameworkProvider
+     *
      * @param string $frameworkFileName
      */
     public function testConversionRoundTrip($frameworkFileName)
@@ -15,7 +16,7 @@ class ConverterTest extends RepositoryTestCase
         $container = $this->client->getContainer();
         $manager = $container->get('hevinci.competency.competency_manager');
         $converter = $container->get('hevinci.competency.transfer_converter');
-        $file = __DIR__ . '/../../Resources/format/valid/' . $frameworkFileName;
+        $file = __DIR__.'/../../Resources/format/valid/'.$frameworkFileName;
 
         $originalJson = file_get_contents($file);
 
@@ -46,7 +47,7 @@ class ConverterTest extends RepositoryTestCase
         $this->om->flush();
 
         $converter = $this->client->getContainer()->get('hevinci.competency.transfer_converter');
-        $file = __DIR__ . '/../../Resources/format/valid/minimal-1.json';
+        $file = __DIR__.'/../../Resources/format/valid/minimal-1.json';
         $framework = $converter->convertToEntity(file_get_contents($file));
 
         $this->assertEquals($scale, $framework->getScale());
@@ -59,7 +60,7 @@ class ConverterTest extends RepositoryTestCase
             ['intermediate-1.json'],
             ['intermediate-2.json'],
             ['full.json'],
-            ['non-ascii.json']
+            ['non-ascii.json'],
         ];
     }
 }

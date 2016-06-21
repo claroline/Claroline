@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\EventDispatcher\Event;
 
 class RichTextFormatEvent extends Event

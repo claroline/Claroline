@@ -46,7 +46,7 @@ class OptionsType extends AbstractType
             array(
                 'mapped' => false,
                 'label' => 'show_all_my_contacts',
-                'data' => $showAllMyContacts
+                'data' => $showAllMyContacts,
             )
         );
         $builder->add(
@@ -55,7 +55,7 @@ class OptionsType extends AbstractType
             array(
                 'mapped' => false,
                 'label' => 'show_all_visible_users',
-                'data' => $showAllVisibleUsers
+                'data' => $showAllVisibleUsers,
             )
         );
         $builder->add(
@@ -64,7 +64,7 @@ class OptionsType extends AbstractType
             array(
                 'mapped' => false,
                 'label' => 'show_picture',
-                'data' => $showPicture
+                'data' => $showPicture,
             )
         );
         $builder->add(
@@ -73,7 +73,7 @@ class OptionsType extends AbstractType
             array(
                 'mapped' => false,
                 'label' => 'show_username',
-                'data' => $showUsername
+                'data' => $showUsername,
             )
         );
         $builder->add(
@@ -82,7 +82,7 @@ class OptionsType extends AbstractType
             array(
                 'mapped' => false,
                 'label' => 'show_mail',
-                'data' => $showMail
+                'data' => $showMail,
             )
         );
         $builder->add(
@@ -91,7 +91,7 @@ class OptionsType extends AbstractType
             array(
                 'mapped' => false,
                 'label' => 'show_phone',
-                'data' => $showPhone
+                'data' => $showPhone,
             )
         );
     }

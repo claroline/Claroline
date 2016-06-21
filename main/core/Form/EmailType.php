@@ -26,7 +26,7 @@ class EmailType extends AbstractType
             array(
                 'required' => true,
                 'constraints' => new Email(),
-                'label' => 'email'
+                'label' => 'email',
             )
         );
     }

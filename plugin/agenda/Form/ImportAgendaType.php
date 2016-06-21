@@ -31,8 +31,8 @@ class ImportAgendaType extends AbstractType
                 'constraints' => array(
                     new NotBlank(),
                     new File(),
-                    new IcsFile()
-                )
+                    new IcsFile(),
+                ),
            )
         );
     }
@@ -47,7 +47,7 @@ class ImportAgendaType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'agenda'
+                'translation_domain' => 'agenda',
                 )
         );
     }

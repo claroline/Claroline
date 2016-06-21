@@ -27,8 +27,7 @@ class ObjectiveType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'platform',
-            'data_class' => 'HeVinci\CompetencyBundle\Entity\Objective'
+            'data_class' => 'HeVinci\CompetencyBundle\Entity\Objective',
         ]);
     }
 }
-

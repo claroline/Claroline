@@ -11,7 +11,6 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CursusBundle\Entity\CourseSession;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

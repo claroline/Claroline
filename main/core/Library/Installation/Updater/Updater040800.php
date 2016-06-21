@@ -85,7 +85,7 @@ class Updater040800 extends Updater
         $idsToRemove = array();
         $exitingUsers = array();
         $exitingWorkspaces = array();
-        $desktopSelect = "
+        $desktopSelect = '
             SELECT ot1.*
             FROM claro_ordered_tool ot1
             WHERE ot1.user_id IS NOT NULL
@@ -96,7 +96,7 @@ class Updater040800 extends Updater
                 AND ot1.user_id = ot2.user_id
             )
             ORDER BY ot1.id ASC
-        ";
+        ';
         $desktopRows = $this->connection->query($desktopSelect);
 
         foreach ($desktopRows as $ot) {
@@ -104,9 +104,7 @@ class Updater040800 extends Updater
             $userId = $ot['user_id'];
 
             if (isset($exitingUsers[$toolId])) {
-
                 if (isset($exitingUsers[$toolId][$userId])) {
-
                     $idsToRemove[] = $ot['id'];
                 } else {
                     $exitingUsers[$toolId][$userId] = true;
@@ -117,7 +115,7 @@ class Updater040800 extends Updater
             }
         }
 
-        $workspaceSelect = "
+        $workspaceSelect = '
             SELECT ot1.*
             FROM claro_ordered_tool ot1
             WHERE ot1.workspace_id IS NOT NULL
@@ -128,7 +126,7 @@ class Updater040800 extends Updater
                 AND ot1.workspace_id = ot2.workspace_id
             )
             ORDER BY ot1.id
-        ";
+        ';
         $workspaceRows = $this->connection->query($workspaceSelect);
 
         foreach ($workspaceRows as $ot) {
@@ -136,9 +134,7 @@ class Updater040800 extends Updater
             $workspaceId = $ot['workspace_id'];
 
             if (isset($exitingWorkspaces[$toolId])) {
-
                 if (isset($exitingWorkspaces[$toolId][$workspaceId])) {
-
                     $idsToRemove[] = $ot['id'];
                 } else {
                     $exitingWorkspaces[$toolId][$workspaceId] = true;
@@ -150,15 +146,13 @@ class Updater040800 extends Updater
         }
 
         if (count($idsToRemove) > 0) {
-
-            $deleteReq = "
+            $deleteReq = '
                 DELETE FROM claro_ordered_tool
-                WHERE id IN (";
+                WHERE id IN (';
 
-            for ($i = 0; $i < count($idsToRemove); $i++) {
-
+            for ($i = 0; $i < count($idsToRemove); ++$i) {
                 if ($i < count($idsToRemove) - 1) {
-                    $deleteReq .= $idsToRemove[$i] . ',';
+                    $deleteReq .= $idsToRemove[$i].',';
                 } else {
                     $deleteReq .= $idsToRemove[$i];
                 }
@@ -167,7 +161,7 @@ class Updater040800 extends Updater
             $this->connection->query($deleteReq);
         }
     }
-    
+
     private function updateWorkspaceMaxUsers()
     {
         $this->log('Updating workspace users limit...');
@@ -175,21 +169,21 @@ class Updater040800 extends Updater
         $em = $this->container->get('doctrine.orm.entity_manager');
         /** @var \Claroline\CoreBundle\Repository\WorkspaceRepository $wsRepo */
         $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace');
-        $workspacesQuery = $wsRepo->createQueryBuilder("workspace")->getQuery();
+        $workspacesQuery = $wsRepo->createQueryBuilder('workspace')->getQuery();
         $i = 0;
         $workspaces = $workspacesQuery->iterate();
         foreach ($workspaces as $row) {
             $workspace = $row[0];
             $workspace->setMaxUsers(10000);
             $em->persist($workspace);
-            
+
             if ($i % 200 === 0) {
                 $this->log('    200 workspace updated...');
                 $em->flush();
                 $em->clear();
             }
-            
-            $i++;
+
+            ++$i;
         }
         $em->flush();
     }

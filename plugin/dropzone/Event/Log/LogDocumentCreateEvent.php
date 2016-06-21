@@ -8,8 +8,8 @@ use Icap\DropzoneBundle\Entity\Document;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 
-class LogDocumentCreateEvent extends AbstractLogResourceEvent {
-
+class LogDocumentCreateEvent extends AbstractLogResourceEvent
+{
     const ACTION = 'resource-icap_dropzone-document_create';
 
     /**
@@ -25,12 +25,12 @@ class LogDocumentCreateEvent extends AbstractLogResourceEvent {
         }
 
         $details = array(
-            'dropzone'  => array(
+            'dropzone' => array(
                 'id' => $dropzone->getId(),
             ),
-            'drop'  => array(
+            'drop' => array(
                 'id' => $drop->getId(),
-                'documents' => $documentsDetails
+                'documents' => $documentsDetails,
             ),
             'document' => $document->toArray(),
         );

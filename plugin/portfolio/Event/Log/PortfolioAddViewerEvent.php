@@ -5,7 +5,6 @@ namespace Icap\PortfolioBundle\Event\Log;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\PortfolioBundle\Entity\Portfolio;
-use Icap\PortfolioBundle\Entity\PortfolioGuide;
 use Icap\PortfolioBundle\Entity\PortfolioUser;
 
 class PortfolioAddViewerEvent extends LogGenericEvent implements NotifiableInterface
@@ -31,14 +30,14 @@ class PortfolioAddViewerEvent extends LogGenericEvent implements NotifiableInter
             self::ACTION,
             array(
                 'owner' => array(
-                    'lastName'  => $user->getLastName(),
-                    'firstName' => $user->getFirstName()
+                    'lastName' => $user->getLastName(),
+                    'firstName' => $user->getFirstName(),
                 ),
                 'portfolio' => array(
-                    'id'    => $this->portfolio->getId(),
+                    'id' => $this->portfolio->getId(),
                     'title' => $this->portfolio->getTitle(),
-                    'slug'  => $this->portfolio->getSlug()
-                )
+                    'slug' => $this->portfolio->getSlug(),
+                ),
             ),
             $portfolioUser->getUser(),
             null,
@@ -60,7 +59,7 @@ class PortfolioAddViewerEvent extends LogGenericEvent implements NotifiableInter
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -104,11 +103,11 @@ class PortfolioAddViewerEvent extends LogGenericEvent implements NotifiableInter
      */
     public function getIconKey()
     {
-        return "portfolio";
+        return 'portfolio';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -118,25 +117,25 @@ class PortfolioAddViewerEvent extends LogGenericEvent implements NotifiableInter
 
         $notificationDetails = array(
             'portfolio' => array(
-                'id'    => $this->portfolio->getId(),
+                'id' => $this->portfolio->getId(),
                 'title' => $this->portfolio->getTitle(),
-                'slug'  => $this->portfolio->getSlug()
+                'slug' => $this->portfolio->getSlug(),
             ),
-            'viewer'  => array(
-                'id'        => $receiver->getId(),
+            'viewer' => array(
+                'id' => $receiver->getId(),
                 'publicUrl' => $receiver->getPublicUrl(),
-                'lastName'  => $receiver->getLastName(),
-                'firstName' => $receiver->getFirstName()
-            )
+                'lastName' => $receiver->getLastName(),
+                'firstName' => $receiver->getFirstName(),
+            ),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

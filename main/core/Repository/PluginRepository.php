@@ -33,8 +33,26 @@ class PluginRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('vendor', $split[0]);
         $query->setParameter('bundle', $split[1]);
-        $results = $query->getResult();
 
-        return count($results) !== 0 ? $results[0] : null;
+        return $query->getOneOrNullResult();
+    }
+
+    /**
+     * Returns a plugin by its fully qualified class name.
+     *
+     * @param string $fqcn
+     *
+     * @return Plugin
+     */
+    public function findPluginByShortName($name)
+    {
+        $dql = '
+            SELECT p FROM Claroline\CoreBundle\Entity\Plugin p
+            WHERE CONCAT(p.vendorName, p.bundleName) LIKE :name
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('name', $name);
+
+        return $query->getOneOrNullResult();
     }
 }

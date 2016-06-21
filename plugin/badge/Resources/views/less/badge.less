@@ -1,3 +1,16 @@
+/** Mixins **/
+.square_badge(@size) {
+    height: @size;
+    width:@size;
+    overflow: hidden;
+    display:block;
+    background-size: cover;
+    background-position: center center;
+    padding: 0;
+}
+
+/** End mixins **/
+
 .list_badges {
     .fa-exclamation-triangle {
         color: orange;
@@ -9,6 +22,7 @@
         color: green;
     }
 }
+
 .badge_list {
     .badge_container {
         margin: 5px 0 0 5px;
@@ -70,6 +84,8 @@
                     overflow: hidden;
                     width: 32px;
                     height: 32px;
+                    background-position: center;
+                    background-size: cover;
                     .badge_image {
                         left: 50%;
                         position: relative;
@@ -124,10 +140,7 @@
         .col-md-4{
             width:125px;
             .img_container{
-                height: 100px;
-                width:100px;
-                overflow: hidden;
-                display:block;
+                .square_badge(100px);
                 .badge_image_informations {
                     left: 50%;
                     position: relative;
@@ -204,7 +217,7 @@
 .list_my_badges{
     float:left;
 }
-#badges{
+#badges, #users {
     .btn.btn-primary.btn-md {
         margin-bottom: 25px;
         margin-top: 25px;
@@ -375,6 +388,11 @@ table.badge_informations {
 .view_badge {
     .view {
         padding-top: 25px;
+
+        .img_container {
+            .square_badge(100px);
+            margin-left: 15px;
+        }
     }
 
     .award_users_container {
@@ -384,7 +402,12 @@ table.badge_informations {
         }
     }
 }
-
+.badge_infos {
+    .img_container {
+        .square_badge(100px);
+        margin-left: 15px;
+    }
+}
 .panel-body
 {
     p{

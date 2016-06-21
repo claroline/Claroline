@@ -23,16 +23,15 @@ class WorkspaceAdditionalActionEvent extends Event
     private $workspace;
 
     /**
-     * @param \Knp\Menu\FactoryInterface $factory
-     * @param \Knp\Menu\ItemInterface $menu
+     * @param \Knp\Menu\FactoryInterface                      $factory
+     * @param \Knp\Menu\ItemInterface                         $menu
      * @param Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      */
     public function __construct(
         FactoryInterface $factory,
         ItemInterface $menu,
         Workspace $workspace
-    )
-    {
+    ) {
         $this->factory = $factory;
         $this->menu = $menu;
         $this->workspace = $workspace;

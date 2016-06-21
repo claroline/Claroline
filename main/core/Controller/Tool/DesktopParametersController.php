@@ -57,8 +57,7 @@ class DesktopParametersController extends Controller
         ToolManager $toolManager,
         StrictDispatcher $ed,
         ObjectManager $om
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->request = $request;
         $this->router = $router;
@@ -79,6 +78,7 @@ class DesktopParametersController extends Controller
      * Displays the desktop tools configuration menu page.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return Response
      */
     public function desktopParametersMenuAction()
@@ -99,6 +99,7 @@ class DesktopParametersController extends Controller
      * Displays the tools configuration page.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return Response
      */
     public function desktopConfigureToolAction(User $user, $type = 0)
@@ -120,7 +121,7 @@ class DesktopParametersController extends Controller
             'tools' => $tools,
             'adminOrderedTools' => $adminOrderedTools,
             'orderedTools' => $orderedTools,
-            'type' => $menuType
+            'type' => $menuType,
         );
     }
 
@@ -135,6 +136,7 @@ class DesktopParametersController extends Controller
      * @EXT\Method("POST")
      *
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return Response
      */
     public function editToolsRolesAction(User $user, $type = 0)
@@ -176,12 +178,13 @@ class DesktopParametersController extends Controller
      * )
      *
      * @param Tool $tool
+     *
      * @return Response
      */
     public function openDesktopToolConfig(Tool $tool)
     {
         $event = $this->ed->dispatch(
-            strtolower('configure_desktop_tool_' . $tool->getName()),
+            strtolower('configure_desktop_tool_'.$tool->getName()),
             'ConfigureDesktopTool',
             array($tool)
         );
@@ -209,11 +212,9 @@ class DesktopParametersController extends Controller
         OrderedTool $orderedTool,
         $nextOrderedToolId,
         $type = 0
-    )
-    {
+    ) {
         if ($orderedTool->getUser() === $user &&
             $orderedTool->getType() === intval($type)) {
-
             $this->toolManager->reorderDesktopOrderedTool(
                 $user,
                 $orderedTool,
@@ -223,7 +224,6 @@ class DesktopParametersController extends Controller
 
             return new Response('success', 200);
         } else {
-
             throw new AccessDeniedException();
         }
     }
@@ -240,6 +240,7 @@ class DesktopParametersController extends Controller
      * Displays the user options form page.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return Response
      */
     public function desktopParametersUserOptionsEditFormAction(User $user)
@@ -275,6 +276,7 @@ class DesktopParametersController extends Controller
      * Edit user options.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
      * @return Response
      */
     public function desktopParametersUserOptionsEditAction(UserOptions $options)
@@ -293,7 +295,6 @@ class DesktopParametersController extends Controller
                 $this->router->generate('claro_desktop_parameters_menu')
             );
         } else {
-
             return array('form' => $form->createView(), 'options' => $options);
         }
     }

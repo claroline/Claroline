@@ -30,10 +30,9 @@ class WidgetController extends BaseController
 
         $data = [];
 
-        if ("form" === $action) {
+        if ('form' === $action) {
             $data['form'] = $this->getWidgetsManager()->getFormView($type);
-        }
-        else {
+        } else {
             $widget = $this->getWidgetsManager()->getNewDataWidget($type, $loggedUser);
             $data = $this->getWidgetsManager()->getWidgetData($widget);
         }
@@ -88,8 +87,7 @@ class WidgetController extends BaseController
 
         try {
             $this->getWidgetsManager()->deleteDataWidget($widget);
-
-        } catch(\Exception $exception){
+        } catch (\Exception $exception) {
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -112,7 +110,7 @@ class WidgetController extends BaseController
             $newWidget = $widgetManager->getNewDataWidget($type, $loggedUser);
             $data = $widgetManager->handle($newWidget, $type, $request->request->all(), $this->get('kernel')->getEnvironment());
             $statusCode = Response::HTTP_CREATED;
-        } catch(\Exception $exception){
+        } catch (\Exception $exception) {
             $data = [];
             $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
@@ -137,7 +135,7 @@ class WidgetController extends BaseController
 
         $widgetFindEvent = new WidgetFindEvent($widgetId, $type, $loggedUser);
 
-        $this->get('event_dispatcher')->dispatch("icap_portfolio_widget_find_" . $type, $widgetFindEvent);
+        $this->get('event_dispatcher')->dispatch('icap_portfolio_widget_find_'.$type, $widgetFindEvent);
 
         $data = $this->getWidgetsManager()->handle($widgetFindEvent->getWidget(), $type, $request->request->all(), $this->get('kernel')->getEnvironment());
 
@@ -147,4 +145,3 @@ class WidgetController extends BaseController
         return $response;
     }
 }
- 

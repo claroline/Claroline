@@ -35,16 +35,16 @@ trait StubPluginTrait
             array('Valid\Simple\ValidSimple'),
             array('Valid\Custom\ValidCustom'),
             array('Valid\WithMigrations\ValidWithMigrations'),
-            array('Valid\WithCustomResources\ValidWithCustomResources')
+            array('Valid\WithCustomResources\ValidWithCustomResources'),
         );
     }
 
     private function getPluginClassPath($classFqcn)
     {
         return __DIR__
-            . '/../../Tests/Stub/plugin/'
-            . str_replace('\\', '/', $classFqcn)
-            . '.php';
+            .'/../../Tests/Stub/plugin/'
+            .str_replace('\\', '/', $classFqcn)
+            .'.php';
     }
 
     private function loadPlugin($pluginFqcn)

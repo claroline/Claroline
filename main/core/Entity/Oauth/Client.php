@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Entity\Oauth;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\OAuthServerBundle\Entity\Client as BaseClient;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Accessor;
 
 /**
  * @ORM\Table(name="claro_api_client")
@@ -33,6 +35,7 @@ class Client extends BaseClient
      *
      * @ORM\Column(name="name", type="string", nullable=false)
      * @ORM\Column(unique=true)
+     * @Groups({"api_client"})
      */
     protected $name;
 
@@ -52,7 +55,7 @@ class Client extends BaseClient
     protected $refreshTokens;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_hidden", type="boolean")
      */
@@ -67,12 +70,24 @@ class Client extends BaseClient
     //for the form
     private $uri;
 
+    /**
+     * @Groups({"api_client"})
+     * @Accessor(getter="getSecret")
+     */
+    protected $clientSecret;
+
+    /**
+     * @Groups({"api_client"})
+     * @Accessor(getter="getConcatRandomId")
+     */
+    protected $clientId;
+
     public function __construct()
     {
         parent::__construct();
 
-        $this->accessTokens  = new ArrayCollection();
-        $this->authCodes     = new ArrayCollection();
+        $this->accessTokens = new ArrayCollection();
+        $this->authCodes = new ArrayCollection();
         $this->refreshTokens = new ArrayCollection();
     }
 
@@ -158,7 +173,7 @@ class Client extends BaseClient
 
     public function getConcatRandomId()
     {
-        return $this->id . '_' . $this->getRandomId();
+        return $this->id.'_'.$this->getRandomId();
     }
 
     public function hide()
@@ -174,7 +189,7 @@ class Client extends BaseClient
 
     public function getUri()
     {
-        return (isset($this->redirectUris[0])) ? $this->redirectUris[0]: null;
+        return (isset($this->redirectUris[0])) ? $this->redirectUris[0] : null;
     }
 
     public function setFriendRequest(FriendRequest $request)

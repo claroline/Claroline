@@ -28,6 +28,4 @@ class Exporter
 
         return $this->templatingEngine->render(sprintf('IcapPortfolioBundle:export:export.%s.twig', $format), array('portfolio' => $portfolio));
     }
-
-
 }

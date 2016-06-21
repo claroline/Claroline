@@ -72,7 +72,7 @@ class MaskManagerTest extends MockeryTestCase
             'edit' => false,
             'delete' => true,
             'copy' => true,
-            'export' => true
+            'export' => true,
         );
 
         $expectedMask = 1 + 8 + 4 + 16;
@@ -118,7 +118,7 @@ class MaskManagerTest extends MockeryTestCase
             'edit' => false,
             'delete' => true,
             'copy' => true,
-            'export' => true
+            'export' => true,
         );
 
         $mask = $this->manager->encodeMask($perms, $resourceType);

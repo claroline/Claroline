@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Menu;
 
-use Knp\Menu\FactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use JMS\DiExtraBundle\Annotation as DI;
 use Knp\Menu\Renderer\ListRenderer;
 use Knp\Menu\ItemInterface;
@@ -34,8 +32,7 @@ class WorkspaceUsersRenderer extends ListRenderer
         $matcher,
         $defaultOptions,
         $charset
-    )
-    {
+    ) {
         parent::__construct($matcher, $defaultOptions, $charset);
     }
 
@@ -46,11 +43,11 @@ class WorkspaceUsersRenderer extends ListRenderer
 
     protected function renderLinkElement(ItemInterface $item, array $options)
     {
-        $uri = $item->getUri('href') . '?' . $item->getExtra('qstring');
+        $uri = $item->getUri('href').'?'.$item->getExtra('qstring');
 
         return sprintf(
-            '<a href="%s" title="%s" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" role="button">' .
-            '<i class="%s"></i>' .
+            '<a href="%s" title="%s" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" role="button">'.
+            '<i class="%s"></i>'.
             '</a>',
             $this->escape($uri),
             $item->getExtra('title'),

@@ -45,8 +45,8 @@ $vendors = [/*
     'SocialMediaBundle',
     //'WebsiteBundle',
     'WikiBundle',
-    'OauthBundle'
-  ]/*,
+    'OauthBundle',
+  ], /*,
   'InnovaLangues' => [
     'PathBundle',
     'CollecticielBundle'
@@ -57,22 +57,24 @@ $vendors = [/*
 ];
 
 foreach ($vendors as $vendor => $packages) {
-  foreach ($packages as $package) {
-    cmd("php import.php {$vendor} {$package} plugin/" . prettify($package));
-  }
+    foreach ($packages as $package) {
+        cmd("php import.php {$vendor} {$package} plugin/".prettify($package));
+    }
 }
 
-function cmd($cmd) {
-  echo "Executing: {$cmd}\n";
-  exec($cmd, $output, $code);
+function cmd($cmd)
+{
+    echo "Executing: {$cmd}\n";
+    exec($cmd, $output, $code);
 
-  if ($code !== 0) {
-    die("Command failed, aborting\n");
-  }
+    if ($code !== 0) {
+        die("Command failed, aborting\n");
+    }
 
-  return $output;
+    return $output;
 }
 
-function prettify($str) {
-	return str_replace('-bundle', '', ltrim(strtolower(preg_replace('/(?!^)[A-Z]{2,}(?=[A-Z][a-z])|[A-Z][a-z]|[0-9]{1,}/', '-$0', $str)), '-'));
+function prettify($str)
+{
+    return str_replace('-bundle', '', ltrim(strtolower(preg_replace('/(?!^)[A-Z]{2,}(?=[A-Z][a-z])|[A-Z][a-z]|[0-9]{1,}/', '-$0', $str)), '-'));
 }

@@ -24,8 +24,8 @@ class LogGroupDeleteEvent extends LogGenericEvent
             self::ACTION,
             array(
                 'receiverGroup' => array(
-                    'name' => $receiverGroup->getName()
-                )
+                    'name' => $receiverGroup->getName(),
+                ),
             ),
             null,
             $receiverGroup

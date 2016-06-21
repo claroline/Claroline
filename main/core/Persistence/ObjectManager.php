@@ -57,7 +57,7 @@ class ObjectManager extends ObjectManagerDecorator
     /**
      * Checks if the underlying manager supports transactions.
      *
-     * @return boolean
+     * @return bool
      */
     public function supportsTransactions()
     {
@@ -67,7 +67,7 @@ class ObjectManager extends ObjectManagerDecorator
     /**
      * Checks if the underlying manager has an event manager.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasEventManager()
     {
@@ -77,7 +77,7 @@ class ObjectManager extends ObjectManagerDecorator
     /**
      * Checks if the underlying manager has an unit of work.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasUnitOfWork()
     {
@@ -85,14 +85,16 @@ class ObjectManager extends ObjectManagerDecorator
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      *
      * This operation has no effect if one or more flush suite is active.
      */
     public function flush()
     {
         if ($this->flushSuiteLevel === 0) {
-            if ($this->activateLog) $this->log('Flush was started.');
+            if ($this->activateLog) {
+                $this->log('Flush was started.');
+            }
             parent::flush();
         }
     }
@@ -105,7 +107,9 @@ class ObjectManager extends ObjectManagerDecorator
     public function startFlushSuite()
     {
         ++$this->flushSuiteLevel;
-        if ($this->activateLog && $this->showFlushLevel) $this->logFlushLevel();
+        if ($this->activateLog && $this->showFlushLevel) {
+            $this->logFlushLevel();
+        }
     }
 
     /**
@@ -122,7 +126,9 @@ class ObjectManager extends ObjectManagerDecorator
 
         --$this->flushSuiteLevel;
         $this->flush();
-        if ($this->activateLog && $this->showFlushLevel) $this->logFlushLevel();
+        if ($this->activateLog && $this->showFlushLevel) {
+            $this->logFlushLevel();
+        }
     }
 
     /**
@@ -131,7 +137,9 @@ class ObjectManager extends ObjectManagerDecorator
     public function forceFlush()
     {
         if ($this->allowForceFlush) {
-            if ($this->activateLog) $this->log('Flush was forced for level ' . $this->flushSuiteLevel. '.');
+            if ($this->activateLog) {
+                $this->log('Flush was forced for level '.$this->flushSuiteLevel.'.');
+            }
             parent::flush();
         }
     }
@@ -194,6 +202,7 @@ class ObjectManager extends ObjectManagerDecorator
      * Returns the unit of work.
      *
      * @return UnitOfWork
+     *
      * @throws UnsupportedMethodException if the method is not supported by
      *                                    the underlying object manager
      */
@@ -219,7 +228,7 @@ class ObjectManager extends ObjectManagerDecorator
      */
     public function factory($class)
     {
-        return new $class;
+        return new $class();
     }
 
     /**
@@ -259,7 +268,7 @@ class ObjectManager extends ObjectManagerDecorator
      *
      * @param string $class
      *
-     * @return integer
+     * @return int
      *
      * @todo make this method compatible with odm implementations
      */
@@ -325,10 +334,10 @@ class ObjectManager extends ObjectManagerDecorator
 
         foreach ($stack as $call) {
             if ($call['function'] === 'endFlushSuite' || $call['function'] === 'startFlushSuite') {
-                $this->log('Function "' . $call['function'] . '" was called from file ' . $call['file'] . ' on line ' . $call['line'] . '.', LogLevel::DEBUG);
+                $this->log('Function "'.$call['function'].'" was called from file '.$call['file'].' on line '.$call['line'].'.', LogLevel::DEBUG);
             }
         }
 
-        $this->log('Flush level: ' . $this->flushSuiteLevel. '.');
+        $this->log('Flush level: '.$this->flushSuiteLevel.'.');
     }
 }

@@ -55,8 +55,9 @@ class PickerController
      * )
      * @EXT\Template
      *
-     * @param Competency    $framework      The framework to load
-     * @param bool          $loadAbilities  Whether linked abilities should be included
+     * @param Competency $framework     The framework to load
+     * @param bool       $loadAbilities Whether linked abilities should be included
+     *
      * @return array
      */
     public function competenciesAction(Competency $framework, $loadAbilities)
@@ -65,7 +66,7 @@ class PickerController
             'framework' => $this->competencyManager->loadCompetency(
                 $framework,
                 (bool) $loadAbilities
-            )
+            ),
         ];
     }
 
@@ -76,7 +77,9 @@ class PickerController
      * @EXT\Template
      *
      * @param Competency $framework
+     *
      * @return array
+     *
      * @throws \LogicException if the competency is not a framework root
      */
     public function levelsAction(Competency $framework)
@@ -94,6 +97,7 @@ class PickerController
      * @EXT\Route("/users/suggest/{query}", name="hevinci_suggest_user")
      *
      * @param string $query
+     *
      * @return JsonResponse
      */
     public function suggestUserAction($query)
@@ -107,6 +111,7 @@ class PickerController
      * @EXT\Route("/groups/suggest/{query}", name="hevinci_suggest_group")
      *
      * @param string $query
+     *
      * @return JsonResponse
      */
     public function suggestGroupAction($query)

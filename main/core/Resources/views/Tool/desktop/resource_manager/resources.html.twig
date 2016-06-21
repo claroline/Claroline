@@ -29,6 +29,7 @@
                 "webPath": "{{ getAssetPath() }}",
                 "language": "{{ app.request.locale }}",
                 "zoom": "{{ resourceZoom }}",
+                "displayMode": "{{ displayMode }}",
                 "pickerDirectoryId": "{{ app.session.get('pickerDirectoryId', '0') }}",
                 "preFetchedDirectory": {{ render(controller('ClarolineCoreBundle:Resource:openDirectory'))|raw }},
                 "resourceTypes": {

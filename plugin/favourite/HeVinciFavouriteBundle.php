@@ -12,7 +12,7 @@ class HeVinciFavouriteBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'favourite');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'favourite');
     }
 
     public function getAdditionalInstaller()

@@ -46,8 +46,7 @@ class CsvWorkspaceUserImportValidator extends ConstraintValidator
         UserManager $userManager,
         ValidatorInterface $validator,
         ClaroUtilities $ut
-    )
-    {
+    ) {
         $this->roleManager = $roleManager;
         $this->translator = $translator;
         $this->userManager = $userManager;
@@ -66,7 +65,7 @@ class CsvWorkspaceUserImportValidator extends ConstraintValidator
         foreach ($workspaceRoles as $workspaceRole) {
             $wsRoleNames[] = $workspaceRole->getTranslationKey();
         }
-        
+
         $data = $this->ut->formatCsvOutput(file_get_contents($value));
         $lines = str_getcsv($data, PHP_EOL);
 
@@ -82,7 +81,6 @@ class CsvWorkspaceUserImportValidator extends ConstraintValidator
         }
 
         foreach ($lines as $i => $line) {
-
             if (trim($line) !== '') {
                 $datas = explode(';', $line);
                 $username = $datas[0];
@@ -94,7 +92,7 @@ class CsvWorkspaceUserImportValidator extends ConstraintValidator
                         'workspace_user_invalid',
                         array('%username%' => $username, '%line%' => $i + 1),
                         'platform'
-                    ) . ' ';
+                    ).' ';
                     $usernameErrors[] = $msg;
                 }
 
@@ -103,7 +101,7 @@ class CsvWorkspaceUserImportValidator extends ConstraintValidator
                         'line_number',
                         array('%line%' => $i + 1),
                         'platform'
-                    ) .  ' ';
+                    ).' ';
                     $msg .= $this->translator->trans(
                         'unavailable_role',
                         array('%translationKey%' => $roleName),

@@ -31,7 +31,9 @@ class FileSizeValidator extends ConstraintValidator
         $found = false;
 
         foreach ($validUnits as $validUnit) {
-            if ($unit === $validUnit) $found = true;
+            if ($unit === $validUnit) {
+                $found = true;
+            }
         }
 
         if (!$found) {

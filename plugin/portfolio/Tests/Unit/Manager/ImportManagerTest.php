@@ -18,12 +18,12 @@ class ImportManagerTest extends MockeryTestCase
     public function testGetAvailableImportFormats()
     {
         $importers = [
-            new Leap2aImporter()
+            new Leap2aImporter(),
         ];
         $importManager = new ImportManager($importers);
 
         $expected = array(
-            'leap2a' => 'Leap2a'
+            'leap2a' => 'Leap2a',
         );
 
         $this->assertEquals($expected, $importManager->getAvailableFormats());
@@ -31,7 +31,7 @@ class ImportManagerTest extends MockeryTestCase
         $importManager = new ImportManager();
 
         $expected = array(
-            'leap2a' => 'Leap2a'
+            'leap2a' => 'Leap2a',
         );
 
         $this->assertEquals($expected, $importManager->getAvailableFormats());
@@ -41,12 +41,12 @@ class ImportManagerTest extends MockeryTestCase
     {
         $importers = [
             new Leap2aImporter(),
-            new Leap2aImporter()
+            new Leap2aImporter(),
         ];
         $importManager = new ImportManager($importers);
 
         $expected = array(
-            'leap2a' => 'Leap2a'
+            'leap2a' => 'Leap2a',
         );
 
         $this->assertEquals($expected, $importManager->getAvailableFormats());

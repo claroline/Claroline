@@ -20,13 +20,14 @@ use Claroline\AnnouncementBundle\Form\AnnouncementType;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -38,22 +39,24 @@ use JMS\DiExtraBundle\Annotation as DI;
 class AnnouncementController extends Controller
 {
     private $announcementManager;
+    private $authorization;
     private $eventDispatcher;
     private $formFactory;
     private $pagerFactory;
+    private $request;
     private $tokenStorage;
-    private $authorization;
     private $translator;
     private $utils;
     private $workspaceManager;
 
     /**
      * @DI\InjectParams({
+     *     "authorization"       = @DI\Inject("security.authorization_checker"),
      *     "announcementManager" = @DI\Inject("claroline.announcement.manager.announcement_manager"),
      *     "eventDispatcher"     = @DI\Inject("event_dispatcher"),
      *     "formFactory"         = @DI\Inject("form.factory"),
      *     "pagerFactory"        = @DI\Inject("claroline.pager.pager_factory"),
-     *     "authorization"       = @DI\Inject("security.authorization_checker"),
+     *     "requestStack"        = @DI\Inject("request_stack"),
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "translator"          = @DI\Inject("translator"),
      *     "utils"               = @DI\Inject("claroline.security.utilities"),
@@ -62,22 +65,23 @@ class AnnouncementController extends Controller
      */
     public function __construct(
         AnnouncementManager $announcementManager,
-        FormFactoryInterface $formFactory,
-        PagerFactory $pagerFactory,
-        TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher,
+        FormFactoryInterface $formFactory,
+        PagerFactory $pagerFactory,
+        RequestStack $requestStack,
+        TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         Utilities $utils,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->announcementManager = $announcementManager;
+        $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->pagerFactory = $pagerFactory;
+        $this->request = $requestStack->getCurrentRequest();
         $this->tokenStorage = $tokenStorage;
-        $this->authorization = $authorization;
         $this->translator = $translator;
         $this->utils = $utils;
         $this->workspaceManager = $workspaceManager;
@@ -99,6 +103,7 @@ class AnnouncementController extends Controller
      *
      * @param AnnouncementAggregate $aggregate
      * @param $page
+     *
      * @return Response
      */
     public function announcementsListAction(AnnouncementAggregate $aggregate, $page = 1)
@@ -108,8 +113,7 @@ class AnnouncementController extends Controller
         try {
             $this->checkAccess('EDIT', $aggregate);
             $announcements = $this->announcementManager->getAllAnnouncementsByAggregate($aggregate);
-        }
-        catch(AccessDeniedException $e) {
+        } catch (AccessDeniedException $e) {
             $this->checkAccess('OPEN', $aggregate);
             $announcements = $this->announcementManager->getVisibleAnnouncementsByAggregate($aggregate);
         }
@@ -118,7 +122,7 @@ class AnnouncementController extends Controller
         return array(
             '_resource' => $aggregate,
             'announcements' => $pager,
-            'resourceCollection' => $collection
+            'resourceCollection' => $collection,
         );
     }
 
@@ -150,7 +154,7 @@ class AnnouncementController extends Controller
         return array(
             'form' => $form->createView(),
             'type' => 'create',
-            '_resource' => $aggregate
+            '_resource' => $aggregate,
         );
     }
 
@@ -178,8 +182,7 @@ class AnnouncementController extends Controller
         $user = $this->tokenStorage->getToken()->getUser();
         $announcement = new Announcement();
         $form = $this->formFactory->create(new AnnouncementType(), $announcement);
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $now = new \DateTime();
@@ -199,7 +202,7 @@ class AnnouncementController extends Controller
                 return array(
                     'form' => $form->createView(),
                     'type' => 'create',
-                    '_resource' => $aggregate
+                    '_resource' => $aggregate,
                 );
             }
 
@@ -209,8 +212,7 @@ class AnnouncementController extends Controller
             if ($announcement->isVisible()) {
                 if (is_null($visibleFrom) || $visibleFrom < $now) {
                     $announcement->setPublicationDate($now);
-                }
-                else {
+                } else {
                     $announcement->setPublicationDate($visibleFrom);
                 }
             }
@@ -218,7 +220,7 @@ class AnnouncementController extends Controller
             $this->announcementManager->insertAnnouncement($announcement);
 
             if ($form->get('notify_user')->getData()) {
-               $this->announcementManager->sendMessage($announcement);
+                $this->announcementManager->sendMessage($announcement);
             }
 
             $this->eventDispatcher->dispatch(
@@ -237,7 +239,7 @@ class AnnouncementController extends Controller
         return array(
             'form' => $form->createView(),
             'type' => 'create',
-            '_resource' => $aggregate
+            '_resource' => $aggregate,
         );
     }
 
@@ -269,7 +271,7 @@ class AnnouncementController extends Controller
             'form' => $form->createView(),
             'type' => 'edit',
             'announcement' => $announcement,
-            '_resource' => $resource
+            '_resource' => $resource,
         );
     }
 
@@ -294,11 +296,8 @@ class AnnouncementController extends Controller
     {
         $resource = $announcement->getAggregate();
         $this->checkAccess('EDIT', $resource);
-
         $form = $this->formFactory->create(new AnnouncementType(), $announcement);
-
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $now = new \DateTime();
@@ -315,18 +314,16 @@ class AnnouncementController extends Controller
                     'form' => $form->createView(),
                     'type' => 'edit',
                     'announcement' => $announcement,
-                    '_resource' => $resource
+                    '_resource' => $resource,
                 );
             }
 
             if (!$announcement->isVisible()) {
                 $announcement->setPublicationDate(null);
-            }
-            else {
+            } else {
                 if (is_null($visibleFrom) || $visibleFrom < $now) {
                     $announcement->setPublicationDate($now);
-                }
-                else {
+                } else {
                     $announcement->setPublicationDate($visibleFrom);
                 }
             }
@@ -356,7 +353,7 @@ class AnnouncementController extends Controller
             'form' => $form->createView(),
             'type' => 'edit',
             'announcement' => $announcement,
-            '_resource' => $resource
+            '_resource' => $resource,
         );
     }
 
@@ -424,7 +421,7 @@ class AnnouncementController extends Controller
         return array(
             'datas' => $pager,
             'widgetType' => 'workspace',
-            'workspaceId' => $workspace->getId()
+            'workspaceId' => $workspace->getId(),
         );
     }
 
@@ -465,10 +462,10 @@ class AnnouncementController extends Controller
      * - for MOVE / COPY $collection->setAttributes(array('parent' => $parent))
      *  where $parent is the new parent entity.
      *
-     * @param string $permission
+     * @param string                                                 $permission
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     private function checkAccess($permission, AbstractResource $resource)
     {

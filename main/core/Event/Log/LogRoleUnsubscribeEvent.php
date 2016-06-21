@@ -37,13 +37,13 @@ class LogRoleUnsubscribeEvent extends LogGenericEvent
         if ($subject instanceof User) {
             $details['receiverUser'] = array(
                 'firstName' => $subject->getFirstName(),
-                'lastName' => $subject->getLastName()
+                'lastName' => $subject->getLastName(),
             );
             $action = self::ACTION_USER;
             $receiver = $subject;
         } else {
             $details['receiverGroup'] = array(
-                'name' => $subject->getName()
+                'name' => $subject->getName(),
             );
             $action = self::ACTION_GROUP;
             $receiverGroup = $subject;
@@ -65,6 +65,6 @@ class LogRoleUnsubscribeEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 }

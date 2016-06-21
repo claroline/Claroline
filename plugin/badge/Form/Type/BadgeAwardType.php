@@ -28,7 +28,7 @@ class BadgeAwardType extends AbstractType
      */
     public function __construct(RouterInterface $router, TranslatorInterface $translator)
     {
-        $this->router     = $router;
+        $this->router = $router;
         $this->translator = $translator;
     }
 
@@ -36,21 +36,21 @@ class BadgeAwardType extends AbstractType
     {
         $builder
             ->add('group', 'zenstruck_ajax_entity', array(
-                'placeholder'    => $this->translator->trans('badge_award_form_group_choose', array(), 'icap_badge'),
-                'class'          => 'ClarolineCoreBundle:Group',
+                'placeholder' => $this->translator->trans('badge_award_form_group_choose', array(), 'icap_badge'),
+                'class' => 'ClarolineCoreBundle:Group',
                 'use_controller' => true,
-                'property'       => 'name',
-                'repo_method'    => 'findByNameForAjax'
+                'property' => 'name',
+                'repo_method' => 'findByNameForAjax',
             ))
             ->add('user', 'zenstruck_ajax_entity', array(
-                'placeholder'    => $this->translator->trans('badge_award_form_user_choose', array(), 'icap_badge'),
-                'class'          => 'ClarolineCoreBundle:User',
+                'placeholder' => $this->translator->trans('badge_award_form_user_choose', array(), 'icap_badge'),
+                'class' => 'ClarolineCoreBundle:User',
                 'use_controller' => true,
-                'property'       => 'username',
-                'repo_method'    => 'findByNameForAjax'
+                'property' => 'username',
+                'repo_method' => 'findByNameForAjax',
             ))
             ->add('comment', 'tinymce', array(
-                'required' => false
+                'required' => false,
             ));
     }
 

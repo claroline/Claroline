@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
@@ -102,7 +101,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $user->setUsername($username);
         $user->setPassword($username);
         $user->setGuid($username);
-        $user->setMail($username . '@mail.com');
+        $user->setMail($username.'@mail.com');
         $this->om->persist($user);
 
         return $user;
@@ -135,9 +134,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         }
 
         if (!isset($this->defaults['activity_type'])) {
-            $type = new ResourceType();
-            $type->setName('activity');
-            $this->om->persist($type);
+            $type = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('activity');
             $this->defaults['activity_type'] = $type;
         }
 
@@ -166,8 +163,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $status,
         Evaluation $previous = null,
         ActivityParameters $parameters = null
-    )
-    {
+    ) {
         $params = $parameters ?
             $parameters :
             (

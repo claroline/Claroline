@@ -52,14 +52,14 @@ class MarkRepositoryTest extends TransactionalTestCase
                 'id' => $bill->getId(),
                 'name' => 'bill bill',
                 'mark' => '12',
-                'markId' => $mark1->getId()
+                'markId' => $mark1->getId(),
             ],
             [
                 'id' => $jane->getId(),
                 'name' => 'jane jane',
                 'mark' => '14',
-                'markId' => $mark2->getId()
-            ]
+                'markId' => $mark2->getId(),
+            ],
         ];
         $actual = $this->repo->findByResult($result1);
         $this->assertEquals($expected, $actual);
@@ -85,8 +85,8 @@ class MarkRepositoryTest extends TransactionalTestCase
                 'id' => $jane->getId(),
                 'name' => 'jane jane',
                 'mark' => '14',
-                'markId' => $mark->getId()
-            ]
+                'markId' => $mark->getId(),
+            ],
         ];
         $actual = $this->repo->findByResultAndUser($result1, $jane);
         $this->assertEquals($expected, $actual);

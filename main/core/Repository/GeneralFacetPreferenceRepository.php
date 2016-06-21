@@ -11,19 +11,18 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class GeneralFacetPreferenceRepository extends EntityRepository
 {
-    public function getAdminPublicProfilePreferenceByRole(array $roles) {
-
+    public function getAdminPublicProfilePreferenceByRole(array $roles)
+    {
         if (in_array('ROLE_ADMIN', $roles)) {
             return array(
                 'baseData' => true,
                 'mail' => true,
                 'phone' => true,
                 'sendMail' => true,
-                'sendMessage' => true
+                'sendMessage' => true,
             );
         }
 
@@ -43,4 +42,4 @@ class GeneralFacetPreferenceRepository extends EntityRepository
 
         return $query->getSingleResult();
     }
-} 
+}

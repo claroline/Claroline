@@ -1,0 +1,12 @@
+# c
+config_update_error: Problem while updating video recorder configuration.
+config_update_success: Video recorder configuration update successfull.
+
+# i
+innova_video_recorder_tool: Video recorder configuration (whole platform)
+
+# m
+video_recorder_configuration_max_recording_time: Maximum recording time (Secondes, 0 = infinite)
+
+# s
+submit_config_label: Save configuration

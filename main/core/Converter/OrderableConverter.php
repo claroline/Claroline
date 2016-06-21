@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Converter;
 
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -16,7 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class OrderableConverter implements ParamConverterInterface
 {
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function apply(Request $request, ParamConverter $configuration)
     {
@@ -29,13 +28,13 @@ class OrderableConverter implements ParamConverterInterface
         }
 
         if (!class_exists($entityClass)) {
-            throw new \Exception('The class ' . $entityClass. ' does not exists.');
+            throw new \Exception('The class '.$entityClass.' does not exists.');
         }
 
         $rClass = new \ReflectionClass($entityClass);
 
         if (!$rClass->implementsInterface('Claroline\CoreBundle\Entity\OrderableInterface')) {
-            throw new \Exception($entityClass. ' is not orderable.');
+            throw new \Exception($entityClass.' is not orderable.');
         }
 
         $orderableFields = $rClass->newInstanceWithoutConstructor()->getOrderableFields();
@@ -50,7 +49,7 @@ class OrderableConverter implements ParamConverterInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function supports(ParamConverter $configuration)
     {

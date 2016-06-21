@@ -27,9 +27,9 @@ class CommentType extends AbstractType
     {
         $resolver->setDefaults(array(
             'translation_domain' => 'icap_blog',
-            'data_class'      => 'Icap\BlogBundle\Entity\Comment',
+            'data_class' => 'Icap\BlogBundle\Entity\Comment',
             'csrf_protection' => true,
-            'intention'       => 'create_post_comment'
+            'intention' => 'create_post_comment',
         ));
     }
 }

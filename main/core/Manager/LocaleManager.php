@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -21,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @Service("claroline.common.locale_manager")
+ * @Service("claroline.manager.locale_manager")
  */
 class LocaleManager
 {
@@ -43,8 +42,7 @@ class LocaleManager
         PlatformConfigurationHandler $configHandler,
         UserManager $userManager,
         TokenStorageInterface $tokenStorage
-    )
-    {
+    ) {
         $this->configHandler = $configHandler;
         $this->userManager = $userManager;
         $this->defaultLocale = $configHandler->getParameter('locale_language');
@@ -57,7 +55,7 @@ class LocaleManager
      *
      * @param $path The path of translations files
      *
-     * @return Array
+     * @return array
      */
     public function retrieveAvailableLocales($path = '/../Resources/translations/')
     {
@@ -76,7 +74,7 @@ class LocaleManager
      *
      * @param $path The path of translations files
      *
-     * @return Array
+     * @return array
      */
     public function getImplementedLocales($path = '/../Resources/translations/')
     {
@@ -94,7 +92,7 @@ class LocaleManager
     /**
      * Get a list of available languages in the platform.
      *
-     * @return Array
+     * @return array
      */
     public function getAvailableLocales()
     {
@@ -106,7 +104,7 @@ class LocaleManager
     }
 
     /**
-     * Set locale setting for current user if this locale is present in the platform
+     * Set locale setting for current user if this locale is present in the platform.
      *
      * @param string $locale The locale string as en, fr, es, etc.
      */
@@ -121,6 +119,7 @@ class LocaleManager
      * language or the browser language if it is present in translations.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return string The locale string as en, fr, es, etc.
      */
     public function getUserLocale(Request $request)
@@ -147,14 +146,40 @@ class LocaleManager
         return $locale;
     }
 
+    public function getLocaleListForSelect()
+    {
+        $locales = $this->retrieveAvailableLocales();
+        $labels = $this->getLocalesLabels();
+        $keys = array_keys($labels);
+        $data = [];
+
+        foreach ($locales as $locale) {
+            if (in_array($locale, $keys)) {
+                $data[] = ['value' => $locale, 'label' => $labels[$locale]];
+            }
+        }
+
+        return $data;
+    }
+
+    public function getLocalesLabels()
+    {
+        return [
+            'fr' => 'Français',
+            'en' => 'English',
+            'nl' => 'Nederlands',
+            'es' => 'Español',
+        ];
+    }
+
     /**
-     * Get Current User
+     * Get Current User.
      *
      * @return mixed Claroline\CoreBundle\Entity\User or null
      */
     private function getCurrentUser()
     {
-        if (is_object($token = $this->tokenStorage->getToken()) and is_object($user = $token->getUser())) {
+        if (is_object($token = $this->tokenStorage->getToken()) && is_object($user = $token->getUser())) {
             return $user;
         }
     }

@@ -4,12 +4,6 @@ namespace Innova\CollecticielBundle\Listener;
 
 use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
 use Doctrine\ORM\EntityManager;
-use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
-use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
-use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
-use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
-use Icap\BlogBundle\Event\Log\LogPostReadEvent;
-use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionDeleteEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
@@ -26,11 +20,6 @@ use Innova\CollecticielBundle\Event\Log\LogDropEndEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropEvaluateEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropStartEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneConfigureEvent;
-use Icap\LessonBundle\Event\Log\LogChapterCreateEvent;
-use Icap\LessonBundle\Event\Log\LogChapterDeleteEvent;
-use Icap\LessonBundle\Event\Log\LogChapterMoveEvent;
-use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
-use Icap\LessonBundle\Event\Log\LogChapterUpdateEvent;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -54,7 +43,7 @@ class BadgeListener
      */
     public function __construct(Router $router, EntityManager $entityManager)
     {
-        $this->router        = $router;
+        $this->router = $router;
         $this->entityManager = $entityManager;
     }
 
@@ -78,10 +67,9 @@ class BadgeListener
     public function onBagdeCreateValidationLink(BadgeCreateValidationLinkEvent $event)
     {
         $content = null;
-        $log     = $event->getLog();
+        $log = $event->getLog();
 
-        switch($log->getAction())
-        {
+        switch ($log->getAction()) {
             case LogCorrectionDeleteEvent::ACTION:
             case LogCorrectionEndEvent::ACTION:
             case LogCorrectionStartEvent::ACTION:
@@ -99,11 +87,11 @@ class BadgeListener
             case LogDropzoneConfigureEvent::ACTION:
                 $logDetails = $event->getLog()->getDetails();
                 $parameters = array('resourceId' => $logDetails['dropzone']['id']);
-                $url        = $this->router->generate('innova_collecticiel_open', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+                $url = $this->router->generate('innova_collecticiel_open', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
 
                 /** @var Dropzone $dropzone */
-                $dropzone = $this->entityManager->getRepository("InnovaCollecticielBundle:Dropzone")->findOneById($logDetails['dropzone']['id']);
-                $title    = $dropzone->getResourceNode()->getName();
+                $dropzone = $this->entityManager->getRepository('InnovaCollecticielBundle:Dropzone')->findOneById($logDetails['dropzone']['id']);
+                $title = $dropzone->getResourceNode()->getName();
                 $content = sprintf('<a href="%s" title="%s">%s</a>', $url, $title, $title);
                 break;
         }

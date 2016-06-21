@@ -30,6 +30,7 @@ class LoginPageAuthenticationListener
      * @DI\Observe("render_external_authentication_button")
      *
      * @param RenderAuthenticationButtonEvent $event
+     *
      * @return string
      */
     public function onRenderButton(RenderAuthenticationButtonEvent $event)

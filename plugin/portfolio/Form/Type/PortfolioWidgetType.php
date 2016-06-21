@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityRepository;
 use Icap\PortfolioBundle\Manager\WidgetTypeManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -58,23 +57,23 @@ class PortfolioWidgetType extends AbstractType
         $builder
             ->add('portfolio_id', 'entity', [
                 'class' => 'IcapPortfolioBundle:Portfolio',
-                'query_builder' => function(EntityRepository $entityRepository) use ($user) {
+                'query_builder' => function (EntityRepository $entityRepository) use ($user) {
                     return $entityRepository->createQueryBuilder('p')
                         ->where('p.user = :user')
                         ->setParameter('user', $user)
                     ;
                 },
-                'property_path' => 'portfolio'
+                'property_path' => 'portfolio',
             ])
             ->add('widget_id', 'entity', [
                 'class' => 'IcapPortfolioBundle:Widget\AbstractWidget',
-                'query_builder' => function(EntityRepository $entityRepository) use ($user) {
+                'query_builder' => function (EntityRepository $entityRepository) use ($user) {
                     return $entityRepository->createQueryBuilder('w')
                         ->where('w.user = :user')
                         ->setParameter('user', $user)
                     ;
                 },
-                'property_path' => 'widget'
+                'property_path' => 'widget',
             ])
             ->add('col', 'integer')
             ->add('row', 'integer')
@@ -84,7 +83,7 @@ class PortfolioWidgetType extends AbstractType
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function(FormEvent $event) use ($user) {
+            function (FormEvent $event) use ($user) {
                 $form = $event->getForm();
                 $choices = [];
                 $choiceTypes = $this->widgetTypeManager->getWidgetsTypes();
@@ -94,7 +93,7 @@ class PortfolioWidgetType extends AbstractType
                 }
 
                 $form->add('widget_type', 'choice', [
-                    'choices' => $choices
+                    'choices' => $choices,
                 ]);
             }
         );
@@ -111,7 +110,7 @@ class PortfolioWidgetType extends AbstractType
             [
                 'data_class' => 'Icap\PortfolioBundle\Entity\PortfolioWidget',
                 'translation_domain' => 'icap_portfolio',
-                'csrf_protection'=> false,
+                'csrf_protection' => false,
             ]
         );
     }

@@ -23,9 +23,9 @@ class ActivityParametersType extends AbstractType
             'withTutor',
             'choice',
             array(
-                'choices' => array (0 => 'no', 1 => 'yes'),
+                'choices' => array(0 => 'no', 1 => 'yes'),
                 'required' => false,
-                'label' => 'with_tutor'
+                'label' => 'with_tutor',
             )
         );
         $builder->add(
@@ -34,20 +34,20 @@ class ActivityParametersType extends AbstractType
             array(
                 'attr' => array('min' => 1),
                 'required' => false,
-                'label' => 'max_second_duration'
+                'label' => 'max_second_duration',
             )
         );
-	$builder->add(
+        $builder->add(
             'who',
             'choice',
             array(
                 'choices' => array(
                     'individual' => 'individual',
                     'collaborative' => 'collaborative',
-                    'mixed' => 'mixed'
+                    'mixed' => 'mixed',
                 ),
                 'required' => false,
-                'label' => 'method_of_work'
+                'label' => 'method_of_work',
             )
         );
         $builder->add(
@@ -56,10 +56,10 @@ class ActivityParametersType extends AbstractType
             array(
                 'choices' => array(
                     'anywhere' => 'anywhere',
-                    'classroom' => 'classroom'
+                    'classroom' => 'classroom',
                 ),
                 'required' => false,
-                'label' => 'learning_place'
+                'label' => 'learning_place',
             )
         );
         $builder->add(
@@ -68,7 +68,7 @@ class ActivityParametersType extends AbstractType
             array(
                 'attr' => array('min' => 1),
                 'required' => false,
-                'label' => 'max_attempts'
+                'label' => 'max_attempts',
             )
         );
         $builder->add(
@@ -77,10 +77,10 @@ class ActivityParametersType extends AbstractType
             array(
                 'choices' => array(
                     'manual' => 'evaluation-manual',
-                    'automatic' => 'evaluation-automatic'
+                    'automatic' => 'evaluation-automatic',
                 ),
                 'required' => true,
-                'label' => 'evaluation_type'
+                'label' => 'evaluation_type',
             )
         );
     }

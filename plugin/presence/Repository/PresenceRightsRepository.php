@@ -8,15 +8,13 @@
 
 namespace FormaLibre\PresenceBundle\Repository;
 
-
 use Doctrine\ORM\EntityRepository;
 
 class PresenceRightsRepository extends EntityRepository
 {
-    
-    public function findPresenceRightsByRolesAndValue(array $roles,$rightValue) {
-        
-         $dql = '
+    public function findPresenceRightsByRolesAndValue(array $roles, $rightValue)
+    {
+        $dql = '
             SELECT pr
             FROM FormaLibre\PresenceBundle\Entity\PresenceRights pr
             WHERE pr.role in (:roles)
@@ -29,9 +27,5 @@ class PresenceRightsRepository extends EntityRepository
         $query->setParameter('roles', $roles);
 
         return $query->getResult();
-        
     }
-    
-    
-    
 }

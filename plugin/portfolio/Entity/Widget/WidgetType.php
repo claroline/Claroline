@@ -3,8 +3,6 @@
 namespace Icap\PortfolioBundle\Entity\Widget;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Plugin;
 
 /**
  * @ORM\Table(name="icap__portfolio_widget_type")

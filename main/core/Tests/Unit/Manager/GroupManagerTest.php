@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use \Mockery as m;
+use Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class GroupManagerTest extends MockeryTestCase
@@ -126,7 +126,7 @@ class GroupManagerTest extends MockeryTestCase
                 'username1',
                 'password1',
                 'email1@claroline.net',
-                'code1'
+                'code1',
             ),
             array(
                 'firstname2',
@@ -134,8 +134,8 @@ class GroupManagerTest extends MockeryTestCase
                 'username2',
                 'password2',
                 'email2@claroline.net',
-                'code2'
-            )
+                'code2',
+            ),
         );
 
         m::getConfiguration()->allowMockingNonExistentMethods(true);
@@ -373,12 +373,12 @@ class GroupManagerTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\CoreBundle\Manager\GroupManager' . $stringMocked,
+            'Claroline\CoreBundle\Manager\GroupManager'.$stringMocked,
             array(
                 $this->om,
                 $this->pagerFactory,
                 $this->translator,
-                $this->eventDispatcher
+                $this->eventDispatcher,
             )
         );
     }

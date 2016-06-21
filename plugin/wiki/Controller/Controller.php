@@ -22,13 +22,12 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class Controller extends BaseController
 {
-    const WIKI_TYPE         = 'icap_wiki';
-    const WIKI_SECTION_TYPE    = 'icap_wiki_section';
+    const WIKI_TYPE = 'icap_wiki';
+    const WIKI_SECTION_TYPE = 'icap_wiki_section';
 
     /**
      * @param string $permission
-     *
-     * @param Wiki $wiki
+     * @param Wiki   $wiki
      *
      * @throws AccessDeniedException
      */
@@ -45,8 +44,7 @@ class Controller extends BaseController
 
     /**
      * @param string $permission
-     *
-     * @param Wiki $wiki
+     * @param Wiki   $wiki
      *
      * @return bool
      */
@@ -76,10 +74,10 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Wiki $wiki
+     * @param Wiki   $wiki
      * @param string $childType
      * @param string $action
-     * @param array $details
+     * @param array  $details
      *
      * @return Controller
      */
@@ -92,13 +90,11 @@ class Controller extends BaseController
             $details
         );
 
-        return $this->dispatch($event);        
+        return $this->dispatch($event);
     }
 
-    
-
     /**
-     * @param Wiki $wiki
+     * @param Wiki  $wiki
      * @param array $changeSet
      *
      * @return Controller
@@ -106,12 +102,12 @@ class Controller extends BaseController
     protected function dispatchWikiUpdateEvent(Wiki $wiki, $changeSet)
     {
         $event = new LogResourceUpdateEvent($wiki->getResourceNode(), $changeSet);
-        
+
         return $this->dispatch($event);
     }
 
     /**
-     * @param Wiki $wiki
+     * @param Wiki    $wiki
      * @param Section $section
      *
      * @return Controller
@@ -124,9 +120,9 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Wiki $wiki
+     * @param Wiki    $wiki
      * @param Section $section
-     * @param array $changeSet
+     * @param array   $changeSet
      *
      * @return Controller
      */
@@ -138,9 +134,9 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Wiki $wiki
+     * @param Wiki    $wiki
      * @param Section $section
-     * @param array $changeSet
+     * @param array   $changeSet
      *
      * @return Controller
      */
@@ -152,7 +148,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Wiki $wiki
+     * @param Wiki    $wiki
      * @param Section $section
      *
      * @return Controller
@@ -165,7 +161,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Wiki $wiki
+     * @param Wiki    $wiki
      * @param Section $section
      *
      * @return Controller
@@ -178,7 +174,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Wiki $wiki
+     * @param Wiki    $wiki
      * @param Section $section
      *
      * @return Controller
@@ -191,9 +187,10 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Wiki $wiki
-     * @param Section $section
+     * @param Wiki         $wiki
+     * @param Section      $section
      * @param Contribution $contribution
+     *
      * @return Controller
      */
     protected function dispatchContributionCreateEvent(Wiki $wiki, Section $section, Contribution $contribution)
@@ -204,7 +201,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Wiki $wiki
+     * @param Wiki  $wiki
      * @param array $changeSet
      *
      * @return Controller
@@ -217,9 +214,10 @@ class Controller extends BaseController
     }
 
     /**
-     * Retrieve a section from database
+     * Retrieve a section from database.
+     *
      * @param Wiki $wiki
-     * @param integer $sectionId
+     * @param int  $sectionId
      *
      * @return Section $section
      */
@@ -227,7 +225,7 @@ class Controller extends BaseController
     {
         $section = $this
             ->get('icap.wiki.section_repository')
-            ->findOneBy(array('id' => $sectionId, 'wiki' => $wiki ));
+            ->findOneBy(array('id' => $sectionId, 'wiki' => $wiki));
         if ($section === null) {
             throw new NotFoundHttpException();
         }
@@ -236,9 +234,10 @@ class Controller extends BaseController
     }
 
     /**
-     * Retrieve a section from database
+     * Retrieve a section from database.
+     *
      * @param Section $section
-     * @param integer $contributionId
+     * @param int     $contributionId
      *
      * @return Section $contri
      */
@@ -256,6 +255,7 @@ class Controller extends BaseController
 
     /**
      * Retrieve logged user. If anonymous return null.
+     *
      * @return user
      */
     protected function getLoggedUser()
@@ -264,7 +264,7 @@ class Controller extends BaseController
         if (is_string($user)) {
             $user = null;
         }
+
         return $user;
     }
-
 }

@@ -2,14 +2,12 @@
 /**
  * Created by : Vincent SAISSET
  * Date: 22/08/13
- * Time: 09:30
+ * Time: 09:30.
  */
 
 namespace Icap\DropzoneBundle\Controller;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionDeleteEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionStartEvent;
@@ -24,10 +22,10 @@ use Icap\DropzoneBundle\Event\Log\LogDocumentOpenEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
+use Icap\DropzoneBundle\Event\Log\LogDropReportEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DropzoneBaseController extends Controller
 {
@@ -35,27 +33,26 @@ class DropzoneBaseController extends Controller
     const DROP_PER_PAGE = 10;
     const CORRECTION_PER_PAGE = 10;
 
-
     protected function dispatch($event)
     {
         if (
-            $event instanceof LogResourceReadEvent or
-            $event instanceof LogDropzoneConfigureEvent or
-            $event instanceof LogCriterionCreateEvent or
-            $event instanceof LogCriterionUpdateEvent or
-            $event instanceof LogCriterionDeleteEvent or
-            $event instanceof LogDropStartEvent or
-            $event instanceof LogDropEndEvent or
-            $event instanceof LogDocumentCreateEvent or
-            $event instanceof LogDocumentDeleteEvent or
-            $event instanceof LogDocumentOpenEvent or
-            $event instanceof LogCorrectionStartEvent or
-            $event instanceof LogCorrectionEndEvent or
-            $event instanceof LogCorrectionUpdateEvent or
-            $event instanceof LogCorrectionDeleteEvent or
-            $event instanceof LogCorrectionValidationChangeEvent or
-            $event instanceof LogDropEvaluateEvent or
-            $event instanceof LogDropReportEvent or
+            $event instanceof LogResourceReadEvent ||
+            $event instanceof LogDropzoneConfigureEvent ||
+            $event instanceof LogCriterionCreateEvent ||
+            $event instanceof LogCriterionUpdateEvent ||
+            $event instanceof LogCriterionDeleteEvent ||
+            $event instanceof LogDropStartEvent ||
+            $event instanceof LogDropEndEvent ||
+            $event instanceof LogDocumentCreateEvent ||
+            $event instanceof LogDocumentDeleteEvent ||
+            $event instanceof LogDocumentOpenEvent ||
+            $event instanceof LogCorrectionStartEvent ||
+            $event instanceof LogCorrectionEndEvent ||
+            $event instanceof LogCorrectionUpdateEvent ||
+            $event instanceof LogCorrectionDeleteEvent ||
+            $event instanceof LogCorrectionValidationChangeEvent ||
+            $event instanceof LogDropEvaluateEvent ||
+            $event instanceof LogDropReportEvent ||
             $event instanceof LogDropzoneManualStateChangedEvent
         ) {
 

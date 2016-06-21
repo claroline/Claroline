@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

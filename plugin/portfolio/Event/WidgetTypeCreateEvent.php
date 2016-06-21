@@ -11,13 +11,15 @@ class WidgetTypeCreateEvent extends Event
 
     /**
      * @return WidgetType
+     *
      * @throws \Exception
      */
     public function getWidgetType()
     {
         if (null === $this->widgetType) {
-            throw new \Exception("Empty vidget type");
+            throw new \Exception('Empty vidget type');
         }
+
         return $this->widgetType;
     }
 

@@ -13,7 +13,8 @@ class CompetencyAbilityRepository extends EntityRepository
      * competencies and a given ability.
      *
      * @param Ability $ability
-     * @return integer
+     *
+     * @return int
      */
     public function countByAbility(Ability $ability)
     {
@@ -29,6 +30,7 @@ class CompetencyAbilityRepository extends EntityRepository
      * Returns the number of abilities associated with a given competency.
      *
      * @param Competency $competency
+     *
      * @return mixed
      */
     public function countByCompetency(Competency $competency)
@@ -45,8 +47,10 @@ class CompetencyAbilityRepository extends EntityRepository
      * Returns the association between a competency and an ability.
      *
      * @param Competency $parent
-     * @param Ability $ability
+     * @param Ability    $ability
+     *
      * @return null|object
+     *
      * @throws \Exception if the ability is not linked to the competency
      */
     public function findOneByTerms(Competency $parent, Ability $ability)

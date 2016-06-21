@@ -40,8 +40,8 @@ class ToolListener
     private $toolManager;
     private $translator;
     private $workspaceManager;
-    const R_U = "ROLE_USER";
-    const R_A = "ROLE_ADMIN";
+    const R_U = 'ROLE_USER';
+    const R_A = 'ROLE_ADMIN';
 
     /**
      * @DI\InjectParams({
@@ -68,8 +68,7 @@ class ToolListener
         ToolManager $toolManager,
         TranslatorInterface $translator,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->container = $container;
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
@@ -89,7 +88,7 @@ class ToolListener
      */
     public function onDisplayWorkspaceParameters(DisplayToolEvent $event)
     {
-         $event->setContent($this->workspaceParameters($event->getWorkspace()->getId()));
+        $event->setContent($this->workspaceParameters($event->getWorkspace()->getId()));
     }
 
     /**
@@ -125,7 +124,7 @@ class ToolListener
     /**
      * Renders the workspace properties page.
      *
-     * @param integer $workspaceId
+     * @param int $workspaceId
      *
      * @return string
      */
@@ -193,7 +192,7 @@ class ToolListener
     public function workspaceLogs($workspaceId)
     {
         /** @var \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace */
-        $workspace  = $this->workspaceManager->getWorkspaceById($workspaceId);
+        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig',
@@ -205,7 +204,7 @@ class ToolListener
     {
         $params = array(
             '_controller' => 'ClarolineCoreBundle:WorkspaceAnalytics:showTraffic',
-            'workspaceId' => $workspace->getId()
+            'workspaceId' => $workspace->getId(),
         );
 
         $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
@@ -236,7 +235,7 @@ class ToolListener
             $menu->addChild(
                 $translatedName,
                 array('uri' => $route)
-            )->setExtra('icon', 'fa fa-' . $tool->getClass())
+            )->setExtra('icon', 'fa fa-'.$tool->getClass())
             ->setExtra('title', $translatedName);
 
             return $menu;
@@ -261,11 +260,11 @@ class ToolListener
                 $translatedName,
                 array(
                     'route' => 'claro_desktop_open_tool',
-                    'routeParameters' => array('toolName' => $toolName)
+                    'routeParameters' => array('toolName' => $toolName),
                 )
             )->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-' . $tool->getClass());
+            ->setExtra('icon', 'fa fa-'.$tool->getClass());
 
             return $menu;
         }
@@ -291,7 +290,7 @@ class ToolListener
             $menu->addChild(
                 $this->translator->trans('preferences', array(), 'platform'),
                 array('route' => 'claro_desktop_parameters_menu')
-            )->setExtra('icon', 'fa fa-' . $tool->getClass())
+            )->setExtra('icon', 'fa fa-'.$tool->getClass())
             ->setExtra('title', $parametersTitle);
 
             return $menu;

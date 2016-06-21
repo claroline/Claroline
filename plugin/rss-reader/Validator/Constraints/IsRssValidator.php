@@ -25,4 +25,3 @@ class IsRssValidator extends ConstraintValidator
         }
     }
 }
-

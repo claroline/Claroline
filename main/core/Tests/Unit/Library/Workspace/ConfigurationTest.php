@@ -31,25 +31,25 @@ class ConfigurationTest extends MockeryTestCase
         $validMininal = array(
             'ROLE_WS_VISITOR' => 'visitor',
             'ROLE_WS_COLLABORATOR' => 'collaborator',
-            'ROLE_WS_MANAGER' => 'manager'
+            'ROLE_WS_MANAGER' => 'manager',
         );
 
         $validOptional = array(
             'ROLE_WS_VISITOR' => 'visitor',
             'ROLE_WS_COLLABORATOR' => 'collaborator',
             'ROLE_WS_MANAGER' => 'manager',
-            'ROLE_WS_ADDITIONAL' => 'new'
+            'ROLE_WS_ADDITIONAL' => 'new',
         );
 
         $missingMandatory = array(
             'ROLE_WS_VISITOR' => 'visitor',
-            'ROLE_WS_ADDITIONAL' => 'new'
+            'ROLE_WS_ADDITIONAL' => 'new',
         );
 
         return array(
             array('roles' => $validMininal, 'isExceptionExpected' => false),
             array('roles' => $validOptional, 'isExceptionExpected' => false),
-            array('roles' => $missingMandatory, 'isExceptionExpected' => true)
+            array('roles' => $missingMandatory, 'isExceptionExpected' => true),
         );
     }
 }

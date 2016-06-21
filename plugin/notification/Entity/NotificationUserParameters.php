@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -124,7 +124,7 @@ class NotificationUserParameters
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isNew()
     {
@@ -132,10 +132,10 @@ class NotificationUserParameters
     }
 
     /**
-     * @param boolean $isNew
+     * @param bool $isNew
      */
     public function setIsNew($isNew)
     {
         $this->isNew = $isNew;
     }
-} 
+}

@@ -46,7 +46,7 @@ class CourseQueuedUserTransferType extends AbstractType
                 'label' => 'session',
                 'property' => 'name',
                 'required' => true,
-                'mapped' => false
+                'mapped' => false,
             )
         );
     }
