@@ -1,0 +1,34 @@
+<style>
+    .btn.o365-connect {
+        background-color: #0072C6;
+    }
+    .btn.o365-connect::before {
+        content: "\f17a";
+        border-right-color: #0085e5;
+    }
+    .btn.office-btn {
+        color: #fff;
+        padding-left: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+        line-height: 34px;
+        margin-top: 5px;
+    }
+    .btn.office-btn::before{
+        width: 30px;
+        font-size: 1.3em;
+        line-height: 34px;
+        position: absolute;
+        left: 0;
+        font-family: "FontAwesome";
+        border-right: 1px solid;
+    }
+    .btn.office-btn:hover {
+        opacity: 0.8;
+        color: #fff;
+    }
+</style>
+
+{% if config.getParameter('o365_active') %}
+    <a class='btn office-btn o365-connect btn-block' type="button" href="{{ path('claro_o365_get_token') }}" style="position: relative">O365 Login</a>
+{% endif %}
