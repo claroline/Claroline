@@ -1,19 +1,6 @@
-<a href="#study-modal-evaluation_{{ document.id }}" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
-    <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To see a review'|trans({},'innova_collecticiel') }}">
-            {% if dropzone.evaluationType == "notation" %}
-                {{ notationDocuments[document.id] ~ "/" ~ dropzone.maximumNotation }}
-            {% else %}
-                {% if notationScaleDocument == '0' %}  
-                    <i class="fa fa-graduation-cap" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Review'|trans({},'innova_collecticiel') }}"></i>
-                {% else %}
-                    {{notationScaleDocument}}
-                {% endif %}
-            {% endif %}
-    </span>
-</a>
 
-{# Déclaration de la modal pour confirmation de la validation #}
-<div class="modal fade" id="study-modal-evaluation_{{ document.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+{# Déclaration de la modal pour saisir la notation #}
+<div class="modal" id="view-modal-evaluation_{{document.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -25,6 +12,7 @@
 
             <div class="modal-body">
                 <div class="innova_collecticiel_notation_form container">
+
                     <div class="row">
                         <div class="form-group row col-md-6">
                             {# Bloc "Rappel des instructions ..." #}
@@ -36,7 +24,7 @@
                         </div>
                     </div>
 
-                   <div class="row text-left">
+                    <div class="row text-left">
                         <div class="form-group row col-md-6">
                             <b>{{ 'Review on'|trans({}, 'innova_collecticiel') }}</b>
                         </div>
@@ -84,24 +72,13 @@
                         </div>
                     </div>
 
-                    <p></p>
-
-                    <div class="row text-left">
-                        <div class="form-group row col-md-6">
-                            <b>{{ 'Assessor'|trans({}, 'innova_collecticiel') }}</b>
-                            {{ notationAssessorDocument.firstName }} {{ notationAssessorDocument.lastName }}
-                        </div>
-                        <div class="form-group row col-md-6">
-                        </div>
-                    </div>
-
                     {% if dropzone.evaluationType == "notation" %}
                         <p></p>
 
                         <div class="row text-left">
                             <div class="form-group row col-md-6">
                                 <b>{{ 'Grade'|trans({}, 'innova_collecticiel') }}</b>
-                                {{ notationDocuments[document.id] }}    
+                                {{ notationDocument }}    
                                 {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
                                 {{ maximumNotation }}
                                 {{ ')' }}
@@ -115,13 +92,13 @@
                         <p></p>
 
                         <div class="row text-left">
-                            <div class="form-group row col-md-6">
+                            <div class="form-group col-md-6">
                                 <b>{{ 'Appreciation'|trans({}, 'innova_collecticiel') }}</b>
                             </div>
                         </div>
 
                         <div class="row text-left">
-                            <div class="form-group row col-md-6">
+                            <div class="form-group col-md-6">
                                 {{ notationScaleDocument }}
                             </div>
                         </div>
@@ -130,22 +107,23 @@
 
                         {% for criteria in criteriasArray %}
                             <div class="row text-left">
-                                <div class="form-group row col-md-6">
+                                <div class="form-group col-md-6">
                                     <b>{{ criteria.criteriaName }}</b>
                                 </div>
                             </div>
 
                             <div class="row text-left">
-                                <div class="form-group row col-md-6">
+                                <div class="form-group col-md-6">
                                     {# Pour affichage de la valeur de l'accusé de réception #}
                                     {% render(controller('InnovaCollecticielBundle:ChoiceCriteria:renderChoiceText',
                                     {'gradingCriteriaId': criteria.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) %}
                                 </div>
                             </div>
                         {% endfor %}
-                    {% endif %}
-                </div>
 
+                    {% endif %}
+
+                </div>
             </div>
 
             <div class="modal-footer">

@@ -57,10 +57,13 @@
 }
 
 /* Affichage en rouge d'icone font-awesome. InnovaERV. */
-
 .icon-fontawesome-red {
     color: red;
 }
+.display-red{
+    color:red;
+}
+
 .title-label {
     vertical-align: middle;
 }
@@ -125,6 +128,7 @@
     margin-left: -20px;
     margin-top: -3px;
 }
+
 .centering-actions {
     position: absolute;
     margin-top: -45px;
