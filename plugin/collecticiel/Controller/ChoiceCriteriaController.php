@@ -41,7 +41,7 @@ class ChoiceCriteriaController extends DropzoneBaseController
             ->getChoiceTextForCriteriaAndNotation($gradingCriteria, $notationArray[0]);
 
             if (!empty($choiceTextArray)) {
-                // Récupération de la valeur de l'accusé de réceptoin
+                // Récupération de la valeur du texte
                 $choiceText = $choiceTextArray[0]->getChoiceText();
             }
         }
