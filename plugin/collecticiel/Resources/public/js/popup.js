@@ -47,7 +47,6 @@ $('#add-criterion-button-innova2').on('click', function(event) {
 
 });
 
-
 $(document).ready(function() {
 
     'use strict';
@@ -517,7 +516,7 @@ $(document).ready(function() {
 
         // Récupération de l'id qui indique si transmission ou enregistrement
         var recordOrTransmit = $(this).attr("data-document_record_or_transmit");
-
+  
         $.ajax({
             url: Routing.generate('innova_collecticiel_add_notation', {
                 documentId: documentId,
