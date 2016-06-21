@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ProfilePanelFieldsType extends AbstractType
 {
@@ -36,6 +37,8 @@ class ProfilePanelFieldsType extends AbstractType
         $dateAttr['autocomplete'] = 'off';
 
         foreach ($this->panel->getFieldsFacet() as $field) {
+            $constraints = $field->isRequired() ? [new NotBlank()] : [];
+
             switch ($field->getType()) {
                 case FieldFacet::STRING_TYPE:
                     $builder->add(
@@ -46,6 +49,20 @@ class ProfilePanelFieldsType extends AbstractType
                             'mapped' => false,
                             'required' => false,
                             'attr' => array('facet' => $this->panel->getFacet()->getName()),
+                            'constraints' => $constraints,
+                        )
+                    );
+                    break;
+                case FieldFacet::EMAIL_TYPE:
+                    $builder->add(
+                        $field->getPrettyName(),
+                        'email',
+                        array(
+                            'label' => $this->translator->trans($field->getName(), array(), 'platform'),
+                            'mapped' => false,
+                            'required' => false,
+                            'attr' => array('facet' => $this->panel->getFacet()->getName()),
+                            'constraints' => $constraints,
                         )
                     );
                     break;
@@ -62,6 +79,7 @@ class ProfilePanelFieldsType extends AbstractType
                             'autoclose' => true,
                             'mapped' => false,
                             'attr' => array('facet' => $this->panel->getFacet()->getName()),
+                            'constraints' => $constraints,
                         )
                     );
                     break;
@@ -74,6 +92,7 @@ class ProfilePanelFieldsType extends AbstractType
                             'mapped' => false,
                             'required' => false,
                             'attr' => array('facet' => $this->panel->getFacet()->getName()),
+                            'constraints' => $constraints,
                         )
                     );
                     break;
@@ -86,6 +105,7 @@ class ProfilePanelFieldsType extends AbstractType
                                 'mapped' => false,
                                 'required' => false,
                                 'attr' => array('facet' => $this->panel->getFacet()->getName()),
+                                'constraints' => $constraints,
                             )
                         );
                         break;
@@ -124,6 +144,7 @@ class ProfilePanelFieldsType extends AbstractType
                             'choices_as_values' => true,
                             'expanded' => $expanded,
                             'multiple' => $multiple,
+                            'constraints' => $constraints,
                         )
                     );
                 }

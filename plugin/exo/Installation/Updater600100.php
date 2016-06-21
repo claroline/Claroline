@@ -183,13 +183,16 @@ class Updater600100
      */
     private function dropExpertiseTables()
     {
-        $this->dropTables([
-            'ujm_expertise_user',
-            'ujm_expertise',
-            'ujm_exercise_group',
-            'ujm_planning',
-            'ujm_group',
-        ]);
+        $schema = $this->connection->getSchemaManager();
+        if ($schema->tablesExist(['ujm_expertise_user'])) {
+            $this->dropTables([
+                'ujm_expertise_user',
+                'ujm_expertise',
+                'ujm_exercise_group',
+                'ujm_planning',
+                'ujm_group',
+            ]);
+        }
     }
 
     /**
@@ -232,10 +235,13 @@ class Updater600100
      */
     private function dropInteractionTables()
     {
-        $this->dropTables([
-            'ujm_document_interaction',
-            'ujm_interaction',
-        ]);
+        $schema = $this->connection->getSchemaManager();
+        if ($schema->tablesExist(['ujm_interaction'])) {
+            $this->dropTables([
+                'ujm_document_interaction',
+                'ujm_interaction',
+            ]);
+        }
     }
 
     private function dropTables(array $tables)

@@ -20,9 +20,10 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use Claroline\CoreBundle\Event\Profile\ProfileLinksEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
+use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @NamePrefix("api_")
@@ -69,7 +70,7 @@ class ProfileController extends FOSRestController
                             }
                         }
 
-                        $field->setIsEditable($this->isGranted('EDIT', $field));
+                        $field->setIsEditable($this->isGranted('EDIT', new FieldFacetCollection([$field], $user)));
                     }
                 }
             }
@@ -103,15 +104,20 @@ class ProfileController extends FOSRestController
     {
         $fields = $this->request->request->get('fields');
 
-        foreach ($fields as $field) {
-            $fieldEntity = $this->facetManager->getFieldFacet($field['id']);
+        $entities = array_map(
+            function ($el) { return $this->facetManager->getFieldFacet($el['id']); },
+            $fields
+        );
 
-            if (!$this->isGranted('EDIT', $fieldEntity)) {
-                throw new AccessDeniedException('You do not have the permission to edit this facet.');
-            }
+        $collection = new FieldFacetCollection($entities, $user);
 
+        if (!$this->isGranted('EDIT', $collection)) {
+            throw new AccessDeniedException('You do not have the permission to edit these fields.');
+        }
+
+        foreach ($fields as $key => $field) {
             $value = isset($field['user_field_value']) ? $field['user_field_value'] : null;
-            $this->facetManager->setFieldValue($user, $fieldEntity, $value);
+            $this->facetManager->setFieldValue($user, $entities[$key], $value);
         }
 
         return $user;

@@ -27,6 +27,11 @@ class GraphicImport extends QtiImport
         $this->qtiRepos = $qtiRepos;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
+
+        if ($this->qtiValidate() === false) {
+            return false;
+        }
+
         $this->createQuestion(InteractionGraphic::TYPE);
         $this->createInteractionGraphic();
 
@@ -183,5 +188,24 @@ class GraphicImport extends QtiImport
         }
 
         return $text;
+    }
+
+    /**
+     * Implements the abstract method.
+     */
+    protected function qtiValidate()
+    {
+        if ($this->assessmentItem->getElementsByTagName('areaMapping')->item(0) == null) {
+            return false;
+        }
+        $am = $this->assessmentItem->getElementsByTagName('areaMapping')->item(0);
+        foreach ($am->getElementsByTagName('areaMapEntry') as $areaMapEntry) {
+            $tabCoords = explode(',', $areaMapEntry->getAttribute('coords'));
+            if (!isset($tabCoords[0]) || !isset($tabCoords[1]) || !isset($tabCoords[2])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

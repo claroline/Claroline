@@ -125,12 +125,6 @@ angular
                                 // Retrieve the step from route ID
                                 if ($route.current.params && $route.current.params.stepId) {
                                     step = ExerciseService.getStep($route.current.params.stepId);
-                                } else {
-                                    // No route param => open the first Step
-                                    var steps = ExerciseService.getSteps();
-                                    if (steps && steps[0]) {
-                                        step = steps[0];
-                                    }
                                 }
 
                                 return step;

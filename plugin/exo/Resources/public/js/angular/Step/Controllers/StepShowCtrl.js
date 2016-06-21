@@ -11,7 +11,7 @@ var StepShowCtrl = function StepShowCtrl(UserPaperService, FeedbackService, Ques
     this.QuestionService = QuestionService;
 
     // Get the order of items from the Paper of the User (in case they are shuffled)
-    this.items = this.UserPaperService.orderQuestions(this.step);
+    this.items = this.UserPaperService.orderStepQuestions(this.step);
     
     // Get feedback info
     this.feedback = this.FeedbackService.get();

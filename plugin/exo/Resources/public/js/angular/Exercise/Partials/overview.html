@@ -84,25 +84,25 @@
                                 <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.created|date_string:'dd/MM/yyyy HH:mm:ss' }}</td>
                             </tr>
 
-                            <!-- Shuffle question order -->
+                            <!-- Shuffle step order -->
                             <tr>
-                                <th class="text-right col-md-4" scope="row">{{ 'random_questions' | trans:{}:'ujm_exo' }}</th>
+                                <th class="text-right col-md-4" scope="row">{{ 'random_steps' | trans:{}:'ujm_exo' }}</th>
                                 <td class="text-center col-md-8">
                                     <span data-ng-if="exerciseOverviewCtrl.exercise.meta.random">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
                                     <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.random">{{ 'no' | trans:{}:'ujm_exo' }}</span>
                                 </td>
                             </tr>
 
-                            <!-- Number of questions to draw -->
+                            <!-- Number of steps to draw -->
                             <tr>
-                                <th class="text-right col-md-4" scope="row">{{ 'number_questions_draw' | trans:{}:'ujm_exo' }}</th>
+                                <th class="text-right col-md-4" scope="row">{{ 'number_steps_draw' | trans:{}:'ujm_exo' }}</th>
                                 <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.pick">
-                                    <span data-ng-switch-when="0">{{ 'all_question'|trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-switch-when="0">{{ 'all_step'|trans:{}:'ujm_exo' }}</span>
                                     <span data-ng-switch-default="">{{ exerciseOverviewCtrl.exercise.meta.pick }}</span>
                                 </td>
                             </tr>
 
-                            <!-- Keep same question -->
+                            <!-- Keep same step -->
                             <tr>
                                 <th class="text-right col-md-4" scope="row">{{ 'keep_same_question' | trans:{}:'ujm_exo' }}</th>
                                 <td class="text-center col-md-8">

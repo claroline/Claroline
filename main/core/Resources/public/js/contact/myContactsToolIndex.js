@@ -9,7 +9,6 @@
 
 (function () {
     'use strict';
-    
     var currentSearch = $('#contacts-datas-box').data('search');
     var currentMax = $('#contacts-datas-box').data('max');
     var currentOrderedBy = $('#contacts-datas-box').data('ordered-by');
@@ -39,7 +38,7 @@
 
     $('#my-contacts-tool').on('click', '.category-edit-btn', function () {
         var categoryId = $(this).data('category-id');
-        
+
         window.Claroline.Modal.displayForm(
             Routing.generate('claro_contact_category_edit_form', {'category': categoryId}),
             renameCategory,
@@ -77,7 +76,7 @@
 
     $('#my-contacts-tool').on('click', '.add-user-to-category-btn', function () {
         currentCategoryId = $(this).data('category-id');
-        
+
         var userPicker = new UserPicker();
         var settings = {
             multiple: true,
@@ -92,8 +91,8 @@
         userPicker.configure(settings, addContactsToCategory);
         userPicker.open();
     });
-    
-    $('#all-my-contacts-content-body').on('click', 'a', function (event) {
+
+    $('body').on('click', '#all-my-contacts-content-body .pagination a', function (event) {
         event.preventDefault();
         var element = event.currentTarget;
         var route = $(element).attr('href');
@@ -106,14 +105,14 @@
             }
         });
     });
-    
+
     $('#all-my-contacts-content-body').on('click', '.contact-additional-action', function (event) {
         var child = $(this).children('.contact-action');
         var url = child.data('url');
         var displayMode = child.data('display-mode');
-        
+
         if (displayMode === 'new_small_window') {
-            
+
             window.open(
                 url,
                 '',
@@ -136,7 +135,7 @@
             }
         });
     });
-    
+
     $('#all-my-contacts-content-body').on('click', '.delete-contact', function () {
         var contactId = $(this).data('contact-id');
 
@@ -148,17 +147,17 @@
             Translator.trans('delete_contact', {}, 'platform')
         );
     });
-    
+
     $('#all-my-contacts-content-body').on('click', '.add-contact-to-category', function () {
         var contactId = $(this).data('contact-id');
-        
+
         window.Claroline.Modal.displayForm(
             Routing.generate('claro_contact_categories_transfer_form', {'user': contactId}),
             refreshPage,
             function() {}
         );
     });
-    
+
     $('#all-visible-users-content-body').on('click', 'a', function (event) {
         event.preventDefault();
         var element = event.currentTarget;
@@ -172,7 +171,7 @@
             }
         });
     });
-    
+
     $('#all-visible-users-content-body').on('click', '.contact-additional-action', function (event) {
         var child = $(this).children('.contact-action');
         var url = child.data('url');
@@ -190,7 +189,7 @@
             }
         });
     });
-    
+
     $('.category-content-body').on('click', 'a', function (event) {
         event.preventDefault();
         var element = event.currentTarget;
@@ -206,13 +205,13 @@
             }
         });
     });
-    
+
     $('.category-content-body').on('click', '.contact-additional-action', function (event) {
         var child = $(this).children('.contact-action');
         var url = child.data('url');
         window.location = url;
     });
-    
+
     $('.category-content-body').on('change', '#max-select', function () {
         var max = $(this).val();
         var categoryElement = $(this).parents('.category-content-body');
@@ -229,7 +228,7 @@
             }
         });
     });
-    
+
     $('.category-content-body').on('click', '.remove-contact', function () {
         var contactId = $(this).data('contact-id');
         var categoryId = $(this).data('category-id');
@@ -245,7 +244,7 @@
             Translator.trans('remove_contact_from_category', {}, 'platform')
         );
     });
-    
+
     $('#my-contacts-tool').on('click', '#search-contact-btn', function () {
         var search = $('#search-contact-input').val();
         window.location = Routing.generate(
@@ -288,7 +287,7 @@
             }
         );
     });
-    
+
     $('#searched-contacts').on('click', '.delete-contact', function () {
         var contactId = $(this).data('contact-id');
 
@@ -300,34 +299,34 @@
             Translator.trans('delete_contact', {}, 'platform')
         );
     });
-    
+
     $('#searched-contacts').on('click', '.add-contact-to-category', function () {
         var contactId = $(this).data('contact-id');
-        
+
         window.Claroline.Modal.displayForm(
             Routing.generate('claro_contact_categories_transfer_form', {'user': contactId}),
             refreshPage,
             function() {}
         );
     });
-    
+
     var refreshPage = function () {
         window.location.reload();
     };
-    
+
     var addCategory = function (datas) {
         var id = datas['id'];
         var name = datas['name'];
-      
+
         var categoryElement =
             '<div class="panel panel-info category-element" id="category-box-' +
                 id + '" style="overflow: visible">' +
-                
+
                 '<div class="panel-heading">' +
                     '<h4 class="panel-title">' +
                         '<a data-toggle="collapse" href="#category-content-' +
                             id + '" id="category-title-' + id + '">' +
-                            
+
                             name +
                         '</a>' +
                         '&nbsp;&nbsp;' +
@@ -340,7 +339,7 @@
                             '<ul class="dropdown-menu" role="menu">' +
                                 '<li role="presentation" class="add-user-to-category-btn" data-category-id="' +
                                     id + '">' +
-                                    
+
                                     '<a role="menuitem" tabindex="-1" href="#">' +
                                         '<i class="fa fa-user-plus"></i>&nbsp;' +
                                         Translator.trans('add_contacts', {}, 'platform') +
@@ -348,7 +347,7 @@
                                 '</li>' +
                                 '<li role="presentation" class="category-edit-btn" data-category-id="' +
                                     id + '">' +
-                                    
+
                                     '<a role="menuitem" tabindex="-1" href="#">' +
                                         '<i class="fa fa-edit"></i>&nbsp;' +
                                         Translator.trans('rename', {}, 'platform') +
@@ -356,7 +355,7 @@
                                 '</li>' +
                                 '<li role="presentation" class="category-delete-btn" data-category-id="' +
                                     id + '">' +
-                                    
+
                                     '<a role="menuitem" tabindex="-1" href="#">' +
                                         '<i class="fa fa-times-circle"></i>&nbsp;' +
                                         Translator.trans('delete', {}, 'platform') +
@@ -374,22 +373,22 @@
                     '</div>' +
                 '</div>' +
             '</div>';
-        
+
         $('#category-list-box').append(categoryElement);
     };
-    
+
     var renameCategory = function (datas) {
         var id = datas['id'];
         var name = datas['name'];
         $('#category-title-' + id).html(name);
     };
-    
+
     var removeCategory = function (event, categoryId) {
         $('#category-box-' + categoryId).remove();
     };
-    
+
     var addContacts = function (userIds) {
-        
+
         if (userIds !== null) {
             var parameters = {};
             parameters.userIds = userIds;
@@ -405,9 +404,9 @@
             });
         }
     };
-    
+
     var addContactsToCategory = function (userIds) {
-        
+
         if (userIds !== null) {
             var parameters = {};
             parameters.userIds = userIds;
@@ -421,9 +420,9 @@
                 url: route,
                 type: 'GET',
                 success: function () {
-                    
+
                     for (var i = 0; i < userIds.length; i++) {
-                        
+
                         if (allContactIds.indexOf(userIds[i]) === -1) {
                             allContactIds.push(userIds[i]);
                         }
@@ -434,7 +433,7 @@
                     var nbCategoryContacts = parseInt($('#category-badge-' + currentCategoryId).html());
                     nbCategoryContacts += userIds.length;
                     $('#category-badge-' + currentCategoryId).html(nbCategoryContacts);
-                    
+
                     $.ajax({
                         url: Routing.generate('claro_contact_show_all_my_contacts'),
                         type: 'GET',
@@ -456,20 +455,20 @@
             });
         }
     };
-    
+
     var removeContact = function (event, contactId) {
         var index = allContactIds.indexOf('' + contactId);
         var nbContacts = parseInt($('#all-my-contacts-badge').html());
         nbContacts--;
         $('#all-my-contacts-badge').html(nbContacts);
-        
+
         if (index > -1) {
             allContactIds.splice(index, 1);
         }
         $('.contact-row-' + contactId).each(function () {
             var categoryId = $(this).data('category-id');
             $(this).remove();
-            
+
             if (categoryId !== undefined) {
                 var nbContacts = parseInt($('#category-badge-' + categoryId).html());
                 nbContacts--;
@@ -477,7 +476,7 @@
             }
         });
     };
-    
+
     var removeContactFromCategory = function (event, datas) {
         var contactId = datas['contact'];
         var categoryId = datas['category'];

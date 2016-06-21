@@ -103,30 +103,6 @@ ExerciseService.prototype.getScoreTotal = function getScoreTotal() {
 };
 
 /**
- * Check if the current Exercise has questions that need manual correction (eg. long open question)
- */
-ExerciseService.prototype.needManualCorrection = function needManualCorrection() {
-    var needed = false;
-    if (this.exercise && this.exercise.steps && 0 !== this.exercise.steps.length) {
-        // Exercise has steps
-        for (var i = 0; i < this.exercise.steps.length; i++) {
-            var step = this.exercise.steps[i];
-            if (step && step.items && 0 !== step.items.length) {
-                // Step has items
-                for (var j = 0; j < step.items.length; j++){
-                    if (step.items[j].typeOpen && step.items[j].typeOpen === 'long'){
-                        needed = true;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    return needed;
-};
-
-/**
  * Save modifications of the metadata of the Exercise
  * @param   {Object} metadata
  * @returns {Promise}
@@ -140,8 +116,6 @@ ExerciseService.prototype.save = function save(metadata) {
             metadata
         )
         .success(function onSuccess(response) {
-            // TODO : display message
-
             // Inject updated data into the Exercise
             angular.merge(this.exercise.meta, response.meta);
 
@@ -179,7 +153,7 @@ ExerciseService.prototype.getSteps = function getSteps() {
  */
 ExerciseService.prototype.getStep = function getStep(stepId) {
     var step = null;
-    if (this.exercise.steps) {
+    if (stepId && this.exercise.steps) {
         for (var i = 0; i < this.exercise.steps.length; i++) {
             if (stepId == this.exercise.steps[i].id) {
                 step = this.exercise.steps[i];
@@ -189,47 +163,6 @@ ExerciseService.prototype.getStep = function getStep(stepId) {
     }
 
     return step;
-};
-
-/**
- * Get the index of a Step
- * @param   {Object} step
- * @returns {Number}
- */
-ExerciseService.prototype.getIndex = function getIndex(step) {
-    return (this.exercise && this.exercise.steps) ? this.exercise.steps.indexOf(step) : -1;
-};
-
-/**
- * Get the previous step of a step
- * @param   {Object} step
- * @returns {Object}
- */
-ExerciseService.prototype.getPrevious = function getPrevious(step) {
-    var previous = null;
-
-    var pos = this.getIndex(step);
-    if (-1 !== pos && this.exercise.steps && this.exercise.steps[pos - 1]) {
-        previous = this.exercise.steps[pos - 1];
-    }
-
-    return previous;
-};
-
-/**
- * Get the next step of a step
- * @param   {Object} step
- * @returns {Object}
- */
-ExerciseService.prototype.getNext = function getNext(step) {
-    var next = null;
-
-    var pos = this.getIndex(step);
-    if (-1 !== pos && this.exercise.steps && this.exercise.steps[pos + 1]) {
-        next = this.exercise.steps[pos + 1];
-    }
-
-    return next;
 };
 
 /**

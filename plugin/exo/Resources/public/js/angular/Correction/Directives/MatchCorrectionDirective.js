@@ -21,4 +21,4 @@ MatchCorrectionDirective.$inject = [];
 // Register directive into AngularJS
 angular
     .module('Correction')
-    .directive('correctionMatch', MatchCorrectionDirective);
+    .directive('matchCorrection', MatchCorrectionDirective);

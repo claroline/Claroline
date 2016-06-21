@@ -85,6 +85,7 @@ class WorkspaceManager
     private $container;
     /** @var array */
     private $importData;
+    private $templateDirectory;
 
     /**
      * Constructor.
@@ -135,6 +136,7 @@ class WorkspaceManager
         $this->pagerFactory = $pagerFactory;
         $this->container = $container;
         $this->importData = [];
+        $this->templateDirectory = $container->getParameter('claroline.param.templates_directory');
     }
 
     /**
@@ -1124,8 +1126,8 @@ class WorkspaceManager
         }
 
         $archive = new \ZipArchive();
-        $fileName = 'tmp'.$file->getBasename();
-        $extractPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$fileName;
+        $fileName = $file->getBasename();
+        $extractPath = $this->templateDirectory.DIRECTORY_SEPARATOR.$fileName;
 
         if ($archive->open($file->getPathname())) {
             $fs = new FileSystem();
@@ -1148,7 +1150,7 @@ class WorkspaceManager
     public function removeTemplate(File $file)
     {
         $fileName = $file->getBasename();
-        $extractPath = sys_get_temp_dir().'tmp'.DIRECTORY_SEPARATOR.$fileName;
+        $extractPath = $this->templateDirectory.DIRECTORY_SEPARATOR.$fileName;
         $fs = new FileSystem();
         $fs->remove($extractPath);
     }
