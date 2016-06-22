@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Manager\TemporaryAccessResourceManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

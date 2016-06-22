@@ -6,7 +6,8 @@
       "private-profile": "profile/module",
       "organization-management": "organization/module",
       "plugin-management": "plugins/module",
-      "portal": "portal/module"
+      "portal": "portal/module",
+      "tinymce": "tinymce/tinymce"
     }
   }
 }

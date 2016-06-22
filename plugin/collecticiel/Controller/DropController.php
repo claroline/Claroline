@@ -83,6 +83,12 @@ class DropController extends DropzoneBaseController
             }
         }
 
+        $recordOrTransmitNotations = array();
+
+        foreach ($dropzone->getDrops() as $drop) {
+            $recordOrTransmitNotations = $dropManager->getRecordOrTransmitNotation($drop);
+        }
+
         $form_url = $this->createForm(new DocumentType(), null, array('documentType' => 'url'));
         $form_file = $this->createForm(new DocumentType(), null, array('documentType' => 'file'));
         $form_resource = $this->createForm(new DocumentType(), null, array('documentType' => 'resource'));
@@ -95,10 +101,16 @@ class DropController extends DropzoneBaseController
         $canEdit = $dropzoneVoter->checkEditRight($dropzone);
         $activeRoute = $this->getRequest()->attributes->get('_route');
         $isOpen = $dropzoneManager->collecticielOpenOrNot($dropzone);
+
         $notationDocuments = $dropManager->getNotationForDocuments($drop);
         $notationCommentDocuments = $dropManager->getNotationCommentForDocuments($drop);
         $notationQualityDocuments = $dropManager->getNotationQualityForDocuments($drop);
         $notationAssessorDocuments = $dropManager->getNotationAssessorForDocuments($drop);
+        $notationAppreciationDocuments = $dropManager->getAppreciationForDocuments($drop);
+
+        $em = $this->getDoctrine()->getManager();
+        $criteriaRepo = $em->getRepository('InnovaCollecticielBundle:GradingCriteria');
+        $criteriasArray = $criteriaRepo->getCriteriaArrayForDropzone($dropzone);
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -122,7 +134,10 @@ class DropController extends DropzoneBaseController
             'notationCommentDocumentsArray' => $notationCommentDocuments,
             'notationQualityDocumentsArray' => $notationQualityDocuments,
             'notationAssessorDocumentsArray' => $notationAssessorDocuments,
-        );
+            'recordOrTransmitNotationsArray' => $recordOrTransmitNotations,
+            'notationAppreciationDocumentsArray' => $notationAppreciationDocuments,
+            'criteriasArray' => $criteriasArray,
+         );
     }
 
     private function addDropsStats(Dropzone $dropzone, $array)
@@ -397,6 +412,13 @@ class DropController extends DropzoneBaseController
         $documentRepo = $em->getRepository('InnovaCollecticielBundle:Document');
         $receiptRepo = $em->getRepository('InnovaCollecticielBundle:ReturnReceipt');
         $notationRepo = $em->getRepository('InnovaCollecticielBundle:Notation');
+
+        $scaleRepo = $em->getRepository('InnovaCollecticielBundle:GradingScale');
+        $scalesArray = $scaleRepo->getScaleArrayForDropzone($dropzone);
+
+        $criteriaRepo = $em->getRepository('InnovaCollecticielBundle:GradingCriteria');
+        $criteriasArray = $criteriaRepo->getCriteriaArrayForDropzone($dropzone);
+
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         $workspace = $dropzone->getResourceNode()->getWorkspace();
 
@@ -417,6 +439,12 @@ class DropController extends DropzoneBaseController
         $userNbTextToRead = array();
         $haveReturnReceiptOrNotArray = array();
         $haveCommentOrNotArray = array();
+        $notationDocuments = array();
+        $recordOrTransmitNotations = array();
+        $notationCommentDocuments = array();
+        $notationQualityDocuments = array();
+        $notationAssessorDocuments = array();
+        $notationAppreciationDocuments = array();
 
         foreach ($dropzone->getDrops() as $drop) {
             $notationDocuments = $dropManager->getNotationForDocuments($drop);
@@ -457,6 +485,11 @@ class DropController extends DropzoneBaseController
             $dropUserId = $drop->getUser()->getId();
             $userToCommentCount[$dropUserId] = $nbCommentsPerUser;
             $userNbTextToRead[$dropUserId] = $nbTextToRead;
+
+            $notationCommentDocuments = $dropManager->getNotationCommentForDocuments($drop);
+            $notationQualityDocuments = $dropManager->getNotationQualityForDocuments($drop);
+            $notationAssessorDocuments = $dropManager->getNotationAssessorForDocuments($drop);
+            $notationAppreciationDocuments = $dropManager->getAppreciationForDocuments($drop);
         }
 
         // Calcul du nombre de documents sans accusé de réception
@@ -507,6 +540,12 @@ class DropController extends DropzoneBaseController
             'maximumNotation' => $dropzone->getMaximumNotation(),
             'notationDocuments' => $notationDocuments,
             'recordOrTransmitNotations' => $recordOrTransmitNotations,
+            'notationCommentDocumentsArray' => $notationCommentDocuments,
+            'notationQualityDocumentsArray' => $notationQualityDocuments,
+            'notationAssessorDocumentsArray' => $notationAssessorDocuments,
+            'notationAppreciationDocumentsArray' => $notationAppreciationDocuments,
+            'scalesArray' => $scalesArray,
+            'criteriasArray' => $criteriasArray,
         ));
 
         return $dataToView;

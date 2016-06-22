@@ -382,7 +382,7 @@ class ExerciseController extends Controller
                 $histoMark = $docimoServ->histoMark($exercise->getId());
                 $histoSuccess = $docimoServ->histoSuccess($exercise->getId(), $sqs, $papers);
 
-                if ($exercise->getNbQuestion() == 0) {
+                if ($exercise->getPickSteps() === 0) {
                     $histoDiscrimination = $docimoServ->histoDiscrimination($exercise->getId(), $sqs, $papers);
                 } else {
                     $histoDiscrimination['coeffQ'] = 'none';

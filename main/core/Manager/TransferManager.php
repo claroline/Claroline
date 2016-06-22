@@ -39,6 +39,7 @@ class TransferManager
     private $container;
     private $data;
     private $workspace;
+    private $templateDirectory;
 
     /**
      * @DI\InjectParams({
@@ -51,6 +52,7 @@ class TransferManager
         $this->listImporters = new ArrayCollection();
         $this->om = $om;
         $this->container = $container;
+        $this->templateDirectory = $container->getParameter('claroline.param.templates_directory');
         $this->data = array();
         $this->workspace = null;
     }
@@ -387,7 +389,7 @@ class TransferManager
     private function setImporters(File $template, User $owner)
     {
         foreach ($this->listImporters as $importer) {
-            $importer->setRootPath(sys_get_temp_dir().DIRECTORY_SEPARATOR.'tmp'.$template->getBasename());
+            $importer->setRootPath($this->templateDirectory.DIRECTORY_SEPARATOR.$template->getBasename());
             $importer->setOwner($owner);
             $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
             $importer->setConfiguration($data);

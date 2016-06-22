@@ -38,18 +38,51 @@ au div situé ci-dessous
 {# Parcours du tableau, des données et affichage du tableau. InnovaERV #}
 {# Voir https://github.com/InnovaLangues/CollecticielBundle/issues/246 #}
 {% set alertNbDocumentWithoutComment = 0 %}
+{% set alertNbDocumentWithoutGraduation = 0 %}
+{% set alertNbDocumentWithoutReview = 0 %}
 
 {% for drop in pager.currentPageResults %}
     {% for document in drop.documents %}
         {% set foundDocument = false %}
         {% for key,value in teacherCommentDocArray %}
             {% if document.id == key %}
-                {% set foundDocument = true  %}
+                {% if notationDocuments[document.id] == 0 %}
+                    {% set alertNbDocumentWithoutComment = alertNbDocumentWithoutComment + 1 %}
+                {% endif %}
+            {% set foundDocument = true  %}
             {% endif %}
         {% endfor %}
         {% if foundDocument == false  %}
             {% set alertNbDocumentWithoutComment = alertNbDocumentWithoutComment + 1 %}
         {% endif %}
+    {% endfor %}
+{% endfor %}
+
+{% for drop in pager.currentPageResults %}
+    {% for document in drop.documents %}
+        {% set foundDocument = false %}
+        {% for key,value in recordOrTransmitNotations %}
+            {% if document.id == key %}
+                {% if recordOrTransmitNotations[document.id] == 0 %}
+                    {% set alertNbDocumentWithoutReview = alertNbDocumentWithoutReview + 1 %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
+
+{% for drop in pager.currentPageResults %}
+    {% for document in drop.documents %}
+        {% set foundDocument = false %}
+        {% for key,value in notationAppreciationDocumentsArray %}
+            {% if document.id == key %}
+                {% if notationAppreciationDocumentsArray[document.id] == 99 %}
+                    {% if (document.validate == 1) %}
+                        {% set alertNbDocumentWithoutGraduation = alertNbDocumentWithoutGraduation + 1 %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
     {% endfor %}
 {% endfor %}
 
@@ -136,16 +169,51 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
         {# On affiche cette colonne si le créateur du collecticiel veut afficher/gérer les évaluations. #}
         {# Demande JJQ. InnovaERV #}
         {% if dropzone.evaluation == 1  %}
-            <th class="centered"><i class="fa fa-graduation-cap"></th>
+            <th class="centered">
+                {% if alertNbDocumentWithoutGraduation != 0  %}
+                    <div class="short-div">
+                        {# Ajout d'une alerte avec le nombre d'éléments non traités. InnovaERV, demande JJQ #}
+                        {% if alertNbDocumentWithoutGraduation > 1  %}
+                            <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                            data-original-title="{{ alertNbDocumentWithoutGraduation }} {{ 'Deals Pending'|trans({},'innova_collecticiel') }}">
+                            </i>
+                        {% endif %}
+                        {% if alertNbDocumentWithoutGraduation == 1  %}
+                            <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                            data-original-title="{{ alertNbDocumentWithoutGraduation }} {{ 'Deal Pending'|trans({},'innova_collecticiel') }}">
+                            </i>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <i class="fa fa-graduation-cap" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Review'|trans({},'innova_collecticiel') }}">
+                </i>
+            </th>
         {% endif %}
+        
         {% if dropzone.evaluation == 1  %}
-            <th class="centered"><i class="fa fa-mail-forward"></th>
+            <th class="centered">
+                {% if alertNbDocumentWithoutReview != 0  %}
+                    <div class="short-div">
+                        {# Ajout d'une alerte avec le nombre d'éléments non traités. InnovaERV, demande JJQ #}
+                        {% if alertNbDocumentWithoutReview > 1  %}
+                            <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                            data-original-title="{{ alertNbDocumentWithoutReview }} {{ 'Deals Pending'|trans({},'innova_collecticiel') }}">
+                            </i>
+                        {% endif %}
+                        {% if alertNbDocumentWithoutReview == 1  %}
+                            <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                            data-original-title="{{ alertNbDocumentWithoutReview }} {{ 'Deal Pending'|trans({},'innova_collecticiel') }}">
+                            </i>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <i class="fa fa-mail-forward" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Review state'|trans({},'innova_collecticiel') }}">
+                </i>
+            </th>
         {% endif %}
 
         <th class="centered no-sort sorting_disabled centering-columns-input">
-        {# Demande JJQ. InnovaERV
-            {{ 'Selection'|trans({}, 'innova_collecticiel') }}
-        #}
+        {# Demande JJQ. InnovaERV {{ 'Selection'|trans({}, 'innova_collecticiel') }} #}
             <div>
                 <input align="center" id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm"
                  data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Selection'|trans({},'innova_collecticiel') }}"
@@ -166,7 +234,12 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                         with {
                         'maximumNotation' : maximumNotation,
                         'notationDocument' : notationDocuments[document.id],
-                        'recordOrTransmitNotation' : recordOrTransmitNotations[document.id]
+                        'recordOrTransmitNotation' : recordOrTransmitNotations[document.id],
+                        'notationAssessorDocument' : notationAssessorDocumentsArray[document.id],
+                        'notationCommentDocument': notationCommentDocumentsArray[document.id],
+                        'notationQualityDocument': notationQualityDocumentsArray[document.id],
+                        'notationAppreciationDocument': notationAppreciationDocumentsArray[document.id],
+                        'notationScaleDocument' : notationAppreciationDocumentsArray[document.id],
                         }
                      %}
                 {% endif %}
@@ -234,3 +307,5 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
 </div>
 {# Fin de la déclaration de la modal pour confirmation de la validation #}
 
+<script src="{{ asset('bundles/innovacollecticiel/js/tooltip.js') }}"></script>
+<script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>

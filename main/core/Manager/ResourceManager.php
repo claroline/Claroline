@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
@@ -1066,9 +1067,8 @@ class ResourceManager
                 $nodes[0]->getName() :
                 $nodes[0]->getName().'.'.$extension;
             $data['file'] = $event->getItem();
-            $data['mimeType'] = $nodes[0]->getResourceType()->getName() === 'file' ?
-                $nodes[0]->getMimeType() :
-                'text/plain';
+            $guesser = ExtensionGuesser::getInstance();
+            $data['mimeType'] = $guesser->guess($nodes[0]->getMimeType()) !== null ?  $nodes[0]->getMimeType() : null;
 
             return $data;
         }
@@ -1375,13 +1375,12 @@ class ResourceManager
      *
      * @param array                      $criteria
      * @param string[] | RoleInterface[] $userRoles
-     * @param bool                       $isRecursive
      *
      * @return array
      */
-    public function getByCriteria(array $criteria, array $userRoles = null, $isRecursive = false)
+    public function getByCriteria(array $criteria, array $userRoles = null)
     {
-        return $this->resourceNodeRepo->findByCriteria($criteria, $userRoles, $isRecursive);
+        return $this->resourceNodeRepo->findByCriteria($criteria, $userRoles);
     }
 
     /**

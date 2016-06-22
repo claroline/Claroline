@@ -53,7 +53,7 @@ class QuestionManagerTest extends TransactionalTestCase
     public function testQcmQuestionRoundTrip($dataFilename)
     {
         // see https://github.com/claroline/Distribution/issues/238
-        $this->markTestSkipped('the scoreTotal property must be removed in favour of a score object');
+        $this->markTestSkipped('Miss rightResponse in the json schema');
 
         $originalCompData = $this->loadData("question/valid/complete/{$dataFilename}");
         $originalEvalData = $this->loadData("question/valid/evaluation/{$dataFilename}");

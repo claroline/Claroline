@@ -72,6 +72,12 @@ class PanelFacet
     protected $isDefaultCollapsed = false;
 
     /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"api_facet_admin", "api_profile"})
+     */
+    protected $isEditable = false;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacetRole",
      *     mappedBy="panelFacet"
@@ -150,6 +156,16 @@ class PanelFacet
     public function isDefaultCollapsed()
     {
         return $this->isDefaultCollapsed;
+    }
+
+    public function isEditable()
+    {
+        return $this->isEditable;
+    }
+
+    public function setIsEditable($isEditable)
+    {
+        $this->isEditable = $isEditable;
     }
 
     public function isCollapsed()

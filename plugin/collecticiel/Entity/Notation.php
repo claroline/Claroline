@@ -2,7 +2,8 @@
 /**
  * Created by : Eric VINCENT
  * Date: 05/2016.
- * Modifiey by : Add recordOrTransmit (05/2016).
+ * Modify by : Add recordOrTransmit (05/2016).
+ * Modify by : Add appreciation (06/2016).
  */
 
 namespace Innova\CollecticielBundle\Entity;
@@ -60,9 +61,24 @@ class Notation
     protected $dropzone;
 
     /**
+     * @ORM\OneToMany(
+     *     targetEntity="Innova\CollecticielBundle\Entity\ChoiceCriteria",
+     *     mappedBy="notation",
+     *     cascade={"all"},
+     *     orphanRemoval=true
+     * )
+     */
+    protected $choiceCriterias;
+
+    /**
      * @ORM\Column(name="note", type="integer", nullable=false)
      */
     protected $note = 0;
+
+    /**
+     * @ORM\Column(name="appreciation", type="integer", nullable=false)
+     */
+    protected $appreciation = 0;
 
     /**
      * @ORM\Column(name="comment_text",type="text", nullable=true)
@@ -285,5 +301,70 @@ class Notation
     public function getRecordOrTransmit()
     {
         return $this->recordOrTransmit;
+    }
+
+    /**
+     * Set appreciation.
+     *
+     * @param int $appreciation
+     *
+     * @return Notation
+     */
+    public function setAppreciation($appreciation)
+    {
+        $this->appreciation = $appreciation;
+
+        return $this;
+    }
+
+    /**
+     * Get appreciation.
+     *
+     * @return int
+     */
+    public function getAppreciation()
+    {
+        return $this->appreciation;
+    }
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->choiceCriterias = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add choiceCriteria.
+     *
+     * @param \Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria
+     *
+     * @return Notation
+     */
+    public function addChoiceCriteria(\Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria)
+    {
+        $this->choiceCriterias[] = $choiceCriteria;
+
+        return $this;
+    }
+
+    /**
+     * Remove choiceCriteria.
+     *
+     * @param \Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria
+     */
+    public function removeChoiceCriteria(\Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria)
+    {
+        $this->choiceCriterias->removeElement($choiceCriteria);
+    }
+
+    /**
+     * Get choiceCriterias.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChoiceCriterias()
+    {
+        return $this->choiceCriterias;
     }
 }

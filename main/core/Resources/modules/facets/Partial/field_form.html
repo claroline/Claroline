@@ -7,11 +7,18 @@
         <div>
             <form name="fieldForm">
                 <form-field field="fmc.form.fields[0]" ng-model="fmc.model.name"></form-field>
-                <form-field field="fmc.form.fields[1]" ng-model="fmc.model.type"></form-field>
+                <form-field field="fmc.form.fields[1]" ng-model="fmc.model.is_required"></form-field>
+                <form-field field="fmc.form.fields[2]" ng-model="fmc.model.type"></form-field>
                 <div ng-if="(fmc.model.type === 4 || fmc.model.type === 5 || fmc.model.type === 6)">
-                    <div ng-repeat="(key, choice) in fmc.model.field_facet_choices track by choice.id" class="row">
-                        <div class="col-xs-10"><form-field field="['choice', 'text']" ng-model="choice.label"></form-field></div>
-                        <div><button class="btn btn-primary btn-xs" ng-click="fmc.removeChoice(choice)">x</button></div>
+                    <div dragula='"choice-bag"' dragula-scope="$parent" dragula-model="fmc.model.field_facet_choices">
+                        <div ng-repeat="(key, choice) in fmc.model.field_facet_choices track by choice.id"
+                            class="row"
+                        >
+                            <div>
+                                <div class="col-xs-10"><form-field field="['choice', 'text']" ng-model="choice.label"></form-field></div>
+                                <div><button class="btn btn-primary btn-xs" ng-click="fmc.removeChoice(choice)">x</button></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-10"><form-field field="['choice', 'text']" ng-model="fmc.newChoice.label"></form-field></div>

@@ -1069,7 +1069,7 @@ user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'
 user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link shared_policy_link_platform_users">platform users</span>, or to <span class="shared_policy_link shared_policy_link_everybody">everybody</span>.'
-user_removed: 'User removed'
+user_removed: 'User %user% removed'
 user_selector: 'User picker'
 user_visit: 'Audience/user visits'
 username: Username
@@ -1295,3 +1295,10 @@ field_edited: Field edition successfull
 field_removed: Field suppression successfull
 panel_roles_edited: Facet roles edition successfull
 profile_preference_edited: Profile preferences edition sucessfull
+manage_group: Manage group
+claro_admin_personal_workspace_resource_rights: Personal workspace resource management
+delete_users: Remove users
+delete_users_confirm: Do you really want to remove the users [ %user_list% ] ?
+group_created: Group %group% created.
+group_removed: Group %group% removed.
+mandatory: Mandatory

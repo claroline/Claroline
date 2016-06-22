@@ -75,9 +75,9 @@
                 {{ 'dropdown_step_navigate_choice_label'|trans:{"1" : exercisePlayerCtrl.index + 1, "2" : exercisePlayerCtrl.exercise.steps.length}:'ujm_sequence'}} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li data-ng-repeat="step in exercisePlayerCtrl.exercise.steps">
+                <li data-ng-repeat="step in exercisePlayerCtrl.paper.order">
                     <a href="" data-ng-click="exercisePlayerCtrl.goTo(step)">
-                        {{ 'dropdown_step_navigate_choice_label'|trans:{ "1" : $index + 1, "2" : exercisePlayerCtrl.exercise.steps.length }:'ujm_sequence'}}
+                        {{ 'dropdown_step_navigate_choice_label'|trans:{ "1" : $index + 1, "2" : exercisePlayerCtrl.paper.order.length }:'ujm_sequence' }}
                     </a>
                 </li>
             </ul>

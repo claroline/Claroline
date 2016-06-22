@@ -66,7 +66,7 @@
                 <div class="panel-body" data-ng-show="!collapsePanelQuestions">
                     <!-- Random order of Questions -->
                     <div class="form-group">
-                        <label for="exercise-random" class="control-label col-md-4">{{ 'random_questions' | trans:{}:'ujm_exo' }}</label>
+                        <label for="exercise-random" class="control-label col-md-4">{{ 'random_steps' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
                                 <input type="checkbox" id="exercise-random" data-ng-model="exerciseMetadataCtrl.meta.random" />
@@ -76,7 +76,7 @@
 
                     <!-- Number of Questions to use in the Exercise -->
                     <div class="form-group">
-                        <label for="exercise-pick" class="control-label col-md-4">{{ 'number_questions_draw' | trans:{}:'ujm_exo' }}</label>
+                        <label for="exercise-pick" class="control-label col-md-4">{{ 'number_steps_draw' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="col-md-2">
@@ -86,17 +86,17 @@
 
                             <span class="help-block">
                                 <span class="fa fa-info-circle"></span>
-                                {{ 'number_questions_draw_help' | trans:{}:'ujm_exo' }}
+                                {{ 'number_steps_draw_help' | trans:{}:'ujm_exo' }}
                             </span>
                         </div>
                     </div>
 
                     <!-- Keep same questions ? -->
-                    <div class="form-group" data-ng-if="0 < exerciseMetadataCtrl.meta.pick">
+                    <div class="form-group" data-ng-if="0 < exerciseMetadataCtrl.meta.pick || exerciseMetadataCtrl.meta.random">
                         <label for="exercise-keep" class="control-label col-md-4">{{ 'keep_same_question' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
-                                <input type="checkbox" id="exercise-keep" data-ng-model="exerciseMetadataCtrl.meta.keepSameQuestion" />
+                                <input type="checkbox" id="exercise-keep" data-ng-model="exerciseMetadataCtrl.meta.keepSteps" />
                             </div>
                         </div>
                     </div>

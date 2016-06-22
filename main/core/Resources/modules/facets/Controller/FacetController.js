@@ -443,7 +443,7 @@ export default class FacetController {
     })
 
     modalInstance.result.then(panel => {
-      this.FormBuilderService.submit(Routing.generate('api_put_panel_roles', {panel: panel.id}), {'roles': panel.panel_facets_role}, 'PUT').then(
+      this.FormBuilderService.submit(Routing.generate('api_put_panel_roles', {panel: panel.id}), {'roles': panel.panel_facets_role, 'is_editable': panel.is_editable}, 'PUT').then(
         d => {
             this.alerts.push({
                 type: 'success',

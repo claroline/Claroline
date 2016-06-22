@@ -192,17 +192,19 @@ class DropManager
         $docWithoutReceiptCount = 0;
         foreach ($drops as $drop) {
             foreach ($drop->getDocuments() as $document) {
-                $returnReceiptType = $this->receiptRepo->doneReturnReceiptForADocument($drop->getDropzone(), $document);
-                // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
-                $id = 0;
-                if (!empty($returnReceiptType)) {
-                    // Récupération de la valeur de l'accusé de réceptoin
-                    $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
-                    if ($id == 0) {
+                if ($document->getValidate()) {
+                    $returnReceiptType = $this->receiptRepo->doneReturnReceiptForADocument($drop->getDropzone(), $document);
+                    // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
+                    $id = 0;
+                    if (!empty($returnReceiptType)) {
+                        // Récupération de la valeur de l'accusé de réceptoin
+                        $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
+                        if ($id == 0) {
+                            ++$docWithoutReceiptCount;
+                        }
+                    } else {
                         ++$docWithoutReceiptCount;
                     }
-                } else {
-                    ++$docWithoutReceiptCount;
                 }
             }
         }
@@ -372,6 +374,54 @@ class DropManager
     }
 
     /**
+     * Handle Appreciation for Documents.
+     *
+     * @param Drop $drop drop
+     *
+     * @return notationAppreciation
+     */
+    public function getAppreciationForDocuments(Drop $drop)
+    {
+        $notationAppreciation = array();
+
+        $dropzone = $drop->getDropzone();
+        $this->gradingScaleRepo = $this->em->getRepository('InnovaCollecticielBundle:GradingScale');
+
+        foreach ($drop->getDocuments() as $document) {
+            $documentId = $document->getId();
+
+            // Ajout pour avoir la notation.
+            $notations = $this
+                ->em->getRepository('InnovaCollecticielBundle:Notation')
+                ->findBy(
+                    array(
+                        'document' => $documentId,
+                        'dropzone' => $dropzone->getId(),
+                    )
+                );
+
+            // Nombre de notation pour le document et pour le dropzone
+            $countExistNotation = count($notations);
+
+            if ($countExistNotation == 0) {
+                $notationAppreciation[$documentId] = 99;
+            } else {
+                // Parcours des commentaires des documents sélectionnés
+                foreach ($notations as $notation) {
+                    if ($notation->getAppreciation() > 0) {
+                        $gradingScale = $this->gradingScaleRepo->find($notation->getAppreciation());
+                        $notationAppreciation[$documentId] = $gradingScale->getScaleName();
+                    } else {
+                        $notationAppreciation[$documentId] = 0;
+                    }
+                }
+            }
+        }
+
+        return $notationAppreciation;
+    }
+
+    /**
      * Handle QualityText for Documents.
      *
      * @param Drop $drop drop
@@ -420,7 +470,7 @@ class DropManager
      *
      * @return recordOrTransmitNotationArray
      */
-    public function recordOrTransmitNotationArray(Drop $drop)
+    public function getRecordOrTransmitNotation(Drop $drop)
     {
         $recordOrTransmitNotationArray = array();
 
@@ -456,5 +506,52 @@ class DropManager
         }
 
         return $recordOrTransmitNotationArray;
+    }
+
+    /**
+     * Handle CommentText for Documents.
+     *
+     * @param Drop $drop drop
+     *
+     * @return notationCommentTextDocuments
+     */
+    public function getChoiceTextForDocuments(Drop $drop)
+    {
+        $notationChoiceTextDocuments = array();
+
+        $dropzone = $drop->getDropzone();
+
+        foreach ($drop->getDocuments() as $document) {
+            $documentId = $document->getId();
+
+            // Ajout pour avoir la notation.
+            $notations = $this
+                ->em->getRepository('InnovaCollecticielBundle:Notation')
+                ->findBy(
+                    array(
+                        'document' => $documentId,
+                        'dropzone' => $dropzone->getId(),
+                    )
+                );
+
+            // Nombre de notation pour le document et pour le dropzone
+            $countExistNotation = count($notations);
+
+            if ($countExistNotation == 0) {
+                $notationCommentTextDocuments[$documentId] = '';
+            } else {
+                // Parcours des commentaires des documents sélectionnés
+                foreach ($notations as $notation) {
+                    if (strlen($notation->getCommentText()) == 0) {
+                        $notationCommentTextDocuments[$documentId] = '';
+                    } else {
+                        $notationCommentTextDocuments[$documentId]
+                            = $notation->getCommentText();
+                    }
+                }
+            }
+        }
+
+        return $notationChoiceTextDocuments;
     }
 }

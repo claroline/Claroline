@@ -65,11 +65,72 @@ UserPaperService.prototype.setNbPapers = function setNbPapers(count) {
 };
 
 /**
+ * Get the index of a Step
+ * @param   {Object} step
+ * @returns {Number}
+ */
+UserPaperService.prototype.getIndex = function getIndex(step) {
+    var index = 0;
+
+    for (var i = 0; i < this.paper.order.length; i++) {
+        if (this.paper.order[i].id === step.id) {
+            index = i;
+
+            break;
+        }
+    }
+
+    return index;
+};
+
+/**
+ * Get the next Step has configured in the Paper of the User
+ * @param   {Object} currentStep
+ * @returns {Number}
+ */
+UserPaperService.prototype.getNextStepId = function getNextStepId(currentStep) {
+    var nextStep = null;
+    for (var i = 0; i < this.paper.order.length; i++) {
+        if (this.paper.order[i].id === currentStep.id) {
+            if (this.paper.order[i + 1]) {
+                // There is a Step after the current one
+                nextStep = this.paper.order[i + 1].id;
+            }
+
+            break;
+        }
+    }
+
+    return nextStep;
+};
+
+/**
+ * Get the previous Step has configured in the Paper of the User
+ * @param   {Object} currentStep
+ * @returns {Number}
+ */
+UserPaperService.prototype.getPreviousStepId = function getPreviousStepId(currentStep) {
+    var previousStep = null;
+    for (var i = 0; i < this.paper.order.length; i++) {
+        if (this.paper.order[i].id === currentStep.id) {
+            if (this.paper.order[i - 1]) {
+                // There is a Step after the current one
+                previousStep = this.paper.order[i - 1].id;
+            }
+
+            break;
+        }
+    }
+
+    return previousStep;
+};
+
+/**
  * Order the Questions of a Step
  * @param   {Object} step
  * @returns {Array} The ordered list of Questions
  */
-UserPaperService.prototype.orderQuestions = function orderQuestions(step) {
+UserPaperService.prototype.orderStepQuestions = function orderStepQuestions(step) {
     return this.PaperService.orderStepQuestions(this.paper, step);
 };
 
@@ -102,8 +163,6 @@ UserPaperService.prototype.start = function start(exercise) {
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error';
             var code = data && data.error && data.error.code ? data.error.code : 403;
-            /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
-            /*$window.location = url;*/
         });
     } else {
         // Continue the current Paper

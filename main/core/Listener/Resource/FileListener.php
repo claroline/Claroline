@@ -421,7 +421,7 @@ class FileListener implements ContainerAwareInterface
         $mimeType,
         Workspace $workspace = null
     ) {
-        $this->container->get('claroline.manager.file_manager')->create($file, $tmpFile, $fileName, $mimeType, $workspace);
+        return $this->container->get('claroline.manager.file_manager')->create($file, $tmpFile, $fileName, $mimeType, $workspace);
     }
 
     private function handleFileCreation($form, CreateResourceEvent $event)

@@ -5,7 +5,6 @@
  * @param {Object}           $location
  * @param {Object}           step
  * @param {Object}           paper
- * @param {CommonService}    CommonService
  * @param {ExerciseService}  ExerciseService
  * @param {FeedbackService}  FeedbackService
  * @param {UserPaperService} UserPaperService
@@ -16,7 +15,6 @@ function ExercisePlayerCtrl(
     $location,
     step,
     paper,
-    CommonService,
     ExerciseService,
     FeedbackService,
     UserPaperService,
@@ -24,7 +22,6 @@ function ExercisePlayerCtrl(
 ) {
     // Store services
     this.$location        = $location;
-    this.CommonService    = CommonService;
     this.ExerciseService  = ExerciseService;
     this.FeedbackService  = FeedbackService;
     this.UserPaperService = UserPaperService;
@@ -34,10 +31,16 @@ function ExercisePlayerCtrl(
     this.exercise = this.ExerciseService.getExercise(); // Current exercise
     this.paper    = paper;    // Paper of the current User
 
+    if (!step && paper.order.length > 0) {
+        // No step passed to the route => Get the first Step defined in the UserPaper
+        step = this.ExerciseService.getStep(paper.order[0].id);
+    }
+
     this.step     = step;
-    this.index    = this.ExerciseService.getIndex(step);
-    this.previous = this.ExerciseService.getPrevious(step);
-    this.next     = this.ExerciseService.getNext(step);
+
+    this.index    = this.UserPaperService.getIndex(step);
+    this.previous = this.ExerciseService.getStep(this.UserPaperService.getPreviousStepId(step));
+    this.next     = this.ExerciseService.getStep(this.UserPaperService.getNextStepId(step));
 
     this.allAnswersFound = -1;
 
