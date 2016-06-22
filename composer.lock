@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "6c8751991614f52388f5a908624a0f7d347b8f2d"
+                "reference": "ca1af8474a6f9da591ae952e53696daaaaebc12d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/6c8751991614f52388f5a908624a0f7d347b8f2d",
-                "reference": "6c8751991614f52388f5a908624a0f7d347b8f2d",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/ca1af8474a6f9da591ae952e53696daaaaebc12d",
+                "reference": "ca1af8474a6f9da591ae952e53696daaaaebc12d",
                 "shasum": ""
             },
             "require": {
@@ -225,6 +225,7 @@
                 "claroline/video-player-bundle": "*",
                 "claroline/web-installer": "*",
                 "claroline/web-resource-bundle": "*",
+                "formalibre/office-connect-bundle": "*",
                 "formalibre/presence-bundle": "*",
                 "formalibre/reservation-bundle": "*",
                 "formalibre/support-bundle": "*",
@@ -303,7 +304,8 @@
                     "Icap\\LessonBundle\\IcapLessonBundle",
                     "Claroline\\FlashCardBundle\\ClarolineFlashCardBundle",
                     "UJM\\ExoBundle\\UJMExoBundle",
-                    "Icap\\LessonBundle\\IcapLessonBundle"
+                    "Icap\\LessonBundle\\IcapLessonBundle",
+                    "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle"
                 ]
             },
             "autoload": {
@@ -356,7 +358,8 @@
                     "Innova\\VideoRecorderBundle\\": "plugin/video-recorder",
                     "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder",
                     "Icap\\LessonBundle\\": "plugin/lesson",
-                    "Claroline\\FlashCardBundle\\": "plugin/flashcard"
+                    "Claroline\\FlashCardBundle\\": "plugin/flashcard",
+                    "FormaLibre\\OfficeConnectBundle\\": "plugin/o365"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -376,7 +379,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-06-19 16:31:31"
+            "time": "2016-06-21 13:50:54"
         },
         {
             "name": "claroline/front-end-bundle",
