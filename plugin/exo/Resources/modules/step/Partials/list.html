@@ -1,0 +1,99 @@
+<div class="steps">
+    <div class="panel-body">
+        <div dragula="'order-steps'" dragula-model="stepListCtrl.steps">
+            <!-- List all Steps -->
+            <div class="panel panel-default" data-ng-repeat="step in stepListCtrl.steps">
+                <div class="panel-heading">
+                    <div class="row">
+                        <h3 class="col-md-10 panel-title">
+                            <span class="handle">
+                                <span class="fa fa-lg fa-ellipsis-v"></span>
+                            </span>
+                            <span>
+                                {{ 'step'|trans:{}:'ujm_exo' }} <b>#{{ $index + 1 }}</b>
+                                <small>({{ 'step_items_count'|transChoice:step.items.length:{ count: step.items.length }:'ujm_exo' }})</small>
+                            </span>
+                        </h3>
+
+                        <div class="col-md-2 step-actions text-right">
+                            <a role="button"
+                               href="{{ 'ujm_question_new' | path:{ exoID: stepListCtrl.exerciseId, stepID: step.id } }}"
+                               class="btn btn-sm btn-default"
+                               data-toggle="tooltip" title="{{ 'add_question' | trans:{}:'ujm_exo' }}">
+                                <span class="fa fa-plus"></span>
+                                <span class="sr-only">{{ 'add_question'|trans:{}:'ujm_exo' }}</span>
+                            </a>
+
+                            <button type="button"
+                                    class="btn btn-sm btn-default"
+                                    data-ng-click="stepListCtrl.editMetadata(step)"
+                                    data-toggle="tooltip" title="{{ 'edit_step' | trans:{}:'ujm_exo' }}">
+                                <span class="fa fa-pencil"></span>
+                                <span class="sr-only">{{ 'edit_step'|trans:{}:'ujm_exo' }}</span>
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-sm btn-danger"
+                                    data-confirm-modal="{{ 'delete_of_my_exercise'|trans:{}:'ujm_exo'}}"
+                                    data-confirm-modal-action="stepListCtrl.removeStep(step)"
+                                    data-toggle="tooltip" title="{{ 'delete_question' | trans:{}:'ujm_exo' }}">
+                                <span class="fa fa-trash-o"></span>
+                                <span class="sr-only">{{ 'delete_question'|trans:{}:'ujm_exo' }}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List items of the Step -->
+                <table class="table table-striped table-hover">
+                    <tbody dragula="'order-questions'" dragula-model="step.items" data-step-id="{{ step.id }}">
+                        <tr class="step-item" data-ng-repeat="item in step.items">
+                            <td class="col-md-10">
+                                <b class="text-info">[{{ item.type | trans:{}:'ujm_exo'}}]</b>
+                                {{ item.title }}
+                            </td>
+                            <td class="col-md-2 text-right">
+                                <!-- Export Item button -->
+                                <a class="btn btn-sm btn-default" data-toggle="tooltip" title="{{ 'Export' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_qti_export' | path:{ id: item.id } }}">
+                                    <span class="fa fa-save"></span>
+                                    <span class="sr-only">{{ 'Export' | trans:{}:'ujm_exo' }}</span>
+                                </a>
+
+                                <!-- Edit Item button -->
+                                <a class="btn btn-sm btn-default" data-toggle="tooltip" title="{{ 'edit' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_edit' | path:{ id: item.id, exoID: stepListCtrl.exerciseId } }}">
+                                    <span class="fa fa-pencil"></span>
+                                    <span class="sr-only">{{ 'edit' | trans:{}:'ujm_exo' }}</span>
+                                </a>
+
+                                <!-- Delete Item button -->
+                                <button type="button" class="btn btn-sm btn-danger" data-toggle="tooltip" title="{{ 'delete' | trans:{}:'ujm_exo' }}"
+                                        data-confirm-modal="{{ 'delete_of_my_exercise'|trans:{}:'ujm_exo'}}"
+                                        data-confirm-modal-action="stepListCtrl.removeItem(step, item)">
+                                    <span class="fa fa-trash-o"></span>
+                                    <span class="sr-only">{{ 'delete' | trans:{}:'ujm_exo' }}</span>
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- No question flag (to be able to drag n drop a Question here) -->
+                        <tr class="no-item text-center" data-ng-if="step.items.length === 0">
+                            <td colspan="2">
+                                <em>{{ 'step_item_add'|trans:{}:'ujm_exo' }}</em>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="alert alert-info" data-ng-if="0 === stepListCtrl.steps.length">
+            <span class="fa fa-warning"></span>
+            {{ 'no_question_found'|trans:{}:'ujm_exo' }}
+        </div>
+
+        <button type="button" class="btn btn-primary" data-ng-click="stepListCtrl.addStep()">
+            <span class="fa fa-plus"></span>
+            {{ 'add_step'|trans:{}:'ujm_exo' }}
+        </button>
+    </div>
+</div>

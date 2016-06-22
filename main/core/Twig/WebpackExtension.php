@@ -69,7 +69,11 @@ class WebpackExtension extends \Twig_Extension
         $assetName = pathinfo($path, PATHINFO_FILENAME);
 
         if (!property_exists($assets, $assetName)) {
-            throw new \Exception("Cannot find asset '{$assetName}' in webpack stats");
+            $assetNames = implode("\n", array_keys((array) $assets));
+
+            throw new \Exception(
+                "Cannot find asset '{$assetName}' in webpack stats. Found:\n{$assetNames})"
+            );
         }
 
         $asset = 'dist/'.$assets->{$assetName}->js;
