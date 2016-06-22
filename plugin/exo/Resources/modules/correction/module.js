@@ -61,7 +61,7 @@ angular
     .directive('graphicCorrection', [
         GraphicCorrectionDirective
     ])
-    .directive('correctionMatch', [
+    .directive('matchCorrection', [
         MatchCorrectionDirective
     ])
     .directive('openCorrection', [
