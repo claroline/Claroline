@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Notation;
+use Innova\CollecticielBundle\Entity\ChoiceCriteria;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,8 +35,7 @@ class NotationController extends DropzoneBaseController
         $documentId = $this->get('request')->query->get('documentId');
         $dropzoneId = $this->get('request')->query->get('dropzoneId');
         $note = $this->get('request')->query->get('note');
-        $commentText = $this->get('request')->query->get('commentText');
-        $qualityText = $this->get('request')->query->get('qualityText');
+        $appreciation = $this->get('request')->query->get('appreciation');
         $recordOrTransmit = $this->get('request')->query->get('recordOrTransmit');
 
         $em = $this->getDoctrine()->getManager();
@@ -47,18 +47,103 @@ class NotationController extends DropzoneBaseController
 
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
-        // Valorisation du commentaire
-        $notation = new Notation();
-        $notation->setUser($user);
-        $notation->setDocument($document);
-        $notation->setDropzone($dropzone);
-        $notation->setNote($note);
-        $notation->setCommentText($commentText);
-        $notation->setQualityText($qualityText);
-        $notation->setRecordOrTransmit($recordOrTransmit);
+        // Récupération des documents sélectionnés
+        $arrayCriteriaId = $this->get('request')->query->get('arrayCriteriaId');
+        $arrayCriteriaName = $this->get('request')->query->get('arrayCriteriaName');
+        $arrayCriteriaValue = $this->get('request')->query->get('arrayCriteriaValue');
 
-        // Insertion en base de la notation
-        $em->persist($notation);
+        // Pour insérer l'ID de la table Notation dans la tabke Choice_criteria
+        $notationId = 0;
+
+        // Ajout pour avoir si la notation a été transmise ou pas.
+        $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
+                    ->findBy(
+                            array(
+                                'document' => $document->getId(),
+                                'dropzone' => $dropzone->getId(),
+                                 )
+                            );
+
+        if ($recordOrTransmit == 0) {
+            if (!empty($notation)) {
+                $notation[0]->setNote($note);
+                $notation[0]->setappreciation($appreciation);
+                // Mise à jour de la base de données
+                $em->persist($notation[0]);
+                $notationId = $notation[0]->getId();
+            } else {
+                // Valorisation de l'évaluation/notation
+                $notation = new Notation();
+                $notation->setUser($user);
+                $notation->setDocument($document);
+                $notation->setDropzone($dropzone);
+                $notation->setNote($note);
+                $notation->setCommentText('');
+                $notation->setQualityText('');
+                $notation->setRecordOrTransmit($recordOrTransmit);
+                $notation->setappreciation($appreciation);
+
+                // Insertion en base
+                $em->persist($notation);
+            }
+        } else {
+            $notation[0]->setNote($note);
+            $notation[0]->setRecordOrTransmit(true);
+            $notation[0]->setappreciation($appreciation);
+            // Mise à jour de la base de données
+            $em->persist($notation[0]);
+            $notationId = $notation[0]->getId();
+        }
+
+        $em->flush();
+
+        if ($notationId == 0) {
+            // Ajout pour avoir si la notation a été transmise ou pas.
+            $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
+                        ->findBy(
+                                array(
+                                    'document' => $document->getId(),
+                                    'dropzone' => $dropzone->getId(),
+                                     )
+                                );
+            $notationId = $notation[0]->getId();
+        }
+
+        // Insertion dans la table ChoiceCriteria.
+        // Parcours des documents sélectionnés et insertion en base de données
+        if (!empty($arrayCriteriaId)) {
+            $cpt = 0;
+            foreach ($arrayCriteriaId as $criteriaId) {
+                $gradingCriteria = $em->getRepository('InnovaCollecticielBundle:GradingCriteria')->find($criteriaId);
+
+                // Ajout pour avoir si la notation a été transmise ou pas.
+                $choiceCriteriaArray = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
+                            ->findBy(
+                                    array(
+                                        'notation' => $notationId,
+                                        'gradingCriteria' => $criteriaId,
+                                         )
+                                    );
+
+                // Nombre de notation pour le document et pour le dropzone
+                $countExistCriteria = count($choiceCriteriaArray);
+
+                // Notation : création
+                if ($countExistCriteria == 0) {
+                    $choiceCriteria = new ChoiceCriteria();
+                    $choiceCriteria->setGradingCriteria($gradingCriteria);
+                    $choiceCriteria->setNotation($notation[0]);
+                    $choiceCriteria->setChoiceText($arrayCriteriaValue[$cpt]);
+                } else {
+                    // Notation : mise à jour
+                    $choiceCriteria = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
+                      ->find($choiceCriteriaArray[0]->getId());
+                    $choiceCriteria->setChoiceText($arrayCriteriaValue[$cpt]);
+                }
+                $em->persist($choiceCriteria);
+                ++$cpt;
+            }
+        }
 
         $em->flush();
 
@@ -93,7 +178,9 @@ class NotationController extends DropzoneBaseController
 
         $dropzone = $em->getRepository('InnovaCollecticielBundle:DropZone')->find($dropzone->getId());
 
-        // Ajout pour avoir si la notation a été transmise ou pas.
+        $drop = $em->getRepository('InnovaCollecticielBundle:Drop')->find($document->getDrop());
+
+        // Recherche des critères de la notation
         $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
                     ->findBy(
                             array(
@@ -108,12 +195,27 @@ class NotationController extends DropzoneBaseController
         $em->persist($notation[0]);
         $em->flush();
 
+        $gradingScale = $em->getRepository('InnovaCollecticielBundle:GradingScale')
+                      ->find($notation[0]->getAppreciation());
+
+        if (!empty($gradingScale)) {
+            $notationScaleDocument = $gradingScale->getScaleName();
+        } else {
+            $notationScaleDocument = '';
+        }
+
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get('templating')->
         render('InnovaCollecticielBundle:Document:documentIsTransmit.html.twig',
                 array('document' => $document,
                       'dropzone' => $dropzone,
+                      'drop' => $drop,
                       'recordOrTransmitNotation' => 1,
+                      'notationDocument' => $notation[0]->getNote(),
+                      'maximumNotation' => $dropzone->getMaximumNotation(),
+                      'notationCommentDocument' => $notation[0]->getCommentText(),
+                      'notationQualityDocument' => $notation[0]->getQualityText(),
+                      'notationScaleDocument' => $notationScaleDocument,
                     )
                );
 

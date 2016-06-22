@@ -26,6 +26,7 @@ class GradingScaleManager
         $this->container = $container;
         $this->em = $em;
         $this->gradingScaleRepo = $this->em->getRepository('InnovaCollecticielBundle:GradingScale');
+        $this->notationRepo = $this->em->getRepository('InnovaCollecticielBundle:Notation');
     }
 
     /**
@@ -38,9 +39,12 @@ class GradingScaleManager
     public function manageGradingScales($tab, Dropzone $dropzone)
     {
         // handle old scales deletion
-        $this->deletOldScales($tab, $dropzone);
+        $this->deleteOldScales($tab, $dropzone);
         // handle update and add
-        foreach (array_keys($tab) as $key) {
+
+        // handle update and add
+        $tabKeys = array_keys($tab);
+        foreach ($tabKeys as $key) {
             // new
             if (empty($tab[$key]['id'])) {
                 $gradingScaleData = $this->insertGradingScale($tab[$key]['scaleName'], $dropzone);
@@ -57,7 +61,7 @@ class GradingScaleManager
         return true;
     }
 
-    private function deletOldScales($data,  Dropzone $dropzone)
+    private function deleteOldScales($data,  Dropzone $dropzone)
     {
         $existing = $this->gradingScaleRepo->findByDropzone($dropzone);
         foreach ($existing as $scale) {
@@ -71,6 +75,18 @@ class GradingScaleManager
             }
             if (!$found) {
                 $this->em->remove($scale);
+
+                // Mise à jour de l'appréciation à zéro car le SCALE a été supprimé
+                $notationsArray = $this->notationRepo
+                    ->findBy(
+                            array(
+                                'appreciation' => $scale->getId(),
+                                 )
+                            );
+
+                foreach ($notationsArray as $notation) {
+                    $notation->setAppreciation(0);
+                }
             }
         }
     }

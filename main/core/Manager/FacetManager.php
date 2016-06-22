@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
 use Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -153,13 +154,14 @@ class FacetManager
      * @param string     $name
      * @param int        $type
      */
-    public function addField(PanelFacet $panelFacet, $name, $type)
+    public function addField(PanelFacet $panelFacet, $name, $isRequired, $type)
     {
         $this->om->startFlushSuite();
         $fieldFacet = new FieldFacet();
         $fieldFacet->setPanelFacet($panelFacet);
         $fieldFacet->setName($name);
         $fieldFacet->setType($type);
+        $fieldFacet->setIsRequired($isRequired);
         $fieldFacet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacet'));
         $this->om->persist($fieldFacet);
         $this->om->endFlushSuite();
@@ -175,12 +177,13 @@ class FacetManager
      *
      * @return PanelFacet
      */
-    public function addPanel(Facet $facet, $name, $collapse = false)
+    public function addPanel(Facet $facet, $name, $collapse = false, $autoEditable = false)
     {
         $panelFacet = new PanelFacet();
         $panelFacet->setName($name);
         $panelFacet->setFacet($facet);
         $panelFacet->setIsDefaultCollapsed($collapse);
+        $panelFacet->setIsEditable($autoEditable);
         $panelFacet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\PanelFacet'));
         $this->om->persist($panelFacet);
         $this->om->flush();
@@ -254,8 +257,7 @@ class FacetManager
      */
     public function setFieldValue(User $user, FieldFacet $field, $value, $force = false)
     {
-        //the voter should be updated
-        if (!$this->authorization->isGranted('edit', $field) && !$force) {
+        if (!$this->authorization->isGranted('edit', new FieldFacetCollection([$field], $user)) && !$force) {
             throw new AccessDeniedException();
         }
 
@@ -339,10 +341,11 @@ class FacetManager
         }
     }
 
-    public function editField(FieldFacet $fieldFacet, $name, $type)
+    public function editField(FieldFacet $fieldFacet, $name, $isRequired, $type)
     {
         $fieldFacet->setName($name);
         $fieldFacet->setType($type);
+        $fieldFacet->setIsRequired($isRequired);
         $this->om->persist($fieldFacet);
         $this->om->flush();
 
@@ -496,7 +499,7 @@ class FacetManager
             case FieldFacet::FLOAT_TYPE: return $ffv->getFloatValue();
             case FieldFacet::DATE_TYPE:
                 return $ffv->getDateValue()->format($this->translator->trans('date_form_datepicker_php', array(), 'platform'));
-            case FieldFacet::STRING_TYPE || FieldFacet::COUNTRY_TYPE || FieldFacet::SELECT_TYPE || FieldFacet::RADIO_TYPE: return $ffv->getStringValue();
+            case FieldFacet::STRING_TYPE || FieldFacet::COUNTRY_TYPE || FieldFacet::SELECT_TYPE || FieldFacet::RADIO_TYPE || FieldFacet::EMAIL_TYPE: return $ffv->getStringValue();
             case FieldFacet::CHECKBOXES_TYPE: return $ffv->getArrayValue();
             default: return 'error';
         }
@@ -577,12 +580,15 @@ class FacetManager
     /**
      * Takes an array from the API/FacetController.php.
      */
-    public function editFacetFieldChoice(array $choiceDef, FieldFacet $field)
+    public function editFacetFieldChoice(array $choiceDef, FieldFacet $field, $position = null)
     {
         $choice = $this->om->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice')->find($choiceDef['id']);
 
         if ($choice) {
             $choice->setLabel($choiceDef['label']);
+            if ($position) {
+                $choice->setPosition($position);
+            }
             $this->om->persist($choice);
             $this->om->flush();
         } else {
@@ -599,6 +605,13 @@ class FacetManager
         //first flush is required altough bad
         $this->om->flush();
         $this->reorderChoices($field);
+    }
+
+    public function setPanelEditable(PanelFacet $panel, $bool)
+    {
+        $panel->setIsEditable($bool);
+        $this->om->persist($panel);
+        $this->om->flush();
     }
 
     public function reorderChoices(FieldFacet $field)

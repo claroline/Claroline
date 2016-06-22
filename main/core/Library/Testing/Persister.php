@@ -197,15 +197,15 @@ class Persister
         return $this->container->get('claroline.manager.facet_manager')->createFacet($name, $forceCreationForm, $isMain);
     }
 
-    public function panelFacet(Facet $facet, $name, $collapse)
+    public function panelFacet(Facet $facet, $name, $collapse, $autoEditable = false)
     {
-        return $this->container->get('claroline.manager.facet_manager')->addPanel($facet, $name, $collapse);
+        return $this->container->get('claroline.manager.facet_manager')->addPanel($facet, $name, $collapse, $autoEditable);
     }
 
-    public function fieldFacet(PanelFacet $panelFacet, $name, $type, array $choices = array())
+    public function fieldFacet(PanelFacet $panelFacet, $name, $type, array $choices = array(), $isRequired = false)
     {
         $this->om->startFlushSuite();
-        $field = $this->container->get('claroline.manager.facet_manager')->addField($panelFacet, $name, $type);
+        $field = $this->container->get('claroline.manager.facet_manager')->addField($panelFacet, $name, $isRequired, $type);
 
         foreach ($choices as $choice) {
             $this->container->get('claroline.manager.facet_manager')->addFacetFieldChoice($choice, $field);

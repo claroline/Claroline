@@ -1,4 +1,3 @@
-
 export default class HelpBlockDirective {
   constructor ($parse, $compile) {
     this.scope = {}
@@ -7,7 +6,9 @@ export default class HelpBlockDirective {
     this.restrict = 'E'
     this.replace = true
     this.require = '^ngModel'
-    this.controller = () => {}
+    this.showErrors = true
+    this.controller = () => {
+    }
     this.controllerAs = 'hc'
     this.bindToController = {
       field: '=',
@@ -20,25 +21,40 @@ export default class HelpBlockDirective {
   }
 
   postLinkFn (scope, elm, attrs, ngModel) {
-    const field = this.$parse(attrs.field)(scope.$parent)
-    const options = field[2]
-    ngModel.formValidators = {}
+    scope.$watch(() => {
+      return this.$parse(attrs.field)(scope.$parent)
+    }, field => {
+      const options = field[2]
+      if (options) this.showErrors = options.show_errors === undefined ? true: options.show_errors
+      ngModel.formValidators = {}
 
-    if (options && options.validators) {
-      options.validators.forEach(validator => {
-        ngModel.formValidators[validator.constructor.name] = validator
-        ngModel.$validators[validator.constructor.name] = modelValue => validator.validate(modelValue)
-      })
-    }
+      if (options && options.validators) {
+        options.validators.forEach(validator => {
+          ngModel.formValidators[validator.constructor.name] = validator
+          ngModel.$validators[validator.constructor.name] = modelValue => validator.validate(modelValue)
+        })
+      }
+
+      ngModel.$validate()
+      this.addErrors(ngModel, elm)
+    })
 
     scope.$watch(() => {
       return ngModel.$modelValue
     }, newValue => {
-      elm.html('')
-      Object.keys(ngModel.$error).forEach(validator => {
-        elm.append(this.buildHelpBlock(ngModel.formValidators[validator].getErrorMessage()))
-      })
+      this.addErrors(ngModel, elm)
     })
+  }
+
+  addErrors (ngModel, elm) {
+    elm.html('')
+    if (this.showErrors) {
+        Object.keys(ngModel.$error).forEach(validator => {
+          if (ngModel.formValidators[validator]) {
+            elm.append(this.buildHelpBlock(ngModel.formValidators[validator].getErrorMessage()))
+          }
+        })
+    }
   }
 
   buildHelpBlock (message) {

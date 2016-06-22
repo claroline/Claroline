@@ -133,11 +133,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts debug=false vars=["locale"]
-        "@ClarolineForumBundle/Resources/views/removeCategoryConfirm.html.twigjs"
-        filter="twig_js"
-    %}<script language="javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
     <script>
         $('#search-button').on('click', function(event) {
             event.preventDefault();
@@ -153,7 +148,12 @@
                function createValidationBox() {
                     var html = Twig.render(
                         ModalWindow,
-                        {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeCategoryConfirm, {'nbItems': 1})}
+                        {
+                            'footer': Twig.render(ValidationFooter),
+                            'isHidden': true,
+                            'modalId': 'confirm-modal',
+                            'body': Translator.trans('remove_category_confirm_message', {}, 'forum')
+                        }
                     );
                     $('body').append(html);
                 }

@@ -75,11 +75,6 @@ class DropzoneCommonType extends AbstractType
                  array(
                      'required' => false, )
                       )
-            // Evaluation. Ajout de cette zone, demande JJQ. InnovaERV
-            ->add('evaluation', 'checkbox',
-                 array(
-                     'required' => false, )
-                      )
             // Picture. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('picture', 'checkbox',
                  array(
@@ -109,10 +104,12 @@ class DropzoneCommonType extends AbstractType
 
             ;
     }
+
     public function getName()
     {
         return 'innova_collecticiel_common_form';
     }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
