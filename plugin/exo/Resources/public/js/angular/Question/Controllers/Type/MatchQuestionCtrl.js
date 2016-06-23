@@ -2,26 +2,23 @@
  * Choice Question Controller
  * @param {FeedbackService}      FeedbackService
  * @param {Object}               $scope
+ * @param {Object}               $uibModal
  * @param {MatchQuestionService} MatchQuestionService
  * @constructor
  */
-var MatchQuestionCtrl = function MatchQuestionCtrl(FeedbackService, $scope, MatchQuestionService) {
+var MatchQuestionCtrl = function MatchQuestionCtrl(FeedbackService, $scope, $uibModal, MatchQuestionService) {
     AbstractQuestionCtrl.apply(this, arguments);
     
     this.$scope = $scope;
+    this.$uibModal = $uibModal;
     this.MatchQuestionService = MatchQuestionService;
-
-    this.savedAnswers = [];
-    for (var i=0; i<this.dropped.length; i++) {
-        this.savedAnswers.push(this.dropped[i]);
-    }
 };
 
 // Extends AbstractQuestionCtrl
 MatchQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype);
 
 // Set up dependency injection (get DI from parent too)
-MatchQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ '$scope', 'MatchQuestionService' ]);
+MatchQuestionCtrl.$inject = AbstractQuestionCtrl.$inject.concat([ '$scope', '$uibModal', 'MatchQuestionService' ]);
 
 MatchQuestionCtrl.prototype.connections = []; // for toBind questions
 
@@ -32,6 +29,25 @@ MatchQuestionCtrl.prototype.orphanAnswers = [];
 MatchQuestionCtrl.prototype.orphanAnswersAreChecked = false;
 
 MatchQuestionCtrl.prototype.savedAnswers = [];
+
+/**
+ * Zoom on an item content (display it in a modal)
+ * @param {mixed} itemData
+ */
+MatchQuestionCtrl.prototype.zoom = function zoom(itemData) {
+    this.$uibModal.open({
+        template: '<div class="modal-body" data-ng-bind-html="zoomCtrl.data | unsafe"></div>',
+        controllerAs: 'zoomCtrl',
+        controller: function ZoomCtrl(data) {
+            this.data = data;
+        },
+        resolve: {
+            data: function () {
+                return itemData;
+            }
+        }
+    });
+};
 
 /**
  *
@@ -233,73 +249,6 @@ MatchQuestionCtrl.prototype.getCurrentItemFeedBackIfOk = function getCurrentItem
     }
 };
 
-MatchQuestionCtrl.prototype.getDropClass = function getDropClass(typeDiv, proposal) {
-    var droppable = true;
-    for (var i = 0; i < this.dropped.length; i++) {
-        if (this.dropped[i].target === proposal.id) {
-            droppable = false;
-        }
-    }
-
-    var classname = "";
-    if (typeDiv === "dropzone") {
-        if (droppable) {
-            classname += "droppable ";
-        } else {
-            classname += "state-highlight-pair";
-        }
-    }
-
-    return classname;
-};
-
-/**
- *
- * @param subject
- * @param proposal
- * @returns {*}
- */
-MatchQuestionCtrl.prototype.getDropColor = function getDropColor(subject, proposal) {
-    var found = false;
-    for (var i = 0; i < this.savedAnswers.length; i++) {
-        if (this.savedAnswers[i].target === proposal.id) {
-            for (var j = 0; j < this.question.solutions.length; j++) {
-                if (this.savedAnswers[i].source === this.question.solutions[j].firstId && this.savedAnswers[i].target === this.question.solutions[j].secondId && (this.feedback.enabled || this.solutions)) {
-                    if (subject === 'div') {
-                        return "drop-success";
-                    } else if (subject === 'button') {
-                        return "drop-button-success";
-                    }
-                    found = true;
-                }
-            }
-        }
-    }
-
-    if (this.feedback.visible && !found) {
-        if (subject === 'div') {
-            return "drop-warning";
-        } else {
-            return "drop-button-warning";
-        }
-    } else {
-        for (var i = 0; i < this.dropped.length; i++) {
-            if (this.dropped[i].target === proposal.id) {
-                if (subject === 'div') {
-                    return "drop-alert";
-                } else if (subject === 'button') {
-                    return "drop-button-alert";
-                }
-            }
-        }
-        if (subject === 'div') {
-            return "";
-        } else {
-            return "drop-button-default";
-        }
-    }
-};
-
 /**
  *
  * @param item
@@ -329,7 +278,7 @@ MatchQuestionCtrl.prototype.getStudentAnswers = function getStudentAnswers(label
     }
 
     var answers = [];
-    for (var i=0; i<answers_to_check.length; i++) {
+    for (var i = 0; i < answers_to_check.length; i++) {
         if (answers_to_check[i].target === label.id) {
             for (var j = 0; j < this.question.firstSet.length; j++) {
                 if (this.question.firstSet[j].id === answers_to_check[i].source) {
@@ -411,11 +360,13 @@ MatchQuestionCtrl.prototype.isRemovableItem = function isRemovableItem(proposalI
         return true;
     }
 
-    for (var i = 0; i < this.savedAnswers.length; i++) {
-        if ((this.savedAnswers[i].target === proposalId && valueType === "target") || (this.savedAnswers[i].source === proposalId && valueType === "source")) {
-            for (var j = 0; j < this.question.solutions.length; j++) {
-                if (this.savedAnswers[i].source === this.question.solutions[j].firstId && this.savedAnswers[i].target === this.question.solutions[j].secondId) {
-                    return false;
+    if (this.question.solutions) {
+        for (var i = 0; i < this.savedAnswers.length; i++) {
+            if ((this.savedAnswers[i].target === proposalId && valueType === "target") || (this.savedAnswers[i].source === proposalId && valueType === "source")) {
+                for (var j = 0; j < this.question.solutions.length; j++) {
+                    if (this.savedAnswers[i].source === this.question.solutions[j].firstId && this.savedAnswers[i].target === this.question.solutions[j].secondId) {
+                        return false;
+                    }
                 }
             }
         }
@@ -446,7 +397,7 @@ MatchQuestionCtrl.prototype.setOrphanAnswers = function setOrphanAnswers() {
     var hasSolution;
     for (var i = 0; i < this.question.secondSet.length; i++) {
         hasSolution = false;
-        for (var j=0; j<this.solutions.length; j++) {
+        for (var j=0; j < this.question.length; j++) {
             if (this.question.secondSet[i].id === this.solutions[j].secondId) {
                 hasSolution = true;
             }
@@ -467,11 +418,11 @@ MatchQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
     }
 
     if (!this.question.toBind) {
-        $('.draggable').draggable("disable");
+        $('.draggable').draggable('disable');
         if (this.question.typeMatch !== 3) {
             $('.draggable').fadeTo(100, 0.3);
         }
-    } else if (this.question.toBind) {
+    } else {
         this.colorBindings();
     }
 };
@@ -488,7 +439,7 @@ MatchQuestionCtrl.prototype.onFeedbackHide = function onFeedbackHide() {
             $('#draggable_' + this.dropped[i].source).draggable("disable");
             $('#draggable_' + this.dropped[i].source).fadeTo(100, 0.3);
         }
-    } else if (this.question.toBind) {
+    } else {
         this.colorBindings();
     }
 };
@@ -510,8 +461,8 @@ MatchQuestionCtrl.prototype.updateStudentData = function () {
     }
 
     for (var i = 0; i < answers_to_check.length; i++) {
-        for (var j=0; j<this.question.firstSet.length; j++) {
-            for (var k=0; k<this.question.secondSet.length; k++) {
+        for (var j = 0; j < this.question.firstSet.length; j++) {
+            for (var k = 0; k < this.question.secondSet.length; k++) {
                 if (answers_to_check[i].source === this.question.firstSet[j].id && answers_to_check[i].target === this.question.secondSet[k].id) {
                     var answer = answers_to_check[i].source + ',' + answers_to_check[i].target;
                     this.answer.push(answer);
@@ -525,7 +476,7 @@ MatchQuestionCtrl.prototype.updateStudentData = function () {
  * Only for toBind type
  * @returns {undefined}
  */
-MatchQuestionCtrl.prototype.reset = function () {
+MatchQuestionCtrl.prototype.reset = function reset() {
     if (this.question.toBind) {
         jsPlumb.detachEveryConnection();
         this.connections.splice(0, this.connections.length);
@@ -536,8 +487,6 @@ MatchQuestionCtrl.prototype.reset = function () {
                 $(this).find('.draggable').removeAttr('style');
                 $(this).find('.draggable').removeAttr('aria-disabled');
                 $(this).find('.draggable').draggable("enable");
-                var idProposal = $(this).attr("id");
-                idProposal = idProposal.replace('div_', '');
             }
         });
 
@@ -545,7 +494,7 @@ MatchQuestionCtrl.prototype.reset = function () {
         $(".droppable").each(function () {
             if ($(this).find(".dragDropped").children()) {
                 $(this).removeClass('state-highlight');
-                $(this).droppable( "option", "disabled", false );
+                $(this).droppable( "option", "disabled", false);
                 $(this).find(".dragDropped").children().remove();
             }
         });
@@ -558,35 +507,25 @@ MatchQuestionCtrl.prototype.reset = function () {
 };
 
 /**
- * init previous answers given for a toBind Match question
- * DOM has to be ready before calling this method...
- * problem when updating a previously given answer
+ * Connect answer associations.
  */
 MatchQuestionCtrl.prototype.addPreviousConnections = function addPreviousConnections() {
     if (this.answer && this.answer.length > 0) {
-        // init previously given answer
-        var sets = this.answer;
-        for (var i = 0; i < sets.length; i++) {
-            if (sets[i] && sets[i] !== '') {
-                var items = sets[i].split(',');
-                if (this.feedback.enabled || this.solutions) {
-                    var created = false;
-                    if (this.solutions) {
-                        for (var j=0; j<this.question.solutions.length; j++) {
-                            if (items[0] === this.question.solutions[j].firstId && items[1] === this.question.solutions[j].secondId) {
-                                var c = jsPlumb.connect({source: "draggable_" + items[0], target: "droppable_" + items[1], type: "right"});
-                                created = true;
-                            }
-                        }
-                    }
-                    if (!created) {
-                        var co = jsPlumb.connect({source: "draggable_" + items[0], target: "droppable_" + items[1], type: "default"});
-                    }
-                }
+        for (var i = 0; i < this.answer.length; i++) {
+            if (this.answer[i] && this.answer[i] !== '') {
+                var association = this.answer[i].split(',');
+
+                jsPlumb.connect({
+                    source: 'draggable_' + association[0],
+                    target: 'droppable_' + association[1],
+                    type: this.feedback.enabled
+                            && this.question.solutions
+                            && this.MatchQuestionService.isAssociationValid(this.question, association) ? 'right' : 'default'
+                });
 
                 var connection = {
-                    source: items[0],
-                    target: items[1]
+                    source: association[0],
+                    target: association[1]
                 };
 
                 this.connections.push(connection);
@@ -655,7 +594,7 @@ MatchQuestionCtrl.prototype.handleBeforeDrop = function handleBeforeDrop(data) {
         var targetId = data.targetId.replace('droppable_', '');
         for (var i=0; i<this.question.firstSet.length; i++) {
             if (this.question.firstSet[i].id === sourceId) {
-                for (var j=0; j<this.question.secondSet.length; j++) {
+                for (var j = 0; j < this.question.secondSet.length; j++) {
                     if (this.question.secondSet[j].id === targetId) {
                         var connection = {
                             source: sourceId,
@@ -680,20 +619,21 @@ MatchQuestionCtrl.prototype.handleBeforeDrop = function handleBeforeDrop(data) {
  * @param {type} data
  * @returns {undefined}
  */
-MatchQuestionCtrl.prototype.removeConnection = function removeConnection(data) {
-    var sourceId = data.sourceId.replace('draggable_', '');
-    var targetId = data.targetId.replace('droppable_', '');
-    // connection is removed from dom even with this commented...
-    // If not commented, code stops at this methods...
-    jsPlumb.detach(data);
+MatchQuestionCtrl.prototype.removeConnection = function removeConnection(connection) {
+    if (connection._jsPlumb.hoverPaintStyle.strokeStyle === "#FC0000") {
+        var sourceId = connection.sourceId.replace('draggable_', '');
+        var targetId = connection.targetId.replace('droppable_', '');
 
-    for (var i = 0; i < this.connections.length; i++) {
-        if (this.connections[i].source === sourceId && this.connections[i].target === targetId) {
-            this.connections.splice(i, 1);
+        jsPlumb.detach(connection);
+
+        for (var i = 0; i < this.connections.length; i++) {
+            if (this.connections[i].source === sourceId && this.connections[i].target === targetId) {
+                this.connections.splice(i, 1);
+            }
         }
-    }
 
-    this.updateStudentData();
+        this.updateStudentData();
+    }
 };
 
 /**
