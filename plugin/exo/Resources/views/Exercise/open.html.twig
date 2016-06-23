@@ -48,7 +48,5 @@
         AngularApp.webDir = "{{ path('claro_index') }}".split('/').slice(0, -2).join('/') + "/";
         AngularApp.locale = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
     </script>
-
-    <script src="{{ hotAsset('dist/commons.js') }}"></script>
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-exo-app.js') }}"></script>
 {% endblock %}
