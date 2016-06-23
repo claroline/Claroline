@@ -1126,13 +1126,13 @@ class WorkspaceManager
         }
 
         $archive = new \ZipArchive();
-        $fileName = $file->getBasename();
+        $fileName = $file->getBasename('.zip');
         $extractPath = $this->templateDirectory.DIRECTORY_SEPARATOR.$fileName;
 
         if ($archive->open($file->getPathname())) {
             $fs = new FileSystem();
-
             $fs->mkdir($extractPath);
+
             if (!$archive->extractTo($extractPath)) {
                 throw new \Exception("The workspace archive couldn't be extracted");
             }
