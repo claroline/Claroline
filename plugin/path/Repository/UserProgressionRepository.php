@@ -42,4 +42,27 @@ class UserProgressionRepository extends EntityRepository
 
         return $progression;
     }
+
+    /**
+     * Get total user progression in path.
+     *
+     * @param Path $path
+     * @param User $user
+     *
+     * @return int
+     */
+    public function countProgressionForUserInPath(Path $path, User $user)
+    {
+        $qb = $this->createQueryBuilder('userProgression')
+            ->select('COUNT(DISTINCT(userProgression.step)) AS total')
+            ->leftJoin('userProgression.step', 'step')
+            ->andWhere('userProgression.user = :user')
+            ->andWhere('step.path = :path')
+            ->andWhere('userProgression.status IN(:statuses)')
+            ->setParameter('user', $user)
+            ->setParameter('path', $path)
+            ->setParameter('statuses', array('seen', 'done'));
+
+        return intval($qb->getQuery()->getSingleScalarResult());
+    }
 }

@@ -35,8 +35,15 @@
              * @type {object}
              */
             var summary = {
-                opened: true
+                opened: true,
+                pinned: true
             };
+
+            /**
+             * Total steps in path
+             * @type {number}
+             */
+            var totalSteps = 0;
 
             /**
              * is condition blocking all children of a step
@@ -210,11 +217,41 @@
                     summary.opened = value;
                 },
 
+                /**
+                 * Toggle summary pin
+                 */
+                toggleSummaryPin: function toggleSummaryPin() {
+                    summary.pinned = !summary.pinned;
+                },
+
+                /**
+                 * Set summary pin
+                 * @param {Boolean} value
+                 */
+                setSummaryPin: function setSummaryPin(value) {
+                    summary.pinned = value;
+                },
+
                 setCompleteBlockingCondition: function setCompleteBlockingCondition(value) {
                     completeBlockingCondition = value;
                 },
                 isCompleteBlockingCondition: function isCompleteBlockingCondition() {
                     return completeBlockingCondition;
+                },
+
+                /**
+                 * Set path total steps
+                 * @param {Number} value
+                 */
+                setTotalSteps: function setTotalSteps(value) {
+                    totalSteps = value;
+                },
+                /**
+                 * Get path total steps
+                 * @returns {number}
+                 */
+                getTotalSteps: function getTotalSteps() {
+                    return totalSteps;
                 },
 
                 /**

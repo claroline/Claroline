@@ -11,7 +11,7 @@ use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
  * Step.
  *
  * @ORM\Table("innova_step")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\StepRepository")
  */
 class Step implements \JsonSerializable
 {

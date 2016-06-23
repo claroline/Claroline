@@ -11,6 +11,8 @@ var PathSummaryShowCtrl = function PathSummaryShowCtrl($routeParams, PathService
     this.userProgression = this.userProgressionService.get();
     this.alertService = AlertService;
     this.evaluation = null;
+    this.totalSteps = this.pathService.getTotalSteps();
+    //this.totalProgression = this.userProgressionService.getTotalProgression();
 
     // Check if summary is displayed by default or not
     var path = this.pathService.getPath();
@@ -45,3 +47,12 @@ PathSummaryShowCtrl.prototype.updateProgression = function (step, newStatus) {
         this.userProgressionService.update(step, newStatus);
     }
 };
+
+PathSummaryShowCtrl.prototype.getTotalProgression = function () {
+    return this.userProgressionService.getTotalProgression();
+};
+
+PathSummaryShowCtrl.prototype.getTotalProgressionPercentage = function () {
+    return Math.round(this.getTotalProgression()*100/this.totalSteps) + "%";
+};
+

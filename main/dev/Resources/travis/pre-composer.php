@@ -18,13 +18,14 @@ set_error_handler(function ($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);
 });
 
-if ($argc < 3) {
-    echo "Expected two arguments: package_name package_path\n";
+if ($argc < 4) {
+    echo "Expected three arguments: package_name package_path target_ref\n";
     exit(1);
 }
 
 $packageName = $argv[1];
 $packagePath = $argv[2];
+$targetRef = $argv[3];
 $composerFile = getcwd().'/composer.json';
 
 if (!file_exists($composerFile)) {
@@ -33,7 +34,7 @@ if (!file_exists($composerFile)) {
 }
 
 $data = json_decode(file_get_contents($composerFile));
-$data->require->{$packageName} = '*';
+$data->require->{$packageName} = $targetRef;
 
 if (!isset($data->repositories)) {
     $data->repositories = [];
