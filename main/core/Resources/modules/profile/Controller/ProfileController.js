@@ -81,7 +81,8 @@ export default class ProfileController {
           'values': field.field_facet_choices,
           'disabled': !(!this.disabled && field.is_editable),
           'validators': validators,
-          'show_errors': !this.disabled
+          'show_errors': !this.disabled,
+          'choice_value': 'value'
       }
     ]
   }

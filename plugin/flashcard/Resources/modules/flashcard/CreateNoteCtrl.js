@@ -1,6 +1,6 @@
 /*
  * This file is part of the Claroline Connect package.
- * 
+ *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * For the full copyright and license information, please view
@@ -8,22 +8,37 @@
  * file that was distributed with this source code.
  */
 
+import NotBlank from '#/main/core/Resources/modules/form/Validator/NotBlank'
+
 export default class CreateNoteCtrl {
-  constructor (service, $http) {
+  constructor (service, $location) {
     this.deck = service.getDeck()
+    this.$location = $location
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
     this.noteTypes = []
-    this.noteTypeChoosenId = 0
     this.noteTypeChoosen = null
+    this.noteTypeField = [
+        'type',
+        'select',
+        {
+            values: [],
+            label: 'note_type',
+            choice_name: 'name',
+            validators: [new NotBlank()]
+        }
+
+    ]
     this.fieldValues = []
     this.newCards = []
-
     this.errorMessage = null
     this.errors = []
     this._service = service
 
-    service.findAllNoteType().then(d => this.noteTypes = d.data)
+    service.findAllNoteType().then(d => {
+      this.noteTypes = d.data
+      this.noteTypeField[2].values = d.data
+    })
   }
 
   createNote (form) {
@@ -31,18 +46,19 @@ export default class CreateNoteCtrl {
       const fields = []
       let fieldLabel = null
 
-      for(let i=0; i<this.fieldValues.length; i++) {
+      for (let i = 0; i < this.fieldValues.length; i++) {
         fieldLabel = this.noteTypeChoosen.field_labels[i]
         fields[i] = {
-          "id": fieldLabel.id,
-          "value": this.fieldValues[i]
+          'id': fieldLabel.id,
+          'value': this.fieldValues[i]
         }
       }
 
       this._service.createNote(this.noteTypeChoosen, fields).then(
-        d => { 
+        d => {
           this.deck.notes.push(d.data)
           this.newCards = this._service.findNewCardToLearn(this.deck)
+          this.$location.path('/')
         },
         d => {
           this.errorMessage = 'errors.note.creation_failure'
