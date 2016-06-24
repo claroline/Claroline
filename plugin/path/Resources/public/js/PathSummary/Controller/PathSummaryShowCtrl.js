@@ -3,13 +3,12 @@
  * @returns {PathSummaryShowCtrl}
  * @constructor
  */
-var PathSummaryShowCtrl = function PathSummaryShowCtrl($routeParams, PathService, UserProgressionService, AlertService) {
+var PathSummaryShowCtrl = function PathSummaryShowCtrl($routeParams, PathService, UserProgressionService) {
     PathSummaryBaseCtrl.apply(this, arguments);
 
     // Get Progression of the current User
     this.userProgressionService = UserProgressionService;
     this.userProgression = this.userProgressionService.get();
-    this.alertService = AlertService;
     this.evaluation = null;
     this.totalSteps = this.pathService.getTotalSteps();
     //this.totalProgression = this.userProgressionService.getTotalProgression();

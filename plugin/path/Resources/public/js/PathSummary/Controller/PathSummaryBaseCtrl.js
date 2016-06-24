@@ -16,6 +16,7 @@ var PathSummaryBaseCtrl = function PathSummaryBaseCtrl($routeParams, PathService
         // Set the structure of the path
         this.structure = path.steps;
     }
+
     return this;
 };
 

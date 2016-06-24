@@ -11,7 +11,8 @@
         '$location',
         'AlertService',
         'StepService',
-        function PathService($http, $q, $timeout, $location, AlertService, StepService) {
+        'UserProgressionService',
+        function PathService($http, $q, $timeout, $location, AlertService, StepService, UserProgressionService) {
             /**
              * ID of the Path
              * @type {Number}
@@ -235,11 +236,34 @@
                 setCompleteBlockingCondition: function setCompleteBlockingCondition(value) {
                     completeBlockingCondition = value;
                 },
+
                 isCompleteBlockingCondition: function isCompleteBlockingCondition() {
                     return completeBlockingCondition;
                 },
 
                 /**
+                 * Get the last Step seen by a User
+                 * @returns {Object|null}
+                 */
+                getLastSeenStep: function getLastSeenStep() {
+                    var lastSeen = null;
+                    this.browseSteps(path.steps, function (parent, step) {
+                        var progression = UserProgressionService.getForStep(step);
+                        if (progression) {
+                            lastSeen = step;
+                        }
+                    });
+
+                    if (null === lastSeen && path.steps && 0 !== path.steps.length) {
+                        lastSeen = path.steps[0];
+                    }
+
+                    console.log(lastSeen);
+
+                    return lastSeen;
+                },
+
+				/**
                  * Set path total steps
                  * @param {Number} value
                  */
