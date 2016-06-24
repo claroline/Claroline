@@ -2,13 +2,13 @@
 
 namespace Innova\PathBundle\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-// Controller dependencies
+use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Manager\PathManager;
 use Innova\PathBundle\Manager\PublishingManager;
-use Innova\PathBundle\Entity\Path\Path;
+// Controller dependencies
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -95,18 +95,18 @@ class PathController
     {
         $this->pathManager->checkAccess('EDIT', $path);
 
-        $response = array();
+        $response = [];
         try {
             $this->publishingManager->publish($path);
 
             // Publish success
             $response['status'] = 'OK';
-            $response['messages'] = array();
+            $response['messages'] = [];
             $response['data'] = json_decode($path->getStructure()); // Send updated data
         } catch (\Exception $e) {
             // Error
             $response['status'] = 'ERROR';
-            $response['messages'] = array($e->getMessage());
+            $response['messages'] = [$e->getMessage()];
             $response['data'] = null;
         }
 
@@ -115,7 +115,7 @@ class PathController
             $message = ('OK' === $response['status']) ? 'publish_success' : 'publish_error';
             $this->session->getFlashBag()->add(
                 ('OK' === $response['status'] ? 'success' : 'error'),
-                $this->translator->trans($message, array(), 'path_wizards')
+                $this->translator->trans($message, [], 'path_wizards')
             );
 
             return new RedirectResponse($request->headers->get('referer'));

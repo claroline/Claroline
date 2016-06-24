@@ -91,8 +91,8 @@
                             // Store step progression in the Path progression array
                             inProgress[step.resourceId] = false;
                             progression[response.progression.stepId] = response.progression;
-                            if (response.totalProgression) {
-                              totalProgression = response.totalProgression;
+                            if (response.progression.status == 'seen' || response.progression.status == 'done') {
+                              totalProgression +=1;
                             }
 
                             deferred.resolve(response);
@@ -126,14 +126,18 @@
                         .success(function (response) {
                             inProgress[step.resourceId] = false;
                             // Store step progression in the Path progression array
+                            var oldStatus = '';
                             if (!angular.isObject(progression[response.progression.stepId])) {
                                 progression[response.progression.stepId] = response.progression;
                             } else {
+                                oldStatus = progression[response.progression.stepId].status;
                                 progression[response.progression.stepId].status = response.progression.status;
                                 progression[response.progression.stepId].authorized = response.progression.authorized;
                             }
-                            if (response.totalProgression) {
-                              totalProgression = response.totalProgression;
+                            if ((status == 'seen' || status == 'done') && oldStatus != 'seen' && oldStatus != 'done') {
+                              totalProgression += 1;
+                            } else if ((oldStatus == 'seen' || oldStatus == 'done') && status != 'seen' && status != 'done') {
+                                totalProgression -= 1;
                             }
                             deferred.resolve(response.progression.status);
                         })
@@ -162,7 +166,7 @@
                  * @param value
                  */
                 setTotalProgression: function setTotalProgression(value) {
-                    totalProgression = value;
+                    totalProgression = parseInt(value);
                 }
             }
         }

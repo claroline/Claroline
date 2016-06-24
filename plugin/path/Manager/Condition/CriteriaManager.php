@@ -4,8 +4,8 @@ namespace Innova\PathBundle\Manager\Condition;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Criteriagroup;
-use Innova\PathBundle\Entity\StepCondition;
 use Innova\PathBundle\Entity\Criterion;
+use Innova\PathBundle\Entity\StepCondition;
 
 /**
  * CriteriaManager
@@ -71,7 +71,7 @@ class CriteriaManager
         // Store existing Criteria to remove those that no longer exist
         $existingCriteria = $group->getCriteria()->toArray();
 
-        $toProcess = !empty($groupStructure->criterion) ? $groupStructure->criterion : array();
+        $toProcess = !empty($groupStructure->criterion) ? $groupStructure->criterion : [];
 
         // Manages criteria
         $createdCriteria = $this->updateCriteria($group, $toProcess);
@@ -93,9 +93,9 @@ class CriteriaManager
      *
      * @return array
      */
-    public function updateCriteria(Criteriagroup $group, array $criteria = array())
+    public function updateCriteria(Criteriagroup $group, array $criteria = [])
     {
-        $processedCriteria = array();
+        $processedCriteria = [];
 
         $existingCriteria = $group->getCriteria();
         foreach ($criteria as $criterionStructure) {
@@ -124,7 +124,7 @@ class CriteriaManager
      *
      * @return \Innova\PathBundle\Manager\Condition\CriteriaManager
      */
-    public function cleanCriteria(Criteriagroup $group, array $neededCriteria = array(), array $existingCriteria = array())
+    public function cleanCriteria(Criteriagroup $group, array $neededCriteria = [], array $existingCriteria = [])
     {
         $toRemove = array_filter($existingCriteria, function (Criterion $current) use ($neededCriteria) {
             $removeCriterion = true;

@@ -2,8 +2,8 @@
 
 namespace Innova\PathBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * StepCondition.
@@ -160,12 +160,12 @@ class StepCondition implements \JsonSerializable
     public function jsonSerialize()
     {
         // Initialize data array
-        $jsonArray = array(
+        $jsonArray = [
             'id' => $this->id,
             'scid' => $this->id,
-        );
+        ];
 
-        $criteriagroups = array();
+        $criteriagroups = [];
         $rootCriteriagroup = $this->getRootCriteriagroup();
         if (!empty($rootCriteriagroup)) {
             $criteriagroups[] = $rootCriteriagroup;

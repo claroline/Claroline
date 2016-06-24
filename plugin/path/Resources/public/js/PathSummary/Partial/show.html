@@ -18,7 +18,7 @@
             </h2>
 
             <div>
-                <uib-progressbar max="pathSummaryShowCtrl.totalSteps" value="pathSummaryShowCtrl.getTotalProgression()"><span style="color:white; white-space:nowrap;"> {{ pathSummaryShowCtrl.getTotalProgressionPercentage() }}</span></uib-progressbar>
+                <uib-progressbar max="pathSummaryShowCtrl.totalSteps" value="pathSummaryShowCtrl.getTotalProgression()"><span style="color:white; white-space:nowrap;"> {{ pathSummaryShowCtrl.getTotalProgressionPercentage() }} {{ 'completed'|trans:{}:'path_wizards' }}</span></uib-progressbar>
             </div>
 
             <!-- Block to display where there is no structure -->

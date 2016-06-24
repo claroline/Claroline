@@ -2,10 +2,10 @@
 
 namespace Innova\PathBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
+use Claroline\CoreBundle\Entity\Resource\Activity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Step.
@@ -527,7 +527,7 @@ class Step implements \JsonSerializable
      */
     public function getPropagatedResources($lvl = 0)
     {
-        $propagated = array();
+        $propagated = [];
 
         /** @var \Innova\PathBundle\Entity\Step $child */
         foreach ($this->children as $child) {
@@ -560,7 +560,7 @@ class Step implements \JsonSerializable
 
     public function getParentsSecondaryResources()
     {
-        $resources = array();
+        $resources = [];
 
         if (!empty($this->parent)) {
             if (!empty($this->parent->parameters)) {
@@ -619,7 +619,7 @@ class Step implements \JsonSerializable
         $accessibleUntil = $this->getAccessibleUntil();
 
         // Initialize data array
-        $jsonArray = array(
+        $jsonArray = [
             'id' => $this->id,               // A local ID for the step in the path (reuse step ID)
             'resourceId' => $this->id,               // The real ID of the Step into the DB
             'activityId' => null,
@@ -627,10 +627,10 @@ class Step implements \JsonSerializable
             'lvl' => $this->lvl,              // The depth of the step in the path structure
             'name' => $this->getName(),        // The name of the linked Activity (used as Step name)
             'description' => $this->getDescription(), // The description of the linked Activity (used as Step description)
-            'primaryResource' => array(),
-            'resources' => array(),
-            'excludedResources' => array(),
-            'children' => array(),
+            'primaryResource' => [],
+            'resources' => [],
+            'excludedResources' => [],
+            'children' => [],
             'withTutor' => false,
             'who' => null,
             'where' => null,
@@ -638,7 +638,7 @@ class Step implements \JsonSerializable
             'accessibleFrom' => $accessibleFrom  instanceof \DateTime ? $accessibleFrom->format('Y-m-d H:i:s')  : null,
             'accessibleUntil' => $accessibleUntil instanceof \DateTime ? $accessibleUntil->format('Y-m-d H:i:s') : null,
             'evaluationType' => null, // automatic/manual
-        );
+        ];
 
         // Get activity properties
         if (!empty($this->activity)) {
@@ -648,15 +648,15 @@ class Step implements \JsonSerializable
             // Get primary resource
             $primaryResource = $this->activity->getPrimaryResource();
             if (!empty($primaryResource)) {
-                $jsonArray['primaryResource'] = array(
-                    array(
+                $jsonArray['primaryResource'] = [
+                    [
                         'id' => $primaryResource->getId(),
                         'resourceId' => $primaryResource->getId(),
                         'name' => $primaryResource->getName(),
                         'type' => $primaryResource->getResourceType()->getName(),
                         'mimeType' => $primaryResource->getMimeType(),
-                    ),
-                );
+                    ],
+                ];
             }
         }
 
@@ -677,14 +677,14 @@ class Step implements \JsonSerializable
                 $propagatedResources = $this->getPropagatedResources($this->lvl);
 
                 foreach ($secondaryResources as $secondaryResource) {
-                    $jsonArray['resources'][] = array(
+                    $jsonArray['resources'][] = [
                         'id' => $secondaryResource->getId(),
                         'resourceId' => $secondaryResource->getId(),
                         'name' => $secondaryResource->getName(),
                         'type' => $secondaryResource->getResourceType()->getName(),
                         'mimeType' => $secondaryResource->getMimeType(),
                         'propagateToChildren' => in_array($secondaryResource->getId(), $propagatedResources),
-                    );
+                    ];
                 }
             }
 

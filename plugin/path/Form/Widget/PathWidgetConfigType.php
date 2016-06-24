@@ -13,35 +13,35 @@ class PathWidgetConfigType extends AbstractType
         return 'innova_path_widget_config';
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options = array())
+    public function buildForm(FormBuilderInterface $builder, array $options = [])
     {
-        $builder->add('status', 'choice', array(
-            'choices' => array(
+        $builder->add('status', 'choice', [
+            'choices' => [
                 'draft' => 'draft',
                 'published' => 'published',
                 'modified' => 'modified',
-            ),
+            ],
             'multiple' => true,
             'required' => false,
-        ));
+        ]);
 
-        $builder->add('removeTags', 'hidden', array(
+        $builder->add('removeTags', 'hidden', [
             'mapped' => false,
             'required' => false,
-        ));
+        ]);
 
-        $builder->add('tags', 'text', array(
+        $builder->add('tags', 'text', [
             'mapped' => false,
             'required' => false,
-        ));
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'Innova\PathBundle\Entity\PathWidgetConfig',
             'translation_domain' => 'widget',
-        ));
+        ]);
 
         return $this;
     }

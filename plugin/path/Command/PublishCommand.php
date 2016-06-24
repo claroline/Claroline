@@ -48,7 +48,7 @@ class PublishCommand extends AbstractPublishCommand
             }
         } else {
             // Need to publish a list of Paths
-            $paths = array();
+            $paths = [];
 
             if ($workspaceId = $input->getOption('workspace')) {
                 // Need to publish Paths for a specific Workspace

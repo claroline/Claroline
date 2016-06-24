@@ -8,17 +8,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractPathType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options = array())
+    public function buildForm(FormBuilderInterface $builder, array $options = [])
     {
-        $builder->add('name',                       'text',     array(
+        $builder->add('name',                       'text',     [
             'required' => true,
-            'attr' => array('autofocus' => true),
-        ));
-        $builder->add('description',                'tinymce',  array('required' => false));
-        $builder->add('breadcrumbs',                'checkbox', array('required' => false));
-        $builder->add('summaryDisplayed',           'checkbox', array('required' => false));
-        $builder->add('completeBlockingCondition',  'checkbox', array('required' => false));
-        $builder->add('structure',                  'hidden',   array('required' => true));
+            'attr' => ['autofocus' => true],
+        ]);
+        $builder->add('description',                'tinymce',  ['required' => false]);
+        $builder->add('breadcrumbs',                'checkbox', ['required' => false]);
+        $builder->add('summaryDisplayed',           'checkbox', ['required' => false]);
+        $builder->add('completeBlockingCondition',  'checkbox', ['required' => false]);
+        $builder->add('structure',                  'hidden',   ['required' => true]);
     }
 
     abstract public function getDefaultOptions();

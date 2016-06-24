@@ -2,15 +2,15 @@
 
 namespace Innova\PathBundle\Controller;
 
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-// Controller dependencies
-use Innova\PathBundle\Manager\PathTemplateManager;
 use Innova\PathBundle\Entity\Path\PathTemplate;
+use Innova\PathBundle\Manager\PathTemplateManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+// Controller dependencies
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class PathTemplateController.
@@ -98,9 +98,9 @@ class PathTemplateController
         $pathTemplate = new PathTemplate();
 
         // Create form to validate data
-        $form = $this->formFactory->create('innova_path_template', $pathTemplate, array(
+        $form = $this->formFactory->create('innova_path_template', $pathTemplate, [
             'csrf_protection' => false,
-        ));
+        ]);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -131,10 +131,10 @@ class PathTemplateController
     public function editAction(PathTemplate $pathTemplate, Request $request)
     {
         // Create form to validate data
-        $form = $this->formFactory->create('innova_path_template', $pathTemplate, array(
+        $form = $this->formFactory->create('innova_path_template', $pathTemplate, [
             'method' => 'PUT',
             'csrf_protection' => false,
-        ));
+        ]);
 
         $form->handleRequest($request);
         if ($form->isValid()) {

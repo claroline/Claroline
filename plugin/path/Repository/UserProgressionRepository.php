@@ -2,8 +2,8 @@
 
 namespace Innova\PathBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\ORM\EntityRepository;
 use Innova\PathBundle\Entity\Path\Path;
 
 class UserProgressionRepository extends EntityRepository
@@ -34,7 +34,7 @@ class UserProgressionRepository extends EntityRepository
         // Get results of the query
         $results = $query->getResult();
 
-        $progression = array();
+        $progression = [];
 
         foreach ($results as $result) {
             $progression[$result->getStep()->getId()] = $result;
@@ -61,7 +61,7 @@ class UserProgressionRepository extends EntityRepository
             ->andWhere('userProgression.status IN(:statuses)')
             ->setParameter('user', $user)
             ->setParameter('path', $path)
-            ->setParameter('statuses', array('seen', 'done'));
+            ->setParameter('statuses', ['seen', 'done']);
 
         return intval($qb->getQuery()->getSingleScalarResult());
     }

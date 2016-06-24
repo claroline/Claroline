@@ -26,13 +26,13 @@ class UserProgression implements \JsonSerializable
      *
      * @var array
      */
-    protected static $statusAvailable = array(
+    protected static $statusAvailable = [
         'unseen',
         'seen',
         'to_do',
         'done',
         'to_review',
-    );
+    ];
 
     /**
      * Unique identifier.
@@ -196,13 +196,13 @@ class UserProgression implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return array(
+        return [
             'id' => $this->id,
-            'userId' => $this->user->getId(),
+            'userId' => ($this->user instanceof User) ? $this->user->getId() : 0,
             'stepId' => $this->step->getId(),
             'status' => $this->status,
             'authorized' => $this->authorized,
-        );
+        ];
     }
 
     /**

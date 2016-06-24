@@ -2,12 +2,12 @@
 
 namespace Innova\PathBundle\Controller\Wizard;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Manager\PathManager;
 use Innova\PathBundle\Manager\UserProgressionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Doctrine\Common\Persistence\ObjectManager;
-use Innova\PathBundle\Entity\Path\Path;
 
 /**
  * Player controller.
@@ -80,7 +80,7 @@ class PlayerController
 
         $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
-        return array(
+        return [
             '_resource' => $path,
             'workspace' => $path->getWorkspace(),
             'userProgression' => $this->pathManager->getUserProgression($path),
@@ -88,6 +88,6 @@ class PlayerController
             'editEnabled' => $this->pathManager->isAllow('EDIT', $path),
             'totalSteps' => $this->pathManager->countAllPublishedSteps($path),
             'totalProgression' => $this->userProgressionManager->calculateUserProgressionInPath($path),
-        );
+        ];
     }
 }

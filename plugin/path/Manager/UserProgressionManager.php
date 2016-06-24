@@ -2,12 +2,12 @@
 
 namespace Innova\PathBundle\Manager;
 
-use Innova\PathBundle\Entity\Path\Path;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\UserProgression;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class UserProgressionManager.
@@ -56,6 +56,10 @@ class UserProgressionManager
             $user = $this->securityToken->getToken()->getUser();
         }
 
+        if (!$user instanceof User) {
+            return 0;
+        }
+
         return $this
             ->om
             ->getRepository('InnovaPathBundle:UserProgression')
@@ -73,7 +77,7 @@ class UserProgressionManager
      *
      * @return UserProgression
      */
-    public function create(Step $step, User $user = null, $status = null, $authorized = false, $checkDuplicate = true)
+    public function create(Step $step, $user = null, $status = null, $authorized = false, $checkDuplicate = true)
     {
         if (empty($user)) {
             // Load current logged User
@@ -81,11 +85,11 @@ class UserProgressionManager
         }
 
         // Check if progression already exists, if so return retrieved progression
-        if ($checkDuplicate) {
-            $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy(array(
+        if ($checkDuplicate && $user instanceof User) {
+            $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy([
                 'step' => $step,
                 'user' => $user,
-            ));
+            ]);
 
             if (!empty($progression)) {
                 return $progression;
@@ -94,7 +98,6 @@ class UserProgressionManager
 
         $progression = new UserProgression();
 
-        $progression->setUser($user);
         $progression->setStep($step);
 
         if (empty($status)) {
@@ -104,8 +107,11 @@ class UserProgressionManager
         $progression->setStatus($status);
         $progression->setAuthorized($authorized);
 
-        $this->om->persist($progression);
-        $this->om->flush();
+        if ($user instanceof User) {
+            $progression->setUser($user);
+            $this->om->persist($progression);
+            $this->om->flush();
+        }
 
         return $progression;
     }
@@ -118,10 +124,10 @@ class UserProgressionManager
         }
 
         // Retrieve the current progression for this step
-        $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy(array(
+        $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy([
             'step' => $step,
             'user' => $user,
-        ));
+        ]);
 
         if (empty($progression)) {
             // No progression for User => initialize a new one
@@ -130,9 +136,10 @@ class UserProgressionManager
             // Update existing progression
             $progression->setStatus($status);
             $progression->setAuthorized($authorized);
-
-            $this->om->persist($progression);
-            $this->om->flush();
+            if ($user instanceof User) {
+                $this->om->persist($progression);
+                $this->om->flush();
+            }
         }
 
         return $progression;

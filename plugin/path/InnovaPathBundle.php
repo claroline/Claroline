@@ -3,11 +3,11 @@
 namespace Innova\PathBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
-use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Innova\PathBundle\Installation\AdditionalInstaller;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Bundle class.
@@ -31,9 +31,9 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
         $bundleClass = get_class($bundle);
         $config = new ConfigurationBuilder();
 
-        $emptyConfigs = array(
+        $emptyConfigs = [
             'Innova\AngularUIPageslideBundle\InnovaAngularUIPageslideBundle',
-        );
+        ];
 
         if (in_array($bundleClass, $emptyConfigs)) {
             return $config;
