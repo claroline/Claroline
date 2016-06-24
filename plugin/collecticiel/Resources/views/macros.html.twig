@@ -1,9 +1,9 @@
 {% macro displayDocumentsList
 (
 drop, dropzone, width, mode, documentListText, adminInnova,
-collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray,
-notationDocumentsArray, notationCommentDocumentsArray,
-notationQualityDocumentsArray, notationAssessorDocumentsArray
+collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray, criteriasArray,
+notationDocumentsArray, notationCommentDocumentsArray, notationAppreciationDocumentsArray,
+notationQualityDocumentsArray, notationAssessorDocumentsArray, recordOrTransmitNotationsArray
 )
 %}
 
@@ -64,7 +64,9 @@ notationQualityDocumentsArray, notationAssessorDocumentsArray
                                 </th>
                             {% endif %}
                             {% if dropzone.evaluation == 1  %}
-                                <th class="centered"><i class="fa fa-graduation-cap"></th>
+                                <th class="centered">
+                                    <i class="fa fa-graduation-cap" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Review'|trans({},'innova_collecticiel') }}">
+                                </th>
                             {% endif %}
                             {% if adminInnova %}
                                 <th class="no-sort"></th>
@@ -87,7 +89,8 @@ notationQualityDocumentsArray, notationAssessorDocumentsArray
                                     'notationCommentDocuments': notationCommentDocumentsArray,
                                     'notationQualityDocuments': notationQualityDocumentsArray,
                                     'notationAssessorDocuments' : notationAssessorDocumentsArray,
-                                 }
+                                    'recordOrTransmitNotations' : recordOrTransmitNotationsArray                          
+                                }
                             %}
                         {% endfor %}
                     </tbody>

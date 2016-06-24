@@ -76,17 +76,14 @@ class Matching extends Interaction
         $score = 0;
 
         foreach ($tabRightResponse as $labelId => $value) {
-            if (isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
-                && (!substr_compare($tabRightResponse[$labelId], $tabResponseIndex[$labelId], 0))
-            ) {
-                $label = $em->getRepository('UJMExoBundle:Label')
-                    ->find($labelId);
-                $score += $label->getScoreRightResponse();
-            }
-            if ($tabRightResponse[$labelId] == null && !isset($tabResponseIndex[$labelId])) {
-                $label = $em->getRepository('UJMExoBundle:Label')
-                    ->find($labelId);
-                $score += $label->getScoreRightResponse();
+            $rightResponseArray = explode('-', $tabRightResponse[$labelId]);
+            $responseArray = explode('-', $tabResponseIndex[$labelId]);
+            foreach ($responseArray as $responseGiven) {
+                if (in_array($responseGiven, $rightResponseArray)) {
+                    $label = $em->getRepository('UJMExoBundle:Label')
+                        ->find($labelId);
+                    $score += $label->getScoreRightResponse();
+                }
             }
         }
 

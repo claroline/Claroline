@@ -7,7 +7,7 @@
         <div class="well">
             {{ 'roles_panels_form_explanation'|trans:{}:'platform' }}
         </div>
-        <form class="form-horizontal">
+        <form>
             <table class="table table-striped table-bordered table-condensed">
                 <thead>
                 <tr>
@@ -24,6 +24,10 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="col-md-4">
+                <input ng-model="firc.panel.is_editable" type="checkbox" name="is_editable" value="is_editable"></input>
+                <label class="control-label" > {{ 'editable'|trans:{}:'platform' }} </label>
+            </div>
             <button class="btn btn-primary" aria-hidden="true" ng-click="firc.onSubmit()"> {{ 'edit'|trans:{}:'platform' }} </button>
             <button class="btn btn-default" data-dismiss="modal" aria-hidden="true" ng-click="$close()">
                 {{ 'cancel'|trans:{}:'platform '}}

@@ -212,7 +212,7 @@
                     "{{ search }}"
                 </div>
             {% endif %}
-            
+
             <div class="row">
                 <div class="col-md-4 pull-right">
                     <div class="input-group margin-bottom-md">
@@ -234,9 +234,9 @@
                 </div>
             </div>
             <br>
-            
+
             {% if search is empty %}
-            
+
                 {% if options['show_all_my_contacts'] is not defined or options['show_all_my_contacts'] %}
                     <div class="panel panel-success">
                         <div class="panel-heading">
@@ -282,6 +282,13 @@
                                                 {% if options['show_picture'] is not defined or options['show_picture'] %}
                                                     <th>{{ 'picture'|trans({}, 'platform') }}</th>
                                                 {% endif %}
+                                                {% if options['show_username'] is not defined or options['show_username'] %}
+                                                    <th>
+                                                        <a href="{{ sortAllMyContactsUrl(max, 'username', order)|trim }}">
+                                                            {{ 'username'|trans({}, 'platform') }}
+                                                        </a>
+                                                    </th>
+                                                {% endif %}
                                                 <th>
                                                     <a href="{{ sortAllMyContactsUrl(max, 'firstName', order)|trim }}">
                                                         {{ 'firstName'|trans({}, 'platform') }}
@@ -292,14 +299,6 @@
                                                         {{ 'lastName'|trans({}, 'platform') }}
                                                     </a>
                                                 </th>
-
-                                                {% if options['show_username'] is not defined or options['show_username'] %}
-                                                    <th>
-                                                        <a href="{{ sortAllMyContactsUrl(max, 'username', order)|trim }}">
-                                                            {{ 'username'|trans({}, 'platform') }}
-                                                        </a>
-                                                    </th>
-                                                {% endif %}
 
                                                 {% if options['show_mail'] is not defined or options['show_mail'] %}
                                                     <th>
@@ -339,12 +338,11 @@
                                                             {% endif %}
                                                         </td>
                                                     {% endif %}
+                                                    {% if options['show_username'] is not defined or options['show_username'] %}
+                                                        <td><a class="standard-link" href="{{ path('claro_profile_view', {'user': contact.getId()})}}"> {{ contact.getUsername() }} </a></td>
+                                                    {% endif %}
                                                     <td>{{ contact.getFirstName() }}</td>
                                                     <td>{{ contact.getLastName() }}</td>
-
-                                                    {% if options['show_username'] is not defined or options['show_username'] %}
-                                                        <td>{{ contact.getUsername() }}</td>
-                                                    {% endif %}
 
                                                     {% if options['show_mail'] is not defined or options['show_mail'] %}
                                                         <td>{{ contact.getMail() }}</td>
@@ -460,7 +458,7 @@
                                 <div class="panel-body category-content-body"
                                      id="category-content-body-{{ categoryId }}"
                                      data-category-id="{{ categoryId }}"
-                                >   
+                                >
                                     {% if contacts[categoryId]|length > 0 %}
 
                                         <div class="row">
@@ -732,7 +730,7 @@
                 {% endif %}
             {% else %}
                 <div id="searched-contacts">
-                    
+
                     {% if contacts|length > 0 %}
                         <div class="row">
                             <div class="col-md-6">

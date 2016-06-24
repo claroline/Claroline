@@ -65,7 +65,6 @@ class UserManager
     private $uploadsDirectory;
     private $validator;
     private $workspaceManager;
-
     private $userRepo;
 
     /**

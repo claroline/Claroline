@@ -83,21 +83,9 @@
     Twig.setFilter('trans', function (name, parameters, domain) {
         return translator.trans(name, parameters, domain);
     });
-    
+
     // Required for variables translations (the language can't be known at the compile time)
     Twig.setFilter('transchoice', function (name, amt, parameters, domain) {
-        /*var bazingaParams = {};
-
-        //bazinga isn't really smart with placeholders...
-        for (var property in parameters) {
-            if (parameters.hasOwnProperty(property)) {
-                var placeholder = property.replace("%", "");
-                bazingaParams.placeholder = parameters.property;
-            }
-        }
-
-        console.debug(bazingaParams);*/
-
         return translator.transChoice(name, amt, parameters, domain);
     });
 

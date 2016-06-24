@@ -27,6 +27,11 @@ class MatchingImport extends QtiImport
         $this->qtiRepos = $qtiRepos;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
+
+        if ($this->qtiValidate() === false) {
+            return false;
+        }
+
         $this->createQuestion(InteractionMatching::TYPE);
         $this->createInteractionMatching();
 
@@ -257,5 +262,21 @@ class MatchingImport extends QtiImport
                          ->findOneBy(array('code' => 1));
             $this->interactionMatching->setTypeMatching($type);
         }
+    }
+
+    /**
+     * Implements the abstract method.
+     */
+    protected function qtiValidate()
+    {
+        if ($this->assessmentItem->getElementsByTagName('itemBody')->item(0) == null) {
+            return false;
+        }
+        $ib = $this->assessmentItem->getElementsByTagName('itemBody')->item(0);
+        if ($ib->getElementsByTagName('matchInteraction')->item(0) == null) {
+            return false;
+        }
+
+        return true;
     }
 }

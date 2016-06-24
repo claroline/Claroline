@@ -59,7 +59,6 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_lesson' }) }}"></script>
-    <script src="{{ hotAsset('dist/commons.js') }}"></script>
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-lesson-list.js') }}"></script>
     <script>
     var bootstrapCSS = _.find(_.pluck(document.styleSheets, 'href'), function(link){return link && link.indexOf("themes/") !== -1});

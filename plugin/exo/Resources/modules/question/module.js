@@ -67,6 +67,7 @@ angular
     .controller('MatchQuestionCtrl', [
         'FeedbackService',
         '$scope',
+        '$uibModal',
         'MatchQuestionService',
         MatchQuestionCtrl
     ])
@@ -95,6 +96,7 @@ angular
     .directive('matchQuestion', [
         'FeedbackService',
         '$timeout',
+        '$window',
         'MatchQuestionService',
         MatchQuestionDirective
     ])

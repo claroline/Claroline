@@ -99,6 +99,7 @@ class FileManager
         $file->setName($fileName);
         $file->setHashName($hashName);
         $file->setMimeType($mimeType);
+        $this->om->persist($file);
 
         return $file;
     }

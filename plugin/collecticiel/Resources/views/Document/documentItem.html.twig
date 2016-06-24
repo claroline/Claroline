@@ -11,6 +11,7 @@
 
 {# InnovaERV : Fin ajout : Affichage ... #}
 <tr id="row_{{ document.id }}">
+
     {# Affichage de l'image de profil #}
     {% if dropzone.picture == 1  %}
         <td class="{{ classArray }}">
@@ -116,24 +117,26 @@
     
     {# On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
     {% if dropzone.evaluation == 1  %}
-        <td class="{{ classArray }} centered">
-            <div class="btn-group">
-                {% if notationDocumentsArray[document.id] != 0 %}
+        <td class="{{ classArray }} centered centering-columnsComment-study">
+            <div class="short-div">
+                {% if recordOrTransmitNotationsArray[document.id] == 1 %}
                     {% include 'InnovaCollecticielBundle:Document:viewNotation.html.twig'
                         with {
                         'notationCommentDocument': notationCommentDocumentsArray[document.id],
                         'notationQualityDocument': notationQualityDocumentsArray[document.id],
-                        'notationAssessorDocument': notationAssessorDocumentsArray[document.id]
+                        'notationAssessorDocument': notationAssessorDocumentsArray[document.id],
+                        'notationScaleDocument': notationAppreciationDocumentsArray[document.id]
                         }
                     %}
                 {% else %}
-                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'No review'|trans({},'innova_collecticiel') }}" class="fa fa-times"></span>
                 {% endif %}
-
             </div>
         </td>
     {% endif %}
 
+    {# Me dit s'il y a eu une évaluation/notation et au cas où si elle a été enregistrée ou transmise #}
+    {% set recordOrTransmitNotation = recordOrTransmitNotations[document.id] %}
 
     {# #146 : changement de gestion des annulations et des suppressions, demande de JJQ #}
     {% if adminInnova %}
@@ -142,7 +145,8 @@
                 {# Cas 1 #}
                 {# Si le document a été validé alors je ne peux pas le supprimer #}
                 <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" 
-                class="btn btn-danger btn-sm launch-modal del_btn_td" id="delete_{{ document.id }}" style="display:none;" >
+                class="btn btn-danger btn-sm launch-modal del_btn_td"
+                id="delete_{{ document.id }}" style="display:none;" >
                     {# Ajout de l'icône "supprimer" #}
                     <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Delete'|trans({},'innova_collecticiel') }}"></i>
                 </a>
@@ -150,7 +154,7 @@
                 <a data-target="#validate-cancel-modal" data-toggle="modal" class="btn btn-default cancel_button" style="display:none;" id="cancel_{{ document.id }}"
                 data-document_id="{{ document.id }}" data-document_adminInnova="1">
                     {# Ajout de l'icône "annuler" #}
-                    <i class="fa fa-undo" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
+                    <i class="fa fa-undo" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Cancel request'|trans({},'innova_collecticiel') }}"></i>
                 </a>
                 {# Cas 3 #}
                 {# Ajout de l'icône "lock" #}
@@ -166,6 +170,7 @@
                 <input type="hidden" value="1" id="adminInnova_{{document.id}}">
                 <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
                 <input type="hidden" value="{{teacherCommentDocArray[document.id]}}" id="teacher_comment_{{document.id}}">
+                <input type="hidden" value="{{recordOrTransmitNotation}}" id="record_transmission_{{document.id}}">
             </td>
         {% endif %}
     {% else %}
@@ -183,7 +188,7 @@
                 <a data-target="#validate-cancel-modal" data-toggle="modal" class="btn btn-default cancel_button" style="display:none;" id="cancel_{{ document.id }}"
                 data-document_id="{{ document.id }}" data-document_adminInnova="0">
                     {# Ajout de l'icône "annuler" #}
-                    <i class="fa fa-undo" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
+                    <i class="fa fa-undo" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Cancel request'|trans({},'innova_collecticiel') }}"></i>
                 </a>
                 {# Cas 3 #}
                 {# Ajout de l'icône "lock" #}
@@ -199,6 +204,7 @@
                 <input type="hidden" value="0" id="adminInnova_{{document.id}}">
                 <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
                 <input type="hidden" value="{{teacherCommentDocArray[document.id]}}" id="teacher_comment_{{document.id}}">
+                <input type="hidden" value="{{recordOrTransmitNotation}}" id="record_transmission_{{document.id}}">
                 </td>
             {% endif %}
         {% endif %}

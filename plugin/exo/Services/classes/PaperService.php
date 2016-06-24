@@ -229,36 +229,6 @@ class PaperService
     }
 
     /**
-     * To create new paper.
-     *
-     *
-     * @param int $id id of exercise
-     * @Param \UJM\ExoBundle\Entity\Exercise $exercise
-     *
-     * @return array
-     */
-    public function prepareInteractionsPaper($id, $exercise)
-    {
-        $orderInter = '';
-        $tabOrderInter = array();
-        $tab = array();
-
-        $questions = $this->container->get('ujm.exo.exercise_manager')
-            ->pickQuestions($exercise);
-
-        foreach ($questions as $question) {
-            $orderInter .= $question->getId().';';
-            $tabOrderInter[] = $question->getId();
-        }
-
-        $tab['interactions'] = $questions;
-        $tab['orderInter'] = $orderInter;
-        $tab['tabOrderInter'] = $tabOrderInter;
-
-        return $tab;
-    }
-
-    /**
      * For the navigation in a paper
      * Finds and displays the question selected by the User in an assessment.
      *

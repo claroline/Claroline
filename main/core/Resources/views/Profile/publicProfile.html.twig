@@ -43,9 +43,8 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        window.userId = {{ app.security.token.user.id }}
+        window.userId = {{ user.id }}
         window.disabled = true
     </script>
-    <script src="{{ hotAsset('dist/commons.js') }}"></script>
     <script src="{{ hotAsset('dist/claroline-distribution-main-core-private-profile.js')}}"></script>
 {% endblock %}

@@ -56,7 +56,6 @@ angular
         '$location',
         'step',
         'paper',
-        'CommonService',
         'ExerciseService',
         'FeedbackService',
         'UserPaperService',

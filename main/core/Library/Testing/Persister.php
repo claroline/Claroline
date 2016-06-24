@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\ProfileProperty;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -196,15 +197,15 @@ class Persister
         return $this->container->get('claroline.manager.facet_manager')->createFacet($name, $forceCreationForm, $isMain);
     }
 
-    public function panelFacet(Facet $facet, $name, $collapse)
+    public function panelFacet(Facet $facet, $name, $collapse, $autoEditable = false)
     {
-        return $this->container->get('claroline.manager.facet_manager')->addPanel($facet, $name, $collapse);
+        return $this->container->get('claroline.manager.facet_manager')->addPanel($facet, $name, $collapse, $autoEditable);
     }
 
-    public function fieldFacet(PanelFacet $panelFacet, $name, $type, array $choices = array())
+    public function fieldFacet(PanelFacet $panelFacet, $name, $type, array $choices = array(), $isRequired = false)
     {
         $this->om->startFlushSuite();
-        $field = $this->container->get('claroline.manager.facet_manager')->addField($panelFacet, $name, $type);
+        $field = $this->container->get('claroline.manager.facet_manager')->addField($panelFacet, $name, $isRequired, $type);
 
         foreach ($choices as $choice) {
             $this->container->get('claroline.manager.facet_manager')->addFacetFieldChoice($choice, $field);
@@ -231,6 +232,17 @@ class Persister
         $this->om->persist($client);
 
         return $client;
+    }
+
+    public function profileProperty($property, $role, $isEditable = true)
+    {
+        $profileProperty = new ProfileProperty();
+        $profileProperty->setProperty($property);
+        $profileProperty->setIsEditable($isEditable);
+        $profileProperty->setRole($this->role($role));
+        $this->om->persist($profileProperty);
+
+        return $profileProperty;
     }
 
     /**

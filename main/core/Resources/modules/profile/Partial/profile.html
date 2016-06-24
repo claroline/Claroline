@@ -1,6 +1,6 @@
 
 <script type="text/ng-template" id="facet_renderer.html">
-    <form role="form" class="form-horizontal">
+    <form class="form-horizontal" name="panel.name">
         <div class="panel-body">
             <div class="panel-group" id="panel-facet-{{ facet.id }}" role="tablist">
                 <div class="panel panel-default" ng-repeat="(key, panel) in facet.panels">
@@ -14,13 +14,13 @@
                     <div id="panel-{{ panel.id }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="panel-{{ panel.id }}">
                         <div class="panel-body">
                             <div ng-repeat="(key, field) in panel.fields">
-                               <form-field field="[field.name, pc.fieldTypes[field.type - 1], { values: field.field_facet_choices, disabled: !(!pc.disabled && field.is_editable) }]" ng-model="field.user_field_value"></form-field>
+                               <form-field field="pc.fieldForms[field.id]" ng-model="field.user_field_value"></form-field>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <input ng-if="!pc.disabled" type="submit" ng-click="pc.onSubmit(facet)" class="btn btn-primary" aria-hidden="true" value="{{ 'edit'|trans:{}:'platform' }}"></input>
+            <input ng-if="!pc.disabled" data-ng-disabled="!panel.name.$valid" type="submit" ng-click="pc.onSubmit(facet)" class="btn btn-primary" aria-hidden="true" value="{{ 'edit'|trans:{}:'platform' }}"></input>
         </div>
     </form>
 </script>
@@ -71,7 +71,7 @@
           </div>
       </div>
       <div class="tab-pane" id="facet-{{ facet.id }}"  ng-if="!facet.is_main" ng-repeat="(key, facet) in pc.facets">
-          <form ng-include="'facet_renderer.html'"></form>
+          <div ng-include="'facet_renderer.html'"></div>
       </div>
   </div>
 </div>

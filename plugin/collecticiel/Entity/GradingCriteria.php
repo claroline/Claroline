@@ -39,6 +39,16 @@ class GradingCriteria
     protected $dropzone;
 
     /**
+     * @ORM\OneToMany(
+     *     targetEntity="Innova\CollecticielBundle\Entity\ChoiceCriteria",
+     *     mappedBy="gradingCriteria",
+     *     cascade={"all"},
+     *     orphanRemoval=true
+     * )
+     */
+    protected $choiceCriterias;
+
+    /**
      * Get id.
      *
      * @return int
@@ -102,5 +112,46 @@ class GradingCriteria
     public function getDropzone()
     {
         return $this->dropzone;
+    }
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->choiceCriterias = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add choiceCriteria.
+     *
+     * @param \Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria
+     *
+     * @return GradingCriteria
+     */
+    public function addChoiceCriteria(\Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria)
+    {
+        $this->choiceCriterias[] = $choiceCriteria;
+
+        return $this;
+    }
+
+    /**
+     * Remove choiceCriteria.
+     *
+     * @param \Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria
+     */
+    public function removeChoiceCriteria(\Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria)
+    {
+        $this->choiceCriterias->removeElement($choiceCriteria);
+    }
+
+    /**
+     * Get choiceCriterias.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChoiceCriterias()
+    {
+        return $this->choiceCriterias;
     }
 }
