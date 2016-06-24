@@ -105,7 +105,7 @@ class AuthenticationManager
      */
     public function getServerName($driver)
     {
-        if ($driver = explode(':', $driver) && isset($driver[1])) {
+        if (($driver = explode(':', $driver)) && isset($driver[1])) {
             return $driver[1];
         }
     }
