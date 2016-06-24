@@ -2,15 +2,15 @@
 
 namespace Innova\PathBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\ResourceQueryBuilder;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Innova\PathBundle\Entity\PathWidgetConfig;
 
 class PathRepository extends EntityRepository
 {
-    public function findWidgetPaths(array $userRoles, array $roots = array(), PathWidgetConfig $config = null)
+    public function findWidgetPaths(array $userRoles, array $roots = [], PathWidgetConfig $config = null)
     {
         $builder = new ResourceQueryBuilder();
 
@@ -20,7 +20,7 @@ class PathRepository extends EntityRepository
             $builder->whereRootIn($roots);
         }
 
-        $builder->whereTypeIn(array('innova_path'));
+        $builder->whereTypeIn(['innova_path']);
         $builder->whereRoleIn($userRoles);
 
         // Add filters if defined
@@ -28,7 +28,7 @@ class PathRepository extends EntityRepository
             // Add widget STATUS filters
             $statusList = $config->getStatus();
             if (!empty($statusList)) {
-                $whereStatus = array();
+                $whereStatus = [];
                 foreach ($statusList as $status) {
                     switch ($status) {
                         case 'draft':
@@ -53,7 +53,7 @@ class PathRepository extends EntityRepository
             // Add widget TAG filters
             $tagList = $config->getTags();
             if (0 < count($tagList)) {
-                $tags = array();
+                $tags = [];
                 foreach ($tagList as $tag) {
                     $tags[] = $tag->getId();
                 }

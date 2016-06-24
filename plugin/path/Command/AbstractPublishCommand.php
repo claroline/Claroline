@@ -2,9 +2,9 @@
 
 namespace Innova\PathBundle\Command;
 
+use Innova\PathBundle\Entity\Path\Path;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Output\OutputInterface;
-use Innova\PathBundle\Entity\Path\Path;
 
 abstract class AbstractPublishCommand extends ContainerAwareCommand
 {

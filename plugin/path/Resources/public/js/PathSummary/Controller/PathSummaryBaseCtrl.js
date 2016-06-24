@@ -16,6 +16,7 @@ var PathSummaryBaseCtrl = function PathSummaryBaseCtrl($routeParams, PathService
         // Set the structure of the path
         this.structure = path.steps;
     }
+
     return this;
 };
 
@@ -63,4 +64,16 @@ PathSummaryBaseCtrl.prototype.close = function close() {
 
 PathSummaryBaseCtrl.prototype.goTo = function goTo(step) {
     this.pathService.goTo(step);
+};
+
+PathSummaryBaseCtrl.prototype.toggleSummary = function toggleSummary() {
+    this.pathService.toggleSummaryState();
+};
+
+PathSummaryBaseCtrl.prototype.toggleSummaryPin = function togglePinSummary() {
+    this.pathService.toggleSummaryPin();
+};
+
+PathSummaryBaseCtrl.prototype.getPsPushClass = function getPsPushClass() {
+    return this.state.pinned ? "path-summary-opened" : "";
 };

@@ -16,7 +16,9 @@
                     id              : '@', // ID of the path
                     path            : '=', // Data of the path
                     editEnabled     : '@', // User is allowed to edit current path ?
-                    userProgression : '=?' // Progression of the current User
+                    userProgression : '=?', // Progression of the current User
+                    totalSteps      : '@',   // The number of total published steps the path contains
+                    totalProgression: '@'   // The number of total seen or done steps in path
                 },
                 bindToController: true
             };

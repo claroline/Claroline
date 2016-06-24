@@ -6,18 +6,18 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class PathType extends AbstractPathType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options = array())
+    public function buildForm(FormBuilderInterface $builder, array $options = [])
     {
         parent::buildForm($builder, $options);
 
         $builder->add(
             'published',
             'checkbox',
-            array(
+            [
                 'required' => true,
                 'mapped' => false,
-                'attr' => array('checked' => 'checked'),
-            )
+                'attr' => ['checked' => 'checked'],
+            ]
         );
     }
 
@@ -28,8 +28,8 @@ class PathType extends AbstractPathType
 
     public function getDefaultOptions()
     {
-        return array(
+        return [
             'data_class' => 'Innova\PathBundle\Entity\Path\Path',
-        );
+        ];
     }
 }

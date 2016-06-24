@@ -2,12 +2,12 @@
 
 namespace Innova\PathBundle\Entity\Path;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Innova\PathBundle\Entity\Step;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Path.
@@ -346,14 +346,14 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      */
     public function initializeStructure()
     {
-        $structure = array(
+        $structure = [
             'name' => $this->getName(),
             'description' => $this->getDescription(),
             'breadcrumbs' => $this->breadcrumbs,
             'summaryDisplayed' => $this->summaryDisplayed,
             'completeBlockingCondition' => $this->completeBlockingCondition,
-            'steps' => array(),
-        );
+            'steps' => [],
+        ];
 
         $this->setStructure(json_encode($structure));
 
@@ -392,20 +392,20 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
 
     public function jsonSerialize()
     {
-        $steps = array();
+        $steps = [];
 
         $rootStep = $this->getRootStep();
         if (!empty($rootStep)) {
             $steps[] = $rootStep;
         }
 
-        return array(
+        return [
             'name' => $this->getResourceNode()->getName(),
             'description' => $this->description,
             'breadcrumbs' => $this->breadcrumbs,
             'summaryDisplayed' => $this->summaryDisplayed,
             'completeBlockingCondition' => $this->completeBlockingCondition,
             'steps' => $steps,
-        );
+        ];
     }
 }

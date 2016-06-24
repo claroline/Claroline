@@ -15,6 +15,8 @@ var PathShowCtrl = function PathShowCtrl($window, $route, $routeParams, PathServ
     }
 
     this.pathService = PathService;
+    this.pathService.setTotalSteps(this.totalSteps);
+    this.userProgressionService.setTotalProgression(this.totalProgression)
 
     return this;
 };

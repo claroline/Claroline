@@ -13,6 +13,7 @@
     "bower": "^1.7.7",
     "colors": "^1.1.2",
     "cssnano": "^3.4.0",
+    "eslint": "^2.13.1",
     "filesystem-bower-resolver": "^1.2.0",
     "less": "^2.5.3",
     "mocha": "^2.4.5",
