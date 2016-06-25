@@ -33,6 +33,8 @@ answer:
   hard: Hard
   good: Good
   easy: Easy
+param:
+  new_card_day: Number of new cards to study each day
 errors:
   line: line
   title: Error

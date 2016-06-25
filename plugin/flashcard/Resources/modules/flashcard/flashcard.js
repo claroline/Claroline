@@ -18,12 +18,14 @@ import createNoteTemplate from './createNote.partial.html'
 import editNoteTemplate from './editNote.partial.html'
 import listNoteTemplate from './listNote.partial.html'
 import editNoteTypeTemplate from './editNoteType.partial.html'
+import editDefaultParamTemplate from './editDefaultParam.partial.html'
 import FlashCardCtrl from './FlashCardCtrl.js'
 import CreateNoteCtrl from './CreateNoteCtrl.js'
 import EditNoteCtrl from './EditNoteCtrl.js'
 import ListNoteCtrl from './ListNoteCtrl.js'
 import EditNoteTypeCtrl from './EditNoteTypeCtrl.js'
 import StudyCtrl from './StudyCtrl.js'
+import EditDefaultParamCtrl from './EditDefaultParamCtrl.js'
 import FlashCardService from './FlashCardService.js'
 
 angular
@@ -71,6 +73,12 @@ angular
     '$location',
     EditNoteTypeCtrl
   ])
+  .controller('EditDefaultParamCtrl', [
+    'FlashCardService',
+    '$routeParams',
+    '$location',
+    EditDefaultParamCtrl
+  ])
   .filter('trans', () => (string, domain = 'platform') =>
     Translator.trans(string, domain)
   )
@@ -111,6 +119,12 @@ angular
           template: editNoteTypeTemplate,
           bindToController: true,
           controller: 'EditNoteTypeCtrl',
+          controllerAs: 'vm'
+        })
+        .when('/edit_default_param', {
+          template: editDefaultParamTemplate,
+          bindToController: true,
+          controller: 'EditDefaultParamCtrl',
           controllerAs: 'vm'
         })
         .otherwise({

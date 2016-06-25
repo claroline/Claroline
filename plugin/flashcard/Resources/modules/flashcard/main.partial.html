@@ -28,11 +28,11 @@
 
 <div class="panel-footer">
 
-  <button class="btn btn-default"
-          data-ng-if="!vm.canEdit"
-          data-ng-click="">
+  <a class="btn btn-default"
+     data-ng-if="!vm.canEdit"
+     href="#/edit_default_param?nexturl=/">
     {{ 'default_parameters'|trans:'flashcard' }}
-  </button>
+  </a>
   <button class="btn btn-default"
           data-ng-click="">
     {{ 'parameters'|trans:'flashcard' }}
