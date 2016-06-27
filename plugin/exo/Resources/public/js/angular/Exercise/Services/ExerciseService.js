@@ -217,7 +217,7 @@ ExerciseService.prototype.addStep = function addStep() {
         // Success callback
         .success(function (response) {
             // Get the information of the Step
-            step.id = response.id;
+            angular.merge(step, response);
 
             deferred.resolve(response);
         })
