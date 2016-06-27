@@ -419,6 +419,9 @@ class DropController extends DropzoneBaseController
         $criteriaRepo = $em->getRepository('InnovaCollecticielBundle:GradingCriteria');
         $criteriasArray = $criteriaRepo->getCriteriaArrayForDropzone($dropzone);
 
+        $notationRepo = $em->getRepository('InnovaCollecticielBundle:GradingNotation');
+        $notationsArray = $notationRepo->getNotationArrayForDropzone($dropzone);
+
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         $workspace = $dropzone->getResourceNode()->getWorkspace();
 
@@ -546,6 +549,7 @@ class DropController extends DropzoneBaseController
             'notationAppreciationDocumentsArray' => $notationAppreciationDocuments,
             'scalesArray' => $scalesArray,
             'criteriasArray' => $criteriasArray,
+            'notationsArray' => $notationsArray,
         ));
 
         return $dataToView;

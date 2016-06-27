@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Innova\CollecticielBundle\Form\DropzoneAppreciationType;
+use Innova\CollecticielBundle\Form\DropzoneNotationCollectionType;
 
 class DropzoneController extends DropzoneBaseController
 {
@@ -288,6 +289,129 @@ class DropzoneController extends DropzoneBaseController
 
     /**
      * @Route(
+     *      "/{resourceId}/edit/notation",
+     *      name="innova_collecticiel_edit_notation",
+     *      requirements={"resourceId" = "\d+"}
+     * )
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "Participate in an evaluation requires authentication. Please login.",
+     *      "messageTranslationDomain" = "innova_collecticiel"
+     * })
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @Template()
+     *
+     * User is needed for Agenda Event
+     */
+    public function editNotationAction(Dropzone $dropzone, $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+        $translator = $this->get('translator');
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+
+        $dropzoneVoter->isAllowToOpen($dropzone);
+        $dropzoneVoter->isAllowToEdit($dropzone);
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+        $gradingNotationManager = $this->get('innova.manager.gradingnotation_manager');
+
+        if ($dropzone->getManualState() == 'notStarted') {
+            $dropzone->setManualState('allowDrop');
+            $em->persist($dropzone);
+            $em->flush();
+        }
+
+        $form = $this->createForm(new DropzoneNotationCollectionType(), $dropzone);
+
+        if ($this->getRequest()->isMethod('POST')) {
+            $tab = $this->getRequest()->request->get('innova_collecticiel_notation_collection_form');
+
+            //var_dump($tab);
+
+            $manageGradingNotations = $gradingNotationManager->manageGradingNotations($tab['gradingNotations'], $dropzone);
+
+            // see if manual planification option has changed.
+            $oldManualPlanning = $dropzone->getManualPlanning();
+            $oldManualPlanningOption = $dropzone->getManualState();
+
+            if ($dropzone->getEditionState() < 2) {
+                $dropzone->setEditionState(2);
+            }
+
+            $dropzone->setEvaluationType('notation');
+            $dropzone->setEvaluation(1);
+
+            $newMaximumNotation = $tab['maximumNotation'];
+            $dropzone->setMaximumNotation($newMaximumNotation);
+
+            // handle events (delete if needed, create & update)
+            $dropzone = $dropzoneManager->handleEvents($dropzone, $user);
+
+            $manualStateChanged = false;
+            $newManualState = null;
+            if ($dropzone->getManualPlanning() === true) {
+                if ($oldManualPlanning === false || $oldManualPlanningOption != $dropzone->getManualState()) {
+                    $manualStateChanged = true;
+                    $newManualState = $dropzone->getManualState();
+                }
+            }
+
+            $unitOfWork = $em->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
+            $changeSet = $unitOfWork->getEntityChangeSet($dropzone);
+
+            $em = $this->getDoctrine()->getManager();
+
+            // InnovaERV : ici, on a changé l'état du collecticiel.
+            // InnovaERV : j'ajoute une notification.
+            // InnovaERV : #171 Bug : lors de la création d'un collecticiel et de la notification
+            if (count($dropzone->getDrops()) > 0) {
+                if ($oldManualPlanningOption != $dropzone->getManualState()) {
+                    // send notification.
+                    $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                    $event = new LogDropzoneManualStateChangedEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                    $this->get('event_dispatcher')->dispatch('log', $event);
+                }
+            }
+
+            $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
+            $this->dispatch($event);
+
+            $this->getRequest()->getSession()->getFlashBag()->add('success', $translator->trans('The collecticiel has been successfully saved', array(), 'innova_collecticiel'));
+            // redirect to main dropzone settings view
+            return $this->redirect(
+                $this->generateUrl(
+                    'innova_collecticiel_edit_common',
+                    array(
+                        'resourceId' => $dropzone->getId(),
+                    )
+                )
+            );
+        }
+
+        $adminInnova = false;
+        if ($dropzoneVoter->checkEditRight($dropzone)
+        && $this->get('security.token_storage')->getToken()->getUser()->getId() == $user->getId()) {
+            $adminInnova = true;
+        }
+
+        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
+
+        return array(
+            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+            'form' => $form->createView(),
+            'adminInnova' => $adminInnova,
+            'maximumNotation' => $dropzone->getMaximumNotation(),
+            'collecticielOpenOrNot' => $collecticielOpenOrNot,
+        );
+    }
+
+    /**
+     * @Route(
      *      "/{resourceId}/edit/criteria",
      *      name="innova_collecticiel_edit_criteria",
      *      requirements={"resourceId" = "\d+"},
@@ -400,7 +524,8 @@ class DropzoneController extends DropzoneBaseController
                 } else {
                     return $this->redirect(
                         $this->generateUrl(
-                            'innova_collecticiel_edit_common',
+                            'innova_collecticiel_edit_com
+                            mon',
                             array(
                                 'resourceId' => $dropzone->getId(),
                             )

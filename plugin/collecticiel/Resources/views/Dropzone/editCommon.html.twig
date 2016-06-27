@@ -167,16 +167,14 @@
              <div class="row">
                <div class="col-md-12">
                  <div id="dropzone-message-part-notation" {% if dropzone.evaluationType != "notation" %} style="display:none" {% endif %}>
-                      <hr>
-                     {# Notation max. Ajout de cette zone, demande JJQ. InnovaERV  #}
-                     <div class="row form-group">
-                         <div class="col-md-8">
-                             {{ form_row(form.maximumNotation, {'label_attr': {'style': 'font-weight: normal;' }} ) }}
-                          </div>
-                          <div class="col-md-4">
-                          </div>
-                      </div>
-                 </div>
+                    <hr>
+                     <div class="col-md-8">
+                       <a href="{{ path('innova_collecticiel_edit_notation', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">
+                         <i class="fa fa-pencil"></i>&nbsp;{{ 'Notation appreciation'|trans({}, 'innova_collecticiel') }}
+                       </a>
+                     </div>
+                     <div class="col-md-4">
+                     </div>
                </div>
              </div>
           </div>
