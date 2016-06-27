@@ -10,6 +10,7 @@
  * Modify by : Eric VINCENT InnovaERV Add MaximumNotation Column (16/03/2016)
  * Modify by : Eric VINCENT InnovaERV Add ArrayCollection GradingScale (04/2016)
  * Modify by : Eric VINCENT InnovaERV Add ArrayCollection GradingCriteria (04/2016).
+ * Modify by : Eric VINCENT InnovaERV Add ArrayCollection GradingNotation (06/2016).
 */
 
 namespace Innova\CollecticielBundle\Entity;
@@ -344,6 +345,18 @@ class Dropzone extends AbstractResource
      * )
      */
     public $gradingCriterias;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Innova\CollecticielBundle\Entity\GradingNotation",
+     *     mappedBy="dropzone",
+     *     cascade={"all"},
+     *     orphanRemoval=true
+     * )
+     */
+    public $gradingNotations;
 
     public function __construct()
     {
@@ -1354,5 +1367,39 @@ class Dropzone extends AbstractResource
     public function getNotations()
     {
         return $this->notations;
+    }
+
+    /**
+     * Add gradingNotation.
+     *
+     * @param \Innova\CollecticielBundle\Entity\GradingNotation $gradingNotation
+     *
+     * @return Dropzone
+     */
+    public function addGradingNotation(\Innova\CollecticielBundle\Entity\GradingNotation $gradingNotation)
+    {
+        $this->gradingNotations[] = $gradingNotation;
+
+        return $this;
+    }
+
+    /**
+     * Remove gradingNotation.
+     *
+     * @param \Innova\CollecticielBundle\Entity\GradingNotation $gradingNotation
+     */
+    public function removeGradingNotation(\Innova\CollecticielBundle\Entity\GradingNotation $gradingNotation)
+    {
+        $this->gradingNotations->removeElement($gradingNotation);
+    }
+
+    /**
+     * Get gradingNotations.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGradingNotations()
+    {
+        return $this->gradingNotations;
     }
 }

@@ -1,6 +1,7 @@
 # a
 add_grading_scale_label: Ajouter un degré d'apréciation
 add_criteria_label: Ajouter une information/un critère
+add_notation_label: Ajouter une information/un critère
 
 # d
 default_scale_very_good: Très bien
@@ -459,6 +460,7 @@ Criterion information : 'Informations/critères accompagnant la notation'
 Add a new : 'Information/critère'
 Criteria number: 'Le nombre de critères n''est pas limité.'
 Rating Scale appreciation: 'Gérer les évaluations'
+Notation appreciation: 'Gérer la notation'
 Evaluation Appreciation : 'Evaluation'
 Info ratingScale : 'Informations/critères accompagnant l''appréciation'
 Very good : 'Très bien'
