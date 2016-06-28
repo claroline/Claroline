@@ -91,6 +91,9 @@ class InteractionQCMHandler extends QuestionHandler
         if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
 
+            // Uses the default category if no category selected
+            $this->checkCategory();
+
             if ($this->form->isValid()) {
                 $this->onSuccessUpdate($this->form->getData(), $originalChoices, $originalHints);
 

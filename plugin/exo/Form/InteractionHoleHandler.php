@@ -108,6 +108,9 @@ class InteractionHoleHandler extends QuestionHandler
         if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
 
+            // Uses the default category if no category selected
+            $this->checkCategory();
+
             if ($this->form->isValid()) {
                 foreach ($this->form->getData()->getHoles() as $h) {
                     foreach ($h->getWordResponses() as $wr) {
