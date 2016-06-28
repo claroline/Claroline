@@ -6,27 +6,33 @@
 
 namespace UJM\ExoBundle\Services\classes;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use UJM\ExoBundle\Entity\Category;
 
 class CategoryService
 {
     private $doctrine;
     private $tokenStorage;
+    private $translator;
 
     /**
      * Constructor.
      *
-     *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry                                            $doctrine     Dependency Injection;
      * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage Dependency Injection
+     * @param \Symfony\Component\Translation\TranslatorInterface                                  $translator
      */
     public function __construct(
             Registry $doctrine,
-            TokenStorageInterface $tokenStorage
+            TokenStorageInterface $tokenStorage,
+            TranslatorInterface $translator
     ) {
         $this->doctrine = $doctrine;
         $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
     }
 
     /**
@@ -87,19 +93,40 @@ class CategoryService
      */
     public function ctrlCategory($question)
     {
-        $em = $this->doctrine->getManager();
-        $user = $this->tokenStorage->getToken()->getUser()->getId();
+        $user = $this->tokenStorage->getToken()->getUser();
         $category = $question->getCategory();
-        $ownerCategory = $category->getUser()->getId();
+        if ($category->getUser()->getId() !== $user->getId()) {
+            $userDefaultCategory = $this->doctrine->getManager()->getRepository('UJMExoBundle:Category')->findOneBy([
+                'user' => $user,
+                'locker' => true,
+            ]);
 
-        if ($ownerCategory != $user) {
-            $userDefaultCategory = $em->getRepository('UJMExoBundle:Category')
-                    ->findOneBy(array('user' => $user, 'locker' => true));
             if (!$userDefaultCategory) {
-                $default = $this->translator->trans('default', array(), 'ujm_exo');
-                $userDefaultCategory = $this->createCategoryDefault($default);
+                $default = $this->translator->trans('default', [], 'ujm_exo');
+                $userDefaultCategory = $this->createCategoryDefault($default, $user);
             }
+
             $question->setCategory($userDefaultCategory);
         }
+    }
+
+    /**
+     * Create the default category for the user.
+     *
+     * @param string $default name of default's category
+     * @param User   $user
+     *
+     * @return \UJM\ExoBundle\Entity\Category
+     */
+    private function createCategoryDefault($default, User $user)
+    {
+        $newCategory = new Category();
+        $newCategory->setValue($default);
+        $newCategory->setLocker(1);
+        $newCategory->setUser($user);
+        $this->doctrine->getManager()->persist($newCategory);
+        $this->doctrine->getManager()->flush();
+
+        return $newCategory;
     }
 }

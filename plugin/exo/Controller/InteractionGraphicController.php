@@ -227,9 +227,14 @@ class InteractionGraphicController extends Controller
         );
 
         $formHandler = new InteractionGraphicHandler(
-            $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
-            $this->container->get('security.token_storage')->getToken()->getUser(), -1,
+            $editForm,
+            $this->get('request'),
+            $this->getDoctrine()->getManager(),
+            $this->container->get('ujm.exo_exercise'),
+            $this->container->get('ujm.exo_category'),
+            $this->container->get('security.token_storage')->getToken()->getUser(),
+            -1,
+            -1,
             $this->get('translator')
         );
 
