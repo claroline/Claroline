@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManager;
 use UJM\ExoBundle\Entity\Category;
 use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\User;
+use UJM\ExoBundle\Services\classes\CategoryService;
+use UJM\ExoBundle\Services\classes\ExerciseServices;
 
 abstract class QuestionHandler
 {
@@ -18,6 +20,7 @@ abstract class QuestionHandler
     protected $catServ;
     protected $user;
     protected $exercise;
+    protected $step;
     protected $isClone = false;
     protected $translator;
 
@@ -25,17 +28,26 @@ abstract class QuestionHandler
      * Constructor.
      *
      *
-     * @param \Symfony\Component\Form\Form                     $form     for an Interaction
+     * @param \Symfony\Component\Form\Form                     $form       for an Interaction
      * @param \Symfony\Component\HttpFoundation\Request        $request
      * @param Doctrine EntityManager                           $em
      * @param \UJM\ExoBundle\Services\classes\exerciseServices $exoServ
      * @param \UJM\ExoBundle\Services\classes\CategoryService  $catServ
      * @param \Claroline\CoreBundle\Entity\User                $user
-     * @param UJM\ExoBundle\Entity\Exercise                    $exercise instance of Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
-     * @param UJM\ExoBundle\Entity\Step
-     * @param Translation $translator
+     * @param \UJM\ExoBundle\Entity\Exercise                   $exercise   instance of Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
+     * @param \UJM\ExoBundle\Entity\Step                       $step
+     * @param TranslatorInterface                              $translator
      */
-    public function __construct(Form $form = null, Request $request = null, EntityManager $em, $exoServ, $catServ, User $user, $exercise = -1, $step = -1, TranslatorInterface $translator = null)
+    public function __construct(
+        Form $form = null,
+        Request $request = null,
+        EntityManager $em,
+        ExerciseServices $exoServ,
+        CategoryService $catServ,
+        User $user,
+        $exercise = -1,
+        $step = -1,
+        TranslatorInterface $translator = null)
     {
         $this->form = $form;
         $this->request = $request;

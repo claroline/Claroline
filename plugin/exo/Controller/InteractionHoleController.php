@@ -205,15 +205,20 @@ class InteractionHoleController extends Controller
         }
 
         $editForm = $this->createForm(
-                new InteractionHoleType(
+            new InteractionHoleType(
                 $this->container->get('security.token_storage')->getToken()->getUser(), $catID
-                ), $interHole
+            ), $interHole
         );
         $formHandler = new InteractionHoleHandler(
-                $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-                $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
-                $this->container->get('security.token_storage')->getToken()->getUser(),
-                $exoID, $this->get('translator')
+            $editForm,
+            $this->get('request'),
+            $this->getDoctrine()->getManager(),
+            $this->container->get('ujm.exo_exercise'),
+            $this->container->get('ujm.exo_category'),
+            $this->container->get('security.token_storage')->getToken()->getUser(),
+            -1,
+            -1,
+            $this->get('translator')
         );
 
         $formHandler->setValidator($this->get('validator'));
