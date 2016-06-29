@@ -8,7 +8,8 @@
  */
 
 export default class XmppService {
-  constructor ($http) {
+  constructor ($rootScope, $http) {
+    this.$rootScope = $rootScope
     this.$http = $http
     this.config = {
       adminConnection: null,
@@ -31,16 +32,17 @@ export default class XmppService {
     this.adminPassword = XmppService._getGlobal('chatAdminPassword')
     this._connectionCallback = this._connectionCallback.bind(this)
     this._adminConnectionCallback = this._adminConnectionCallback.bind(this)
+    this._connectedCallBack = () => {}
   }
 
   _connectionCallback (status) {
-
     if (status === Strophe.Status.CONNECTED) {
       console.log('Connected')
       this.config['connection'].send($pres().c('priority').t('-1'))
       this.config['connected'] = true
       this.config['busy'] = false
-      //$rootScope.$broadcast('xmppConnectedEvent')
+      this.refreshScope()
+      this._connectedCallBack()
     } else if (status === Strophe.Status.CONNFAIL) {
       console.log('Connection failed !')
       this.config['connected'] = false
@@ -59,25 +61,18 @@ export default class XmppService {
   }
 
   _adminConnectionCallback (status) {
-
     if (status === Strophe.Status.CONNECTED) {
       console.log('admin Connected')
       this.config['adminConnection'].send($pres().c('priority').t('-1'))
       this.config['adminConnected'] = true
-      //this.config['busy'] = false
+      this.refreshScope()
     } else if (status === Strophe.Status.CONNFAIL) {
       console.log('admin Connection failed !')
-      //this.config['connected'] = false
-      //this.config['busy'] = false
     } else if (status === Strophe.Status.DISCONNECTED) {
       console.log('admin Disconnected')
-      //this.config['connected'] = false
-      //this.config['busy'] = false
     } else if (status === Strophe.Status.CONNECTING) {
-      //this.config['busy'] = true
       console.log('admin Connecting...')
     } else if (status === Strophe.Status.DISCONNECTING) {
-      //this.config['busy'] = true
       console.log('admin Disconnecting...')
     }
   }
@@ -86,7 +81,39 @@ export default class XmppService {
     return this.config
   }
 
+  setConnectedCallBack (callback) {
+    this._connectedCallBack = callback
+  }
+
   connect () {
+    if (!this.config['connected'] && !this.config['busy']) {
+      const route = Routing.generate('api_get_xmpp_options')
+
+      this.$http.get(route).then(datas => {
+
+        if (datas['status'] === 200) {
+          this.config['canChat'] = datas['data']['canChat']
+
+          if (datas['data']['canChat']) {
+            this.config['username'] = datas['data']['chatUsername']
+            this.config['password'] = datas['data']['chatPassword']
+            this.config['firstName'] = datas['data']['firstName']
+            this.config['lastName'] = datas['data']['lastName']
+            this.config['fullName'] = `${datas['data']['firstName']} ${datas['data']['lastName']}`
+            this.config['color'] = datas['data']['chatColor']
+            this.config['connection'] = new Strophe.Connection(this.config['boshService']);
+            this.config['connection'].connect(
+              `${this.config['username']}@${this.config['xmppHost']}`,
+              this.config['password'],
+              this._connectionCallback
+            )
+          }
+        }
+      })
+    }
+  }
+
+  connectWithAdmin () {
     if (!this.config['connected'] && !this.config['busy']) {
       const route = Routing.generate('api_get_xmpp_options')
 
@@ -130,5 +157,9 @@ export default class XmppService {
     }
 
     return window[name]
+  }
+
+  refreshScope () {
+    this.$rootScope.$apply()
   }
 }

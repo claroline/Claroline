@@ -15,41 +15,43 @@ export default class ChatRoomTextCtrl {
     this.chatRoomConfig = ChatRoomService.getConfig()
     this.xmppConfig = ChatRoomService.getXmppConfig()
     this.messages = ChatRoomService.getMessages()
+    this.oldMessages = ChatRoomService.getOldMessages()
     this.users = ChatRoomService.getUsers()
+    this.bannedUsers = ChatRoomService.getBannedUsers()
     this.input = ''
     this.initialize()
   }
 
   initialize () {
-    console.log('*********** status text ***********')
-    console.log(this.xmppConfig)
-    console.log(this.chatRoomConfig)
-  }
+    $(window).unload(($event) => {
+      $event.preventDefault()
+      console.log('Disconnecting...')
+      this.ChatRoomService.disconnectFromRoom()
+    })
 
-  refresh () {
-    console.log(this.chatRoomConfig)
-    console.log(this.users)
-    console.log(this.messages)
-  }
-
-  muteUser (username) {
-    console.log('Mute ' + username)
-  }
-
-  unmuteUser (username) {
-    console.log('Unmute ' + username)
+    if (!this.chatRoomConfig['connected']) {
+      this.ChatRoomService.connectToRoom()
+    }
   }
 
   kickUser (username) {
-    console.log('Kick ' + username)
+    this.ChatRoomService.kickUser(username)
+  }
+
+  muteUser (username) {
+    this.ChatRoomService.muteUser(username)
+  }
+
+  unmuteUser (username) {
+    this.ChatRoomService.unmuteUser(username)
   }
 
   banUser (username) {
-    console.log('Ban ' + username)
+    this.ChatRoomService.banUser(username)
   }
 
   unbanUser (username) {
-    console.log('Unban ' + username)
+    this.ChatRoomService.unbanUser(username)
   }
 
   isAdmin () {
@@ -65,6 +67,7 @@ export default class ChatRoomTextCtrl {
   }
 
   goBack () {
+    this.ChatRoomService.disconnectFromRoom()
     this.$state.transitionTo(
       'main',
       {},

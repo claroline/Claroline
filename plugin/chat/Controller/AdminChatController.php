@@ -62,8 +62,7 @@ class AdminChatController extends Controller
         RequestStack $requestStack,
         RouterInterface $router,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->chatManager = $chatManager;
         $this->claroUtils = $claroUtils;
         $this->formFactory = $formFactory;
@@ -84,8 +83,7 @@ class AdminChatController extends Controller
      */
     public function adminChatManagementAction()
     {
-
-        return array();
+        return [];
     }
 
     /**
@@ -102,7 +100,7 @@ class AdminChatController extends Controller
             new ChatConfigurationType($this->platformConfigHandler)
         );
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -111,30 +109,38 @@ class AdminChatController extends Controller
      *     name="claro_chat_admin_configure"
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineChatBundle:AdminChat:adminChatConfigureForm.html.twig")
      */
     public function adminChatConfigureAction()
     {
-        $formData = $this->request->get('chat_configuration_form');
-        $host = $formData['host'];
-        $mucHost = $formData['mucHost'];
-        $port = $formData['port'];
-        $iceServers = $formData['iceServers'];
-        $disableChatRoomAudio = isset($formData['disableChatRoomAudio']) ? true : false;
-        $disableChatRoomVideo = isset($formData['disableChatRoomVideo']) ? true : false;
-        $this->platformConfigHandler->setParameters(
-            array(
-                'chat_xmpp_host' => $host,
-                'chat_xmpp_muc_host' => $mucHost,
-                'chat_bosh_port' => $port,
-                'chat_ice_servers' => $iceServers,
-                'chat_room_audio_disable' => $disableChatRoomAudio,
-                'chat_room_video_disable' => $disableChatRoomVideo
-            )
+        $form = $this->formFactory->create(
+            new ChatConfigurationType($this->platformConfigHandler)
         );
 
-        return new RedirectResponse(
-            $this->router->generate('claro_chat_admin_management')
-        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $disableChatRoomAudio = $form->get('disableChatRoomAudio')->getData() ? true : false;
+            $disableChatRoomVideo = $form->get('disableChatRoomVideo')->getData() ? true : false;
+            $this->platformConfigHandler->setParameters(
+                [
+                    'chat_xmpp_host' => $form->get('host')->getData(),
+                    'chat_xmpp_muc_host' => $form->get('mucHost')->getData(),
+                    'chat_bosh_port' => $form->get('port')->getData(),
+                    'chat_ice_servers' => $form->get('iceServers')->getData(),
+                    'chat_room_audio_disable' => $disableChatRoomAudio,
+                    'chat_room_video_disable' => $disableChatRoomVideo,
+                    'chat_admin_username' => $form->get('admin')->getData(),
+                    'chat_admin_password' => $form->get('password')->getData(),
+                ]
+            );
+
+            return new RedirectResponse(
+                $this->router->generate('claro_chat_admin_management')
+            );
+        }
+
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -154,9 +160,8 @@ class AdminChatController extends Controller
         $max = 50,
         $orderedBy = 'username',
         $order = 'ASC'
-    )
-    {
-        $chatUsers = array();
+    ) {
+        $chatUsers = [];
 
         if ($show !== 0) {
             $chatUsers = $this->chatManager->getChatUsers(
@@ -168,10 +173,11 @@ class AdminChatController extends Controller
                 $max
             );
         }
+
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
         $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
 
-        return array(
+        return [
             'chatUsers' => $chatUsers,
             'show' => $show,
             'search' => $search,
@@ -180,8 +186,8 @@ class AdminChatController extends Controller
             'orderedBy' => $orderedBy,
             'order' => $order,
             'xmppHost' => $xmppHost,
-            'boshPort' => $boshPort
-        );
+            'boshPort' => $boshPort,
+        ];
     }
 
     /**
@@ -195,7 +201,7 @@ class AdminChatController extends Controller
      */
     public function chatUsersListAction($type = 'none')
     {
-        $datas = array();
+        $datas = [];
         $users = $this->chatManager->getAllUsersFromChatUsers();
 
         switch ($type) {
@@ -248,7 +254,7 @@ class AdminChatController extends Controller
             new ChatUserEditionType($color)
         );
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -274,7 +280,7 @@ class AdminChatController extends Controller
             $newColor = $form->get('color')->getData();
 
             if (is_null($options)) {
-                $options = array('color' => $newColor);
+                $options = ['color' => $newColor];
             } else {
                 $options['color'] = $newColor;
             }
@@ -283,8 +289,7 @@ class AdminChatController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-
-            return array('form' => $form->createView());
+            return ['form' => $form->createView()];
         }
     }
 }

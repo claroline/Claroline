@@ -14,7 +14,6 @@ namespace Claroline\ChatBundle\Controller\API;
 use Claroline\ChatBundle\Entity\ChatRoom;
 use Claroline\ChatBundle\Entity\ChatRoomMessage;
 use Claroline\ChatBundle\Manager\ChatManager;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
@@ -23,6 +22,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -150,6 +150,114 @@ class ChatController extends FOSRestController
             'roomType' => $chatRoom->getRoomType(),
             'roomTypeText' => $chatRoom->getRoomTypeText()
         );
+    }
+
+    /**
+     * @View(serializerGroups={"api_chat"})
+     * @ApiDoc(
+     *     description="Register Chat room user presence status",
+     *     views = {"chat"}
+     * )
+     */
+    public function postChatRoomPresenceRegisterAction(ChatRoom $chatRoom, $username, $fullName, $status)
+    {
+        $this->checkChatRoomRight($chatRoom, 'OPEN');
+        $this->chatManager->saveChatRoomMessage($chatRoom, $username, $fullName, $status, ChatRoomMessage::PRESENCE);
+    }
+
+    /**
+     * @View(serializerGroups={"api_chat"})
+     * @ApiDoc(
+     *     description="Register Chat room user message",
+     *     views = {"chat"}
+     * )
+     */
+    public function postChatRoomMessageRegisterAction(Request $request, ChatRoom $chatRoom, $username, $fullName)
+    {
+        $hasRight = $this->hasChatRoomRight($chatRoom, 'OPEN');
+
+        if (!$hasRight) {
+
+            return new JsonResponse('not_authorized', 403);
+        }
+        $message = $request->request->get('message', false);
+        $this->chatManager->saveChatRoomMessage($chatRoom, $username, $fullName, $message, ChatRoomMessage::MESSAGE);
+    }
+
+    /**
+     * @View(serializerGroups={"api_chat"})
+     * @ApiDoc(
+     *     description="Get users infos by usernames",
+     *     views = {"chat"}
+     * )
+     */
+    public function postChatUsersInfosAction(Request $request)
+    {
+        $datas = array();
+        $usernames = $request->request->get('usernames', false);
+        $chatUsers = $this->chatManager->getChatUsersByUsernames($usernames);
+
+        foreach ($chatUsers as $chatUser) {
+            $chatUsername = $chatUser->getChatUsername();
+            $user = $chatUser->getUser();
+            $options = $chatUser->getOptions();
+            $color = isset($options['color']) ? $options['color'] : null;
+            $datas[$chatUsername] = array(
+                'username' => $chatUsername,
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
+                'color' => $color
+            );
+        }
+
+        return $datas;
+    }
+
+    /**
+     * @View(serializerGroups={"api_chat"})
+     * @ApiDoc(
+     *     description="Get registered messages",
+     *     views = {"chat"}
+     * )
+     */
+    public function getRegisteredMessagesAction(ChatRoom $chatRoom)
+    {
+        $datas = array();
+        $names = array();
+        $usernames = array();
+        $colors = array();
+        $messages = $this->chatManager->getMessagesByChatRoom($chatRoom);
+
+        foreach ($messages as $message) {
+            $username = $message->getUsername();
+
+            if (!isset($names[$username])) {
+                $names[$username] = $username;
+                $usernames[] = $username;
+            }
+        }
+        $chatUsers = $this->chatManager->getChatUsersByUsernames($usernames);
+
+        foreach ($chatUsers as $chatUser) {
+            $chatUsername = $chatUser->getChatUsername();
+            $options = $chatUser->getOptions();
+            $colors[$chatUsername] = isset($options['color']) ? $options['color'] : null;
+        }
+
+        foreach ($messages  as $message) {
+            $username = $message->getUsername();
+            $color = isset($colors[$username]) ? $colors[$username] : null;
+            $datas[] = array(
+                'username' => $username,
+                'userFullName' => $message->getUserFullName(),
+                'creationDate' => $message->getCreationDate(),
+                'type' => $message->getTypeText(),
+                'content' => $message->getContent(),
+                'color' => $color
+            );
+        }
+
+        return $datas;
     }
 
     private function checkChatRoomRight(ChatRoom $chatRoom, $right)

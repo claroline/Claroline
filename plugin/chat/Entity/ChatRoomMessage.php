@@ -50,7 +50,7 @@ class ChatRoomMessage
     protected $userFullName;
 
     /**
-     * @ORM\Column(name="content", nullable=true)
+     * @ORM\Column(name="content", type="text", nullable=true)
      */
     protected $content;
 
@@ -132,5 +132,21 @@ class ChatRoomMessage
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    public function getTypeText()
+    {
+        $typeText = '';
+
+        switch ($this->type) {
+            case self::MESSAGE :
+                $typeText = 'message';
+                break;
+            case self::PRESENCE :
+                $typeText = 'presence';
+                break;
+        }
+
+        return $typeText;
     }
 }

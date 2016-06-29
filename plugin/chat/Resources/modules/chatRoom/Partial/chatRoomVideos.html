@@ -1,0 +1,75 @@
+<div id='participants-video-container'>
+    <div id='my-video-container' class="participant-stream">
+        <div class="panel panel-default participant-panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    {{ 'me'|trans:{}:'chat' }}
+                    <!--<span class="pull-right">-->
+                        <!--<i ng-if="myMicroEnabled" class="fa fa-microphone pointer-hand" ng-click="manageMicrophone(myUsername)"></i>-->
+                        <!--<i ng-if="!myMicroEnabled" class="fa fa-microphone-slash pointer-hand" ng-click="manageMicrophone(myUsername)"></i>-->
+                        <!--<i ng-if="myCameraEnabled" class="fa fa-video-camera pointer-hand" ng-click="manageCamera()"></i>-->
+                        <!--<i ng-if="!myCameraEnabled" class="fa fa-eye-slash pointer-hand" ng-click="manageCamera()"></i>-->
+                    <!--</span>-->
+                </h3>
+            </div>
+            <div class="panel-body participant-video-panel" ng-click="crc.selectSourceStream(crc.getMyUsername())">
+                <video id="my-video" autoplay="autoplay" class="participant-video" ng-src="{{ crc.videoConfig['mySourceStream'] }}"></video>
+                <!--<div id="ownvolume"></div>-->
+            </div>
+        </div>
+    </div>
+    <div ng-repeat="user in crc.videoConfig['users']" class="participant-stream">
+        <div class="panel panel-default participant-panel" ng-if="user['username'] !== crc.chatRoomConfig['myUsername']">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    {{ user['name'] }}
+                    <!--<span class="pull-right">-->
+                        <!--<i ng-if="stream['micro']" class="fa fa-microphone pointer-hand" ng-click="manageMicrophone(stream['username'])"></i>-->
+                        <!--<i ng-if="!stream['micro']" class="fa fa-microphone-slash pointer-hand" ng-click="manageMicrophone(stream['username'])"></i>-->
+                    <!--</span>-->
+                </h3>
+            </div>
+            <div class="panel-body participant-video-panel" ng-click="crc.selectSourceStream(user['username'])">
+                <video autoplay="autoplay" class="participant-video other-stream" ng-src="{{ crc.videoConfig['sourceStreams'][user['username']] }}"></video>
+            </div>
+        </div>
+    <!--<div id='participants-video-container'>-->
+        <!--<div id='my-video-container' class="participant-stream">-->
+            <!--<div ng-class="streamClassName(myUsername)">-->
+                <!--<div class="panel-heading">-->
+                    <!--<h3 class="panel-title">-->
+                        <!--{{ 'me'|trans:{}:'chat' }}-->
+                        <!--<span class="pull-right">-->
+                            <!--<i ng-if="myMicroEnabled" class="fa fa-microphone pointer-hand" ng-click="manageMicrophone(myUsername)"></i>-->
+                            <!--<i ng-if="!myMicroEnabled" class="fa fa-microphone-slash pointer-hand" ng-click="manageMicrophone(myUsername)"></i>-->
+                            <!--<i ng-if="myCameraEnabled" class="fa fa-video-camera pointer-hand" ng-click="manageCamera()"></i>-->
+                            <!--<i ng-if="!myCameraEnabled" class="fa fa-eye-slash pointer-hand" ng-click="manageCamera()"></i>-->
+                        <!--</span>-->
+                    <!--</h3>-->
+                <!--</div>-->
+                <!--<div class="panel-body participant-video-panel" ng-click="updateMainVideoSrc(myUsername)">-->
+                    <!--<video id="my-video" autoplay="autoplay" class="participant-video"></video>-->
+                    <!--<div id="ownvolume"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div ng-repeat="stream in streams" id="participant-stream-{{ stream['sid'] }}" class="participant-stream">-->
+            <!--<div class="panel panel-default participant-panel">-->
+                <!--<div ng-class="streamClassName(stream['username'])">-->
+                    <!--<div class="panel-heading">-->
+                        <!--<h3 class="panel-title">-->
+                            <!--{{ stream['name'] }}-->
+                            <!--<span class="pull-right">-->
+                                <!--<i ng-if="stream['micro']" class="fa fa-microphone pointer-hand" ng-click="manageMicrophone(stream['username'])"></i>-->
+                                <!--<i ng-if="!stream['micro']" class="fa fa-microphone-slash pointer-hand" ng-click="manageMicrophone(stream['username'])"></i>-->
+                            <!--</span>-->
+                        <!--</h3>-->
+                    <!--</div>-->
+                    <!--<div class="panel-body participant-video-panel" ng-click="updateMainVideoSrc(stream['username'])">-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    </div>
+</div>

@@ -9,7 +9,7 @@
 
 (function () {
     'use strict';
-    
+
     var connection;
     var xmppHost;
     var boshPort;
@@ -18,15 +18,15 @@
     var username = '';
     var password = '';
     var userId = -1;
-    
+
     function xmppConnect()
     {
         xmppHost = $('#management-datas-box').data('xmpp-host');
         boshPort = $('#management-datas-box').data('bosh-port');
-        boshService = 'https://' + xmppHost + ':' + boshPort + '/http-bind';
+        boshService = 'http://' + xmppHost + ':' + boshPort + '/http-bind';
         connection = new Strophe.Connection(boshService);
     }
-    
+
     function xmppRegistration()
     {
         connection.register.connect(
@@ -34,7 +34,7 @@
             registrationCallBack
         );
     }
-    
+
     $('#search-chat-users-btn').on('click', function () {
         var search = $('#search-chat-users-input').val();
         var orderedBy = $('#management-datas-box').data('ordered-by');
@@ -72,7 +72,7 @@
             window.location.href = route;
         }
     });
-    
+
     $('#max-select').on('change', function() {
         var search = $('#management-datas-box').data('search');
         var orderedBy = $('#management-datas-box').data('ordered-by');
@@ -90,10 +90,10 @@
         );
         window.location.href = route;
     });
-    
+
     $('.create-chat-users-btn').on('click', function () {
         var blackList = [];
-        
+
         $.ajax({
             url: Routing.generate('claro_chat_users_list', {type: 'id'}),
             type: 'GET',
@@ -102,7 +102,7 @@
                 blackList = datas;
             }
         });
-        
+
         var userPicker = new UserPicker();
         var config = {
             multiple: false,
@@ -119,21 +119,21 @@
         userPicker.configure(config, registerUsers);
         userPicker.open();
     });
-    
+
     var registerUsers = function (datas) {
         xmppConnect();
-        
+
         for (var i = 0; i < datas.length; i++) {
             userDatas = datas[i];
             xmppRegistration();
         }
     };
-    
+
     var registrationCallBack = function (status) {
-                
+
         if (status === Strophe.Status.REGISTER) {
             console.log('Registering...');
-            
+
             if (userDatas !== null) {
                 username = userDatas['username'];
                 password = userDatas['guid'];
@@ -141,7 +141,7 @@
                 connection.register.fields.username = username;
                 connection.register.fields.password = password;
                 connection.register.fields.name = userDatas['firstName'] +
-                    ' ' + 
+                    ' ' +
                     userDatas['lastName'];
                 // calling submit will continue the registration process
                 connection.register.submit();
@@ -149,7 +149,7 @@
         } else if (status === Strophe.Status.REGISTERED) {
             console.log("[XMPP] Registered !");
             console.log(userId + ' - ' + username + ' - ' + password);
-            
+
             $.ajax({
                 url: Routing.generate(
                     'claro_chat_user_create',
@@ -168,16 +168,16 @@
             console.log("Registration form not properly filled out.")
         } else if (status === Strophe.Status.REGIFAIL) {
             console.log("The Server does not support In-Band Registration")
-        } else if (status === Strophe.Status.CONNECTED) { 
+        } else if (status === Strophe.Status.CONNECTED) {
             console.log('Connected');
         } else {
             console.log('Connection failed !');
         }
     };
-    
+
     $('.chat-user-edit-btn').on('click', function () {
         var chatUserId = $(this).data('chat-user-id');
-        
+
         window.Claroline.Modal.displayForm(
             Routing.generate(
                 'claro_chat_user_edit_form',
@@ -189,7 +189,7 @@
             function () {}
         );
     });
-    
+
     $('body').on('focus', '#chat_user_edition_form_color', function () {
         $(this).colorpicker();
     });

@@ -21,9 +21,11 @@ import ChatRoomMainCtrl from './Controller/ChatRoomMainCtrl'
 import ChatRoomTextCtrl from './Controller/ChatRoomTextCtrl'
 import ChatRoomVideoCtrl from './Controller/ChatRoomVideoCtrl'
 import ChatRoomService from './Service/ChatRoomService'
+import VideoService from './Service/VideoService'
 import ChatRoomInputDirective from './Directive/ChatRoomInputDirective'
 import ChatRoomMessagesDirective from './Directive/ChatRoomMessagesDirective'
 import ChatRoomUsersDirective from './Directive/ChatRoomUsersDirective'
+import ChatRoomVideosDirective from './Directive/ChatRoomVideosDirective'
 
 angular.module('ChatRoomModule', [
   'ui.bootstrap',
@@ -36,9 +38,11 @@ angular.module('ChatRoomModule', [
 ])
 .controller('ChatRoomMainCtrl', ['$state', 'ChatRoomService', ChatRoomMainCtrl])
 .controller('ChatRoomTextCtrl', ['$state', 'ChatRoomService', ChatRoomTextCtrl])
-.controller('ChatRoomVideoCtrl', ['$state', 'ChatRoomService', ChatRoomVideoCtrl])
+.controller('ChatRoomVideoCtrl', ['$state', 'ChatRoomService', 'VideoService', ChatRoomVideoCtrl])
 .service('ChatRoomService', ChatRoomService)
+.service('VideoService', VideoService)
 .directive('chatRoomInput', () => new ChatRoomInputDirective)
 .directive('chatRoomMessages', () => new ChatRoomMessagesDirective)
 .directive('chatRoomUsers', () => new ChatRoomUsersDirective)
+.directive('chatRoomVideos', () => new ChatRoomVideosDirective)
 .config(Routing)

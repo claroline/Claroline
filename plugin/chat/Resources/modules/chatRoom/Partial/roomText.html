@@ -1,43 +1,60 @@
 <div ng-if="crc.chatRoomConfig['roomType'] === 'text'">
-    <div class="alert alert-danger" ng-if="!crc.chatRoomConfig['connected']">
-        {{ 'not_connected'|trans:{}:'chat' }}
+    <div ng-if="crc.chatRoomConfig['roomStatus'] === 'open'">
+        <div ng-if="crc.chatRoomConfig['connected']">
+            <button class="btn btn-default" ng-click="crc.goBack()">
+                {{ 'back'|trans:{}:'platform' }}
+            </button>
+            <!--<div ng-if="isConnected()">-->
+                <div class="row chat-room-row">
+                    <div id="chat-room-content-panel" class="col-md-9">
+                        <chat-room-messages></chat-room-messages>
+                    </div>
+                    <div id="chat-room-users-panel" class="col-md-3">
+                        <chat-room-users></chat-room-users>
+                    </div>
+                </div>
+                <div class="row chat-room-row">
+                    <chat-room-input></chat-room-input>
+                </div>
+            <!--</div>-->
+            <!--<div ng-if="!isConnected()">-->
+                <!--<div class="alert alert-{{ messageType }}">-->
+                    <!--{{ message }}-->
+                <!--</div>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<br>-->
+            <!--</div>-->
+        </div>
+        <div ng-if="!crc.chatRoomConfig['connected']">
+            <div class="alert alert-{{ crc.chatRoomConfig['messageType'] }}" ng-if="crc.chatRoomConfig['message']">
+                {{ crc.chatRoomConfig['message'] }}
+            </div>
+            <div class="alert alert-danger" ng-if="!crc.chatRoomConfig['message']">
+                {{ 'not_connected'|trans:{}:'chat' }}
+            </div>
+            <button class="btn btn-default" ng-click="crc.goBack()">
+                {{ 'back'|trans:{}:'platform' }}
+            </button>
+        </div>
     </div>
-    <button class="btn btn-default" ng-click="crc.refresh()">
-        <i class="fa fa-refresh"></i>
-    </button>
-    <button class="btn btn-default" ng-click="crc.goBack()">
-        {{ 'back'|trans:{}:'platform' }}
-    </button>
-    <!--<div ng-if="isConnected()">-->
-        <div class="row chat-room-row">
-            <div id="chat-room-content-panel" class="col-md-9">
-                <chat-room-messages></chat-room-messages>
-            </div>
-            <div id="chat-room-users-panel" class="col-md-3">
-                <chat-room-users></chat-room-users>
-            </div>
+    <div ng-if="crc.chatRoomConfig['roomStatus'] !== 'open'">
+        <div class="alert alert-danger">
+            {{ 'chat_room_status'|trans:{}:'chat' }} : {{ crc.chatRoomConfig['roomStatus']|trans:{}:'chat' }}
         </div>
-        <div class="row chat-room-row">
-            <chat-room-input></chat-room-input>
-        </div>
-    <!--</div>-->
-    <!--<div ng-if="!isConnected()">-->
-        <!--<div class="alert alert-{{ messageType }}">-->
-            <!--{{ message }}-->
-        <!--</div>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--<br>-->
-    <!--</div>-->
+        <button class="btn btn-default" ng-click="crc.goBack()">
+            {{ 'back'|trans:{}:'platform' }}
+        </button>
+    </div>
 </div>
 <div ng-if="crc.chatRoomConfig['roomType'] !== 'text'">
     <div class="alert alert-danger">
