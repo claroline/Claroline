@@ -109,6 +109,8 @@ class DropController extends DropzoneBaseController
         $notationAppreciationDocuments = $dropManager->getAppreciationForDocuments($drop);
 
         $em = $this->getDoctrine()->getManager();
+        $notationRepo = $em->getRepository('InnovaCollecticielBundle:GradingNotation');
+        $notationsArray = $notationRepo->getNotationArrayForDropzone($dropzone);
         $criteriaRepo = $em->getRepository('InnovaCollecticielBundle:GradingCriteria');
         $criteriasArray = $criteriaRepo->getCriteriaArrayForDropzone($dropzone);
 
@@ -137,7 +139,8 @@ class DropController extends DropzoneBaseController
             'recordOrTransmitNotationsArray' => $recordOrTransmitNotations,
             'notationAppreciationDocumentsArray' => $notationAppreciationDocuments,
             'criteriasArray' => $criteriasArray,
-         );
+            'notationsArray' => $notationsArray,
+        );
     }
 
     private function addDropsStats(Dropzone $dropzone, $array)

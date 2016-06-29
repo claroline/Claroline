@@ -1,7 +1,7 @@
 {% macro displayDocumentsList
 (
 drop, dropzone, width, mode, documentListText, adminInnova,
-collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray, criteriasArray,
+collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray, criteriasArray, notationsArray,
 notationDocumentsArray, notationCommentDocumentsArray, notationAppreciationDocumentsArray,
 notationQualityDocumentsArray, notationAssessorDocumentsArray, recordOrTransmitNotationsArray
 )
@@ -89,7 +89,8 @@ notationQualityDocumentsArray, notationAssessorDocumentsArray, recordOrTransmitN
                                     'notationCommentDocuments': notationCommentDocumentsArray,
                                     'notationQualityDocuments': notationQualityDocumentsArray,
                                     'notationAssessorDocuments' : notationAssessorDocumentsArray,
-                                    'recordOrTransmitNotations' : recordOrTransmitNotationsArray                          
+                                    'recordOrTransmitNotations' : recordOrTransmitNotationsArray, 
+                                    'recordOrTransmitNotation' : recordOrTransmitNotationsArray[document.id],
                                 }
                             %}
                         {% endfor %}
