@@ -92,6 +92,9 @@ points: Points
 question_hints: Indices
 question_hint_label: Indice
 question_hint_show_title: Voir l'indice
+question_object: Objet de la question
+question_specification: Consigne pédagogique
+question_supplementary: Information complémentaire
 question_show_hint_confirm: Êtes vous sûr de vouloir utiliser l'indice ? <br/> Cela entrainera une pénalité de %1% points.
 
 # s

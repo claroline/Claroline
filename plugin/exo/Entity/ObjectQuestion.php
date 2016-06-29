@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,7 +22,7 @@ class ObjectQuestion
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Question")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Question", inversedBy="objects")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $question;
@@ -31,7 +32,7 @@ class ObjectQuestion
      *
      * @ORM\Column(name="ordre", type="integer")
      */
-    private $ordre;
+    private $order;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -61,7 +62,7 @@ class ObjectQuestion
         return $this->exercise;
     }
 
-    public function setQuestion(Question $question)
+    public function setQuestion(Question $question = null)
     {
         $this->question = $question;
     }
@@ -74,11 +75,11 @@ class ObjectQuestion
     /**
      * Set ordre.
      *
-     * @param int $ordre
+     * @param int $order
      */
-    public function setOrdre($ordre)
+    public function setOrdre($order)
     {
-        $this->ordre = $ordre;
+        $this->order = $order;
     }
 
     /**
@@ -88,7 +89,7 @@ class ObjectQuestion
      */
     public function getOrdre()
     {
-        return $this->ordre;
+        return $this->order;
     }
 
     /**
@@ -121,5 +122,21 @@ class ObjectQuestion
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return ResourceNode
+     */
+    public function getResourceNode()
+    {
+        return $this->resourceNode;
+    }
+
+    /**
+     * @param ResourceNode $resourceNode
+     */
+    public function setResourceNode(ResourceNode $resourceNode)
+    {
+        $this->resourceNode = $resourceNode;
     }
 }

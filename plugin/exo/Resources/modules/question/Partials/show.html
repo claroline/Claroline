@@ -45,6 +45,13 @@
             <!-- Description of the Question -->
             <div data-ng-bind="questionShowCtrl.question.description"></div>
         </div>
+        <div class="question-info" data-ng-if="questionShowCtrl.question.objects.length > 0">
+            <h5>{{ 'question_object'|trans:{}:'ujm_sequence' }}</h5>
+            <div data-ng-repeat="object in questionShowCtrl.question.objects">
+                <iframe src="{{ object.url }}"></iframe>
+                <span data-ng-if="object.type === 'text'">{{ object.data }}</span>
+            </div>
+        </div>
 
         <!-- Display specificity of the Question -->
         <h5 data-ng-if="questionShowCtrl.includeCorrection && ((questionShowCtrl.question.solutions && questionShowCtrl.question.solutions.length > 0) || questionShowCtrl.question.stats)">
@@ -95,6 +102,16 @@
                     data-answer="questionShowCtrl.questionPaper.answer"
                     data-include-correction="questionShowCtrl.includeCorrection">
             </graphic-question>
+        </div>
+        
+        <div class="question-info" data-ng-if="questionShowCtrl.question.specification">
+            <h5>{{ 'question_specification'|trans:{}:'ujm_sequence' }}</h5>
+            <div>{{ questionShowCtrl.question.specification }}</div>
+        </div>
+        
+        <div class="question-info" data-ng-if="questionShowCtrl.question.supplementary">
+            <h5>{{ 'question_supplementary'|trans:{}:'ujm_sequence' }}</h5>
+            <div>{{ questionShowCtrl.question.supplementary }}</div>
         </div>
 
         <!-- Display solution of the Question -->
