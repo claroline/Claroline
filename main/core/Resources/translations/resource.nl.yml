@@ -1,9 +1,11 @@
 activity: activity
 administrate: administrate
+all: all
 compose: compose
 copy: copy
 delete: delete
 directory: directory
+document: document
 download: download
 edit: edit
 edit-properties: edit-properties
@@ -11,7 +13,10 @@ edit-rights: edit-rights
 empty: empty
 export: export
 file: file
+image: image
 insert: insert
+media: media
+more: more
 open: open
 open-tracking: open-tracking
 rename: rename
@@ -20,4 +25,6 @@ resource_name_form_name: resource_name_form_name
 resource_shortcut: resource_shortcut
 text: text
 update_file: update_file
+video: video
+workspace: workspace
 write: write

@@ -1,0 +1,21 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="$close()">&times;</button>
+        <h4> {{ uimc.user.username }} </h4>
+    </div>
+    <div class="modal-body">
+        <ul>
+          <li> {{ 'username'|trans:{}:'platform' }}: {{ uimc.user.username }} </li>
+          <li> {{ 'last_name'|trans:{}:'platform' }}: {{ uimc.user.lastName }} </li>
+          <li> {{ 'first_name'|trans:{}:'platform' }}: {{ uimc.user.firstName }}</li>
+          <li> {{ 'roles'|trans:{}:'platform' }}: {{ uimc.rolesList }} </li>
+        </ul>
+
+        {{ 'workspace_list'|trans:{}:'platform' }}:
+        <ul class="list-group">
+            <li ng-repeat="(key, workspace) in uimc.workspaces" class="list-group-item">
+                <a href="{{ 'claro_workspace_open'|path:{'workspaceId':workspace.id} }}"> {{ workspace.name }} </a>
+            </li>
+        </ul>
+    </div>
+</div>

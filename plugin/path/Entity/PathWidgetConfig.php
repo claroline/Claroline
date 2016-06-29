@@ -2,10 +2,10 @@
 
 namespace Innova\PathBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\TagBundle\Entity\Tag;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\TagBundle\Entity\Tag;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Configuration of Widgets Path.

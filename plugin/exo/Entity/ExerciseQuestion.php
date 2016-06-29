@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UJM\ExoBundle\Entity\ExerciseQuestion.
  *
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseQuestionRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="ujm_exercise_question")
  */
 class ExerciseQuestion

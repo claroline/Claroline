@@ -20,8 +20,7 @@ use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\CategoryType;
 use Claroline\ForumBundle\Form\EditTitleType;
 use Claroline\ForumBundle\Event\Log\ReadSubjectEvent;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Manager\Manager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -30,9 +29,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -41,35 +37,35 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ForumController extends Controller
 {
-    private $manager;
-    private $tokenStorage;
     private $authorization;
+    private $forumManager;
+    private $tokenStorage;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "manager"       = @DI\Inject("claroline.manager.forum_manager"),
      *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "forumManager"  = @DI\Inject("claroline.manager.forum_manager"),
      *     "tokenStorage"  = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
-        Manager $manager,
-        TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        Manager $forumManager,
+        TokenStorageInterface $tokenStorage
     ) {
-        $this->manager = $manager;
-        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
+        $this->forumManager = $forumManager;
+        $this->tokenStorage = $tokenStorage;
     }
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{forum}/category",
      *     name="claro_forum_categories",
      *     defaults={"page"=1}
      * )
-     * @Template("ClarolineForumBundle::index.html.twig")
+     * @EXT\Template("ClarolineForumBundle::index.html.twig")
      *
      * @param Forum $forum
      * @param User  $user
@@ -82,7 +78,7 @@ class ForumController extends Controller
         $user = $this->tokenStorage->getToken()->getUser();
         $hasSubscribed = $user === 'anon.' ?
             false :
-            $this->manager->hasSubscribed($user, $forum);
+            $this->forumManager->hasSubscribed($user, $forum);
         $isModerator = $this->authorization->isGranted(
             'moderate',
             new ResourceCollection(array($forum->getResourceNode()))
@@ -99,13 +95,13 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/category/{category}/subjects/page/{page}/max/{max}",
      *     name="claro_forum_subjects",
      *     defaults={"page"=1, "max"=20},
      *     options={"expose"=true}
      * )
-     * @Template()
+     * @EXT\Template()
      *
      * @param Category $category
      * @param int      $page
@@ -115,7 +111,7 @@ class ForumController extends Controller
     {
         $forum = $category->getForum();
         $this->checkAccess($forum);
-        $pager = $this->manager->getSubjectsPager($category, $page, $max);
+        $pager = $this->forumManager->getSubjectsPager($category, $page, $max);
 
         $subjectsIds = array();
         $lastMessages = array();
@@ -123,7 +119,7 @@ class ForumController extends Controller
         foreach ($pager as $subject) {
             $subjectsIds[] = $subject['id'];
         }
-        $messages = $this->manager->getLastMessagesBySubjectsIds($subjectsIds);
+        $messages = $this->forumManager->getLastMessagesBySubjectsIds($subjectsIds);
 
         foreach ($messages as $message) {
             $lastMessages[$message->getSubject()->getId()] = $message;
@@ -141,7 +137,7 @@ class ForumController extends Controller
 
             if (!is_null($securityToken)) {
                 $user = $securityToken->getUser();
-                $logs = $this->manager->getSubjectsReadingLogs($user, $forum->getResourceNode());
+                $logs = $this->forumManager->getSubjectsReadingLogs($user, $forum->getResourceNode());
             }
         }
         $lastAccessDates = array();
@@ -170,12 +166,12 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/form/subject/{category}",
      *     name="claro_forum_form_subject_creation"
      * )
-     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @Template()
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
      *
      * @param Category $category
      */
@@ -199,12 +195,12 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/form/category/{forum}",
      *     name="claro_forum_form_category_creation"
      * )
-     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @Template()
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
      *
      * @param Forum $forum
      */
@@ -226,12 +222,12 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/category/create/{forum}",
      *     name="claro_forum_create_category"
      * )
-     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @Template()
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
      *
      * @param Forum $forum
      */
@@ -248,7 +244,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $category = $form->getData();
-            $this->manager->createCategory($forum, $category->getName());
+            $this->forumManager->createCategory($forum, $category->getName());
         }
 
         return new RedirectResponse(
@@ -259,12 +255,12 @@ class ForumController extends Controller
     /**
      * The form submission is working but I had to do some weird things to make it works.
      *
-     * @Route(
+     * @EXT\Route(
      *     "/subject/create/{category}",
      *     name="claro_forum_create_subject"
      * )
-     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @Template("ClarolineForumBundle:Forum:subjectForm.html.twig")
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineForumBundle:Forum:subjectForm.html.twig")
      *
      * @param Category $category
      *
@@ -292,7 +288,7 @@ class ForumController extends Controller
             $subject->setAuthor($user->getFirstName().' '.$user->getLastName());
             //instantiation of the new resources
             $subject->setCategory($category);
-            $this->manager->createSubject($subject);
+            $this->forumManager->createSubject($subject);
             $dataMessage = $form->get('message')->getData();
 
             if ($dataMessage['content'] !== null) {
@@ -301,7 +297,7 @@ class ForumController extends Controller
                 $message->setCreator($user);
                 $message->setAuthor($user->getFirstName().' '.$user->getLastName());
                 $message->setSubject($subject);
-                $this->manager->createMessage($message, $subject);
+                $this->forumManager->createMessage($message, $subject);
 
                 return new RedirectResponse(
                     $this->generateUrl('claro_forum_subjects', array('category' => $category->getId()))
@@ -321,13 +317,13 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/subject/{subject}/messages/page/{page}/max/{max}",
      *     name="claro_forum_messages",
      *     defaults={"page"=1, "max"= 20},
      *     options={"expose"=true}
      * )
-     * @Template()
+     * @EXT\Template()
      *
      * @param Subject $subject
      * @param int     $page
@@ -342,7 +338,7 @@ class ForumController extends Controller
             'moderate',
             new ResourceCollection(array($forum->getResourceNode()))
         ) && !$isAnon;
-        $pager = $this->manager->getMessagesPager($subject, $page, $max);
+        $pager = $this->forumManager->getMessagesPager($subject, $page, $max);
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $canPost = $this->authorization->isGranted('post', $collection);
         $form = $this->get('form.factory')->create(new MessageType());
@@ -372,11 +368,11 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/create/message/{subject}",
      *     name="claro_forum_create_message"
      * )
-     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @param Subject $subject
      */
@@ -387,7 +383,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $message = $form->getData();
-            $this->manager->createMessage($message, $subject);
+            $this->forumManager->createMessage($message, $subject);
         }
 
         return new RedirectResponse(
@@ -396,11 +392,11 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/edit/message/{message}/form",
      *     name="claro_forum_edit_message_form"
      * )
-     * @Template()
+     * @EXT\Template()
      *
      * @param Message $message
      */
@@ -426,12 +422,12 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/edit/message/{message}",
      *     name="claro_forum_edit_message"
      * )
      *
-     * @Template("ClarolineForumBundle:Forum:editMessageForm.html.twig")
+     * @EXT\Template("ClarolineForumBundle:Forum:editMessageForm.html.twig")
      *
      * @param Message $message
      */
@@ -451,7 +447,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $newContent = $form->get('content')->getData();
-            $this->manager->editMessage($message, $oldContent, $newContent);
+            $this->forumManager->editMessage($message, $oldContent, $newContent);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
@@ -468,11 +464,11 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/edit/category/{category}/form",
      *     name="claro_forum_edit_category_form"
      * )
-     * @Template()
+     * @EXT\Template()
      *
      * @param Category $category
      */
@@ -497,7 +493,7 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/edit/category/{category}",
      *     name="claro_forum_edit_category"
      * )
@@ -519,7 +515,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $newName = $form->get('name')->getData();
-            $this->manager->editCategory($category, $oldName, $newName);
+            $this->forumManager->editCategory($category, $oldName, $newName);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
@@ -528,7 +524,7 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/delete/category/{category}",
      *     name="claro_forum_delete_category"
      * )
@@ -540,7 +536,7 @@ class ForumController extends Controller
         $forum = $category->getForum();
 
         if ($this->authorization->isGranted('moderate', new ResourceCollection(array($category->getForum()->getResourceNode())))) {
-            $this->manager->deleteCategory($category);
+            $this->forumManager->deleteCategory($category);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
@@ -551,13 +547,13 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{forum}/search/{search}/page/{page}",
      *     name="claro_forum_search",
      *     defaults={"page"=1, "search"= ""},
      *     options={"expose"=true}
      * )
-     * @Template("ClarolineForumBundle::searchResults.html.twig")
+     * @EXT\Template("ClarolineForumBundle::searchResults.html.twig")
      *
      * @param Forum  $forum
      * @param int    $page
@@ -565,7 +561,7 @@ class ForumController extends Controller
      */
     public function searchAction(Forum $forum, $page, $search)
     {
-        $pager = $this->manager->searchPager($forum, $search, $page);
+        $pager = $this->forumManager->searchPager($forum, $search, $page);
 
         return array(
             'pager' => $pager,
@@ -577,16 +573,16 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/edit/subject/{subjectId}/form",
      *     name="claro_forum_edit_subject_form"
      * )
-     * @ParamConverter(
+     * @EXT\ParamConverter(
      *      "subject",
      *      class="ClarolineForumBundle:Subject",
      *      options={"id" = "subjectId", "strictId" = true}
      * )
-     * @Template()
+     * @EXT\Template()
      *
      * @param Subject $subject
      */
@@ -611,16 +607,16 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/edit/subject/{subjectId}/submit",
      *     name="claro_forum_edit_subject"
      * )
-     * @ParamConverter(
+     * @EXT\ParamConverter(
      *      "subject",
      *      class="ClarolineForumBundle:Subject",
      *      options={"id" = "subjectId", "strictId" = true}
      * )
-     * @Template("ClarolineForumBundle:Forum:editSubjectForm.html.twig")
+     * @EXT\Template("ClarolineForumBundle:Forum:editSubjectForm.html.twig")
      *
      * @param Subject $subject
      */
@@ -641,7 +637,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $newTitle = $form->get('title')->getData();
-            $this->manager->editSubject($subject, $oldTitle, $newTitle);
+            $this->forumManager->editSubject($subject, $oldTitle, $newTitle);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
@@ -658,7 +654,7 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/delete/message/{message}",
      *     name="claro_forum_delete_message"
      * )
@@ -668,7 +664,7 @@ class ForumController extends Controller
     public function deleteMessageAction(Message $message)
     {
         if ($this->authorization->isGranted('moderate', new ResourceCollection(array($message->getSubject()->getCategory()->getForum()->getResourceNode())))) {
-            $this->manager->deleteMessage($message);
+            $this->forumManager->deleteMessage($message);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $message->getSubject()->getId()))
@@ -679,7 +675,7 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/subscribe/forum/{forum}",
      *     name="claro_forum_subscribe"
      * )
@@ -690,7 +686,7 @@ class ForumController extends Controller
      */
     public function subscribeAction(Forum $forum, User $user)
     {
-        $this->manager->subscribe($forum, $user);
+        $this->forumManager->subscribe($forum, $user);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
@@ -698,7 +694,7 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/unsubscribe/forum/{forum}",
      *     name="claro_forum_unsubscribe"
      * )
@@ -709,7 +705,7 @@ class ForumController extends Controller
      */
     public function unsubscribeAction(Forum $forum, User $user)
     {
-        $this->manager->unsubscribe($forum, $user);
+        $this->forumManager->unsubscribe($forum, $user);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
@@ -717,7 +713,7 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/delete/subject/{subject}",
      *     name="claro_forum_delete_subject"
      * )
@@ -727,7 +723,7 @@ class ForumController extends Controller
     public function deleteSubjectAction(Subject $subject)
     {
         if ($this->authorization->isGranted('moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode())))) {
-            $this->manager->deleteSubject($subject);
+            $this->forumManager->deleteSubject($subject);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
@@ -804,7 +800,7 @@ class ForumController extends Controller
         $category = $subject->getCategory();
         $forum = $category->getForum();
         $this->checkAccess($forum);
-        $pager = $this->manager->getSubjectsPager($category, $page);
+        $pager = $this->forumManager->getSubjectsPager($category, $page);
 
         return array(
             '_resource' => $forum,
@@ -831,7 +827,7 @@ class ForumController extends Controller
     {
         $forum = $newSubject->getCategory()->getForum();
         $this->checkAccess($forum);
-        $this->manager->moveMessage($message, $newSubject);
+        $this->forumManager->moveMessage($message, $newSubject);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_subjects', array('category' => $newSubject->getCategory()->getId()))
@@ -853,7 +849,7 @@ class ForumController extends Controller
     {
         $forum = $newCategory->getForum();
         $this->checkAccess($forum);
-        $this->manager->moveSubject($subject, $newCategory);
+        $this->forumManager->moveSubject($subject, $newCategory);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
@@ -874,7 +870,7 @@ class ForumController extends Controller
     {
         $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);
-        $this->manager->stickSubject($subject);
+        $this->forumManager->stickSubject($subject);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
@@ -895,7 +891,7 @@ class ForumController extends Controller
     {
         $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);
-        $this->manager->unstickSubject($subject);
+        $this->forumManager->unstickSubject($subject);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
@@ -916,7 +912,7 @@ class ForumController extends Controller
     {
         $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);
-        $this->manager->closeSubject($subject);
+        $this->forumManager->closeSubject($subject);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
@@ -937,7 +933,7 @@ class ForumController extends Controller
     {
         $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);
-        $this->manager->openSubject($subject);
+        $this->forumManager->openSubject($subject);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
@@ -945,13 +941,13 @@ class ForumController extends Controller
     }
 
      /**
-      * @Route(
+      * @EXT\Route(
       *     "/reply/message/{message}",
       *     name="claro_forum_reply_message_form"
       * )
-      * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
       *
-      * @Template("ClarolineForumBundle:Forum:replyMessageForm.html.twig")
+      * @EXT\Template("ClarolineForumBundle:Forum:replyMessageForm.html.twig")
       *
       * @param Message $message
       */
@@ -965,7 +961,7 @@ class ForumController extends Controller
 
          if ($form->isValid()) {
              $newMsg = $form->getData();
-             $this->manager->createMessage($newMsg, $subject);
+             $this->forumManager->createMessage($newMsg, $subject);
 
              return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
@@ -982,13 +978,13 @@ class ForumController extends Controller
      }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/quote/message/{message}",
      *     name="claro_forum_quote_message_form"
      * )
-     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
-     * @Template("ClarolineForumBundle:Forum:quoteMessageForm.html.twig")
+     * @EXT\Template("ClarolineForumBundle:Forum:quoteMessageForm.html.twig")
      *
      * @param Message $message
      */
@@ -997,13 +993,13 @@ class ForumController extends Controller
         $subject = $message->getSubject();
         $forum = $subject->getCategory()->getForum();
         $reply = new Message();
-        $reply->setContent($this->manager->getMessageQuoteHTML($message));
+        $reply->setContent($this->forumManager->getMessageQuoteHTML($message));
         $form = $this->container->get('form.factory')->create(new MessageType(), $reply);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
             $newMsg = $form->getData();
-            $this->manager->createMessage($newMsg, $subject);
+            $this->forumManager->createMessage($newMsg, $subject);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
@@ -1020,7 +1016,7 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{forum}/notifications/activate",
      *     name="claro_forum_activate_global_notifications"
      * )
@@ -1035,7 +1031,7 @@ class ForumController extends Controller
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
-        $this->manager->activateGlobalNotifications($forum);
+        $this->forumManager->activateGlobalNotifications($forum);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
@@ -1043,7 +1039,7 @@ class ForumController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{forum}/notifications/disable",
      *     name="claro_forum_disable_global_notifications"
      * )
@@ -1058,7 +1054,7 @@ class ForumController extends Controller
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
-        $this->manager->disableGlobalNotifications($forum);
+        $this->forumManager->disableGlobalNotifications($forum);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))

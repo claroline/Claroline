@@ -1,9 +1,11 @@
 activity: Activité
 administrate: Administrer
+all: Tout
 compose: Composer
 copy: Copier
 delete: Supprimer
 directory: Répertoire
+document: Document
 download: Télécharger
 edit: Editer
 edit-properties: 'Editer les propriétés'
@@ -11,7 +13,10 @@ edit-rights: 'Editer les droits'
 empty: Vide
 export: Exporter
 file: Fichier
+image: Image
 insert: Insérer
+media: Média
+more: Plus
 open: Ouvrir
 open-tracking: 'Voir le suivi de l''objet'
 rename: Renommer
@@ -20,5 +25,6 @@ resource_name_form_name: 'Nom de la ressource'
 resource_shortcut: Raccourcis
 text: Texte
 update_file: 'Mettre à jour le fichier'
+video: Vidéo
+workspace: 'Espace d''activités'
 write: Ecrire
-resource_type: 'Type de ressource'

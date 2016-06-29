@@ -20,7 +20,7 @@ class AdditionalInstaller extends BaseInstaller
             $updater->preUpdate();
         }
 
-        if (version_compare($currentVersion, '6.1.0.0', '<=') || version_compare($currentVersion, '6.9999999.9999999.9999999-dev', '<=')) {
+        if (version_compare($currentVersion, '6.2.0.0', '<')) {
             $updater = new Updater600200($this->container);
             $updater->setLogger($this->logger);
             $updater->preUpdate();
@@ -41,7 +41,7 @@ class AdditionalInstaller extends BaseInstaller
             $updater->postUpdate();
         }
 
-        if (version_compare($currentVersion, '6.1.0.0', '<=') || version_compare($currentVersion, '6.9999999.9999999.9999999-dev', '<=')) {
+        if (version_compare($currentVersion, '6.2.0.0', '<')) {
             $updater = new Updater600200($this->container);
             $updater->setLogger($this->logger);
             $updater->postUpdate();

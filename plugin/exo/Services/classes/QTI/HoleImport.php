@@ -30,6 +30,11 @@ class HoleImport extends QtiImport
         $this->qtiRepos = $qtiRepos;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
+
+        if ($this->qtiValidate() === false) {
+            return false;
+        }
+
         $this->createQuestion(InteractionHole::TYPE);
         $this->createInteractionHole();
 
@@ -330,5 +335,24 @@ class HoleImport extends QtiImport
         }
 
         return $text;
+    }
+
+    /**
+     * Implements the abstract method.
+     */
+    public function qtiValidate()
+    {
+        if ($this->assessmentItem->getElementsByTagName('responseDeclaration')->item(0) == null) {
+            return false;
+        }
+
+        $rps = $this->assessmentItem->getElementsByTagName('responseDeclaration');
+        foreach ($rps as $rp) {
+            if ($mapping = $rp->getElementsByTagName('mapping')->item(0) == null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

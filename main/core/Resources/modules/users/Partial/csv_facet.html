@@ -1,0 +1,26 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="$close()">&times;</button>
+        <h4> {{ 'import_facets'|trans:{}:'platform' }} </h4>
+    </div>
+    <form id="csv-facets" method="post" enctype="multipart/form-data" ng-submit="icfc.submit()">
+    <div class="modal-body">
+        <div class="well">
+            <div>
+                <h3> {{ 'csv_format_facets'|trans:{}:'platform' }} </h3>
+                <ul>
+                    <li> {{ 'csv_format_facets_line_1'|trans:{}:'platform' }} </li>
+                    <li> {{ 'csv_format_facets_line_end'|trans:{}:'platform' }} </li>
+                </ul>
+            </div>
+        </div>
+        <div>
+            {{ 'csv_select'|trans:{}:'platform' }}
+            <form-field field="['csv', 'file']"></form-field>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input type="submit" name="submit" value="{{ 'import'|trans:{}:'platform' }}" class="btn btn-primary pull-left">
+    </div>
+    </form>
+</div>

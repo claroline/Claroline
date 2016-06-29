@@ -5,7 +5,7 @@
         <h3 class="panel-title">{{ 'qcm_creation' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
-    <form onsubmit="return check_form('{{ 'nbr_choices' | trans({}, 'ujm_exo') }}', '{{ 'answer_coched' | trans({}, 'ujm_exo') }}', '{{ 'label_empty' | trans({}, 'ujm_exo') }}', '{{ 'point_answers' | trans({}, 'ujm_exo') }}', '{{ 'point_answer' | trans({}, 'ujm_exo') }}', '{{ 'invite_question' | trans({}, 'ujm_exo') }}');"
+    <form onsubmit="return check_form_qcm('{{ 'answer_coched' | trans({}, 'ujm_exo') }}');"
           action="{{ path('ujm_interactionqcm_create') }}" method="post" {{ form_enctype(form) }}>
 
         <div class="panel-body">

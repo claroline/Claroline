@@ -34,7 +34,7 @@ class InteractionHoleController extends Controller
         $vars['form'] = $form->createView();
         $vars['exoID'] = $attr->get('exoID');
 
-        return $this->render('UJMExoBundle:InteractionHole:paper.html.twig', $vars);
+        return $this->render('UJMExoBundle:InteractionHole:show.html.twig', $vars);
     }
 
     /**
@@ -288,7 +288,7 @@ class InteractionHoleController extends Controller
         }
 
         $interSer = $this->container->get('ujm.exo_InteractionHole');
-        $res = $interSer->response($request);
+        $res = $interSer->responsePhp($request);
 
         $vars['score'] = $res['score'];
         $vars['penalty'] = $res['penalty'];

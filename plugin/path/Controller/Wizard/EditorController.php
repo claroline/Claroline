@@ -2,20 +2,20 @@
 
 namespace Innova\PathBundle\Controller\Wizard;
 
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Manager\PathManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Innova\PathBundle\Entity\Path\Path;
-use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 
 /**
  * Class EditorController.
@@ -104,11 +104,11 @@ class EditorController
 
         $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
-        return array(
+        return [
             '_resource' => $path,
             'workspace' => $path->getWorkspace(),
             'resourceIcons' => $resourceIcons,
-        );
+        ];
     }
 
     /**
@@ -131,12 +131,12 @@ class EditorController
         $this->pathManager->checkAccess('EDIT', $path);
 
         // Create form
-        $form = $this->formFactory->create('innova_path', $path, array(
+        $form = $this->formFactory->create('innova_path', $path, [
             'method' => 'PUT',
             'csrf_protection' => false,
-        ));
+        ]);
 
-        $response = array();
+        $response = [];
 
         // Try to process data
         $form->handleRequest($request);
@@ -146,7 +146,7 @@ class EditorController
 
             // Validation OK
             $response['status'] = 'OK';
-            $response['messages'] = array();
+            $response['messages'] = [];
             $response['data'] = $path->getStructure();
         } else {
             // Validation Error
@@ -175,7 +175,7 @@ class EditorController
      */
     public function loadActivityAction($nodeId)
     {
-        $activity = array();
+        $activity = [];
 
         $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($nodeId);
         if (!empty($node)) {
@@ -189,30 +189,30 @@ class EditorController
                 $activity['primaryResource'] = null;
                 $primaryResource = $resource->getPrimaryResource();
                 if (!empty($primaryResource)) {
-                    $activity['primaryResource'] = array(
+                    $activity['primaryResource'] = [
                         'resourceId' => $primaryResource->getId(),
                         'name' => $primaryResource->getName(),
                         'type' => $primaryResource->getResourceType()->getName(),
                         'mimeType' => $primaryResource->getMimeType(),
-                    );
+                    ];
                 }
 
                 // Process activity parameters
                 $parameters = $resource->getParameters();
                 if (!empty($parameters)) {
                     // Secondary resources
-                    $activity['resources'] = array();
+                    $activity['resources'] = [];
 
                     $secondaryResources = $parameters->getSecondaryResources();
                     if (!empty($secondaryResources)) {
                         foreach ($secondaryResources as $secondaryResource) {
-                            $activity['resources'][] = array(
+                            $activity['resources'][] = [
                                 'resourceId' => $secondaryResource->getId(),
                                 'name' => $secondaryResource->getName(),
                                 'type' => $secondaryResource->getResourceType()->getName(),
                                 'mimeType' => $secondaryResource->getMimeType(),
                                 'propagateToChildren' => true,
-                            );
+                            ];
                         }
                     }
 
@@ -254,10 +254,10 @@ class EditorController
             throw new NotFoundHttpException('Unable to find Activity referenced by ID : '.$activityId);
         }
 
-        $route = $this->router->generate('claro_resource_open', array(
+        $route = $this->router->generate('claro_resource_open', [
             'node' => $activity->getResourceNode()->getId(),
             'resourceType' => 'activity',
-        ));
+        ]);
 
         return new RedirectResponse($route);
     }
@@ -269,7 +269,7 @@ class EditorController
      */
     private function getFormErrors(FormInterface $form)
     {
-        $errors = array();
+        $errors = [];
         foreach ($form->getErrors() as $key => $error) {
             $errors[$key] = $error->getMessage();
         }

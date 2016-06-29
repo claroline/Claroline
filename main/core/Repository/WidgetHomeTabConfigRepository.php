@@ -30,7 +30,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
 
     public function findAdminWidgetConfigs(HomeTab $homeTab)
     {
-        return $this->buildBaseQuery($homeTab)
+        return $this->buildSelectQuery($homeTab)
             ->andWhere('whtc.workspace IS NULL')
             ->andWhere('whtc.user IS NULL')
             ->getQuery()
@@ -39,7 +39,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
 
     public function findVisibleAdminWidgetConfigs(HomeTab $homeTab)
     {
-        return $this->buildBaseQuery($homeTab)
+        return $this->buildSelectQuery($homeTab)
             ->andWhere('whtc.workspace IS NULL')
             ->andWhere('whtc.user IS NULL')
             ->andWhere('whtc.visible = true')
@@ -49,7 +49,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
 
     public function findWidgetConfigsByUser(HomeTab $homeTab, User $user)
     {
-        return $this->buildBaseQuery($homeTab)
+        return $this->buildSelectQuery($homeTab)
             ->andWhere('whtc.workspace IS NULL')
             ->andWhere('whtc.user = :user')
             ->andWhere("whtc.type = 'desktop'")
@@ -60,7 +60,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
 
     public function findVisibleWidgetConfigsByUser(HomeTab $homeTab, User $user)
     {
-        return $this->buildBaseQuery($homeTab)
+        return $this->buildSelectQuery($homeTab)
             ->andWhere('whtc.workspace IS NULL')
             ->andWhere('whtc.user = :user')
             ->andWhere("whtc.type = 'desktop'")
@@ -72,7 +72,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
 
     public function findWidgetConfigsByWorkspace(HomeTab $homeTab, Workspace $workspace)
     {
-        return $this->buildBaseQuery($homeTab)
+        return $this->buildSelectQuery($homeTab)
             ->andWhere('whtc.workspace = :workspace')
             ->andWhere('whtc.user IS NULL')
             ->andWhere("whtc.type = 'workspace'")
@@ -83,7 +83,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
 
     public function findVisibleWidgetConfigsByWorkspace(HomeTab $homeTab, Workspace $workspace)
     {
-        return $this->buildBaseQuery($homeTab)
+        return $this->buildSelectQuery($homeTab)
             ->andWhere('whtc.workspace = :workspace')
             ->andWhere('whtc.user IS NULL')
             ->andWhere("whtc.type = 'workspace'")
@@ -95,19 +95,20 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
 
     public function findVisibleWidgetConfigsByTabIdAndWorkspace($homeTabId, Workspace $workspace)
     {
-        return $this->buildBaseQuery($homeTabId)
+        return $this->buildSelectQuery($homeTabId)
             ->join(
                 'Claroline\CoreBundle\Entity\Home\HomeTabConfig',
                 'htc',
                 'WITH',
                 'htc.homeTab = :homeTabId'
             )
-            ->where('htc.homeTab = :homeTabId')
+            ->andWhere('htc.homeTab = :homeTabId')
             ->andWhere('htc.visible = true')
             ->andWhere('whtc.workspace = :workspace')
             ->andWhere('whtc.user IS NULL')
             ->andWhere("whtc.type = 'workspace'")
             ->andWhere('whtc.visible = true')
+            ->setParameter('homeTabId', $homeTabId)
             ->setParameter('workspace', $workspace)
             ->getQuery()
             ->getResult();
@@ -118,14 +119,14 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $homeTabId,
         Workspace $workspace
     ) {
-        return $this->buildBaseQuery($homeTabId)
+        return $this->buildSelectQuery($homeTabId)
             ->join(
                 'Claroline\CoreBundle\Entity\Home\HomeTabConfig',
                 'htc',
                 'WITH',
                 'htc.homeTab = :homeTab'
             )
-            ->where('htc.homeTab = :homeTab')
+            ->andWhere('htc.homeTab = :homeTab')
             ->andWhere('htc.visible = true')
             ->andWhere('whtc.workspace = :workspace')
             ->andWhere('whtc.user IS NULL')
@@ -143,7 +144,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         WidgetInstance $widgetInstance,
         User $user
     ) {
-        return $this->buildBaseQuery($homeTab)
+        return $this->buildSelectQuery($homeTab)
             ->andWhere('whtc.user = :user')
             ->andWhere('whtc.workspace IS NULL')
             ->andWhere("whtc.type = 'admin_desktop'")
@@ -156,7 +157,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
 
     public function findWidgetHomeTabConfigsByHomeTabAndType(HomeTab $homeTab, $type)
     {
-        return $this->buildBaseQuery($homeTab)
+        return $this->buildSelectQuery($homeTab)
             ->andWhere('whtc.type = :type')
             ->setParameter('type', $type)
             ->getQuery()
@@ -165,9 +166,9 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
 
     public function updateAdminWidgetHomeTabConfig(HomeTab $homeTab, $widgetOrder)
     {
-        return $this->buildBaseQuery($homeTab, true)
+        return $this->buildUpdateQuery($homeTab)
             ->set('whtc.widgetOrder', 'whtc.widgetOrder - 1')
-            ->where('whtc.user IS NULL')
+            ->andWhere('whtc.user IS NULL')
             ->andWhere('whtc.workspace IS NULL')
             ->andWhere('whtc.widgetOrder > :widgetOrder')
             ->setParameter('widgetOrder', $widgetOrder)
@@ -180,9 +181,9 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $widgetOrder,
         User $user
     ) {
-        return $this->buildBaseQuery($homeTab, true)
+        return $this->buildUpdateQuery($homeTab)
             ->set('whtc.widgetOrder', 'whtc.widgetOrder - 1')
-            ->where('whtc.user = :user')
+            ->andWhere('whtc.user = :user')
             ->andWhere('whtc.workspace IS NULL')
             ->andWhere('whtc.widgetOrder > :widgetOrder')
             ->setParameter('user', $user)
@@ -196,12 +197,13 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $widgetOrder,
         Workspace $workspace
     ) {
-        return $this->buildBaseQuery($homeTab, true)
+        return $this->buildUpdateQuery($homeTab)
             ->set('whtc.widgetOrder', 'whtc.widgetOrder - 1')
-            ->where('whtc.user IS NULL')
+            ->andWhere('whtc.user IS NULL')
             ->andWhere('whtc.workspace = :workspace')
             ->andWhere('whtc.widgetOrder > :widgetOrder')
             ->setParameter('workspace', $workspace)
+            ->setParameter('widgetOrder', $widgetOrder)
             ->getQuery()
             ->execute();
     }
@@ -211,9 +213,9 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $widgetOrder,
         $newWidgetOrder
     ) {
-        return $this->buildBaseQuery($homeTab, true)
+        return $this->buildUpdateQuery($homeTab)
             ->set('whtc.widgetOrder', ':newWidgetOrder')
-            ->where('whtc.user IS NULL')
+            ->andWhere('whtc.user IS NULL')
             ->andWhere('whtc.workspace IS NULL')
             ->andWhere('whtc.widgetOrder = :widgetOrder')
             ->setParameter('widgetOrder', $widgetOrder)
@@ -228,9 +230,9 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $newWidgetOrder,
         User $user
     ) {
-        return $this->buildBaseQuery($homeTab, true)
+        return $this->buildUpdateQuery($homeTab)
             ->set('whtc.widgetOrder', ':newWidgetOrder')
-            ->where('whtc.user = :user')
+            ->andWhere('whtc.user = :user')
             ->andWhere('whtc.workspace IS NULL')
             ->andWhere('whtc.widgetOrder = :widgetOrder')
             ->setParameter('user', $user)
@@ -246,9 +248,9 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
         $newWidgetOrder,
         Workspace $workspace
     ) {
-        return $this->buildBaseQuery($homeTab, true)
+        return $this->buildUpdateQuery($homeTab)
             ->set('whtc.widgetOrder', ':newWidgetOrder')
-            ->where('whtc.user IS NULL')
+            ->andWhere('whtc.user IS NULL')
             ->andWhere('whtc.workspace = :workspace')
             ->andWhere('whtc.widgetOrder = :widgetOrder')
             ->setParameter('workspace', $workspace)
@@ -258,33 +260,58 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
             ->execute();
     }
 
-    private function buildBaseQuery($homeTab, $isUpdate = false)
+    private function buildSelectQuery($homeTab)
     {
         $qb = $this->createQueryBuilder('whtc');
 
-        if ($isUpdate) {
-            $qb->update('whtc');
-        } else {
-            $qb->select('whtc');
-        }
-
-        $qb->leftJoin('whtc.widgetInstance', 'instance')
+        return $qb
+            ->select('whtc')
+            ->leftJoin('whtc.widgetInstance', 'instance')
             ->join('instance.widget', 'widget')
             ->leftJoin('widget.plugin', 'plugin')
             ->where('whtc.homeTab = :homeTab')
             ->andWhere($qb->expr()->orX(
-                'CONCAT(plugin.vendorName, plugin.bundleName) IN (:bundles)',
+                'CONCAT(plugin.vendorName, plugin.bundleName) IN (:plugins)',
                 'widget.plugin IS NULL'
             ))
-            ->orderBy('whtc.widgetOrder', 'ASC');
+            ->orderBy('whtc.widgetOrder', 'ASC')
+            ->setParameters([
+                'homeTab' => $homeTab,
+                'plugins' => $this->getEnabledPlugins(),
+            ]);
+    }
 
-        $bundles = $this->container
+    private function buildUpdateQuery(HomeTab $homeTab)
+    {
+        $qb = $this->_em->createQueryBuilder();
+
+        return $qb
+            ->update($this->_entityName, 'whtc')
+            ->where('whtc.homeTab = :homeTab')
+            ->andWhere($qb->expr()->in(
+                'whtc.widgetInstance',
+                $this->_em->createQueryBuilder()
+                    ->select('wi')
+                    ->from('Claroline\CoreBundle\Entity\Widget\WidgetInstance', 'wi')
+                    ->join('wi.widget', 'widget')
+                    ->leftJoin('widget.plugin', 'plugin')
+                    ->where($qb->expr()->orX(
+                        'CONCAT(plugin.vendorName, plugin.bundleName) IN (:plugins)',
+                        'widget.plugin IS NULL'
+                    ))
+                    ->getQuery()
+                    ->getDQL()
+            ))
+            ->setParameters([
+                'homeTab' => $homeTab,
+                'plugins' => $this->getEnabledPlugins(),
+            ]);
+    }
+
+    private function getEnabledPlugins()
+    {
+        return $this->container
             ->get('claroline.manager.plugin_manager')
             ->getEnabled(true);
-
-        return $qb->setParameters([
-            'homeTab' => $homeTab,
-            'bundles' => $bundles,
-        ]);
     }
 }

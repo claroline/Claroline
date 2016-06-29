@@ -22,7 +22,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Log\LogHiddenWorkspaceWidgetConfig;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Entity\Log\LogWidgetConfig;
@@ -39,7 +38,6 @@ class LogController extends Controller
     private $eventDispatcher;
     private $tokenStorage;
     private $authorization;
-    private $formFactory;
     private $translator;
 
     /**
@@ -49,7 +47,6 @@ class LogController extends Controller
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
      *     "authorization"      = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"       = @DI\Inject("security.token_storage"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "translator"         = @DI\Inject("translator")
      * })
      */
@@ -59,7 +56,6 @@ class LogController extends Controller
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
-        FormFactory $formFactory,
         TranslatorInterface $translator
     ) {
         $this->toolManager = $toolManager;
@@ -67,7 +63,6 @@ class LogController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
-        $this->formFactory = $formFactory;
         $this->translator = $translator;
     }
 

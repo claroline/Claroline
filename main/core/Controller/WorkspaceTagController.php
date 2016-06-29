@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
@@ -26,6 +26,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Form\WorkspaceTagType;
+use Claroline\CoreBundle\Form\AdminWorkspaceTagType;
 
 class WorkspaceTagController extends Controller
 {
@@ -43,7 +45,7 @@ class WorkspaceTagController extends Controller
      *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "authorization"      = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"       = @DI\Inject("security.token_storage"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"        = @DI\Inject("form.factory"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "translator"         = @DI\Inject("translator")
      * })
@@ -183,11 +185,7 @@ class WorkspaceTagController extends Controller
             throw new AccessDeniedException();
         }
         $workspaceTag = new WorkspaceTag();
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_ADMIN_WORKSPACE_TAG,
-            array(),
-            $workspaceTag
-        );
+        $form = $this->formFactory->create(new AdminWorkspaceTagType(), $workspaceTag);
 
         return array('form' => $form->createView());
     }
@@ -213,11 +211,7 @@ class WorkspaceTagController extends Controller
         }
         $workspaceTag = new WorkspaceTag();
 
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_ADMIN_WORKSPACE_TAG,
-            array(),
-            $workspaceTag
-        );
+        $form = $this->formFactory->create(new AdminWorkspaceTagType(), $workspaceTag);
         $request = $this->getRequest();
         $form->handleRequest($request);
 
@@ -250,11 +244,7 @@ class WorkspaceTagController extends Controller
         $workspaceTag = new WorkspaceTag();
         $workspaceTag->setUser($currentUser);
 
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WORKSPACE_TAG,
-            array(),
-            $workspaceTag
-        );
+        $form = $this->formFactory->create(new WorkspaceTagType(), $workspaceTag);
 
         return array('form' => $form->createView());
     }
@@ -278,12 +268,7 @@ class WorkspaceTagController extends Controller
     {
         $workspaceTag = new WorkspaceTag();
         $workspaceTag->setUser($currentUser);
-
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WORKSPACE_TAG,
-            array(),
-            $workspaceTag
-        );
+        $form = $this->formFactory->create(new WorkspaceTagType(), $workspaceTag);
         $request = $this->getRequest();
         $form->handleRequest($request);
 
@@ -319,11 +304,8 @@ class WorkspaceTagController extends Controller
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_ADMIN_WORKSPACE_TAG,
-            array(),
-            $workspaceTag
-        );
+
+        $form = $this->formFactory->create(new AdminWorkspaceTagType(), $workspaceTag);
 
         return array(
             'form' => $form->createView(),
@@ -352,11 +334,8 @@ class WorkspaceTagController extends Controller
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_ADMIN_WORKSPACE_TAG,
-            array(),
-            $workspaceTag
-        );
+
+        $form = $this->formFactory->create(new AdminWorkspaceTagType(), $workspaceTag);
         $request = $this->getRequest();
         $form->handleRequest($request);
 
@@ -394,11 +373,7 @@ class WorkspaceTagController extends Controller
         User $currentUser,
         WorkspaceTag $workspaceTag
     ) {
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WORKSPACE_TAG,
-            array(),
-            $workspaceTag
-        );
+        $form = $this->formFactory->create(new WorkspaceTagType(), $workspaceTag);
 
         return array(
             'form' => $form->createView(),
@@ -427,11 +402,7 @@ class WorkspaceTagController extends Controller
         User $currentUser,
         WorkspaceTag $workspaceTag
     ) {
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WORKSPACE_TAG,
-            array(),
-            $workspaceTag
-        );
+        $form = $this->formFactory->create(new WorkspaceTagType(), $workspaceTag);
         $request = $this->getRequest();
         $form->handleRequest($request);
 

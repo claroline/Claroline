@@ -38,7 +38,7 @@
 
         {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
 
-        <form onsubmit="return check_form('{{ 'nbr_choices' | trans({}, 'ujm_exo') }}', '{{ 'answer_coched' | trans({}, 'ujm_exo') }}', '{{ 'label_empty' | trans({}, 'ujm_exo') }}', '{{ 'point_answers' | trans({}, 'ujm_exo') }}', '{{ 'point_answer' | trans({}, 'ujm_exo') }}', '{{ 'invite_question' | trans({}, 'ujm_exo') }}');"
+        <form onsubmit="return check_form_qcm( '{{ 'answer_coched' | trans({}, 'ujm_exo') }}');"
               action="{{ path('ujm_interactionqcm_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
             <div class="panel-body">
                 {% set form = edit_form %}

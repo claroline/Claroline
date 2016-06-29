@@ -94,12 +94,14 @@
         <h3 class="panel-title"> {{ currentSco.getTitle() }} </h3>
     </div>
     <div class="panel-body">
+
         <i id="menu-display-btn" class="btn btn-default fa fa-list pull-left"></i>
         <div class="text-right">
             <a class="btn btn-primary pointer-hand" onClick="javascript:enterFullScreen()">
                 <i class="fa fa-expand"></i>
             </a>
         </div>
+
         <br>
         <div class="row">
             <div id="menu-box" class="col-md-3 menu-style hidden">
@@ -117,7 +119,7 @@
             </div>
             <div id="content-box" class="col-md-12">
                 <div class="full-size">
-                    
+
                     {% if isAnon %}
                         <div id="twig-scorm-data"
                              student-id="-1"
@@ -158,6 +160,7 @@
                         </div>
                     {% endif %}
                     <iframe id="scorm-frame"
+                            allowfullscreen
                             class="full-size"
                             src="{{ asset(scormUrl) }}"
                             frameborder="0">

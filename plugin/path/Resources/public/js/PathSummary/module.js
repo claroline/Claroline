@@ -6,6 +6,7 @@
 
     angular.module('PathSummaryModule', [
         'PathModule',
-        'UserProgressionModule'
+        'UserProgressionModule',
+        'ui.bootstrap'
     ]);
 })();

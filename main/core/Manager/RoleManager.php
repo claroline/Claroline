@@ -425,9 +425,7 @@ class RoleManager
         $this->om->startFlushSuite();
 
         foreach ($subjects as $subject) {
-            foreach ($roles as $role) {
-                $this->associateRole($subject, $role, $sendMail);
-            }
+            $this->associateRoles($subject, $roles);
         }
 
         $this->om->endFlushSuite();
@@ -650,9 +648,9 @@ class RoleManager
     /**
      * @return \Claroline\CoreBundle\Entity\Role[]
      */
-    public function getAllPlatformRoles()
+    public function getAllPlatformRoles($includeRoleUser = true)
     {
-        return $this->roleRepo->findAllPlatformRoles();
+        return $this->roleRepo->findAllPlatformRoles($includeRoleUser);
     }
 
     /**
@@ -1112,5 +1110,10 @@ class RoleManager
         }
 
         $this->om->endFlushSuite();
+    }
+
+    public function getUserRole(User $user)
+    {
+        return $this->roleRepo->findUserRoleByUser($user);
     }
 }

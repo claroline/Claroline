@@ -171,6 +171,7 @@ communication: Communication
 completed: Terminé
 configuration: Configuration
 configure: Configurer
+confirm: OK
 confirm_send_data: 'Nous vous proposons de marquer votre accord pour l''envoi de données :'
 connections: 'Nb Cnx.'
 contact: Contact
@@ -212,7 +213,6 @@ creation_date: 'Date de création'
 creator: Créateur
 csv_export: 'Export csv'
 csv_select: 'Sélectionnez un fichier csv:'
-csv_delete: Suppression par csv
 csv_format_info: 'Informations sur le format du fichier CSV'
 csv_format_user_list: 'Format: liste de nom d''utilisateurs séparés par un retour à la ligne.'
 csv_users_import_infos: 'Informations sur le format du fichier CSV'
@@ -313,6 +313,7 @@ duration: Durée
 edit: Modifier
 edit_facet: 'Editer une facette'
 edit_field: 'Editer un champ'
+edit_maintenance_message: 'Modifier le message de maintenance'
 edit_password: 'Modifier le mot de passe'
 edit_password_error: 'Une erreur est survenue pendant la modification du mot de passe.'
 edit_password_error_current: 'Votre mot de passe actuel n''est pas correct.'
@@ -537,6 +538,7 @@ mail_not_available: 'La fonction d''envoi de courriel n''est pas disponible.'
 mail_not_exist: 'Ce courriel n''existe pas '
 mail_sent: 'Un courriel vient de vous être envoyé. Vérifiez votre dossier spam au cas où celui-ci n''apparaîtrait pas dans votre boîte de réception.'
 maintenance: Maintenance
+maintenance_message_edit_success: Le message de maintenance a bien été modifié
 maintenance_mode_enabled: 'Le mode maintenance est activé'
 maintenance_mode_message: 'L''accès à la plateforme est désactivé pour les utilisateurs. Vous pouvez le réactiver dans la section maintenance des paramètres de l''administration.'
 make_my_public_profil_visible: 'Rendre mon profil public visible'
@@ -705,6 +707,14 @@ platform_widgets: 'Widgets de la plateforme'
 please_validate_your_account: 'Un courriel vient de vous être envoyé pour activer votre compte.'
 please_wait: 'Veuillez patienter...'
 port: Port
+portal: Portail de ressources
+portal_access_disabled: L'accès au portail est bloqué car aucune des ses options est activée.
+portal_configuration_updated_success: La configuration du portail de ressources a été modifiée avec succès
+portal_no_published_resources: Il paraît qu'il n'y a pas de ressources publiées sur le portail
+portal_resources_configuration: Choisissez les ressources à faire apparaître dans le portail
+portal_search: Rechercher les ressources en libre accès
+portal_search_total_results: '%totalItems% résultat(s) dans ''%type%'' [classé(s) par pertinence]'
+portal_short: Portail
 portfolio_url: 'Url d''accès à l''outil de portfolio'
 position: Position
 positive_number_expected: 'Cette valeur doit être un nombre positif'
@@ -734,6 +744,8 @@ public_workspaces: 'Espaces d''activités publics'
 publish: Publié
 publish_resource: 'Publier la ressource'
 published: Publié
+published_to_portal: Publié sur le portail de ressources
+published_to_portal_message: 'Cette option rendra la ressource accessible à tous les utilisateurs anonymes . Vous devrez enlever les droits aux anonymes dans la gestion des droits pour restreindre de nouveau l''accès.'
 put_back_permissions_after_update: 'N''oubliez pas de remettre les permissions d''origine après une mise à jour.'
 receiver: destinataire(s)
 recent_all_workspace_activities_overview: 'Aperçu de toutes les activités récentes de %workspaceName%'
@@ -1084,7 +1096,6 @@ view_category_hierarchy: 'Visualiser la structure des catégories'
 views: 'Nb vues'
 visibility: Visibilité
 visible: Visible
-visible_facet_form_explanation: 'Le champ "Visible" permet de spécifier si l''élément doit être visible ou non par l''utilisateur.'
 visitor: Visiteur
 warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
 warning_workspace_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
@@ -1257,7 +1268,6 @@ group_name: Nom du groupe
 profile_edition: Modification du profil
 claro_admin_personal_workspace_resource_rights: Gestion des ressources de l'espace personnel
 organization_name: Nom de l'organisation
-csv_delete: Suppression par csv
 plugins: Plugins
 activate: Activer
 version: Version
@@ -1267,3 +1277,40 @@ cache_management_explanation: Votre dossier app/cache doit être vidé manuellem
 required_by: Requis par:
 require: Requiert:
 requirement_warning: Attention aux prérequis
+roles_updated: Roles mis à jour
+role_update: Mise à jour des rôles
+role_update_confirm:  Êtes-vous sûr de vouloir rajouter les rôles suivants [ %role_list ] aux utilisateurs [ %user_list% ] ?
+add_roles: Add roles
+csv_delete: Suppression par csv
+import_facets: Importer des facettes
+csv: Csv
+csv_format_facets: Format du csv:
+csv_format_facets_line_1: Première ligne: liste des facettes par nom séparée par des point-virgules (facette1;facette2;facette3;...)
+csv_format_facets_line_end: Lignes suivantes: username;valeur facette 1; valeur facette2; valeur facette3;...
+create_panel: Créer un panel
+edit_panel: Modifier un panel
+is_main_facet_label: Mettre dans l'onglet General
+delete_panel: Supprimer un panel
+delete_panel_confirm: Êtes-vous sûr de vouloir supprimer ce panel ?
+edit_mode: Mode édition
+display_mode: Mode affichage
+roles_panels_form_explanation: Définissez l'accessibilité au panel par rôle.
+delete_field: Supprimer un champ
+delete_field_confirm: Êtes-vous vraiment sûr de vouloir supprimer ce champ ?
+facet_imported: Facettes importées
+radio: Bouton radio
+select: Liste déroulante
+checkboxes: Checkboxes
+facet_edited: Facet édité avec succès
+facet_created: Facet créé avec succès
+facet_removed: Facet supprimé avec succès
+facet_roles_edited: Édition des rôles du facet avec succès
+panel_created: Panel créé avec succès
+panel_edited: Panel édité avec succès
+panel_removed: Panel supprimé avec succès
+field_created: Champ créé avec succès
+field_edited: Champ édité avec succès
+field_removed: Champ supprimé avec succès
+panel_roles_edited: Rôles du panel édité avec succès
+profile_preference_edited: Préférences du profil éditées avec succès
+mandatory: Obligatoire

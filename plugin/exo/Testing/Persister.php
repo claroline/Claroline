@@ -208,8 +208,6 @@ class Persister
      public function exercise($title, array $questions = [], User $user = null)
      {
          $exercise = new Exercise();
-         $exercise->setTitle($title);
-
          if ($user) {
              if (!isset($this->exoType)) {
                  $this->exoType = new ResourceType();
@@ -277,7 +275,7 @@ class Persister
         $user->setFirstName($username);
         $user->setLastName($username);
         $user->setUsername($username);
-        $user->setPassword($username);
+        $user->setPlainPassword($username);
         $user->setMail($username.'@mail.com');
         $user->setGuid($username);
         $this->om->persist($user);

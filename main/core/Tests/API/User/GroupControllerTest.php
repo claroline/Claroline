@@ -6,14 +6,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Library\Testing\Persister;
 
-/**
- * Specific tests for organizations
- * How to run:
- * - create database
- * - php app/console claroline:init_test_schema --env=test
- * - php app/console doctrine:schema:update --force --env=test
- * - bin/phpunit vendor/claroline/core-bundle/Tests/API/User/GroupControllerTest.php -c app/phpunit.xml.
- */
 class GroupControllerTest extends TransactionalTestCase
 {
     /** @var Persister */

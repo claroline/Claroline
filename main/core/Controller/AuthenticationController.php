@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
@@ -33,6 +33,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Form\ResetPasswordType;
+use Claroline\CoreBundle\Form\EmailType;
 
 /**
  * Authentication/login controller.
@@ -58,7 +60,7 @@ class AuthenticationController
      *     "encoderFactory" = @DI\Inject("security.encoder_factory"),
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "translator"     = @DI\Inject("translator"),
-     *     "formFactory"    = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"    = @DI\Inject("form.factory"),
      *     "authenticator"  = @DI\Inject("claroline.authenticator"),
      *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
      *     "router"         = @DI\Inject("router"),
@@ -150,7 +152,7 @@ class AuthenticationController
     public function forgotPasswordAction()
     {
         if ($this->mailManager->isMailerAvailable()) {
-            $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array());
+            $form = $this->formFactory->create(new EmailType());
 
             return array('form' => $form->createView());
         }
@@ -173,7 +175,7 @@ class AuthenticationController
      */
     public function sendEmailAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array(), null);
+        $form = $this->formFactory->create(new EmailType());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -231,7 +233,7 @@ class AuthenticationController
             );
         }
 
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), $user);
+        $form = $this->formFactory->create(new ResetPasswordType(), $user);
         $currentTime = time();
 
         // the link is valid for 24h
@@ -258,7 +260,7 @@ class AuthenticationController
     public function newPasswordAction($hash)
     {
         $user = $this->userManager->getByResetPasswordHash($hash);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), $user);
+        $form = $this->formFactory->create(new ResetPasswordType(), $user);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

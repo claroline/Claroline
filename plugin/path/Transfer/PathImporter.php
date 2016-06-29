@@ -3,11 +3,11 @@
 namespace Innova\PathBundle\Transfer;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class PathImporter extends Importer implements ConfigurationInterface, RichTextInterface
@@ -58,6 +58,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
                         ->scalarNode('structure')->end()
                         ->booleanNode('breadcrumbs')->end()
                         ->booleanNode('summaryDisplayed')->end()
+                        ->booleanNode('completeBlockingCondition')->end()
                         ->booleanNode('modified')->end()
                         ->booleanNode('published')->end()
                     ->end()

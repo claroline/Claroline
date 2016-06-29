@@ -100,7 +100,7 @@ class OauthController extends Controller
     /**
      * @EXT\Route(
      *     "/form",
-     *     name="claro_admin_oauth_form",
+     *     name="claro_admin_oauth_client_form",
      *     options = {"expose"=true}
      * )
      * @EXT\Template()

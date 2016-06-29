@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Icap\DropzoneBundle\Entity\Criterion;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Form\DropzoneType;

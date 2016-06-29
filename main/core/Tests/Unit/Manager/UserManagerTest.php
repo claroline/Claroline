@@ -97,43 +97,6 @@ class UserManagerTest extends MockeryTestCase
         $this->getManager()->deleteUser($user);
     }
 
-    public function testCreateUserWithRole()
-    {
-        $manager = $this->getManager(array('setPersonalWorkspace'));
-        $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
-
-        $this->om->shouldReceive('startFlushSuite')->once();
-        $this->om->shouldReceive('endFlushSuite')->once();
-        $manager->shouldReceive('setPersonalWorkspace')
-            ->with($user)
-            ->once()
-            ->andReturn($workspace);
-        $this->toolManager
-            ->shouldReceive('addRequiredToolsToUser')
-            ->with($user)
-            ->once();
-        $this->roleManager
-            ->shouldReceive('setRoleToRoleSubject')
-            ->with($user, PlatformRoles::USER)
-            ->once();
-        $this->mailManager->shouldReceive('isMailerAvailable')->once()->andReturn(true);
-        $this->mailManager->shouldReceive('sendCreationMessage')->once()->with($user);
-        $this->om->shouldReceive('persist')->with($user)->once();
-        $this->strictDispatcher
-            ->shouldReceive('dispatch')
-            ->with('log', 'Log\LogUserCreate', array($user))
-            ->once();
-        $this->roleManager
-            ->shouldReceive('setRoleToRoleSubject')
-            ->with($user, 'MY_ROLE')
-            ->once();
-
-        $this->mailManager->shouldReceive('isMailerAvailable')->andReturn(false);
-
-        $manager->createUserWithRole($user, 'MY_ROLE');
-    }
-
     public function testInsertUserWithRoles()
     {
         $manager = $this->getManager(array('setPersonalWorkspace'));

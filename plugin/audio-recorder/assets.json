@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "recorder": "js/audio-recorder"
+      "recorder": "audio-recorder"
     }
   }
 }

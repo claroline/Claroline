@@ -28,11 +28,8 @@ class ApiControllerTest extends TransactionalTestCase
     public function testGetChapters()
     {
         $user = $this->persist->user('david');
-
         $lesson = $this->persist->lesson('Test lesson', $user);
-
         $chapter = $this->persist->chapter('Test title', 'Test text', $lesson, $lesson->getRoot());
-        //var_dump($chapter->getId());
 
         $this->assertTrue(!is_null($lesson));
     }

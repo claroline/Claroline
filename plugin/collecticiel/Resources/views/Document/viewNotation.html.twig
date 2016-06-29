@@ -1,0 +1,156 @@
+<a href="#study-modal-evaluation_{{ document.id }}" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
+    <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To see a review'|trans({},'innova_collecticiel') }}">
+            {% if dropzone.evaluationType == "notation" %}
+                {{ notationDocuments[document.id] ~ "/" ~ dropzone.maximumNotation }}
+            {% else %}
+                {% if notationScaleDocument == '0' %}  
+                    <i class="fa fa-graduation-cap" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Review'|trans({},'innova_collecticiel') }}"></i>
+                {% else %}
+                    {{notationScaleDocument}}
+                {% endif %}
+            {% endif %}
+    </span>
+</a>
+
+{# Déclaration de la modal pour confirmation de la validation #}
+<div class="modal fade" id="study-modal-evaluation_{{ document.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="innova_collecticiel_notation_form container">
+                    <div class="row">
+                        <div class="form-group row col-md-6">
+                            {# Bloc "Rappel des instructions ..." #}
+                            {% if dropzone.instruction != null %}
+                                {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionTeacherNotation.html.twig' %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group row col-md-6">
+                        </div>
+                    </div>
+
+                   <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                            <b>{{ 'Review on'|trans({}, 'innova_collecticiel') }}</b>
+                        </div>
+                        <div class="form-group row col-md-6">
+                        </div>
+                    </div>
+
+                    {% if document.url is not null %}
+                        {% set documentTitle = document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url %}
+                    {% else %}
+                        {% if document.title is not null %}
+                            {% set documentTitle = document.title %}
+                        {% else %}
+                            {% set documentTitle = document.resourceNode.name %}
+                        {% endif %}
+                    {% endif %}
+                    
+                    <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                        <table class="table table-responsive table-condensed well table-striped">
+                                <thead>
+                                </thead>
+                                <tbody class="table">
+                                    <tr>
+                                        <td>{{ 'Type'|trans({}, 'innova_collecticiel') }}</td>
+                                        <td>{{ 'Document'|trans({}, 'innova_collecticiel') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
+                                        <td>{{ documentTitle }}</td>
+                                    </tr>
+                                  </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group row col-md-6">
+                        </div>
+                    </div>
+
+                    <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                            <b>{{ 'Author'|trans({}, 'innova_collecticiel') }}</b>
+                            {{ drop.user.firstName }} {{ drop.user.lastName }}
+                        </div>
+                        <div class="form-group row col-md-6">
+                        </div>
+                    </div>
+
+                    <p></p>
+
+                    <div class="row text-left">
+                        <div class="form-group row col-md-6">
+                            <b>{{ 'Assessor'|trans({}, 'innova_collecticiel') }}</b>
+                            {{ notationAssessorDocument.firstName }} {{ notationAssessorDocument.lastName }}
+                        </div>
+                        <div class="form-group row col-md-6">
+                        </div>
+                    </div>
+
+                    {% if dropzone.evaluationType == "notation" %}
+                        <p></p>
+
+                        <div class="row text-left">
+                            <div class="form-group row col-md-6">
+                                <b>{{ 'Grade'|trans({}, 'innova_collecticiel') }}</b>
+                                {{ notationDocuments[document.id] }}    
+                                {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
+                                {{ maximumNotation }}
+                                {{ ')' }}
+                            </div>
+                            <div class="form-group row col-md-6">
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if dropzone.evaluationType == "ratingScale" %}
+                        <p></p>
+
+                        <div class="row text-left">
+                            <div class="form-group row col-md-6">
+                                <b>{{ 'Appreciation'|trans({}, 'innova_collecticiel') }}</b>
+                            </div>
+                        </div>
+
+                        <div class="row text-left">
+                            <div class="form-group row col-md-6">
+                                {{ notationScaleDocument }}
+                            </div>
+                        </div>
+
+                        <p></p>
+
+                        {% for criteria in criteriasArray %}
+                            <div class="row text-left">
+                                <div class="form-group row col-md-6">
+                                    <b>{{ criteria.criteriaName }}</b>
+                                </div>
+                            </div>
+
+                            <div class="row text-left">
+                                <div class="form-group row col-md-6">
+                                    {# Pour affichage de la valeur de l'accusé de réception #}
+                                    {% render(controller('InnovaCollecticielBundle:ChoiceCriteria:renderChoiceText',
+                                    {'gradingCriteriaId': criteria.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary rest" id="cancel_button" data-dismiss="modal">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
+            </div>
+        </div>
+    </div>
+</div>

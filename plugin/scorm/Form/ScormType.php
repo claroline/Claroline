@@ -27,6 +27,7 @@ class ScormType extends AbstractType
             array(
                 'required' => true,
                 'constraints' => new NotBlank(),
+                'attr' => array('autofocus' => true),
             )
         );
         $builder->add(

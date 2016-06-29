@@ -8,14 +8,6 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Library\Testing\Persister;
 
-/**
- * Specific tests for organizations
- * How to run:
- * - create database
- * - php app/console claroline:init_test_schema --env=test
- * - php app/console doctrine:schema:update --force --env=test
- * - bin/phpunit vendor/claroline/core-bundle/Tests/API/User/UserControllerTest.php -c app/phpunit.xml.
- */
 class UserControllerTest extends TransactionalTestCase
 {
     protected function setUp()
@@ -24,8 +16,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->persister = $this->client->getContainer()->get('claroline.library.testing.persister');
     }
 
-    //@url: /api/users.{_format}
-    //@route: api_get_users
     public function testGetUsersAction()
     {
         //initialization
@@ -40,8 +30,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(1, count(json_decode($data, true)));
     }
 
-    //@url: /api/users.{_format}
-    //@route: api_get_users
     public function testGetUsersActionIsSecured()
     {
         //initialization
@@ -54,8 +42,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    //@route: api_get_search_users
-    //@url: /api/users/page/{page}/limit/{limit}/search.{_format}
     public function testSearchUsersAction()
     {
         //initialization
@@ -104,8 +90,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(0, count($data['users']));
     }
 
-    //@url: /api/user/searchable/fields.{_format}
-    //@route: api_get_user_fields
     public function testGetUsersSearchableFieldsAction()
     {
         //initialization
@@ -120,8 +104,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(7, count($data));
     }
 
-    //@url: /api/users.{_format}
-    //@route: api_post_user
     public function testPostUserAction()
     {
         //initialization
@@ -149,16 +131,11 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals('toto', $data['username']);
     }
 
-    //check we can only add we manage
-    //@url: /api/users.{_format}
-    //@route: api_post_user
     public function testPostUserActionIsProtected()
     {
         $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
-    //@url: /api/users.{_format}
-    //@route: api_put_user
     public function testPutUserAction()
     {
         //initialization
@@ -184,8 +161,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals('toto', $data['username']);
     }
 
-    //@url: /api/users.{_format}
-    //@route: api_put_user
     public function testPutUserActionIsProtected()
     {
         //initialization
@@ -223,8 +198,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    //@route: api_get_user
-    //@url: /api/users/{user}.{_format}
     public function getUserAction()
     {
         //initialization
@@ -239,8 +212,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals($data['username'], 'john');
     }
 
-    //@route: api_get_user
-    //@url: /api/users/{user}.{_format}
     public function testGetUserActionIsProtected()
     {
         //initialization
@@ -257,8 +228,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    //@route: api_delete_user
-    //@url: /api/users/{user}.{_format}
     public function testDeleteUserAction()
     {
         //initialization
@@ -279,8 +248,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(0, count($data['users']));
     }
 
-    //@route: api_delete_user
-    //@url: /api/users/{user}.{_format}
     public function testDeleteUserActionIsProtected()
     {
         //initialization
@@ -302,8 +269,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(0, count($data['users']));
     }
 
-    //@route: api_delete_users
-    //@url: /api/users.{_format}
     public function testDeleteUsersAction()
     {
         //initialization
@@ -323,8 +288,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(0, count($data['users']));
     }
 
-    //@route: api_delete_users
-    //@url: /api/users.{_format}
     public function testDeleteUsersActionIsProtected()
     {
         //initialization
@@ -360,8 +323,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals($preCount + 1, count($data['roles']));
     }
 
-    //@route: api_add_user_role
-    //@url: /api/users/{user}/roles/{role}/add.{_format}
     public function testAddUserRoleActionIsProtected()
     {
         //initialization
@@ -376,9 +337,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    //@route: api_remove_user_role
-    //@url: /api/users/{user}/roles/{role}/remove.{_format}
-    //MAYBE CHANGE THIS TO DELETE BECAUSE THIS SHOULD NOT BE A GET
     public function testRemoveUserRoleAction()
     {
         //initialization
@@ -390,7 +348,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->persister->flush();
 
         //test
-        $this->client->request('GET', "/api/users/{$userOrga->getId()}/roles/{$baseRole->getId()}/remove.json");
         $preCount = count($userOrga->getRoles());
         $this->logIn($adminOrga);
         $this->client->request('GET', "/api/users/{$userOrga->getId()}/roles/{$baseRole->getId()}/remove.json");
@@ -399,8 +356,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals($preCount - 1, count($data['roles']));
     }
 
-    //@route: api_remove_user_role
-    //@url: /api/users/{user}/roles/{role}/remove.{_format}
     public function testRemoveUserRoleActionIsProtected()
     {
         //initialization
@@ -416,36 +371,26 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    //@route: api_add_user_group
-    //@url: /api/users/{user}/groups/{group}/add.{_format}
     public function testAddUserGroupAction()
     {
         $this->markTestSkipped('This test has not been implemented yet.');
     }
 
-    //@route: api_add_user_group
-    //@url: /api/users/{user}/groups/{group}/add.{_format}
     public function testAddUserGroupActionIsProtected()
     {
         $this->markTestSkipped('This test has not been implemented yet.');
     }
 
-    //@route: api_remove_user_group
-    //@url: /api/users/{user}/groups/{group}/remove.{_format}
     public function testRemoveUserGroupAction()
     {
         $this->markTestSkipped('This test has not been implemented yet.');
     }
 
-    //@route: api_remove_user_group
-    //@url: /api/users/{user}/groups/{group}/remove.{_format}
     public function testRemoveUserGroupActionIsProtected()
     {
         $this->markTestSkipped('This test has not been implemented yet.');
     }
 
-    //@route: api_get_user_admin_actions
-    //@url: /api/user/admin/action.{_format}
     public function testGetUserAdminActionsAction()
     {
         //initialization
@@ -461,8 +406,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertGreaterThan(1, count($data));
     }
 
-    //@route: api_users_password_initialize
-    //@url: /api/passwords/initializes/users.{_format}
     public function testUsersPasswordInitializeAction()
     {
         //initialization
@@ -481,8 +424,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals($data[0], 'success');
     }
 
-    //@route: api_users_password_initialize
-    //@url: /api/passwords/initializes/users.{_format}
     public function testUsersPasswordInitializeActionIsProtected()
     {
         $john = $this->persister->user('john');
@@ -493,32 +434,102 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    //@route: api_add_users_to_group
-    //@url: /api/users/{group}/to/group/add.{_format}
     public function testAddUsersToGroupAction()
     {
         $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
-    //@route: api_add_users_to_group
-    //@url: /api/users/{group}/to/group/add.{_format}
     public function testAddUsersToGroupActionIsProtected()
     {
         $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
-    //@route: api_remove_users_from_group
-    //@url: /api/users/{group}/from/group/remove.{_format}
     public function testRemoveUsersFromGroupAction()
     {
         $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
-    //@route: api_remove_users_from_group
-    //@url: /api/users/{group}/from/group/remove.{_format}
     public function testRemoveUsersFromGroupActionIsProtected()
     {
         $this->markTestIncomplete('This test has not been implemented yet.');
+    }
+
+    public function testPutRolesToUsersAction()
+    {
+        $users = [
+            $this->persister->user('user1'),
+            $this->persister->user('user2'),
+            $this->persister->user('user3'),
+        ];
+
+        $roles = [
+            $this->persister->role('ROLE_1'),
+            $this->persister->role('ROLE_2'),
+            $this->persister->role('ROLE_3'),
+        ];
+
+        $admin = $this->createAdmin();
+        $this->persister->flush();
+        $this->logIn($admin);
+
+        $uString = '';
+
+        foreach ($users as $user) {
+            $uString .= "userIds[]={$user->getId()}&";
+        }
+
+        $rString = '';
+
+        foreach ($roles as $role) {
+            $rString .= "roleIds[]={$role->getId()}&";
+        }
+
+        $request = "/api/users/roles/add.json?{$uString}{$rString}";
+        $this->client->request('PUT', $request);
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(5, count($data[0]['roles']));
+    }
+
+    public function testCsvImportFacetsAction()
+    {
+        $this->markTestIncomplete('This test has not been implemented yet.');
+    }
+
+    public function testGetPublicUserAction()
+    {
+        $admin = $this->createAdmin();
+        $user = $this->persister->user('user');
+
+        //A user can see himself
+        $this->logIn($user);
+        $this->client->request('GET', "/api/user/{$user->getId()}/public");
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals(
+            ['email' => 'user@mail.com', 'firstName' => 'user', 'lastName' => 'user', 'username' => 'user'],
+            $data
+        );
+
+        //A use can see other people...
+        $this->client->request('GET', "/api/user/{$admin->getId()}/public");
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals([], $data);
+
+        //...unless some permissions were granted explicitely
+        $prop = $this->persister->profileProperty('username', 'ROLE_USER');
+        $this->persister->flush();
+        $this->client->request('GET', "/api/user/{$admin->getId()}/public");
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals(['username' => 'admin'], $data);
+
+        //and the admin can see everyone.
+        $this->logIn($admin);
+        $this->client->request('GET', "/api/user/{$user->getId()}/public");
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals(
+            ['email' => 'user@mail.com', 'firstName' => 'user', 'lastName' => 'user', 'username' => 'user'],
+            $data
+        );
     }
 
     private function createAdmin()

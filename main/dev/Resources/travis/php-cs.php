@@ -11,7 +11,7 @@ $pkgDir = realpath(__DIR__.'/../../../..');
 $targetFile = "{$pkgDir}/git_diff_files.txt";
 
 if (!file_exists($targetFile)) {
-    die("Cannot find file listing CS targets (looked for {$targetFile})\n");
+    echo "Cannot find file listing CS targets (looked for {$targetFile})\n";
     exit(1);
 }
 
@@ -28,4 +28,7 @@ $files = array_map(function ($filePath) use ($pkgDir) {
 
 $finder = Symfony\CS\Finder\DefaultFinder::create()->append($files);
 
-return Symfony\CS\Config\Config::create()->finder($finder);
+return Symfony\CS\Config\Config::create()
+    ->level(Symfony\CS\FixerInterface::SYMFONY_LEVEL)
+    ->fixers(['ordered_use', 'short_array_syntax'])
+    ->finder($finder);

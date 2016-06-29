@@ -23,6 +23,16 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+
+    <script type="text/javascript">
+        {# autofocus HTML has no effect in second and next loaded Bootstrap modals #}
+        $(function(){
+            $(document).on('shown.bs.modal', '.modal', function () {
+                $(this).find('[autofocus]').focus();
+            });
+        });
+    </script>
+
     <script type="text/javascript">
         $(function() {
             Claroline.ResourceManager.createFullManager({
@@ -30,9 +40,11 @@
                 "parentElement": $('div.section-content .panel'),
                 "breadcrumbElement": $('ul.breadcrumb'),
                 "isWorkspace": true,
+                "workspaceId" : {{ workspace.getId() }},
                 "webPath": "{{ getAssetPath() }}",
                 "language": "{{ app.request.locale }}",
                 "zoom": "{{ resourceZoom }}",
+                "displayMode": "{{ displayMode }}",
                 "pickerDirectoryId": "{{ app.session.get('pickerDirectoryId', '0') }}",
                 "preFetchedDirectory": {{ render(controller('ClarolineCoreBundle:Resource:openDirectory', { 'nodeId': directoryId}))|raw }},
                 "resourceTypes": {

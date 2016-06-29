@@ -34,6 +34,7 @@ services:
         arguments:
             objectManager: @doctrine.orm.entity_manager
             pathManager:   @innova_path.manager.path
+            userProgressionManager: @innova_path.manager.user_progression
         scope: request
           
     # Editor controller

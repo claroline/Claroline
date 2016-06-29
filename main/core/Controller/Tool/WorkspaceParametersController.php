@@ -14,10 +14,8 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Form\PartialWorkspaceImportType;
+use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
@@ -25,10 +23,11 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Claroline\CoreBundle\Manager\TransferManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -36,6 +35,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Claroline\CoreBundle\Form\WorkspaceEditType;
+use Claroline\CoreBundle\Form\BaseProfileType;
 
 class WorkspaceParametersController extends Controller
 {
@@ -53,6 +54,7 @@ class WorkspaceParametersController extends Controller
     private $utilities;
     private $groupManager;
     private $toolManager;
+    private $transferManager;
 
     /**
      * @DI\InjectParams({
@@ -61,19 +63,23 @@ class WorkspaceParametersController extends Controller
      *     "authorization"       = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"         = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"         = @DI\Inject("form.factory"),
      *     "router"              = @DI\Inject("router"),
-     *     "localeManager"       = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager"       = @DI\Inject("claroline.manager.locale_manager"),
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
      *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
      *     "tosManager"          = @DI\Inject("claroline.common.terms_of_service_manager"),
      *     "utilities"           = @DI\Inject("claroline.utilities.misc"),
-     *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager")
+     *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
+     *     "transferManager"     = @DI\Inject("claroline.manager.transfer_manager"),
+     *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager")
      * })
      */
     public function __construct(
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager,
+        ResourceManager $resourceManager,
+        TransferManager $transferManager,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         StrictDispatcher $eventDispatcher,
@@ -101,6 +107,8 @@ class WorkspaceParametersController extends Controller
         $this->tosManager = $tosManager;
         $this->utilities = $utilities;
         $this->toolManager = $toolManager;
+        $this->resourceManager = $resourceManager;
+        $this->transferManager = $transferManager;
     }
 
     /**
@@ -133,19 +141,17 @@ class WorkspaceParametersController extends Controller
         $workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
         $isAdmin = $this->authorization->isGranted('OPEN', $workspaceAdminTool);
 
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WORKSPACE_EDIT,
-            array(
-                $username,
-                $creationDate,
-                $count,
-                $storageUsed,
-                $countResources,
-                $isAdmin,
-                $expDate,
-            ),
-            $workspace
+        $workspaceType = new WorkspaceEditType(
+            $username,
+            $creationDate,
+            $count,
+            $storageUsed,
+            $countResources,
+            $isAdmin,
+            $expDate
         );
+
+        $form = $this->formFactory->create($workspaceType, $workspace);
 
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(
@@ -157,13 +163,13 @@ class WorkspaceParametersController extends Controller
             $url = '';
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'workspace' => $workspace,
             'url' => $url,
             'user' => $user,
             'count' => $count,
-        );
+        ];
     }
 
     /**
@@ -192,11 +198,9 @@ class WorkspaceParametersController extends Controller
         $expDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
             $workspace->getEndDate()
         );
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WORKSPACE_EDIT,
-            array(null, null, null, null, null, $isAdmin, $expDate),
-            $workspace
-        );
+
+        $workspaceType = new WorkspaceEditType(null, null, null, null, null, $isAdmin, $expDate);
+        $form = $this->formFactory->create($workspaceType, $workspace);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -321,9 +325,8 @@ class WorkspaceParametersController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_BASE_PROFILE, array($this->localeManager, $this->tosManager, $this->get('translator'))
-        );
+        $baseProfileType = new BaseProfileType($this->localeManager, $this->tosManager, $this->get('translator'));
+        $form = $this->formFactory->create($baseProfileType);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -371,57 +374,6 @@ class WorkspaceParametersController extends Controller
                 'claro_workspace_open', array('workspaceId' => $workspace->getId())
             )
         );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{workspace}/import/partial/form",
-     *     name="claro_workspace_partial_import_form"
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:importForm.html.twig")
-     *
-     * @param Workspace $workspace
-     *
-     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-     *
-     * @return Response
-     */
-    public function importFormAction(Workspace $workspace)
-    {
-        $this->checkAccess($workspace);
-        $form = $this->container->get('form.factory')->create(new PartialWorkspaceImportType());
-
-        return array('form' => $form->createView(), 'workspace' => $workspace);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{workspace}/import/partial/submit",
-     *     name="claro_workspace_partial_import_submit"
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:importForm.html.twig")
-     *
-     * @param Workspace $workspace
-     *
-     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-     *
-     * @return Response
-     */
-    public function importAction(Workspace $workspace)
-    {
-        $this->checkAccess($workspace);
-        $form = $this->container->get('form.factory')->create(new PartialWorkspaceImportType());
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $template = $form->get('workspace')->getData();
-            $config = Configuration::fromTemplate($template);
-            $this->workspaceManager->importInExistingWorkspace($config, $workspace);
-        }
-
-        $url = $this->router->generate('claro_workspace_edit_form', array('workspace' => $workspace->getId()));
-
-        return new RedirectResponse($url);
     }
 
     private function checkAccess(Workspace $workspace)

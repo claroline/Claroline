@@ -14,19 +14,21 @@ alert_ending: Are you sure you want to finish ? (You can't alter your answers an
 all: All
 allow_to_edit: Allow to edit
 all_question: All the questions
+all_question: All the steps
 already: This question is already shared with this user
 already_answered: You have already answered at this exercise
 already_exist: This name exist already
 anonymous : Anonymous
 answer_coched: No response expected is checked
 answer_zone: Answer zone
+answer_of: answer of
 attempt_info1: You have
 attempt_info2sing: attempt
 attempt_info2plur: attempts
 attempt_info3: Attempt N°
 attempt_info4: You have
 attempt_info5: in order to improve your score
-attempt_info6: You do not have attempt
+attempt_info6: You have no more attempts.
 at_the_end_of_assessment: At the end of assessment
 at_the_same_time_that_the_correction: At the same time that the correction
 availability_of_correction: Availability of correction
@@ -41,6 +43,7 @@ application/x.short+json: Open
 badge_obtained: Congratulations ! You got the badge of knowledge
 badge_no_obtained: You have not yet received the badge of knowledge
 back: Back
+back_to_overview: Go back the the Exercise overview
 back_to_the_list: Back to the list
 bank_of_questions: Bank of questions
 brief_search: Brief Search
@@ -99,14 +102,21 @@ duration: Duration
 edit: Edit
 edit_category: Edit a category
 edit_question: Edit a question
+edit_step: Edit information
 end_date: End date
 entry: Entry
 exercise: Exercise
 exercise_alert_break: The interruption of this exercise is not allowed. Your paper will be considered finish !
 exercise_definition: Exercise definition
 exercise_edit: Exercise edit
+exercise_finished_attempts: "[0, 1] You have finished %count% attempt|]1,Inf[  You have finished %count% attempts"
 exercice_linked_question: Questions linked to the exercise
+exercise_restart: Restart the exercise
+exercise_start: Start the exercise
+exercise_try: Try the exercise
 exit: Exit
+exo_empty_user_can_edit: This exercise is empty. Please edit and publish it to fill it.
+exo_empty_user_read_only: This exercise is empty and has not been configured by its designer. Please come back later.
 expected_answer: Expected answer
 explain_coeff_dis0: The copies must have the same questions to calculate the coefficient of discrimination.
 explain_coeff_dis1: Analysis of the relevance of the questions, this correlation coefficient ranges from -1 to +1.
@@ -132,6 +142,9 @@ formative : Formative
 
 # G
 graphic: Graphic
+graphic_area_shape_rect: Rectangle
+graphic_area_shape_circle: Circle
+graphic_area_shape_poly: Polygon
 graphic_creation: Graphic creation
 graphic_edition: Graphic edition
 graphic_help: Drag the crosshairs on the picture to mark your answer
@@ -172,6 +185,7 @@ info_search_type: If you want to do a search by type, you must used the followin
 instruction_add_hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
 instruction_matching: To set your correspondence, choose in the column "Correspondence" the number of one or more proposals to associate.
 in_valid_mark: Invalid score
+item_points: "[0,1] %count% point|]1,Inf[ %count% points"
 
 # K
 keep_same_question: Keep the same questions for a same user
@@ -192,8 +206,8 @@ long: Long
 # M
 manage_img: Manage my documents
 mark: Mark
-mark_question: Marked this question
-mark_bigest: The mark must be less than or equal to
+mark_question: Mark this question
+mark_bigest: The mark must be less than or equal to the maximum score
 mark_bigest_other: The rating is greater than the maximum score
 matching: Association
 matching_creation: Association creation
@@ -201,6 +215,8 @@ matching_edition: Association edition
 matching_value: Type of associative question
 maximum_tries: Maximum number of tries
 meaning_measure_difficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
+metadata_visible:      Display exercise information
+metadata_visible_help: If checked a table with the exercise information will be displayed on the overview
 model: Model
 more_info: More information
 my_questions: My questions
@@ -240,6 +256,8 @@ number_proposal: Number of the proposal
 number_of_papers: Number of papers
 number_questions_draw: Number of questions to draw (0 for all)
 number_questions_draw_help: Type 0 to draw all questions
+number_steps_draw: Number of steps to draw
+number_steps_draw_help: Type 0 to draw all steps
 numerical: Numerical
 numerical_response: Numerical response (value or interval)
 num_paper: Paper's number
@@ -258,6 +276,8 @@ overview: Overview
 paper: Paper
 paper_legend: Papers which need manual correction
 paper_list: Paper list
+paper_count: "{0} no paper|{1} %count% paper|]1,Inf[ %count% papers"
+paper_need_manual_correction: This paper needs a manual correction
 metadata: Parameters
 partially: Partially correct
 penalty: Penalty
@@ -293,8 +313,11 @@ question_title: Question title (optional)
 question_shared_with: This question is shared with users below
 question_need_manual_correction: This question needs a manual correction
 question_open_keywords_info: Your answer needs to contain the following keywords to get the points
+question_graphic_set_pointers: Click on the picture to place a pointer
+question_graphic_nb_pointers: "{0} There is no more pointer to place on the picture.|{1} There is still %count% pointer to place on the picture.|]1,Inf[ There are still %count% pointers to place on the picture."
 
 # R
+random_steps: Random order of steps
 random_questions: Random order of questions
 raz: => To reset all pointers' position, press "c".
 square: square
@@ -304,6 +327,8 @@ reset: Reset
 resize_zone: To re-size the picture, place your mouse on its bottom right corner, keep left mouse button down, and mouve your mouse
 response: Response
 result: Results
+results_list: List of results
+result_show: Show the results
 right_response: Points for correct answer
 
 # S
@@ -341,6 +366,11 @@ sort: Sort documents
 summative : Summative
 show_additional_info: Display additional information
 step: Step
+statistics: Display statistics
+step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
+step_item_add: Drag'n'drop or click the "+" button to add questions.
+stat_users: "[0, 1] %count% user|]1,Inf[ %count% users"
+stat_have_responded: have responded
 
 # T
 temporary_mark: Temporary mark
@@ -358,6 +388,8 @@ upload: Upload
 uploading: Uploading
 user: User
 users: Users
+ujm_exo_exercise_name: Name
+ujm_exo_exercise_published: Publish resource
 
 # V
 validate: Validate

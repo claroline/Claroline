@@ -102,4 +102,14 @@ interface QuestionHandlerInterface
      * @param mixed    $data
      */
     public function storeAnswerAndMark(Question $question, Response $response, $data);
+
+    /**
+     * Generates stats for the given Question and set of Responses.
+     *
+     * @param Question $question
+     * @param array    $answers
+     *
+     * @return mixed
+     */
+    public function generateStats(Question $question, array $answers);
 }

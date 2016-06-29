@@ -19,14 +19,14 @@ class ImportersConfigPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (false === $container->hasDefinition('claroline.manager.transfert_manager')) {
+        if (false === $container->hasDefinition('claroline.manager.transfer_manager')) {
             return;
         }
 
-        $transfertManager = $container->getDefinition('claroline.manager.transfert_manager');
+        $transferManager = $container->getDefinition('claroline.manager.transfer_manager');
 
         foreach ($container->findTaggedServiceIds('claroline.importer') as $id => $attributes) {
-            $transfertManager->addMethodCall('addImporter', array(new Reference($id)));
+            $transferManager->addMethodCall('addImporter', array(new Reference($id)));
         }
     }
 }

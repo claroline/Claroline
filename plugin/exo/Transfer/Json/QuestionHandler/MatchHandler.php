@@ -306,6 +306,16 @@ class MatchHandler implements QuestionHandlerInterface
     /**
      * {@inheritdoc}
      */
+    public function generateStats(Question $question, array $answers)
+    {
+        $match = [];
+
+        return $match;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function validateAnswerFormat(Question $question, $data)
     {
         if (!is_array($data)) {

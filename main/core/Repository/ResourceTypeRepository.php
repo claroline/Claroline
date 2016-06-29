@@ -107,4 +107,13 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
 
         return $query->getResult();
     }
+
+    public function findAllTypeNames()
+    {
+        $dql = '
+            SELECT t.name AS name FROM Claroline\CoreBundle\Entity\Resource\ResourceType t';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

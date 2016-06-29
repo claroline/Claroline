@@ -1,0 +1,90 @@
+.match-question-container {
+    position: relative;
+
+    div > p {
+        > audio {
+            margin-top: 40px;
+            max-width: 90%;
+        }
+
+        > img,
+        > video {
+            max-height: 110px;
+        }
+    }
+
+    .btn-reset {
+        margin-bottom: floor(@grid-gutter-width / 2);
+    }
+
+    ._jsPlumb_hover {
+        cursor: pointer;
+    }
+
+    .endPoints {
+        z-index: 1;
+        cursor: default;
+    }
+
+    .well,
+    .well > div {
+        display: table;
+        vertical-align: middle;
+        width: 100%;
+
+        .item-handle,
+        .item-btn,
+        .item-content,
+        .item-zoom {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .item-btn {
+            width: 16px;
+            padding: @padding-base-vertical @padding-base-horizontal;
+        }
+    }
+
+    .well > div {
+        height: 100%;
+    }
+
+    .ui-draggable-dragging {
+        max-width: 450px; 
+    }
+
+    .draggable {
+        cursor: all-scroll;
+    }
+
+    .dragDropped {
+        margin: 0;
+
+        li:first-child {
+            margin-top: floor(@grid-gutter-width / 2);
+        }
+    }
+
+    .drop-fixed-height {
+        height: 120px;
+        max-height: 120px;
+    }
+
+    .drop-success {
+        background-color: @state-success-bg;
+    }
+
+    .drop-danger {
+        background-color: @state-danger-bg;
+    }
+
+    .state-hover {
+        border: 1px solid @state-info-border;
+        background: @state-info-bg;
+    }
+
+    .state-active {
+        border: 1px solid @brand-primary;
+    }
+}

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Profile\ProfileLinksEvent;
@@ -64,7 +63,7 @@ class ProfileController extends Controller
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
      *     "tokenStorage"           = @DI\Inject("security.token_storage"),
      *     "request"                = @DI\Inject("request"),
-     *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager"          = @DI\Inject("claroline.manager.locale_manager"),
      *     "encoderFactory"         = @DI\Inject("security.encoder_factory"),
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
@@ -114,37 +113,6 @@ class ProfileController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/",
-     *      name="claro_profile_view"
-     * )
-     * @SEC\Secure(roles="ROLE_USER")
-     * @EXT\Template()
-     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
-     */
-    public function viewAction(Request $request, User $loggedUser)
-    {
-        $facets = $this->facetManager->getPrivateVisibleFacets();
-        $fieldFacetValues = $this->facetManager->getFieldValuesByUser($loggedUser);
-        $fieldFacets = $this->facetManager->getPrivateVisibleFields();
-        $profileLinksEvent = new ProfileLinksEvent($loggedUser, $request->getLocale());
-        $this->get('event_dispatcher')->dispatch(
-            'profile_link_event',
-            $profileLinksEvent
-        );
-
-        $links = $profileLinksEvent->getLinks();
-
-        return array(
-            'user' => $loggedUser,
-            'facets' => $facets,
-            'fieldFacetValues' => $fieldFacetValues,
-            'fieldFacets' => $fieldFacets,
-            'links' => $links,
-        );
-    }
-
-    /**
-     * @EXT\Route(
      *     "/{publicUrl}",
      *      name="claro_public_profile_view",
      *      options={"expose"=true}
@@ -160,32 +128,26 @@ class ProfileController extends Controller
         }
 
         try {
-            /** @var \Claroline\CoreBundle\Entity\User $user */
             $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
+
+            return array('user' => $user);
         } catch (NoResultException $e) {
             throw new NotFoundHttpException('Page not found');
         }
+    }
 
-        $facets = $this->facetManager->getVisibleFacets();
-        $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
-        $publicProfilePreferences = $this->facetManager->getVisiblePublicPreference();
-        $fieldFacets = $this->facetManager->getVisibleFieldFacets();
-        $profileLinksEvent = new ProfileLinksEvent($user, $request->getLocale());
-        $this->get('event_dispatcher')->dispatch(
-            'profile_link_event',
-            $profileLinksEvent
-        );
-
-        $links = $profileLinksEvent->getLinks();
-
-        return array(
-            'user' => $user,
-            'publicProfilePreferences' => $publicProfilePreferences,
-            'facets' => $facets,
-            'fieldFacetValues' => $fieldFacetValues,
-            'fieldFacets' => $fieldFacets,
-            'links' => $links,
-        );
+    /**
+     * @EXT\Route(
+     *     "/show/{user}",
+     *      name="claro_profile_view",
+     *      options={"expose"=true}
+     * )
+     * @SEC\Secure(roles="ROLE_USER")
+     * @EXT\Template("ClarolineCoreBundle:Profile:publicProfile.html.twig")
+     */
+    public function viewAction(Request $request, User $user)
+    {
+        return $this->publicProfileAction($request, $user->getPublicUrl());
     }
 
     /**
@@ -197,7 +159,7 @@ class ProfileController extends Controller
     {
         $facets = $this->facetManager->getVisibleFacets(5);
         $fieldFacetValues = $this->facetManager->getFieldValuesByUser($loggedUser);
-        $fieldFacets = $this->facetManager->getVisibleFieldFacets();
+        $fieldFacets = $this->facetManager->getVisibleFieldForCurrentUserFacets();
         $profileLinksEvent = new ProfileLinksEvent($loggedUser, $request->getLocale());
         $publicProfilePreferences = $this->facetManager->getVisiblePublicPreference();
         $this->get('event_dispatcher')->dispatch(
@@ -322,7 +284,7 @@ class ProfileController extends Controller
             if ($editYourself) {
                 $successMessage = $translator->trans('edit_your_profile_success', array(), 'platform');
                 $errorMessage = $translator->trans('edit_your_profile_error', array(), 'platform');
-                $redirectUrl = $this->generateUrl('claro_profile_view');
+                $redirectUrl = $this->generateUrl('claro_public_profile_view', ['publicUrl' => $user->getPublicUrl()]);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -431,7 +393,7 @@ class ProfileController extends Controller
             }
 
             if ($selfEdit) {
-                return $this->redirect($this->generateUrl('claro_profile_view'));
+                return $this->redirect($this->generateUrl('claro_public_profile_view', array('publicUrl' => $user->getPublicUrl())));
             } else {
                 return $this->redirect($this->generateUrl('claro_admin_users_index'));
             }
@@ -479,7 +441,7 @@ class ProfileController extends Controller
                 $sessionFlashBag->add('error', $translator->trans('tune_public_url_error', array(), 'platform'));
             }
 
-            return $this->redirect($this->generateUrl('claro_profile_view'));
+            return $this->redirect($this->generateUrl('claro_public_profile_view', array('publicUrl' => $user->getPublicUrl())));
         }
 
         return array(
@@ -511,36 +473,6 @@ class ProfileController extends Controller
         $response = new JsonResponse($data);
 
         return $response;
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/user/{user}/facet/{facet}/edit",
-     *      name="claro_user_facet_edit"
-     * )
-     * @EXT\Method({"POST"})
-     */
-    public function editFacet(User $user, Facet $facet)
-    {
-        //do some validation
-        $data = $this->request->request;
-
-        foreach ($data as $key => $value) {
-            $fieldFacetId = (int) str_replace('field-', '', $key);
-            $fieldFacet = $this->facetManager->getFieldFacet($fieldFacetId);
-            $this->facetManager->setFieldValue($user, $fieldFacet, reset($value));
-        }
-
-        $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
-        $data = array();
-
-        foreach ($fieldFacetValues as $fieldFacetValue) {
-            $data[$fieldFacetValue->getFieldFacet()->getId()] = $this->facetManager->getDisplayedValue(
-                $fieldFacetValue
-            );
-        }
-
-        return new JsonResponse($data);
     }
 
     private function encodePassword(User $user)

@@ -2,12 +2,12 @@
 
 namespace Innova\PathBundle\Entity\Path;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Innova\PathBundle\Entity\Step;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Path.
@@ -21,7 +21,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      * Name of the path (only for forms).
      *
      * @var string
-     * 
+     *
      * @Assert\NotBlank
      */
     protected $name;
@@ -57,7 +57,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      * Steps linked to the path.
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * 
+     *
      * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", indexBy="id", cascade={"persist", "remove"})
      * @ORM\OrderBy({"lvl" = "ASC", "order" = "ASC"})
      */
@@ -80,12 +80,22 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     protected $description;
 
     /**
+     * Does the path manage conditions that block all the further steps or just the next one.
+     *
+     * @var bool
+     *
+     * @ORM\Column(name="is_complete_blocking_condition", type="boolean")
+     */
+    protected $completeBlockingCondition;
+
+    /**
      * Class constructor.
      */
     public function __construct()
     {
         $this->steps = new ArrayCollection();
         $this->modified = false;
+        $this->completeBlockingCondition = true;
     }
 
     /**
@@ -282,6 +292,30 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
+     * Get completeBlockingCondition.
+     *
+     * @return bool
+     */
+    public function isCompleteBlockingCondition()
+    {
+        return $this->completeBlockingCondition;
+    }
+
+    /**
+     * Set completeBlockingCondition.
+     *
+     * @param bool completeBlockingCondition
+     *
+     * @return \Innova\PathBundle\Entity\Path\Path
+     */
+    public function setCompleteBlockingCondition($completeBlockingCondition)
+    {
+        $this->completeBlockingCondition = $completeBlockingCondition;
+
+        return $this;
+    }
+
+    /**
      * Get root step of the path.
      *
      * @throws \Exception
@@ -312,13 +346,14 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      */
     public function initializeStructure()
     {
-        $structure = array(
+        $structure = [
             'name' => $this->getName(),
             'description' => $this->getDescription(),
             'breadcrumbs' => $this->breadcrumbs,
             'summaryDisplayed' => $this->summaryDisplayed,
-            'steps' => array(),
-        );
+            'completeBlockingCondition' => $this->completeBlockingCondition,
+            'steps' => [],
+        ];
 
         $this->setStructure(json_encode($structure));
 
@@ -357,19 +392,20 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
 
     public function jsonSerialize()
     {
-        $steps = array();
+        $steps = [];
 
         $rootStep = $this->getRootStep();
         if (!empty($rootStep)) {
             $steps[] = $rootStep;
         }
 
-        return array(
+        return [
             'name' => $this->getResourceNode()->getName(),
             'description' => $this->description,
             'breadcrumbs' => $this->breadcrumbs,
             'summaryDisplayed' => $this->summaryDisplayed,
+            'completeBlockingCondition' => $this->completeBlockingCondition,
             'steps' => $steps,
-        );
+        ];
     }
 }

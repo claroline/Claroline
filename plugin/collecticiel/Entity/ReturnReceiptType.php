@@ -7,6 +7,7 @@
 namespace Innova\CollecticielBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\ReturnReceiptTypeRepository")
@@ -42,7 +43,7 @@ class ReturnReceiptType
      */
     public function __construct()
     {
-        $this->returnreceipts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->returnreceipts = new ArrayCollection();
     }
 
     /**

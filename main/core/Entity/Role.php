@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Facet\PanelFacetRole;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
@@ -41,20 +42,21 @@ class Role implements RoleInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_user"})
+     * @Groups({"api_user", "api_facet_admin", "api_role"})
      */
     protected $id;
 
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
-     * @Groups({"api_user"})
+     * @Groups({"api_user", "api_facet_admin", "api_role"})
      */
     protected $name;
 
     /**
      * @ORM\Column(name="translation_key")
      * @Assert\NotBlank()
+     * @Groups({"api_role", "api_user", "api_facet_admin"})
      */
     protected $translationKey;
 
@@ -81,11 +83,11 @@ class Role implements RoleInterface
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetRole",
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacetRole",
      *     mappedBy="role"
      * )
      */
-    protected $fieldFacetsRole;
+    protected $panelFacetsRole;
 
     /**
      * @ORM\OneToMany(
@@ -113,7 +115,7 @@ class Role implements RoleInterface
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"api_user"})
+     * @Groups({"api_user", "api_role"})
      */
     protected $type = self::PLATFORM_ROLE;
 
@@ -182,7 +184,7 @@ class Role implements RoleInterface
         $this->resourceContext = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->facets = new ArrayCollection();
-        $this->fieldFacetsRoles = new ArrayCollection();
+        $this->panelFacetsRole = new ArrayCollection();
         $this->toolRights = new ArrayCollection();
         $this->pwsToolConfig = new ArrayCollection();
         $this->profileProperties = new ArrayCollection();
@@ -377,5 +379,10 @@ class Role implements RoleInterface
         return is_null($this->workspace) ?
             $this->translationKey :
             '['.$this->workspace->getName().'] '.$this->translationKey;
+    }
+
+    public function addPanelFacetRole(PanelFacetRole $pfr)
+    {
+        $this->panelFacetsRole->add($pfr);
     }
 }

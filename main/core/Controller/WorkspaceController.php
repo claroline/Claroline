@@ -32,8 +32,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Component\Form\FormFactory;
+use Claroline\CoreBundle\Form\ImportWorkspaceType;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Security\TokenUpdater;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
@@ -51,6 +51,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Library\Logger\FileLogger;
+use Symfony\Component\HttpFoundation\File\File;
+use Claroline\CoreBundle\Form\WorkspaceType;
 
 /**
  * This controller is able to:
@@ -78,7 +80,7 @@ class WorkspaceController extends Controller
     private $tokenUpdater;
     private $widgetManager;
     private $request;
-    private $templateDir;
+    private $templateArchive;
     private $templating;
     private $translator;
     private $session;
@@ -99,11 +101,11 @@ class WorkspaceController extends Controller
      *     "tokenStorage"              = @DI\Inject("security.token_storage"),
      *     "router"                    = @DI\Inject("router"),
      *     "utils"                     = @DI\Inject("claroline.security.utilities"),
-     *     "formFactory"               = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"               = @DI\Inject("form.factory"),
      *     "tokenUpdater"              = @DI\Inject("claroline.security.token_updater"),
      *     "widgetManager"             = @DI\Inject("claroline.manager.widget_manager"),
      *     "request"                   = @DI\Inject("request"),
-     *     "templateDir"               = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "templateArchive"           = @DI\Inject("%claroline.param.default_template%"),
      *     "templating"                = @DI\Inject("templating"),
      *     "translator"                = @DI\Inject("translator"),
      *     "session"                   = @DI\Inject("session")
@@ -128,7 +130,7 @@ class WorkspaceController extends Controller
         TokenUpdater $tokenUpdater,
         WidgetManager $widgetManager,
         Request $request,
-        $templateDir,
+        $templateArchive,
         TwigEngine $templating,
         TranslatorInterface $translator,
         SessionInterface $session
@@ -151,7 +153,7 @@ class WorkspaceController extends Controller
         $this->tokenUpdater = $tokenUpdater;
         $this->widgetManager = $widgetManager;
         $this->request = $request;
-        $this->templateDir = $templateDir;
+        $this->templateArchive = $templateArchive;
         $this->templating = $templating;
         $this->translator = $translator;
         $this->session = $session;
@@ -164,20 +166,16 @@ class WorkspaceController extends Controller
      *     defaults={"search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = false})
      * @EXT\Template()
      *
      * Renders the workspace list page with its claroline layout.
      *
-     * @param $currentUser
      * @param $search
      *
      * @return Response
      */
-    public function listAction($currentUser, $search = '')
+    public function listAction($search = '')
     {
-        //        $user = $currentUser instanceof User ? $currentUser : null;
-
         return $this->tagManager->getDatasForWorkspaceList(false, $search);
     }
 
@@ -262,9 +260,9 @@ class WorkspaceController extends Controller
      * @EXT\Template()
      *
      * Renders the displayable workspace list.
-     
+     *
      * @param $search
-     
+     *
      * @return Response
      */
     public function listWorkspacesWithSelfRegistrationAction($search = '')
@@ -283,7 +281,7 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("currentUser", converter="current_user")
      *
      * @EXT\Template()
      *
@@ -324,9 +322,10 @@ class WorkspaceController extends Controller
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
         $user = $this->tokenStorage->getToken()->getUser();
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
+        $workspaceType = new WorkspaceType($user);
+        $form = $this->formFactory->create($workspaceType);
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -346,7 +345,8 @@ class WorkspaceController extends Controller
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
         $user = $this->tokenStorage->getToken()->getUser();
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
+        $workspaceType = new WorkspaceType($user);
+        $form = $this->formFactory->create($workspaceType, new Workspace());
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
         $modelLog = $this->container->getParameter('kernel.root_dir').'/logs/models.log';
@@ -359,19 +359,11 @@ class WorkspaceController extends Controller
             if (!is_null($model)) {
                 $this->createWorkspaceFromModel($model, $form);
             } else {
-                $config = Configuration::fromTemplate(
-                    $this->templateDir.$ds.'default.zip'
-                );
-                $config->setWorkspaceName($form->get('name')->getData());
-                $config->setWorkspaceCode($form->get('code')->getData());
-                $config->setDisplayable($form->get('displayable')->getData());
-                $config->setSelfRegistration($form->get('selfRegistration')->getData());
-                $config->setRegistrationValidation($form->get('registrationValidation')->getData());
-                $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
-                $config->setWorkspaceDescription($form->get('description')->getData());
-
+                $workspace = $form->getData();
+                $template = new File($this->templateArchive);
                 $user = $this->tokenStorage->getToken()->getUser();
-                $this->workspaceManager->create($config, $user);
+                $workspace->setCreator($user);
+                $workspace = $this->workspaceManager->create($workspace, $template);
             }
             $this->tokenUpdater->update($this->tokenStorage->getToken());
             $route = $this->router->generate('claro_workspace_by_user');
@@ -386,7 +378,7 @@ class WorkspaceController extends Controller
             return new RedirectResponse($route);
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -899,7 +891,7 @@ class WorkspaceController extends Controller
      *     name="claro_workspace_remove_user_from_queue",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = false})
+     * @EXT\ParamConverter("user", converter="current_user")
      *
      * Removes user from Workspace registration queue.
      *
@@ -1440,7 +1432,7 @@ class WorkspaceController extends Controller
      */
     public function exportAction(Workspace $workspace)
     {
-        $archive = $this->container->get('claroline.manager.transfert_manager')->export($workspace);
+        $archive = $this->container->get('claroline.manager.transfer_manager')->export($workspace);
 
         $fileName = $workspace->getCode().'.zip';
         $mimeType = 'application/zip';
@@ -1475,7 +1467,8 @@ class WorkspaceController extends Controller
      */
     public function importFormAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_IMPORT, array());
+        $importType = new ImportWorkspaceType();
+        $form = $this->container->get('form.factory')->create($importType);
 
         return array('form' => $form->createView());
     }
@@ -1493,21 +1486,16 @@ class WorkspaceController extends Controller
      */
     public function importAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_IMPORT, array());
+        $importType = new ImportWorkspaceType();
+        $form = $this->container->get('form.factory')->create($importType,  new Workspace());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $template = $form->get('workspace')->getData();
-            $config = Configuration::fromTemplate($template);
-            $config->setWorkspaceName($form->get('name')->getData());
-            $config->setWorkspaceCode($form->get('code')->getData());
-            $config->setDisplayable($form->get('displayable')->getData());
-            $config->setSelfRegistration($form->get('selfRegistration')->getData());
-            $config->setRegistrationValidation($form->get('registrationValidation')->getData());
-            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
-            $config->setWorkspaceDescription($form->get('description')->getData());
-            $this->workspaceManager->create($config, $this->tokenStorage->getToken()->getUser());
-            $this->workspaceManager->importRichText();
+            $file = $form->get('workspace')->getData();
+            $template = new File($file);
+            $workspace = $form->getData();
+            $workspace->setCreator($this->tokenStorage->getToken()->getUser());
+            $this->workspaceManager->create($workspace, $template);
         } else {
             return new Response(
                 $this->templating->render(

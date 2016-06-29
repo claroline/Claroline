@@ -14,6 +14,7 @@ namespace Claroline\WebInstaller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Filesystem\Filesystem;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
 use Claroline\CoreBundle\Library\Installation\Settings\DatabaseChecker;
@@ -36,6 +37,8 @@ class Controller
             $ds.'config'.$ds.'platform_options.yml';
         $lockedFile = $container->getAppDirectory().
             $ds.'config'.$ds.'locked_platform_options.yml';
+        $this->parametersDist = $container->getAppDirectory().
+            $ds.'config'.$ds.'parameters.yml.dist';
         $this->configHandler = new PlatformConfigurationHandler($configFile, $lockedFile);
     }
 
@@ -64,6 +67,11 @@ class Controller
     public function requirementStep()
     {
         $settingChecker = new SettingChecker();
+        $ds = DIRECTORY_SEPARATOR;
+
+        $fs = new Filesystem();
+        $fs->copy($this->parametersDist, $this->container->getAppDirectory().
+            $ds.'config'.$ds.'parameters.yml');
 
         return $this->renderStep(
             'requirements.html.php',

@@ -3,13 +3,13 @@
  * Created by : Vincent SAISSET
  * Date: 21/08/13
  * Time: 15:18
- * Modifiey by : Eric VINCENT InnovaERV Add ReturnReceipt Column
- * Modifiey by : Eric VINCENT InnovaERV Add Evaluation Column
- * Modifiey by : Eric VINCENT InnovaERV Add Username and Picture Column
- * Modifiey by : Eric VINCENT InnovaERV Add EvaluationType Column (02/02/2016)
- * Modifiey by : Eric VINCENT InnovaERV Add MaximumNotation Column (16/03/2016)
- * Modifiey by : Eric VINCENT InnovaERV Add ArrayCollection GradingScale (04/2016)
- * Modifiey by : Eric VINCENT InnovaERV Add ArrayCollection GradingCriteria (04/2016).
+ * Modify by : Eric VINCENT InnovaERV Add ReturnReceipt Column
+ * Modify by : Eric VINCENT InnovaERV Add Evaluation Column
+ * Modify by : Eric VINCENT InnovaERV Add Username and Picture Column
+ * Modify by : Eric VINCENT InnovaERV Add EvaluationType Column (02/02/2016)
+ * Modify by : Eric VINCENT InnovaERV Add MaximumNotation Column (16/03/2016)
+ * Modify by : Eric VINCENT InnovaERV Add ArrayCollection GradingScale (04/2016)
+ * Modify by : Eric VINCENT InnovaERV Add ArrayCollection GradingCriteria (04/2016).
 */
 
 namespace Innova\CollecticielBundle\Entity;
@@ -284,7 +284,7 @@ class Dropzone extends AbstractResource
     protected $evaluationType = self::EVALUATION_TYPE;
 
     /**
-     * @ORM\Column(name="maximum_notation", type="smallint", nullable=false)
+     * @ORM\Column(name="maximum_notation", type="smallint", nullable=true, options={"default" = 0})
      */
     protected $maximumNotation = 0;
 
@@ -325,6 +325,18 @@ class Dropzone extends AbstractResource
      * @var ArrayCollection
      *
      * @ORM\OneToMany(
+     *     targetEntity="Innova\CollecticielBundle\Entity\Notation",
+     *     mappedBy="dropzone",
+     *     cascade={"all"},
+     *     orphanRemoval=true
+     * )
+     */
+    public $notations;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(
      *     targetEntity="Innova\CollecticielBundle\Entity\GradingCriteria",
      *     mappedBy="dropzone",
      *     cascade={"all"},
@@ -335,6 +347,7 @@ class Dropzone extends AbstractResource
 
     public function __construct()
     {
+        $this->notations = new ArrayCollection();
         $this->gradingScales = new ArrayCollection();
         $this->gradingCriterias = new ArrayCollection();
         $this->drops = new ArrayCollection();
@@ -1307,5 +1320,39 @@ class Dropzone extends AbstractResource
     public function getGradingCriterias()
     {
         return $this->gradingCriterias;
+    }
+
+    /**
+     * Add notation.
+     *
+     * @param \Innova\CollecticielBundle\Entity\Notation $notation
+     *
+     * @return Dropzone
+     */
+    public function addNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    {
+        $this->notations[] = $notation;
+
+        return $this;
+    }
+
+    /**
+     * Remove notation.
+     *
+     * @param \Innova\CollecticielBundle\Entity\Notation $notation
+     */
+    public function removeNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    {
+        $this->notations->removeElement($notation);
+    }
+
+    /**
+     * Get notations.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNotations()
+    {
+        return $this->notations;
     }
 }

@@ -22,7 +22,7 @@
 .path-summary-container {
     margin-top: @navbar-height;
     height: auto !important;
-    z-index: 9 !important;
+    z-index: 10 !important;
     background: @navbar-default-bg;
     box-shadow: 3px 0 3px rgba(0,0,0,.25);
 
@@ -118,7 +118,6 @@
         }
     }
 }
-
 .tree-item {
     cursor: pointer;
     line-height: 24px;
@@ -257,6 +256,20 @@
     border-left: 1px dotted;
 }
 
+// Toggle summary button
+.path-summary-pin-toggle-btn{
+    position:fixed;
+    -ms-transform: rotate(90deg); /* IE 9 */
+    -ms-transform-origin: left top 0; /* IE 9 */
+    -webkit-transform: rotate(90deg);
+    -webkit-transform-origin: left top 0; /* Chrome, Safari, Opera */
+    transform: rotate(90deg);
+    transform-origin: left top 0;
+    margin-left:-4px;
+    z-index: 10;
+    min-width: 140px;
+}
+
 // Opened state
 .path-summary-opened {
     .path-summary-container {
@@ -267,22 +280,41 @@
 
 /* Shift content when sidebar is present */
 @media (min-width: @screen-sm) {
+    body {
+        margin-left: 55px !important;
+    }
     .path-summary-container {
         margin-left: 40px;
     }
 
     .path-summary-opened {
-        margin-left: @path-summary-width + 40px !important;
+        &.path-summary-pinned{
+            margin-left: @path-summary-width + 55px !important;
+        }
+
+        .path-summary-pin-toggle-btn {
+            left: @path-summary-width + 70px !important;
+        }
     }
+
 }
 
 /* Reset margin when no leftbar (on small screen) */
 @media (max-width: (@screen-sm - 1)) {
+    body {
+        margin-left: 15px !important;
+    }
     .path-summary-container {
         margin-left: 0px;
     }
 
     .path-summary-opened {
-        margin-left: @path-summary-width !important;
+        .path-summary-pinned{
+            margin-left: @path-summary-width !important;
+        }
+
+        .path-summary-pin-toggle-btn {
+            left: @path-summary-width + 30px !important;
+        }
     }
 }

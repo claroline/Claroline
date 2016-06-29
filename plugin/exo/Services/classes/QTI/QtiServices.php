@@ -3,14 +3,27 @@
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Filesystem\Filesystem;
 
 class QtiServices
 {
     /**
+     * @var QtiRepository
+     */
+    private $qtiRepository;
+
+    /**
+     * @param QtiRepository $qtiRepository
+     */
+    public function __construct(QtiRepository $qtiRepository)
+    {
+        $this->qtiRepository = $qtiRepository;
+    }
+    /**
      * For create a zip where questions while be integrate.
      *
-     * @param type $tmpFileName
-     * @param type $title
+     * @param string $tmpFileName
+     * @param string $title
      *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
@@ -29,27 +42,53 @@ class QtiServices
     /**
      * sort the paths of questions.
      *
-     * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
-     * @param string                                           $stepDir  directory of step
+     * @param QtiRepository $qtiRepo
+     * @param string        $stepDir directory of step
      *
      * @return array of String array with the paths of questions sorted
      */
-    public function sortPathOfQuestions($qtiRepos, $stepDir = '')
+    public function sortPathOfQuestions(QtiRepository $qtiRepo, $stepDir = '')
     {
-        $pathQtiDir = $qtiRepos->getUserDir().'questions';
+        $pathQtiDir = $qtiRepo->getUserDir().'questions';
         if ($stepDir != '') {
             $pathQtiDir .= '/'.$stepDir;
         }
         $questions = new \DirectoryIterator($pathQtiDir);
         //create array with sort file
-        $qdirs = array();
+        $dirs = array();
         foreach ($questions as $question) {
             if ($question != '.' && $question != '..' && $question->getExtension() == '') {
-                $qdirs[] = $pathQtiDir.'/'.$question->getFilename();
+                $dirs[] = $pathQtiDir.'/'.$question->getFilename();
             }
         }
-        sort($qdirs);
 
-        return $qdirs;
+        sort($dirs);
+
+        return $dirs;
+    }
+    /**
+     * create the directory questions to export an exercise and export the qti files.
+     *
+     * @param \UJM\ExoBundle\Entity\Question[] $questions
+     * @param int                              $numStep
+     */
+    public function createQuestionsDirectory(array $questions, $numStep)
+    {
+        $fs = new Filesystem();
+
+        $fs->mkdir($this->qtiRepository->getUserDir().'questions');
+        $i = 'a';
+        $fs->mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep);
+        foreach ($questions as $question) {
+            $this->qtiRepository->export($question);
+            $fs->mkdir($this->qtiRepository->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i);
+            $iterator = new \DirectoryIterator($this->qtiRepository->getUserDir());
+            foreach ($iterator as $element) {
+                if (!$element->isDot() && $element->isFile()) {
+                    rename($this->qtiRepository->getUserDir().$element->getFilename(), $this->qtiRepository->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i.'/'.$element->getFilename());
+                }
+            }
+            $i .= 'a';
+        }
     }
 }

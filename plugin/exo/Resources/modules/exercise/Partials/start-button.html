@@ -1,0 +1,32 @@
+<div class="text-center">
+    <!-- Attempts info -->
+    <div class="attempts" data-ng-if="startBtnCtrl.exercise.meta.maxAttempts > 0">
+        <!-- Max attempts not reached -->
+        <span data-ng-if="startBtnCtrl.isComposeEnabled()">
+            {{ 'sequence_attempts_infos'|transChoice:5:{ count: startBtnCtrl.exercise.meta.maxAttempts }:'ujm_sequence'}}
+            ({{ 'exercise_finished_attempts'|transChoice:startBtnCtrl.nbUserPapers:{ count: startBtnCtrl.nbUserPapers }:'ujm_exo' }})
+        </span>
+
+        <!-- Max attempts reached -->
+        <em data-ng-if="!startBtnCtrl.isComposeEnabled()">
+            {{ 'attempt_info6'|trans:{}:'ujm_exo' }}
+        </em>
+    </div>
+
+    <!-- Play button if Exercise is OK -->
+    <a href="#/play" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="startBtnCtrl.isComposeEnabled()">
+        <span class="fa fa-fw fa-play"></span>
+        <span data-ng-if="0 === startBtnCtrl.nbUserPapers">{{ 'exercise_start' | trans:{}:'ujm_exo' }}</span>
+        <span data-ng-if="0 < startBtnCtrl.nbUserPapers">{{ 'exercise_restart' | trans:{}:'ujm_exo' }}</span>
+    </a>
+
+    <!-- Results of the Exercise -->
+    <a href="#/papers" class="btn btn-default btn-block" data-ng-if="0 < startBtnCtrl.nbUserPapers && startBtnCtrl.paperLink">
+        <span class="fa fa-fw fa-check-square-o"></span> {{ 'result_show' | trans:{}:'ujm_exo' }}
+    </a>
+
+    <!-- Home link -->
+    <a href="#/" class="btn btn-default btn-block" data-ng-if="startBtnCtrl.overviewLink">
+        <span class="fa fa-fw fa-info"></span> {{ 'back_to_overview' | trans:{}:'ujm_exo' }}
+    </a>
+</div>

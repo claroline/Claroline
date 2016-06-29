@@ -89,6 +89,7 @@ log_resource-update_sentence: 'has updated %resource%'
 log_resource-update_shortname: Update
 log_resource-update_title: 'Resource update'
 log_resource_owner: 'Owner of resource'
+log_resource-text-update_filter: 'Text update'
 log_role: 'Action target role'
 log_role-subscribe_group_filter: 'Assigning a role to a group'
 log_role-subscribe_user_filter: 'Assigning a role to a user'
@@ -161,11 +162,11 @@ log_workspace-role-update_filter: 'Update a role for a workspace'
 log_workspace-role-update_sentence: 'has updated a role for workspace %workspace%'
 log_workspace-role-update_shortname: Update
 log_workspace-role-update_title: 'Update a role for a workspace'
-log_workspace-tool-read_filter: log_workspace-tool-read_filter
-log_workspace-tool-read_sentence: log_workspace-tool-read_sentence
-log_workspace-tool-read_shortname: log_workspace-tool-read_shortname
+log_workspace-tool-read_filter: 'Tool opening'
+log_workspace-tool-read_sentence: opened the tool %tool% in %workspace%
+log_workspace-tool-read_shortname: Opening
 log_workspace-tool-read_title: log_workspace-tool-read_title
-log_workspace-update_filter: 'Workspace update'
+log_workspace-update_filter: 'Tool opening in workspace'
 log_workspace-update_shortname: Update
 log_workspace-update_title: 'Workspace update'
 log_workspace_read: 'Workspace access'

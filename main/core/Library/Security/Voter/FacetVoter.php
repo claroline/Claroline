@@ -11,11 +11,13 @@
 
 namespace Claroline\CoreBundle\Library\Security\Voter;
 
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
+use Claroline\CoreBundle\Entity\Facet\Facet;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
 
 /**
  * This voter is involved in access decisions for facets.
@@ -27,6 +29,9 @@ class FacetVoter
 {
     private $em;
     private $container;
+
+    const VIEW = 'view';
+    const EDIT = 'edit';
 
     /**
      * @DI\InjectParams({
@@ -49,37 +54,89 @@ class FacetVoter
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        if ($object instanceof FieldFacet) {
-            return $this->fieldFacetVote($object, $token, $attributes[0]);
+        if ($object instanceof FieldFacetCollection) {
+            //fields right management is done at the Panel level
+            return $this->fieldFacetVote($object, $token, strtolower($attributes[0]));
+        }
+
+        if ($object instanceof PanelFacet) {
+            return $this->panelFacetVote($object, $token, strtolower($attributes[0]));
+        } elseif ($object instanceof Facet) {
+            //no implementation yet
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    private function fieldFacetVote(FieldFacet $fieldFacet, TokenInterface $token, $attribute)
+    private function panelFacetVote(PanelFacet $panel, TokenInterface $token, $action)
     {
-        $fieldFacetsByRole = $this->container->get('claroline.manager.facet_manager')->getVisibleFieldFacets();
-        $canEdit = false;
-        $canOpen = false;
-
-        foreach ($fieldFacetsByRole as $field) {
-            if ($field['id'] === $fieldFacet->getId()) {
-                $canEdit = $field['canEdit'];
-                $canOpen = $field['canOpen'];
-            }
-        }
-
-        if (strtolower($attribute) === 'edit') {
-            return $fieldFacet->getIsEditableByOwner() | $canEdit ?
-                VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
-        }
-
-        if (strtolower($attribute) === 'open') {
-            return $fieldFacet->getIsVisibleByOwner() | $canOpen ?
-                VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+        switch ($action) {
+            case self::VIEW: return $this->checkPanelView($token, $panel);
+            case self::EDIT: return $this->checkPanelEdit($token, $panel);
         }
 
         return VoterInterface::ACCESS_DENIED;
+    }
+
+    public function checkPanelView(TokenInterface $token, PanelFacet $panel)
+    {
+        $userRoles = array_map(function ($el) { return $el->getRole(); }, $token->getRoles());
+        $panelRoles = $panel->getPanelFacetsRole();
+
+        foreach ($panelRoles as $panelRole) {
+            if (in_array($panelRole->getRole()->getName(), $userRoles)) {
+                if ($panelRole->canOpen()) {
+                    return  VoterInterface::ACCESS_GRANTED;
+                }
+            }
+        }
+
+        return VoterInterface::ACCESS_DENIED;
+    }
+
+    public function checkPanelEdit(TokenInterface $token, PanelFacet $panel)
+    {
+        $userRoles = array_map(function ($el) { return $el->getRole(); }, $token->getRoles());
+        $panelRoles = $panel->getPanelFacetsRole();
+
+        foreach ($panelRoles as $panelRole) {
+            if (in_array($panelRole->getRole()->getName(), $userRoles)) {
+                if ($panelRole->canEdit()) {
+                    return  VoterInterface::ACCESS_GRANTED;
+                }
+            }
+        }
+
+        return VoterInterface::ACCESS_DENIED;
+    }
+
+    public function fieldFacetVote(FieldFacetCollection $collection, TokenInterface $token, $action)
+    {
+        switch ($action) {
+            case self::EDIT: return $this->checkFieldEdit($token, $collection);
+        }
+
+        return VoterInterface::ACCESS_DENIED;
+    }
+
+    public function checkFieldEdit(TokenInterface $token, $collection)
+    {
+        foreach ($collection->getFields() as $field) {
+            //are we editing ourselves and can we do this ?
+            $autoEditAllowed = ($token->getUser() === $collection->getUser()) && $field->getPanelFacet()->isEditable();
+
+            if (!$autoEditAllowed) {
+                $panel = $field->getPanelFacet();
+                //can we edit the panel because we were granted the right to do it ?
+                $access = $this->checkPanelEdit($token, $panel);
+                if ($access === VoterInterface::ACCESS_DENIED) {
+                    //nope
+                    return $access;
+                }
+            }
+        }
+
+        return  VoterInterface::ACCESS_GRANTED;
     }
 
     public function supportsAttribute($attribute)

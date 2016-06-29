@@ -1,0 +1,30 @@
+<div data-ng-if="vm.isPortalActive && (vm.images || vm.lastResources)">
+    <portal-search data-options="vm.portalSearchOptions"></portal-search>
+    <div data-ng-if="vm.images && vm.images.length" class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h4><a href="search/image">{{ 'image'|trans:{}:'resource' }}</a></h4>
+                <div class="row row-eq-height">
+                    <div data-ng-repeat="image in vm.images" class="col-xs-3 col-sm-2 col-md-1">
+                        <a class="thumbnail" href="{{ 'claro_resource_open_short'|path:{'node': image.id} }}"><img data-ng-src="{{ image.relativeUrl|asset }}" alt="{{ image.name }}" title="{{ image.name }}"/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-ng-if="vm.lastResources" class="container-fluid">
+        <div class="row">
+            <div class="row">
+                <div data-ng-repeat="(key, resources) in vm.lastResources" class="portal-index-resource-type-list col-md-3">
+                    <h4><a href="search/{{resources.type}}">{{ key }}</a></h4>
+                    <div data-ng-repeat="resource in resources.list">
+                        <div><a href="{{ resource|resourcePath }}" data-ng-bind-html="resource.name|trust_html"></a></div>
+                        <div class="text-muted small italic"><em>{{ 'created_by'|trans:{'creator': resource.creatorFirstName + ' ' + resource.creatorLastName, 'creationDate': (resource.creationDate|date:('date_form_format'|trans)) }:'platform' }}</em></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div data-ng-if="!vm.isPortalActive" data-ng-bind="'portal_access_disabled'|trans:{}:'platform' "></div>
+<div data-ng-if="vm.isPortalActive && vm.images.length == 0 && vm.lastResources.length == 0" data-ng-bind="'portal_no_published_resources'|trans:{}:'platform' "></div>

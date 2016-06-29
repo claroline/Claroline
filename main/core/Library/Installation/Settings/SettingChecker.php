@@ -100,8 +100,8 @@ class SettingChecker
 
         $category->addRequirement(
             'Parameter %parameter% should be equal or greater than %value% in your php.ini',
-            array('parameter' => 'max_execution_time', 'value' => 300),
-            (ini_get('max_execution_time') >= 300 || ini_get('max_execution_time') == 0) ? true : false
+            array('parameter' => 'max_execution_time', 'value' => 60),
+            (ini_get('max_execution_time') >= 60 || ini_get('max_execution_time') == 0) ? true : false
         );
 
         $category->addRecommendation(
@@ -221,7 +221,7 @@ class SettingChecker
     private function checkFilePermissions()
     {
         $category = new SettingCategory('File permissions');
-        $rootDir = __DIR__.'/../../../../../..';
+        $rootDir = __DIR__.'/../../../../../../../../';
         $writableElements = array(
             'app/cache' => 'directory',
             'app/sessions' => 'directory',

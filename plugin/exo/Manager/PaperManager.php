@@ -5,12 +5,18 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\LinkHintPaper;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Entity\StepQuestion;
+use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
+use UJM\ExoBundle\Library\Mode\CorrectionMode;
+use UJM\ExoBundle\Library\Mode\MarkMode;
+use UJM\ExoBundle\Services\classes\PaperService;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -19,40 +25,67 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class PaperManager
 {
+    /**
+     * @var ObjectManager
+     */
     private $om;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var QuestionHandlerCollector
+     */
     private $handlerCollector;
-    private $exerciseManager;
+
+    /**
+     * @var QuestionManager
+     */
     private $questionManager;
+
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var PaperService
+     */
+    private $paperService;
 
     /**
      * @DI\InjectParams({
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
+     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
      *     "collector"          = @DI\Inject("ujm.exo.question_handler_collector"),
-     *     "exerciseManager"    = @DI\Inject("ujm.exo.exercise_manager"),
      *     "questionManager"    = @DI\Inject("ujm.exo.question_manager"),
-     *     "translator"         = @DI\Inject("translator")
+     *     "translator"         = @DI\Inject("translator"),
+     *     "paperService"       = @DI\Inject("ujm.exo_paper")
      * })
      *
      * @param ObjectManager            $om
+     * @param EventDispatcherInterface $eventDispatcher
      * @param QuestionHandlerCollector $collector
-     * @param ExerciseManager          $exerciseManager
      * @param QuestionManager          $questionManager
      * @param TranslatorInterface      $translator
+     * @param PaperService             $paperService
      */
     public function __construct(
         ObjectManager $om,
+        EventDispatcherInterface $eventDispatcher,
         QuestionHandlerCollector $collector,
-        ExerciseManager $exerciseManager,
         QuestionManager $questionManager,
-        TranslatorInterface $translator
-
+        TranslatorInterface $translator,
+        PaperService $paperService
     ) {
         $this->om = $om;
+        $this->eventDispatcher = $eventDispatcher;
         $this->handlerCollector = $collector;
-        $this->exerciseManager = $exerciseManager;
         $this->questionManager = $questionManager;
         $this->translator = $translator;
+        $this->paperService = $paperService;
     }
 
     /**
@@ -61,16 +94,26 @@ class PaperManager
      *
      * @param Exercise $exercise
      * @param User     $user
-     * @param bool     $withSolutions
      *
      * @return array
      */
-    public function openPaper(Exercise $exercise, User $user, $withSolutions = false)
+    public function openPaper(Exercise $exercise, User $user)
     {
-        return [
-            'exercise' => $this->exerciseManager->exportExercise($exercise, $withSolutions),
-            'paper' => $this->exportPaper($exercise, $user),
-        ];
+        $papers = $this->om->getRepository('UJMExoBundle:Paper')->findUnfinishedPapers($user, $exercise);
+        if (count($papers) === 0) {
+            $paper = $this->createPaper($user, $exercise);
+        } else {
+            if (!$exercise->getDispButtonInterrupt()) {
+                // User is not allowed to continue is previous paper => open a new one and close the previous
+                $this->closePaper($papers[0]);
+
+                $paper = $this->createPaper($user, $exercise);
+            } else {
+                $paper = $papers[0];
+            }
+        }
+
+        return $this->exportPaper($paper);
     }
 
     /**
@@ -89,11 +132,17 @@ class PaperManager
         );
 
         $paperNum = $lastPaper ? $lastPaper->getNumPaper() + 1 : 1;
-        $questions = $this->exerciseManager->pickQuestions($exercise);
-        $order = '';
 
-        foreach ($questions as $question) {
-            $order .= $question->getId().';';
+        $order = '';
+        if ($exercise->getKeepSteps() && $lastPaper) {
+            // Get steps order from the last user Paper
+            $order = $lastPaper->getOrdreQuestion();
+        } else {
+            // Generate paper step order
+            $questions = $this->pickQuestions($exercise);
+            foreach ($questions as $question) {
+                $order .= $question->getId().';';
+            }
         }
 
         $paper = new Paper();
@@ -107,37 +156,6 @@ class PaperManager
         $this->om->flush();
 
         return $paper;
-    }
-
-    /**
-     * Exports a paper in a JSON-encodable format. If no unfinished paper exists for
-     * that given exercise and user, a new one is created. Otherwise the latest is
-     * returned.
-     *
-     * @param User     $user
-     * @param Exercise $exercise
-     *
-     * @return Paper
-     */
-    public function exportPaper(Exercise $exercise, User $user)
-    {
-        $repo = $this->om->getRepository('UJMExoBundle:Paper');
-        $papers = $repo->findUnfinishedPapers($user, $exercise);
-
-        if (count($papers) === 0) {
-            $paper = $this->createPaper($user, $exercise);
-            $questions = [];
-        } else {
-            $paper = $papers[0];
-            $questions = $this->exportPaperQuestions($paper);
-        }
-
-        return [
-            'id' => $paper->getId(),
-            'number' => $paper->getNumPaper(),
-            'order' => $this->getStepsQuestions($paper),
-            'questions' => $questions,
-        ];
     }
 
     /**
@@ -165,7 +183,10 @@ class PaperManager
         }
 
         $handler->storeAnswerAndMark($question, $response, $data);
-        $this->applyPenalties($paper, $question, $response);
+        if (-1 !== $response->getMark()) {
+            // Only apply penalties if the answer has been marked
+            $this->applyPenalties($paper, $question, $response);
+        }
 
         $this->om->persist($response);
         $this->om->flush();
@@ -176,20 +197,25 @@ class PaperManager
      * @param Paper    $paper
      * @param int      $score
      */
-    public function recordOpenScore(Question $question, Paper $paper, $score)
+    public function recordScore(Question $question, Paper $paper, $score)
     {
         $response = $this->om->getRepository('UJMExoBundle:Response')
             ->findOneBy(['paper' => $paper, 'question' => $question]);
 
         $response->setMark($score);
 
+        // Apply penalties to the score
+        $this->applyPenalties($paper, $question, $response);
+
         $scorePaper = $paper->getScore();
-        $scoreExercise = $scorePaper + $score;
+        $scoreExercise = $scorePaper + $response->getMark();
         $paper->setScore($scoreExercise);
 
         $this->om->persist($paper);
         $this->om->persist($response);
         $this->om->flush();
+
+        $this->checkPaperEvaluated($paper);
     }
 
     /**
@@ -238,9 +264,54 @@ class PaperManager
         if (!$paper->getEnd()) {
             $paper->setEnd(new \DateTime());
         }
+
         $paper->setInterupt(false);
         $paper->setScore($this->calculateScore($paper->getId()));
+
         $this->om->flush();
+
+        $this->checkPaperEvaluated($paper);
+    }
+
+    /**
+     * Close a Paper that is not finished (because the Exercise does not allow interruption).
+     *
+     * @param Paper $paper
+     */
+    public function closePaper(Paper $paper)
+    {
+        if (!$paper->getEnd()) {
+            $paper->setEnd(new \DateTime());
+        }
+
+        $paper->setInterupt(true); // keep track that the user has not finished
+        $paper->setScore($this->calculateScore($paper->getId()));
+
+        $this->om->flush();
+
+        $this->checkPaperEvaluated($paper);
+    }
+
+    /**
+     * Check if a Paper is full evaluated and dispatch a Log event if yes.
+     *
+     * @param Paper $paper
+     *
+     * @return $boolean
+     */
+    public function checkPaperEvaluated(Paper $paper)
+    {
+        $fullyEvaluated = $this->om->getRepository('UJMExoBundle:Response')->allPaperResponsesMarked($paper);
+        if ($fullyEvaluated) {
+            $event = new LogExerciseEvaluatedEvent($paper->getExercise(), [
+                'result' => $paper->getScore(),
+                'resultMax' => $this->paperService->getPaperTotalScore($paper->getId()),
+            ]);
+
+            $this->eventDispatcher->dispatch('log', $event);
+        }
+
+        return $fullyEvaluated;
     }
 
     private function calculateScore($paperId)
@@ -252,80 +323,72 @@ class PaperManager
     }
 
     /**
-     * Returns the papers of a user for a given exercise, in a JSON format.
-     * Also includes the complete definition and solution of each question
-     * associated with the exercise.
+     * Returns the papers for a given exercise, in a JSON format.
      *
      * @param Exercise $exercise
      * @param User     $user
      *
      * @return array
      */
-    public function exportUserPapers(Exercise $exercise, User $user)
+    public function exportExercisePapers(Exercise $exercise, User $user = null)
     {
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
+        $isAdmin = true;
+        $search = [
+            'exercise' => $exercise,
+        ];
+
+        if (!empty($user)) {
+            // Load papers for a single non admin User
+            $isAdmin = false;
+            $search['user'] = $user;
+        }
+
         $papers = $this->om->getRepository('UJMExoBundle:Paper')
-            ->findBy(['exercise' => $exercise, 'user' => $user]);
+            ->findBy($search);
 
-        $papers = array_map(function ($paper) {
+        $exportPapers = [];
+        $exportQuestions = [];
+        foreach ($papers as $paper) {
+            $exportPapers[] = $this->exportPaper($paper, $isAdmin);
 
-            return [
-                'id' => $paper->getId(),
-                'number' => $paper->getNumPaper(),
-                'user' => $this->showUserPaper($paper),
-                'start' => $paper->getStart()->format('Y-m-d H:i:s'),
-                'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
-                'interrupted' => $paper->getInterupt(),
-                'scoreTotal' => $paper->getScore(),
-                'order' => $this->getStepsQuestions($paper),
-                'questions' => $this->exportPaperQuestions($paper),
-            ];
-        }, $papers);
+            $paperQuestions = new \stdClass();
+            $paperQuestions->paperId = $paper->getId();
+            $paperQuestions->questions = $this->exportPaperQuestions($paper, $isAdmin);
 
-        $questions = array_map(function ($question) {
-            return $this->questionManager->exportQuestion($question, true);
-        }, $questionRepo->findByExercise($exercise));
+            $exportQuestions[] = $paperQuestions;
+        }
 
         return [
-            'questions' => $questions,
-            'papers' => $papers,
+            'papers' => $exportPapers,
+            'questions' => $exportQuestions,
         ];
     }
 
     /**
      * Returns one specific paper details.
-     * Also includes the complete definition and solution of each question
-     * associated with the exercise.
      *
-     * @param Paper    $paper
-     * @param Exercise $exercise
+     * @param Paper $paper
+     * @param bool  $withScore If true, the score will be exported even if it's not available (for Admins)
      *
      * @return array
      */
-    public function exportUserPaper(Paper $paper, Exercise $exercise)
+    public function exportPaper(Paper $paper, $withScore = false)
     {
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
+        $scoreAvailable = $withScore || $this->isScoreAvailable($paper->getExercise(), $paper);
 
         $_paper = [
             'id' => $paper->getId(),
             'number' => $paper->getNumPaper(),
             'user' => $this->showUserPaper($paper),
-            'start' => $paper->getStart()->format('Y-m-d H:i:s'),
-            'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
+            'start' => $paper->getStart()->format('Y-m-d\TH:i:s'),
+            'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d\TH:i:s') : null,
             'interrupted' => $paper->getInterupt(),
-            'scoreTotal' => $paper->getScore(),
+            'scoreTotal' => $scoreAvailable ? $paper->getScore() : null,
             'order' => $this->getStepsQuestions($paper),
-            'questions' => $this->exportPaperQuestions($paper),
+            'questions' => $this->exportPaperAnswers($paper, $scoreAvailable),
         ];
 
-        $questions = array_map(function ($question) {
-            return $this->questionManager->exportQuestion($question, true, true);
-        }, $questionRepo->findByExercise($exercise));
-
-        return [
-            'questions' => $questions,
-            'paper' => $_paper,
-        ];
+        return $_paper;
     }
 
     /**
@@ -358,50 +421,21 @@ class PaperManager
      */
     public function countUserFinishedPapers(Exercise $exercise, User $user)
     {
-        $nbPapers = $this->om->getRepository('UJMExoBundle:Paper')
+        return $this->om->getRepository('UJMExoBundle:Paper')
             ->countUserFinishedPapers($exercise, $user);
-
-        return $nbPapers;
     }
 
     /**
-     * Returns the papers for a given exercise, in a JSON format.
-     * Also includes the complete definition and solution of each question
-     * associated with the exercise.
+     * Returns the number of papers already done for a given exercise.
      *
      * @param Exercise $exercise
      *
      * @return array
      */
-    public function exportExercisePapers(Exercise $exercise)
+    public function countExercisePapers(Exercise $exercise)
     {
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
-        $papers = $this->om->getRepository('UJMExoBundle:Paper')
-            ->findBy(['exercise' => $exercise]);
-
-        $papers = array_map(function ($paper) {
-
-            return [
-                'id' => $paper->getId(),
-                'user' => $this->showUserPaper($paper),
-                'number' => $paper->getNumPaper(),
-                'start' => $paper->getStart()->format('Y-m-d H:i:s'),
-                'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
-                'interrupted' => $paper->getInterupt(),
-                'scoreTotal' => $paper->getScore(),
-                'order' => $this->getStepsQuestions($paper),
-                'questions' => $this->exportPaperQuestions($paper),
-            ];
-        }, $papers);
-
-        $questions = array_map(function ($question) {
-            return $this->questionManager->exportQuestion($question, true, true);
-        }, $questionRepo->findByExercise($exercise));
-
-        return [
-            'questions' => $questions,
-            'papers' => $papers,
-        ];
+        return $this->om->getRepository('UJMExoBundle:Paper')
+            ->countExercisePapers($exercise);
     }
 
     private function applyPenalties(Paper $paper, Question $question, Response $response)
@@ -426,12 +460,49 @@ class PaperManager
         }
     }
 
-    private function exportPaperQuestions(Paper $paper)
+    /**
+     * Export the Questions linked to the Paper.
+     *
+     * @param Paper $paper
+     * @param bool  $withSolution
+     *
+     * @return array
+     */
+    public function exportPaperQuestions(Paper $paper, $withSolution = false)
+    {
+        $solutionAvailable = $withSolution || $this->isSolutionAvailable($paper->getExercise(), $paper);
+
+        $export = [];
+        $questions = $this->getPaperQuestions($paper);
+        foreach ($questions as $question) {
+            $exportedQuestion = $this->questionManager->exportQuestion($question, $solutionAvailable, true);
+
+            $exportedQuestion->stats = null;
+            if ($paper->getExercise()->hasStatistics()) {
+                $exportedQuestion->stats = $this->questionManager->generateQuestionStats($question, $paper->getExercise());
+            }
+
+            $export[] = $exportedQuestion;
+        }
+
+        return $export;
+    }
+
+    /**
+     * Export submitted answers for each Question of the Paper.
+     *
+     * @param Paper $paper
+     * @param bool  $withScore Do we need to export the score of the Paper ?
+     *
+     * @return array
+     *
+     * @throws \UJM\ExoBundle\Transfer\Json\UnregisteredHandlerException
+     */
+    private function exportPaperAnswers(Paper $paper, $withScore = false)
     {
         $responseRepo = $this->om->getRepository('UJMExoBundle:Response');
         $linkRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
-        $questions = $questionRepo->findByExercise($paper->getExercise());
+        $questions = $this->getPaperQuestions($paper);
         $paperQuestions = [];
 
         foreach ($questions as $question) {
@@ -455,12 +526,34 @@ class PaperManager
                     'id' => (string) $question->getId(),
                     'answer' => $answer,
                     'hints' => $hints,
-                    'score' => $answerScore,
+                    'score' => $withScore ? $answerScore : null,
                 ];
             }
         }
 
         return $paperQuestions;
+    }
+
+    /**
+     * Get the Questions linked to a Paper.
+     *
+     * @param Paper $paper
+     *
+     * @return Question[]
+     */
+    private function getPaperQuestions(Paper $paper)
+    {
+        $ids = explode(';', substr($paper->getOrdreQuestion(), 0, -1));
+
+        $questions = [];
+        foreach ($ids as $id) {
+            $question = $this->om->getRepository('UJMExoBundle:Question')->find($id);
+            if ($question) {
+                $questions[] = $question;
+            }
+        }
+
+        return $questions;
     }
 
     /**
@@ -470,37 +563,176 @@ class PaperManager
      *
      * @return array
      */
-    public function getStepsQuestions($paper)
+    public function getStepsQuestions(Paper $paper)
     {
-        $qIds = explode(';', substr($paper->getOrdreQuestion(), 0, -1));
-
-        //to keep the questions order
-        $questions = [];
-        foreach ($qIds as $qid) {
-            $q = $this->om->getRepository('UJMExoBundle:Question')->find($qid);
-            $questions[] = $q;
-        }
-
+        $questions = $this->getPaperQuestions($paper);
         $exercise = $paper->getExercise();
-        $stepsQuestions = [];
 
-        foreach ($exercise->getSteps() as $step) {
-            $stepQuestions = [
-                'id' => $step->getId(),
-                'items' => [],
-            ];
+        // to keep the questions order
+        $deleted = []; // Questions not linked to the exercise anymore
+        $stepsQuestions = []; // Questions linked to a Step of the Exercise (the keys are the step IDs)
+        foreach ($questions as $question) {
+            // Check if the question is attached to a Step
 
-            //to keep the questions order
-            foreach ($questions as $question) {
-                $sq = $this->om->getRepository('UJMExoBundle:StepQuestion')->findOneBy(array('step' => $step, 'question' => $question));
-                if ($sq) {
-                    $stepQuestions['items'][] = $sq->getQuestion()->getId();
+            /** @var StepQuestion $stepQuestion */
+            $stepQuestion = $this->om->getRepository('UJMExoBundle:StepQuestion')->findByExerciseAndQuestion($exercise, $question->getId());
+            if ($stepQuestion) {
+                // Question linked to a Step
+                $step = $stepQuestion->getStep();
+                if (!isset($stepsQuestions[$step->getId()])) {
+                    $stepsQuestions[$step->getId()] = [
+                        'id' => $step->getId(),
+                        'items' => [],
+                    ];
                 }
-            }
 
-            $stepsQuestions[] = $stepQuestions;
+                $stepsQuestions[$step->getId()]['items'][] = $question->getId();
+            } else {
+                $deleted[] = $question->getId();
+            }
         }
 
-        return $stepsQuestions;
+        // Remove step ids indexes to avoid receiving an array with undefined values in JS
+        $steps = array_values($stepsQuestions);
+
+        // Append deleted questions at the end of the Exercise
+        if (!empty($deleted)) {
+            $steps[] = [
+                'id' => 'deleted',
+                'items' => $deleted,
+            ];
+        }
+
+        return $steps;
+    }
+
+    /**
+     * Check if the solution of the Paper is available to User.
+     *
+     * @param Exercise $exercise
+     * @param Paper    $paper
+     *
+     * @return bool
+     */
+    public function isSolutionAvailable(Exercise $exercise, Paper $paper)
+    {
+        $correctionMode = $exercise->getCorrectionMode();
+        switch ($correctionMode) {
+            case CorrectionMode::AFTER_END:
+                $available = !empty($paper->getEnd());
+                break;
+
+            case CorrectionMode::AFTER_LAST_ATTEMPT:
+                $available = 0 === $exercise->getMaxAttempts() || $paper->getNumPaper() === $exercise->getMaxAttempts();
+                break;
+
+            case CorrectionMode::AFTER_DATE:
+                $now = new \DateTime();
+                $available = empty($exercise->getDateCorrection()) || $now >= $exercise->getDateCorrection();
+                break;
+
+            case CorrectionMode::NEVER:
+            default:
+                $available = false;
+                break;
+        }
+
+        return $available;
+    }
+
+    /**
+     * Check if the score of the Paper is available to User.
+     *
+     * @param Exercise $exercise
+     * @param Paper    $paper
+     *
+     * @return bool
+     */
+    public function isScoreAvailable(Exercise $exercise, Paper $paper)
+    {
+        $markMode = $exercise->getMarkMode();
+        switch ($markMode) {
+            case MarkMode::AFTER_END:
+                $available = !empty($paper->getEnd());
+                break;
+
+            case MarkMode::WITH_CORRECTION:
+            default:
+                $available = $this->isSolutionAvailable($exercise, $paper);
+                break;
+        }
+
+        return $available;
+    }
+
+    /**
+     * Returns a question list according to the *shuffle* and
+     * *nbQuestions* parameters of an exercise, i.e. filtered
+     * and/or randomized if needed.
+     *
+     * @param Exercise $exercise
+     *
+     * @return array
+     */
+    public function pickQuestions(Exercise $exercise)
+    {
+        $steps = $this->pickSteps($exercise);
+        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
+        $finalQuestions = [];
+
+        foreach ($steps as $step) {
+            $questions = $questionRepo->findByStep($step);
+            $finalQuestions = array_merge($finalQuestions, $questions);
+        }
+
+        return $finalQuestions;
+    }
+
+    /**
+     * Returns a step list according to the *shuffle* and
+     * nbStep* parameters of an exercise, i.e. filtered
+     * and/or randomized if needed.
+     *
+     * @param Exercise $exercise
+     *
+     * @return array
+     */
+    public function pickSteps(Exercise $exercise)
+    {
+        $steps = $exercise->getSteps()->toArray();
+
+        if ($exercise->getShuffle()) {
+            shuffle($steps);
+        }
+
+        if (($stepToPick = $exercise->getPickSteps()) > 0) {
+            $steps = $this->pickItem($stepToPick, $steps);
+        }
+
+        return $steps;
+    }
+
+    /**
+     * Returns item (step or question) list according to the *shuffle* and
+     * *nbItem* parameters of an exercise or a step, i.e. filtered
+     * and/or randomized if needed.
+     *
+     * @param int   $itemToPick
+     * @param array $listItem   array of steps or array of question
+     *
+     * @return array
+     */
+    private function pickItem($itemToPick, array $listItem)
+    {
+        $newListItem = array();
+        while ($itemToPick > 0) {
+            $index = rand(0, count($listItem) - 1);
+            $newListItem[] = $listItem[$index];
+            unset($listItem[$index]);
+            $listItem = array_values($listItem); // "re-index" the array
+            --$itemToPick;
+        }
+
+        return $newListItem;
     }
 }

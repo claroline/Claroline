@@ -10,7 +10,6 @@ namespace Innova\CollecticielBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class DropRepository extends EntityRepository

@@ -143,9 +143,9 @@ claro_admin_home_tab:
     prefix: admin
     type: annotation
 
-claro_admin_tool_config:
-    resource: "@ClarolineCoreBundle/Controller/Administration/ToolsController.php"
-    prefix: admin/tools
+claro_admin_portal_config:
+    resource: "@ClarolineCoreBundle/Controller/Administration/PortalConfigurationController.php"
+    prefix: admin/portal
     type: annotation
 
 claro_resource:
@@ -273,8 +273,9 @@ claro_admin_plugin:
 
 claro_api:
     resource: "@ClarolineCoreBundle/Controller/API/User/ApiController.php"
+    type: rest
     prefix: api
-    type: annotation
+    defaults: {_format: json}
     options:
         expose: true
 
@@ -286,9 +287,24 @@ claro_user_api:
     options:
         expose: true
 
-
 claro_workspace_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Admin/WorkspaceController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/Workspace/WorkspaceController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_profile_api:
+    resource: "@ClarolineCoreBundle/Controller/API/User/ProfileController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_facet_api:
+    resource: "@ClarolineCoreBundle/Controller/API/User/FacetController.php"
     type: rest
     prefix: api
     defaults: {_format: json}
@@ -297,6 +313,14 @@ claro_workspace_api:
 
 claro_group_api:
     resource: "@ClarolineCoreBundle/Controller/API/User/GroupController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_role_api:
+    resource: "@ClarolineCoreBundle/Controller/API/User/RoleController.php"
     type: rest
     prefix: api
     defaults: {_format: json}
@@ -391,12 +415,38 @@ claro_resources_api:
     options:
         expose: true
 
+claro_roles_api:
+    resource: "@ClarolineCoreBundle/Controller/API/User/RoleController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_locale_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/LocaleController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"
     prefix: contact
+    type: annotation
+
+claro_portal:
+    resource: "@ClarolineCoreBundle/Controller/PortalController.php"
+    prefix: portal
     type: annotation
 
 claro_admin_widget:
     prefix: admin/widget
     resource: "@ClarolineCoreBundle/Controller/Administration/WidgetController.php"
     type: annotation
+
+claro_client:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/ClientController.php"
+    type: annotation
+    prefix: api

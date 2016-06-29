@@ -19,7 +19,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\AgendaBundle\Entity\Event;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\AgendaBundle\Manager\AgendaManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -31,7 +30,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class AgendaController extends Controller
 {
     private $authorization;
-    private $formFactory;
     private $request;
     private $agendaManager;
     private $router;
@@ -41,7 +39,6 @@ class AgendaController extends Controller
     /**
      * @DI\InjectParams({
      *     "authorization"      = @DI\Inject("security.authorization_checker"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "request"            = @DI\Inject("request"),
      *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager"),
      *     "router"             = @DI\Inject("router"),
@@ -51,7 +48,6 @@ class AgendaController extends Controller
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        FormFactory $formFactory,
         Request $request,
         AgendaManager $agendaManager,
         RouterInterface $router,
@@ -59,7 +55,6 @@ class AgendaController extends Controller
         EntityManager $em
     ) {
         $this->authorization = $authorization;
-        $this->formFactory = $formFactory;
         $this->request = $request;
         $this->agendaManager = $agendaManager;
         $this->router = $router;

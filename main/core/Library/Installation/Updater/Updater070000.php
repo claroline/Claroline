@@ -35,5 +35,13 @@ class Updater070000 extends Updater
             $this->om->remove($plugin);
             $this->om->flush();
         }
+
+        $tool = $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')->findOneByName('desktop_tools');
+
+        if ($tool) {
+            $this->log('Removing admin desktop tool from database...');
+            $this->om->remove($tool);
+            $this->om->flush();
+        }
     }
 }

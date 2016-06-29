@@ -37,7 +37,7 @@ class Validator
      *
      * @return array
      */
-    public function validateMetadata(\stdClass $metadata)
+    public function validateExerciseMetadata(\stdClass $metadata)
     {
         if (!empty($metadata->type)) {
             // Validate standard metadata fields
@@ -47,6 +47,16 @@ class Validator
 
             // Validate custom metadata fields
             if (count($errors) === 0) {
+                // Date correction
+                if (!empty($metadata->correctionDate)) {
+                    $dateTime = \DateTime::createFromFormat('Y-m-d\TH:i:s', $metadata->correctionDate);
+                    if (!$dateTime || $dateTime->format('Y-m-d\TH:i:s') !== $metadata->correctionDate) {
+                        $errors[] = [
+                            'path' => 'dateCorrection',
+                            'message' => 'Invalid date format',
+                        ];
+                    }
+                }
             }
 
             return $errors;
@@ -56,6 +66,24 @@ class Validator
             'path' => '',
             'message' => 'Exercise metadata cannot be validated due to missing property "type"',
         ]];
+    }
+
+    /**
+     * Validates a JSON-decoded step metadata against the available
+     * metadata schemas. Returns an array of validation errors.
+     *
+     * @param \stdClass $metadata
+     *
+     * @return array
+     */
+    public function validateStepMetadata(\stdClass $metadata)
+    {
+        // Validate standard metadata fields
+        $schema = $this->getSchema('http://json-quiz.github.io/json-quiz/schemas/metadata/schema.json');
+        $validator = $this->getValidator();
+        $errors = $validator->validate($metadata, $schema);
+
+        return $errors;
     }
 
     /**
@@ -81,7 +109,7 @@ class Validator
                     && !isset($question->solutions)) {
                     $errors[] = [
                         'path' => '',
-                        'message' => 'a solution(s) property is required',
+                        'message' => 'A solution property is required',
                     ];
                 }
 

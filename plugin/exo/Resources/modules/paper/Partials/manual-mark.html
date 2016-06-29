@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+        <span class="fa fa-check-square"></span>
+        {{ 'mark_question' | trans:{}:'ujm_exo' }}
+    </h4>
+</div>
+
+<div class="modal-body">
+    <form>
+        <div class="form-group">
+            <label for="question-score" class="control-label">{{ 'score' | trans:{}:'ujm_exo' }}</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="question-score" data-ng-model="manualMarkCtrl.score" />
+                <span class="input-group-addon">
+                    / {{ manualMarkCtrl.question.scoreTotal }}
+                </span>
+            </div>
+            <span class="help-block text-danger" data-ng-if="manualMarkCtrl.errors" data-ng-repeat="error in manualMarkCtrl.errors">
+                <span class="fa fa-fw fa-exclamation-triangle"></span>
+                {{ error|trans:{}:'ujm_exo' }}
+            </span>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="manualMarkCtrl.save()">
+        {{ 'save' | trans:{}:'ujm_exo' }}
+    </button>
+    <button class="btn btn-default cancel" ng-click="manualMarkCtrl.cancel()">
+        {{ 'cancel' | trans:{}:'ujm_exo' }}
+    </button>
+</div>

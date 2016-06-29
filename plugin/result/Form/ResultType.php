@@ -30,6 +30,7 @@ class ResultType extends AbstractType
             ->add('name', 'text', [
                 'label' => 'title',
                 'constraints' => new NotBlank(),
+                'attr' => ['autofocus' => true],
             ])
             ->add('total', 'integer', [
                 'label' => 'maximum_mark',

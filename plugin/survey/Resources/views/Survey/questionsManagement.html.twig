@@ -81,6 +81,10 @@
         </div>
         <hr>
         {% if questions|length > 0 %}
+            <div class="alert alert-warning">
+                <p>{{ 'question_disabled_edit_button_info'|trans({}, 'survey') }}</p>
+                <p>{{ 'question_multi_survey_info'|trans({}, 'survey') }}</p>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover text-center">
                     <tr>
@@ -100,6 +104,7 @@
                     </tr>
                     
                     {% for question in questions %}
+                        {% set questionId = question.getId() %}
                         <tr>
                             <td>
                                 {{ question.getTitle() }}
@@ -109,21 +114,21 @@
                             </td>
                             <td>
                                 <span class="btn btn-default view-question-btn"
-                                      data-question-id="{{ question.getId() }}"
+                                      data-question-id="{{ questionId }}"
                                       data-survey-id="{{ survey.getId() }}"
                                 >
                                     <i class="fa fa-eye"></i>
                                 </span>
                                 <a href="{{ path(
                                         'claro_survey_question_edit_form',
-                                        {'question': question.getId(), 'survey': surveyId}
+                                        {'question': questionId, 'survey': surveyId}
                                     ) }}"
-                                    class="btn btn-default"
+                                    class="btn btn-default {% if answeredQuestions[questionId] is defined and answeredQuestions[questionId] %}disabled{% endif %}"
                                 >
                                     <i class="fa fa-edit"></i>
                                 </a>
                                 <span class="btn btn-danger delete-question-btn"
-                                      data-question-id="{{ question.getId() }}"
+                                      data-question-id="{{ questionId }}"
                                       data-survey-id="{{ survey.getId() }}"
                                 >
                                     <i class="fa fa-trash-o"></i>
@@ -133,7 +138,7 @@
                     {% endfor %}
                 </table>
             </div>
-        
+
             {% if questions.getNbPages() > 1 %}
                 {{ renderPager(questions, survey.getId(), orderedBy, order, max) }}
             {% endif %}

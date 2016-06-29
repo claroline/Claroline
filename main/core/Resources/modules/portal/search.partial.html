@@ -1,0 +1,71 @@
+<div data-ng-if="vm.isPortalActive">
+    <portal-search data-options="vm.portalSearchOptions"></portal-search>
+    <div class="container-fluid portal-search-tabs-container">
+        <ul class="nav nav-tabs portal-search-tabs row" role="tablist">
+            <li class="portal-back-button">
+                <a href="./">
+                    <i class="fa fa-angle-left"></i>
+                    <span class="option-text">{{'portal_short'|trans:{}:'platform'}}</span>
+                </a>
+            </li>
+            <li data-ng-repeat="type in vm.resourceTypes.visible" data-ng-class="{'active': type == vm.resourceType}">
+                <a data-ng-if="type != 'file'" href="search/{{type}}?query={{vm.query}}">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">{{ type|trans:{}:'resource' }}</span>
+                </a>
+                <a data-ng-if="type == 'file'" href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">{{ 'media'|trans:{}:'resource' }}</span>
+                    <span class="caret"></span>
+                </a>
+                <ul data-ng-if="type == 'file'" class="dropdown-menu">
+                    <li data-ng-class="{'active': !vm.fileType && vm.resourceType == type}">
+                        <a href="search/{{type}}?query={{vm.query}}">
+                            {{ 'all'|trans:{}:'resource' }}
+                        </a>
+                    </li>
+                    <li data-ng-repeat="fileType in vm.fileTypes" data-ng-class="{'active': fileType == vm.fileType}">
+                        <a href="search/{{fileType}}?query={{vm.query}}">
+                            {{ fileType|trans:{}:'resource' }}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li data-ng-if="vm.resourceTypes.more && vm.resourceTypes.more.length" class="dropdown">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <span class="option-text">{{ 'more'|trans:{}:'resource' }}</span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li data-ng-repeat="type in vm.resourceTypes.more" data-ng-class="{'active': type == vm.resourceType}">
+                        <a href="search/{{type}}?query={{vm.query}}">
+                            {{ type|trans:{}:'resource' }}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div data-ng-if="vm.resourceType && vm.pagination.totalItems >=0 " class="portal-search-result-info text-muted"><em data-ng-bind="'portal_search_total_results'|trans:{'type': ((vm.fileType || vm.resourceType)|trans:'resource'), 'totalItems':vm.pagination.totalItems}:'platform'"></em></div>
+            <div data-ng-if="vm.resources && vm.resources.length">
+                <div data-ng-repeat="resource in vm.resources">
+                    <div class="portal-search-result">
+                        <div class="icon-column pull-left">
+                            <img data-ng-src="{{ resource.relativeUrl|asset }}" style="max-width: 40px; max-height: 40px;" alt="{{ resource.name }}" title="{{ resource.name }}"/>
+                        </div>
+                        <div class="text-column pull-left">
+                            <div><a href="{{ resource|resourcePath }}" data-ng-bind-html="resource.name|trust_html"></a></div>
+                            <div class="text-muted small italic"><em>{{ 'created_by'|trans:{'creator': resource.creatorFirstName + ' ' + resource.creatorLastName, 'creationDate': (resource.creationDate|date:('date_form_format'|trans)) }:'platform' }}</em></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <uib-pagination class="portal-search-pagination" data-ng-if="vm.pagination.hasToPaginate" previous-text="&#xf104" next-text="&#xf105" ng-change="vm.pageChanged()" force-ellipses="true" max-size="5" total-items="vm.pagination.totalItems" ng-model="vm.currentPage" items-per-page="vm.pagination.itemsPerPage"></uib-pagination>
+    </div>
+</div>
+<div data-ng-if="!vm.isPortalActive" data-ng-bind="'portal_access_disabled'|trans:{}:'platform' "></div>

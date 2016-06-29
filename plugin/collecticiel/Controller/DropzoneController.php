@@ -9,7 +9,6 @@ use Innova\CollecticielBundle\Form\DropzoneCommonType;
 use Innova\CollecticielBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
-use Claroline\AgendaBundle\Entity\Event;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -80,6 +79,16 @@ class DropzoneController extends DropzoneBaseController
             $resourceNodes = $dropzoneManager->updatePublished($resourceId, $form->get('published')->getData());
 
             $dropzone = $form->getData();
+
+            //https://github.com/claroline/Distribution/issues/300
+            //const EVALUATION_TYPE = 'noEvaluation'
+            if ($dropzone->getEvaluationType() !== Dropzone::EVALUATION_TYPE) {
+                $dropzone->setEvaluation(1);
+            }
+            if ($dropzone->getEvaluationType() === Dropzone::EVALUATION_TYPE) {
+                $dropzone->setEvaluation(0);
+            }
+
             $form = $this->handleFormErrors($form, $dropzone);
 
             if ($dropzone->getEditionState() < 2) {
@@ -185,6 +194,7 @@ class DropzoneController extends DropzoneBaseController
         $dropzoneVoter->isAllowToEdit($dropzone);
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $gradingScaleManager = $this->get('innova.manager.gradingscale_manager');
+        $gradingCriteriaManager = $this->get('innova.manager.gradingcriteria_manager');
 
         if ($dropzone->getManualState() == 'notStarted') {
             $dropzone->setManualState('allowDrop');
@@ -196,7 +206,10 @@ class DropzoneController extends DropzoneBaseController
 
         if ($this->getRequest()->isMethod('POST')) {
             $tab = $this->getRequest()->request->get('innova_collecticiel_appreciation_form');
+
             $manageGradingScales = $gradingScaleManager->manageGradingScales($tab['gradingScales'], $dropzone);
+
+            $manageGradingCriterias = $gradingCriteriaManager->manageGradingCriterias($tab['gradingCriterias'], $dropzone);
 
             // see if manual planification option has changed.
             $oldManualPlanning = $dropzone->getManualPlanning();
@@ -205,6 +218,10 @@ class DropzoneController extends DropzoneBaseController
             if ($dropzone->getEditionState() < 2) {
                 $dropzone->setEditionState(2);
             }
+
+            // https://github.com/claroline/Distribution/issues/502
+            $dropzone->setEvaluationType('ratingScale');
+            $dropzone->setEvaluation(1);
 
             // handle events (delete if needed, create & update)
             $dropzone = $dropzoneManager->handleEvents($dropzone, $user);

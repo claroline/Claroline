@@ -171,6 +171,7 @@ communication: Communication
 completed: Completed
 configuration: Configuration
 configure: Configure
+confirm: OK
 confirm_send_data: 'We suggest to confirm your agreement to send data:'
 connections: Connections
 contact: Contact
@@ -312,6 +313,7 @@ duration: Duration
 edit: Edit
 edit_facet: 'Edit a facet'
 edit_field: 'Edit a field'
+edit_maintenance_message: 'Edit maintenance message'
 edit_password: 'Edit the password'
 edit_password_error: 'An error occured while editing the password.'
 edit_password_error_current: 'The current password is not correct.'
@@ -536,6 +538,7 @@ mail_not_available: 'The mail function is not available.'
 mail_not_exist: 'This mail does not exist'
 mail_sent: 'A email has been sent to your address. Check your inbox mail and your spam box.'
 maintenance: Maintenance
+maintenance_message_edit_success: The maintenance message has been edited successfully
 maintenance_mode_enabled: 'Maintenance mode is activated'
 maintenance_mode_message: 'The platform access is disabled. You can activate it in the maintenance section of administration parameters.'
 make_my_public_profil_visible: 'Make my public profile visible'
@@ -704,6 +707,14 @@ platform_widgets: 'Platform widgets'
 please_validate_your_account: 'An email was sent for you to activate your account'
 please_wait: 'Please wait...'
 port: Port
+portal: Portal
+portal_access_disabled: Access to portal is disabled because no resource type is enabled.
+portal_configuration_updated_success: Portal configuration successfully updated
+portal_no_published_resources: It seems that there are no resources published to portal.
+portal_resources_configuration: Choose the resources to be displayed on portal
+portal_search: Search open resources
+portal_search_total_results: '%totalItems% result(s) in ''%type%'' (ordered by relevance)'
+portal_short: Portal
 portfolio_url: 'Portfolio tool''s access url'
 position: Position
 positive_number_expected: 'This value should be a positive number'
@@ -733,6 +744,8 @@ public_workspaces: 'Public workspaces'
 publish: Publish
 publish_resource: 'Publish resource'
 published: Published
+published_to_portal: Published to portal
+published_to_portal_message: 'This option automatically allows anonymous users to acces the resource. You have to remove the anonymous rights in resource''s rights management section to restrict the acces again.'
 put_back_permissions_after_update: 'Don''t forget to put your original permissions after an update.'
 receiver: Receiver(s)
 recent_all_workspace_activities_overview: 'Overview of all recent activities in %workspaceName%'
@@ -1056,7 +1069,7 @@ user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'
 user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link shared_policy_link_platform_users">platform users</span>, or to <span class="shared_policy_link shared_policy_link_everybody">everybody</span>.'
-user_removed: 'User removed'
+user_removed: 'User %user% removed'
 user_selector: 'User picker'
 user_visit: 'Audience/user visits'
 username: Username
@@ -1246,3 +1259,46 @@ cache_management_explanation: Your must empty your app/cache directory to finali
 required_by: Required by:
 require: Require:
 requirement_warning: Requierment warning
+roles_updated: Roles updated
+role_update: Roles update
+role_update_confirm:  Do you really want to add the roles [ %role_list% ] to the users [ %user_list% ] ?
+add_roles: Add role
+csv_delete: Csv delete
+import_facets: Import facets
+csv: Csv
+csv_format_facets: Csv format:
+csv_format_facets_line_1: First line: facet list separated by semicolons (facet1;facet2;facet;...)
+csv_format_facets_line_end: Following lines: username;facet value1; facet value2;facet value2;...
+create_panel: New panel
+edit_panel: Edit panel
+is_main_facet_label: Put in general tab
+delete_panel: Remove panel
+delete_panel_confirm: Do you really want to remove this panel ?
+edit_mode: Edit mode
+display_mode: Display mode
+roles_panels_form_explanation: Edit the panel accessibility by role.
+delete_field: Removing a field
+delete_field_confirm: Do you really want to remove this field ?
+facet_imported: Facets imported
+radio: Radio button
+select: Select list
+checkboxes: Checkboxes
+facet_edited: Facet edition successfull
+facet_created: Facet creation successfull
+facet_removed: Facet suppression successfull
+facet_roles_edited: Facet roles edition successfull
+panel_created: Panel creation successfull
+panel_edited: Panel edition successfull
+panel_removed: Panel suppression successfull
+field_created: Field creation successfull
+field_edited: Field edition successfull
+field_removed: Field suppression successfull
+panel_roles_edited: Facet roles edition successfull
+profile_preference_edited: Profile preferences edition sucessfull
+manage_group: Manage group
+claro_admin_personal_workspace_resource_rights: Personal workspace resource management
+delete_users: Remove users
+delete_users_confirm: Do you really want to remove the users [ %user_list% ] ?
+group_created: Group %group% created.
+group_removed: Group %group% removed.
+mandatory: Mandatory

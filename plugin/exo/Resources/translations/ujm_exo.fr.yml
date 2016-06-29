@@ -14,19 +14,21 @@ alert_ending: Etes-vous sur de vouloir terminer ? (Vous ne pourrez plus modifier
 all: Tout
 allow_to_edit: Autoriser l'édition
 all_question: Toutes les questions
+all_step: Toutes les étapes
 already: Cette question est déjà partagée avec cet utilisateur
 already_answered: Vous avez déjà répondu à cet exercice
 already_exist: Ce nom existe déjà.
 anonymous : Anonyme
 answer_coched: Aucune réponse attendue n\'est cochée
 answer_zone: Zone de réponse
+answer_of: réponse de
 attempt_info1: Vous avez droit à
 attempt_info2sing: essai
 attempt_info2plur: essais
 attempt_info3: Essai N°
 attempt_info4: Il vous reste
 attempt_info5: afin d'améliorer votre note
-attempt_info6: Il ne vous reste plus aucun essai
+attempt_info6: Il ne vous reste plus aucun essai.
 at_the_end_of_assessment: A la fin du test
 at_the_same_time_that_the_correction: En même temps que la correction
 availability_of_correction: Disponibilité de la correction
@@ -41,6 +43,7 @@ application/x.short+json: Ouverte
 badge_obtained: Félicitation ! Vous avez obtenu le badge de connaissances
 badge_no_obtained: Vous n'avez pas encore obtenu le badge de connaissance
 back: Retour
+back_to_overview: Retourner à la vue d'ensemble de l'Exercice
 back_to_the_list: Retour à la liste
 bank_of_questions: Banque de questions
 brief_search: Recherche rapide
@@ -99,14 +102,21 @@ duration: Durée (en minutes)
 edit: Editer
 edit_category: Editer cette catégorie
 edit_question: Editer une question
+edit_step: Editer les informations
 end_date: Date de fin
 entry: Entrer
 exercise: Exercice
 exercise_alert_break: Interuption non autorisée. Votre copie sera considérée comme terminée !
 exercise_definition: Définition de l'exercice
 exercise_edit: Modification de l'exercice
+exercise_finished_attempts: "[0, 1] Vous avez terminé %count% essai|]1,Inf[ Vous avez terminé %count% essais"
 exercice_linked_question: Questions liées à l'exercice
+exercise_restart: Recommencer l'exercice
+exercise_start: Commencer l'exercice
+exercise_try: Tester l'exercice
 exit: Quitter
+exo_empty_user_can_edit: Cet exercice est vide. Editez et publiez le afin de le remplir.
+exo_empty_user_read_only: Cet exercice est vide et n'a pas encore été configuré par son concepteur. Veuillez revenir plus tard.
 expected_answer: Réponse attendue
 explain_coeff_dis0: Les copies doivent avoir les mêmes questions pour pouvoir calculer le coefficient de discrimination.
 explain_coeff_dis1: Analyse de la pertinence des questions, ce coefficient de corrélation varie de -1 à + 1.
@@ -133,6 +143,9 @@ formative : Formatif
 
 # G
 graphic: Graphique
+graphic_area_shape_rect: Rectangle
+graphic_area_shape_circle: Cercle
+graphic_area_shape_poly: Polygone
 graphic_creation: Création d'une question graphique
 graphic_edition: Edition d'une question graphique
 graphic_help: Glisser les réticules sur l'image pour marques votre réponse
@@ -173,6 +186,7 @@ info_search_type: Si vous voulez faire une recherche par type, vous devez utilis
 instruction_add_hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un trou".
 instruction_matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
 in_valid_mark: Note invalide
+item_points: "[0,1] %count% point|]1,Inf[ %count% points"
 
 # K
 keep_same_question: Conserver les mêmes questions pour un même utilisateur
@@ -194,7 +208,7 @@ long: Longue
 manage_img: Gérer mes documents
 mark: Note
 mark_question: Noter cette question
-mark_bigest: La note doit être inférieure ou égale à
+mark_bigest: La note doit être inférieure ou égale au score maximum
 mark_bigest_other: La note est superieur au score maximun
 matching: Association
 matching_creation: Création d'une question associative
@@ -202,6 +216,8 @@ matching_edition: Edition d'une question associative
 matching_value: Type de question associative
 maximum_tries: Nombre d'essai maximum
 meaning_measure_difficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
+metadata_visible:      Afficher les informations de l'exercice
+metadata_visible_help: Si coché, un tableau récapitulatif sera affiché sur la vue d'ensemble de l'exercice
 model: Modèle
 more_info: Plus d'informations
 my_questions: Mes questions
@@ -241,6 +257,8 @@ number_proposal: Numéro de la proposition
 number_of_papers: Nombre de copies
 number_questions_draw: Nombre de questions à tirer
 number_questions_draw_help: Tapez 0 pour tirer toutes les questions
+number_steps_draw: Nombre d'étapes à tirer
+number_steps_draw_help: Tapez 0 pour tirer toutes les étapes
 numerical: Numérique
 numerical_response: Réponse numérique
 num_paper: Numéro de la copie
@@ -257,8 +275,9 @@ overview: Vue d'ensemble
 
 # P
 paper: Passage
-paper_legend: Copies nécessitant une correction manuelle
+paper_need_manual_correction: Cette copie nécessite une correction manuelle
 paper_list: Liste des copies
+paper_count: "{0} aucune copie|{1} %count% copie|]1,Inf[ %count% copies"
 metadata: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité
@@ -294,9 +313,12 @@ question_title: Titre de la question (facultatif)
 question_shared_with: Cette question est partagée avec les utilisateurs suivants
 question_need_manual_correction: Cette question nécessite une correction manuelle
 question_open_keywords_info: Votre réponse doit contenir les mots clés suivant pour obtenir les points
+question_graphic_set_pointers: Cliquez sur l'image pour placer un pointeur
+question_graphic_nb_pointers: "{0} Il ne reste plus aucun pointeur à placer sur l'image.|{1} Il reste %count% pointeur à placer sur l'image.|]1,Inf[ Il reste %count% pointeurs à placer sur l'image."
 
 # R
 random_questions: Ordre des questions aléatoire
+random_steps: Ordre des étapes aléatoire
 raz: => Pour remettre à leurs position initiale tous les pointeurs, appuyez sur "c".
 square: Carré
 remove_advanced_edition: Edition simple
@@ -305,6 +327,8 @@ reset: Réinitialiser
 resize_zone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites la glisser
 response: Réponse
 result: Résultats
+results_list: Liste des résultats
+result_show: Voir les résultats
 right_response: Points pour la bonne réponse
 
 # S
@@ -342,6 +366,11 @@ sort: Trier les documents
 summative : Sommatif
 show_additional_info: Afficher les informations supplémentaires
 step: Etape
+statistics: Afficher les statistiques
+step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
+step_item_add: Glisser/déposer ou cliquer sur le bouton "+" pour ajouter des questions
+stat_users: "[0, 1] %count% utilisateur|]1,Inf[ %count% utilisateurs"
+stat_have_responded: ont répondu
 
 # T
 temporary_mark: Note temporaire
@@ -359,6 +388,8 @@ upload: Télécharger
 uploading: Chargement en cours
 user: Utilisateur
 users: Utilisateurs
+ujm_exo_exercise_name: Nom
+ujm_exo_exercise_published: Publier la ressource
 
 # V
 validate: Valider

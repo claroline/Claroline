@@ -2,16 +2,16 @@
 
 namespace Innova\PathBundle\EventListener\Resource;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Innova\PathBundle\Entity\Path\Path;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Path Event Listener
@@ -39,9 +39,9 @@ class PathListener extends ContainerAware
 
         $url = $this->container->get('router')->generate(
             $route,
-            array(
+            [
                 'id' => $path->getId(),
-            )
+            ]
         );
 
         $event->setResponse(new RedirectResponse($url));
@@ -54,9 +54,9 @@ class PathListener extends ContainerAware
 
         $route = $this->container->get('router')->generate(
             'innova_path_editor_wizard',
-            array(
+            [
                 'id' => $path->getId(),
-            )
+            ]
         );
 
         $event->setResponse(new RedirectResponse($route));
@@ -75,10 +75,10 @@ class PathListener extends ContainerAware
 
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'resourceType' => 'innova_path',
-            )
+            ]
         );
 
         $event->setResponseContent($content);
@@ -108,14 +108,14 @@ class PathListener extends ContainerAware
             $path->initializeStructure();
 
             // Send new path to dispatcher through event object
-            $event->setResources(array($path));
+            $event->setResources([$path]);
         } else {
             $content = $this->container->get('templating')->render(
                 'ClarolineCoreBundle:Resource:createForm.html.twig',
-                array(
+                [
                     'form' => $form->createView(),
                     'resourceType' => 'innova_path',
-                )
+                ]
             );
 
             $event->setErrorFormContent($content);
@@ -160,7 +160,7 @@ class PathListener extends ContainerAware
         $structure = json_decode($pathToCopy->getStructure());
 
         // Process steps
-        $processedNodes = array();
+        $processedNodes = [];
         foreach ($structure->steps as $step) {
             $processedNodes = $this->copyStepContent($step, $parent, $processedNodes);
         }
@@ -184,7 +184,7 @@ class PathListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    private function copyStepContent(\stdClass $step, ResourceNode $newParent, array $processedNodes = array())
+    private function copyStepContent(\stdClass $step, ResourceNode $newParent, array $processedNodes = [])
     {
         // Remove reference to Step Entity
         $step->resourceId = null;
@@ -214,7 +214,7 @@ class PathListener extends ContainerAware
         return $processedNodes;
     }
 
-    private function copyResource(\stdClass $resource, ResourceNode $newParent, array $processedNodes = array())
+    private function copyResource(\stdClass $resource, ResourceNode $newParent, array $processedNodes = [])
     {
         // Get current User
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
@@ -272,7 +272,7 @@ class PathListener extends ContainerAware
         return $processedNodes;
     }
 
-    private function updateStep(\stdClass $step, array $processedNodes = array())
+    private function updateStep(\stdClass $step, array $processedNodes = [])
     {
         if (!empty($step->primaryResource) && !empty($step->primaryResource[0])) {
             $this->replaceResourceId($step->primaryResource[0], $processedNodes);

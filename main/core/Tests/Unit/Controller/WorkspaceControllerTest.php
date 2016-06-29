@@ -175,48 +175,6 @@ class WorkspaceControllerTest extends MockeryTestCase
         );
     }
 
-    public function testCreationFormAction()
-    {
-        $controller = $this->getController(array('assertIsGranted'));
-        $form = $this->mock('Symfony\Component\Form\Form');
-
-        $this->security
-            ->shouldReceive('isGranted')
-            ->with('ROLE_WS_CREATOR', null)
-            ->once()
-            ->andReturn(true);
-        $this->formFactory
-            ->shouldReceive('create')
-            ->with(FormFactory::TYPE_WORKSPACE)
-            ->once()
-            ->andReturn($form);
-        $form->shouldReceive('createView')->once()->andReturn('view');
-
-        $this->assertEquals(array('form' => 'view'), $controller->creationFormAction());
-    }
-
-    public function testCreateAction()
-    {
-        $this->markTestSkipped();
-        $controller = $this->getController(array('assertIsGranted'));
-        $form = $this->mock('Symfony\Component\Form\Form');
-
-        $this->security
-            ->shouldReceive('isGranted')
-            ->with('ROLE_WS_CREATOR', null)
-            ->once()
-            ->andReturn(true);
-        $this->formFactory
-            ->shouldReceive('create')
-            ->with(FormFactory::TYPE_WORKSPACE)
-            ->once()
-            ->andReturn($form);
-        $form->shouldReceive('handleRequest')->once()->with($this->request);
-        $form->shouldReceive('isValid')->once()->andReturn(true);
-
-        $controller->createAction();
-    }
-
     public function testDeleteAction()
     {
         $controller = $this->getController(array('assertIsGranted'));

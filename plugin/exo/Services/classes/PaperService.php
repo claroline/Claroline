@@ -229,36 +229,6 @@ class PaperService
     }
 
     /**
-     * To create new paper.
-     *
-     *
-     * @param int $id id of exercise
-     * @Param \UJM\ExoBundle\Entity\Exercise $exercise
-     *
-     * @return array
-     */
-    public function prepareInteractionsPaper($id, $exercise)
-    {
-        $orderInter = '';
-        $tabOrderInter = array();
-        $tab = array();
-
-        $questions = $this->container->get('ujm.exo.exercise_manager')
-            ->pickQuestions($exercise);
-
-        foreach ($questions as $question) {
-            $orderInter .= $question->getId().';';
-            $tabOrderInter[] = $question->getId();
-        }
-
-        $tab['interactions'] = $questions;
-        $tab['orderInter'] = $orderInter;
-        $tab['tabOrderInter'] = $tabOrderInter;
-
-        return $tab;
-    }
-
-    /**
      * For the navigation in a paper
      * Finds and displays the question selected by the User in an assessment.
      *
@@ -299,71 +269,5 @@ class PaperService
         $array['_resource'] = $paper->getExercise();
 
         return $array;
-    }
-     /**
-      * To finish an assessment.
-      *
-      *
-      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface  $session
-      *
-      * @return \UJM\ExoBundle\Entity\Paper
-      */
-     public function finishExercise(SessionInterface $session)
-     {
-         $em = $this->doctrine->getManager();
-        /** @var \UJM\ExoBundle\Entity\Paper $paper */
-        $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
-         $paper->setInterupt(0);
-         $paper->setEnd(new \Datetime());
-         $em->persist($paper);
-         $em->flush();
-
-         $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
-
-         $session->remove('penalties');
-
-         return $paper;
-     }
-
-    /**
-     * To force finish an assessment.
-     *
-     *
-     * @param \UJM\ExoBundle\Entity\Paper $paperToClose
-     *
-     * @return \UJM\ExoBundle\Entity\Paper
-     */
-    public function forceFinishExercise($paperToClose)
-    {
-        $em = $this->doctrine->getManager();
-        /** @var \UJM\ExoBundle\Entity\Paper $paper */
-        $paper = $paperToClose;
-        $paper->setInterupt(0);
-        $paper->setEnd(new \Datetime());
-        $em->persist($paper);
-        $em->flush();
-
-        $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
-
-        return $paper;
-    }
-
-    /**
-     * To interupt an assessment.
-     *
-     *
-     * @param SessionInterface session
-     *
-     * @return \UJM\ExoBundle\Entity\Paper
-     */
-    public function interuptExercise(SessionInterface $session)
-    {
-        $em = $this->doctrine->getManager();
-        $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
-        $paper->setInterupt(1);
-        $em->persist($paper);
-        $em->flush();
-
-        return $paper;
     }
 }

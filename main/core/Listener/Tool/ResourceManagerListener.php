@@ -174,6 +174,7 @@ class ResourceManagerListener
                 'jsonPath' => $jsonPath,
                 'maxPostSize' => ini_get('post_max_size'),
                 'resourceZoom' => $this->getZoom(),
+                'displayMode' => $this->getDisplayMode($workspaceId),
              )
         );
     }
@@ -196,6 +197,7 @@ class ResourceManagerListener
                 'resourceActions' => $resourceActions,
                 'maxPostSize' => ini_get('post_max_size'),
                 'resourceZoom' => $this->getZoom(),
+                'displayMode' => $this->getDisplayMode('desktop'),
             )
         );
     }
@@ -245,5 +247,10 @@ class ResourceManagerListener
                 'wsSearch' => '',
             )
         );
+    }
+
+    private function getDisplayMode($index)
+    {
+        return $this->userManager->getResourceManagerDisplayMode($index);
     }
 }

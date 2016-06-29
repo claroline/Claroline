@@ -116,7 +116,7 @@ class ToolListener
         }
 
         $criteria['types'] = array('activity');
-        $nodes = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
+        $nodes = $this->resourceManager->getByCriteria($criteria, $userRoles);
 
         $activitiesData = array();
         $nodeInfo = array();

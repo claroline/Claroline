@@ -30,8 +30,10 @@ class Builder extends ContainerAware
             ->setChildrenAttribute('class', 'dropdown-menu')
             ->setChildrenAttribute('role', 'menu');
 
-        $menu->addChild($translator->trans('my_profile', array(), 'platform'), array('route' => 'claro_profile_view'))
-            ->setAttribute('class', 'dropdown')
+        $menu->addChild(
+            $translator->trans('my_profile', array(), 'platform'),
+            array('uri' => $router->generate('claro_public_profile_view', array('publicUrl' => $tokenStorage->getToken()->getUser()->getPublicUrl())))
+        )->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-user');
         $menu->addChild(
@@ -330,6 +332,7 @@ class Builder extends ContainerAware
         $line = $options['line'];
         $url = $options['url'];
         $referer = $options['referer'];
+        $httpCode = isset($options['httpCode']) ? $options['httpCode'] : null;
         $menu = $factory->createItem('exception-actions')
             ->setChildrenAttribute('class', 'btn-group menu exception-actions-menu');
 
@@ -344,7 +347,8 @@ class Builder extends ContainerAware
                 $file,
                 $line,
                 $url,
-                $referer
+                $referer,
+                $httpCode
             )
         );
 

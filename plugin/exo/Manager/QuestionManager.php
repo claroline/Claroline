@@ -2,11 +2,15 @@
 
 namespace UJM\ExoBundle\Manager;
 
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
+use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
 use UJM\ExoBundle\Transfer\Json\Validator;
@@ -16,29 +20,39 @@ use UJM\ExoBundle\Transfer\Json\Validator;
  */
 class QuestionManager
 {
+    private $router;
     private $om;
     private $validator;
     private $handlerCollector;
+    private $rm;
 
     /**
      * @DI\InjectParams({
+     *     "router"     = @DI\Inject("router"),
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "validator"  = @DI\Inject("ujm.exo.json_validator"),
-     *     "collector"  = @DI\Inject("ujm.exo.question_handler_collector")
+     *     "collector"  = @DI\Inject("ujm.exo.question_handler_collector"),
+     *     "rm"         = @DI\Inject("claroline.manager.resource_manager")
      * })
      *
+     * @param UrlGeneratorInterface    $router
      * @param ObjectManager            $om
      * @param Validator                $validator
      * @param QuestionHandlerCollector $collector
+     * @param ResourceManager          $rm
      */
     public function __construct(
+        UrlGeneratorInterface $router,
         ObjectManager $om,
         Validator $validator,
-        QuestionHandlerCollector $collector
+        QuestionHandlerCollector $collector,
+        ResourceManager $rm
     ) {
+        $this->router = $router;
         $this->om = $om;
         $this->validator = $validator;
         $this->handlerCollector = $collector;
+        $this->rm = $rm;
     }
 
     /**
@@ -94,6 +108,7 @@ class QuestionManager
     public function exportQuestion(Question $question, $withSolution = true, $forPaperList = false)
     {
         $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
+        $rm = $this->rm;
 
         $data = new \stdClass();
         $data->id = $question->getId();
@@ -101,6 +116,26 @@ class QuestionManager
         $data->title = $question->getTitle();
         $data->description = $question->getDescription();
         $data->invite = $question->getInvite();
+        $data->supplementary = $question->getSupplementary();
+        $data->specification = $question->getSpecification();
+        $data->objects = array_map(function ($object) use ($rm) {
+            $resourceObjectData = new \stdClass();
+            $resourceObjectData->id = (string) $object->getResourceNode()->getId();
+            $resourceObjectData->type = $object->getResourceNode()->getResourceType()->getName();
+            switch ($object->getResourceNode()->getResourceType()->getName()) {
+                case 'text':
+                    if ($rm->getResourceFromNode($object->getResourceNode())->getRevisions()[0]) {
+                        $resourceObjectData->data = $rm->getResourceFromNode($object->getResourceNode())->getRevisions()[0]->getContent();
+                    }
+                default:
+                    $resourceObjectData->url = $this->router->generate(
+                        'claro_resource_open',
+                        ['resourceType' => $object->getResourceNode()->getResourceType()->getName(), 'node' => $object->getResourceNode()->getId()]
+                    );
+            }
+
+            return $resourceObjectData;
+        }, $question->getObjects()->toArray());
 
         if (count($question->getHints()) > 0) {
             $data->hints = array_map(function ($hint) use ($withSolution) {
@@ -123,6 +158,45 @@ class QuestionManager
         $handler->convertInteractionDetails($question, $data, $withSolution, $forPaperList);
 
         return $data;
+    }
+
+    /**
+     * Get question statistics inside an Exercise.
+     *
+     * @param Question $question
+     * @param Exercise $exercise
+     *
+     * @return \stdClass
+     */
+    public function generateQuestionStats(Question $question, Exercise $exercise)
+    {
+        $questionStats = new \stdClass();
+
+        // We load all the answers for the question (we need to get the entities as the response in DB are not processable as is)
+        $answers = $this->om->getRepository('UJMExoBundle:Response')->findByExerciseAndQuestion($exercise, $question);
+
+        // Number of Users that have seen the question in their exercise
+        $questionStats->seen = count($answers);
+
+        // Number of Users that have responded to the question (no blank answer)
+        $questionStats->answered = 0;
+        if (!empty($answers)) {
+            /* @var Response $answer */
+            for ($i = 0; $i < $questionStats->seen; ++$i) {
+                if (!empty($answers[$i]->getResponse())) {
+                    ++$questionStats->answered;
+                } else {
+                    // Remove element (to avoid processing in custom handlers)
+                    unset($answers[$i]);
+                }
+            }
+
+            // Let the Handler of the question type parse and compile the data
+            $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
+            $questionStats->solutions = $handler->generateStats($question, $answers);
+        }
+
+        return $questionStats;
     }
 
     public function exportQuestionAnswers(Question $question)

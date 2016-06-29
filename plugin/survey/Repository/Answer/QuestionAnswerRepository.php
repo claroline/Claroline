@@ -74,4 +74,18 @@ class QuestionAnswerRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findQuestionAnswersByQuestions(array $questions, $executeQuery = true)
+    {
+        $dql = '
+            SELECT qa
+            FROM Claroline\SurveyBundle\Entity\Answer\QuestionAnswer qa
+            JOIN qa.question q
+            WHERE q IN (:questions)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('questions', $questions);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

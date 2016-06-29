@@ -130,7 +130,7 @@ class RoleRepository extends EntityRepository
      *
      * @return array[Role]
      */
-    public function findAllPlatformRoles()
+    public function findAllPlatformRoles($includeRoleUser = true)
     {
         $queryBuilder = $this
             ->createQueryBuilder('role')
@@ -138,6 +138,12 @@ class RoleRepository extends EntityRepository
             ->setParameter('roleType', Role::PLATFORM_ROLE);
         $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name', '?1')))
             ->setParameter(1, 'ROLE_ANONYMOUS');
+
+        if (!$includeRoleUser) {
+            $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name', '?2')))
+                ->setParameter(2, 'ROLE_USER');
+        }
+
         $query = $queryBuilder->getQuery();
 
         return $query->getResult();

@@ -1,5 +1,7 @@
 import ConfirmModalController from '../Controller/ConfirmModalController'
 
+import errorModal from '../Partial/error_modal.html'
+
 export default class ClarolineAPIService {
     constructor($http, $httpParamSerializerJQLike, $uibModal) {
         this.$http = $http
@@ -21,7 +23,7 @@ export default class ClarolineAPIService {
         var data = {};
         var serialized = angular.copy(parameters);
         //remove the id too
-        delete serialized.id;
+        if (serialized.id) delete serialized.id
 
         //quick and dirty fix for array of checkboxes. It probably won't work for (multi)select and radio buttons but... hey. It's a start.
         //I do all of this because by default, the serializer expects an array for sf2 BUT ng-init will do an object and it won't work.
@@ -79,9 +81,6 @@ export default class ClarolineAPIService {
     }
 
     confirm(urlObject, callback, title, content) {
-        //the order is important
-        //ConfirmModalController.$inject = ['callback', 'urlObject', 'title', 'content', '$http', '$uibModalInstance']
-
         this.$uibModal.open({
             template: require('../Partial/confirm_modal.html'),
             controller: 'ConfirmModalController',
@@ -92,6 +91,13 @@ export default class ClarolineAPIService {
                 title: function() {return title},
                 content: function() {return content}
             }
+        });
+    }
+
+    errorModal() {
+        this.$uibModal.open({
+            template: errorModal ,
+            controller: () => {},
         });
     }
 

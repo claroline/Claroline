@@ -27,6 +27,8 @@
         <h3 class="panel-title">{{ 'maintenance'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body">
+        {{ macros.flashBox() }}
+
         {% if not is_maintenance_enabled() %}
             <a class="btn btn-primary" href="{{ path('claro_admin_parameters_start_maintenance') }}">
                 {{ 'start_maintenance'|trans({}, 'platform') }}
@@ -36,5 +38,9 @@
                 {{ 'end_maintenance'|trans({}, 'platform') }}
             </a>
         {% endif %}
+        <a class="btn btn-default" href="{{ path('claro_admin_parameters_maintenance_message_edit_form') }}">
+            <i class="fa fa-pencil"></i>
+            {{ 'edit_maintenance_message'|trans({}, 'platform') }}
+        </a>
     </div>
 {% endblock %}

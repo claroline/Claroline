@@ -1,0 +1,8 @@
+{
+  "webpack": {
+    "entry": {
+      "track-management": "track/module",
+      "watcher": "watcher/watch-video"
+    }
+  }
+}

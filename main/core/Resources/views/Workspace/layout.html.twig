@@ -6,7 +6,7 @@
             {{ workspace.getName() }}
         {% else %}
             {% if _resource is defined %}
-                {% if _resource.getWorkspace() %} 
+                {% if _resource.getWorkspace() is defined %}
                     {{ _resource.getWorkspace.getName() }} -
                 {% endif %}
                 {{ _resource.getResourceNode().getName() | striptags | raw }}
@@ -31,6 +31,7 @@
             {% endif %}
             <ul class="breadcrumb">
                 {% if not has_role('ROLE_ANONYMOUS') and workspace is defined and workspace != null %}
+                    <li>
                         {# we're finding wich is the workspace we want to display here #}
                         <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
                             {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}

@@ -110,6 +110,14 @@ class QcmHandler implements QuestionHandlerInterface
     {
         $interaction = new InteractionQCM();
 
+        if ($importData->score->type === 'sum') {
+            $interaction->setWeightResponse(true);//weighted true
+        } elseif ($importData->score->type === 'fixed') {
+            $interaction->setWeightResponse(false);//no weighted false
+            $interaction->setScoreRightResponse($importData->score->success);
+            $interaction->setScoreFalseResponse($importData->score->failure);
+        }
+
         for ($i = 0, $max = count($importData->choices); $i < $max; ++$i) {
             // temporary limitation
             if ($importData->choices[$i]->type !== 'text/html') {
@@ -178,11 +186,22 @@ class QcmHandler implements QuestionHandlerInterface
 
         $exportData->scoreTotal = $this->container->get('ujm.exo.qcm_service')->maxScore($interaction);
 
+        if (!$interaction->getWeightResponse()) {
+            $exportData->score = [
+                'type' => 'fixed',
+                'success' => $interaction->getScoreRightResponse(),
+                'failure' => $interaction->getScoreFalseResponse(),
+            ];
+        } else {
+            $exportData->score = ['type' => 'sum'];
+        }
+
         if ($withSolution) {
             $exportData->solutions = array_map(function ($choice) {
                 $solutionData = new \stdClass();
                 $solutionData->id = (string) $choice->getId();
                 $solutionData->score = $choice->getWeight();
+                $solutionData->rightResponse = $choice->getRightResponse();
 
                 if ($choice->getFeedback()) {
                     $solutionData->feedback = $choice->getFeedback();
@@ -205,6 +224,7 @@ class QcmHandler implements QuestionHandlerInterface
             $solutionData = new \stdClass();
             $solutionData->id = (string) $choice->getId();
             $solutionData->score = $choice->getWeight();
+            $solutionData->rightResponse = $choice->getRightResponse();
 
             if ($choice->getFeedback()) {
                 $solutionData->feedback = $choice->getFeedback();
@@ -214,6 +234,32 @@ class QcmHandler implements QuestionHandlerInterface
         }, $choices);
 
         return $exportData;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generateStats(Question $question, array $answers)
+    {
+        $choices = [];
+
+        /** @var Response $answer */
+        foreach ($answers as $answer) {
+            $decoded = $this->convertAnswerDetails($answer);
+
+            foreach ($decoded as $choiceId) {
+                if (!isset($choices[$choiceId])) {
+                    // First answer to have this solution
+                    $choices[$choiceId] = new \stdClass();
+                    $choices[$choiceId]->id = $choiceId;
+                    $choices[$choiceId]->count = 0;
+                }
+
+                ++$choices[$choiceId]->count;
+            }
+        }
+
+        return $choices;
     }
 
     /**

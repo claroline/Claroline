@@ -3,6 +3,10 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Question;
+use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Entity\Paper;
 
 /**
  * ResponseRepository.
@@ -18,7 +22,7 @@ class ResponseRepository extends EntityRepository
      * @param int $paperID
      * @param int $questionID
      *
-     * Return array[Response]
+     * @return Response[]
      */
     public function getAlreadyResponded($paperID, $questionID)
     {
@@ -38,7 +42,7 @@ class ResponseRepository extends EntityRepository
      * @param int    $exoId id Exercise
      * @param string $order to order result
      *
-     * Return array
+     * @return array
      */
     public function getExerciseMarks($exoId, $order)
     {
@@ -61,7 +65,7 @@ class ResponseRepository extends EntityRepository
      *
      * @param int $paperID id paper
      *
-     * Return array[Response]
+     * @return Response[]
      */
     public function getPaperResponses($paperID)
     {
@@ -79,7 +83,7 @@ class ResponseRepository extends EntityRepository
      * @param int $exoId
      * @param int $questionId
      *
-     * Return array[Response]
+     * @return Response[]
      */
     public function getExerciseInterResponsesWithCount($exoId, $questionId)
     {
@@ -106,7 +110,7 @@ class ResponseRepository extends EntityRepository
      * @param int $exoId
      * @param int $questionId
      *
-     * Return array[Response]
+     * @return Response[]
      */
     public function getExerciseInterResponses($exoId, $questionId)
     {
@@ -127,12 +131,33 @@ class ResponseRepository extends EntityRepository
     }
 
     /**
+     * Send the score for an exercise and an interaction.
+     *
+     * @param Exercise $exercise
+     * @param Question $question
+     *
+     * @return Response[]
+     */
+    public function findByExerciseAndQuestion(Exercise $exercise, Question $question)
+    {
+        $qb = $this->createQueryBuilder('r');
+
+        return $qb
+            ->join('r.paper', 'p', 'WITH', 'p.exercise = :exercise')
+            ->where('r.question = :question')
+            ->setParameter('exercise', $exercise)
+            ->setParameter('question', $question)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Get the score total for a paper.
      *
      *
-     * @param int $paperID id paper
+     * @param int $paperId id paper
      *
-     * Return int
+     * @return int
      */
     public function getScoreExercise($paperId)
     {
@@ -150,5 +175,26 @@ class ResponseRepository extends EntityRepository
         $res = $query->getOneOrNullResult();
 
         return $res['score'];
+    }
+
+    /**
+     * Check if all the responses of a Paper have been evaluated.
+     *
+     * @param Paper $paper
+     *
+     * @return bool
+     */
+    public function allPaperResponsesMarked(Paper $paper)
+    {
+        $qb = $this->createQueryBuilder('r');
+
+        $count = $qb->select('COUNT(r)')
+            ->where('r.mark = -1')
+            ->andWhere('r.paper = :paper')
+            ->setParameter('paper', $paper)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return 0 === (int) $count;
     }
 }

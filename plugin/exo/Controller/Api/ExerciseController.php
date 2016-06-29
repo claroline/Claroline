@@ -3,18 +3,19 @@
 namespace UJM\ExoBundle\Controller\Api;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Paper;
-use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Manager\ExerciseManager;
 use UJM\ExoBundle\Manager\PaperManager;
 use UJM\ExoBundle\Manager\QuestionManager;
+use UJM\ExoBundle\Services\classes\PaperService;
 
 /**
  * Exercise Controller.
@@ -28,34 +29,44 @@ use UJM\ExoBundle\Manager\QuestionManager;
  */
 class ExerciseController
 {
+    private $om;
     private $authorization;
     private $exerciseManager;
     private $questionManager;
     private $paperManager;
+    private $paperService;
 
     /**
      * @DI\InjectParams({
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "authorization"      = @DI\Inject("security.authorization_checker"),
      *     "exerciseManager"    = @DI\Inject("ujm.exo.exercise_manager"),
      *     "questionManager"    = @DI\Inject("ujm.exo.question_manager"),
-     *     "paperManager"       = @DI\Inject("ujm.exo.paper_manager")
+     *     "paperManager"       = @DI\Inject("ujm.exo.paper_manager"),
+     *     "paperService"       = @DI\Inject("ujm.exo_paper")
      * })
      *
+     * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
      * @param ExerciseManager               $exerciseManager
      * @param QuestionManager               $questionManager
      * @param PaperManager                  $paperManager
+     * @param PaperService                  $paperService
      */
     public function __construct(
+        ObjectManager $om,
         AuthorizationCheckerInterface $authorization,
         ExerciseManager $exerciseManager,
         QuestionManager $questionManager,
-        PaperManager $paperManager
+        PaperManager $paperManager,
+        PaperService $paperService
     ) {
+        $this->om = $om;
         $this->authorization = $authorization;
         $this->exerciseManager = $exerciseManager;
         $this->questionManager = $questionManager;
         $this->paperManager = $paperManager;
+        $this->paperService = $paperService;
     }
 
     /**
@@ -118,9 +129,8 @@ class ExerciseController
                 throw new AccessDeniedHttpException('max attempts reached');
             }
         }
-        $data = $this->paperManager->openPaper($exercise, $user, false);
 
-        return new JsonResponse($data);
+        return new JsonResponse($this->paperManager->openPaper($exercise, $user));
     }
 
     /**
@@ -136,11 +146,61 @@ class ExerciseController
      */
     public function papersAction(User $user, Exercise $exercise)
     {
+        $this->assertHasPermission('OPEN', $exercise);
+
         if ($this->isAdmin($exercise)) {
             return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
         }
 
-        return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));
+        return new JsonResponse($this->paperManager->exportExercisePapers($exercise, $user));
+    }
+
+    /**
+     * Exports papers into a CSV format.
+     *
+     * @EXT\Route("/exercises/{id}/papers/export", name="exercise_papers_export")
+     *
+     * @param Exercise $exercise
+     *
+     * @return Response
+     */
+    public function papersExportAction(Exercise $exercise)
+    {
+        $this->assertHasPermission('ADMINISTRATE', $exercise);
+
+        $iterableResult = $this->om->getRepository('UJMExoBundle:Paper')
+            ->getExerciseAllPapersIterator($exercise->getId());
+
+        $handle = fopen('php://memory', 'r+');
+        while (false !== ($row = $iterableResult->next())) {
+            $rowCSV = array();
+            $infosPaper = $this->paperService->getInfosPaper($row[0]);
+            $score = $infosPaper['scorePaper'] / $infosPaper['maxExoScore'];
+            $score = $score * 20;
+
+            $rowCSV[] = $row[0]->getUser()->getLastName().'-'.$row[0]->getUser()->getFirstName();
+            $rowCSV[] = $row[0]->getNumPaper();
+            $rowCSV[] = $row[0]->getStart()->format('Y-m-d H:i:s');
+            if ($row[0]->getEnd()) {
+                $rowCSV[] = $row[0]->getEnd()->format('Y-m-d H:i:s');
+            } else {
+                $rowCSV[] = $this->get('translator')->trans('no_finish', array(), 'ujm_exo');
+            }
+            $rowCSV[] = $row[0]->getInterupt();
+            $rowCSV[] = $this->paperService->roundUpDown($score);
+
+            fputcsv($handle, $rowCSV);
+            $this->om->detach($row[0]);
+        }
+
+        rewind($handle);
+        $content = stream_get_contents($handle);
+        fclose($handle);
+
+        return new Response($content, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="export.csv"',
+        ]);
     }
 
     /**
@@ -157,25 +217,6 @@ class ExerciseController
     public function countFinishedPaperAction(User $user, Exercise $exercise)
     {
         return new JsonResponse($this->paperManager->countUserFinishedPapers($exercise, $user));
-    }
-
-    /**
-     * Returns one paper.
-     * Also includes the complete definition and solution of each question
-     * associated with the exercise.
-     *
-     * @EXT\Route("/exercises/{exerciseId}/papers/{paperId}", name="exercise_paper")
-     * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
-     *
-     * @param Exercise $exercise
-     * @param Paper    $paper
-     *
-     * @return JsonResponse
-     */
-    public function paperAction(Exercise $exercise, Paper $paper)
-    {
-        return new JsonResponse($this->paperManager->exportUserPaper($paper, $exercise));
     }
 
     private function assertHasPermission($permission, Exercise $exercise)

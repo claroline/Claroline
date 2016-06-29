@@ -1,0 +1,174 @@
+<div class="overview">
+    <div class="panel-body">
+        <!-- Empty exercise alert -->
+        <div class="row" data-ng-if="exerciseOverviewCtrl.exercise.steps.length === 0">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="alert alert-info text-center">
+                    <span class="fa fa-fw fa-warning"></span>
+
+                    <!-- Message for Users who can only read the Path -->
+                    <span data-ng-if="!exerciseOverviewCtrl.editEnabled">{{ 'exo_empty_user_read_only'|trans:{}:'ujm_exo' }}</span>
+
+                    <!-- Message for Users who can edit the Path -->
+                    <span data-ng-if="exerciseOverviewCtrl.editEnabled">{{ 'exo_empty_user_can_edit'|trans:{}:'ujm_exo' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <!-- Description of the exercise -->
+                <div class="exercise-description panel panel-default" data-ng-if="exerciseOverviewCtrl.exercise.meta.description">
+                    <div class="panel-body" data-ng-bind-html="exerciseOverviewCtrl.exercise.meta.description"></div>
+                </div>
+
+                <!-- Information of the Exercise -->
+                <div class="panel panel-default" data-ng-if="exerciseOverviewCtrl.exercise.meta.metadataVisible">
+                    <table class="table table-striped table-bordered">
+                        <!-- Display exercise general information -->
+                        <tbody>
+                            <!-- Start date -->
+                            <tr data-ng-if="exerciseOverviewCtrl.exercise.meta.startDate">
+                                <th class="text-right col-md-4" scope="row">{{ 'start_date' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.startDate|date_string:'dd/MM/yyyy' }}</td>
+                            </tr>
+
+                            <!-- End date -->
+                            <tr data-ng-if="exerciseOverviewCtrl.exercise.meta.endDate">
+                                <th class="text-right col-md-4" scope="row">{{ 'end_date' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.endDate|date_string:'dd/MM/yyyy' }}</td>
+                            </tr>
+
+                            <!-- Duration -->
+                            <tr data-ng-if="exerciseOverviewCtrl.exercise.meta.duration">
+                                <th class="text-right col-md-4" scope="row">{{ 'duration' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.duration }}</td>
+                            </tr>
+
+                            <!-- When correction will be available ? -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'availability_of_correction' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.correctionMode">
+                                    <span data-ng-switch-when="1">{{ 'at_the_end_of_assessment'|trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-switch-when="2">{{ 'after_the_last_attempt'|trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-switch-when="3">{{ 'from'|trans:{}:'ujm_exo' }} <b>{{ exerciseOverviewCtrl.exercise.meta.correctionDate|date_string:'dd/MM/yyyy' }}</b></span>
+                                    <span data-ng-switch-when="4">{{ 'never'|trans:{}:'ujm_exo' }}</span>
+                                </td>
+                            </tr>
+
+                            <!-- When score will be available ? -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'availability_of_score' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.markMode">
+                                    <span data-ng-switch-when="1">{{ 'at_the_same_time_that_the_correction'|trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-switch-when="2">{{ 'at_the_end_of_assessment'|trans:{}:'ujm_exo' }}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <!-- Display exercise advanced information (for those who can administrate the Exercise) -->
+                        <tbody data-ng-hide="!exerciseOverviewCtrl.editEnabled || !exerciseOverviewCtrl.additionalInfo">
+                            <!-- Type of the Exercise (summative, evaluative, formative) -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'type' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.type">
+                                    <span data-ng-switch-when="1">{{ 'summative' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-switch-when="2">{{ 'evaluative' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-switch-when="3">{{ 'formative' | trans:{}:'ujm_exo' }}</span>
+                                </td>
+                            </tr>
+
+                            <!-- Creation date -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'creation_date' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.created|date_string:'dd/MM/yyyy HH:mm:ss' }}</td>
+                            </tr>
+
+                            <!-- Shuffle step order -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'random_steps' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8">
+                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.random">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.random">{{ 'no' | trans:{}:'ujm_exo' }}</span>
+                                </td>
+                            </tr>
+
+                            <!-- Number of steps to draw -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'number_steps_draw' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.pick">
+                                    <span data-ng-switch-when="0">{{ 'all_step'|trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-switch-default="">{{ exerciseOverviewCtrl.exercise.meta.pick }}</span>
+                                </td>
+                            </tr>
+
+                            <!-- Keep same step -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'keep_same_question' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8">
+                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.pick">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.pick">{{ 'no' | trans:{}:'ujm_exo' }}</span>
+                                </td>
+                            </tr>
+
+                            <!-- Anonymous allowed ? -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'anonymous' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8">
+                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.anonymous">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.anonymous">{{ 'no' | trans:{}:'ujm_exo' }}</span>
+                                </td>
+                            </tr>
+
+                            <!-- Display interrupt button ? -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'test_exit' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8">
+                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.dispButtonInterrupt">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.dispButtonInterrupt">{{ 'no' | trans:{}:'ujm_exo' }}</span>
+                                </td>
+                            </tr>
+
+                            <!-- Maximum attempts -->
+                            <tr>
+                                <th class="text-right col-md-4" scope="row">{{ 'maximum_tries' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.maxAttempts || '-' }}</td>
+                            </tr>
+
+                            <!-- Lock attempt -->
+                            <tr data-ng-if="0 < exerciseOverviewCtrl.exercise.meta.maxAttempts">
+                                <th class="text-right col-md-4" scope="row">{{ 'lock_attempt' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8">
+                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.lockAttempt">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.lockAttempt">{{ 'no' | trans:{}:'ujm_exo' }}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Toggle additional information (displayed only for administrators) -->
+                    <div class="panel-footer text-center toggle-exercise-info" data-ng-if="exerciseOverviewCtrl.editEnabled" data-ng-click="exerciseOverviewCtrl.additionalInfo = !exerciseOverviewCtrl.additionalInfo" role="button">
+                        <span class="fa fa-fw" data-ng-class="{ 'fa-angle-double-down': !exerciseOverviewCtrl.additionalInfo, 'fa-angle-double-up': exerciseOverviewCtrl.additionalInfo }"></span>
+                        <span data-ng-if="!exerciseOverviewCtrl.additionalInfo">{{ 'show_additional_info'|trans:{}:'ujm_exo' }}</span>
+                        <span data-ng-if="exerciseOverviewCtrl.additionalInfo">{{ 'hide_additional_info'|trans:{}:'ujm_exo' }}</span>
+                        <span class="fa fa-fw" data-ng-class="{ 'fa-angle-double-down': !exerciseOverviewCtrl.additionalInfo, 'fa-angle-double-up': exerciseOverviewCtrl.additionalInfo }"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Display a big button for those who can edit Exercise OR a big button to play the Exercise if no alert -->
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-center">
+                <!-- Edit button if Exercise is empty -->
+                <a href="#/steps" role="button" class="btn btn-block btn-primary btn-lg" data-ng-if="exerciseOverviewCtrl.editEnabled && exerciseOverviewCtrl.exercise.steps.length === 0">
+                    <span class="fa fa-pencil"></span>
+                    {{ 'edit'|trans:{}:'ujm_exo' }}
+                </a>
+
+                <!-- Start button -->
+                <button-start data-paper-link="true" data-ng-if="exerciseOverviewCtrl.exercise.steps.length > 0"></button-start>
+            </div>
+        </div>
+    </div>
+</div>

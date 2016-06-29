@@ -34,7 +34,7 @@ class InteractionGraphicController extends Controller
         $vars['listeCoords'] = $listeCoords;
         $vars['exoID'] = $attr->get('exoID');
 
-        return $this->render('UJMExoBundle:InteractionGraphic:paper.html.twig', $vars);
+        return $this->render('UJMExoBundle:InteractionGraphic:show.html.twig', $vars);
     }
     /**
      * @return \Symfony\Component\HttpFoundation\Response
@@ -351,7 +351,7 @@ class InteractionGraphicController extends Controller
         }
 
         $exerciseSer = $this->container->get('ujm.exo_InteractionGraphic');
-        $res = $exerciseSer->response($request);
+        $res = $exerciseSer->responsePhp($request);
 
         $vars['point'] = $res['point']; // Score of the student without penalty
         $vars['penalty'] = $res['penalty']; // Penalty (hints)

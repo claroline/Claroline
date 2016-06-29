@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
  * @DI\Service("claroline.manager.import_csv_manager")
@@ -28,6 +29,7 @@ class ImportCsvManager
     private $roleManager;
     private $userManager;
     private $workspaceManager;
+    private $ut;
 
     /**
      * Constructor.
@@ -39,6 +41,7 @@ class ImportCsvManager
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
      *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "ut"               = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(
@@ -47,7 +50,8 @@ class ImportCsvManager
         GroupManager $groupManager,
         RoleManager $roleManager,
         UserManager $userManager,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        ClaroUtilities $ut
     ) {
         $this->om = $om;
         $this->translator = $translator;
@@ -55,6 +59,7 @@ class ImportCsvManager
         $this->roleManager = $roleManager;
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
+        $this->ut = $ut;
     }
 
     public function parseCSVLines(array $lines)
@@ -273,6 +278,7 @@ class ImportCsvManager
                 if (is_null($group)) {
                     $group = new Group();
                     $group->setName($groupName);
+                    $group->setGuid($this->ut->generateGuid());
                     $this->om->persist($group);
                     $logs[] = "$groupTxt [$groupName] $createdTxt";
                 } else {

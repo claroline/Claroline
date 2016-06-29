@@ -135,12 +135,12 @@ class Criterion implements \JsonSerializable
     public function jsonSerialize()
     {
         // Initialize data array
-        $jsonArray = array(
+        $jsonArray = [
             'id' => $this->id,                   // A local ID for the criterion in the criteriagroup
             'critid' => $this->id,                   // The real ID of the criterion into the DB
             'type' => $this->getCtype(),           // criterion type
             'data' => $this->getData(),            // criterion data
-        );
+        ];
 
         return $jsonArray;
     }

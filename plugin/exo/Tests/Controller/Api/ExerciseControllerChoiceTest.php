@@ -70,6 +70,7 @@ class ExerciseControllerChoiceTest extends TransactionalTestCase
             $this->john,
             ['data' => ['not a choice id']]
         );
+
         $this->assertEquals(422, $this->client->getResponse()->getStatusCode());
     }
 

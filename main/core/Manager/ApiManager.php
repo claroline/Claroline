@@ -158,6 +158,7 @@ class ApiManager
         }
 
         foreach ($data as $id) {
+            //make one big query later
             $entities[] = $this->om->getRepository($class)->find((int) $id);
         }
 

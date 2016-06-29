@@ -131,7 +131,7 @@ class PublishingManager
         $existingSteps = $path->getSteps()->toArray();
 
         // Publish steps for this path
-        $toProcess = !empty($this->pathStructure->steps) ? $this->pathStructure->steps : array();
+        $toProcess = !empty($this->pathStructure->steps) ? $this->pathStructure->steps : [];
 
         $publishedSteps = $this->publishSteps(0, null, $toProcess);
 
@@ -175,10 +175,10 @@ class PublishingManager
      *
      * @return array
      */
-    protected function publishSteps($level = 0, Step $parent = null, array $steps = array(), $propagatedResources = array())
+    protected function publishSteps($level = 0, Step $parent = null, array $steps = [], $propagatedResources = [])
     {
         $currentOrder = 0;
-        $processedSteps = array();
+        $processedSteps = [];
 
         // Retrieve existing steps for this path
         $existingSteps = $this->path->getSteps();
@@ -194,7 +194,7 @@ class PublishingManager
             }
 
             // Manage resources inheritance
-            $excludedResources = !empty($stepStructure->excludedResources) ? $stepStructure->excludedResources : array();
+            $excludedResources = !empty($stepStructure->excludedResources) ? $stepStructure->excludedResources : [];
             $this->publishPropagatedResources($step, $propagatedResources, $excludedResources);
 
             // Store step to know it doesn't have to be deleted when we will clean the path
@@ -203,16 +203,16 @@ class PublishingManager
             // Process children of current step
             if (!empty($stepStructure->children)) {
                 // Add propagated resources of current step for children
-                $currentPropagatedResources = array();
+                $currentPropagatedResources = [];
                 if (!empty($stepStructure->resources)) {
                     foreach ($stepStructure->resources as $resource) {
                         if (!empty($resource->propagateToChildren) && $resource->propagateToChildren) {
                             // Resource is propagated
-                            $currentPropagatedResources[] = array(
+                            $currentPropagatedResources[] = [
                                 'id' => $resource->id,
                                 'resourceId' => $resource->resourceId,
                                 'lvl' => $level,
-                            );
+                            ];
                         }
                     }
                 }
@@ -241,9 +241,9 @@ class PublishingManager
      *
      * @return \Innova\PathBundle\Manager\PublishingManager
      */
-    protected function publishPropagatedResources(Step $step, array $propagatedResources = array(), array $excludedResources = array())
+    protected function publishPropagatedResources(Step $step, array $propagatedResources = [], array $excludedResources = [])
     {
-        $inheritedResources = array();
+        $inheritedResources = [];
         $currentInherited = $step->getInheritedResources();
 
         if (!empty($propagatedResources)) {
@@ -294,7 +294,7 @@ class PublishingManager
      *
      * @return \Innova\PathBundle\Manager\PublishingManager
      */
-    protected function cleanSteps(array $neededSteps = array(), array $existingSteps = array())
+    protected function cleanSteps(array $neededSteps = [], array $existingSteps = [])
     {
         $toRemove = array_filter($existingSteps, function (Step $current) use ($neededSteps) {
             $removeStep = true;
@@ -350,7 +350,7 @@ class PublishingManager
      */
     protected function retrieveAllNodes(array $steps)
     {
-        $nodes = array();
+        $nodes = [];
 
         foreach ($steps as $step) {
             $activity = $step->getActivity();

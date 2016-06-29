@@ -2,7 +2,6 @@
 
 namespace Icap\DropzoneBundle\Controller;
 
-use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
