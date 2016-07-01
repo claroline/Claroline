@@ -18,8 +18,8 @@ class ExerciseController extends Controller
     /**
      * Opens an exercise.
      *
-     * @param User|string $user     the current User or the "anon." string if not logged
-     * @param Exercise    $exercise
+     * @param Exercise $exercise
+     * @param User     $user
      *
      * @EXT\Route(
      *     "/{id}",
@@ -31,7 +31,7 @@ class ExerciseController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function openAction(User $user = null, Exercise $exercise)
+    public function openAction(Exercise $exercise, User $user = null)
     {
         $this->assertHasPermission('OPEN', $exercise);
 

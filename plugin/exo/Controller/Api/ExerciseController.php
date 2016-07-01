@@ -109,19 +109,19 @@ class ExerciseController
      *
      * @EXT\Route("/exercises/{id}/attempts", name="exercise_new_attempt")
      * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param User     $user
      * @param Exercise $exercise
+     * @param User     $user
      *
      * @return JsonResponse
      */
-    public function attemptAction(User $user, Exercise $exercise)
+    public function attemptAction(Exercise $exercise, User $user = null)
     {
         $this->assertHasPermission('OPEN', $exercise);
 
         // if not admin of the resource check if exercise max attempts is reached
-        if (!$this->isAdmin($exercise)) {
+        if (!$this->isAdmin($exercise) && $user) {
             $max = $exercise->getMaxAttempts();
             $nbFinishedPapers = $this->paperManager->countUserFinishedPapers($exercise, $user);
 
@@ -201,22 +201,6 @@ class ExerciseController
             'Content-Type' => 'application/force-download',
             'Content-Disposition' => 'attachment; filename="export.csv"',
         ]);
-    }
-
-    /**
-     * Returns the number of finished paper for a given user and exercise.
-     *
-     * @EXT\Route("/exercises/{id}/papers/count", name="exercise_papers_count")
-     * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * @param User     $user
-     * @param Exercise $exercise
-     *
-     * @return JsonResponse
-     */
-    public function countFinishedPaperAction(User $user, Exercise $exercise)
-    {
-        return new JsonResponse($this->paperManager->countUserFinishedPapers($exercise, $user));
     }
 
     private function assertHasPermission($permission, Exercise $exercise)
