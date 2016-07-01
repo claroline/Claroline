@@ -295,7 +295,8 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
 
                             // Update paper with Score
                             var paper = this.getQuestionPaper(item);
-                            paper.score = response[i].score;
+                            paper.score = response[i].answer.score;
+                            paper.nbTries = response[i].answer.nbTries;
                         }
                     }
                 }

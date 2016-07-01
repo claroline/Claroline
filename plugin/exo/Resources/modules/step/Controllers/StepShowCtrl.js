@@ -18,6 +18,10 @@ function StepShowCtrl(UserPaperService, FeedbackService, QuestionService) {
 
     this.FeedbackService
         .on('show', this.onFeedbackShow.bind(this));
+    
+    if (this.getQuestionPaper(this.items[0]).nbTries && this.getQuestionPaper(this.items[0]).nbTries >= this.step.meta.maxAttempts && this.feedback.enabled) {
+        this.solutionShown = true;
+    }
 }
 
 /**

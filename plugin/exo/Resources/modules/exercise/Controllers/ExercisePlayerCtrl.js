@@ -59,6 +59,8 @@ function ExercisePlayerCtrl(
     // Get feedback info
     this.feedback = this.FeedbackService.get();
 
+    this.areMaxAttemptsReached();
+
     // Initialize Timer if needed
     if (0 !== this.exercise.meta.duration) {
         this.timer = this.TimerService.new(this.exercise.id, this.exercise.meta.duration * 60, this.end.bind(this), true);
@@ -151,12 +153,30 @@ ExercisePlayerCtrl.prototype.submit = function submit() {
 };
 
 /**
+ * Check if the step's maxAttempts is reached
+ */
+ExercisePlayerCtrl.prototype.areMaxAttemptsReached = function areMaxAttemptsReached() {
+    if (this.feedback.enabled) {
+        for (var i = 0; i < this.paper.questions.length; i++) {
+            if (this.step.items[0].id.toString() === this.paper.questions[i].id.toString() && this.paper.questions[i].nbTries >= this.step.meta.maxAttempts) {
+                this.feedback.visible = true;
+                this.solutionShown = true;
+                this.currentStepTry = this.paper.questions[i].nbTries;
+                if (this.currentStepTry > this.step.meta.maxAttempts) {
+                    this.currentStepTry = this.step.meta.maxAttempts;
+                }
+            }
+        }
+    }
+};
+
+/**
  * @param button
  */
 ExercisePlayerCtrl.prototype.isButtonEnabled = function isButtonEnabled(button) {
     var buttonEnabled;
     if (button === 'retry') {
-        buttonEnabled = this.feedback.enabled && this.feedback.visible && this.currentStepTry !== this.step.meta.maxAttempts && this.allAnswersFound !== 0;
+        buttonEnabled = this.feedback.enabled && this.feedback.visible && this.currentStepTry < this.step.meta.maxAttempts && this.allAnswersFound !== 0;
     } else if (button === 'next') {
         buttonEnabled = !this.next || (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
     } else if (button === 'navigation') {
@@ -212,6 +232,8 @@ ExercisePlayerCtrl.prototype.goTo = function goTo(step) {
 
         this.$location.path('/play/' + step.id);
     }
+    
+    this.areMaxAttemptsReached();
 };
 
 /**

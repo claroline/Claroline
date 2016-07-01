@@ -511,40 +511,66 @@ class PaperManager
      *
      * @throws \UJM\ExoBundle\Transfer\Json\UnregisteredHandlerException
      */
-    private function exportPaperAnswers(Paper $paper, $withScore = false)
+    public function exportPaperAnswers(Paper $paper, $withScore = false)
     {
-        $responseRepo = $this->om->getRepository('UJMExoBundle:Response');
-        $linkRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
         $questions = $this->getPaperQuestions($paper);
         $paperQuestions = [];
 
         foreach ($questions as $question) {
-            $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
-            // TODO: these two queries must be moved out of the loop
-            $response = $responseRepo->findOneBy(['paper' => $paper, 'question' => $question]);
-            $links = $linkRepo->findViewedByPaperAndQuestion($paper, $question);
-
-            $answer = $response ? $handler->convertAnswerDetails($response) : null;
-            $answerScore = $response ? $response->getMark() : 0;
-            $hints = array_map(function ($link) {
-                return [
-                    'id' => $link->getHint()->getId(),
-                    'value' => $link->getHint()->getValue(),
-                    'penalty' => $link->getHint()->getPenalty(),
-                ];
-            }, $links);
-
-            if ($answer || count($hints) > 0) {
-                $paperQuestions[] = [
-                    'id' => (string) $question->getId(),
-                    'answer' => $answer,
-                    'hints' => $hints,
-                    'score' => $withScore ? $answerScore : null,
-                ];
+            $paperQuestion = $this->exportPaperAnswer($question, $paper, $withScore);
+            if (!empty($paperQuestion)) {
+                $paperQuestions[] = $paperQuestion;
             }
         }
 
         return $paperQuestions;
+    }
+
+    /**
+     * Export submitted answers for one Question of the Paper.
+     *
+     * @param Question  $question
+     * @param Paper     $paper
+     * @param bool      $withScore Do we need to export the score of the Paper ?
+     *
+     * @return array
+     *
+     * @throws \UJM\ExoBundle\Transfer\Json\UnregisteredHandlerException
+     */
+    public function exportPaperAnswer(Question $question, Paper $paper, $withScore = false)
+    {
+        $responseRepo = $this->om->getRepository('UJMExoBundle:Response');
+        $linkRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
+        
+        $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
+        // TODO: these two queries must be moved out of the loop
+        $response = $responseRepo->findOneBy(['paper' => $paper, 'question' => $question]);
+        $links = $linkRepo->findViewedByPaperAndQuestion($paper, $question);
+
+        $answer = $response ? $handler->convertAnswerDetails($response) : null;
+        $answerScore = $response ? $response->getMark() : 0;
+        $nbTries = $response ? $response->getNbTries() : 0;
+        $hints = array_map(function ($link) {
+            return [
+                'id' => $link->getHint()->getId(),
+                'value' => $link->getHint()->getValue(),
+                'penalty' => $link->getHint()->getPenalty(),
+            ];
+        }, $links);
+        
+        $paperQuestion = null;
+        
+        if ($answer || count($hints) > 0) {
+            $paperQuestion = [
+                'id' => (string) $question->getId(),
+                'answer' => $answer,
+                'hints' => $hints,
+                'nbTries' => $nbTries,
+                'score' => $withScore ? $answerScore : null,
+            ];
+        }
+
+        return $paperQuestion;
     }
 
     /**
