@@ -70,6 +70,9 @@ class QtiRepository
         if (!is_dir($this->userRootDir.$directory.'/zip')) {
             $fs->mkdir($this->userRootDir.$directory.'/zip');
         }
+        if (!is_dir($this->userRootDir.$directory.'/ws')) {
+            $fs->mkdir($this->userRootDir.$directory.'/ws');
+        }
     }
 
     /**
@@ -106,6 +109,7 @@ class QtiRepository
                 $document_xml = new \DomDocument();
                 $document_xml->load($file);
                 foreach ($document_xml->getElementsByTagName('assessmentItem') as $ai) {
+                    $path = dirname($file);
                     $imported = false;
                     $ib = $ai->getElementsByTagName('itemBody')->item(0);
                     foreach ($ib->childNodes as $node) {
@@ -113,23 +117,23 @@ class QtiRepository
                             switch ($node->nodeName) {
                                 case 'choiceInteraction': //qcm
                                     $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionQCM');
-                                    $interX = $qtiImport->import($this, $ai);
+                                    $interX = $qtiImport->import($this, $ai, $path);
                                     break;
                                 case 'selectPointInteraction': //graphic with the tag selectPointInteraction
                                     $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
-                                    $interX = $qtiImport->import($this, $ai);
+                                    $interX = $qtiImport->import($this, $ai, $path);
                                     break;
                                 case 'hotspotInteraction': //graphic with the tag hotspotInteraction
                                     $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
-                                    $interX = $qtiImport->import($this, $ai);
+                                    $interX = $qtiImport->import($this, $ai, $path);
                                     break;
                                 case 'extendedTextInteraction': /*open (long or short)*/
                                     $qtiImport = $this->longOrShort($ai);
-                                    $interX = $qtiImport->import($this, $ai);
+                                    $interX = $qtiImport->import($this, $ai, $path);
                                     break;
                                 case 'matchInteraction': //matching
                                     $qtiImport = $this->container->get('ujm.exo_qti_import_matching');
-                                    $interX = $qtiImport->import($this, $ai);
+                                    $interX = $qtiImport->import($this, $ai, $path);
                                     break;
                             }
                         }
@@ -138,7 +142,7 @@ class QtiRepository
                         $imported = true;
                     }
                     if ($imported === false) {
-                        $other = $this->importOther($ai);
+                        $other = $this->importOther($ai, $path);
                         $interX = $other[0];
                         $imported = $other[1];
                         if ($imported == false) {
@@ -148,7 +152,7 @@ class QtiRepository
 
                     if ($this->step != null) {
                         $this->exerciseQuestions[] = $file;
-                        $this->importedQuestions[$file->getFileName()] = $interX;
+                        $this->importedQuestions[dirname($file).'/'.$file->getFileName()] = $interX;
                     }
                 }
             }
@@ -185,10 +189,11 @@ class QtiRepository
      * to try import other type of question.
      *
      * @param DOMElement $ai
+     * @param            $path
      *
      *  @return array
      */
-    private function importOther($ai)
+    private function importOther($ai, $path)
     {
         $imported = false;
         $interX = null;
@@ -210,12 +215,12 @@ class QtiRepository
         }
         if ($nbNodes == 2 && $promptTag === true && $textEntryInteractionTag === true) {
             $qtiImport = $this->container->get('ujm.exo_qti_import_open_one_word');
-            $interX = $qtiImport->import($this, $ai);
+            $interX = $qtiImport->import($this, $ai, $path);
             $imported = true;
         } elseif (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
                     || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) { //question with hole
                         $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionHole');
-            $interX = $qtiImport->import($this, $ai);
+            $interX = $qtiImport->import($this, $ai, $path);
             $imported = true;
         }
 
@@ -307,8 +312,8 @@ class QtiRepository
                 $order = -1;
             }
 
-            if (isset($this->importedQuestions[$xmlName->getFileName()])) {
-                $this->container->get('ujm.exo_exercise')->addQuestionInStep($this->importedQuestions[$xmlName->getFileName()]->getQuestion(), $this->step, $order);
+            if (isset($this->importedQuestions[dirname($xmlName).'/'.$xmlName->getFileName()])) {
+                $this->container->get('ujm.exo_exercise')->addQuestionInStep($this->importedQuestions[dirname($xmlName).'/'.$xmlName->getFileName()]->getQuestion(), $this->step, $order);
             }
 
             ++$order;

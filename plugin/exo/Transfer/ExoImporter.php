@@ -286,7 +286,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
                 $files = opendir($question);
                 while (($file = readdir($files)) !== false) {
                     if ($file != '.' && $file != '..') {
-                        copy($question.'/'.$file, $this->qtiRepository->getUserDir().$file);
+                        copy($question.'/'.$file, $this->qtiRepository->getUserDir().'ws/'.$file);
                     }
                 }
                 $this->qtiRepository->scanFilesToImport($newStep);
