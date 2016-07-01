@@ -21,10 +21,12 @@ class MatchingImport extends QtiImport
      *
      * @param qtiRepository $qtiRepos
      * @param DOMElement    $assessmentItem assessmentItem of the question to imported
+     * @param string        $path           parent directory of the files
      */
-    public function import(qtiRepository $qtiRepos, $assessmentItem)
+    public function import(qtiRepository $qtiRepos, $assessmentItem, $path)
     {
         $this->qtiRepos = $qtiRepos;
+        $this->path = $path;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
 
