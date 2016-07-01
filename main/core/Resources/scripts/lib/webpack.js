@@ -60,13 +60,17 @@ function configure(rootDir, packages, isWatchMode) {
 
   const loaders = [
     makeJsLoader(isProd),
-    makeRawLoader()
+    makeRawLoader(),
+    makeJqueryUiLoader()
   ]
 
   return {
     entry: entries,
     output: output,
-    resolve: { root: root },
+    resolve: {
+      root: root,
+      alias: { jquery: __dirname + '/../../modules/jquery' }
+    },
     plugins: plugins,
     module: { loaders: loaders },
     devServer: {
@@ -263,6 +267,20 @@ function makeRawLoader() {
   return {
     test: /\.html$/,
     loader: 'raw'
+  }
+}
+
+/**
+ * This loader disables AMD for jQuery UI modules. The reason is that these
+ * modules try to load jQuery via AMD first but get a version of jQuery which
+ * isn't the one made globally available, causing several issues. This loader
+ * could probably be removed when jQuery is required only through module
+ * imports.
+ */
+function makeJqueryUiLoader() {
+  return {
+    test: /jquery-ui/,
+    loader: 'imports?define=>false'
   }
 }
 
