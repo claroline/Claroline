@@ -845,8 +845,6 @@ class WorkspaceManager
      */
     public function importWorkspaces(array $workspaces, $logger = null)
     {
-        //$this->om->clear();
-        $ds = DIRECTORY_SEPARATOR;
         $i = 0;
         $j = 0;
         $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');

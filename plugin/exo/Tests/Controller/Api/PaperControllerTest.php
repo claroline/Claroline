@@ -77,8 +77,10 @@ class PaperControllerTest extends TransactionalTestCase
     {
         // create one paper
         $pa1 = $this->persist->paper($this->bob, $this->ex1);
+
         // create another one
-        $pa2 = $this->persist->paper($this->bob, $this->ex1);
+        $this->persist->paper($this->bob, $this->ex1);
+
         $this->om->flush();
 
         $this->request('GET', "/exercise/api/papers/{$pa1->getId()}", $this->bob);

@@ -350,7 +350,7 @@ class HoleImport extends QtiImport
 
         $rps = $this->assessmentItem->getElementsByTagName('responseDeclaration');
         foreach ($rps as $rp) {
-            if ($mapping = $rp->getElementsByTagName('mapping')->item(0) == null) {
+            if ($rp->getElementsByTagName('mapping')->item(0) == null) {
                 return false;
             }
         }

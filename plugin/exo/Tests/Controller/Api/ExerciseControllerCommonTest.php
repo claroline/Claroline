@@ -187,8 +187,10 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
     {
         // creator of the resource is considered as administrator of the resource
         $pa1 = $this->persist->paper($this->bob, $this->ex1);
+
         // check that only one paper will be returned even if another user paper exists
-        $pa2 = $this->persist->paper($this->admin, $this->ex1);
+        $this->persist->paper($this->admin, $this->ex1);
+
         $this->om->flush();
 
         $this->request('GET', "/exercise/api/exercises/{$this->ex1->getId()}/papers", $this->bob);

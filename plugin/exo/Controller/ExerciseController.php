@@ -198,7 +198,6 @@ class ExerciseController extends Controller
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
-        $services = $this->container->get('ujm.exo_exercise');
         $questionSer = $this->container->get('ujm.exo_question');
         $paginationSer = $this->container->get('ujm.exo_pagination');
 

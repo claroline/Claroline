@@ -285,7 +285,7 @@ class InteractionHoleController extends Controller
     {
         $vars = array();
         $request = $this->get('request');
-        $postVal = $req = $request->request->all();
+        $postVal = $request->request->all();
 
         if ($postVal['exoID'] != -1) {
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);
