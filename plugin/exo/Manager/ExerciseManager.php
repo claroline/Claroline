@@ -271,6 +271,10 @@ class ExerciseManager
      */
     public function exportExercise(Exercise $exercise, $withSolutions = true)
     {
+        if ($exercise->getType() === "3") {
+            $withSolutions = true;
+        }
+        
         return [
             'id' => $exercise->getId(),
             'meta' => $this->exportMetadata($exercise),
