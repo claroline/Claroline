@@ -441,6 +441,26 @@ class ResourceManager
         }
     }
 
+    public function openResourceForPortal(ResourceNode $node)
+    {
+        $this->rightsManager->editPerms(
+            1,
+            $this->roleManager->getRoleByName('ROLE_USER'),
+            $node,
+            false,
+            array(),
+            true
+        );
+        $this->rightsManager->editPerms(
+            1,
+            $this->roleManager->getRoleByName('ROLE_ANONYMOUS'),
+            $node,
+            false,
+            array(),
+            true
+        );
+    }
+
     /**
      * Checks if a resource already has a name.
      *

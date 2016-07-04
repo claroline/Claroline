@@ -203,6 +203,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             && !empty($route)
             && !$request->isXmlHttpRequest()
             && !is_a($event->getResponse(), JsonResponse::class)
+            && !$event->getResponse()->headers->contains('Content-Type', 'application/json')
             && 'GET' === $request->getMethod()
             && 200 === $event->getResponse()->getStatusCode()
             && !$event->getResponse() instanceof StreamedResponse

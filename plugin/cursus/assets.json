@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "registration": "modules/Registration/module"
+      "registration": "Registration/module"
     }
   }
 }

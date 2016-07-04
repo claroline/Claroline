@@ -185,6 +185,7 @@ class ResourcePropertiesController extends Controller
         $this->checkAccess('EDIT', $collection);
         $creatorUsername = $node->getCreator()->getUsername();
         $wasPublished = $node->isPublished();
+        $wasPublishedToPortal = $node->isPublishedToPortal();
         $form = $this->formFactory->create(
             new ResourcePropertiesType($creatorUsername, $this->translator),
             $node
@@ -214,6 +215,14 @@ class ResourcePropertiesController extends Controller
                 $eventName = "publication_change_{$node->getResourceType()->getName()}";
                 $resource = $this->resourceManager->getResourceFromNode($node);
                 $this->dispatcher->dispatch($eventName, 'PublicationChange', [$resource]);
+            }
+
+            if (
+                $this->hasAccess('ADMINISTRATE', $collection) &&
+                $node->isPublishedToPortal() &&
+                !$wasPublishedToPortal
+            ) {
+                $this->resourceManager->openResourceForPortal($node);
             }
 
             $arrayNode = $this->resourceManager->toArray($node, $this->tokenStorage->getToken());
@@ -328,8 +337,19 @@ class ResourcePropertiesController extends Controller
      */
     private function checkAccess($permission, $collection)
     {
-        if (!$this->authorization->isGranted($permission, $collection)) {
+        if (!$this->hasAccess($permission, $collection)) {
             throw new AccessDeniedException(print_r($collection->getErrorsForDisplay(), true));
         }
+    }
+
+    /**
+     * @param $permission
+     * @param $collection
+     *
+     * @return bool
+     */
+    private function hasAccess($permission, $collection)
+    {
+        return $this->authorization->isGranted($permission, $collection);
     }
 }

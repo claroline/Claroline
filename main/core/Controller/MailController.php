@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Manager\MailManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Form\SendMailType;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -41,7 +42,7 @@ class MailController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"  = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"  = @DI\Inject("form.factory"),
      *     "request"      = @DI\Inject("request"),
      *     "mailManager"  = @DI\Inject("claroline.manager.mail_manager"),
      *     "router"       = @DI\Inject("router"),
@@ -85,10 +86,10 @@ class MailController extends Controller
      */
     public function formAction(User $user)
     {
-        return array(
-            'form' => $this->formFactory->create(FormFactory::TYPE_EMAIL)->createView(),
-            'userId' => $user->getId(),
-        );
+        $mailType = new SendMailType();
+        $form = $this->formFactory->create($mailType);
+
+        return ['form' => $form->createView(), 'userId' => $user->getId()];
     }
 
     /**
@@ -111,7 +112,8 @@ class MailController extends Controller
      */
     public function sendAction(User $user)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_EMAIL);
+        $mailType = new SendMailType();
+        $form = $this->formFactory->create($mailType);
         $form->handleRequest($this->request);
         $sender = $this->tokenStorage->getToken()->getUser();
 

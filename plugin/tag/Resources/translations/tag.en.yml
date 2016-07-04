@@ -16,5 +16,6 @@ tag_deletion: Tag deletion
 tag_deletion_message: Are you sure you want to delete this Tag ?
 tag_group: Tag the group
 tag_resource: Tag the resource
+tag_resource_help: Enter your comma separated tags here. Tags allow you to quickly search for resources through the search engine.
 tag_user: Tag the user
 tag_workspace: Tag the workspace

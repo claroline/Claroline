@@ -7,8 +7,8 @@
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Coords;
-use UJM\ExoBundle\Entity\Picture;
 use UJM\ExoBundle\Entity\InteractionGraphic;
+use UJM\ExoBundle\Entity\Picture;
 
 class GraphicImport extends QtiImport
 {
@@ -19,12 +19,14 @@ class GraphicImport extends QtiImport
      *
      * @param qtiRepository $qtiRepos
      * @param DOMElement    $assessmentItem assessmentItem of the question to imported
+     * @param string        $path           parent directory of the files
      *
      * @return UJM\ExoBundle\Entity\InteractionGraphic
      */
-    public function import(qtiRepository $qtiRepos, $assessmentItem)
+    public function import(qtiRepository $qtiRepos, $assessmentItem, $path)
     {
         $this->qtiRepos = $qtiRepos;
+        $this->path = $path;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
 
@@ -128,7 +130,7 @@ class GraphicImport extends QtiImport
     {
         $path = $this->container->getParameter('claroline.param.uploads_directory');
 
-        $src = $this->qtiRepos->getUserDir().'/'.$picture;
+        $src = $this->path.'/'.$picture;
 
         if (!is_dir($path.'/ujmexo/')) {
             mkdir($path.'/ujmexo/');
@@ -138,7 +140,7 @@ class GraphicImport extends QtiImport
         }
 
         if (!is_dir($userDir)) {
-            $dirs = array('audio', 'images', 'media', 'video');
+            $dirs = ['audio', 'images', 'media', 'video'];
             mkdir($userDir);
 
             foreach ($dirs as $dir) {

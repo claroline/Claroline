@@ -38,7 +38,7 @@ before_install:
   # leave build/repo dir
   - cd ../..
   # increase php memory size (required for composer)
-  - echo "memory_limit=3072M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo "memory_limit=4096M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   # disable xdebug
   - phpenv config-rm xdebug.ini
   # get node >=5.6 (manual upgrade of nvm is currently required, pre-installed version is buggy)
@@ -48,12 +48,12 @@ before_install:
 
 before_script:
   # get and configure claroline platform
-  - curl -L https://github.com/claroline/Claroline/archive/master.tar.gz | tar xzv
+  - curl -L https://github.com/claroline/Claroline/archive/${TRAVIS_BRANCH}.tar.gz | tar xzv
   - cd Claroline-master
   - php scripts/configure.php --default
   # override platform composer.json with build/repo local reference
   - rm -rf ../$TRAVIS_REPO_SLUG/.git
-  - php ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/pre-composer.php claroline/distribution ../$TRAVIS_REPO_SLUG
+  - php ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/pre-composer.php claroline/distribution ../$TRAVIS_REPO_SLUG dev-$TRAVIS_BRANCH
   # fetch dependencies and build
   - export TRAVIS_REPO_SLUG REMOTE_HOST REMOTE_USER REMOTE_PASS CACHE_PATH
   - bash ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/fetch-deps.bash
@@ -66,8 +66,12 @@ before_script:
 script:
   # launch phpmd on modified files
   - $ROOT/vendor/bin/phpmd --exclude main/core/Resources/bundle-creator,main/web-installer `cat git_diff_files.txt | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml
+  # launch md on modified files
+  - $ROOT/vendor/bin/md `cat git_diff_files.txt | tr '\n' ' '`
   # dry run php-cs-fixer on modified files (fail on violation)
   - $ROOT/vendor/bin/php-cs-fixer fix --dry-run --diff --config-file=main/dev/Resources/travis/php-cs.php
+  # launch eslint on ES6 files
+  - $ROOT/node_modules/.bin/eslint `cat git_diff_files.txt | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`
   # launch the whole test suite
   - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/bin/phpunit
 

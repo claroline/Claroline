@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "pdf-viewer": "modules/pdf/module"
+      "pdf-viewer": "pdf/module"
     }
   }
 }

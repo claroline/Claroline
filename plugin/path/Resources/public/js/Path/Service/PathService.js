@@ -11,7 +11,8 @@
         '$location',
         'AlertService',
         'StepService',
-        function PathService($http, $q, $timeout, $location, AlertService, StepService) {
+        'UserProgressionService',
+        function PathService($http, $q, $timeout, $location, AlertService, StepService, UserProgressionService) {
             /**
              * ID of the Path
              * @type {Number}
@@ -35,8 +36,15 @@
              * @type {object}
              */
             var summary = {
-                opened: true
+                opened: true,
+                pinned: true
             };
+
+            /**
+             * Total steps in path
+             * @type {number}
+             */
+            var totalSteps = 0;
 
             /**
              * is condition blocking all children of a step
@@ -210,11 +218,64 @@
                     summary.opened = value;
                 },
 
+                /**
+                 * Toggle summary pin
+                 */
+                toggleSummaryPin: function toggleSummaryPin() {
+                    summary.pinned = !summary.pinned;
+                },
+
+                /**
+                 * Set summary pin
+                 * @param {Boolean} value
+                 */
+                setSummaryPin: function setSummaryPin(value) {
+                    summary.pinned = value;
+                },
+
                 setCompleteBlockingCondition: function setCompleteBlockingCondition(value) {
                     completeBlockingCondition = value;
                 },
+
                 isCompleteBlockingCondition: function isCompleteBlockingCondition() {
                     return completeBlockingCondition;
+                },
+
+                /**
+                 * Get the last Step seen by a User
+                 * @returns {Object|null}
+                 */
+                getLastSeenStep: function getLastSeenStep() {
+                    var lastSeen = null;
+                    this.browseSteps(path.steps, function (parent, step) {
+                        var progression = UserProgressionService.getForStep(step);
+                        if (progression) {
+                            lastSeen = step;
+                        }
+                    });
+
+                    if (null === lastSeen && path.steps && 0 !== path.steps.length) {
+                        lastSeen = path.steps[0];
+                    }
+
+                    console.log(lastSeen);
+
+                    return lastSeen;
+                },
+
+				/**
+                 * Set path total steps
+                 * @param {Number} value
+                 */
+                setTotalSteps: function setTotalSteps(value) {
+                    totalSteps = value;
+                },
+                /**
+                 * Get path total steps
+                 * @returns {number}
+                 */
+                getTotalSteps: function getTotalSteps() {
+                    return totalSteps;
                 },
 
                 /**

@@ -18,6 +18,13 @@
             {{ form_row(form.creator) }}
             <hr>
             {{ form_row(form.published) }}
+            <div class="form-group row">
+                {{ form_label(form.publishedToPortal) }}
+                <div class="col-md-3">
+                    {{ form_widget(form.publishedToPortal) }}
+                    <i class="fa fa-question-circle text-info" data-toggle="tooltip" data-placement="top" style="font-size: 1.4em; cursor: help;" title="{{ 'published_to_portal_message'|trans({}, 'platform') }}"></i>
+                </div>
+            </div>
             {{ form_row(form.accessibleFrom) }}
             {{ form_row(form.accessibleUntil) }}
             <hr>

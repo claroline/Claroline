@@ -1,0 +1,8 @@
+officeconnect_controller:
+    resource: "@FormaLibreOfficeConnectBundle/Controller/OfficeConnectController.php"
+    type: annotation
+    prefix: /
+officeconnect_authentication_controller:
+    resource: "@FormaLibreOfficeConnectBundle/Controller/AuthenticationController.php"
+    type: annotation
+    prefix: /

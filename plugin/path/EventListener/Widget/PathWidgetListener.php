@@ -6,9 +6,9 @@ use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\TagBundle\Manager\TagManager;
 use Innova\PathBundle\Manager\PathManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactoryInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Manages Path widgets.
@@ -69,11 +69,11 @@ class PathWidgetListener
 
         $config = $this->pathManager->getWidgetConfig($widgetInstance);
 
-        $content = $this->twig->render('InnovaPathBundle:Widget:list.html.twig', array(
+        $content = $this->twig->render('InnovaPathBundle:Widget:list.html.twig', [
             'workspace' => $workspace,
             'isDesktop' => $widgetInstance->isDesktop(),
             'paths' => $this->pathManager->getWidgetPaths($config, $workspace),
-        ));
+        ]);
 
         $event->setContent($content);
         $event->stopPropagation();
@@ -92,11 +92,11 @@ class PathWidgetListener
         $form = $this->formFactory->create('innova_path_widget_config', $config);
         $content = $this->twig->render(
             'InnovaPathBundle:Widget:config.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'instance' => $instance,
                 'tags' => $this->tagManager->getPlatformTags(),
-            )
+            ]
         );
 
         $event->setContent($content);

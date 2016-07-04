@@ -78,6 +78,11 @@ class ResourcePropertiesType extends AbstractType
             'checkbox',
             array('required' => true, 'label' => 'published')
         );
+        $builder->add(
+            'publishedToPortal',
+            'checkbox',
+            array('required' => false, 'label' => 'published_to_portal')
+        );
         $accessibleFromParams = $dateParams;
         $accessibleFromParams['label'] = 'accessible_from';
         $builder->add('accessibleFrom', 'datepicker', $accessibleFromParams);

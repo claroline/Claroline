@@ -11,48 +11,24 @@
                 replace: true,
                 controller: ResourcesPrimaryShowCtrl,
                 controllerAs: 'resourcesPrimaryShowCtrl',
-                templateUrl: AngularApp.webDir + 'bundles/innovapath/js/ResourcePrimary/Partial/show.html',
+                template: '<iframe id="embeddedActivity" style="width: 100%; min-height: {{ resourcesPrimaryShowCtrl.height }}px;" data-ng-src="{{ resourcesPrimaryShowCtrl.resourceUrl.url }}" allowfullscreen></iframe>',
                 scope: {
                     resources : '=', // Resources of the Step
                     height    : '='  // Min height for Resource display
                 },
                 bindToController: true,
-                link: function (scope, element, attrs) {
-                    var iframeChangeTimeout = null;
+                link: function (scope, element, attr) {
+                    $(window).on('message',function(e) {
 
-                    var activityFrame = element.find('iframe');
+                        if (  (typeof e.originalEvent.data === 'string') && (e.originalEvent.data.indexOf('documentHeight:') > -1) ) {
 
-                    var resizeIframe = function (activityFrame) {
-                        var height = $(activityFrame).contents().find('body').first().height();
+                            // Split string from identifier
+                            var height = e.originalEvent.data.split('documentHeight:')[1];
 
-                        if (height) {
-                            $(activityFrame).css('height', height + 15);
+                            // do stuff with the height
+                            $(element).css('height', parseInt(height) + 15);
                         }
-                    };
-
-                    // Manage the height of the iFrame
-                    $(activityFrame).load(function () {
-                        var iframe = this;
-                        setTimeout(function () {
-                            resizeIframe(iframe);
-                        }, 50);
                     });
-
-                    $(window).on('resize', function () {
-                        clearTimeout(iframeChangeTimeout);
-                        iframeChangeTimeout = setTimeout(function () {
-                            $(activityFrame).each(function () {
-                                resizeIframe(this);
-                            });
-                        }, 300);
-                    });
-
-                    clearTimeout(iframeChangeTimeout);
-                    iframeChangeTimeout = setTimeout(function () {
-                        $(activityFrame).each(function () {
-                            resizeIframe(activityFrame);
-                        });
-                    }, 300);
                 }
             };
         }

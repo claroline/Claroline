@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -31,7 +30,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ToolListener
 {
     private $container;
-    private $formFactory;
     private $httpKernel;
     private $rightsManager;
     private $router;
@@ -46,7 +44,6 @@ class ToolListener
     /**
      * @DI\InjectParams({
      *     "container"        = @DI\Inject("service_container"),
-     *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "httpKernel"       = @DI\Inject("http_kernel"),
      *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
      *     "router"           = @DI\Inject("router"),
@@ -59,7 +56,6 @@ class ToolListener
      */
     public function __construct(
         ContainerInterface $container,
-        FormFactory $formFactory,
         $httpKernel,
         RightsManager $rightsManager,
         RouterInterface $router,
@@ -70,7 +66,6 @@ class ToolListener
         WorkspaceManager $workspaceManager
     ) {
         $this->container = $container;
-        $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
         $this->rightsManager = $rightsManager;
         $this->router = $router;

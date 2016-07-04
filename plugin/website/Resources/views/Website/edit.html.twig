@@ -83,9 +83,9 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ hotAsset("dist/claroline-distribution-plugin-website-edit-app.js") }}"></script>
-    <script type="text/javascript" src="{{ asset("packages/angular-ui-resource-picker/angular-resource-picker.js") }}"></script>
-    <script type="text/javascript">
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-website-edit-app.js') }}"></script>
+    <script src="{{ asset('packages/angular-ui-resource-picker/angular-resource-picker.js') }}"></script>
+    <script>
         (function() {
             'use strict';
             angular
@@ -107,6 +107,5 @@
                 });
         })();
     </script>
-
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_website' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_website' }) }}"></script>
 {% endblock %}

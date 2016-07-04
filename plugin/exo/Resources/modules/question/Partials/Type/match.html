@@ -1,0 +1,141 @@
+<div class="type-question-container match-question-container panel panel-default">
+    <div class="panel-body">
+        <!-- Reset button -->
+        <div class="text-right">
+            <button type="button" role="button" class="btn btn-sm btn-danger btn-reset" data-ng-disabled="matchQuestionCtrl.feedback.visible" data-ng-click="matchQuestionCtrl.reset()">
+                <span class="fa fa-refresh"></span>
+                {{ 'reset'|trans:{}:'ujm_exo' }}
+            </button>
+        </div>
+
+        <!-- Type : to bind -->
+        <div data-ng-if="matchQuestionCtrl.question.typeMatch === 1" class="row">
+            <!-- List of Proposals -->
+            <div class="col-md-5">
+                <div class="well well-sm text-center source" id="draggable_{{ proposal.id }}"
+                     data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet">
+                    <div class="item-content" data-ng-bind-html="proposal.data | unsafe"></div>
+                </div>
+            </div>
+
+            <!-- Empty space for drawing links -->
+            <div class="col-md-2"></div>
+
+            <!-- List of Labels -->
+            <div class="col-md-5">
+                <div class="well well-sm text-center target" id="droppable_{{ label.id }}"
+                     data-ng-repeat="label in matchQuestionCtrl.question.secondSet">
+                    <div class="item-content" data-ng-bind-html="label.data | unsafe"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Type : to drag -->
+        <div data-ng-if="matchQuestionCtrl.question.typeMatch === 2" class="row">
+            <!-- PROPOSALS -->
+            <div class="col-md-6">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="well well-sm text-center origin" id="div_{{ proposal.id }}">
+                    <span class="item-handle fa fa-fw fa-ellipsis-v"></span>
+                    <div id="draggable_{{ proposal.id }}" class="item-content draggable" data-ng-bind-html="proposal.data | unsafe"></div>
+                </div>
+            </div>
+
+            <!-- LABELS -->
+            <div class="col-md-6">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="well well-sm text-center droppable" id="droppable_{{proposal.id}}">
+                    <div data-ng-bind-html="proposal.data | unsafe"></div>
+
+                    <ul class="list-group dragDropped">
+                        <li data-ng-repeat="item in matchQuestionCtrl.dropped" class="list-group-item text-left" data-ng-if="item.target === proposal.id"
+                            data-ng-class="{'list-group-item-success': matchQuestionCtrl.feedback.visible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item)), 'list-group-item-danger': matchQuestionCtrl.feedback.visible && matchQuestionCtrl.dropIsValid(item) === 2}">
+                            <div class="row">
+                                <div class="col-sm-9" data-ng-bind-html="item.label | unsafe"></div>
+
+                                <div class="col-md-1">
+                                    <span data-ng-if="matchQuestionCtrl.feedback.visible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))" data-toggle="tooltip" data-ng-class="{'text-success fa fa-check' : matchQuestionCtrl.dropIsValid(item) === 1, 'text-danger fa fa-close': matchQuestionCtrl.dropIsValid(item) === 2}" title="{{ matchQuestionCtrl.getDropFeedback(item) }}"></span>
+                                </div>
+
+                                <div class="col-sm-2 text-right">
+                                    <button class="btn btn-xs btn-danger"
+                                            data-ng-disabled="matchQuestionCtrl.feedback.visible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))"
+                                            data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)">
+                                        <span class="fa fa-trash-o"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Type : to pair -->
+        <div data-ng-if="matchQuestionCtrl.question.typeMatch === 3" class="row">
+            <!-- PROPOSALS -->
+            <div class="col-md-4">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="well well-sm text-center origin draggable drop-fixed-height" id="div_{{ proposal.id }}">
+                    <!-- When the div is not dropped yet -->
+                    <span class="item-handle fa fa-fw fa-ellipsis-v" data-ng-if="!matchQuestionCtrl.proposalDropped(proposal)"></span>
+
+                    <div class="item-content"
+                         data-ng-if="!matchQuestionCtrl.proposalDropped(proposal)"
+                         data-ng-bind-html="proposal.data | unsafe" id="draggable_{{ proposal.id }}"></div>
+
+                    <a href="" type="button" class="item-btn btn btn-default"
+                       data-ng-if="!matchQuestionCtrl.proposalDropped(proposal)"
+                       data-ng-click="matchQuestionCtrl.zoom(proposal.data)">
+                        <span class="fa fa-fw fa-search-plus"></span>
+                    </a>
+
+                    <!-- When the div is dropped -->
+                    <a href="" type="button" class="item-btn"
+                       data-ng-if="matchQuestionCtrl.proposalDropped(proposal)"
+                       data-ng-click="matchQuestionCtrl.removeDropped(proposal.id, -1)">
+                        <span class="fa fa-fw fa-undo"></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Answer zone -->
+            <div class="col-md-4">
+                <div class="droppable well well-sm text-center drop-fixed-height"
+                     id="droppable_{{ proposal.id }}"
+                     data-toggle="tooltip"
+                     title="{{ matchQuestionCtrl.getCurrentItemFeedBackIfOk(proposal) }}"
+                     data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet">
+                    <div data-ng-repeat="item in matchQuestionCtrl.dropped"
+                         data-ng-class="{ 'drop-success': matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item), 'drop-danger': matchQuestionCtrl.feedback.visible && matchQuestionCtrl.dropIsValid(item) === 2 }"
+                         data-ng-if="item.target === proposal.id">
+                        <!-- Remove item -->
+                        <a href="" role="button" class="item-btn btn btn-default"
+                           data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"
+                           data-ng-disabled="matchQuestionCtrl.feedback.visible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))">
+                            <span class="fa fa-fw fa-undo"></span>
+                        </a>
+
+                        <!-- Item content -->
+                        <div class="item-content" data-ng-bind-html="item.label | unsafe"></div>
+
+                        <!-- Zoom item content -->
+                        <a href="" type="button" class="item-btn btn btn-default" data-ng-click="matchQuestionCtrl.zoom(item.label)">
+                            <span class="fa fa-fw fa-search-plus"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List of labels -->
+            <div class="col-md-4">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="well well-sm text-center drop-fixed-height">
+                    <!-- Item content -->
+                    <div class="item-content" data-ng-bind-html="proposal.data | unsafe"></div>
+
+                    <!-- Zoom item content -->
+                    <a href="" type="button" class="item-btn btn btn-default" data-ng-click="matchQuestionCtrl.zoom(proposal.data)">
+                        <span class="fa fa-fw fa-search-plus"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

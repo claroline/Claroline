@@ -54,50 +54,6 @@ class AuthenticationControllerTest extends MockeryTestCase
         );
     }
 
-    public function testSendEmailAction()
-    {
-        $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $form = $this->mock('Symfony\Component\Form\Form');
-
-        $this->formFactory->shouldReceive('create')
-            ->once()
-            ->with(FormFactory::TYPE_USER_EMAIL, array(), null)
-            ->andReturn($form);
-        $form->shouldReceive('handleRequest')
-            ->with($this->request)
-            ->once();
-        $form->shouldReceive('isValid')
-            ->once()
-            ->andReturn(true);
-        $form->shouldReceive('getData')
-            ->once()
-            ->andReturn(array('mail' => 'toto@claroline.com'));
-        $this->userManager->shouldReceive('getUserByEmail')
-            ->once()
-            ->with('toto@claroline.com')
-            ->andReturn($user);
-        $user->shouldReceive('getUsername')->once()->andReturn('toto');
-        $user->shouldReceive('getSalt')->once()->andReturn('fsdf');
-        $user->shouldReceive('setHashTime')->once()->with(intValue());
-        $user->shouldReceive('setResetPasswordHash')->once()->with(stringValue());
-        $user->shouldReceive('getResetPasswordHash')->once()->andReturn('123');
-        $this->om->shouldReceive('persist')->once()->with($user);
-        $this->om->shouldReceive('flush')->once();
-        $this->mailManager
-            ->shouldReceive('sendForgotPassword')
-            ->once()
-            ->with($user)
-            ->andReturn(true);
-        $form->shouldReceive('createView')
-            ->once()
-            ->andReturn('view');
-
-        $this->assertEquals(
-            array('user' => $user, 'form' => 'view'),
-            $this->controller->sendEmailAction()
-        );
-    }
-
     public function testPostAuthenticationAction()
     {
         $parameterBag = $this->mock('Symfony\Component\HttpFoundation\ServerBag');

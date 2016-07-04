@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -21,6 +21,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Form\AdminAnalyticsConnectionsType;
+use Claroline\CoreBundle\Form\AdminAnalyticsTopType;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -39,7 +41,7 @@ class AnalyticsController extends Controller
      * @DI\InjectParams({
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "formFactory"         = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"         = @DI\Inject("form.factory"),
      *     "analyticsManager"    = @DI\Inject("claroline.manager.analytics_manager"),
      *     "request"             = @DI\Inject("request")
      * })
@@ -105,14 +107,11 @@ class AnalyticsController extends Controller
      */
     public function analyticsConnectionsAction()
     {
-        $criteriaForm = $this->formFactory->create(
-            FormFactory::TYPE_ADMIN_ANALYTICS_CONNECTIONS,
-            array(),
-            array(
-                'range' => $this->analyticsManager->getDefaultRange(),
-                'unique' => 'false',
-            )
-        );
+        $analyticsType = new AdminAnalyticsConnectionsType();
+        $criteriaForm = $this->formFactory->create($analyticsType, array(
+            'range' => $this->analyticsManager->getDefaultRange(),
+            'unique' => 'false',
+        ));
 
         $criteriaForm->handleRequest($this->request);
         $unique = false;
@@ -190,9 +189,9 @@ class AnalyticsController extends Controller
      */
     public function analyticsTopAction(Request $request, $topType)
     {
+        $analyticsTopType = new AdminAnalyticsTopType();
         $criteriaForm = $this->formFactory->create(
-            FormFactory::TYPE_ADMIN_ANALYTICS_TOP,
-            array(),
+            $analyticsTopType,
             array(
                 'top_type' => $topType,
                 'top_number' => 30,

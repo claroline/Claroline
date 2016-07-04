@@ -13,12 +13,12 @@ namespace Claroline\CoreBundle\Controller\Widget;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Claroline\CoreBundle\Form\SimpleTextType;
 
 class SimpleTextController extends Controller
 {
@@ -39,7 +39,7 @@ class SimpleTextController extends Controller
         //wtf !
         $keys = array_keys($request->request->all());
         $id = array_pop($keys);
-        $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT, array($id));
+        $form = $this->get('form.factory')->create(new SimpleTextType($id));
         $form->bind($this->getRequest());
 
         if ($form->isValid()) {
@@ -56,8 +56,8 @@ class SimpleTextController extends Controller
         } else {
             $simpleTextConfig = new SimpleTextConfig();
             $simpleTextConfig->setWidgetInstance($widget);
-            $errorForm = $this->container->get('claroline.form.factory')
-                ->create(FormFactory::TYPE_SIMPLE_TEXT, array('widget_text_'.rand(0, 1000000000), $simpleTextConfig));
+            $errorForm = $this->container->get('form.factory')
+                ->create(new SimpleTextType('widget_text_'.rand(0, 1000000000)), $simpleTextConfig);
             $errorForm->setData($form->getData());
             $children = $form->getIterator();
             $errorChildren = $errorForm->getIterator();

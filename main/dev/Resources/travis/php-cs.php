@@ -28,4 +28,7 @@ $files = array_map(function ($filePath) use ($pkgDir) {
 
 $finder = Symfony\CS\Finder\DefaultFinder::create()->append($files);
 
-return Symfony\CS\Config\Config::create()->finder($finder);
+return Symfony\CS\Config\Config::create()
+    ->level(Symfony\CS\FixerInterface::SYMFONY_LEVEL)
+    ->fixers(['ordered_use', 'short_array_syntax'])
+    ->finder($finder);

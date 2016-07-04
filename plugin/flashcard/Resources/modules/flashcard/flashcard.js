@@ -1,6 +1,6 @@
 /*
  * This file is part of the Claroline Connect package.
- * 
+ *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * For the full copyright and license information, please view
@@ -11,7 +11,8 @@
 import angular from 'angular/index'
 import {} from 'angular-bootstrap'
 import {} from 'angular-route'
-import ClarolineAPI from '../../../../../main/core/Resources/modules/services/module'
+import ClarolineAPI from '#/main/core/services/module'
+import FormBuilder from '#/main/core/form/module'
 import mainTemplate from './main.partial.html'
 import studyTemplate from './study.partial.html'
 import createNoteTemplate from './createNote.partial.html'
@@ -30,7 +31,8 @@ angular
   .module('FlashCardModule', [
     'ui.bootstrap',
     'ngRoute',
-    'ClarolineAPI'
+    'ClarolineAPI',
+    'FormBuilder'
   ])
   .service('FlashCardService', [
     '$http',
@@ -52,6 +54,7 @@ angular
   ])
   .controller('CreateNoteCtrl', [
     'FlashCardService',
+    '$location',
     CreateNoteCtrl
   ])
   .controller('EditNoteCtrl', [
@@ -118,4 +121,3 @@ angular
         })
     }
   ]);
-

@@ -10,7 +10,7 @@ class WikiType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name');
+        $builder->add('name', 'text', array('attr' => array('autofocus' => true)));
     }
 
     public function getName()

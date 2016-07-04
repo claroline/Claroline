@@ -3,11 +3,11 @@
 namespace Innova\PathBundle\EventListener;
 
 use Claroline\CoreBundle\Event\RichTextFormatEvent;
-use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Transfert\RichTextFormatter;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
-use Claroline\CoreBundle\Library\Transfert\RichTextFormatter;
 
 /**
  * @DI\Service()
@@ -79,7 +79,7 @@ class RichTextFormatListener
             $parent = $this->formatter->findParentFromDataUid($uid);
             $el = $this->formatter->findItemFromUid($uid);
             $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                ->findOneBy(array('parent' => $parent, 'name' => $el['name']));
+                ->findOneBy(['parent' => $parent, 'name' => $el['name']]);
 
             if ($node) {
                 $resource = $this->resourceManager->getResourceFromNode($node);

@@ -108,9 +108,6 @@
             }
         ],
         /**
-         * get return values of promises made in PathService to be available elsewhere
-         */
-        /**
          * list of all user group in Claro
          */
         allgroups: [
@@ -201,7 +198,36 @@
                                     return { granted: true };
                                 }
                             ]
-                        }, resolveRootFunctions)
+                        }, resolveRootFunctions, {
+                            step: [
+                                '$route',
+                                'PathService',
+                                function getLastSeenStep($route, PathService) {
+                                    // Get the last seen step or the root if none
+                                    var currentStep = PathService.getLastSeenStep();
+                                    if (currentStep) {
+                                        $route.current.params.stepId = currentStep.id;
+                                    }
+
+                                    return currentStep;
+                                }
+                            ],
+                            inheritedResources: [
+                                'PathService',
+                                function getLastSeenInheritedResources(PathService) {
+                                    var inherited = [];
+
+                                    var path = PathService.getPath();
+                                    var currentStep = PathService.getLastSeenStep();
+                                    if (angular.isObject(path) && angular.isObject(path.steps) && angular.isObject(currentStep)) {
+                                        // Grab inherited resources
+                                        inherited = PathService.getStepInheritedResources(path.steps, currentStep);
+                                    }
+
+                                    return inherited;
+                                }
+                            ]
+                        })
                     })
                     .when('/:stepId?', {
                         templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/show.html',
@@ -214,7 +240,7 @@
                                 'PathService',
                                 'AuthorizationCheckerService',
                                 function authorizationResolve($route, PathService, AuthorizationCheckerService) {
-                                    var authorization = false;
+                                    var authorization = true;
 
                                     var step = PathService.getStep($route.current.params.stepId);
                                     if (angular.isDefined(step) && angular.isObject(step)) {

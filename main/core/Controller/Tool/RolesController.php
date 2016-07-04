@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Symfony\Component\Form\FormFactory as SymfonyFormFactory;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -29,7 +29,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Form\WorkspaceUsersImportType;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -40,6 +39,8 @@ use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\workspaceUserQueueManager;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Form\WorkspaceRoleType;
+use Claroline\CoreBundle\Form\RoleTranslationType;
 
 class RolesController extends Controller
 {
@@ -55,7 +56,6 @@ class RolesController extends Controller
     private $request;
     private $translator;
     private $wksUqmanager;
-    private $symfonyFormFactory;
 
     /**
      * @DI\InjectParams({
@@ -67,12 +67,11 @@ class RolesController extends Controller
      *     "facetManager"       = @DI\Inject("claroline.manager.facet_manager"),
      *     "authorization"      = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"       = @DI\Inject("security.token_storage"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "router"             = @DI\Inject("router"),
      *     "request"            = @DI\Inject("request"),
      *     "translator"         = @DI\Inject("translator"),
      *     "wksUqmanager"       = @DI\Inject("claroline.manager.workspace_user_queue_manager"),
-     *     "symfonyFormFactory" = @DI\Inject("form.factory")
+     *     "formFactory" = @DI\Inject("form.factory")
      * })
      */
     public function __construct(
@@ -84,12 +83,11 @@ class RolesController extends Controller
         FacetManager $facetManager,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
-        FormFactory $formFactory,
         UrlGeneratorInterface $router,
         Request $request,
         TranslatorInterface $translator,
         workspaceUserQueueManager $wksUqmanager,
-        SymfonyFormFactory $symfonyFormFactory
+        FormFactory $formFactory
     ) {
         $this->roleManager = $roleManager;
         $this->userManager = $userManager;
@@ -104,7 +102,6 @@ class RolesController extends Controller
         $this->request = $request;
         $this->translator = $translator;
         $this->wksUqmanager = $wksUqmanager;
-        $this->symfonyFormFactory = $symfonyFormFactory;
     }
     /**
      * @EXT\Route(
@@ -131,7 +128,7 @@ class RolesController extends Controller
     public function createRoleFormAction(Workspace $workspace)
     {
         $this->checkEditionAccess($workspace);
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_ROLE);
+        $form = $this->formFactory->create(new WorkspaceRoleType());
 
         return array('workspace' => $workspace, 'form' => $form->createView());
     }
@@ -148,7 +145,7 @@ class RolesController extends Controller
     public function createRoleAction(Workspace $workspace, User $user)
     {
         $this->checkEditionAccess($workspace);
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_ROLE);
+        $form = $this->formFactory->create(new WorkspaceRoleType());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -241,7 +238,7 @@ class RolesController extends Controller
     public function editRoleFormAction(Role $role, Workspace $workspace)
     {
         $this->checkEditionAccess($workspace);
-        $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION, array(), $role);
+        $form = $this->formFactory->create(new RoleTranslationType(), $role);
 
         return array('workspace' => $workspace, 'form' => $form->createView(), 'role' => $role);
     }
@@ -257,11 +254,7 @@ class RolesController extends Controller
     public function editRoleAction(Role $role, Workspace $workspace)
     {
         $this->checkEditionAccess($workspace);
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_ROLE_TRANSLATION,
-            array('wsGuid' => $workspace->getGuid()),
-            $role
-        );
+        $form = $this->formFactory->create(new RoleTranslationType($workspace->getGuid()), $role);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -857,7 +850,7 @@ class RolesController extends Controller
     public function workspaceUsersToolImportFormAction(Workspace $workspace)
     {
         $this->checkEditionAccess($workspace);
-        $form = $this->symfonyFormFactory->create(new WorkspaceUsersImportType($workspace));
+        $form = $this->formFactory->create(new WorkspaceUsersImportType($workspace));
 
         return array('workspace' => $workspace, 'form' => $form->createView());
     }
@@ -874,7 +867,7 @@ class RolesController extends Controller
     public function workspaceUsersToolImportAction(Workspace $workspace)
     {
         $this->checkEditionAccess($workspace);
-        $form = $this->symfonyFormFactory->create(new WorkspaceUsersImportType($workspace));
+        $form = $this->formFactory->create(new WorkspaceUsersImportType($workspace));
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

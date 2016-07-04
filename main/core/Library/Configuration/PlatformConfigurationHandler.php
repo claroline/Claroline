@@ -93,6 +93,7 @@ class PlatformConfigurationHandler
         'google_geocoding_client_id' => null,
         'google_geocoding_signature' => null,
         'google_geocoding_key' => null,
+        'portal_enabled_resources' => null,
     );
     private $lockedParameters;
 

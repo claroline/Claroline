@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\LinkHintPaper;
@@ -18,7 +19,6 @@ use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Library\Mode\MarkMode;
 use UJM\ExoBundle\Services\classes\PaperService;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("ujm.exo.paper_manager")
@@ -97,17 +97,23 @@ class PaperManager
      *
      * @return array
      */
-    public function openPaper(Exercise $exercise, User $user)
+    public function openPaper(Exercise $exercise, User $user = null)
     {
-        $papers = $this->om->getRepository('UJMExoBundle:Paper')->findUnfinishedPapers($user, $exercise);
+        $papers = [];
+        if ($user) {
+            // If it's not an anonymous, load the previous unfinished papers
+            $papers = $this->om->getRepository('UJMExoBundle:Paper')->findUnfinishedPapers($user, $exercise);
+        }
+
         if (count($papers) === 0) {
-            $paper = $this->createPaper($user, $exercise);
+            // Create a new paper for anonymous or if no unfinished
+            $paper = $this->createPaper($exercise, $user);
         } else {
             if (!$exercise->getDispButtonInterrupt()) {
                 // User is not allowed to continue is previous paper => open a new one and close the previous
                 $this->closePaper($papers[0]);
 
-                $paper = $this->createPaper($user, $exercise);
+                $paper = $this->createPaper($exercise, $user);
             } else {
                 $paper = $papers[0];
             }
@@ -119,22 +125,29 @@ class PaperManager
     /**
      * Creates a new exercise paper for a given user.
      *
-     * @param User     $user
      * @param Exercise $exercise
+     * @param User     $user
      *
      * @return Paper
      */
-    public function createPaper(User $user, Exercise $exercise)
+    public function createPaper(Exercise $exercise, User $user = null)
     {
-        $lastPaper = $this->om->getRepository('UJMExoBundle:Paper')->findOneBy(
-            ['user' => $user, 'exercise' => $exercise],
-            ['start' => 'DESC']
-        );
+        // Get the number of the new Paper
+        $paperNum = 1;
+        if ($user) {
+            $lastPaper = $this->om->getRepository('UJMExoBundle:Paper')->findOneBy(
+                ['user' => $user, 'exercise' => $exercise],
+                ['start' => 'DESC']
+            );
 
-        $paperNum = $lastPaper ? $lastPaper->getNumPaper() + 1 : 1;
+            if ($lastPaper) {
+                $paperNum = $lastPaper->getNumPaper() + 1;
+            }
+        }
 
+        // Generate the list of Steps and Questions for the Paper
         $order = '';
-        if ($exercise->getKeepSteps() && $lastPaper) {
+        if (!empty($lastPaper) && $exercise->getKeepSteps()) {
             // Get steps order from the last user Paper
             $order = $lastPaper->getOrdreQuestion();
         } else {
@@ -145,6 +158,7 @@ class PaperManager
             }
         }
 
+        // Create the new Paper entity
         $paper = new Paper();
         $paper->setExercise($exercise);
         $paper->setUser($user);
@@ -199,6 +213,7 @@ class PaperManager
      */
     public function recordScore(Question $question, Paper $paper, $score)
     {
+        /** @var Response $response */
         $response = $this->om->getRepository('UJMExoBundle:Response')
             ->findOneBy(['paper' => $paper, 'question' => $question]);
 
@@ -400,12 +415,10 @@ class PaperManager
      */
     private function showUserPaper(Paper $paper)
     {
-        $user = $paper->getUser();
-
-        $showUser = $user->getFirstName().' '.$user->getLastName();
-
-        if ($paper->getAnonymous()) {
-            $showUser = $this->translator->trans('anonymous', array(), 'ujm_exo');
+        if (!$paper->getUser() || $paper->getAnonymous()) {
+            $showUser = $this->translator->trans('anonymous', [], 'ujm_exo');
+        } else {
+            $showUser = $paper->getUser()->getFirstName().' '.$paper->getUser()->getLastName();
         }
 
         return $showUser;
@@ -724,7 +737,7 @@ class PaperManager
      */
     private function pickItem($itemToPick, array $listItem)
     {
-        $newListItem = array();
+        $newListItem = [];
         while ($itemToPick > 0) {
             $index = rand(0, count($listItem) - 1);
             $newListItem[] = $listItem[$index];

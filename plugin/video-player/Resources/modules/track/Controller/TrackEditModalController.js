@@ -1,4 +1,4 @@
-import langs from '#/main/core/Resources/modules/form/Field/Lang/iso'
+import langs from '#/main/core/form/Field/Lang/iso'
 
 export default class TrackEditModalController {
   constructor ($http, $uibModalInstance, track) {

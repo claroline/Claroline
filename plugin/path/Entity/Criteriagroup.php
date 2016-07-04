@@ -2,8 +2,8 @@
 
 namespace Innova\PathBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Criteriagroup.
@@ -299,11 +299,11 @@ class Criteriagroup implements \JsonSerializable
     public function jsonSerialize()
     {
         // Initialize data array
-        $jsonArray = array(
+        $jsonArray = [
             'id' => $this->id,               // A local ID for the criteriagroup in the condition
             'cgid' => $this->id,               // The real ID of the criteriagroup into the DB
             'lvl' => $this->lvl,              // The depth of the criteriagroup in the condition structure
-        );
+        ];
 
         // Get step criteriagroup
         if (!empty($this->children)) {

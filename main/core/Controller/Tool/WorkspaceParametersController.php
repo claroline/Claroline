@@ -12,29 +12,32 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Form\BaseProfileType;
+use Claroline\CoreBundle\Form\WorkspaceEditType;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
-use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\TransferManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
-use Claroline\CoreBundle\Manager\TransferManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class WorkspaceParametersController extends Controller
 {
@@ -61,7 +64,7 @@ class WorkspaceParametersController extends Controller
      *     "authorization"       = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"         = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"         = @DI\Inject("form.factory"),
      *     "router"              = @DI\Inject("router"),
      *     "localeManager"       = @DI\Inject("claroline.manager.locale_manager"),
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
@@ -139,37 +142,35 @@ class WorkspaceParametersController extends Controller
         $workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
         $isAdmin = $this->authorization->isGranted('OPEN', $workspaceAdminTool);
 
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WORKSPACE_EDIT,
-            array(
-                $username,
-                $creationDate,
-                $count,
-                $storageUsed,
-                $countResources,
-                $isAdmin,
-                $expDate,
-            ),
-            $workspace
+        $workspaceType = new WorkspaceEditType(
+            $username,
+            $creationDate,
+            $count,
+            $storageUsed,
+            $countResources,
+            $isAdmin,
+            $expDate
         );
+
+        $form = $this->formFactory->create($workspaceType, $workspace);
 
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(
                 'claro_workspace_subscription_url_generate',
-                array('workspace' => $workspace->getId()),
+                ['workspace' => $workspace->getId()],
                 true
             );
         } else {
             $url = '';
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'workspace' => $workspace,
             'url' => $url,
             'user' => $user,
             'count' => $count,
-        );
+        ];
     }
 
     /**
@@ -198,11 +199,9 @@ class WorkspaceParametersController extends Controller
         $expDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
             $workspace->getEndDate()
         );
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WORKSPACE_EDIT,
-            array(null, null, null, null, null, $isAdmin, $expDate),
-            $workspace
-        );
+
+        $workspaceType = new WorkspaceEditType(null, null, null, null, null, $isAdmin, $expDate);
+        $form = $this->formFactory->create($workspaceType, $workspace);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -217,10 +216,10 @@ class WorkspaceParametersController extends Controller
             return $this->redirect(
                 $this->generateUrl(
                     'claro_workspace_open_tool',
-                    array(
+                    [
                         'workspaceId' => $workspace->getId(),
                         'toolName' => 'parameters',
-                    )
+                    ]
                 )
             );
         } else {
@@ -232,19 +231,19 @@ class WorkspaceParametersController extends Controller
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(
                 'claro_workspace_subscription_url_generate',
-                array('workspace' => $workspace->getId()),
+                ['workspace' => $workspace->getId()],
                 true
             );
         } else {
             $url = '';
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'workspace' => $workspace,
             'url' => $url,
             'user' => $user,
-        );
+        ];
     }
 
     /**
@@ -264,7 +263,7 @@ class WorkspaceParametersController extends Controller
         $event = $this->eventDispatcher->dispatch(
             strtolower('configure_workspace_tool_'.$tool->getName()),
             'ConfigureWorkspaceTool',
-            array($tool, $workspace)
+            [$tool, $workspace]
         );
 
         return new Response($event->getContent());
@@ -290,10 +289,10 @@ class WorkspaceParametersController extends Controller
             return $this->redirect(
                 $this->generateUrl(
                     'claro_workspace_subscription_url_generate_anonymous',
-                    array(
+                    [
                         'workspace' => $workspace->getId(),
                         'toolName' => 'home',
-                    )
+                    ]
                 )
             );
         }
@@ -302,7 +301,7 @@ class WorkspaceParametersController extends Controller
 
         return $this->redirect(
             $this->generateUrl(
-                'claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home')
+                'claro_workspace_open_tool', ['workspaceId' => $workspace->getId(), 'toolName' => 'home']
             )
         );
     }
@@ -327,9 +326,8 @@ class WorkspaceParametersController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_BASE_PROFILE, array($this->localeManager, $this->tosManager, $this->get('translator'))
-        );
+        $baseProfileType = new BaseProfileType($this->localeManager, $this->tosManager, $this->get('translator'));
+        $form = $this->formFactory->create($baseProfileType, new User());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -339,15 +337,15 @@ class WorkspaceParametersController extends Controller
 
             return $this->redirect(
                 $this->generateUrl(
-                    'claro_workspace_open', array('workspaceId' => $workspace->getId())
+                    'claro_workspace_open', ['workspaceId' => $workspace->getId()]
                 )
             );
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'workspace' => $workspace,
-        );
+        ];
     }
 
     /**
@@ -374,7 +372,7 @@ class WorkspaceParametersController extends Controller
 
         return $this->redirect(
             $this->generateUrl(
-                'claro_workspace_open', array('workspaceId' => $workspace->getId())
+                'claro_workspace_open', ['workspaceId' => $workspace->getId()]
             )
         );
     }

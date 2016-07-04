@@ -66,8 +66,8 @@ class InteractionOpenHandler extends QuestionHandler
      */
     public function processUpdate($originalInterOpen)
     {
-        $originalWrs = array();
-        $originalHints = array();
+        $originalWrs = [];
+        $originalHints = [];
 
         foreach ($originalInterOpen->getWordResponses() as $wr) {
             $originalWrs[] = $wr;
@@ -78,6 +78,9 @@ class InteractionOpenHandler extends QuestionHandler
 
         if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
+
+            // Uses the default category if no category selected
+            $this->checkCategory();
 
             if ($this->form->isValid()) {
                 $this->onSuccessUpdate($this->form->getData(), $originalWrs, $originalHints);

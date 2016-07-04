@@ -15,7 +15,7 @@ class InteractionGraphicHandler extends QuestionHandler
             $this->form->handleRequest($this->request);
             $data = $this->form->getData();
             //Uses the default category if no category selected
-            $this->checkCategory($data);
+            $this->checkCategory();
             //If title null, uses the first 50 characters of "invite" (enuncicate)
             $this->checkTitle();
             if ($this->validateNbClone() === false) {
@@ -91,7 +91,7 @@ class InteractionGraphicHandler extends QuestionHandler
      */
     public function processUpdate($originalInterGraphic)
     {
-        $originalHints = array();
+        $originalHints = [];
 
         foreach ($originalInterGraphic->getQuestion()->getHints() as $hint) {
             $originalHints[] = $hint;
@@ -99,6 +99,9 @@ class InteractionGraphicHandler extends QuestionHandler
 
         if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
+
+            // Uses the default category if no category selected
+            $this->checkCategory();
 
             if ($this->form->isValid()) {
                 $this->onSuccessUpdate($this->form->getData(), $originalHints);
@@ -161,12 +164,12 @@ class InteractionGraphicHandler extends QuestionHandler
      */
     private function persitNewCoords($coord, $interGraph, $lengthCoord)
     {
-        $result = array();
+        $result = [];
         for ($i = 0; $i < $lengthCoord; ++$i) {
             $inter = preg_split('[§§]', $coord[$i]); // Divide the src of the answer zone and the other informations
 
-            $before = array('|-|', '~~', '^^');
-            $after = array('@@', '@@', '@@');
+            $before = ['|-|', '~~', '^^'];
+            $after = ['@@', '@@', '@@'];
 
             $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
 

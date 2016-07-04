@@ -1,0 +1,10 @@
+<div class="container-fluid">
+    <form class="form-horizontal row" data-ng-submit="vm.submit()">
+        <div class="form-group col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" id="searchQuery" data-ng-value="vm.options.query" data-ng-model="vm.options.query" name="query" autofocus="autofocus" placeholder="{{ 'portal_search'|trans:{}:'platform' }}"/>
+                <div class="input-group-addon" data-ng-click="vm.submit()"><i class="fa fa-search"></i></div>
+            </div>
+        </div>
+    </form>
+</div>
