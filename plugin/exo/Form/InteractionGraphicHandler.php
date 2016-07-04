@@ -91,7 +91,7 @@ class InteractionGraphicHandler extends QuestionHandler
      */
     public function processUpdate($originalInterGraphic)
     {
-        $originalHints = array();
+        $originalHints = [];
 
         foreach ($originalInterGraphic->getQuestion()->getHints() as $hint) {
             $originalHints[] = $hint;
@@ -164,12 +164,12 @@ class InteractionGraphicHandler extends QuestionHandler
      */
     private function persitNewCoords($coord, $interGraph, $lengthCoord)
     {
-        $result = array();
+        $result = [];
         for ($i = 0; $i < $lengthCoord; ++$i) {
             $inter = preg_split('[§§]', $coord[$i]); // Divide the src of the answer zone and the other informations
 
-            $before = array('|-|', '~~', '^^');
-            $after = array('@@', '@@', '@@');
+            $before = ['|-|', '~~', '^^'];
+            $after = ['@@', '@@', '@@'];
 
             $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
 

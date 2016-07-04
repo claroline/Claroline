@@ -66,8 +66,8 @@ class InteractionOpenHandler extends QuestionHandler
      */
     public function processUpdate($originalInterOpen)
     {
-        $originalWrs = array();
-        $originalHints = array();
+        $originalWrs = [];
+        $originalHints = [];
 
         foreach ($originalInterOpen->getWordResponses() as $wr) {
             $originalWrs[] = $wr;

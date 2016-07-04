@@ -7,8 +7,8 @@
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Coords;
-use UJM\ExoBundle\Entity\Picture;
 use UJM\ExoBundle\Entity\InteractionGraphic;
+use UJM\ExoBundle\Entity\Picture;
 
 class GraphicImport extends QtiImport
 {
@@ -140,7 +140,7 @@ class GraphicImport extends QtiImport
         }
 
         if (!is_dir($userDir)) {
-            $dirs = array('audio', 'images', 'media', 'video');
+            $dirs = ['audio', 'images', 'media', 'video'];
             mkdir($userDir);
 
             foreach ($dirs as $dir) {

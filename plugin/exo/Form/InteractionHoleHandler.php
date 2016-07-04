@@ -94,8 +94,8 @@ class InteractionHoleHandler extends QuestionHandler
      */
     public function processUpdate($originalInterHole)
     {
-        $originalHoles = array();
-        $originalHints = array();
+        $originalHoles = [];
+        $originalHints = [];
 
         // Create an array of the current Choice objects in the database
         foreach ($originalInterHole->getHoles() as $hole) {
@@ -230,7 +230,7 @@ class InteractionHoleHandler extends QuestionHandler
         //id hole in html = $hole->getPosition()
         $html = $interHole->getHtml();
         $tabInputValue = explode('value="', $html);
-        $tabHoles = array();
+        $tabHoles = [];
 
         foreach ($interHole->getHoles() as $hole) {
             if ($hole->getSelector() === false) {
@@ -244,7 +244,7 @@ class InteractionHoleHandler extends QuestionHandler
                 $regExpr = '<select id="'.$pos.'" class="blank" name="blank_'.$hole->getPosition().'">';
                 $select = '<select id="'.$pos.'" class="blank" name="blank_'.$hole->getPosition().'">';
 
-                $wrs = array();
+                $wrs = [];
                 foreach ($hole->getWordResponses() as $wr) {
                     $wrs[] = $wr;
                 }

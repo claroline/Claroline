@@ -2,28 +2,28 @@
 
 namespace UJM\ExoBundle\Testing;
 
+use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Category;
-use UJM\ExoBundle\Entity\Step;
-use UJM\ExoBundle\Entity\StepQuestion;
 use UJM\ExoBundle\Entity\Choice;
-use UJM\ExoBundle\Entity\Proposal;
-use UJM\ExoBundle\Entity\Label;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
+use UJM\ExoBundle\Entity\InteractionMatching;
 use UJM\ExoBundle\Entity\InteractionOpen;
 use UJM\ExoBundle\Entity\InteractionQCM;
-use UJM\ExoBundle\Entity\InteractionMatching;
+use UJM\ExoBundle\Entity\Label;
 use UJM\ExoBundle\Entity\Paper;
+use UJM\ExoBundle\Entity\Proposal;
 use UJM\ExoBundle\Entity\Question;
-use UJM\ExoBundle\Entity\TypeQCM;
+use UJM\ExoBundle\Entity\Step;
+use UJM\ExoBundle\Entity\StepQuestion;
 use UJM\ExoBundle\Entity\TypeMatching;
+use UJM\ExoBundle\Entity\TypeQCM;
 use UJM\ExoBundle\Manager\PaperManager;
 
 /**

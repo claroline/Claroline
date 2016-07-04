@@ -2,12 +2,12 @@
 
 namespace UJM\ExoBundle\Form;
 
+use Claroline\CoreBundle\Entity\User;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManager;
-use UJM\ExoBundle\Entity\Category;
 use Symfony\Component\Translation\TranslatorInterface;
-use Claroline\CoreBundle\Entity\User;
+use UJM\ExoBundle\Entity\Category;
 use UJM\ExoBundle\Services\classes\CategoryService;
 use UJM\ExoBundle\Services\classes\ExerciseServices;
 
@@ -155,7 +155,7 @@ abstract class QuestionHandler
     protected function checkCategory()
     {
         $data = $this->form->getData()->getQuestion();
-        $default = $this->translator->trans('default', array(), 'ujm_exo');
+        $default = $this->translator->trans('default', [], 'ujm_exo');
         $uid = $this->user->getId();
         $ListeCategroy = $this->em->getRepository('UJMExoBundle:Category')->getListCategory($uid);
 

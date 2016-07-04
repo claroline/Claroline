@@ -173,7 +173,7 @@ class ExerciseController
 
         $handle = fopen('php://memory', 'r+');
         while (false !== ($row = $iterableResult->next())) {
-            $rowCSV = array();
+            $rowCSV = [];
             $infosPaper = $this->paperService->getInfosPaper($row[0]);
             $score = $infosPaper['scorePaper'] / $infosPaper['maxExoScore'];
             $score = $score * 20;
@@ -184,7 +184,7 @@ class ExerciseController
             if ($row[0]->getEnd()) {
                 $rowCSV[] = $row[0]->getEnd()->format('Y-m-d H:i:s');
             } else {
-                $rowCSV[] = $this->get('translator')->trans('no_finish', array(), 'ujm_exo');
+                $rowCSV[] = $this->get('translator')->trans('no_finish', [], 'ujm_exo');
             }
             $rowCSV[] = $row[0]->getInterupt();
             $rowCSV[] = $this->paperService->roundUpDown($score);

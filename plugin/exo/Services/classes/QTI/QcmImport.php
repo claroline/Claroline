@@ -101,13 +101,13 @@ class QcmImport extends QtiImport
         if ($ri->hasAttribute('cardinality') && $ri->getAttribute('cardinality') == 'multiple') {
             $type = $this->om
                          ->getRepository('UJMExoBundle:TypeQCM')
-                         ->findOneBy(array('code' => 1));
+                         ->findOneBy(['code' => 1]);
 
             $this->interactionQCM->setTypeQCM($type);
         } else {
             $type = $this->om
                          ->getRepository('UJMExoBundle:TypeQCM')
-                         ->findOneBy(array('code' => 2));
+                         ->findOneBy(['code' => 2]);
 
             $this->interactionQCM->setTypeQCM($type);
         }

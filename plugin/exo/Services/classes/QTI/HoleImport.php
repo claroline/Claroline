@@ -15,7 +15,7 @@ class HoleImport extends QtiImport
     protected $interactionHole;
     protected $qtiTextWithHoles;
     protected $textHtml;
-    protected $tabWrOpt = array();
+    protected $tabWrOpt = [];
 
     /**
      * Implements the abstract method.

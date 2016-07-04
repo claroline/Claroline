@@ -77,8 +77,8 @@ class InteractionQCMHandler extends QuestionHandler
      */
     public function processUpdate($originalInterQCM)
     {
-        $originalChoices = array();
-        $originalHints = array();
+        $originalChoices = [];
+        $originalHints = [];
 
         // Create an array of the current Choice objects in the database
         foreach ($originalInterQCM->getChoices() as $choice) {

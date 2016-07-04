@@ -10,8 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Step;
 
 class ExerciseController extends Controller
 {
@@ -186,11 +186,11 @@ class ExerciseController extends Controller
             $QuestionsExo = false;
         }
 
-        $vars = array();
-        $sharedWithMe = array();
-        $shareRight = array();
-        $questionWithResponse = array();
-        $alreadyShared = array();
+        $vars = [];
+        $sharedWithMe = [];
+        $shareRight = [];
+        $questionWithResponse = [];
+        $alreadyShared = [];
 
         $em = $this->getDoctrine()->getManager();
 
@@ -312,7 +312,7 @@ class ExerciseController extends Controller
 
             return new Response($url);
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
+            return $this->redirect($this->generateUrl('ujm_exercise_import_question', ['exoID' => $exoID]));
         }
     }
 

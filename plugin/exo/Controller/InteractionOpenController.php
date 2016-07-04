@@ -2,12 +2,12 @@
 
 namespace UJM\ExoBundle\Controller;
 
-use Symfony\Component\Form\FormError;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use UJM\ExoBundle\Entity\InteractionOpen;
 use UJM\ExoBundle\Entity\Response;
-use UJM\ExoBundle\Form\InteractionOpenType;
 use UJM\ExoBundle\Form\InteractionOpenHandler;
+use UJM\ExoBundle\Form\InteractionOpenType;
 use UJM\ExoBundle\Form\ResponseType;
 
 /**
@@ -55,13 +55,13 @@ class InteractionOpenController extends Controller
         $typeOpen = $interOpenSer->getTypeOpen();
 
         return $this->container->get('templating')->renderResponse(
-           'UJMExoBundle:InteractionOpen:new.html.twig', array(
+           'UJMExoBundle:InteractionOpen:new.html.twig', [
                'exoID' => $attr->get('exoID'),
                'stepID' => $attr->get('stepID'),
                'entity' => $entity,
                'typeOpen' => json_encode($typeOpen),
                'form' => $form->createView(),
-           )
+           ]
        );
     }
 
@@ -102,8 +102,8 @@ class InteractionOpenController extends Controller
 
             if ($exoID == -1) {
                 return $this->redirect(
-                    $this->generateUrl('ujm_question_index', array(
-                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), )
+                    $this->generateUrl('ujm_question_index', [
+                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), ]
                     )
                 );
             } else {
@@ -115,33 +115,33 @@ class InteractionOpenController extends Controller
 
         if ($openHandler == 'infoDuplicateQuestion') {
             $form->addError(new FormError(
-                    $this->get('translator')->trans('info_duplicate_question', array(), 'ujm_exo')
+                    $this->get('translator')->trans('info_duplicate_question', [], 'ujm_exo')
                     ));
         }
 
         $typeOpen = $interOpenSer->getTypeOpen();
         $formWithError = $this->render(
-            'UJMExoBundle:InteractionOpen:new.html.twig', array(
+            'UJMExoBundle:InteractionOpen:new.html.twig', [
             'entity' => $interOpen,
             'form' => $form->createView(),
             'exoID' => $exoID,
             'stepID' => $stepID,
             'error' => true,
             'typeOpen' => json_encode($typeOpen),
-            )
+            ]
         );
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
         $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
 
         return $this->render(
-            'UJMExoBundle:Question:new.html.twig', array(
+            'UJMExoBundle:Question:new.html.twig', [
             'formWithError' => $formWithError,
             'exoID' => $exoID,
             'stepID' => $stepID,
             'linkedCategory' => $catSer->getLinkedCategories(),
             'locker' => $catSer->getLockCategory(),
             'interactionType' => $interactionType,
-            )
+            ]
         );
     }
 
@@ -244,11 +244,11 @@ class InteractionOpenController extends Controller
         }
 
         return $this->forward(
-            'UJMExoBundle:Question:edit', array(
+            'UJMExoBundle:Question:edit', [
                 'exoID' => $exoID,
                 'id' => $interOpen->getQuestion()->getId(),
                 'form' => $editForm,
-            )
+            ]
         );
     }
 
@@ -266,7 +266,7 @@ class InteractionOpenController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionOpen')->find($id);
         //Deleting of relations, if there the question is shared
-        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $entity->getQuestion()->getId()));
+        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(['question' => $entity->getQuestion()->getId()]);
         foreach ($sharesQuestion as $share) {
             $em->remove($share);
         }
@@ -277,7 +277,7 @@ class InteractionOpenController extends Controller
         $em->remove($entity);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
+        return $this->redirect($this->generateUrl('ujm_question_index', ['pageNow' => $pageNow]));
     }
 
     /**
@@ -288,7 +288,7 @@ class InteractionOpenController extends Controller
      */
     public function responseOpenAction()
     {
-        $vars = array();
+        $vars = [];
         $request = $this->get('request');
         $postVal = $request->request->all();
 

@@ -18,8 +18,8 @@ class QtiRepository
     private $tokenStorage;
     private $container;
     private $step = null;
-    private $exerciseQuestions = array();
-    private $importedQuestions = array();
+    private $exerciseQuestions = [];
+    private $importedQuestions = [];
 
     /**
      * Constructor.
@@ -39,7 +39,7 @@ class QtiRepository
      public function razValues()
      {
          $this->step = null;
-         $this->exerciseQuestions = array();
+         $this->exerciseQuestions = [];
      }
 
     /**
@@ -197,7 +197,7 @@ class QtiRepository
     {
         $imported = false;
         $interX = null;
-        $response = array();
+        $response = [];
         $ib = $ai->getElementsByTagName('itemBody')->item(0);
         $nbNodes = 0;
         $promptTag = false;

@@ -44,7 +44,7 @@ class AuthenticationManager
      */
     public function getDrivers()
     {
-        $drivers = array();
+        $drivers = [];
 
         $files = $this->finder->files()->in($this->driverPath)->name($this->fileTypes);
 

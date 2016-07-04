@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\LinkHintPaper;
@@ -18,7 +19,6 @@ use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Library\Mode\MarkMode;
 use UJM\ExoBundle\Services\classes\PaperService;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("ujm.exo.paper_manager")
@@ -737,7 +737,7 @@ class PaperManager
      */
     private function pickItem($itemToPick, array $listItem)
     {
-        $newListItem = array();
+        $newListItem = [];
         while ($itemToPick > 0) {
             $index = rand(0, count($listItem) - 1);
             $newListItem[] = $listItem[$index];

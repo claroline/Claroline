@@ -6,9 +6,9 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-use UJM\ExoBundle\Entity\Proposal;
-use UJM\ExoBundle\Entity\Label;
 use UJM\ExoBundle\Entity\InteractionMatching;
+use UJM\ExoBundle\Entity\Label;
+use UJM\ExoBundle\Entity\Proposal;
 
 class MatchingImport extends QtiImport
 {
@@ -255,13 +255,13 @@ class MatchingImport extends QtiImport
             //type : to drag
             $type = $this->om
                          ->getRepository('UJMExoBundle:TypeMatching')
-                         ->findOneBy(array('code' => 2));
+                         ->findOneBy(['code' => 2]);
             $this->interactionMatching->setTypeMatching($type);
         } else {
             //type : to bind
             $type = $this->om
                          ->getRepository('UJMExoBundle:TypeMatching')
-                         ->findOneBy(array('code' => 1));
+                         ->findOneBy(['code' => 1]);
             $this->interactionMatching->setTypeMatching($type);
         }
     }

@@ -87,9 +87,9 @@ class InteractionMatchingHandler extends QuestionHandler
      */
     public function processUpdate($originalInterMatching)
     {
-        $originalLabel = array();
-        $originalProposal = array();
-        $originalHints = array();
+        $originalLabel = [];
+        $originalProposal = [];
+        $originalHints = [];
 
         //create an array of currente Label of the database
         foreach ($originalInterMatching->getLabels() as $label) {

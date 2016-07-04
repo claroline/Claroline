@@ -8,10 +8,10 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\Category;
 use UJM\ExoBundle\Entity\Question;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 
 abstract class QtiImport
 {
@@ -85,8 +85,8 @@ abstract class QtiImport
     {
         $this->qtiCat = $this->om
                              ->getRepository('UJMExoBundle:Category')
-                             ->findOneBy(array('value' => 'QTI',
-                                               'user' => $this->user->getId(), ));
+                             ->findOneBy(['value' => 'QTI',
+                                               'user' => $this->user->getId(), ]);
         if ($this->qtiCat == null) {
             $this->createQTICategory();
         }
@@ -169,7 +169,7 @@ abstract class QtiImport
      */
     private function objectToResource()
     {
-        $elements = array();
+        $elements = [];
         $objects = $this->assessmentItem->getElementsByTagName('object');
         $ws = $this->user->getPersonalWorkspace();
         $manager = $this->container->get('claroline.manager.resource_manager');
@@ -198,7 +198,7 @@ abstract class QtiImport
                                 );
             if ($ob->parentNode->nodeName != 'selectPointInteraction' &&
                     $ob->parentNode->nodeName != 'hotspotInteraction') {
-                $elements[] = array($ob, $abstractResource->getResourceNode());
+                $elements[] = [$ob, $abstractResource->getResourceNode()];
             }
         }
         $this->callReplaceNode($elements);
@@ -247,7 +247,7 @@ abstract class QtiImport
         if (strpos($mimeType, 'image/') !== false) {
             $url = $this->container->get('router')
                         ->generate('claro_file_get_media',
-                                array('node' => $resourceNode->getId())
+                                ['node' => $resourceNode->getId()]
                           );
             $imgTag = $this->assessmentItem->ownerDocument->createElement('img');
 
@@ -267,9 +267,9 @@ abstract class QtiImport
         } else {
             $url = $this->container->get('router')
                                    ->generate('claro_resource_open',
-                                           array('resourceType' => $resourceNode->getResourceType()->getName(),
+                                           ['resourceType' => $resourceNode->getResourceType()->getName(),
                                                  'node' => $resourceNode->getId(),
-                                     ));
+                                     ]);
             $aTag = $this->assessmentItem->ownerDocument->createElement('a', $resourceNode->getName());
             $hrefAttr = $this->assessmentItem->ownerDocument->createAttribute('href');
             $hrefAttr->value = $url;
@@ -312,7 +312,7 @@ abstract class QtiImport
     {
         $this->dirQTI = $this->om
                              ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                             ->findOneBy(array('workspace' => $ws, 'name' => 'QTI_SYS'));
+                             ->findOneBy(['workspace' => $ws, 'name' => 'QTI_SYS']);
 
         if (!is_object($this->dirQTI)) {
             $this->createDirQTIImport($ws);

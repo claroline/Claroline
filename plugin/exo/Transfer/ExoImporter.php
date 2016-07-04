@@ -12,14 +12,14 @@
 namespace UJM\ExoBundle\Transfer;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Claroline\CoreBundle\Library\Transfert\Importer;
-use Symfony\Component\Config\Definition\Processor;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Manager\SubscriptionManager;
@@ -274,7 +274,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
             $this->qtiRepository->razValues();
             $newStep = $this->createStep($step, $exercise);
             $questions = opendir($exoPath.'/'.$step['order']);
-            $questionFiles = array();
+            $questionFiles = [];
             while (($question = readdir($questions)) !== false) {
                 if ($question != '.' && $question != '..') {
                     $questionFiles[] = $exoPath.'/'.$step['order'].'/'.$question;
@@ -309,7 +309,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         /** @var \UJM\ExoBundle\Repository\QuestionRepository $questionRepo */
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
 
-        $steps = array();
+        $steps = [];
         foreach ($object->getSteps() as $step) {
             $s = [
                 'text' => $step->getText(),
