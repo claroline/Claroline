@@ -60,7 +60,7 @@ class PaperManagerTest extends \PHPUnit_Framework_TestCase
             ->method('findOneBy')
             ->willReturn($paper1);
 
-        $paper2 = $this->manager->createPaper($user, $exercise);
+        $paper2 = $this->manager->createPaper($exercise, $user);
 
         $this->assertEquals($paper1->getOrdreQuestion(), $paper2->getOrdreQuestion());
     }

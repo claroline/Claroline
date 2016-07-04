@@ -6,9 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use UJM\ExoBundle\Entity\InteractionMatching;
 use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Form\InteractionMatchingHandler;
 use UJM\ExoBundle\Form\InteractionMatchingType;
 use UJM\ExoBundle\Form\ResponseType;
-use UJM\ExoBundle\Form\InteractionMatchingHandler;
 
 /**
  * InteractionMatching Controller.
@@ -63,13 +63,13 @@ class InteractionMatchingController extends Controller
         $typeMatching = $interMatchSer->getTypeMatching();
 
         return $this->container->get('templating')->renderResponse(
-           'UJMExoBundle:InteractionMatching:new.html.twig', array(
+           'UJMExoBundle:InteractionMatching:new.html.twig', [
                'exoID' => $attr->get('exoID'),
                'stepID' => $attr->get('stepID'),
                'entity' => $entity,
                'typeMatching' => json_encode($typeMatching),
                'form' => $form->createView(),
-           )
+           ]
        );
     }
 
@@ -112,8 +112,8 @@ class InteractionMatchingController extends Controller
 
             if ($exoID == -1) {
                 return $this->redirect(
-                    $this->generateUrl('ujm_question_index', array(
-                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), )
+                    $this->generateUrl('ujm_question_index', [
+                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), ]
                     )
                 );
             } else {
@@ -125,33 +125,33 @@ class InteractionMatchingController extends Controller
 
         if ($matchingHandler == 'infoDuplicateQuestion') {
             $form->addError(new FormError(
-                    $this->get('translator')->trans('info_duplicate_question', array(), 'ujm_exo')
+                    $this->get('translator')->trans('info_duplicate_question', [], 'ujm_exo')
                     ));
         }
 
         $typeMatching = $interMatchSer->getTypeMatching();
         $formWithError = $this->render(
-            'UJMExoBundle:InteractionMatching:new.html.twig', array(
+            'UJMExoBundle:InteractionMatching:new.html.twig', [
             'entity' => $interMatching,
             'form' => $form->createView(),
             'error' => true,
             'exoID' => $exoID,
             'stepID' => $stepID,
             'typeMatching' => json_encode($typeMatching),
-            )
+            ]
         );
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
         $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
 
         return $this->render(
-                'UJMExoBundle:Question:new.html.twig', array(
+                'UJMExoBundle:Question:new.html.twig', [
                 'formWithError' => $formWithError,
                 'exoID' => $exoID,
                 'stepID' => $stepID,
                 'linkedCategory' => $catSer->getLinkedCategories(),
                 'locker' => $catSer->getLockCategory(),
                 'interactionType' => $interactionType,
-            )
+            ]
         );
     }
 
@@ -172,8 +172,8 @@ class InteractionMatchingController extends Controller
         foreach ($correspondence as $key => $corresp) {
             $correspondence[$key] = explode('-', $corresp);
         }
-        $tableLabel = array();
-        $tableProposal = array();
+        $tableLabel = [];
+        $tableProposal = [];
 
         $ind = 1;
 
@@ -249,9 +249,14 @@ class InteractionMatchingController extends Controller
             ), $interMatching
         );
         $formHandler = new InteractionMatchingHandler(
-            $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
-            $this->container->get('security.token_storage')->getToken()->getUser(), -1,
+            $editForm,
+            $this->get('request'),
+            $this->getDoctrine()->getManager(),
+            $this->container->get('ujm.exo_exercise'),
+            $this->container->get('ujm.exo_category'),
+            $this->container->get('security.token_storage')->getToken()->getUser(),
+            -1,
+            -1,
             $this->get('translator')
         );
 
@@ -266,11 +271,11 @@ class InteractionMatchingController extends Controller
         }
 
         return $this->forward(
-            'UJMExoBundle:Question:edit', array(
+            'UJMExoBundle:Question:edit', [
                 'exoID' => $exoID,
                 'id' => $interMatching->getQuestion()->getId(),
                 'form' => $editForm,
-            )
+            ]
         );
     }
 
@@ -288,7 +293,7 @@ class InteractionMatchingController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionMatching')->find($id);
         //Deleting of relations, if there the question is shared
-        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $entity->getQuestion()->getId()));
+        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(['question' => $entity->getQuestion()->getId()]);
         foreach ($sharesQuestion as $share) {
             $em->remove($share);
         }
@@ -299,7 +304,7 @@ class InteractionMatchingController extends Controller
         $em->remove($entity);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
+        return $this->redirect($this->generateUrl('ujm_question_index', ['pageNow' => $pageNow]));
     }
 
     /**
@@ -310,7 +315,7 @@ class InteractionMatchingController extends Controller
      */
     public function responseMatchingAction()
     {
-        $vars = array();
+        $vars = [];
         $request = $this->get('request');
         $postVal = $request->request->all();
 

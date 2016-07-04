@@ -6,9 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Form\InteractionHoleHandler;
 use UJM\ExoBundle\Form\InteractionHoleType;
 use UJM\ExoBundle\Form\ResponseType;
-use UJM\ExoBundle\Form\InteractionHoleHandler;
 
 /**
  * InteractionHole controller.
@@ -52,12 +52,12 @@ class InteractionHoleController extends Controller
         );
 
         return $this->container->get('templating')->renderResponse(
-            'UJMExoBundle:InteractionHole:new.html.twig', array(
+            'UJMExoBundle:InteractionHole:new.html.twig', [
                 'exoID' => $attr->get('exoID'),
                 'stepID' => $attr->get('stepID'),
                 'entity' => $entity,
                 'form' => $form->createView(),
-            )
+            ]
         );
     }
 
@@ -100,8 +100,8 @@ class InteractionHoleController extends Controller
 
             if ($exoID == -1) {
                 return $this->redirect(
-                                $this->generateUrl('ujm_question_index', array(
-                                    'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), )
+                                $this->generateUrl('ujm_question_index', [
+                                    'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), ]
                                 )
                 );
             } else {
@@ -114,7 +114,7 @@ class InteractionHoleController extends Controller
         if ($holeHandler != false) {
             if ($holeHandler == 'infoDuplicateQuestion') {
                 $form->addError(new FormError(
-                        $this->get('translator')->trans('info_duplicate_question', array(), 'ujm_exo')
+                        $this->get('translator')->trans('info_duplicate_question', [], 'ujm_exo')
                 ));
             } else {
                 $form->addError(new FormError($holeHandler));
@@ -122,26 +122,26 @@ class InteractionHoleController extends Controller
         }
 
         $formWithError = $this->render(
-                'UJMExoBundle:InteractionHole:new.html.twig', array(
+                'UJMExoBundle:InteractionHole:new.html.twig', [
             'entity' => $interHole,
             'form' => $form->createView(),
             'error' => true,
             'exoID' => $exoID,
             'stepID' => $stepID,
-                )
+                ]
         );
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
         $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
 
         return $this->render(
-                     'UJMExoBundle:Question:new.html.twig', array(
+                     'UJMExoBundle:Question:new.html.twig', [
                     'formWithError' => $formWithError,
                     'exoID' => $exoID,
                     'stepID' => $stepID,
                     'linkedCategory' => $catSer->getLinkedCategories(),
                     'locker' => $catSer->getLockCategory(),
                     'interactionType' => $interactionType,
-                        )
+                        ]
         );
     }
 
@@ -167,14 +167,14 @@ class InteractionHoleController extends Controller
         $linkedCategory = $catSer->getLinkedCategories();
 
         return $this->render(
-                        'UJMExoBundle:InteractionHole:edit.html.twig', array(
+                        'UJMExoBundle:InteractionHole:edit.html.twig', [
                     'entity' => $interactionHole,
                     'edit_form' => $editForm->createView(),
                     'nbResponses' => $holeSer->getNbReponses($attr->get('interaction')),
                     'linkedCategory' => $linkedCategory,
                     'exoID' => $attr->get('exoID'),
                     'locker' => $catSer->getLockCategory(),
-                        )
+                        ]
         );
     }
 
@@ -205,15 +205,20 @@ class InteractionHoleController extends Controller
         }
 
         $editForm = $this->createForm(
-                new InteractionHoleType(
+            new InteractionHoleType(
                 $this->container->get('security.token_storage')->getToken()->getUser(), $catID
-                ), $interHole
+            ), $interHole
         );
         $formHandler = new InteractionHoleHandler(
-                $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-                $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
-                $this->container->get('security.token_storage')->getToken()->getUser(),
-                $exoID, $this->get('translator')
+            $editForm,
+            $this->get('request'),
+            $this->getDoctrine()->getManager(),
+            $this->container->get('ujm.exo_exercise'),
+            $this->container->get('ujm.exo_category'),
+            $this->container->get('security.token_storage')->getToken()->getUser(),
+            -1,
+            -1,
+            $this->get('translator')
         );
 
         $formHandler->setValidator($this->get('validator'));
@@ -234,11 +239,11 @@ class InteractionHoleController extends Controller
         }
 
         return $this->forward(
-                        'UJMExoBundle:Question:edit', array(
+                        'UJMExoBundle:Question:edit', [
                     'exoID' => $exoID,
                     'id' => $interHole->getQuestion()->getId(),
                     'form' => $editForm,
-                        )
+                        ]
         );
     }
 
@@ -256,7 +261,7 @@ class InteractionHoleController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionHole')->find($id);
         //Deleting of relations, if there the question is shared
-        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $entity->getQuestion()->getId()));
+        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(['question' => $entity->getQuestion()->getId()]);
         foreach ($sharesQuestion as $share) {
             $em->remove($share);
         }
@@ -267,7 +272,7 @@ class InteractionHoleController extends Controller
         $em->remove($entity);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
+        return $this->redirect($this->generateUrl('ujm_question_index', ['pageNow' => $pageNow]));
     }
 
     /**
@@ -278,9 +283,9 @@ class InteractionHoleController extends Controller
      */
     public function responseHoleAction()
     {
-        $vars = array();
+        $vars = [];
         $request = $this->get('request');
-        $postVal = $req = $request->request->all();
+        $postVal = $request->request->all();
 
         if ($postVal['exoID'] != -1) {
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);
