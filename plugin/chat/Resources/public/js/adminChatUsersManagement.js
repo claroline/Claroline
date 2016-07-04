@@ -11,6 +11,7 @@
     'use strict';
 
     var connection;
+    var protocol;
     var xmppHost;
     var boshPort;
     var boshService;
@@ -23,7 +24,8 @@
     {
         xmppHost = $('#management-datas-box').data('xmpp-host');
         boshPort = $('#management-datas-box').data('bosh-port');
-        boshService = 'http://' + xmppHost + ':' + boshPort + '/http-bind';
+        protocol = $('#management-datas-box').data('xmpp-ssl') ? 'https': 'http';
+        boshService = protocol + '://' + xmppHost + ':' + boshPort + '/http-bind';
         connection = new Strophe.Connection(boshService);
     }
 

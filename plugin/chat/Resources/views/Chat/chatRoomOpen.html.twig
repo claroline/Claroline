@@ -61,6 +61,7 @@
         window.roomStatus = '{{ chatRoom.getRoomStatusText() }}'
         window.roomType = '{{ chatRoom.getRoomTypeText() }}'
         window.xmppHost = '{{ xmppHost }}'
+        window.xmppSsl = {{ ssl ? 'true' : 'false' }}
         window.xmppMucHost = '{{ xmppMucHost }}'
         window.boshPort = {{ boshPort }}
         window.iceServers = '{{ iceServers }}'

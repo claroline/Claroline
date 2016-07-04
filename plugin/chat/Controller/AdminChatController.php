@@ -215,6 +215,7 @@ class AdminChatController extends Controller
 
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
         $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
+        $ssl = $this->platformConfigHandler->getParameter('chat_ssl');
 
         return [
             'chatUsers' => $chatUsers,
@@ -226,6 +227,7 @@ class AdminChatController extends Controller
             'order' => $order,
             'xmppHost' => $xmppHost,
             'boshPort' => $boshPort,
+            'ssl' => $ssl,
         ];
     }
 

@@ -9,6 +9,7 @@
 
 export default class XmppService {
   constructor ($rootScope, $http) {
+    this.protocol = XmppService._getGlobal('xmppSsl') ? 'https': 'http'
     this.$rootScope = $rootScope
     this.$http = $http
     this.config = {
@@ -22,7 +23,7 @@ export default class XmppService {
       color: null,
       xmppHost: XmppService._getGlobal('xmppHost'),
       boshPort: XmppService._getGlobal('boshPort'),
-      boshService: `http://${XmppService._getGlobal('xmppHost')}:${XmppService._getGlobal('boshPort')}/http-bind`,
+      boshService: `${this.protocol}://${XmppService._getGlobal('xmppHost')}:${XmppService._getGlobal('boshPort')}/http-bind`,
       canChat: false,
       connected: false,
       busy: false,

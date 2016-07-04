@@ -26,8 +26,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -63,8 +63,7 @@ class ChatController extends Controller
         RouterInterface $router,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->authorization = $authorization;
         $this->chatManager = $chatManager;
         $this->formFactory = $formFactory;
@@ -88,14 +87,16 @@ class ChatController extends Controller
     {
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
         $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
+        $ssl = $this->platformConfigHandler->getParameter('chat_ssl');
         $chatUser = $this->chatManager->getChatUserByUser($authenticatedUser);
 
-        return array(
+        return [
             'chatUser' => $chatUser,
             'user' => $user,
             'xmppHost' => $xmppHost,
-            'boshPort' => $boshPort
-        );
+            'boshPort' => $boshPort,
+            'ssl' => $ssl,
+        ];
     }
 
     /**
@@ -113,11 +114,10 @@ class ChatController extends Controller
         $user = $this->tokenStorage->getToken()->getUser();
 
         if ($user === 'anon.' || $chatRoom->getRoomStatus() === ChatRoom::CLOSED) {
-
             return new RedirectResponse(
                 $this->router->generate(
                     'claro_chat_room_archives',
-                    array('chatRoom' => $chatRoom->getId())
+                    ['chatRoom' => $chatRoom->getId()]
                 )
             );
         }
@@ -127,11 +127,12 @@ class ChatController extends Controller
         $iceServers = $this->platformConfigHandler->getParameter('chat_ice_servers');
         $chatAdminUsername = $this->platformConfigHandler->getParameter('chat_admin_username');
         $chatAdminPassword = $this->platformConfigHandler->getParameter('chat_admin_password');
+        $ssl = $this->platformConfigHandler->getParameter('chat_ssl');
         $chatUser = $this->chatManager->getChatUserByUser($user);
         $canChat = !is_null($chatUser);
         $canEdit = $this->hasChatRoomRight($chatRoom, 'EDIT');
         $color = null;
-        
+
         if (!is_null($chatUser)) {
             $options = $chatUser->getOptions();
 
@@ -141,7 +142,7 @@ class ChatController extends Controller
         }
         $hasAdmin = !empty($chatAdminUsername) && !empty($chatAdminPassword);
 
-        return array(
+        return [
             'workspace' => $chatRoom->getResourceNode()->getWorkspace(),
             'canChat' => $canChat,
             'canEdit' => $canEdit,
@@ -151,11 +152,12 @@ class ChatController extends Controller
             'xmppMucHost' => $xmppMucHost,
             'boshPort' => $boshPort,
             'iceServers' => $iceServers,
+            'ssl' => $ssl,
             'color' => $color,
             'hasAdmin' => $hasAdmin,
             'chatAdminUsername' => $chatAdminUsername,
-            'chatAdminPassword' => $chatAdminPassword
-        );
+            'chatAdminPassword' => $chatAdminPassword,
+        ];
     }
 
     /**
@@ -171,25 +173,25 @@ class ChatController extends Controller
         $this->checkChatRoomRight($chatRoom, 'OPEN');
         $canEdit = $this->hasChatRoomRight($chatRoom, 'EDIT');
         $messages = $chatRoom->getMessages();
-        $messagesDatas = array();
+        $messagesDatas = [];
 
         foreach ($messages as $message) {
             $creationDate = $message->getCreationDate();
             $day = $creationDate->format('d/m/Y');
 
             if (!isset($messagesDatas[$day])) {
-                $messagesDatas[$day] = array();
+                $messagesDatas[$day] = [];
             }
             $messagesDatas[$day][] = $message;
         }
         $users = $this->chatManager->getChatRoomParticipantsName($chatRoom);
 
-        return array(
+        return [
             'chatRoom' => $chatRoom,
             'canEdit' => $canEdit,
             'messagesDatas' => $messagesDatas,
-            'users' => $users
-        );
+            'users' => $users,
+        ];
     }
 
     /**
@@ -204,15 +206,15 @@ class ChatController extends Controller
     {
         $this->checkChatRoomRight($chatRoom, 'OPEN');
         $messages = $chatRoom->getMessages();
-        $messagesDatas = array();
+        $messagesDatas = [];
 
         foreach ($messages as $message) {
-            $messagesDatas[] = array(
+            $messagesDatas[] = [
                 'username' => $message->getUsername(),
                 'userFullName' => $message->getUserFullName(),
                 'content' => $message->getContent(),
-                'type' => $message->getType()
-            );
+                'type' => $message->getType(),
+            ];
         }
 
         return new JsonResponse($messagesDatas, 200);
@@ -233,8 +235,7 @@ class ChatController extends Controller
         $username,
         $fullName,
         $message = ''
-    )
-    {
+    ) {
         $this->checkChatRoomRight($chatRoom, 'OPEN');
         $this->chatManager->saveChatRoomMessage(
             $chatRoom,
@@ -260,8 +261,7 @@ class ChatController extends Controller
         $username,
         $fullName,
         $status
-    )
-    {
+    ) {
         $this->checkChatRoomRight($chatRoom, 'OPEN');
         $this->chatManager->saveChatRoomMessage(
             $chatRoom,
@@ -287,8 +287,7 @@ class ChatController extends Controller
         $username,
         $fullName,
         $status
-    )
-    {
+    ) {
         $this->checkChatRoomRight($chatRoom, 'EDIT');
         $this->chatManager->saveChatRoomMessage(
             $chatRoom,
@@ -319,11 +318,11 @@ class ChatController extends Controller
         );
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
 
-        return array(
+        return [
             'form' => $form->createView(),
             'chatRoom' => $chatRoom,
-            'xmppMucHost' => $xmppMucHost
-        );
+            'xmppMucHost' => $xmppMucHost,
+        ];
     }
 
     /**
@@ -351,11 +350,11 @@ class ChatController extends Controller
         } else {
             $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
 
-            return array(
+            return [
                 'form' => $form->createView(),
                 'chatRoom' => $chatRoom,
-                'xmppMucHost' => $xmppMucHost
-            );
+                'xmppMucHost' => $xmppMucHost,
+            ];
         }
     }
 
@@ -378,17 +377,16 @@ class ChatController extends Controller
 
     private function checkChatRoomRight(ChatRoom $chatRoom, $right)
     {
-        $collection = new ResourceCollection(array($chatRoom->getResourceNode()));
+        $collection = new ResourceCollection([$chatRoom->getResourceNode()]);
 
         if (!$this->authorization->isGranted($right, $collection)) {
-
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
 
     private function hasChatRoomRight(ChatRoom $chatRoom, $right)
     {
-        $collection = new ResourceCollection(array($chatRoom->getResourceNode()));
+        $collection = new ResourceCollection([$chatRoom->getResourceNode()]);
 
         return $this->authorization->isGranted($right, $collection);
     }
