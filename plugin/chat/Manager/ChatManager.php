@@ -157,11 +157,15 @@ class ChatManager
             $client = $this->getClient($host, $admin, $pw);
             $client->disconnect();
         } catch (\Exception $e) {
+            
             switch (get_class($e)) {
                 case 'Fabiang\Xmpp\Exception\ErrorException':
                     $errors[] = $this->translator->trans('invalid_host', ['%error%' => $e->getMessage()], 'chat');
                 case 'Fabiang\Xmpp\Exception\Stream\AuthenticationErrorException':
                     $errors[] = $this->translator->trans('invalid_authentication', [], 'chat');
+                default:
+                    $errors[] = $e->getMessage();
+                    //$errors[] = $this->translator->trans('generic_error', [], $e->getMessage());
             }
         }
 
@@ -170,7 +174,12 @@ class ChatManager
         $url = $protocol.$host.':'.$boshPort.'/http-bind';
         //ping bosh
         $curlopts = [CURLOPT_HEADER => true];
-        $this->curlManager->exec($url, null, 'GET', $curlopts, false, $ch);
+
+        if ($ssl) {
+            $curlopts[CURLOPT_SSL_VERIFYPEER] = false;
+        }
+
+        $res = $this->curlManager->exec($url, null, 'GET', $curlopts, false, $ch);
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
