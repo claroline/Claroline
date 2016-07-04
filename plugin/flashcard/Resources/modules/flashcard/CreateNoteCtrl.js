@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-import NotBlank from '#/main/core/Resources/modules/form/Validator/NotBlank'
+import NotBlank from '#/main/core/form/Validator/NotBlank'
 
 export default class CreateNoteCtrl {
   constructor (service, $location) {
