@@ -22,6 +22,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -120,6 +121,24 @@ class AdminChatController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $errors = $this->chatManager->validateParameters(
+                $form->get('host')->getData(),
+                $form->get('mucHost')->getData(),
+                $form->get('port')->getData(),
+                $form->get('iceServers')->getData(),
+                $form->get('admin')->getData(),
+                $form->get('password')->getData(),
+                $form->get('ssl')->getData()
+            );
+
+            if ($errors) {
+                foreach ($errors as $error) {
+                    $form->addError(new FormError($error));
+                }
+
+                return ['form' => $form->createView()];
+            }
+
             $disableChatRoomAudio = $form->get('disableChatRoomAudio')->getData() ? true : false;
             $disableChatRoomVideo = $form->get('disableChatRoomVideo')->getData() ? true : false;
             $this->platformConfigHandler->setParameters(
@@ -132,8 +151,11 @@ class AdminChatController extends Controller
                     'chat_room_video_disable' => $disableChatRoomVideo,
                     'chat_admin_username' => $form->get('admin')->getData(),
                     'chat_admin_password' => $form->get('password')->getData(),
+                    'chat_ssl' => $form->get('ssl')->getData(),
                 ]
             );
+
+            $chatType = $this->chatManager->enableChatType();
 
             return new RedirectResponse(
                 $this->router->generate('claro_chat_admin_management')
@@ -141,6 +163,23 @@ class AdminChatController extends Controller
         }
 
         return ['form' => $form->createView()];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/chat/reset",
+     *     name="claro_chat_admin_reset"
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineChatBundle:AdminChat:adminChatConfigureForm.html.twig")
+     */
+    public function resetConfigurationAction()
+    {
+        $chatType = $this->chatManager->resetParameters();
+
+        return new RedirectResponse(
+            $this->router->generate('claro_chat_admin_management')
+        );
     }
 
     /**

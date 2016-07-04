@@ -76,14 +76,19 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
      *
      * @return array[ResourceType]
      */
-    public function findAll()
+    public function findAll($filterEnabled = true)
     {
+        if (!$filterEnabled) {
+            return parent::findAll();
+        }
+
         $dql = '
           SELECT rt, ma FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
           LEFT JOIN rt.actions ma
           LEFT JOIN rt.plugin p
-          WHERE CONCAT(p.vendorName, p.bundleName) IN (:bundles)
-          OR rt.plugin is NULL';
+          WHERE (CONCAT(p.vendorName, p.bundleName) IN (:bundles)
+          OR rt.plugin is NULL)
+          AND rt.isEnabled = true';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('bundles', $this->bundles);

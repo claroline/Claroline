@@ -11,8 +11,6 @@
 
 namespace Claroline\ChatBundle\Form;
 
-use Claroline\ChatBundle\Validator\Constraints\BoshPort;
-use Claroline\ChatBundle\Validator\Constraints\XmppHost;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,12 +36,14 @@ class ChatConfigurationType extends AbstractType
         $iceServers = empty($configIceServers) ?
             'stun:stun.l.google.com:19302' :
             $configIceServers;
+        $ssl = $this->configHandler->getParameter('chat_ssl');
         $chatRoomAudio = $this->configHandler->getParameter('chat_room_audio_disable');
         $chatRoomVideo = $this->configHandler->getParameter('chat_room_video_disable');
         $admin = $this->configHandler->getParameter('chat_admin_username');
         $password = $this->configHandler->getParameter('chat_admin_password');
         $disableAudio = is_null($chatRoomAudio) ? false : $chatRoomAudio;
         $disableVideo = is_null($chatRoomAudio) ? false : $chatRoomVideo;
+        $ssl = is_null($ssl) ? false : $ssl;
 
         $builder->add(
             'host',
@@ -53,7 +53,7 @@ class ChatConfigurationType extends AbstractType
                 'data' => $xmppHost,
                 'mapped' => false,
                 'label' => 'host',
-                'constraints' => [new NotBlank(), new XmppHost()],
+                'constraints' => [new NotBlank()],
             ]
         );
         $builder->add(
@@ -65,6 +65,7 @@ class ChatConfigurationType extends AbstractType
                 'mapped' => false,
                 'label' => 'admin',
                 'constraints' => [new NotBlank()],
+                'translation_domain' => 'platform',
             ]
         );
         $builder->add(
@@ -76,6 +77,7 @@ class ChatConfigurationType extends AbstractType
                 'mapped' => false,
                 'label' => 'password',
                 'constraints' => [new NotBlank()],
+                'translation_domain' => 'platform',
             ]
         );
         $builder->add(
@@ -97,7 +99,7 @@ class ChatConfigurationType extends AbstractType
                 'data' => $boshPort,
                 'mapped' => false,
                 'label' => 'bosh_server_port',
-                'constraints' => [new NotBlank(), new BoshPort()],
+                'constraints' => [new NotBlank()],
             ]
         );
         $builder->add(
@@ -109,6 +111,16 @@ class ChatConfigurationType extends AbstractType
                 'mapped' => false,
                 'label' => 'ice_servers',
                 'constraints' => [new NotBlank()],
+            ]
+        );
+        $builder->add(
+            'ssl',
+            'checkbox',
+            [
+                'required' => false,
+                'data' => $ssl,
+                'mapped' => false,
+                'label' => 'ssl',
             ]
         );
         $builder->add(

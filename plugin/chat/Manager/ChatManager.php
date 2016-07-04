@@ -21,6 +21,7 @@ use Claroline\ChatBundle\Library\Xmpp\Protocol\Register;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Manager\CurlManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Fabiang\Xmpp\Client;
@@ -28,6 +29,7 @@ use Fabiang\Xmpp\Options;
 use Fabiang\Xmpp\Protocol\Message;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.chat_manager")
@@ -41,20 +43,26 @@ class ChatManager
     private $configHandler;
     private $chatRoomMessageRepo;
     private $chatUserRepo;
+    private $curlManager;
+    private $translator;
 
     /**
      * @DI\InjectParams({
      *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"          = @DI\Inject("claroline.pager.pager_factory"),
      *     "utils"                 = @DI\Inject("claroline.utilities.misc"),
-     *     "configHandler"         = @DI\Inject("claroline.config.platform_config_handler")
+     *     "configHandler"         = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "curlManager"           = @DI\Inject("claroline.manager.curl_manager"),
+     *     "translator"            = @DI\Inject("translator")
      * })
      */
     public function __construct(
         ObjectManager $om,
         PagerFactory $pagerFactory,
         ClaroUtilities $utils,
-        PlatformConfigurationHandler $configHandler
+        PlatformConfigurationHandler $configHandler,
+        CurlManager $curlManager,
+        TranslatorInterface $translator
     ) {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
@@ -62,23 +70,34 @@ class ChatManager
         $this->chatRoomMessageRepo = $om->getRepository('ClarolineChatBundle:ChatRoomMessage');
         $this->chatUserRepo = $om->getRepository('ClarolineChatBundle:ChatUser');
         $this->configHandler = $configHandler;
+        $this->curlManager = $curlManager;
+        $this->translator = $translator;
     }
 
     public function importExistingUsers()
     {
         $users = $this->om->getRepository('ClarolineCoreBundle:User')->findAll();
-        $client = $this->getClient();
+        $host = $this->configHandler->getParameter('chat_xmpp_host');
+        $client = $this->getClient($host);
+        $i = 0;
+        $this->om->startFlushSuite();
 
         foreach ($users as $user) {
             $chatUser = $this->chatUserRepo->findOneByUser($user);
 
             if (!$chatUser) {
+                ++$i;
                 $this->importUser($user, $client);
+
+                if ($i % 200) {
+                    $this->om->forceFlush();
+                }
             } else {
                 $this->log("User {$user->getUsername()} already exists");
             }
         }
 
+        $this->om->endFlushSuite();
         $client->disconnect();
     }
 
@@ -87,7 +106,8 @@ class ChatManager
         $hasCreatedClient = false;
 
         if (!$client) {
-            $client = $this->getClient();
+            $host = $this->configHandler->getParameter('chat_xmpp_host');
+            $client = $this->getClient($host);
             $hasCreatedClient = true;
         }
 
@@ -102,18 +122,19 @@ class ChatManager
         }
     }
 
-    public function getClient($username = null, $password = null)
+    public function getClient($host, $username = null, $password = null)
     {
-        $host = $this->configHandler->getParameter('chat_xmpp_host');
         $address = "tcp://{$host}:5222";
 
         $options = new Options($address);
+
         if ($this->logger) {
             $options->setLogger($this->logger);
         }
 
         if ($username && $password) {
-            $options->setUsername($adminUsername)->setPassword($adminPassword);
+            $this->log("Logging with {$username} | {$password}");
+            $options->setUsername($username)->setPassword($password);
             $options->setImplementation(new AuthenticatedImplementation());
         } else {
             $options->setImplementation(new AnonymousImplementation());
@@ -124,6 +145,40 @@ class ChatManager
         $client->connect();
 
         return $client;
+    }
+
+    public function validateParameters($host, $muc, $boshPort, $ice, $admin, $pw, $ssl)
+    {
+        $timeout = 1;
+        $errors = [];
+
+        //xmpp client
+        try {
+            $client = $this->getClient($host, $admin, $pw);
+            $client->disconnect();
+        } catch (\Exception $e) {
+            switch (get_class($e)) {
+                case 'Fabiang\Xmpp\Exception\ErrorException':
+                    $errors[] = $this->translator->trans('invalid_host', ['%error%' => $e->getMessage()], 'chat');
+                case 'Fabiang\Xmpp\Exception\Stream\AuthenticationErrorException':
+                    $errors[] = $this->translator->trans('invalid_authentication', [], 'chat');
+            }
+        }
+
+        $protocol = $ssl ? 'https://' : 'http://';
+        //default bosh bind url
+        $url = $protocol.$host.':'.$boshPort.'/http-bind';
+        //ping bosh
+        $curlopts = [CURLOPT_HEADER => true];
+        $this->curlManager->exec($url, null, 'GET', $curlopts, false, $ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($code !== 200) {
+            $errors[] = $this->translator->trans('invalid_bosh', ['%url%' => $url], 'chat');
+        }
+
+        return $errors;
     }
 
     public function createChatUser(User $user, $username, $password)
@@ -268,5 +323,38 @@ class ChatManager
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    public function getChatType()
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneByName('claroline_chat_room');
+    }
+
+    public function resetParameters()
+    {
+        $this->configHandler->setParameters(
+            [
+                'chat_xmpp_host' => null,
+                'chat_xmpp_muc_host' => null,
+                'chat_bosh_port' => null,
+                'chat_ice_servers' => null,
+                'chat_room_audio_disable' => null,
+                'chat_room_video_disable' => null,
+                'chat_admin_username' => null,
+                'chat_admin_password' => null,
+                'chat_ssl' => null,
+            ]
+        );
+
+        $this->enableChatType(false);
+    }
+
+    public function enableChatType($bool = true)
+    {
+        $chatType = $this->getChatType();
+        $chatType->setIsEnabled($bool);
+        $this->om->persist($chatType);
+        $this->om->flush();
     }
 }
