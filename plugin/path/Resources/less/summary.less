@@ -309,12 +309,16 @@
     }
 
     .path-summary-opened {
+        .path-summary-container {
+            width: @path-summary-width-xs !important;
+        }
+
         .path-summary-pinned{
-            margin-left: @path-summary-width !important;
+            margin-left: @path-summary-width-xs !important;
         }
 
         .path-summary-pin-toggle-btn {
-            left: @path-summary-width + 30px !important;
+            left: @path-summary-width-xs + 30px !important;
         }
     }
 }

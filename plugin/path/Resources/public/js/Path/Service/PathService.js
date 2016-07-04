@@ -258,12 +258,10 @@
                         lastSeen = path.steps[0];
                     }
 
-                    console.log(lastSeen);
-
                     return lastSeen;
                 },
 
-				/**
+                /**
                  * Set path total steps
                  * @param {Number} value
                  */
