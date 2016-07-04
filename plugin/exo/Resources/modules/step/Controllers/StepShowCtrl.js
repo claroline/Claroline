@@ -24,6 +24,11 @@ function StepShowCtrl(UserPaperService, FeedbackService, QuestionService) {
     }
     if (this.feedback.enabled && this.getQuestionPaper(this.items[0]).nbTries) {
         this.onFeedbackShow();
+
+        if (this.allAnswersFound === 0) {
+            this.feedback.visible = true;
+            this.solutionShown = true;
+        }
     }
 }
 

@@ -25,7 +25,7 @@
             <!-- Previous step -->
             <button type="button" role="button" class="btn btn-default"
                     data-toggle="tooltip" data-container="body" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}"
-                    data-ng-disabled="!exercisePlayerCtrl.previous || (exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible) || (exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && !exercisePlayerCtrl.solutionShown)"
+                    data-ng-disabled="exercisePlayerCtrl.isButtonEnabled('previous')"
                     data-ng-click="exercisePlayerCtrl.goTo(exercisePlayerCtrl.previous)"
             >
                 <span class="fa fa-arrow-circle-left"></span>
@@ -34,7 +34,7 @@
 
             <!-- Validate step (for Formative exercises) -->
             <button type="button" role="button" class="btn btn-success"
-                    data-ng-show="exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible"
+                    data-ng-show="exercisePlayerCtrl.isButtonEnabled('validate')"
                     data-ng-click="exercisePlayerCtrl.submit()"
             >
                 <span class="fa fa-check"></span>

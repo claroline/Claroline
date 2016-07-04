@@ -178,11 +178,15 @@ ExercisePlayerCtrl.prototype.isButtonEnabled = function isButtonEnabled(button) 
     if (button === 'retry') {
         buttonEnabled = this.feedback.enabled && this.feedback.visible && this.currentStepTry < this.step.meta.maxAttempts && this.allAnswersFound !== 0;
     } else if (button === 'next') {
-        buttonEnabled = !this.next || (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
+        buttonEnabled = !this.next || (this.feedback.enabled && !this.feedback.visible && !(this.allAnswersFound === 0)) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
     } else if (button === 'navigation') {
         buttonEnabled = (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
     } else if (button === 'end') {
         buttonEnabled = (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
+    } else if (button === 'validate') {
+        buttonEnabled = this.feedback.enabled && !this.feedback.visible && this.currentStepTry <= this.step.meta.maxAttempts && this.allAnswersFound !== 0;
+    } else if (button === 'previous') {
+        buttonEnabled = !this.previous || (this.feedback.enabled && !this.feedback.visible && !(this.allAnswersFound === 0)) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0));
     }
 
     return buttonEnabled;
