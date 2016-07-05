@@ -4,6 +4,7 @@
 {% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block section_content %}
+    <div>{{ macros.flashBox() }}</div>
     <div id="users-panel" class="panel panel-default" ng-app="UsersManager">
         <div class="panel panel-body" ui-view>
         </div>

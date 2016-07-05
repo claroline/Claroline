@@ -872,6 +872,7 @@ class RolesController extends Controller
 
         if ($form->isValid()) {
             $datas = array();
+            $file = $form['file']->getData();
             $data = file_get_contents($file);
             $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
             $lines = str_getcsv($data, PHP_EOL);
