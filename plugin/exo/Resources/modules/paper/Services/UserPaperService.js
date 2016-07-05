@@ -153,17 +153,21 @@ UserPaperService.prototype.start = function start(exercise) {
   if (!this.paper || this.paper.end) {
     // Start a new Paper (or load an interrupted one)
     this.$http.post(
-            Routing.generate('exercise_new_attempt', {id: exercise.id})
-            ).success(function (response) {
-      this.paper = response
-      deferred.resolve(this.paper)
-    }.bind(this)).error(function (data, status) {
+      Routing.generate('exercise_new_attempt', {id: exercise.id})
+      ).success(function (response) {
+        this.paper = response
+        deferred.resolve(this.paper)
+      }.bind(this)).error(function (data, status) {
       // TODO : display message
 
       deferred.reject([])
       var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error'
       var code = data && data.error && data.error.code ? data.error.code : 403
-    });
+
+      console.log('Message: ' + msg)
+      console.log('Code: ' + code)
+      console.log('Status: ' + status)
+    })
   } else {
     // Continue the current Paper
     deferred.resolve(this.paper)
@@ -181,8 +185,8 @@ UserPaperService.prototype.end = function end() {
 
   this.$http
           .put(
-                  Routing.generate('exercise_finish_paper', {id: this.paper.id})
-                  )
+            Routing.generate('exercise_finish_paper', {id: this.paper.id})
+            )
 
           // Success callback
           .success(function onSuccess(response) {
@@ -203,6 +207,11 @@ UserPaperService.prototype.end = function end() {
 
             var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService end sequence error'
             var code = data && data.error && data.error.code ? data.error.code : 403
+
+            console.log('Message: ' + msg)
+            console.log('Code: ' + code)
+            console.log('Status: ' + status)
+
             /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
             /*$window.location = url;*/
           })
@@ -218,8 +227,8 @@ UserPaperService.prototype.useHint = function useHint(question, hint) {
   var deferred = this.$q.defer()
   this.$http
           .get(
-                  Routing.generate('exercise_hint', {paperId: this.paper.id, hintId: hint.id})
-                  )
+            Routing.generate('exercise_hint', {paperId: this.paper.id, hintId: hint.id})
+            )
           .success(function onSuccess(response) {
             // Update question Paper with used hint
             var questionPaper = this.getQuestionPaper(question)
@@ -236,6 +245,11 @@ UserPaperService.prototype.useHint = function useHint(question, hint) {
             deferred.reject([])
             var msg = data && data.error && data.error.message ? data.error.message : 'QuestionService get hint error'
             var code = data && data.error && data.error.code ? data.error.code : 400
+
+            console.log('Message: ' + msg)
+            console.log('Code: ' + code)
+            console.log('Status: ' + status)
+
             /*var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});*/
             /*$window.location = url;*/
           })
@@ -251,7 +265,6 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
   var deferred = this.$q.defer()
 
   // Get answers for each Question of the Step
-  var noAnswer = true
   var stepAnswers = {}
   if (step && step.items) {
     for (var i = 0; i < step.items.length; i++) {
@@ -269,8 +282,8 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
   // There are answers to post
   this.$http
           .put(
-                  Routing.generate('exercise_submit_step', {paperId: this.paper.id, stepId: step.id}),
-                  {data: stepAnswers}
+            Routing.generate('exercise_submit_step', {paperId: this.paper.id, stepId: step.id}),
+            {data: stepAnswers}
           )
 
           // Success callback
@@ -312,6 +325,11 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
             deferred.reject([])
             var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService submit answer error'
             var code = data && data.error && data.error.code ? data.error.code : 403
+
+            console.log('Message: ' + msg)
+            console.log('Code: ' + code)
+            console.log('Status: ' + status)
+
             /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
             //$window.location = url;
           })
@@ -333,7 +351,7 @@ UserPaperService.prototype.isAllowedToCompose = function isAllowedToCompose() {
   }
 
   return allowed
-};
+}
 
 /**
  * Check if the correction of the Exercise is available
@@ -351,33 +369,33 @@ UserPaperService.prototype.isCorrectionAvailable = function isCorrectionAvailabl
     var exercise = this.ExerciseService.getExercise()
 
     switch (exercise.meta.correctionMode) {
-      // At the end of assessment
-      case '1':
-        available = null !== paper.end
-        break
+    // At the end of assessment
+    case '1':
+      available = null !== paper.end
+      break
 
-        // After the last attempt
-      case '2':
-        available = (0 === exercise.meta.maxAttempts || this.nbPapers >= exercise.meta.maxAttempts)
-        break
+    // After the last attempt
+    case '2':
+      available = (0 === exercise.meta.maxAttempts || this.nbPapers >= exercise.meta.maxAttempts)
+      break
 
-        // From a fixed date
-      case '3':
-        var now = new Date()
+    // From a fixed date
+    case '3':
+      var now = new Date()
 
-        var correctionDate = null
-        if (null !== exercise.meta.correctionDate) {
-          correctionDate = new Date(Date.parse(exercise.meta.correctionDate))
-        }
+      var correctionDate = null
+      if (null !== exercise.meta.correctionDate) {
+        correctionDate = new Date(Date.parse(exercise.meta.correctionDate))
+      }
 
-        available = (null === correctionDate || now >= correctionDate)
-        break
+      available = (null === correctionDate || now >= correctionDate)
+      break
 
-        // Never
-      default:
-      case '4':
-        available = false
-        break
+      // Never
+    default:
+    case '4':
+      available = false
+      break
     }
   }
 
@@ -400,20 +418,20 @@ UserPaperService.prototype.isScoreAvailable = function isScoreAvailable(paper) {
     var exercise = this.ExerciseService.getExercise()
 
     switch (exercise.meta.markMode) {
-      // At the same time that the correction
-      case '1':
-        available = this.isCorrectionAvailable(paper)
-        break
+    // At the same time that the correction
+    case '1':
+      available = this.isCorrectionAvailable(paper)
+      break
 
-        // At the end of the assessment
-      case '2':
-        available = null !== paper.end
-        break
+    // At the end of the assessment
+    case '2':
+      available = null !== paper.end
+      break
 
-        // Show score if nothing specified
-      default:
-        available = false
-        break
+    // Show score if nothing specified
+    default:
+      available = false
+      break
     }
   }
 

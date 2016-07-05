@@ -334,7 +334,7 @@ class ExerciseManager
         $exercise->setStatistics($metadata->statistics ? true : false);
 
         $correctionDate = null;
-        if (!empty($metadata->correctionDate) && CorrectionMode::AFTER_DATE == $metadata->correctionMode) {
+        if (!empty($metadata->correctionDate) && CorrectionMode::AFTER_DATE === $metadata->correctionMode) {
             $correctionDate = \DateTime::createFromFormat('Y-m-d\TH:i:s', $metadata->correctionDate);
         }
 

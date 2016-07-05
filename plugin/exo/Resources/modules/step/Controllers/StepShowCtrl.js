@@ -127,6 +127,6 @@ StepShowCtrl.prototype.getSuiteFeedback = function getSuiteFeedback() {
   }
 
   return sentence
-};
+}
 
 export default StepShowCtrl

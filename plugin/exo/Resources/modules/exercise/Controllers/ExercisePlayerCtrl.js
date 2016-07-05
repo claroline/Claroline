@@ -286,4 +286,6 @@ ExercisePlayerCtrl.prototype.interrupt = function interrupt() {
           }.bind(this))
 }
 
+import $ from 'jquery'
+
 export default ExercisePlayerCtrl
