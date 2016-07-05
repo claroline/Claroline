@@ -529,9 +529,9 @@ class PaperManager
     /**
      * Export submitted answers for one Question of the Paper.
      *
-     * @param Question  $question
-     * @param Paper     $paper
-     * @param bool      $withScore Do we need to export the score of the Paper ?
+     * @param Question $question
+     * @param Paper    $paper
+     * @param bool     $withScore Do we need to export the score of the Paper ?
      *
      * @return array
      *
@@ -541,7 +541,7 @@ class PaperManager
     {
         $responseRepo = $this->om->getRepository('UJMExoBundle:Response');
         $linkRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
-        
+
         $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
         // TODO: these two queries must be moved out of the loop
         $response = $responseRepo->findOneBy(['paper' => $paper, 'question' => $question]);
@@ -557,9 +557,9 @@ class PaperManager
                 'penalty' => $link->getHint()->getPenalty(),
             ];
         }, $links);
-        
+
         $paperQuestion = null;
-        
+
         if ($answer || count($hints) > 0) {
             $paperQuestion = [
                 'id' => (string) $question->getId(),
