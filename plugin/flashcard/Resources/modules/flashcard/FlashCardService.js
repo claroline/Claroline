@@ -141,6 +141,22 @@ export default class FlashCardService {
     return this.$http.post(url, { newCardDay: newCardDay })
   }
 
+  editUserParam (deck, newCardDay) {
+    const url = Routing.generate('claroline_edit_user_param', {
+      deck: deck.id,
+    })
+
+    return this.$http.post(url, { newCardDay: newCardDay })
+  }
+
+  getUserPreference (id) {
+    const url = Routing.generate('claroline_get_user_pref', {
+      deck: deck.id,
+    })
+
+    return this.$http.get(url)
+  }
+
   static _getGlobal (name) {
     if (typeof window[name] === 'undefined') {
       throw new Error(

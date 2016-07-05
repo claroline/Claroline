@@ -49,6 +49,9 @@ class DeckManager
      */
     public function create(Deck $deck)
     {
+        foreach ($deck->getUserPreferences() as $userPref) {
+            $this->om->persist($userPref);
+        }
         $this->om->persist($deck);
         $this->om->flush();
 

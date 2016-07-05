@@ -13,6 +13,7 @@ namespace Claroline\FlashCardBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * UserPreference.
@@ -30,6 +31,7 @@ class UserPreference
      * @var int
      *
      * @ORM\Column(name="new_card_day", type="integer")
+     * @Groups({"api_flashcard", "api_flashcard_user_pref"})
      */
     private $newCardDay;
 
