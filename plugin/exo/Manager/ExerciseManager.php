@@ -5,8 +5,8 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Entity\Step;
+use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
 use UJM\ExoBundle\Transfer\Json\Validator;
 
