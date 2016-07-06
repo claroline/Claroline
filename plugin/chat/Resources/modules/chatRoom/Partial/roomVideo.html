@@ -7,15 +7,6 @@
 
             <div id="chat-room-video-row" class="row">
                 <div class="col-md-8">
-                    <span class="pull-left">
-                        <i class="fa fa-car btn btn-default" ng-click="crc.switchCamera()"></i>
-                        <i class="fa fa-video-camera btn btn-default" ng-click="crc.switchVideo()"></i>
-                        <i class="fa btn btn-default"
-                           ng-class="crc.videoConfig['myAudioEnabled'] ? 'fa-microphone' : 'fa-microphone-slash'"
-                           ng-click="crc.switchAudio()"
-                        >
-                        </i>
-                    </span>
                     <div id="main-video-container">
                         <video id="main-video" autoplay="autoplay" ng-src="{{ crc.videoConfig['sourceStreams'][crc.videoConfig['mainStreamUsername']] }}"></video>
                     </div>

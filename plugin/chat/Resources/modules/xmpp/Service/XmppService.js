@@ -9,7 +9,10 @@
 
 export default class XmppService {
   constructor ($rootScope, $http) {
+<<<<<<< HEAD
     this.protocol = XmppService._getGlobal('xmppSsl') ? 'https': 'http'
+=======
+>>>>>>> import-chat
     this.$rootScope = $rootScope
     this.$http = $http
     this.config = {
@@ -33,7 +36,7 @@ export default class XmppService {
     this.adminPassword = XmppService._getGlobal('chatAdminPassword')
     this._connectionCallback = this._connectionCallback.bind(this)
     this._adminConnectionCallback = this._adminConnectionCallback.bind(this)
-    this._connectedCallBack = () => {}
+    this._connectedCallback = () => {}
   }
 
   _connectionCallback (status) {
@@ -43,7 +46,7 @@ export default class XmppService {
       this.config['connected'] = true
       this.config['busy'] = false
       this.refreshScope()
-      this._connectedCallBack()
+      this._connectedCallback()
     } else if (status === Strophe.Status.CONNFAIL) {
       console.log('Connection failed !')
       this.config['connected'] = false
