@@ -27,6 +27,7 @@ export default class ChatRoomService {
       canChat: ChatRoomService._getGlobal('canChat'),
       canEdit: ChatRoomService._getGlobal('canEdit'),
       xmppMucHost: ChatRoomService._getGlobal('xmppMucHost'),
+      iceServers: ChatRoomService._getGlobal('iceServers'),
       myUsername: null,
       myRole: 'none',
       myAffiliation: null,
@@ -39,12 +40,9 @@ export default class ChatRoomService {
     this._onRoomAdminPresenceInit = this._onRoomAdminPresenceInit.bind(this)
     this._onRoomAdminPresence = this._onRoomAdminPresence.bind(this)
     this._onRoomPresence = this._onRoomPresence.bind(this)
-
     this._onRoomMessage = this._onRoomMessage.bind(this)
-
     this._onIQStanzaInit = this._onIQStanzaInit.bind(this)
     this._onIQStanza = this._onIQStanza.bind(this)
-
     this._fullConnection = this._fullConnection.bind(this)
     this._connectedCallBack = () => {}
   }
@@ -569,8 +567,6 @@ export default class ChatRoomService {
     const statusCode = status.attr('code')
     const error = $(presence).find('error')
     const errorCode = error.attr('code')
-    console.log('##### STATUS = ' + statusCode + ' ####')
-    console.log('##### ERROR = ' + errorCode + ' ####')
 
     if (roomName.toLowerCase() === this.config['room'].toLowerCase() && username !== this.config['adminUsername']) {
       const type = $(presence).attr('type')

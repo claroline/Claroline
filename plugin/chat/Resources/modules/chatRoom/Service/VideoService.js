@@ -15,9 +15,13 @@ export default class VideoService {
     this.UserService = UserService
     this.chatRoomConfig = this.ChatRoomService.getConfig()
     this.xmppConfig = this.ChatRoomService.getXmppConfig()
+    this.iceServers = [];
+    //this.iceServers.push('stun:stun.l.google.com:19302')
+    this.iceServers.push(this.chatRoomConfig.iceServers)
+    console.log(this.iceServers)
     this.videoConfig = {
       ice_config: {
-        iceServers: [{urls: ['stun:stun.l.google.com:19302']}]
+        iceServers: [{urls: this.iceServers}]
       },
       AUTOACCEPT: true,
       PRANSWER: false, // use either pranswer or autoaccept
@@ -51,6 +55,31 @@ export default class VideoService {
     this._noStunCandidates = this._noStunCandidates.bind(this)
     this._waitForRemoteVideo = this._waitForRemoteVideo.bind(this)
     this.ChatRoomService.setConnectedCallBack(this.switchCamera)
+
+    //listeners
+    angular.element(document).bind('mediaready.jingle', this._onMediaReady)
+    angular.element(document).bind('mediafailure.jingle', this._onMediaFailure)
+    angular.element(document).bind('callincoming.jingle', this._onCallIncoming)
+    //angular.element(document).bind('callactive.jingle', this._onCallActive)
+    angular.element(document).bind('callterminated.jingle', this._onCallTerminated)
+    angular.element(document).bind('remotestreamadded.jingle', this._onRemoteStreamAdded)
+    angular.element(document).bind('remotestreamremoved.jingle', this._onRemoteStreamRemoved)
+    angular.element(document).bind('iceconnectionstatechange.jingle', this._onIceConnectionStateChanged)
+    angular.element(document).bind('nostuncandidates.jingle', this._noStunCandidates)
+    angular.element(document).bind('ack.jingle', (event, sid, ack) => {
+        console.log('got stanza ack for ' + sid, ack)
+    })
+    angular.element(document).bind('error.jingle', (event, sid, err) => {
+        if (!sid) {
+            console.error('got stanza error but no sid defined', err)
+            //this.switchCamera()
+        } else {
+            console.error('got stanza error for ' + sid, err)
+        }
+    })
+    angular.element(document).bind('packetloss.jingle', (event, sid, loss) => {
+      console.warn('packetloss', sid, loss)
+    })
   }
 
   getVideoConfig () {
@@ -62,24 +91,6 @@ export default class VideoService {
     RTC = setupRTC()
     getUserMediaWithConstraints(['audio', 'video'])
     this.xmppConfig['connection'].jingle.ice_config = this.videoConfig['ice_config']
-    angular.element(document).bind('mediaready.jingle', this._onMediaReady)
-    angular.element(document).bind('mediafailure.jingle', this._onMediaFailure)
-    angular.element(document).bind('callincoming.jingle', this._onCallIncoming)
-    //angular.element(document).bind('callactive.jingle', this._onCallActive)
-    angular.element(document).bind('callterminated.jingle', this._onCallTerminated)
-    angular.element(document).bind('remotestreamadded.jingle', this._onRemoteStreamAdded)
-    angular.element(document).bind('remotestreamremoved.jingle', this._onRemoteStreamRemoved)
-    angular.element(document).bind('iceconnectionstatechange.jingle', this._onIceConnectionStateChanged)
-    angular.element(document).bind('nostuncandidates.jingle', this._noStunCandidates)
-    angular.element(document).bind('ack.jingle', function (event, sid, ack) {
-      console.log('got stanza ack for ' + sid, ack)
-    })
-    angular.element(document).bind('error.jingle', function (event, sid, err) {
-      console.log('got stanza error for ' + sid, err)
-    })
-    angular.element(document).bind('packetloss.jingle', function (event, sid, loss) {
-      console.warn('packetloss', sid, loss)
-    })
 
     if (RTC) {
       RTCPeerconnection = RTC.peerconnection
@@ -170,7 +181,10 @@ export default class VideoService {
         )
 
         if (session['sid']) {
+            console.log('Session initialiazed', session)
             this.addSid(session['sid'], u['username']);
+        } else {
+            console.error('No session initialized')
         }
       }
     })
@@ -286,14 +300,16 @@ export default class VideoService {
       //manageDisconnectedSid(sid);
     } else if (sess.peerconnection.iceConnectionState === 'failed' || sess.peerconnection.iceConnectionState === 'closed') {
       console.log('failed/closed stream');
-      //$scope.removeStream(sid);
-      //manageDisconnectedSid(sid);
+      //retry
+      console.log('retry')
+      setTimeout(() => {
+        this.switchCamera()
+      }, Math.random(0, 10000))
     }
   }
 
   _noStunCandidates (event) {
-    console.log('webrtc did not encounter stun candidates, NAT traversal will not work')
-    console.warn('webrtc did not encounter stun candidates, NAT traversal will not work')
+    console.error('webrtc did not encounter stun candidates, NAT traversal will not work')
   }
 
   _waitForRemoteVideo(sid) {

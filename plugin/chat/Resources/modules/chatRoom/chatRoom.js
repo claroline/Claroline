@@ -13,6 +13,17 @@ import UIRouter from 'angular-ui-router'
 import bootstrap from 'angular-bootstrap'
 import translation from 'angular-ui-translation/angular-translation'
 
+// import 'strophejs'
+// import 'strophejs-plugins/disco/strophe.disco.js'
+// import 'strophe.jingle/strophe.jingle.adapter.js'
+// import 'strophe.jingle/strophe.jingle.js'
+// import 'strophe.jingle/strophe.jingle.sdp.js'
+// import 'strophe.jingle/strophe.jingle.session.js'
+// import 'hark/hark.bundle.js'
+//
+//
+// import 'sualko.strophe.jinglejs'
+
 import MessageModule from '../message/message'
 import UserModule from '../user/user'
 import XmppModule from '../xmpp/xmpp'
