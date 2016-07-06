@@ -145,8 +145,6 @@ export default class ChatRoomService {
         type: 'unavailable'
       })
       this.xmppConfig['connection'].send(presence)
-      //this.xmppConfig['connection'].flush()
-      //this.xmppConfig['connection'].disconnect()
     }
   }
 
@@ -534,7 +532,7 @@ export default class ChatRoomService {
     const statusCode = status.attr('code')
     const error = $(presence).find('error')
     const errorCode = error.attr('code')
-    
+
     if (statusCode) {
         console.log('##### STATUS = ' + statusCode + ' ####')
     }
@@ -664,7 +662,7 @@ export default class ChatRoomService {
       }
     }
 
-    return response
+    return true
   }
 
   _onIQStanzaInit (iq) {
@@ -681,7 +679,8 @@ export default class ChatRoomService {
       }
     }
 
-    return response
+    return oops
+
   }
 
   _onIQStanza (iq) {

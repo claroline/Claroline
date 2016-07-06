@@ -47,11 +47,9 @@ export default class VideoService {
     this._stopUserStream = this._stopUserStream.bind(this)
     this._manageManagementMessage = this._manageManagementMessage.bind(this)
     this._updateMainStream = this._updateMainStream.bind(this)
-
     this._onMediaReady = this._onMediaReady.bind(this)
     this._onMediaFailure = this._onMediaFailure.bind(this)
     this._onCallIncoming = this._onCallIncoming.bind(this)
-    // this._onCallActive = this._onCallActive.bind(this)
     this._onCallTerminated = this._onCallTerminated.bind(this)
     this._onRemoteStreamAdded = this._onRemoteStreamAdded.bind(this)
     this._onRemoteStreamRemoved = this._onRemoteStreamRemoved.bind(this)
@@ -332,8 +330,6 @@ export default class VideoService {
       }
     }
     console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-  // const streamURL = this.videoConfig['sourceStreams'][username]
-  // console.log(streamURL)
   }
 
   _manageManagementMessage (type, username, name, value) {
@@ -377,13 +373,6 @@ export default class VideoService {
     this.videoConfig['mySourceStream'] = trustedStreamURL
     this.videoConfig['sourceStreams'][this.chatRoomConfig['myUsername']] = trustedStreamURL
     this.videoConfig['mainStreamUsername'] = this.chatRoomConfig['myUsername']
-    // const index = this.UserService.getUserIndex(this.chatRoomConfig['myUsername'])
-
-    // if (index > -1) {
-    //  this.videoConfig['users'][index]['sourceStream'] = trustedStreamURL
-    // RTC.attachMediaStream(angular.element(document).find('#my-video'), this.videoConfig['localStream'])
-    // updateMainVideoDisplay()
-    // }
     this.initiateCalls()
     this.sendMicroStatus()
     this.initiateHark()
@@ -403,39 +392,13 @@ export default class VideoService {
     sess.accept()
   }
 
-  // _onCallActive (event, videoelem, sid) {
-  //  console.log('*********** Call active *******************')
-  // }
-
   _onCallTerminated (event, sid, reason) {
     console.log('Call terminated')
   }
 
   _onRemoteStreamAdded (event, data, sid) {
     console.log(`Remote stream for session ${sid} added.`)
-    // console.log(data)
-
-    // if ($('#participant-video-' + sid).length !== 0) {
-    //    console.log('ignoring duplicate onRemoteStreamAdded...') // FF 20
-    //
-    //    return
-    // }
-    // after remote stream has been added, wait for ice to become connected
-    // old code for compat with FF22 beta
-    // const el = $('<video autoplay="autoplay" class="participant-video"/>').attr('id', 'participant-video-' + sid)
-    // const el = angular.element(document).find('.other-stream')
-    // RTC.attachMediaStream(el, data.stream)
-    // this._waitForRemoteVideo(el, sid)
     this._waitForRemoteVideo(sid)
-
-  /* does not yet work for remote streams -- https://code.google.com/p/webrtc/issues/detail?id=861
-  var options = { interval:500 }
-  var speechEvents = hark(data.stream, options)
-
-  speechEvents.on('volume_change', function (volume, treshold) {
-    console.log('volume for ' + sid, volume, treshold)
-  })
-  */
   }
 
   _onRemoteStreamRemoved (event, data, sid) {
@@ -458,7 +421,7 @@ export default class VideoService {
     // manageDisconnectedSid(sid)
     } else if (sess.peerconnection.iceConnectionState === 'failed' || sess.peerconnection.iceConnectionState === 'closed') {
       console.log('failed/closed stream')
-      this._reconnect ()
+      //this._reconnect ()
     }
   }
 
