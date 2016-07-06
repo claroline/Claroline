@@ -64,9 +64,6 @@ paper_list_table_user: Utilisateur
 paper_list_table_paper_number: '#'
 paper_list_table_start_date: Date de début
 paper_list_table_end_date: Date de fin
-paper_list_table_interrupted: Interrompue
-paper_list_table_interrupted_yes: Oui
-paper_list_table_interrupted_no: Non
 paper_list_table_action: Correction
 paper_list_table_action_not_available: Indisponible actuellement
 paper_list_table_score: Score

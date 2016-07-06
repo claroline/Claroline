@@ -276,6 +276,7 @@ overview: Overview
 
 # P
 paper: Paper
+paper_finished: Finished
 paper_legend: Papers which need manual correction
 paper_list: Paper list
 paper_count: "{0} no paper|{1} %count% paper|]1,Inf[ %count% papers"
