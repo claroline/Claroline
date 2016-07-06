@@ -464,18 +464,6 @@ export default class VideoService {
       console.log(this.xmppConfig['connection'].jingle.sessions)
       console.log('###################################################################')
       this.ChatRoomService.refreshScope()
-      // const index = this.UserService.getUserIndex(initiator)
-
-    // if (index > -1) {
-    //  this.videoConfig['users'][index]['sourceStream'] = trustedStreamURL
-    //  this.ChatRoomService.refreshScope()
-    // console.log('##########################')
-    // console.log(trustedStreamURL)
-    // RTC.attachMediaStream(angular.element(document).find('#my-video'), this.videoConfig['localStream'])
-    // updateMainVideoDisplay()
-    // }
-    // RTC.attachMediaStream(selector, sess.remoteStream); // FIXME: why do i have to do this for FF?
-    // console.log('waitForremotevideo', sess.peerconnection.iceConnectionState, sess.peerconnection.signalingState)
     } else {
       setTimeout(() => {this._waitForRemoteVideo(sid)}, 500)
     }

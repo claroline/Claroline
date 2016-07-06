@@ -120,6 +120,8 @@ export default class ChatRoomService {
       this.xmppConfig['connection'].addHandler(this._onRoomPresence, null, 'presence')
       this.xmppConfig['connection'].addHandler(this._onRoomMessage, null, 'message', 'groupchat')
       this.xmppConfig['connection'].addHandler(this._onIQStanza, null, 'iq')
+      //this will log everything we receive
+      //this.xmppConfig['connection'].xmlInput((elem) => console.log(elem))
       console.log(`${this.config['room']}/${this.xmppConfig['username']}`)
       this.xmppConfig['connection'].send(
         $pres({to: `${this.config['room']}/${this.xmppConfig['username']}`})
@@ -145,6 +147,7 @@ export default class ChatRoomService {
         type: 'unavailable'
       })
       this.xmppConfig['connection'].send(presence)
+      this.xmppConfig['connection'].disconnect()
     }
   }
 
@@ -524,7 +527,7 @@ export default class ChatRoomService {
   }
 
   _onRoomPresence (presence) {
-    console.log(presence)
+    //console.log(presence)
     const from = $(presence).attr('from')
     const username = Strophe.getResourceFromJid(from)
     const roomName = Strophe.getBareJidFromJid(from)

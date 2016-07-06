@@ -103,6 +103,15 @@ export default class XmppService {
             this.config['fullName'] = `${datas['data']['firstName']} ${datas['data']['lastName']}`
             this.config['color'] = datas['data']['chatColor']
             this.config['connection'] = new Strophe.Connection(this.config['boshService']);
+            // this.config['connection'].disconnect(() => {
+            //     this.log('DISCONNECTED')
+            //     this.config['connection'].connect(
+            //       `${this.config['username']}@${this.config['xmppHost']}`,
+            //       this.config['password'],
+            //       this._connectionCallback
+            //     )
+            // })
+
             this.config['connection'].connect(
               `${this.config['username']}@${this.config['xmppHost']}`,
               this.config['password'],

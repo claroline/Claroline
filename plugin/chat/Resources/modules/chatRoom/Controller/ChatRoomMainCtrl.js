@@ -24,8 +24,6 @@ export default class ChatRoomMainCtrl {
   initializeChatRoom () {
     if (this.xmppConfig['connected']) {
       this.ChatRoomService.initializeRoom()
-      //this.ChatRoomService.connectToRoom()
-      //this.ChatRoomService.initializeRoom()
     }
   }
 
