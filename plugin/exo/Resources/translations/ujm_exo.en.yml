@@ -14,7 +14,7 @@ alert_ending: Are you sure you want to finish ? (You can't alter your answers an
 all: All
 allow_to_edit: Allow to edit
 all_question: All the questions
-all_question: All the steps
+all_step: All the steps
 already: This question is already shared with this user
 already_answered: You have already answered at this exercise
 already_exist: This name exist already
