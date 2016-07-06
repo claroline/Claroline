@@ -25,6 +25,7 @@ export default class ChatRoomVideoCtrl {
   }
 
   initialize () {
+    console.log('INIT VIDEO PLAYER')
     $(window).unload(($event) => {
       $event.preventDefault()
       console.log('Disconnecting...')

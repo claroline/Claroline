@@ -97,7 +97,6 @@ export default class ChatRoomService {
       console.log('Connecting to room...')
       this.connectAdminToRoom()
     } else {
-        console.log(this.XmppService)
       console.log('Not connected to XMPP')
       this.XmppService.setConnectedCallback(this._fullConnection)
       this.XmppService.connectWithAdmin()
@@ -535,8 +534,14 @@ export default class ChatRoomService {
     const statusCode = status.attr('code')
     const error = $(presence).find('error')
     const errorCode = error.attr('code')
-    console.log('##### STATUS = ' + statusCode + ' ####')
-    console.log('##### ERROR = ' + errorCode + ' ####')
+    
+    if (statusCode) {
+        console.log('##### STATUS = ' + statusCode + ' ####')
+    }
+
+    if (errorCode) {
+        console.log('##### ERROR = ' + errorCode + ' ####')
+    }
 
     if (roomName.toLowerCase() === this.config['room'].toLowerCase() && username !== this.config['adminUsername']) {
       const type = $(presence).attr('type')
