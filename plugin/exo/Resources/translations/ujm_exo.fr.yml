@@ -190,7 +190,7 @@ in_valid_mark: Note invalide
 item_points: "[0,1] %count% point|]1,Inf[ %count% points"
 
 # K
-keep_same_question: Conserver les mêmes questions pour un même utilisateur
+keep_same_step: Conserver les mêmes étapes pour un même utilisateur
 key_word: Mot clé
 keys_words: Mots clés
 kind_question: Quel type de question

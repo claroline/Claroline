@@ -189,7 +189,7 @@ in_valid_mark: Invalid score
 item_points: "[0,1] %count% point|]1,Inf[ %count% points"
 
 # K
-keep_same_question: Keep the same questions for a same user
+keep_same_step: Keep the same steps for a same user
 key_word: Key word
 keys_words: Keys words
 kind_question: What kind of question
