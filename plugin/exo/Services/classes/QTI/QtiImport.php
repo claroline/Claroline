@@ -24,6 +24,7 @@ abstract class QtiImport
     protected $question;
     protected $assessmentItem;
     protected $dirQTI;
+    protected $path;
 
     /**
      * Constructor.
@@ -176,7 +177,7 @@ abstract class QtiImport
         $this->getDirQTIImport($ws);
         foreach ($objects as $ob) {
             $fileName = $this->getFileName($ob);
-            $tmpFile = $this->qtiRepos->getUserDir().'/'.$fileName;
+            $tmpFile = $this->path.'/'.$fileName;
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $hashName = $this->container->get('claroline.utilities.misc')->generateGuid().'.'.$extension;
             $mimeType = $ob->getAttribute('type');
@@ -217,7 +218,7 @@ abstract class QtiImport
             $fileURLExplode = explode('/', $fileURL);
             $fileName = $fileURLExplode[count($fileURLExplode) - 1];
             $ob->setAttribute('data', $fileName);
-            copy($fileURL, $this->qtiRepos->getUserDir().'/'.$fileName);
+            copy($fileURL, $this->path.'/'.$fileName);
         }
 
         return $fileName;
@@ -345,10 +346,11 @@ abstract class QtiImport
      *
      * @param qtiRepository $qtiRepos
      * @param DOMElement    $assessmentItem assessmentItem of the question to imported
+     * @param string        $path           parent directory of the files
      *
      * @return UJM\ExoBundle\Entity\InteractionQCM or InteractionGraphic or ....
      */
-    abstract public function import(qtiRepository $qtiRepos, $assessmentItem);
+    abstract public function import(qtiRepository $qtiRepos, $assessmentItem, $path);
 
     /**
      * abstract method to get the prompt.

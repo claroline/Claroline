@@ -74,12 +74,17 @@ class ExerciseControllerMatchTest extends TransactionalTestCase
         $pa1 = $this->persist->paper($this->john, $this->ex1);
         $this->om->flush();
 
+        $step = $this->ex1->getSteps()->get(0);
+
         $this->request(
             'PUT',
-            "/exercise/api/papers/{$pa1->getId()}/questions/{$this->qu1->getId()}",
+            "/exercise/api/papers/{$pa1->getId()}/steps/{$step->getId()}",
             $this->john,
-            ['data' => ['not a proposal id,not a label id']]
+            [
+                'data' => [$this->qu1->getId() => 'not a proposal id,not a label id'],
+            ]
         );
+
         $this->assertEquals(422, $this->client->getResponse()->getStatusCode());
     }
 
@@ -92,11 +97,15 @@ class ExerciseControllerMatchTest extends TransactionalTestCase
         $propId2 = (string) $this->prop2->getId();
         $labelId = (string) $this->lab1->getId();
 
+        $step = $this->ex1->getSteps()->get(0);
+
         $this->request(
             'PUT',
-            "/exercise/api/papers/{$pa1->getId()}/questions/{$this->qu1->getId()}",
+            "/exercise/api/papers/{$pa1->getId()}/steps/{$step->getId()}",
             $this->john,
-            ['data' => [$propId1.','.$labelId, $propId2.','.$labelId]]
+            [
+                'data' => [$this->qu1->getId() => [$propId1.','.$labelId, $propId2.','.$labelId]],
+            ]
         );
 
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());

@@ -93,7 +93,9 @@ class PaperControllerTest extends TransactionalTestCase
         $pa1 = $this->persist->paper($this->john, $this->ex1);
         $this->om->flush();
 
-        $this->request('PUT', "/exercise/api/papers/{$pa1->getId()}/questions/{$this->qu1->getId()}");
+        $step = $this->ex1->getSteps()->get(0);
+
+        $this->request('PUT', "/exercise/api/papers/{$pa1->getId()}/steps/{$step->getId()}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -105,7 +107,9 @@ class PaperControllerTest extends TransactionalTestCase
         $pa1->setEnd($date);
         $this->om->flush();
 
-        $this->request('PUT', "/exercise/api/papers/{$pa1->getId()}/questions/{$this->qu1->getId()}", $this->john);
+        $step = $this->ex1->getSteps()->get(0);
+
+        $this->request('PUT', "/exercise/api/papers/{$pa1->getId()}/steps/{$step->getId()}", $this->john);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -114,7 +118,9 @@ class PaperControllerTest extends TransactionalTestCase
         $pa1 = $this->persist->paper($this->john, $this->ex1);
         $this->om->flush();
 
-        $this->request('PUT', "/exercise/api/papers/{$pa1->getId()}/questions/{$this->qu1->getId()}", $this->bob);
+        $step = $this->ex1->getSteps()->get(0);
+
+        $this->request('PUT', "/exercise/api/papers/{$pa1->getId()}/steps/{$step->getId()}", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 

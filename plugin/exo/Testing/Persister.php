@@ -256,12 +256,12 @@ class Persister
      */
     public function paper(User $user, Exercise $exercise)
     {
-        return $this->paperManager->createPaper($user, $exercise);
+        return $this->paperManager->createPaper($exercise, $user);
     }
 
     public function finishpaper(Paper $paper)
     {
-        return $this->paperManager->finishPaper($paper);
+        $this->paperManager->finishPaper($paper);
     }
 
     /**

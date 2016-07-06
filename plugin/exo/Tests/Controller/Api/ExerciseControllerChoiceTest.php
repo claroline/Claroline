@@ -64,9 +64,11 @@ class ExerciseControllerChoiceTest extends TransactionalTestCase
         $pa1 = $this->persist->paper($this->john, $this->ex1);
         $this->om->flush();
 
+        $step = $this->ex1->getSteps()->get(0);
+
         $this->request(
             'PUT',
-            "/exercise/api/papers/{$pa1->getId()}/questions/{$this->qu1->getId()}",
+            "/exercise/api/papers/{$pa1->getId()}/steps/{$step->getId()}",
             $this->john,
             ['data' => ['not a choice id']]
         );
@@ -81,12 +83,17 @@ class ExerciseControllerChoiceTest extends TransactionalTestCase
 
         $id = (string) $this->ch1->getId();
 
+        $step = $this->ex1->getSteps()->get(0);
+
         $this->request(
             'PUT',
-            "/exercise/api/papers/{$pa1->getId()}/questions/{$this->qu1->getId()}",
+            "/exercise/api/papers/{$pa1->getId()}/steps/{$step->getId()}",
             $this->john,
-            ['data' => [$id]]
+            [
+                'data' => [$this->qu1->getId() => [$id]],
+            ]
         );
+
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
     }
 }

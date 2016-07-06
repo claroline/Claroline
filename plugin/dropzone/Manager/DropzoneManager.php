@@ -337,8 +337,10 @@ class DropzoneManager
                     $documents = $drop->getDocuments();
                     if (count($documents) > 0) {
                         $doc = $documents[0];
-                        $rootId = $doc->getResourceNode()->getParent()->getId();
-                        array_push($ids, $rootId);
+                        if ($doc->getResourceNode()) {
+                            $rootId = $doc->getResourceNode()->getParent()->getId();
+                            array_push($ids, $rootId);
+                        }
                     }
                 }
             }

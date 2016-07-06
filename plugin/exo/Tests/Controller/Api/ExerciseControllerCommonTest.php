@@ -174,25 +174,6 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
         $this->assertInternalType('object', $content);
     }
 
-    /**
-     * Checks the count of finished papers.
-     */
-    public function testCountFinishedPaper()
-    {
-        // create one paper that will be ended
-        $pa1 = $this->persist->paper($this->john, $this->ex1);
-        // create another paper that will not be ended
-        $pa2 = $this->persist->paper($this->john, $this->ex1);
-        // finish first john's paper
-        $this->persist->finishpaper($pa1);
-        $this->om->flush();
-
-        // count john's finished papers
-        $this->request('GET', "/exercise/api/exercises/{$this->ex1->getId()}/papers/count", $this->john);
-        $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertTrue((int) $content === 1);
-    }
-
     public function testAnonymousPapers()
     {
         $this->request('GET', "/exercise/api/exercises/{$this->ex1->getId()}/papers");
