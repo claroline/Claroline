@@ -257,13 +257,14 @@ export default class VideoService {
   }
 
   closeAllConnections () {
+    for (let sid in this.videoConfig['sids']) {
+      console.log(this.xmppConfig['connection'].jingle.sessions[sid])
+      this.xmppConfig['connection'].jingle.sessions[sid].terminate('Closing all connections...')
+      console.log(`${sid} : closed`)
+    }
+    /*
     RTC = null
-    RTCPeerconnection = null
-    //for (let sid in this.videoConfig['sids']) {
-    //  console.log(this.xmppConfig['connection'].jingle.sessions[sid])
-    //  //this.xmppConfig['connection'].jingle.sessions[sid].terminate('Closing all connections...')
-    //  console.log(`${sid} : closed`)
-    //}
+    RTCPeerconnection = null*/
   }
 
   _updateMainStream () {
@@ -300,7 +301,12 @@ export default class VideoService {
       console.log('got stanza ack for ' + sid, ack)
     })
     angular.element(document).bind('error.jingle', function (event, sid, err) {
-      console.log('got stanza error for ' + sid, err)
+      if (sid) {
+          console.error('got stanza error for ' + sid, err)
+      } else {
+          console.error('no sid defined for', err)
+      }
+
     })
     angular.element(document).bind('packetloss.jingle', function (event, sid, loss) {
       console.warn('packetloss', sid, loss)
@@ -460,6 +466,7 @@ export default class VideoService {
       //manageDisconnectedSid(sid);
     } else if (sess.peerconnection.iceConnectionState === 'failed' || sess.peerconnection.iceConnectionState === 'closed') {
       console.log('failed/closed stream');
+      //
     }
   }
 

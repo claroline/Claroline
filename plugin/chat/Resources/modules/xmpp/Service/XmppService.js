@@ -9,10 +9,7 @@
 
 export default class XmppService {
   constructor ($rootScope, $http) {
-<<<<<<< HEAD
     this.protocol = XmppService._getGlobal('xmppSsl') ? 'https': 'http'
-=======
->>>>>>> import-chat
     this.$rootScope = $rootScope
     this.$http = $http
     this.config = {
@@ -85,8 +82,8 @@ export default class XmppService {
     return this.config
   }
 
-  setConnectedCallBack (callback) {
-    this._connectedCallBack = callback
+  setConnectedCallback (callback) {
+    this._connectedCallback = callback
   }
 
   connect () {

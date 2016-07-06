@@ -97,6 +97,7 @@ export default class ChatRoomService {
       console.log('Connecting to room...')
       this.connectAdminToRoom()
     } else {
+        console.log(this.XmppService)
       console.log('Not connected to XMPP')
       this.XmppService.setConnectedCallback(this._fullConnection)
       this.XmppService.connectWithAdmin()
@@ -197,54 +198,6 @@ export default class ChatRoomService {
     .c('field', {var: 'muc#roomconfig_whois'})
     .c('value').t('moderators')
     this.xmppConfig['adminConnection'].sendIQ(iq)
-
-    //this.getUsers().forEach(u => {
-    //  const iq = $iq({
-    //    id: `mute-${u['username']}`,
-    //    from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
-    //    to: this.config['room'],
-    //    type: 'set'
-    //  }).c('x', {xmlns: 'http://jabber.org/protocol/muc#admin'})
-    //  .c('item', {nick: this.xmppConfig['username'], role: 'participant'})
-    //  this.xmppConfig['connection'].sendIQ(iq)
-    //})
-    //
-    //const route = Routing.generate('api_put_room_status', {chatRoom: this.config['roomId'], roomStatus: 1})
-    //this.$http.put(route).then(datas => {
-    //  if (datas['status'] === 200) {
-    //    this.config['roomStatus'] = datas['data']['roomStatusText']
-    //  }
-    //})
-
-    //var message = Translator.trans('chat_room_open_msg', {}, 'chat');
-    //
-    //XmppService.getConnection().send(
-    //    $msg({
-    //        to: room,
-    //        type: "groupchat"
-    //    }).c('body').t(message)
-    //    .up()
-    //    .c(
-    //        'datas',
-    //        {
-    //            firstName:  XmppService.getFirstName(),
-    //            lastName: XmppService.getLastName(),
-    //            color: XmppService.getColor(),
-    //            status: 'raw'
-    //        }
-    //    )
-    //);
-    //
-    //var route = Routing.generate(
-    //    'claro_chat_room_status_register',
-    //    {
-    //        chatRoom: roomId,
-    //        username: XmppService.getUsername(),
-    //        fullName: XmppService.getFullName(),
-    //        status: 'open'
-    //    }
-    //);
-    //$http.post(route);
   }
 
   openRoom () {
