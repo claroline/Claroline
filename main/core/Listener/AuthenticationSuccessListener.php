@@ -210,7 +210,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             && !$this->isRouteExcluded($route)
         ) {
             if ($token = $this->tokenStorage->getToken()) {
-                if ('anon.' === $user = $token->getUser()) {
+                if ('anon.' === $token->getUser()) {
                     $uri = $request->getRequestUri();
                     $request->getSession()->set('redirect_route', $uri);
                 }
