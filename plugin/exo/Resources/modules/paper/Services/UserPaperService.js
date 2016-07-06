@@ -157,16 +157,10 @@ UserPaperService.prototype.start = function start(exercise) {
       ).success(function (response) {
         this.paper = response
         deferred.resolve(this.paper)
-      }.bind(this)).error(function (data, status) {
-      // TODO : display message
+      }.bind(this)).error(function () {
+        // TODO : display message
 
-      deferred.reject([])
-      var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error'
-      var code = data && data.error && data.error.code ? data.error.code : 403
-
-      console.log('Message: ' + msg)
-      console.log('Code: ' + code)
-      console.log('Status: ' + status)
+        deferred.reject([])
     })
   } else {
     // Continue the current Paper
@@ -200,18 +194,10 @@ UserPaperService.prototype.end = function end() {
           }.bind(this))
 
           // Error callback
-          .error(function onError(data, status) {
+          .error(function onError() {
             // TODO : display message
 
             deferred.reject([])
-
-            var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService end sequence error'
-            var code = data && data.error && data.error.code ? data.error.code : 403
-
-            console.log('Message: ' + msg)
-            console.log('Code: ' + code)
-            console.log('Status: ' + status)
-
             /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
             /*$window.location = url;*/
           })
@@ -241,15 +227,8 @@ UserPaperService.prototype.useHint = function useHint(question, hint) {
 
             deferred.resolve(response)
           }.bind(this))
-          .error(function onError(data, status) {
+          .error(function onError() {
             deferred.reject([])
-            var msg = data && data.error && data.error.message ? data.error.message : 'QuestionService get hint error'
-            var code = data && data.error && data.error.code ? data.error.code : 400
-
-            console.log('Message: ' + msg)
-            console.log('Code: ' + code)
-            console.log('Status: ' + status)
-
             /*var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});*/
             /*$window.location = url;*/
           })
@@ -319,17 +298,10 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
           }.bind(this))
 
           // Error callback
-          .error(function onError(data, status) {
+          .error(function onError() {
             // TODO : display message
 
             deferred.reject([])
-            var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService submit answer error'
-            var code = data && data.error && data.error.code ? data.error.code : 403
-
-            console.log('Message: ' + msg)
-            console.log('Code: ' + code)
-            console.log('Status: ' + status)
-
             /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
             //$window.location = url;
           })
@@ -437,5 +409,7 @@ UserPaperService.prototype.isScoreAvailable = function isScoreAvailable(paper) {
 
   return available
 }
+
+import angular from 'angular/index'
 
 export default UserPaperService
