@@ -15,13 +15,9 @@ export default class VideoService {
     this.UserService = UserService
     this.chatRoomConfig = this.ChatRoomService.getConfig()
     this.xmppConfig = this.ChatRoomService.getXmppConfig()
-    this.iceServers = []
-    // this.iceServers.push('stun:stun.l.google.com:19302')
-    this.iceServers.push(this.chatRoomConfig.iceServers)
-    console.log(this.iceServers)
     this.videoConfig = {
       ice_config: {
-        iceServers: [{urls: this.iceServers}]
+        iceServers: this.chatRoomConfig.iceServers
       },
       AUTOACCEPT: true,
       PRANSWER: false, // use either pranswer or autoaccept
@@ -43,6 +39,7 @@ export default class VideoService {
       selectedUser: null,
       speakingUser: null
     }
+    console.log(this.videoConfig.ice_config)
     this._startMedias = this._startMedias.bind(this)
     this._stopUserStream = this._stopUserStream.bind(this)
     this._manageManagementMessage = this._manageManagementMessage.bind(this)

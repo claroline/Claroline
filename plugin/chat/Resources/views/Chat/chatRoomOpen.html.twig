@@ -67,7 +67,7 @@
         window.xmppSsl = {{ ssl ? 'true' : 'false' }}
         window.xmppMucHost = '{{ xmppMucHost }}'
         window.boshPort = {{ boshPort }}
-        window.iceServers = '{{ iceServers }}'
+        window.iceServers = {{ iceServers|raw }}
         window.canChat = {{ canChat ? 'true' : 'false' }}
         window.canEdit = {{ canEdit ? 'true' : 'false' }}
         window.hasAdmin = {{ hasAdmin ? 'true' : 'false' }}
