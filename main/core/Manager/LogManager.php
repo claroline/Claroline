@@ -11,21 +11,21 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Log\LogWidgetConfig;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
+use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Adapter\FixedAdapter;
-use Pagerfanta\Pagerfanta;
 use Pagerfanta\Exception\NotValidCurrentPageException;
+use Pagerfanta\Pagerfanta;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
-use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Entity\Log\LogWidgetConfig;
 
 /**
  * @DI\Service("claroline.log.manager")
@@ -71,9 +71,9 @@ class LogManager
 
         $hiddenConfigs = $this->em
             ->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
-            ->findBy(array('user' => $user));
+            ->findBy(['user' => $user]);
 
-        $workspaceIds = array();
+        $workspaceIds = [];
 
         foreach ($hiddenConfigs as $hiddenConfig) {
             $workspaceIds[] = $hiddenConfig->getWorkspaceId();
@@ -83,9 +83,9 @@ class LogManager
         /** @var \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces */
         $workspaces = $this->em
             ->getRepository('ClarolineCoreBundle:Workspace\Workspace')
-            ->findByUserAndRoleNamesNotIn($user, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'), $workspaceIds);
+            ->findByUserAndRoleNamesNotIn($user, ['ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'], $workspaceIds);
 
-        $configs = array();
+        $configs = [];
 
         if (count($workspaces) > 0) {
             //add this method to the repository @see ligne 68
@@ -96,13 +96,13 @@ class LogManager
         $defaultInstance = $this->em
             ->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
             ->findOneBy(
-            array(
+            [
                 'widget' => $instance->getWidget(),
                 'isAdmin' => true,
                 'workspace' => null,
                 'user' => null,
                 'isDesktop' => false,
-            )
+            ]
         );
 
         $defaultConfig = $this->getLogConfig($defaultInstance);
@@ -121,7 +121,7 @@ class LogManager
 
             for ($i = 0, $countConfigs = count($configs); $i < $countConfigs && $config === null; ++$i) {
                 $current = $configs[$i];
-                if ($current->getWidgetInstance()->getWorkspace()->getId() == $workspace->getId()) {
+                if ($current->getWidgetInstance()->getWorkspace()->getId() === $workspace->getId()) {
                     $config = $current;
                 }
             }
@@ -137,7 +137,7 @@ class LogManager
         }
 
         // Remove configs which hasAllRestriction
-        $configsCleaned = array();
+        $configsCleaned = [];
         $events = $this->container->get('claroline.event.manager')
             ->getEvents(LogGenericEvent::DISPLAYED_WORKSPACE);
 
@@ -162,7 +162,7 @@ class LogManager
         //List item delegation
         $views = $this->renderLogs($logs);
 
-        return array(
+        return [
             'logs' => $logs,
             'listItemViews' => $views,
             'chartData' => $chartData,
@@ -170,10 +170,10 @@ class LogManager
             'isDesktop' => true,
             'title' => $this->container->get('translator')->trans(
                 'your_workspace_activity_overview',
-                array(),
+                [],
                 'platform'
             ),
-        );
+        ];
     }
 
     public function getWorkspaceWidgetList(WidgetInstance $instance)
@@ -188,7 +188,7 @@ class LogManager
 
         if ($config === null) {
             $defaultConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
-                ->findOneBy(array('isDesktop' => false, 'isAdmin' => true));
+                ->findOneBy(['isDesktop' => false, 'isAdmin' => true]);
 
             $config = new LogWidgetConfig();
 
@@ -211,9 +211,9 @@ class LogManager
             return;
         }
 
-        $query = $this->logRepository->findLogsThroughConfigs(array($config), $config->getAmount());
+        $query = $this->logRepository->findLogsThroughConfigs([$config], $config->getAmount());
         $logs = $query->getResult();
-        $chartData = $this->logRepository->countByDayThroughConfigs(array($config), $this->getDefaultRange());
+        $chartData = $this->logRepository->countByDayThroughConfigs([$config], $this->getDefaultRange());
 
         //List item delegation
         $views = $this->renderLogs($logs);
@@ -223,18 +223,18 @@ class LogManager
         if ($config->hasAllRestriction(count($workspaceEvents))) {
             $title = $this->container->get('translator')->trans(
                 'recent_all_workspace_activities_overview',
-                array('%workspaceName%' => $workspace->getName()),
+                ['%workspaceName%' => $workspace->getName()],
                 'platform'
             );
         } else {
             $title = $this->container->get('translator')->trans(
                 'Overview of recent activities in %workspaceName%',
-                array('%workspaceName%' => $workspace->getName()),
+                ['%workspaceName%' => $workspace->getName()],
                 'platform'
             );
         }
 
-        return array(
+        return [
             'logs' => $logs,
             'listItemViews' => $views,
             'chartData' => $chartData,
@@ -242,7 +242,7 @@ class LogManager
             'logAmount' => $config->getAmount(),
             'title' => $title,
             'isDesktop' => false,
-        );
+        ];
     }
 
     public function getAdminList($page, $maxResult = -1)
@@ -258,10 +258,10 @@ class LogManager
 
     public function getWorkspaceList($workspace, $page, $maxResult = -1)
     {
-        if ($workspace == null) {
+        if ($workspace === null) {
             $workspaceIds = $this->getAdminOrCollaboratorWorkspaceIds();
         } else {
-            $workspaceIds = array($workspace->getId());
+            $workspaceIds = [$workspace->getId()];
         }
 
         $params = $this->getList(
@@ -280,7 +280,7 @@ class LogManager
 
     public function getResourceList($resource, $page, $maxResult = -1)
     {
-        $resourceNodeIds = array($resource->getResourceNode()->getId());
+        $resourceNodeIds = [$resource->getResourceNode()->getId()];
 
         $params = $this->getList(
             $page,
@@ -359,15 +359,15 @@ class LogManager
 
         //List item delegation
         $views = $this->renderLogs($pager->getCurrentPageResults());
-        //$views = array();
-        return array(
+
+        return [
             'pager' => $pager,
             'listItemViews' => $views,
             'filter' => $filter,
             'filterForm' => $filterForm->createView(),
             'chartData' => $chartData,
             'actionName' => $actionString,
-        );
+        ];
     }
 
     public function countByUserListForCSV(
@@ -375,9 +375,9 @@ class LogManager
         $workspace = null,
         $resource = null
     ) {
-        $workspaceIds = ($workspace == null) ? null : array($workspace->getId());
-        $resourceNodeIds = ($resource == null) ? null : array($resource->getResourceNode()->getId());
-        if ($workspaceIds == null && $resourceNodeIds == null) {
+        $workspaceIds = ($workspace === null) ? null : [$workspace->getId()];
+        $resourceNodeIds = ($resource === null) ? null : [$resource->getResourceNode()->getId()];
+        if ($workspaceIds === null && $resourceNodeIds === null) {
             $workspaceIds = $this->getAdminOrCollaboratorWorkspaceIds();
         }
         if ($workspaceIds !== null) {
@@ -426,10 +426,10 @@ class LogManager
 
     public function countByUserWorkspaceList($workspace, $page)
     {
-        if ($workspace == null) {
+        if ($workspace === null) {
             $workspaceIds = $this->getAdminOrCollaboratorWorkspaceIds();
         } else {
-            $workspaceIds = array($workspace->getId());
+            $workspaceIds = [$workspace->getId()];
         }
 
         $params = $this->countByUser(
@@ -447,7 +447,7 @@ class LogManager
 
     public function countByUserResourceList($resource, $page)
     {
-        $resourceNodeIds = array($resource->getResourceNode()->getId());
+        $resourceNodeIds = [$resource->getResourceNode()->getId()];
 
         $params = $this->countByUser(
             $page,
@@ -492,7 +492,6 @@ class LogManager
         $filterForm = $this->container->get('form.factory')->create($logFilterFormType, $data);
 
         $data['range'] = $dateRangeToTextTransformer->transform($range);
-        //$filter = urlencode(json_encode($data));
 
         //Find if action refers to an resource type
         $actionData = $this->getResourceTypeFromAction($data['action']);
@@ -545,14 +544,14 @@ class LogManager
             $userActionsByDay[] = null;
             $resultUserList = $formatedData['userData'];
             $currentUserId = null;
-            $userActionsArray = array();
+            $userActionsArray = [];
             foreach ($userActionsByDay as $userAction) {
-                if ($userAction === null || ($currentUserId !== null && $currentUserId != $userAction['id'])) {
+                if ($userAction === null || ($currentUserId !== null && $currentUserId !== $userAction['id'])) {
                     $resultUserList[$currentUserId]['stats'] = $this
                         ->logRepository
                         ->extractChartData($userActionsArray, $range);
                     $resultUserList[$currentUserId]['maxValue'] = max(array_column($userActionsArray, 'total'));
-                    $userActionsArray = array();
+                    $userActionsArray = [];
                 }
                 if ($userAction !== null) {
                     $currentUserId = $userAction['id'];
@@ -565,19 +564,19 @@ class LogManager
         $pager->setMaxPerPage(self::LOG_PER_PAGE);
         $pager->setCurrentPage($page);
 
-        return array(
+        return [
             'pager' => $pager,
             'filter' => $data,
             'filterForm' => $filterForm->createView(),
             'actionName' => $actionString,
             'orderBy' => $orderBy,
             'order' => $order,
-        );
+        ];
     }
 
     public function getWorkspaceVisibilityForDesktopWidget(User $user, array $workspaces)
     {
-        $workspacesVisibility = array();
+        $workspacesVisibility = [];
 
         foreach ($workspaces as $workspace) {
             $workspacesVisibility[$workspace->getId()] = true;
@@ -585,7 +584,7 @@ class LogManager
 
         $hiddenWorkspaceConfigs = $this->em
             ->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
-            ->findBy(array('user' => $user));
+            ->findBy(['user' => $user]);
 
         foreach ($hiddenWorkspaceConfigs as $config) {
             if ($workspacesVisibility[$config->getWorkspaceId()] !== null) {
@@ -618,7 +617,7 @@ class LogManager
     {
         return $this->em
             ->getRepository('ClarolineCoreBundle:Log\LogWidgetConfig')
-            ->findOneBy(array('widgetInstance' => $config));
+            ->findOneBy(['widgetInstance' => $config]);
     }
 
     protected function getResourceTypeFromAction($action)
@@ -633,7 +632,7 @@ class LogManager
             $actionString = trim($actionString);
         }
 
-        return array('action' => $actionString, 'resourceType' => $resourceType);
+        return ['action' => $actionString, 'resourceType' => $resourceType];
     }
 
     protected function processFormData(
@@ -653,9 +652,9 @@ class LogManager
         if (array_key_exists('filter', $data)) {
             $decodeFilter = json_decode(urldecode($data['filter']), true);
             if ($decodeFilter !== null) {
-                $action = $decodeFilter->action;
-                $range = $dateRangeToTextTransformer->reverseTransform($decodeFilter->range);
-                $userSearch = $decodeFilter->user;
+                $action = $decodeFilter['action'];
+                $range = $dateRangeToTextTransformer->reverseTransform($decodeFilter['range']);
+                $userSearch = $decodeFilter['user'];
                 if (!empty($decodeFilter['orderBy'])) {
                     $orderBy = $decodeFilter['orderBy'];
                     $order = $decodeFilter['order'];
@@ -667,6 +666,9 @@ class LogManager
             $tmpForm->submit($request);
             $formData = $tmpForm->getData();
             $action = isset($formData['action']) ? $formData['action'] : null;
+            if (empty($action) && !empty($request->get('action'))) {
+                $action = $request->get('action');
+            }
             $range = isset($formData['range']) ? $formData['range'] : null;
             $userSearch = isset($formData['user']) ? $formData['user'] : null;
             if (!empty($data['orderBy'])) {
@@ -675,15 +677,15 @@ class LogManager
             }
         }
 
-        if ($range == null) {
+        if ($range === null) {
             $range = $this->getDefaultRange();
         }
 
-        if ($action == null && $actionsRestriction == 'workspace' && $workspaceIds !== null) {
+        if ($action === null && $actionsRestriction === 'workspace' && $workspaceIds !== null) {
             $action = LogWorkspaceEnterEvent::ACTION;
         }
 
-        $data = array();
+        $data = [];
         $data['action'] = $action;
         $data['range'] = $range;
         $data['user'] = $userSearch;
@@ -711,7 +713,7 @@ class LogManager
     protected function renderLogs($logs)
     {
         //List item delegation
-        $views = array();
+        $views = [];
         foreach ($logs as $log) {
             $eventName = 'create_log_list_item_'.$log->getAction();
             $event = new LogCreateDelegateViewEvent($log);
@@ -739,7 +741,7 @@ class LogManager
         $endDate = new \DateTime('now');
         $endDate->setTime(23, 59, 59);
 
-        return array($startDate->getTimestamp(), $endDate->getTimestamp());
+        return [$startDate->getTimestamp(), $endDate->getTimestamp()];
     }
 
     protected function getYesterdayRange()
@@ -753,16 +755,16 @@ class LogManager
         $endDate->setTime(23, 59, 59);
         $endDate->sub(new \DateInterval('P1D')); // P1D means a period of 1 days
 
-        return array($startDate->getTimestamp(), $endDate->getTimestamp());
+        return [$startDate->getTimestamp(), $endDate->getTimestamp()];
     }
 
     protected function getAdminOrCollaboratorWorkspaceIds()
     {
-        $workspaceIds = array();
+        $workspaceIds = [];
         $loggedUser = $this->container->get('security.token_storage')->getToken()->getUser();
         $workspaceIdsResult = $this->em
             ->getRepository('ClarolineCoreBundle:Workspace\Workspace')
-            ->findIdsByUserAndRoleNames($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
+            ->findIdsByUserAndRoleNames($loggedUser, ['ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER']);
 
         foreach ($workspaceIdsResult as $line) {
             $workspaceIds[] = $line['id'];
@@ -773,19 +775,19 @@ class LogManager
 
     protected function formatTopUserDataArray($topUsers)
     {
-        if ($topUsers === null || count($topUsers) == 0) {
-            return array();
+        if ($topUsers === null || count($topUsers) === 0) {
+            return [];
         }
 
-        $topUsersFormatedArray = array();
-        $topUsersIdList = array();
+        $topUsersFormatedArray = [];
+        $topUsersIdList = [];
         foreach ($topUsers as $topUser) {
             $id = $topUser['id'];
-            $topUser['stats'] = array();
+            $topUser['stats'] = [];
             $topUsersFormatedArray[$id] = $topUser;
             $topUsersIdList[] = $id;
         }
 
-        return array('ids' => $topUsersIdList, 'userData' => $topUsersFormatedArray);
+        return ['ids' => $topUsersIdList, 'userData' => $topUsersFormatedArray];
     }
 }
