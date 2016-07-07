@@ -14,6 +14,8 @@ function UserPaperService($http, $q, PaperService, ExerciseService) {
   this.ExerciseService = ExerciseService
 }
 
+/* global Routing */
+
 /**
  * Current paper of the User
  * @type {Object}
@@ -161,7 +163,7 @@ UserPaperService.prototype.start = function start(exercise) {
         // TODO : display message
 
         deferred.reject([])
-    })
+      })
   } else {
     // Continue the current Paper
     deferred.resolve(this.paper)

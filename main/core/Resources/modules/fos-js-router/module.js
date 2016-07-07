@@ -1,8 +1,7 @@
+import angular from 'angular/index'
 import 'angular/angular.min'
 
+import RouterService from './Service/RouterService'
+
 angular.module('ui.fos-js-router', [])
-    .filter('path', function () {
-        return function (route, parameters = {}) {
-            return Routing.generate(route, parameters)
-        };
-    })
+  .service('RouterService', RouterService)
