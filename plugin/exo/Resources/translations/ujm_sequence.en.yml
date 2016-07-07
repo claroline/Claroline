@@ -99,7 +99,7 @@ question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This 
 # s
 sequence_step: Step
 sequence_attempts_infos: "[0, 1] You have %count% attempt|]1,Inf[ You have %count% attempts"
-sequence_nb_attempts: Attempt N° %1%
+sequence_nb_attempts: Attempt n° %1%
 sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the exercise ?
 sequence_end_sequence_confirm: Are you sure you want to go to finish the exercise ? <br/> Yon won't be able to edit your answers.
 sequence_play_leave_confirm: Are you sure you want to leave the application ?

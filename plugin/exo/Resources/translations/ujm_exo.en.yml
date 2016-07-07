@@ -113,6 +113,7 @@ exercise_finished_attempts: "[0, 1] You have finished %count% attempt|]1,Inf[  Y
 exercice_linked_question: Questions linked to the exercise
 exercise_restart: Restart the exercise
 exercise_start: Start the exercise
+exercise_tries: "[0, 1] You have %count% try|]1,Inf[ You have %count% tries"
 exercise_try: Try the exercise
 exit: Exit
 exo_empty_user_can_edit: This exercise is empty. Please edit and publish it to fill it.
@@ -252,6 +253,7 @@ not_enought_papers: To display docimology, it must have at least 12 papers
 not_yet_mark: Not yet mark
 no_user_found: No user found
 n_question: Question n°
+number_max_attempts_help: Type 0 for unlimited attempts
 number_proposal: Number of the proposal
 number_of_papers: Number of papers
 number_questions_draw: Number of questions to draw (0 for all)

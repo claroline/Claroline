@@ -212,8 +212,15 @@
                     <!-- Maximum attempts -->
                     <div class="form-group">
                         <label for="exercise-max-attempts" class="control-label col-md-4">{{ 'maximum_tries' | trans:{}:'ujm_exo' }}</label>
-                        <div class="col-md-2">
-                            <input type="text" class="form-control" id="exercise-max-attempts" data-ng-model="exerciseMetadataCtrl.meta.maxAttempts" />
+                        <div class="col-md-4">
+                            <div>
+                                <input type="text" class="form-control" id="exercise-max-attempts" data-ng-model="exerciseMetadataCtrl.meta.maxAttempts" />
+                            </div>
+
+                            <span class="help-block">
+                                <span class="fa fa-info-circle"></span>
+                                {{ 'number_max_attempts_help' | trans:{}:'ujm_exo' }}
+                            </span>
                         </div>
                     </div>
 
