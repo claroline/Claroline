@@ -81,8 +81,8 @@ class ExerciseManager
 
         // Update steps order
         $steps = $exercise->getSteps();
-        foreach ($steps as $pos) {
-            $step->setOrder($pos);
+        foreach ($steps as $pos => $stepToReorder) {
+            $stepToReorder->setOrder($pos);
 
             $this->om->persist($step);
         }
@@ -271,7 +271,7 @@ class ExerciseManager
      */
     public function exportExercise(Exercise $exercise, $withSolutions = true)
     {
-        if ($exercise->getType() === '3') {
+        if ($exercise->getType() === $exercise::TYPE_FORMATIVE) {
             $withSolutions = true;
         }
 
