@@ -81,7 +81,7 @@ class ExerciseManager
 
         // Update steps order
         $steps = $exercise->getSteps();
-        foreach ($steps as $pos => $stepToReorder) {
+        foreach ($steps as $pos) {
             $step->setOrder($pos);
 
             $this->om->persist($step);
