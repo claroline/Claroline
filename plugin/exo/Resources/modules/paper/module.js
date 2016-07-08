@@ -2,6 +2,8 @@
  * Paper module
  */
 
+import angular from 'angular/index'
+
 import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
 import 'at-table/dist/angular-table'
