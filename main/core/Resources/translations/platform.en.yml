@@ -1295,6 +1295,7 @@ field_edited: Field edition successfull
 field_removed: Field suppression successfull
 panel_roles_edited: Facet roles edition successfull
 profile_preference_edited: Profile preferences edition sucessfull
+use_honeypot: Activate honeypot for anonymous (anti-spam)
 manage_group: Manage group
 claro_admin_personal_workspace_resource_rights: Personal workspace resource management
 delete_users: Remove users
@@ -1302,3 +1303,4 @@ delete_users_confirm: Do you really want to remove the users [ %user_list% ] ?
 group_created: Group %group% created.
 group_removed: Group %group% removed.
 mandatory: Mandatory
+leave_empty: Let this field empty to prove that you aren't a bot.
