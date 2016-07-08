@@ -13,12 +13,14 @@ import UserPaperService from './Services/UserPaperService'
 import ManualMarkCtrl from './Controllers/ManualMarkCtrl'
 import PaperListCtrl from './Controllers/PaperListCtrl'
 import PaperShowCtrl from './Controllers/PaperShowCtrl'
+import '#/main/core/fos-js-router/module'
 
 angular
   .module('Paper', [
     'ui.translation',
     'ui.bootstrap',
     'angular-table',
+    'ui.fos-js-router',
     'Common'
   ])
   .service('PaperService', [
@@ -34,6 +36,7 @@ angular
     '$q',
     'PaperService',
     'ExerciseService',
+    'url',
     UserPaperService
   ])
   .controller('ManualMarkCtrl', [

@@ -19,11 +19,14 @@ import stepList from './step/Partials/list.html'
 import paperList from './paper/Partials/list.html'
 import paperShow from './paper/Partials/show.html'
 
+import '#/main/core/fos-js-router/module'
+
 angular
     // Declare the new Application
     .module('ExerciseApp', [
         'ngRoute',
         'angular-loading-bar',
+        'ui.fos-js-router',
         'mgcrea.ngStrap.datepicker',
         'Exercise',
         'Step',

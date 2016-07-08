@@ -5,16 +5,16 @@
  * @param {Object}          $q
  * @param {PaperService}    PaperService
  * @param {ExerciseService} ExerciseService
+ * @param {url}             url
  * @constructor
  */
-function UserPaperService($http, $q, PaperService, ExerciseService) {
+function UserPaperService($http, $q, PaperService, ExerciseService, url) {
   this.$http = $http
   this.$q = $q
   this.PaperService = PaperService
   this.ExerciseService = ExerciseService
+  this.UrlService = url
 }
-
-/* global Routing */
 
 /**
  * Current paper of the User
@@ -155,7 +155,7 @@ UserPaperService.prototype.start = function start(exercise) {
   if (!this.paper || this.paper.end) {
     // Start a new Paper (or load an interrupted one)
     this.$http.post(
-      Routing.generate('exercise_new_attempt', {id: exercise.id})
+      this.UrlService('exercise_new_attempt', {id: exercise.id})
       ).success(function (response) {
         this.paper = response
         deferred.resolve(this.paper)
@@ -181,7 +181,7 @@ UserPaperService.prototype.end = function end() {
 
   this.$http
           .put(
-            Routing.generate('exercise_finish_paper', {id: this.paper.id})
+            this.UrlService('exercise_finish_paper', {id: this.paper.id})
             )
 
           // Success callback
@@ -215,7 +215,7 @@ UserPaperService.prototype.useHint = function useHint(question, hint) {
   var deferred = this.$q.defer()
   this.$http
           .get(
-            Routing.generate('exercise_hint', {paperId: this.paper.id, hintId: hint.id})
+            this.UrlService('exercise_hint', {paperId: this.paper.id, hintId: hint.id})
             )
           .success(function onSuccess(response) {
             // Update question Paper with used hint
@@ -263,7 +263,7 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
   // There are answers to post
   this.$http
           .put(
-            Routing.generate('exercise_submit_step', {paperId: this.paper.id, stepId: step.id}),
+            this.UrlService('exercise_submit_step', {paperId: this.paper.id, stepId: step.id}),
             {data: stepAnswers}
           )
 

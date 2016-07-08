@@ -1,7 +1,11 @@
-import angular from 'angular/index'
-import 'angular/angular.min'
+/* global Routing */
 
-import RouterService from './Service/RouterService'
+import angular from 'angular/index'
 
 angular.module('ui.fos-js-router', [])
-  .service('RouterService', RouterService)
+  .filter('path', () => generateUrl)
+  .service('url', () => generateUrl)
+  
+function generateUrl(route, parameters = {}) {
+  return Routing.generate(route, parameters)
+}
