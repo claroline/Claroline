@@ -109,10 +109,11 @@ exercise: Exercice
 exercise_alert_break: Interuption non autorisée. Votre copie sera considérée comme terminée !
 exercise_definition: Définition de l'exercice
 exercise_edit: Modification de l'exercice
-exercise_finished_attempts: "[0, 1] Vous avez terminé %count% essai|]1,Inf[ Vous avez terminé %count% essais"
+exercise_finished_attempts: "[0, 1] %count% réalisée à ce stade|]1,Inf[ %count% réalisées à ce stade"
 exercice_linked_question: Questions liées à l'exercice
 exercise_restart: Recommencer l'exercice
 exercise_start: Commencer l'exercice
+exercise_tries: "[0, 1] Vous avez droit à %count% essai|]1,Inf[ Vous avez droit à %count% essais"
 exercise_try: Tester l'exercice
 exit: Quitter
 exo_empty_user_can_edit: Cet exercice est vide. Editez et publiez le afin de le remplir.
@@ -189,7 +190,7 @@ in_valid_mark: Note invalide
 item_points: "[0,1] %count% point|]1,Inf[ %count% points"
 
 # K
-keep_same_question: Conserver les mêmes questions pour un même utilisateur
+keep_same_step: Conserver les mêmes étapes pour un même utilisateur
 key_word: Mot clé
 keys_words: Mots clés
 kind_question: Quel type de question
@@ -253,6 +254,7 @@ not_enought_papers: Pour afficher la docimologie, il doit y avoir au moins 12 co
 not_yet_mark: Pas encore noté
 no_user_found: Pas d'utilisateur trouvé
 n_question: Question n°
+number_max_attempts_help: Tapez 0 pour un nombre d'essais illimité
 number_proposal: Numéro de la proposition
 number_of_papers: Nombre de copies
 number_questions_draw: Nombre de questions à tirer
@@ -275,6 +277,7 @@ overview: Vue d'ensemble
 
 # P
 paper: Passage
+paper_finished: Terminé
 paper_need_manual_correction: Cette copie nécessite une correction manuelle
 paper_list: Liste des copies
 paper_count: "{0} aucune copie|{1} %count% copie|]1,Inf[ %count% copies"

@@ -37,7 +37,7 @@
              */
             var summary = {
                 opened: true,
-                pinned: true
+                pinned: false
             };
 
             /**
@@ -258,12 +258,10 @@
                         lastSeen = path.steps[0];
                     }
 
-                    console.log(lastSeen);
-
                     return lastSeen;
                 },
 
-				/**
+                /**
                  * Set path total steps
                  * @param {Number} value
                  */

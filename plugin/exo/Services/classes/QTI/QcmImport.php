@@ -18,12 +18,14 @@ class QcmImport extends QtiImport
      *
      * @param qtiRepository $qtiRepos
      * @param DOMElement    $assessmentItem assessmentItem of the question to imported
+     * @param string        $path           parent directory of the files
      *
      * @return UJM\ExoBundle\Entity\InteractionQCM
      */
-    public function import(qtiRepository $qtiRepos, $assessmentItem)
+    public function import(qtiRepository $qtiRepos, $assessmentItem, $path)
     {
         $this->qtiRepos = $qtiRepos;
+        $this->path = $path;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
         if ($this->qtiValidate() === false) {
@@ -99,13 +101,13 @@ class QcmImport extends QtiImport
         if ($ri->hasAttribute('cardinality') && $ri->getAttribute('cardinality') == 'multiple') {
             $type = $this->om
                          ->getRepository('UJMExoBundle:TypeQCM')
-                         ->findOneBy(array('code' => 1));
+                         ->findOneBy(['code' => 1]);
 
             $this->interactionQCM->setTypeQCM($type);
         } else {
             $type = $this->om
                          ->getRepository('UJMExoBundle:TypeQCM')
-                         ->findOneBy(array('code' => 2));
+                         ->findOneBy(['code' => 2]);
 
             $this->interactionQCM->setTypeQCM($type);
         }

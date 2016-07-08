@@ -11,16 +11,17 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
@@ -28,16 +29,15 @@ use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @DI\Service("claroline.manager.workspace_manager")
@@ -203,7 +203,7 @@ class WorkspaceManager
         $displayable = false,
         $selfRegistration = false,
         $selfUnregistration = false,
-        &$errors = array()
+        &$errors = []
     ) {
         $this->om->startFlushSuite();
         $this->log('Workspace from model beginning.');
@@ -256,7 +256,7 @@ class WorkspaceManager
         $this->dispatcher->dispatch(
             'claroline_workspaces_delete',
             'GenericDatas',
-            array(array($workspace))
+            [[$workspace]]
         );
         $this->om->remove($workspace);
         $this->om->endFlushSuite();
@@ -272,7 +272,7 @@ class WorkspaceManager
      */
     public function prepareRightsArray(array $rights, array $roles)
     {
-        $preparedRightsArray = array();
+        $preparedRightsArray = [];
 
         foreach ($rights as $key => $right) {
             $preparedRights = $right;
@@ -411,7 +411,7 @@ class WorkspaceManager
         $orderedToolType = 0
     ) {
         $userRoleNames = $this->sut->getRoles($token);
-        $accesses = array();
+        $accesses = [];
 
         if (in_array('ROLE_ADMIN', $userRoleNames)) {
             foreach ($workspaces as $workspace) {
@@ -422,7 +422,7 @@ class WorkspaceManager
         }
 
         $hasAllAccesses = true;
-        $workspacesWithoutManagerRole = array();
+        $workspacesWithoutManagerRole = [];
 
         foreach ($workspaces as $workspace) {
             if (in_array('ROLE_WS_MANAGER_'.$workspace->getGuid(), $userRoleNames)) {
@@ -518,7 +518,7 @@ class WorkspaceManager
         if (count($roleNames) > 0) {
             $workspaces = $this->workspaceRepo->findMyWorkspacesByRoleNames($roleNames);
         } else {
-            $workspaces = array();
+            $workspaces = [];
         }
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page);
@@ -541,7 +541,7 @@ class WorkspaceManager
             $workspaces = $this->workspaceRepo
                 ->findByRoleNamesBySearch($roleNames, $search, $orderedToolType);
         } else {
-            $workspaces = array();
+            $workspaces = [];
         }
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page);
@@ -597,7 +597,7 @@ class WorkspaceManager
     {
         return count($roles) > 0 ?
             $this->workspaceRepo->findLatestWorkspacesByUser($user, $roles, $max) :
-            array();
+            [];
     }
 
     /**
@@ -713,7 +713,7 @@ class WorkspaceManager
      */
     public function getFavouriteWorkspacesByUser(User $user)
     {
-        $workspaces = array();
+        $workspaces = [];
         $favourites = $this->workspaceFavouriteRepo
             ->findFavouriteWorkspacesByUser($user);
 
@@ -736,7 +736,7 @@ class WorkspaceManager
         User $user
     ) {
         return $this->workspaceFavouriteRepo
-            ->findOneBy(array('workspace' => $workspace, 'user' => $user));
+            ->findOneBy(['workspace' => $workspace, 'user' => $user]);
     }
 
     /**
@@ -746,7 +746,7 @@ class WorkspaceManager
      */
     public function findPersonalUser(Workspace $workspace)
     {
-        $user = $this->userRepo->findBy(array('personalWorkspace' => $workspace));
+        $user = $this->userRepo->findBy(['personalWorkspace' => $workspace]);
 
         return (count($user) === 1) ? $user[0] : null;
     }
@@ -761,7 +761,7 @@ class WorkspaceManager
         $this->dispatcher->dispatch(
             'log',
             'Log\LogWorkspaceRegistrationQueue',
-            array($wksrq)
+            [$wksrq]
         );
         $this->om->persist($wksrq);
         $this->om->flush();
@@ -783,7 +783,7 @@ class WorkspaceManager
             $this->dispatcher->dispatch(
                 'claroline_workspace_register_user',
                 'WorkspaceAddUser',
-                array($role, $user)
+                [$role, $user]
             );
         }
 
@@ -802,7 +802,7 @@ class WorkspaceManager
      */
     public function findAllWorkspaces($page, $max = 20, $orderedBy = 'id', $order = null)
     {
-        $result = $this->workspaceRepo->findBy(array(), array($orderedBy => $order));
+        $result = $this->workspaceRepo->findBy([], [$orderedBy => $order]);
 
         return $this->pagerFactory->createPagerFromArray($result, $page, $max);
     }
@@ -845,8 +845,6 @@ class WorkspaceManager
      */
     public function importWorkspaces(array $workspaces, $logger = null)
     {
-        //$this->om->clear();
-        $ds = DIRECTORY_SEPARATOR;
         $i = 0;
         $j = 0;
         $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
@@ -860,7 +858,7 @@ class WorkspaceManager
             $selfRegistration = $workspace[3];
             $registrationValidation = $workspace[4];
             $selfUnregistration = $workspace[5];
-            $errors = array();
+            $errors = [];
 
             if (isset($workspace[6]) && trim($workspace[6]) !== '') {
                 $user = $this->om->getRepository('ClarolineCoreBundle:User')
@@ -1041,7 +1039,7 @@ class WorkspaceManager
 
     public function toArray(Workspace $workspace)
     {
-        $data = array();
+        $data = [];
         $data['id'] = $workspace->getId();
         $data['name'] = $workspace->getName();
         $data['code'] = $workspace->getCode();
@@ -1072,10 +1070,10 @@ class WorkspaceManager
         if (is_null($workspaceOptions)) {
             $workspaceOptions = new WorkspaceOptions();
             $workspaceOptions->setWorkspace($workspace);
-            $details = array(
+            $details = [
                 'hide_tools_menu' => false,
                 'background_color' => null,
-            );
+            ];
             $workspaceOptions->setDetails($details);
             $workspace->setOptions($workspaceOptions);
             $this->om->persist($workspaceOptions);
@@ -1126,13 +1124,13 @@ class WorkspaceManager
         }
 
         $archive = new \ZipArchive();
-        $fileName = $file->getBasename();
+        $fileName = $file->getBasename('.zip');
         $extractPath = $this->templateDirectory.DIRECTORY_SEPARATOR.$fileName;
 
         if ($archive->open($file->getPathname())) {
             $fs = new FileSystem();
-
             $fs->mkdir($extractPath);
+
             if (!$archive->extractTo($extractPath)) {
                 throw new \Exception("The workspace archive couldn't be extracted");
             }

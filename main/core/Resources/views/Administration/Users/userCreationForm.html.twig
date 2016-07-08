@@ -16,6 +16,7 @@
                     }
                 ])
             }}
+            <div>{{ macros.flashBox() }}</div>
             {% if error is not empty %}
                 <div class="alert alert-warning"> {{ error|trans({}, 'platform') }} </div>
             {% endif %}

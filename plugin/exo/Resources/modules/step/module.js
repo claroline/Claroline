@@ -2,8 +2,8 @@
  * Step module
  */
 
-import angular from "angular/index"
-import registerDragula from "angular-dragula/dist/angular-dragula"
+import angular from 'angular/index'
+import registerDragula from 'angular-dragula/dist/angular-dragula'
 
 import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
@@ -11,6 +11,7 @@ import 'angular-ui-tinymce'
 import '#/main/core/modal/module'
 
 import './../common/module'
+import './../feedback/module'
 import './../question/module'
 
 import StepService from './Services/StepService'
@@ -29,6 +30,7 @@ angular
     'ui.modal',
     'dragula',
     'Common',
+    'Feedback',
     'Question'
   ])
   .service('StepService', [
@@ -59,4 +61,6 @@ angular
     'QuestionService',
     StepShowCtrl
   ])
-  .directive('stepShow', StepShowDirective)
+  .directive('stepShow', [
+    StepShowDirective
+  ])

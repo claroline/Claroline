@@ -20,23 +20,23 @@ use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\Templating\EngineInterface;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * @DI\Service("claroline.authentication_handler")
@@ -148,14 +148,14 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $event = $this->eventDispatcher->dispatch(
                 'claroline_retrieve_user_workspaces_by_tag',
                 'GenericDatas',
-                array(
-                    array(
+                [
+                    [
                         'tag' => $defaultWorkspaceTag,
                         'user' => $user,
                         'ordered_by' => 'id',
                         'order' => 'ASC',
-                    ),
-                )
+                    ],
+                ]
             );
             $workspaces = $event->getResponse();
 
@@ -163,7 +163,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 $workspace = $workspaces[0];
                 $route = $this->router->generate(
                     'claro_workspace_open',
-                    array('workspaceId' => $workspace->getId())
+                    ['workspaceId' => $workspace->getId()]
                 );
 
                 return new RedirectResponse($route);
@@ -210,7 +210,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             && !$this->isRouteExcluded($route)
         ) {
             if ($token = $this->tokenStorage->getToken()) {
-                if ('anon.' === $user = $token->getUser()) {
+                if ('anon.' === $token->getUser()) {
                     $uri = $request->getRequestUri();
                     $request->getSession()->set('redirect_route', $uri);
                 }
@@ -236,7 +236,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 $form = $this->formFactory->create(new TermsOfServiceType(), $content);
                 $response = $this->templating->render(
                     'ClarolineCoreBundle:Authentication:termsOfService.html.twig',
-                    array('form' => $form->createView())
+                    ['form' => $form->createView()]
                 );
 
                 $event->setResponse(new Response($response));
@@ -278,18 +278,22 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      */
     private function isRouteExcluded($route)
     {
-        return in_array($route, $this->getExcludedRoutes()) || preg_match('/(claro_security_|oauth_|_login)/', $route);
+        return in_array(
+            $route,
+            $this->getExcludedRoutes()) || preg_match('/(claro_security_|oauth_|_login|claro_file)/',
+            $route
+        );
     }
 
     private function getExcludedRoutes()
     {
-        return array(
+        return [
             'bazinga_jstranslation_js',
             'bazinga_exposetranslation_js',
             'login_check',
             'login',
             'claro_registration_user_registration_form',
-        );
+        ];
     }
 
     public function isImpersonated()

@@ -21,5 +21,12 @@ services:
         tags:
             - { name: form.type_extension, alias: form }
 
+    claroline.honeypot_extension:
+        arguments:
+            - "@service_container"
+        class: Claroline\CoreBundle\Form\Extension\HoneypotExtension
+        tags:
+            - { name: form.type_extension, alias: form }
+
 framework:
     test: true

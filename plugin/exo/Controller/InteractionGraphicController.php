@@ -2,12 +2,12 @@
 
 namespace UJM\ExoBundle\Controller;
 
-use Symfony\Component\Form\FormError;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Response;
 use UJM\ExoBundle\Entity\InteractionGraphic;
-use UJM\ExoBundle\Form\InteractionGraphicType;
 use UJM\ExoBundle\Form\InteractionGraphicHandler;
+use UJM\ExoBundle\Form\InteractionGraphicType;
 
 /**
  * InteractionGraphic controller.
@@ -28,7 +28,7 @@ class InteractionGraphicController extends Controller
 
         $repository = $em->getRepository('UJMExoBundle:Coords');
 
-        $listeCoords = $repository->findBy(array('interactionGraphic' => $interactionGraph));
+        $listeCoords = $repository->findBy(['interactionGraphic' => $interactionGraph]);
 
         $vars['interactionToDisplayed'] = $interactionGraph;
         $vars['listeCoords'] = $listeCoords;
@@ -51,12 +51,12 @@ class InteractionGraphicController extends Controller
        );
 
         return $this->container->get('templating')->renderResponse(
-           'UJMExoBundle:InteractionGraphic:new.html.twig', array(
+           'UJMExoBundle:InteractionGraphic:new.html.twig', [
                'exoID' => $attr->get('exoID'),
                'stepID' => $attr->get('stepID'),
                'entity' => $entity,
                'form' => $form->createView(),
-           )
+           ]
        );
     }
 
@@ -95,10 +95,10 @@ class InteractionGraphicController extends Controller
             if ($exoID == -1) {
                 return $this->redirect(
                     $this->generateUrl(
-                        'ujm_question_index', array(
+                        'ujm_question_index', [
                             'categoryToFind' => base64_encode($categoryToFind),
                             'titleToFind' => base64_encode($titleToFind),
-                        )
+                        ]
                     )
                 );
             } else {
@@ -110,31 +110,31 @@ class InteractionGraphicController extends Controller
 
         if ($graphicHandler == 'infoDuplicateQuestion') {
             $form->addError(new FormError(
-                    $this->get('translator')->trans('info_duplicate_question', array(), 'ujm_exo')
+                    $this->get('translator')->trans('info_duplicate_question', [], 'ujm_exo')
                     ));
         }
 
         $formWithError = $this->render(
-            'UJMExoBundle:InteractionGraphic:new.html.twig', array(
+            'UJMExoBundle:InteractionGraphic:new.html.twig', [
             'entity' => $interGraph,
             'form' => $form->createView(),
             'error' => true,
             'exoID' => $exoID,
             'stepID' => $stepID,
-            )
+            ]
         );
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
         $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
 
         return $this->render(
-                'UJMExoBundle:Question:new.html.twig', array(
+                'UJMExoBundle:Question:new.html.twig', [
                 'formWithError' => $formWithError,
                 'exoID' => $exoID,
                 'stepID' => $stepID,
                 'linkedCategory' => $catSer->getLinkedCategories(),
                 'locker' => $catSer->getLockCategory(),
                 'interactionType' => $interactionType,
-            )
+            ]
         );
     }
 
@@ -154,10 +154,10 @@ class InteractionGraphicController extends Controller
             ->findOneByQuestion($attr->get('interaction')->getId());
 
         $picture = $em->getRepository('UJMExoBundle:Picture')
-            ->findOneBy(array('id' => $interactionGraph->getPicture()));
+            ->findOneBy(['id' => $interactionGraph->getPicture()]);
 
         $position = $em->getRepository('UJMExoBundle:Coords')->findBy(
-            array('interactionGraphic' => $interactionGraph->getId())
+            ['interactionGraphic' => $interactionGraph->getId()]
         );
 
         if ($attr->get('user')->getId() != $interactionGraph->getQuestion()->getUser()->getId()) {
@@ -227,9 +227,14 @@ class InteractionGraphicController extends Controller
         );
 
         $formHandler = new InteractionGraphicHandler(
-            $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
-            $this->container->get('security.token_storage')->getToken()->getUser(), -1,
+            $editForm,
+            $this->get('request'),
+            $this->getDoctrine()->getManager(),
+            $this->container->get('ujm.exo_exercise'),
+            $this->container->get('ujm.exo_category'),
+            $this->container->get('security.token_storage')->getToken()->getUser(),
+            -1,
+            -1,
             $this->get('translator')
         );
 
@@ -244,11 +249,11 @@ class InteractionGraphicController extends Controller
         }
 
         return $this->forward(
-            'UJMExoBundle:Question:edit', array(
+            'UJMExoBundle:Question:edit', [
                 'id' => $entity->getQuestion()->getId(),
                 'form' => $editForm,
                 'exoID' => $exoID,
-            )
+            ]
         );
     }
 
@@ -265,9 +270,9 @@ class InteractionGraphicController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $interactionGraphic = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
-        $coords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $id));
+        $coords = $em->getRepository('UJMExoBundle:Coords')->findBy(['interactionGraphic' => $id]);
         //Deleting of relations, if there the question is shared
-        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $interactionGraphic->getQuestion()->getId()));
+        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(['question' => $interactionGraphic->getQuestion()->getId()]);
         foreach ($sharesQuestion as $share) {
             $em->remove($share);
         }
@@ -287,7 +292,7 @@ class InteractionGraphicController extends Controller
         $em->remove($interactionGraphic);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
+        return $this->redirect($this->generateUrl('ujm_question_index', ['pageNow' => $pageNow]));
     }
 
     /**
@@ -321,7 +326,7 @@ class InteractionGraphicController extends Controller
                     ->getManager()
                     ->getRepository('UJMExoBundle:Picture');
 
-                $pic = $repository->findOneBy(array('label' => $label));
+                $pic = $repository->findOneBy(['label' => $label]);
                 $suffix = substr($pic->getUrl(), 9); // Get the end of the src of the picture
             } else {
                 $suffix = ''; // Else don't display anything
@@ -341,9 +346,9 @@ class InteractionGraphicController extends Controller
      */
     public function responseGraphicAction()
     {
-        $vars = array();
+        $vars = [];
         $request = $this->container->get('request');
-        $postVal = $req = $request->request->all();
+        $postVal = $request->request->all();
 
         if ($postVal['exoID'] != -1) {
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);

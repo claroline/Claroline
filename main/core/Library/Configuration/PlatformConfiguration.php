@@ -17,12 +17,12 @@ class PlatformConfiguration
     const REGISTRATION_MAIL_VALIDATION_PARTIAL = 1;
     const REGISTRATION_MAIL_VALIDATION_FULL = 2;
     const DEFAULT_REDIRECT_OPTION = 'DESKTOP';
-    public static $REDIRECT_OPTIONS = array(
+    public static $REDIRECT_OPTIONS = [
         'DESKTOP' => 'DESKTOP',
         'LAST' => 'LAST',
         'URL' => 'URL',
         'WORKSPACE_TAG' => 'WORKSPACE_TAG',
-    );
+    ];
 
     private $name;
     private $nameActive;
@@ -83,6 +83,7 @@ class PlatformConfiguration
     private $googleGeocodingClientId;
     private $googleGeocodingSignature;
     private $googleGeocodingKey;
+    private $formHoneypot;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -744,5 +745,15 @@ class PlatformConfiguration
     public function getGoogleGeocodingKey()
     {
         return $this->googleGeocodingKey;
+    }
+
+    public function setFormHoneypot($bool)
+    {
+        $this->formHoneypot = $bool;
+    }
+
+    public function getFormHoneypot()
+    {
+        return $this->formHoneypot;
     }
 }

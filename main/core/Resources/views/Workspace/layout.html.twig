@@ -90,6 +90,38 @@
             window.Workspace.id = null;
         {% endif %}
     </script>
+
+    <script>
+        var postHeight = function postHeight(height) {
+            if (parent) {
+
+                var newHeight = height || document.body.scrollHeight;
+                var message = 'documentHeight:' + newHeight;
+
+                parent.postMessage(message, "*");
+            }
+        };
+
+        $(document).ready(function () {
+            postHeight();
+
+            /* Hack for constantly polling iframe inner height and react when angular router loads another page */
+            var getIframeWindowHeight = function() {
+                return $("iframe#embeddedActivity").contents().find('body').first().height();
+            }
+            var oldHeight= getIframeWindowHeight();
+
+            setInterval(function() {
+                var newHeight = getIframeWindowHeight();
+                if (newHeight != oldHeight) {
+                    postHeight(newHeight);
+                }
+                oldHeight = newHeight;
+            }, 2000);
+            /* End of Hack */
+
+        });
+    </script>
 {% endblock %}
 
 {% block stylesheets %}

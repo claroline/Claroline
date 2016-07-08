@@ -2,16 +2,29 @@
     <label class="control-label col-sm-2"> {{ sc.label|trans:{}:sc.translationDomain }} </label>
     <!-- http://www.gurustop.net/blog/2014/01/28/common-problems-and-solutions-when-using-select-elements-with-angular-js-ng-options-initial-selection/ -->
     <div class="col-sm-10">
-        <select
+
+        <select ng-if="sc.choice_value"
             class="form-control"
             name="{{ sc.name }}"
             ng-model="sc._ngModel"
-            ng-options="option.label|trans:{}:sc.translationDomain for option in sc.field[2].values track by option.value"
+            ng-options="option[sc.choice_name]|trans:{}:sc.translationDomain for option in sc.field[2].values track by option[sc.choice_value]"
             ng-init="sc._ngModel = {value: sc.ngModel}"
-            ng-change="sc.ngModel= sc._ngModel.value"
+            ng-change="sc.ngModel= sc._ngModel[sc.choice_value]"
             ng-disabled="sc.field[2].disabled"
         >
         </select>
+
+        <select ng-if="!sc.choice_value"
+            class="form-control"
+            name="{{ sc.name }}"
+            ng-model="sc._ngModel"
+            ng-options="option[sc.choice_name]|trans:{}:sc.translationDomain for option in sc.field[2].values track by option.id"
+            ng-init="sc._ngModel = {value: sc.ngModel}"
+            ng-change="sc.ngModel= sc._ngModel"
+            ng-disabled="sc.field[2].disabled"
+        >
+        </select>
+
         <help-block ng-model="sc.ngModel" field="sc.field"></help-block>
     </div>
 </div>

@@ -64,17 +64,7 @@
                 </div>
 
                 <div class="panel-body" data-ng-show="!collapsePanelQuestions">
-                    <!-- Random order of Questions -->
-                    <div class="form-group">
-                        <label for="exercise-random" class="control-label col-md-4">{{ 'random_steps' | trans:{}:'ujm_exo' }}</label>
-                        <div class="col-md-8">
-                            <div class="checkbox">
-                                <input type="checkbox" id="exercise-random" data-ng-model="exerciseMetadataCtrl.meta.random" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Number of Questions to use in the Exercise -->
+                    <!-- Number of Steps to use in the Exercise -->
                     <div class="form-group">
                         <label for="exercise-pick" class="control-label col-md-4">{{ 'number_steps_draw' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
@@ -91,9 +81,19 @@
                         </div>
                     </div>
 
-                    <!-- Keep same questions ? -->
+                    <!-- Random order of Steps -->
+                    <div class="form-group">
+                        <label for="exercise-random" class="control-label col-md-4">{{ 'random_steps' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <div class="checkbox">
+                                <input type="checkbox" id="exercise-random" data-ng-model="exerciseMetadataCtrl.meta.random" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Keep same steps ? -->
                     <div class="form-group" data-ng-if="0 < exerciseMetadataCtrl.meta.pick || exerciseMetadataCtrl.meta.random">
-                        <label for="exercise-keep" class="control-label col-md-4">{{ 'keep_same_question' | trans:{}:'ujm_exo' }}</label>
+                        <label for="exercise-keep" class="control-label col-md-4">{{ 'keep_same_step' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
                                 <input type="checkbox" id="exercise-keep" data-ng-model="exerciseMetadataCtrl.meta.keepSteps" />
@@ -212,8 +212,15 @@
                     <!-- Maximum attempts -->
                     <div class="form-group">
                         <label for="exercise-max-attempts" class="control-label col-md-4">{{ 'maximum_tries' | trans:{}:'ujm_exo' }}</label>
-                        <div class="col-md-2">
-                            <input type="text" class="form-control" id="exercise-max-attempts" data-ng-model="exerciseMetadataCtrl.meta.maxAttempts" />
+                        <div class="col-md-4">
+                            <div>
+                                <input type="text" class="form-control" id="exercise-max-attempts" data-ng-model="exerciseMetadataCtrl.meta.maxAttempts" />
+                            </div>
+
+                            <span class="help-block">
+                                <span class="fa fa-info-circle"></span>
+                                {{ 'number_max_attempts_help' | trans:{}:'ujm_exo' }}
+                            </span>
                         </div>
                     </div>
 
