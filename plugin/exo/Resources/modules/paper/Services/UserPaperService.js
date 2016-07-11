@@ -5,34 +5,36 @@
  * @param {Object}          $q
  * @param {PaperService}    PaperService
  * @param {ExerciseService} ExerciseService
+ * @param {url}             url
  * @constructor
  */
-function UserPaperService($http, $q, PaperService, ExerciseService) {
-    this.$http           = $http;
-    this.$q              = $q;
-    this.PaperService    = PaperService;
-    this.ExerciseService = ExerciseService;
+function UserPaperService($http, $q, PaperService, ExerciseService, url) {
+  this.$http = $http
+  this.$q = $q
+  this.PaperService = PaperService
+  this.ExerciseService = ExerciseService
+  this.UrlService = url
 }
 
 /**
  * Current paper of the User
  * @type {Object}
  */
-UserPaperService.prototype.paper = null;
+UserPaperService.prototype.paper = null
 
 /**
  * Number of papers already done by the User
  * @type {number}
  */
-UserPaperService.prototype.nbPapers = 0;
+UserPaperService.prototype.nbPapers = 0
 
 /**
  * Get Paper
  * @returns {Object}
  */
 UserPaperService.prototype.getPaper = function getPaper() {
-    return this.paper;
-};
+  return this.paper
+}
 
 /**
  * Set Paper
@@ -40,18 +42,18 @@ UserPaperService.prototype.getPaper = function getPaper() {
  * @returns {UserPaperService}
  */
 UserPaperService.prototype.setPaper = function setPaper(paper) {
-    this.paper = paper;
+  this.paper = paper
 
-    return this;
-};
+  return this
+}
 
 /**
  * Get number of Papers
  * @returns {number}
  */
 UserPaperService.prototype.getNbPapers = function getNbPapers() {
-    return this.nbPapers;
-};
+  return this.nbPapers
+}
 
 /**
  * Set number of Papers
@@ -59,10 +61,10 @@ UserPaperService.prototype.getNbPapers = function getNbPapers() {
  * @returns {UserPaperService}
  */
 UserPaperService.prototype.setNbPapers = function setNbPapers(count) {
-    this.nbPapers = count ? parseInt(count) : 0;
+  this.nbPapers = count ? parseInt(count) : 0
 
-    return this;
-};
+  return this
+}
 
 /**
  * Get the index of a Step
@@ -70,18 +72,18 @@ UserPaperService.prototype.setNbPapers = function setNbPapers(count) {
  * @returns {Number}
  */
 UserPaperService.prototype.getIndex = function getIndex(step) {
-    var index = 0;
+  var index = 0
 
-    for (var i = 0; i < this.paper.order.length; i++) {
-        if (this.paper.order[i].id === step.id) {
-            index = i;
+  for (var i = 0; i < this.paper.order.length; i++) {
+    if (this.paper.order[i].id === step.id) {
+      index = i
 
-            break;
-        }
+      break
     }
+  }
 
-    return index;
-};
+  return index
+}
 
 /**
  * Get the next Step has configured in the Paper of the User
@@ -89,20 +91,20 @@ UserPaperService.prototype.getIndex = function getIndex(step) {
  * @returns {Number}
  */
 UserPaperService.prototype.getNextStepId = function getNextStepId(currentStep) {
-    var nextStep = null;
-    for (var i = 0; i < this.paper.order.length; i++) {
-        if (this.paper.order[i].id === currentStep.id) {
-            if (this.paper.order[i + 1]) {
-                // There is a Step after the current one
-                nextStep = this.paper.order[i + 1].id;
-            }
+  var nextStep = null
+  for (var i = 0; i < this.paper.order.length; i++) {
+    if (this.paper.order[i].id === currentStep.id) {
+      if (this.paper.order[i + 1]) {
+        // There is a Step after the current one
+        nextStep = this.paper.order[i + 1].id
+      }
 
-            break;
-        }
+      break
     }
+  }
 
-    return nextStep;
-};
+  return nextStep
+}
 
 /**
  * Get the previous Step has configured in the Paper of the User
@@ -110,20 +112,20 @@ UserPaperService.prototype.getNextStepId = function getNextStepId(currentStep) {
  * @returns {Number}
  */
 UserPaperService.prototype.getPreviousStepId = function getPreviousStepId(currentStep) {
-    var previousStep = null;
-    for (var i = 0; i < this.paper.order.length; i++) {
-        if (this.paper.order[i].id === currentStep.id) {
-            if (this.paper.order[i - 1]) {
-                // There is a Step after the current one
-                previousStep = this.paper.order[i - 1].id;
-            }
+  var previousStep = null
+  for (var i = 0; i < this.paper.order.length; i++) {
+    if (this.paper.order[i].id === currentStep.id) {
+      if (this.paper.order[i - 1]) {
+        // There is a Step after the current one
+        previousStep = this.paper.order[i - 1].id
+      }
 
-            break;
-        }
+      break
     }
+  }
 
-    return previousStep;
-};
+  return previousStep
+}
 
 /**
  * Order the Questions of a Step
@@ -131,16 +133,16 @@ UserPaperService.prototype.getPreviousStepId = function getPreviousStepId(curren
  * @returns {Array} The ordered list of Questions
  */
 UserPaperService.prototype.orderStepQuestions = function orderStepQuestions(step) {
-    return this.PaperService.orderStepQuestions(this.paper, step);
-};
+  return this.PaperService.orderStepQuestions(this.paper, step)
+}
 
 /**
  * Get Paper for a Question
  * @param {Object} question
  */
 UserPaperService.prototype.getQuestionPaper = function getQuestionPaper(question) {
-    return this.PaperService.getQuestionPaper(this.paper, question);
-};
+  return this.PaperService.getQuestionPaper(this.paper, question)
+}
 
 /**
  * Start the Exercise
@@ -148,191 +150,182 @@ UserPaperService.prototype.getQuestionPaper = function getQuestionPaper(question
  * @returns {promise}
  */
 UserPaperService.prototype.start = function start(exercise) {
-    var deferred = this.$q.defer();
+  var deferred = this.$q.defer()
 
-    if (!this.paper || this.paper.end) {
-        // Start a new Paper (or load an interrupted one)
-        this.$http.post(
-            Routing.generate('exercise_new_attempt', { id: exercise.id })
-        ).success(function(response){
-            this.paper = response;
-            deferred.resolve(this.paper);
-        }.bind(this)).error(function(data, status){
-            // TODO : display message
+  if (!this.paper || this.paper.end) {
+    // Start a new Paper (or load an interrupted one)
+    this.$http.post(
+      this.UrlService('exercise_new_attempt', {id: exercise.id})
+      ).success(function (response) {
+        this.paper = response
+        deferred.resolve(this.paper)
+      }.bind(this)).error(function () {
+        // TODO : display message
 
-            deferred.reject([]);
-            var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error';
-            var code = data && data.error && data.error.code ? data.error.code : 403;
-        });
-    } else {
-        // Continue the current Paper
-        deferred.resolve(this.paper);
-    }
+        deferred.reject([])
+      })
+  } else {
+    // Continue the current Paper
+    deferred.resolve(this.paper)
+  }
 
-    return deferred.promise;
-};
+  return deferred.promise
+}
 
 /**
  * End the Exercise
  * @returns {promise}
  */
 UserPaperService.prototype.end = function end() {
-    var deferred = this.$q.defer();
+  var deferred = this.$q.defer()
 
-    this.$http
-        .put(
-            Routing.generate('exercise_finish_paper', { id: this.paper.id })
-        )
+  this.$http
+          .put(
+            this.UrlService('exercise_finish_paper', {id: this.paper.id})
+            )
 
-        // Success callback
-        .success(function onSuccess(response) {
+          // Success callback
+          .success(function onSuccess(response) {
             // Update the number of finished papers
-            this.nbPapers++;
+            this.nbPapers++
 
             // Update the current User Paper with updated data (endDate particularly)
-            angular.merge(this.paper, response);
+            angular.merge(this.paper, response)
 
-            deferred.resolve(response);
-        }.bind(this))
+            deferred.resolve(response)
+          }.bind(this))
 
-        // Error callback
-        .error(function onError(data, status) {
+          // Error callback
+          .error(function onError() {
             // TODO : display message
 
-            deferred.reject([]);
-
-            var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService end sequence error';
-            var code = data && data.error && data.error.code ? data.error.code : 403;
+            deferred.reject([])
             /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
             /*$window.location = url;*/
-        });
+          })
 
-    return deferred.promise;
-};
+  return deferred.promise
+}
 
 /**
  * Use an hint
  * @returns {promise}
  */
 UserPaperService.prototype.useHint = function useHint(question, hint) {
-    var deferred = this.$q.defer();
-    this.$http
-        .get(
-            Routing.generate('exercise_hint', { paperId: this.paper.id, hintId: hint.id })
-        )
-        .success(function onSuccess(response) {
+  var deferred = this.$q.defer()
+  this.$http
+          .get(
+            this.UrlService('exercise_hint', {paperId: this.paper.id, hintId: hint.id})
+            )
+          .success(function onSuccess(response) {
             // Update question Paper with used hint
-            var questionPaper = this.getQuestionPaper(question);
+            var questionPaper = this.getQuestionPaper(question)
 
             questionPaper.hints.push({
-                id     : hint.id,
-                penalty: hint.penalty,
-                value  : response
-            });
+              id: hint.id,
+              penalty: hint.penalty,
+              value: response
+            })
 
-            deferred.resolve(response);
-        }.bind(this))
-        .error(function onError(data, status) {
-            deferred.reject([]);
-            var msg = data && data.error && data.error.message ? data.error.message : 'QuestionService get hint error';
-            var code = data && data.error && data.error.code ? data.error.code : 400;
+            deferred.resolve(response)
+          }.bind(this))
+          .error(function onError() {
+            deferred.reject([])
             /*var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});*/
             /*$window.location = url;*/
-        });
+          })
 
-    return deferred.promise;
-};
+  return deferred.promise
+}
 
 /**
  * Submit Step answers to the server
  * @param {Object} step
  */
 UserPaperService.prototype.submitStep = function submitStep(step) {
-    var deferred = this.$q.defer();
+  var deferred = this.$q.defer()
 
-    // Get answers for each Question of the Step
-    var noAnswer = true;
-    var stepAnswers = {};
-    if (step && step.items) {
-        for (var i = 0; i < step.items.length; i++) {
-            var item      = step.items[i];
-            var itemPaper = this.getQuestionPaper(item);
+  // Get answers for each Question of the Step
+  var stepAnswers = {}
+  if (step && step.items) {
+    for (var i = 0; i < step.items.length; i++) {
+      var item = step.items[i]
+      var itemPaper = this.getQuestionPaper(item)
 
-            if (itemPaper && itemPaper.answer) {
-                stepAnswers[item.id] = itemPaper.answer;
-            } else {
-                stepAnswers[item.id] = '';
-            }
-        }
+      if (itemPaper && itemPaper.answer) {
+        stepAnswers[item.id] = itemPaper.answer
+      } else {
+        stepAnswers[item.id] = ''
+      }
     }
+  }
 
-    // There are answers to post
-    this.$http
-        .put(
-            Routing.generate('exercise_submit_step', { paperId: this.paper.id, stepId: step.id }),
-            { data: stepAnswers }
-        )
+  // There are answers to post
+  this.$http
+          .put(
+            this.UrlService('exercise_submit_step', {paperId: this.paper.id, stepId: step.id}),
+            {data: stepAnswers}
+          )
 
-        // Success callback
-        .success(function onSuccess(response) {
+          // Success callback
+          .success(function onSuccess(response) {
             if (response) {
-                for (var i = 0; i < response.length; i++) {
-                    if (response[i]) {
-                        var item = null;
+              for (var i = 0; i < response.length; i++) {
+                if (response[i]) {
+                  var item = null
 
-                        // Get item in Step
-                        for (var j = 0; j < step.items.length; j++) {
-                            if (response[i].question.id === step.items[j].id) {
-                                item = step.items[j];
-                                break; // Stop searching
-                            }
-                        }
-
-                        if (item) {
-                            // Update question with solutions and feedback
-                            item.solutions = response[i].question.solutions ? response[i].question.solutions : [];
-                            item.feedback  = response[i].question.feedback  ? response[i].question.feedback  : null;
-
-                            // Update paper with Score
-                            var paper = this.getQuestionPaper(item);
-                            paper.score = response[i].score;
-                        }
+                  // Get item in Step
+                  for (var j = 0; j < step.items.length; j++) {
+                    if (response[i].question.id === step.items[j].id) {
+                      item = step.items[j]
+                      break // Stop searching
                     }
+                  }
+
+                  if (item) {
+                    // Update question with solutions and feedback
+                    item.solutions = response[i].question.solutions ? response[i].question.solutions : []
+                    item.feedback = response[i].question.feedback ? response[i].question.feedback : null
+
+                    // Update paper with Score
+                    var paper = this.getQuestionPaper(item)
+                    paper.score = response[i].answer.score
+                    paper.nbTries = response[i].answer.nbTries
+                  }
                 }
+              }
             }
 
-            deferred.resolve(response);
-        }.bind(this))
+            deferred.resolve(response)
+          }.bind(this))
 
-        // Error callback
-        .error(function onError(data, status) {
+          // Error callback
+          .error(function onError() {
             // TODO : display message
 
-            deferred.reject([]);
-            var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService submit answer error';
-            var code = data && data.error && data.error.code ? data.error.code : 403;
+            deferred.reject([])
             /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
             //$window.location = url;
-        });
+          })
 
-    return deferred.promise;
-};
+  return deferred.promise
+}
 
 /**
  * Check if the User is allowed to compose (max attempts of the Exercise is not reached)
  * @returns {boolean}
  */
 UserPaperService.prototype.isAllowedToCompose = function isAllowedToCompose() {
-    var allowed = true;
+  var allowed = true
 
-    var exercise = this.ExerciseService.getExercise();
-    if (exercise.meta.maxAttempts && this.nbPapers >= exercise.meta.maxAttempts) {
-        // Max attempts reached => user can not do the exercise
-        allowed = false;
-    }
+  var exercise = this.ExerciseService.getExercise()
+  if (exercise.meta.maxAttempts && this.nbPapers >= exercise.meta.maxAttempts) {
+    // Max attempts reached => user can not do the exercise
+    allowed = false
+  }
 
-    return allowed;
-};
+  return allowed
+}
 
 /**
  * Check if the correction of the Exercise is available
@@ -340,48 +333,48 @@ UserPaperService.prototype.isAllowedToCompose = function isAllowedToCompose() {
  * @returns {Boolean}
  */
 UserPaperService.prototype.isCorrectionAvailable = function isCorrectionAvailable(paper) {
-    var available = false;
+  var available = false
 
-    if (this.ExerciseService.isEditEnabled()) {
-        // Always show correction for exercise's administrators
-        available = true;
-    } else {
-        // Use the configuration of the Exercise to know if it's available
-        var exercise = this.ExerciseService.getExercise();
+  if (this.ExerciseService.isEditEnabled()) {
+    // Always show correction for exercise's administrators
+    available = true
+  } else {
+    // Use the configuration of the Exercise to know if it's available
+    var exercise = this.ExerciseService.getExercise()
 
-        switch (exercise.meta.correctionMode) {
-            // At the end of assessment
-            case '1':
-                available = null !== paper.end;
-                break;
+    switch (exercise.meta.correctionMode) {
+    // At the end of assessment
+    case '1':
+      available = null !== paper.end
+      break
 
-            // After the last attempt
-            case '2':
-                available = (0 === exercise.meta.maxAttempts || this.nbPapers >= exercise.meta.maxAttempts);
-                break;
+    // After the last attempt
+    case '2':
+      available = (0 === exercise.meta.maxAttempts || this.nbPapers >= exercise.meta.maxAttempts)
+      break
 
-            // From a fixed date
-            case '3':
-                var now = new Date();
+    // From a fixed date
+    case '3':
+      var now = new Date()
 
-                var correctionDate = null;
-                if (null !== exercise.meta.correctionDate) {
-                    correctionDate = new Date(Date.parse(exercise.meta.correctionDate));
-                }
+      var correctionDate = null
+      if (null !== exercise.meta.correctionDate) {
+        correctionDate = new Date(Date.parse(exercise.meta.correctionDate))
+      }
 
-                available = (null === correctionDate || now >= correctionDate);
-                break;
+      available = (null === correctionDate || now >= correctionDate)
+      break
 
-            // Never
-            default:
-            case '4':
-                available = false;
-                break;
-        }
+      // Never
+    default:
+    case '4':
+      available = false
+      break
     }
+  }
 
-    return available;
-};
+  return available
+}
 
 /**
  * Check if the score obtained by the User for the Exercise is available
@@ -389,34 +382,36 @@ UserPaperService.prototype.isCorrectionAvailable = function isCorrectionAvailabl
  * @returns {Boolean}
  */
 UserPaperService.prototype.isScoreAvailable = function isScoreAvailable(paper) {
-    var available = false;
+  var available = false
 
-    if (this.ExerciseService.isEditEnabled()) {
-        // Always show score for exercise's administrators
-        available = true;
-    } else {
-        // Use the configuration of the Exercise to know if it's available
-        var exercise = this.ExerciseService.getExercise();
+  if (this.ExerciseService.isEditEnabled()) {
+    // Always show score for exercise's administrators
+    available = true
+  } else {
+    // Use the configuration of the Exercise to know if it's available
+    var exercise = this.ExerciseService.getExercise()
 
-        switch (exercise.meta.markMode) {
-            // At the same time that the correction
-            case '1':
-                available = this.isCorrectionAvailable(paper);
-                break;
+    switch (exercise.meta.markMode) {
+    // At the same time that the correction
+    case '1':
+      available = this.isCorrectionAvailable(paper)
+      break
 
-            // At the end of the assessment
-            case '2':
-                available = null !== paper.end;
-                break;
+    // At the end of the assessment
+    case '2':
+      available = null !== paper.end
+      break
 
-            // Show score if nothing specified
-            default:
-                available = false;
-                break;
-        }
+    // Show score if nothing specified
+    default:
+      available = false
+      break
     }
+  }
 
-    return available;
-};
+  return available
+}
+
+import angular from 'angular/index'
 
 export default UserPaperService
