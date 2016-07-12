@@ -2,9 +2,9 @@
 
 namespace Innova\CollecticielBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Innova\CollecticielBundle\Entity\GradingCriteria;
 use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\GradingCriteria;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("innova.manager.gradingcriteria_manager")
@@ -45,15 +45,17 @@ class GradingCriteriaManager
         foreach ($tabKeys as $key) {
             // new
             if (empty($tab[$key]['id'])) {
-                $gradingCriteriaData = $this->insertGradingCriteria($tab[$key]['criteriaName'], $dropzone);
+                if (!empty($tab[$key]['criteriaName'])) {
+                    $gradingCriteriaData = $this->insertGradingCriteria($tab[$key]['criteriaName'], $dropzone);
+                    $this->em->persist($gradingCriteriaData);
+                }
             } else {
                 if (!empty($tab[$key]['criteriaName'])) {
                     $gradingCriteria = $this->gradingCriteriaRepo->find($tab[$key]['id']);
                     $gradingCriteriaData = $this->updateGradingCriteria($tab[$key]['criteriaName'], $gradingCriteria);
+                    $this->em->persist($gradingCriteriaData);
                 }
             }
-
-            $this->em->persist($gradingCriteriaData);
         }
 
         $this->em->flush();

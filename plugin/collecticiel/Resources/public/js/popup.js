@@ -685,6 +685,120 @@ $(document).ready(function() {
         $('#document_id_0').prop('indeterminate', true);
     })
 
+    // InnovaERV : To update Dropzone when I click on "Gérer l'évaluation"
+    $('.validation_edit_common').on('click', function(event) {
+
+        // Variable initialization
+        var dropzoneId = 0;
+        var instruction = 0;
+
+        var allowWorkspaceResource = 0;
+        var allowUpload = 0;
+        var allowUrl = 0;
+        var allowRichText = 0;
+
+        var manualPlanning = 0;
+        var manualState = 0;
+
+        var startAllowDrop_date = 0;
+        var startAllowDrop_time = 0;
+        var endAllowDrop_date = 0;
+        var endAllowDrop_time = 0;
+
+        var published = 0;
+        var returnReceipt = 0;
+        var picture = 0;
+        var username = 0;
+
+        dropzoneId = document.getElementById('dropzone_id').value;
+        instruction = document.getElementById('innova_collecticiel_common_form_instruction').value;
+
+        if (document.getElementById('innova_collecticiel_common_form_allowWorkspaceResource').checked) {
+            allowWorkspaceResource = document.getElementById('innova_collecticiel_common_form_allowWorkspaceResource').value;
+        }
+        if (document.getElementById('innova_collecticiel_common_form_allowUpload').checked) {
+            allowUpload = document.getElementById('innova_collecticiel_common_form_allowUpload').value;
+        }
+        if (document.getElementById('innova_collecticiel_common_form_allowUrl').checked) {
+            allowUrl = document.getElementById('innova_collecticiel_common_form_allowUrl').value;
+        }
+        if (document.getElementById('innova_collecticiel_common_form_allowRichText').checked) {
+            allowRichText = document.getElementById('innova_collecticiel_common_form_allowRichText').value;
+        }
+
+        if (document.getElementById('innova_collecticiel_common_form_published').checked) {
+            published = document.getElementById('innova_collecticiel_common_form_published').value;
+        }
+        if (document.getElementById('innova_collecticiel_common_form_returnReceipt').checked) {
+            returnReceipt = document.getElementById('innova_collecticiel_common_form_returnReceipt').value;
+        }
+
+        if (document.getElementById('innova_collecticiel_common_form_picture').checked) {
+            picture = document.getElementById('innova_collecticiel_common_form_picture').value;
+        }
+        if (document.getElementById('innova_collecticiel_common_form_username').checked) {
+            username = document.getElementById('innova_collecticiel_common_form_username').value;
+        }
+
+
+        if (document.getElementById('innova_collecticiel_common_form_manualPlanning_0').checked) {
+            manualPlanning = document.getElementById('innova_collecticiel_common_form_manualPlanning_0').value;
+            if (document.getElementById('innova_collecticiel_common_form_manualState_0').checked) {
+                manualState = document.getElementById('innova_collecticiel_common_form_manualState_0').value;
+            } else {
+                manualState = document.getElementById('innova_collecticiel_common_form_manualState_1').value;
+            }
+        }
+
+        if (document.getElementById('innova_collecticiel_common_form_manualPlanning_1').checked) {
+            manualPlanning = document.getElementById('innova_collecticiel_common_form_manualPlanning_1').value;
+            manualState = document.getElementById('innova_collecticiel_common_form_manualState_1').value;
+
+            startAllowDrop_date = document.getElementById('innova_collecticiel_common_form_startAllowDrop_date').value;
+            startAllowDrop_time = document.getElementById('innova_collecticiel_common_form_startAllowDrop_time').value;
+
+            endAllowDrop_date = document.getElementById('innova_collecticiel_common_form_endAllowDrop_date').value;
+            endAllowDrop_time = document.getElementById('innova_collecticiel_common_form_endAllowDrop_time').value;
+        }
+
+        $.ajax({
+            url: Routing.generate('innova_collecticiel_update_dropzone', {
+            }),
+            method: "GET",
+            data: {
+                dropzoneId: dropzoneId,
+                instruction: instruction,
+
+                allowWorkspaceResource: allowWorkspaceResource,
+                allowUpload: allowUpload,
+                allowUrl: allowUrl,
+                allowRichText: allowRichText,
+
+                manualPlanning: manualPlanning,
+                manualState: manualState,
+
+                startAllowDrop_date: startAllowDrop_date,
+                startAllowDrop_time: startAllowDrop_time,
+                endAllowDrop_date: endAllowDrop_date,
+                endAllowDrop_time: endAllowDrop_time,
+
+                published: published,
+                returnReceipt: returnReceipt,
+                picture: picture,
+                username: username,
+            },
+            complete: function(data) {
+                var data_link = $.parseJSON(data.responseText)
+
+                if (data_link !== 'false') {
+                    document.location.href = data_link.link;
+                }
+            }
+        });
+
+    })
+
+
     // InnovaERV : ajout du bouton "Retour" dans la liste des commentaires.
     // InnovaERV : ajout de la redirection via Ajax.
     $('.backLink').on('click', function(event) {
