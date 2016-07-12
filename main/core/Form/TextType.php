@@ -28,7 +28,7 @@ class TextType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', ['label' => 'name', 'constraints' => new NotBlank(), 'attr' => ['autofocus' => true]]);
-        $builder->add('text', 'tinymce', ['label' => 'text')];
+        $builder->add('text', 'tinymce', ['label' => 'text']);
         $builder->add(
             'published',
             'checkbox',
