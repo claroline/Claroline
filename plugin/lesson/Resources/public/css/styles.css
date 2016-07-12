@@ -435,16 +435,3 @@ form.ng-submitted input.ng-invalid + .popover {
 form.ng-submitted input.ng-invalid + .popover.top > .arrow {
     border-top-color: #b94a48;
 }
-
-/* Loading bar */
-#loading-bar .bar {
-    background-color: white;
-    height: 3px;
-}
-
-#loading-bar-spinner .spinner-icon {
-    border-top-color: white;
-    border-left-color: #BBC8D0;
-    width: 25px;
-    height: 25px;
-}
