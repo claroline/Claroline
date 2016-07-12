@@ -7,7 +7,7 @@
                 <div class="pull-left image">
                     {% if drop.user.getPicture() != '' %}
                         <img src="{{ asset('uploads/pictures/') ~ drop.user.getPicture() }}"
-                        class=""
+                        class="img-polaroid img-responsive"
                         alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
                     {% else %}
                         <img class="img-polaroid img-responsive" src="{{ asset('bundles/icapnotification/images/default-avatar.png') }}">
