@@ -172,10 +172,14 @@
                             <hr>
                             {# Notation max. Ajout de cette zone, demande JJQ. InnovaERV  #}
                             <div class="row form-group">
-                                <div class="col-md-8">
-                                    {{ form_row(form.maximumNotation, {'label_attr': {'style': 'font-weight: normal;' }} )}}
+                                <div class="col-md-5">
+                                    {% if dropzone.maximumNotation > 0 %}
+                                        {{ form_row(form.maximumNotation, {'label_attr': {'style': 'font-weight: normal;' }} )}}
+                                    {% else %}
+                                        {{ form_row(form.maximumNotation, {'value':'20','label_attr': {'style': 'font-weight: normal;' }} )}}
+                                    {% endif %}
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-7">
                                 </div>
                             </div>
                         </div>
