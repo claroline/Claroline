@@ -702,18 +702,22 @@ class DropzoneController extends DropzoneBaseController
             $dropzone->setManualState($manualState);
         } else {
             $dropzone->setManualPlanning($manualPlanning);
-            $formatDate = explode('/', $startAllowDrop_date);
-            $startAllowDrop = $formatDate[2].'-'.$formatDate[1].'-'
-                .$formatDate[0].' '.$startAllowDrop_time.':00';
-            $formatDate = explode('/', $endAllowDrop_date);
-            $endAllowDrop = $formatDate[2].'-'.$formatDate[1].'-'
-                .$formatDate[0].' '.$endAllowDrop_time.':00';
-            $dropzone->setStartAllowDrop(
-                \DateTime::createFromFormat('Y-m-d H:i:s', $startAllowDrop)
-            );
-            $dropzone->setEndAllowDrop(
-                \DateTime::createFromFormat('Y-m-d H:i:s', $endAllowDrop)
-            );
+            if ($startAllowDrop_date !== '0') {
+                $formatDate = explode('/', $startAllowDrop_date);
+                $startAllowDrop = $formatDate[2].'-'.$formatDate[1].'-'
+                    .$formatDate[0].' '.$startAllowDrop_time.':00';
+                $dropzone->setStartAllowDrop(
+                    \DateTime::createFromFormat('Y-m-d H:i:s', $startAllowDrop)
+                );
+            }
+            if ($endAllowDrop_date !== '0') {
+                $formatDate = explode('/', $endAllowDrop_date);
+                $endAllowDrop = $formatDate[2].'-'.$formatDate[1].'-'
+                    .$formatDate[0].' '.$endAllowDrop_time.':00';
+                $dropzone->setEndAllowDrop(
+                    \DateTime::createFromFormat('Y-m-d H:i:s', $endAllowDrop)
+                );
+            }
         }
 
         // Database updating dropzone
