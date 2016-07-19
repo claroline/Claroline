@@ -2,6 +2,7 @@
  * Timer module
  */
 
+import angular from 'angular/index'
 import 'angular-ui-translation/angular-translation'
 import 'ngstorage'
 
@@ -10,5 +11,5 @@ import TimerDirective from './Directives/TimerDirective'
 
 angular
   .module('Timer', ['ui.translation', 'ngStorage'])
-  .service('TimerService', ['$timeout', '$localStorage', TimerDirective])
+  .service('TimerService', ['$timeout', '$localStorage', TimerService])
   .directive('timer', ['TimerService', TimerDirective])

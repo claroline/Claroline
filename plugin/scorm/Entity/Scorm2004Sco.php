@@ -12,6 +12,8 @@
 namespace Claroline\ScormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity
@@ -23,6 +25,7 @@ class Scorm2004Sco
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_user_min"})
      */
     protected $id;
 
@@ -59,16 +62,19 @@ class Scorm2004Sco
 
     /**
      * @ORM\Column(name="scorm_identifier", nullable=false)
+     * @Groups({"api_user_min"})
      */
     protected $identifier;
 
     /**
      * @ORM\Column(nullable=false, length=200)
+     * @Groups({"api_user_min"})
      */
     protected $title;
 
     /**
      * @ORM\Column(type="boolean", nullable=false)
+     * @Groups({"api_user_min"})
      */
     protected $visible;
 
@@ -79,31 +85,43 @@ class Scorm2004Sco
 
     /**
      * @ORM\Column(name="time_limit_action", nullable=true)
+     * @Groups({"api_user_min"})
+     * @SerializedName("timeLimitAction")
      */
     protected $timeLimitAction;
 
     /**
      * @ORM\Column(name="launch_data", nullable=true, length=4000)
+     * @Groups({"api_user_min"})
+     * @SerializedName("launchData")
      */
     protected $launchData;
 
     /**
      * @ORM\Column(name="is_block", type="boolean", nullable=false)
+     * @Groups({"api_user_min"})
+     * @SerializedName("isBlock")
      */
     protected $isBlock;
 
     /**
      * @ORM\Column(name="max_time_allowed", nullable=true)
+     * @Groups({"api_user_min"})
+     * @SerializedName("maxTimeAllowed")
      */
     protected $maxTimeAllowed;
 
     /**
      * @ORM\Column(name="completion_threshold", type="decimal", precision=10, scale=7, nullable=true)
+     * @Groups({"api_user_min"})
+     * @SerializedName("completionThreshold")
      */
     protected $completionThreshold;
 
     /**
      * @ORM\Column(name="scaled_passing_score", type="decimal", precision=10, scale=7, nullable=true)
+     * @Groups({"api_user_min"})
+     * @SerializedName("scaledPassingScore")
      */
     protected $scaledPassingScore;
 

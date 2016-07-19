@@ -11,7 +11,7 @@
         <!-- Type : to bind -->
         <div data-ng-if="matchQuestionCtrl.question.typeMatch === 1" class="row">
             <!-- List of Proposals -->
-            <div class="col-md-5">
+            <div class="col-md-5 col-xs-5">
                 <div class="well well-sm text-center source" id="draggable_{{ proposal.id }}"
                      data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet">
                     <div class="item-content" data-ng-bind-html="proposal.data | unsafe"></div>
@@ -19,10 +19,10 @@
             </div>
 
             <!-- Empty space for drawing links -->
-            <div class="col-md-2"></div>
+            <div class="col-md-2 col-xs-2"></div>
 
             <!-- List of Labels -->
-            <div class="col-md-5">
+            <div class="col-md-5 col-xs-5">
                 <div class="well well-sm text-center target" id="droppable_{{ label.id }}"
                      data-ng-repeat="label in matchQuestionCtrl.question.secondSet">
                     <div class="item-content" data-ng-bind-html="label.data | unsafe"></div>
@@ -33,7 +33,7 @@
         <!-- Type : to drag -->
         <div data-ng-if="matchQuestionCtrl.question.typeMatch === 2" class="row">
             <!-- PROPOSALS -->
-            <div class="col-md-6">
+            <div class="col-md-6 col-xs-6">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="well well-sm text-center origin" id="div_{{ proposal.id }}">
                     <span class="item-handle fa fa-fw fa-ellipsis-v"></span>
                     <div id="draggable_{{ proposal.id }}" class="item-content draggable" data-ng-bind-html="proposal.data | unsafe"></div>
@@ -41,7 +41,7 @@
             </div>
 
             <!-- LABELS -->
-            <div class="col-md-6">
+            <div class="col-md-6 col-xs-6">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="well well-sm text-center droppable" id="droppable_{{proposal.id}}">
                     <div data-ng-bind-html="proposal.data | unsafe"></div>
 
@@ -72,7 +72,7 @@
         <!-- Type : to pair -->
         <div data-ng-if="matchQuestionCtrl.question.typeMatch === 3" class="row">
             <!-- PROPOSALS -->
-            <div class="col-md-4">
+            <div class="col-md-4 col-xs-4">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="well well-sm text-center origin draggable drop-fixed-height" id="div_{{ proposal.id }}">
                     <!-- When the div is not dropped yet -->
                     <span class="item-handle fa fa-fw fa-ellipsis-v" data-ng-if="!matchQuestionCtrl.proposalDropped(proposal)"></span>
@@ -97,7 +97,7 @@
             </div>
 
             <!-- Answer zone -->
-            <div class="col-md-4">
+            <div class="col-md-4 col-xs-4">
                 <div class="droppable well well-sm text-center drop-fixed-height"
                      id="droppable_{{ proposal.id }}"
                      data-toggle="tooltip"
@@ -125,7 +125,7 @@
             </div>
 
             <!-- List of labels -->
-            <div class="col-md-4">
+            <div class="col-md-4 col-xs-4">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="well well-sm text-center drop-fixed-height">
                     <!-- Item content -->
                     <div class="item-content" data-ng-bind-html="proposal.data | unsafe"></div>

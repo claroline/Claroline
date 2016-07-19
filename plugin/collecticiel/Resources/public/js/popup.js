@@ -344,7 +344,11 @@ $(document).ready(function() {
                 dropzoneId: dropzoneId,
             },
             complete: function(data) {
-                $("#is-transmit-" + docId).html(data.responseText);
+                var data_link = $.parseJSON(data.responseText);
+
+                if (data_link !== 'false') {
+                    document.location.href = data_link.link;
+                }
             }
         });
 
