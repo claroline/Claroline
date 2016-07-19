@@ -6,15 +6,14 @@
 
 namespace Innova\CollecticielBundle\Controller;
 
+use Innova\CollecticielBundle\Entity\ChoiceCriteria;
+use Innova\CollecticielBundle\Entity\Document;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Notation;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Innova\CollecticielBundle\Entity\Dropzone;
-use Innova\CollecticielBundle\Entity\Document;
-use Innova\CollecticielBundle\Entity\Notation;
-use Innova\CollecticielBundle\Entity\ChoiceCriteria;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Response;
 
 class NotationController extends DropzoneBaseController
 {
@@ -49,7 +48,6 @@ class NotationController extends DropzoneBaseController
 
         // Récupération des documents sélectionnés
         $arrayCriteriaId = $this->get('request')->query->get('arrayCriteriaId');
-        $arrayCriteriaName = $this->get('request')->query->get('arrayCriteriaName');
         $arrayCriteriaValue = $this->get('request')->query->get('arrayCriteriaValue');
 
         // Pour insérer l'ID de la table Notation dans la tabke Choice_criteria
@@ -58,13 +56,13 @@ class NotationController extends DropzoneBaseController
         // Ajout pour avoir si la notation a été transmise ou pas.
         $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
                     ->findBy(
-                            array(
+                            [
                                 'document' => $document->getId(),
                                 'dropzone' => $dropzone->getId(),
-                                 )
-                            );
+                            ]
+                        );
 
-        if ($recordOrTransmit == 0) {
+        if ($recordOrTransmit === 0) {
             if (!empty($notation)) {
                 $notation[0]->setNote($note);
                 $notation[0]->setappreciation($appreciation);
@@ -97,15 +95,15 @@ class NotationController extends DropzoneBaseController
 
         $em->flush();
 
-        if ($notationId == 0) {
+        if ($notationId === 0) {
             // Ajout pour avoir si la notation a été transmise ou pas.
             $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
                         ->findBy(
-                                array(
+                                [
                                     'document' => $document->getId(),
                                     'dropzone' => $dropzone->getId(),
-                                     )
-                                );
+                                ]
+                            );
             $notationId = $notation[0]->getId();
         }
 
@@ -119,17 +117,17 @@ class NotationController extends DropzoneBaseController
                 // Ajout pour avoir si la notation a été transmise ou pas.
                 $choiceCriteriaArray = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
                             ->findBy(
-                                    array(
+                                    [
                                         'notation' => $notationId,
                                         'gradingCriteria' => $criteriaId,
-                                         )
-                                    );
+                                    ]
+                                );
 
                 // Nombre de notation pour le document et pour le dropzone
                 $countExistCriteria = count($choiceCriteriaArray);
 
                 // Notation : création
-                if ($countExistCriteria == 0) {
+                if ($countExistCriteria === 0) {
                     $choiceCriteria = new ChoiceCriteria();
                     $choiceCriteria->setGradingCriteria($gradingCriteria);
                     $choiceCriteria->setNotation($notation[0]);
@@ -148,12 +146,14 @@ class NotationController extends DropzoneBaseController
         $em->flush();
 
         // Redirection
-        $url = $this->generateUrl('innova_collecticiel_drops_awaiting', array(
+        $url = $this->generateUrl(
+                'innova_collecticiel_drops_awaiting',
+                [
                     'resourceId' => $dropzone->getId(),
-                )
+                ]
         );
 
-        return new JsonResponse(array('link' => $url));
+        return new JsonResponse(['link' => $url]);
     }
 
     /**
@@ -178,16 +178,14 @@ class NotationController extends DropzoneBaseController
 
         $dropzone = $em->getRepository('InnovaCollecticielBundle:DropZone')->find($dropzone->getId());
 
-        $drop = $em->getRepository('InnovaCollecticielBundle:Drop')->find($document->getDrop());
-
         // Recherche des critères de la notation
         $notation = $em->getRepository('InnovaCollecticielBundle:Notation')
                     ->findBy(
-                            array(
+                            [
                                 'document' => $document->getId(),
                                 'dropzone' => $dropzone->getId(),
-                                 )
-                            );
+                            ]
+                        );
 
         $notation[0]->setRecordOrTransmit(true);
 
@@ -204,22 +202,14 @@ class NotationController extends DropzoneBaseController
             $notationScaleDocument = '';
         }
 
-        // Ajout afin d'afficher la partie du code avec "Demande transmise"
-        $template = $this->get('templating')->
-        render('InnovaCollecticielBundle:Document:documentIsTransmit.html.twig',
-                array('document' => $document,
-                      'dropzone' => $dropzone,
-                      'drop' => $drop,
-                      'recordOrTransmitNotation' => 1,
-                      'notationDocument' => $notation[0]->getNote(),
-                      'maximumNotation' => $dropzone->getMaximumNotation(),
-                      'notationCommentDocument' => $notation[0]->getCommentText(),
-                      'notationQualityDocument' => $notation[0]->getQualityText(),
-                      'notationScaleDocument' => $notationScaleDocument,
-                    )
-               );
+        // Redirection
+        $url = $this->generateUrl(
+                    'innova_collecticiel_drops_awaiting',
+                    [
+                        'resourceId' => $dropzone->getId(),
+                    ]
+                );
 
-        // Retour du template actualisé à l'Ajax et non plus du Json.
-        return new Response($template);
+        return new JsonResponse(['link' => $url]);
     }
 }
