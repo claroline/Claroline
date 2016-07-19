@@ -111,6 +111,7 @@ class QtiRepository
                 foreach ($document_xml->getElementsByTagName('assessmentItem') as $ai) {
                     $path = dirname($file);
                     $imported = false;
+                    $interX = false;
                     $ib = $ai->getElementsByTagName('itemBody')->item(0);
                     foreach ($ib->childNodes as $node) {
                         if ($imported === false) {
