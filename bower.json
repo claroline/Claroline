@@ -54,6 +54,7 @@
     "moment": "2.11.2",
     "MathJax": "2.6.1",
     "ng-file-upload": "11.2.3",
+    "ng-table": "1.0.0",
     "ngstorage": "0.3.10",
     "pdfjs-dist": "1.4.133",
     "select2": "3.5.4",

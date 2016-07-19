@@ -90,8 +90,20 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title"> {{ currentSco.getTitle() }} </h3>
+    <div class="panel-heading clearfix">
+        <h3 class="panel-title">
+            {{ currentSco.getTitle() }}
+            {% if canEdit %}
+                <a class="btn btn-default btn-sm pull-right"
+                   href="{{ path('claro_scorm_results', {'resourceNode': resource.getResourceNode().getId()}) }}"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="{{ 'display_results'|trans({}, 'scorm') }}"
+                >
+                    <i class="fa fa-list"></i>
+                </a>
+            {% endif %}
+        </h3>
     </div>
     <div class="panel-body">
 
