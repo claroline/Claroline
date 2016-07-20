@@ -141,46 +141,34 @@
                 <div id="evaluationType">
                     <h4>{{ 'Evaluation for documents'|trans({}, 'innova_collecticiel') }}</h4>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-5">
                             {{ form_widget(form.evaluationType) }}
                         </div>
-                        <div class="col-md-4">
-                        </div>
-                    </div>
-                </div>
-                {# Manage Scales Button #}
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="dropzone-message-part-appreciation" {% if dropzone.evaluationType != "ratingScale" %} style="display:none" {% endif %}>
-                            <hr>
-                            <div class="col-md-8">
+                        <div class="col-md-7">
+                            <div id="dropzone-message-part-appreciation" {% if dropzone.evaluationType != "ratingScale" %} style="display:none" {% endif %}>
                                 {# Delete href and add validation_edit_common class for Ajax updating #}
-                                <a class="btn btn-primary pull-right validation_edit_common">
+                                <a class="btn btn-primary pull-left validation_edit_common">
                                     <i class="fa fa-pencil"></i>&nbsp;{{ 'Rating Scale appreciation'|trans({}, 'innova_collecticiel') }}
                                 </a>
                             </div>
-                            <div class="col-md-4">
-                            </div>
                         </div>
                     </div>
                 </div>
-            
+
                 {# Evaluation gestion. Ajout de cette zone, demande JJQ. InnovaERV  #}
                 <div class="row">
                     <div class="col-md-12">
                         <div id="dropzone-message-part-notation" {% if dropzone.evaluationType != "notation" %} style="display:none" {% endif %}>
                             <hr>
                             {# Notation max. Ajout de cette zone, demande JJQ. InnovaERV  #}
-                            <div class="row form-group">
-                                <div class="col-md-5">
-                                    {% if dropzone.maximumNotation > 0 %}
-                                        {{ form_row(form.maximumNotation, {'label_attr': {'style': 'font-weight: normal;' }} )}}
-                                    {% else %}
-                                        {{ form_row(form.maximumNotation, {'value':'20','label_attr': {'style': 'font-weight: normal;' }} )}}
-                                    {% endif %}
-                                </div>
-                                <div class="col-md-7">
-                                </div>
+                            <div class="col-md-5">
+                                {% if dropzone.maximumNotation > 0 %}
+                                    {{ form_row(form.maximumNotation, {'label_attr': {'style': 'font-weight: normal;' }} )}}
+                                {% else %}
+                                    {{ form_row(form.maximumNotation, {'value':'20','label_attr': {'style': 'font-weight: normal;' }} )}}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-7">
                             </div>
                         </div>
                     </div>
