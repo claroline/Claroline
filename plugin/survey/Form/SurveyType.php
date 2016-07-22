@@ -26,6 +26,7 @@ class SurveyType extends AbstractType
             array(
                 'constraints' => new NotBlank(),
                 'label' => 'name',
+                'attr' => array('autofocus' => true),
             )
         );
         $builder->add(

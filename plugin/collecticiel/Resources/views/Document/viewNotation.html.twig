@@ -35,6 +35,7 @@
                         <div class="form-group row col-md-6">
                         </div>
                     </div>
+                </div>
 
                    <div class="row text-left">
                         <div class="form-group row col-md-6">
@@ -43,6 +44,7 @@
                         <div class="form-group row col-md-6">
                         </div>
                     </div>
+                </div>
 
                     {% if document.url is not null %}
                         {% set documentTitle = document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url %}
@@ -74,6 +76,7 @@
                         <div class="form-group row col-md-6">
                         </div>
                     </div>
+                </div>
 
                     <div class="row text-left">
                         <div class="form-group row col-md-6">
@@ -83,8 +86,9 @@
                         <div class="form-group row col-md-6">
                         </div>
                     </div>
+                </div>
 
-                    <p></p>
+                <p></p>
 
                     <div class="row text-left">
                         <div class="form-group row col-md-6">
@@ -94,8 +98,9 @@
                         <div class="form-group row col-md-6">
                         </div>
                     </div>
+                </div>
 
-                    {% if dropzone.evaluationType == "notation" %}
+                {% if dropzone.evaluationType == "notation" %}
                         <p></p>
 
                         <div class="row text-left">

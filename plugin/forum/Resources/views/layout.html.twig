@@ -5,3 +5,11 @@
 {% endif %}
 
 {% extends layout %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts debug=false
+        'js/translations/forum/*.js'
+        %}<script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

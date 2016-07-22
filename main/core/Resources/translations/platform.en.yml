@@ -171,6 +171,7 @@ communication: Communication
 completed: Completed
 configuration: Configuration
 configure: Configure
+confirm: OK
 confirm_send_data: 'We suggest to confirm your agreement to send data:'
 connections: Connections
 contact: Contact
@@ -706,6 +707,14 @@ platform_widgets: 'Platform widgets'
 please_validate_your_account: 'An email was sent for you to activate your account'
 please_wait: 'Please wait...'
 port: Port
+portal: Portal
+portal_access_disabled: Access to portal is disabled because no resource type is enabled.
+portal_configuration_updated_success: Portal configuration successfully updated
+portal_no_published_resources: It seems that there are no resources published to portal.
+portal_resources_configuration: Choose the resources to be displayed on portal
+portal_search: Search open resources
+portal_search_total_results: '%totalItems% result(s) in ''%type%'' (ordered by relevance)'
+portal_short: Portal
 portfolio_url: 'Portfolio tool''s access url'
 position: Position
 positive_number_expected: 'This value should be a positive number'
@@ -735,6 +744,8 @@ public_workspaces: 'Public workspaces'
 publish: Publish
 publish_resource: 'Publish resource'
 published: Published
+published_to_portal: Published to portal
+published_to_portal_message: 'This option automatically allows anonymous users to acces the resource. You have to remove the anonymous rights in resource''s rights management section to restrict the acces again.'
 put_back_permissions_after_update: 'Don''t forget to put your original permissions after an update.'
 receiver: Receiver(s)
 recent_all_workspace_activities_overview: 'Overview of all recent activities in %workspaceName%'
@@ -1058,7 +1069,7 @@ user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'
 user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link shared_policy_link_platform_users">platform users</span>, or to <span class="shared_policy_link shared_policy_link_everybody">everybody</span>.'
-user_removed: 'User removed'
+user_removed: 'User %user% removed'
 user_selector: 'User picker'
 user_visit: 'Audience/user visits'
 username: Username
@@ -1284,4 +1295,12 @@ field_edited: Field edition successfull
 field_removed: Field suppression successfull
 panel_roles_edited: Facet roles edition successfull
 profile_preference_edited: Profile preferences edition sucessfull
+use_honeypot: Activate honeypot for anonymous (anti-spam)
+manage_group: Manage group
+claro_admin_personal_workspace_resource_rights: Personal workspace resource management
+delete_users: Remove users
+delete_users_confirm: Do you really want to remove the users [ %user_list% ] ?
+group_created: Group %group% created.
+group_removed: Group %group% removed.
 mandatory: Mandatory
+leave_empty: Let this field empty to prove that you aren't a bot.

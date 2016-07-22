@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller\Administration;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -35,7 +34,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class WorkspaceRegistrationController extends Controller
 {
     private $adminWorkspaceRegistrationTool;
-    private $formFactory;
     private $groupManager;
     private $roleManager;
     private $session;
@@ -46,7 +44,6 @@ class WorkspaceRegistrationController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"         = @DI\Inject("claroline.form.factory"),
      *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
      *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
      *     "session"             = @DI\Inject("session"),
@@ -57,7 +54,6 @@ class WorkspaceRegistrationController extends Controller
      * })
      */
     public function __construct(
-        FormFactory $formFactory,
         GroupManager $groupManager,
         RoleManager $roleManager,
         SessionInterface $session,
@@ -66,7 +62,6 @@ class WorkspaceRegistrationController extends Controller
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager
     ) {
-        $this->formFactory = $formFactory;
         $this->groupManager = $groupManager;
         $this->roleManager = $roleManager;
         $this->session = $session;

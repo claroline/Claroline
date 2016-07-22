@@ -2,11 +2,12 @@
 
 namespace Innova\PathBundle\Controller\Wizard;
 
-use Innova\PathBundle\Manager\PathManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Path\Path;
+use Innova\PathBundle\Manager\PathManager;
+use Innova\PathBundle\Manager\UserProgressionManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Player controller.
@@ -36,17 +37,25 @@ class PlayerController
     protected $pathManager;
 
     /**
+     * @var UserProgressionManager
+     */
+    protected $userProgressionManager;
+
+    /**
      * Class constructor.
      *
      * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
      * @param \Innova\PathBundle\Manager\PathManager     $pathManager
+     * @param UserProgressionManager                     $userProgressionManager
      */
     public function __construct(
         ObjectManager $objectManager,
-        PathManager   $pathManager)
+        PathManager   $pathManager,
+        UserProgressionManager $userProgressionManager)
     {
         $this->om = $objectManager;
         $this->pathManager = $pathManager;
+        $this->userProgressionManager = $userProgressionManager;
     }
 
     /**
@@ -71,12 +80,14 @@ class PlayerController
 
         $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
-        return array(
+        return [
             '_resource' => $path,
             'workspace' => $path->getWorkspace(),
             'userProgression' => $this->pathManager->getUserProgression($path),
             'resourceIcons' => $resourceIcons,
             'editEnabled' => $this->pathManager->isAllow('EDIT', $path),
-        );
+            'totalSteps' => $this->pathManager->countAllPublishedSteps($path),
+            'totalProgression' => $this->userProgressionManager->calculateUserProgressionInPath($path),
+        ];
     }
 }

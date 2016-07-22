@@ -85,11 +85,11 @@
 
 {% block javascripts %}
     {% if options.menuOrientation == 'horizontal' %}
-        <script src="{{ hotAsset("dist/claroline-distribution-plugin-website-view-app-horizontal.js") }}"></script>
+        <script src="{{ hotAsset('dist/claroline-distribution-plugin-website-view-app-horizontal.js') }}"></script>
     {% else %}
-        <script src="{{ hotAsset("dist/claroline-distribution-plugin-website-view-app-vertical.js") }}"></script>
+        <script src="{{ hotAsset('dist/claroline-distribution-plugin-website-view-app-vertical.js') }}"></script>
     {% endif %}
-    <script type="text/javascript">
+    <script>
         (function() {
             'use strict';
             angular

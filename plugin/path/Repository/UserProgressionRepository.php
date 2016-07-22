@@ -2,8 +2,8 @@
 
 namespace Innova\PathBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\ORM\EntityRepository;
 use Innova\PathBundle\Entity\Path\Path;
 
 class UserProgressionRepository extends EntityRepository
@@ -34,12 +34,35 @@ class UserProgressionRepository extends EntityRepository
         // Get results of the query
         $results = $query->getResult();
 
-        $progression = array();
+        $progression = [];
 
         foreach ($results as $result) {
             $progression[$result->getStep()->getId()] = $result;
         }
 
         return $progression;
+    }
+
+    /**
+     * Get total user progression in path.
+     *
+     * @param Path $path
+     * @param User $user
+     *
+     * @return int
+     */
+    public function countProgressionForUserInPath(Path $path, User $user)
+    {
+        $qb = $this->createQueryBuilder('userProgression')
+            ->select('COUNT(DISTINCT(userProgression.step)) AS total')
+            ->leftJoin('userProgression.step', 'step')
+            ->andWhere('userProgression.user = :user')
+            ->andWhere('step.path = :path')
+            ->andWhere('userProgression.status IN(:statuses)')
+            ->setParameter('user', $user)
+            ->setParameter('path', $path)
+            ->setParameter('statuses', ['seen', 'done']);
+
+        return intval($qb->getQuery()->getSingleScalarResult());
     }
 }

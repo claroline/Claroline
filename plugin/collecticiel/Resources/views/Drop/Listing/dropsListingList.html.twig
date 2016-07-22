@@ -5,10 +5,10 @@
         <td>
             <div class="user-panel">
                 <div class="pull-left image">
-                    {% if drop.user.getPicture() != '' %}
-                        <img src="{{ asset('uploads/pictures/') ~ drop.user.getPicture() }}"
-                        class=""
-                        alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
+                    {% if document.sender.getPicture() != '' %}
+                        <img src="{{ asset('uploads/pictures/') ~ document.sender.getPicture() }}"
+                        class="img-polaroid img-responsive"
+                        alt="{{ document.sender.getLastName() ~ ' ' ~ document.sender.getFirstName() }}">
                     {% else %}
                         <img class="img-polaroid img-responsive" src="{{ asset('bundles/icapnotification/images/default-avatar.png') }}">
                     {% endif %}
@@ -17,12 +17,12 @@
         </td>
     {% endif %}
 
-    <td>{{ drop.user.lastName|upper }}</td>
+    <td>{{ document.sender.lastName|upper }}</td>
 
-    <td>{{ drop.user.firstName|capitalize }}</td>
+    <td>{{ document.sender.firstName|capitalize }}</td>
 
     {% if dropzone.username == 1  %}
-        <td>{{ drop.user.userName|capitalize }}</td>
+        <td>{{ document.sender.userName|capitalize }}</td>
     {% endif %}
 
     {# En date du #}

@@ -87,9 +87,9 @@ class InteractionMatchingHandler extends QuestionHandler
      */
     public function processUpdate($originalInterMatching)
     {
-        $originalLabel = array();
-        $originalProposal = array();
-        $originalHints = array();
+        $originalLabel = [];
+        $originalProposal = [];
+        $originalHints = [];
 
         //create an array of currente Label of the database
         foreach ($originalInterMatching->getLabels() as $label) {
@@ -105,6 +105,9 @@ class InteractionMatchingHandler extends QuestionHandler
 
         if ($this->request->getMethod()  == 'POST') {
             $this->form->handleRequest($this->request);
+
+            // Uses the default category if no category selected
+            $this->checkCategory();
 
             if ($this->form->isValid()) {
                 $this->onSuccessUpdate($this->form->getData(), $originalLabel, $originalProposal, $originalHints);

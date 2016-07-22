@@ -231,6 +231,11 @@ class ResourceNode
     protected $published = true;
 
     /**
+     * @ORM\Column(name="published_to_portal", type="boolean", options={"default": 0})
+     */
+    protected $publishedToPortal = false;
+
+    /**
      * @var ArrayCollection|\Claroline\CoreBundle\Entity\Log\Log[]
      *
      * @ORM\OneToMany(
@@ -705,6 +710,16 @@ class ResourceNode
     public function setPublished($published)
     {
         $this->published = $published;
+    }
+
+    public function isPublishedToPortal()
+    {
+        return $this->publishedToPortal;
+    }
+
+    public function setPublishedToPortal($publishedToPortal)
+    {
+        $this->publishedToPortal = $publishedToPortal;
     }
 
     /**

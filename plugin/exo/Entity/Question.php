@@ -96,7 +96,12 @@ class Question
     private $hints;
 
     /**
-     * Note: used for joins only.
+     * @ORM\OneToMany(targetEntity="ObjectQuestion", mappedBy="question", orphanRemoval=true)
+     */
+    private $objects;
+
+    /**
+     * Note: used for joins only., orphanRemoval=true.
      *
      * @ORM\OneToMany(targetEntity="StepQuestion", mappedBy="question")
      */
@@ -105,6 +110,7 @@ class Question
     public function __construct()
     {
         $this->hints = new ArrayCollection();
+        $this->objects = new ArrayCollection();
         $this->stepQuestions = new ArrayCollection();
         $this->dateCreate = new \DateTime();
     }
@@ -181,6 +187,27 @@ class Question
     public function getInvite()
     {
         return $this->invite;
+    }
+
+    public function getObjects()
+    {
+        return $this->objects;
+    }
+
+    public function addObject(ObjectQuestion $object)
+    {
+        if (!$this->objects->contains($object)) {
+            $this->objects->add($object);
+            $object->setQuestion($this);
+        }
+    }
+
+    public function removeObject(ObjectQuestion $object)
+    {
+        if ($this->objects->contains($object)) {
+            $this->objects->removeElement($object);
+            $object->setQuestion(null);
+        }
     }
 
     /**
@@ -290,7 +317,7 @@ class Question
     /**
      * @param Category $category
      */
-    public function setCategory(Category $category)
+    public function setCategory(Category $category = null)
     {
         $this->category = $category;
     }

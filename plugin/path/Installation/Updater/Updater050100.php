@@ -29,9 +29,9 @@ class Updater050100 extends Updater
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         // Retrieve the widget
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy(array(
+        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy([
             'name' => 'innova_my_paths_widget',
-        ));
+        ]);
 
         if ($widget) {
             // Delete Widget
@@ -45,9 +45,9 @@ class Updater050100 extends Updater
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         // Retrieve the tool
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(array(
+        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy([
             'name' => 'innova_path',
-        ));
+        ]);
 
         if ($tool) {
             // Delete Widget

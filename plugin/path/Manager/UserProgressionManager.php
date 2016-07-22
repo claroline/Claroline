@@ -2,11 +2,12 @@
 
 namespace Innova\PathBundle\Manager;
 
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\UserProgression;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class UserProgressionManager.
@@ -40,25 +41,63 @@ class UserProgressionManager
     }
 
     /**
-     * Create a new progression for a User and a Step (by default, the first action is 'seen').
+     * Calculates how many steps are seen or done in a path for a user,
+     * a measure to estimate total user progression over the path.
      *
-     * @param Step   $step
-     * @param User   $user
-     * @param string $status
-     * @param bool   $authorized
+     * @param Path      $path
+     * @param User|null $user
      *
-     * @return UserProgression
+     * @return int $totalProgression
      */
-    public function create(Step $step, User $user = null, $status = null, $authorized = false)
+    public function calculateUserProgressionInPath(Path $path, User $user = null)
     {
         if (empty($user)) {
             // Load current logged User
             $user = $this->securityToken->getToken()->getUser();
         }
 
+        if (!$user instanceof User) {
+            return 0;
+        }
+
+        return $this
+            ->om
+            ->getRepository('InnovaPathBundle:UserProgression')
+            ->countProgressionForUserInPath($path, $user);
+    }
+
+    /**
+     * Create a new progression for a User and a Step (by default, the first action is 'seen').
+     *
+     * @param Step   $step
+     * @param User   $user
+     * @param string $status
+     * @param bool   $authorized
+     * @param bool   $checkDuplicate
+     *
+     * @return UserProgression
+     */
+    public function create(Step $step, $user = null, $status = null, $authorized = false, $checkDuplicate = true)
+    {
+        if (empty($user)) {
+            // Load current logged User
+            $user = $this->securityToken->getToken()->getUser();
+        }
+
+        // Check if progression already exists, if so return retrieved progression
+        if ($checkDuplicate && $user instanceof User) {
+            $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy([
+                'step' => $step,
+                'user' => $user,
+            ]);
+
+            if (!empty($progression)) {
+                return $progression;
+            }
+        }
+
         $progression = new UserProgression();
 
-        $progression->setUser($user);
         $progression->setStep($step);
 
         if (empty($status)) {
@@ -68,8 +107,11 @@ class UserProgressionManager
         $progression->setStatus($status);
         $progression->setAuthorized($authorized);
 
-        $this->om->persist($progression);
-        $this->om->flush();
+        if ($user instanceof User) {
+            $progression->setUser($user);
+            $this->om->persist($progression);
+            $this->om->flush();
+        }
 
         return $progression;
     }
@@ -82,21 +124,22 @@ class UserProgressionManager
         }
 
         // Retrieve the current progression for this step
-        $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy(array(
+        $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy([
             'step' => $step,
             'user' => $user,
-        ));
+        ]);
 
         if (empty($progression)) {
             // No progression for User => initialize a new one
-            $progression = $this->create($step, $user, $status, $authorized);
+            $progression = $this->create($step, $user, $status, $authorized, false);
         } else {
             // Update existing progression
             $progression->setStatus($status);
             $progression->setAuthorized($authorized);
-
-            $this->om->persist($progression);
-            $this->om->flush();
+            if ($user instanceof User) {
+                $this->om->persist($progression);
+                $this->om->flush();
+            }
         }
 
         return $progression;

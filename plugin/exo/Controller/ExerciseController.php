@@ -10,16 +10,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Step;
 
 class ExerciseController extends Controller
 {
     /**
      * Opens an exercise.
      *
-     * @param User|string $user     the current User or the "anon." string if not logged
-     * @param Exercise    $exercise
+     * @param Exercise $exercise
+     * @param User     $user
      *
      * @EXT\Route(
      *     "/{id}",
@@ -31,7 +31,7 @@ class ExerciseController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function openAction(User $user = null, Exercise $exercise)
+    public function openAction(Exercise $exercise, User $user = null)
     {
         $this->assertHasPermission('OPEN', $exercise);
 
@@ -186,11 +186,11 @@ class ExerciseController extends Controller
             $QuestionsExo = false;
         }
 
-        $vars = array();
-        $sharedWithMe = array();
-        $shareRight = array();
-        $questionWithResponse = array();
-        $alreadyShared = array();
+        $vars = [];
+        $sharedWithMe = [];
+        $shareRight = [];
+        $questionWithResponse = [];
+        $alreadyShared = [];
 
         $em = $this->getDoctrine()->getManager();
 
@@ -198,7 +198,6 @@ class ExerciseController extends Controller
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
-        $services = $this->container->get('ujm.exo_exercise');
         $questionSer = $this->container->get('ujm.exo_question');
         $paginationSer = $this->container->get('ujm.exo_pagination');
 
@@ -313,7 +312,7 @@ class ExerciseController extends Controller
 
             return new Response($url);
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
+            return $this->redirect($this->generateUrl('ujm_exercise_import_question', ['exoID' => $exoID]));
         }
     }
 

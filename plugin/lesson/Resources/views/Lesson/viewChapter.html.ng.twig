@@ -61,13 +61,14 @@
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_lesson' }) }}"></script>
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-lesson-list.js') }}"></script>
     <script>
+        console.log("{{ asset("bundles/icaplesson/css/styles.css")}}");
     var bootstrapCSS = _.find(_.pluck(document.styleSheets, 'href'), function(link){return link && link.indexOf("themes/") !== -1});
 angular.module('LessonModule').value('lesson.data', {
     isGranted: {{ is_granted('EDIT', node) ? 'true' : 'false' }},
     lessonId: {{ _resource.id }},
     root: "{{ root.slug }}",
     defaultChapter: {% if defaultChapter is defined and defaultChapter is not empty %}"{{ defaultChapter }}"{% else %}null{% endif %},
-    tinymceStylesheets: [bootstrapCSS, "/bundles/icaplesson/css/styles.css", "/bundles/clarolinecore/css/common/tinymce.css"]
+    tinymceStylesheets: [bootstrapCSS, "{{ asset("bundles/icaplesson/css/styles.css")}}", "{{ asset("bundles/clarolinecore/css/common/tinymce.css")}}"]
 });
     </script>
     <script>

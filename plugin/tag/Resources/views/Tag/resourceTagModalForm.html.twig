@@ -22,33 +22,38 @@
                 {{ resourceNode.getResourceType().getName()|trans({}, 'resource') }}
             </div>
             <br>
-            <div>
+            <div id='tags-display-box'>
                 {% for resourceTag in resourceTags %}
-                    <span class="label label-success margin-bottom-sm margin-right-sm">
+                    <span class="label label-success margin-bottom-sm margin-right-sm tag-element" data-tag-id="{{ resourceTag.getId() }}" data-resource-id="{{ resourceNode.getId() }}">
                         <i class="fa fa-tag"></i>
                         {{ resourceTag.getName() }}
+                        {% if is_granted('EDIT', resourceNode) %}
+                            <i class="fa fa-remove remove-tag-from-object-btn pointer-hand" ></i>
+                        {% endif %}
                     </span>
                 {% endfor %}
             </div>
             <br>
-            <form id="resource-tag-form"
-                  action="{{ path('claro_tag_resource_tag', {'resourceNode': resourceNode.getId()}) }}"
-                  method="POST"
-                  novalidate="novalidate"
-            > 
-                {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
-                {{ form_widget(form) }}
-                
-                <br>
-                <span class="pull-right">
-                    <span class="btn btn-default" data-dismiss="modal">
-                        {{ 'cancel'|trans({},'platform') }}
+             {% if is_granted('EDIT', resourceNode) %}
+                <form id="resource-tag-form"
+                      action="{{ path('claro_tag_resource_tag', {'resourceNode': resourceNode.getId()}) }}"
+                      method="POST"
+                      novalidate="novalidate"
+                > 
+                    {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
+                    {{ form_widget(form) }}
+                     <div><small class='text-muted'>{{ 'tag_resource_help'|trans({}, 'tag') }}</small></div>
+                    <br>
+                    <span class="pull-right">
+                        <span class="btn btn-default" data-dismiss="modal">
+                            {{ 'cancel'|trans({},'platform') }}
+                        </span>
+                        <button type="submit" id='tag-btn' class="btn btn-primary">
+                            {{ 'ok'|trans({},'platform') }}
+                        </button>
                     </span>
-                    <button type="submit" id='tag-btn' class="btn btn-primary">
-                        {{ 'ok'|trans({},'platform') }}
-                    </button>
-                </span>
-            </form>
+                </form>
+             {% endif %}
             <br>
             <br>
         </div>
@@ -61,6 +66,14 @@
     >
     </script>
     <script src='{{ asset('bundles/clarolinetag/js/tag-typeahead.js') }}'
+            type="text/javascript"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'tag' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinetag/js/tagsManagement.js') }}'
             type="text/javascript"
     >
     </script>

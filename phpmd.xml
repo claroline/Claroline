@@ -11,12 +11,11 @@
     <description>Code checks</description>
 
     <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod"/>
+    <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable"/>
 
     <!-- MUST HAVE -->
 
-    <!-- <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable"/> -->
     <!-- <rule ref="rulesets/design.xml/ExitExpression"/> -->
-    <!-- <rule ref="rulesets/design.xml/EvalExpression"/> -->
 
     <!-- NICE TO HAVE -->
 

@@ -18,7 +18,7 @@
 
 {# Variable qui va compter le nombre de commentaires #}
 {% if nbComment == 0 and nameAdmin|length == 0 %}
-        <span class="fa fa-minus" title="{{ 'Document not commented'|trans({}, 'innova_collecticiel') }}"> </span>
+    <span class="fa fa-minus" title="{{ 'Document not commented'|trans({}, 'innova_collecticiel') }}"> </span>
 {% else %}
-        <span class="fa fa-check" title="{{nameAdmin }}{{ ' ' ~ 'Document commented'|trans({}, 'innova_collecticiel') }}"></span>
+    <span class="fa fa-check" title="{{nameAdmin }}{{ ' ' ~ 'Document commented'|trans({}, 'innova_collecticiel') }}"></span>
 {% endif %}

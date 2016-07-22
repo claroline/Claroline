@@ -2,19 +2,19 @@
 
 namespace Innova\PathBundle\Controller\Widget;
 
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\TagBundle\Manager\TagManager;
+use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\PathWidgetConfig;
+use Innova\PathBundle\Manager\PathManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Form\FormFactoryInterface;
-use Innova\PathBundle\Manager\PathManager;
-use Claroline\TagBundle\Manager\TagManager;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Innova\PathBundle\Entity\PathWidgetConfig;
 
 /**
  * Class PathWidgetConfigController.
@@ -132,7 +132,7 @@ class PathWidgetController
             if (!empty($tags)) {
                 // Ge the list of Tags from data String
                 $tags = explode(',', $tags);
-                $uniqueTags = array();
+                $uniqueTags = [];
                 foreach ($tags as $tag) {
                     $value = trim($tag);
                     if (!empty($value)) {
@@ -154,10 +154,10 @@ class PathWidgetController
             return new Response('success', 204);
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'instance' => $widgetInstance,
             'tags' => $this->tagManager->getPlatformTags(),
-        );
+        ];
     }
 }

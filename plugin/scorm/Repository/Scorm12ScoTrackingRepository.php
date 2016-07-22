@@ -17,10 +17,25 @@ use Doctrine\ORM\EntityRepository;
 
 class Scorm12ScoTrackingRepository extends EntityRepository
 {
-    public function findAllTrackingsByUserAndResource(
-        User $user,
-        Scorm12Resource $resource
-    ) {
+    public function findTrackingsByResource(Scorm12Resource $resource)
+    {
+        $dql = '
+            SELECT t
+            FROM Claroline\ScormBundle\Entity\Scorm12ScoTracking t
+            JOIN t.user u
+            JOIN t.sco s
+            WHERE s.scormResource = :resource
+            ORDER BY u.lastName ASC
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('resource', $resource);
+
+        return $query->getResult();
+    }
+
+    public function findAllTrackingsByUserAndResource(User $user, Scorm12Resource $resource)
+    {
         $dql = '
             SELECT t
             FROM Claroline\ScormBundle\Entity\Scorm12ScoTracking t

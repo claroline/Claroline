@@ -3,9 +3,9 @@
 namespace Innova\PathBundle\Manager\Condition;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\Criteriagroup;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\StepCondition;
-use Innova\PathBundle\Entity\Criteriagroup;
 
 /**
  * StepConditionManager
@@ -69,7 +69,7 @@ class StepConditionManager
         // Store existing CriteriaGroups to remove those that no longer exist
         $existingGroups = $condition->getCriteriagroups()->toArray();
 
-        $toProcess = !empty($conditionStructure->criteriagroups) ? $conditionStructure->criteriagroups : array();
+        $toProcess = !empty($conditionStructure->criteriagroups) ? $conditionStructure->criteriagroups : [];
 
         // Set up StepCondition criteria
         $createdGroups = $this->updateCriteriaGroups($condition, 0, null, $toProcess);
@@ -91,10 +91,10 @@ class StepConditionManager
      *
      * @return array
      */
-    public function updateCriteriaGroups(StepCondition $condition, $level = 0, Criteriagroup $parent = null, array $criteria = array())
+    public function updateCriteriaGroups(StepCondition $condition, $level = 0, Criteriagroup $parent = null, array $criteria = [])
     {
         $currentOrder = 0;
-        $processedGroups = array();
+        $processedGroups = [];
 
         $existingGroups = $condition->getCriteriagroups();
         foreach ($criteria as $groupStructure) {
@@ -135,7 +135,7 @@ class StepConditionManager
      *
      * @return \Innova\PathBundle\Manager\Condition\StepConditionManager
      */
-    public function cleanCriteriaGroups(StepCondition $condition, array $neededGroups = array(), array $existingGoups = array())
+    public function cleanCriteriaGroups(StepCondition $condition, array $neededGroups = [], array $existingGoups = [])
     {
         $toRemove = array_filter($existingGoups, function (Criteriagroup $current) use ($neededGroups) {
             $removeGroup = true;

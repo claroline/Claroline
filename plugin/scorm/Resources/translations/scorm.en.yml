@@ -1,8 +1,21 @@
+best_score: Best score
+best_status: Best status
 browsed: Browsed
 completed: Completed
+completion_status: Completion status
+details: Details
+display_details: Display details
+display_results: Display results
 failed: Failed
 incomplete: Incomplete
-not attempted: 'Not attempted'
-not_attempted: 'Not attempted'
+last_status: Last status
+last_score: Last score
+no_detail: No detail
+no_result: No result
+not attempted: Not attempted
+not_attempted: Not attempted
 passed: Passed
+session_time: Last session time
+scorm_results: SCORM results
+success_status: Success status
 unknown: Unknown

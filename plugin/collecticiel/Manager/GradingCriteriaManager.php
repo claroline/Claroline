@@ -45,7 +45,9 @@ class GradingCriteriaManager
         foreach ($tabKeys as $key) {
             // new
             if (empty($tab[$key]['id'])) {
-                $gradingCriteriaData = $this->insertGradingCriteria($tab[$key]['criteriaName'], $dropzone);
+                if (!empty($tab[$key]['criteriaName'])) {
+                    $gradingCriteriaData = $this->insertGradingCriteria($tab[$key]['criteriaName'], $dropzone);
+                }
             } else {
                 if (!empty($tab[$key]['criteriaName'])) {
                     $gradingCriteria = $this->gradingCriteriaRepo->find($tab[$key]['id']);

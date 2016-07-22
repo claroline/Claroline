@@ -5,8 +5,8 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Entity\Step;
+use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
 use UJM\ExoBundle\Transfer\Json\Validator;
 
@@ -82,7 +82,7 @@ class ExerciseManager
         // Update steps order
         $steps = $exercise->getSteps();
         foreach ($steps as $pos => $stepToReorder) {
-            $step->setOrder($pos);
+            $stepToReorder->setOrder($pos);
 
             $this->om->persist($step);
         }
@@ -271,6 +271,10 @@ class ExerciseManager
      */
     public function exportExercise(Exercise $exercise, $withSolutions = true)
     {
+        if ($exercise->getType() === $exercise::TYPE_FORMATIVE) {
+            $withSolutions = true;
+        }
+
         return [
             'id' => $exercise->getId(),
             'meta' => $this->exportMetadata($exercise),
@@ -330,7 +334,7 @@ class ExerciseManager
         $exercise->setStatistics($metadata->statistics ? true : false);
 
         $correctionDate = null;
-        if (!empty($metadata->correctionDate) && CorrectionMode::AFTER_DATE == $metadata->correctionMode) {
+        if (!empty($metadata->correctionDate) && CorrectionMode::AFTER_DATE === $metadata->correctionMode) {
             $correctionDate = \DateTime::createFromFormat('Y-m-d\TH:i:s', $metadata->correctionDate);
         }
 

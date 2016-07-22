@@ -19,7 +19,7 @@
                  <div class="pull-left image">
                     {% if document.sender.getPicture() != '' %}
                         <img src="{{ asset('uploads/pictures/') ~ document.sender.getPicture() }}"
-                        class=""
+                        class="img-polaroid img-responsive"
                         alt="{{ document.sender.getLastName() ~ ' ' ~ document.sender.getFirstName() }}">
                     {% else %}
                         <img class="img-polaroid img-responsive" src="{{ asset('bundles/icapnotification/images/default-avatar.png') }}">
@@ -28,6 +28,7 @@
             </div>
         </td>
     {% endif %}
+
     <td class="{{ classArray }}">
         {{ document.sender.lastName }}
     </td>

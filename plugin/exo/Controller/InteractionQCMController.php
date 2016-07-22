@@ -6,8 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Response;
-use UJM\ExoBundle\Form\InteractionQCMType;
 use UJM\ExoBundle\Form\InteractionQCMHandler;
+use UJM\ExoBundle\Form\InteractionQCMType;
 use UJM\ExoBundle\Form\ResponseType;
 
 /**
@@ -60,13 +60,13 @@ class InteractionQCMController extends Controller
         $typeQCM = $serviceQcm->getTypeQCM();
 
         return $this->container->get('templating')->renderResponse(
-           'UJMExoBundle:InteractionQCM:new.html.twig', array(
+           'UJMExoBundle:InteractionQCM:new.html.twig', [
            'exoID' => $attr->get('exoID'),
            'stepID' => $attr->get('stepID'),
            'entity' => $entity,
            'typeQCM' => json_encode($typeQCM),
            'form' => $form->createView(),
-           )
+           ]
        );
     }
 
@@ -108,8 +108,8 @@ class InteractionQCMController extends Controller
 
             if ($exoID == -1) {
                 return $this->redirect(
-                    $this->generateUrl('ujm_question_index', array(
-                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), )
+                    $this->generateUrl('ujm_question_index', [
+                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), ]
                     )
                 );
             } else {
@@ -121,33 +121,33 @@ class InteractionQCMController extends Controller
 
         if ($qcmHandler == 'infoDuplicateQuestion') {
             $form->addError(new FormError(
-                    $this->get('translator')->trans('info_duplicate_question', array(), 'ujm_exo')
+                    $this->get('translator')->trans('info_duplicate_question', [], 'ujm_exo')
                     ));
         }
 
         $typeQCM = $services->getTypeQCM();
         $formWithError = $this->render(
-            'UJMExoBundle:InteractionQCM:new.html.twig', array(
+            'UJMExoBundle:InteractionQCM:new.html.twig', [
                 'entity' => $interQCM,
                 'form' => $form->createView(),
                 'error' => true,
                 'exoID' => $exoID,
                 'stepID' => $stepID,
                 'typeQCM' => json_encode($typeQCM),
-            )
+            ]
         );
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
         $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
 
         return $this->render(
-                'UJMExoBundle:Question:new.html.twig', array(
+                'UJMExoBundle:Question:new.html.twig', [
                 'formWithError' => $formWithError,
                 'exoID' => $exoID,
                 'stepID' => $stepID,
                 'linkedCategory' => $catSer->getLinkedCategories(),
                 'locker' => $catSer->getLockCategory(),
                 'interactionType' => $interactionType,
-            )
+            ]
         );
     }
 
@@ -226,9 +226,14 @@ class InteractionQCMController extends Controller
             ), $interQCM
         );
         $formHandler = new InteractionQCMHandler(
-            $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
-            $this->container->get('security.token_storage')->getToken()->getUser(), -1,
+            $editForm,
+            $this->get('request'),
+            $this->getDoctrine()->getManager(),
+            $this->container->get('ujm.exo_exercise'),
+            $this->container->get('ujm.exo_category'),
+            $this->container->get('security.token_storage')->getToken()->getUser(),
+            -1,
+            -1,
             $this->get('translator')
         );
 
@@ -243,11 +248,11 @@ class InteractionQCMController extends Controller
         }
 
         return $this->forward(
-            'UJMExoBundle:Question:edit', array(
+            'UJMExoBundle:Question:edit', [
                 'exoID' => $exoID,
                 'id' => $interQCM->getQuestion()->getId(),
                 'form' => $editForm,
-            )
+            ]
         );
     }
 
@@ -265,7 +270,7 @@ class InteractionQCMController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
         //Deleting of relations, if there the question is shared
-        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $entity->getQuestion()->getId()));
+        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(['question' => $entity->getQuestion()->getId()]);
         foreach ($sharesQuestion as $share) {
             $em->remove($share);
         }
@@ -276,7 +281,7 @@ class InteractionQCMController extends Controller
         $em->remove($entity);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
+        return $this->redirect($this->generateUrl('ujm_question_index', ['pageNow' => $pageNow]));
     }
 
     /**
@@ -287,9 +292,9 @@ class InteractionQCMController extends Controller
      */
     public function responseQcmAction()
     {
-        $vars = array();
+        $vars = [];
         $request = $this->get('request');
-        $postVal = $req = $request->request->all();
+        $postVal = $request->request->all();
 
         if ($postVal['exoID'] != -1) {
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);

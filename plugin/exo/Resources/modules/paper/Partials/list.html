@@ -1,0 +1,147 @@
+<div class="papers-container">
+    <div class="panel-body">
+        <div class="row">
+            <!-- Search -->
+            <div data-ng-class="{'col-md-8 col-md-offset-2': paperListCtrl.filtered.length <= 10, 'col-md-5 col-md-offset-2': paperListCtrl.filtered.length > 10}">
+                <div class="input-group">
+                    <input type="text" class="form-control" data-ng-model="paperListCtrl.query" data-ng-change="paperListCtrl.filterPapers()" placeholder="{{ 'paper_search'|trans:{}:'ujm_sequence' }}">
+                    <div class="input-group-addon">
+                        <span class="fa fa-search"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nb elements per page -->
+            <div class="col-md-3" data-ng-if="paperListCtrl.filtered.length > 10">
+                <div class="input-group">
+                    <select class="form-control" data-ng-model="paperListCtrl.config.itemsPerPage">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="500">500</option>
+                    </select>
+                    <div class="input-group-addon">
+                        {{ 'line_per_page'|trans:{}:'platform' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default" style="margin-top: 20px;">
+                    <div class="panel-heading">
+                        <!-- Button to delete test papers (when the Exercise is not published and has never been) -->
+                        <button type="button" class="pull-right btn btn-xs btn-danger" data-ng-click="paperListCtrl.deletePapers()" data-ng-if="paperListCtrl.papers.length > 0 && !paperListCtrl.exercise.meta.published && !paperListCtrl.exercise.meta.publishedOnce">
+                            <span class="fa fa-trash-o"></span>
+                            {{ 'delete_papers' | trans:{}:'ujm_exo' }}
+                        </button>
+                        <h3 class="panel-title">
+                            {{ 'paper_list'|trans:{}:'ujm_exo' }}
+                            <small>{{ 'paper_count'|transChoice:paperListCtrl.filtered.length:{count: paperListCtrl.filtered.length}:'ujm_exo' }}</small>
+                        </h3>
+                    </div>
+
+                    <!-- Display no item message -->
+                    <div class="panel-body text-center" data-ng-if="0 === paperListCtrl.filtered.length">
+                        <em><span class="fa fa-warning"></span> {{ 'paper_list_no_paper'|trans:{}:'ujm_sequence' }}</em>
+                    </div>
+
+                    <!-- List of Papers -->
+                    <table class="papers-list table table-striped table-hover" data-ng-if="paperListCtrl.filtered.length > 0" at-table at-list="paperListCtrl.filtered" at-paginated at-config="paperListCtrl.config">
+                        <thead>
+                            <tr>
+                                <th at-attribute="user" data-ng-if="paperListCtrl.editEnabled">{{ 'paper_list_table_user'|trans:{}:'ujm_sequence' }}</th>
+                                <th at-attribute="number">{{ 'paper_list_table_paper_number'|trans:{}:'ujm_sequence' }}</th>
+                                <th at-attribute="start">{{ 'paper_list_table_start_date'|trans:{}:'ujm_sequence' }}</th>
+                                <th at-attribute="end">{{ 'paper_list_table_end_date'|trans:{}:'ujm_sequence' }}</th>
+                                <th at-attribute="interrupted">{{ 'paper_finished'|trans:{}:'ujm_exo' }}</th>
+                                <th at-attribute="score">{{ 'paper_list_table_score'|trans:{}:'ujm_sequence' }}</th>
+                                <th at-attribute="id">{{ 'actions' | trans:{}:'ujm_exo' }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <!-- User -->
+                                <td data-ng-if="paperListCtrl.editEnabled" at-implicit at-attribute="user" at-sortable></td>
+
+                                <!-- Paper number -->
+                                <td at-implicit at-attribute="number" at-sortable></td>
+
+                                <!-- Date start -->
+                                <td at-attribute="start" at-sortable at-initial-sorting="asc">
+                                    {{ item.start|date_string:'dd/MM/yyyy HH:mm:ss' }}
+                                </td>
+
+                                <!-- Date end -->
+                                <td at-attribute="end" at-sortable>
+                                    <!-- Paper ended -->
+                                    <span data-ng-if="item.end">
+                                        {{ item.end|date_string:'dd/MM/yyyy HH:mm:ss' }}
+                                    </span>
+
+                                    <!-- Paper interrupted -->
+                                    <span data-ng-if="!item.end">-</span>
+                                </td>
+
+                                <!-- Finished ? -->
+                                <td at-attribute="interrupted" at-sortable class="text-center">
+                                    <span data-ng-if="item.interrupted">
+                                        {{ 'no' | trans:{}:'ujm_exo' }}
+                                    </span>
+
+                                    <span data-ng-if="!item.interrupted">
+                                        {{ 'yes' | trans:{}:'ujm_exo' }}
+                                    </span>
+                                </td>
+
+                                <!-- Score -->
+                                <td at-attribute="score" at-sortable class="text-right">
+                                    <div data-ng-if="paperListCtrl.isScoreAvailable(item)">
+                                        <!-- Manual correction alert -->
+                                        <span class="manual-correction-flag text-danger" data-ng-if="paperListCtrl.needManualCorrection(item)" data-toggle="tooltip" title="{{ 'paper_need_manual_correction'|trans:{}:'ujm_exo' }}">
+                                            <span class="fa fa-warning"></span>
+                                        </span>
+
+                                                <!-- Score -->
+                                        <span class="label label-primary">
+                                            {{ paperListCtrl.getPaperScore(item) + '/20' }}
+                                        </span>
+                                    </div>
+
+                                    <em data-ng-if="!paperListCtrl.isScoreAvailable(item)">
+                                        {{ 'paper_list_table_action_not_available'|trans:{}:'ujm_sequence' }}
+                                    </em>
+                                </td>
+
+                                <!-- Actions -->
+                                <td at-attribute="id" class="text-right">
+                                    <a class="btn btn-sm btn-default" data-ng-if="paperListCtrl.isCorrectionAvailable(item)" href="#/papers/{{item.id}}">
+                                        <span class="fa fa-eye"></span>
+                                        <span class="sr-only">{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}</span>
+                                    </a>
+
+                                    <em data-ng-if="!paperListCtrl.isCorrectionAvailable(item)">
+                                        {{ 'paper_list_table_action_not_available'|trans:{}:'ujm_sequence' }}
+                                    </em>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="panel-footer text-center" data-ng-if="paperListCtrl.filtered.length > paperListCtrl.config.itemsPerPage">
+                        <at-pagination at-config="paperListCtrl.config" at-list="paperListCtrl.filtered"></at-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Display a big button for those who can edit Exercise OR a big button to play the Exercise if no alert -->
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <button-start data-overview-link="true"></button-start>
+            </div>
+        </div>
+    </div>
+</div>

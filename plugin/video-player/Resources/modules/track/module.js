@@ -3,10 +3,10 @@ import 'angular/angular.min'
 import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
 
-import '#/main/core/Resources/modules/form/module'
-import '#/main/core/Resources/modules/services/module'
+import '#/main/core/form/module'
+import '#/main/core/services/module'
 
-import Interceptors from '#/main/core/Resources/modules/interceptorsDefault'
+import Interceptors from '#/main/core/interceptorsDefault'
 import TracksButtonDirective from './Directive/TracksButtonDirective'
 import TracksModalController from './Controller/TracksModalController'
 import TrackEditModalController from './Controller/TrackEditModalController'

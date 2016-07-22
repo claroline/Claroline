@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "list": "modules/results/results.js"
+      "list": "results/results.js"
     }
   }
 }

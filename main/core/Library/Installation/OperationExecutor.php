@@ -154,14 +154,9 @@ class OperationExecutor
                     }
                 }
             } else {
-                try {
-                    $foundBundle = $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundle);
-                } catch (\Doctrine\DBAL\Exception\TableNotFoundException $e) {
-                    $foundBundle = false;
-                }
                 $previousPackage = $previous->findPackage($currentPackage->getName(), '*');
                 //old <= v6 package detection
-                if (!$previousPackage && !$foundBundle) {
+                if (!$previousPackage) {
                     $this->log("Installation of {$currentPackage->getName()} required");
                     $operation = $this->buildOperation(Operation::INSTALL, $currentPackage);
                     $operation->setToVersion($currentPackage->getVersion());

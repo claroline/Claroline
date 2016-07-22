@@ -20,7 +20,8 @@ export default {
           { value: 8, label: 'email'}
         ],
         default: 1,
-        label: 'type'
+        label: 'type',
+        choice_value: 'value'
       }
     ]
   ]
