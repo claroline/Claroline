@@ -2,9 +2,9 @@
 
 namespace Innova\CollecticielBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Innova\CollecticielBundle\Entity\GradingCriteria;
 use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\GradingCriteria;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("innova.manager.gradingcriteria_manager")

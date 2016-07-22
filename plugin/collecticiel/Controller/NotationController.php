@@ -6,15 +6,15 @@
 
 namespace Innova\CollecticielBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Innova\CollecticielBundle\Entity\Dropzone;
-use Innova\CollecticielBundle\Entity\Document;
-use Innova\CollecticielBundle\Entity\Notation;
 use Innova\CollecticielBundle\Entity\ChoiceCriteria;
 use Innova\CollecticielBundle\Entity\ChoiceNotation;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Innova\CollecticielBundle\Entity\Document;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Notation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class NotationController extends DropzoneBaseController
 {
@@ -113,7 +113,7 @@ class NotationController extends DropzoneBaseController
         if (!empty($arrayCriteriaId)) {
             $cpt = 0;
             foreach ($arrayCriteriaId as $criteriaId) {
-                if ($evaluationType == 'ratingScale') {
+                if ($evaluationType === 'ratingScale') {
                     $gradingCriteria = $em->getRepository('InnovaCollecticielBundle:GradingCriteria')->find($criteriaId);
 
                     // Ajout pour avoir si la notation a été transmise ou pas.
@@ -143,23 +143,23 @@ class NotationController extends DropzoneBaseController
                     $em->persist($choiceCriteria);
                 }
 
-                if ($evaluationType == 'notation') {
+                if ($evaluationType === 'notation') {
                     $gradingNotation = $em->getRepository('InnovaCollecticielBundle:GradingNotation')->find($criteriaId);
 
                     // Ajout pour avoir si la notation a été transmise ou pas.
                     $choiceNotationArray = $em->getRepository('InnovaCollecticielBundle:choiceNotation')
                                 ->findBy(
-                                        array(
+                                        [
                                             'notation' => $notationId,
                                             'gradingNotation' => $criteriaId,
-                                             )
-                                        );
+                                        ]
+                                    );
 
                     // Nombre de notation pour le document et pour le dropzone
                     $countExistNotation = count($choiceNotationArray);
 
                     // Notation : création
-                    if ($countExistNotation == 0) {
+                    if ($countExistNotation === 0) {
                         $choiceNotation = new ChoiceNotation();
                         $choiceNotation->setGradingNotation($gradingNotation);
                         $choiceNotation->setNotation($notation[0]);

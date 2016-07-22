@@ -2,9 +2,9 @@
 
 namespace Innova\CollecticielBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Innova\CollecticielBundle\Entity\GradingNotation;
 use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\GradingNotation;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("innova.manager.gradingnotation_manager")
@@ -40,12 +40,9 @@ class GradingNotationManager
         // handle old scales deletion
         $this->deleteOldNotations($tab, $dropzone);
 
-        var_dump($tab);
-
         // handle update and add
         $tabKeys = array_keys($tab);
         foreach ($tabKeys as $key) {
-            var_dump($key);
             // new
             if (empty($tab[$key]['id'])) {
                 if (!empty($tab[$key]['notationName'])) {

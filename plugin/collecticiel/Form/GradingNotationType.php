@@ -12,12 +12,12 @@ class GradingNotationType extends AbstractType
     {
         $builder
             ->add('notationName', 'text',
-                array(
+                [
                     'required' => true,
                     'label' => false,
                     'attr' => array('class' => 'form-control-notation'),
-                   )
-                )
+                ]
+            )
             ->add('id', 'hidden')
             ;
     }
@@ -30,12 +30,12 @@ class GradingNotationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-                array(
+                [
                     'language' => 'fr',
                     'data_class' => 'Innova\CollecticielBundle\Entity\GradingNotation',
                     'cascade_validation' => true,
                     'translation_domain' => 'innova_collecticiel',
-                    )
+                ]
         );
     }
 }

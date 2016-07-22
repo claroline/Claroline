@@ -109,8 +109,6 @@ class DropController extends DropzoneBaseController
         $notationAppreciationDocuments = $dropManager->getAppreciationForDocuments($drop);
 
         $em = $this->getDoctrine()->getManager();
-        $notationRepo = $em->getRepository('InnovaCollecticielBundle:GradingNotation');
-        $notationsArray = $notationRepo->getNotationArrayForDropzone($dropzone);
         $criteriaRepo = $em->getRepository('InnovaCollecticielBundle:GradingCriteria');
         $criteriasArray = $criteriaRepo->getCriteriaArrayForDropzone($dropzone);
 
@@ -402,7 +400,6 @@ class DropController extends DropzoneBaseController
         $translator = $this->get('translator');
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropManager = $this->get('innova.manager.drop_manager');
-        $roleManager = $this->get('claroline.manager.role_manager');
         $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
 
         $dropzoneVoter->isAllowToOpen($dropzone);
@@ -1000,7 +997,7 @@ class DropController extends DropzoneBaseController
         $userNbDocDropped = $dropManager->getDroppedDocsByUserCount($dropzone);
         $userNbAdressedRequests = $dropManager->getRequestByUserCount($dropzone);
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
-        $usersByWorkspaces = $userManager->getUsersByWorkspaces(array($workspace->getId()), $page, 20, false);
+        $usersByWorkspaces = $userManager->getUsersByWorkspaces([$workspace->getId()], $page, 20, false);
 
         $dataToView = $this->addDropsStats($dropzone, [
             'workspace' => $workspace,

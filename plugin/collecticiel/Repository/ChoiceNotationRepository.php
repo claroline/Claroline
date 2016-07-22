@@ -7,9 +7,9 @@
 namespace Innova\CollecticielBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Innova\CollecticielBundle\Entity\ChoiceNotation;
 use Innova\CollecticielBundle\Entity\GradingNotation;
 use Innova\CollecticielBundle\Entity\Notation;
-use Innova\CollecticielBundle\Entity\ChoiceNotation;
 
 class ChoiceNotationRepository extends EntityRepository
 {

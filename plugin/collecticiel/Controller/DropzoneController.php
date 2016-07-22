@@ -235,7 +235,6 @@ class DropzoneController extends DropzoneBaseController
         $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $translator = $this->get('translator');
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         $dropzoneVoter->isAllowToOpen($dropzone);
         $dropzoneVoter->isAllowToEdit($dropzone);
