@@ -15,7 +15,7 @@ class GradingNotationType extends AbstractType
                 [
                     'required' => true,
                     'label' => false,
-                    'attr' => array('class' => 'form-control-notation'),
+                    'attr' => ['class' => 'form-control-notation'],
                 ]
             )
             ->add('id', 'hidden')
