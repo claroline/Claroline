@@ -7,6 +7,7 @@
 namespace Innova\CollecticielBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\GradingNotationRepository")
@@ -97,7 +98,7 @@ class GradingNotation
      *
      * @return GradingCriteria
      */
-    public function setDropzone(\Innova\CollecticielBundle\Entity\Dropzone $dropzone)
+    public function setDropzone(Dropzone $dropzone)
     {
         $this->dropzone = $dropzone;
 
@@ -118,7 +119,7 @@ class GradingNotation
      */
     public function __construct()
     {
-        $this->choiceCriterias = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->choiceCriterias = new ArrayCollection();
     }
 
     /**
@@ -128,7 +129,7 @@ class GradingNotation
      *
      * @return GradingCriteria
      */
-    public function addChoiceCriteria(\Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria)
+    public function addChoiceCriteria(ChoiceCriteria $choiceCriteria)
     {
         $this->choiceCriterias[] = $choiceCriteria;
 
@@ -140,7 +141,7 @@ class GradingNotation
      *
      * @param \Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria
      */
-    public function removeChoiceCriteria(\Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria)
+    public function removeChoiceCriteria(ChoiceCriteria $choiceCriteria)
     {
         $this->choiceCriterias->removeElement($choiceCriteria);
     }
@@ -186,7 +187,7 @@ class GradingNotation
      *
      * @return GradingNotation
      */
-    public function addChoiceNotation(\Innova\CollecticielBundle\Entity\ChoiceNotation $choiceNotation)
+    public function addChoiceNotation(ChoiceNotation $choiceNotation)
     {
         $this->choiceNotations[] = $choiceNotation;
 
@@ -198,7 +199,7 @@ class GradingNotation
      *
      * @param \Innova\CollecticielBundle\Entity\ChoiceNotation $choiceNotation
      */
-    public function removeChoiceNotation(\Innova\CollecticielBundle\Entity\ChoiceNotation $choiceNotation)
+    public function removeChoiceNotation(ChoiceNotation $choiceNotation)
     {
         $this->choiceNotations->removeElement($choiceNotation);
     }

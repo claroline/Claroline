@@ -1050,7 +1050,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function addDrop(\Innova\CollecticielBundle\Entity\Drop $drops)
+    public function addDrop(Drop $drops)
     {
         $this->drops[] = $drops;
 
@@ -1062,7 +1062,7 @@ class Dropzone extends AbstractResource
      *
      * @param \Innova\CollecticielBundle\Entity\Drop $drops
      */
-    public function removeDrop(\Innova\CollecticielBundle\Entity\Drop $drops)
+    public function removeDrop(Drop $drops)
     {
         $this->drops->removeElement($drops);
     }
@@ -1074,7 +1074,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function addPeerReviewCriterium(\Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria)
+    public function addPeerReviewCriterium(Criterion $peerReviewCriteria)
     {
         $this->peerReviewCriteria[] = $peerReviewCriteria;
 
@@ -1086,7 +1086,7 @@ class Dropzone extends AbstractResource
      *
      * @param \Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria
      */
-    public function removePeerReviewCriterium(\Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria)
+    public function removePeerReviewCriterium(Criterion $peerReviewCriteria)
     {
         $this->peerReviewCriteria->removeElement($peerReviewCriteria);
     }
@@ -1098,7 +1098,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
+    public function setResourceNode(ResourceNode $resourceNode = null)
     {
         $this->resourceNode = $resourceNode;
 
@@ -1266,7 +1266,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function addGradingScale(\Innova\CollecticielBundle\Entity\GradingScale $gradingScale)
+    public function addGradingScale(GradingScale $gradingScale)
     {
         $this->gradingScales->add($gradingScale);
 
@@ -1278,7 +1278,7 @@ class Dropzone extends AbstractResource
      *
      * @param \Innova\CollecticielBundle\Entity\GradingScale $gradingScale
      */
-    public function removeGradingScale(\Innova\CollecticielBundle\Entity\GradingScale $gradingScale)
+    public function removeGradingScale(GradingScale $gradingScale)
     {
         $this->gradingScales->removeElement($gradingScale);
     }
@@ -1308,7 +1308,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function addGradingCriteria(\Innova\CollecticielBundle\Entity\GradingCriteria $gradingCriteria)
+    public function addGradingCriteria(GradingCriteria $gradingCriteria)
     {
         $this->gradingCriterias[] = $gradingCriteria;
 
@@ -1320,7 +1320,7 @@ class Dropzone extends AbstractResource
      *
      * @param \Innova\CollecticielBundle\Entity\GradingCriteria $gradingCriteria
      */
-    public function removeGradingCriteria(\Innova\CollecticielBundle\Entity\GradingCriteria $gradingCriteria)
+    public function removeGradingCriteria(GradingCriteria $gradingCriteria)
     {
         $this->gradingCriterias->removeElement($gradingCriteria);
     }
@@ -1342,7 +1342,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function addNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    public function addNotation(Notation $notation)
     {
         $this->notations[] = $notation;
 
@@ -1354,7 +1354,7 @@ class Dropzone extends AbstractResource
      *
      * @param \Innova\CollecticielBundle\Entity\Notation $notation
      */
-    public function removeNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    public function removeNotation(Notation $notation)
     {
         $this->notations->removeElement($notation);
     }
@@ -1376,7 +1376,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function addGradingNotation(\Innova\CollecticielBundle\Entity\GradingNotation $gradingNotation)
+    public function addGradingNotation(GradingNotation $gradingNotation)
     {
         $this->gradingNotations[] = $gradingNotation;
 
@@ -1388,7 +1388,7 @@ class Dropzone extends AbstractResource
      *
      * @param \Innova\CollecticielBundle\Entity\GradingNotation $gradingNotation
      */
-    public function removeGradingNotation(\Innova\CollecticielBundle\Entity\GradingNotation $gradingNotation)
+    public function removeGradingNotation(GradingNotation $gradingNotation)
     {
         $this->gradingNotations->removeElement($gradingNotation);
     }

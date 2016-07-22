@@ -115,7 +115,7 @@ class ChoiceNotation
      *
      * @return ChoiceCriteria
      */
-    public function setNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    public function setNotation(Notation $notation)
     {
         $this->notation = $notation;
 
@@ -139,7 +139,7 @@ class ChoiceNotation
      *
      * @return ChoiceNotation
      */
-    public function setGradingNotation(\Innova\CollecticielBundle\Entity\GradingNotation $gradingNotation)
+    public function setGradingNotation(GradingNotation $gradingNotation)
     {
         $this->gradingNotation = $gradingNotation;
 
