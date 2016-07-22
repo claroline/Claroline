@@ -15,11 +15,11 @@
 
 namespace Innova\CollecticielBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -663,12 +663,12 @@ class Dropzone extends AbstractResource
      */
     public function setManualState($manualState)
     {
-        $ms_tab_values = array(
+        $ms_tab_values = [
             self::MANUAL_STATE_NOT_STARTED,
             self::MANUAL_STATE_PEER_REVIEW,
             self::MANUAL_STATE_ALLOW_DROP,
             self::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW,
-            self::MANUAL_STATE_FINISHED, );
+            self::MANUAL_STATE_FINISHED, ];
         if (array_search($manualState, $ms_tab_values) !== false) {
             $this->manualState = $manualState;
         }
@@ -1003,7 +1003,7 @@ class Dropzone extends AbstractResource
      */
     public function setAutoCloseState($autoCloseState)
     {
-        $authorizedValues = array(self::AUTO_CLOSED_STATE_CLOSED, self::AUTO_CLOSED_STATE_WAITING);
+        $authorizedValues = [self::AUTO_CLOSED_STATE_CLOSED, self::AUTO_CLOSED_STATE_WAITING];
         if (in_array($autoCloseState, $authorizedValues)) {
             $this->autoCloseState = $autoCloseState;
         }
