@@ -87,11 +87,11 @@ class ChoiceNotation
     /**
      * Set gradingCriteria.
      *
-     * @param \Innova\CollecticielBundle\Entity\GradingCriteria $gradingCriteria
+     * @param GradingCriteria $gradingCriteria
      *
      * @return ChoiceCriteria
      */
-    public function setGradingCriteria(\Innova\CollecticielBundle\Entity\GradingCriteria $gradingCriteria)
+    public function setGradingCriteria(GradingCriteria $gradingCriteria)
     {
         $this->gradingCriteria = $gradingCriteria;
 
