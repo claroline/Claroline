@@ -553,7 +553,7 @@ class DropController extends DropzoneBaseController
             'scalesArray' => $scalesArray,
             'criteriasArray' => $criteriasArray,
             'notationsArray' => $notationsArray,
-        ));
+        ]);
 
         return $dataToView;
     }

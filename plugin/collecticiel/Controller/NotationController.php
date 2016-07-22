@@ -15,7 +15,6 @@ use Innova\CollecticielBundle\Entity\ChoiceCriteria;
 use Innova\CollecticielBundle\Entity\ChoiceNotation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Response;
 
 class NotationController extends DropzoneBaseController
 {
@@ -117,29 +116,31 @@ class NotationController extends DropzoneBaseController
                 if ($evaluationType == 'ratingScale') {
                     $gradingCriteria = $em->getRepository('InnovaCollecticielBundle:GradingCriteria')->find($criteriaId);
 
-                // Ajout pour avoir si la notation a été transmise ou pas.
-                $choiceCriteriaArray = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
-                            ->findBy(
-                                    [
-                                        'notation' => $notationId,
-                                        'gradingCriteria' => $criteriaId,
-                                    ]
-                                );
+                    // Ajout pour avoir si la notation a été transmise ou pas.
+                    $choiceCriteriaArray = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
+                                ->findBy(
+                                        [
+                                            'notation' => $notationId,
+                                            'gradingCriteria' => $criteriaId,
+                                        ]
+                                    );
 
-                // Nombre de notation pour le document et pour le dropzone
-                $countExistCriteria = count($choiceCriteriaArray);
+                    // Nombre de notation pour le document et pour le dropzone
+                    $countExistCriteria = count($choiceCriteriaArray);
 
-                // Echelle : création
-                if ($countExistCriteria === 0) {
-                    $choiceCriteria = new ChoiceCriteria();
-                    $choiceCriteria->setGradingCriteria($gradingCriteria);
-                    $choiceCriteria->setNotation($notation[0]);
-                    $choiceCriteria->setChoiceText($arrayCriteriaValue[$cpt]);
-                } else {
-                    // Echelle : mise à jour
-                    $choiceCriteria = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
-                      ->find($choiceCriteriaArray[0]->getId());
-                    $choiceCriteria->setChoiceText($arrayCriteriaValue[$cpt]);
+                    // Echelle : création
+                    if ($countExistCriteria === 0) {
+                        $choiceCriteria = new ChoiceCriteria();
+                        $choiceCriteria->setGradingCriteria($gradingCriteria);
+                        $choiceCriteria->setNotation($notation[0]);
+                        $choiceCriteria->setChoiceText($arrayCriteriaValue[$cpt]);
+                    } else {
+                        // Echelle : mise à jour
+                        $choiceCriteria = $em->getRepository('InnovaCollecticielBundle:choiceCriteria')
+                          ->find($choiceCriteriaArray[0]->getId());
+                        $choiceCriteria->setChoiceText($arrayCriteriaValue[$cpt]);
+                    }
+                    $em->persist($choiceCriteria);
                 }
 
                 if ($evaluationType == 'notation') {
@@ -173,9 +174,8 @@ class NotationController extends DropzoneBaseController
                 }
                 ++$cpt;
             }
+            $em->flush();
         }
-
-        $em->flush();
 
         // Redirection
         $url = $this->generateUrl(
@@ -211,8 +211,8 @@ class NotationController extends DropzoneBaseController
         $document
             = $em->getRepository('InnovaCollecticielBundle:Document')
                 ->find($document->getId());
-        
-		$dropzone
+
+        $dropzone
             = $em->getRepository('InnovaCollecticielBundle:DropZone')
                 ->find($dropzone->getId());
 
