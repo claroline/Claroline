@@ -6,8 +6,8 @@
 
 namespace Innova\CollecticielBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\GradingNotationRepository")

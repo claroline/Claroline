@@ -459,7 +459,7 @@ class Dropzone extends AbstractResource
      */
     public function setForceCommentInCorrection($forceCommentInCorrection)
     {
-        if ($this->getAllowCommentInCorrection() == true) {
+        if ($this->getAllowCommentInCorrection() === true) {
             $this->forceCommentInCorrection = $forceCommentInCorrection;
         } else {
             $this->forceCommentInCorrection = false;
@@ -868,18 +868,18 @@ class Dropzone extends AbstractResource
     public function isNotStarted()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == 'notStarted';
+            return $this->manualState === 'notStarted';
         } else {
             $now = new \DateTime();
 
-            return $now->getTimestamp() < $this->getStartAllowDrop()->getTimestamp() && ($this->getStartReview() == null || $now->getTimestamp() < $this->getStartReview()->getTimestamp());
+            return $now->getTimestamp() < $this->getStartAllowDrop()->getTimestamp() && ($this->getStartReview() === null || $now->getTimestamp() < $this->getStartReview()->getTimestamp());
         }
     }
 
     public function isAllowDrop()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == 'allowDrop' || $this->manualState == 'allowDropAndPeerReview';
+            return $this->manualState === 'allowDrop' || $this->manualState === 'allowDropAndPeerReview';
         } else {
             $now = new \DateTime();
 
@@ -891,7 +891,7 @@ class Dropzone extends AbstractResource
     {
         if ($this->peerReview) {
             if ($this->manualPlanning) {
-                return $this->manualState == 'peerReview' || $this->manualState == 'allowDropAndPeerReview';
+                return $this->manualState === 'peerReview' || $this->manualState === 'allowDropAndPeerReview';
             } else {
                 $now = new \DateTime();
 
@@ -905,7 +905,7 @@ class Dropzone extends AbstractResource
     public function isFinished()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == 'finished';
+            return $this->manualState === 'finished';
         } else {
             $now = new \DateTime();
 
@@ -921,7 +921,7 @@ class Dropzone extends AbstractResource
 
     public function getTimeRemaining($reference)
     {
-        if ($this->manualPlanning || $reference == null) {
+        if ($this->manualPlanning || $reference === null) {
             return -1;
         }
         $now = new \DateTime();
