@@ -13,6 +13,7 @@ after_the_last_attempt: Après le dernier essai
 alert_ending: Etes-vous sur de vouloir terminer ? (Vous ne pourrez plus modifier vos réponses)
 all: Tout
 allow_to_edit: Autoriser l'édition
+allow_test_exit: Permettre d'interrompre l'exercice
 all_question: Toutes les questions
 all_step: Toutes les étapes
 already: Cette question est déjà partagée avec cet utilisateur
@@ -107,7 +108,7 @@ end_date: Date de fin
 entry: Entrer
 exercise: Exercice
 exercise_alert_break: Interuption non autorisée. Votre copie sera considérée comme terminée !
-exercise_definition: Définition de l'exercice
+exercise_definition: Vue d'ensemble
 exercise_edit: Modification de l'exercice
 exercise_finished_attempts: "[0, 1] %count% réalisée à ce stade|]1,Inf[ %count% réalisées à ce stade"
 exercice_linked_question: Questions liées à l'exercice
@@ -203,6 +204,7 @@ less_information: Moins d'informations
 list: Liste
 list_question: Liste des questions
 lock_attempt: Verrouiller le test
+lock_exercise: Verrouiller l'exercice
 long: Longue
 
 # M
@@ -215,6 +217,7 @@ matching: Association
 matching_creation: Création d'une question associative
 matching_edition: Edition d'une question associative
 matching_value: Type de question associative
+maximum_attempts: Nombre de tentatives maximum
 maximum_tries: Nombre d'essai maximum
 meaning_measure_difficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
 metadata_visible:      Afficher les informations de l'exercice
@@ -320,8 +323,10 @@ question_graphic_set_pointers: Cliquez sur l'image pour placer un pointeur
 question_graphic_nb_pointers: "{0} Il ne reste plus aucun pointeur à placer sur l'image.|{1} Il reste %count% pointeur à placer sur l'image.|]1,Inf[ Il reste %count% pointeurs à placer sur l'image."
 
 # R
+random_picking: Tirage aléatoire
 random_questions: Ordre des questions aléatoire
 random_steps: Ordre des étapes aléatoire
+random_steps_order: Ordre aléatoire des étapes
 raz: => Pour remettre à leurs position initiale tous les pointeurs, appuyez sur "c".
 square: Carré
 remove_advanced_edition: Edition simple
@@ -339,6 +344,7 @@ save: Enregistrer
 save_order: Enregistrer le nouvel ordre
 score: Score
 score_answer: Points pour cette réponse
+score_displaying: Affichage du score
 score_list_question: Note et liste des questions
 score_error: Attention, le score doit être un chiffre !
 score_max : Score maximum possible
@@ -362,6 +368,7 @@ shared_with: Partager avec
 short: Courte
 show: Afficher
 show_instructions: Montrer les consignes
+signing: Passation
 size: Taille
 start_again: Recommencer
 start_date: Date de début

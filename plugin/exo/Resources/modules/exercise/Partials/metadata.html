@@ -59,7 +59,7 @@
                 <div class="panel-heading">
                     <h4 class="panel-title" data-ng-click="collapsePanelQuestions = !collapsePanelQuestions">
                         <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsePanelQuestions, 'fa-caret-down': !collapsePanelQuestions }"></span>
-                        {{ 'questions'|trans:{}:'ujm_exo' }}
+                        {{ 'random_picking'|trans:{}:'ujm_exo' }}
                     </h4>
                 </div>
 
@@ -83,7 +83,7 @@
 
                     <!-- Random order of Steps -->
                     <div class="form-group">
-                        <label for="exercise-random" class="control-label col-md-4">{{ 'random_steps' | trans:{}:'ujm_exo' }}</label>
+                        <label for="exercise-random" class="control-label col-md-4">{{ 'random_steps_order' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
                                 <input type="checkbox" id="exercise-random" data-ng-model="exerciseMetadataCtrl.meta.random" />
@@ -108,7 +108,7 @@
                 <div class="panel-heading">
                     <h4 class="panel-title" data-ng-click="collapsePanelAssessment = !collapsePanelAssessment">
                         <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsePanelAssessment, 'fa-caret-down': !collapsePanelAssessment }"></span>
-                        {{ 'at_the_end_of_assessment'|trans:{}:'ujm_exo' }}
+                        {{ 'result'|trans:{}:'ujm_exo' }}
                     </h4>
                 </div>
 
@@ -154,7 +154,7 @@
 
                     <!-- When score will be available ? -->
                     <div class="form-group">
-                        <label for="exercise-mark-mode" class="control-label col-md-4">{{ 'availability_of_score'|trans:{}:'ujm_exo' }}</label>
+                        <label for="exercise-mark-mode" class="control-label col-md-4">{{ 'score_displaying'|trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <select id="exercise-mark-mode"
                                     class="form-control"
@@ -171,7 +171,7 @@
                 <div class="panel-heading">
                     <h4 class="panel-title" data-ng-click="collapsePanelPaper = !collapsePanelPaper">
                         <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsePanelPaper, 'fa-caret-down': !collapsePanelPaper }"></span>
-                        {{ 'paper'|trans:{}:'ujm_exo' }}
+                        {{ 'signing'|trans:{}:'ujm_exo' }}
                     </h4>
                 </div>
 
@@ -201,7 +201,7 @@
 
                     <!-- Display interrupt button ? -->
                     <div class="form-group">
-                        <label for="exercise-interrupt-btn" class="control-label col-md-4">{{ 'test_exit' | trans:{}:'ujm_exo' }}</label>
+                        <label for="exercise-interrupt-btn" class="control-label col-md-4">{{ 'allow_test_exit' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
                                 <input type="checkbox" id="exercise-interrupt-btn" data-ng-model="exerciseMetadataCtrl.meta.dispButtonInterrupt" />
@@ -211,7 +211,7 @@
 
                     <!-- Maximum attempts -->
                     <div class="form-group">
-                        <label for="exercise-max-attempts" class="control-label col-md-4">{{ 'maximum_tries' | trans:{}:'ujm_exo' }}</label>
+                        <label for="exercise-max-attempts" class="control-label col-md-4">{{ 'maximum_attempts' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-4">
                             <div>
                                 <input type="text" class="form-control" id="exercise-max-attempts" data-ng-model="exerciseMetadataCtrl.meta.maxAttempts" />
@@ -226,7 +226,7 @@
 
                     <!-- Lock attempt -->
                     <div class="form-group" data-ng-if="0 < exerciseMetadataCtrl.meta.maxAttempts">
-                        <label for="exercise-lock-attempt" class="control-label col-md-4">{{ 'lock_attempt' | trans:{}:'ujm_exo' }}</label>
+                        <label for="exercise-lock-attempt" class="control-label col-md-4">{{ 'lock_exercise' | trans:{}:'ujm_exo' }}</label>
                         <div class="col-md-8">
                             <div class="checkbox">
                                 <input type="checkbox" id="exercise-lock-attempt" data-ng-model="exerciseMetadataCtrl.meta.lockAttempt" />
