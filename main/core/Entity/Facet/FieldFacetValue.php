@@ -76,7 +76,7 @@ class FieldFacetValue
      */
     protected $value;
 
-    public function setDateValue(\DateTime $dateValue)
+    public function setDateValue(\DateTime $dateValue = null)
     {
         $this->dateValue = $dateValue;
     }
@@ -127,7 +127,7 @@ class FieldFacetValue
         return $this->stringValue;
     }
 
-    public function setArrayValue(array $arrayValue)
+    public function setArrayValue(array $arrayValue = null)
     {
         $this->arrayValue = $arrayValue;
     }
