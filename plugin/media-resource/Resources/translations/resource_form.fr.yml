@@ -1,0 +1,20 @@
+
+# o
+options_panel_title: Options pour la ressource
+options_form_view_mode: Mode de lecture
+options_form_enable_text_transcription: Afficher la transcription textuelle
+options_form_tts_language: Langue pour le text to speech
+options_form_tts_choices_en_US: Anglais (US)
+options_form_tts_choices_en_GB: Anglais (GB)
+options_form_tts_choices_de_DE: Allemand
+options_form_tts_choices_es_ES: Espagnol
+options_form_tts_choices_fr_FR: Français
+options_form_tts_choices_it_IT: Italien
+options_form_view_mode_choices_live: Continu libre
+options_form_view_mode_choices_pause: Continu avec pause
+options_form_view_mode_choices_free: Libre
+options_form_view_mode_choices_active: Continu actif
+options_form_view_mode_choices_scripted_active: Scénarisé actif
+
+# s
+show_hide_options_panel: Montrer / Cacher le panel des options

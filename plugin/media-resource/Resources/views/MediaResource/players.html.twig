@@ -1,0 +1,12 @@
+{% extends "InnovaMediaResourceBundle::layout.html.twig" %}
+
+{% block media_resource_content %}
+    <div class="media-resource-players-container" data-ng-app="PlayersApp" data-ng-cloak="">
+        <mr-players-wrapper class="players-wrapper" data-resource="{{_resource | json_encode}}"></mr-players-wrapper>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-media-resource-players.js') }}"></script>
+{% endblock %}

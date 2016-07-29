@@ -1,0 +1,159 @@
+<div class="modal-header">
+    <button type="button" class="close" data-ng-click="modalCtrl.close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">{{'region_help' | trans:{}:'media_resource'}}</h4>
+</div>
+<div class="modal-body">
+    <!-- full help modal -->
+    <div data-ng-if="!modalCtrl.data.minimal" id="help-tab-panel" role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#help-region-choice" aria-controls="help-region-choice" role="tab" data-toggle="tab">{{'help_modal_choice_tab_label' | trans:{}:'media_resource'}}</a>
+            </li>
+            <li role="presentation">
+                <a href="#region-help-available" aria-controls="region-help-available" role="tab" data-toggle="tab">{{'help_modal_help_tab_label' | trans:{}:'media_resource'}}</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active margin-top-lg" id="help-region-choice">
+                <div class="row">
+                    <div class="col-md-12 text-center" data-ng-bind-html="'help_modal_intro' | trans:{}:'media_resource' | trust_html"></div>
+                </div>
+                <hr>
+                <div class="row full-height-row">
+                    <div class="col-xs-10 full-height-col">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-addon">
+                                        <input type="radio" data-ng-model="modalCtrl.selected" data-ng-value="modalCtrl.data.current" name="segment">
+                                    </span>
+                                    <input type="text" class="form-control" disabled placeholder="{{'current_segment'| trans:{}:'media_resource'}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-ng-if="modalCtrl.data.previous">
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-addon">
+                                            <input type="radio" data-ng-model="modalCtrl.selected" data-ng-value="modalCtrl.data.previous" name="segment">
+                                        </span>
+                                        <input type="text" class="form-control" disabled placeholder="{{'previous_segment'| trans:{}:'media_resource'}}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 full-height-col">
+                        <button class="btn btn-default" data-ng-click="modalCtrl.play(modalCtrl.playModes.NORMAL)" title="{{'region_help_segment_playback' | trans:{}:'media_resource'}}">
+                            <i class="fa fa-play"></i>
+                            /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane margin-top-lg" id="region-help-available">
+                <div data-ng-if="modalCtrl.hasHelp()">
+                    <div data-ng-if="modalCtrl.hasPlayHelps()">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="btn-group">
+                                    <!-- if help.loop -->
+                                    <button data-ng-if="modalCtrl.selected.helps.loop" data-ng-click="modalCtrl.play($event, modalCtrl.playModes.LOOP)" class="btn btn-default" title="{{'region_help_segment_playback_loop' | trans:{}:'media_resource'}}">
+                                        <i class="fa fa-retweet"></i>
+                                    </button>
+                                    <!-- if help.backward -->
+                                    <button data-ng-if="modalCtrl.selected.helps.backward" data-ng-click="modalCtrl.playBackward()" class="btn btn-default" title="{{'region_help_segment_playback_backward' | trans:{}:'media_resource'}}">
+                                        <i class="fa fa-exchange"></i>
+                                    </button>
+                                    <!-- if help.rate -->
+                                    <button data-ng-if="modalCtrl.selected.helps.rate" data-ng-click="modalCtrl.play($event, modalCtrl.playModes.SLOW)" class="btn btn-default" title="{{'region_help_segment_playback_rate' | trans:{}:'media_resource'}}">
+                                        x0.8
+                                    </button>
+                                    <!-- if (help.connex && help.connex.start && help.connex.end) -->
+                                    <button data-ng-if="modalCtrl.selected.helps.helpRegionUuid !== ''" data-ng-click="modalCtrl.play($event, modalCtrl.playModes.RELATED)" class="btn btn-default" title="{{'region_help_related_segment_playback' | trans:{}:'media_resource'}}">
+                                        <i class="fa fa-play"></i>
+                                        /
+                                        <i class="fa fa-pause"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- if helptexts -->
+                    <div data-ng-if="modalCtrl.hasHelpTexts()">
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{'region_config_help_texts' | trans:{}:'media_resource'}}
+                            </div>
+                            <div class="col-md-8">
+                                <div class="btn-group">
+                                    <button
+                                        class="btn btn-default"
+                                        title="{{'region_help_help_text_label'|trans:{}:'media_resource'}} {{$index + 1}}"
+                                        data-ng-if="item.text !== ''"
+                                        data-ng-click="modalCtrl.showHelpText($event, item.text)"
+                                        data-ng-repeat="item in modalCtrl.selected.helps.helpTexts">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- if helplinks -->
+                    <div data-ng-if="modalCtrl.hasHelpLinks()">
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{'region_help_help_links_label' | trans:{}:'media_resource'}}
+                            </div>
+                            <div class="col-md-8">
+                                <div class="btn-group">
+                                    <a class="btn btn-default fa fa-link" data-ng-if="item.url !== ''" data-ng-repeat="item in modalCtrl.selected.helps.helpLinks" title="{{'region_help_help_link_label' | trans:{}:'media_resource'}} {{$index + 1}}" target="_blank" href="{{item.url}}"></a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- No help available -->
+                <div data-ng-if="!modalCtrl.hasHelp()">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>{{'region_help_no_help_available' | trans:{}:'media_resource'}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- minimal help modal -->
+    <div data-ng-if="modalCtrl.data.minimal">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group">
+                    <button class="btn btn-default" data-ng-click="modalCtrl.play(modalCtrl.playModes.NORMAL)" title="{{'region_help_segment_playback' | trans:{}:'media_resource'}}">
+                        <i class="fa fa-play"></i>
+                        /
+                        <i class="fa fa-pause"></i>
+                    </button>
+                    <button data-ng-click="modalCtrl.play($event, modalCtrl.playModes.LOOP)" class="btn btn-default" title="{{'region_help_segment_playback_loop' | trans:{}:'media_resource'}}">
+                        <i class="fa fa-retweet"></i>
+                    </button>
+                    <button data-ng-click="modalCtrl.play($event, modalCtrl.playModes.SLOW)" class="btn btn-default" title="{{'region_help_segment_playback_rate' | trans:{}:'media_resource'}}">
+                        x0.8
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="modalCtrl.close()">{{'close' | trans:{}:'media_resource'}}</button>
+</div>
