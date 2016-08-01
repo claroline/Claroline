@@ -1,0 +1,38 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'innova_video_recorder_config' | trans({}, 'innova_video_recorder') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'packages'|trans({}, 'platform'),
+                'href': path('claro_admin_plugins')
+            },
+            {
+                'name': 'innova_video_recorder_config'|trans({}, 'innova_video_recorder'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+
+{% block section_content %}
+    {{ parent() }}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'innova_video_recorder_config'|trans({}, 'innova_video_recorder') }}</h3>
+    </div>
+
+    <div class="panel-body">
+        {{ form_start(form, {'action': path('video_recorder_config_save', {'id':id }) , 'method': 'POST'}) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

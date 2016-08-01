@@ -1,0 +1,12 @@
+{% extends "InnovaMediaResourceBundle::layout.html.twig" %}
+
+{% block media_resource_content %}
+    <div class="media-resource-administrate-container" data-ng-app="AdminApp" data-ng-cloak="">
+        <mr-admin class="admin-comp" data-resource="{{ _resource | json_encode  }}"></mr-admin>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-media-resource-admin.js') }}"></script>
+{% endblock %}

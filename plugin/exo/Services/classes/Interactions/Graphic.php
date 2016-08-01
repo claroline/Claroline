@@ -2,9 +2,9 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Services for the graphic.
@@ -30,13 +30,13 @@ class Graphic extends Interaction
         $em = $this->doctrine->getManager();
 
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
-            ->findBy(array('interactionGraphic' => $graphId));
+            ->findBy(['interactionGraphic' => $graphId]);
 
         $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')
             ->find($graphId);
 
         $doc = $em->getRepository('UJMExoBundle:Picture')
-            ->findOneBy(array('id' => $interG->getPicture()));
+            ->findOneBy(['id' => $interG->getPicture()]);
 
         if (!preg_match('/[0-9]+/', $answers)) {
             $answers = '';
@@ -46,7 +46,7 @@ class Graphic extends Interaction
         $score = $this->mark($answers, $rightCoords, $penalty);
         $total = $this->maxScore($interG); // Score max
 
-        $res = array(
+        $res = [
             'penalty' => $penalty, // Penalty (hints)
             'interG' => $interG, // The entity interaction graphic (for the id ...)
             'coords' => $rightCoords, // The coordinates of the right answer zones
@@ -55,7 +55,7 @@ class Graphic extends Interaction
             'rep' => preg_split('[;]', $answers), // Coordinates of the answer zones of the student's answer
             'score' => $score, // Score of the student (right answer - penalty)
             'response' => $answers, // The student's answer (with all the information of the coordinates)
-        );
+        ];
 
         return $res;
     }
@@ -69,19 +69,19 @@ class Graphic extends Interaction
      *
      * @return mixed[]
      */
-    public function responsePhp(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
+    public function responsePhp(Request $request, $paperID = 0)
     {
         $answers = $request->request->get('answers'); // Answer of the student
         $graphId = $request->request->get('graphId'); // Id of the graphic interaction
         $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
         $em = $this->doctrine->getManager();
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
-            ->findBy(array('interactionGraphic' => $graphId));
+            ->findBy(['interactionGraphic' => $graphId]);
 
         $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')
             ->find($graphId);
         $doc = $em->getRepository('UJMExoBundle:Picture')
-            ->findOneBy(array('id' => $interG->getPicture()));
+            ->findOneBy(['id' => $interG->getPicture()]);
         $point = $this->markPhp($answers, $request, $rightCoords, $coords);
         $session = $request->getSession();
         $penalty = $this->getPenalty($interG->getQuestion(), $session, $paperID);
@@ -94,7 +94,7 @@ class Graphic extends Interaction
             $answers = '';
         }
         $total = $this->maxScore($interG); // Score max
-        $res = array(
+        $res = [
             'point' => $point, // Score of the student without penalty
             'penalty' => $penalty, // Penalty (hints)
             'interG' => $interG, // The entity interaction graphic (for the id ...)
@@ -104,7 +104,7 @@ class Graphic extends Interaction
             'rep' => $coords, // Coordonates of the answer zones of the student's answer
             'score' => $score, // Score of the student (right answer - penalty)
             'response' => $answers, // The student's answer (with all the informations of the coordonates)
-        );
+        ];
 
         return $res;
     }
@@ -132,15 +132,22 @@ class Graphic extends Interaction
                 list($xr, $yr) = explode(',', $expected->getValue());
                 // Get tolerance zone
                 $zoneSize = $expected->getSize();
+                $zoneShape = $expected->getShape();
 
                 foreach ($coordsList as $coords) {
                     if (preg_match('/[0-9]+/', $coords)) {
                         // Get X and Y values from answers of the student
                         list($xa, $ya) = explode('-', $coords);
 
-                        if (($xa <= ($xr + $zoneSize)) && ($xa > $xr) &&
-                            ($ya <= ($yr + $zoneSize)) && ($ya > $yr)
-                        ) {
+                        if ($zoneShape === 'circle') {
+                            $xcenter = $xr + ($zoneSize / 2);
+                            $ycenter = $yr + ($zoneSize / 2);
+                            $valid = pow($xa - $xcenter, 2) + pow($ya - $ycenter, 2) <= pow($zoneSize / 2, 2);
+                        } elseif ($zoneShape === 'square') {
+                            $valid = ($xa <= ($xr + $zoneSize)) && ($xa > $xr) && ($ya <= ($yr + $zoneSize)) && ($ya > $yr);
+                        }
+
+                        if ($valid) {
                             // The student answer is in the answer zone give him the points
                             $score += $expected->getScoreCoords();
 
@@ -208,7 +215,7 @@ class Graphic extends Interaction
             $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
         }
 
-        $verif = array();
+        $verif = [];
         $point = $z = 0;
 
         for ($i = 0; $i < $max - 1; ++$i) {
@@ -249,7 +256,7 @@ class Graphic extends Interaction
         $scoreMax = 0;
 
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
-            ->findBy(array('interactionGraphic' => $interGraph->getId()));
+            ->findBy(['interactionGraphic' => $interGraph->getId()]);
 
         foreach ($rightCoords as $score) {
             $scoreMax += $score->getScoreCoords();
@@ -304,7 +311,7 @@ class Graphic extends Interaction
         $resu = true;
         for ($v = 0; $v < $z; ++$v) {
             // if already placed at this right place
-            if ($coor == $verif[$v]) {
+            if ($coor === $verif[$v]) {
                 $resu = false;
                 break;
             } else {

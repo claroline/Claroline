@@ -1,0 +1,42 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% stylesheets debug=false filter='lessphp, cssmin' output='vendor/claroline/plugin/innovamediaresource/css/innova-media-resource.css'
+    '@InnovaMediaResourceBundle/Resources/less/app.less'
+ %}
+    <link href="{{ asset_url }}" rel="stylesheet" media="screen"/>
+    {% endstylesheets %}
+{% endblock %}
+
+
+{% block section_content %}
+    {{ parent() }}
+    <div class="media-resource-content-container">
+        <div class="alert-messages">
+            {% for successMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-dismissable alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ successMessage }}
+                </div>
+            {% endfor %}
+
+            {% for errorMessage in app.session.flashbag.get('error') %}
+                <div class="alert alert-dismissable alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ errorMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+        {% block media_resource_content %}{% endblock %}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain':'media_resource' }) }}"></script>
+  <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain':'resource_form' }) }}"></script>
+{% endblock %}

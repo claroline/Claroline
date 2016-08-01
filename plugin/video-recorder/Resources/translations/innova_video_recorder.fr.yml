@@ -1,13 +1,19 @@
 # c
 creating_resource: Création de la ressource
+config_update_error: Problème lors de la mise à jour de la configuration de l'enregistreur vidéo
+config_update_success: Mise à jour de la configuration de l'enregistreur vidéo effectuée avec succès.
 
 # d
 download_video: Télécharger le fichier vidéo
 db_meter: Db mètre
 
+# i
+innova_video_recorder_config: Configuration de l'enregistreur vidéo
+
 # m
 my_recordings: Mes enregistrements
 max_recording_time: Temps maximum d'enregistrement :
+video_recorder_configuration_max_recording_time: Temps d'enregistrement maximum (Secondes, 0 = infini)
 
 # o
 ok: Valider
@@ -25,6 +31,7 @@ start_recording: Commencer l'enregistrement
 start: Démarrer
 stop_recording: Arrêter l'enregistrement
 stop: Stop
+submit_config_label: Sauvegarder la configuration
 
 # w
-warning_message_record_end: Lenregistrement est terminé<br/>Cliquez sur Valider s'il convient ou sur Recommencer<br/>(recommencer effacera l'enregistrement actuel)
+warning_message_record_end: L'enregistrement est terminé<br/>Cliquez sur Valider s'il convient ou sur Recommencer<br/>(recommencer effacera l'enregistrement actuel)

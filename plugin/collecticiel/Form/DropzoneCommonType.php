@@ -3,15 +3,15 @@
 namespace Innova\CollecticielBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class DropzoneCommonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $defaultDateTimeOptions = array(
+        $defaultDateTimeOptions = [
             'required' => false,
             'read_only' => false,
             'component' => true,
@@ -19,89 +19,118 @@ class DropzoneCommonType extends AbstractType
             'language' => $options['language'],
             'date_format' => $options['date_format'],
             'format' => $options['date_format'],
-        );
+        ];
 
         $builder
-            ->add('stayHere', 'hidden', array(
-                'mapped' => false,
-            ))
-            ->add('autoCloseForManualStates', 'hidden', array(
-                'mapped' => false,
-            ))
-            ->add('instruction', 'tinymce', array(
-                'required' => false,
-            ))
+            ->add(
+                'stayHere',
+                'hidden',
+                [
+                    'mapped' => false,
+                ]
+            )
+            ->add(
+                'autoCloseForManualStates',
+                'hidden',
+                [
+                    'mapped' => false,
+                ]
+            )
+            ->add(
+                'instruction',
+                'tinymce',
+                [
+                    'required' => false,
+                ]
+            )
 
-            ->add('allowWorkspaceResource', 'checkbox', array('required' => false))
-            ->add('allowUpload', 'checkbox', array('required' => false))
-            ->add('allowUrl', 'checkbox', array('required' => false))
-            ->add('allowRichText', 'checkbox', array('required' => false))
+            ->add('allowWorkspaceResource', 'checkbox', ['required' => false])
+            ->add('allowUpload', 'checkbox', ['required' => false])
+            ->add('allowUrl', 'checkbox', ['required' => false])
+            ->add('allowRichText', 'checkbox', ['required' => false])
 
-            ->add('successMessage', 'tinymce', array('required' => false))
-            ->add('failMessage', 'tinymce', array('required' => false))
+            ->add('successMessage', 'tinymce', ['required' => false])
+            ->add('failMessage', 'tinymce', ['required' => false])
 
-            ->add('manualPlanning', 'choice', array(
-                'required' => true,
-                'choices' => array(
-                    true => 'manualPlanning',
-                    false => 'sheduleByDate',
-                ),
-                'expanded' => true,
-                'multiple' => false,
-            ))
-            ->add('manualState', 'choice', array(
-                'choices' => array(
+            ->add(
+                'manualPlanning',
+                'choice',
+                [
+                    'required' => true,
+                    'choices' => [
+                            true => 'manualPlanning',
+                            false => 'sheduleByDate',
+                        ],
+                    'expanded' => true,
+                    'multiple' => false,
+                    ]
+            )
+            ->add('manualState', 'choice',
+                [
+                'choices' => [
                     'allowDrop' => 'allowDropManualState',
                     'finished' => 'finishedManualState',
-                ),
+                ],
                 'expanded' => true,
                 'multiple' => false,
-            ))
+            ])
             ->add('startAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
             ->add('endAllowDrop', 'datetimepicker', $defaultDateTimeOptions);
 
         $builder
             // Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('published', 'checkbox',
-                array(
-                    'attr' => array(),
+                [
+                    'attr' => [],
                     'mapped' => false,
-                    'required' => false, )
-                     );
+                    'required' => false,
+                ]
+            );
 
         $builder
             // Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('returnReceipt', 'checkbox',
-                 array(
-                     'required' => false, )
-                      )
+                [
+                    'required' => false,
+                ]
+            )
             // Picture. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('picture', 'checkbox',
-                 array(
-                     'required' => false, )
-                      )
+                [
+                    'required' => false,
+                ]
+            )
             // Username. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('username', 'checkbox',
-                 array(
-                     'required' => false, )
-                      )
+                [
+                    'required' => false,
+                ]
+            )
 
             // EvaluationType. Ajout de cette zone, demande JJQ. InnovaERV
-            ->add('evaluationType', 'choice', array(
-                'choices' => array(
-                    'noEvaluation' => 'noEvaluation',
-                    'notation' => 'notation',
-                    'ratingScale' => 'ratingScale',
-                ),
-                'expanded' => false,
-                'multiple' => false,
-            ))
+            ->add('evaluationType', 'choice',
+                [
+                    'choices' => [
+                        'noEvaluation' => 'noEvaluation',
+                        'notation' => 'notation',
+                        'ratingScale' => 'ratingScale',
+                    ],
+                    'expanded' => false,
+                    'multiple' => false,
+                    ]
+            )
 
             // Notation maxi. Ajout de cette zone, demande JJQ. InnovaERV
-            ->add('maximumNotation', 'integer', array(
-                          'required' => true, 'attr' => array('min' => 0, 'max' => 9999), )
-                        )
-
+            ->add('maximumNotation', 'integer',
+                [
+                    'required' => true,
+                    'attr' => [
+                        'min' => 0,
+                        'max' => 9999,
+                        'class' => 'form-control-notation',
+                    ],
+                ]
+            )
             ;
     }
 
@@ -113,11 +142,11 @@ class DropzoneCommonType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'language' => 'fr',
                 'translation_domain' => 'innova_collecticiel',
                 'date_format' => DateType::HTML5_FORMAT,
-            )
+            ]
         );
     }
 }

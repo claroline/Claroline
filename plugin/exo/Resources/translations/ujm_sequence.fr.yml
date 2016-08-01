@@ -46,7 +46,7 @@ label_no_labels_associated: Pas de label(s) associé(s)
 label_manual_correction_needed: Correction manuelle nécessaire!
 
 # m
-max_attempts_reached_see_solution: Vous avez atteint le maximum de tentatives. Consultez la solution proposée et poursuivez.
+max_attempts_reached_see_solution: Vous avez atteint le maximum d'essais autorisés. Consultez la solution proposée et poursuivez.
 
 # n
 need_correction: Cette réponse nécessite une correction manuelle
@@ -64,9 +64,6 @@ paper_list_table_user: Utilisateur
 paper_list_table_paper_number: '#'
 paper_list_table_start_date: Date de début
 paper_list_table_end_date: Date de fin
-paper_list_table_interrupted: Interrompue
-paper_list_table_interrupted_yes: Oui
-paper_list_table_interrupted_no: Non
 paper_list_table_action: Correction
 paper_list_table_action_not_available: Indisponible actuellement
 paper_list_table_score: Score
@@ -99,8 +96,8 @@ question_show_hint_confirm: Êtes vous sûr de vouloir utiliser l'indice ? <br/>
 
 # s
 sequence_step: Etape
-sequence_attempts_infos: "[0, 1] Vous avez le droit à %count% tentatives|]1,Inf[ Vous avez le droit à %count% tentatives"
-sequence_nb_attempts: Essai N° %1%
+sequence_attempts_infos: "[0, 1] Vous avez droit à %count% tentative|]1,Inf[ Vous avez droit à %count% tentatives"
+sequence_nb_attempts: Essai n° %1%
 sequence_interrupt_sequence_confirm: Êtes vous sûr de vouloir interrompre l'exercice ?
 sequence_end_sequence_confirm: Êtes vous sûr de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.
 sequence_play_leave_confirm: Êtes vous sûr de vouloir quitter l'application ?

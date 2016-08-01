@@ -3,8 +3,8 @@
 namespace Icap\DropzoneBundle\Manager;
 
 use Claroline\CoreBundle\Manager\MaskManager;
-use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Entity\Drop;
+use Icap\DropzoneBundle\Entity\Dropzone;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -48,8 +48,8 @@ class DropzoneManager
         $rights = $ressourceNode->getRights();
 
         // will contain the 'authorized to open' user's ids.
-        $userIds = array();
-        $test = array();
+        $userIds = [];
+        $test = [];
         // searching for roles with the 'open' right
         foreach ($rights as $ressourceRight) {
             $role = $ressourceRight->getRole(); //  current role
@@ -111,7 +111,7 @@ class DropzoneManager
     {
         $drop = $this->em
             ->getRepository('IcapDropzoneBundle:Drop')
-            ->findOneBy(array('dropzone' => $dropzone, 'user' => $user));
+            ->findOneBy(['dropzone' => $dropzone, 'user' => $user]);
         $nbCorrections = $this->em
             ->getRepository('IcapDropzoneBundle:Correction')
             ->countFinished($dropzone, $user);
@@ -149,9 +149,9 @@ class DropzoneManager
      */
     public function getDrozponeProgress(Dropzone $dropzone, Drop $drop = null, $nbCorrection = 0)
     {
-        $begin_states = array('Evaluation not started', 'awaiting for drop', 'drop provided');
-        $end_states = array('waiting for correction', 'corrected copy');
-        $states = array();
+        $begin_states = ['Evaluation not started', 'awaiting for drop', 'drop provided'];
+        $end_states = ['waiting for correction', 'corrected copy'];
+        $states = [];
 
         $states = array_merge($states, $begin_states);
         $expectedCorrections = $dropzone->getExpectedTotalCorrection();
@@ -237,7 +237,7 @@ class DropzoneManager
 
         $percent = round(($currentState * 100) / (count($states) - 1));
 
-        return array('states' => $states, 'currentState' => $currentState, 'percent' => $percent, 'nbCorrection' => $nbCorrection);
+        return ['states' => $states, 'currentState' => $currentState, 'percent' => $percent, 'nbCorrection' => $nbCorrection];
     }
 
     /**
@@ -320,7 +320,7 @@ class DropzoneManager
 
     public function getResourcesNodeIdsForDownload(Dropzone $dropzone, $beginDate, $endDate)
     {
-        $ids = array();
+        $ids = [];
 
         // on veut récupérer uniquement les drops terminés.
         foreach ($dropzone->getDrops() as $drop) {
@@ -337,8 +337,10 @@ class DropzoneManager
                     $documents = $drop->getDocuments();
                     if (count($documents) > 0) {
                         $doc = $documents[0];
-                        $rootId = $doc->getResourceNode()->getParent()->getId();
-                        array_push($ids, $rootId);
+                        if ($doc->getResourceNode()) {
+                            $rootId = $doc->getResourceNode()->getParent()->getId();
+                            array_push($ids, $rootId);
+                        }
                     }
                 }
             }

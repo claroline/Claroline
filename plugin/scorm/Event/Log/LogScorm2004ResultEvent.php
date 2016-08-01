@@ -19,11 +19,8 @@ class LogScorm2004ResultEvent extends LogGenericEvent
 {
     const ACTION = 'resource-scorm_2004-sco_result';
 
-    public function __construct(
-        Scorm2004Resource $scormResource,
-        User $user,
-        array $details
-    ) {
+    public function __construct(Scorm2004Resource $scormResource, User $user, array $details)
+    {
         parent::__construct(
             self::ACTION,
             $details,
@@ -40,6 +37,6 @@ class LogScorm2004ResultEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 }

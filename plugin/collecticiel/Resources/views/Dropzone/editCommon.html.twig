@@ -112,8 +112,8 @@
                         }
                         ) }}
                     {% endif %}
-                 </div>
-             </div>
+                </div>
+            </div>
         </div>
 
         {# Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV  #}
@@ -121,97 +121,89 @@
             <h4>{{ 'Return receipt'|trans({}, 'innova_collecticiel') }}</h4>
             <div class="row form-group">
                 <div class="col-md-10">
-                    {{ form_row(form.returnReceipt, {'label_attr': {'style': 'font-weight: normal;' }}
-                    ) }}
-                 </div>
-             </div>
+                    {{ form_row(form.returnReceipt, {'label_attr': {'style': 'font-weight: normal;' }} ) }}
+                </div>
+            </div>
         </div>
 
-        {# Evaluation affichage. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        {# Evaluation affichage. Ajout de cette zone, demande JJQ. InnovaERV #}
         <div class="row">
-          <div class="col-md-12">
-            <div id="evaluation">
-                <h4>{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</h4>
+            <div class="col-md-12">
+                <div id="evaluation">
+                    <h4>{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</h4>
+                </div>
             </div>
-          </div>
         </div>
-        <!-- Evaluation types -->
+
+        {# Evaluation types #}
         <div class="row">
-          <div class="col-md-12">
-            <div id="evaluationType">
-              <h4>{{ 'Evaluation for documents'|trans({}, 'innova_collecticiel') }}</h4>
-              <div class="row">
-                  <div class="col-md-8">
-                    {{ form_widget(form.evaluationType) }}
-                  </div>
-                  <div class="col-md-4">
-                  </div>
-               </div>
-             </div>
-             <!-- Manage Scales Button -->
-             <div class="row">
-               <div class="col-md-12">
-                 <div id="dropzone-message-part-appreciation" {% if dropzone.evaluationType != "ratingScale" %} style="display:none" {% endif %}>
-                    <hr>
-                     <div class="col-md-8">
-                       <a href="{{ path('innova_collecticiel_edit_appreciation', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">
-                         <i class="fa fa-pencil"></i>&nbsp;{{ 'Rating Scale appreciation'|trans({}, 'innova_collecticiel') }}
-                       </a>
-                     </div>
-                     <div class="col-md-4">
-                     </div>
-                 </div>
-               </div>
-             </div>
-             {# Evaluation gestion. Ajout de cette zone, demande JJQ. InnovaERV  #}
-             <div class="row">
-               <div class="col-md-12">
-                 <div id="dropzone-message-part-notation" {% if dropzone.evaluationType != "notation" %} style="display:none" {% endif %}>
-                      <hr>
-                     {# Notation max. Ajout de cette zone, demande JJQ. InnovaERV  #}
-                     <div class="row form-group">
-                         <div class="col-md-8">
-                             {{ form_row(form.maximumNotation, {'label_attr': {'style': 'font-weight: normal;' }} ) }}
-                          </div>
-                          <div class="col-md-4">
-                          </div>
-                      </div>
-                 </div>
-               </div>
-             </div>
-          </div>
+            <div class="col-md-12">
+                <div id="evaluationType">
+                    <h4>{{ 'Evaluation for documents'|trans({}, 'innova_collecticiel') }}</h4>
+                    <div class="row">
+                        <div class="col-md-5">
+                            {{ form_widget(form.evaluationType) }}
+                        </div>
+                        <div class="col-md-7">
+                            <div id="dropzone-message-part-appreciation" {% if dropzone.evaluationType != "ratingScale" %} style="display:none" {% endif %}>
+                                {# Delete href and add validation_edit_common class for Ajax updating #}
+                                <a class="btn btn-primary pull-left validation_edit_common">
+                                    <i class="fa fa-pencil"></i>&nbsp;{{ 'Rating Scale appreciation'|trans({}, 'innova_collecticiel') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Evaluation gestion. Ajout de cette zone, demande JJQ. InnovaERV  #}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="dropzone-message-part-notation" {% if dropzone.evaluationType != "notation" %} style="display:none" {% endif %}>
+                            <hr>
+                            {# Notation max. Ajout de cette zone, demande JJQ. InnovaERV  #}
+                            <div class="col-md-5">
+                                {% if dropzone.maximumNotation > 0 %}
+                                    {{ form_row(form.maximumNotation, {'label_attr': {'style': 'font-weight: normal;' }} )}}
+                                {% else %}
+                                    {{ form_row(form.maximumNotation, {'value':'20','label_attr': {'style': 'font-weight: normal;' }} )}}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-7">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <hr>
-        {# user image and id. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        {# user image and id. Ajout de cette zone, demande JJQ. InnovaERV #}
         <div id="display">
             <h4>{{ 'Display'|trans({}, 'innova_collecticiel') }}</h4>
             <div class="row form-group">
                 <div class="col-md-12">
                     {{ form_row(form.picture, {'label_attr': {'style': 'font-weight: normal;' }} ) }}
-                 </div>
+                </div>
              </div>
 
             <div class="row form-group">
                 <div class="col-md-12">
-                    {{ form_row(form.username, {'label_attr': {'style': 'font-weight: normal;' }}
-                     ) }}
-                 </div>
+                    {{ form_row(form.username, {'label_attr': {'style': 'font-weight: normal;' }} ) }}
+                </div>
              </div>
         </div>
 
         {# Submit #}
         <div class="pull-right">
-          <!--
-            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}"
-               class="btn btn-default ">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}
-            </a>
-          -->
             <button role="submit" type="submit" class="btn btn-primary">
                 {{ 'Save'|trans({}, 'innova_collecticiel') }}
             </button>
         </div>
         {{ form_rest(form) }}
+ 
+        {# Add hidden variable to add this data in Javascript #}
+        <input type="hidden" value="{{dropzone.id}}" id="dropzone_id">
+
     </form>
 
     {% include 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDropModalCollecticiel.html.twig' %}

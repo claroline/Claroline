@@ -1,0 +1,31 @@
+<div class="row media-container">
+    <div class="col-md-12">
+        <div id="audio-player">
+            <div id="wave-timeline"></div>
+            <div id="waveform">
+                <div class="progress progress-striped active" id="progress-bar">
+                    <div class="progress-bar progress-bar-info"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr/>
+<!-- media controls -->
+<div class="row">
+    <div class="col-md-12 text-center">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default" data-ng-click="$ctrl.play()" title="{{'play_pause' | trans:{}:'media_resource'}}">
+            <i class="fa fa-play"></i>
+            /
+            <i class="fa fa-pause"></i>
+        </button>
+        <button class="btn btn-default" data-ng-disabled="!$ctrl.showHelp" data-ng-click="$ctrl.help()" title="{{'region_help_view' |  trans:{}:'media_resource'}}">
+          <i class="fa fa-question"></i>
+        </button>
+        <button type="button" data-ng-click="$ctrl.deleteRegions()" class="btn btn-default btn-warning" title="{{'region_delete' | trans:{}:'media_resource'}}">
+            <i class="fa fa-trash-o"></i>
+        </button>
+      </div>
+    </div>
+</div>

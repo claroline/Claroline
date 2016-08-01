@@ -12,22 +12,23 @@
 
 namespace Claroline\ScormBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
-use Claroline\ScormBundle\Entity\ScormResource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
 use Claroline\ScormBundle\Entity\Scorm12ScoTracking;
 use Claroline\ScormBundle\Entity\Scorm2004Resource;
 use Claroline\ScormBundle\Entity\Scorm2004Sco;
 use Claroline\ScormBundle\Entity\Scorm2004ScoTracking;
-use Claroline\ScormBundle\Listener\Exception\InvalidScormArchiveException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Claroline\ScormBundle\Entity\ScormResource;
 use Claroline\ScormBundle\Library\Scorm12;
 use Claroline\ScormBundle\Library\Scorm2004;
+use Claroline\ScormBundle\Listener\Exception\InvalidScormArchiveException;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @DI\Service("claroline.manager.scorm_manager")
@@ -44,39 +45,31 @@ class ScormManager
     private $filePath;
     private $libsco12;
     private $libsco2004;
+    private $logRepo;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "container"    = @DI\Inject("service_container"),
-     *     "libsco12"     = @DI\Inject("claroline.library.scorm_12"),
-     *     "libsco2004"  = @DI\Inject("claroline.library.scorm_2004")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"  = @DI\Inject("service_container"),
+     *     "libsco12"   = @DI\Inject("claroline.library.scorm_12"),
+     *     "libsco2004" = @DI\Inject("claroline.library.scorm_2004")
      * })
      */
-    public function __construct(
-        ObjectManager $om,
-        ContainerInterface $container,
-        Scorm12 $libsco12,
-        Scorm2004 $libsco2004
-    ) {
+    public function __construct(ObjectManager $om, ContainerInterface $container, Scorm12 $libsco12, Scorm2004 $libsco2004)
+    {
         $this->om = $om;
         $this->container = $container;
         $this->libsco12 = $libsco12;
         $this->libsco2004 = $libsco2004;
-        $this->scorm12ResourceRepo =
-            $om->getRepository('ClarolineScormBundle:Scorm12Resource');
-        $this->scorm12ScoTrackingRepo =
-            $om->getRepository('ClarolineScormBundle:Scorm12ScoTracking');
-        $this->scorm2004ResourceRepo =
-            $om->getRepository('ClarolineScormBundle:Scorm2004Resource');
-        $this->scorm2004ScoTrackingRepo =
-            $om->getRepository('ClarolineScormBundle:Scorm2004ScoTracking');
-        $this->scormResourcesPath = $this->container
-            ->getParameter('claroline.param.uploads_directory').'/scormresources/';
-        $this->filePath = $this->container
-            ->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR;
+        $this->scorm12ResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm12Resource');
+        $this->scorm12ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12ScoTracking');
+        $this->scorm2004ResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm2004Resource');
+        $this->scorm2004ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm2004ScoTracking');
+        $this->scormResourcesPath = $this->container->getParameter('claroline.param.uploads_directory').'/scormresources/';
+        $this->filePath = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR;
+        $this->logRepo = $om->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
     public function createScorm($tmpFile, $name, $version, Workspace $workspace = null)
@@ -204,21 +197,19 @@ class ScormManager
      * Access to Scorm12ScoTrackingRepository methods *
      **************************************************/
 
-    public function getAllScorm12ScoTrackingsByUserAndResource(
-        User $user,
-        Scorm12Resource $resource
-    ) {
-        return $this->scorm12ScoTrackingRepo
-            ->findAllTrackingsByUserAndResource($user, $resource);
+    public function getScorm12TrackingsByResource(Scorm12Resource $resource)
+    {
+        return $this->scorm12ScoTrackingRepo->findTrackingsByResource($resource);
     }
 
-    public function getScorm12ScoTrackingByUserAndSco(
-        User $user,
-        Scorm12Sco $sco
-    ) {
-        return $this->scorm12ScoTrackingRepo->findOneBy(
-            array('user' => $user->getId(), 'sco' => $sco->getId())
-        );
+    public function getAllScorm12ScoTrackingsByUserAndResource(User $user, Scorm12Resource $resource)
+    {
+        return $this->scorm12ScoTrackingRepo->findAllTrackingsByUserAndResource($user, $resource);
+    }
+
+    public function getScorm12ScoTrackingByUserAndSco(User $user, Scorm12Sco $sco)
+    {
+        return $this->scorm12ScoTrackingRepo->findOneBy(['user' => $user->getId(), 'sco' => $sco->getId()]);
     }
 
     /*************************************************
@@ -234,28 +225,44 @@ class ScormManager
      * Access to Scorm2004ScoTrackingRepository methods *
      ****************************************************/
 
-    public function getAllScorm2004ScoTrackingsByUserAndResource(
-        User $user,
-        Scorm2004Resource $resource
-    ) {
-        return $this->scorm2004ScoTrackingRepo
-            ->findAllTrackingsByUserAndResource($user, $resource);
+    public function getScorm2004TrackingsByResource(Scorm2004Resource $resource)
+    {
+        return $this->scorm2004ScoTrackingRepo->findTrackingsByResource($resource);
     }
 
-    public function getScorm2004ScoTrackingByUserAndSco(
-        User $user,
-        Scorm2004Sco $sco
-    ) {
-        return $this->scorm2004ScoTrackingRepo->findOneBy(
-            array('user' => $user->getId(), 'sco' => $sco->getId())
-        );
+    public function getAllScorm2004ScoTrackingsByUserAndResource(User $user, Scorm2004Resource $resource)
+    {
+        return $this->scorm2004ScoTrackingRepo->findAllTrackingsByUserAndResource($user, $resource);
+    }
+
+    public function getScorm2004ScoTrackingByUserAndSco(User $user, Scorm2004Sco $sco)
+    {
+        return $this->scorm2004ScoTrackingRepo->findOneBy(['user' => $user->getId(), 'sco' => $sco->getId()]);
     }
 
     public function generateScosFromScormArchive(\SplFileInfo $file, $version)
     {
-        return $version === '1.2' ?
-            $this->generateScos12FromScormArchive($file) :
-            $this->generateScos2004FromScormArchive($file);
+        return $version === '1.2' ? $this->generateScos12FromScormArchive($file) : $this->generateScos2004FromScormArchive($file);
+    }
+
+    /***********************************
+     * Access to LogRepository methods *
+     ***********************************/
+
+    public function getScormTrackingDetails(User $user, ResourceNode $resourceNode, $type = 'scorm12')
+    {
+        switch ($type) {
+            case 'scorm12':
+                $action = 'resource-scorm_12-sco_result';
+                break;
+            case 'scorm2004':
+                $action = 'resource-scorm_2004-sco_result';
+                break;
+            default:
+                $action = null;
+        }
+
+        return $this->logRepo->findBy(['action' => $action, 'receiver' => $user, 'resourceNode' => $resourceNode], ['dateLog' => 'desc']);
     }
 
     /**
@@ -337,10 +344,8 @@ class ScormManager
      * @param Scorm12Resource $scormResource
      * @param array           $scos          Array of Scorm12Sco
      */
-    private function persistScos(
-        ScormResource $scormResource,
-        array $scos
-    ) {
+    private function persistScos(ScormResource $scormResource, array $scos)
+    {
         foreach ($scos as $sco) {
             if (is_array($sco)) {
                 $this->persistScos($scormResource, $sco);

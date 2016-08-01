@@ -26,26 +26,26 @@ use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\SecurityTokenManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\ThemeManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -158,7 +158,7 @@ class ParametersController extends Controller
      */
     public function indexAction()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -172,7 +172,7 @@ class ParametersController extends Controller
      */
     public function generalFormAction(Request $request)
     {
-        $descriptions = $this->contentManager->getTranslatedContent(array('type' => 'platformDescription'));
+        $descriptions = $this->contentManager->getTranslatedContent(['type' => 'platformDescription']);
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
@@ -180,7 +180,7 @@ class ParametersController extends Controller
                 $this->localeManager->getAvailableLocales(),
                 $role,
                 $descriptions,
-                $this->translator->trans('date_form_format', array(), 'platform'),
+                $this->translator->trans('date_form_format', [], 'platform'),
                 $this->localeManager->getUserLocale($request),
                 $this->configHandler->getLockedParamaters()
             ),
@@ -193,7 +193,7 @@ class ParametersController extends Controller
                 try {
                     $portfolioUrlOptions = $request->get('portfolioUrlOptions', 0);
                     $this->configHandler->setParameters(
-                        array(
+                        [
                             'allow_self_registration' => $form['selfRegistration']->getData(),
                             'locale_language' => $form['localeLanguage']->getData(),
                             'name' => $form['name']->getData(),
@@ -202,6 +202,7 @@ class ParametersController extends Controller
                             'redirect_after_login_option' => $form['redirect_after_login_option']->getData(),
                             'redirect_after_login_url' => $form['redirect_after_login_url']->getData(),
                             'form_captcha' => $form['formCaptcha']->getData(),
+                            'form_honeypot' => $form['formHoneypot']->getData(),
                             'platform_init_date' => $form['platform_init_date']->getData(),
                             'platform_limit_date' => $form['platform_limit_date']->getData(),
                             'account_duration' => $form['account_duration']->getData(),
@@ -219,13 +220,13 @@ class ParametersController extends Controller
                             'default_workspace_tag' => $form['defaultWorkspaceTag']->getData(),
                             'registration_mail_validation' => $form['registrationMailValidation']->getData(),
                             'is_pdf_export_active' => $form['isPdfExportActive']->getData(),
-                        )
+                        ]
                     );
 
                     $content = $request->get('platform_parameters_form');
 
                     if (isset($content['description'])) {
-                        $descriptionContent = $this->contentManager->getContent(array('type' => 'platformDescription'));
+                        $descriptionContent = $this->contentManager->getContent(['type' => 'platformDescription']);
                         if ($descriptionContent) {
                             $this->contentManager->updateContent($descriptionContent, $content['description']);
                         } else {
@@ -247,7 +248,7 @@ class ParametersController extends Controller
                         new FormError(
                             $this->translator->trans(
                                 'unwritable_file_exception',
-                                array('%path%' => $e->getPath()),
+                                ['%path%' => $e->getPath()],
                                 'platform'
                             )
                         )
@@ -258,16 +259,16 @@ class ParametersController extends Controller
         $event = $this->eventDispatcher->dispatch(
             'claroline_retrieve_tags',
             'GenericDatas',
-            array()
+            []
         );
         $response = $event->getResponse();
-        $tags = is_array($response) ? $response : array();
+        $tags = is_array($response) ? $response : [];
 
-        return array(
+        return [
             'form_settings' => $form->createView(),
             'logos' => $this->get('claroline.common.logo_service')->listLogos(),
             'tags' => $tags,
-        );
+        ];
     }
 
     /**
@@ -293,12 +294,12 @@ class ParametersController extends Controller
             if ($form->isValid()) {
                 try {
                     $this->configHandler->setParameters(
-                        array(
+                        [
                             'nameActive' => $form['name_active']->getData(),
                             'theme' => $form['theme']->getData(),
                             'footer' => $form['footer']->getData(),
                             'logo' => $this->request->get('selectlogo'),
-                        )
+                        ]
                     );
 
                     $logo = $this->request->files->get('logo');
@@ -315,7 +316,7 @@ class ParametersController extends Controller
                         new FormError(
                             $this->translator->trans(
                                 'unwritable_file_exception',
-                                array('%path%' => $e->getPath()),
+                                ['%path%' => $e->getPath()],
                                 'platform'
                             )
                         )
@@ -324,10 +325,10 @@ class ParametersController extends Controller
             }
         }
 
-        return array(
+        return [
             'form_appearance' => $form->createView(),
             'logos' => $this->get('claroline.common.logo_service')->listLogos(),
-        );
+        ];
     }
 
     /**
@@ -339,7 +340,7 @@ class ParametersController extends Controller
      */
     public function mailIndexAction()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -360,7 +361,7 @@ class ParametersController extends Controller
             $platformConfig
         );
 
-        return array('form_mail' => $form->createView());
+        return ['form_mail' => $form->createView()];
     }
 
     /**
@@ -385,7 +386,7 @@ class ParametersController extends Controller
         );
         $form->handleRequest($this->request);
 
-        $data = array(
+        $data = [
             'transport' => $form['mailer_transport']->getData(),
             'host' => $form['mailer_host']->getData(),
             'username' => $form['mailer_username']->getData(),
@@ -393,7 +394,7 @@ class ParametersController extends Controller
             'auth_mode' => $form['mailer_auth_mode']->getData(),
             'encryption' => $form['mailer_encryption']->getData(),
             'port' => $form['mailer_port']->getData(),
-        );
+        ];
 
         $settings = new MailingSettings();
         $settings->setTransport($data['transport']);
@@ -402,25 +403,25 @@ class ParametersController extends Controller
 
         if (count($errors) > 0) {
             foreach ($errors as $field => $error) {
-                $trans = $this->translator->trans($error, array(), 'platform');
+                $trans = $this->translator->trans($error, [], 'platform');
                 $form->get('mailer_'.$field)->addError(new FormError($trans));
             }
 
-            return array('form_mail' => $form->createView());
+            return ['form_mail' => $form->createView()];
         }
 
         $checker = new MailingChecker($settings);
         $error = $checker->testTransport();
 
-        if ($error != 1) {
+        if ($error !== 1) {
             $session = $this->request->getSession();
-            $session->getFlashBag()->add('error', $this->translator->trans($error, array(), 'platform'));
+            $session->getFlashBag()->add('error', $this->translator->trans($error, [], 'platform'));
 
-            return array('form_mail' => $form->createView());
+            return ['form_mail' => $form->createView()];
         }
 
         $this->configHandler->setParameters(
-            array(
+            [
                 'mailer_transport' => $data['transport'],
                 'mailer_host' => $data['host'],
                 'mailer_username' => $data['username'],
@@ -428,7 +429,7 @@ class ParametersController extends Controller
                 'mailer_auth_mode' => $data['auth_mode'],
                 'mailer_encryption' => $data['encryption'],
                 'mailer_port' => $data['port'],
-            )
+            ]
         );
 
         $this->cacheManager->setParameter('is_mailer_available', true);
@@ -446,7 +447,7 @@ class ParametersController extends Controller
      */
     public function resetMailServerAction()
     {
-        $data = array(
+        $data = [
             'mailer_transport' => 'smtp',
             'mailer_host' => null,
             'mailer_username' => null,
@@ -454,7 +455,7 @@ class ParametersController extends Controller
             'mailer_auth_mode' => null,
             'mailer_encryption' => null,
             'mailer_port' => null,
-        );
+        ];
 
         $this->configHandler->setParameters($data);
         $this->cacheManager->setParameter('is_mailer_available', false);
@@ -476,7 +477,7 @@ class ParametersController extends Controller
             $this->mailManager->getMailInscription()
         );
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -495,9 +496,9 @@ class ParametersController extends Controller
         $form = $this->formFactory->create(new AdminForm\MailInscriptionType(), $formData['content']);
         $errors = $this->mailManager->validateMailVariable($formData['content'], '%password%');
 
-        return array(
+        return [
             'form' => $this->updateMailContent($formData, $form, $errors, $this->mailManager->getMailInscription()),
-        );
+        ];
     }
 
     /**
@@ -514,7 +515,7 @@ class ParametersController extends Controller
             $this->mailManager->getMailLayout()
         );
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -533,9 +534,9 @@ class ParametersController extends Controller
         $form = $this->formFactory->create(new AdminForm\MailLayoutType(), $formData['content']);
         $errors = $this->mailManager->validateMailVariable($formData['content'], '%content%');
 
-        return array(
+        return [
             'form' => $this->updateMailContent($formData, $form, $errors, $this->mailManager->getMailLayout()),
-        );
+        ];
     }
 
     /**
@@ -551,7 +552,7 @@ class ParametersController extends Controller
             new AdminForm\MailOptionType($this->mailManager->getMailerFrom())
         );
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -576,7 +577,7 @@ class ParametersController extends Controller
             return $this->redirect($this->generateUrl('claro_admin_parameters_mail_index'));
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -596,7 +597,7 @@ class ParametersController extends Controller
             $this->termsOfService->getTermsOfService(false)
         );
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -624,7 +625,7 @@ class ParametersController extends Controller
             $terms = $this->request->get('terms_of_service_form')['termsOfService'];
 
             if ($areTermsEnabled && $this->termsOfService->areTermsEmpty($terms)) {
-                $error = $this->translator->trans('terms_enabled_but_empty', array(), 'platform');
+                $error = $this->translator->trans('terms_enabled_but_empty', [], 'platform');
                 $form->addError(new FormError($error));
             } else {
                 $this->termsOfService->setTermsOfService($terms);
@@ -632,7 +633,7 @@ class ParametersController extends Controller
             }
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -661,7 +662,7 @@ class ParametersController extends Controller
             }
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -682,7 +683,7 @@ class ParametersController extends Controller
             )
         );
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -695,7 +696,7 @@ class ParametersController extends Controller
      */
     public function submitSessionAction()
     {
-        $formData = $this->request->request->get('platform_session_form', array());
+        $formData = $this->request->request->get('platform_session_form', []);
         $storageType = isset($formData['session_storage_type']) ?
             $formData['session_storage_type'] :
             $this->configHandler->getParameter('session_storage_type');
@@ -710,7 +711,7 @@ class ParametersController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $data = array(
+            $data = [
                 'session_storage_type' => $form['session_storage_type']->getData(),
                 'session_db_table' => $form['session_db_table']->getData(),
                 'session_db_id_col' => $form['session_db_id_col']->getData(),
@@ -720,7 +721,7 @@ class ParametersController extends Controller
                 'session_db_user' => $form['session_db_user']->getData(),
                 'session_db_password' => $form['session_db_password']->getData(),
                 'cookie_lifetime' => $form['cookie_lifetime']->getData(),
-            );
+            ];
 
             $errors = $this->dbSessionValidator->validate($data);
 
@@ -728,13 +729,13 @@ class ParametersController extends Controller
                 $this->configHandler->setParameters($data);
             } else {
                 foreach ($errors as $error) {
-                    $msg = $this->translator->trans($error, array(), 'platform');
+                    $msg = $this->translator->trans($error, [], 'platform');
                     $form->addError(new FormError($msg));
                 }
             }
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -746,7 +747,7 @@ class ParametersController extends Controller
      */
     public function oauthIndexAction()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -777,7 +778,7 @@ class ParametersController extends Controller
      */
     public function maintenancePageAction()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -822,7 +823,7 @@ class ParametersController extends Controller
         $maintenanceMessage = $this->getMaintenanceMessage();
         $form = $this->formFactory->create(new AdminForm\MaintenanceMessageType($maintenanceMessage));
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -849,7 +850,7 @@ class ParametersController extends Controller
             return new RedirectResponse($this->router->generate('claro_admin_parameters_maintenance'));
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -869,10 +870,10 @@ class ParametersController extends Controller
     {
         $tokens = $this->tokenManager->getAllTokens($order, $direction);
 
-        return array(
+        return [
             'tokens' => $tokens,
             'direction' => $direction,
-        );
+        ];
     }
 
     /**
@@ -894,7 +895,7 @@ class ParametersController extends Controller
             new SecurityToken()
         );
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -926,7 +927,7 @@ class ParametersController extends Controller
             );
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -953,10 +954,10 @@ class ParametersController extends Controller
             $securityToken
         );
 
-        return array(
+        return [
             'form' => $form->createView(),
             'token' => $securityToken,
-        );
+        ];
     }
 
     /**
@@ -992,10 +993,10 @@ class ParametersController extends Controller
             );
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'token' => $securityToken,
-        );
+        ];
     }
 
     /**
@@ -1036,7 +1037,7 @@ class ParametersController extends Controller
      */
     public function sendDatasConfirmationFormAction()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -1050,10 +1051,6 @@ class ParametersController extends Controller
      */
     public function sendDatasConfirmAction()
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $platformOptionsFile = $this->container->getParameter('kernel.root_dir').
-            $ds.'config'.$ds.'platform_options.yml';
-
         if (is_null($this->configHandler->getParameter('token'))) {
             $token = $this->generateToken(20);
             $this->configHandler->setParameter('token', $token);
@@ -1093,14 +1090,14 @@ class ParametersController extends Controller
         if (count($errors) > 0) {
             if (isset($errors['no_content'])) {
                 $form->get('content')->addError(
-                    new FormError($this->translator->trans($errors['no_content'], array(), 'validators'))
+                    new FormError($this->translator->trans($errors['no_content'], [], 'validators'))
                 );
             }
 
             foreach ($errors as $language => $errors) {
                 if (isset($errors['content'])) {
                     foreach ($errors['content'] as $error) {
-                        $msg = $this->translator->trans($error, array('%language%' => $language), 'platform');
+                        $msg = $this->translator->trans($error, ['%language%' => $language], 'platform');
                         $form->get('content')->addError(new FormError($msg));
                     }
                 }
@@ -1116,7 +1113,7 @@ class ParametersController extends Controller
     {
         $this->get('session')->getFlashBag()->add(
             $type,
-            $this->translator->trans($message, array(), 'platform')
+            $this->translator->trans($message, [], 'platform')
         );
     }
 
@@ -1156,7 +1153,7 @@ class ParametersController extends Controller
             $currentUrl
         );
         $platformUrl = preg_replace(
-            array('/app\.php(.)*$/', '/app_dev\.php(.)*$/'),
+            ['/app\.php(.)*$/', '/app_dev\.php(.)*$/'],
             'app.php',
             $currentUrl
         );
