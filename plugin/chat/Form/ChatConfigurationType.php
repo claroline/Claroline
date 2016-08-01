@@ -34,7 +34,7 @@ class ChatConfigurationType extends AbstractType
         $boshPort = empty($configPort) ? 5280 : $configPort;
         $configIceServers = $this->configHandler->getParameter('chat_ice_servers');
         $iceServers = empty($configIceServers) ?
-            'stun:stun.l.google.com:19302' :
+            "[{url: 'stun:stun.l.google.com:19302'}]" :
             $configIceServers;
         $ssl = $this->configHandler->getParameter('chat_ssl');
         $chatRoomAudio = $this->configHandler->getParameter('chat_room_audio_disable');

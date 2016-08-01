@@ -15,11 +15,13 @@ use Fabiang\Xmpp\Protocol\DefaultImplementation;
  */
 class AnonymousImplementation extends DefaultImplementation
 {
-    public function register()
+    public function register($ssl = false)
     {
         $this->registerListener(new Stream());
         $this->registerListener(new StreamError());
-        $this->registerListener(new StartTls());
+        if ($ssl) {
+            $this->registerListener(new StartTls());
+        }
         $this->registerListener(new Bind());
         $this->registerListener(new Session());
         $this->registerListener(new Roster());

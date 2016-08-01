@@ -21,23 +21,23 @@ export default class ChatRoomVideoCtrl {
     this.users = ChatRoomService.getUsers()
     this.bannedUsers = ChatRoomService.getBannedUsers()
     this.input = ''
+
+    //this should be only loaded once
+    $(window).unload(($event) => {
+      $event.preventDefault()
+      console.log('Disconnecting...')
+      this.VideoService.closeAllConnections()
+      //this.VideoService.stopMedia()
+      console.log('All connection closed...')
+      this.ChatRoomService.disconnectFromRoom()
+    })
+
     this.initialize()
   }
 
   initialize () {
     console.log('INIT VIDEO PLAYER')
-    $(window).unload(($event) => {
-      $event.preventDefault()
-      console.log('Disconnecting...')
-      this.VideoService.closeAllConnections()
-      this.VideoService.stopMedia()
-      console.log('All connection closed...')
-      this.ChatRoomService.disconnectFromRoom()
-    })
-
-    if (!this.chatRoomConfig['connected']) {
-      this.ChatRoomService.connectToRoom()
-    }
+    this.ChatRoomService.connectToRoom()
   }
 
   isAdmin () {

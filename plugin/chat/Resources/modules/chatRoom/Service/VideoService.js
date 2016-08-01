@@ -251,9 +251,12 @@ export default class VideoService {
 
   closeAllConnections () {
     for (let sid in this.videoConfig['sids']) {
+      console.log('Try to close ' + sid)
       console.log(this.xmppConfig['connection'].jingle.sessions[sid])
-      this.xmppConfig['connection'].jingle.sessions[sid].terminate('Closing all connections...')
-      console.log(`${sid} : closed`)
+      if (this.xmppConfig['connection'].jingle.sessions[sid].state === 'active') {
+          this.xmppConfig['connection'].jingle.sessions[sid].terminate('Closing all connections...')
+          console.log(`${sid} : closed`)
+      }
     }
   }
 

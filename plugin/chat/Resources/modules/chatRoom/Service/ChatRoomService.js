@@ -311,6 +311,9 @@ export default class ChatRoomService {
         }
       }
     }
+
+    console.log('Disconnecting the admin (roles are set)')
+    this.xmppConfig['adminConnection'].disconnect()
   }
 
   requestOutcastList () {
