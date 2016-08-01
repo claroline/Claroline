@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Library\Configuration;
 
-use RuntimeException;
-use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
+use RuntimeException;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @DI\Service("claroline.config.platform_config_handler")
@@ -26,7 +26,7 @@ class PlatformConfigurationHandler
     private $configFile;
     private $parameters;
 
-    public static $defaultParameters = array(
+    public static $defaultParameters = [
         'name' => 'claroline',
         'nameActive' => true,
         'support_email' => null,
@@ -57,6 +57,7 @@ class PlatformConfigurationHandler
         'session_db_user' => null,
         'session_db_password' => null,
         'form_captcha' => true,
+        'form_honeypot' => false,
         'platform_limit_date' => 1559350861, //1 june 2019
         'platform_init_date' => 1388534461, //1 june 2014
         'account_duration' => null,
@@ -84,7 +85,7 @@ class PlatformConfigurationHandler
         'help_url' => 'http://claroline.net/workspaces/125/open/tool/home',
         'register_button_at_login' => false,
         'send_mail_at_workspace_registration' => true,
-        'locales' => array('fr', 'en', 'es'),
+        'locales' => ['fr', 'en', 'es'],
         'domain_name' => null,
         'platform_url' => null,
         'mailer_from' => null,
@@ -94,7 +95,7 @@ class PlatformConfigurationHandler
         'google_geocoding_signature' => null,
         'google_geocoding_key' => null,
         'portal_enabled_resources' => null,
-    );
+    ];
     private $lockedParameters;
 
     /**
@@ -141,7 +142,7 @@ class PlatformConfigurationHandler
 
     public function setParameters(array $parameters)
     {
-        $toMerge = array();
+        $toMerge = [];
 
         foreach ($parameters as $key => $value) {
             if (!isset($this->lockedParameters[$key])) {
@@ -154,7 +155,7 @@ class PlatformConfigurationHandler
 
     public function isRedirectOption($option)
     {
-        return $this->parameters['redirect_after_login_option'] == $option;
+        return $this->parameters['redirect_after_login_option'] === $option;
     }
 
     public function getPlatformConfig()
@@ -217,6 +218,7 @@ class PlatformConfigurationHandler
         $config->setGoogleGeocodingClientId($this->parameters['google_geocoding_client_id']);
         $config->setGoogleGeocodingSignature($this->parameters['google_geocoding_signature']);
         $config->setGoogleGeocodingKey($this->parameters['google_geocoding_key']);
+        $config->setFormHoneypot($this->parameters['form_honeypot']);
 
         return $config;
     }
@@ -229,7 +231,7 @@ class PlatformConfigurationHandler
             );
         }
 
-        $configParameters = Yaml::parse(file_get_contents($this->configFile)) ?: array();
+        $configParameters = Yaml::parse(file_get_contents($this->configFile)) ?: [];
         $parameters = self::$defaultParameters;
 
         foreach ($configParameters as $parameter => $value) {
@@ -265,10 +267,10 @@ class PlatformConfigurationHandler
 
     protected function generateLockedParameters($lockedConfigFile)
     {
-        $lockedParameters = array();
+        $lockedParameters = [];
 
         if (file_exists($lockedConfigFile)) {
-            $lockedConfigParameters = Yaml::parse(file_get_contents($lockedConfigFile)) ?: array();
+            $lockedConfigParameters = Yaml::parse(file_get_contents($lockedConfigFile)) ?: [];
 
             foreach ($lockedConfigParameters as $parameter => $value) {
                 $lockedParameters[$parameter] = $value;

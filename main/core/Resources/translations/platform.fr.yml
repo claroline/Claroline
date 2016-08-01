@@ -1313,4 +1313,7 @@ field_edited: Champ édité avec succès
 field_removed: Champ supprimé avec succès
 panel_roles_edited: Rôles du panel édité avec succès
 profile_preference_edited: Préférences du profil éditées avec succès
+use_honeypot: Activer le honeypot pour les anonymes (anti-spam)
 mandatory: Obligatoire
+leave_empty: Laissez ce champ vide pour prouver que vous n'aide pas un robot.
+field_not_empty: Veuillez laisser le champ vide

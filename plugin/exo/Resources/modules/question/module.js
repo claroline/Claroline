@@ -2,11 +2,13 @@
  * Question module
  */
 
+import angular from 'angular/index'
 import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
 import '#/main/core/modal/module'
 
 import './../common/module'
+import './../feedback/module'
 import './../correction/module'
 import './../image/module'
 
@@ -32,104 +34,105 @@ import MatchQuestionService from './Services/Type/MatchQuestionService'
 import OpenQuestionService from './Services/Type/OpenQuestionService'
 
 angular
-    .module('Question', [
-        'ui.translation',
-        'ui.bootstrap',
-        'ui.modal',
-        'Common',
-        'Image',
-        'Correction'
-    ])
-    .controller('QuestionShowCtrl', [
-        '$uibModal',
-        'ExerciseService',
-        'QuestionService',
-        'FeedbackService',
-        'UserPaperService',
-        QuestionShowCtrl
-    ])
-    .controller('ChoiceQuestionCtrl', [
-        'FeedbackService',
-        'ChoiceQuestionService',
-        ChoiceQuestionCtrl
-    ])
-    .controller('ClozeQuestionCtrl', [
-        'FeedbackService',
-        'ClozeQuestionService',
-        ClozeQuestionCtrl
-    ])
-    .controller('GraphicQuestionCtrl', [
-        'FeedbackService',
-        'GraphicQuestionService',
-        'ImageAreaService',
-        GraphicQuestionCtrl
-    ])
-    .controller('MatchQuestionCtrl', [
-        'FeedbackService',
-        '$scope',
-        '$uibModal',
-        'MatchQuestionService',
-        MatchQuestionCtrl
-    ])
-    .controller('OpenQuestionCtrl', [
-        'FeedbackService',
-        'OpenQuestionService',
-        OpenQuestionCtrl
-    ])
-    .directive('questionShow', [
-        QuestionShowDirective
-    ])
-    .directive('choiceQuestion', [
-        'FeedbackService',
-        ChoiceQuestionDirective
-    ])
-    .directive('clozeQuestion', [
-        'FeedbackService',
-        '$compile',
-        ClozeQuestionDirective
-    ])
-    .directive('graphicQuestion', [
-        'FeedbackService',
-        '$window',
-        GraphicQuestionDirective
-    ])
-    .directive('matchQuestion', [
-        'FeedbackService',
-        '$timeout',
-        '$window',
-        'MatchQuestionService',
-        MatchQuestionDirective
-    ])
-    .directive('openQuestion', [
-        'FeedbackService',
-        OpenQuestionDirective
-    ])
-    .service('QuestionService', [
-        'ChoiceQuestionService',
-        'ClozeQuestionService',
-        'GraphicQuestionService',
-        'MatchQuestionService',
-        'OpenQuestionService',
-        QuestionService
-    ])
-    .service('ChoiceQuestionService', [
-        'FeedbackService',
-        ChoiceQuestionService
-    ])
-    .service('ClozeQuestionService', [
-        'FeedbackService',
-        ClozeQuestionService
-    ])
-    .service('GraphicQuestionService', [
-        'FeedbackService',
-        'ImageAreaService',
-        GraphicQuestionService
-    ])
-    .service('MatchQuestionService', [
-        'FeedbackService',
-        MatchQuestionService
-    ])
-    .service('OpenQuestionService', [
-        'FeedbackService',
-        OpenQuestionService
-    ])
+  .module('Question', [
+    'ui.translation',
+    'ui.bootstrap',
+    'ui.modal',
+    'Common',
+    'Feedback',
+    'Image',
+    'Correction'
+  ])
+  .controller('QuestionShowCtrl', [
+    '$uibModal',
+    'ExerciseService',
+    'QuestionService',
+    'FeedbackService',
+    'UserPaperService',
+    QuestionShowCtrl
+  ])
+  .controller('ChoiceQuestionCtrl', [
+    'FeedbackService',
+    'ChoiceQuestionService',
+    ChoiceQuestionCtrl
+  ])
+  .controller('ClozeQuestionCtrl', [
+    'FeedbackService',
+    'ClozeQuestionService',
+    ClozeQuestionCtrl
+  ])
+  .controller('GraphicQuestionCtrl', [
+    'FeedbackService',
+    'GraphicQuestionService',
+    'ImageAreaService',
+    GraphicQuestionCtrl
+  ])
+  .controller('MatchQuestionCtrl', [
+    'FeedbackService',
+    '$scope',
+    '$uibModal',
+    'MatchQuestionService',
+    MatchQuestionCtrl
+  ])
+  .controller('OpenQuestionCtrl', [
+    'FeedbackService',
+    'OpenQuestionService',
+    OpenQuestionCtrl
+  ])
+  .directive('questionShow', [
+    QuestionShowDirective
+  ])
+  .directive('choiceQuestion', [
+    'FeedbackService',
+    ChoiceQuestionDirective
+  ])
+  .directive('clozeQuestion', [
+    'FeedbackService',
+    '$compile',
+    ClozeQuestionDirective
+  ])
+  .directive('graphicQuestion', [
+    'FeedbackService',
+    '$window',
+    GraphicQuestionDirective
+  ])
+  .directive('matchQuestion', [
+    'FeedbackService',
+    '$timeout',
+    '$window',
+    'MatchQuestionService',
+    MatchQuestionDirective
+  ])
+  .directive('openQuestion', [
+    'FeedbackService',
+    OpenQuestionDirective
+  ])
+  .service('QuestionService', [
+    'ChoiceQuestionService',
+    'ClozeQuestionService',
+    'GraphicQuestionService',
+    'MatchQuestionService',
+    'OpenQuestionService',
+    QuestionService
+  ])
+  .service('ChoiceQuestionService', [
+    'FeedbackService',
+    ChoiceQuestionService
+  ])
+  .service('ClozeQuestionService', [
+    'FeedbackService',
+    ClozeQuestionService
+  ])
+  .service('GraphicQuestionService', [
+    'FeedbackService',
+    'ImageAreaService',
+    GraphicQuestionService
+  ])
+  .service('MatchQuestionService', [
+    'FeedbackService',
+    MatchQuestionService
+  ])
+  .service('OpenQuestionService', [
+    'FeedbackService',
+    OpenQuestionService
+  ])

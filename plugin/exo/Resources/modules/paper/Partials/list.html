@@ -56,7 +56,7 @@
                                 <th at-attribute="number">{{ 'paper_list_table_paper_number'|trans:{}:'ujm_sequence' }}</th>
                                 <th at-attribute="start">{{ 'paper_list_table_start_date'|trans:{}:'ujm_sequence' }}</th>
                                 <th at-attribute="end">{{ 'paper_list_table_end_date'|trans:{}:'ujm_sequence' }}</th>
-                                <th at-attribute="interrupted">{{ 'paper_list_table_interrupted'|trans:{}:'ujm_sequence' }}</th>
+                                <th at-attribute="interrupted">{{ 'paper_finished'|trans:{}:'ujm_exo' }}</th>
                                 <th at-attribute="score">{{ 'paper_list_table_score'|trans:{}:'ujm_sequence' }}</th>
                                 <th at-attribute="id">{{ 'actions' | trans:{}:'ujm_exo' }}</th>
                             </tr>
@@ -85,13 +85,15 @@
                                     <span data-ng-if="!item.end">-</span>
                                 </td>
 
-                                <!-- Has been interrupted ? -->
+                                <!-- Finished ? -->
                                 <td at-attribute="interrupted" at-sortable class="text-center">
-                                    <span class="fa fa-fw fa-check-circle" data-ng-if="item.interrupted"></span>
-                                    <span class="fa fa-fw fa-times-circle" data-ng-if="!item.interrupted"></span>
+                                    <span data-ng-if="item.interrupted">
+                                        {{ 'no' | trans:{}:'ujm_exo' }}
+                                    </span>
 
-                                    <span class="sr-only" data-ng-if="item.interrupted">{{ 'paper_list_table_interrupted_yes'|trans:{}:'ujm_sequence' }}</span>
-                                    <span class="sr-only" data-ng-if="!item.interrupted">{{ 'paper_list_table_interrupted_no'|trans:{}:'ujm_sequence' }}</span>
+                                    <span data-ng-if="!item.interrupted">
+                                        {{ 'yes' | trans:{}:'ujm_exo' }}
+                                    </span>
                                 </td>
 
                                 <!-- Score -->

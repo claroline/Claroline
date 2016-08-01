@@ -35,18 +35,18 @@ class ExperienceType extends AbstractWidgetType
             ->add('post', 'text')
             ->add('companyName', 'text')
             ->add('startDate', 'datepicker',
-                array(
+                [
                     'required' => false,
                     'language' => $language,
-                    'format' => 'Y-M-d',
-               )
+                    'format' => 'Y/M/d',
+               ]
             )
             ->add('endDate', 'datepicker',
-                array(
+                [
                     'required' => false,
                     'language' => $language,
-                    'format' => 'Y-M-d',
-               )
+                    'format' => 'Y/M/d',
+               ]
             )
             ->add('description', 'tinymce')
             ->add('website', 'url');
@@ -60,11 +60,11 @@ class ExperienceType extends AbstractWidgetType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Icap\PortfolioBundle\Entity\Widget\ExperienceWidget',
                 'translation_domain' => 'icap_portfolio',
                 'csrf_protection' => false,
-            )
+            ]
         );
     }
 }

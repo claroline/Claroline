@@ -1,0 +1,55 @@
+<!-- region text transcription row -->
+
+<div data-ng-if="$ctrl.resource.options.showTextTranscription" class="row">
+    <div class="col-md-12">
+        <div class="my-flex-row">
+            <div class="text-center player-col" style="width:10%;" data-ng-click="$ctrl.toggleTextTranscriptionText()" id="btn-toggle-transcription">
+                <i style="cursor:pointer;" class="fa fa-font big bordered-top bordered-left bordered-right" title="{{'textual_transcription' | trans:{}:'media_resource'}}"></i>
+            </div>
+            <div class="player-col" style="width:90%;">
+                <div data-ng-if="$ctrl.showTextTranscriptionText" class="help-text" data-ng-bind-html="$ctrl.currentRegion.note | trust_html"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- play buttons and waveform row -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="my-flex-row">
+            <div class="text-center player-col" style="width:10%;">
+                <!-- Play / Pause -->
+                <button data-ng-click="$ctrl.play()" id="btn-play" title="{{'play_pause' | trans:{}:'media_resource'}}" data-ng-class="{'fa-play': !$ctrl.playing, 'fa-pause': $ctrl.playing}" class="fa big bordered-top bordered-left bordered-right bordered-bottom"></button>
+            </div>
+            <div class="player-col" style="width:90%;">
+                <div id="wave-timeline"></div>
+                <div id="waveform">
+                    <div class="progress progress-striped active" id="progress-bar">
+                        <div class="progress-bar progress-bar-info"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Help row -->
+<div class="row" data-ng-if="$ctrl.showHelp">
+    <div class="col-md-12">
+
+        <div class="help-container">
+            <button class="btn btn-default fa fa-retweet help-item" data-ng-click="$ctrl.playInLoop()" data-ng-disabled="!$ctrl.currentRegion.helps.loop" id="btn-loop" title="{{'region_help_segment_playback_loop' | trans:{}:'media_resource'}}"></button>
+            <button class="btn btn-default fa fa-exchange help-item" data-ng-click="$ctrl.playBackward()" data-ng-disabled="!$ctrl.currentRegion.helps.backward" id="btn-backward" title="{{'region_help_segment_playback_backward' | trans:{}:'media_resource'}}"></button>
+            <button class="btn btn-default help-item" id="btn-slow" data-ng-click="$ctrl.playSlowly()" data-ng-disabled="!$ctrl.currentRegion.helps.rate" title="{{'region_help_segment_playback_rate' | trans:{}:'media_resource'}}">x0.8</button>
+            <button class="btn btn-default fa fa-file-text-o help-item" data-ng-click="$ctrl.showHelpText()" data-ng-disabled="!$ctrl.hasHelpText()" id="btn-text" title="{{'region_help_help_text_label' | trans:{}:'media_resource'}}">
+                <span class="label label-info my-label">{{$ctrl.currentHelpTextIndex + 1}}</span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Help text row -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="help-text-container" data-ng-show="$ctrl.helpText !== ''">
+            <span class="help-text-item">{{$ctrl.helpText.text}}</span>
+        </div>
+    </div>
+</div>

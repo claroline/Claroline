@@ -153,3 +153,7 @@
 .user-panel .image .img-polaroid{
   max-height: 75px;
 }
+
+.form-control-notation {
+    width: 15%;
+}

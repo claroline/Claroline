@@ -1,9 +1,14 @@
 # c
 creating_resource: Creating resource
+config_update_error: Problem while updating video recorder configuration.
+config_update_success: Video recorder configuration update successfull.
 
 # d
 download_video: Download video file
 db_meter: Db meter
+
+# i
+innova_video_recorder_config: Video recorder configuration
 
 # m
 my_recordings: My recordings
@@ -25,6 +30,10 @@ start_recording: Start recording
 stop_recording: Stop recording
 start: Start
 stop: Stop
+submit_config_label: Save configuration
+
+# v
+video_recorder_configuration_max_recording_time: Maximum recording time (Secondes, 0 = infinite)
 
 # w
-warning_message_record_end:
+warning_message_record_end: Recording has ended<br/>Click Validate if it seems good to you else use the Retry button

@@ -33,25 +33,25 @@ class UserInformationType extends AbstractWidgetType
 
         $builder
             ->add('birthDate', 'datepicker',
-                array(
+                [
                     'required' => false,
                     'language' => $language,
-                    'format' => 'Y-M-d',
-               )
+                    'format' => 'Y/M/d',
+               ]
             )
             ->add('city', 'text')
-            ->add('show_avatar', 'checkbox', array(
+            ->add('show_avatar', 'checkbox', [
                 'required' => false,
-            ))
-            ->add('show_mail', 'checkbox', array(
+            ])
+            ->add('show_mail', 'checkbox', [
                 'required' => false,
-            ))
-            ->add('show_phone', 'checkbox', array(
+            ])
+            ->add('show_phone', 'checkbox', [
                 'required' => false,
-            ))
-            ->add('show_description', 'checkbox', array(
+            ])
+            ->add('show_description', 'checkbox', [
                 'required' => false,
-            ))
+            ])
             ->add('text', 'tinymce');
     }
 
@@ -63,11 +63,11 @@ class UserInformationType extends AbstractWidgetType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Icap\PortfolioBundle\Entity\Widget\UserInformationWidget',
                 'translation_domain' => 'icap_portfolio',
                 'csrf_protection' => false,
-            )
+            ]
         );
     }
 }

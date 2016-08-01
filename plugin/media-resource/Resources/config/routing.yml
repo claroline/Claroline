@@ -1,0 +1,4 @@
+innova_media_resource:
+    resource: "@InnovaMediaResourceBundle/Controller/MediaResourceController.php"
+    prefix:   /
+    type: annotation

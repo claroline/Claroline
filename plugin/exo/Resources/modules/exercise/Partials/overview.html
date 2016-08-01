@@ -84,15 +84,6 @@
                                 <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.created|date_string:'dd/MM/yyyy HH:mm:ss' }}</td>
                             </tr>
 
-                            <!-- Shuffle step order -->
-                            <tr>
-                                <th class="text-right col-md-4" scope="row">{{ 'random_steps' | trans:{}:'ujm_exo' }}</th>
-                                <td class="text-center col-md-8">
-                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.random">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
-                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.random">{{ 'no' | trans:{}:'ujm_exo' }}</span>
-                                </td>
-                            </tr>
-
                             <!-- Number of steps to draw -->
                             <tr>
                                 <th class="text-right col-md-4" scope="row">{{ 'number_steps_draw' | trans:{}:'ujm_exo' }}</th>
@@ -102,9 +93,18 @@
                                 </td>
                             </tr>
 
-                            <!-- Keep same step -->
+                            <!-- Shuffle step order -->
                             <tr>
-                                <th class="text-right col-md-4" scope="row">{{ 'keep_same_question' | trans:{}:'ujm_exo' }}</th>
+                                <th class="text-right col-md-4" scope="row">{{ 'random_steps' | trans:{}:'ujm_exo' }}</th>
+                                <td class="text-center col-md-8">
+                                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.random">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
+                                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.random">{{ 'no' | trans:{}:'ujm_exo' }}</span>
+                                </td>
+                            </tr>
+
+                            <!-- Keep same step -->
+                            <tr data-ng-if="0 < exerciseOverviewCtrl.exercise.meta.pick || exerciseOverviewCtrl.exercise.meta.random">
+                                <th class="text-right col-md-4" scope="row">{{ 'keep_same_step' | trans:{}:'ujm_exo' }}</th>
                                 <td class="text-center col-md-8">
                                     <span data-ng-if="exerciseOverviewCtrl.exercise.meta.pick">{{ 'yes' | trans:{}:'ujm_exo' }}</span>
                                     <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.pick">{{ 'no' | trans:{}:'ujm_exo' }}</span>

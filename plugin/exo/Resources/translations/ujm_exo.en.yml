@@ -13,8 +13,9 @@ after_the_last_attempt: After the last attempt
 alert_ending: Are you sure you want to finish ? (You can't alter your answers anymore)
 all: All
 allow_to_edit: Allow to edit
+allow_test_exit: Allow test exit
 all_question: All the questions
-all_question: All the steps
+all_step: All the steps
 already: This question is already shared with this user
 already_answered: You have already answered at this exercise
 already_exist: This name exist already
@@ -113,6 +114,7 @@ exercise_finished_attempts: "[0, 1] You have finished %count% attempt|]1,Inf[  Y
 exercice_linked_question: Questions linked to the exercise
 exercise_restart: Restart the exercise
 exercise_start: Start the exercise
+exercise_tries: "[0, 1] You have %count% try|]1,Inf[ You have %count% tries"
 exercise_try: Try the exercise
 exit: Exit
 exo_empty_user_can_edit: This exercise is empty. Please edit and publish it to fill it.
@@ -188,7 +190,7 @@ in_valid_mark: Invalid score
 item_points: "[0,1] %count% point|]1,Inf[ %count% points"
 
 # K
-keep_same_question: Keep the same questions for a same user
+keep_same_step: Keep the same steps for a same user
 key_word: Key word
 keys_words: Keys words
 kind_question: What kind of question
@@ -201,6 +203,7 @@ less_information: Less information
 list: List
 list_question: List of question
 lock_attempt: Lock attempt
+lock_exercise: Verrouiller l'exercice
 long: Long
 
 # M
@@ -213,6 +216,7 @@ matching: Association
 matching_creation: Association creation
 matching_edition: Association edition
 matching_value: Type of associative question
+maximum_attempts: Maximum number of attempts
 maximum_tries: Maximum number of tries
 meaning_measure_difficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
 metadata_visible:      Display exercise information
@@ -252,6 +256,7 @@ not_enought_papers: To display docimology, it must have at least 12 papers
 not_yet_mark: Not yet mark
 no_user_found: No user found
 n_question: Question n°
+number_max_attempts_help: Type 0 for unlimited attempts
 number_proposal: Number of the proposal
 number_of_papers: Number of papers
 number_questions_draw: Number of questions to draw (0 for all)
@@ -274,6 +279,7 @@ overview: Overview
 
 # P
 paper: Paper
+paper_finished: Finished
 paper_legend: Papers which need manual correction
 paper_list: Paper list
 paper_count: "{0} no paper|{1} %count% paper|]1,Inf[ %count% papers"
@@ -317,8 +323,10 @@ question_graphic_set_pointers: Click on the picture to place a pointer
 question_graphic_nb_pointers: "{0} There is no more pointer to place on the picture.|{1} There is still %count% pointer to place on the picture.|]1,Inf[ There are still %count% pointers to place on the picture."
 
 # R
+random_picking: Random picking
 random_steps: Random order of steps
 random_questions: Random order of questions
+random_steps_order: Random order of steps
 raz: => To reset all pointers' position, press "c".
 square: square
 remove_advanced_edition: Simple edition
@@ -336,6 +344,7 @@ save: Save
 save_order: Save the new order
 score: Score
 score_answer: Points for this answer
+score_displaying: Score displaying
 score_list_question: Score and list of questions
 score_error: Be careful, score must be a number
 score_max : Score maximum possible
@@ -359,6 +368,7 @@ shared_with: Shared with
 short: Short
 show: Show
 show_instructions: Show instructions
+signing: Signing
 size: Size
 start_again: Start again
 start_date: Start date
