@@ -228,10 +228,12 @@ class Deck extends AbstractResource
         foreach ($this->userPreferences as $i => $userPref) {
             if ($newUserPref->getUser()->getId() === $userPref->getUser()->getId()) {
                 $this->userPreferences[$i] = $newUserPref;
+
                 return $this;
             }
         }
         $this->userPreferences->add($newUserPref);
+
         return $this;
     }
 }

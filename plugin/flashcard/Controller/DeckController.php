@@ -165,7 +165,7 @@ class DeckController
      *     name="claroline_get_user_pref"
      * )
      *
-     * @param Deck    $deck
+     * @param Deck $deck
      *
      * @return JsonResponse
      */
@@ -187,8 +187,6 @@ class DeckController
 
         return $response;
     }
-
-
 
     private function assertCanOpen($obj)
     {
