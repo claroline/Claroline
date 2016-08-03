@@ -1062,6 +1062,7 @@ user_removed: 'User %user% removed'
 user_selector: 'User picker'
 user_visit: 'Audience/user visits'
 username: Username
+username_already_used: 'Username %username% is already used'
 username_and_email_from_two_different_users: 'Username %username% and email %email% are both in use and don''t refer to the same user.'
 username_found_at: 'The username %username% was found at lines: %lines%'
 username_or_email: 'Username or email'
