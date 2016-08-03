@@ -39,7 +39,7 @@ angular.module('ChatRoomModule', [
 ])
 .controller('ChatRoomMainCtrl', ['$state', 'ChatRoomService', ChatRoomMainCtrl])
 .controller('ChatRoomTextCtrl', ['$state', 'ChatRoomService', ChatRoomTextCtrl])
-.controller('ChatRoomVideoCtrl', ['$state', 'ChatRoomService', 'VideoService', ChatRoomVideoCtrl])
+.controller('ChatRoomVideoCtrl', ['$state', '$scope', 'ChatRoomService', 'VideoService', ChatRoomVideoCtrl])
 .service('ChatRoomService', ChatRoomService)
 .service('VideoService', VideoService)
 .directive('chatRoomInput', () => new ChatRoomInputDirective)

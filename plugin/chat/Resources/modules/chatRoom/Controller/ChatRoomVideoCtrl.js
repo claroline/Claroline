@@ -9,8 +9,9 @@
 
 export default class ChatRoomVideoCtrl {
 
-  constructor($state, ChatRoomService, VideoService) {
+  constructor($state, $scope, ChatRoomService, VideoService) {
     this.$state = $state
+    this.$scope = $scope
     this.ChatRoomService = ChatRoomService
     this.VideoService = VideoService
     this.chatRoomConfig = ChatRoomService.getConfig()
