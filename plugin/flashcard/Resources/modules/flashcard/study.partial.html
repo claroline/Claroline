@@ -32,6 +32,12 @@
           data-ng-if="vm.answers.length == 0 && vm.currentCard">
     {{ 'answer.show'|trans:'flashcard' }}
   </button>
+  <button class="btn btn-default"
+          data-ng-click="vm.cancelLastStudy()"
+          data-ng-if="vm.answers.length == 0 && vm.currentCard &&
+          vm.revisedCards.length != 0">
+    {{ 'study.cancelLastStudy'|trans:'flashcard' }}
+  </button>
   <button class="btn btn-danger"
           data-ng-click="vm.validAnswer(0)"
           data-ng-if="vm.answers.length > 0">

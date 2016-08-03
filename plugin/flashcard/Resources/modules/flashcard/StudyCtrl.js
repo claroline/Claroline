@@ -15,6 +15,8 @@ export default class StudyCtrl {
     this.canEdit = service._canEdit
     this.newCards = []
     this.learningCards = []
+    // Revised cards during this session
+    this.revisedCards = []
     this.sessionId = 0
     this.currentCard = false
     this.currentCardIsNew = 0
@@ -79,6 +81,7 @@ export default class StudyCtrl {
   }
 
   showQuestions () {
+    this.questions = []
     for (let i=0; i < this.currentCard.card_type.questions.length; i++) {
         for (let j=0; j < this.currentCard.note.field_values.length; j++) {
           if (this.currentCard.card_type.questions[i].id ==
@@ -90,6 +93,7 @@ export default class StudyCtrl {
   }
 
   showAnswers () {
+    this.answers = []
     for (let i=0; i < this.currentCard.card_type.answers.length; i++) {
         for (let j=0; j < this.currentCard.note.field_values.length; j++) {
           if (this.currentCard.card_type.answers[i].id ==
@@ -104,10 +108,37 @@ export default class StudyCtrl {
     this.answerQuality = answerQuality
     // We need to treat the case where this request doesn't work
     this._service.studyCard(
-        this.deck, 
-        this.sessionId, 
-        this.currentCard, 
-        answerQuality).then(d => this.sessionId = d.data);
+      this.deck, 
+      this.sessionId, 
+      this.currentCard, 
+      answerQuality
+    ).then(
+      d => {
+        this.sessionId = d.data
+      }
+    )
+    this.revisedCards.push(this.currentCard)
     this.chooseCard()
+  }
+
+  cancelLastStudy () {
+    this._service.cancelLastStudy(
+      this.deck, 
+      this.sessionId, 
+      this.revisedCards[this.revisedCards.length - 1]
+    ).then(
+        d => {
+          this.sessionId = d.data
+        }
+    )
+    if (this.currentCardIsNew) {
+      this.newCards.push(this.currentCard)
+      this.currentCard = this.revisedCards.pop()
+      this.currentCardIsNew = 0
+    } else {
+      this.learningCards.push(this.currentCard)
+      this.currentCard = this.revisedCards.pop()
+    }
+    this.showQuestions()
   }
 }

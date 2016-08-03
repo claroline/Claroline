@@ -27,6 +27,7 @@ field:
 study:
   begin: Commencer à étudier
   stop: Arrêter d'étudier
+  cancelLastStudy: Annuler la dernière étude
 answer:
   show: Afficher la réponse
   again: Encore

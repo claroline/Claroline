@@ -118,6 +118,15 @@ export default class FlashCardService {
     return this.$http.get(url)
   }
 
+  cancelLastStudy (deck, sessionId, card) {
+    const url = Routing.generate('claroline_cancel_last_study', {
+      deck: deck.id,
+      sessionId: sessionId,
+      card: card.id,
+    })
+    return this.$http.get(url)
+  }
+
   suspendCard (card, suspend) {
     const url = Routing.generate('claroline_suspend_card', {
       card: card.id,

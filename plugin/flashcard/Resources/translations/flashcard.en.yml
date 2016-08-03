@@ -27,6 +27,7 @@ field:
 study:
   begin: Study now
   stop: Stop studying
+  cancelLastStudy: Undo last review
 answer:
   show: Show response
   again: Again

@@ -148,6 +148,21 @@ class Session
      *
      * @return bool
      */
+    public function deleteCard(Card $obj)
+    {
+        if ($this->newCards->contains($obj)) {
+            return $this->newCards->removeElement($obj);
+        }
+        if ($this->oldCards->contains($obj)) {
+            return $this->oldCards->removeElement($obj);
+        }
+    }
+
+    /**
+     * @param Card
+     *
+     * @return bool
+     */
     public function addNewCard(Card $obj)
     {
         if ($this->newCards->contains($obj)) {
