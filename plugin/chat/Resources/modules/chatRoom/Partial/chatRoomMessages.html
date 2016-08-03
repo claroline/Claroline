@@ -1,4 +1,4 @@
-<div id="chat-messages-panel" class="well well-sm">
+<div id="chat-messages-panel" class="well well-sm" scroll-bottom="{'always': true}">
     <div ng-if="crc.oldMessages.length > 0">
         <div>****************************************</div>
             <div ng-repeat="oldMessage in crc.oldMessages">
@@ -47,7 +47,7 @@
         <div ng-switch="message['type']">
             <div ng-switch-when="message">
                 <b class="received-message" style="color: {{ message['color'] }}">
-                    {{ message['sender'] }} 
+                    {{ message['sender'] }}
                 </b> :
                 {{ message['message'] }}
             </div>

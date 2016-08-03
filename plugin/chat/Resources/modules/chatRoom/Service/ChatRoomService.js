@@ -685,8 +685,7 @@ export default class ChatRoomService {
       }
     }
 
-    return oops
-
+    return true
   }
 
   _onIQStanza (iq) {
