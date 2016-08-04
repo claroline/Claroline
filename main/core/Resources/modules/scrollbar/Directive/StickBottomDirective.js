@@ -9,37 +9,37 @@ export default class StickBottomDirective {
 
   link (scope, $el, $attrs) {
     const options = this.$parse($attrs.scrollBottom)(scope.$parent)
-    const always = options.always ? true: false
+    const always = options.always ? true : false
     const el = $el[0]
-    console.log($el)
 
     scope.$watch(
-        //I should watch the height instead but I couldn't make it work (yet)
-        () => {return $el.html()},
-        (newValue, oldValue) => {
-          this.scrollIfReady(el, always)
-        },
-        true
+      // I should watch the height instead but I couldn't make it work (yet)
+      () => {
+        return $el.html()},
+      () => {
+        this.scrollIfReady(el, always)
+      },
+      true
     )
 
     this.$timeout(this.scrollBottom(el), 0, false)
   }
 
-  scrollBottom(el) {
-     el.scrollTop = el.scrollHeight;
+  scrollBottom (el) {
+    el.scrollTop = el.scrollHeight
   }
 
-  isBottom(el) {
+  isBottom (el) {
     return el.scrollTop + el.clientHeight + 1 >= el.scrollHeight
   }
 
-  scrollReady(el, always) {
-      const ready = this.isBottom(el) || always
-      return ready
+  scrollReady (el, always) {
+    const ready = this.isBottom(el) || always
+    return ready
   }
 
-  scrollIfReady(el, always) {
-      if (this.scrollReady(el, always)) this.scrollBottom(el)
+  scrollIfReady (el, always) {
+    if (this.scrollReady(el, always)) this.scrollBottom(el)
   }
 
 }

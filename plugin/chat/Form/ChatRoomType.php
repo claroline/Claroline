@@ -29,9 +29,9 @@ class ChatRoomType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $typesList = array(
+        $typesList = [
             ChatRoom::TEXT => 'text_only',
-        );
+        ];
         $disableAudio = $this->configHandler->getParameter('chat_room_audio_disable');
         $disableVideo = $this->configHandler->getParameter('chat_room_video_disable');
 
@@ -46,19 +46,19 @@ class ChatRoomType extends AbstractType
         $builder->add(
             'name',
             'text',
-            array(
+            [
                 'constraints' => new NotBlank(),
                 'label' => 'name',
-                'translation_domain' => 'platform'
-            )
+                'translation_domain' => 'platform',
+            ]
         );
         $builder->add(
             'roomType',
             'choice',
-            array(
+            [
                 'label' => 'type',
-                'choices' => $typesList
-            )
+                'choices' => $typesList,
+            ]
         );
     }
 
@@ -69,6 +69,6 @@ class ChatRoomType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'chat'));
+        $resolver->setDefaults(['translation_domain' => 'chat']);
     }
 }

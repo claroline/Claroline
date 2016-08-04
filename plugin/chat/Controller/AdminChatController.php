@@ -155,7 +155,7 @@ class AdminChatController extends Controller
                 ]
             );
 
-            $chatType = $this->chatManager->enableChatType();
+            $this->chatManager->enableChatType();
 
             return new RedirectResponse(
                 $this->router->generate('claro_chat_admin_management')
@@ -175,7 +175,7 @@ class AdminChatController extends Controller
      */
     public function resetConfigurationAction()
     {
-        $chatType = $this->chatManager->resetParameters();
+        $this->chatManager->resetParameters();
 
         return new RedirectResponse(
             $this->router->generate('claro_chat_admin_management')

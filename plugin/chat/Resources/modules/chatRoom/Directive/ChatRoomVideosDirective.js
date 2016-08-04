@@ -7,11 +7,13 @@
  * file that was distributed with this source code.
  */
 
+import tpl from '../Partial/chatRoomVideos.html'
+
 export default class ChatRoomVideosDirective {
 
-  constructor() {
+  constructor () {
     this.restrict = 'E'
     this.replace = true
-    this.template = require('../Partial/chatRoomVideos.html')
+    this.template = tpl
   }
 }

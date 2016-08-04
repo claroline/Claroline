@@ -7,10 +7,21 @@
  * file that was distributed with this source code.
  */
 
+import $ from 'jquery'
+
+/* global Routing */
+/* global Translator */
+/* global Strophe */
+
+/* global $pres */
+/* global $iq */
+/* global $msg */
+
 export default class ChatRoomService {
-  constructor ($rootScope, $http, XmppService, UserService, MessageService) {
+  constructor ($rootScope, $http, $log, XmppService, UserService, MessageService) {
     this.$rootScope = $rootScope
     this.$http = $http
+    this.$log = $log
     this.XmppService = XmppService
     this.UserService = UserService
     this.MessageService = MessageService
@@ -47,9 +58,12 @@ export default class ChatRoomService {
     this._onIQStanza = this._onIQStanza.bind(this)
 
     this._fullConnection = this._fullConnection.bind(this)
-    this._connectedCallback = () => {}
-    this._userDisconnectedCallback = () => {}
-    this._managementCallback = () => {}
+    this._connectedCallback = () => {
+    }
+    this._userDisconnectedCallback = () => {
+    }
+    this._managementCallback = () => {
+    }
   }
 
   getConfig () {
@@ -93,39 +107,38 @@ export default class ChatRoomService {
   }
 
   connectToRoom () {
-    if (this.xmppConfig['connected'] && this.xmppConfig['adminConnected'])  {
-      console.log('Connecting to room...')
+    if (this.xmppConfig['connected'] && this.xmppConfig['adminConnected']) {
+      this.$log.log('Connecting to room...')
       this.connectAdminToRoom()
     } else {
-      console.log('Not connected to XMPP')
+      this.$log.log('Not connected to XMPP')
       this.XmppService.setConnectedCallback(this._fullConnection)
       this.XmppService.connectWithAdmin()
     }
   }
 
   connectAdminToRoom () {
-    if (this.xmppConfig['adminConnected'])  {
-      console.log(`Connecting ${this.config['adminUsername']} to room...`)
+    if (this.xmppConfig['adminConnected']) {
+      this.$log.log(`Connecting ${this.config['adminUsername']} to room...`)
       this.xmppConfig['adminConnection'].addHandler(this._onRoomAdminPresence, null, 'presence')
       this.xmppConfig['adminConnection'].send($pres({to: `${this.config['room']}/${this.config['adminUsername']}`}))
     } else {
-      console.log(`${this.config['adminUsername']} is not connected`)
+      this.$log.log(`${this.config['adminUsername']} is not connected`)
     }
   }
 
   connectUserToRoom () {
-    if (this.xmppConfig['connected'])  {
-      console.log('Connecting user to room...')
+    if (this.xmppConfig['connected']) {
+      this.$log.log('Connecting user to room...')
       this.config['busy'] = true
       this.xmppConfig['connection'].addHandler(this._onRoomPresence, null, 'presence')
       this.xmppConfig['connection'].addHandler(this._onRoomMessage, null, 'message', 'groupchat')
       this.xmppConfig['connection'].addHandler(this._onIQStanza, null, 'iq')
-      //this will log everything we receive
-      //this.xmppConfig['connection'].xmlInput((elem) => console.log(elem))
-      console.log(`${this.config['room']}/${this.xmppConfig['username']}`)
+      // this will log everything we receive
+      // this.xmppConfig['connection'].xmlInput((elem) => this.$log.log(elem))
+      this.$log.log(`${this.config['room']}/${this.xmppConfig['username']}`)
       this.xmppConfig['connection'].send(
-        $pres({to: `${this.config['room']}/${this.xmppConfig['username']}`})
-        .c(
+        $pres({to: `${this.config['room']}/${this.xmppConfig['username']}`}).c(
           'datas',
           {
             firstName: this.xmppConfig['firstName'],
@@ -135,7 +148,7 @@ export default class ChatRoomService {
         )
       )
     } else {
-      console.log('Not connected to XMPP')
+      this.$log.log('Not connected to XMPP')
     }
   }
 
@@ -160,43 +173,43 @@ export default class ChatRoomService {
     this.MessageService.emptyOldMessages()
     this.UserService.emptyUsers()
     this.UserService.emptyBannedUsers()
-    console.log('Disconnected')
+    this.$log.log('Disconnected')
   }
 
   initializeRoom () {
-    if (this.xmppConfig['adminConnected'])  {
-      console.log(`${this.config['adminUsername']} is connected`)
+    if (this.xmppConfig['adminConnected']) {
+      this.$log.log(`${this.config['adminUsername']} is connected`)
       this.xmppConfig['adminConnection'].addHandler(this._onRoomAdminPresenceInit, null, 'presence')
       this.xmppConfig['adminConnection'].addHandler(this._onIQStanzaInit, null, 'iq')
       this.xmppConfig['adminConnection'].send($pres({to: `${this.config['room']}/${this.config['adminUsername']}`}))
     } else {
-      console.log(`${this.config['adminUsername']} is not connected`)
+      this.$log.log(`${this.config['adminUsername']} is not connected`)
     }
   }
 
   configureRoom () {
-    console.log('configure room')
+    this.$log.log('configure room')
     const iq = $iq({
       id: 'room-config-submit',
       from: `${this.config['adminUsername']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
       to: this.config['room'],
       type: 'set'
     }).c('query', {xmlns: 'http://jabber.org/protocol/muc#owner'})
-    .c('x', {xmlns: 'jabber:x:data', type: 'submit'})
-    .c('field', {var: 'FORM_TYPE'})
-    .c('value').t('http://jabber.org/protocol/muc#roomconfig')
-    .up()
-    .up()
-    .c('field', {var: 'muc#roomconfig_persistentroom'})
-    .c('value').t(1)
-    .up()
-    .up()
-    .c('field', {var: 'muc#roomconfig_moderatedroom'})
-    .c('value').t(0)
-    .up()
-    .up()
-    .c('field', {var: 'muc#roomconfig_whois'})
-    .c('value').t('moderators')
+      .c('x', {xmlns: 'jabber:x:data', type: 'submit'})
+      .c('field', {var: 'FORM_TYPE'})
+      .c('value').t('http://jabber.org/protocol/muc#roomconfig')
+      .up()
+      .up()
+      .c('field', {var: 'muc#roomconfig_persistentroom'})
+      .c('value').t(1)
+      .up()
+      .up()
+      .c('field', {var: 'muc#roomconfig_moderatedroom'})
+      .c('value').t(0)
+      .up()
+      .up()
+      .c('field', {var: 'muc#roomconfig_whois'})
+      .c('value').t('moderators')
     this.xmppConfig['adminConnection'].sendIQ(iq)
   }
 
@@ -230,16 +243,14 @@ export default class ChatRoomService {
             this.xmppConfig['connection'].send(
               $msg({
                 to: this.config['room'],
-                type: "groupchat"
-              }).c('body').t(message)
-              .up()
-              .c(
-                'datas',
-                {
-                  firstName:  this.xmppConfig['firstName'],
-                  lastName: this.xmppConfig['lastName'],
-                  color: this.xmppConfig['color']
-                }
+                type: 'groupchat'
+              })
+                .c('body')
+                .t(message)
+                .up()
+                .c(
+                  'datas',
+                  {firstName: this.xmppConfig['firstName'], lastName: this.xmppConfig['lastName'], color: this.xmppConfig['color']}
               )
             )
           }
@@ -258,36 +269,36 @@ export default class ChatRoomService {
   }
 
   initializeRoleAndAffiliation () {
-    console.log('initialize role & affiliation...')
+    this.$log.log('initialize role & affiliation...')
 
     if (this.config['myAffiliation'] !== 'owner' && this.config['myAffiliation'] !== 'outcast' && this.config['myRole'] !== 'visitor') {
       if (this.config['canEdit']) {
         if (this.config['myAffiliation'] !== 'admin') {
-          console.log('Granting ADMIN affiliation...')
+          this.$log.log('Granting ADMIN affiliation...')
           const affiliationIq = $iq({
             id: `role-${this.config['myUsername']}`,
             from: `${this.config['adminUsername']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
             to: this.config['room'],
             type: 'set'
           }).c('query', {xmlns: 'http://jabber.org/protocol/muc#admin'})
-          .c('item', {jid: `${this.config['myUsername']}@${this.xmppConfig['xmppHost']}`, affiliation: 'admin'})
+            .c('item', {jid: `${this.config['myUsername']}@${this.xmppConfig['xmppHost']}`, affiliation: 'admin'})
           this.xmppConfig['adminConnection'].sendIQ(affiliationIq)
         }
 
         if (this.config['myRole'] !== 'moderator') {
-          console.log('Granting MODERATOR role...')
+          this.$log.log('Granting MODERATOR role...')
           const roleIq = $iq({
             id: `role-${this.config['myUsername']}`,
             from: `${this.config['adminUsername']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
             to: this.config['room'],
             type: 'set'
           }).c('x', {xmlns: 'http://jabber.org/protocol/muc#admin'})
-          .c('item', {nick: this.config['myUsername'], role: 'moderator'})
+            .c('item', {nick: this.config['myUsername'], role: 'moderator'})
           this.xmppConfig['adminConnection'].sendIQ(roleIq)
         }
       } else {
         if (this.config['myAffiliation'] !== 'none') {
-          console.log('Granting NONE affiliation...')
+          this.$log.log('Granting NONE affiliation...')
           const affiliationIq = $iq({
             id: `role-${this.config['myUsername']}`,
             from: `${this.config['adminUsername']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
@@ -299,7 +310,7 @@ export default class ChatRoomService {
         }
 
         if (this.config['myRole'] !== 'participant') {
-          console.log('Granting PARTICIPANT role...')
+          this.$log.log('Granting PARTICIPANT role...')
           const roleIq = $iq({
             id: `role-${this.config['myUsername']}`,
             from: `${this.config['adminUsername']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
@@ -312,7 +323,7 @@ export default class ChatRoomService {
       }
     }
 
-    console.log('Disconnecting the admin (roles are set)')
+    this.$log.log('Disconnecting the admin (roles are set)')
     this.xmppConfig['adminConnection'].disconnect()
   }
 
@@ -323,19 +334,19 @@ export default class ChatRoomService {
       to: this.config['room'],
       type: 'get'
     }).c('query', {xmlns: 'http://jabber.org/protocol/muc#admin'})
-    .c('item', {affiliation: 'outcast'})
+      .c('item', {affiliation: 'outcast'})
     this.xmppConfig['connection'].sendIQ(iq)
   }
 
   kickUser (username) {
     if (this.config['canEdit'] && this.config['myRole'] === 'moderator') {
       const iq = $iq({
-          id: `kick-${username}`,
-          from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
-          to: this.config['room'],
-          type: 'set'
+        id: `kick-${username}`,
+        from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
+        to: this.config['room'],
+        type: 'set'
       }).c('x', {xmlns: 'http://jabber.org/protocol/muc#admin'})
-      .c('item', {nick: username, role: 'none'})
+        .c('item', {nick: username, role: 'none'})
       this.xmppConfig['connection'].sendIQ(iq)
     }
   }
@@ -374,7 +385,7 @@ export default class ChatRoomService {
         to: this.config['room'],
         type: 'set'
       }).c('query', {xmlns: 'http://jabber.org/protocol/muc#admin'})
-      .c('item', {jid: `${username}@${this.xmppConfig['xmppHost']}`, affiliation: 'outcast'})
+        .c('item', {jid: `${username}@${this.xmppConfig['xmppHost']}`, affiliation: 'outcast'})
       this.xmppConfig['connection'].sendIQ(iq)
     }
   }
@@ -387,7 +398,7 @@ export default class ChatRoomService {
         to: this.config['room'],
         type: 'set'
       }).c('query', {xmlns: 'http://jabber.org/protocol/muc#admin'})
-      .c('item', {jid: `${username}@${this.xmppConfig['xmppHost']}`, affiliation: 'none'})
+        .c('item', {jid: `${username}@${this.xmppConfig['xmppHost']}`, affiliation: 'none'})
       this.xmppConfig['connection'].sendIQ(iq)
     }
   }
@@ -398,21 +409,19 @@ export default class ChatRoomService {
         to: this.config['room'],
         type: 'groupchat'
       }).c('body').t('')
-      .up()
-      .c(
-        'datas',
-        {
-          status: 'management',
-          username: username,
-          name: name,
-          type: 'unban-user',
-          value: true
-        }
-      )
+        .up()
+        .c(
+          'datas', {
+            status: 'management',
+            username: username,
+            name: name,
+            type: 'unban-user',
+            value: true
+          })
     )
   }
 
-  registerPresence (status, username = this.xmppConfig['username'], fullName = this.xmppConfig['fullName']) {
+  registerPresence (status, username = this.xmppConfig['username'] , fullName = this.xmppConfig['fullName']) {
     const route = Routing.generate(
       'api_post_chat_room_presence_register',
       {
@@ -425,7 +434,7 @@ export default class ChatRoomService {
     this.$http.post(route)
   }
 
-  registerMessage (message, username = this.xmppConfig['username'], fullName = this.xmppConfig['fullName']) {
+  registerMessage (message, username = this.xmppConfig['username'] , fullName = this.xmppConfig['fullName']) {
     const route = Routing.generate(
       'api_post_chat_room_message_register',
       {
@@ -435,8 +444,9 @@ export default class ChatRoomService {
       }
     )
     return this.$http.post(route, {message: message}).then(
-      d => {return 'ok'},
-      d =>  {
+      () => {
+        return 'ok'},
+      d => {
         if (d['status'] === 403) {
           const route = Routing.generate('claro_resource_open_short', {node: this.config['resourceId']})
           window.location = route
@@ -500,7 +510,7 @@ export default class ChatRoomService {
       const username = Strophe.getResourceFromJid(from)
 
       if (username === this.config['adminUsername'] && statusCode === '110') {
-        console.log('admin is connected to chat room')
+        this.$log.log('admin is connected to chat room')
         this.configureRoom()
         response = false
       }
@@ -520,7 +530,7 @@ export default class ChatRoomService {
       const username = Strophe.getResourceFromJid(from)
 
       if (username === this.config['adminUsername'] && statusCode === '110') {
-        console.log('admin is connected to chat room')
+        this.$log.log('admin is connected to chat room')
         this.connectUserToRoom()
         response = false
       }
@@ -530,7 +540,7 @@ export default class ChatRoomService {
   }
 
   _onRoomPresence (presence) {
-    //console.log(presence)
+    // this.$log.log(presence)
     const from = $(presence).attr('from')
     const username = Strophe.getResourceFromJid(from)
     const roomName = Strophe.getBareJidFromJid(from)
@@ -540,11 +550,11 @@ export default class ChatRoomService {
     const errorCode = error.attr('code')
 
     if (statusCode) {
-        console.log('##### STATUS = ' + statusCode + ' ####')
+      this.$log.log('##### STATUS = ' + statusCode + ' ####')
     }
 
     if (errorCode) {
-        console.log('##### ERROR = ' + errorCode + ' ####')
+      this.$log.log('##### ERROR = ' + errorCode + ' ####')
     }
 
     if (roomName.toLowerCase() === this.config['room'].toLowerCase() && username !== this.config['adminUsername']) {
@@ -562,7 +572,7 @@ export default class ChatRoomService {
       name = (name === username) ? this.UserService.getUserFullName(name) : name
 
       if (errorCode === '403') {
-        console.log('Forbidden')
+        this.$log.log('Forbidden')
         this.config['message'] = Translator.trans('not_authorized_msg', {}, 'chat')
         this.config['messageType'] = 'danger'
         this.refreshScope()
@@ -572,7 +582,6 @@ export default class ChatRoomService {
           this.config['myAffiliation'] = affiliation
 
           if (statusCode === '110') {
-
             if (type === 'unavailable') {
               this.resetChatRoomDatas()
               this.registerPresence('disconnection')
@@ -600,8 +609,8 @@ export default class ChatRoomService {
         } else {
           if (statusCode === '301') {
             const userDatas = this.UserService.getUserDatas(username)
-            const userDatasName = userDatas['name'] ?  userDatas['name'] : username
-            const userDatasColor = userDatas['color'] ?  userDatas['color'] : null
+            const userDatasName = userDatas['name'] ? userDatas['name'] : username
+            const userDatasColor = userDatas['color'] ? userDatas['color'] : null
             this.UserService.addBannedUser(username, userDatasName, userDatasColor)
             this.MessageService.addPresenceMessage(name, 'banned')
           } else if (statusCode === '307') {
@@ -610,7 +619,7 @@ export default class ChatRoomService {
         }
 
         if (type === 'unavailable') {
-          console.log(`****************** ${username} => disconnected`)
+          this.$log.log(`****************** ${username} => disconnected`)
           this._userDisconnectedCallback(username)
           this.UserService.removeUser(username, statusCode)
           this.refreshScope()
@@ -625,7 +634,7 @@ export default class ChatRoomService {
   }
 
   _onRoomMessage (message) {
-    console.log(message)
+    this.$log.log(message)
     const from = $(message).attr('from')
     const type = $(message).attr('type')
     const roomName = Strophe.getBareJidFromJid(from)
@@ -636,10 +645,9 @@ export default class ChatRoomService {
 
       if (delayElement === undefined || delayElement[0] === undefined) {
         let body = $(message).find('html > body').html()
-        const statusElement  = $(message).find('status')
+        const statusElement = $(message).find('status')
 
         if (statusElement === undefined || statusElement.attr('code') !== '104') {
-
           if (body === undefined) {
             body = $(message).find('body').text()
           }
@@ -647,13 +655,13 @@ export default class ChatRoomService {
           const status = datas.attr('status')
 
           if (status === 'raw') {
-            console.log('RAW MESSAGE')
-          //  $rootScope.$broadcast('rawRoomMessageEvent', {message: body});
+            this.$log.log('RAW MESSAGE')
+          //  $rootScope.$broadcast('rawRoomMessageEvent', {message: body})
           } else if (status === 'management') {
-            const type =  datas.attr('type')
+            const type = datas.attr('type')
             const user = datas.attr('username')
             const userFullName = datas.attr('name')
-            const value =  datas.attr('value');
+            const value = datas.attr('value')
             this.manageManagementMessage(type, user, userFullName, value)
           } else if (username !== this.config['myUsername']) {
             const firstName = datas.attr('firstName')
@@ -672,16 +680,14 @@ export default class ChatRoomService {
   }
 
   _onIQStanzaInit (iq) {
-    //console.log(iq)
-    let response = true
     const type = $(iq).attr('type')
     const id = $(iq).attr('id')
 
     if (type === 'result') {
       if (id === 'room-config-submit') {
-        console.log('Room configured')
+        this.$log.log('Room configured')
         this.openRoom()
-        response = false
+      // return false
       }
     }
 
@@ -689,7 +695,7 @@ export default class ChatRoomService {
   }
 
   _onIQStanza (iq) {
-    //console.log(iq)
+    // this.$log.log(iq)
     const type = $(iq).attr('type')
     const id = $(iq).attr('id')
 
@@ -708,8 +714,8 @@ export default class ChatRoomService {
       } else if (id.substring(0, 4) === 'ban-') {
         const username = id.substring(4, id.length)
         const userDatas = this.UserService.getUserDatas(username)
-        const userDatasName = userDatas['name'] ?  userDatas['name'] : username
-        const userDatasColor = userDatas['color'] ?  userDatas['color'] : null
+        const userDatasName = userDatas['name'] ? userDatas['name'] : username
+        const userDatasColor = userDatas['color'] ? userDatas['color'] : null
         this.UserService.addBannedUser(username, userDatasName, userDatasColor)
         this.refreshScope()
       } else if (id.substring(0, 6) === 'unban-') {

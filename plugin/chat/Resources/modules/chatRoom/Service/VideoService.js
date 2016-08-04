@@ -7,10 +7,22 @@
  * file that was distributed with this source code.
  */
 
+/* eslint no-unused-vars: ["error", { "vars": "local" }] */
+/* global $msg */
+/* global hark */
+/* global setupRTC */
+/* global RTC */
+/* global RTCPeerconnection */
+/* global getUserMediaWithConstraints */
+/* global Strophe */
+
+import angular from 'angular/index'
+
 export default class VideoService {
-  constructor ($http, $sce, ChatRoomService, UserService) {
+  constructor ($http, $sce, $log, ChatRoomService, UserService) {
     this.$http = $http
     this.$sce = $sce
+    this.$log = $log
     this.ChatRoomService = ChatRoomService
     this.UserService = UserService
     this.chatRoomConfig = this.ChatRoomService.getConfig()
@@ -41,7 +53,7 @@ export default class VideoService {
     }
 
     this.RTC = null
-    console.log(this.videoConfig.ice_config)
+    this.$log.log(this.videoConfig.ice_config)
     this._startMedias = this._startMedias.bind(this)
     this._stopUserStream = this._stopUserStream.bind(this)
     this._manageManagementMessage = this._manageManagementMessage.bind(this)
@@ -68,12 +80,12 @@ export default class VideoService {
   switchVideo () {
     if (this.videoConfig['myVideoEnabled']) {
       this.videoConfig['myVideoTracks'].forEach(t => {
-          t.enabled = false
+        t.enabled = false
       })
       this.videoConfig['myVideoEnabled'] = false
     } else {
       this.videoConfig['myVideoTracks'].forEach(t => {
-          t.enabled = true
+        t.enabled = true
       })
       this.videoConfig['myVideoEnabled'] = true
     }
@@ -119,14 +131,7 @@ export default class VideoService {
         type: 'groupchat'
       }).c('body').t('')
         .up()
-        .c(
-          'datas',
-          {
-            status: 'management',
-            username: username,
-            type: 'video-micro-switch'
-          }
-      )
+        .c('datas', {status: 'management', username: username, type: 'video-micro-switch'})
     )
   }
 
@@ -137,14 +142,7 @@ export default class VideoService {
         type: 'groupchat'
       }).c('body').t('')
         .up()
-        .c(
-          'datas',
-          {
-            status: 'management',
-            username: username,
-            type: 'video-micro-status-request'
-          }
-      )
+        .c('datas', {status: 'management', username: username, type: 'video-micro-status-request'})
     )
   }
 
@@ -155,15 +153,12 @@ export default class VideoService {
         type: 'groupchat'
       }).c('body').t('')
         .up()
-        .c(
-          'datas',
-          {
-            status: 'management',
-            username: this.chatRoomConfig['myUsername'],
-            type: 'video-micro-status',
-            value: this.videoConfig['myAudioEnabled']
-          }
-      )
+        .c('datas', {
+          status: 'management',
+          username: this.chatRoomConfig['myUsername'],
+          type: 'video-micro-status',
+          value: this.videoConfig['myAudioEnabled']
+        })
     )
   }
 
@@ -175,14 +170,12 @@ export default class VideoService {
       }).c('body').t('')
         .up()
         .c(
-          'datas',
-          {
+          'datas', {
             status: 'management',
             username: this.chatRoomConfig['myUsername'],
             type: 'speaking',
             value: 1
-          }
-      )
+          })
     )
   }
 
@@ -196,28 +189,28 @@ export default class VideoService {
   }
 
   selectSourceStream (username) {
-    console.log(username)
+    this.$log.log(username)
     if (this.videoConfig['selectedUser'] === username) {
       this.videoConfig['selectedUser'] = null
     } else {
       this.videoConfig['selectedUser'] = username
     }
-    console.log(`Selected user: ${this.videoConfig['selectedUser']}`)
+    this.$log.log(`Selected user: ${this.videoConfig['selectedUser']}`)
     this.videoConfig['mainStreamUsername'] = username
   }
 
   initiateCalls () {
-    console.log('Initiating calls...')
+    this.$log.log('Initiating calls...')
     this.videoConfig['users'].forEach(u => {
       if (u['username'] !== this.chatRoomConfig['myUsername']) {
-        console.log(`${this.chatRoomConfig['room']}/${u['username']}`)
-        console.log(`${this.chatRoomConfig['room']}/${this.chatRoomConfig['myUsername']}`)
+        this.$log.log(`${this.chatRoomConfig['room']}/${u['username']}`)
+        this.$log.log(`${this.chatRoomConfig['room']}/${this.chatRoomConfig['myUsername']}`)
         const session = this.xmppConfig['connection'].jingle.initiate(
           `${this.chatRoomConfig['room']}/${u['username']}`,
           `${this.chatRoomConfig['room']}/${this.chatRoomConfig['myUsername']}`
         )
 
-        //as long a we don't have a better fix...
+        // as long a we don't have a better fix...
         if (this.RTC.browser === 'firefox') session.usetrickle = false
 
         if (session['sid']) {
@@ -240,10 +233,10 @@ export default class VideoService {
       })
       speechEvents.on('stopped_speaking', () => {
         if (this.videoConfig['myAudioEnabled']) {
-          console.log('Stopped speaking.')
+          this.$log.log('Stopped speaking.')
         }
       })
-      speechEvents.on('volume_change', (volume, treshold) => {
+      speechEvents.on('volume_change', (volume) => {
         if (this.videoConfig['myAudioEnabled'] && this.videoConfig['speakingUser'] !== this.chatRoomConfig['myUsername'] && volume > -50) {
           this.sendSpeakingNotification()
         }
@@ -257,35 +250,35 @@ export default class VideoService {
 
   closeAllConnections () {
     for (let sid in this.videoConfig['sids']) {
-      console.log('Try to close ' + sid)
-      console.log(this.xmppConfig['connection'].jingle.sessions[sid])
+      this.$log.log('Try to close ' + sid)
+      this.$log.log(this.xmppConfig['connection'].jingle.sessions[sid])
       if (this.xmppConfig['connection'].jingle.sessions[sid].state === 'active') {
-          this.xmppConfig['connection'].jingle.sessions[sid].terminate('Closing all connections...')
-          console.log(`${sid} : closed`)
+        this.xmppConfig['connection'].jingle.sessions[sid].terminate('Closing all connections...')
+        this.$log.log(`${sid} : closed`)
       }
     }
   }
 
   _updateMainStream () {
-    console.log('_updateMainStream')
+    this.$log.log('_updateMainStream')
     if (this.videoConfig['selectedUser'] !== null) {
       if (this.videoConfig['mainStreamUsername'] !== this.videoConfig['selectedUser']) {
         this.videoConfig['mainStreamUsername'] = this.videoConfig['selectedUser']
         this.ChatRoomService.refreshScope()
-        console.log(`Selected user : ${this.videoConfig['mainStreamUsername']}`)
+        this.$log.log(`Selected user : ${this.videoConfig['mainStreamUsername']}`)
       }
     } else if (this.videoConfig['speakingUser'] !== null) {
       if (this.videoConfig['mainStreamUsername'] !== this.videoConfig['speakingUser']) {
         this.videoConfig['mainStreamUsername'] = this.videoConfig['speakingUser']
         this.ChatRoomService.refreshScope()
-        console.log(`Speaking user : ${this.videoConfig['mainStreamUsername']}`)
+        this.$log.log(`Speaking user : ${this.videoConfig['mainStreamUsername']}`)
       }
     }
   }
 
   _startMedias () {
-    //for getUserMediaWithConstraints()
-    RTC = this.RTC = setupRTC();
+    // for getUserMediaWithConstraints()
+    RTC = this.RTC = setupRTC()
     getUserMediaWithConstraints(['audio', 'video'])
     this.xmppConfig['connection'].jingle.ice_config = this.videoConfig['ice_config']
     angular.element(document).bind('mediaready.jingle', this._onMediaReady)
@@ -298,17 +291,17 @@ export default class VideoService {
     angular.element(document).bind('iceconnectionstatechange.jingle', this._onIceConnectionStateChanged)
     angular.element(document).bind('nostuncandidates.jingle', this._noStunCandidates)
     angular.element(document).bind('ack.jingle', function (event, sid, ack) {
-      console.log('got stanza ack for ' + sid, ack)
+      this.$log.log('got stanza ack for ' + sid, ack)
     })
     angular.element(document).bind('error.jingle', function (event, sid, err) {
       if (sid) {
-        console.error('got stanza error for ' + sid, err)
+        this.$log.error('got stanza error for ' + sid, err)
       } else {
-        console.error('no sid defined for', err)
+        this.$log.error('no sid defined for', err)
       }
     })
     angular.element(document).bind('packetloss.jingle', function (event, sid, loss) {
-      console.warn('packetloss', sid, loss)
+      this.$log.warn('packetloss', sid, loss)
     })
 
     if (this.RTC) {
@@ -317,16 +310,16 @@ export default class VideoService {
 
       if (this.RTC.browser === 'firefox') {
         this.xmppConfig['connection'].jingle.media_constraints.mandatory.mozDontOfferDataChannel = true
-        this.xmppConfig['connection'].jingle.media_constraints.mandatory.offerToReceiveAudio = true
-        this.xmppConfig['connection'].jingle.media_constraints.mandatory.offerToReceiveVideo = true
+        this.xmppConfig['connection'].jingle.media_constraints.offerToReceiveAudio = true
+        this.xmppConfig['connection'].jingle.media_constraints.offerToReceiveVideo = true
       }
     } else {
-      console.log('webrtc capable browser required')
+      this.$log.log('webrtc capable browser required')
     }
   }
 
   _stopUserStream (username) {
-    console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+    this.$log.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
     for (let sid in this.videoConfig['sids']) {
       if (this.videoConfig['sids'][sid] === username) {
         this.xmppConfig['connection'].jingle.sessions[sid].terminate('disconnected user')
@@ -334,7 +327,7 @@ export default class VideoService {
         delete this.videoConfig['sids'][sid]
       }
     }
-    console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+    this.$log.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
   }
 
   _manageManagementMessage (type, username, name, value) {
@@ -345,7 +338,7 @@ export default class VideoService {
       }
     } else if (type === 'video-micro-status-request') {
       if (username === this.chatRoomConfig['myUsername']) {
-        console.log(`resend micro status request`)
+        this.$log.log('resend micro status request')
         this.sendMicroStatus()
       }
     } else if (type === 'video-micro-switch') {
@@ -354,14 +347,14 @@ export default class VideoService {
         this.ChatRoomService.refreshScope()
       }
     } else if (type === 'speaking') {
-      console.log(`${username} is speaking...`)
+      this.$log.log(`${username} is speaking...`)
       this.videoConfig['speakingUser'] = username
       this.ChatRoomService.refreshScope()
     }
   }
 
   _onMediaReady (event, stream) {
-    console.log('Media ready')
+    this.$log.log('Media ready')
     this.videoConfig['localStream'] = stream
     this.xmppConfig['connection'].jingle.localStream = stream
     this.videoConfig['localStream'].getAudioTracks().forEach(t => this.videoConfig['myAudioTracks'].push(t))
@@ -385,11 +378,11 @@ export default class VideoService {
   }
 
   _onMediaFailure () {
-    console.log('Media failure')
+    this.$log.log('Media failure')
   }
 
   _onCallIncoming (event, sid) {
-    console.log(`Incoming call : ${sid}`)
+    this.$log.log(`Incoming call : ${sid}`)
     const sess = this.xmppConfig['connection'].jingle.sessions[sid]
     const initiator = Strophe.getResourceFromJid(sess['initiator'])
     this.addSid(sid, initiator)
@@ -397,44 +390,44 @@ export default class VideoService {
     sess.accept()
   }
 
-  _onCallTerminated (event, sid, reason) {
-    console.log('Call terminated')
+  _onCallTerminated () {
+    this.$log.log('Call terminated')
   }
 
   _onRemoteStreamAdded (event, data, sid) {
-    console.log(`Remote stream for session ${sid} added.`)
+    this.$log.log(`Remote stream for session ${sid} added.`)
     this._waitForRemoteVideo(sid)
   }
 
   _onRemoteStreamRemoved (event, data, sid) {
-    console.log(`Remote stream for session ${sid} removed.`)
+    this.$log.log(`Remote stream for session ${sid} removed.`)
   }
 
   _onIceConnectionStateChanged (event, sid, sess) {
-    console.log('_onIceConnectionStateChanged')
-    console.log('ice state for', sid, sess.peerconnection.iceConnectionState)
-    console.log('sig state for', sid, sess.peerconnection.signalingState)
-    console.log(sess['initiator'])
+    this.$log.log('_onIceConnectionStateChanged')
+    this.$log.log('ice state for', sid, sess.peerconnection.iceConnectionState)
+    this.$log.log('sig state for', sid, sess.peerconnection.signalingState)
+    this.$log.log(sess['initiator'])
 
     if (sess.peerconnection.iceConnectionState === 'connected') {
-      console.log('add new stream')
+      this.$log.log('add new stream')
     } else if (sess.peerconnection.iceConnectionState === 'disconnected') {
       this.xmppConfig['connection'].jingle.sessions[sid].terminate('disconnected')
       // connection.jingle.sessions[sid].terminate('disconnected')
-      console.log('remove stream')
+      this.$log.log('remove stream')
     // $scope.removeStream(sid)
     // manageDisconnectedSid(sid)
     } else if (sess.peerconnection.iceConnectionState === 'failed' || sess.peerconnection.iceConnectionState === 'closed') {
-      console.log('failed/closed stream')
+      this.$log.log('failed/closed stream')
     }
   }
 
-  _noStunCandidates (event) {
-    console.error('webrtc did not encounter stun candidates, NAT traversal will not work')
+  _noStunCandidates () {
+    this.$log.error('webrtc did not encounter stun candidates, NAT traversal will not work')
   }
 
   _waitForRemoteVideo (sid) {
-    console.log('*********** Waiting for remote video... *******************')
+    this.$log.log('*********** Waiting for remote video... *******************')
     const sess = this.xmppConfig['connection'].jingle.sessions[sid]
     const videoTracks = sess.remoteStream.getVideoTracks()
     // const initiator = Strophe.getResourceFromJid(sess['initiator'])
@@ -444,13 +437,14 @@ export default class VideoService {
       const streamURL = window.URL.createObjectURL(sess.remoteStream)
       const trustedStreamURL = this.$sce.trustAsResourceUrl(streamURL)
       this.videoConfig['sourceStreams'][this.videoConfig['sids'][sid]] = trustedStreamURL
-      console.log('###################################################################')
-      console.log(this.videoConfig['sids'])
-      console.log(this.xmppConfig['connection'].jingle.sessions)
-      console.log('###################################################################')
+      this.$log.log('###################################################################')
+      this.$log.log(this.videoConfig['sids'])
+      this.$log.log(this.xmppConfig['connection'].jingle.sessions)
+      this.$log.log('###################################################################')
       this.ChatRoomService.refreshScope()
     } else {
-      setTimeout(() => {this._waitForRemoteVideo(sid)}, 500)
+      setTimeout(() => {
+        this._waitForRemoteVideo(sid)}, 500)
     }
   }
 }

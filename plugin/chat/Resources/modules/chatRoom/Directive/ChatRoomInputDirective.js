@@ -7,11 +7,13 @@
  * file that was distributed with this source code.
  */
 
+import tpl from '../Partial/chatRoomInput.html'
+
 export default class ChatRoomInputDirective {
 
   constructor () {
     this.restrict = 'E'
     this.replace = true
-    this.template = require('../Partial/chatRoomInput.html')
+    this.template = tpl
   }
 }

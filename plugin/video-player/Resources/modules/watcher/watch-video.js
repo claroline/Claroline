@@ -1,6 +1,6 @@
 import observe from './observe'
 
-//observe('video', callback)
+observe('video', callback)
 
 function callback (el) {
   videojs(el, {

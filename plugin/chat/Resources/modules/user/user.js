@@ -7,10 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import 'angular/index'
+import angular from 'angular/index'
 
-import bootstrap from 'angular-bootstrap'
-import translation from 'angular-ui-translation/angular-translation'
+import 'angular-bootstrap'
+import 'angular-ui-translation/angular-translation'
+
 import UserService from './Service/UserService'
 
 angular.module('UserModule', [
@@ -19,4 +20,3 @@ angular.module('UserModule', [
   'ui.translation'
 ])
 .service('UserService', UserService)
-

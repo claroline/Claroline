@@ -31,15 +31,7 @@ class ValidateParametersCommand extends ContainerAwareCommand
     {
         $consoleLogger = ConsoleLogger::get($output);
         $chatManager = $this->getContainer()->get('claroline.manager.chat_manager');
-        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
         $chatManager->setLogger($consoleLogger);
-        $host = $configHandler->getParameter('chat_xmpp_host');
-        $user = $configHandler->getParameter('chat_admin_username');
-        $pw = $configHandler->getParameter('chat_admin_password');
-        $muc = $configHandler->getParameter('chat_xmpp_muc_host');
-        $bosh = $configHandler->getParameter('chat_bosh_port');
-        $ice = $configHandler->getParameter('chat_ice_servers');
-        $ssl = $configHandler->getParameter('chat_ssl');
-        $chatManager->validateParameters($host, $muc, $bosh, $ice, $user, $pw, $ssl);
+        $chatManager->isConfigured();
     }
 }

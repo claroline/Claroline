@@ -21,7 +21,7 @@ export default class UserService {
     return this.bannedUsers
   }
 
-  addUser (username, name, color = null, affiliation = null, role = null) {
+  addUser (username, name, color = null , affiliation = null , role = null) {
     const index = this.users.findIndex(u => u['username'] === username)
     let added = false
 
@@ -36,7 +36,7 @@ export default class UserService {
     return added
   }
 
-  removeUser (username, statusCode = 0) {
+  removeUser (username) {
     const index = this.users.findIndex(u => u['username'] === username)
 
     if (index > -1) {

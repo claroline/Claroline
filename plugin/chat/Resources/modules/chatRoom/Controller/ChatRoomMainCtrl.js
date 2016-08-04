@@ -9,7 +9,7 @@
 
 export default class ChatRoomMainCtrl {
 
-  constructor($state, ChatRoomService) {
+  constructor ($state, ChatRoomService) {
     this.$state = $state
     this.ChatRoomService = ChatRoomService
     this.chatRoomConfig = ChatRoomService.getConfig()
@@ -28,7 +28,7 @@ export default class ChatRoomMainCtrl {
   }
 
   connectToRoom () {
-    //this.ChatRoomService.connectToRoom()
+    // this.ChatRoomService.connectToRoom()
 
     if (this.chatRoomConfig['roomType'] === 'text') {
       this.$state.transitionTo(

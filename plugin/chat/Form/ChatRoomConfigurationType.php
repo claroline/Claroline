@@ -28,14 +28,14 @@ class ChatRoomConfigurationType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $typesList = array(
+        $typesList = [
             ChatRoom::TEXT => 'text_only',
-        );
-        $statusList = array(
+        ];
+        $statusList = [
             ChatRoom::UNINITIALIZED => 'uninitialized',
             ChatRoom::OPEN => 'open',
-            ChatRoom::CLOSED => 'closed'
-        );
+            ChatRoom::CLOSED => 'closed',
+        ];
         $disableAudio = $this->configHandler->getParameter('chat_room_audio_disable');
         $disableVideo = $this->configHandler->getParameter('chat_room_video_disable');
 
@@ -50,26 +50,26 @@ class ChatRoomConfigurationType extends AbstractType
         $builder->add(
             'roomName',
             'text',
-            array(
+            [
                 'label' => 'chat_room_id',
-                'disabled' => true
-            )
+                'disabled' => true,
+            ]
         );
         $builder->add(
             'roomType',
             'choice',
-            array(
+            [
                 'label' => 'type',
-                'choices' => $typesList
-            )
+                'choices' => $typesList,
+            ]
         );
         $builder->add(
             'roomStatus',
             'choice',
-            array(
+            [
                 'label' => 'status',
-                'choices' => $statusList
-            )
+                'choices' => $statusList,
+            ]
         );
     }
 
@@ -80,6 +80,6 @@ class ChatRoomConfigurationType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'chat'));
+        $resolver->setDefaults(['translation_domain' => 'chat']);
     }
 }

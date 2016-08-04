@@ -7,10 +7,13 @@
  * file that was distributed with this source code.
  */
 
+import $ from 'jquery'
+
 export default class ChatRoomTextCtrl {
 
-  constructor($state, ChatRoomService) {
+  constructor($state, $log, ChatRoomService) {
     this.$state = $state
+    this.$log = $log
     this.ChatRoomService = ChatRoomService
     this.chatRoomConfig = ChatRoomService.getConfig()
     this.xmppConfig = ChatRoomService.getXmppConfig()
@@ -25,7 +28,7 @@ export default class ChatRoomTextCtrl {
   initialize () {
     $(window).unload(($event) => {
       $event.preventDefault()
-      console.log('Disconnecting...')
+      this.$log.log('Disconnecting...')
       this.ChatRoomService.disconnectFromRoom()
     })
 

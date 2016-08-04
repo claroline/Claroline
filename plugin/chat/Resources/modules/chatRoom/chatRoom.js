@@ -7,14 +7,16 @@
  * file that was distributed with this source code.
  */
 
-import 'angular/index'
+import angular from 'angular/index'
 
-import UIRouter from 'angular-ui-router'
-import bootstrap from 'angular-bootstrap'
-import translation from 'angular-ui-translation/angular-translation'
-import MessageModule from '../message/message'
-import UserModule from '../user/user'
-import XmppModule from '../xmpp/xmpp'
+import 'angular-ui-router'
+import 'angular-bootstrap'
+import 'angular-ui-translation/angular-translation'
+import '../message/message'
+import '../user/user'
+import '../xmpp/xmpp'
+import '#/main/core/scrollbar/module'
+
 import Routing from './routing.js'
 import ChatRoomMainCtrl from './Controller/ChatRoomMainCtrl'
 import ChatRoomTextCtrl from './Controller/ChatRoomTextCtrl'
@@ -25,7 +27,6 @@ import ChatRoomInputDirective from './Directive/ChatRoomInputDirective'
 import ChatRoomMessagesDirective from './Directive/ChatRoomMessagesDirective'
 import ChatRoomUsersDirective from './Directive/ChatRoomUsersDirective'
 import ChatRoomVideosDirective from './Directive/ChatRoomVideosDirective'
-import Scrollbar from '#/main/core/scrollbar/module'
 
 angular.module('ChatRoomModule', [
   'ui.bootstrap',
@@ -37,13 +38,13 @@ angular.module('ChatRoomModule', [
   'MessageModule',
   'UserModule'
 ])
-.controller('ChatRoomMainCtrl', ['$state', 'ChatRoomService', ChatRoomMainCtrl])
-.controller('ChatRoomTextCtrl', ['$state', 'ChatRoomService', ChatRoomTextCtrl])
-.controller('ChatRoomVideoCtrl', ['$state', '$scope', 'ChatRoomService', 'VideoService', ChatRoomVideoCtrl])
-.service('ChatRoomService', ChatRoomService)
-.service('VideoService', VideoService)
-.directive('chatRoomInput', () => new ChatRoomInputDirective)
-.directive('chatRoomMessages', () => new ChatRoomMessagesDirective)
-.directive('chatRoomUsers', () => new ChatRoomUsersDirective)
-.directive('chatRoomVideos', () => new ChatRoomVideosDirective)
-.config(Routing)
+  .controller('ChatRoomMainCtrl', ['$state', 'ChatRoomService', ChatRoomMainCtrl])
+  .controller('ChatRoomTextCtrl', ['$state', '$log', 'ChatRoomService', ChatRoomTextCtrl])
+  .controller('ChatRoomVideoCtrl', ['$state', '$log', '$scope', 'ChatRoomService', 'VideoService', ChatRoomVideoCtrl])
+  .service('ChatRoomService', ChatRoomService)
+  .service('VideoService', VideoService)
+  .directive('chatRoomInput', () => new ChatRoomInputDirective)
+  .directive('chatRoomMessages', () => new ChatRoomMessagesDirective)
+  .directive('chatRoomUsers', () => new ChatRoomUsersDirective)
+  .directive('chatRoomVideos', () => new ChatRoomVideosDirective)
+  .config(Routing)

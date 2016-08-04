@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import 'angular/index'
-
+import angular from 'angular/index'
 import XmppService from './Service/XmppService'
 
 angular.module('XmppModule', [])
 .service('XmppService', XmppService)
-

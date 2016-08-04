@@ -40,6 +40,9 @@ class UserCreationListener
     public function onUserCreated(UserCreatedEvent $event)
     {
         $user = $event->getUser();
-        $this->chatManager->importUser($user);
+
+        if ($this->chatManager->isConfigured()) {
+            $this->chatManager->importUser($user);
+        }
     }
 }

@@ -7,11 +7,16 @@
  * file that was distributed with this source code.
  */
 
+ /* global Strophe */
+ /* global $pres */
+ /* global Routing */
+
 export default class XmppService {
-  constructor ($rootScope, $http) {
-    this.protocol = XmppService._getGlobal('xmppSsl') ? 'https': 'http'
+  constructor ($rootScope, $http, $log) {
+    this.protocol = XmppService._getGlobal('xmppSsl') ? 'https' : 'http'
     this.$rootScope = $rootScope
     this.$http = $http
+    this.$log = $log
     this.config = {
       adminConnection: null,
       connection: null,
@@ -33,48 +38,49 @@ export default class XmppService {
     this.adminPassword = XmppService._getGlobal('chatAdminPassword')
     this._connectionCallback = this._connectionCallback.bind(this)
     this._adminConnectionCallback = this._adminConnectionCallback.bind(this)
-    this._connectedCallback = () => {}
+    this._connectedCallback = () => {
+    }
   }
 
   _connectionCallback (status) {
     if (status === Strophe.Status.CONNECTED) {
-      console.log('Connected')
+      this.$log.log('Connected')
       this.config['connection'].send($pres().c('priority').t('-1'))
       this.config['connected'] = true
       this.config['busy'] = false
       this.refreshScope()
       this._connectedCallback()
     } else if (status === Strophe.Status.CONNFAIL) {
-      console.log('Connection failed !')
+      this.$log.log('Connection failed !')
       this.config['connected'] = false
       this.config['busy'] = false
     } else if (status === Strophe.Status.DISCONNECTED) {
-      console.log('Disconnected')
+      this.$log.log('Disconnected')
       this.config['connected'] = false
       this.config['busy'] = false
     } else if (status === Strophe.Status.CONNECTING) {
       this.config['busy'] = true
-      console.log('Connecting...')
+      this.$log.log('Connecting...')
     } else if (status === Strophe.Status.DISCONNECTING) {
       this.config['busy'] = true
-      console.log('Disconnecting...')
+      this.$log.log('Disconnecting...')
     }
   }
 
   _adminConnectionCallback (status) {
     if (status === Strophe.Status.CONNECTED) {
-      console.log('admin Connected')
+      this.$log.log('admin Connected')
       this.config['adminConnection'].send($pres().c('priority').t('-1'))
       this.config['adminConnected'] = true
       this.refreshScope()
     } else if (status === Strophe.Status.CONNFAIL) {
-      console.log('admin Connection failed !')
+      this.$log.log('admin Connection failed !')
     } else if (status === Strophe.Status.DISCONNECTED) {
-      console.log('admin Disconnected')
+      this.$log.log('admin Disconnected')
     } else if (status === Strophe.Status.CONNECTING) {
-      console.log('admin Connecting...')
+      this.$log.log('admin Connecting...')
     } else if (status === Strophe.Status.DISCONNECTING) {
-      console.log('admin Disconnecting...')
+      this.$log.log('admin Disconnecting...')
     }
   }
 
@@ -102,7 +108,7 @@ export default class XmppService {
             this.config['lastName'] = datas['data']['lastName']
             this.config['fullName'] = `${datas['data']['firstName']} ${datas['data']['lastName']}`
             this.config['color'] = datas['data']['chatColor']
-            this.config['connection'] = new Strophe.Connection(this.config['boshService']);
+            this.config['connection'] = new Strophe.Connection(this.config['boshService'])
             this.config['connection'].connect(
               `${this.config['username']}@${this.config['xmppHost']}`,
               this.config['password'],
@@ -131,22 +137,22 @@ export default class XmppService {
             this.config['fullName'] = `${datas['data']['firstName']} ${datas['data']['lastName']}`
             this.config['color'] = datas['data']['chatColor']
 
-            this.config['adminConnection'] = new Strophe.Connection(this.config['boshService']);
+            this.config['adminConnection'] = new Strophe.Connection(this.config['boshService'])
             this.config['adminConnection'].connect(
               `${this.adminUsername}@${this.config['xmppHost']}`,
               this.adminPassword,
               this._adminConnectionCallback
             )
 
-            this.config['connection'] = new Strophe.Connection(this.config['boshService']);
+            this.config['connection'] = new Strophe.Connection(this.config['boshService'])
             this.config['connection'].connect(
               `${this.config['username']}@${this.config['xmppHost']}`,
               this.config['password'],
               this._connectionCallback
             )
 
-            //this.config['connection'].rawInput = function (data) { console.log('RECV: ' + data); };
-            //this.config['connection'].rawOutput = function (data) { console.log('SEND: ' + data); };
+          // this.config['connection'].rawInput = function (data) { this.$log.log('RECV: ' + data); }
+          // this.config['connection'].rawOutput = function (data) { this.$log.log('SEND: ' + data); }
           }
         }
       })

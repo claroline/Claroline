@@ -25,9 +25,9 @@ class ChatRoom extends AbstractResource
     const OPEN = 1;
     const CLOSED = 2;
 
-    CONST TEXT = 0;
-    CONST AUDIO = 1;
-    CONST VIDEO = 2;
+    const TEXT = 0;
+    const AUDIO = 1;
+    const VIDEO = 2;
 
     /**
      * @ORM\Id

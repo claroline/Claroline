@@ -15,7 +15,7 @@
                 </h3>
             </div>
             <div class="panel-body participant-video-panel" ng-click="crc.selectSourceStream(crc.getMyUsername())">
-                <video id="my-video" autoplay="autoplay" class="participant-video" ng-src="{{ crc.videoConfig['mySourceStream'] }}"></video>
+                <video id="my-video" autoplay="autoplay" class="participant-video not-video-js" ng-src="{{ crc.videoConfig['mySourceStream'] }}"></video>
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@
                 </h3>
             </div>
             <div class="panel-body participant-video-panel" ng-click="crc.selectSourceStream(user['username'])">
-                <video autoplay="autoplay" class="participant-video other-stream" ng-src="{{ crc.videoConfig['sourceStreams'][user['username']] }}"></video>
+                <video autoplay="autoplay" class="participant-video other-stream not-video-js" ng-src="{{ crc.videoConfig['sourceStreams'][user['username']] }}"></video>
             </div>
         </div>
     </div>

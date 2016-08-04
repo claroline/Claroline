@@ -27,7 +27,6 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-
 /**
  * @DI\Service
  */
@@ -60,8 +59,7 @@ class ChatRoomListener
         PlatformConfigurationHandler $platformConfigHandler,
         RequestStack $requestStack,
         TwigEngine $templating
-    )
-    {
+    ) {
         $this->chatManager = $chatManager;
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
@@ -83,10 +81,10 @@ class ChatRoomListener
         );
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
-                'resourceType' => 'claroline_chat_room'
-            )
+                'resourceType' => 'claroline_chat_room',
+            ]
         );
         $event->setResponseContent($content);
         $event->stopPropagation();
@@ -107,7 +105,7 @@ class ChatRoomListener
         if ($form->isValid()) {
             $chatRoom = $form->getData();
             $this->om->persist($chatRoom);
-            $event->setResources(array($chatRoom));
+            $event->setResources([$chatRoom]);
             $event->stopPropagation();
 
             return;
@@ -115,10 +113,10 @@ class ChatRoomListener
 
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
-                'resourceType' => 'claroline_chat_room'
-            )
+                'resourceType' => 'claroline_chat_room',
+            ]
         );
         $event->setErrorFormContent($content);
         $event->stopPropagation();
@@ -131,10 +129,10 @@ class ChatRoomListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineChatBundle:Chat:chatRoomOpen';
         $params['chatRoom'] = $event->getResource()->getId();
-        $subRequest = $this->request->duplicate(array(), null, $params);
+        $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);

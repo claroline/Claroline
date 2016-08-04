@@ -7,10 +7,13 @@
  * file that was distributed with this source code.
  */
 
+import $ from 'jquery'
+
 export default class ChatRoomVideoCtrl {
 
-  constructor($state, $scope, ChatRoomService, VideoService) {
+  constructor($state, $log, $scope, ChatRoomService, VideoService) {
     this.$state = $state
+    this.$log = $log
     this.$scope = $scope
     this.ChatRoomService = ChatRoomService
     this.VideoService = VideoService
@@ -26,10 +29,10 @@ export default class ChatRoomVideoCtrl {
     //this should be only loaded once
     $(window).unload(($event) => {
       $event.preventDefault()
-      console.log('Disconnecting...')
+      this.$log.log('Disconnecting...')
       this.VideoService.closeAllConnections()
       //this.VideoService.stopMedia()
-      console.log('All connection closed...')
+      this.$log.log('All connection closed...')
       this.ChatRoomService.disconnectFromRoom()
     })
 
@@ -37,7 +40,7 @@ export default class ChatRoomVideoCtrl {
   }
 
   initialize () {
-    console.log('INIT VIDEO PLAYER')
+    this.$log.log('INIT VIDEO PLAYER')
     this.ChatRoomService.connectToRoom()
   }
 
@@ -56,7 +59,7 @@ export default class ChatRoomVideoCtrl {
   goBack () {
     this.VideoService.closeAllConnections()
     this.VideoService.stopMedia()
-    console.log('All connection closed...')
+    this.$log.log('All connection closed...')
     this.ChatRoomService.disconnectFromRoom()
     this.$state.transitionTo(
       'main',

@@ -29,13 +29,13 @@ class ChatUserEditionType extends AbstractType
         $builder->add(
             'color',
             'text',
-            array(
+            [
                 'required' => false,
                 'mapped' => false,
                 'data' => $this->color,
                 'label' => 'color',
-                'translation_domain' => 'platform'
-            )
+                'translation_domain' => 'platform',
+            ]
         );
     }
 
@@ -46,6 +46,6 @@ class ChatUserEditionType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'chat'));
+        $resolver->setDefaults(['translation_domain' => 'chat']);
     }
 }
