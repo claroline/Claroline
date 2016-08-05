@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "1d870f7586a8648e5eea499cf33096d5e5cfa9b0"
+                "reference": "668eed751ece16b76870584c58200e33b2f87ce1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/1d870f7586a8648e5eea499cf33096d5e5cfa9b0",
-                "reference": "1d870f7586a8648e5eea499cf33096d5e5cfa9b0",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/668eed751ece16b76870584c58200e33b2f87ce1",
+                "reference": "668eed751ece16b76870584c58200e33b2f87ce1",
                 "shasum": ""
             },
             "require": {
@@ -244,6 +244,7 @@
                 "icap/wiki-bundle": "*",
                 "innova/audio-recorder-bundle": "*",
                 "innova/collecticiel-bundle": "*",
+                "innova/media-resource-bundle": "*",
                 "innova/path-bundle": "*",
                 "innova/video-recorder-bundle": "*",
                 "ujm/exo-bundle": "*"
@@ -301,7 +302,7 @@
                     "Icap\\WebsiteBundle\\IcapWebsiteBundle",
                     "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle",
                     "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle",
-                    "Icap\\LessonBundle\\IcapLessonBundle",
+                    "Innova\\MediaResourceBundle\\InnovaMediaResourceBundle",
                     "Claroline\\FlashCardBundle\\ClarolineFlashCardBundle",
                     "UJM\\ExoBundle\\UJMExoBundle",
                     "Icap\\LessonBundle\\IcapLessonBundle",
@@ -359,6 +360,7 @@
                     "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder",
                     "Icap\\LessonBundle\\": "plugin/lesson",
                     "Claroline\\FlashCardBundle\\": "plugin/flashcard",
+                    "Innova\\MediaResourceBundle\\": "plugin/media-resource",
                     "FormaLibre\\OfficeConnectBundle\\": "plugin/o365"
                 }
             },
@@ -379,7 +381,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-07-27 09:21:43"
+            "time": "2016-07-29 12:05:41"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -4194,12 +4196,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "463dea9af6bc182a3958df5d62f4592c8724ce06"
+                "reference": "e6e424687ed934256bf9c68585eff0fbb40c13c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/463dea9af6bc182a3958df5d62f4592c8724ce06",
-                "reference": "463dea9af6bc182a3958df5d62f4592c8724ce06",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/e6e424687ed934256bf9c68585eff0fbb40c13c4",
+                "reference": "e6e424687ed934256bf9c68585eff0fbb40c13c4",
                 "shasum": ""
             },
             "require": {
@@ -4270,7 +4272,7 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2016-06-16 15:04:18"
+            "time": "2016-08-04 09:03:43"
         },
         {
             "name": "ocramius/proxy-manager",
