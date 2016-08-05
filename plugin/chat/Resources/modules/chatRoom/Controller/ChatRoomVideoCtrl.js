@@ -8,52 +8,22 @@
  */
 
 import $ from 'jquery'
+import ChatRoomBaseCtrl from './ChatRoomBaseCtrl'
 
-export default class ChatRoomVideoCtrl {
+export default class ChatRoomVideoCtrl extends ChatRoomBaseCtrl {
 
-  constructor($state, $log, $scope, ChatRoomService, VideoService) {
-    this.$state = $state
+  constructor($state, $log, ChatRoomService, VideoService) {
+    super($state, ChatRoomService)
     this.$log = $log
-    this.$scope = $scope
-    this.ChatRoomService = ChatRoomService
     this.VideoService = VideoService
-    this.chatRoomConfig = ChatRoomService.getConfig()
-    this.xmppConfig = ChatRoomService.getXmppConfig()
     this.videoConfig = VideoService.getVideoConfig()
-    this.messages = ChatRoomService.getMessages()
-    this.oldMessages = ChatRoomService.getOldMessages()
-    this.users = ChatRoomService.getUsers()
-    this.bannedUsers = ChatRoomService.getBannedUsers()
-    this.input = ''
 
     //this should be only loaded once
     $(window).unload(($event) => {
       $event.preventDefault()
       this.$log.log('Disconnecting...')
       this.VideoService.closeAllConnections()
-      //this.VideoService.stopMedia()
-      this.$log.log('All connection closed...')
-      this.ChatRoomService.disconnectFromRoom()
     })
-
-    this.initialize()
-  }
-
-  initialize () {
-    this.$log.log('INIT VIDEO PLAYER')
-    this.ChatRoomService.connectToRoom()
-  }
-
-  isAdmin () {
-    return this.ChatRoomService.isAdmin()
-  }
-
-  isModerator () {
-    return this.ChatRoomService.isModerator()
-  }
-
-  canParticipate () {
-    return this.ChatRoomService.canParticipate()
   }
 
   goBack () {
@@ -68,13 +38,8 @@ export default class ChatRoomVideoCtrl {
     )
   }
 
-  sendMessage () {
-    this.ChatRoomService.sendMessage(this.input)
-    this.input = ''
-  }
-
-  switchAudio (username = null) {
-    this.VideoService.switchUserAudio(username)
+  switchAudio (username) {
+    this.VideoService.requestUserMicroSwitch(username)
   }
 
   switchVideo () {

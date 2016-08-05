@@ -10,13 +10,14 @@
 import mainTpl from './Partial/main.html'
 import textTpl from './Partial/roomText.html'
 import videoTpl from './Partial/roomVideo.html'
+import audioTpl from './Partial/roomAudio.html'
 
 export default function($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('main', {
       url: '/main',
       template: mainTpl,
-      controller: 'ChatRoomMainCtrl',
+      controller: 'ChatRoomInitCtrl',
       controllerAs: 'crmc'
     })
     .state('text', {
@@ -29,6 +30,12 @@ export default function($stateProvider, $urlRouterProvider) {
       url: '/video',
       template: videoTpl,
       controller: 'ChatRoomVideoCtrl',
+      controllerAs: 'crc'
+    })
+    .state('audio', {
+      url: '/audio',
+      template: audioTpl,
+      controller: 'ChatRoomAudioCtrl',
       controllerAs: 'crc'
     })
 

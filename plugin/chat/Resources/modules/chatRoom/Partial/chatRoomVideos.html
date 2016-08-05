@@ -8,14 +8,14 @@
                         <button class="button button-sm" ng-click="crc.switchVideo()">
                             <i class="fa fa-video-camera"></i>
                         </button>
-                        <button class="button button-sm" ng-click="crc.switchAudio()">
+                        <button class="button button-sm" ng-click="crc.switchAudio(crc.getMyUsername())">
                             <i class="fa" ng-class="crc.videoConfig['myAudioEnabled'] ? 'fa-microphone' : 'fa-microphone-slash'"></i>
                         </button>
                     </span>
                 </h3>
             </div>
             <div class="panel-body participant-video-panel" ng-click="crc.selectSourceStream(crc.getMyUsername())">
-                <video id="my-video" autoplay="autoplay" class="participant-video not-video-js" ng-src="{{ crc.videoConfig['mySourceStream'] }}"></video>
+                <video autoplay="autoplay" class="participant-video not-video-js mute" ng-src="{{ crc.videoConfig['mySourceStream'] }}"></video>
             </div>
         </div>
     </div>

@@ -51,12 +51,9 @@ export default class ChatRoomService {
     this._onRoomAdminPresenceInit = this._onRoomAdminPresenceInit.bind(this)
     this._onRoomAdminPresence = this._onRoomAdminPresence.bind(this)
     this._onRoomPresence = this._onRoomPresence.bind(this)
-
     this._onRoomMessage = this._onRoomMessage.bind(this)
-
     this._onIQStanzaInit = this._onIQStanzaInit.bind(this)
     this._onIQStanza = this._onIQStanza.bind(this)
-
     this._fullConnection = this._fullConnection.bind(this)
     this._connectedCallback = () => {
     }
@@ -107,6 +104,7 @@ export default class ChatRoomService {
   }
 
   connectToRoom () {
+    this.$log.log('CONNECT TO ROOM')
     if (this.xmppConfig['connected'] && this.xmppConfig['adminConnected']) {
       this.$log.log('Connecting to room...')
       this.connectAdminToRoom()
@@ -134,8 +132,6 @@ export default class ChatRoomService {
       this.xmppConfig['connection'].addHandler(this._onRoomPresence, null, 'presence')
       this.xmppConfig['connection'].addHandler(this._onRoomMessage, null, 'message', 'groupchat')
       this.xmppConfig['connection'].addHandler(this._onIQStanza, null, 'iq')
-      // this will log everything we receive
-      // this.xmppConfig['connection'].xmlInput((elem) => this.$log.log(elem))
       this.$log.log(`${this.config['room']}/${this.xmppConfig['username']}`)
       this.xmppConfig['connection'].send(
         $pres({to: `${this.config['room']}/${this.xmppConfig['username']}`}).c(
@@ -153,6 +149,7 @@ export default class ChatRoomService {
   }
 
   disconnectFromRoom () {
+    this.$log.log('DISCONNECT FROM ROOM')
     if (this.config['connected']) {
       const presence = $pres({
         from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
@@ -651,13 +648,11 @@ export default class ChatRoomService {
           if (body === undefined) {
             body = $(message).find('body').text()
           }
+          
           const datas = $(message).find('datas')
           const status = datas.attr('status')
 
-          if (status === 'raw') {
-            this.$log.log('RAW MESSAGE')
-          //  $rootScope.$broadcast('rawRoomMessageEvent', {message: body})
-          } else if (status === 'management') {
+          if (status === 'management') {
             const type = datas.attr('type')
             const user = datas.attr('username')
             const userFullName = datas.attr('name')

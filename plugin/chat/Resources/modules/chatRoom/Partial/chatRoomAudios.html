@@ -1,0 +1,17 @@
+<div id='participants-video-container'>
+    <ul>
+        <li style="list-style: none;" ng-class="crc.getStreamClass(crc.getMyUsername())">
+            <button class="button button-sm" ng-click="crc.switchAudio(crc.getMyUsername())">
+                <i class="fa" ng-class="crc.videoConfig['myAudioEnabled'] ? 'fa-microphone' : 'fa-microphone-slash'"></i>
+            </button>
+            {{ 'me'|trans:{}:'chat' }}
+        </li>
+        <li ng-repeat="user in crc.videoConfig['users']" ng-if="user['username'] !== crc.chatRoomConfig['myUsername']" ng-class="crc.getStreamClass(user['username'])">
+            <button class="button button-sm" ng-click="crc.switchAudio(user['username'])">
+                <i class="fa" ng-class="crc.videoConfig['usersMicroStatus'][user['username']] ? 'fa-microphone' : 'fa-microphone-slash'"></i>
+            </button>
+            {{ user['username'] }}
+            <audio autoplay="autoplay" class="participant-video other-stream not-video-js" ng-src="{{ crc.videoConfig['sourceStreams'][user['username']] }}"></audio>
+        </li>
+    </ul>
+</div>

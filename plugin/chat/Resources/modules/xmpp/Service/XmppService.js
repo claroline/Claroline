@@ -150,9 +150,6 @@ export default class XmppService {
               this.config['password'],
               this._connectionCallback
             )
-
-          // this.config['connection'].rawInput = function (data) { this.$log.log('RECV: ' + data); }
-          // this.config['connection'].rawOutput = function (data) { this.$log.log('SEND: ' + data); }
           }
         }
       })

@@ -18,15 +18,17 @@ import '../xmpp/xmpp'
 import '#/main/core/scrollbar/module'
 
 import Routing from './routing.js'
-import ChatRoomMainCtrl from './Controller/ChatRoomMainCtrl'
+import ChatRoomInitCtrl from './Controller/ChatRoomInitCtrl'
 import ChatRoomTextCtrl from './Controller/ChatRoomTextCtrl'
 import ChatRoomVideoCtrl from './Controller/ChatRoomVideoCtrl'
+import ChatRoomAudioCtrl from './Controller/ChatRoomAudioCtrl'
 import ChatRoomService from './Service/ChatRoomService'
 import VideoService from './Service/VideoService'
 import ChatRoomInputDirective from './Directive/ChatRoomInputDirective'
 import ChatRoomMessagesDirective from './Directive/ChatRoomMessagesDirective'
 import ChatRoomUsersDirective from './Directive/ChatRoomUsersDirective'
 import ChatRoomVideosDirective from './Directive/ChatRoomVideosDirective'
+import ChatRoomAudiosDirective from './Directive/ChatRoomAudiosDirective.js'
 
 angular.module('ChatRoomModule', [
   'ui.bootstrap',
@@ -38,13 +40,15 @@ angular.module('ChatRoomModule', [
   'MessageModule',
   'UserModule'
 ])
-  .controller('ChatRoomMainCtrl', ['$state', 'ChatRoomService', ChatRoomMainCtrl])
-  .controller('ChatRoomTextCtrl', ['$state', '$log', 'ChatRoomService', ChatRoomTextCtrl])
-  .controller('ChatRoomVideoCtrl', ['$state', '$log', '$scope', 'ChatRoomService', 'VideoService', ChatRoomVideoCtrl])
+  .controller('ChatRoomInitCtrl', ['$state', 'ChatRoomService', ChatRoomInitCtrl])
+  .controller('ChatRoomTextCtrl', ['$state', 'ChatRoomService', ChatRoomTextCtrl])
+  .controller('ChatRoomAudioCtrl', ['$state', '$log', 'ChatRoomService', 'VideoService', ChatRoomAudioCtrl])
+  .controller('ChatRoomVideoCtrl', ['$state', '$log', 'ChatRoomService', 'VideoService', ChatRoomVideoCtrl])
   .service('ChatRoomService', ChatRoomService)
   .service('VideoService', VideoService)
   .directive('chatRoomInput', () => new ChatRoomInputDirective)
   .directive('chatRoomMessages', () => new ChatRoomMessagesDirective)
   .directive('chatRoomUsers', () => new ChatRoomUsersDirective)
   .directive('chatRoomVideos', () => new ChatRoomVideosDirective)
+  .directive('chatRoomAudios', () => new ChatRoomAudiosDirective)
   .config(Routing)

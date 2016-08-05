@@ -7,7 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import $ from 'jquery'
-import ChatRoomBaseCtrl from './ChatRoomBaseCtrl'
+import tpl from '../Partial/chatRoomAudios.html'
 
-export default class ChatRoomTextCtrl extends ChatRoomBaseCtrl {}
+export default class ChatRoomAudiosDirective {
+
+  constructor () {
+    this.restrict = 'E'
+    this.replace = true
+    this.template = tpl
+  }
+}
