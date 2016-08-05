@@ -1,0 +1,17 @@
+<span class="pull-right pointer-hand" ng-if="!dhmc.isHomeLocked">
+    <i class="fa fa-unlock-alt" ng-if="dhmc.editionMode" ng-click="dhmc.toggleEditionMode()"></i>
+    <i class="fa fa-lock" ng-if="!dhmc.editionMode" ng-click="dhmc.toggleEditionMode()"></i>
+</span>
+
+<desktop-home-tabs></desktop-home-tabs>
+<br>
+<widgets></widgets>
+
+<div ng-if="!dhmc.isHomeTabLocked && dhmc.editionMode && dhmc.homeTabsOptions['selectedTabId'] && !dhmc.homeTabsOptions['selectedTabIsLocked']">
+    <hr>
+    <span class="btn btn-primary" ng-click="dhmc.createUserWidget(dhmc.homeTabsOptions['selectedTabConfigId'])">
+        <i class="fa fa-plus-circle">
+        </i>
+        {{ 'add_widget_to_home_tab'|trans:{}:'platform' }}
+    </span>
+</div>

@@ -11,16 +11,16 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.widget_manager")
@@ -86,7 +86,7 @@ class WidgetManager
         }
 
         $instance = new WidgetInstance($widget);
-        $instance->setName($this->translator->trans($widget->getName(), array(), 'widget'));
+        $instance->setName($this->translator->trans($widget->getName(), [], 'widget'));
         $instance->setIsAdmin($isAdmin);
         $instance->setIsDesktop($isDesktop);
         $instance->setWidget($widget);
@@ -139,7 +139,7 @@ class WidgetManager
      */
     public function getDesktopWidgets()
     {
-        return $this->widgetRepo->findBy(array('isDisplayableInDesktop' => true));
+        return $this->widgetRepo->findBy(['isDisplayableInDesktop' => true]);
     }
 
     /**
@@ -149,7 +149,7 @@ class WidgetManager
      */
     public function getWorkspaceWidgets()
     {
-        return $this->widgetRepo->findBy(array('isDisplayableInWorkspace' => true));
+        return $this->widgetRepo->findBy(['isDisplayableInWorkspace' => true]);
     }
 
     /**
@@ -159,7 +159,7 @@ class WidgetManager
      */
     public function getDesktopInstances(User $user)
     {
-        return  $this->widgetInstanceRepo->findBy(array('user' => $user));
+        return  $this->widgetInstanceRepo->findBy(['user' => $user]);
     }
 
     /**
@@ -169,7 +169,7 @@ class WidgetManager
      */
     public function getWorkspaceInstances(Workspace $workspace)
     {
-        return  $this->widgetInstanceRepo->findBy(array('workspace' => $workspace));
+        return  $this->widgetInstanceRepo->findBy(['workspace' => $workspace]);
     }
 
     /**
@@ -183,10 +183,10 @@ class WidgetManager
     {
         if (count($excludedWidgetInstances) === 0) {
             return $this->widgetInstanceRepo->findBy(
-                array(
+                [
                     'isAdmin' => true,
                     'isDesktop' => true,
-                )
+                ]
             );
         }
 
@@ -205,10 +205,10 @@ class WidgetManager
     {
         if (count($excludedWidgetInstances) === 0) {
             return $this->widgetInstanceRepo->findBy(
-                array(
+                [
                     'isAdmin' => true,
                     'isDesktop' => false,
-                )
+                ]
             );
         }
 
@@ -230,11 +230,11 @@ class WidgetManager
     ) {
         if (count($excludedWidgetInstances) === 0) {
             return $this->widgetInstanceRepo->findBy(
-                array(
+                [
                     'user' => $user,
                     'isAdmin' => false,
                     'isDesktop' => true,
-                )
+                ]
             );
         }
 
@@ -250,31 +250,48 @@ class WidgetManager
      *
      * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
      */
-    public function getWorkspaceWidgetInstance(
-        Workspace $workspace,
-        array $excludedWidgetInstances
-    ) {
+    public function getWorkspaceWidgetInstance(Workspace $workspace, array $excludedWidgetInstances)
+    {
         if (count($excludedWidgetInstances) === 0) {
             return $this->widgetInstanceRepo->findBy(
-                array(
+                [
                     'workspace' => $workspace,
                     'isAdmin' => false,
                     'isDesktop' => false,
-                )
+                ]
             );
         }
 
-        return $this->widgetInstanceRepo
-            ->findWorkspaceWidgetInstance($workspace, $excludedWidgetInstances);
+        return $this->widgetInstanceRepo->findWorkspaceWidgetInstance($workspace, $excludedWidgetInstances);
+    }
+
+    public function getAdminWidgetDisplayConfigsByWHTCs(array $widgetHTCs)
+    {
+        $results = [];
+        $widgetInstances = [];
+
+        foreach ($widgetHTCs as $whtc) {
+            $widgetInstance = $whtc->getWidgetInstance();
+            $widgetInstances[] = $widgetInstance;
+        }
+        $adminWDCs = $this->getAdminWidgetDisplayConfigsByWidgets($widgetInstances);
+
+        foreach ($adminWDCs as $wdc) {
+            $widgetInstance = $wdc->getWidgetInstance();
+            $id = $widgetInstance->getId();
+            $results[$id] = $wdc;
+        }
+
+        return $results;
     }
 
     public function generateWidgetDisplayConfigsForUser(User $user, array $widgetHTCs)
     {
-        $results = array();
-        $widgetInstances = array();
-        $mappedWHTCs = array();
-        $userTab = array();
-        $adminTab = array();
+        $results = [];
+        $widgetInstances = [];
+        $mappedWHTCs = [];
+        $userTab = [];
+        $adminTab = [];
 
         foreach ($widgetHTCs as $whtc) {
             $widgetInstance = $whtc->getWidgetInstance();
@@ -306,16 +323,10 @@ class WidgetManager
                 if (isset($mappedWHTCs[$id]) && isset($adminTab[$id])) {
                     $changed = false;
 
-                    if ($userTab[$id]->getColor() !== $adminTab[$id]->getColor()) {
+                    if ($userTab[$id]->getColor() !== $adminTab[$id]->getColor() ||
+                        $userTab[$id]->getDetails() !== $adminTab[$id]->getDetails()) {
                         $userTab[$id]->setColor($adminTab[$id]->getColor());
-                        $changed = true;
-                    }
-
-                    if ($mappedWHTCs[$id]->isLocked()) {
-                        $userTab[$id]->setRow($adminTab[$id]->getRow());
-                        $userTab[$id]->setColumn($adminTab[$id]->getColumn());
-                        $userTab[$id]->setWidth($adminTab[$id]->getWidth());
-                        $userTab[$id]->setHeight($adminTab[$id]->getHeight());
+                        $userTab[$id]->setDetails($adminTab[$id]->getDetails());
                         $changed = true;
                     }
 
@@ -355,9 +366,9 @@ class WidgetManager
         Workspace $workspace,
         array $widgetHTCs
     ) {
-        $results = array();
-        $widgetInstances = array();
-        $workspaceTab = array();
+        $results = [];
+        $widgetInstances = [];
+        $workspaceTab = [];
 
         foreach ($widgetHTCs as $htc) {
             $widgetInstances[] = $htc->getWidgetInstance();
@@ -369,7 +380,6 @@ class WidgetManager
 
         foreach ($workspaceWDCs as $wdc) {
             $widgetInstanceId = $wdc->getWidgetInstance()->getId();
-
             $workspaceTab[$widgetInstanceId] = $wdc;
         }
 
@@ -398,9 +408,9 @@ class WidgetManager
 
     public function generateWidgetDisplayConfigsForAdmin(array $widgetHTCs)
     {
-        $results = array();
-        $widgetInstances = array();
-        $adminTab = array();
+        $results = [];
+        $widgetInstances = [];
+        $adminTab = [];
 
         foreach ($widgetHTCs as $htc) {
             $widgetInstances[] = $htc->getWidgetInstance();
@@ -464,9 +474,14 @@ class WidgetManager
         $this->om->flush();
     }
 
-    /************************************
-     * Access to TeamRepository methods *
-     ************************************/
+    /***************************************************
+     * Access to WidgetDisplayConfigRepository methods *
+     ***************************************************/
+
+    public function getWidgetDisplayConfigById($id)
+    {
+        return $this->widgetDisplayConfigRepo->findOneById($id);
+    }
 
     public function getWidgetDisplayConfigsByUserAndWidgets(
         User $user,
@@ -479,7 +494,7 @@ class WidgetManager
                 $widgetInstances,
                 $executeQuery
             ) :
-            array();
+            [];
     }
 
     public function getAdminWidgetDisplayConfigsByWidgets(
@@ -491,7 +506,7 @@ class WidgetManager
                 $widgetInstances,
                 $executeQuery
             ) :
-            array();
+            [];
     }
 
     public function getWidgetDisplayConfigsByWorkspaceAndWidgets(
@@ -505,7 +520,7 @@ class WidgetManager
                 $widgetInstances,
                 $executeQuery
             ) :
-            array();
+            [];
     }
 
     public function getWidgetDisplayConfigsByWidgetsForAdmin(
@@ -517,7 +532,7 @@ class WidgetManager
                 $widgetInstances,
                 $executeQuery
             ) :
-            array();
+            [];
     }
 
     public function getWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
@@ -531,6 +546,6 @@ class WidgetManager
                 $widgetHomeTabConfigs,
                 $executeQuery
             ) :
-            array();
+            [];
     }
 }

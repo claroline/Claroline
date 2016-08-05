@@ -966,6 +966,7 @@ terms_enabled_but_empty: 'Les conditions d''utilisation ne peuvent être activé
 terms_of_service_acceptance: 'J''accepte les conditions d''utilisation'
 test_repository_activated: 'Les dépôts de test sont activés'
 text: Texte
+text_title_color: Couleur du texte dans le titre
 the_following_users_were_not_imported: 'Les utilisateurs suivants n''ont pas pu être importés:'
 the_workspace: 'L''espace d''activités'
 theme: Thème

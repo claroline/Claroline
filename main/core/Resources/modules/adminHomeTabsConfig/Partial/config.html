@@ -1,0 +1,12 @@
+<admin-home-tabs></admin-home-tabs>
+<br>
+<admin-widgets></admin-widgets>
+
+<div ng-if="ahtcc.homeTabsOptions['selectedTabId']">
+    <hr>
+    <span class="btn btn-primary" ng-click="ahtcc.createAdminWidget(ahtcc.homeTabsOptions['selectedTabId'])">
+        <i class="fa fa-plus-circle">
+        </i>
+        {{ 'add_widget_to_home_tab'|trans:{}:'platform' }}
+    </span>
+</div>

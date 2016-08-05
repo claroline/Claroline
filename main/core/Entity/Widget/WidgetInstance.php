@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\Entity\Widget;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WidgetInstanceRepository")
@@ -23,6 +25,8 @@ class WidgetInstance
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_widget"})
+     * @SerializedName("id")
      */
     protected $id;
 
@@ -41,6 +45,8 @@ class WidgetInstance
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\Widget")
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
+     * @Groups({"api_widget"})
+     * @SerializedName("widget")
      *
      * @var Widget
      */
@@ -48,23 +54,38 @@ class WidgetInstance
 
     /**
      * @ORM\Column(name="is_admin", type="boolean")
+     * @Groups({"api_widget"})
+     * @SerializedName("isAdmin")
      */
     protected $isAdmin = false;
 
     /**
      * @ORM\Column(name="is_desktop", type="boolean")
+     * @Groups({"api_widget"})
+     * @SerializedName("isDesktop")
      */
     protected $isDesktop = false;
 
     /**
      * @ORM\Column(name="name")
+     * @Groups({"api_widget"})
+     * @SerializedName("name")
      */
     protected $name;
 
     /**
      * @ORM\Column(nullable=true)
+     * @Groups({"api_widget"})
+     * @SerializedName("icon")
      */
     protected $icon;
+
+    /**
+     * @ORM\Column(name="template", nullable=true)
+     * @Groups({"api_widget"})
+     * @SerializedName("template")
+     */
+    protected $template;
 
     public function getId()
     {
@@ -136,10 +157,10 @@ class WidgetInstance
 
     public function serializeForWidgetPicker()
     {
-        $return = array(
+        $return = [
             'id' => $this->id,
             'name' => $this->name,
-        );
+        ];
 
         return $return;
     }
@@ -152,5 +173,15 @@ class WidgetInstance
     public function setIcon($icon)
     {
         $this->icon = $icon;
+    }
+
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
+    public function setTemplate($template)
+    {
+        $this->template = $template;
     }
 }

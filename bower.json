@@ -6,6 +6,7 @@
     "angular": "1.5.6",
     "angular-animate": "1.5.6",
     "angular-bootstrap": "1.1.2",
+    "angular-bootstrap-colorpicker": "3.0.24",
     "angular-breadcrumb": "0.4.1",
     "angular-data-table": "https://github.com/ngodfraind/angular-data-table.git#f80646159282c7487c90ff9b13a850112e4aa030",
     "angular-daterangepicker": "0.2.2",
