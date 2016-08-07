@@ -23,6 +23,11 @@ card_type:
 field:
   name: Name of the field
   names: Name of fields
+  type: Type of field
+  value: Value for the field
+  image:
+    src: Source of the image
+    alt: Alternate text for the image
   add: Add a new field
 study:
   begin: Study now

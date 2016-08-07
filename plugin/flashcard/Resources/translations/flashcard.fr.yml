@@ -23,6 +23,11 @@ card_type:
 field:
   name: Nom du champ
   names: Nom des champs
+  type: Type du champ
+  value: Valeur du champ
+  image:
+    src: Source de l'image
+    alt: Text alternatif pour l'image
   add: Ajouter un nouveau champ
 study:
   begin: Commencer à étudier

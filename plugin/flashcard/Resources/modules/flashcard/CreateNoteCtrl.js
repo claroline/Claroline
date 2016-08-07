@@ -18,6 +18,7 @@ export default class CreateNoteCtrl {
     this.noteTypeChoosen = null
     this.fieldValues = []
     this.newCards = []
+    this.fieldTypes = ['text', 'image']
 
     this.errorMessage = null
     this.errors = []
@@ -35,7 +36,7 @@ export default class CreateNoteCtrl {
         fieldLabel = this.noteTypeChoosen.field_labels[i]
         fields[i] = {
           "id": fieldLabel.id,
-          "value": this.fieldValues[i]
+          "fieldValue": this.fieldValues[i]
         }
       }
 
