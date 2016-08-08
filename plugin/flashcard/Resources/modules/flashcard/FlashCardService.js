@@ -118,6 +118,15 @@ export default class FlashCardService {
     return this.$http.get(url)
   }
 
+  cancelLastStudy (deck, sessionId, card) {
+    const url = Routing.generate('claroline_cancel_last_study', {
+      deck: deck.id,
+      sessionId: sessionId,
+      card: card.id,
+    })
+    return this.$http.get(url)
+  }
+
   suspendCard (card, suspend) {
     const url = Routing.generate('claroline_suspend_card', {
       card: card.id,
@@ -130,6 +139,30 @@ export default class FlashCardService {
     const url = Routing.generate('claroline_reset_card', {
       card: card.id
     })
+    return this.$http.get(url)
+  }
+
+  editDefaultParam (deck, newCardDay) {
+    const url = Routing.generate('claroline_edit_default_param', {
+      deck: deck.id,
+    })
+
+    return this.$http.post(url, { newCardDay: newCardDay })
+  }
+
+  editUserParam (deck, newCardDay) {
+    const url = Routing.generate('claroline_edit_user_param', {
+      deck: deck.id,
+    })
+
+    return this.$http.post(url, { newCardDay: newCardDay })
+  }
+
+  getUserPreference (id) {
+    const url = Routing.generate('claroline_get_user_pref', {
+      deck: deck.id,
+    })
+
     return this.$http.get(url)
   }
 

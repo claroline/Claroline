@@ -63,6 +63,16 @@ export default class ListNoteCtrl {
     return nbr
   }
 
+  compareFieldValuesById (first, second) {
+    if (first.field_label.id < second.field_label.id) {
+      return -1
+    }
+    if (first.field_label.id > second.field_label.id) {
+      return 1
+    }
+    return 0
+  }
+
   getQuestionsFromCard (note, card) {
     const question_labels = card.card_type.questions
     let questions = []

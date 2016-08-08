@@ -16,6 +16,8 @@ use Claroline\FlashCardBundle\Entity\Note;
 use Claroline\FlashCardBundle\Entity\NoteType;
 use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Entity\FieldValue;
+use Claroline\FlashCardBundle\Entity\FieldValueText;
+use Claroline\FlashCardBundle\Entity\FieldValueImage;
 use Claroline\FlashCardBundle\Entity\Card;
 use Claroline\FlashCardBundle\Manager\NoteManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -85,9 +87,17 @@ class NoteController
             $note->setNoteType($noteType);
 
             foreach ($fields as $field) {
-                $fieldValue = new FieldValue();
+                if ($field['fieldValue']['type'] == 'text') {
+                    $fieldValue = new FieldValueText();
+                    $fieldValue->setValue($field['fieldValue']['value']);
+                }
+                if ($field['fieldValue']['type'] == 'image') {
+                    $fieldValue = new FieldValueImage();
+                    $fieldValue->setValue($field['fieldValue']['value']);
+                    $fieldValue->setAlt($field['fieldValue']['alt']);
+                }
+
                 $fieldValue->setFieldLabel($noteType->getFieldLabel($field['id']));
-                $fieldValue->setValue($field['value']);
                 $fieldValue->setNote($note);
                 $note->addFieldValue($fieldValue);
             }

@@ -213,4 +213,27 @@ class Deck extends AbstractResource
 
         return $userPref;
     }
+
+    /**
+     * Set the preferences for a specified user. If the user already has
+     * preferences, then the new one overwrite the old one. If the user
+     * has no prefences yet, the given preferences are added.
+     *
+     * @param UserPreference $newUserPref
+     *
+     * @return Deck
+     */
+    public function setUserPreference(UserPreference $newUserPref)
+    {
+        foreach ($this->userPreferences as $i => $userPref) {
+            if ($newUserPref->getUser()->getId() === $userPref->getUser()->getId()) {
+                $this->userPreferences[$i] = $newUserPref;
+
+                return $this;
+            }
+        }
+        $this->userPreferences->add($newUserPref);
+
+        return $this;
+    }
 }

@@ -23,16 +23,24 @@ card_type:
 field:
   name: Nom du champ
   names: Nom des champs
+  type: Type du champ
+  value: Valeur du champ
+  image:
+    src: Source de l'image
+    alt: Text alternatif pour l'image
   add: Ajouter un nouveau champ
 study:
   begin: Commencer à étudier
   stop: Arrêter d'étudier
+  cancelLastStudy: Annuler la dernière étude
 answer:
   show: Afficher la réponse
   again: Encore
   hard: Difficile
   good: Bon
   easy: Facile
+param:
+  new_card_day: Nombre de nouvelles cartes à réviser par jour
 errors:
   line: ligne
   title: Erreur

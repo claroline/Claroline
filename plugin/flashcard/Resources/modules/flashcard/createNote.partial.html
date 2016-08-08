@@ -34,19 +34,74 @@
     <div class="form-group"
          data-ng-if="vm.noteTypeChoosen"
          data-ng-repeat="fieldLabel in vm.noteTypeChoosen.field_labels">
-      <label for="field-{{ fieldLabel.id }}-value">{{ fieldLabel.name }}</label>
-      <input id="field-{{ fieldLabel.id }}-value"
-             type="text"
-             name="field-{{ fieldLabel.id }}-value"
-             class="form-control"
-             data-ng-model="vm.fieldValues[$index]"
-             required />
-      <p class="help-block"
-         data-ng-if="(createNoteForm.$submitted ||
-         createNoteForm.fieldValues[$index].$dirty) &&
-         createNoteForm.fieldValues[$index].$error.required">
-        {{ 'errors.not_blank'|trans:'flashcard' }}
-      </p>
+      <h3>{{ fieldLabel.name }}</h3>
+      <label for="field-{{ fieldLabel.id }}-type">
+        {{ 'field.type'|trans:'flashcard'}}
+      </label>
+      <select id="field-{{ fieldLabel.id }}-type"
+              class="form-control"
+              data-ng-model="vm.fieldValues[$index].type"
+              required>
+        <option 
+          data-ng-repeat="type in vm.fieldTypes"
+          value="{{ type }}">
+          {{ type }}
+        </option>
+      </select>
+
+      <!-- For type Text -->
+      <div data-ng-if="vm.fieldValues[$index].type == 'text'">
+        <label for="field-{{ fieldLabel.id }}-value">
+          {{ 'field.value'|trans:'flashcard' }} {{ fieldLabel.name }}
+        </label>
+        <input id="field-{{ fieldLabel.id }}-value"
+               type="text"
+               name="field-{{ fieldLabel.id }}-value"
+               class="form-control"
+               data-ng-model="vm.fieldValues[$index].value"
+               required />
+        <p class="help-block"
+           data-ng-if="(createNoteForm.$submitted ||
+           createNoteForm.fieldValues[$index].value.$dirty) &&
+           createNoteForm.fieldValues[$index].value.$error.required">
+          {{ 'errors.not_blank'|trans:'flashcard' }}
+        </p>
+      </div>
+
+      <!-- For type Image -->
+      <div data-ng-if="vm.fieldValues[$index].type == 'image'">
+        <label for="field-{{ fieldLabel.id }}-value">
+          {{ 'field.image.src'|trans:'flashcard' }}
+        </label>
+        <input id="field-{{ fieldLabel.id }}-value"
+               type="text"
+               name="field-{{ fieldLabel.id }}-value"
+               class="form-control"
+               data-ng-model="vm.fieldValues[$index].value"
+               required />
+        <p class="help-block"
+           data-ng-if="(createNoteForm.$submitted ||
+           createNoteForm.fieldValues[$index].value.$dirty) &&
+           createNoteForm.fieldValues[$index].value.$error.required">
+          {{ 'errors.not_blank'|trans:'flashcard' }}
+        </p>
+        <label for="field-{{ fieldLabel.id }}-alt">
+          {{ 'field.image.alt'|trans:'flashcard' }}
+        </label>
+        <input id="field-{{ fieldLabel.id }}-alt"
+               type="text"
+               name="field-{{ fieldLabel.id }}-alt"
+               class="form-control"
+               data-ng-model="vm.fieldValues[$index].alt"
+               required />
+        <p class="help-block"
+           data-ng-if="(createNoteForm.$submitted ||
+           createNoteForm.fieldValues[$index].alt.$dirty) &&
+           createNoteForm.fieldValues[$index].alt.$error.required">
+          {{ 'errors.not_blank'|trans:'flashcard' }}
+        </p>
+      </div>
+
     </div>
 
   </div>

@@ -19,6 +19,13 @@ use JMS\Serializer\Annotation\Groups;
  *
  * @ORM\Table(name="claro_fcbundle_field_value")
  * @ORM\Entity
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type_discr", type="string")
+ * @ORM\DiscriminatorMap({
+ *     "generic" = "FieldValue",
+ *     "text" = "FieldValueText",
+ *     "image" = "FieldValueImage"
+ * })
  */
 class FieldValue
 {
@@ -35,7 +42,19 @@ class FieldValue
      *     "api_flashcard_deck"
      * })
      */
-    private $id;
+    protected $id;
+
+    /**
+     * @var string
+     *
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_note",
+     *     "api_flashcard_card",
+     *     "api_flashcard_deck"
+     * })
+     */
+    protected $type = 'generic';
 
     /**
      * @var text
@@ -48,7 +67,20 @@ class FieldValue
      *     "api_flashcard_deck"
      * })
      */
-    private $value;
+    protected $value;
+
+    /**
+     * @var text
+     *
+     * @ORM\Column(name="mimetype", type="string")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_note",
+     *     "api_flashcard_card",
+     *     "api_flashcard_deck"
+     * })
+     */
+    protected $mimetype = '';
 
     /**
      * @ORM\ManyToOne(targetEntity="FieldLabel", inversedBy="fieldValues")
@@ -60,13 +92,13 @@ class FieldValue
      *     "api_flashcard_deck"
      * })
      */
-    private $fieldLabel;
+    protected $fieldLabel;
 
     /**
      * @ORM\ManyToOne(targetEntity="Note", inversedBy="fieldValues")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $note;
+    protected $note;
 
     /**
      * Get id.
@@ -76,6 +108,16 @@ class FieldValue
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get type.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
