@@ -264,6 +264,8 @@ export default class ChatRoomService {
         this.MessageService.addOldMessage(m['userFullName'], m['content'], m['color'], m['type'], m['creationDate'])
       })
     })
+
+    return this.MessageService.getOldMessages()
   }
 
   initializeRoleAndAffiliation () {

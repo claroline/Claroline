@@ -11,6 +11,7 @@ import mainTpl from './Partial/main.html'
 import textTpl from './Partial/roomText.html'
 import videoTpl from './Partial/roomVideo.html'
 import audioTpl from './Partial/roomAudio.html'
+import archiveTpl from './Partial/archive.html'
 
 export default function($stateProvider, $urlRouterProvider) {
   $stateProvider
@@ -38,6 +39,11 @@ export default function($stateProvider, $urlRouterProvider) {
       controller: 'ChatRoomAudioCtrl',
       controllerAs: 'crc'
     })
-
+    .state('archive', {
+      url: '/archive',
+      template: archiveTpl,
+      controller: 'ChatRoomArchiveCtrl',
+      controllerAs: 'cra'
+    })
   $urlRouterProvider.otherwise('/main')
 }

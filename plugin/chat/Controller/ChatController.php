@@ -23,7 +23,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -112,15 +111,6 @@ class ChatController extends Controller
         $this->checkChatRoomRight($chatRoom, 'OPEN');
         $this->chatManager->initChatRoom($chatRoom);
         $user = $this->tokenStorage->getToken()->getUser();
-
-        if ($user === 'anon.' || $chatRoom->getRoomStatus() === ChatRoom::CLOSED) {
-            return new RedirectResponse(
-                $this->router->generate(
-                    'claro_chat_room_archives',
-                    ['chatRoom' => $chatRoom->getId()]
-                )
-            );
-        }
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
         $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
@@ -158,66 +148,6 @@ class ChatController extends Controller
             'chatAdminUsername' => $chatAdminUsername,
             'chatAdminPassword' => $chatAdminPassword,
         ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/chat/room/{chatRoom}/archives",
-     *     name="claro_chat_room_archives",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template()
-     */
-    public function chatRoomArchivesAction(ChatRoom $chatRoom)
-    {
-        $this->checkChatRoomRight($chatRoom, 'OPEN');
-        $canEdit = $this->hasChatRoomRight($chatRoom, 'EDIT');
-        $messages = $chatRoom->getMessages();
-        $messagesDatas = [];
-
-        foreach ($messages as $message) {
-            $creationDate = $message->getCreationDate();
-            $day = $creationDate->format('d/m/Y');
-
-            if (!isset($messagesDatas[$day])) {
-                $messagesDatas[$day] = [];
-            }
-            $messagesDatas[$day][] = $message;
-        }
-        $users = $this->chatManager->getChatRoomParticipantsName($chatRoom);
-
-        return [
-            'chatRoom' => $chatRoom,
-            'canEdit' => $canEdit,
-            'messagesDatas' => $messagesDatas,
-            'users' => $users,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/chat/room/{chatRoom}/archives/retrieve",
-     *     name="claro_chat_room_archives_retrieve",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template()
-     */
-    public function chatRoomArchivesRetrieveAction(ChatRoom $chatRoom)
-    {
-        $this->checkChatRoomRight($chatRoom, 'OPEN');
-        $messages = $chatRoom->getMessages();
-        $messagesDatas = [];
-
-        foreach ($messages as $message) {
-            $messagesDatas[] = [
-                'username' => $message->getUsername(),
-                'userFullName' => $message->getUserFullName(),
-                'content' => $message->getContent(),
-                'type' => $message->getType(),
-            ];
-        }
-
-        return new JsonResponse($messagesDatas, 200);
     }
 
     /**

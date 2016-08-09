@@ -14,6 +14,11 @@ export default class ChatRoomInitCtrl {
     this.ChatRoomService = ChatRoomService
     this.chatRoomConfig = ChatRoomService.getConfig()
     this.xmppConfig = ChatRoomService.getXmppConfig()
+
+    if (this.chatRoomConfig['roomStatus'] === 'closed') {
+      this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true } )    
+    }
+
     this.initialize()
   }
 

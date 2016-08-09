@@ -19,6 +19,7 @@ import '#/main/core/scrollbar/module'
 import '#/main/core/form/module'
 
 import Routing from './routing.js'
+import ChatRoomArchiveCtrl from './Controller/ChatRoomArchiveCtrl'
 import ChatRoomInitCtrl from './Controller/ChatRoomInitCtrl'
 import ChatRoomTextCtrl from './Controller/ChatRoomTextCtrl'
 import ChatRoomVideoCtrl from './Controller/ChatRoomVideoCtrl'
@@ -44,6 +45,7 @@ angular.module('ChatRoomModule', [
   'UserModule'
 ])
   .controller('ChatRoomInitCtrl', ['$state', 'ChatRoomService', ChatRoomInitCtrl])
+  .controller('ChatRoomArchiveCtrl', ['ChatRoomService', 'FormBuilderService', '$uibModal', '$state', ChatRoomArchiveCtrl])
   .controller('ChatRoomTextCtrl', ['$state', '$uibModal', 'ChatRoomService', 'FormBuilderService', ChatRoomTextCtrl])
   .controller('ChatRoomAudioCtrl', ['$state', '$uibModal', '$log', 'ChatRoomService', 'VideoService', 'FormBuilderService', ChatRoomAudioCtrl])
   .controller('ChatRoomVideoCtrl', ['$state', '$uibModal', '$log', 'ChatRoomService', 'VideoService', 'FormBuilderService', ChatRoomVideoCtrl])

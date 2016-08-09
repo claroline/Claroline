@@ -1,0 +1,43 @@
+<div>
+    <button class="btn btn-default" ng-click="cra.configure()">
+        {{ 'configure'|trans:{}:'platform' }}
+    </button>
+
+    <div class="panel-body">
+        <div id="chat-room-content-archives-panel" class="col-md-9">
+            <div id="chat-content-archives" class="well well-sm">
+                <div ng-repeat="oldMessage in cra.oldMessages">
+                    <div ng-switch="oldMessage['type']">
+                        <div ng-switch-when="message">
+                            <b class="received-message" style="color: {{ oldMessage['color'] }}">
+                                {{ oldMessage['name'] }}
+                            </b> :
+                            {{ oldMessage['content'] }}
+                        </div>
+                        <div ng-switch-when="presence">
+                            <b ng-switch="oldMessage['content']">
+                                <span ng-switch-when="kicked">
+                                    {{ oldMessage['name'] }}
+                                    {{ 'has_been_kicked_from_the_chat_room'|trans:{}:'chat' }}
+                                </span>
+                                <span ng-switch-when="banned">
+                                    {{ oldMessage['name'] }}
+                                    {{ 'has_been_banned_from_the_chat_room'|trans:{}:'chat' }}
+                                </span>
+                                <span ng-switch-when="unbanned">
+                                    {{ oldMessage['name'] }}
+                                    {{ 'has_been_unbanned_from_the_chat_room'|trans:{}:'chat' }}
+                                </span>
+                            </b>
+                        </div>
+                        <div ng-switch-when="raw">
+                            <b>
+                                {{ oldMessage['content'] }}
+                            </b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
