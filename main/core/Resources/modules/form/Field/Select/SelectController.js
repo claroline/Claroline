@@ -7,5 +7,6 @@ export default class SelectController extends FieldController {
     this._ngModel = this.ngModel
     this.choice_name = this.field[2].choice_name || 'label'
     this.choice_value = this.field[2].choice_value || null
+    console.log(this.translationDomain)
   }
 }

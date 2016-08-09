@@ -16,12 +16,14 @@ import '../message/message'
 import '../user/user'
 import '../xmpp/xmpp'
 import '#/main/core/scrollbar/module'
+import '#/main/core/form/module'
 
 import Routing from './routing.js'
 import ChatRoomInitCtrl from './Controller/ChatRoomInitCtrl'
 import ChatRoomTextCtrl from './Controller/ChatRoomTextCtrl'
 import ChatRoomVideoCtrl from './Controller/ChatRoomVideoCtrl'
 import ChatRoomAudioCtrl from './Controller/ChatRoomAudioCtrl'
+import ChatConfigureCtrl from './Controller/ChatConfigureCtrl'
 import ChatRoomService from './Service/ChatRoomService'
 import VideoService from './Service/VideoService'
 import ChatRoomInputDirective from './Directive/ChatRoomInputDirective'
@@ -38,12 +40,14 @@ angular.module('ChatRoomModule', [
   'ui.router',
   'XmppModule',
   'MessageModule',
+  'FormBuilder',
   'UserModule'
 ])
   .controller('ChatRoomInitCtrl', ['$state', 'ChatRoomService', ChatRoomInitCtrl])
-  .controller('ChatRoomTextCtrl', ['$state', 'ChatRoomService', ChatRoomTextCtrl])
-  .controller('ChatRoomAudioCtrl', ['$state', '$log', 'ChatRoomService', 'VideoService', ChatRoomAudioCtrl])
-  .controller('ChatRoomVideoCtrl', ['$state', '$log', 'ChatRoomService', 'VideoService', ChatRoomVideoCtrl])
+  .controller('ChatRoomTextCtrl', ['$state', '$uibModal', 'ChatRoomService', 'FormBuilderService', ChatRoomTextCtrl])
+  .controller('ChatRoomAudioCtrl', ['$state', '$uibModal', '$log', 'ChatRoomService', 'VideoService', 'FormBuilderService', ChatRoomAudioCtrl])
+  .controller('ChatRoomVideoCtrl', ['$state', '$uibModal', '$log', 'ChatRoomService', 'VideoService', 'FormBuilderService', ChatRoomVideoCtrl])
+  .controller('ChatConfigureCtrl', ChatConfigureCtrl)
   .service('ChatRoomService', ChatRoomService)
   .service('VideoService', VideoService)
   .directive('chatRoomInput', () => new ChatRoomInputDirective)

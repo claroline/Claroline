@@ -1,4 +1,12 @@
 <div ng-if="crc.chatRoomConfig['roomType'] === 'text'">
+    <div>
+        <button class="btn btn-default" ng-click="crc.goBack()">
+            {{ 'back'|trans:{}:'platform' }}
+        </button>
+        <button class="btn btn-default" ng-click="crc.configure()">
+            {{ 'back'|trans:{}:'platform' }}
+        </button>
+    </div>
     <div ng-if="crc.chatRoomConfig['roomStatus'] === 'open'">
         <div ng-if="crc.chatRoomConfig['connected']">
             <button class="btn btn-default" ng-click="crc.goBack()">
@@ -23,25 +31,6 @@
             <div class="alert alert-danger" ng-if="!crc.chatRoomConfig['message']">
                 {{ 'not_connected'|trans:{}:'chat' }}
             </div>
-            <button class="btn btn-default" ng-click="crc.goBack()">
-                {{ 'back'|trans:{}:'platform' }}
-            </button>
         </div>
     </div>
-    <div ng-if="crc.chatRoomConfig['roomStatus'] !== 'open'">
-        <div class="alert alert-danger">
-            {{ 'chat_room_status'|trans:{}:'chat' }} : {{ crc.chatRoomConfig['roomStatus']|trans:{}:'chat' }}
-        </div>
-        <button class="btn btn-default" ng-click="crc.goBack()">
-            {{ 'back'|trans:{}:'platform' }}
-        </button>
-    </div>
-</div>
-<div ng-if="crc.chatRoomConfig['roomType'] !== 'text'">
-    <div class="alert alert-danger">
-        {{ 'invalid_room_type'|trans:{}:'chat' }}
-    </div>
-    <button class="btn btn-default" ng-click="crc.goBack()">
-        {{ 'back'|trans:{}:'platform' }}
-    </button>
 </div>

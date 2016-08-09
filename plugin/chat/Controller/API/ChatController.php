@@ -17,6 +17,7 @@ use Claroline\ChatBundle\Manager\ChatManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -36,25 +37,29 @@ class ChatController extends FOSRestController
     private $chatManager;
     private $platformConfigHandler;
     private $tokenStorage;
+    private $request;
 
     /**
      * @DI\InjectParams({
      *     "authorization"         = @DI\Inject("security.authorization_checker"),
      *     "chatManager"           = @DI\Inject("claroline.manager.chat_manager"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "tokenStorage"          = @DI\Inject("security.token_storage")
+     *     "tokenStorage"          = @DI\Inject("security.token_storage"),
+     *     "request"               = @DI\Inject("request")
      * })
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ChatManager $chatManager,
         PlatformConfigurationHandler $platformConfigHandler,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        Request $request
     ) {
         $this->authorization = $authorization;
         $this->chatManager = $chatManager;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->tokenStorage = $tokenStorage;
+        $this->request = $request;
     }
 
     /**
@@ -254,6 +259,17 @@ class ChatController extends FOSRestController
         }
 
         return $datas;
+    }
+
+    /**
+     * @View(serializerGroups={"api_room"})
+     * @Put("room/{chatRoom}", name="put_chat_room", options={ "method_prefix" = false })
+     */
+    public function putChatRoomAction(ChatRoom $chatRoom)
+    {
+        $data = $this->request->request->get('chat_room');
+
+        return $this->chatManager->editChatRoom($chatRoom, $data['room_type'], $data['room_status']);
     }
 
     private function checkChatRoomRight(ChatRoom $chatRoom, $right)

@@ -8,13 +8,16 @@
  */
 
 import $ from 'jquery'
+import configureTpl from '../Partial/configure.html'
 
 export default class ChatRoomBaseCtrl {
 
-  constructor($state, ChatRoomService) {
+  constructor ($state, $uibModal, ChatRoomService, FormBuilderService) {
     this.input = ''
+    this.$uibModal = $uibModal
     this.$state = $state
     this.ChatRoomService = ChatRoomService
+    this.FormBuilderService = FormBuilderService
     this.chatRoomConfig = ChatRoomService.getConfig()
     this.xmppConfig = ChatRoomService.getXmppConfig()
     this.messages = ChatRoomService.getMessages()
@@ -76,5 +79,32 @@ export default class ChatRoomBaseCtrl {
   sendMessage () {
     this.ChatRoomService.sendMessage(this.input)
     this.input = ''
+  }
+
+  configure () {
+    const modalInstance = this.$uibModal.open({
+      template: configureTpl,
+      controller: 'ChatConfigureCtrl',
+      controllerAs: 'ccc',
+      resolve: {
+        chat: () => {
+          return this.chatRoomConfig.chat}
+      }
+    })
+
+    modalInstance.result.then(result => {
+      if (!result) return
+      var data = this.FormBuilderService.submit(
+        Routing.generate('api_put_chat_room', {chatRoom: result.id}),
+        {'chat_room': result},
+        'PUT'
+      ).then(
+        d => {
+            alert('toto')
+
+        },
+        d => alert('error')
+      )
+    })
   }
 }

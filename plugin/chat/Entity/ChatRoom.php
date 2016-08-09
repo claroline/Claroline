@@ -14,6 +14,7 @@ namespace Claroline\ChatBundle\Entity;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
@@ -33,21 +34,25 @@ class ChatRoom extends AbstractResource
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_chat"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="room_name", nullable=true)
+     * @Groups({"api_chat"})
      */
     protected $roomName;
 
     /**
      * @ORM\Column(type="integer", name="room_status")
+     * @Groups({"api_chat"})
      */
     protected $roomStatus = self::UNINITIALIZED;
 
     /**
      * @ORM\Column(type="integer", name="room_type")
+     * @Groups({"api_chat"})
      */
     protected $roomType = self::TEXT;
 

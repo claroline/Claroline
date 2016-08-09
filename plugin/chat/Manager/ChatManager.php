@@ -385,4 +385,14 @@ class ChatManager
         $this->om->persist($chatType);
         $this->om->flush();
     }
+
+    public function editChatRoom(ChatRoom $chatRoom, $type, $status)
+    {
+        $chatRoom->setRoomType($type);
+        $chatRoom->setRoomStatus($status);
+        $this->om->persist($chatRoom);
+        $this->om->flush();
+
+        return $chatRoom;
+    }
 }

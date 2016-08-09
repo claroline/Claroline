@@ -12,10 +12,11 @@ import ChatRoomBaseCtrl from './ChatRoomBaseCtrl'
 
 export default class ChatRoomVideoCtrl extends ChatRoomBaseCtrl {
 
-  constructor($state, $log, ChatRoomService, VideoService) {
-    super($state, ChatRoomService)
+  constructor($state, $uibModal, $log, ChatRoomService, VideoService, FormBuilderService) {
+    super($state, $uibModal, ChatRoomService, FormBuilderService)
     this.$log = $log
     this.VideoService = VideoService
+    this.FormBuilderService = FormBuilderService
     this.videoConfig = VideoService.getVideoConfig()
 
     //this should be only loaded once

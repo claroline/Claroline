@@ -1,13 +1,18 @@
 <div ng-if="crc.chatRoomConfig['roomType'] === 'video'">
+    <div class="panel-body">
+        <button class="btn btn-default" ng-click="crc.goBack()">
+            {{ 'back'|trans:{}:'platform' }}
+        </button>
+        <button class="btn btn-default" ng-click="crc.configure()">
+            {{ 'configure'|trans:{}:'platform' }}
+        </button>
+    </div>
     <div ng-if="crc.chatRoomConfig['roomStatus'] === 'open'">
         <div ng-if="crc.chatRoomConfig['connected']">
-            <button class="btn btn-default" ng-click="crc.goBack()">
-                {{ 'back'|trans:{}:'platform' }}
-            </button>
             <div id="chat-room-video-row" class="row">
                 <div class="col-md-8">
                     <div id="main-video-container">
-                        <video class="not-video-js mute" autoplay="autoplay" ng-src="{{ crc.videoConfig['sourceStreams'][crc.videoConfig['mainStreamUsername']] }}"></video>
+                        <video id="main-video" class="not-video-js mute" autoplay="autoplay" ng-src="{{ crc.videoConfig['sourceStreams'][crc.videoConfig['mainStreamUsername']] }}"></video>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -27,25 +32,6 @@
             <div class="alert alert-danger" ng-if="!crc.chatRoomConfig['message']">
                 {{ 'not_connected'|trans:{}:'chat' }}
             </div>
-            <button class="btn btn-default" ng-click="crc.goBack()">
-                {{ 'back'|trans:{}:'platform' }}
-            </button>
         </div>
     </div>
-    <div ng-if="crc.chatRoomConfig['roomStatus'] !== 'open'">
-        <div class="alert alert-danger">
-            {{ 'chat_room_status'|trans:{}:'chat' }} : {{ crc.chatRoomConfig['roomStatus']|trans:{}:'chat' }}
-        </div>
-        <button class="btn btn-default" ng-click="crc.goBack()">
-            {{ 'back'|trans:{}:'platform' }}
-        </button>
-    </div>
-</div>
-<div ng-if="crc.chatRoomConfig['roomType'] !== 'video'">
-    <div class="alert alert-danger">
-        {{ 'invalid_room_type'|trans:{}:'chat' }}
-    </div>
-    <button class="btn btn-default" ng-click="crc.goBack()">
-        {{ 'back'|trans:{}:'platform' }}
-    </button>
 </div>

@@ -30,6 +30,7 @@ export default class ChatRoomService {
       connected: false,
       busy: false,
       resourceId: ChatRoomService._getGlobal('resourceId'),
+      chat: ChatRoomService._getGlobal('chat'),
       room: `${ChatRoomService._getGlobal('roomName')}@${ChatRoomService._getGlobal('xmppMucHost')}`,
       roomId: ChatRoomService._getGlobal('roomId'),
       roomName: ChatRoomService._getGlobal('roomName'),
@@ -648,7 +649,7 @@ export default class ChatRoomService {
           if (body === undefined) {
             body = $(message).find('body').text()
           }
-          
+
           const datas = $(message).find('datas')
           const status = datas.attr('status')
 

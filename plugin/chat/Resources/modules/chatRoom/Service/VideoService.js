@@ -357,8 +357,7 @@ export default class VideoService {
     this.config['localStream'].getAudioTracks().forEach(t => this.config['myAudioTracks'].push(t))
     this.config['localStream'].getVideoTracks().forEach(t => this.config['myVideoTracks'].push(t))
     // Mute sound in my video & main video to avoid echo
-    const elements = angular.element(document).find('.mute')
-    element.forEach((el) => el.muted = el.volume = true)
+    angular.element(document).find('.mute').each((index, el) => el.muted = el.volume = true)
     const streamURL = window.URL.createObjectURL(this.config['localStream'])
     const trustedStreamURL = this.$sce.trustAsResourceUrl(streamURL)
     this.config['mySourceStream'] = trustedStreamURL
