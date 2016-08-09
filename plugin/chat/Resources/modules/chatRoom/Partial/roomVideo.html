@@ -1,13 +1,14 @@
-<div ng-if="crc.chatRoomConfig['roomType'] === 'video'">
-    <div class="panel-body">
-        <button class="btn btn-default" ng-click="crc.goBack()">
-            {{ 'back'|trans:{}:'platform' }}
-        </button>
-        <button class="btn btn-default" ng-click="crc.configure()">
-            {{ 'configure'|trans:{}:'platform' }}
-        </button>
-    </div>
-    <div ng-if="crc.chatRoomConfig['roomStatus'] === 'open'">
+<div class="panel-body">
+    <button class="btn btn-default" ng-click="crc.goBack()">
+        {{ 'back'|trans:{}:'platform' }}
+    </button>
+    <button class="btn btn-default" ng-click="crc.configure()">
+        {{ 'configure'|trans:{}:'platform' }}
+    </button>
+</div>
+
+<div ng-if="crc.chatRoomConfig['chatRoom']['room_type_text'] === 'video'">
+    <div ng-if="crc.chatRoomConfig['chatRoom']['room_status_text'] === 'open'">
         <div ng-if="crc.chatRoomConfig['connected']">
             <div id="chat-room-video-row" class="row">
                 <div class="col-md-8">
@@ -34,4 +35,7 @@
             </div>
         </div>
     </div>
+</div>
+<div ng-if="crc.chatRoomConfig['chatRoom']['room_type_text'] !== 'video'" class="panel-body">
+    {{ 'invalid_room_type'|trans:{}:'chat' }}
 </div>

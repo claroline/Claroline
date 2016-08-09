@@ -14,6 +14,7 @@ namespace Claroline\ChatBundle\Entity;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Groups;
 
 /**
@@ -63,6 +64,18 @@ class ChatRoom extends AbstractResource
      * )
      */
     protected $messages;
+
+    /**
+     * @Accessor(getter="getRoomStatusText")
+     * @Groups({"api_chat"})
+     */
+    protected $roomStatusText;
+
+    /**
+     * @Accessor(getter="getRoomTypeText")
+     * @Groups({"api_chat"})
+     */
+    protected $roomTypeText;
 
     public function __construct()
     {

@@ -2,7 +2,7 @@
 <div ng-if="crmc.chatRoomConfig['canChat']">
 
     <!-- Uninitialized room -->
-    <div ng-if="crmc.chatRoomConfig['roomStatus'] === 'uninitialized'">
+    <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'uninitialized'">
         <div class="alert alert-warning" >
             {{ 'chat_room_uninitialized_msg'|trans:{}:'chat' }}
         </div>
@@ -16,7 +16,7 @@
     </div>
 
     <!-- Open room -->
-    <div ng-if="crmc.chatRoomConfig['roomStatus'] === 'open'">
+    <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'open'">
         <button class="btn btn-primary"
             ng-disabled="!crmc.xmppConfig['connected'] || !crmc.xmppConfig['adminConnected']"
             ng-click="crmc.connectToRoom()"
@@ -27,7 +27,7 @@
 
 
     <!-- Unknown status room -->
-    <div ng-if="crmc.chatRoomConfig['roomStatus'] === 'unknown'">
+    <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'unknown'">
         <div class="alert alert-danger">
             {{ 'chat_room_unknown_status_msg'|trans:{}:'chat' }}
         </div>

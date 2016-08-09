@@ -39,11 +39,8 @@
     <script src="{{ asset('packages/hark/hark.bundle.js') }}"></script>
     <script>
         window.resourceId = {{ chatRoom.getResourceNode().getId() }}
-        window.chat = {{ chatRoom|json_serialize('api_chat')|raw }}
-        window.roomId = {{ chatRoom.getId() }}
+        window.chatRoom = {{ chatRoom|json_serialize('api_chat')|raw }}
         window.roomName = '{{ chatRoom.getRoomName() }}'
-        window.roomStatus = '{{ chatRoom.getRoomStatusText() }}'
-        window.roomType = '{{ chatRoom.getRoomTypeText() }}'
         window.xmppHost = '{{ xmppHost }}'
         window.xmppSsl = {{ ssl ? 'true' : 'false' }}
         window.xmppMucHost = '{{ xmppMucHost }}'

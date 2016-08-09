@@ -8,6 +8,7 @@ export default class ChatConfigureCtrl {
   }
 
   onSubmit (form) {
+    console.log(this.chat)  
     if (form.$valid) this.$uibModalInstance.close(this.chat)
   }
 }

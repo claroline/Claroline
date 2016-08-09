@@ -18,10 +18,11 @@ import $ from 'jquery'
 /* global $msg */
 
 export default class ChatRoomService {
-  constructor ($rootScope, $http, $log, XmppService, UserService, MessageService) {
+  constructor ($rootScope, $http, $log, $httpParamSerializerJQLike, XmppService, UserService, MessageService) {
     this.$rootScope = $rootScope
     this.$http = $http
     this.$log = $log
+    this.$httpParamSerializerJQLike = $httpParamSerializerJQLike
     this.XmppService = XmppService
     this.UserService = UserService
     this.MessageService = MessageService
@@ -30,12 +31,9 @@ export default class ChatRoomService {
       connected: false,
       busy: false,
       resourceId: ChatRoomService._getGlobal('resourceId'),
-      chat: ChatRoomService._getGlobal('chat'),
+      chatRoom: ChatRoomService._getGlobal('chatRoom'),
       room: `${ChatRoomService._getGlobal('roomName')}@${ChatRoomService._getGlobal('xmppMucHost')}`,
-      roomId: ChatRoomService._getGlobal('roomId'),
       roomName: ChatRoomService._getGlobal('roomName'),
-      roomStatus: ChatRoomService._getGlobal('roomStatus'),
-      roomType: ChatRoomService._getGlobal('roomType'),
       canChat: ChatRoomService._getGlobal('canChat'),
       canEdit: ChatRoomService._getGlobal('canEdit'),
       xmppMucHost: ChatRoomService._getGlobal('xmppMucHost'),
@@ -211,13 +209,19 @@ export default class ChatRoomService {
     this.xmppConfig['adminConnection'].sendIQ(iq)
   }
 
-  openRoom () {
-    const route = Routing.generate('api_put_room_status', {chatRoom: this.config['roomId'], roomStatus: 1})
-    this.$http.put(route).then(datas => {
-      if (datas['status'] === 200) {
-        this.config['roomStatus'] = datas['data']['roomStatusText']
-      }
-    })
+  openRoom() {
+    this.config['chatRoom']['room_status'] = 1
+    this.editChatRoom(this.config['chatRoom'])
+  }
+
+  editChatRoom(chatRoom) {
+      return this.$http.put(
+          Routing.generate('api_put_chat_room', {chatRoom: this.config.chatRoom.id}),
+          this.$httpParamSerializerJQLike({'chat_room': chatRoom}),
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+      ).then((data) => {
+          return this.config.chatRoom = data.data
+      })
   }
 
   isAdmin () {
@@ -258,7 +262,7 @@ export default class ChatRoomService {
   }
 
   getRegisteredMessages () {
-    const route = Routing.generate('api_get_registered_messages' , {chatRoom: this.config['roomId']})
+    const route = Routing.generate('api_get_registered_messages' , {chatRoom: this.config.chatRoom.id})
     this.$http.get(route).then(d => {
       d['data'].forEach(m => {
         this.MessageService.addOldMessage(m['userFullName'], m['content'], m['color'], m['type'], m['creationDate'])
@@ -425,7 +429,7 @@ export default class ChatRoomService {
     const route = Routing.generate(
       'api_post_chat_room_presence_register',
       {
-        chatRoom: this.config['roomId'],
+        chatRoom: this.config.chatRoom.id,
         username: username,
         fullName: fullName,
         status: status
@@ -438,7 +442,7 @@ export default class ChatRoomService {
     const route = Routing.generate(
       'api_post_chat_room_message_register',
       {
-        chatRoom: this.config['roomId'],
+        chatRoom: this.config.chatRoom.id,
         username: username,
         fullName: fullName
       }
@@ -685,7 +689,6 @@ export default class ChatRoomService {
       if (id === 'room-config-submit') {
         this.$log.log('Room configured')
         this.openRoom()
-      // return false
       }
     }
 

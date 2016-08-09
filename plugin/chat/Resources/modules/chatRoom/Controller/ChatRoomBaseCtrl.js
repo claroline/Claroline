@@ -88,23 +88,25 @@ export default class ChatRoomBaseCtrl {
       controllerAs: 'ccc',
       resolve: {
         chat: () => {
-          return this.chatRoomConfig.chat}
+          return this.chatRoomConfig.chatRoom
+          }
       }
     })
 
     modalInstance.result.then(result => {
-      if (!result) return
-      var data = this.FormBuilderService.submit(
-        Routing.generate('api_put_chat_room', {chatRoom: result.id}),
-        {'chat_room': result},
-        'PUT'
-      ).then(
-        d => {
-            alert('toto')
-
-        },
-        d => alert('error')
-      )
+      this.ChatRoomService.editChatRoom(result).then((chatRoom) => {
+        console.log(chatRoom)
+        this.redirect(chatRoom)
+      })
     })
+  }
+
+  redirect (chatRoom) {
+    if (chatRoom['room_status'] === 2) {
+        this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true })
+        return
+    }
+
+    this.$state.transitionTo(chatRoom['room_type_text'], {}, { reload: true, inherit: true, notify: true })
   }
 }

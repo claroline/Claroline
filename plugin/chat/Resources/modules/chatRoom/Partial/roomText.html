@@ -1,17 +1,15 @@
-<div ng-if="crc.chatRoomConfig['roomType'] === 'text'">
-    <div>
-        <button class="btn btn-default" ng-click="crc.goBack()">
-            {{ 'back'|trans:{}:'platform' }}
-        </button>
-        <button class="btn btn-default" ng-click="crc.configure()">
-            {{ 'back'|trans:{}:'platform' }}
-        </button>
-    </div>
-    <div ng-if="crc.chatRoomConfig['roomStatus'] === 'open'">
+<div>
+    <button class="btn btn-default" ng-click="crc.goBack()">
+        {{ 'back'|trans:{}:'platform' }}
+    </button>
+    <button class="btn btn-default" ng-click="crc.configure()">
+        {{ 'configure'|trans:{}:'platform' }}
+    </button>
+</div>
+
+<div ng-if="crc.chatRoomConfig['chatRoom']['room_type_text'] === 'text'">
+    <div ng-if="crc.chatRoomConfig['chatRoom']['room_status_text'] === 'open'">
         <div ng-if="crc.chatRoomConfig['connected']">
-            <button class="btn btn-default" ng-click="crc.goBack()">
-                {{ 'back'|trans:{}:'platform' }}
-            </button>
             <div class="row chat-room-row">
                 <div id="chat-room-content-panel" class="col-md-9">
                     <chat-room-messages></chat-room-messages>
@@ -33,4 +31,7 @@
             </div>
         </div>
     </div>
+</div>
+<div ng-if="crc.chatRoomConfig['chatRoom']['room_type_text'] !== 'text'" class="panel-body">
+    {{ 'invalid_room_type'|trans:{}:'chat' }}
 </div>

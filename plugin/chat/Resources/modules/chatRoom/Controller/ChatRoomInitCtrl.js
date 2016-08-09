@@ -15,8 +15,8 @@ export default class ChatRoomInitCtrl {
     this.chatRoomConfig = ChatRoomService.getConfig()
     this.xmppConfig = ChatRoomService.getXmppConfig()
 
-    if (this.chatRoomConfig['roomStatus'] === 'closed') {
-      this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true } )    
+    if (this.chatRoomConfig['chatRoom']['room_status_text'] === 'closed') {
+      this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true })
     }
 
     this.initialize()
@@ -24,7 +24,7 @@ export default class ChatRoomInitCtrl {
 
   initialize () {
     if (!this.xmppConfig['connected']) {
-        this.ChatRoomService.connect()
+      this.ChatRoomService.connect()
     }
   }
 
@@ -35,24 +35,16 @@ export default class ChatRoomInitCtrl {
 
   connectToRoom () {
     this.initialize()
-    if (this.chatRoomConfig['roomType'] === 'text') {
-      this.$state.transitionTo(
-        'text',
-        {},
-        { reload: true, inherit: true, notify: true }
-      )
-    } else if (this.chatRoomConfig['roomType'] === 'video') {
-      this.$state.transitionTo(
-        'video',
-        {},
-        { reload: true, inherit: true, notify: true }
-      )
-  } else if (this.chatRoomConfig['roomType'] === 'audio') {
-      this.$state.transitionTo(
-        'audio',
-        {},
-        { reload: true, inherit: true, notify: true }
-      )
+    this.redirect()
+  }
+
+  redirect () {
+    if (this.chatRoomConfig['chatRoom']['room_type_text'] === 'text') {
+      this.$state.transitionTo('text', {}, {reload: true, inherit: true, notify: true})
+    } else if (this.chatRoomConfig['chatRoom']['room_type_text'] === 'video') {
+      this.$state.transitionTo('video', {}, { reload: true, inherit: true, notify: true })
+    } else if (this.chatRoomConfig['chatRoom']['room_type_text'] === 'audio') {
+      this.$state.transitionTo('audio', {}, { reload: true, inherit: true, notify: true })
     }
   }
 }

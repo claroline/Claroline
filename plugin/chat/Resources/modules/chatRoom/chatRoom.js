@@ -32,6 +32,7 @@ import ChatRoomMessagesDirective from './Directive/ChatRoomMessagesDirective'
 import ChatRoomUsersDirective from './Directive/ChatRoomUsersDirective'
 import ChatRoomVideosDirective from './Directive/ChatRoomVideosDirective'
 import ChatRoomAudiosDirective from './Directive/ChatRoomAudiosDirective.js'
+import Interceptors from '#/main/core/interceptorsDefault'
 
 angular.module('ChatRoomModule', [
   'ui.bootstrap',
@@ -45,7 +46,7 @@ angular.module('ChatRoomModule', [
   'UserModule'
 ])
   .controller('ChatRoomInitCtrl', ['$state', 'ChatRoomService', ChatRoomInitCtrl])
-  .controller('ChatRoomArchiveCtrl', ['ChatRoomService', 'FormBuilderService', '$uibModal', '$state', ChatRoomArchiveCtrl])
+  .controller('ChatRoomArchiveCtrl', ['$state', '$uibModal', 'ChatRoomService', 'FormBuilderService', ChatRoomArchiveCtrl])
   .controller('ChatRoomTextCtrl', ['$state', '$uibModal', 'ChatRoomService', 'FormBuilderService', ChatRoomTextCtrl])
   .controller('ChatRoomAudioCtrl', ['$state', '$uibModal', '$log', 'ChatRoomService', 'VideoService', 'FormBuilderService', ChatRoomAudioCtrl])
   .controller('ChatRoomVideoCtrl', ['$state', '$uibModal', '$log', 'ChatRoomService', 'VideoService', 'FormBuilderService', ChatRoomVideoCtrl])
@@ -58,3 +59,4 @@ angular.module('ChatRoomModule', [
   .directive('chatRoomVideos', () => new ChatRoomVideosDirective)
   .directive('chatRoomAudios', () => new ChatRoomAudiosDirective)
   .config(Routing)
+  .config(Interceptors)

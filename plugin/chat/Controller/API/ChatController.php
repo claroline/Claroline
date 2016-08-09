@@ -134,29 +134,6 @@ class ChatController extends FOSRestController
     /**
      * @View(serializerGroups={"api_chat"})
      * @ApiDoc(
-     *     description="Change status of Chat room",
-     *     views = {"chat"}
-     * )
-     */
-    public function putRoomStatusAction(ChatRoom $chatRoom, $roomStatus)
-    {
-        $this->checkChatRoomRight($chatRoom, 'EDIT');
-        $chatRoom->setRoomStatus($roomStatus);
-        $this->chatManager->persistChatRoom($chatRoom);
-
-        return [
-            'id' => $chatRoom->getId(),
-            'roomName' => $chatRoom->getRoomName(),
-            'roomStatus' => $chatRoom->getRoomStatus(),
-            'roomStatusText' => $chatRoom->getRoomStatusText(),
-            'roomType' => $chatRoom->getRoomType(),
-            'roomTypeText' => $chatRoom->getRoomTypeText(),
-        ];
-    }
-
-    /**
-     * @View(serializerGroups={"api_chat"})
-     * @ApiDoc(
      *     description="Register Chat room user presence status",
      *     views = {"chat"}
      * )
@@ -262,7 +239,7 @@ class ChatController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api_room"})
+     * @View(serializerGroups={"api_chat"})
      * @Put("room/{chatRoom}", name="put_chat_room", options={ "method_prefix" = false })
      */
     public function putChatRoomAction(ChatRoom $chatRoom)
