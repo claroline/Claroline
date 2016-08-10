@@ -29,6 +29,7 @@
         >
         </i>
         {{ user['name'] }}
+
         <span ng-switch on="user['role']" ng-if="crc.isAdmin() && user['affiliation'] !== 'admin'">
             <i ng-switch-when="visitor"
                class="fa fa-microphone pointer-hand chat-room-mute-btn"

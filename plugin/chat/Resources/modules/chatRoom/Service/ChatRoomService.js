@@ -312,8 +312,8 @@ export default class ChatRoomService {
       }
     }
 
-    this.$log.log('Disconnecting the admin (roles are set)')
-    this.xmppConfig['adminConnection'].disconnect()
+    //this.$log.log('Disconnecting the admin (roles are set)')
+    //this.xmppConfig['adminConnection'].disconnect()
   }
 
   requestOutcastList () {
@@ -529,7 +529,6 @@ export default class ChatRoomService {
   }
 
   _onRoomPresence (presence) {
-    // this.$log.log(presence)
     const from = $(presence).attr('from')
     const username = Strophe.getResourceFromJid(from)
     const roomName = Strophe.getBareJidFromJid(from)
@@ -543,7 +542,7 @@ export default class ChatRoomService {
     }
 
     if (errorCode) {
-      this.$log.log('##### ERROR = ' + errorCode + ' ####')
+      this.$log.error('##### ERROR = ' + errorCode + ' ####')
     }
 
     if (roomName.toLowerCase() === this.config['room'].toLowerCase() && username !== this.config['adminUsername']) {
@@ -568,6 +567,7 @@ export default class ChatRoomService {
       } else {
         if (username === this.xmppConfig['username']) {
           this.config['myRole'] = role
+          console.log('ON ROOM AFFILIATION', affiliation)
           this.config['myAffiliation'] = affiliation
 
           if (statusCode === '110') {
@@ -605,6 +605,7 @@ export default class ChatRoomService {
           }
         }
 
+        //move this above ?
         if (type === 'unavailable') {
           this.$log.log(`****************** ${username} => disconnected`)
           this._userDisconnectedCallback(username)
@@ -621,7 +622,6 @@ export default class ChatRoomService {
   }
 
   _onRoomMessage (message) {
-    this.$log.log(message)
     const from = $(message).attr('from')
     const type = $(message).attr('type')
     const roomName = Strophe.getBareJidFromJid(from)
