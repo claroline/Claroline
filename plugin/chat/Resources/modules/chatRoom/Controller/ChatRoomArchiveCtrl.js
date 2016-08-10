@@ -13,6 +13,6 @@ import ChatRoomBaseCtrl from './ChatRoomBaseCtrl'
 export default class ChatRoomArchiveCtrl extends ChatRoomBaseCtrl {
   constructor ($state, $uibModal, $log, ChatRoomService, VideoService, FormBuilderService) {
     super($state, $uibModal, $log, ChatRoomService, VideoService, FormBuilderService)
-    this.oldMessages = this.ChatRoomService.getRegisteredMessages()
+    this.oldMessages = this.ChatRoomService.getOldMessages()
   }
 }
