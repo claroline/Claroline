@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import configureTpl from '../Partial/configure.html'
 import ChatRoomBaseCtrl from './ChatRoomBaseCtrl'
 
 export default class ChatRoomArchiveCtrl extends ChatRoomBaseCtrl {

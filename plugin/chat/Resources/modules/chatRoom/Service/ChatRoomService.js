@@ -193,19 +193,19 @@ export default class ChatRoomService {
     this.xmppConfig['adminConnection'].sendIQ(iq)
   }
 
-  openRoom() {
+  openRoom () {
     this.config['chatRoom']['room_status'] = 1
     this.editChatRoom(this.config['chatRoom'])
   }
 
-  editChatRoom(chatRoom) {
-      return this.$http.put(
-          Routing.generate('api_put_chat_room', {chatRoom: this.config.chatRoom.id}),
-          this.$httpParamSerializerJQLike({'chat_room': chatRoom}),
-          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-      ).then((data) => {
-          return this.config.chatRoom = data.data
-      })
+  editChatRoom (chatRoom) {
+    return this.$http.put(
+      Routing.generate('api_put_chat_room', {chatRoom: this.config.chatRoom.id}),
+      this.$httpParamSerializerJQLike({'chat_room': chatRoom}),
+      {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+    ).then((data) => {
+      return this.config.chatRoom = data.data
+    })
   }
 
   isAdmin () {
@@ -250,7 +250,7 @@ export default class ChatRoomService {
     const route = Routing.generate('api_get_registered_messages' , {chatRoom: this.config.chatRoom.id})
     this.$http.get(route).then(d => {
       d['data'].forEach(m => {
-        messages.push({name: m['userFullName'], content:  m['content'], color: m['color'], type: m['type'], creationDate: m['creationDate']})
+        messages.push({name: m['userFullName'], content: m['content'], color: m['color'], type: m['type'], creationDate: m['creationDate']})
       })
     })
 
@@ -312,8 +312,8 @@ export default class ChatRoomService {
       }
     }
 
-    //this.$log.log('Disconnecting the admin (roles are set)')
-    //this.xmppConfig['adminConnection'].disconnect()
+  // this.$log.log('Disconnecting the admin (roles are set)')
+  // this.xmppConfig['adminConnection'].disconnect()
   }
 
   requestOutcastList () {
@@ -465,7 +465,7 @@ export default class ChatRoomService {
   }
 
   manageBannedUsers (bannedUsernames) {
-    const route = Routing.generate('api_post_chat_users_infos')
+    const route = Routing.generate('api_post_chat_users_infos', {chatRoom: this.config.chatRoom.id})
     this.$http.post(route, {usernames: bannedUsernames}).then(
       d => {
         const usersDatas = d['data']
@@ -567,7 +567,6 @@ export default class ChatRoomService {
       } else {
         if (username === this.xmppConfig['username']) {
           this.config['myRole'] = role
-          console.log('ON ROOM AFFILIATION', affiliation)
           this.config['myAffiliation'] = affiliation
 
           if (statusCode === '110') {
@@ -605,7 +604,7 @@ export default class ChatRoomService {
           }
         }
 
-        //move this above ?
+        // move this above ?
         if (type === 'unavailable') {
           this.$log.log(`****************** ${username} => disconnected`)
           this._userDisconnectedCallback(username)

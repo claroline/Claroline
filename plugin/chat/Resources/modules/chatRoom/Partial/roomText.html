@@ -2,7 +2,7 @@
     <button class="btn btn-default" ng-click="crc.goBack()">
         {{ 'back'|trans:{}:'platform' }}
     </button>
-    <button class="btn btn-default" ng-click="crc.configure()">
+    <button ng-if="crc.chatRoomConfig.canEdit" class="btn btn-default" ng-click="crc.configure()">
         {{ 'configure'|trans:{}:'platform' }}
     </button>
 </div>

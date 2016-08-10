@@ -12,13 +12,12 @@ import angular from 'angular/index'
 import 'angular-ui-router'
 import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
-import '../message/message'
 import '../user/user'
 import '../xmpp/xmpp'
 import '#/main/core/scrollbar/module'
 import '#/main/core/form/module'
 
-import Routing from './routing.js'
+import Routing from './routing'
 import ChatRoomArchiveCtrl from './Controller/ChatRoomArchiveCtrl'
 import ChatRoomInitCtrl from './Controller/ChatRoomInitCtrl'
 import ChatRoomTextCtrl from './Controller/ChatRoomTextCtrl'
@@ -31,7 +30,7 @@ import ChatRoomInputDirective from './Directive/ChatRoomInputDirective'
 import ChatRoomMessagesDirective from './Directive/ChatRoomMessagesDirective'
 import ChatRoomUsersDirective from './Directive/ChatRoomUsersDirective'
 import ChatRoomVideosDirective from './Directive/ChatRoomVideosDirective'
-import ChatRoomAudiosDirective from './Directive/ChatRoomAudiosDirective.js'
+import ChatRoomAudiosDirective from './Directive/ChatRoomAudiosDirective'
 import Interceptors from '#/main/core/interceptorsDefault'
 
 angular.module('ChatRoomModule', [
@@ -41,7 +40,6 @@ angular.module('ChatRoomModule', [
   'ui.scrollbar',
   'ui.router',
   'XmppModule',
-  'MessageModule',
   'FormBuilder',
   'UserModule'
 ])

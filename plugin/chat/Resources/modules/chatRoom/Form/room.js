@@ -1,8 +1,6 @@
-import NotBlank from '#/main/core/form/Validator/NotBlank'
-
 export default {
   fields: [
-    ['room_name', 'text', {label: 'room_name', disabled: true}],
+    ['room_name', 'text', {label: 'name', disabled: true}],
     [
       'room_type',
       'select',
@@ -13,7 +11,8 @@ export default {
           { value: 2, label: 'audio_video'}
         ],
         choice_value: 'value',
-        translation_domain: 'chat'
+        translation_domain: 'chat',
+        label: 'type'
       }
     ],
     [
@@ -25,7 +24,8 @@ export default {
           { value: 2, label: 'closed'}
         ],
         choice_value: 'value',
-        translation_domain: 'chat'
+        translation_domain: 'chat',
+        label: 'status'
       }
     ]
   ]

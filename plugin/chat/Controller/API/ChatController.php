@@ -169,7 +169,7 @@ class ChatController extends FOSRestController
      *     views = {"chat"}
      * )
      */
-    public function postChatUsersInfosAction(Request $request)
+    public function postChatUsersInfosAction(Request $request, ChatRoom $chatRoom)
     {
         $this->checkChatRoomRight($chatRoom, 'OPEN');
         $datas = [];
@@ -246,7 +246,7 @@ class ChatController extends FOSRestController
      */
     public function putChatRoomAction(ChatRoom $chatRoom)
     {
-        $this->checkChatRoomRight($chatRoom, 'OPEN');
+        $this->checkChatRoomRight($chatRoom, 'EDIT');
         $data = $this->request->request->get('chat_room');
 
         return $this->chatManager->editChatRoom($chatRoom, $data['room_type'], $data['room_status']);

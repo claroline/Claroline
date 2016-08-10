@@ -89,7 +89,7 @@ export default class ChatRoomBaseCtrl {
       resolve: {
         chat: () => {
           return this.chatRoomConfig.chatRoom
-          }
+        }
       }
     })
 
@@ -102,12 +102,10 @@ export default class ChatRoomBaseCtrl {
 
   redirect (chatRoom) {
     if (chatRoom['room_status'] === 2) {
-        this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true })
-        return
+      this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true })
+      return
     }
 
-    //this.ChatRoomService.disconnectFromRoom()
-    //this.ChatRoomService.connectToRoom()
     this.$state.transitionTo(chatRoom['room_type_text'], {}, { reload: true, inherit: true, notify: true })
   }
 }

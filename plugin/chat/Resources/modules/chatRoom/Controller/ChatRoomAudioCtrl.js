@@ -7,13 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import $ from 'jquery'
-
 import ChatRoomVideoCtrl from './ChatRoomVideoCtrl'
 
 export default class ChatRoomAudioCtrl extends ChatRoomVideoCtrl {
-    constructor ($state, $uibModal, $log, ChatRoomService, VideoService, FormBuilderService) {
-        super($state, $uibModal, $log, ChatRoomService, VideoService, FormBuilderService)
-        this.VideoService.getConfig().myVideoEnabled = false
-    }
+  constructor ($state, $uibModal, $log, ChatRoomService, VideoService, FormBuilderService) {
+    super($state, $uibModal, $log, ChatRoomService, VideoService, FormBuilderService)
+    this.VideoService.getConfig().myVideoEnabled = false
+  }
 }
