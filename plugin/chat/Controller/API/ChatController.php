@@ -171,6 +171,7 @@ class ChatController extends FOSRestController
      */
     public function postChatUsersInfosAction(Request $request)
     {
+        $this->checkChatRoomRight($chatRoom, 'OPEN');
         $datas = [];
         $usernames = $request->request->get('usernames', false);
         $chatUsers = $this->chatManager->getChatUsersByUsernames($usernames);
@@ -200,6 +201,7 @@ class ChatController extends FOSRestController
      */
     public function getRegisteredMessagesAction(ChatRoom $chatRoom)
     {
+        $this->checkChatRoomRight($chatRoom, 'OPEN');
         $datas = [];
         $names = [];
         $usernames = [];
@@ -244,6 +246,7 @@ class ChatController extends FOSRestController
      */
     public function putChatRoomAction(ChatRoom $chatRoom)
     {
+        $this->checkChatRoomRight($chatRoom, 'OPEN');
         $data = $this->request->request->get('chat_room');
 
         return $this->chatManager->editChatRoom($chatRoom, $data['room_type'], $data['room_status']);

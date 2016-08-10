@@ -36,3 +36,6 @@
 <div ng-if="crc.chatRoomConfig['chatRoom']['room_type_text'] !== 'audio'" class="panel-body">
     {{ 'invalid_room_type'|trans:{}:'chat' }}
 </div>
+<div ng-if="crc.chatRoomConfig['chatRoom']['room_status_text'] === 'closed'" class="panel-body">
+    {{ 'chat_room_closed_msg'|trans:{}:'chat' }}
+</div>

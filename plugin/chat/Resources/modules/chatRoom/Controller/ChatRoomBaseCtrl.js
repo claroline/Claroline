@@ -30,7 +30,7 @@ export default class ChatRoomBaseCtrl {
       this.ChatRoomService.disconnectFromRoom()
     })
 
-    if (!this.chatRoomConfig['connected']) {
+    if (!this.chatRoomConfig['connected'] && this.chatRoomConfig['chatRoom']['room_status_text'] !== 'closed') {
       this.ChatRoomService.connectToRoom()
     }
   }
@@ -95,7 +95,6 @@ export default class ChatRoomBaseCtrl {
 
     modalInstance.result.then(result => {
       this.ChatRoomService.editChatRoom(result).then((chatRoom) => {
-        console.log(chatRoom)
         this.redirect(chatRoom)
       })
     })
@@ -107,6 +106,8 @@ export default class ChatRoomBaseCtrl {
         return
     }
 
+    //this.ChatRoomService.disconnectFromRoom()
+    //this.ChatRoomService.connectToRoom()
     this.$state.transitionTo(chatRoom['room_type_text'], {}, { reload: true, inherit: true, notify: true })
   }
 }
