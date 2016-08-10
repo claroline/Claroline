@@ -966,6 +966,7 @@ terms_enabled_but_empty: 'Terms of service can only be enabled if the text is pr
 terms_of_service_acceptance: 'I accept the terms of service'
 test_repository_activated: 'Test repositories are activated'
 text: Text
+text_title_color: Color for text in title
 the_following_users_were_not_imported: 'The following users were not imported.'
 the_workspace: Workspace
 theme: Theme

@@ -55,7 +55,8 @@
                 this.$el.html(Twig.render(ModalWindow, {
                     'modalId': 'picker-' + this.parameters.viewName,
                     'header' : Translator.trans('resource_picker', {}, 'platform'),
-                    'body': ''
+                    'body': '',
+                    'style': 'z-index: 2000;'
                 }));
                 this.wrapper = this.$('.modal-body');
             } else {

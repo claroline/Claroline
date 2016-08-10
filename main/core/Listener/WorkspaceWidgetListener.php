@@ -12,10 +12,14 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Service()
@@ -24,19 +28,35 @@ class WorkspaceWidgetListener
 {
     private $authorization;
     private $templating;
+    private $tokenStorage;
+    private $utils;
+    private $workspaceManager;
+    private $workspaceTagManager;
 
     /**
      * @DI\InjectParams({
-     *     "authorization"    = @DI\Inject("security.authorization_checker"),
-     *     "templating"       = @DI\Inject("templating")
+     *     "authorization"       = @DI\Inject("security.authorization_checker"),
+     *     "templating"          = @DI\Inject("templating"),
+     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
+     *     "utils"               = @DI\Inject("claroline.security.utilities"),
+     *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager")
      * })
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TwigEngine $templating
+        TwigEngine $templating,
+        TokenStorageInterface $tokenStorage,
+        Utilities $utils,
+        WorkspaceManager $workspaceManager,
+        WorkspaceTagManager $workspaceTagManager
     ) {
         $this->authorization = $authorization;
         $this->templating = $templating;
+        $this->tokenStorage = $tokenStorage;
+        $this->utils = $utils;
+        $this->workspaceManager = $workspaceManager;
+        $this->workspaceTagManager = $workspaceTagManager;
     }
 
     /**
@@ -49,10 +69,26 @@ class WorkspaceWidgetListener
         if (!$this->authorization->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();
         }
+        $widgetInstance = $event->getInstance();
+        $instanceTemplate = $widgetInstance->getTemplate();
+        $template = is_null($instanceTemplate) ?
+            'ClarolineCoreBundle:Widget:desktopWidgetMyWorkspaces.html.twig' :
+            $instanceTemplate;
+        $mode = 0;
+        $token = $this->tokenStorage->getToken();
+        $user = $token->getUser();
+        $workspaces = $this->workspaceManager->getFavouriteWorkspacesByUser($user);
 
+        if (count($workspaces) > 0) {
+            $mode = 1;
+        } else {
+            $roles = $this->utils->getRoles($token);
+            $datas = $this->workspaceTagManager->getDatasForWorkspaceListByUser($user, $roles);
+            $workspaces = $datas['workspaces'];
+        }
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Widget:desktopWidgetMyWorkspaces.html.twig',
-            array()
+            $template,
+            ['workspaces' => $workspaces, 'mode' => $mode, 'widgetInstance' => $widgetInstance]
         );
         $event->setContent($content);
         $event->stopPropagation();

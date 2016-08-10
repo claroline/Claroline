@@ -1,0 +1,45 @@
+<div gridster="dhmc.gridsterOptions">
+    <ul>
+        <li gridster-item="widget"
+            class="panel panel-default gridster-item-content"
+            ng-repeat="widget in dhmc.widgets"
+            style="border-color: {{ widget['color'] }}"
+        >
+            <div class="panel-heading widget-header" style="background-color: {{ widget['color'] }}">
+                <h3 class="panel-title">
+                    <span class="pull-right widget-header-control-box" ng-if="dhmc.widgetsOptions['canEdit'] && !widget['locked']">
+                        <span ng-if="widget['type'] === 'desktop'">
+                            <i class="fa fa-times close"
+                               ng-if="widget['type'] === 'desktop'"
+                               ng-click="dhmc.deleteUserWidget($event, widget['configId'])"
+                            >
+                            </i>
+                            <span class="close">&nbsp;</span>
+                            <i class="fa fa-pencil close"
+                               ng-if="widget['type'] === 'desktop'"
+                               ng-click="dhmc.editUserWidget($event, widget['instanceId'], widget['displayId'], widget['configurable'])"
+                            >
+                            </i>
+                        </span>
+                        <i class="fa fa-times close"
+                           ng-if="widget['type'] !== 'desktop'"
+                           ng-click="dhmc.hideAdminWidget($event, widget['configId'])"
+                        >
+                        </i>
+                        <span class="close" ng-if="widget['type'] !== 'desktop'">&nbsp;</span>
+                    </span>
+                    <span class="widget-header-content"
+                          title="{{ widget['instanceName'] }}"
+                          style="color: {{ widget['textTitleColor'] }}"
+                    >
+                       {{ widget['instanceName'] }}
+                    </span>
+                </h3>
+            </div>
+            <div class="panel-body home-widget-content">
+                <div ng-bind-html="widget['content']">
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

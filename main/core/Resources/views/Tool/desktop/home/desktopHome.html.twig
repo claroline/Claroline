@@ -1,0 +1,35 @@
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}
+{% endblock %}
+
+{% block section_content %}
+    <div id="desktop-home-panel" ng-app="DesktopHomeModule">
+        <div class="panel-body" ui-view>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        debug=false
+        filter='less, cssmin'
+        output='css/clarolinecore/hometabs.css'
+        "@ClarolineCoreBundle/Resources/less/home-tabs.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media"/>
+    {% endstylesheets %}
+    <link rel='stylesheet' type='text/css' href='{{ asset('packages/angular-bootstrap-colorpicker/css/colorpicker.min.css')}}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('packages/angular-gridster/dist/angular-gridster.min.css')}}'>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        window.tabId = {{ tabId }}
+    </script>
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-desktop-home.js') }}"></script>
+    <script src="{{ asset('packages/angular-gridster/dist/angular-gridster.min.js') }}"></script>
+{% endblock %}
