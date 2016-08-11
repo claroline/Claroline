@@ -1,43 +1,51 @@
-<!-- If a chat account has been created -->
-<div ng-if="crmc.chatRoomConfig['canChat']">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ crc.chatRoomConfig.resourceName }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <!-- If a chat account has been created -->
+        <div ng-if="crmc.chatRoomConfig['canChat']">
 
-    <!-- Uninitialized room -->
-    <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'uninitialized'">
-        <div class="alert alert-warning" >
-            {{ 'chat_room_uninitialized_msg'|trans:{}:'chat' }}
+            <!-- Uninitialized room -->
+            <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'uninitialized'">
+                <div class="alert alert-warning" >
+                    {{ 'chat_room_uninitialized_msg'|trans:{}:'chat' }}
+                </div>
+                <button class="btn btn-primary"
+                    ng-if="crmc.chatRoomConfig['canEdit']"
+                    ng-disabled="!crmc.xmppConfig['connected'] || !crmc.xmppConfig['adminConnected']"
+                    ng-click="crmc.initializeChatRoom()"
+                >
+                    {{ 'init_room'|trans:{}:'chat' }}
+                </button>
+            </div>
+
+            <!-- Open room -->
+            <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'open'">
+                <button class="btn btn-primary"
+                    ng-click="crmc.connectToRoom()"
+                >
+                    {{ 'connect_to_chat_room'|trans:{}:'chat' }}
+                </button>
+            </div>
+
+
+            <!-- Unknown status room -->
+            <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'unknown'">
+                <div class="alert alert-danger">
+                    {{ 'chat_room_unknown_status_msg'|trans:{}:'chat' }}
+                </div>
+            </div>
+
         </div>
-        <button class="btn btn-primary"
-            ng-if="crmc.chatRoomConfig['canEdit']"
-            ng-disabled="!crmc.xmppConfig['connected'] || !crmc.xmppConfig['adminConnected']"
-            ng-click="crmc.initializeChatRoom()"
-        >
-            {{ 'init_room'|trans:{}:'chat' }}
-        </button>
-    </div>
 
-    <!-- Open room -->
-    <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'open'">
-        <button class="btn btn-primary"
-            ng-disabled="!crmc.xmppConfig['connected'] || !crmc.xmppConfig['adminConnected']"
-            ng-click="crmc.connectToRoom()"
-        >
-            {{ 'connect_to_chat_room'|trans:{}:'chat' }}
-        </button>
-    </div>
-
-
-    <!-- Unknown status room -->
-    <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'unknown'">
-        <div class="alert alert-danger">
-            {{ 'chat_room_unknown_status_msg'|trans:{}:'chat' }}
+        <!-- Else -->
+        <div ng-if="!crmc.chatRoomConfig['canChat']">
+            <div class="alert alert-danger">
+                {{ 'chat_account_not_activated_msg'|trans:{}:'chat' }}
+            </div>
         </div>
-    </div>
-
-</div>
-
-<!-- Else -->
-<div ng-if="!crmc.chatRoomConfig['canChat']">
-    <div class="alert alert-danger">
-        {{ 'chat_account_not_activated_msg'|trans:{}:'chat' }}
     </div>
 </div>

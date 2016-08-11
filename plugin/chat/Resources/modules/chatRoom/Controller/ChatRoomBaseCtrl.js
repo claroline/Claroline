@@ -10,6 +10,8 @@
 import $ from 'jquery'
 import configureTpl from '../Partial/configure.html'
 import closeRoomTpl from '../Partial/close.html'
+import changeRoomTypeTpl from '../Partial/changeRoomType.html'
+import ChatRoom from '../Model/ChatRoom'
 
 export default class ChatRoomBaseCtrl {
 
@@ -27,9 +29,11 @@ export default class ChatRoomBaseCtrl {
     this.bannedUsers = ChatRoomService.getBannedUsers()
 
     ChatRoomService.setCloseCallback(() => {
-      this.$uibModal.open({template: closeRoomTpl}).result.then(() => {
-        this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true })
-      })
+        this._closeRoomCallback()
+    })
+
+    ChatRoomService.setChangeRoomTypeCallback((type) => {
+        this._changeRoomTypeCallback(type)
     })
 
     $(window).unload(($event) => {
@@ -40,6 +44,18 @@ export default class ChatRoomBaseCtrl {
     if (!this.chatRoomConfig['connected'] && this.chatRoomConfig['chatRoom']['room_status_text'] !== 'closed') {
       this.ChatRoomService.connectToRoom()
     }
+  }
+
+  _changeRoomTypeCallback(type) {
+      this.$uibModal.open({template: changeRoomTypeTpl}).result.then(() => {
+        this.goBack()
+      })
+  }
+
+  _closeRoomCallback() {
+      this.$uibModal.open({template: closeRoomTpl}).result.then(() => {
+        this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true })
+      })
   }
 
   kickUser (username) {
@@ -108,11 +124,10 @@ export default class ChatRoomBaseCtrl {
   }
 
   redirect (chatRoom) {
-    if (chatRoom['room_status'] === 2) {
+    if (chatRoom['room_status'] === ChatRoom.CLOSED) {
       this.ChatRoomService.close()
-      return
     }
 
-    this.$state.transitionTo(chatRoom['room_type_text'], {}, { reload: true, inherit: true, notify: true })
+    this.ChatRoomService.changeRoomType(chatRoom['room_type_text'])
   }
 }

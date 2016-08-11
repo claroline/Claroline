@@ -8,6 +8,7 @@
  */
 
 import $ from 'jquery'
+import ChatRoom from '../Model/ChatRoom'
 
 /* global Routing */
 /* global Translator */
@@ -31,6 +32,7 @@ export default class ChatRoomService {
       connected: false,
       busy: false,
       resourceId: ChatRoomService._getGlobal('resourceId'),
+      resourceName: ChatRoomService._getGlobal('resourceName'),
       chatRoom: ChatRoomService._getGlobal('chatRoom'),
       room: `${ChatRoomService._getGlobal('roomName')}@${ChatRoomService._getGlobal('xmppMucHost')}`,
       roomName: ChatRoomService._getGlobal('roomName'),
@@ -55,11 +57,17 @@ export default class ChatRoomService {
     this._onIQStanza = this._onIQStanza.bind(this)
     this._fullConnection = this._fullConnection.bind(this)
     this._onRoomClose = this._onRoomClose.bind(this)
+    this._onChangeRoomType = this._onChangeRoomType.bind(this)
+
     this._connectedCallback = () => {
     }
     this._userDisconnectedCallback = () => {
     }
     this._managementCallback = () => {
+    }
+    this._closeCallback = () => {
+    }
+    this._changeRoomTypeCallback = () => {
     }
   }
 
@@ -93,6 +101,10 @@ export default class ChatRoomService {
 
   setCloseCallback (callback) {
     this._closeCallback = callback
+  }
+
+  setChangeRoomTypeCallback (callback) {
+    this._changeRoomTypeCallback = callback
   }
 
   setManagementCallback (callback) {
@@ -159,6 +171,7 @@ export default class ChatRoomService {
       this.xmppConfig['connection'].send(presence)
       this.xmppConfig['connection'].disconnect()
     }
+    //this.refreshScope()
   }
 
   initializeRoom () {
@@ -489,10 +502,15 @@ export default class ChatRoomService {
       this.messages.push({name: name, status: 'unbanned', type: 'presence'})
       this.refreshScope()
     } else {
-      if (type === 'close_room') {
-        this._onRoomClose()
-      } else {
-        this._managementCallback(type, username, name, value)
+      switch (type) {
+          case 'close_room':
+            this._onRoomClose();
+            break;
+          case 'change_room_type':
+            this._onChangeRoomType(value)
+            break;
+          default:
+            this._managementCallback(type, username, name, value)
       }
     }
   }
@@ -513,12 +531,34 @@ export default class ChatRoomService {
     )
   }
 
+  changeRoomType (type) {
+    this.xmppConfig['connection'].send(
+      $msg({
+        to: this.config['room'],
+        type: 'groupchat'
+      }).c('body').t('')
+        .up()
+        .c(
+          'datas', {
+            status: 'management',
+            type: 'change_room_type',
+            value: type
+          })
+    )
+  }
+
   _onRoomClose () {
-    this.config['myRole'] = 'none'
-    this.config['myAffiliation'] = null
-    this.config['adminConnected'] = false
-    this.config['connected'] = false
+    //closed
+    this.config.chatRoom.room_status = ChatRoom.CLOSED
+    this.config.chatRoom.room_status_text = 'closed'
     this._closeCallback()
+  }
+
+  _onChangeRoomType (type) {
+    this.config.chatRoom.room_type = ChatRoom[type.toUpperCase()]
+    this.config.chatRoom.room_type_text = type
+    console.log(this.config.chatRoom)
+    this._changeRoomTypeCallback(type)
   }
 
   _onRoomAdminPresenceInit (presence) {
