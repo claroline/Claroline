@@ -10,6 +10,7 @@ chat: Chat
 chat_account_not_activated_msg: Votre compte pour le Chat n'est pas activé
 chat_accounts_creation: Création de comptes pour le Chat
 chat_configuration: Configuration du Chat
+chat_room_closed_alert: La chat room a été fermée
 chat_room_closed_msg: La Chat room est fermée
 chat_room_configuration: Configuration de la Chat room
 chat_room_id: Identifiant de la Chat room
@@ -21,6 +22,7 @@ chat_username: Identifiant pour le Chat
 closed: Fermé
 connect_to_chat_room: Se connecter à la Chat room
 connecting: Connexion en cours...
+continue: Continuer
 create_chat_accounts: Créer des comptes pour le Chat
 disable_chat_room_audio: Désactiver les Chat rooms audio
 disable_chat_room_video: Désactiver les Chat rooms video

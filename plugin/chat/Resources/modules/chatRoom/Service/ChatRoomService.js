@@ -54,6 +54,7 @@ export default class ChatRoomService {
     this._onIQStanzaInit = this._onIQStanzaInit.bind(this)
     this._onIQStanza = this._onIQStanza.bind(this)
     this._fullConnection = this._fullConnection.bind(this)
+    this._onRoomClose = this._onRoomClose.bind(this)
     this._connectedCallback = () => {
     }
     this._userDisconnectedCallback = () => {
@@ -88,6 +89,10 @@ export default class ChatRoomService {
 
   setUserDisconnectedCallback (callback) {
     this._userDisconnectedCallback = callback
+  }
+
+  setCloseCallback (callback) {
+    this._closeCallback = callback
   }
 
   setManagementCallback (callback) {
@@ -484,8 +489,36 @@ export default class ChatRoomService {
       this.messages.push({name: name, status: 'unbanned', type: 'presence'})
       this.refreshScope()
     } else {
-      this._managementCallback(type, username, name, value)
+      if (type === 'close_room') {
+        this._onRoomClose()
+      } else {
+        this._managementCallback(type, username, name, value)
+      }
     }
+  }
+
+  close () {
+    this.xmppConfig['connection'].send(
+      $msg({
+        to: this.config['room'],
+        type: 'groupchat'
+      }).c('body').t('')
+        .up()
+        .c(
+          'datas', {
+            status: 'management',
+            type: 'close_room',
+            value: true
+          })
+    )
+  }
+
+  _onRoomClose () {
+    this.config['myRole'] = 'none'
+    this.config['myAffiliation'] = null
+    this.config['adminConnected'] = false
+    this.config['connected'] = false
+    this._closeCallback()
   }
 
   _onRoomAdminPresenceInit (presence) {

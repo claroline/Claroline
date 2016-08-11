@@ -1,11 +1,13 @@
 <div>
-    <button class="btn btn-default" ng-click="cra.configure()">
-        {{ 'configure'|trans:{}:'platform' }}
-    </button>
+    <div class="panel-body">
+        <button ng-if="cra.chatRoomConfig.canEdit" class="btn btn-default" ng-click="cra.configure()">
+            {{ 'configure'|trans:{}:'platform' }}
+        </button>
+    </div>
 
     <div class="panel-body">
         <div id="chat-room-content-archives-panel" class="col-md-9">
-            <div id="chat-content-archives" class="well well-sm">
+            <div id="chat-content-archives" class="well well-sm" style="overflow: scroll; max-height: 100vh;">
                 <div ng-repeat="oldMessage in cra.oldMessages">
                     <div ng-switch="oldMessage['type']">
                         <div ng-switch-when="message">

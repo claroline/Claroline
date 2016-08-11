@@ -9,6 +9,7 @@
 
 import $ from 'jquery'
 import configureTpl from '../Partial/configure.html'
+import closeRoomTpl from '../Partial/close.html'
 
 export default class ChatRoomBaseCtrl {
 
@@ -24,6 +25,12 @@ export default class ChatRoomBaseCtrl {
     this.oldMessages = ChatRoomService.getOldMessages()
     this.users = ChatRoomService.getUsers()
     this.bannedUsers = ChatRoomService.getBannedUsers()
+
+    ChatRoomService.setCloseCallback(() => {
+      this.$uibModal.open({template: closeRoomTpl}).result.then(() => {
+        this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true })
+      })
+    })
 
     $(window).unload(($event) => {
       $event.preventDefault()
@@ -102,7 +109,7 @@ export default class ChatRoomBaseCtrl {
 
   redirect (chatRoom) {
     if (chatRoom['room_status'] === 2) {
-      this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true })
+      this.ChatRoomService.close()
       return
     }
 
