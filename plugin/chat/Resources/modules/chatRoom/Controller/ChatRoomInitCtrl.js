@@ -33,16 +33,6 @@ export default class ChatRoomInitCtrl {
 
   connectToRoom () {
     this.initialize()
-    this.redirect()
-  }
-
-  redirect () {
-    if (this.chatRoomConfig['chatRoom']['room_type_text'] === 'text') {
-      this.$state.transitionTo('text', {}, {reload: true, inherit: true, notify: true})
-    } else if (this.chatRoomConfig['chatRoom']['room_type_text'] === 'video') {
-      this.$state.transitionTo('video', {}, { reload: true, inherit: true, notify: true })
-    } else if (this.chatRoomConfig['chatRoom']['room_type_text'] === 'audio') {
-      this.$state.transitionTo('audio', {}, { reload: true, inherit: true, notify: true })
-    }
+    this.$state.transitionTo(this.chatRoomConfig['chatRoom']['room_type_text'], {}, {reload: true, inherit: true, notify: true})
   }
 }

@@ -25,7 +25,7 @@ import ChatRoomVideoCtrl from './Controller/ChatRoomVideoCtrl'
 import ChatRoomAudioCtrl from './Controller/ChatRoomAudioCtrl'
 import ChatConfigureCtrl from './Controller/ChatConfigureCtrl'
 import ChatRoomService from './Service/ChatRoomService'
-import VideoService from './Service/VideoService'
+import RTCService from './Service/RTCService'
 import ChatRoomInputDirective from './Directive/ChatRoomInputDirective'
 import ChatRoomMessagesDirective from './Directive/ChatRoomMessagesDirective'
 import ChatRoomUsersDirective from './Directive/ChatRoomUsersDirective'
@@ -45,12 +45,12 @@ angular.module('ChatRoomModule', [
 ])
   .controller('ChatRoomInitCtrl', ['$state', 'ChatRoomService', ChatRoomInitCtrl])
   .controller('ChatRoomArchiveCtrl', ['$state', '$uibModal', 'ChatRoomService', 'FormBuilderService', ChatRoomArchiveCtrl])
-  .controller('ChatRoomTextCtrl', ['$state', '$uibModal', 'ChatRoomService', 'FormBuilderService', ChatRoomTextCtrl])
-  .controller('ChatRoomAudioCtrl', ['$state', '$uibModal', '$log', 'ChatRoomService', 'VideoService', 'FormBuilderService', ChatRoomAudioCtrl])
-  .controller('ChatRoomVideoCtrl', ['$state', '$uibModal', '$log', 'ChatRoomService', 'VideoService', 'FormBuilderService', ChatRoomVideoCtrl])
+  .controller('ChatRoomTextCtrl', ['$state', '$uibModal', '$rootScope', 'ChatRoomService', 'FormBuilderService', ChatRoomTextCtrl])
+  .controller('ChatRoomAudioCtrl', ['$state', '$uibModal', '$log', '$rootScope', 'ChatRoomService', 'RTCService', 'FormBuilderService', ChatRoomAudioCtrl])
+  .controller('ChatRoomVideoCtrl', ['$state', '$uibModal', '$log', '$rootScope', 'ChatRoomService', 'RTCService', 'FormBuilderService', ChatRoomVideoCtrl])
   .controller('ChatConfigureCtrl', ChatConfigureCtrl)
   .service('ChatRoomService', ChatRoomService)
-  .service('VideoService', VideoService)
+  .service('RTCService', RTCService)
   .directive('chatRoomInput', () => new ChatRoomInputDirective)
   .directive('chatRoomMessages', () => new ChatRoomMessagesDirective)
   .directive('chatRoomUsers', () => new ChatRoomUsersDirective)

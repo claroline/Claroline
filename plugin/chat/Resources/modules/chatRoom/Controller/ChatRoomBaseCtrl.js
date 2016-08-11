@@ -15,10 +15,11 @@ import ChatRoom from '../Model/ChatRoom'
 
 export default class ChatRoomBaseCtrl {
 
-  constructor ($state, $uibModal, ChatRoomService, FormBuilderService) {
+  constructor ($state, $uibModal, $rootScope, ChatRoomService, FormBuilderService) {
     this.input = ''
     this.$uibModal = $uibModal
     this.$state = $state
+    this.$rootScope = $rootScope
     this.ChatRoomService = ChatRoomService
     this.FormBuilderService = FormBuilderService
     this.chatRoomConfig = ChatRoomService.getConfig()
@@ -27,6 +28,15 @@ export default class ChatRoomBaseCtrl {
     this.oldMessages = ChatRoomService.getOldMessages()
     this.users = ChatRoomService.getUsers()
     this.bannedUsers = ChatRoomService.getBannedUsers()
+
+    //the config must change to request approriate medias
+    $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams, options) => {
+        if (toState.name === 'text') {
+            ChatRoomService.setConnectedCallback(() => {})
+            ChatRoomService.setUserDisconnectedCallback(() => {})
+            ChatRoomService.setManagementCallback(() => {})
+        }
+    })
 
     ChatRoomService.setCloseCallback(() => {
         this._closeRoomCallback()
@@ -47,9 +57,10 @@ export default class ChatRoomBaseCtrl {
   }
 
   _changeRoomTypeCallback(type) {
-      this.$uibModal.open({template: changeRoomTypeTpl}).result.then(() => {
-        this.goBack()
-      })
+      this.goBack()
+      /*this.$uibModal.open({template: changeRoomTypeTpl}).result.then(() => {
+
+      })*/
   }
 
   _closeRoomCallback() {

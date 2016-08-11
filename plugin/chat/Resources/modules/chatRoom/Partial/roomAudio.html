@@ -1,5 +1,5 @@
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading clearfix">
         <h3 class="panel-title">
             {{ crc.chatRoomConfig.resourceName }}
             <button ng-if="crc.chatRoomConfig.canEdit" class="btn btn-default pull-right" ng-click="crc.configure()">
@@ -11,9 +11,6 @@
         <div class="panel">
             <button class="btn btn-default" ng-click="crc.goBack()">
                 {{ 'back'|trans:{}:'platform' }}
-            </button>
-            <button ng-if="crc.chatRoomConfig.canEdit" class="btn btn-default" ng-click="crc.configure()">
-                {{ 'configure'|trans:{}:'platform' }}
             </button>
         </div>
         <div ng-if="crc.chatRoomConfig['chatRoom']['room_type_text'] === 'audio'">

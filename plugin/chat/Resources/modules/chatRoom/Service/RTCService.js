@@ -18,7 +18,7 @@
 
 import angular from 'angular/index'
 
-export default class VideoService {
+export default class RTCService {
   constructor ($http, $sce, $log, ChatRoomService, UserService) {
     this.$http = $http
     this.$sce = $sce

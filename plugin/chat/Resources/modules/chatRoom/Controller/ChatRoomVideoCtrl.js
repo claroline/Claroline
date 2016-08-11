@@ -12,24 +12,37 @@ import ChatRoomBaseCtrl from './ChatRoomBaseCtrl'
 
 export default class ChatRoomVideoCtrl extends ChatRoomBaseCtrl {
 
-  constructor($state, $uibModal, $log, ChatRoomService, VideoService, FormBuilderService) {
-    super($state, $uibModal, ChatRoomService, FormBuilderService)
+  constructor($state, $uibModal, $log, $rootScope, ChatRoomService, RTCService, FormBuilderService) {
+    super($state, $uibModal, $rootScope, ChatRoomService, FormBuilderService)
     this.$log = $log
-    this.VideoService = VideoService
+    this.RTCService = RTCService
     this.FormBuilderService = FormBuilderService
-    this.videoConfig = VideoService.getVideoConfig()
+    this.rtcConfig = RTCService.getVideoConfig()
+    this.rtcConfig.myVideoEnabled = true
+    this.rtcConfig.myAudioEnabled = true
+
+    //the config must change to request approriate medias
+    $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams, options) => {
+        if (toState.name === 'video') {
+            this.rtcConfig.myVideoEnabled = true
+            this.rtcConfig.myAudioEnabled = true
+            ChatRoomService.setConnectedCallback(RTCService._startMedias)
+            ChatRoomService.setUserDisconnectedCallback(RTCService._stopUserStream)
+            ChatRoomService.setManagementCallback(RTCService._manageManagementMessage)
+        }
+    })
 
     //this should be only loaded once
     $(window).unload(($event) => {
       $event.preventDefault()
       this.$log.log('Disconnecting...')
-      this.VideoService.closeAllConnections()
+      this.RTCService.closeAllConnections()
     })
   }
 
   goBack () {
-    this.VideoService.closeAllConnections()
-    this.VideoService.stopMedia()
+    this.RTCService.closeAllConnections()
+    this.RTCService.stopMedia()
     this.$log.log('All connection closed...')
     this.ChatRoomService.disconnectFromRoom()
     this.$state.transitionTo(
@@ -40,11 +53,11 @@ export default class ChatRoomVideoCtrl extends ChatRoomBaseCtrl {
   }
 
   switchAudio (username) {
-    this.VideoService.requestUserMicroSwitch(username)
+    this.RTCService.requestUserMicroSwitch(username)
   }
 
   switchVideo () {
-    this.VideoService.switchVideo()
+    this.RTCService.switchVideo()
   }
 
   getMyUsername () {
@@ -52,12 +65,12 @@ export default class ChatRoomVideoCtrl extends ChatRoomBaseCtrl {
   }
 
   selectSourceStream (username) {
-    this.VideoService.selectSourceStream(username)
+    this.RTCService.selectSourceStream(username)
   }
 
   getStreamClass (username) {
-    const selectedClass = this.videoConfig['selectedUser'] === username ? 'video-selected' : ''
-    const speakingClass = this.videoConfig['speakingUser'] === username ? 'video-speaking' : ''
+    const selectedClass = this.rtcConfig['selectedUser'] === username ? 'video-selected' : ''
+    const speakingClass = this.rtcConfig['speakingUser'] === username ? 'video-speaking' : ''
 
     return `${selectedClass} ${speakingClass}`
   }

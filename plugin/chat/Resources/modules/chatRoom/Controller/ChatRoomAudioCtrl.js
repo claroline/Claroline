@@ -10,8 +10,21 @@
 import ChatRoomVideoCtrl from './ChatRoomVideoCtrl'
 
 export default class ChatRoomAudioCtrl extends ChatRoomVideoCtrl {
-  constructor ($state, $uibModal, $log, ChatRoomService, VideoService, FormBuilderService) {
-    super($state, $uibModal, $log, ChatRoomService, VideoService, FormBuilderService)
-    this.VideoService.getConfig().myVideoEnabled = false
+  constructor ($state, $uibModal, $log, $rootScope, ChatRoomService, RTCService, FormBuilderService) {
+    super($state, $uibModal, $log, $rootScope, ChatRoomService, RTCService, FormBuilderService)
+
+    this.rtcConfig.myVideoEnabled = false
+    this.rtcConfig.myAudioEnabled = true
+
+    //the config must change to request approriate medias
+    $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams, options) => {
+        if (toState.name === 'audio') {
+            this.rtcConfig.myVideoEnabled = false
+            this.rtcConfig.myAudioEnabled = true
+            ChatRoomService.setConnectedCallback(RTCService._startMedias)
+            ChatRoomService.setUserDisconnectedCallback(RTCService._stopUserStream)
+            ChatRoomService.setManagementCallback(RTCService._manageManagementMessage)
+        }
+    })
   }
 }
