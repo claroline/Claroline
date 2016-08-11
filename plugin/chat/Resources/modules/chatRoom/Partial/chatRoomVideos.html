@@ -31,6 +31,9 @@
                         <button class="button button-sm" ng-click="crc.switchAudio(user['username'])">
                             <i class="fa" ng-class="crc.videoConfig['usersMicroStatus'][user['username']] ? 'fa-microphone' : 'fa-microphone-slash'"></i>
                         </button>
+                        <button class="button button-sm" ng-if="crc.isModerator() && user['affiliation'] !== 'admin'" ng-click="crc.kickUser(user['username'])"  data-toggle="tooltip" data-placement="top" title="{{ 'kick'|trans:{}:'chat' }}">
+                            <i class="fa fa-fire pointer-hand chat-room-kick-btn"></i>
+                        </button>
                     </span>
                 </h3>
             </div>

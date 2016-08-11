@@ -6,9 +6,12 @@
             </button>
             {{ 'me'|trans:{}:'chat' }}
         </li>
-        <li ng-repeat="user in crc.videoConfig['users']" ng-if="user['username'] !== crc.chatRoomConfig['myUsername']" ng-class="crc.getStreamClass(user['username'])">
+        <li  style="list-style: none;" ng-repeat="user in crc.videoConfig['users']" ng-if="user['username'] !== crc.chatRoomConfig['myUsername']" ng-class="crc.getStreamClass(user['username'])">
             <button class="button button-sm" ng-click="crc.switchAudio(user['username'])">
                 <i class="fa" ng-class="crc.videoConfig['usersMicroStatus'][user['username']] ? 'fa-microphone' : 'fa-microphone-slash'"></i>
+            </button>
+            <button class="button button-sm" ng-if="crc.isModerator() && user['affiliation'] !== 'admin'" ng-click="crc.kickUser(user['username'])"  data-toggle="tooltip" data-placement="top" title="{{ 'kick'|trans:{}:'chat' }}">
+                <i class="fa fa-fire pointer-hand chat-room-kick-btn"></i>
             </button>
             {{ user['username'] }}
             <audio autoplay="autoplay" class="participant-video other-stream not-video-js" ng-src="{{ crc.videoConfig['sourceStreams'][user['username']] }}"></audio>
