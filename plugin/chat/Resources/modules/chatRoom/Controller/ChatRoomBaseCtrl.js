@@ -10,7 +10,7 @@
 import $ from 'jquery'
 import configureTpl from '../Partial/configure.html'
 import closeRoomTpl from '../Partial/close.html'
-import changeRoomTypeTpl from '../Partial/changeRoomType.html'
+//import changeRoomTypeTpl from '../Partial/changeRoomType.html'
 import ChatRoom from '../Model/ChatRoom'
 
 export default class ChatRoomBaseCtrl {
@@ -29,21 +29,24 @@ export default class ChatRoomBaseCtrl {
     this.users = ChatRoomService.getUsers()
     this.bannedUsers = ChatRoomService.getBannedUsers()
 
-    //the config must change to request approriate medias
-    $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams, options) => {
-        if (toState.name === 'text') {
-            ChatRoomService.setConnectedCallback(() => {})
-            ChatRoomService.setUserDisconnectedCallback(() => {})
-            ChatRoomService.setManagementCallback(() => {})
-        }
+    // the config must change to request approriate medias
+    $rootScope.$on('$stateChangeStart', (event, toState) => {
+      if (toState.name === 'text') {
+        ChatRoomService.setConnectedCallback(() => {
+        })
+        ChatRoomService.setUserDisconnectedCallback(() => {
+        })
+        ChatRoomService.setManagementCallback(() => {
+        })
+      }
     })
 
     ChatRoomService.setCloseCallback(() => {
-        this._closeRoomCallback()
+      this._closeRoomCallback()
     })
 
     ChatRoomService.setChangeRoomTypeCallback((type) => {
-        this._changeRoomTypeCallback(type)
+      this._changeRoomTypeCallback(type)
     })
 
     $(window).unload(($event) => {
@@ -56,17 +59,17 @@ export default class ChatRoomBaseCtrl {
     }
   }
 
-  _changeRoomTypeCallback(type) {
-      this.goBack()
-      /*this.$uibModal.open({template: changeRoomTypeTpl}).result.then(() => {
+  _changeRoomTypeCallback () {
+    this.goBack()
+  /*this.$uibModal.open({template: changeRoomTypeTpl}).result.then(() => {
 
-      })*/
+  })*/
   }
 
-  _closeRoomCallback() {
-      this.$uibModal.open({template: closeRoomTpl}).result.then(() => {
-        this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true })
-      })
+  _closeRoomCallback () {
+    this.$uibModal.open({template: closeRoomTpl}).result.then(() => {
+      this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true })
+    })
   }
 
   kickUser (username) {

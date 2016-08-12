@@ -1,10 +1,12 @@
-<div>
-    <div class="panel-body">
-        <button ng-if="cra.chatRoomConfig.canEdit" class="btn btn-default" ng-click="cra.configure()">
-            {{ 'configure'|trans:{}:'platform' }}
-        </button>
+<div class="panel panel-default">
+    <div class="panel-heading clearfix">
+        <h3 class="panel-title">
+            {{ cra.chatRoomConfig.resourceName }}
+            <button ng-if="cra.chatRoomConfig.canEdit" class="btn btn-default pull-right" ng-click="cra.configure()">
+                <i class="fa fa-cog"></i>
+            </button>
+        </h3>
     </div>
-
     <div class="panel-body">
         <div id="chat-room-content-archives-panel" class="col-md-9">
             <div id="chat-content-archives" class="well well-sm" style="overflow: scroll; max-height: 100vh;">

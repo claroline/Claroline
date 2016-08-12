@@ -12,7 +12,7 @@ import ChatRoomBaseCtrl from './ChatRoomBaseCtrl'
 
 export default class ChatRoomVideoCtrl extends ChatRoomBaseCtrl {
 
-  constructor($state, $uibModal, $log, $rootScope, ChatRoomService, RTCService, FormBuilderService) {
+  constructor ($state, $uibModal, $log, $rootScope, ChatRoomService, RTCService, FormBuilderService) {
     super($state, $uibModal, $rootScope, ChatRoomService, FormBuilderService)
     this.$log = $log
     this.RTCService = RTCService
@@ -21,18 +21,18 @@ export default class ChatRoomVideoCtrl extends ChatRoomBaseCtrl {
     this.rtcConfig.myVideoEnabled = true
     this.rtcConfig.myAudioEnabled = true
 
-    //the config must change to request approriate medias
-    $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams, options) => {
-        if (toState.name === 'video') {
-            this.rtcConfig.myVideoEnabled = true
-            this.rtcConfig.myAudioEnabled = true
-            ChatRoomService.setConnectedCallback(RTCService._startMedias)
-            ChatRoomService.setUserDisconnectedCallback(RTCService._stopUserStream)
-            ChatRoomService.setManagementCallback(RTCService._manageManagementMessage)
-        }
+    // the config must change to request approriate medias
+    $rootScope.$on('$stateChangeStart', (event, toState) => {
+      if (toState.name === 'video') {
+        this.rtcConfig.myVideoEnabled = true
+        this.rtcConfig.myAudioEnabled = true
+        ChatRoomService.setConnectedCallback(RTCService._startMedias)
+        ChatRoomService.setUserDisconnectedCallback(RTCService._stopUserStream)
+        ChatRoomService.setManagementCallback(RTCService._manageManagementMessage)
+      }
     })
 
-    //this should be only loaded once
+    // this should be only loaded once
     $(window).unload(($event) => {
       $event.preventDefault()
       this.$log.log('Disconnecting...')

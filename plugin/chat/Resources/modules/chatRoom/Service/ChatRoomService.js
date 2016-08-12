@@ -171,7 +171,7 @@ export default class ChatRoomService {
       this.xmppConfig['connection'].send(presence)
       this.xmppConfig['connection'].disconnect()
     }
-    //this.refreshScope()
+  // this.refreshScope()
   }
 
   initializeRoom () {
@@ -503,14 +503,14 @@ export default class ChatRoomService {
       this.refreshScope()
     } else {
       switch (type) {
-          case 'close_room':
-            this._onRoomClose();
-            break;
-          case 'change_room_type':
-            this._onChangeRoomType(value)
-            break;
-          default:
-            this._managementCallback(type, username, name, value)
+      case 'close_room':
+        this._onRoomClose()
+        break
+      case 'change_room_type':
+        this._onChangeRoomType(value)
+        break
+      default:
+        this._managementCallback(type, username, name, value)
       }
     }
   }
@@ -548,7 +548,7 @@ export default class ChatRoomService {
   }
 
   _onRoomClose () {
-    //closed
+    // closed
     this.config.chatRoom.room_status = ChatRoom.CLOSED
     this.config.chatRoom.room_status_text = 'closed'
     this._closeCallback()
@@ -557,7 +557,6 @@ export default class ChatRoomService {
   _onChangeRoomType (type) {
     this.config.chatRoom.room_type = ChatRoom[type.toUpperCase()]
     this.config.chatRoom.room_type_text = type
-    console.log(this.config.chatRoom)
     this._changeRoomTypeCallback(type)
   }
 

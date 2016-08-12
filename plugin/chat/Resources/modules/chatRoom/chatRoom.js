@@ -44,7 +44,7 @@ angular.module('ChatRoomModule', [
   'UserModule'
 ])
   .controller('ChatRoomInitCtrl', ['$state', 'ChatRoomService', ChatRoomInitCtrl])
-  .controller('ChatRoomArchiveCtrl', ['$state', '$uibModal', 'ChatRoomService', 'FormBuilderService', ChatRoomArchiveCtrl])
+  .controller('ChatRoomArchiveCtrl', ['$state', '$uibModal', '$rootScope', 'ChatRoomService', 'FormBuilderService', ChatRoomArchiveCtrl])
   .controller('ChatRoomTextCtrl', ['$state', '$uibModal', '$rootScope', 'ChatRoomService', 'FormBuilderService', ChatRoomTextCtrl])
   .controller('ChatRoomAudioCtrl', ['$state', '$uibModal', '$log', '$rootScope', 'ChatRoomService', 'RTCService', 'FormBuilderService', ChatRoomAudioCtrl])
   .controller('ChatRoomVideoCtrl', ['$state', '$uibModal', '$log', '$rootScope', 'ChatRoomService', 'RTCService', 'FormBuilderService', ChatRoomVideoCtrl])
