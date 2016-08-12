@@ -388,7 +388,7 @@ generate_url: 'Public URL Subscription '
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
 generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
-get_mail_notifications: 'I want to be notified by email on %adress%.'
+get_mail_notifications: 'Receive a notification copy on %adress%.'
 google_tag_validation: 'Google HTML tag validation'
 grant_access: 'Grant access'
 grant_type: Permissions
