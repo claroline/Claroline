@@ -22,7 +22,7 @@ class LogCourseQueueDeclineEvent extends LogGenericEvent
     {
         $course = $queue->getCourse();
         $user = $queue->getUser();
-        $details = array();
+        $details = [];
         $details['userId'] = $user->getId();
         $details['username'] = $user->getUsername();
         $details['firsName'] = $user->getFirstName();
@@ -43,6 +43,6 @@ class LogCourseQueueDeclineEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_ADMIN);
+        return [self::DISPLAYED_ADMIN];
     }
 }

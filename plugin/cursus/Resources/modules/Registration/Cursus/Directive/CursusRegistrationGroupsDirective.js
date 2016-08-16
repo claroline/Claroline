@@ -7,11 +7,13 @@
  * file that was distributed with this source code.
  */
 
+import template from '../Partial/cursus_registration_groups.html'
+
 export default class CursusRegistrationGroupsDirective {
        
-    constructor() {
-        this.restrict = 'E'
-        this.replace = true
-        this.template = require('../Partial/cursus_registration_groups.html')
-    }
+  constructor() {
+    this.restrict = 'E'
+    this.replace = true
+    this.template = template
+  }
 }

@@ -15,10 +15,10 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -40,7 +40,7 @@ class Workspace
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min", "api_user_min"})
      * @SerializedName("id")
      */
     protected $id;
@@ -48,14 +48,14 @@ class Workspace
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min", "api_user_min"})
      * @SerializedName("name")
      */
     protected $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("description")
      */
     protected $description;
@@ -63,35 +63,35 @@ class Workspace
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min", "api_user_min"})
      * @SerializedName("code")
      */
     protected $code;
 
     /**
      * @ORM\Column(type="string", nullable=false)
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("maxStorageSize")
      */
     protected $maxStorageSize = '1 TB';
 
     /**
      * @ORM\Column(type="integer", nullable=false)
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("maxUploadResources")
      */
     protected $maxUploadResources = 10000;
 
     /**
      * @ORM\Column(type="integer", nullable=false)
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("maxUsers")
      */
     protected $maxUsers = 10000;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("displayable")
      */
     protected $displayable = false;
@@ -142,70 +142,70 @@ class Workspace
 
     /**
      * @ORM\Column(unique=true)
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("guid")
      */
     protected $guid;
 
     /**
      * @ORM\Column(name="self_registration", type="boolean")
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("selfRegistration")
      */
     protected $selfRegistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("registrationValidation")
      */
     protected $registrationValidation = false;
 
     /**
      * @ORM\Column(name="self_unregistration", type="boolean")
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("selfUnregistration")
      */
     protected $selfUnregistration = false;
 
     /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("creationDate")
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="is_personal", type="boolean")
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("isPersonal")
      */
     protected $isPersonal = false;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("startDate")
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("endDate")
      */
     protected $endDate;
 
     /**
      * @ORM\Column(name="is_access_date", type="boolean")
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("isAccessDate")
      */
     protected $isAccessDate = false;
 
     /**
      * @ORM\Column(name="workspace_type", type="integer", nullable=true)
-     * @Groups({"api_workspace"})
+     * @Groups({"api_workspace", "api_workspace_min"})
      * @SerializedName("workspaceType")
      */
     protected $workspaceType;
@@ -425,10 +425,10 @@ class Workspace
 
     public function serializeForWidgetPicker()
     {
-        $return = array(
+        $return = [
             'id' => $this->id,
             'name' => $this->name,
-        );
+        ];
 
         return $return;
     }

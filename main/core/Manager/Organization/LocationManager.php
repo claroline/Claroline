@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Manager\Organization;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\CurlManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.organization.location_manager")
@@ -71,7 +71,12 @@ class LocationManager
 
     public function getByType($type)
     {
-        return $this->repo->findBy(array('type' => $type));
+        return $this->repo->findBy(['type' => $type]);
+    }
+
+    public function getByTypes(array $types)
+    {
+        return $this->repo->findLocationsByTypes($types);
     }
 
     public function setCoordinates(Location $location)
@@ -98,5 +103,10 @@ class LocationManager
         $query = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$this->ch->getParameter('google_geocoding_key');
 
         return $this->cm->exec($query);
+    }
+
+    public function getLocationById($id)
+    {
+        return $this->repo->findOneById($id);
     }
 }

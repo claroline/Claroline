@@ -1,0 +1,48 @@
+{% if search != '' %}
+    <div class="alert alert-info">
+        {{ 'results_for_search_on'|trans({}, 'platform') }} :
+        "{{ search }}"
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-4 pull-right">
+        <div class="input-group margin-bottom-md">
+            <input class="form-control search-course"
+                   type="text"
+                   id="search-course-input"
+                   placeholder="{{ 'search'|trans({}, 'platform') }}"
+                   value="{{ search }}"
+            >
+            <span class="input-group-btn">
+                <button class="filter btn btn-default search-course-btn"
+                        type="button"
+                        id="search-course-btn"
+                >
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+    <button id="list-view-button"
+            class="btn btn-default pull-right"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="{{ 'list_view'|trans({}, 'cursus') }}"
+    >
+        <i class="fa fa-list"></i>
+    </button>
+    <div id="courses-widget-calendar-{{ widgetInstance.getId() }}" class="col-md-12"></div>
+</div>
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/bazingajstranslation/js/translator.min.js') }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'agenda' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"></script>
+    <script>
+        window['sessions_' + {{ widgetInstance.getId() }}] = {{ sessions|json_encode|raw }}
+        window['editable-sessions_' + {{ widgetInstance.getId() }}] = {{ editableSessions|json_encode|raw }}
+        window['workspaces_' + {{ widgetInstance.getId() }}] = {{ workspacesList|json_encode|raw }}
+    </script>
+{% endblock %}

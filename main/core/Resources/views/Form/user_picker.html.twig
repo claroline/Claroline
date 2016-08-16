@@ -15,15 +15,20 @@
                    {% endif %}
 
                    {% if value is not empty %}
-                       {% if value[0] is iterable %}
+                       {% if value is iterable and value[0] is iterable %}
                            value="{% for v in value %}{% if v['id'] is defined %}{{ v['id'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
                            {% if model is defined %}
                                ng-init='{{ alias }}.{{ model }}.{{ name }}="{% for v in value %}{% if v['id'] is defined %}{{ v['id'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"'
                            {% endif %}
-                       {% else %}
+                       {% elseif value is iterable %}
                            value="{{ value[0] }}"
                            {% if model is defined %}
                                ng-init='{{ value[0] }}'
+                           {% endif %}
+                       {% else %}
+                           value="{{ value }}"
+                           {% if model is defined %}
+                               ng-init='{{ value }}'
                            {% endif %}
                        {% endif %}
                    {% endif %}
@@ -53,12 +58,14 @@
                        
                    {% if value is not empty %}
                        {% if multiple %}
-                   
-                           {% if value[0] is iterable %}
+                           {% if value is iterable and value[0] is iterable %}
                                value="{% for v in value %}{% if v['name'] is defined %}{{ v['name'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
                                data-status="OK"
-                           {% else %}
+                           {% elseif value is iterable %}
                                data-value="{{ value[0] }}"
+                               data-status="id"
+                           {% else %}
+                               data-value="{{ value }}"
                                data-status="id"
                            {% endif %}
                            data-multiple="multiple"

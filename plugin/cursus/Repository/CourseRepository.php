@@ -235,4 +235,20 @@ class CourseRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findCourseByCodeWithoutId($code, $id, $executeQuery = true)
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Course c
+            WHERE UPPER(c.code) = :code
+            AND c.id != :id
+        ";
+        $query = $this->_em->createQuery($dql);
+        $upperCode = strtoupper($code);
+        $query->setParameter('code', $upperCode);
+        $query->setParameter('id', $id);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
 }

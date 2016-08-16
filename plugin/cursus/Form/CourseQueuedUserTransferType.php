@@ -32,7 +32,7 @@ class CourseQueuedUserTransferType extends AbstractType
         $builder->add(
             'session',
             'entity',
-            array(
+            [
                 'class' => 'ClarolineCursusBundle:CourseSession',
                 'query_builder' => function (EntityRepository $er) use ($course) {
 
@@ -47,7 +47,7 @@ class CourseQueuedUserTransferType extends AbstractType
                 'property' => 'name',
                 'required' => true,
                 'mapped' => false,
-            )
+            ]
         );
     }
 
@@ -58,6 +58,6 @@ class CourseQueuedUserTransferType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'cursus'));
+        $resolver->setDefaults(['translation_domain' => 'cursus']);
     }
 }

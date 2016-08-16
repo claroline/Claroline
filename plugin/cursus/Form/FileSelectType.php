@@ -11,23 +11,37 @@
 
 namespace Claroline\CursusBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
+use Claroline\CoreBundle\Form\Angular\AngularType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class FileSelectType extends AbstractType
+class FileSelectType extends AngularType
 {
+    private $forApi = false;
+    private $ngAlias;
+
+    public function __construct($ngAlias = 'cmc')
+    {
+        $this->ngAlias = $ngAlias;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
             'archive',
             'file',
-            array(
+            [
                 'required' => true,
                 'mapped' => false,
                 'label' => 'file',
                 'translation_domain' => 'platform',
-            )
+                'constraints' => [
+                    new NotBlank(),
+                    new File(),
+                ],
+            ]
         );
     }
 
@@ -38,6 +52,18 @@ class FileSelectType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'cursus'));
+        $default = ['translation_domain' => 'cursus'];
+
+        if ($this->forApi) {
+            $default['csrf_protection'] = false;
+        }
+        $default['ng-model'] = 'file';
+        $default['ng-controllerAs'] = $this->ngAlias;
+        $resolver->setDefaults($default);
+    }
+
+    public function enableApi()
+    {
+        $this->forApi = true;
     }
 }

@@ -13,23 +13,28 @@ namespace Claroline\CursusBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
+use Claroline\CursusBundle\Entity\SessionEvent;
+use Claroline\CursusBundle\Entity\SessionEventComment;
 use Claroline\CursusBundle\Form\CoursesWidgetConfigurationType;
 use Claroline\CursusBundle\Form\CourseType;
 use Claroline\CursusBundle\Form\CursusType;
 use Claroline\CursusBundle\Form\FileSelectType;
+use Claroline\CursusBundle\Form\MyCoursesWidgetConfigurationType;
 use Claroline\CursusBundle\Form\PluginConfigurationType;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,8 +42,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CursusController extends Controller
 {
@@ -48,6 +54,7 @@ class CursusController extends Controller
     private $platformConfigHandler;
     private $request;
     private $router;
+    private $serializer;
     private $toolManager;
     private $translator;
 
@@ -59,6 +66,7 @@ class CursusController extends Controller
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "requestStack"          = @DI\Inject("request_stack"),
      *     "router"                = @DI\Inject("router"),
+     *     "serializer"            = @DI\Inject("jms_serializer"),
      *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"            = @DI\Inject("translator")
      * })
@@ -68,6 +76,7 @@ class CursusController extends Controller
         CursusManager $cursusManager,
         FormFactory $formFactory,
         PlatformConfigurationHandler $platformConfigHandler,
+        Serializer $serializer,
         RequestStack $requestStack,
         RouterInterface $router,
         ToolManager $toolManager,
@@ -79,6 +88,7 @@ class CursusController extends Controller
         $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
+        $this->serializer = $serializer;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
     }
@@ -98,16 +108,16 @@ class CursusController extends Controller
     public function cursusManagementToolMenuAction()
     {
         $this->checkToolAccess();
-        $displayedWords = array();
+        $displayedWords = [];
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
 
-        return array(
+        return [
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
-        );
+        ];
     }
 
     /**
@@ -121,18 +131,18 @@ class CursusController extends Controller
     public function cursusToolIndexAction()
     {
         $this->checkToolAccess();
-        $displayedWords = array();
+        $displayedWords = [];
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
         $allRootCursus = $this->cursusManager->getAllRootCursus();
 
-        return array(
+        return [
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
             'allRootCursus' => $allRootCursus,
-        );
+        ];
     }
 
     /**
@@ -149,7 +159,7 @@ class CursusController extends Controller
         $this->checkToolAccess();
         $form = $this->formFactory->create(new CursusType());
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -177,13 +187,13 @@ class CursusController extends Controller
                 $cursus->setCursusOrder(intval($orderMax) + 1);
             }
             $color = $form->get('color')->getData();
-            $details = array('color' => $color);
+            $details = ['color' => $color];
             $cursus->setDetails($details);
             $this->cursusManager->persistCursus($cursus);
 
             $message = $this->translator->trans(
                 'cursus_creation_confirm_msg',
-                array(),
+                [],
                 'cursus'
             );
             $session = $this->request->getSession();
@@ -191,7 +201,7 @@ class CursusController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-            return array('form' => $form->createView());
+            return ['form' => $form->createView()];
         }
     }
 
@@ -214,10 +224,10 @@ class CursusController extends Controller
             $cursus
         );
 
-        return array(
+        return [
             'form' => $form->createView(),
             'cursus' => $cursus,
-        );
+        ];
     }
 
     /**
@@ -245,7 +255,7 @@ class CursusController extends Controller
             $details = $cursus->getDetails();
 
             if (is_null($details)) {
-                $details = array('color' => $color);
+                $details = ['color' => $color];
             } else {
                 $details['color'] = $color;
             }
@@ -254,7 +264,7 @@ class CursusController extends Controller
 
             $message = $this->translator->trans(
                 'cursus_edition_confirm_msg',
-                array(),
+                [],
                 'cursus'
             );
             $session = $this->request->getSession();
@@ -262,10 +272,10 @@ class CursusController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-            return array(
+            return [
                 'form' => $form->createView(),
                 'cursus' => $cursus,
-            );
+            ];
         }
     }
 
@@ -284,7 +294,7 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
 
-        return array('cursus' => $cursus);
+        return ['cursus' => $cursus];
     }
 
     /**
@@ -301,7 +311,7 @@ class CursusController extends Controller
     public function cursusViewHierarchyAction(Cursus $cursus)
     {
         $this->checkToolAccess();
-        $hierarchy = array();
+        $hierarchy = [];
         $allCursus = $this->cursusManager->getHierarchyByCursus($cursus);
 
         foreach ($allCursus as $oneCursus) {
@@ -311,13 +321,13 @@ class CursusController extends Controller
                 $parentId = $parent->getId();
 
                 if (!isset($hierarchy[$parentId])) {
-                    $hierarchy[$parentId] = array();
+                    $hierarchy[$parentId] = [];
                 }
                 $hierarchy[$parentId][] = $oneCursus;
             }
         }
 
-        return array('cursus' => $cursus, 'hierarchy' => $hierarchy);
+        return ['cursus' => $cursus, 'hierarchy' => $hierarchy];
     }
 
     /**
@@ -337,7 +347,7 @@ class CursusController extends Controller
 
         $message = $this->translator->trans(
             'cursus_deletion_confirm_msg',
-            array(),
+            [],
             'cursus'
         );
         $session = $this->request->getSession();
@@ -361,7 +371,7 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
 
-        return array('description' => $cursus->getDescription());
+        return ['description' => $cursus->getDescription()];
     }
 
     /**
@@ -378,12 +388,12 @@ class CursusController extends Controller
     public function cursusManagementAction(Cursus $cursus)
     {
         $this->checkToolAccess();
-        $displayedWords = array();
+        $displayedWords = [];
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
-        $hierarchy = array();
+        $hierarchy = [];
         $allCursus = $this->cursusManager->getHierarchyByCursus($cursus);
 
         foreach ($allCursus as $oneCursus) {
@@ -393,18 +403,18 @@ class CursusController extends Controller
                 $parentId = $parent->getId();
 
                 if (!isset($hierarchy[$parentId])) {
-                    $hierarchy[$parentId] = array();
+                    $hierarchy[$parentId] = [];
                 }
                 $hierarchy[$parentId][] = $oneCursus;
             }
         }
 
-        return array(
+        return [
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
             'cursus' => $cursus,
             'hierarchy' => $hierarchy,
-        );
+        ];
     }
 
     /**
@@ -421,10 +431,10 @@ class CursusController extends Controller
         $this->checkToolAccess();
         $form = $this->formFactory->create(new CursusType());
 
-        return array(
+        return [
             'form' => $form->createView(),
             'parent' => $parent,
-        );
+        ];
     }
 
     /**
@@ -453,23 +463,23 @@ class CursusController extends Controller
                 $cursus->setCursusOrder(intval($orderMax) + 1);
             }
             $color = $form->get('color')->getData();
-            $details = array('color' => $color);
+            $details = ['color' => $color];
             $cursus->setDetails($details);
             $this->cursusManager->persistCursus($cursus);
 
             return new JsonResponse(
-                array(
+                [
                     'parent_id' => $parent->getId(),
                     'id' => $cursus->getId(),
                     'title' => $cursus->getTitle(),
-                ),
+                ],
                 200
             );
         } else {
-            return array(
+            return [
                 'form' => $form->createView(),
                 'parent' => $parent,
-            );
+            ];
         }
     }
 
@@ -512,7 +522,7 @@ class CursusController extends Controller
             $max
         );
 
-        return array(
+        return [
             'cursus' => $cursus,
             'courses' => $courses,
             'search' => $search,
@@ -520,7 +530,7 @@ class CursusController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
-        );
+        ];
     }
 
     /**
@@ -574,11 +584,11 @@ class CursusController extends Controller
     public function cursusCourseAddAction(Cursus $cursus, Course $course)
     {
         $this->checkToolAccess();
-        $createdCursus = $this->cursusManager->addCoursesToCursus($cursus, array($course));
-        $results = array();
+        $createdCursus = $this->cursusManager->addCoursesToCursus($cursus, [$course]);
+        $results = [];
 
         foreach ($createdCursus as $created) {
-            $results[] = array('id' => $created->getId(), 'title' => $created->getTitle());
+            $results[] = ['id' => $created->getId(), 'title' => $created->getTitle()];
         }
 
         return new JsonResponse($results, 200);
@@ -624,7 +634,7 @@ class CursusController extends Controller
     public function cursusCourseRemoveAction(Cursus $cursus, Course $course)
     {
         $this->checkToolAccess();
-        $this->cursusManager->removeCoursesFromCursus($cursus, array($course));
+        $this->cursusManager->removeCoursesFromCursus($cursus, [$course]);
 
         return new JsonResponse('success', 200);
     }
@@ -671,10 +681,10 @@ class CursusController extends Controller
             new Course()
         );
 
-        return array(
+        return [
             'form' => $form->createView(),
             'cursus' => $cursus,
-        );
+        ];
     }
 
     /**
@@ -704,25 +714,25 @@ class CursusController extends Controller
                 $course->setIcon($hashName);
             }
             $this->cursusManager->persistCourse($course);
-            $createdCursus = $this->cursusManager->addCoursesToCursus($cursus, array($course));
-            $results = array();
+            $createdCursus = $this->cursusManager->addCoursesToCursus($cursus, [$course]);
+            $results = [];
 
             foreach ($createdCursus as $created) {
-                $results[] = array(
+                $results[] = [
                     'id' => $created->getId(),
                     'title' => $created->getTitle(),
                     'course_id' => $course->getId(),
                     'code' => $course->getCode(),
                     'root' => $cursus->getRoot(),
-                );
+                ];
             }
 
             return new JsonResponse($results, 200);
         } else {
-            return array(
+            return [
                 'form' => $form->createView(),
                 'cursus' => $cursus,
-            );
+            ];
         }
     }
 
@@ -799,7 +809,7 @@ class CursusController extends Controller
     public function pluginConfigureFormAction()
     {
         $this->checkToolAccess();
-        $displayedWords = array();
+        $displayedWords = [];
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
@@ -810,11 +820,11 @@ class CursusController extends Controller
             $this->cursusManager->getConfirmationEmail()
         );
 
-        return array(
+        return [
             'form' => $form->createView(),
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
-        );
+        ];
     }
 
     /**
@@ -828,7 +838,7 @@ class CursusController extends Controller
     public function pluginConfigureAction()
     {
         $this->checkToolAccess();
-        $displayedWords = array();
+        $displayedWords = [];
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
@@ -837,21 +847,21 @@ class CursusController extends Controller
         $formData = $this->request->get('cursus_plugin_configuration_form');
         $this->cursusManager->persistConfirmationEmail($formData['content']);
         $this->platformConfigHandler->setParameters(
-            array(
+            [
                 'cursusbundle_default_session_start_date' => $formData['startDate'],
                 'cursusbundle_default_session_end_date' => $formData['endDate'],
-            )
+            ]
         );
         $form = $this->formFactory->create(
             new PluginConfigurationType($this->platformConfigHandler),
             $this->cursusManager->getConfirmationEmail()
         );
 
-        return array(
+        return [
             'form' => $form->createView(),
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
-        );
+        ];
     }
 
     /**
@@ -876,11 +886,11 @@ class CursusController extends Controller
         $this->cursusManager->persistCursusDisplayedWord($displayedWord);
 
         $sessionFlashBag = $this->get('session')->getFlashBag();
-        $msg = $this->translator->trans('the_displayed_word_for', array(), 'cursus').
+        $msg = $this->translator->trans('the_displayed_word_for', [], 'cursus').
             ' ['.
             $key.
             '] '.
-            $this->translator->trans('will_be', array(), 'cursus').
+            $this->translator->trans('will_be', [], 'cursus').
             ' ['
             .$value.
             ']';
@@ -904,7 +914,10 @@ class CursusController extends Controller
      */
     public function coursesRegistrationWidgetAction(WidgetInstance $widgetInstance)
     {
-        return array('widgetInstance' => $widgetInstance);
+        $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+        $defaultMode = $config->getDefaultMode();
+
+        return ['widgetInstance' => $widgetInstance, 'mode' => $defaultMode];
     }
 
     /**
@@ -949,17 +962,13 @@ class CursusController extends Controller
                 $max
             );
         }
-        $coursesArray = array();
+        $coursesArray = [];
 
         foreach ($courses as $course) {
             $coursesArray[] = $course;
         }
-        $sessions = array();
-        $courseSessions = $this->cursusManager->getSessionsByCourses(
-            $coursesArray,
-            'creationDate',
-            'ASC'
-        );
+        $sessions = [];
+        $courseSessions = $this->cursusManager->getSessionsByCourses($coursesArray, 'creationDate', 'ASC');
 
         foreach ($courseSessions as $courseSession) {
             $courseId = $courseSession->getCourse()->getId();
@@ -967,20 +976,15 @@ class CursusController extends Controller
 
             if ($status === 0 || $status === 1) {
                 if (!isset($sessions[$courseId])) {
-                    $sessions[$courseId] = array();
+                    $sessions[$courseId] = [];
                 }
                 $sessions[$courseId][] = $courseSession;
             }
         }
-        $registeredSessions = array();
-        $pendingSessions = array();
-        $userSessions = $this->cursusManager->getSessionUsersBySessionsAndUsers(
-            $courseSessions,
-            array($authenticatedUser),
-            0
-        );
-        $pendingRegistrations =
-            $this->cursusManager->getSessionQueuesByUser($authenticatedUser);
+        $registeredSessions = [];
+        $pendingSessions = [];
+        $userSessions = $this->cursusManager->getSessionUsersBySessionsAndUsers($courseSessions, [$authenticatedUser], 0);
+        $pendingRegistrations = $this->cursusManager->getSessionQueuesByUser($authenticatedUser);
 
         foreach ($userSessions as $userSession) {
             $registeredSessions[$userSession->getSession()->getId()] = true;
@@ -989,14 +993,14 @@ class CursusController extends Controller
         foreach ($pendingRegistrations as $pendingRegistration) {
             $pendingSessions[$pendingRegistration->getSession()->getId()] = $pendingRegistration;
         }
-        $courseQueues = array();
+        $courseQueues = [];
         $courseQueueRequests = $this->cursusManager->getCourseQueuesByUser($authenticatedUser);
 
         foreach ($courseQueueRequests as $courseQueueRequest) {
             $courseQueues[$courseQueueRequest->getCourse()->getId()] = true;
         }
 
-        return array(
+        return [
             'widgetInstance' => $widgetInstance,
             'courses' => $courses,
             'search' => $search,
@@ -1008,7 +1012,69 @@ class CursusController extends Controller
             'registeredSessions' => $registeredSessions,
             'pendingSessions' => $pendingSessions,
             'courseQueues' => $courseQueues,
+        ];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/courses/list/registration/widget/{widgetInstance}/calendar/search/{search}",
+     *     name="claro_cursus_courses_list_for_registration_widget_calendar",
+     *     defaults={"search"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:coursesListForRegistrationWidgetCalendar.html.twig")
+     */
+    public function coursesListForRegistrationWidgetCalendarAction(User $authenticatedUser, WidgetInstance $widgetInstance, $search = '')
+    {
+        $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+        $configCursus = $config->getCursus();
+        $configPublicSessions = $config->isPublicSessionsOnly();
+
+        if (is_null($configCursus)) {
+            $courses = $this->cursusManager->getAllCourses($search, 'title', 'ASC', false);
+        } else {
+            $courses = $this->cursusManager->getDescendantCoursesByCursus($configCursus, $search, 'title', 'ASC', false);
+        }
+        $courseSessions = $this->cursusManager->getSessionsByCourses($courses, 'creationDate', 'ASC');
+
+        if ($configPublicSessions) {
+            $toSerialize = [];
+
+            foreach ($courseSessions as $cs) {
+                if ($cs->getPublicRegistration()) {
+                    $toSerialize[] = $cs;
+                }
+            }
+        } else {
+            $toSerialize = $courseSessions;
+        }
+        $serializedCourseSessions = $this->serializer->serialize(
+            $toSerialize,
+            'json',
+            SerializationContext::create()->setGroups(['api_user_min'])
         );
+        $registeredSessions = [];
+        $pendingSessions = [];
+        $userSessions = $this->cursusManager->getSessionUsersBySessionsAndUsers($courseSessions, [$authenticatedUser], 0);
+        $pendingRegistrations = $this->cursusManager->getSessionQueuesByUser($authenticatedUser);
+
+        foreach ($userSessions as $userSession) {
+            $registeredSessions[$userSession->getSession()->getId()] = true;
+        }
+
+        foreach ($pendingRegistrations as $pendingRegistration) {
+            $sessionId = $pendingRegistration->getSession()->getId();
+            $pendingSessions[$sessionId] = $sessionId;
+        }
+
+        return [
+            'widgetInstance' => $widgetInstance,
+            'search' => $search,
+            'registeredSessions' => $registeredSessions,
+            'pendingSessions' => $pendingSessions,
+            'courseSessions' => $serializedCourseSessions,
+        ];
     }
 
     /**
@@ -1020,21 +1086,15 @@ class CursusController extends Controller
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Widget:coursesListForRegistrationWidget.html.twig")
      */
-    public function courseSessionSelfRegisterAction(
-        CourseSession $session,
-        User $authenticatedUser
-    ) {
+    public function courseSessionSelfRegisterAction(CourseSession $session, User $authenticatedUser)
+    {
         $results = null;
 
         if ($session->getPublicRegistration()) {
             if ($session->hasValidation()) {
                 $this->cursusManager->addUserToSessionQueue($authenticatedUser, $session);
             } else {
-                $results = $this->cursusManager->registerUsersToSession(
-                    $session,
-                    array($authenticatedUser),
-                    0
-                );
+                $results = $this->cursusManager->registerUsersToSession($session, [$authenticatedUser], 0);
             }
         }
 
@@ -1049,10 +1109,8 @@ class CursusController extends Controller
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      */
-    public function courseQueueRegisterAction(
-        Course $course,
-        User $authenticatedUser
-    ) {
+    public function courseQueueRegisterAction(Course $course, User $authenticatedUser)
+    {
         $this->cursusManager->addUserToCourseQueue($authenticatedUser, $course);
 
         return new JsonResponse('success', 200);
@@ -1066,10 +1124,8 @@ class CursusController extends Controller
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      */
-    public function courseQueueCancelAction(
-        Course $course,
-        User $authenticatedUser
-    ) {
+    public function courseQueueCancelAction(Course $course, User $authenticatedUser)
+    {
         $this->cursusManager->removeUserFromCourseQueue($authenticatedUser, $course);
 
         return new JsonResponse('success', 200);
@@ -1087,16 +1143,9 @@ class CursusController extends Controller
     public function coursesRegistrationWidgetConfigureFormAction(WidgetInstance $widgetInstance)
     {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+        $form = $this->formFactory->create(new CoursesWidgetConfigurationType($this->translator), $config);
 
-        $form = $this->formFactory->create(
-            new CoursesWidgetConfigurationType(),
-            $config
-        );
-
-        return array(
-            'form' => $form->createView(),
-            'config' => $config,
-        );
+        return ['form' => $form->createView(), 'config' => $config];
     }
 
     /**
@@ -1110,10 +1159,7 @@ class CursusController extends Controller
      */
     public function coursesRegistrationWidgetConfigureAction(CoursesWidgetConfig $config)
     {
-        $form = $this->formFactory->create(
-            new CoursesWidgetConfigurationType(),
-            $config
-        );
+        $form = $this->formFactory->create(new CoursesWidgetConfigurationType($this->translator), $config);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -1121,10 +1167,47 @@ class CursusController extends Controller
 
             return new JsonResponse('success', 204);
         } else {
-            return array(
-                'form' => $form->createView(),
-                'config' => $config,
-            );
+            return ['form' => $form->createView(), 'config' => $config];
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/my/courses/widget/{widgetInstance}/configure/form",
+     *     name="claro_cursus_my_courses_widget_configure_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesWidgetConfigureForm.html.twig")
+     */
+    public function myCoursesWidgetConfigureFormAction(WidgetInstance $widgetInstance)
+    {
+        $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+        $form = $this->formFactory->create(new MyCoursesWidgetConfigurationType($this->translator), $config);
+
+        return ['form' => $form->createView(), 'config' => $config];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/my/courses/widget/configure/config/{config}",
+     *     name="claro_cursus_my_courses_widget_configure",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesWidgetConfigureForm.html.twig")
+     */
+    public function myCoursesRegistrationWidgetConfigureAction(CoursesWidgetConfig $config)
+    {
+        $form = $this->formFactory->create(new MyCoursesWidgetConfigurationType($this->translator), $config);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->cursusManager->persistCoursesWidgetConfiguration($config);
+
+            return new JsonResponse('success', 204);
+        } else {
+            return ['form' => $form->createView(), 'config' => $config];
         }
     }
 
@@ -1134,12 +1217,15 @@ class CursusController extends Controller
      *     name="claro_cursus_my_courses_widget",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesWidget.html.twig")
      */
-    public function myCoursesWidgetAction(WidgetInstance $widgetInstance)
+    public function myCoursesWidgetAction(User $user, WidgetInstance $widgetInstance)
     {
-        return array('widgetInstance' => $widgetInstance);
+        $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+        $defaultMode = $config->getDefaultMode();
+
+        return ['user' => $user, 'widgetInstance' => $widgetInstance, 'mode' => $defaultMode];
     }
 
     /**
@@ -1171,7 +1257,7 @@ class CursusController extends Controller
             $max
         );
         $sessionUsers = $this->cursusManager->getSessionUsersByUser($authenticatedUser);
-        $workspacesList = array();
+        $workspacesList = [];
 
         foreach ($sessionUsers as $sessionUser) {
             $session = $sessionUser->getSession();
@@ -1183,7 +1269,7 @@ class CursusController extends Controller
             }
         }
 
-        return array(
+        return [
             'widgetInstance' => $widgetInstance,
             'courses' => $courses,
             'search' => $search,
@@ -1192,7 +1278,56 @@ class CursusController extends Controller
             'orderedBy' => $orderedBy,
             'order' => $order,
             'workspacesList' => $workspacesList,
+        ];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/my/courses/widget/{widgetInstance}/calendar/search/{search}",
+     *     name="claro_cursus_my_courses_list_for_widget_calendar",
+     *     defaults={"search"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesListForWidgetCalendar.html.twig")
+     */
+    public function myCoursesListForWidgetCalendarAction(User $authenticatedUser, WidgetInstance $widgetInstance, $search = '')
+    {
+        $sessionUsers = $this->cursusManager->getSessionUsersByUser($authenticatedUser, $search);
+        $workspacesList = [];
+        $sessions = [];
+        $editableSessions = [];
+
+        foreach ($sessionUsers as $sessionUser) {
+            $session = $sessionUser->getSession();
+            $sessions[] = $session;
+            $workspace = $session->getWorkspace();
+
+            if (!is_null($workspace)) {
+                $workspacesList[$session->getId()] = [
+                    'id' => $workspace->getId(),
+                    'name' => $workspace->getName(),
+                    'code' => $workspace->getCode(),
+                ];
+            }
+
+            if ($sessionUser->getUserType() === CourseSessionUser::TEACHER) {
+                $editableSessions[$session->getId()] = true;
+            }
+        }
+        $serializedSessions = $this->serializer->serialize(
+            $sessions,
+            'json',
+            SerializationContext::create()->setGroups(['api_user_min'])
         );
+
+        return [
+            'widgetInstance' => $widgetInstance,
+            'sessions' => $serializedSessions,
+            'search' => $search,
+            'workspacesList' => $workspacesList,
+            'editableSessions' => $editableSessions,
+        ];
     }
 
     /**
@@ -1241,7 +1376,7 @@ class CursusController extends Controller
         $this->checkToolAccess();
         $form = $this->formFactory->create(new FileSelectType());
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -1266,7 +1401,7 @@ class CursusController extends Controller
             !$zip->getStream('cursus.json') ||
             !$zip->getStream('courses.json')) {
             $form->get('archive')->addError(
-                new FormError($this->translator->trans('invalid_file', array(), 'cursus'))
+                new FormError($this->translator->trans('invalid_file', [], 'cursus'))
             );
         }
 
@@ -1313,8 +1448,84 @@ class CursusController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-            return array('form' => $form->createView());
+            return ['form' => $form->createView()];
         }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/session/event/{sessionEvent}/comment/create",
+     *     name="api_post_session_event_comment",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function postSessionEventCommentAction(User $user, SessionEvent $sessionEvent)
+    {
+        $session = $sessionEvent->getSession();
+        $sessionTutor = $this->cursusManager->getOneSessionUserBySessionAndUserAndType($session, $user, CourseSessionUser::TEACHER);
+
+        if (is_null($sessionTutor)) {
+            $this->checkToolAccess();
+        } else {
+            $comment = $this->request->request->get('comment', false);
+            $sessionEventComment = $this->cursusManager->createSessionEventComment($user, $sessionEvent, $comment);
+            $serializedSessionEventComment = $this->serializer->serialize(
+                $sessionEventComment,
+                'json',
+                SerializationContext::create()->setGroups(['api_user_min'])
+            );
+
+            return new JsonResponse($serializedSessionEventComment, 200);
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/session/event/comment/{sessionEventComment}/edit",
+     *     name="api_put_session_event_comment_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function putSessionEventCommentEditAction(User $user, SessionEventComment $sessionEventComment)
+    {
+        $creator = $sessionEventComment->getUser();
+
+        if ($user->getId() !== $creator->getId()) {
+            $this->checkToolAccess();
+        }
+        $content = $this->request->request->get('comment', false);
+        $sessionEventComment->setContent($content);
+        $sessionEventComment->setEditionDate(new \DateTime());
+        $this->cursusManager->persistSessionEventComment($sessionEventComment);
+        $serializedSessionEventComment = $this->serializer->serialize(
+            $sessionEventComment,
+            'json',
+            SerializationContext::create()->setGroups(['api_user_min'])
+        );
+
+        return new JsonResponse($serializedSessionEventComment, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/session/event/comment/{sessionEventComment}/delete",
+     *     name="api_delete_session_event_comment",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function deleteSessionEventCommentAction(User $user, SessionEventComment $sessionEventComment)
+    {
+        $creator = $sessionEventComment->getUser();
+
+        if ($user->getId() !== $creator->getId()) {
+            $this->checkToolAccess();
+        }
+        $this->cursusManager->deleteSessionEventComment($sessionEventComment);
+
+        return new JsonResponse('success', 200);
     }
 
     private function checkToolAccess()

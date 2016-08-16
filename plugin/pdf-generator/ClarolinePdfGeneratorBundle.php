@@ -4,11 +4,10 @@ namespace Claroline\PdfGeneratorBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\BundleBundle\Installation\AdditionalInstaller;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\PdfGeneratorBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Bundle class.
@@ -33,9 +32,9 @@ class ClarolinePdfGeneratorBundle extends PluginBundle implements ConfigurationP
         $config = new ConfigurationBuilder();
         $bundleClass = get_class($bundle);
 
-        $simpleConfigs = array(
+        $simpleConfigs = [
             'Knp\Bundle\SnappyBundle\KnpSnappyBundle' => 'knp_snappy',
-        );
+        ];
 
         if (isset($simpleConfigs[$bundleClass])) {
             return $config->addContainerResource($this->buildPath($simpleConfigs[$bundleClass]));
@@ -47,15 +46,20 @@ class ClarolinePdfGeneratorBundle extends PluginBundle implements ConfigurationP
         return __DIR__."/Resources/config/{$folder}/{$file}.yml";
     }
 
-    /*
-    public function getAdditionalInstaller()
-    {
-        return new AdditionalInstaller();
-    }
-    */
-
     public function hasMigrations()
     {
-        return false;
+        return true;
+    }
+
+    public function getExtraRequirements()
+    {
+        return [
+            'wkhtmltopdf' => [
+                'test' => function () {
+                    return true;
+                },
+                'failure_msg' => 'wkhtmltopdf not installed',
+            ],
+        ];
     }
 }

@@ -71,6 +71,22 @@ next: '>'
 nextYear: '>>'
 no_event_found: 'Ningún evento encontrado'
 no_description: 'Sin descripción'
+picker:
+  close: Close the picker
+  go_to_today: Go to today
+  locale: es
+  select_month: Select Month
+  prev_month: Previous Month
+  next_month: Next Month
+  select_year: Select Year
+  prev_year: Previous Year
+  next_year: Next Year
+  select_decade: Select Decade
+  prev_decade: Next Decade
+  next_decade: Previous Decade
+  prev_century: Previous Century
+  next_century: Next Century
+  switch_mode: Select Time
 prev: '<'
 prevYear: '<<'
 remove_event: Eliminar un evento

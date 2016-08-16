@@ -17,6 +17,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 
 class CourseSessionType extends AbstractType
@@ -33,69 +35,88 @@ class CourseSessionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $validatorsRoles = $this->cursusManager->getValidatorsRoles();
-
         $builder->add(
             'name',
             'text',
-            array('required' => true)
-        );
-        $attr = array();
-        $attr['class'] = 'datepicker input-small';
-        $attr['data-date-format'] = 'dd-mm-yyyy';
-        $attr['autocomplete'] = 'off';
-        $builder->add(
-            'start_date',
-            'datepicker',
-            array(
-                'required' => false,
-                'format' => 'dd-MM-yyyy',
-                'widget' => 'single_text',
-                'attr' => $attr,
-                'input' => 'datetime',
-            )
+            ['required' => true]
         );
         $builder->add(
-            'end_date',
-            'datepicker',
-            array(
-                'required' => false,
-                'format' => 'dd-MM-yyyy',
-                'widget' => 'single_text',
-                'attr' => $attr,
-                'input' => 'datetime',
-            )
+            'description',
+            'textarea',
+            ['required' => false, 'label' => 'description', 'translation_domain' => 'platform']
         );
         $builder->add(
-            'sessionStatus',
-            'choice',
-            array(
+            'startDate',
+            'datetime',
+            [
                 'required' => true,
-                'choices' => array(
-                    0 => 'session_not_started',
-                    1 => 'session_open',
-                    2 => 'session_closed',
-                ),
-            )
+                'input' => 'datetime',
+                'format' => 'dd/MM/yyy HH:mm',
+                'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'date',
+                    'with_seconds' => false,
+                    'data_timezone' => 'Europe/Brussels',
+                    'user_timezone' => 'Europe/Brussels',
+                ],
+                'constraints' => [new DateTime(), new NotBlank()],
+                'translation_domain' => 'platform',
+                'label' => 'start_date',
+            ]
+        );
+        $builder->add(
+            'endDate',
+            'datetime',
+            [
+                'required' => true,
+                'input' => 'datetime',
+                'format' => 'dd/MM/yyy HH:mm',
+                'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'date',
+                    'with_seconds' => false,
+                    'data_timezone' => 'Europe/Brussels',
+                    'user_timezone' => 'Europe/Brussels',
+                ],
+                'constraints' => [new DateTime(), new NotBlank()],
+                'translation_domain' => 'platform',
+                'label' => 'end_date',
+            ]
         );
         $builder->add(
             'defaultSession',
-            'checkbox',
-            array('required' => true)
+            'choice',
+            [
+                'choices' => ['yes' => true, 'no' => false],
+                'choices_as_values' => true,
+                'required' => true,
+                'label' => 'default_session',
+            ]
         );
         $builder->add(
             'publicRegistration',
-            'checkbox',
-            array('required' => true)
+            'choice',
+            [
+                'choices' => ['yes' => true, 'no' => false],
+                'choices_as_values' => true,
+                'required' => true,
+                'label' => 'public_registration',
+            ]
         );
         $builder->add(
             'publicUnregistration',
-            'checkbox',
-            array('required' => true)
+            'choice',
+            [
+                'choices' => ['yes' => true, 'no' => false],
+                'choices_as_values' => true,
+                'required' => true,
+                'label' => 'public_unregistration',
+            ]
         );
         $builder->add(
             'cursus',
             'entity',
-            array(
+            [
                 'required' => false,
                 'class' => 'ClarolineCursusBundle:Cursus',
                 'query_builder' => function (EntityRepository $er) {
@@ -107,53 +128,60 @@ class CourseSessionType extends AbstractType
                 'property' => 'title',
                 'multiple' => true,
                 'expanded' => true,
-            )
+            ]
         );
         $builder->add(
             'maxUsers',
             'integer',
-            array(
+            [
                 'required' => false,
-                'constraints' => array(
-                    new Range(array('min' => 0)),
-                ),
-                'attr' => array('min' => 0),
+                'constraints' => [new Range(['min' => 0])],
+                'attr' => ['min' => 0],
                 'label' => 'max_users',
-            )
+            ]
         );
         $builder->add(
             'userValidation',
-            'checkbox',
-            array(
+            'choice',
+            [
+                'choices' => ['yes' => true, 'no' => false],
+                'choices_as_values' => true,
                 'required' => true,
                 'label' => 'user_validation',
-            )
+            ]
         );
         $builder->add(
             'organizationValidation',
-            'checkbox',
-            array(
+            'choice',
+            [
+                'choices' => ['yes' => true, 'no' => false],
+                'choices_as_values' => true,
                 'required' => true,
                 'label' => 'organization_validation',
-            )
+            ]
         );
         $builder->add(
             'registrationValidation',
-            'checkbox',
-            array('required' => true)
+            'choice',
+            [
+                'choices' => ['yes' => true, 'no' => false],
+                'choices_as_values' => true,
+                'required' => true,
+                'label' => 'registration_validation',
+            ]
         );
         $builder->add(
             'validators',
             'userpicker',
-            array(
+            [
                 'required' => false,
                 'picker_name' => 'validators-picker',
-                'picker_title' => $this->translator->trans('validators_selection', array(), 'cursus'),
+                'picker_title' => $this->translator->trans('validators_selection', [], 'cursus'),
                 'multiple' => true,
                 'attach_name' => false,
                 'forced_roles' => $validatorsRoles,
-                'label' => $this->translator->trans('validators', array(), 'cursus'),
-            )
+                'label' => $this->translator->trans('validators', [], 'cursus'),
+            ]
         );
     }
 
@@ -164,6 +192,6 @@ class CourseSessionType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'cursus'));
+        $resolver->setDefaults(['translation_domain' => 'cursus']);
     }
 }

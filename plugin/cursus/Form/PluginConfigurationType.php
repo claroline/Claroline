@@ -27,12 +27,12 @@ class PluginConfigurationType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $attr = array();
+        $attr = [];
         $attr['class'] = 'datepicker input-small';
         $attr['data-date-format'] = 'dd-mm-yyyy';
         $attr['autocomplete'] = 'off';
 
-        $startOptions = array(
+        $startOptions = [
             'required' => false,
             'mapped' => false,
             'format' => 'dd-MM-yyyy',
@@ -40,13 +40,13 @@ class PluginConfigurationType extends AbstractType
             'attr' => $attr,
             'input' => 'datetime',
             'label' => 'default_session_start_date',
-        );
+        ];
         $defaultStartDate = $this->configHandler->getParameter('cursusbundle_default_session_start_date');
 
         if (!empty($defaultStartDate)) {
             $startOptions['data'] = new \DateTime($defaultStartDate);
         }
-        $endOptions = array(
+        $endOptions = [
             'required' => false,
             'mapped' => false,
             'format' => 'dd-MM-yyyy',
@@ -54,7 +54,7 @@ class PluginConfigurationType extends AbstractType
             'attr' => $attr,
             'input' => 'datetime',
             'label' => 'default_session_start_date',
-        );
+        ];
         $defaultEndDate = $this->configHandler->getParameter('cursusbundle_default_session_end_date');
 
         if (!empty($defaultEndDate)) {
@@ -74,10 +74,10 @@ class PluginConfigurationType extends AbstractType
         $builder->add(
             'content',
             'content',
-            array(
+            [
                 'data' => $builder->getData(),
-                'theme_options' => array('contentTitle' => true),
-            )
+                'theme_options' => ['contentTitle' => true],
+            ]
         );
     }
 
@@ -88,6 +88,6 @@ class PluginConfigurationType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'cursus'));
+        $resolver->setDefaults(['translation_domain' => 'cursus']);
     }
 }

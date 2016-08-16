@@ -66,6 +66,14 @@
             </span>
         </div>
     </div>
+    <button id="calendar-view-button"
+            class="btn btn-default pull-right"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="{{ 'calendar_view'|trans({}, 'cursus') }}"
+    >
+        <i class="fa fa-calendar"></i>
+    </button>
 </div>
 
 {% if courses|length > 0 %}
@@ -75,10 +83,10 @@
     {% endif %}
 
     <div class="panel-group" role="tablist">
-
         {% for course in courses %}
             {% set courseId = course.getId() %}
             {% set icon = course.getIcon() %}
+            {% set description = course.getDescription() %}
 
             {% if icon is empty %}
                 {% set iconPath = asset('bundles/clarolinecursus/images/no_icon.png') %}
@@ -89,7 +97,7 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <span data-toggle="collapse"
-                              href="#course-content-{{ courseId }}"
+                              href="#course-content-{{ widgetInstance.getId() }}-{{ courseId }}"
                               class="pointer-hand"
                         >
                             {{ course.getTitle() }}
@@ -97,34 +105,36 @@
                         </span>
                     </h3>
                 </div>
-                <div id="course-content-{{ courseId }}" class="panel-collapse collapse">
-                    <div class="panel-body">   
-
-                        <div class="media">
-                            <div class="media-left col-md-2 text-center">
-                                <img class="media-object"
-                                     src="{{ iconPath }}"
-                                     alt=""
-                                     width="150px"
-                                >
-                            </div>
-                            <div class="media-body col-md-10">
-                                <div>
-                                    {{ course.getDescription()|raw }}
-                                </div>
-                                
-                                {% if workspacesList[courseId] is defined %}
-                                    <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspacesList[courseId].getId(), 'toolName': 'home'}) }}"
-                                       class="standard-link"
-                                    >
-                                        <i class="fa fa-book">
-                                        </i>
-                                        {{ workspacesList[courseId].getName() }}
-                                        <small>({{ workspacesList[courseId].getCode() }})</small>
-                                    </a>
+                <div id="course-content-{{ widgetInstance.getId() }}-{{ courseId }}" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        {% if icon is not empty or description is not empty %}
+                            <div class="media">
+                                {% if icon is not empty %}
+                                    <div class="media-left col-md-2 text-center">
+                                        <img class="media-object" src="{{ iconPath }}" alt="" width="150px">
+                                    </div>
+                                {% endif %}
+                                {% if course.getDescription() is not empty %}
+                                    <div class="media-body col-md-10">
+                                        <div>
+                                            {{ description|raw }}
+                                        </div>
+                                    </div>
                                 {% endif %}
                             </div>
-                        </div>
+                            <hr>
+                        {% endif %}
+
+                        {% if workspacesList[courseId] is defined %}
+                            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspacesList[courseId].getId(), 'toolName': 'home'}) }}"
+                               class="standard-link"
+                            >
+                                <i class="fa fa-book">
+                                </i>
+                                {{ workspacesList[courseId].getName() }}
+                                <small>({{ workspacesList[courseId].getCode() }})</small>
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -139,12 +149,3 @@
         {{ 'no_course'|trans({}, 'cursus') }}
     </div>
 {% endif %}
-
-<div id="my-courses-widget-datas-box"
-     data-search="{{ search }}"
-     data-max="{{ max }}"
-     data-ordered-by="{{ orderedBy }}"
-     data-order="{{ order }}"
-     data-widget-instance-id="{{ widgetInstance.getId() }}"
->
-</div>
