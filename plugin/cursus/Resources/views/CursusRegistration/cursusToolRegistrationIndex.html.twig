@@ -38,8 +38,11 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'tools' }) }}"></script>
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"></script>
+    {% javascripts debug=false
+    'js/translations/cursus/*.js'
+    'js/translations/tools/*.js'
+    %}<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
     <script type='text/javascript' src='{{ hotAsset('dist/commons.js') }}'></script>
     <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-registration.js') }}"></script>
 {% endblock %}
