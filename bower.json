@@ -44,7 +44,7 @@
     "fullcalendar": "2.6.0",
     "gridstack": "0.2.3",
     "jqPlot": "https://github.com/jqPlot/jqPlot.git#080c6de5a6",
-    "jquery": "2.2.0",
+    "jquery": "2.2.4",
     "jquery-option-tree": "https://github.com/jongilbraith/jquery-option-tree.git#6b7137ec6e",
     "jquery-sortable": "0.9.13",
     "jquery-ui": "1.11.4",
@@ -67,7 +67,11 @@
     "typeahead.js": "0.11.1",
     "typeahead.js-bootstrap3.less": "https://github.com/bassjobsen/typeahead.js-bootstrap-css.git#1.2.1",
     "underscore": "1.8.3",
-    "video.js": "5.2.0",    
+    "video.js": "5.2.0",
+    "strophejs": "https://github.com/strophe/strophejs.git#1.2.7",
+    "strophe.jingle": "https://github.com/ESTOS/strophe.jingle.git#529df0b12cae47ca4a0e74172f7c0b83a57e68e7",
+    "strophejs-plugins": "https://github.com/strophe/strophejs-plugins.git#0.0.6",
+    "hark": "https://github.com/otalk/hark.git#1.1.4",
     "wavesurfer.js": "1.1.8"
   },
   "ignore": [
