@@ -48,7 +48,7 @@ high: Haute
 hide_tasks: Cacher toutes les tâches
 import_agenda_file: 'Importer'
 invitation_to_an_event: Invitation à un évènement
-invitation_not_found: L'invitation à l'évènement n'a pas été trouvé. Il a peut-être été modifié ou supprimé.
+invitation_not_found: L'invitation à l'évènement n'a pas été trouvée. L'évènement a peut-être été modifié ou supprimé.
 invitation_already_done: L'action demandée a déjà été appliquée à l'évènement. Aucune modification n'a été effectuée.
 invitation_joined: L'invitation a bien été acceptée. Un nouvel évènement a été créé dans votre bureau. Vous pouvez ainsi voir qui participe également à cet évènement. Vous pouvez changer le titre et la description sans que les modifications ne se propagent chez les autres invités.
 invitation_set_maybe: Vous avez bien marqué vous participerez peut-être à l'évènement. Cet évènement a été créé dans votre bureau. Vous pouvez ainsi voir qui participe également à cet évènement. Vous pouvez changer le titre et la description sans que les modifications ne se propagent chez les autres invités.
