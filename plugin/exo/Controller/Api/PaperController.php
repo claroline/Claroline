@@ -159,6 +159,7 @@ class PaperController
                 $answers[] = [
                     'question' => $this->questionManager->exportQuestionAnswers($stepQuestion->getQuestion()),
                     'answer' => $this->paperManager->exportPaperAnswer($stepQuestion->getQuestion(), $paper),
+                    'score' => $this->questionManager->exportQuestionScore($stepQuestion->getQuestion(), $paper),
                 ];
             }
 

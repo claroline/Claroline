@@ -23,7 +23,7 @@ class LogSessionQueueUserValidateEvent extends LogGenericEvent
         $session = $queue->getSession();
         $course = $session->getCourse();
         $user = $queue->getUser();
-        $details = array();
+        $details = [];
         $details['userId'] = $user->getId();
         $details['username'] = $user->getUsername();
         $details['firsName'] = $user->getFirstName();
@@ -49,6 +49,6 @@ class LogSessionQueueUserValidateEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_ADMIN);
+        return [self::DISPLAYED_ADMIN];
     }
 }

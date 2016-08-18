@@ -616,6 +616,7 @@ new_message_alert: 'You have %count% new message(s)'
 new_password: 'New password'
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
+next: Next
 'no': 'No'
 no_action_found: 'No action found.'
 no_activity_in_workspace: 'There are currently no activities in this workspace.'
@@ -721,6 +722,7 @@ positive_number_expected: 'This value should be a positive number'
 powered_by: 'Powered by'
 preferences: Preferences
 preview: Preview
+previous: Previous
 private: Private
 profil_edition: 'User profile edition'
 profile_management: 'Profile Management'

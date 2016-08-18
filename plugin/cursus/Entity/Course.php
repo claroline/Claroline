@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,14 +33,14 @@ class Course
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_bulletin"})
+     * @Groups({"api_cursus", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_bulletin"})
+     * @Groups({"api_cursus", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("code")
      */
     protected $code;
@@ -47,35 +48,35 @@ class Course
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_bulletin"})
+     * @Groups({"api_cursus", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("title")
      */
     protected $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("description")
      */
     protected $description;
 
     /**
      * @ORM\Column(name="public_registration", type="boolean")
-     * @Groups({"api", "api_cursus"})
+     * @Groups({"api", "api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("publicRegistration")
      */
     protected $publicRegistration = false;
 
     /**
      * @ORM\Column(name="public_unregistration", type="boolean")
-     * @Groups({"api", "api_cursus"})
+     * @Groups({"api", "api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("publicUnregistration")
      */
     protected $publicUnregistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("registrationValidation")
      */
     protected $registrationValidation = false;
@@ -85,16 +86,22 @@ class Course
      *     targetEntity="Claroline\CoreBundle\Entity\Model\WorkspaceModel"
      * )
      * @ORM\JoinColumn(name="workspace_model_id", nullable=true, onDelete="SET NULL")
+     * @Groups({"api_user_min"})
+     * @SerializedName("workspaceModel")
      */
     protected $workspaceModel;
 
     /**
      * @ORM\Column(name="tutor_role_name", nullable=true)
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("tutorRoleName")
      */
     protected $tutorRoleName;
 
     /**
      * @ORM\Column(name="learner_role_name", nullable=true)
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("learnerRoleName")
      */
     protected $learnerRoleName;
 
@@ -109,7 +116,7 @@ class Course
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("icon")
      */
     protected $icon;
@@ -119,42 +126,65 @@ class Course
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
      * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="SET NULL")
+     * @Groups({"api_user_min"})
      */
     protected $workspace;
 
     /**
      * @ORM\Column(name="user_validation", type="boolean")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("userValidation")
      */
     protected $userValidation = false;
 
     /**
      * @ORM\Column(name="organization_validation", type="boolean")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("organizationValidation")
      */
     protected $organizationValidation = false;
 
     /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("maxUsers")
      */
     protected $maxUsers;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinTable(name="claro_cursusbundle_course_validators")
+     * @Groups({"api_user_min"})
      */
     protected $validators;
+
+    /**
+     * @ORM\Column(name="session_duration", nullable=false, type="integer", options={"default" = 1})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @SerializedName("defaultSessionDuration")
+     */
+    protected $defaultSessionDuration = 1;
+
+    /**
+     * @ORM\Column(name="with_session_event", type="boolean", options={"default" = 1})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @SerializedName("withSessionEvent")
+     */
+    private $withSessionEvent = true;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
+     * )
+     * @ORM\JoinTable(name="claro_cursusbundle_course_organizations")
+     */
+    protected $organizations;
 
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
         $this->validators = new ArrayCollection();
+        $this->organizations = new ArrayCollection();
     }
 
     public function getId()
@@ -317,11 +347,6 @@ class Course
         return $this->validators->toArray();
     }
 
-    /**
-     * Adds a validator to the course.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $validator
-     */
     public function addValidator(User $validator)
     {
         if (!$this->validators->contains($validator)) {
@@ -331,11 +356,6 @@ class Course
         return $this;
     }
 
-    /**
-     * Removes a validator from the course.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $validator
-     */
     public function removeValidator(User $validator)
     {
         if ($this->validators->contains($validator)) {
@@ -345,9 +365,57 @@ class Course
         return $this;
     }
 
+    public function emptyValidators()
+    {
+        $this->validators->clear();
+    }
+
     public function hasValidation()
     {
         return $this->userValidation || $this->registrationValidation;
+    }
+
+    public function getDefaultSessionDuration()
+    {
+        return $this->defaultSessionDuration;
+    }
+
+    public function setDefaultSessionDuration($defaultSessionDuration)
+    {
+        $this->defaultSessionDuration = $defaultSessionDuration;
+    }
+
+    public function getWithSessionEvent()
+    {
+        return $this->withSessionEvent;
+    }
+
+    public function setWithSessionEvent($withSessionEvent)
+    {
+        $this->withSessionEvent = $withSessionEvent;
+    }
+
+    public function getOrganizations()
+    {
+        return $this->organizations->toArray();
+    }
+
+    public function addOrganization(Organization $organization)
+    {
+        if (!$this->organizations->contains($organization)) {
+            $this->organizations->add($organization);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganization(Organization $organization)
+    {
+        if ($this->organizations->contains($organization)) {
+            $this->organizations->removeElement($organization);
+        }
+
+        return $this;
     }
 
     public function __toString()

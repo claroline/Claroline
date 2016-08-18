@@ -29,7 +29,10 @@
   <button ng-click="pc.switchProfileMode()" class="btn btn-primary" style="margin-bottom: 10px;"> {{ pc.profileModeLabel }} </button>
   <ul class="nav nav-tabs">
       <li class="active"><a href="#general-profile" data-toggle="tab">{{ 'general'|trans:{}:'platform' }}</a> </li>
-      <li ng-if="!facet.is_main" ng-repeat="(key, facet) in pc.facets"> <a href="#facet-{{ facet.id}}" data-toggle="tab"> {{ facet.name }}</a> </i>
+      <li ng-if="!facet.is_main" ng-repeat="(key, facet) in pc.facets"> <a href="#facet-{{ facet.id}}" data-toggle="tab"> {{ facet.name }}</a> </li>
+      <li ng-if="pc.displayCourses" ng-click="pc.loadCoursesProfile()">
+          <a href="#courses-profile" data-toggle="tab">{{ 'courses'|trans:{}:'cursus' }}</a>
+      </li>
   </ul>
   <div id="facet-pane" class="tab-content">
       <div class="tab-pane active" id="general-profile">
@@ -72,6 +75,30 @@
       </div>
       <div class="tab-pane" id="facet-{{ facet.id }}"  ng-if="!facet.is_main" ng-repeat="(key, facet) in pc.facets">
           <div ng-include="'facet_renderer.html'"></div>
+      </div>
+      <div class="tab-pane" id="courses-profile" ng-if="pc.displayCourses">
+          <br>
+          <div class="table-responsive" ng-if="pc.sessions.length > 0">
+              <table class="table" ng-table="pc.sessionsTableParams" show-filter="true">
+                  <tr ng-repeat="session in $data">
+                      <td class="text-center" data-title="'course'|trans:{}:'cursus'" filter="{courseTitle: 'text'}" sortable="'courseTitle'">
+                          {{ session['courseTitle'] }}
+                      </td>
+                      <td class="text-center" data-title="'course_code'|trans:{}:'cursus'" filter="{courseCode: 'text'}" sortable="'courseCode'">
+                          {{ session['courseCode'] }}
+                      </td>
+                      <td class="text-center" data-title="'session'|trans:{}:'cursus'" filter="{name: 'text'}" sortable="'name'">
+                          {{ session['name'] }}
+                      </td>
+                      <td class="text-center" data-title="'start_date'|trans:{}:'platform'" sortable="'startDate'">
+                          {{ session['startDate']|date:'dd/MM/yyyy' }}
+                      </td>
+                      <td class="text-center" data-title="'end_date'|trans:{}:'platform'" sortable="'endDate'">
+                          {{ session['endDate']|date:'dd/MM/yyyy' }}
+                      </td>
+                  </tr>
+              </table>
+          </div>
       </div>
   </div>
 </div>

@@ -34,14 +34,14 @@ class CourseSession
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_bulletin"})
+     * @Groups({"api_cursus", "api_bulletin", "api_user_min", "api_group_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="session_name")
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_bulletin"})
+     * @Groups({"api_cursus", "api_bulletin", "api_user_min", "api_group_min"})
      * @SerializedName("name")
      */
     protected $name;
@@ -52,9 +52,16 @@ class CourseSession
      *     inversedBy="sessions"
      * )
      * @ORM\JoinColumn(name="course_id", nullable=false, onDelete="CASCADE")
-     * @Groups({"api_bulletin"})
+     * @Groups({"api_cursus", "api_bulletin", "api_user_min", "api_group_min"})
      */
     protected $course;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("description")
+     */
+    protected $description;
 
     /**
      * @ORM\ManyToOne(
@@ -85,54 +92,63 @@ class CourseSession
      *     targetEntity="Claroline\CursusBundle\Entity\Cursus"
      * )
      * @ORM\JoinTable(name="claro_cursus_sessions")
+     * @Groups({"api_user_min"})
      */
     protected $cursus;
 
     /**
      * @ORM\Column(name="session_status", type="integer")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("sessionStatus")
      */
     protected $sessionStatus = self::SESSION_NOT_STARTED;
 
     /**
      * @ORM\Column(name="default_session", type="boolean")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("defaultSession")
      */
     protected $defaultSession = false;
 
     /**
      * @ORM\Column(name="creation_date", type="datetime", nullable=false)
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("creationDate")
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="public_registration", type="boolean")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("publicRegistration")
      */
     protected $publicRegistration = false;
 
     /**
      * @ORM\Column(name="public_unregistration", type="boolean")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("publicUnregistration")
      */
     protected $publicUnregistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("registrationValidation")
      */
     protected $registrationValidation = false;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("startDate")
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("endDate")
      */
     protected $endDate;
 
@@ -156,42 +172,50 @@ class CourseSession
      * @Groups({"api_bulletin"})
      * @SerializedName("extra")
      */
-    protected $extra = array();
+    protected $extra = [];
 
     /**
      * @ORM\Column(name="user_validation", type="boolean")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
      * @SerializedName("userValidation")
      */
     protected $userValidation = false;
 
     /**
      * @ORM\Column(name="organization_validation", type="boolean")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
      * @SerializedName("organizationValidation")
      */
     protected $organizationValidation = false;
 
     /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
      * @SerializedName("maxUsers")
      */
     protected $maxUsers;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinTable(name="claro_cursusbundle_course_session_validators")
+     * @Groups({"api_user_min"})
      */
     protected $validators;
 
     /**
      * @ORM\Column(name="session_type", type="integer")
-     * @Groups({"api_cursus"})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
      */
     protected $type = 0;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CursusBundle\Entity\SessionEvent",
+     *     mappedBy="session"
+     * )
+     * @Groups({"api_cursus", "api_user_min"})
+     */
+    protected $events;
 
     public function __construct()
     {
@@ -199,6 +223,7 @@ class CourseSession
         $this->sessionUsers = new ArrayCollection();
         $this->sessionGroups = new ArrayCollection();
         $this->validators = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function getId()
@@ -231,12 +256,22 @@ class CourseSession
         $this->course = $course;
     }
 
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
     public function getWorkspace()
     {
         return $this->workspace;
     }
 
-    public function setWorkspace(Workspace $workspace)
+    public function setWorkspace(Workspace $workspace = null)
     {
         $this->workspace = $workspace;
     }
@@ -246,7 +281,6 @@ class CourseSession
         return $this->cursus->toArray();
     }
 
-    //wtf... so lazy...
     public function addCursu(Cursus $cursus)
     {
         if (!$this->cursus->contains($cursus)) {
@@ -274,6 +308,11 @@ class CourseSession
         return $this;
     }
 
+    public function emptyCursus()
+    {
+        $this->cursus->clear();
+    }
+
     public function getSessionStatus()
     {
         return $this->sessionStatus;
@@ -289,7 +328,7 @@ class CourseSession
         return $this->learnerRole;
     }
 
-    public function setLearnerRole(Role $learnerRole)
+    public function setLearnerRole(Role $learnerRole = null)
     {
         $this->learnerRole = $learnerRole;
     }
@@ -299,7 +338,7 @@ class CourseSession
         return $this->tutorRole;
     }
 
-    public function setTutorRole(Role $tutorRole)
+    public function setTutorRole(Role $tutorRole = null)
     {
         $this->tutorRole = $tutorRole;
     }
@@ -410,11 +449,6 @@ class CourseSession
         return $shortTitle.' - '.$this->getName();
     }
 
-    public function __toString()
-    {
-        return $this->getName();
-    }
-
     public function setExtra(array $extra)
     {
         $this->extra = $extra;
@@ -478,6 +512,11 @@ class CourseSession
         return $this;
     }
 
+    public function emptyValidators()
+    {
+        $this->validators->clear();
+    }
+
     public function getType()
     {
         return $this->type;
@@ -491,5 +530,15 @@ class CourseSession
     public function hasValidation()
     {
         return $this->userValidation || $this->registrationValidation;
+    }
+
+    public function getEvents()
+    {
+        return $this->events->toArray();
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

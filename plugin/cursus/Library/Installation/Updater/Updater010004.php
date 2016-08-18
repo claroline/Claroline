@@ -35,7 +35,7 @@ class Updater010004 extends Updater
     {
         $this->log('Creating confirmation email...');
         $content = $this->contentManager->getContent(
-            array('type' => 'claro_cursusbundle_mail_confirmation')
+            ['type' => 'claro_cursusbundle_mail_confirmation']
         );
 
         if (is_null($content)) {

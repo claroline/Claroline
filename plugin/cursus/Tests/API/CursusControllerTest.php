@@ -11,8 +11,8 @@
 
 namespace Claroline\CursusBubdle\Tests\API;
 
-use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Library\Testing\Persister;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Library\Testing\CursusPersister;
 
@@ -152,11 +152,6 @@ class CursusControllerTest extends TransactionalTestCase
         $this->sessionBA1 = $this->cursusPersister->session('session_BA_1', $this->courseBA, CourseSession::SESSION_CLOSED);
         $this->sessionBA2 = $this->cursusPersister->session('session_BA_2', $this->courseBA, CourseSession::SESSION_NOT_STARTED);
 
-//        $this->john = $this->persister->user('john');
-//        $roleAdmin = $this->persister->role('ROLE_ADMIN');
-//        $this->admin = $this->persister->user('admin');
-//        $this->admin->addRole($roleAdmin);
-//        $this->persister->persist($this->admin);
         $this->persister->flush();
     }
 
@@ -170,9 +165,6 @@ class CursusControllerTest extends TransactionalTestCase
         $this->assertEquals(2, count($datas));
         $this->assertEquals('root_cursus_A', $datas[0]['title']);
         $this->assertEquals('root_cursus_B', $datas[1]['title']);
-
-        // Unable to check for children. They are not fetched in the tests
-//        $this->assertEquals(3, count($datas[0]['children']));
     }
 
     public function testGetDatasForCursusRegistrationAction()
@@ -180,25 +172,7 @@ class CursusControllerTest extends TransactionalTestCase
         // Test with cursusAA
         $AAId = $this->cursusAA->getId();
         $this->client->request('GET', '/clarolinecursusbundle/api/datas/'.$AAId.'/for/cursus/registration.json');
-//        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-//        $content = $this->client->getResponse()->getContent();
-//        $datas = json_decode($content, true);
-//        $this->assertEquals(2, count($datas));
-//        $this->assertEquals('root_cursus_A', $datas[0]['title']);
-//        $this->assertEquals('root_cursus_B', $datas[1]['title']);
-
-        // Unable to check for children. They are not fetched in the tests
-//        $this->assertEquals(3, count($datas[0]['children']));
     }
-
-//    public function testGetCursusUsersForCursusRegistrationAction(Cursus $cursus)
-//    {
-//        $this->client->request('GET', '/clarolinecursusbundle/api/cursuses/{cursus}/users/for/cursus/registration.json');
-//
-////        $datas = $this->cursusManager->getCursusUsersForCursusRegistration($cursus);
-////
-////        return new JsonResponse($datas, 200);
-//    }
 
     public function testGetDatasForSearchedCursusRegistrationAction()
     {
@@ -249,95 +223,6 @@ class CursusControllerTest extends TransactionalTestCase
         $this->assertEquals($this->cursusAACA->getTitle(), $datas[$AACId][0]['title']);
     }
 
-//    public function testDeleteCursusGroupAction(CursusGroup $cursusGroup)
-//    {
-//        $this->client->request('DELETE', '/clarolinecursusbundle/api/cursuses/{cursusGroup}/group.json');
-////        $this->cursusManager->unregisterGroupFromCursus(
-////            $cursusGroup->getCursus(),
-////            $cursusGroup->getGroup()
-////        );
-////
-////        return new JsonResponse('success', 200);
-//    }
-
-//    public function testDeleteCursusGroupsAction($cursusGroupsIdsTxt)
-//    {
-//        $this->client->request('DELETE', '/clarolinecursusbundle/api/cursuses/{cursusGroupsIdsTxt}/groups.json');
-////        $cursusGroups = $this->cursusManager
-////            ->getCursusGroupsFromCursusGroupsIdsTxt($cursusGroupsIdsTxt);
-////        $this->cursusManager->unregisterGroupsFromCursus($cursusGroups);
-////
-////        return new JsonResponse('success', 200);
-//    }
-
-//    public function testDeleteCursusUserAction(CursusUser $cursusUser)
-//    {
-//        $this->client->request('DELETE', '/clarolinecursusbundle/api/cursuses/{cursusUser}/user.json');
-////        $this->cursusManager->unregisterUserFromCursus(
-////            $cursusUser->getCursus(),
-////            $cursusUser->getUser()
-////        );
-////
-////        return new JsonResponse('success', 200);
-//    }
-
-//    public function testDeleteCursusUsersAction(Cursus $cursus, $usersIdsTxt)
-//    {
-//        $this->client->request('DELETE', '/clarolinecursusbundle/api/cursuses/{cursus}/users/{usersIdsTxt}.json');
-////        $users = $this->cursusManager->getUsersFromUsersIdsTxt($usersIdsTxt);
-////        $this->cursusManager->unregisterUsersFromCursus($cursus, $users);
-////
-////        return new JsonResponse('success', 200);
-//    }
-
-//    public function testGetUnregisteredCursusGroupsAction(Cursus $cursus)
-//    {
-//        $this->client->request('GET', '/clarolinecursusbundle/api/unregistereds/{cursus}/cursus/groups.json');
-////        return $this->cursusManager->getUnregisteredGroupsByCursus(
-////            $cursus,
-////            '',
-////            'name',
-////            'ASC',
-////            false
-////        );
-//    }
-
-//    public function testGetSearchedUnregisteredCursusGroupsAction(Cursus $cursus, $search)
-//    {
-//        $this->client->request('GET', '/clarolinecursusbundle/api/searcheds/{cursus}/unregistereds/{search}/cursus/groups.json');
-////        return $this->cursusManager->getUnregisteredGroupsByCursus(
-////            $cursus,
-////            $search,
-////            'name',
-////            'ASC',
-////            false
-////        );
-//    }
-
-//    public function testGetUnregisteredCursusUsersAction(Cursus $cursus)
-//    {
-//        $this->client->request('GET', '/clarolinecursusbundle/api/unregistereds/{cursus}/cursus/users.json');
-////        return $this->cursusManager->getUnregisteredUsersByCursus(
-////            $cursus,
-////            '',
-////            'lastName',
-////            'ASC',
-////            false
-////        );
-//    }
-
-//    public function testGetSearchedUnregisteredCursusUsersAction(Cursus $cursus, $search = '')
-//    {
-//        $this->client->request('GET', '/clarolinecursusbundle/api/searcheds/{cursus}/unregistereds/{search}/cursus/users.json');
-////        return $this->cursusManager->getUnregisteredUsersByCursus(
-////            $cursus,
-////            $search,
-////            'lastName',
-////            'ASC',
-////            false
-////        );
-//    }
-
     public function testGetSessionsForCursusListAction()
     {
         // Test with a cursus without course
@@ -352,7 +237,7 @@ class CursusControllerTest extends TransactionalTestCase
         $courseAAAId = $this->courseAAA->getId();
         $courseAABId = $this->courseAAB->getId();
         $courseAACAId = $this->courseAACA->getId();
-        $ids = array();
+        $ids = [];
         $ids[] = $this->rootCursusA->getId();
         $ids[] = $this->cursusAA->getId();
         $ids[] = $this->cursusAAA->getId();
@@ -375,132 +260,4 @@ class CursusControllerTest extends TransactionalTestCase
         $this->assertNotEquals(CourseSession::SESSION_CLOSED, $datas2[$courseAAAId]['sessions'][0]['sessionStatus']);
         $this->assertNotEquals(CourseSession::SESSION_CLOSED, $datas2[$courseAAAId]['sessions'][1]['sessionStatus']);
     }
-
-//    public function testPostGroupRegisterToMultipleCursusAction(
-//        Group $group,
-//        $cursusIdsTxt,
-//        $sessionsIdsTxt
-//    )
-//    {
-//        $this->client->request('POST', '/clarolinecursusbundle/api/groups/{group}/registers/{cursusIdsTxt}/tos/{sessionsIdsTxt}/multiples/cursuses.json');
-////        $multipleCursus = $this->cursusManager->getCursusFromCursusIdsTxt($cursusIdsTxt);
-////        $sessions = $this->cursusManager->getSessionsFromSessionsIdsTxt($sessionsIdsTxt);
-////        $results = $this->cursusManager->registerGroupToCursusAndSessions($group, $multipleCursus, $sessions);
-////
-////        return new JsonResponse($results, 200);
-//    }
-
-//    public function testPostUsersRegisterToMultipleCursusAction(
-//        $usersIdsTxt,
-//        $cursusIdsTxt,
-//        $sessionsIdsTxt
-//    )
-//    {
-//        $this->client->request('POST', '/clarolinecursusbundle/api/users/{usersIdsTxt}/registers/{cursusIdsTxt}/tos/{sessionsIdsTxt}/multiples/cursuses.json');
-////        $users = $this->cursusManager->getUsersFromUsersIdsTxt($usersIdsTxt);
-////        $multipleCursus = $this->cursusManager->getCursusFromCursusIdsTxt($cursusIdsTxt);
-////        $sessions = $this->cursusManager->getSessionsFromSessionsIdsTxt($sessionsIdsTxt);
-////        $results = $this->cursusManager->registerUsersToCursusAndSessions($users, $multipleCursus, $sessions);
-////
-////        return new JsonResponse($results, 200);
-//    }
-
-//    public function testGetRegistrationQueuesDatasAction()
-//    {
-//        $this->client->request('GET', '/clarolinecursusbundle/api/registration/queues/datas.json');
-////        $datas = $this->cursusManager->getRegistrationQueuesDatasByValidator();
-////
-////        return $datas;
-//    }
-
-//    public function testGetRegistrationQueuesDatasBySearchAction($search)
-//    {
-//        $this->client->request('GET', '/clarolinecursusbundle/api/registrations/{search}/queues/datas/by/search.json');
-////        $datas = $this->cursusManager->getRegistrationQueuesDatasByValidator($search);
-////
-////        return $datas;
-//    }
-
-//    public function testPutCourseQueueValidateAction(CourseRegistrationQueue $queue)
-//    {
-//        $this->client->request('PUT', '/clarolinecursusbundle/api/courses/{queue}/queue/validate.json');
-////        $canValidate = $this->cursusManager->canValidateCourseQueue($queue);
-////
-////        if (!$canValidate) {
-////
-////            return new JsonResponse('not_authorized', 403);
-////        }
-////        $datas = $this->cursusManager->validateCourseQueue($queue);
-////
-////        return new JsonResponse($datas, 200);
-//    }
-
-//    public function testPutSessionQueueValidateAction(CourseSessionRegistrationQueue $queue)
-//    {
-//        $this->client->request('PUT', '/clarolinecursusbundle/api/sessions/{queue}/queue/validate.json');
-////        $canValidate = $this->cursusManager->canValidateSessionQueue($queue);
-////
-////        if (!$canValidate) {
-////
-////            return new JsonResponse('not_authorized', 403);
-////        }
-////        $datas = $this->cursusManager->validateSessionQueue($queue);
-////
-////        return new JsonResponse($datas, 200);
-//    }
-
-//    public function testDeleteCourseQueueAction(CourseRegistrationQueue $queue)
-//    {
-//        $this->client->request('DELETE', '/clarolinecursusbundle/api/courses/{queue}/queue.json');
-////        $canValidate = $this->cursusManager->canValidateCourseQueue($queue);
-////
-////        if (!$canValidate) {
-////
-////            return new JsonResponse('not_authorized', 403);
-////        }
-////        $queueDatas = $this->cursusManager->declineCourseQueue($queue);
-////
-////        return new JsonResponse($queueDatas, 200);
-//    }
-
-//    public function testDeleteSessionQueueAction(CourseSessionRegistrationQueue $queue)
-//    {
-//        $this->client->request('DELETE', '/clarolinecursusbundle/api/sessions/{queue}/queue.json');
-////        $canValidate = $this->cursusManager->canValidateSessionQueue($queue);
-////
-////        if (!$canValidate) {
-////
-////            return new JsonResponse('not_authorized', 403);
-////        }
-////        $queueDatas = $this->cursusManager->declineSessionQueue($queue);
-////
-////        return new JsonResponse($queueDatas, 200);
-//    }
-
-//    public function testGetAvailableSessionsByCourseAction(Course $course)
-//    {
-//        $this->client->request('GET', '/clarolinecursusbundle/api/availables/{course}/sessions/by/course.json');
-////        $notStartedsessions = $this->cursusManager->getSessionsByCourseAndStatus(
-////            $course,
-////            CourseSession::SESSION_NOT_STARTED
-////        );
-////        $openSessions = $this->cursusManager->getSessionsByCourseAndStatus(
-////            $course,
-////            CourseSession::SESSION_OPEN
-////        );
-////        $sessions = array_merge($notStartedsessions, $openSessions);
-////
-////        return $sessions;
-//    }
-
-//    public function testPostCourseQueuedUserTransferAction(
-//        CourseRegistrationQueue $queue,
-//        CourseSession $session
-//    )
-//    {
-//        $this->client->request('POST', '/clarolinecursusbundle/api/courses/{queue}/queueds/{session}/users/transfers.json');
-////        $results = $this->cursusManager->transferQueuedUserToSession($queue, $session);
-////
-////        return $results;
-//    }
 }

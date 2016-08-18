@@ -328,4 +328,20 @@ class CursusRepository extends NestedTreeRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findCursusByCodeWithoutId($code, $id, $executeQuery = true)
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            WHERE UPPER(c.code) = :code
+            AND c.id != :id
+        ";
+        $query = $this->_em->createQuery($dql);
+        $upperCode = strtoupper($code);
+        $query->setParameter('code', $upperCode);
+        $query->setParameter('id', $id);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
 }

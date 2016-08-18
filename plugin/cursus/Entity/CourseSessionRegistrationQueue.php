@@ -13,6 +13,8 @@ namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
@@ -31,43 +33,51 @@ class CourseSessionRegistrationQueue
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
+     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\CourseSession")
-     * @ORM\JoinColumn(name="session_id", nullable=false, onDelete="CASCADE")
+     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $session;
 
     /**
      * @ORM\Column(name="application_date", type="datetime")
+     * @Groups({"api_cursus", "api_user_min"})
+     * @SerializedName("applicationDate")
      */
     protected $applicationDate;
 
     /**
      * @ORM\Column(name="queue_status", type="integer")
+     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $status = CourseRegistrationQueue::WAITING;
 
     /**
      * @ORM\Column(name="validation_date", nullable=true, type="datetime")
+     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $validationDate;
 
     /**
      * @ORM\Column(name="user_validation_date", nullable=true, type="datetime")
+     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $userValidationDate;
 
     /**
      * @ORM\Column(name="validator_validation_date", nullable=true, type="datetime")
+     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $validatorValidationDate;
 
@@ -79,6 +89,7 @@ class CourseSessionRegistrationQueue
 
     /**
      * @ORM\Column(name="organization_validation_date", nullable=true, type="datetime")
+     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $organizationValidationDate;
 

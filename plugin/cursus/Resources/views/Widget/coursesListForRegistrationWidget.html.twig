@@ -66,19 +66,26 @@
             </span>
         </div>
     </div>
+    <button id="calendar-view-button"
+            class="btn btn-default pull-right"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="{{ 'calendar_view'|trans({}, 'cursus') }}"
+    >
+        <i class="fa fa-calendar"></i>
+    </button>
 </div>
 
 {% if courses|length > 0 %}
-
     {% if courses.getNbPages() > 1 %}
         {{ renderPager(courses, widgetInstance.getId(), search, max, orderedBy, order) }}
     {% endif %}
 
     <div class="panel-group" role="tablist">
-
         {% for course in courses %}
             {% set courseId = course.getId() %}
             {% set icon = course.getIcon() %}
+            {% set description = course.getDescription() %}
 
             {% if icon is empty %}
                 {% set iconPath = asset('bundles/clarolinecursus/images/no_icon.png') %}
@@ -89,7 +96,7 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <span data-toggle="collapse"
-                              href="#course-content-{{ courseId }}"
+                              href="#course-content-{{ widgetInstance.getId() }}-{{ courseId }}"
                               class="pointer-hand"
                         >
                             {{ course.getTitle() }}
@@ -97,24 +104,25 @@
                         </span>
                     </h3>
                 </div>
-                <div id="course-content-{{ courseId }}" class="panel-collapse collapse">
-                    <div class="panel-body">   
-                
-                        <div class="media">
-                            <div class="media-left col-md-2 text-center">
-                                <img class="media-object"
-                                     src="{{ iconPath }}"
-                                     alt=""
-                                     width="150px"
-                                >
+                <div id="course-content-{{ widgetInstance.getId() }}-{{ courseId }}" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        {% if icon is not empty or description is not empty %}
+                            <div class="media">
+                                {% if icon is not empty %}
+                                    <div class="media-left col-md-2 text-center">
+                                        <img class="media-object" src="{{ iconPath }}" alt="" width="150px">
+                                    </div>
+                                {% endif %}
+                                {% if course.getDescription() is not empty %}
+                                    <div class="media-body col-md-10">
+                                        <div>
+                                            {{ description|raw }}
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
-                            <div class="media-body col-md-10">
-                                <div>
-                                    {{ course.getDescription()|raw }}
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
+                            <hr>
+                        {% endif %}
 
                         {% if sessions[courseId] is not defined %}
                             <div class="alert alert-warning">
@@ -150,6 +158,14 @@
                                         {% set endDate = session.getEndDate() %}
                                         <li>
                                             <span>
+                                                {% if session.getEvents()|length > 0 %}
+                                                    <i class="fa fa-chevron-circle-right pointer-hand"
+                                                       data-toggle="collapse"
+                                                       href="#collapse-events-{{ widgetInstance.getId() }}-{{ session.getId() }}"
+                                                       style="color: #337AB7"
+                                                    >
+                                                    </i>
+                                                {% endif %}
                                                 {{ session.getName() }}
                                                 [
                                                 {% if startDate is empty %}
@@ -188,6 +204,43 @@
                                                     </span>
                                                 {% endif %}
                                             </span>
+
+                                            {% if session.getEvents()|length > 0 %}
+                                                <div id="collapse-events-{{ widgetInstance.getId() }}-{{ session.getId() }}" class="collapse">
+                                                    <br>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <tr>
+                                                                <th>{{ 'session_event'|trans({}, 'cursus') }}</th>
+                                                                <th>{{ 'duration'|trans({}, 'platform') }}</th>
+                                                                <th>{{ 'location'|trans({}, 'platform') }}</th>
+                                                                <th>{{ 'location_extra'|trans({}, 'cursus') }}</th>
+                                                            </tr>
+                                                            {% for event in session.getEvents() %}
+                                                                <tr>
+                                                                    <td>{{ event.getName() }}</td>
+                                                                    <td>
+                                                                        {{ event.getStartDate()|intl_date_format }}
+                                                                        <i class="fa fa-long-arrow-right"></i>
+                                                                        {{ event.getEndDate()|intl_date_format }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {% if event.getLocation() is not empty %}
+                                                                            {% set location = event.getLocation() %}
+                                                                            {{ location.getStreet() }}, {{ location.getStreetNumber() }}
+                                                                            <br>
+                                                                            {{ location.getPc() }} {{ location.getTown() }}
+                                                                            <br>
+                                                                            {{ location.getCountry() }}
+                                                                        {% endif %}
+                                                                    </td>
+                                                                    <td>{{ event.getLocationExtra()|raw }}</td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
                                         </li>
                                     {% endfor %}
                                 </ul>
@@ -207,12 +260,3 @@
         {{ 'no_course'|trans({}, 'cursus') }}
     </div>
 {% endif %}
-
-<div id="courses-registration-widget-datas-box"
-     data-search="{{ search }}"
-     data-max="{{ max }}"
-     data-ordered-by="{{ orderedBy }}"
-     data-order="{{ order }}"
-     data-widget-instance-id="{{ widgetInstance.getId() }}"
->
-</div>
