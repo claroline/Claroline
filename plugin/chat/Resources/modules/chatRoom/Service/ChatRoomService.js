@@ -30,7 +30,8 @@ export default class ChatRoomService {
     this.xmppConfig = XmppService.getConfig()
     this.config = {
       connected: false,
-      busy: false,
+      busy: false, // connecting
+      configuring: false,
       resourceId: ChatRoomService._getGlobal('resourceId'),
       resourceName: ChatRoomService._getGlobal('resourceName'),
       chatRoom: ChatRoomService._getGlobal('chatRoom'),
@@ -117,6 +118,7 @@ export default class ChatRoomService {
 
   connectToRoom () {
     this.$log.log('CONNECT TO ROOM')
+    this.config['busy'] = true
     if (this.xmppConfig['connected'] && this.xmppConfig['adminConnected']) {
       this.$log.log('Connecting to room...')
       this.connectAdminToRoom()
@@ -129,6 +131,7 @@ export default class ChatRoomService {
 
   connectAdminToRoom () {
     if (this.xmppConfig['adminConnected']) {
+      this.config['busy'] = true
       this.$log.log(`Connecting ${this.config['adminUsername']} to room...`)
       this.xmppConfig['adminConnection'].addHandler(this._onRoomAdminPresence, null, 'presence')
       this.xmppConfig['adminConnection'].send($pres({to: `${this.config['room']}/${this.config['adminUsername']}`}))
@@ -171,7 +174,8 @@ export default class ChatRoomService {
       this.xmppConfig['connection'].send(presence)
       this.xmppConfig['connection'].disconnect()
     }
-  // this.refreshScope()
+
+    this.config['busy'] = false
   }
 
   initializeRoom () {
@@ -222,6 +226,7 @@ export default class ChatRoomService {
       this.$httpParamSerializerJQLike({'chat_room': chatRoom}),
       {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
     ).then((data) => {
+      this.config.chatRoom.configuring = true
       return this.config.chatRoom = data.data
     })
   }
@@ -646,7 +651,6 @@ export default class ChatRoomService {
               this.$log.error('Something went wrong. OnRoomPresence stanza type = "unavailable"')
             } else {
               this.config['connected'] = true
-              this.config['busy'] = false
               this.config['myUsername'] = username
               this.config['messageType'] = null
               this.config['message'] = null
@@ -688,6 +692,8 @@ export default class ChatRoomService {
         }
       }
     }
+
+    this.config['busy'] = false
 
     return true
   }

@@ -15,30 +15,31 @@
                 </div>
                 <button class="btn btn-primary"
                     ng-if="crmc.chatRoomConfig['canEdit']"
-                    ng-disabled="!crmc.xmppConfig['connected'] || !crmc.xmppConfig['adminConnected']"
                     ng-click="crmc.initializeChatRoom()"
                 >
                     {{ 'init_room'|trans:{}:'chat' }}
                 </button>
             </div>
-
-            <!-- Open room -->
-            <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'open'">
-                <button class="btn btn-primary"
-                    ng-click="crmc.connectToRoom()"
-                >
-                    {{ 'connect_to_chat_room'|trans:{}:'chat' }}
-                </button>
-            </div>
-
-
-            <!-- Unknown status room -->
-            <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'unknown'">
-                <div class="alert alert-danger">
-                    {{ 'chat_room_unknown_status_msg'|trans:{}:'chat' }}
+                <!-- Open room -->
+                <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'open'">
+                    <button class="btn btn-primary"
+                        ng-click="crmc.connectToRoom()"
+                    >
+                        {{ 'connect_to_chat_room'|trans:{}:'chat' }}
+                    </button>
                 </div>
-            </div>
+                <div class="panel panel-body">
+                    <!-- Unknown status room -->
+                    <div ng-if="crmc.chatRoomConfig['chatRoom']['room_status_text'] === 'unknown'">
+                        <div class="alert alert-danger">
+                            {{ 'chat_room_unknown_status_msg'|trans:{}:'chat' }}
+                        </div>
+                    </div>
 
+                    <div ng-if="crmc.chatRoomConfig['busy'] || crmc.xmppConfig['busy']" class="alert alert-warning">
+                        {{ 'connecting'|trans:{}:'chat' }}
+                    </div>
+                </div>
         </div>
 
         <!-- Else -->

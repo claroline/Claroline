@@ -18,6 +18,8 @@ export default class ChatRoomInitCtrl {
     if (this.chatRoomConfig['chatRoom']['room_status_text'] === 'closed') {
       this.$state.transitionTo('archive', {}, { reload: true, inherit: true, notify: true })
     }
+
+    this.initialize()
   }
 
   initialize () {

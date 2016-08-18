@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
- /* global Strophe */
- /* global $pres */
- /* global Routing */
+/* global Strophe */
+/* global $pres */
+/* global Routing */
 
 export default class XmppService {
   constructor ($rootScope, $http, $log) {
@@ -31,7 +31,7 @@ export default class XmppService {
       boshService: `${this.protocol}://${XmppService._getGlobal('xmppHost')}:${XmppService._getGlobal('boshPort')}/http-bind`,
       canChat: false,
       connected: false,
-      busy: false,
+      busy: false, // equals "connecting"
       adminConnected: false
     }
     this.adminUsername = XmppService._getGlobal('chatAdminUsername')
@@ -62,7 +62,7 @@ export default class XmppService {
       this.config['busy'] = true
       this.$log.log('Connecting...')
     } else if (status === Strophe.Status.DISCONNECTING) {
-      this.config['busy'] = true
+      this.config['busy'] = false
       this.$log.log('Disconnecting...')
     }
   }

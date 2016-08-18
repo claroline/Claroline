@@ -13,7 +13,7 @@
                 {{ 'back'|trans:{}:'platform' }}
             </button>
         </div>
-        <div ng-if="crc.chatRoomConfig['chatRoom']['room_type_text'] === 'text'">
+        <div ng-if="crc.chatRoomConfig['chatRoom']['room_type_text'] === 'text'" class="panel panel-body">
             <div ng-if="crc.chatRoomConfig['chatRoom']['room_status_text'] === 'open'">
                 <div ng-if="crc.chatRoomConfig['connected']">
                     <div class="row chat-room-row">
@@ -29,10 +29,13 @@
                     </div>
                 </div>
                 <div ng-if="!crc.chatRoomConfig['connected']">
+                    <div ng-if="crc.chatRoomConfig['busy'] || crc.xmppConfig['busy']" class="alert alert-warning">
+                        {{ 'connecting'|trans:{}:'chat' }}
+                    </div>
                     <div class="alert alert-{{ crc.chatRoomConfig['messageType'] }}" ng-if="crc.chatRoomConfig['message']">
                         {{ crc.chatRoomConfig['message'] }}
                     </div>
-                    <div class="alert alert-danger" ng-if="!crc.chatRoomConfig['message']">
+                    <div class="alert alert-danger" ng-if="!(crc.chatRoomConfig['busy'] || crc.xmppConfig['busy'])">
                         {{ 'not_connected'|trans:{}:'chat' }}
                     </div>
                 </div>
