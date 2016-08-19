@@ -15,7 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 
 /**
- * @DI\Service
+ * @DI\Service("claroline.extension.webpack")
  * @DI\Tag("twig.extension")
  */
 class WebpackExtension extends \Twig_Extension
@@ -78,9 +78,9 @@ class WebpackExtension extends \Twig_Extension
 
         $asset = 'dist/'.$assets->{$assetName}->js;
 
-        if ($this->environment === 'dev') {
+        /*if ($this->environment === 'dev') {
             return "http://localhost:8080/{$asset}";
-        }
+        }*/
 
         return $this->assetExtension->getAssetUrl($asset);
     }
