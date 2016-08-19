@@ -205,7 +205,7 @@ class StepConditionController extends Controller
     public function getActivityList(Path $path)
     {
         $activitylist = array();
-        $steps = $this->om->getRepository('InnovaPathBundle:Path')->findById($path);
+        $steps = $this->om->getRepository('InnovaPathBundle:Path\Path')->findById($path);
 
         foreach ($steps as $step) {
             $activitylist[$step->getId()] = self::getActivityEvaluation($step->getActivity());
