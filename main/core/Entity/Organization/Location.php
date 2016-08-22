@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Entity\Organization;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\Groups;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Organization\LocationRepository")
  * @ORM\Table(name="claro__location")
  * @DoctrineAssert\UniqueEntity("name")
  */
@@ -26,78 +26,79 @@ class Location
 {
     const TYPE_DEPARTMENT = 1;
     const TYPE_USER = 2;
+    const TYPE_TRAINING = 3;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_location", "api_organization_list", "api_organization_tree"})
+     * @Groups({"api_location", "api_organization_list", "api_organization_tree", "api_user_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_location", "api_organization_list", "api_organization_tree"})
+     * @Groups({"api_location", "api_organization_list", "api_organization_tree", "api_user_min"})
      */
     protected $name;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_location"})
+     * @Groups({"api_location", "api_user_min"})
      */
     protected $street;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_location"})
+     * @Groups({"api_location", "api_user_min"})
      */
     protected $streetNumber;
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api_location"})
+     * @Groups({"api_location", "api_user_min"})
      */
     protected $boxNumber;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_location"})
+     * @Groups({"api_location", "api_user_min"})
      */
     protected $pc;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_location"})
+     * @Groups({"api_location", "api_user_min"})
      */
     protected $town;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_location"})
+     * @Groups({"api_location", "api_user_min"})
      */
     protected $country;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"api_location"})
+     * @Groups({"api_location", "api_user_min"})
      */
     protected $latitude;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"api_location"})
+     * @Groups({"api_location", "api_user_min"})
      */
     protected $longitude;
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api_location"})
+     * @Groups({"api_location", "api_user_min"})
      */
     protected $phone;
 
@@ -121,6 +122,7 @@ class Location
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"api_user_min"})
      */
     protected $type = self::TYPE_DEPARTMENT;
 

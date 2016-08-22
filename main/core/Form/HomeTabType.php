@@ -12,54 +12,83 @@
 namespace Claroline\CoreBundle\Form;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Form\Angular\AngularType;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class HomeTabType extends AbstractType
+class HomeTabType extends AngularType
 {
-    private $isAdmin;
+    private $color;
+    private $forApi = false;
+    private $locked;
+    private $ngAlias;
+    private $type;
+    private $visible;
     private $workspace;
 
-    public function __construct(Workspace $workspace = null, $isAdmin = false)
+    public function __construct($type = 'desktop', $color = null, $locked = false, $visible = true, Workspace $workspace = null, $ngAlias = 'htfmc')
     {
-        $this->isAdmin = $isAdmin;
+        $this->color = $color;
+        $this->locked = $locked;
+        $this->ngAlias = $ngAlias;
+        $this->type = $type;
+        $this->visible = $visible;
         $this->workspace = $workspace;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('constraints' => new NotBlank(), 'label' => 'name'));
-        $workspace = $this->workspace;
+        $builder->add('name', 'text', ['constraints' => new NotBlank(), 'label' => 'name']);
+        $builder->add(
+            'color',
+            'text',
+            [
+                'required' => false,
+                'mapped' => false,
+                'label' => 'color',
+                'data' => $this->color,
+                'attr' => ['colorpicker' => 'hex'],
+            ]
+        );
 
-        if (!is_null($workspace)) {
+        if ($this->type === 'admin') {
             $builder->add(
-                'roles',
-                'entity',
-                array(
-                    'label' => 'roles',
-                    'class' => 'ClarolineCoreBundle:Role',
-                    'choice_translation_domain' => true,
-                    'query_builder' => function (EntityRepository $er) use ($workspace) {
-
-                        return $er->createQueryBuilder('r')
-                            ->where('r.workspace = :workspace')
-                            ->setParameter('workspace', $workspace)
-                            ->orderBy('r.translationKey', 'ASC');
-                    },
-                    'property' => 'translationKey',
-                    'expanded' => true,
-                    'multiple' => true,
-                    'required' => false,
-                )
+                'visible',
+                'choice',
+                [
+                    'choices' => [
+                        'yes' => true,
+                        'no' => false,
+                    ],
+                    'label' => 'visible',
+                    'required' => true,
+                    'mapped' => false,
+                    // *this line is important*
+                    'choices_as_values' => true,
+                    'data' => $this->visible,
+                ]
             );
-        } elseif ($this->isAdmin) {
+            $builder->add(
+                'locked',
+                'choice',
+                [
+                    'choices' => [
+                        'yes' => true,
+                        'no' => false,
+                    ],
+                    'label' => 'locked',
+                    'mapped' => false,
+                    'required' => true,
+                    'choices_as_values' => true,
+                    'data' => $this->locked,
+                ]
+            );
             $builder->add(
                 'roles',
                 'entity',
-                array(
+                [
                     'label' => 'roles',
                     'class' => 'ClarolineCoreBundle:Role',
                     'choice_translation_domain' => true,
@@ -75,7 +104,45 @@ class HomeTabType extends AbstractType
                     'expanded' => true,
                     'multiple' => true,
                     'required' => false,
-                )
+                ]
+            );
+        } elseif ($this->type === 'workspace' && !is_null($this->workspace)) {
+            $builder->add(
+                'visible',
+                'choice',
+                [
+                    'choices' => [
+                        'yes' => true,
+                        'no' => false,
+                    ],
+                    'label' => 'visible',
+                    'required' => true,
+                    'mapped' => false,
+                    // *this line is important*
+                    'choices_as_values' => true,
+                    'data' => $this->visible,
+                ]
+            );
+            $workspace = $this->workspace;
+            $builder->add(
+                'roles',
+                'entity',
+                [
+                    'label' => 'roles',
+                    'class' => 'ClarolineCoreBundle:Role',
+                    'choice_translation_domain' => true,
+                    'query_builder' => function (EntityRepository $er) use ($workspace) {
+
+                        return $er->createQueryBuilder('r')
+                            ->where('r.workspace = :workspace')
+                            ->setParameter('workspace', $workspace)
+                            ->orderBy('r.translationKey', 'ASC');
+                    },
+                    'property' => 'translationKey',
+                    'expanded' => true,
+                    'multiple' => true,
+                    'required' => false,
+                ]
             );
         }
     }
@@ -87,10 +154,19 @@ class HomeTabType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'translation_domain' => 'platform',
-            )
-        );
+        $default = ['translation_domain' => 'platform'];
+
+        if ($this->forApi) {
+            $default['csrf_protection'] = false;
+        }
+        $default['ng-model'] = 'homeTab';
+        $default['ng-controllerAs'] = $this->ngAlias;
+
+        $resolver->setDefaults($default);
+    }
+
+    public function enableApi()
+    {
+        $this->forApi = true;
     }
 }

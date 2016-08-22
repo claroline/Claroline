@@ -1,10 +1,12 @@
+{% set widgetInstanceId = widgetInstance.getId() %}
+
 <ul class="nav nav-pills">
-    <li id="all-my-workspaces-btn">
+    <li id="all-my-workspaces-btn-{{ widgetInstanceId }}">
         <a href="">
             {{ 'all_my_workspaces'|trans({}, 'platform') }}
         </a>
     </li>
-    <li id="favourite-workspaces-btn">
+    <li id="favourite-workspaces-btn-{{ widgetInstanceId }}">
         <a href="">
             {{ 'my_favourite_workspaces'|trans({}, 'platform') }}
         </a>
@@ -12,16 +14,89 @@
 </ul>
 <br>
 
-<div id="workspaces-list-element">
-    {% render(controller(
-        'ClarolineCoreBundle:Widget\\MyWorkspacesWidget:displayMyWorkspacesWidget',
-        {'mode': 0}
-    )) %}
+<div id="workspaces-list-element-{{ widgetInstanceId }}">
+    {% if workspaces|length == 0 %}
+        {{ 'no_workspace'|trans({}, 'platform') }}
+    {% else %}
+        {% for workspace in workspaces %}
+        <a class="col-md-6"
+            {% if has_access_to_workspace(workspace.getId()) %}
+                href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
+            {% endif %}
+        >
+            <i class="fa fa-book"></i>
+            {{ workspace.getName() }}
+            <span>
+                <small>
+                    ({{ workspace.getCode() }})
+                </small>
+            </span>
+        </a>
+        {% endfor %}
+    {% endif %}
 </div>
 
 {% block javascripts %}
-    <script
-        src='{{ asset('bundles/clarolinecore/js/widget/desktopWidgetMyWorkspaces.js') }}'
-        type="text/javascript">
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            var widgetInstanceId = {{ widgetInstanceId }};
+
+            function menuHighlightMode()
+            {
+                var mode = {{ mode }};
+
+                if (mode === 1) {
+                    $('#all-my-workspaces-btn-' + widgetInstanceId).removeClass('active');
+                    $('#favourite-workspaces-btn-' + widgetInstanceId).addClass('active');
+                } else {
+                    $('#favourite-workspaces-btn-' + widgetInstanceId).removeClass('active');
+                    $('#all-my-workspaces-btn-' + widgetInstanceId).addClass('active');
+                }
+            }
+
+            $('#all-my-workspaces-btn-' + widgetInstanceId).on('click', function (e) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+
+                var active = $(this).hasClass('active');
+
+                if (!active) {
+                    $.ajax({
+                        url: Routing.generate('claro_display_workspaces_widget', {'mode': 0}),
+                        type: 'GET',
+                        success: function (datas) {
+                            $('#workspaces-list-element-' + widgetInstanceId).html(datas);
+                            $('#favourite-workspaces-btn-' + widgetInstanceId).removeClass('active');
+                            $('#all-my-workspaces-btn-' + widgetInstanceId).addClass('active');
+                        }
+                    });
+                }
+            });
+
+            $('#favourite-workspaces-btn-' + widgetInstanceId).on('click', function (e) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+
+                var active = $(this).hasClass('active');
+
+                if (!active) {
+                    $.ajax({
+                        url: Routing.generate('claro_display_workspaces_widget', {'mode': 1}),
+                        type: 'GET',
+                        success: function (datas) {
+                            $('#workspaces-list-element-' + widgetInstanceId).html(datas);
+                            $('#all-my-workspaces-btn-' + widgetInstanceId).removeClass('active');
+                            $('#favourite-workspaces-btn-' + widgetInstanceId).addClass('active');
+                        }
+                    });
+                }
+            });
+
+            $(document).ready(function () {
+                menuHighlightMode();
+            });
+        })();
     </script>
 {% endblock %}

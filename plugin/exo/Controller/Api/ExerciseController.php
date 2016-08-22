@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -35,6 +36,7 @@ class ExerciseController
     private $questionManager;
     private $paperManager;
     private $paperService;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -43,7 +45,8 @@ class ExerciseController
      *     "exerciseManager"    = @DI\Inject("ujm.exo.exercise_manager"),
      *     "questionManager"    = @DI\Inject("ujm.exo.question_manager"),
      *     "paperManager"       = @DI\Inject("ujm.exo.paper_manager"),
-     *     "paperService"       = @DI\Inject("ujm.exo_paper")
+     *     "paperService"       = @DI\Inject("ujm.exo_paper"),
+     *     "translator"         = @DI\Inject("translator.default")
      * })
      *
      * @param ObjectManager                 $om
@@ -52,6 +55,7 @@ class ExerciseController
      * @param QuestionManager               $questionManager
      * @param PaperManager                  $paperManager
      * @param PaperService                  $paperService
+     * @param Translator                    $translator
      */
     public function __construct(
         ObjectManager $om,
@@ -59,7 +63,8 @@ class ExerciseController
         ExerciseManager $exerciseManager,
         QuestionManager $questionManager,
         PaperManager $paperManager,
-        PaperService $paperService
+        PaperService $paperService,
+        Translator $translator
     ) {
         $this->om = $om;
         $this->authorization = $authorization;
@@ -67,6 +72,7 @@ class ExerciseController
         $this->questionManager = $questionManager;
         $this->paperManager = $paperManager;
         $this->paperService = $paperService;
+        $this->translator = $translator;
     }
 
     /**
@@ -184,7 +190,7 @@ class ExerciseController
             if ($row[0]->getEnd()) {
                 $rowCSV[] = $row[0]->getEnd()->format('Y-m-d H:i:s');
             } else {
-                $rowCSV[] = $this->get('translator')->trans('no_finish', [], 'ujm_exo');
+                $rowCSV[] = $this->translator->trans('no_finish', [], 'ujm_exo');
             }
             $rowCSV[] = $row[0]->getInterupt();
             $rowCSV[] = $this->paperService->roundUpDown($score);

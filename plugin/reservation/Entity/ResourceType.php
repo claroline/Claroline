@@ -4,6 +4,7 @@ namespace FormaLibre\ReservationBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,6 +17,7 @@ class ResourceType
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_reservation", "api_cursus"})
      */
     protected $id;
 
@@ -23,6 +25,7 @@ class ResourceType
      * @ORM\Column(name="name", type="string", length=50)
      * @Assert\NotNull()
      * @Assert\Length(min="2", max="50")
+     * @Groups({"api_reservation", "api_cursus"})
      */
     private $name;
 

@@ -1283,7 +1283,7 @@ class UserManager
                 $existingUser->setFirstName($firstName);
                 $existingUser->setLastName($lastName);
                 $existingUser->setUsername($username);
-                if ($pwd != '') {
+                if ($pwd !== '') {
                     $existingUser->setPlainPassword($pwd);
                 }
                 $existingUser->setMail($email);
@@ -1369,6 +1369,8 @@ class UserManager
             $options->setDesktopMode(UserOptions::READ_ONLY_MODE);
         }
         $this->persistUserOptions($options);
+
+        return $options;
     }
 
     public function getUsersForUserPicker(

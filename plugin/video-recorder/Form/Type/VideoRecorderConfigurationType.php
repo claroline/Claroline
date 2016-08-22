@@ -10,8 +10,8 @@ class VideoRecorderConfigurationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('max_recording_time', 'integer', array('required' => true, 'attr' => array('min' => 0)))
-            ->add('', 'submit', array('label' => 'submit_config_label', 'translation_domain' => 'tools', 'attr' => array('class' => 'btn btn-primary pull-right')));
+        $builder->add('max_recording_time', 'integer', ['required' => true, 'attr' => ['min' => 0]])
+            ->add('', 'submit', ['label' => 'submit_config_label', 'translation_domain' => 'innova_video_recorder', 'attr' => ['class' => 'btn btn-primary pull-right']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -23,10 +23,10 @@ class VideoRecorderConfigurationType extends AbstractType
 
     public function getDefaultOptions()
     {
-        return array(
+        return [
           'data_class' => 'Innova\VideoRecorderBundle\Entity\VideoRecorderConfiguration',
-          'translation_domain' => 'tools',
-      );
+          'translation_domain' => 'innova_video_recorder',
+      ];
     }
 
     public function getName()

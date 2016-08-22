@@ -67,6 +67,7 @@ class PaperManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testShuffleSteps()
     {
+        $this->markTestIncomplete('If the shuffle method returns the original order the assertNotEquals will fail');
         $exercise = $this->mock('UJM\ExoBundle\Entity\Exercise');
 
         $exercise->expects($this->once())

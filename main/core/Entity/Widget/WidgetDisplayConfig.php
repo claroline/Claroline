@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Entity\Widget;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
@@ -40,6 +42,8 @@ class WidgetDisplayConfig
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_widget"})
+     * @SerializedName("id")
      */
     protected $id;
 
@@ -58,33 +62,52 @@ class WidgetDisplayConfig
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance")
      * @ORM\JoinColumn(name="widget_instance_id", onDelete="CASCADE", nullable=false)
+     * @Groups({"api_widget"})
+     * @SerializedName("widgetInstance")
      */
     protected $widgetInstance;
 
     /**
      * @ORM\Column(name="row_position", type="integer")
+     * @Groups({"api_widget"})
+     * @SerializedName("row")
      */
     protected $row = -1;
 
     /**
      * @ORM\Column(name="column_position", type="integer")
+     * @Groups({"api_widget"})
+     * @SerializedName("column")
      */
     protected $column = -1;
 
     /**
      * @ORM\Column(name="width", type="integer", options={"default":4})
+     * @Groups({"api_widget"})
+     * @SerializedName("width")
      */
     protected $width = 4;
 
     /**
      * @ORM\Column(name="height", type="integer", options={"default":3})
+     * @Groups({"api_widget"})
+     * @SerializedName("height")
      */
     protected $height = 3;
 
     /**
      * @ORM\Column(name="color", nullable=true)
+     * @Groups({"api_widget"})
+     * @SerializedName("color")
      */
     protected $color;
+
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     * @Groups({"api_widget"})
+     * @SerializedName("details")
+     */
+    protected $details;
 
     public function getId()
     {
@@ -174,5 +197,15 @@ class WidgetDisplayConfig
     public function setColor($color)
     {
         $this->color = $color;
+    }
+
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    public function setDetails($details)
+    {
+        $this->details = $details;
     }
 }

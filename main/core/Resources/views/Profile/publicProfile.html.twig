@@ -40,8 +40,16 @@
 </div>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('packages/ng-table/dist/ng-table.css') }}" />
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('packages/angular/angular.min.js') }}"></script>
+    <script src="{{ asset('packages/ng-table/dist/ng-table.js') }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"></script>
     <script>
         window.userId = {{ user.id }}
         window.disabled = true

@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\Entity\Home;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
@@ -33,6 +35,8 @@ class HomeTabConfig
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_home_tab"})
+     * @SerializedName("configId")
      */
     protected $id;
 
@@ -41,6 +45,8 @@ class HomeTabConfig
      *     targetEntity="Claroline\CoreBundle\Entity\Home\HomeTab"
      * )
      * @ORM\JoinColumn(name="home_tab_id", nullable=false, onDelete="CASCADE")
+     * @Groups({"api_home_tab"})
+     * @SerializedName("hometab")
      */
     protected $homeTab;
 
@@ -62,23 +68,38 @@ class HomeTabConfig
 
     /**
      * @ORM\Column()
+     * @Groups({"api_home_tab"})
+     * @SerializedName("type")
      */
     protected $type;
 
     /**
      * @ORM\Column(type="boolean", name="is_visible")
+     * @Groups({"api_home_tab"})
+     * @SerializedName("visible")
      */
     protected $visible = true;
 
     /**
      * @ORM\Column(type="boolean", name="is_locked")
+     * @Groups({"api_home_tab"})
+     * @SerializedName("locked")
      */
     protected $locked = false;
 
     /**
      * @ORM\Column(type="integer", name="tab_order")
+     * @Groups({"api_home_tab"})
+     * @SerializedName("tabOrder")
      */
     protected $tabOrder;
+
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     * @Groups({"api_home_tab"})
+     * @SerializedName("details")
+     */
+    protected $details;
 
     public function getId()
     {
@@ -158,5 +179,15 @@ class HomeTabConfig
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    public function setDetails($details)
+    {
+        $this->details = $details;
     }
 }

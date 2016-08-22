@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -60,11 +60,8 @@ class HomeListener
      */
     public function onDisplayDesktopHome(DisplayToolEvent $event)
     {
-        $params = array(
-            '_controller' => 'ClarolineCoreBundle:Tool\Home:displayDesktopHomeTab',
-            'tabId' => -1,
-        );
-        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
+        $params = ['_controller' => 'ClarolineCoreBundle:Tool\Home:desktopHomeDisplay'];
+        $subRequest = $this->container->get('request')->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         $event->setContent($response->getContent());
@@ -77,12 +74,11 @@ class HomeListener
      */
     public function onDisplayWorkspaceHome(DisplayToolEvent $event)
     {
-        $params = array(
-            '_controller' => 'ClarolineCoreBundle:Workspace:displayWorkspaceHomeTab',
+        $params = [
+            '_controller' => 'ClarolineCoreBundle:Tool\Home:workspaceHomeDisplay',
             'workspace' => $event->getWorkspace()->getId(),
-            'tabId' => -1,
-        );
-        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
+        ];
+        $subRequest = $this->container->get('request')->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         $event->setContent($response->getContent());

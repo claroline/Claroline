@@ -1,4 +1,4 @@
-import 'angular/angular.min'
+import angular from 'angular/index'
 
 import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
@@ -16,7 +16,8 @@ angular.module('UserProfile', [
   'ClarolineAPI',
   'ui.asset',
   'ui.html-truster',
-  'FormBuilder'
+  'FormBuilder',
+  'ngTable'
 ])
   .directive('userProfile', () => new ProfileDirective)
   .config(Interceptors)

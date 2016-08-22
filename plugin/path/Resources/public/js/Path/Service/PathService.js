@@ -37,7 +37,7 @@
              */
             var summary = {
                 opened: true,
-                pinned: false
+                pinned: true
             };
 
             /**

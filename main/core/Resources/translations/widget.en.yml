@@ -1,7 +1,8 @@
 core_resource_logger: 'Overview of recent activities'
-my_workspaces: 'My workspaces'
 my_profile: 'My profile'
+my_workspaces: 'My workspaces'
 simple_text: Text
+type: Type
 widget_configuration_copy_warning: 'An error occured while copying configuration of widget <%widgetInstanceName%>'
 widget_instance_form_name: Name
 widget_instance_form_widget: Type

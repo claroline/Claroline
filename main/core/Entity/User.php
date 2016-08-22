@@ -235,7 +235,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api_user"})
+     * @Groups({"api_user", "api_user_min"})
      * @SerializedName("picture")
      */
     protected $picture;

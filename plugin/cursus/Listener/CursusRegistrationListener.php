@@ -63,9 +63,9 @@ class CursusRegistrationListener
      */
     public function onAdministrationToolOpen(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCursusBundle:CursusRegistration:cursusToolRegistrationIndex';
-        $subRequest = $this->request->duplicate(array(), null, $params);
+        $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
@@ -83,7 +83,7 @@ class CursusRegistrationListener
         $action = $log->getAction();
         $user = $log->getReceiver();
         $group = $log->getReceiverGroup();
-        $sessions = array('learner' => array(), 'tutor' => array());
+        $sessions = ['learner' => [], 'tutor' => []];
 
         if ($action === 'group-add_user') {
             $multipleCursus = $this->cursusManager->getCursusByGroup($group);
@@ -102,17 +102,17 @@ class CursusRegistrationListener
             }
 
             if (count($sessions['learner']) > 0) {
-                $this->cursusManager->registerUsersToSessions($sessions['learner'], array($user), 0);
+                $this->cursusManager->registerUsersToSessions($sessions['learner'], [$user], 0);
             }
 
             if (count($sessions['tutor']) > 0) {
-                $this->cursusManager->registerUsersToSessions($sessions['tutor'], array($user), 1);
+                $this->cursusManager->registerUsersToSessions($sessions['tutor'], [$user], 1);
             }
         } elseif ($action === 'group-remove_user') {
             $multipleCursus = $this->cursusManager->getCursusByGroup($group);
             $cursusUsers = $this->cursusManager->getCursusUsersFromCursusAndUsers(
                 $multipleCursus,
-                array($user)
+                [$user]
             );
             $this->cursusManager->deleteCursusUsers($cursusUsers);
 
@@ -127,12 +127,12 @@ class CursusRegistrationListener
                     $sessions['tutor'][] = $sessionGroup->getSession();
                 }
             }
-            $sessionUsers = array();
+            $sessionUsers = [];
 
             if (count($sessions['learner']) > 0) {
                 $sessionUsers = $this->cursusManager->getSessionUsersBySessionsAndUsers(
                     $sessions['learner'],
-                    array($user),
+                    [$user],
                     0
                 );
             }
@@ -140,7 +140,7 @@ class CursusRegistrationListener
             if (count($sessions['tutor']) > 0) {
                 $sessionTutors = $this->cursusManager->getSessionUsersBySessionsAndUsers(
                     $sessions['tutor'],
-                    array($user),
+                    [$user],
                     1
                 );
                 $sessionUsers = array_merge($sessionUsers, $sessionTutors);
@@ -159,13 +159,13 @@ class CursusRegistrationListener
         $user = $event->getUser();
         $url = $this->router->generate(
             'claro_cursus_user_sessions_management',
-            array('user' => $user->getId())
+            ['user' => $user->getId()]
         );
 
         $menu = $event->getMenu();
         $menu->addChild(
-            $this->translator->trans('user_sessions_management', array(), 'cursus'),
-            array('uri' => $url)
+            $this->translator->trans('user_sessions_management', [], 'cursus'),
+            ['uri' => $url]
         )->setExtra('icon', 'fa fa-list-alt');
 
         return $menu;
@@ -181,13 +181,13 @@ class CursusRegistrationListener
         $group = $event->getGroup();
         $url = $this->router->generate(
             'claro_cursus_group_sessions_management',
-            array('group' => $group->getId())
+            ['group' => $group->getId()]
         );
 
         $menu = $event->getMenu();
         $menu->addChild(
-            $this->translator->trans('user_sessions_management', array(), 'cursus'),
-            array('uri' => $url)
+            $this->translator->trans('user_sessions_management', [], 'cursus'),
+            ['uri' => $url]
         )->setExtra('icon', 'fa fa-list-alt');
 
         return $menu;

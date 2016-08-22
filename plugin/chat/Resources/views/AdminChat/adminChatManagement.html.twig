@@ -1,0 +1,47 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ 
+        parent() ~
+        ' - ' ~
+        'claroline_chat_management_admin_tool' | trans({}, 'tools')
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'claroline_chat_management_admin_tool'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'claroline_chat_management_admin_tool'|trans({}, 'tools') }}
+        </h3>
+    </div>
+    <div class="list-group">
+        <a class="list-group-item"
+           href="{{ path('claro_chat_admin_configure_form') }}"
+        >
+            <i class="fa fa-cogs"></i>
+            {{ 'configuration'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item"
+           href="{{ path('claro_chat_users_admin_management') }}"
+        >
+            <i class="fa fa-users"></i>
+            {{ 'users_management'|trans({}, 'platform') }}
+        </a>
+    </div>
+{% endblock %}

@@ -1,5 +1,11 @@
+# a
+audio_recorder_configuration_max_try: Maximum recording try
+audio_recorder_configuration_max_recording_time: Maximum recording time (Secondes, 0 = infinite)
+
 # c
 creating_resource: Creating resource...
+config_update_error: Problem while updating audio recorder configuration.
+config_update_success: Audio recorder configuration update successfull.
 
 # d
 download_audio: Download audio file
@@ -9,6 +15,8 @@ db_meter: Mic level
 end_recording_message: Recording is complete<br/>It was placed in your temporary list
 end_recording_message_maxtime_reached: The recording has reached the maximum allowed<br/>He was stopped and placed in your temporary list
 
+# i
+innova_audio_recorder_config: Audio recorder configuration
 
 # m
 my_recordings: My recordings (temporary)
@@ -30,3 +38,4 @@ resource_creation_error_download: Please use the download button to save locally
 # s
 start_recording: Start
 stop_recording: Stop
+submit_config_label: Save configuration

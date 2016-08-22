@@ -145,10 +145,10 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript"
-            src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"
-    >
-    </script>
+{% javascripts debug=false
+    'js/translations/cursus/*.js'
+    %}<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
     <script src='{{ asset('bundles/clarolinecursus/js/cursusToolIndex.js') }}'
             type="text/javascript"
     >

@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\AbstractType;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use FOS\RestBundle\View\View;
+use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -98,7 +98,7 @@ class ApiManager
     public function formEncode($entity, Form $form, AbstractType $formType)
     {
         $baseName = $formType->getName();
-        $payload = array();
+        $payload = [];
 
         foreach ($form->getIterator() as $el) {
             if (is_array($entity)) {
@@ -110,10 +110,14 @@ class ApiManager
     }
 
     //helper for the API controllers methods. We only do this in case of html request
-    public function handleFormView($template, $form, array $options = array())
+    public function handleFormView($template, $form, array $options = [])
     {
         $httpCode = isset($options['http_code']) ? $options['http_code'] : 200;
-        $parameters = isset($options['form_view']) ? $options['form_view'] : array();
+        $parameters = isset($options['form_view']) ? $options['form_view'] : [];
+
+        if (isset($options['extra_infos'])) {
+            $parameters['extraInfos'] = $options['extra_infos'];
+        }
         $serializerGroup = isset($options['serializer_group']) ? $options['serializer_group'] : 'api';
 
         return $form->isValid() ?
@@ -148,7 +152,7 @@ class ApiManager
     public function getParameters($name, $class)
     {
         $request = $this->container->get('request');
-        $data = $entities = array();
+        $data = $entities = [];
 
         if ($request->request->has($name)) {
             $data = $request->request->get($name);

@@ -23,7 +23,7 @@
     id="form_log_update_workspace_widget"
     method="POST"
     action="{{ path('claro_log_update_workspace_widget_config', {'widgetInstance': instance.getId()}) }}"
-    class="form-horizontal"
+    class="form-horizontal widget-content-config-form"
     {{ form_enctype(form) }}>
 
     <div class="panel-body">
@@ -31,13 +31,5 @@
 
         {{ form_widget(form._token) }}
         {{ form_widget(form) }}
-    </div>
-
-    <div class="panel-footer">
-        <button type="submit" class="btn btn-primary">{{ 'configure'|trans({}, 'platform') }}</button>
-
-        <a href="#">
-            <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
-        </a>
     </div>
 </form>

@@ -21,8 +21,8 @@ use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
-use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionGroup;
+use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Form\CourseQueuedUserTransferType;
@@ -119,7 +119,7 @@ class CourseController extends Controller
         $orderedBy = 'title',
         $order = 'ASC'
     ) {
-        $displayedWords = array();
+        $displayedWords = [];
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
@@ -133,7 +133,7 @@ class CourseController extends Controller
             $max
         );
 
-        return array(
+        return [
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
             'courses' => $courses,
@@ -142,7 +142,7 @@ class CourseController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
-        );
+        ];
     }
 
     /**
@@ -156,7 +156,7 @@ class CourseController extends Controller
      */
     public function courseCreateFormAction(User $authenticatedUser)
     {
-        $displayedWords = array();
+        $displayedWords = [];
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
@@ -166,10 +166,10 @@ class CourseController extends Controller
             new Course()
         );
 
-        return array(
+        return [
             'form' => $form->createView(),
             'displayedWords' => $displayedWords,
-        );
+        ];
     }
 
     /**
@@ -201,7 +201,7 @@ class CourseController extends Controller
 
             $message = $this->translator->trans(
                 'course_creation_confirm_msg',
-                array(),
+                [],
                 'cursus'
             );
             $session = $this->request->getSession();
@@ -211,16 +211,16 @@ class CourseController extends Controller
                 $this->router->generate('claro_cursus_tool_course_index')
             );
         } else {
-            $displayedWords = array();
+            $displayedWords = [];
 
             foreach (CursusDisplayedWord::$defaultKey as $key) {
                 $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
             }
 
-            return array(
+            return [
                 'form' => $form->createView(),
                 'displayedWords' => $displayedWords,
-            );
+            ];
         }
     }
 
@@ -246,7 +246,7 @@ class CourseController extends Controller
         $cursus = intval($source) === 2 ?
             $this->cursusManager->getOneCursusById($cursusId) :
             null;
-        $displayedWords = array();
+        $displayedWords = [];
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
@@ -256,14 +256,14 @@ class CourseController extends Controller
             $course
         );
 
-        return array(
+        return [
             'form' => $form->createView(),
             'course' => $course,
             'displayedWords' => $displayedWords,
             'source' => $source,
             'cursus' => $cursus,
             'cursusId' => $cursusId,
-        );
+        ];
     }
 
     /**
@@ -302,7 +302,7 @@ class CourseController extends Controller
 
             $message = $this->translator->trans(
                 'course_edition_confirm_msg',
-                array(),
+                [],
                 'cursus'
             );
             $session = $this->request->getSession();
@@ -311,7 +311,7 @@ class CourseController extends Controller
                 $this->router->generate('claro_cursus_tool_course_index') :
                 $this->router->generate(
                     'claro_cursus_course_management',
-                    array('course' => $course->getId(), 'cursusId' => $cursusId)
+                    ['course' => $course->getId(), 'cursusId' => $cursusId]
                 );
 
             return new RedirectResponse($route);
@@ -319,20 +319,20 @@ class CourseController extends Controller
             $cursus = intval($source) === 2 ?
                 $this->cursusManager->getOneCursusById($cursusId) :
                 null;
-            $displayedWords = array();
+            $displayedWords = [];
 
             foreach (CursusDisplayedWord::$defaultKey as $key) {
                 $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
             }
 
-            return array(
+            return [
                 'form' => $form->createView(),
                 'course' => $course,
                 'displayedWords' => $displayedWords,
                 'source' => $source,
                 'cursus' => $cursus,
                 'cursusId' => $cursusId,
-            );
+            ];
         }
     }
 
@@ -352,7 +352,7 @@ class CourseController extends Controller
 
         $message = $this->translator->trans(
             'course_deletion_confirm_msg',
-            array(),
+            [],
             'cursus'
         );
         $session = $this->request->getSession();
@@ -374,7 +374,7 @@ class CourseController extends Controller
      */
     public function courseDescriptionDisplayAction(Course $course)
     {
-        return array('description' => $course->getDescription());
+        return ['description' => $course->getDescription()];
     }
 
     /**
@@ -391,7 +391,7 @@ class CourseController extends Controller
      */
     public function courseManagementAction(Course $course, $cursusId = -1)
     {
-        $displayedWords = array();
+        $displayedWords = [];
         $cursus = $this->cursusManager->getOneCursusById($cursusId);
         $type = is_null($cursus) ? 'course' : 'cursus';
 
@@ -399,19 +399,19 @@ class CourseController extends Controller
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
         $sessions = $this->cursusManager->getSessionsByCourse($course);
-        $sessionsTab = array();
+        $sessionsTab = [];
 
         foreach ($sessions as $session) {
             $status = $session->getSessionStatus();
 
             if (!isset($sessionsTab[$status])) {
-                $sessionsTab[$status] = array();
+                $sessionsTab[$status] = [];
             }
             $sessionsTab[$status][] = $session;
         }
         $queues = $this->cursusManager->getCourseQueuesByCourse($course);
 
-        return array(
+        return [
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
             'type' => $type,
@@ -419,7 +419,7 @@ class CourseController extends Controller
             'course' => $course,
             'sessionsTab' => $sessionsTab,
             'queues' => $queues,
-        );
+        ];
     }
 
     /**
@@ -450,7 +450,7 @@ class CourseController extends Controller
             $session
         );
 
-        return array('form' => $form->createView(), 'course' => $course);
+        return ['form' => $form->createView(), 'course' => $course];
     }
 
     /**
@@ -462,7 +462,7 @@ class CourseController extends Controller
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Course:courseSessionCreateModalForm.html.twig")
      */
-    public function courseSessionCreateAction(Course $course, User $authenticatedUser)
+    public function courseSessionCreateAction(Course $course)
     {
         $session = new CourseSession();
         $form = $this->formFactory->create(
@@ -474,15 +474,28 @@ class CourseController extends Controller
         if ($form->isValid()) {
             $creationDate = new \DateTime();
             $session->setCreationDate($creationDate);
-            $this->cursusManager->createCourseSessionFromSession(
-                $session,
+            $this->cursusManager->createCourseSession(
                 $course,
-                $authenticatedUser
+                $session->getName(),
+                $session->getDescription(),
+                $session->getCursus(),
+                null,
+                $session->getStartDate(),
+                $session->getEndDate(),
+                $session->isDefaultSession(),
+                $session->getPublicRegistration(),
+                $session->getPublicUnregistration(),
+                $session->getRegistrationValidation(),
+                $session->getUserValidation(),
+                $session->getOrganizationValidation(),
+                $session->getMaxUsers(),
+                $session->getType(),
+                $session->getValidators()
             );
 
             return new JsonResponse('success', 200);
         } else {
-            return array('form' => $form->createView(), 'course' => $course);
+            return ['form' => $form->createView(), 'course' => $course];
         }
     }
 
@@ -502,7 +515,7 @@ class CourseController extends Controller
             $session
         );
 
-        return array('form' => $form->createView(), 'session' => $session);
+        return ['form' => $form->createView(), 'session' => $session];
     }
 
     /**
@@ -527,7 +540,7 @@ class CourseController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-            return array('form' => $form->createView(), 'session' => $session);
+            return ['form' => $form->createView(), 'session' => $session];
         }
     }
 
@@ -564,10 +577,10 @@ class CourseController extends Controller
         $sessionUsers = $this->cursusManager->getSessionUsersBySession($session);
         $sessionGroups = $this->cursusManager->getSessionGroupsBySession($session);
         $queues = $this->cursusManager->getSessionQueuesBySession($session);
-        $learners = array();
-        $tutors = array();
-        $learnersGroups = array();
-        $tutorsGroups = array();
+        $learners = [];
+        $tutors = [];
+        $learnersGroups = [];
+        $tutorsGroups = [];
 
         foreach ($sessionUsers as $sessionUser) {
             if ($sessionUser->getUserType() === 0) {
@@ -585,14 +598,14 @@ class CourseController extends Controller
             }
         }
 
-        return array(
+        return [
             'session' => $session,
             'learners' => $learners,
             'tutors' => $tutors,
             'learnersGroups' => $learnersGroups,
             'tutorsGroups' => $tutorsGroups,
             'queues' => $queues,
-        );
+        ];
     }
 
     /**
@@ -635,7 +648,7 @@ class CourseController extends Controller
             $max
         );
 
-        return array(
+        return [
             'session' => $session,
             'userType' => $userType,
             'users' => $users,
@@ -643,7 +656,7 @@ class CourseController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
-        );
+        ];
     }
 
     /**
@@ -666,7 +679,7 @@ class CourseController extends Controller
     ) {
         $results = $this->cursusManager->registerUsersToSession(
             $session,
-            array($user),
+            [$user],
             $userType
         );
 
@@ -685,7 +698,7 @@ class CourseController extends Controller
      */
     public function courseSessionUserUnregisterAction(CourseSessionUser $sessionUser)
     {
-        $this->cursusManager->unregisterUsersFromSession(array($sessionUser));
+        $this->cursusManager->unregisterUsersFromSession([$sessionUser]);
 
         return new JsonResponse('success', 200);
     }
@@ -730,7 +743,7 @@ class CourseController extends Controller
             $max
         );
 
-        return array(
+        return [
             'session' => $session,
             'groupType' => $groupType,
             'groups' => $groups,
@@ -738,7 +751,7 @@ class CourseController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
-        );
+        ];
     }
 
     /**
@@ -760,7 +773,7 @@ class CourseController extends Controller
         $groupType
     ) {
         $results = $this->cursusManager->registerGroupToSessions(
-            array($session),
+            [$session],
             $group,
             $groupType
         );
@@ -800,7 +813,7 @@ class CourseController extends Controller
         $confirmationEmail = $this->cursusManager->getConfirmationEmail();
 
         if (!is_null($confirmationEmail)) {
-            $users = array();
+            $users = [];
             $sessionUsers = $session->getSessionUsers();
 
             foreach ($sessionUsers as $sessionUser) {
@@ -869,7 +882,7 @@ class CourseController extends Controller
                 $title = str_replace('%end_date%', $session->getEndDate()->format('d-m-Y'), $title);
                 $content = str_replace('%end_date%', $session->getEndDate()->format('d-m-Y'), $content);
             }
-            $this->mailManager->send($title, $content, array($user));
+            $this->mailManager->send($title, $content, [$user]);
         }
 
         return new JsonResponse('success', 200);
@@ -891,7 +904,7 @@ class CourseController extends Controller
     ) {
         $user = $queue->getUser();
         $session = $queue->getSession();
-        $results = $this->cursusManager->registerUsersToSession($session, array($user), 0);
+        $results = $this->cursusManager->registerUsersToSession($session, [$user], 0);
 
         if ($results['status'] === 'success') {
             $this->cursusManager->deleteSessionQueue($queue);
@@ -933,10 +946,10 @@ class CourseController extends Controller
         $course = $queue->getCourse();
         $form = $this->formFactory->create(new CourseQueuedUserTransferType($course));
 
-        return array(
+        return [
             'form' => $form->createView(),
             'queue' => $queue,
-        );
+        ];
     }
 
     /**
@@ -961,10 +974,10 @@ class CourseController extends Controller
 
             return new JsonResponse($results, 200);
         } else {
-            return array(
+            return [
                 'form' => $form->createView(),
                 'queue' => $queue,
-            );
+            ];
         }
     }
 
@@ -983,7 +996,7 @@ class CourseController extends Controller
         $this->cursusManager->persistCourseSession($session);
 
         return new JsonResponse(
-            array('id' => $session->getId(), 'default' => $isDefault),
+            ['id' => $session->getId(), 'default' => $isDefault],
             200
         );
     }
@@ -1032,7 +1045,7 @@ class CourseController extends Controller
     {
         $form = $this->formFactory->create(new FileSelectType());
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -1053,7 +1066,7 @@ class CourseController extends Controller
 
         if (empty($file) || !$zip->open($file) || !$zip->getStream('courses.json')) {
             $form->get('archive')->addError(
-                new FormError($this->translator->trans('invalid_file', array(), 'cursus'))
+                new FormError($this->translator->trans('invalid_file', [], 'cursus'))
             );
         }
 
@@ -1090,7 +1103,7 @@ class CourseController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-            return array('form' => $form->createView());
+            return ['form' => $form->createView()];
         }
     }
 
@@ -1107,7 +1120,7 @@ class CourseController extends Controller
         if (!$this->authorization->isGranted('OPEN', $workspace)) {
             throw new AccessDeniedException();
         }
-        $results = array();
+        $results = [];
         $roles = $this->roleManager->getRolesByWorkspace($workspace);
 
         foreach ($roles as $role) {

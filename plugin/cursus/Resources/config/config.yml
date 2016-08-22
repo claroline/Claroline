@@ -15,7 +15,7 @@ plugin:
       default_width: 12
       default_height: 4
     - name: claroline_cursus_my_courses
-      is_configurable: false
+      is_configurable: true
       is_displayable_in_workspace: false
       is_displayable_in_desktop: true
       default_width: 12

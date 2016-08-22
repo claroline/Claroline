@@ -1,0 +1,43 @@
+{% extends "ClarolineCursusBundle::adminLayout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'claroline_cursus_tool' | trans({}, 'tools') }}
+{% endblock %}
+
+{% block section_content %}
+    <div id="cursus-management-panel" ng-app="CursusManagementModule" ng-cloak>
+        <div ncy-breadcrumb></div>
+        <div class="panel panel-default" ui-view>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/angular-ui-tree/dist/angular-ui-tree.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/angular-data-table/release/dataTable.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/angular-data-table/release/material.css') }}" />
+    <link rel="stylesheet" href="{{ asset('packages/angular-loading-bar/build/loading-bar.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('packages/angular-dragula/dist/dragula.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('packages/ng-table/dist/ng-table.css') }}" />
+    <link rel='stylesheet' href='{{ asset('packages/angular-bootstrap-colorpicker/css/colorpicker.min.css')}}'>
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecursus/css/management.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type='text/javascript' src="{{ asset('packages/angular/angular.min.js') }}"></script>
+    <script type='text/javascript' src="{{ hotAsset('dist/commons.js') }}"></script>
+    <script type='text/javascript' src="{{ asset('packages/angular-loading-bar/build/loading-bar.min.js') }}"></script>
+    <script type='text/javascript' src="{{ asset('packages/angular-dragula/dist/angular-dragula.min.js') }}"></script>
+    <script type='text/javascript' src="{{ asset('packages/ng-table/dist/ng-table.js') }}"></script>
+    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-management.js') }}"></script>
+
+    {% javascripts debug=false
+        'js/translations/agenda/*.js'
+        'js/translations/cursus/*.js'
+        'js/translations/tools/*.js'
+        %}<script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}

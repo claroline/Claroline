@@ -11,16 +11,16 @@
 
 namespace  Claroline\CoreBundle\Listener;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
-use Symfony\Component\Form\FormFactory;
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Event\CopyWidgetConfigurationEvent;
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
+use Claroline\CoreBundle\Event\CopyWidgetConfigurationEvent;
+use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Form\SimpleTextType;
 use Claroline\CoreBundle\Manager\SimpleTextManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Claroline\CoreBundle\Form\SimpleTextType;
+use Symfony\Component\Form\FormFactory;
 
 /**
  * @DI\Service
@@ -31,29 +31,25 @@ class SimpleTextWidgetListener
     private $formFactory;
     private $templating;
     private $om;
-    private $router;
 
     /**
      * @DI\InjectParams({
      *      "simpleTextManager" = @DI\Inject("claroline.manager.simple_text_manager"),
      *      "formFactory"       = @DI\Inject("form.factory"),
      *      "templating"        = @DI\Inject("templating"),
-     *      "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *      "router"            = @DI\Inject("router")
+     *      "om"                = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         SimpleTextManager $simpleTextManager,
         FormFactory $formFactory,
         TwigEngine $templating,
-        ObjectManager $om,
-        $router
+        ObjectManager $om
     ) {
         $this->simpleTextManager = $simpleTextManager;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->om = $om;
-        $this->router = $router;
     }
 
     /**
@@ -119,8 +115,6 @@ class SimpleTextWidgetListener
 
     private function replaceResourceLinks($content, $resourceInfos)
     {
-        $baseUrl = $this->router->getContext()->getBaseUrl();
-
         foreach ($resourceInfos['copies'] as $resource) {
             $type = $resource['original']->getResourceType()->getName();
 

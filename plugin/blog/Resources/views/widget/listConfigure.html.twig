@@ -10,17 +10,19 @@
     {% endstylesheets %}
 {% endblock %}
 
-<form name="blog_widegt_list_form" class="form-inline" action="{{ path("icap_blog_widget_list_configure", {'id': widgetInstance.id}) }}" method="post" {{ form_enctype(form) }} novalidate="novalidate">
+<form name="blog_widegt_list_form"
+      class="form-inline widget-content-config-form"
+      action="{{ path("icap_blog_widget_list_configure", {'id': widgetInstance.id}) }}"
+      method="post"
+      {{ form_enctype(form) }}
+      novalidate="novalidate"
+>
     <div class="panel-body">
         {{ form_errors(form) }}
         {{ form_widget(form.widgetListBlogs) }}
         <p>{{ 'display_for_list'|trans({}, 'widget') }}</p>
         {{ form_widget(form.widgetDisplayListBlogs) }}
         {{ form_rest(form) }}
-    </div>
-    <div class="panel-footer">
-        <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
-        <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
     </div>
 </form>
 

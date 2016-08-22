@@ -1,10 +1,5 @@
 plugin:
-
-  tools:
-    - name: innova_video_recorder_tool
-      class: video-camera
-      is_displayable_in_workspace: false
-      is_displayable_in_desktop: true
+  has_options: true
 
   resources:
     - class: Claroline\CoreBundle\Entity\Resource\File
