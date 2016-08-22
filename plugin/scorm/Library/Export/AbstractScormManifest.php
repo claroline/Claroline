@@ -7,14 +7,14 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 abstract class AbstractScormManifest
 {
     /**
-     * The Node of the primary resource of the package
+     * The Node of the primary resource of the package.
      *
      * @var ResourceNode
      */
     protected $node;
 
     /**
-     * The list of Resources (SCO) of the package
+     * The list of Resources (SCO) of the package.
      *
      * @var array
      */
@@ -34,7 +34,7 @@ abstract class AbstractScormManifest
 
         // Create Manifest container
         $this->xml = new \SimpleXMLElement('<manifest></manifest>');
-        $this->xml->addAttribute('identifier', 'scorm_' . $node->getId());
+        $this->xml->addAttribute('identifier', 'scorm_'.$node->getId());
 
         $this->addMetadata();
         $this->addOrganizations();
@@ -46,7 +46,7 @@ abstract class AbstractScormManifest
      *
      * @return string
      */
-    protected abstract function getSchemaVersion();
+    abstract protected function getSchemaVersion();
 
     /**
      * Dump manifest structure into a XML string.
@@ -92,8 +92,8 @@ abstract class AbstractScormManifest
 
         // Create the Resource item
         $item = $default->addChild('item');
-        $item->addAttribute('identifier', 'item_' . $this->node->getId());
-        $item->addAttribute('identifierref', 'resource_' . $this->node->getId());
+        $item->addAttribute('identifier', 'item_'.$this->node->getId());
+        $item->addAttribute('identifierref', 'resource_'.$this->node->getId());
         $item->addAttribute('isvisible', true);
 
         $item->addChild('title', $this->node->getName());
@@ -116,7 +116,7 @@ abstract class AbstractScormManifest
         $resourceTemplate = 'scos'.DIRECTORY_SEPARATOR.'resource_'.$resource['node']->getId().'.html';
 
         $resourceXML = $resourcesXML->addChild('resource');
-        $resourceXML->addAttribute('identifier',      'resource_' . $resource['node']->getId());
+        $resourceXML->addAttribute('identifier',      'resource_'.$resource['node']->getId());
         $resourceXML->addAttribute('type',            'webcontent');
         $resourceXML->addAttribute('adlcp:scormType', 'sco');
         $resourceXML->addAttribute('href',            $resourceTemplate);
@@ -132,7 +132,7 @@ abstract class AbstractScormManifest
             foreach ($files as $fileHref) {
                 $resourceXML
                     ->addChild('file')
-                    ->addAttribute('href', 'assets/' . $fileHref);
+                    ->addAttribute('href', 'assets/'.$fileHref);
             }
         }
 

@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Exports a Resource in Scorm format
+ * Exports a Resource in Scorm format.
  */
 class ScormExportCommand extends ContainerAwareCommand
 {
@@ -33,7 +33,7 @@ class ScormExportCommand extends ContainerAwareCommand
 
         /** @var ResourceNode $resourceNode */
         $resourceNode = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneBy([
-            'id' => $resourceId
+            'id' => $resourceId,
         ]);
 
         if (!$resourceNode) {
@@ -42,7 +42,7 @@ class ScormExportCommand extends ContainerAwareCommand
             return false;
         }
 
-        /** @var \Claroline\ScormBundle\Manager\ExportManager */
+        /* @var \Claroline\ScormBundle\Manager\ExportManager */
         $exporter = $this->getContainer()->get('claroline.scorm.export_manager');
 
         $version = $input->getOption('scorm-version');

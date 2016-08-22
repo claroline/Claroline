@@ -8,19 +8,19 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Claroline\ScormBundle\Library\Export\AbstractScormManifest;
 use Claroline\ScormBundle\Library\Export\Scorm12Manifest;
 use Claroline\ScormBundle\Library\Export\Scorm2004Manifest;
 use FOS\JsRoutingBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Create Scorm packages from Claroline resources
+ * Create Scorm packages from Claroline resources.
  *
  * @DI\Service("claroline.scorm.export_manager")
  */
@@ -50,13 +50,13 @@ class ExportManager
     /**
      * Constructor.
      *
-     * @param string $tmp
-     * @param string $rootDir
-     * @param RouterInterface $router
-     * @param Controller $jsRouterCtrl
+     * @param string           $tmp
+     * @param string           $rootDir
+     * @param RouterInterface  $router
+     * @param Controller       $jsRouterCtrl
      * @param StrictDispatcher $dispatcher
-     * @param ClaroUtilities $utilities
-     * @param ResourceManager $resourceManager
+     * @param ClaroUtilities   $utilities
+     * @param ResourceManager  $resourceManager
      *
      * @DI\InjectParams({
      *     "tmp"             = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
@@ -91,8 +91,8 @@ class ExportManager
      * Create a Scorm archive for a ResourceNode.
      *
      * @param ResourceNode $node
-     * @param string $locale
-     * @param string $scormVersion
+     * @param string       $locale
+     * @param string       $scormVersion
      *
      * @return \ZipArchive
      *
@@ -113,7 +113,7 @@ class ExportManager
 
         // Export the Resource and all it's sub-resources
         $exportedResources = $this->exportResource($resource, $locale);
-        
+
         // Create the manifest for the Scorm package
         if ('1.2' === $scormVersion) {
             $manifest = new Scorm12Manifest($node, $exportedResources);
@@ -130,7 +130,7 @@ class ExportManager
      * Export a Claroline Resource and all it's embed Resources.
      *
      * @param AbstractResource $resource
-     * @param string $locale
+     * @param string           $locale
      *
      * @return array - The list of exported resource
      */
@@ -167,7 +167,7 @@ class ExportManager
      * Dispatch export event for the Resource.
      *
      * @param AbstractResource $resource
-     * @param string $locale
+     * @param string           $locale
      *
      * @return ExportScormResourceEvent
      */
@@ -183,10 +183,10 @@ class ExportManager
     /**
      * Create SCORM package.
      *
-     * @param ResourceNode $node - The exported ResourceNode
-     * @param string $locale - THe locale to use for export
+     * @param ResourceNode          $node     - The exported ResourceNode
+     * @param string                $locale   - THe locale to use for export
      * @param AbstractScormManifest $manifest - The manifest of the SCORM package
-     * @param array $scos - The list of resources to include into the package
+     * @param array                 $scos     - The list of resources to include into the package
      *
      * @return \ZipArchive
      */
@@ -223,7 +223,7 @@ class ExportManager
             // Add translations
             if (!empty($sco['translation_domains'])) {
                 foreach ($sco['translation_domains'] as $domain) {
-                    $translationFile = 'js/translations/' . $domain . '/' . $locale . '.js';
+                    $translationFile = 'js/translations/'.$domain.'/'.$locale.'.js';
                     $this->copyToPackage($archive, 'translations/'.$domain.'.js', $translationFile);
                 }
             }
@@ -238,7 +238,7 @@ class ExportManager
      * Adds the claroline common assets and translations into the package.
      *
      * @param \ZipArchive $archive
-     * @param string $locale
+     * @param string      $locale
      */
     private function addCommons(\ZipArchive $archive, $locale)
     {
@@ -275,7 +275,7 @@ class ExportManager
 
         // Generate JS routes with FOSJSRoutingBundle
         $request = new Request([
-            'callback' => 'fos.Router.setData'
+            'callback' => 'fos.Router.setData',
         ]);
         $jsRoutes = $this->jsRouterCtrl->indexAction($request, 'js');
         $this->saveToPackage($archive, 'commons/routes.js', $jsRoutes->getContent());
@@ -291,13 +291,13 @@ class ExportManager
      * Copy file into the SCORM package.
      *
      * @param \ZipArchive $archive
-     * @param string $pathInArchive
-     * @param string $filePath
+     * @param string      $pathInArchive
+     * @param string      $filePath
      */
     private function copyToPackage(\ZipArchive $archive, $pathInArchive, $filePath)
     {
         $filePath = ltrim($filePath, '/\\');
-        $filePath = $this->webPath . DIRECTORY_SEPARATOR . $filePath;
+        $filePath = $this->webPath.DIRECTORY_SEPARATOR.$filePath;
 
         if (file_exists($filePath)) {
             $archive->addFile($filePath, $pathInArchive);
@@ -310,8 +310,8 @@ class ExportManager
      * Save content into the SCORM package.
      *
      * @param \ZipArchive $archive
-     * @param string $pathInArchive
-     * @param string $content
+     * @param string      $pathInArchive
+     * @param string      $content
      */
     private function saveToPackage(\ZipArchive $archive, $pathInArchive, $content)
     {

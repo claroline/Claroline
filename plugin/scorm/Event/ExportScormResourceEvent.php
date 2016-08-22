@@ -3,7 +3,6 @@
 namespace Claroline\ScormBundle\Event;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -60,7 +59,7 @@ class ExportScormResourceEvent extends Event implements DataConveyorEventInterfa
      * Constructor.
      *
      * @param AbstractResource $resource
-     * @param string $locale
+     * @param string           $locale
      */
     public function __construct(AbstractResource $resource, $locale)
     {
@@ -123,7 +122,7 @@ class ExportScormResourceEvent extends Event implements DataConveyorEventInterfa
      * Add a new asset file to include.
      *
      * @param string $packageName - Name of the asset in the SCORM package (with extension)
-     * @param string $webPath - Relative path to the file inside the `web` directory
+     * @param string $webPath     - Relative path to the file inside the `web` directory
      */
     public function addAsset($packageName, $webPath)
     {
