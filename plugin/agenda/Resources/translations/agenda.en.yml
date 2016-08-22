@@ -4,7 +4,7 @@ all_day: the whole day
 at: at
 cancel: Cancel
 close: Close
-confirm: 'Confirm modification ?'
+confirm: 'Do you want to confirm this change ?'
 date_invalid: 'An error occured. Please check that your event doesn''t end before it starts'
 day_: Day
 day:
@@ -30,7 +30,7 @@ error: 'An unexpected error occurred, please try again'
 event: Event
 export: 'Export events'
 filter_user: Filter by user
-filter_tasks: Filter the tasks
+filter_tasks: Filter by tasks
 filter_ws: Filter by workspace
 form:
     all_day: All day
@@ -92,7 +92,7 @@ prevYear: '<<'
 remove_event: Remove an event
 remove_event_confirm: Are you sure you want to remove this event ?
 start_date: 'Start date'
-show_task_only: Display only the tasks
+show_task_only: Only display the tasks
 task: Task
 task_done: Task done !
 task_not_done: Task not done !
