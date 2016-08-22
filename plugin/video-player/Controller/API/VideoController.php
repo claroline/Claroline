@@ -11,22 +11,22 @@
 
 namespace Claroline\VideoPlayerBundle\Controller\API;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\View;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Delete;
-use FOS\RestBundle\Controller\Annotations\Put;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\VideoPlayerBundle\Entity\Track;
 use Claroline\VideoPlayerBundle\Manager\VideoPlayerManager;
+use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @NamePrefix("api_")
@@ -141,7 +141,7 @@ class VideoController extends FOSRestController
 
     private function throwExceptionIfNotGranted(File $video, $permission)
     {
-        $collection = new ResourceCollection(array($video->getResourceNode()));
+        $collection = new ResourceCollection([$video->getResourceNode()]);
 
         if (!$this->authorization->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
