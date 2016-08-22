@@ -11,7 +11,10 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
@@ -19,6 +22,8 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -27,12 +32,15 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class WidgetManager
 {
+    use LoggableTrait;
+
     private $om;
     private $widgetDisplayConfigRepo;
     private $widgetInstanceRepo;
     private $widgetRepo;
     private $router;
     private $translator;
+    private $container;
 
     /**
      * Constructor.
@@ -40,17 +48,23 @@ class WidgetManager
      * @DI\InjectParams({
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "router"     = @DI\Inject("router"),
-     *     "translator" = @DI\Inject("translator")
+     *     "translator" = @DI\Inject("translator"),
+     *     "container"  = @DI\Inject("service_container")
      * })
      */
-    public function __construct(ObjectManager $om, RouterInterface $router, TranslatorInterface $translator)
-    {
+    public function __construct(
+        ObjectManager $om,
+        RouterInterface $router,
+        TranslatorInterface $translator,
+        ContainerInterface $container
+    ) {
         $this->om = $om;
         $this->widgetDisplayConfigRepo = $om->getRepository('ClarolineCoreBundle:Widget\WidgetDisplayConfig');
         $this->widgetInstanceRepo = $om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
         $this->widgetRepo = $om->getRepository('ClarolineCoreBundle:Widget\Widget');
         $this->router = $router;
         $this->translator = $translator;
+        $this->container = $container;
     }
 
     /**
@@ -104,15 +118,6 @@ class WidgetManager
     public function removeInstance(WidgetInstance $widgetInstance)
     {
         $this->om->remove($widgetInstance);
-        $this->om->flush();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $widgetInstance
-     */
-    public function insertWidgetInstance(WidgetInstance $widgetInstance)
-    {
-        $this->om->persist($widgetInstance);
         $this->om->flush();
     }
 
@@ -460,15 +465,15 @@ class WidgetManager
         WidgetHomeTabConfig $widgetHomeTabConfig = null,
         WidgetDisplayConfig $widgetDisplayConfig = null
     ) {
-        if (!is_null($widgetInstance)) {
+        if ($widgetInstance) {
             $this->om->persist($widgetInstance);
         }
 
-        if (!is_null($widgetHomeTabConfig)) {
+        if ($widgetHomeTabConfig) {
             $this->om->persist($widgetHomeTabConfig);
         }
 
-        if (!is_null($widgetDisplayConfig)) {
+        if ($widgetDisplayConfig) {
             $this->om->persist($widgetDisplayConfig);
         }
         $this->om->flush();
@@ -547,5 +552,123 @@ class WidgetManager
                 $executeQuery
             ) :
             [];
+    }
+
+    public function importTextFromCsv($file)
+    {
+        $data = file_get_contents($file);
+        $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
+        $lines = str_getcsv($data, PHP_EOL);
+        $textWidget = $this->om->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneByName('simple_text');
+        $this->om->startFlushSuite();
+        $i = 0;
+
+        foreach ($lines as $line) {
+            $values = str_getcsv($line, ';');
+            $code = $values[0];
+            $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code);
+            $name = $values[1];
+            $title = $values[2];
+            $width = isset($values[4]) ? $values[4] : 4;
+            $height = isset($values[5]) ? $values[5] : 3;
+            $tab = $this->om->getRepository('ClarolineCoreBundle:Home\HomeTab')->findOneBy(['workspace' => $workspace, 'name' => $name]);
+            $widgetInstance = $this->om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
+                ->findOneBy(['workspace' => $workspace, 'name' => $title]);
+
+            if (!$widgetInstance) {
+                $widgetInstance = $this->createWidgetInstance(
+                    $title,
+                    $textWidget,
+                    $tab,
+                    $workspace
+                );
+            } else {
+                $this->log("Widget {$title} already exists in workspace {$code}: Updating...");
+            }
+
+            $simpleTextConfig = $this->container->get('claroline.manager.simple_text_manager')->getTextConfig($widgetInstance);
+
+            if (!$simpleTextConfig) {
+                $simpleTextConfig = new SimpleTextConfig();
+                $simpleTextConfig->setWidgetInstance($widgetInstance);
+            }
+
+            $widgetDisplayConfigs = $widgetInstance->getWidgetDisplayConfigs();
+            $widgetDisplayConfig = $widgetDisplayConfigs[0];
+
+            if (!$widgetDisplayConfig) {
+                $widgetDisplayConfig = new WidgetDisplayConfig();
+                $widgetDisplayConfig->setWidgetInstance($widgetInstance);
+                $widgetDisplayConfig->setWorkspace($workspace);
+                $widgetDisplayConfig->setWidth($width);
+                $widgetDisplayConfig->setHeight($height);
+                $this->om->persist($widgetDisplayConfig);
+            }
+
+            $widgetDisplayConfig->setHeight($height);
+            $widgetDisplayConfig->setWidth($width);
+            $this->om->persist($widgetDisplayConfig);
+            $content = file_get_contents($values[3]);
+            $simpleTextConfig->setContent($content);
+            $this->om->persist($simpleTextConfig);
+
+            ++$i;
+
+            if ($i % 100 === 0) {
+                $this->om->forceFlush();
+                $this->om->clear();
+                $textWidget = $this->om->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneByName('simple_text');
+                $this->om->merge($textWidget);
+            }
+        }
+
+        $this->om->endFlushSuite();
+    }
+
+    public function createWidgetInstance(
+        $name,
+        Widget $widget,
+        HomeTab $homeTab,
+        Workspace $workspace = null,
+        $isAdmin = false,
+        $isLocked = false
+    ) {
+        $this->log("Create widget {$name} in {$workspace->getCode()}");
+        $widgetInstance = new WidgetInstance();
+        $widgetHomeTabConfig = new WidgetHomeTabConfig();
+
+        if ($workspace) {
+            $type = 'workspace';
+            $isDesktop = false;
+        } else {
+            $type = 'user';
+            $isDesktop = true;
+        }
+
+        $widgetInstance->setWorkspace($workspace);
+        $widgetInstance->setName($name);
+        $widgetInstance->setIsAdmin($isAdmin);
+        $widgetInstance->setIsDesktop($isDesktop);
+        $widgetInstance->setWidget($widget);
+        $widgetHomeTabConfig->setHomeTab($homeTab);
+        $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
+        $widgetHomeTabConfig->setWorkspace($workspace);
+        $widgetHomeTabConfig->setLocked($isLocked);
+        $widgetHomeTabConfig->setWidgetOrder(1);
+        $widgetHomeTabConfig->setType($type);
+        $this->om->persist($widgetInstance);
+        $this->om->persist($widgetHomeTabConfig);
+
+        return $widgetInstance;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

@@ -162,6 +162,7 @@ class UserManager
         $this->objectManager->startFlushSuite();
         $user->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $user->setEmailValidationHash($this->container->get('claroline.utilities.misc')->generateGuid());
+        $user->setOrganizations($organizations);
         $this->objectManager->persist($user);
         $publicUrl ? $user->setPublicUrl($publicUrl) : $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user, 0);
@@ -434,6 +435,12 @@ class UserManager
                 $groupName = null;
             }
 
+            if (isset($user[10])) {
+                $organizationName = trim($user[10]) === '' ? null : $user[10];
+            } else {
+                $organizationName = null;
+            }
+
             if ($modelName) {
                 $model = $this->objectManager
                     ->getRepository('Claroline\CoreBundle\Entity\Model\WorkspaceModel')
@@ -442,6 +449,15 @@ class UserManager
                 $model = null;
             }
 
+            if ($organizationName) {
+                $organizations = [$this->objectManager
+                    ->getRepository('Claroline\CoreBundle\Entity\Organization\Organization')
+                    ->findOneByName($organizationName), ];
+            } else {
+                $organizations = [];
+            }
+
+            $group = $groupName ? $this->groupManager->getGroupByName($groupName) : null;
             if ($groupName) {
                 $group = $this->groupManager->getGroupByNameAndScheduledForInsert($groupName);
 
@@ -466,7 +482,7 @@ class UserManager
             $newUser->setAuthentication($authentication);
             $newUser->setIsMailNotified($enableEmailNotifaction);
 
-            $this->createUser($newUser, $sendMail, $additionalRoles, $model, $username.uniqid());
+            $this->createUser($newUser, $sendMail, $additionalRoles, $model, $username.uniqid(), $organizations);
             $this->objectManager->persist($newUser);
             $returnValues[] = $firstName.' '.$lastName;
 
@@ -1637,6 +1653,18 @@ class UserManager
                     $this->log('Add default organization for user '.$user->getUsername());
                     $user->addOrganization($default);
                     $this->objectManager->persist($user);
+                    $detach[] = $user;
+
+                    if ($i % 250 === 0) {
+                        $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
+                        $this->objectManager->forceFlush();
+
+                        foreach ($detach as $el) {
+                            $this->objectManager->detach($el);
+                        }
+
+                        $detach = [];
+                    }
                 } else {
                     $this->log("Organization for user {$user->getUsername()} already exists");
                 }

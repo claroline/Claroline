@@ -424,8 +424,11 @@ class WorkspaceModelManager
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\User                $user
      */
-    private function duplicateRootDirectory(Workspace $source, Workspace $workspace, User $user)
-    {
+    private function duplicateRootDirectory(
+        Workspace $source,
+        Workspace $workspace,
+        User $user
+    ) {
         $rootDirectory = new Directory();
         $rootDirectory->setName($workspace->getName());
         $directoryType = $this->resourceManager->getResourceTypeByName('directory');
@@ -722,8 +725,11 @@ class WorkspaceModelManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $copy
      * @param array                                              $workspaceRoles
      */
-    private function duplicateRights(ResourceNode $resourceNode, ResourceNode $copy, array $workspaceRoles)
-    {
+    private function duplicateRights(
+        ResourceNode $resourceNode,
+        ResourceNode $copy,
+        array $workspaceRoles
+    ) {
         $rights = $resourceNode->getRights();
         $workspace = $resourceNode->getWorkspace();
 
@@ -755,8 +761,7 @@ class WorkspaceModelManager
         $modelWorkspace = $model->getWorkspace();
         $resourcesModels = $model->getResourcesModel();
         $homeTabs = $model->getHomeTabs();
-        $resourcesInfos = [];
-
+        $resourcesInfos = ['copies' => []];
         $this->duplicateWorkspaceRoles($modelWorkspace, $workspace, $user);
         $this->duplicateOrderedTools($modelWorkspace, $workspace);
         $rootDirectory = $this->duplicateRootDirectory($modelWorkspace, $workspace, $user);

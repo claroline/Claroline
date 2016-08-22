@@ -399,6 +399,7 @@ group_configuration: 'Configuration du groupe'
 group_creation: 'Création d''un groupe'
 group_parameter: 'Paramètres du groupe'
 group_invalid: 'Le groupe %group% n''est pas valide à la ligne %line%.'
+organization_invalid: 'L''organization %organization% n''est pas valide à la ligne %line%.'
 groups: Groupes
 groups_list: 'Liste des groupes'
 groups_per_page: 'Groupes par page'
@@ -1316,6 +1317,10 @@ field_edited: Champ édité avec succès
 field_removed: Champ supprimé avec succès
 panel_roles_edited: Rôles du panel édité avec succès
 profile_preference_edited: Préférences du profil éditées avec succès
+organization: Organisation
+workspace_not_exists: L'espace d'activité %code% n'existe pas à la ligne %line%.
+tab_not_exists: L'onglet %tab% n'existe pas à la ligne %line%.
+file_not_exists: Le fichier %file% n'existe pas à la ligne %line%.
 use_honeypot: Activer le honeypot pour les anonymes (anti-spam)
 mandatory: Obligatoire
 leave_empty: Laissez ce champ vide pour prouver que vous n'aide pas un robot.

@@ -1864,6 +1864,45 @@ class ResourceManager
         $this->om->flush();
     }
 
+    public function importDirectoriesFromCsv($file)
+    {
+        $data = file_get_contents($file);
+        $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
+        $lines = str_getcsv($data, PHP_EOL);
+        $this->om->startFlushSuite();
+        $i = 0;
+        $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('directory');
+
+        foreach ($lines as $line) {
+            $values = str_getcsv($line, ';');
+            $code = $values[0];
+            $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code);
+
+            $name = $values[1];
+            $directory = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneBy(
+                ['workspace' => $workspace, 'name' => $name, 'resourceType' => $resourceType]
+            );
+            if (!$directory) {
+                $directory = new Directory();
+                $directory->setName($name);
+                $this->log("Create directory {$name} for workspace {$code}");
+                $this->create($directory, $resourceType, $workspace->getCreator(), $workspace, $this->getWorkspaceRoot($workspace));
+                ++$i;
+            } else {
+                $this->log("Directory {$name} already exists for workspace {$code}");
+            }
+
+            if ($i % 100 === 0) {
+                $this->om->forceFlush();
+                $this->om->clear();
+                $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('directory');
+                $this->om->merge($resourceType);
+            }
+        }
+
+        $this->om->endFlushSuite();
+    }
+
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
