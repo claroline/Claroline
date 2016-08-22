@@ -2,14 +2,14 @@
 
 namespace FormaLibre\OfficeConnectBundle\Controller;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use FormaLibre\OfficeConnectBundle\Library\O365ResponseUser;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use FormaLibre\OfficeConnectBundle\Library\O365ResponseUser;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  *  @author Nathan Brasseur <nbr@eonix.be>
@@ -70,6 +70,7 @@ class OfficeConnectController extends Controller
         $providerKey = 'main';
         $token = new UsernamePasswordToken($userLoaded, $userLoaded->getPassword(), $providerKey, $userLoaded->getRoles());
         $securityContext->setToken($token);
+        $userManager->logUser($user);
 
         return new RedirectResponse($this->generateUrl('claro_desktop_open'));
     }
