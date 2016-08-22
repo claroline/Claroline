@@ -442,7 +442,18 @@ class UserManager
                 $model = null;
             }
 
-            $group = $groupName ? $this->groupManager->getGroupByName($groupName) : null;
+            if ($groupName) {
+                $group = $this->groupManager->getGroupByNameAndScheduledForInsert($groupName);
+
+                if (!$group) {
+                    $group = new Group();
+                    $group->setName($groupName);
+                    $group = $this->groupManager->insertGroup($group);
+                }
+            } else {
+                $group = null;
+            }
+
             $newUser = new User();
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);

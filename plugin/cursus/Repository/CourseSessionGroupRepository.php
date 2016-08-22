@@ -82,11 +82,12 @@ class CourseSessionGroupRepository extends EntityRepository
         $dql = '
             SELECT csg
             FROM Claroline\CursusBundle\Entity\CourseSessionGroup csg
-            WHERE csg.group = :group
+            JOIN csg.group g
+            WHERE g.name = :group
             ORDER BY csg.registrationDate DESC
         ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('group', $group);
+        $query->setParameter('group', $group->getName());
 
         return $executeQuery ? $query->getResult() : $query;
     }

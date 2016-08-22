@@ -274,12 +274,13 @@ class CursusRepository extends NestedTreeRepository
             WHERE EXISTS (
                 SELECT cg
                 FROM Claroline\CursusBundle\Entity\CursusGroup cg
-                WHERE cg.group = :group
+                JOIN cg.group g
+                WHERE g.name = :group
                 AND cg.cursus = c
             )
         ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('group', $group);
+        $query->setParameter('group', $group->getName());
 
         return $executeQuery ? $query->getResult() : $query;
     }
