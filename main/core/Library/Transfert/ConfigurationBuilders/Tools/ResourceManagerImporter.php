@@ -86,7 +86,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public function supports($type)
     {
-        return $type == 'yml' ? true : false;
+        return $type === 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -100,7 +100,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $importer = $this->getImporterByName($item['item']['type']);
 
                 if (!$importer && $this->env === 'dev') {
-                    //throw new InvalidConfigurationException('The importer ' . $item['item']['type'] . ' does not exist');
+                    throw new InvalidConfigurationException('The importer '.$item['item']['type'].' does not exist');
                 }
 
                 if ($importer && isset($item['item']['data'])) {
@@ -123,7 +123,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
          * The implementation will change later (if we need to change the perms of
          * ROLE_USER and ROLE_ANONYMOUS) but it's easier to code it that way.
          */
-        $createdResources = [];
 
         if ($fullImport) {
             $directories[$data['data']['root']['uid']] = $root;
@@ -300,8 +299,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
             }
         }
-
-        //throw new \Exception('boom');
     }
 
     public function export(Workspace $workspace, array &$_files, $object)
@@ -309,7 +306,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $_data = [];
         //first we get the root
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $rootRights = $root->getRights();
         $_data['root'] = [
             'uid' => $root->getId(),
             'roles' => $this->getPermsArray($root),
@@ -717,9 +713,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $this->getCreationRightsArray($role['role']['rights']['create']) :
             [];
 
-        $uow = $this->om->getUnitOfWork();
-        $map = $uow->getIdentityMap();
-
         //is it in the identity map ?
         $createdRights = $this->rightManager->getRightsFromIdentityMapOrScheduledForInsert(
             $role['role']['name'],
@@ -758,7 +751,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         if (isset($data['data']['items'])) {
             foreach ($data['data']['items'] as $item) {
                 foreach ($this->getListImporters() as $importer) {
-                    if ($importer->getName() == $item['item']['type']) {
+                    if ($importer->getName() === $item['item']['type']) {
                         $resourceImporter = $importer;
                     }
                 }
