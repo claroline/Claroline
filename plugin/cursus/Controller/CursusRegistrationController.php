@@ -17,16 +17,17 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
+use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CursusRegistrationController extends Controller
 {
@@ -80,7 +81,7 @@ class CursusRegistrationController extends Controller
     {
         $this->checkToolAccess();
 
-        return array();
+        return [];
     }
 
     /**
@@ -96,8 +97,8 @@ class CursusRegistrationController extends Controller
     {
         $this->checkToolAccess();
         $sessionUsers = $this->cursusManager->getSessionUsersByUser($user);
-        $tutorSessions = array();
-        $learnerSessions = array();
+        $tutorSessions = [];
+        $learnerSessions = [];
 
         foreach ($sessionUsers as $sessionUser) {
             $type = $sessionUser->getUserType();
@@ -105,28 +106,28 @@ class CursusRegistrationController extends Controller
             $course = $session->getCourse();
             $courseCode = $course->getCode();
 
-            if ($type == 0) {
+            if ($type === CourseSessionUser::LEARNER) {
                 if (!isset($learnerSessions[$courseCode])) {
-                    $learnerSessions[$courseCode] = array();
+                    $learnerSessions[$courseCode] = [];
                     $learnerSessions[$courseCode]['course'] = $course;
-                    $learnerSessions[$courseCode]['sessions'] = array();
+                    $learnerSessions[$courseCode]['sessions'] = [];
                 }
                 $learnerSessions[$courseCode]['sessions'][] = $sessionUser;
-            } elseif ($type == 1) {
+            } elseif ($type === CourseSessionUser::TEACHER) {
                 if (!isset($tutorSessions[$courseCode])) {
-                    $tutorSessions[$courseCode] = array();
+                    $tutorSessions[$courseCode] = [];
                     $tutorSessions[$courseCode]['course'] = $course;
-                    $tutorSessions[$courseCode]['sessions'] = array();
+                    $tutorSessions[$courseCode]['sessions'] = [];
                 }
                 $tutorSessions[$courseCode]['sessions'][] = $sessionUser;
             }
         }
 
-        return array(
+        return [
             'user' => $user,
             'tutorSessions' => $tutorSessions,
             'learnerSessions' => $learnerSessions,
-        );
+        ];
     }
 
     /**
@@ -144,11 +145,11 @@ class CursusRegistrationController extends Controller
         $this->checkToolAccess();
         $sessions = $this->cursusManager->getSessionsByUserAndType($user, intval($type));
 
-        return array(
+        return [
             'user' => $user,
             'type' => $type,
             'sessions' => $sessions,
-        );
+        ];
     }
 
     /**
@@ -164,8 +165,8 @@ class CursusRegistrationController extends Controller
     {
         $this->checkToolAccess();
         $sessionGroups = $this->cursusManager->getSessionGroupsByGroup($group);
-        $tutorSessions = array();
-        $learnerSessions = array();
+        $tutorSessions = [];
+        $learnerSessions = [];
 
         foreach ($sessionGroups as $sessionGroup) {
             $type = $sessionGroup->getGroupType();
@@ -173,28 +174,28 @@ class CursusRegistrationController extends Controller
             $course = $session->getCourse();
             $courseCode = $course->getCode();
 
-            if ($type == 0) {
+            if ($type === 0) {
                 if (!isset($learnerSessions[$courseCode])) {
-                    $learnerSessions[$courseCode] = array();
+                    $learnerSessions[$courseCode] = [];
                     $learnerSessions[$courseCode]['course'] = $course;
-                    $learnerSessions[$courseCode]['sessions'] = array();
+                    $learnerSessions[$courseCode]['sessions'] = [];
                 }
                 $learnerSessions[$courseCode]['sessions'][] = $sessionGroup;
-            } elseif ($type == 1) {
+            } elseif ($type === 1) {
                 if (!isset($tutorSessions[$courseCode])) {
-                    $tutorSessions[$courseCode] = array();
+                    $tutorSessions[$courseCode] = [];
                     $tutorSessions[$courseCode]['course'] = $course;
-                    $tutorSessions[$courseCode]['sessions'] = array();
+                    $tutorSessions[$courseCode]['sessions'] = [];
                 }
                 $tutorSessions[$courseCode]['sessions'][] = $sessionGroup;
             }
         }
 
-        return array(
+        return [
             'group' => $group,
             'tutorSessions' => $tutorSessions,
             'learnerSessions' => $learnerSessions,
-        );
+        ];
     }
 
     /**
@@ -212,11 +213,11 @@ class CursusRegistrationController extends Controller
         $this->checkToolAccess();
         $sessions = $this->cursusManager->getSessionsByGroupAndType($group, intval($type));
 
-        return array(
+        return [
             'group' => $group,
             'type' => $type,
             'sessions' => $sessions,
-        );
+        ];
     }
 
     /**
@@ -234,12 +235,12 @@ class CursusRegistrationController extends Controller
         $this->checkToolAccess();
         $sessionsDatas = $this->cursusManager->getSessionsDatas($search, true, $page, $max);
 
-        return array(
+        return [
             'sessionsDatas' => $sessionsDatas,
             'search' => $search,
             'page' => $page,
             'max' => $max,
-        );
+        ];
     }
 
     /**
@@ -258,7 +259,7 @@ class CursusRegistrationController extends Controller
     public function sessionsRegisterAction(User $user, $type, array $sessions)
     {
         $this->checkToolAccess();
-        $results = $this->cursusManager->registerUsersToSessions($sessions, array($user), $type);
+        $results = $this->cursusManager->registerUsersToSessions($sessions, [$user], $type);
 
         if ($results['status'] === 'failed') {
             $datas = $results['datas'];
@@ -269,12 +270,12 @@ class CursusRegistrationController extends Controller
                     'error',
                     $this->translator->trans(
                         'session_not_enough_place_msg',
-                        array(
+                        [
                             '%courseTitle%' => $data['courseTitle'],
                             '%courseCode%' => $data['courseCode'],
                             '%sessionName%' => $data['sessionName'],
                             '%remainingPlaces%' => $data['remainingPlaces'],
-                        ),
+                        ],
                         'cursus'
                     )
                 );
@@ -284,7 +285,7 @@ class CursusRegistrationController extends Controller
         return new RedirectResponse(
             $this->router->generate(
                 'claro_cursus_user_sessions_management',
-                array('user' => $user->getId())
+                ['user' => $user->getId()]
             )
         );
     }
@@ -316,12 +317,12 @@ class CursusRegistrationController extends Controller
                     'error',
                     $this->translator->trans(
                         'session_not_enough_place_msg',
-                        array(
+                        [
                             '%courseTitle%' => $data['courseTitle'],
                             '%courseCode%' => $data['courseCode'],
                             '%sessionName%' => $data['sessionName'],
                             '%remainingPlaces%' => $data['remainingPlaces'],
-                        ),
+                        ],
                         'cursus'
                     )
                 );
@@ -331,7 +332,7 @@ class CursusRegistrationController extends Controller
         return new RedirectResponse(
             $this->router->generate(
                 'claro_cursus_group_sessions_management',
-                array('group' => $group->getId())
+                ['group' => $group->getId()]
             )
         );
     }
@@ -360,7 +361,7 @@ class CursusRegistrationController extends Controller
             'success',
             $this->translator->trans(
                 'course_request_confirmation_success',
-                array('%courseTitle%' => $course->getTitle()),
+                ['%courseTitle%' => $course->getTitle()],
                 'cursus'
             )
         );
@@ -395,7 +396,7 @@ class CursusRegistrationController extends Controller
             'success',
             $this->translator->trans(
                 'session_request_confirmation_success',
-                array('%courseTitle%' => $course->getTitle(), '%sessionName%' => $session->getName()),
+                ['%courseTitle%' => $course->getTitle(), '%sessionName%' => $session->getName()],
                 'cursus'
             )
         );

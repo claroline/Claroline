@@ -38,15 +38,14 @@ class CourseSessionGroupRepository extends EntityRepository
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
-    public function findSessionGroupsBySession(
-        CourseSession $session,
-        $executeQuery = true
-    ) {
+    public function findSessionGroupsBySession(CourseSession $session, $executeQuery = true)
+    {
         $dql = '
             SELECT csg
             FROM Claroline\CursusBundle\Entity\CourseSessionGroup csg
+            JOIN csg.group g
             WHERE csg.session = :session
-            ORDER BY csg.registrationDate DESC
+            ORDER BY g.name ASC
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('session', $session);
@@ -83,11 +82,12 @@ class CourseSessionGroupRepository extends EntityRepository
         $dql = '
             SELECT csg
             FROM Claroline\CursusBundle\Entity\CourseSessionGroup csg
-            WHERE csg.group = :group
+            JOIN csg.group g
+            WHERE g.name = :group
             ORDER BY csg.registrationDate DESC
         ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('group', $group);
+        $query->setParameter('group', $group->getName());
 
         return $executeQuery ? $query->getResult() : $query;
     }

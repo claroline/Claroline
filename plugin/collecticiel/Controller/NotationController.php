@@ -18,24 +18,24 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class NotationController extends DropzoneBaseController
 {
     /**
-     * @Route(
+     *@Route(
      *      "/add/notation",
      *      name="innova_collecticiel_add_notation",
      *      options={"expose"=true}
      * )
-     * @Template()
+     *@Template()
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function AddNotationForDocsAction()
+    public function addNotationForDocsAction()
     {
 
         // Récupération de l'ID du document
         $documentId = $this->get('request')->query->get('documentId');
         $dropzoneId = $this->get('request')->query->get('dropzoneId');
-        $note = $this->get('request')->query->get('note');
+        $note = (int) $this->get('request')->query->get('note');
         $appreciation = $this->get('request')->query->get('appreciation');
-        $recordOrTransmit = $this->get('request')->query->get('recordOrTransmit');
+        $recordOrTransmit = (int) $this->get('request')->query->get('recordOrTransmit');
 
         $em = $this->getDoctrine()->getManager();
         $dropzone = $em->getRepository('InnovaCollecticielBundle:Dropzone')->find($dropzoneId);
@@ -61,7 +61,6 @@ class NotationController extends DropzoneBaseController
                                 'dropzone' => $dropzone->getId(),
                             ]
                         );
-
         if ($recordOrTransmit === 0) {
             if (!empty($notation)) {
                 $notation[0]->setNote($note);
@@ -157,15 +156,17 @@ class NotationController extends DropzoneBaseController
     }
 
     /**
-     * @Route(
+     *@Route(
      *      "/document/{documentId}/dropzone/{dropzoneId}",
      *      name="innova_collecticiel_validate_transmit_evaluation",
      *      requirements={"documentId" = "\d+", "dropzoneId" = "\d+"},
      *      options={"expose"=true}
      * )
-     * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
-     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "dropzoneId"})
-     * @Template()
+     *@ParamConverter("document",
+     * class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
+     *@ParamConverter("dropzone",
+     * class="InnovaCollecticielBundle:Dropzone", options={"id" = "dropzoneId"})
+     *@Template()
      */
     public function ajaxValidateTransmitEvaluationDocumentAction(Document $document, Dropzone $dropzone)
     {
@@ -174,9 +175,12 @@ class NotationController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
 
         // Recherche en base des données du document à mettre à jour
-        $document = $em->getRepository('InnovaCollecticielBundle:Document')->find($document->getId());
-
-        $dropzone = $em->getRepository('InnovaCollecticielBundle:DropZone')->find($dropzone->getId());
+        $document
+            = $em->getRepository('InnovaCollecticielBundle:Document')
+                ->find($document->getId());
+        $dropzone
+            = $em->getRepository('InnovaCollecticielBundle:DropZone')
+                ->find($dropzone->getId());
 
         // Recherche des critères de la notation
         $notation = $em->getRepository('InnovaCollecticielBundle:Notation')

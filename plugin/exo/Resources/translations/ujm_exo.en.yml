@@ -13,6 +13,7 @@ after_the_last_attempt: After the last attempt
 alert_ending: Are you sure you want to finish ? (You can't alter your answers anymore)
 all: All
 allow_to_edit: Allow to edit
+allow_test_exit: Allow test exit
 all_question: All the questions
 all_step: All the steps
 already: This question is already shared with this user
@@ -202,6 +203,7 @@ less_information: Less information
 list: List
 list_question: List of question
 lock_attempt: Lock attempt
+lock_exercise: Verrouiller l'exercice
 long: Long
 
 # M
@@ -214,6 +216,7 @@ matching: Association
 matching_creation: Association creation
 matching_edition: Association edition
 matching_value: Type of associative question
+maximum_attempts: Maximum number of attempts
 maximum_tries: Maximum number of tries
 meaning_measure_difficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
 metadata_visible:      Display exercise information
@@ -320,8 +323,10 @@ question_graphic_set_pointers: Click on the picture to place a pointer
 question_graphic_nb_pointers: "{0} There is no more pointer to place on the picture.|{1} There is still %count% pointer to place on the picture.|]1,Inf[ There are still %count% pointers to place on the picture."
 
 # R
+random_picking: Random picking
 random_steps: Random order of steps
 random_questions: Random order of questions
+random_steps_order: Random order of steps
 raz: => To reset all pointers' position, press "c".
 square: square
 remove_advanced_edition: Simple edition
@@ -339,6 +344,7 @@ save: Save
 save_order: Save the new order
 score: Score
 score_answer: Points for this answer
+score_displaying: Score displaying
 score_list_question: Score and list of questions
 score_error: Be careful, score must be a number
 score_max : Score maximum possible
@@ -362,6 +368,7 @@ shared_with: Shared with
 short: Short
 show: Show
 show_instructions: Show instructions
+signing: Signing
 size: Size
 start_again: Start again
 start_date: Start date

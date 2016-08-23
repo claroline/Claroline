@@ -1,0 +1,91 @@
+<div class="modal-header">
+    <button type="button" class="close" data-ng-click="modalCtrl.close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">{{'dialog_region_configure' | trans:{}:'media_resource'}}</h4>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-horizontal">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" data-ng-model="modalCtrl.current.helps.loop" name="loop" value="loop">
+                        {{'region_config_allow_loop' | trans:{}:'media_resource'}}
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" data-ng-model="modalCtrl.current.helps.backward" name="backward" value="backward">
+                        {{'region_config_allow_bwb' | trans:{}:'media_resource'}}
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" data-ng-model="modalCtrl.current.helps.rate" name="rate" value="rate">
+                        {{'region_config_allow_rate' | trans:{}:'media_resource'}}
+                    </label>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>{{'region_config_help_texts' | trans:{}:'media_resource'}}</h4>
+                        <div data-ng-repeat="item in modalCtrl.current.helps.helpTexts">
+                          <label for="text_{{$index}}">{{'region_config_help_text' | trans:{}:'media_resource'}}{{$index + 1}}</label>
+                          <input
+                              id="text_{{$index}}"
+                              type="text"
+                              placeholder="{{'region_config_help_texts_placeholder' | trans:{}:'media_resource'}}"
+                              class="form-control margin-bottom-sx" data-ng-model="item.text">
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>{{'region_config_help_links' | trans:{}:'media_resource'}}
+                            &nbsp;
+                            <small>{{'region_config_help_links_small' | trans:{}:'media_resource'}}</small>
+                        </h4>
+                        <div data-ng-repeat="item in modalCtrl.current.helps.helpLinks">
+                          <label for="url_{{$index}}">{{'region_config_help_link' | trans:{}:'media_resource'}}{{$index + 1}}</label>
+                          <input
+                              id="url_{{$index}}"
+                              type="url"
+                              pattern="https?://[a-z0-9\-_]+(\.[a-z0-9\-_]+)+([a-z0-9\-\.,@\?^=%&;:/~\+#]*[a-z0-9\-@\?^=%&;/~\+#])?"
+                              class="form-control margin-bottom-sx"
+                              data-ng-model="item.url"
+                              name="modal-help-links[]"
+                              placeholder="{{'region_config_help_links_placeholder' | trans:{}:'media_resource'}}">
+                        </div>
+
+                    </div>
+                </div>
+                <hr>
+                <h4>{{'region_config_help_region_title'|trans:{}:'media_resource'}}</h4>
+                <div class="row">
+                    <div class="col-md-10">
+                        <select class="form-control" id="select-help-related-region" data-ng-model="modalCtrl.selected" data-ng-change="modalCtrl.updateRelatedRegion()">
+                            <option value="">{{'none' |trans:{}:'media_resource'}}</option>
+                            <option value="{{item.uuid}}" data-ng-selected="{{current.helps.helpRegionUuid == item.uuid}}" data-ng-if="item.uuid !== current.uuid" data-ng-repeat="item in modalCtrl.regions">
+                                {{item.start | secondsToHms}}
+                                -
+                                {{item.end | secondsToHms}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button data-ng-disabled="modalCtrl.selected === ''" class="btn btn-default" data-ng-click="modalCtrl.play()" role="button" type="button" id="btn-help-related-region-play">
+                            <i class="fa fa-play"></i>
+                            /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="modalCtrl.close()">{{'close' | trans:{}:'media_resource'}}</button>
+</div>

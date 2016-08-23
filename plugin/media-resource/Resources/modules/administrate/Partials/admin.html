@@ -1,0 +1,230 @@
+<!-- PANEL HEADER -->
+<div class="panel-heading clearfix">
+    <h3 class="panel-title pull-left">
+        {{$ctrl.resource.name}}
+    </h3>
+    <a href="{{ 'innova_media_resource_open' | path:{'workspaceId': $ctrl.resource.workspaceId, 'id':$ctrl.resource.id} }}" title="{{'media_resource_open' | trans :{}:'media_resource'}}" class="btn btn-default fa fa-eye pull-right"></a>
+</div>
+<div class="panel-body">
+    <!-- options for the resource -->
+    <div data-ng-if="$ctrl.httpSuccess" class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{ 'resource_update_success' | trans:{}:'media_resource'}}
+    </div>
+    <div data-ng-if="$ctrl.httpError" class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{ 'resource_update_error' | trans:{}:'media_resource'}}
+    </div>
+    <!-- options for the resource -->
+    <div class="panel panel-primary options-panel">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left">{{'options_panel_title' | trans :{}:'media_resource'}}</h3>
+            <button type="button" role="button" title="{{'show_hide_options_panel' | trans:{}:'resource_form'}}" class="btn btn-default fa fa-chevron-up pull-right" data-ng-click="$ctrl.togglePanel($event)"></button>
+        </div>
+        <div class="panel-body">
+            <!-- CHOOSE PLAY MODE -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="media_resource_options_mode">
+                    {{'options_form_view_mode' | trans:{}:'resource_form'}}
+                    <button popover-append-to-body="true" popover-placement="right" uib-popover-template="$ctrl.popoverPlayersTplUrl" title="{{'popover_button_title' | trans:{}:'media_resource'}}" popover-title="{{'popover_players_popover_title' | trans:{}:'media_resource'}}" type="button" class="btn btn-default fa fa-info"></button>
+
+                </label>
+                <div class="col-sm-10">
+                    <select class="form-control" data-ng-change="$ctrl.optionsModeChanged()" data-ng-model="$ctrl.resource.options.mode">
+                        <option data-ng-repeat="mode in $ctrl.modes" value="{{mode.value}}">{{mode.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <!-- SHOW TEXT TRANSCRIPTION OPTION -->
+            <div class="form-group" data-ng-show="$ctrl.resource.options.mode == 'free'">
+                <label class="col-sm-2 control-label" for="media_resource_options_showTextTranscription">
+                    {{'options_form_enable_text_transcription' | trans:{}:'resource_form'}}
+                </label>
+                <div class="col-sm-10">
+                    <input type="checkbox" data-ng-model="$ctrl.resource.options.showTextTranscription">
+                </div>
+            </div>
+            <hr>
+            <!-- TTS LANGUAGE -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="media_resource_options_ttsLanguage">
+                    {{'options_form_tts_language' | trans:{}:'resource_form'}}
+                </label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="" data-ng-model="$ctrl.resource.options.lang">
+                        <option data-ng-repeat="lang in $ctrl.langs" value="{{lang.value}}">{{lang.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- resource edition -->
+    <div class="panel panel-primary">
+        <div class="panel-heading"></div>
+        <div class="panel-body">
+            <!-- timeline + waveform + minimap -->
+            <div class="row media-container">
+                <div class="col-md-12">
+                    <div id="audio-player">
+                        <div id="wave-timeline"></div>
+                        <div id="waveform">
+                            <div class="progress progress-striped active" id="progress-bar">
+                                <div class="progress-bar progress-bar-info"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <!-- main controls buttons -->
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="btn-group">
+                        <button type="button" role="button" class="btn btn-default" data-ng-click="$ctrl.backward()" title="{{'move_backward' | trans:{}:'media_resource'}}">
+                            <i class="fa fa-step-backward"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" data-ng-click="$ctrl.play()" title="{{'play_pause' | trans:{}:'media_resource'}}">
+                            <i class="fa fa-play"></i>
+                            /
+                            <i class="fa fa-pause"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" data-ng-click="$ctrl.playRegion()" title="{{'play_current_region' | trans:{}:'media_resource'}}">
+                            &nbsp;|-&nbsp;<i class="fa fa-play"></i>&nbsp;-|&nbsp;
+                        </button>
+                        <button type="button" class="btn btn-default" data-ng-click="$ctrl.forward()" title="{{'move_forward' | trans:{}:'media_resource'}}">
+                            <i class="fa fa-step-forward"></i>
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-warning" title="{{'add_marker' | trans:{}:'media_resource'}}" data-ng-click="$ctrl.mark()">
+                            <i class="fa fa-flag"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" data-ng-click="$ctrl.help()" title="{{'region_help_preview' | trans:{}:'media_resource'}}">
+                            <i class="fa fa-question"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" data-ng-click="$ctrl.zip()" title="{{'resource_zip_export' | trans:{}:'media_resource'}}">
+                            <i class="fa fa-download"></i>
+                        </button>
+                        <button type="button" role="button" class="btn btn-primary" data-ng-click="$ctrl.save()" title="{{ 'media_resource_save'|trans:{}:'media_resource'}}">
+                            <i class="fa fa-save"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <!-- regions -->
+            <div class="row">
+                <div class="col-md-12 text-center regions-container">
+                    <div class="row regions-titles">
+                        <div class="col-xs-2 text-center">
+                            <b>{{'region_list_start_end_title' | trans:{}:'media_resource'}}</b>
+                        </div>
+                        <div class="col-xs-7">
+                            <b>{{'region_list_transcription_title' | trans:{}:'media_resource'}}</b>
+                            <button uib-popover-template="$ctrl.popoverTranscriptionTplUrl" title="{{'popover_button_title' | trans:{}:'media_resource'}}" popover-title="{{'popover_transcription_popover_title' | trans:{}:'media_resource'}}" type="button" class="btn btn-default fa fa-info"></button>
+                        </div>
+                        <div class="col-xs-1 text-center">
+                            <b>{{'region_list_number_title' | trans:{}:'media_resource'}}</b>
+                        </div>
+                        <div class="col-xs-2 text-center">
+                            <b>{{'region_list_actions_title' | trans:{}:'media_resource'}}</b>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row region" data-uuid="{{region.uuid}}" data-ng-repeat="region in $ctrl.resource.regions | orderBy : 'start'">
+                        <div class="col-xs-1 text-center">
+                            <div class="time-text start" data-start="{{region.start}}" data-ng-model="region.start">{{ region.start | secondsToHms}}</div>
+                        </div>
+                        <div class="col-xs-1 text-center">
+                            <div class="time-text end" data-ng-model="region.end">{{ region.end | secondsToHms }}</div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div contenteditable="true" class="text-left note" data-ng-bind-html="region.note | trust_html" data-ng-model="region.note"></div>
+                        </div>
+                        <div class="col-xs-1 text-right">
+                            <span class="badge row-index">{{ $index + 1 }}</span>
+                        </div>
+                        <div class="col-xs-2 text-right">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default" data-ng-click="$ctrl.playRegion(region)" title="{{'play_pause_region' | trans:{}:'media_resource'}}">
+                                    |-&nbsp;<i class="fa fa-play"></i>&nbsp;-|
+                                </button>
+                                <button role="button" type="button" data-ng-class="$ctrl.hasHelp(region.helps) ? 'btn-warning':'btn-default'" class="btn" data-ng-click="$ctrl.configureRegionHelps(region)" title="{{'region_config' | trans:{}:'media_resource'}}">
+                                    <i class="fa fa-cog"></i>
+                                </button>
+                                <button
+                                    role="button"
+                                    data-ng-disabled="$ctrl.resource.regions.length === 1"
+                                    type="button"
+                                    class="btn btn-danger"
+                                    data-confirm-modal="{{ 'delete_region_confirm'|trans:{}:'media_resource'}}"
+                                    data-confirm-modal-action="$ctrl.deleteRegion(region)"
+                                    title="{{'region_delete' | trans:{}:'media_resource'}}">
+                                    <i class="fa fa-trash-o"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Toggleable annotation buttons panel -->
+    <div class="panel panel-primary annotation-panel">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left">{{'annotation_panel_title' | trans:{}:'media_resource'}}</h3>
+            <button type="button" role="button" title="{{'show_hide_annotation_panel' | trans:{}:'media_resource'}}" class="btn btn-default fa fa-chevron-up pull-right" data-ng-click="$ctrl.togglePanel($event)"></button>
+        </div>
+        <div class="panel-body">
+            <div class="row annotation-container">
+                <div class="col-md-12">
+                    <div class="annotation-buttons-container text-center">
+                        <button type="button" class="btn annotation-button blue" title="{{'accent_primary' | trans:{}:'media_resource'}}" data-color="blue" data-ng-click="$ctrl.annotate('blue')">&nbsp;</button>
+                        <button type="button" class="btn annotation-button red" title="{{'accent_secondary' | trans:{}:'media_resource'}}" data-color="red" data-ng-click="$ctrl.annotate('red')">&nbsp;</button>
+                        <button type="button" class="btn annotation-button orange" title="{{'accent_weak_vowel' | trans:{}:'media_resource'}}" data-color="orange" data-ng-click="$ctrl.annotate('orange')">&nbsp;</button>
+                        <button type="button" class="btn annotation-button black" title="{{'accent_no_accent' | trans:{}:'media_resource'}}" data-color="black" data-ng-click="$ctrl.annotate('black')">&nbsp;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- POPOVER(s) TEMPLATES -->
+    <script type="text/ng-template" id="popover.players.html">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li>
+                        <b>{{'options_form_view_mode_choices_live' | trans:{}:'media_resource'}}</b>: {{'popover_players_live' | trans:{}:'media_resource'}}
+                    </li>
+                    <li>
+                        <b>{{'options_form_view_mode_choices_active' | trans:{}:'media_resource'}}</b>: {{'popover_players_active' | trans:{}:'media_resource'}}
+                    </li>
+                    <li>
+                        <b>{{'options_form_view_mode_choices_pause' | trans:{}:'media_resource'}}</b>: {{'popover_players_pause' | trans:{}:'media_resource'}}
+                    </li>
+                    <li>
+                        <b>{{'options_form_view_mode_choices_scripted_active' | trans:{}:'media_resource'}}</b>: {{'popover_players_scripted' | trans:{}:'media_resource'}}
+                    </li>
+                    <li>
+                        <b>{{'options_form_view_mode_choices_free' | trans:{}:'media_resource'}}</b>: {{'popover_players_free' | trans:{}:'media_resource'}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="popover.transcription.html">
+        <div class="row">
+            <div class="col-md-12">
+              <p>
+                {{'popover_transcription_popover_explain_first' | trans:{}:'media_resource'}}
+              </p>
+              <p>
+                {{'popover_transcription_popover_explain_second' | trans:{}:'media_resource'}}
+              </p>
+            </div>
+        </div>
+    </script>
+
+</div>

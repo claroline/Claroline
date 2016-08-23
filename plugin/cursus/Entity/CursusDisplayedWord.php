@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CursusDisplayedWord
 {
-    public static $defaultKey = array('cursus', 'course', 'session');
+    public static $defaultKey = ['cursus', 'course', 'session'];
 
     /**
      * @ORM\Column(type="integer")

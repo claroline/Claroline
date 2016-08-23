@@ -1,0 +1,8 @@
+{
+  "webpack": {
+    "entry": {
+      "admin": "administrate/app",
+      "players": "players/app"
+    }
+  }
+}

@@ -1,0 +1,141 @@
+add_new_resource_type: 'Add a new resource type'
+add_resource: 'Add a resource'
+agenda:
+  add_reservation: 'Add a reservation'
+  day_: 'Day'
+  day:
+    mon: 'Mon'
+    monday: 'Monday'
+    tue: 'Tue'
+    tuesday: 'Tuesday'
+    wed: 'Wed'
+    wednesday: 'Wednesday'
+    thu: 'Thu'
+    thursday: 'Thursday'
+    fri: 'Fri'
+    friday: 'Friday'
+    sat: 'Sat'
+    saturday: 'Saturday'
+    sun: 'Sun'
+    sunday: 'Sunday'
+  form:
+    comment: 'Comment'
+    description: 'Description'
+    duration: 'Duration'
+    end_date: 'End date'
+    localisation: 'Localization'
+    max_time_reservation: 'Maximum reservation time'
+    max_255_characters: 'Maximum 255 characters'
+    resource: 'Resource'
+    resource_type: 'Resource type'
+    select_resource_pls: '-- Please select a resource --'
+    start_date: 'Start date'
+  modify_reservation: 'Modify a reservation'
+  month_: 'Month'
+  month:
+    jan: 'Jan'
+    january: 'January'
+    feb: 'Feb'
+    february: 'February'
+    mar: 'Mar'
+    march: 'March'
+    apr: 'Apr'
+    april: 'April'
+    may: 'May'
+    jun: 'Jun'
+    june: 'June'
+    jul: 'Jul'
+    july: 'July'
+    aug: 'Aug'
+    august: 'August'
+    sept: 'Sept'
+    september: 'September'
+    oct: 'Oct'
+    october: 'October'
+    nov: 'Nov'
+    november: 'November'
+    dec: 'Dec'
+    december: 'December'
+  popover:
+    author: 'Created by'
+  resource:
+    admin: Admin
+    admin_info: 'May create, modify and delete any reservation.'
+    book: Book
+    book_info: 'May creat, modify and delete reservations.'
+    cannot_see: 'No access allowed'
+    cannot_see_info: 'May neither see nor modify reservations.'
+    rights_info: 'Permissions vary for each resource.'
+    see: 'Watch'
+    see_info: 'May only watch reservations.'
+  today: 'Today'
+  week: 'Week'
+  week_number_title: S
+confirm_reservation_deletion_content: 'Are you sure you want to delete this reservation?'
+confirm_reservation_deletion_title: 'Deleting a reservation'
+confirm_resource_type_deletion_title: 'Deleting resource type'
+confirm_resource_type_deletion_content: 'Are you sure you want to delete this resource type? This action will delete all the resources belonging to this resource type as well as the possible reservations in progress.'
+confirm_resource_deletion_title: 'Deleting a resource'
+confirm_resource_deletion_content: 'Are you sure you want to delete this resource? This action will delete all the reservations linked to this resource.'
+delete_resource: 'Deleting the resource'
+delete_resource_type: 'Deleting this resource type'
+error_: 'Error'
+error:
+  empty_input: 'This field may not be empty.'
+  resource_type_already_exists: 'This resource type already exists.'
+  number_reservations_exceeded: 'Number of reservations exceeded for this resource. Please change the date you wish to make a reservation for this ressource.'
+  max_time_reservation_exceeded: 'You have exceeded the maximum reservation time for this resource.'
+export_resources: 'Export resources'
+filter:
+  by_resource: 'Filter by resources'
+  no_resource_found: 'No resource found'
+  no_resource_type_found: 'No resource type found'
+form:
+  change_resource_type_name_title: 'Changing the name'
+  change_resource_type_name: 'Changing the name'
+  color: Couleur
+  description: Description
+  localisation: Localisation
+  maxTime: 'Maximum reservation time'
+  maxTimeOfReservation: 'Maximum reservation time (optional)'
+  name: 'Name'
+  quantity: 'Quantity'
+  information_about_quantity_modification: 'Changing the quantity of available resources will only affect future reservations.'
+import_: 'Import'
+import:
+  resources: 'Import resources'
+  resources_submit: 'Import the resources'
+  resources_title: 'Import resources'
+  resources_info: |
+    Please select a .csv file by using a comma as a separating character and quotation marks to surround the complex text_fields. The first line of the file must contain the name of the seven colums as in the example above:
+    - the name of the resource type (min 2 and max 50 characters)
+    - the name of the resource (min 2 and max 50 characters)
+    - the maximum reservation time - format hh:mm ou hh:mm:ss (optional)
+    - the description (optional)
+    - the localization (optional)
+    - the quantity (minimum 1)
+    - the colour of the ressource (optional).
+    If the resource type doesn't exist, it will be created automatically.
+  file: 'Resources file'
+  tv: Television
+  tv_localisation: 'Teachers'' lounge'
+modify_resource_type_name: 'Change name.'
+modify_resource: 'Modify a resource.'
+no_resources_type_yet: 'There are no resources to reserve yet.'
+no_resources_in_resource_type: 'There are no resources in this category.'
+picker:
+  close: 'Close'
+  go_to_today: 'Today'
+  locale: fr
+  select_month: 'Select a month'
+  prev_month: 'Preceding month'
+  next_month: 'Next month'
+  select_year: 'Select a year'
+  prev_year: 'Preceding year'
+  next_year: 'Next year'
+  select_decade: 'Select a decade'
+  prev_decade: 'Preceding decade'
+  next_decade: 'Next decade'
+  prev_century: 'Preceding century'
+  next_century: 'Next century'
+reservation: 'Reservation'

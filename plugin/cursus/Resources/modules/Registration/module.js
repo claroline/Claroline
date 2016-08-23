@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import 'angular/angular.min'
+import angular from 'angular/index'
 
-import UIRouter from 'angular-ui-router'
-import dataTable from 'angular-data-table/release/dataTable.helpers.min'
-import bootstrap from 'angular-bootstrap'
-import translation from 'angular-ui-translation/angular-translation'
+import 'angular-ui-router'
+import 'angular-data-table/release/dataTable.helpers.min'
+import 'angular-bootstrap'
+import 'angular-ui-translation/angular-translation'
 
 import Routing from './routing.js' 
 import CursusDescriptionModalCtrl from './Cursus/Controller/CursusDescriptionModalCtrl'
@@ -36,11 +36,11 @@ import SessionsChoicesTransferModalCtrl from './Queue/Controller/SessionsChoices
 import RegistrationQueueCoursesDirective from './Queue/Directive/RegistrationQueueCoursesDirective'
 
 angular.module('CursusRegistrationModule', [
-    'ui.router',
-    'ui.translation',
-    'data-table',
-    'ui.bootstrap', 
-    'ui.bootstrap.tpls'
+  'ui.router',
+  'ui.translation',
+  'data-table',
+  'ui.bootstrap',
+  'ui.bootstrap.tpls'
 ])
 .controller('CursusRegistrationCtrl', ['$http', CursusRegistrationCtrl])
 .controller('CursusRegistrationManagementCtrl', ['$stateParams', '$http', '$uibModal', CursusRegistrationManagementCtrl])

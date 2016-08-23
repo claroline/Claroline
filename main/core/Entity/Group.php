@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
+use Claroline\CoreBundle\Entity\Organization\Organization;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
-use JMS\Serializer\Annotation\Groups;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\GroupRepository")
@@ -35,14 +35,14 @@ class Group extends AbstractRoleSubject implements OrderableInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_group"})
+     * @Groups({"api_group", "api_group_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_group"})
+     * @Groups({"api_group", "api_group_min"})
      */
     protected $name;
 
@@ -57,7 +57,7 @@ class Group extends AbstractRoleSubject implements OrderableInterface
 
     /**
      * @ORM\Column()
-     * @Groups({"api_group"})
+     * @Groups({"api_group", "api_group_min"})
      */
     protected $guid;
 
@@ -134,7 +134,7 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     public function getUserIds()
     {
         $users = $this->getUsers();
-        $userIds = array();
+        $userIds = [];
         foreach ($users as $user) {
             array_push($userIds, $user->getId());
         }
@@ -153,10 +153,10 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     public function getPlatformRole()
     {
         $roles = $this->getEntityRoles();
-        $return = array();
+        $return = [];
 
         foreach ($roles as $role) {
-            if ($role->getType() != Role::WS_ROLE) {
+            if ($role->getType() !== Role::WS_ROLE) {
                 $return[] = $role;
             }
         }
@@ -169,7 +169,7 @@ class Group extends AbstractRoleSubject implements OrderableInterface
         $roles = $this->getEntityRoles();
 
         foreach ($roles as $role) {
-            if ($role->getType() != Role::WS_ROLE) {
+            if ($role->getType() !== Role::WS_ROLE) {
                 $removedRole = $role;
             }
         }
@@ -189,10 +189,10 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     public function setPlatformRoles($platformRoles)
     {
         $roles = $this->getEntityRoles();
-        $removedRoles = array();
+        $removedRoles = [];
 
         foreach ($roles as $role) {
-            if ($role->getType() != Role::WS_ROLE) {
+            if ($role->getType() !== Role::WS_ROLE) {
                 $removedRoles[] = $role;
             }
         }
@@ -213,7 +213,7 @@ class Group extends AbstractRoleSubject implements OrderableInterface
 
     public function getOrderableFields()
     {
-        return array('name', 'id');
+        return ['name', 'id'];
     }
 
     public function addModel(WorkspaceModel $model)
@@ -240,7 +240,7 @@ class Group extends AbstractRoleSubject implements OrderableInterface
 
     public static function getSearchableFields()
     {
-        return array('name');
+        return ['name'];
     }
 
     public function __toString()

@@ -11,14 +11,13 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
@@ -38,14 +37,17 @@ use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceShortcutRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use JMS\DiExtraBundle\Annotation as DI;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Claroline\BundleRecorder\Log\LoggableTrait;
-use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
@@ -87,6 +89,7 @@ class ResourceManager
     /* @var PlatformConfigurationHandler */
     private $platformConfigHandler;
     private $filesDirectory;
+    /* @var ContainerInterface */
     private $container;
 
     /**
@@ -163,7 +166,7 @@ class ResourceManager
         Workspace $workspace = null,
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
-        array $rights = array(),
+        array $rights = [],
         $isPublished = true,
         $createRights = true
     ) {
@@ -231,7 +234,7 @@ class ResourceManager
             //care if it's a shortcut
             if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
                 $target = $resource->getTarget();
-                $roles = array();
+                $roles = [];
                 $rights = $node->getRights();
 
                 foreach ($rights as $right) {
@@ -246,10 +249,10 @@ class ResourceManager
         }
 
         $usersToNotify = $workspace && $workspace->getId() ?
-            $this->container->get('claroline.manager.user_manager')->getUsersByWorkspaces(array($workspace), null, null, false) :
-            array();
+            $this->container->get('claroline.manager.user_manager')->getUsersByWorkspaces([$workspace], null, null, false) :
+            [];
 
-        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node, $usersToNotify));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', [$node, $usersToNotify]);
         $this->om->endFlushSuite();
 
         return $resource;
@@ -279,8 +282,8 @@ class ResourceManager
         $parent = $parent ?: $node->getParent();
         $sameLevelNodes = $parent ?
             $parent->getChildren() :
-            $this->resourceNodeRepo->findBy(array('parent' => null));
-        $siblingNames = array();
+            $this->resourceNodeRepo->findBy(['parent' => null]);
+        $siblingNames = [];
 
         foreach ($sameLevelNodes as $levelNode) {
             if (!$isCopy && $levelNode === $node) {
@@ -365,7 +368,7 @@ class ResourceManager
             $target->getIcon()->getShortcutIcon()
         );
 
-        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($shortcut->getResourceNode()));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', [$shortcut->getResourceNode()]);
 
         return $shortcut;
     }
@@ -387,14 +390,11 @@ class ResourceManager
     public function setRights(
         ResourceNode $node,
         ResourceNode $parent = null,
-        array $rights = array()
+        array $rights = []
     ) {
         if (count($rights) === 0 && $parent !== null) {
             $node = $this->rightsManager->copy($parent, $node);
         } else {
-            //            if (count($rights) === 0) {
-//                throw new RightsException('Rights must be specified if there is no parent');
-//            }
             $this->createRights($node, $rights);
         }
 
@@ -413,7 +413,7 @@ class ResourceManager
      */
     public function createRights(
         ResourceNode $node,
-        array $rights = array()
+        array $rights = []
     ) {
         foreach ($rights as $data) {
             $resourceTypes = $this->checkResourceTypes($data['create']);
@@ -423,20 +423,20 @@ class ResourceManager
         if (!array_key_exists('ROLE_ANONYMOUS', $rights)) {
             $this->rightsManager->create(
                 0,
-                $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+                $this->roleRepo->findOneBy(['name' => 'ROLE_ANONYMOUS']),
                 $node,
                 false,
-                array()
+                []
             );
         }
 
         if (!array_key_exists('ROLE_USER', $rights)) {
             $this->rightsManager->create(
                 0,
-                $this->roleRepo->findOneBy(array('name' => 'ROLE_USER')),
+                $this->roleRepo->findOneBy(['name' => 'ROLE_USER']),
                 $node,
                 false,
-                array()
+                []
             );
         }
     }
@@ -448,7 +448,7 @@ class ResourceManager
             $this->roleManager->getRoleByName('ROLE_USER'),
             $node,
             false,
-            array(),
+            [],
             true
         );
         $this->rightsManager->editPerms(
@@ -456,7 +456,7 @@ class ResourceManager
             $this->roleManager->getRoleByName('ROLE_ANONYMOUS'),
             $node,
             false,
-            array(),
+            [],
             true
         );
     }
@@ -473,7 +473,7 @@ class ResourceManager
         $stringErrors = '';
 
         //null or '' shouldn't be valid
-        if ($resource->getName() == null) {
+        if ($resource->getName() === null) {
             $stringErrors .= 'The resource name is missing'.PHP_EOL;
         }
 
@@ -494,8 +494,8 @@ class ResourceManager
      */
     public function checkResourceTypes(array $resourceTypes)
     {
-        $validTypes = array();
-        $unknownTypes = array();
+        $validTypes = [];
+        $unknownTypes = [];
 
         foreach ($resourceTypes as $type) {
             //@todo write findByNames method.
@@ -530,7 +530,6 @@ class ResourceManager
      */
     public function insertAtIndex(ResourceNode $node, $index)
     {
-        //throw new \Exception($index);
         $this->om->startFlushSuite();
 
         if ($index > $node->getIndex()) {
@@ -635,7 +634,7 @@ class ResourceManager
 
         $this->om->persist($child);
         $this->om->endFlushSuite();
-        $this->dispatcher->dispatch('log', 'Log\LogResourceMove', array($child, $parent));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceMove', [$child, $parent]);
 
         return $child;
     }
@@ -676,11 +675,11 @@ class ResourceManager
     public function hasLinkTo(ResourceNode $parent, ResourceNode $target)
     {
         $nodes = $this->resourceNodeRepo
-            ->findBy(array('parent' => $parent, 'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'));
+            ->findBy(['parent' => $parent, 'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut']);
 
         foreach ($nodes as $node) {
             $shortcut = $this->getResourceFromNode($node);
-            if ($shortcut->getTarget() == $target) {
+            if ($shortcut->getTarget() === $target) {
                 return true;
             }
         }
@@ -747,9 +746,9 @@ class ResourceManager
      */
     public function buildSearchArray($queryParameters)
     {
-        $allowedStringCriteria = array('name', 'dateFrom', 'dateTo');
-        $allowedArrayCriteria = array('types');
-        $criteria = array();
+        $allowedStringCriteria = ['name', 'dateFrom', 'dateTo'];
+        $allowedArrayCriteria = ['types'];
+        $criteria = [];
 
         foreach ($queryParameters as $parameter => $value) {
             if (in_array($parameter, $allowedStringCriteria) && is_string($value)) {
@@ -784,7 +783,7 @@ class ResourceManager
         $index = null,
         $withRights = true,
         $withDirectoryContent = true,
-        array $rights = array()
+        array $rights = []
     ) {
         $this->log("Copying {$node->getName()} from type {$node->getResourceType()->getName()}");
         $resource = $this->getResourceFromNode($node);
@@ -806,7 +805,7 @@ class ResourceManager
             $event = $this->dispatcher->dispatch(
                 'copy_'.$node->getResourceType()->getName(),
                 'CopyResource',
-                array($resource, $parent)
+                [$resource, $parent]
             );
 
             $copy = $event->getCopy();
@@ -817,7 +816,7 @@ class ResourceManager
 
             $copy->setResourceNode($newNode);
 
-            if ($node->getResourceType()->getName() == 'directory' &&
+            if ($node->getResourceType()->getName() === 'directory' &&
                 $withDirectoryContent) {
                 $i = 1;
 
@@ -831,7 +830,7 @@ class ResourceManager
         }
 
         $this->om->persist($copy);
-        $this->dispatcher->dispatch('log', 'Log\LogResourceCopy', array($newNode, $node));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCopy', [$newNode, $node]);
         $this->om->flush();
 
         return $copy;
@@ -851,10 +850,10 @@ class ResourceManager
      */
     public function toArray(ResourceNode $node, TokenInterface $token, $new = false)
     {
-        $resourceArray = array();
+        $resourceArray = [];
         $resourceArray['id'] = $node->getId();
         $resourceArray['name'] = $node->getName();
-        $resourceArray['parent_id'] = ($node->getParent() != null) ? $node->getParent()->getId() : null;
+        $resourceArray['parent_id'] = ($node->getParent() !== null) ? $node->getParent()->getId() : null;
         $resourceArray['creator_username'] = $node->getCreator()->getUsername();
         $resourceArray['creator_id'] = $node->getCreator()->getId();
         $resourceArray['type'] = $node->getResourceType()->getName();
@@ -863,8 +862,8 @@ class ResourceManager
         $resourceArray['mime_type'] = $node->getMimeType();
         $resourceArray['published'] = $node->isPublished();
         $resourceArray['index_dir'] = $node->getIndex();
-        $resourceArray['creation_date'] = $node->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
-        $resourceArray['modification_date'] = $node->getModificationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+        $resourceArray['creation_date'] = $node->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', [], 'platform'));
+        $resourceArray['modification_date'] = $node->getModificationDate()->format($this->translator->trans('date_range.format.with_hours', [], 'platform'));
         $resourceArray['new'] = $new;
 
         $isAdmin = false;
@@ -946,7 +945,7 @@ class ResourceManager
                     $event = $this->dispatcher->dispatch(
                         "delete_{$node->getResourceType()->getName()}",
                         'DeleteResource',
-                        array($resource)
+                        [$resource]
                     );
 
                     foreach ($event->getFiles() as $file) {
@@ -994,13 +993,13 @@ class ResourceManager
                 $this->dispatcher->dispatch(
                     'claroline_resources_delete',
                     'GenericDatas',
-                    array(array($node))
+                    [[$node]]
                 );
 
                 $this->dispatcher->dispatch(
                     'log',
                     'Log\LogResourceDelete',
-                    array($node)
+                    [$node]
                 );
 
                 // Delete all associated shortcuts
@@ -1045,7 +1044,7 @@ class ResourceManager
      */
     public function download(array $elements, $forceArchive = false)
     {
-        $data = array();
+        $data = [];
 
         if (count($elements) === 0) {
             throw new ExportResourceException('No resources were selected.');
@@ -1060,7 +1059,7 @@ class ResourceManager
             $event = $this->dispatcher->dispatch(
                 "download_{$nodes[0]->getResourceType()->getName()}",
                 'DownloadResource',
-                array($this->getResourceFromNode($this->getRealTarget($nodes[0])))
+                [$this->getResourceFromNode($this->getRealTarget($nodes[0]))]
             );
             $extension = $event->getExtension();
             $data['name'] = empty($extension) ?
@@ -1068,7 +1067,7 @@ class ResourceManager
                 $nodes[0]->getName().'.'.$extension;
             $data['file'] = $event->getItem();
             $guesser = ExtensionGuesser::getInstance();
-            $data['mimeType'] = $guesser->guess($nodes[0]->getMimeType()) !== null ?  $nodes[0]->getMimeType() : null;
+            $data['mimeType'] = $guesser->guess($nodes[0]->getMimeType()) !== null ? $nodes[0]->getMimeType() : null;
 
             return $data;
         }
@@ -1105,7 +1104,7 @@ class ResourceManager
                         $event = $this->dispatcher->dispatch(
                             "download_{$node->getResourceType()->getName()}",
                             'DownloadResource',
-                            array($resource)
+                            [$resource]
                         );
 
                         $obj = $event->getItem();
@@ -1119,7 +1118,7 @@ class ResourceManager
                         $archive->addEmptyDir(iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename));
                     }
 
-                    $this->dispatcher->dispatch('log', 'Log\LogResourceExport', array($node));
+                    $this->dispatcher->dispatch('log', 'Log\LogResourceExport', [$node]);
                 }
             }
         }
@@ -1145,9 +1144,9 @@ class ResourceManager
      */
     public function expandResources(array $nodes)
     {
-        $dirs = array();
-        $ress = array();
-        $toAppend = array();
+        $dirs = [];
+        $ress = [];
+        $toAppend = [];
 
         foreach ($nodes as $node) {
             $resourceTypeName = $node->getResourceType()->getName();
@@ -1242,7 +1241,7 @@ class ResourceManager
             $this->dispatcher->dispatch(
                 'log',
                 'Log\LogResourceUpdate',
-                array($node, $changeSet)
+                [$node, $changeSet]
             );
         }
     }
@@ -1259,7 +1258,7 @@ class ResourceManager
     {
         $entity = $this->om->factory($class);
 
-        if ($entity instanceof \Claroline\CoreBundle\Entity\Resource\AbstractResource) {
+        if ($entity instanceof AbstractResource) {
             $entity->setName($name);
 
             return $entity;
@@ -1420,7 +1419,7 @@ class ResourceManager
      */
     public function getByWorkspace(Workspace $workspace)
     {
-        return $this->resourceNodeRepo->findBy(array('workspace' => $workspace));
+        return $this->resourceNodeRepo->findBy(['workspace' => $workspace]);
     }
 
     /**
@@ -1433,8 +1432,8 @@ class ResourceManager
         ResourceType $resourceType
     ) {
         return $this->resourceNodeRepo->findBy(
-            array('workspace' => $workspace, 'resourceType' => $resourceType),
-            array('name' => 'ASC')
+            ['workspace' => $workspace, 'resourceType' => $resourceType],
+            ['name' => 'ASC']
         );
     }
 
@@ -1456,7 +1455,7 @@ class ResourceManager
      */
     public function getById($id)
     {
-        return $this->resourceNodeRepo->findOneby(array('id' => $id));
+        return $this->resourceNodeRepo->findOneby(['id' => $id]);
     }
 
     /**
@@ -1490,7 +1489,7 @@ class ResourceManager
         ResourceNode $newParent,
         User $user,
         $withRights = true,
-        array $rights = array(),
+        array $rights = [],
         $index = null
     ) {
         $newNode = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -1593,9 +1592,9 @@ class ResourceManager
     public function isResourceActionImplemented(ResourceType $resourceType = null, $actionName)
     {
         if ($resourceType) {
-            $alwaysTrue = array('rename', 'edit-properties', 'edit-rights', 'open-tracking');
+            $alwaysTrue = ['rename', 'edit-properties', 'edit-rights', 'open-tracking'];
             //first, directories can be downloaded even if there is no listener attached to it
-            if ($resourceType->getName() === 'directory' && $actionName == 'download') {
+            if ($resourceType->getName() === 'directory' && $actionName === 'download') {
                 return true;
             }
             if (in_array($actionName, $alwaysTrue)) {
@@ -1612,7 +1611,7 @@ class ResourceManager
 
     private function isDirectoryEmpty($dirName)
     {
-        $files = array();
+        $files = [];
         $dirHandle = opendir($dirName);
 
         if ($dirHandle) {
@@ -1654,7 +1653,6 @@ class ResourceManager
     public function checkEnoughStorageSpaceLeft(Workspace $workspace, \SplFileInfo $file)
     {
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
-        $workspaceDir = $workspaceManager->getStorageDirectory($workspace);
         $fileSize = filesize($file);
         $allowedMaxSize = $this->ut->getRealFileSize($workspace->getMaxStorageSize());
         $currentStorage = $this->ut->getRealFileSize($workspaceManager->getUsedStorage($workspace));
@@ -1669,7 +1667,6 @@ class ResourceManager
      */
     public function checkResourceLimitExceeded(Workspace $workspace)
     {
-        $ch = $this->container->get('claroline.config.platform_config_handler');
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
         $maxFileStorage = $workspace->getMaxUploadResources();
 
@@ -1684,22 +1681,19 @@ class ResourceManager
      */
     public function addStorageExceededFormError(Form $form, $fileSize, Workspace $workspace)
     {
-        $filesize = $this->ut->getRealFileSize($fileSize);
-        //we want how many bites and well...
         $maxSize = $this->ut->getRealFileSize($workspace->getMaxStorageSize());
-        //throw new \Exception($maxSize);
         $usedSize = $this->ut->getRealFileSize(
             $this->container->get('claroline.manager.workspace_manager')->getUsedStorage($workspace)
         );
 
         $storageLeft = $maxSize - $usedSize;
-        $fileSize = $this->ut->formatFileSize($fileSize);
+        $fileSize = $this->ut->formatFileSize($this->ut->getRealFileSize($fileSize));
         $storageLeft = $this->ut->formatFileSize($storageLeft);
 
         $translator = $this->container->get('translator');
         $msg = $translator->trans(
             'storage_limit_exceeded',
-            array('%storageLeft%' => $storageLeft, '%fileSize%' => $fileSize),
+            ['%storageLeft%' => $storageLeft, '%fileSize%' => $fileSize],
             'platform'
         );
         $form->addError(new FormError($msg));
@@ -1723,7 +1717,7 @@ class ResourceManager
             if (get_class($entity) === 'Claroline\CoreBundle\Entity\Resource\ResourceNode') {
                 if ($entity->getWorkspace()->getCode() === $workspace->getCode() &&
                     $entity->getName() === $name &&
-                    $entity->getParent() == $parent) {
+                    $entity->getParent() === $parent) {
                     return $entity;
                 }
             }
@@ -1742,12 +1736,12 @@ class ResourceManager
     public function addPublicFileDirectory(Workspace $workspace)
     {
         $directory = new Directory();
-        $dirName = $this->translator->trans('my_public_documents', array(), 'platform');
+        $dirName = $this->translator->trans('my_public_documents', [], 'platform');
         $directory->setName($dirName);
         $directory->setIsUploadDestination(true);
         $parent = $this->getNodeScheduledForInsert($workspace, $workspace->getName());
         if (!$parent) {
-            $parent = $this->resourceNodeRepo->findOneBy(array('workspace' => $workspace->getId(), 'parent' => $parent));
+            $parent = $this->resourceNodeRepo->findOneBy(['workspace' => $workspace->getId(), 'parent' => $parent]);
         }
         $role = $this->roleManager->getRoleByName('ROLE_ANONYMOUS');
 
@@ -1758,7 +1752,7 @@ class ResourceManager
             $workspace,
             $parent,
             null,
-            array('ROLE_ANONYMOUS' => array('open' => true, 'export' => true, 'create' => array(), 'role' => $role)),
+            ['ROLE_ANONYMOUS' => ['open' => true, 'export' => true, 'create' => [], 'role' => $role]],
             true
         );
     }
@@ -1771,8 +1765,8 @@ class ResourceManager
     public function getDefaultUploadDestinations()
     {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        if ($user == 'anon.') {
-            return array();
+        if ($user === 'anon.') {
+            return [];
         }
 
         $pws = $user->getPersonalWorkspace();
@@ -1813,9 +1807,9 @@ class ResourceManager
     {
         try {
             $lastIndex = $this->resourceNodeRepo->findLastIndex($parent);
-        } catch (\Doctrine\ORM\NonUniqueResultException $e) {
+        } catch (NonUniqueResultException $e) {
             $lastIndex = 0;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             $lastIndex = 0;
         }
 
@@ -1868,6 +1862,45 @@ class ResourceManager
         }
 
         $this->om->flush();
+    }
+
+    public function importDirectoriesFromCsv($file)
+    {
+        $data = file_get_contents($file);
+        $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
+        $lines = str_getcsv($data, PHP_EOL);
+        $this->om->startFlushSuite();
+        $i = 0;
+        $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('directory');
+
+        foreach ($lines as $line) {
+            $values = str_getcsv($line, ';');
+            $code = $values[0];
+            $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code);
+
+            $name = $values[1];
+            $directory = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneBy(
+                ['workspace' => $workspace, 'name' => $name, 'resourceType' => $resourceType]
+            );
+            if (!$directory) {
+                $directory = new Directory();
+                $directory->setName($name);
+                $this->log("Create directory {$name} for workspace {$code}");
+                $this->create($directory, $resourceType, $workspace->getCreator(), $workspace, $this->getWorkspaceRoot($workspace));
+                ++$i;
+            } else {
+                $this->log("Directory {$name} already exists for workspace {$code}");
+            }
+
+            if ($i % 100 === 0) {
+                $this->om->forceFlush();
+                $this->om->clear();
+                $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('directory');
+                $this->om->merge($resourceType);
+            }
+        }
+
+        $this->om->endFlushSuite();
     }
 
     public function setLogger(LoggerInterface $logger)

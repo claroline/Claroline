@@ -11,10 +11,12 @@
 
 namespace Claroline\CoreBundle\Validator\Constraints;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 /**
  * @DI\Validator("username_validator")
@@ -22,15 +24,24 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 class UsernameValidator extends ConstraintValidator
 {
     private $ch;
+    private $om;
+    private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "ch" = @DI\Inject("claroline.config.platform_config_handler")
+     *     "ch"    = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "om"    = @DI\Inject("claroline.persistence.object_manager"),
+     *     "trans" = @DI\Inject("translator")
      * })
      */
-    public function setEntityManager(PlatformConfigurationHandler $ch)
-    {
+    public function setEntityManager(
+        PlatformConfigurationHandler $ch,
+        ObjectManager $om,
+        TranslatorInterface $translator
+    ) {
         $this->ch = $ch;
+        $this->om = $om;
+        $this->translator = $translator;
     }
 
     public function validate($value, Constraint $constraint)
@@ -39,6 +50,12 @@ class UsernameValidator extends ConstraintValidator
 
         if (!preg_match($regex, $value)) {
             $this->context->addViolation($constraint->error);
+        }
+
+        $user = $this->om->getRepository('ClarolineCoreBundle:User')->findOneByMail($value);
+
+        if ($user) {
+            $this->context->addViolation($this->translator->trans('username_already_used', ['%username%' => $value], 'platform'));
         }
     }
 }

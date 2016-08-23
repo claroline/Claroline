@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Entity\Widget;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WidgetRepository")
@@ -28,6 +30,8 @@ class Widget
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_widget"})
+     * @SerializedName("id")
      */
     protected $id;
 
@@ -42,36 +46,50 @@ class Widget
 
     /**
      * @ORM\Column()
+     * @Groups({"api_widget"})
+     * @SerializedName("name")
      */
     protected $name;
 
     /**
      * @ORM\Column(name="is_configurable", type="boolean")
+     * @Groups({"api_widget"})
+     * @SerializedName("isConfigurable")
      */
     protected $isConfigurable;
 
     /**
      * @ORM\Column(name="is_exportable", type="boolean")
+     * @Groups({"api_widget"})
+     * @SerializedName("isExportable")
      */
     protected $isExportable;
 
     /**
      * @ORM\Column(name="is_displayable_in_workspace", type="boolean")
+     * @Groups({"api_widget"})
+     * @SerializedName("isDisplayableInWorkspace")
      */
     protected $isDisplayableInWorkspace = true;
 
     /**
      * @ORM\Column(name="is_displayable_in_desktop", type="boolean")
+     * @Groups({"api_widget"})
+     * @SerializedName("isDisplayableInDesktop")
      */
     protected $isDisplayableInDesktop = true;
 
     /**
      * @ORM\Column(name="default_width", type="integer", options={"default":4})
+     * @Groups({"api_widget"})
+     * @SerializedName("defaultWidth")
      */
     protected $defaultWidth = 4;
 
     /**
      * @ORM\Column(name="default_height", type="integer", options={"default":3})
+     * @Groups({"api_widget"})
+     * @SerializedName("defaultHeight")
      */
     protected $defaultHeight = 3;
 

@@ -389,7 +389,7 @@ generate_url: 'Public URL Subscription '
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
 generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
-get_mail_notifications: 'I want to be notified by email on %adress%.'
+get_mail_notifications: 'Receive a notification copy on %adress%.'
 google_tag_validation: 'Google HTML tag validation'
 grant_access: 'Grant access'
 grant_type: Permissions
@@ -616,6 +616,7 @@ new_message_alert: 'You have %count% new message(s)'
 new_password: 'New password'
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
+next: Next
 'no': 'No'
 no_action_found: 'No action found.'
 no_activity_in_workspace: 'There are currently no activities in this workspace.'
@@ -721,6 +722,7 @@ positive_number_expected: 'This value should be a positive number'
 powered_by: 'Powered by'
 preferences: Preferences
 preview: Preview
+previous: Previous
 private: Private
 profil_edition: 'User profile edition'
 profile_management: 'Profile Management'
@@ -966,6 +968,7 @@ terms_enabled_but_empty: 'Terms of service can only be enabled if the text is pr
 terms_of_service_acceptance: 'I accept the terms of service'
 test_repository_activated: 'Test repositories are activated'
 text: Text
+text_title_color: Color for text in title
 the_following_users_were_not_imported: 'The following users were not imported.'
 the_workspace: Workspace
 theme: Theme
@@ -1073,6 +1076,7 @@ user_removed: 'User %user% removed'
 user_selector: 'User picker'
 user_visit: 'Audience/user visits'
 username: Username
+username_already_used: 'Username %username% is already used'
 username_and_email_from_two_different_users: 'Username %username% and email %email% are both in use and don''t refer to the same user.'
 username_found_at: 'The username %username% was found at lines: %lines%'
 username_or_email: 'Username or email'
@@ -1303,4 +1307,5 @@ delete_users_confirm: Do you really want to remove the users [ %user_list% ] ?
 group_created: Group %group% created.
 group_removed: Group %group% removed.
 mandatory: Mandatory
-leave_empty: Let this field empty to prove that you aren't a bot.
+leave_empty: Let this field empty to prove that you aren't a bot
+field_not_empty: Please let the field empty

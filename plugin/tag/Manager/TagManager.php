@@ -11,15 +11,15 @@
 
 namespace Claroline\TagBundle\Manager;
 
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\TagBundle\Entity\ResourcesTagsWidgetConfig;
-use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Entity\Tag;
+use Claroline\TagBundle\Entity\TaggedObject;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -111,7 +111,7 @@ class TagManager
 
     public function tagObject(array $tags, $object, User $user = null)
     {
-        $uniqueTags = array();
+        $uniqueTags = [];
 
         foreach ($tags as $tag) {
             $value = trim($tag);
@@ -125,7 +125,7 @@ class TagManager
             $this->om->startFlushSuite();
             $objectId = $object->getId();
             $objectClass = str_replace('Proxies\\__CG__\\', '', get_class($object));
-            $tagsList = array();
+            $tagsList = [];
 
             foreach ($uniqueTags as $tagName) {
                 $tag = is_null($user) ?
@@ -158,7 +158,7 @@ class TagManager
 
     public function getObjectsByClassAndIds($class, array $ids, $orderedBy = 'id', $order = 'ASC')
     {
-        $objects = array();
+        $objects = [];
 
         if (count($ids) > 0) {
             $objects = $this->taggedObjectRepo
@@ -183,7 +183,7 @@ class TagManager
                 $orderedBy,
                 $order
             ) :
-            array();
+            [];
     }
 
     public function removeTaggedObjectsByResourceAndTag(ResourceNode $resourceNode, Tag $tag)
@@ -217,7 +217,7 @@ class TagManager
         if (is_null($config)) {
             $config = new ResourcesTagsWidgetConfig();
             $config->setWidgetInstance($widgetInstance);
-            $details = array('nb_tags' => 10);
+            $details = ['nb_tags' => 10];
             $config->setDetails($details);
             $this->persistResourcesTagsWidgetConfig($config);
         }
@@ -229,6 +229,17 @@ class TagManager
     {
         $this->om->persist($config);
         $this->om->flush();
+    }
+
+    public function removeTaggedObjectByTagNameAndObjectIdAndClass($tagName, $objectId, $objectClass)
+    {
+        $taggedObjects = $this->getOneTaggedObjectByTagNameAndObject($tagName, $objectId, $objectClass);
+        $this->om->startFlushSuite();
+
+        foreach ($taggedObjects as $to) {
+            $this->deleteTaggedObject($to);
+        }
+        $this->om->endFlushSuite();
     }
 
     /***********************************
@@ -395,6 +406,15 @@ class TagManager
         );
     }
 
+    public function getOneTaggedObjectByTagNameAndObject($tagName, $objectId, $objectClass)
+    {
+        return $this->taggedObjectRepo->findOneTaggedObjectByTagNameAndObject(
+            $tagName,
+            $objectId,
+            $objectClass
+        );
+    }
+
     public function getTaggedObjectsByTags(
         array $tags,
         $orderedBy = 'name',
@@ -409,7 +429,7 @@ class TagManager
                 $orderedBy,
                 $order
             ) :
-            array();
+            [];
 
         return $withPager ?
             $this->pagerFactory->createPagerFromArray($objects, $page, $max) :
@@ -419,7 +439,7 @@ class TagManager
     public function getTaggedResourcesByWorkspace(
         Workspace $workspace,
         $user = 'anon.',
-        array $roleNames = array('ROLE_ANONYMOUS')
+        array $roleNames = ['ROLE_ANONYMOUS']
     ) {
         return $this->taggedObjectRepo->findTaggedResourcesByWorkspace(
             $workspace,

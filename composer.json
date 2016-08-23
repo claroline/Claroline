@@ -26,6 +26,7 @@
         "doctrine/doctrine-bundle": "~1.3",
         "doctrine/migrations": "~1.3",
         "doctrine/orm": "~2.4",
+        "fabiang/xmpp": "0.6.1",
         "friendsofsymfony/jsrouting-bundle": "~1.5",
         "friendsofsymfony/oauth-server-bundle": "~1.4",
         "friendsofsymfony/rest-bundle": "1.7.9",
@@ -76,8 +77,9 @@
         "innova/angular-js-bundle": "~5.0",
         "innova/angular-ui-resource-picker-bundle": "~6.0",
         "innova/angular-ui-tinymce-bundle": "5.*",
-        "innova/angular-ui-pageslide-bundle": "~5.1",
-        "claroline/front-end-bundle": "dev-7.x-test"
+        "innova/angular-ui-pageslide-bundle": "~5.0",
+        "claroline/front-end-bundle": "dev-7.x-test",
+        "fabiang/xmpp": "0.6.1"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.6",
@@ -132,6 +134,7 @@
         "claroline/dev-bundle": "*",
         "innova/video-recorder-bundle": "*",
         "innova/audio-recorder-bundle": "*",
+        "innova/media-resource-bundle": "*",
         "ujm/exo-bundle": "*",
         "icap/lesson-bundle": "*",
         "formalibre/office-connect-bundle": "*"
@@ -180,6 +183,7 @@
             "Innova\\PathBundle\\": "plugin/path",
             "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator",
             "Claroline\\DevBundle\\": "main/dev",
+            "Claroline\\ChatBundle\\": "plugin/chat",
             "Claroline\\WebInstaller\\": "main/web-installer/",
             "Icap\\WebsiteBundle\\": "plugin/website",
             "UJM\\ExoBundle\\": "plugin/exo",
@@ -187,6 +191,7 @@
             "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder",
             "Icap\\LessonBundle\\": "plugin/lesson",
             "Claroline\\FlashCardBundle\\": "plugin/flashcard",
+            "Innova\\MediaResourceBundle\\": "plugin/media-resource",
             "FormaLibre\\OfficeConnectBundle\\": "plugin/o365"
         }
     },
@@ -236,10 +241,11 @@
             "Icap\\WebsiteBundle\\IcapWebsiteBundle",
             "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle",
             "Innova\\AudioRecorderBundle\\InnovaAudioRecorderBundle",
-            "Icap\\LessonBundle\\IcapLessonBundle",
+            "Innova\\MediaResourceBundle\\InnovaMediaResourceBundle",
             "Claroline\\FlashCardBundle\\ClarolineFlashCardBundle",
             "UJM\\ExoBundle\\UJMExoBundle",
             "Icap\\LessonBundle\\IcapLessonBundle",
+            "Claroline\\ChatBundle\\ClarolineChatBundle",
             "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle"
         ]
     }

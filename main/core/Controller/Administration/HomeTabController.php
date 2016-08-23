@@ -16,25 +16,29 @@ use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Event\Log\LogHomeTabAdminCreateEvent;
+use Claroline\CoreBundle\Event\Log\LogHomeTabAdminDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogHomeTabAdminEditEvent;
+use Claroline\CoreBundle\Event\Log\LogWidgetAdminCreateEvent;
+use Claroline\CoreBundle\Event\Log\LogWidgetAdminDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogWidgetAdminEditEvent;
 use Claroline\CoreBundle\Form\HomeTabType;
-use Claroline\CoreBundle\Form\HomeTabConfigType;
-use Claroline\CoreBundle\Form\WidgetDisplayType;
-use Claroline\CoreBundle\Form\WidgetDisplayConfigType;
-use Claroline\CoreBundle\Form\WidgetHomeTabConfigType;
-use Claroline\CoreBundle\Form\WidgetInstanceType;
+use Claroline\CoreBundle\Form\WidgetInstanceConfigType;
+use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\HomeTabManager;
-use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Manager\PluginManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -42,60 +46,48 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
  */
 class HomeTabController extends Controller
 {
+    private $apiManager;
+    private $bundles;
     private $eventDispatcher;
-    private $formFactory;
     private $homeTabManager;
+    private $pluginManager;
     private $request;
+    private $serializer;
     private $widgetManager;
-    private $bundleManager;
 
     /**
      * @DI\InjectParams({
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"     = @DI\Inject("form.factory"),
+     *     "apiManager"      = @DI\Inject("claroline.manager.api_manager"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "pluginManager"   = @DI\Inject("claroline.manager.plugin_manager"),
      *     "request"         = @DI\Inject("request"),
-     *     "widgetManager"   = @DI\Inject("claroline.manager.widget_manager"),
-     *     "bundleManager"   = @DI\Inject("claroline.manager.plugin_manager")
+     *     "serializer"      = @DI\Inject("jms_serializer"),
+     *     "widgetManager"   = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
-        StrictDispatcher $eventDispatcher,
-        FormFactory $formFactory,
+        ApiManager $apiManager,
+        EventDispatcherInterface $eventDispatcher,
         HomeTabManager $homeTabManager,
+        PluginManager $pluginManager,
         Request $request,
-        WidgetManager $widgetManager,
-        PluginManager $bundleManager
+        Serializer $serializer,
+        WidgetManager $widgetManager
     ) {
+        $this->apiManager = $apiManager;
+        $this->bundles = $pluginManager->getEnabled(true);
         $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory = $formFactory;
         $this->homeTabManager = $homeTabManager;
+        $this->pluginManager = $pluginManager;
         $this->request = $request;
+        $this->serializer = $serializer;
         $this->widgetManager = $widgetManager;
-        $this->bundleManager = $bundleManager;
-        $this->bundles = $bundleManager->getEnabled(true);
     }
 
     /**
      * @EXT\Route(
-     *     "/home_tabs/configuration/menu",
-     *     name="claro_admin_home_tabs_configuration_menu",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabsConfigMenu.html.twig")
-     *
-     * Displays the homeTabs configuration menu.
-     *
-     * @return Response
-     */
-    public function adminHomeTabsConfigMenuAction()
-    {
-        return array();
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/home_tabs/{homeTabId}/type/{homeTabType}/configuration",
+     *     "/desktop/hometabs/configuration",
      *     name="claro_admin_home_tabs_configuration",
      *     options = {"expose"=true}
      * )
@@ -103,144 +95,100 @@ class HomeTabController extends Controller
      *
      * Displays the admin homeTabs configuration page.
      *
-     * @param int $homeTabId
-     *
      * @return array
      */
-    public function adminHomeTabsConfigAction($homeTabType, $homeTabId = -1)
+    public function adminHomeTabsConfigAction()
     {
-        $homeTabConfigs = ($homeTabType === 'desktop') ?
-            $this->homeTabManager->getAdminDesktopHomeTabConfigs() :
-            $this->homeTabManager->getAdminWorkspaceHomeTabConfigs();
-        $tabId = intval($homeTabId);
-        $widgets = array();
-        $firstElement = true;
-        $initWidgetsPosition = false;
+        return [];
+    }
 
-        if ($tabId !== -1) {
-            foreach ($homeTabConfigs as $homeTabConfig) {
-                if ($tabId === $homeTabConfig->getHomeTab()->getId()) {
-                    $firstElement = false;
-                    break;
-                }
-            }
+    /**
+     * @EXT\Route(
+     *     "/api/admin/home/tabs",
+     *     name="api_get_admin_home_tabs",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Returns list of admin home tabs
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getAdminHomeTabsAction()
+    {
+        $datas = [];
+        $hometabConfigs = $this->homeTabManager->getAdminDesktopHomeTabConfigs();
+
+        foreach ($hometabConfigs as $htc) {
+            $datas[] = $this->serializer->serialize($htc, 'json', SerializationContext::create()->setGroups(['api_home_tab']));
         }
 
-        if ($firstElement) {
-            $firstHomeTabConfig = reset($homeTabConfigs);
+        return new JsonResponse($datas, 200);
+    }
 
-            if ($firstHomeTabConfig) {
-                $tabId = $firstHomeTabConfig->getHomeTab()->getId();
-            }
-        }
-        $homeTab = $this->homeTabManager->getAdminHomeTabByIdAndType($tabId, $homeTabType);
-        $widgetHomeTabConfigs = is_null($homeTab) ?
-            array() :
-            $this->homeTabManager->getAdminWidgetConfigs($homeTab);
-        $wdcs = $this->widgetManager->generateWidgetDisplayConfigsForAdmin($widgetHomeTabConfigs);
+    /**
+     * @EXT\Route(
+     *     "/api/admin/home/tab/create/form",
+     *     name="api_get_admin_home_tab_creation_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Returns the home tab creation form
+     */
+    public function getAdminHomeTabCreationFormAction()
+    {
+        $formType = new HomeTabType('admin');
+        $formType->enableApi();
+        $form = $this->createForm($formType);
 
-        foreach ($wdcs as $wdc) {
-            if ($wdc->getRow() === -1 || $wdc->getColumn() === -1) {
-                $initWidgetsPosition = true;
-                break;
-            }
-        }
-
-        foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
-            $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
-
-            $event = $this->eventDispatcher->dispatch(
-                "widget_{$widgetInstance->getWidget()->getName()}",
-                'DisplayWidget',
-                array($widgetInstance)
-            );
-
-            $widget['config'] = $widgetHomeTabConfig;
-            $widget['content'] = $event->getContent();
-            $widgetInstanceId = $widgetHomeTabConfig->getWidgetInstance()->getId();
-            $widget['widgetDisplayConfig'] = $wdcs[$widgetInstanceId];
-            $widgets[] = $widget;
-        }
-
-        return array(
-            'curentHomeTabId' => $tabId,
-            'homeTabType' => $homeTabType,
-            'homeTabConfigs' => $homeTabConfigs,
-            'widgetsDatas' => $widgets,
-            'initWidgetsPosition' => $initWidgetsPosition,
+        return $this->apiManager->handleFormView(
+            'ClarolineCoreBundle:API:HomeTab\adminHomeTabCreateForm.html.twig',
+            $form
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/home_tab/type/{homeTabType}/create/form",
-     *     name="claro_admin_home_tab_create_form",
+     *     "/api/admin/home/tab/type/{homeTabType}/create",
+     *     name="api_post_admin_home_tab_creation",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabCreateModalForm.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
-     * Displays the admin homeTab form.
+     * Creates a desktop home tab
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function adminHomeTabCreateFormAction($homeTabType)
-    {
-        $homeTabForm = $this->formFactory->create(
-            new HomeTabType(null, true),
-            new HomeTab()
-        );
-        $homeTabConfigForm = $this->formFactory->create(
-            new HomeTabConfigType(true),
-            new HomeTabConfig()
-        );
-
-        return array(
-            'homeTabType' => $homeTabType,
-            'homeTabForm' => $homeTabForm->createView(),
-            'homeTabConfigForm' => $homeTabConfigForm->createView(),
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/home_tab/type/{homeTabType}/create",
-     *     name="claro_admin_home_tab_create",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabCreateModalForm.html.twig")
-     *
-     * Create a new admin homeTab.
-     *
-     * @param string $homeTabType
-     *
-     * @return array|Response
-     */
-    public function adminHomeTabCreateAction($homeTabType)
+    public function postAdminHomeTabCreationAction($homeTabType = 'desktop')
     {
         $isDesktop = ($homeTabType === 'desktop');
         $type = $isDesktop ? 'admin_desktop' : 'admin_workspace';
+        $formType = new HomeTabType('admin');
+        $formType->enableApi();
+        $form = $this->createForm($formType);
+        $form->submit($this->request);
 
-        $homeTab = new HomeTab();
-        $homeTabConfig = new HomeTabConfig();
-        $homeTabForm = $this->formFactory->create(
-            new HomeTabType(null, true),
-            $homeTab
-        );
-        $homeTabConfigForm = $this->formFactory->create(
-            new HomeTabConfigType(true),
-            $homeTabConfig
-        );
-        $homeTabForm->handleRequest($this->request);
-        $homeTabConfigForm->handleRequest($this->request);
+        if ($form->isValid()) {
+            $formDatas = $form->getData();
+            $color = $form->get('color')->getData();
+            $locked = $form->get('locked')->getData();
+            $visible = $form->get('visible')->getData();
+            $roles = $formDatas['roles'];
 
-        if ($homeTabForm->isValid() && $homeTabConfigForm->isValid()) {
+            $homeTab = new HomeTab();
+            $homeTab->setName($formDatas['name']);
             $homeTab->setType($type);
-            $this->homeTabManager->insertHomeTab($homeTab);
 
+            foreach ($roles as $role) {
+                $homeTab->addRole($role);
+            }
+            $homeTabConfig = new HomeTabConfig();
             $homeTabConfig->setHomeTab($homeTab);
             $homeTabConfig->setType($type);
-
+            $homeTabConfig->setLocked($locked);
+            $homeTabConfig->setVisible($visible);
+            $homeTabConfig->setDetails(['color' => $color]);
             $lastOrder = $isDesktop ?
                 $this->homeTabManager->getOrderOfLastAdminDesktopHomeTabConfig() :
                 $this->homeTabManager->getOrderOfLastAdminWorkspaceHomeTabConfig();
@@ -251,555 +199,461 @@ class HomeTabController extends Controller
                 $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
             }
             $this->homeTabManager->persistHomeTabConfigs($homeTab, $homeTabConfig);
-
-            return new JsonResponse($homeTab->getId(), 200);
-        } else {
-            return array(
-                'homeTabType' => $homeTabType,
-                'homeTabForm' => $homeTabForm->createView(),
-                'homeTabConfigForm' => $homeTabConfigForm->createView(),
-            );
-        }
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/home_tab/{homeTab}/type/{homeTabType}/config/{homeTabConfig}/edit/form",
-     *     name="claro_admin_home_tab_edit_form",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabEditModalForm.html.twig")
-     *
-     * Displays the admin homeTab name edition form.
-     *
-     * @param HomeTab       $homeTab
-     * @param HomeTabConfig $homeTabConfig
-     * @param string        $homeTabType
-     *
-     * @throws AccessDeniedException
-     *
-     * @return array
-     */
-    public function adminHomeTabEditFormAction(
-        HomeTab $homeTab,
-        HomeTabConfig $homeTabConfig,
-        $homeTabType
-    ) {
-        $this->checkAdminHomeTab($homeTab, $homeTabType);
-        $this->checkAdminHomeTabConfig($homeTabConfig, $homeTabType);
-
-        $homeTabForm = $this->formFactory->create(
-            new HomeTabType(null, true),
-            $homeTab
-        );
-        $homeTabConfigForm = $this->formFactory->create(
-            new HomeTabConfigType(true),
-            $homeTabConfig
-        );
-
-        return array(
-            'homeTab' => $homeTab,
-            'homeTabConfig' => $homeTabConfig,
-            'homeTabType' => $homeTabType,
-            'homeTabForm' => $homeTabForm->createView(),
-            'homeTabConfigForm' => $homeTabConfigForm->createView(),
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/home_tab/{homeTab}/type/{homeTabType}/config/{homeTabConfig}/edit",
-     *     name="claro_admin_home_tab_edit",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabEditModalForm.html.twig")
-     *
-     * Edit the admin homeTab name.
-     *
-     * @param HomeTab       $homeTab
-     * @param HomeTabConfig $homeTabConfig
-     * @param string        $homeTabType
-     *
-     * @throws AccessDeniedException
-     *
-     * @return array
-     */
-    public function adminHomeTabEditAction(
-        HomeTab $homeTab,
-        HomeTabConfig $homeTabConfig,
-        $homeTabType
-    ) {
-        $this->checkAdminHomeTab($homeTab, $homeTabType);
-        $this->checkAdminHomeTabConfig($homeTabConfig, $homeTabType);
-
-        $homeTabForm = $this->formFactory->create(
-            new HomeTabType(null, true),
-            $homeTab
-        );
-        $homeTabConfigForm = $this->formFactory->create(
-            new HomeTabConfigType(true),
-            $homeTabConfig
-        );
-        $homeTabForm->handleRequest($this->request);
-        $homeTabConfigForm->handleRequest($this->request);
-
-        if ($homeTabForm->isValid() && $homeTabConfigForm->isValid()) {
-            $this->homeTabManager->persistHomeTabConfigs($homeTab, $homeTabConfig);
-            $visibility = $homeTabConfig->isVisible() ? 'visible' : 'hidden';
-            $lock = $homeTabConfig->isLocked() ? 'locked' : 'unlocked';
+            $event = new LogHomeTabAdminCreateEvent($homeTabConfig);
+            $this->eventDispatcher->dispatch('log', $event);
 
             return new JsonResponse(
-                array(
-                    'id' => $homeTab->getId(),
-                    'name' => $homeTab->getName(),
-                    'visibility' => $visibility,
-                    'lock' => $lock,
-                ),
+                $this->serializer->serialize($homeTabConfig, 'json', SerializationContext::create()->setGroups(['api_home_tab'])),
                 200
             );
         } else {
-            return array(
-                'homeTab' => $homeTab,
-                'homeTabConfig' => $homeTabConfig,
-                'homeTabType' => $homeTabType,
-                'homeTabForm' => $homeTabForm->createView(),
-                'homeTabConfigForm' => $homeTabConfigForm->createView(),
+            $options = [
+                'http_code' => 400,
+                'extra_parameters' => null,
+                'serializer_group' => 'api_home_tab',
+            ];
+
+            return $this->apiManager->handleFormView(
+                'ClarolineCoreBundle:API:HomeTab\adminHomeTabCreateForm.html.twig',
+                $form,
+                $options
             );
         }
     }
 
     /**
      * @EXT\Route(
-     *     "/home_tab/{homeTab}/type/{homeTabType}/delete",
-     *     name="claro_admin_home_tab_delete",
+     *     "/api/admin/home/tab/{homeTabConfig}/type/{homeTabType}/edit/form",
+     *     name="api_get_admin_home_tab_edition_form",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
-     * Delete the given homeTab.
+     * Returns the admin home tab edition form
      *
-     * @param HomeTab $homeTab
-     * @param string  $homeTabType
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function adminHomeTabDeleteAction(
-        HomeTab $homeTab,
-        $homeTabType
-    ) {
+    public function getAdminHomeTabEditionFormAction(HomeTabConfig $homeTabConfig, $homeTabType = 'desktop')
+    {
+        $homeTab = $homeTabConfig->getHomeTab();
         $this->checkAdminHomeTab($homeTab, $homeTabType);
-        $this->homeTabManager->deleteHomeTab($homeTab);
+        $this->checkAdminHomeTabConfig($homeTabConfig, $homeTabType);
+        $visible = $homeTabConfig->isVisible();
+        $locked = $homeTabConfig->isLocked();
+        $details = $homeTabConfig->getDetails();
+        $color = isset($details['color']) ? $details['color'] : null;
+        $formType = new HomeTabType('admin', $color, $locked, $visible);
+        $formType->enableApi();
+        $form = $this->createForm($formType, $homeTab);
 
-        return new Response('success', 204);
+        return $this->apiManager->handleFormView(
+            'ClarolineCoreBundle:API:HomeTab\adminHomeTabEditForm.html.twig',
+            $form
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "home_tab/type/{homeTabType}/config/{homeTabConfig}/reorder/next/{nextHomeTabConfigId}",
-     *     name="claro_admin_home_tab_config_reorder",
+     *     "/api/admin/home/tab/{homeTabConfig}/type/{homeTabType}/edit",
+     *     name="api_put_admin_home_tab_edition",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Edits an admin home tab
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function putAdminHomeTabEditionAction(HomeTabConfig $homeTabConfig, $homeTabType = 'desktop')
+    {
+        $homeTab = $homeTabConfig->getHomeTab();
+        $this->checkAdminHomeTab($homeTab, $homeTabType);
+        $this->checkAdminHomeTabConfig($homeTabConfig, $homeTabType);
+        $formType = new HomeTabType('admin');
+        $formType->enableApi();
+        $form = $this->createForm($formType);
+        $form->submit($this->request);
+
+        if ($form->isValid()) {
+            $formDatas = $form->getData();
+            $color = $form->get('color')->getData();
+            $locked = $form->get('locked')->getData();
+            $visible = $form->get('visible')->getData();
+            $roles = $formDatas['roles'];
+            $homeTab->emptyRoles();
+
+            foreach ($roles as $role) {
+                $homeTab->addRole($role);
+            }
+            $homeTab->setName($formDatas['name']);
+            $homeTabConfig->setVisible($visible);
+            $homeTabConfig->setLocked($locked);
+            $details = $homeTabConfig->getDetails();
+
+            if (is_null($details)) {
+                $details = [];
+            }
+            $details['color'] = $color;
+            $homeTabConfig->setDetails($details);
+            $this->homeTabManager->persistHomeTabConfigs($homeTab, $homeTabConfig);
+            $event = new LogHomeTabAdminEditEvent($homeTabConfig);
+            $this->eventDispatcher->dispatch('log', $event);
+
+            return new JsonResponse(
+                $this->serializer->serialize($homeTabConfig, 'json', SerializationContext::create()->setGroups(['api_home_tab'])),
+                200
+            );
+        } else {
+            $options = [
+                'http_code' => 400,
+                'extra_parameters' => null,
+                'serializer_group' => 'api_home_tab',
+            ];
+
+            return $this->apiManager->handleFormView(
+                'ClarolineCoreBundle:API:HomeTab\adminHomeTabEditForm.html.twig',
+                $form,
+                $options
+            );
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/admin/home/tab/{homeTabConfig}/type/{homeTabType}/delete",
+     *     name="api_delete_admin_home_tab",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Deletes admin home tab
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function deleteAdminHomeTabAction(HomeTabConfig $homeTabConfig, $homeTabType = 'desktop')
+    {
+        $homeTab = $homeTabConfig->getHomeTab();
+        $this->checkAdminHomeTab($homeTab, $homeTabType);
+        $this->checkAdminHomeTabConfig($homeTabConfig, $homeTabType);
+        $htcDatas = $this->serializer->serialize($homeTabConfig, 'json', SerializationContext::create()->setGroups(['api_home_tab']));
+        $this->homeTabManager->deleteHomeTabConfig($homeTabConfig);
+        $this->homeTabManager->deleteHomeTab($homeTab);
+        $event = new LogHomeTabAdminDeleteEvent(json_decode($htcDatas, true));
+        $this->eventDispatcher->dispatch('log', $event);
+
+        return new JsonResponse($htcDatas, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/admin/type/{homeTabType}/home/tab/{homeTabConfig}/next/{nextHomeTabConfigId}/reorder",
+     *     name="api_post_admin_home_tab_config_reorder",
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
      *
-     * Update workspace HomeTabConfig order
+     * Update admin HomeTabConfig order
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function adminHomeTabConfigReorderAction(
-        $homeTabType,
-        HomeTabConfig $homeTabConfig,
-        $nextHomeTabConfigId
-    ) {
+    public function postAdminHomeTabConfigReorderAction($homeTabType, HomeTabConfig $homeTabConfig, $nextHomeTabConfigId)
+    {
         $this->checkAdminHomeTabConfig($homeTabConfig, $homeTabType);
         $homeTab = $homeTabConfig->getHomeTab();
         $this->checkAdminHomeTab($homeTab, $homeTabType);
 
-        $this->homeTabManager->reorderAdminHomeTabConfigs(
-            $homeTabType,
-            $homeTabConfig,
-            $nextHomeTabConfigId
-        );
+        $this->homeTabManager->reorderAdminHomeTabConfigs($homeTabType, $homeTabConfig, $nextHomeTabConfigId);
 
-        return new Response('success', 200);
+        return new JsonResponse('success', 200);
     }
 
     /**
      * @EXT\Route(
-     *     "/widget_home_tab_config/{widgetHomeTabConfig}/delete",
-     *     name="claro_admin_widget_home_tab_config_delete",
+     *     "/api/admin/home/tab/{homeTab}/widgets/display",
+     *     name="api_get_admin_widgets_display",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
-     * Delete the given widgetHomeTabConfig.
+     * Retrieves admin widgets
      *
-     * @param WidgetHomeTabConfig $widgetHomeTabConfig
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function adminWidgetHomeTabConfigDeleteAction(
-        WidgetHomeTabConfig $widgetHomeTabConfig
-    ) {
-        $this->checkAdminAccessForWidgetHomeTabConfig($widgetHomeTabConfig);
-        $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
-        $this->homeTabManager->deleteWidgetHomeTabConfig($widgetHomeTabConfig);
-        $this->widgetManager->removeInstance($widgetInstance);
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/widget/diplay/config/{widgetDisplayConfig}/position/row/{row}/column/{column}/update",
-     *     name="claro_admin_widget_display_config_position_update",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     *
-     * Update widget position.
-     *
-     * @return Response
-     */
-    public function adminWidgetDisplayConfigPositionUpdateAction(
-        WidgetDisplayConfig $widgetDisplayConfig,
-        $row,
-        $column
-    ) {
-        $this->checkAdminAccessForWidgetDisplayConfig($widgetDisplayConfig);
-        $widgetDisplayConfig->setRow($row);
-        $widgetDisplayConfig->setColumn($column);
-        $this->widgetManager->persistWidgetDisplayConfigs(array($widgetDisplayConfig));
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "hometab/{homeTab}/type/{homeTabType}/widget/instance/create/form",
-     *     name="claro_admin_widget_instance_create_form",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminWidgetInstanceCreateModalForm.html.twig")
-     *
-     * Displays the widget instance form.
-     *
-     * @param HomeTab $homeTab
-     * @param string  $homeTabType
-     *
-     * @return array
-     */
-    public function adminWidgetInstanceCreateFormAction(HomeTab $homeTab, $homeTabType)
+    public function getAdminWidgetsAction(HomeTab $homeTab)
     {
-        $isDesktop = ($homeTabType === 'desktop');
-        $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType($this->bundles, $isDesktop),
-            new WidgetInstance()
-        );
-        $widgetHomeTabConfigForm = $this->formFactory->create(
-            new WidgetHomeTabConfigType(true),
-            new WidgetHomeTabConfig()
-        );
-        $displayConfigForm = $this->formFactory->create(
-            new WidgetDisplayConfigType(),
-            new WidgetDisplayConfig()
-        );
+        $widgets = [];
+        $configs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
+        $wdcs = $this->widgetManager->generateWidgetDisplayConfigsForAdmin($configs);
 
-        return array(
-            'homeTabType' => $homeTabType,
-            'homeTab' => $homeTab,
-            'instanceForm' => $instanceForm->createView(),
-            'widgetHomeTabConfigForm' => $widgetHomeTabConfigForm->createView(),
-            'displayConfigForm' => $displayConfigForm->createView(),
+        foreach ($configs as $config) {
+            $widgetDatas = [];
+            $widgetInstance = $config->getWidgetInstance();
+            $widget = $widgetInstance->getWidget();
+            $widgetInstanceId = $widgetInstance->getId();
+            $widgetDatas['config'] = $this->serializer->serialize($config, 'json', SerializationContext::create()->setGroups(['api_widget']));
+            $widgetDatas['display'] = $this->serializer->serialize($wdcs[$widgetInstanceId], 'json', SerializationContext::create()->setGroups(['api_widget']));
+            $widgetDatas['configurable'] = $widget->isConfigurable();
+            $event = $this->eventDispatcher->dispatch('widget_'.$widget->getName(), new DisplayWidgetEvent($widgetInstance));
+            $widgetDatas['content'] = $event->getContent();
+            $widgets[] = $widgetDatas;
+        }
+
+        return new JsonResponse($widgets, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/admin/home/tab/widget/create/form",
+     *     name="api_get_admin_widget_instance_creation_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Returns the widget instance creation form
+     */
+    public function getAdminInstanceCreationFormAction()
+    {
+        $formType = new WidgetInstanceConfigType('admin', $this->bundles);
+        $formType->enableApi();
+        $form = $this->createForm($formType);
+
+        return $this->apiManager->handleFormView(
+            'ClarolineCoreBundle:API:Widget\widgetInstanceCreateForm.html.twig',
+            $form
         );
     }
 
     /**
      * @EXT\Route(
-     *     "hometab/{homeTab}/type/{homeTabType}/widget/instance/create",
-     *     name="claro_admin_widget_instance_create",
+     *     "/api/admin/home/tab/{homeTab}/type/{homeTabType}/widget/create",
+     *     name="api_post_admin_widget_instance_creation",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminWidgetInstanceCreateModalForm.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
-     * Creates a widget instance.
-     *
-     * @param HomeTab $homeTab
-     * @param string  $homeTabType
-     *
-     * @return Response
+     * Creates a new widget instance
      */
-    public function adminWidgetInstanceCreateAction(HomeTab $homeTab, $homeTabType)
+    public function postAdminWidgetInstanceCreationAction(HomeTab $homeTab, $homeTabType = 'desktop')
     {
+        $this->checkAdminHomeTab($homeTab, $homeTabType);
         $isDesktop = ($homeTabType === 'desktop');
-        $widgetInstance = new WidgetInstance();
-        $widgetHomeTabConfig = new WidgetHomeTabConfig();
-        $widgetDisplayConfig = new WidgetDisplayConfig();
+        $formType = new WidgetInstanceConfigType('admin', $this->bundles);
+        $formType->enableApi();
+        $form = $this->createForm($formType);
+        $form->submit($this->request);
 
-        $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType($this->bundles, $isDesktop),
-            $widgetInstance
-        );
-        $widgetHomeTabConfigForm = $this->formFactory->create(
-            new WidgetHomeTabConfigType(true),
-            $widgetHomeTabConfig
-        );
-        $displayConfigForm = $this->formFactory->create(
-            new WidgetDisplayConfigType(),
-            $widgetDisplayConfig
-        );
-        $instanceForm->handleRequest($this->request);
-        $widgetHomeTabConfigForm->handleRequest($this->request);
-        $displayConfigForm->handleRequest($this->request);
+        if ($form->isValid()) {
+            $formDatas = $form->getData();
+            $widget = $formDatas['widget'];
+            $color = $form->get('color')->getData();
+            $textTitleColor = $form->get('textTitleColor')->getData();
+            $locked = $form->get('locked')->getData();
+            $visible = $form->get('visible')->getData();
 
-        if ($instanceForm->isValid() &&
-            $widgetHomeTabConfigForm->isValid() &&
-            $displayConfigForm->isValid()) {
+            $widgetInstance = new WidgetInstance();
+            $widgetHomeTabConfig = new WidgetHomeTabConfig();
+            $widgetDisplayConfig = new WidgetDisplayConfig();
+            $widgetInstance->setName($formDatas['name']);
+            $widgetInstance->setWidget($widget);
             $widgetInstance->setIsAdmin(true);
             $widgetInstance->setIsDesktop($isDesktop);
             $widgetHomeTabConfig->setHomeTab($homeTab);
             $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
+            $widgetHomeTabConfig->setVisible($visible);
+            $widgetHomeTabConfig->setLocked($locked);
             $widgetHomeTabConfig->setWidgetOrder(1);
             $widgetHomeTabConfig->setType('admin');
-            $widget = $widgetInstance->getWidget();
             $widgetDisplayConfig->setWidgetInstance($widgetInstance);
             $widgetDisplayConfig->setWidth($widget->getDefaultWidth());
             $widgetDisplayConfig->setHeight($widget->getDefaultHeight());
+            $widgetDisplayConfig->setColor($color);
+            $widgetDisplayConfig->setDetails(['textTitleColor' => $textTitleColor]);
+            $this->widgetManager->persistWidgetConfigs($widgetInstance, $widgetHomeTabConfig, $widgetDisplayConfig);
+            $event = new LogWidgetAdminCreateEvent($homeTab, $widgetHomeTabConfig, $widgetDisplayConfig);
+            $this->eventDispatcher->dispatch('log', $event);
+            $widgetDatas = [
+                'config' => $this->serializer->serialize($widgetHomeTabConfig, 'json', SerializationContext::create()->setGroups(['api_widget'])),
+                'display' => $this->serializer->serialize($widgetDisplayConfig, 'json', SerializationContext::create()->setGroups(['api_widget'])),
+                'configurable' => $widget->isConfigurable(),
+            ];
 
-            $this->widgetManager->persistWidgetConfigs(
-                $widgetInstance,
-                $widgetHomeTabConfig,
-                $widgetDisplayConfig
-            );
-
-            return new JsonResponse(
-                array(
-                    'widgetInstanceId' => $widgetInstance->getId(),
-                    'widgetHomeTabConfigId' => $widgetHomeTabConfig->getId(),
-                    'widgetDisplayConfigId' => $widgetDisplayConfig->getId(),
-                    'color' => $widgetDisplayConfig->getColor(),
-                    'name' => $widgetInstance->getName(),
-                    'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0,
-                    'visibility' => $widgetHomeTabConfig->isVisible() ? 1 : 0,
-                    'lock' => $widgetHomeTabConfig->isLocked() ? 1 : 0,
-                    'width' => $widget->getDefaultWidth(),
-                    'height' => $widget->getDefaultHeight(),
-                ),
-                200
-            );
+            return new JsonResponse($widgetDatas, 200);
         } else {
-            return array(
-                'homeTabType' => $homeTabType,
-                'homeTab' => $homeTab,
-                'instanceForm' => $instanceForm->createView(),
-                'widgetHomeTabConfigForm' => $widgetHomeTabConfigForm->createView(),
-                'displayConfigForm' => $displayConfigForm->createView(),
+            $options = [
+                'http_code' => 400,
+                'extra_parameters' => null,
+                'serializer_group' => 'api_widget',
+            ];
+
+            return $this->apiManager->handleFormView(
+                'ClarolineCoreBundle:API:Widget\widgetInstanceCreateForm.html.twig',
+                $form,
+                $options
             );
         }
     }
 
     /**
      * @EXT\Route(
-     *     "home_tab/type/{homeTabType}/widget/instance/{widgetInstance}/config/{widgetHomeTabConfig}/display/{widgetDisplayConfig}/edit/form",
-     *     name = "claro_admin_widget_config_edit_form",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminWidgetConfigEditModalForm.html.twig")
-     *
-     * @param WidgetInstance      $widgetInstance
-     * @param WidgetHomeTabConfig $widgetHomeTabConfig
-     * @param WidgetDisplayConfig $widgetDisplayConfig
-     * @param string              $homeTabType
-     *
-     * @throws AccessDeniedException
-     *
-     * @return array
-     */
-    public function adminWidgetConfigEditFormAction(
-        WidgetInstance $widgetInstance,
-        WidgetHomeTabConfig $widgetHomeTabConfig,
-        WidgetDisplayConfig $widgetDisplayConfig,
-        $homeTabType
-    ) {
-        $this->checkAdminAccessForWidgetInstance($widgetInstance);
-        $this->checkAdminAccessForWidgetHomeTabConfig($widgetHomeTabConfig);
-        $this->checkAdminAccessForWidgetDisplayConfig($widgetDisplayConfig);
-
-        $instanceForm = $this->formFactory->create(
-            new WidgetDisplayType(),
-            $widgetInstance
-        );
-        $widgetHomeTabConfigForm = $this->formFactory->create(
-            new WidgetHomeTabConfigType(true),
-            $widgetHomeTabConfig
-        );
-        $displayConfigForm = $this->formFactory->create(
-            new WidgetDisplayConfigType(),
-            $widgetDisplayConfig
-        );
-
-        return array(
-            'homeTabType' => $homeTabType,
-            'instanceForm' => $instanceForm->createView(),
-            'widgetHomeTabConfigForm' => $widgetHomeTabConfigForm->createView(),
-            'displayConfigForm' => $displayConfigForm->createView(),
-            'widgetInstance' => $widgetInstance,
-            'widgetHomeTabConfig' => $widgetHomeTabConfig,
-            'widgetDisplayConfig' => $widgetDisplayConfig,
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "home_tab/type/{homeTabType}/widget/instance/{widgetInstance}/config/{widgetHomeTabConfig}/display/{widgetDisplayConfig}/edit",
-     *     name = "claro_admin_widget_config_edit",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminWidgetConfigEditModalForm.html.twig")
-     *
-     * @param WidgetInstance      $widgetInstance
-     * @param WidgetHomeTabConfig $widgetHomeTabConfig
-     * @param WidgetDisplayConfig $widgetDisplayConfig
-     * @param string              $homeTabType
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     *
-     * @return array
-     */
-    public function adminWidgetConfigEditAction(
-        WidgetInstance $widgetInstance,
-        WidgetHomeTabConfig $widgetHomeTabConfig,
-        WidgetDisplayConfig $widgetDisplayConfig,
-        $homeTabType
-    ) {
-        $this->checkAdminAccessForWidgetInstance($widgetInstance);
-        $this->checkAdminAccessForWidgetHomeTabConfig($widgetHomeTabConfig);
-        $this->checkAdminAccessForWidgetDisplayConfig($widgetDisplayConfig);
-
-        $instanceForm = $this->formFactory->create(
-            new WidgetDisplayType(),
-            $widgetInstance
-        );
-        $widgetHomeTabConfigForm = $this->formFactory->create(
-            new WidgetHomeTabConfigType(true),
-            $widgetHomeTabConfig
-        );
-        $displayConfigForm = $this->formFactory->create(
-            new WidgetDisplayConfigType(),
-            $widgetDisplayConfig
-        );
-        $instanceForm->handleRequest($this->request);
-        $widgetHomeTabConfigForm->handleRequest($this->request);
-        $displayConfigForm->handleRequest($this->request);
-
-        if ($instanceForm->isValid() &&
-            $widgetHomeTabConfigForm->isValid() &&
-            $displayConfigForm->isValid()) {
-            $this->widgetManager->persistWidgetConfigs(
-                $widgetInstance,
-                $widgetHomeTabConfig,
-                $widgetDisplayConfig
-            );
-            $visibility = $widgetHomeTabConfig->isVisible() ?
-                'visible' :
-                'hidden';
-            $lock = $widgetHomeTabConfig->isLocked() ?
-                'locked' :
-                'unlocked';
-
-            return new JsonResponse(
-                array(
-                    'id' => $widgetHomeTabConfig->getId(),
-                    'color' => $widgetDisplayConfig->getColor(),
-                    'title' => $widgetInstance->getName(),
-                    'visibility' => $visibility,
-                    'lock' => $lock,
-                ),
-                200
-            );
-        } else {
-            return array(
-                'homeTabType' => $homeTabType,
-                'instanceForm' => $instanceForm->createView(),
-                'widgetHomeTabConfigForm' => $widgetHomeTabConfigForm->createView(),
-                'displayConfigForm' => $displayConfigForm->createView(),
-                'widgetInstance' => $widgetInstance,
-                'widgetHomeTabConfig' => $widgetHomeTabConfig,
-                'widgetDisplayConfig' => $widgetDisplayConfig,
-            );
-        }
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/widget/{widgetInstance}/form",
-     *     name="claro_admin_widget_configuration",
-     *     options={"expose"=true}
-     * )
-     *
-     * Asks a widget to render its configuration page.
-     *
-     * @param WidgetInstance $widgetInstance
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
-     */
-    public function getAdminWidgetFormConfigurationAction(WidgetInstance $widgetInstance)
-    {
-        $this->checkAdminAccessForWidgetInstance($widgetInstance);
-
-        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
-            "widget_{$widgetInstance->getWidget()->getName()}_configuration",
-            'ConfigureWidget',
-            array($widgetInstance)
-        );
-
-        return new Response($event->getContent());
-    }
-
-    /**
-     * @EXT\Route(
-     *     "update/widgets/display/config",
-     *     name="claro_admin_update_widgets_display_config",
+     *     "/api/admin/home/tab/widget/config/{whtc}/display/{wdc}/edit/form",
+     *     name="api_get_admin_widget_instance_edition_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *     "widgetDisplayConfigs",
-     *      class="ClarolineCoreBundle:Widget\WidgetDisplayConfig",
-     *      options={"multipleIds" = true, "name" = "wdcIds"}
-     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Returns the widget instance edition form
      */
-    public function updateAdminWidgetsDisplayConfigAction(array $widgetDisplayConfigs)
+    public function getAdminWidgetInstanceEditionFormAction(WidgetHomeTabConfig $whtc, WidgetDisplayConfig $wdc)
     {
-        $toPersist = array();
+        $this->checkAdminAccessForWidgetHomeTabConfig($whtc);
+        $this->checkAdminAccessForWidgetDisplayConfig($wdc);
+        $widgetInstance = $wdc->getWidgetInstance();
+        $widget = $widgetInstance->getWidget();
+        $this->checkAdminAccessForWidgetInstance($widgetInstance);
+        $visible = $whtc->isVisible();
+        $locked = $whtc->isLocked();
+        $color = $wdc->getColor();
+        $details = $wdc->getDetails();
+        $textTitleColor = isset($details['textTitleColor']) ? $details['textTitleColor'] : null;
+        $formType = new WidgetInstanceConfigType('admin', $this->bundles, false, [], $color, $textTitleColor, $locked, $visible, false);
+        $formType->enableApi();
+        $form = $this->createForm($formType, $widgetInstance);
 
-        foreach ($widgetDisplayConfigs as $config) {
-            $this->checkAdminAccessForWidgetDisplayConfig($config);
+        return $this->apiManager->handleFormView(
+            'ClarolineCoreBundle:API:Widget\widgetInstanceEditForm.html.twig',
+            $form,
+            ['extra_infos' => $widget->isConfigurable()]
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/admin/home/tab/widget/config/{whtc}/display/{wdc}/edit",
+     *     name="api_put_admin_widget_instance_edition",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Edits widget instance config
+     */
+    public function putAdminWidgetInstanceEditionAction(WidgetHomeTabConfig $whtc, WidgetDisplayConfig $wdc)
+    {
+        $widgetInstance = $wdc->getWidgetInstance();
+        $widget = $widgetInstance->getWidget();
+        $this->checkAdminAccessForWidgetHomeTabConfig($whtc);
+        $this->checkAdminAccessForWidgetDisplayConfig($wdc);
+        $this->checkAdminAccessForWidgetInstance($widgetInstance);
+        $color = $wdc->getColor();
+        $details = $wdc->getDetails();
+        $visible = $whtc->isVisible();
+        $locked = $whtc->isLocked();
+        $textTitleColor = isset($details['textTitleColor']) ? $details['textTitleColor'] : null;
+        $formType = new WidgetInstanceConfigType('admin', $this->bundles, false, [], $color, $textTitleColor, $locked, $visible, false);
+        $formType->enableApi();
+        $form = $this->createForm($formType, $widgetInstance);
+        $form->submit($this->request);
+
+        if ($form->isValid()) {
+            $instance = $form->getData();
+            $name = $instance->getName();
+            $color = $form->get('color')->getData();
+            $textTitleColor = $form->get('textTitleColor')->getData();
+            $visible = $form->get('visible')->getData();
+            $locked = $form->get('locked')->getData();
+            $widgetInstance->setName($name);
+            $whtc->setVisible($visible);
+            $whtc->setLocked($locked);
+            $wdc->setColor($color);
+            $details = $wdc->getDetails();
+
+            if (is_null($details)) {
+                $details = [];
+            }
+            $details['textTitleColor'] = $textTitleColor;
+            $wdc->setDetails($details);
+
+            $this->widgetManager->persistWidgetConfigs($widgetInstance, null, $wdc);
+            $event = new LogWidgetAdminEditEvent($widgetInstance, $whtc, $wdc);
+            $this->eventDispatcher->dispatch('log', $event);
+            $widgetDatas = [
+                'config' => $this->serializer->serialize($whtc, 'json', SerializationContext::create()->setGroups(['api_widget'])),
+                'display' => $this->serializer->serialize($wdc, 'json', SerializationContext::create()->setGroups(['api_widget'])),
+            ];
+
+            return new JsonResponse($widgetDatas, 200);
+        } else {
+            $options = [
+                'http_code' => 400,
+                'extra_parameters' => null,
+                'serializer_group' => 'api_widget',
+                'extra_infos' => $widget->isConfigurable(),
+            ];
+
+            return $this->apiManager->handleFormView(
+                'ClarolineCoreBundle:API:Widget\widgetInstanceEditForm.html.twig',
+                $form,
+                $options
+            );
         }
-        $datas = $this->request->request->all();
+    }
 
-        foreach ($widgetDisplayConfigs as $config) {
-            $id = $config->getId();
+    /**
+     * @EXT\Route(
+     *     "/api/admin/home/tab/widget/{widgetHomeTabConfig}/delete",
+     *     name="api_delete_admin_widget_home_tab_config",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Deletes a widget
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function deleteAdminWidgetHomeTabConfigAction(WidgetHomeTabConfig $widgetHomeTabConfig)
+    {
+        $this->checkAdminAccessForWidgetHomeTabConfig($widgetHomeTabConfig);
+        $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
+        $datas = $this->serializer->serialize($widgetInstance, 'json', SerializationContext::create()->setGroups(['api_widget']));
+        $this->homeTabManager->deleteWidgetHomeTabConfig($widgetHomeTabConfig);
+        $this->widgetManager->removeInstance($widgetInstance);
+        $event = new LogWidgetAdminDeleteEvent(json_decode($datas, true));
+        $this->eventDispatcher->dispatch('log', $event);
 
-            if (isset($datas[$id]) && !empty($datas[$id])) {
-                $config->setRow($datas[$id]['row']);
-                $config->setColumn($datas[$id]['column']);
-                $config->setWidth($datas[$id]['width']);
-                $config->setHeight($datas[$id]['height']);
-                $toPersist[] = $config;
+        return new JsonResponse($datas, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/admin/widget/display/{datas}/update",
+     *     name="api_put_admin_widget_display_update",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Updates widgets display
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function putAdminWidgetDisplayUpdateAction($datas)
+    {
+        $jsonDatas = json_decode($datas, true);
+        $displayConfigs = [];
+
+        foreach ($jsonDatas as $data) {
+            $displayConfig = $this->widgetManager->getWidgetDisplayConfigById($data['id']);
+
+            if (!is_null($displayConfig)) {
+                $this->checkAdminAccessForWidgetDisplayConfig($displayConfig);
+                $displayConfig->setRow($data['row']);
+                $displayConfig->setColumn($data['col']);
+                $displayConfig->setWidth($data['sizeX']);
+                $displayConfig->setHeight($data['sizeY']);
+                $displayConfigs[] = $displayConfig;
             }
         }
+        $this->widgetManager->persistWidgetDisplayConfigs($displayConfigs);
 
-        if (count($toPersist) > 0) {
-            $this->widgetManager->persistWidgetDisplayConfigs($toPersist);
-        }
-
-        return new Response('success', 200);
+        return new JsonResponse($jsonDatas, 200);
     }
 
     private function checkAdminHomeTab(HomeTab $homeTab, $homeTabType)
@@ -811,10 +665,8 @@ class HomeTabController extends Controller
         }
     }
 
-    private function checkAdminHomeTabConfig(
-        HomeTabConfig $homeTabConfig,
-        $homeTabType
-    ) {
+    private function checkAdminHomeTabConfig(HomeTabConfig $homeTabConfig, $homeTabType)
+    {
         if (!is_null($homeTabConfig->getUser()) ||
             !is_null($homeTabConfig->getWorkspace()) ||
             $homeTabConfig->getType() !== 'admin_'.$homeTabType) {

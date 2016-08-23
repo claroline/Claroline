@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Plugin;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceTypeRepository")
@@ -83,6 +83,11 @@ class ResourceType
      * @ORM\Column(type="integer")
      */
     protected $defaultMask = 1;
+
+    /**
+     * @ORM\Column(name="is_enabled", type="boolean")
+     */
+    protected $isEnabled = true;
 
     /**
      * Constructor.
@@ -176,5 +181,15 @@ class ResourceType
     public function getDefaultMask()
     {
         return $this->defaultMask;
+    }
+
+    public function setIsEnabled($isEnabled)
+    {
+        $this->isEnabled = $isEnabled;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isEnabled;
     }
 }

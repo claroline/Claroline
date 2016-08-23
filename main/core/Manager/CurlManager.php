@@ -12,39 +12,36 @@
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\AbstractType;
 
 /**
  * @DI\Service("claroline.manager.curl_manager")
  */
 class CurlManager
 {
-    public function exec($url, $payload = null, $type = 'GET')
+    public function exec($url, $payload = null, $type = 'GET', $options = [], $autoClose = true, &$ch = null)
     {
+        $options[CURLOPT_RETURNTRANSFER] = true;
+        $options[CURLOPT_URL] = $url;
+
         $url = trim($url);
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
+
+        foreach ($options as $option => $value) {
+            curl_setopt($ch, $option, $value);
+        }
 
         switch ($type) {
             case 'POST': $this->setPostCurl($ch, $payload); break;
             case 'PUT': $this->setPutCurl($ch, $payload); break;
         }
 
-        //$qs = http_build_query(array('payload' => $payload));
-        //curl_setopt($ch, CURLOPT_POSTFIELDS, $qs);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $serverOutput = curl_exec($ch);
-        curl_close($ch);
+
+        if ($autoClose) {
+            curl_close($ch);
+        }
 
         return $serverOutput;
-    }
-
-    /**
-     * Transforms an entity into an array wich will be used by the 'post' curl request for a specified form.
-     */
-    public function formEncode($entity, AbstractType $formType)
-    {
-        $data = array();
     }
 
     private function setPostCurl($ch, $payload)

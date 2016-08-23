@@ -13,21 +13,24 @@ namespace Claroline\CursusBundle\Controller\API;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CursusBundle\Entity\Cursus;
-use Claroline\CursusBundle\Entity\CursusGroup;
-use Claroline\CursusBundle\Entity\CursusUser;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
+use Claroline\CursusBundle\Entity\Cursus;
+use Claroline\CursusBundle\Entity\CursusGroup;
+use Claroline\CursusBundle\Entity\CursusUser;
 use Claroline\CursusBundle\Manager\CursusManager;
+use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -38,28 +41,41 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CursusController extends FOSRestController
 {
     private $cursusManager;
+    private $facetManager;
     private $formFactory;
+    private $platformConfigHandler;
+    private $profilePropertyManager;
     private $request;
 
     /**
      * @DI\InjectParams({
-     *     "cursusManager" = @DI\Inject("claroline.manager.cursus_manager"),
-     *     "formFactory"   = @DI\Inject("form.factory"),
-     *     "requestStack"  = @DI\Inject("request_stack")
+     *     "cursusManager"         = @DI\Inject("claroline.manager.cursus_manager"),
+     *     "facetManager"          = @DI\Inject("claroline.manager.facet_manager"),
+     *     "formFactory"           = @DI\Inject("form.factory"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "requestStack"          = @DI\Inject("request_stack")
      * })
      */
     public function __construct(
         CursusManager $cursusManager,
+        FacetManager $facetManager,
         FormFactory $formFactory,
+        PlatformConfigurationHandler $platformConfigHandler,
         RequestStack $requestStack
     ) {
         $this->cursusManager = $cursusManager;
+        $this->facetManager = $facetManager;
         $this->formFactory = $formFactory;
+        $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
     }
 
     /**
-     * @View(serializerGroups={"api_cursus"})
+     * @EXT\Route(
+     *     "/root/cursus/all",
+     *     name="api_get_all_root_cursus"
+     * )
+     * @View(serializerGroups={"api_workspace_min"})
      * @ApiDoc(
      *     description="Returns root cursus list",
      *     views = {"cursus"}
@@ -68,6 +84,38 @@ class CursusController extends FOSRestController
     public function getAllRootCursusAction()
     {
         return $this->cursusManager->getAllRootCursus('', 'cursusOrder');
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/root/cursus",
+     *     name="api_get_root_cursus"
+     * )
+     * @View(serializerGroups={"api_user_min"})
+     * @ApiDoc(
+     *     description="Returns root cursus list without children",
+     *     views = {"cursus"}
+     * )
+     */
+    public function getRootCursusAction()
+    {
+        return $this->cursusManager->getAllRootCursus('', 'cursusOrder');
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/cursus/{cursus}",
+     *     name="api_get_one_cursus"
+     * )
+     * @View(serializerGroups={"api_workspace_min"})
+     * @ApiDoc(
+     *     description="Returns a cursus",
+     *     views = {"cursus"}
+     * )
+     */
+    public function getOneCursusAction(Cursus $cursus)
+    {
+        return [$cursus];
     }
 
     /**
@@ -289,11 +337,8 @@ class CursusController extends FOSRestController
      *     views = {"cursus"}
      * )
      */
-    public function postGroupRegisterToMultipleCursusAction(
-        Group $group,
-        $cursusIdsTxt,
-        $sessionsIdsTxt
-    ) {
+    public function postGroupRegisterToMultipleCursusAction(Group $group, $cursusIdsTxt, $sessionsIdsTxt)
+    {
         $multipleCursus = $this->cursusManager->getCursusFromCursusIdsTxt($cursusIdsTxt);
         $sessions = $this->cursusManager->getSessionsFromSessionsIdsTxt($sessionsIdsTxt);
         $results = $this->cursusManager->registerGroupToCursusAndSessions($group, $multipleCursus, $sessions);
@@ -308,11 +353,8 @@ class CursusController extends FOSRestController
      *     views = {"cursus"}
      * )
      */
-    public function postUsersRegisterToMultipleCursusAction(
-        $usersIdsTxt,
-        $cursusIdsTxt,
-        $sessionsIdsTxt
-    ) {
+    public function postUsersRegisterToMultipleCursusAction($usersIdsTxt, $cursusIdsTxt, $sessionsIdsTxt)
+    {
         $users = $this->cursusManager->getUsersFromUsersIdsTxt($usersIdsTxt);
         $multipleCursus = $this->cursusManager->getCursusFromCursusIdsTxt($cursusIdsTxt);
         $sessions = $this->cursusManager->getSessionsFromSessionsIdsTxt($sessionsIdsTxt);
@@ -444,13 +486,127 @@ class CursusController extends FOSRestController
      *     views = {"cursus"}
      * )
      */
-    public function postCourseQueuedUserTransferAction(
-        CourseRegistrationQueue $queue,
-        CourseSession $session
-    ) {
+    public function postCourseQueuedUserTransferAction(CourseRegistrationQueue $queue, CourseSession $session)
+    {
         $results = $this->cursusManager->transferQueuedUserToSession($queue, $session);
 
         return $results;
+    }
+
+    /**
+     * @View(serializerGroups={"api_user_min"})
+     * @ApiDoc(
+     *     description="Returns the courses list",
+     *     views = {"cursus"}
+     * )
+     * @Get("/all/courses")
+     */
+    public function getAllCoursesAction()
+    {
+        return $this->cursusManager->getAllCourses('', 'title', 'ASC', false);
+    }
+
+    /**
+     * @View(serializerGroups={"api_cursus"})
+     * @ApiDoc(
+     *     description="Returns the unmapped courses list",
+     *     views = {"cursus"}
+     * )
+     * @Get("/cursus/{cursus}/all/unmapped/courses")
+     */
+    public function getAllUnmappedCoursesAction(Cursus $cursus)
+    {
+        return $this->cursusManager->getUnmappedCoursesByCursus($cursus, '', 'title', 'ASC', false);
+    }
+
+    /**
+     * @View(serializerGroups={"api_user_min"})
+     * @ApiDoc(
+     *     description="Returns the sessions list",
+     *     views = {"cursus"}
+     * )
+     * @Get("/sessions/all")
+     */
+    public function getSessionsAction()
+    {
+        return $this->cursusManager->getAllSessions();
+    }
+
+    /**
+     * @View(serializerGroups={"api_user_min"})
+     * @ApiDoc(
+     *     description="Returns the sessions list by course",
+     *     views = {"cursus"}
+     * )
+     * @Get("/course/{course}/sessions")
+     */
+    public function getSessionsByCourseAction(Course $course)
+    {
+        return $this->cursusManager->getSessionsByCourse($course, 'startDate', 'ASC');
+    }
+
+    /**
+     * @View(serializerGroups={"api_cursus"})
+     * @ApiDoc(
+     *     description="Returns workspace id of session",
+     *     views = {"cursus"}
+     * )
+     * @Get("/session/{session}/workspace/id")
+     */
+    public function getWorkspaceIdFromSessionAction(CourseSession $session)
+    {
+        $workspace = $session->getWorkspace();
+
+        return is_null($workspace) ? null : $workspace->getId();
+    }
+
+    /**
+     * @View(serializerGroups={"api_user_min"})
+     * @ApiDoc(
+     *     description="Returns the events list by session",
+     *     views = {"cursus"}
+     * )
+     * @Get("/session/{session}/events")
+     */
+    public function getSessionEventsBySessionAction(CourseSession $session)
+    {
+        return $this->cursusManager->getEventsBySession($session, 'startDate', 'ASC');
+    }
+
+    /**
+     * @View(serializerGroups={"api_cursus"})
+     * @ApiDoc(
+     *     description="Returns courses profile tab option",
+     *     views = {"cursus"}
+     * )
+     * @Get("/courses/profile/tab/option")
+     */
+    public function getCoursesProfileTabOptionAction()
+    {
+        $facetPreferences = $this->facetManager->getVisiblePublicPreference();
+        $enabled = $facetPreferences['baseData'] ?
+            $this->platformConfigHandler->getParameter('cursus_enable_courses_profile_tab') :
+            false;
+
+        return $enabled ? true : false;
+    }
+
+    /**
+     * @View(serializerGroups={"api_cursus"})
+     * @ApiDoc(
+     *     description="Returns the finished sessions by user",
+     *     views = {"cursus"}
+     * )
+     * @Get("/user/{user}/closed/sessions")
+     */
+    public function getClosedSessionsByLeanerAction(User $user)
+    {
+        $facetPreferences = $this->facetManager->getVisiblePublicPreference();
+        $enabled = $facetPreferences['baseData'] ?
+            $this->platformConfigHandler->getParameter('cursus_enable_courses_profile_tab') :
+            false;
+
+        return $enabled ? $this->cursusManager->getClosedSessionsByUser($user) : [];
     }
 
     /***********************************
@@ -478,7 +634,7 @@ class CursusController extends FOSRestController
      */
     public function getAllCursusHierarchyAction()
     {
-        $hierarchy = array();
+        $hierarchy = [];
         $allCursus = $this->cursusManager->getAllCursus();
 
         foreach ($allCursus as $cursus) {
@@ -486,14 +642,14 @@ class CursusController extends FOSRestController
 
             if (is_null($parent)) {
                 if (!isset($hierarchy['root'])) {
-                    $hierarchy['root'] = array();
+                    $hierarchy['root'] = [];
                 }
                 $hierarchy['root'][] = $cursus;
             } else {
                 $parentId = $parent->getId();
 
                 if (!isset($hierarchy[$parentId])) {
-                    $hierarchy[$parentId] = array();
+                    $hierarchy[$parentId] = [];
                 }
                 $hierarchy[$parentId][] = $cursus;
             }
@@ -532,13 +688,13 @@ class CursusController extends FOSRestController
      *     description="Register an user to a cursus",
      *     views = {"cursus"}
      * )
-     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
+     * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserToCursusAction(User $user, Cursus $cursus)
     {
         $this->cursusManager->registerUserToCursus($cursus, $user);
 
-        return array('success');
+        return ['success'];
     }
 
     /**
@@ -547,13 +703,13 @@ class CursusController extends FOSRestController
      *     description="Unregister an user from a cursus",
      *     views = {"cursus"}
      * )
-     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
+     * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function removeUserFromCursusAction(User $user, Cursus $cursus)
     {
         $this->cursusManager->unregisterUserFromCursus($cursus, $user);
 
-        return array('success');
+        return ['success'];
     }
 
     /**
@@ -562,13 +718,13 @@ class CursusController extends FOSRestController
      *     description="Register an user to a course session",
      *     views = {"cursus"}
      * )
-     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
+     * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserToSessionAction(User $user, CourseSession $session, $type = 0)
     {
-        $this->cursusManager->registerUsersToSession($session, array($user), $type);
+        $this->cursusManager->registerUsersToSession($session, [$user], $type);
 
-        return array('success');
+        return ['success'];
     }
 
     /**
@@ -580,9 +736,9 @@ class CursusController extends FOSRestController
      */
     public function removeUserFromSessionAction(CourseSessionUser $sessionUser)
     {
-        $this->cursusManager->unregisterUsersFromSession(array($sessionUser));
+        $this->cursusManager->unregisterUsersFromSession([$sessionUser]);
 
-        return array('success');
+        return ['success'];
     }
 
     /**
@@ -591,13 +747,13 @@ class CursusController extends FOSRestController
      *     description="Register an user to a cursus hierarchy",
      *     views = {"cursus"}
      * )
-     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
+     * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserToCursusHierarchyAction(User $user, Cursus $cursus)
     {
-        $hierarchy = array();
-        $lockedHierarchy = array();
-        $unlockedCursus = array();
+        $hierarchy = [];
+        $lockedHierarchy = [];
+        $unlockedCursus = [];
         $allRelatedCursus = $this->cursusManager->getRelatedHierarchyByCursus($cursus);
         foreach ($allRelatedCursus as $oneCursus) {
             $parent = $oneCursus->getParent();
@@ -605,14 +761,14 @@ class CursusController extends FOSRestController
 
             if (is_null($parent)) {
                 if (!isset($hierarchy['root'])) {
-                    $hierarchy['root'] = array();
+                    $hierarchy['root'] = [];
                 }
                 $hierarchy['root'][] = $oneCursus;
             } else {
                 $parentId = $parent->getId();
 
                 if (!isset($hierarchy[$parentId])) {
-                    $hierarchy[$parentId] = array();
+                    $hierarchy[$parentId] = [];
                 }
                 $hierarchy[$parentId][] = $oneCursus;
             }
@@ -625,6 +781,6 @@ class CursusController extends FOSRestController
         );
         $this->cursusManager->registerUserToMultipleCursus($unlockedCursus, $user, true, true);
 
-        return array('success');
+        return ['success'];
     }
 }

@@ -23,7 +23,7 @@ class LogCourseSessionUserUnregistrationEvent extends LogGenericEvent
         $session = $sessionUser->getSession();
         $course = $session->getCourse();
         $user = $sessionUser->getUser();
-        $details = array();
+        $details = [];
         $details['username'] = $user->getUsername();
         $details['firsName'] = $user->getFirstName();
         $details['lastName'] = $user->getLastName();
@@ -48,6 +48,6 @@ class LogCourseSessionUserUnregistrationEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_ADMIN);
+        return [self::DISPLAYED_ADMIN];
     }
 }

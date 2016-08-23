@@ -34,29 +34,29 @@ class FormationsType extends AbstractWidgetType
         $builder
             ->add('name', 'text')
             ->add('startDate', 'datepicker',
-                array(
+                [
                     'required' => false,
                     'language' => $language,
-                    'format' => 'Y-M-d',
-               )
+                    'format' => 'Y/M/d',
+               ]
             )
             ->add('endDate', 'datepicker',
-                array(
+                [
                     'required' => false,
                     'language' => $language,
-                    'format' => 'Y-M-d',
-               )
+                    'format' => 'Y/M/d',
+               ]
             )
             ->add('establishmentName', 'text')
             ->add('diploma', 'text')
             ->add('children', 'collection',
-                array(
+                [
                     'type' => 'icap_portfolio_widget_form_formations_formation',
                     'by_reference' => false,
                     'allow_add' => true,
                     'allow_delete' => true,
                     'property_path' => 'resources',
-                )
+                ]
             );
     }
 
@@ -68,11 +68,11 @@ class FormationsType extends AbstractWidgetType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Icap\PortfolioBundle\Entity\Widget\FormationsWidget',
                 'translation_domain' => 'icap_portfolio',
                 'csrf_protection' => false,
-            )
+            ]
         );
     }
 }

@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\RefreshCacheEvent;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Claroline\CoreBundle\Entity\User;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Event\RefreshCacheEvent;
-use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
 
 /**
  * @DI\Service("claroline.manager.mail_manager")
@@ -78,41 +78,41 @@ class MailManager
     {
         $this->container->get('claroline.manager.user_manager')->initializePassword($user);
         $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate('claro_security_reset_password', array('hash' => $hash), true);
-        $subject = $this->translator->trans('resetting_your_password', array(), 'platform');
+        $link = $this->router->generate('claro_security_reset_password', ['hash' => $hash], true);
+        $subject = $this->translator->trans('resetting_your_password', [], 'platform');
 
         $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Mail:forgotPassword.html.twig', array('user' => $user, 'link' => $link)
+            'ClarolineCoreBundle:Mail:forgotPassword.html.twig', ['user' => $user, 'link' => $link]
         );
 
-        return $this->send($subject, $body, array($user), null, array(), true);
+        return $this->send($subject, $body, [$user], null, [], true);
     }
 
     public function sendInitPassword(User $user)
     {
         $this->container->get('claroline.manager.user_manager')->initializePassword($user);
         $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate('claro_security_reset_password', array('hash' => $hash), true);
-        $subject = $this->translator->trans('initialize_your_password', array(), 'platform');
+        $link = $this->router->generate('claro_security_reset_password', ['hash' => $hash], true);
+        $subject = $this->translator->trans('initialize_your_password', [], 'platform');
 
         $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Mail:initialize_password.html.twig', array('user' => $user, 'link' => $link)
+            'ClarolineCoreBundle:Mail:initialize_password.html.twig', ['user' => $user, 'link' => $link]
         );
 
-        return $this->send($subject, $body, array($user), null, array(), true);
+        return $this->send($subject, $body, [$user], null, [], true);
     }
 
     public function sendEnableAccountMessage(User $user)
     {
         $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate('claro_security_activate_user', array('hash' => $hash), true);
-        $subject = $this->translator->trans('activate_account', array(), 'platform');
+        $link = $this->router->generate('claro_security_activate_user', ['hash' => $hash], true);
+        $subject = $this->translator->trans('activate_account', [], 'platform');
 
         $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Mail:activateUser.html.twig', array('user' => $user, 'link' => $link)
+            'ClarolineCoreBundle:Mail:activateUser.html.twig', ['user' => $user, 'link' => $link]
         );
 
-        return $this->send($subject, $body, array($user), null, array(), true);
+        return $this->send($subject, $body, [$user], null, [], true);
     }
 
     public function sendValidateEmail($hash)
@@ -120,11 +120,11 @@ class MailManager
         $users = $this->container->get('claroline.manager.user_manager')->getByEmailValidationHash($hash);
         $url =
             $this->container->get('request')->getSchemeAndHttpHost()
-            .$this->router->generate('claro_security_validate_email', array('hash' => $hash));
-        $body = $this->translator->trans('email_validation_url_display', array('%url%' => $url), 'platform');
-        $subject = $this->translator->trans('email_validation', array(), 'platform');
+            .$this->router->generate('claro_security_validate_email', ['hash' => $hash]);
+        $body = $this->translator->trans('email_validation_url_display', ['%url%' => $url], 'platform');
+        $subject = $this->translator->trans('email_validation', [], 'platform');
 
-        $this->send($subject, $body, $users, null, array(), true);
+        $this->send($subject, $body, $users, null, [], true);
     }
 
     /**
@@ -135,14 +135,14 @@ class MailManager
     public function sendCreationMessage(User $user)
     {
         $locale = $user->getLocale();
-        $content = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_registration'));
+        $content = $this->contentManager->getTranslatedContent(['type' => 'claro_mail_registration']);
         $displayedLocale = isset($content[$locale]) ? $locale : $this->ch->getParameter('locale_language');
         $body = $content[$displayedLocale]['content'];
         $subject = $content[$displayedLocale]['title'];
         $url =
             $this->container->get('request')->getSchemeAndHttpHost()
-            .$this->router->generate('claro_security_validate_email', array('hash' => $user->getEmailValidationHash()));
-        $validationLink = $this->translator->trans('email_validation_url_display', array('%url%' => $url), 'platform');
+            .$this->router->generate('claro_security_validate_email', ['hash' => $user->getEmailValidationHash()]);
+        $validationLink = $this->translator->trans('email_validation_url_display', ['%url%' => $url], 'platform');
 
         $body = str_replace('%first_name%', $user->getFirstName(), $body);
         $body = str_replace('%last_name%', $user->getLastName(), $body);
@@ -151,17 +151,17 @@ class MailManager
         $body = str_replace('%validation_mail%', $validationLink, $body);
         $subject = str_replace('%platform_name%', $this->ch->getParameter('name'), $subject);
 
-        return $this->send($subject, $body, array($user), null, array(), true);
+        return $this->send($subject, $body, [$user], null, [], true);
     }
 
     public function getMailInscription()
     {
-        return $this->contentManager->getContent(array('type' => 'claro_mail_registration'));
+        return $this->contentManager->getContent(['type' => 'claro_mail_registration']);
     }
 
     public function getMailLayout()
     {
-        return $this->contentManager->getContent(array('type' => 'claro_mail_layout'));
+        return $this->contentManager->getContent(['type' => 'claro_mail_layout']);
     }
 
     /**
@@ -174,7 +174,7 @@ class MailManager
      *
      * @return bool
      */
-    public function send($subject, $body, array $users, $from = null, array $extra = array(), $force = false)
+    public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false)
     {
         if (count($users) === 0) {
             //obviously, if we're not going to send anything to anyone, it's better to stop
@@ -186,7 +186,7 @@ class MailManager
 
             $to = [];
 
-            $layout = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_layout'));
+            $layout = $this->contentManager->getTranslatedContent(['type' => 'claro_mail_layout']);
             $fromEmail = $this->getMailerFrom();
             $locale = count($users) === 1 ? $users[0]->getLocale() : $this->ch->getParameter('locale_language');
 
@@ -258,7 +258,7 @@ class MailManager
     public function validateMailVariable(array $translatedContents, $mailVariable)
     {
         $languages = array_keys($translatedContents);
-        $errors = array();
+        $errors = [];
         $voidCount = 0;
 
         foreach ($languages as $language) {

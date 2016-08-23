@@ -12,16 +12,16 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Pager\PagerFactory;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
-use Claroline\CoreBundle\Pager\PagerFactory;
-use Symfony\Component\Translation\TranslatorInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.group_manager")
@@ -77,8 +77,10 @@ class GroupManager
     {
         $group->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $this->om->persist($group);
-        $this->eventDispatcher->dispatch('log', 'Log\LogGroupCreate', array($group));
+        $this->eventDispatcher->dispatch('log', 'Log\LogGroupCreate', [$group]);
         $this->om->flush();
+
+        return $group;
     }
 
     /**
@@ -91,7 +93,7 @@ class GroupManager
         $this->eventDispatcher->dispatch(
             'claroline_groups_delete',
             'GenericDatas',
-            array(array($group))
+            [[$group]]
         );
 
         $this->om->remove($group);
@@ -110,20 +112,20 @@ class GroupManager
         $unitOfWork->computeChangeSets();
         $changeSet = $unitOfWork->getEntityChangeSet($group);
         $newRoles = $group->getPlatformRoles();
-        $oldRolesTranslationKeys = array();
+        $oldRolesTranslationKeys = [];
 
         foreach ($oldRoles as $oldRole) {
             $oldRolesTranslationKeys[] = $oldRole->getTranslationKey();
         }
 
-        $newRolesTransactionKey = array();
+        $newRolesTransactionKeys = [];
 
         foreach ($newRoles as $newRole) {
             $newRolesTransactionKeys[] = $newRole->getTranslationKey();
         }
 
-        $changeSet['platformRole'] = array($oldRolesTranslationKeys, $newRolesTransactionKey);
-        $this->eventDispatcher->dispatch('log', 'Log\LogGroupUpdate', array($group, $changeSet));
+        $changeSet['platformRole'] = [$oldRolesTranslationKeys, $newRolesTransactionKeys];
+        $this->eventDispatcher->dispatch('log', 'Log\LogGroupUpdate', [$group, $changeSet]);
 
         $this->om->persist($group);
         $this->om->flush();
@@ -137,7 +139,7 @@ class GroupManager
      */
     public function addUsersToGroup(Group $group, array $users)
     {
-        $addedUsers = array();
+        $addedUsers = [];
 
         if (!$this->validateAddUsersToGroup($users, $group)) {
             throw new Exception\AddRoleException();
@@ -147,7 +149,7 @@ class GroupManager
             if (!$group->containsUser($user)) {
                 $addedUsers[] = $user;
                 $group->addUser($user);
-                $this->eventDispatcher->dispatch('log', 'Log\LogGroupAddUser', array($group, $user));
+                $this->eventDispatcher->dispatch('log', 'Log\LogGroupAddUser', [$group, $user]);
             }
         }
 
@@ -184,7 +186,7 @@ class GroupManager
     {
         foreach ($users as $user) {
             $group->removeUser($user);
-            $this->eventDispatcher->dispatch('log', 'Log\LogGroupRemoveUser', array($group, $user));
+            $this->eventDispatcher->dispatch('log', 'Log\LogGroupRemoveUser', [$group, $user]);
         }
 
         $this->om->persist($group);
@@ -431,6 +433,7 @@ class GroupManager
 
     public function validateAddUsersToGroup(array $users, Group $group)
     {
+        return true;
         $countToRegister = count($users);
         $roles = $group->getPlatformRoles();
 
@@ -449,6 +452,30 @@ class GroupManager
     public function getGroupByName($name, $executeQuery = true)
     {
         return $this->groupRepo->findGroupByName($name, $executeQuery);
+    }
+
+    public function getGroupByNameAndScheduledForInsert($name)
+    {
+        $group = $this->groupRepo->findGroupByName($name, true);
+
+        if (!$group) {
+            $group = $this->getGroupByNameScheduledForInsert($name);
+        }
+
+        return $group;
+    }
+
+    public function getGroupByNameScheduledForInsert($name)
+    {
+        $scheduledForInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
+
+        foreach ($scheduledForInsert as $entity) {
+            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Group') {
+                if ($entity->getName() === $name) {
+                    return $entity;
+                }
+            }
+        }
     }
 
     public function searchPartialList($searches, $page, $limit, $count = false)
@@ -501,7 +528,7 @@ class GroupManager
      */
     public function convertGroupsToArray(array $groups)
     {
-        $content = array();
+        $content = [];
         $i = 0;
         foreach ($groups as $group) {
             $content[$i]['id'] = $group->getId();
@@ -511,7 +538,7 @@ class GroupManager
             $rolesCount = count($roles);
             $j = 0;
             foreach ($roles as $role) {
-                $rolesString .= "{$this->translator->trans($role->getTranslationKey(), array(), 'platform')}";
+                $rolesString .= "{$this->translator->trans($role->getTranslationKey(), [], 'platform')}";
                 if ($j < $rolesCount - 1) {
                     $rolesString .= ' ,';
                 }
@@ -559,7 +586,7 @@ class GroupManager
             return $this->groupRepo->findGroupsByNames($names);
         }
 
-        return array();
+        return [];
     }
 
     public function getAllGroupsWithoutPager(
@@ -585,7 +612,7 @@ class GroupManager
             $total = $this->container->get('claroline.manager.user_manager')->countUsersByRoleIncludingGroup($roleUser);
 
             if ($total + count($users) > $max) {
-                return array('form' => $form->createView(), 'error' => true, 'group' => $group);
+                return false;
             }
 
             return $this->importUsers($group, $users);

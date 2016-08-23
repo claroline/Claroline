@@ -18,8 +18,10 @@ var PathSummaryShowCtrl = function PathSummaryShowCtrl($routeParams, PathService
     if (angular.isObject(path)) {
         if (!path.summaryDisplayed) {
             this.pathService.setSummaryState(false);
+            this.pathService.setSummaryPin(false);
         } else {
             this.pathService.setSummaryState(true);
+            this.pathService.setSummaryPin(true);
         }
     }
 

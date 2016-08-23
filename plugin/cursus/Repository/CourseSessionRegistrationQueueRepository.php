@@ -24,8 +24,10 @@ class CourseSessionRegistrationQueueRepository extends EntityRepository
         $dql = '
             SELECT q
             FROM Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue q
+            JOIN q.user u
             WHERE q.session = :session
-            ORDER BY q.applicationDate DESC
+            AND u.isEnabled = true
+            ORDER BY u.lastName ASC
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('session', $session);

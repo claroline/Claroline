@@ -1,0 +1,35 @@
+<div gridster="whc.gridsterOptions">
+    <ul>
+        <li gridster-item="widget"
+            class="panel panel-default gridster-item-content"
+            ng-repeat="widget in whc.widgets"
+            style="border-color: {{ widget['color'] }}"
+        >
+            <div class="panel-heading widget-header" style="background-color: {{ widget['color'] }}">
+                <h3 class="panel-title">
+                    <span class="pull-right widget-header-control-box" ng-if="whc.widgetsOptions['canEdit']">
+                        <i class="fa fa-times close" ng-click="whc.deleteWorkspaceWidget($event, widget['configId'])">
+                        </i>
+                        <span class="close">&nbsp;</span>
+                        <i class="fa fa-pencil close"
+                           ng-click="whc.editWorkspaceWidget($event, widget['instanceId'], widget['configId'], widget['displayId'], widget['configurable'])"
+                        >
+                        </i>
+                    </span>
+                    <span class="widget-header-content"
+                          title="{{ widget['instanceName'] }}"
+                          style="color: {{ widget['textTitleColor'] }}"
+                    >
+                        <span ng-class="whc.widgetsOptions['canEdit'] && !widget['visible'] ? 'strike' : ''">
+                            {{ widget['instanceName'] }}
+                        </span>
+                    </span>
+                </h3>
+            </div>
+            <div class="panel-body home-widget-content">
+                <div ng-bind-html="widget['content']">
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

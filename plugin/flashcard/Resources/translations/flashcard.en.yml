@@ -6,11 +6,11 @@ cards:
 card:
   is_new: Not studied yet
   suspend: Suspend learning process
-  unsuspend: Unsuspend learning process
-  repeat: Delet learning data
+  unsuspend: Resume learning process
+  repeat: Delete learning data
 note:
   delete: Delete note
-  warning: Warning, this will delete all the cards linked to this note.
+  warning: Warning: this will delete all the cards linked to this note.
 notes:
   add: Add a note
 note_type: Note model
@@ -28,7 +28,7 @@ study:
   begin: Study now
   stop: Stop studying
 answer:
-  show: Show response
+  show: Show answer
   again: Again
   hard: Hard
   good: Good

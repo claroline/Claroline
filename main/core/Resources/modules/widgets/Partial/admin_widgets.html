@@ -1,0 +1,38 @@
+<div gridster="ahtcc.gridsterOptions">
+    <ul>
+        <li gridster-item="widget"
+            class="panel panel-default gridster-item-content"
+            ng-repeat="widget in ahtcc.widgets"
+            style="border-color: {{ widget['color'] }}"
+        >
+            <div class="panel-heading widget-header" style="background-color: {{ widget['color'] }}">
+                <h3 class="panel-title">
+                    <span class="pull-right widget-header-control-box">
+                        <i class="fa fa-times close" ng-click="ahtcc.deleteAdminWidget($event, widget['configId'])">
+                        </i>
+                        <span class="close">&nbsp;</span>
+                        <i class="fa fa-pencil close"
+                           ng-click="ahtcc.editAdminWidget($event, widget['instanceId'], widget['configId'], widget['displayId'], widget['configurable'])"
+                        >
+                        </i>
+                    </span>
+                    <span class="widget-header-content"
+                          title="{{ widget['instanceName'] }}"
+                          style="color: {{ widget['textTitleColor'] }}"
+                    >
+                        <span ng-if="widget['locked']">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        <span ng-class="widget['visible'] ? '' : 'strike'">
+                            {{ widget['instanceName'] }}
+                        </span>
+                    </span>
+                </h3>
+            </div>
+            <div class="panel-body home-widget-content">
+                <div ng-bind-html="widget['content']">
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
