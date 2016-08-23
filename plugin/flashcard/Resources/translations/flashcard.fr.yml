@@ -5,12 +5,12 @@ cards:
   list: Voir toutes les cartes
 card:
   is_new: Pas encore étudiée
-  suspend: Supendre l'étude de la carte
-  unsuspend: Continuer d'étudier la carte
+  suspend: Suspendre l'étude de la carte
+  unsuspend: Reprendre l'étude de la carte
   repeat: Oublier l'apprentissage de la carte
 note:
   delete: Supprimer la note
-  warning: Attention, supprimer la note supprimera aussi toutes les cartes qui y sont liées.
+  warning: Attention: supprimer la note supprimera aussi toutes les cartes qui y sont liées.
 notes:
   add: Ajouter une note
 note_type: Modèle de note
@@ -37,7 +37,7 @@ errors:
   line: ligne
   title: Erreur
   not_blank: Cette valeur ne peut pas être vide.
-  not_unique: Ce champs doit être unique.
+  not_unique: Ce champ doit être unique.
   note:
     creation_failure: Impossible de créer la note.
   note_type:
