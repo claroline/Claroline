@@ -178,7 +178,10 @@
     {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"] "@ClarolineAgendaBundle/Resources/views/Agenda/eventContent.html.twig" %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'agenda' }) }}"></script>
+    {% javascripts debug=false
+     'js/translations/agenda/*.js'
+       %}<script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <script type="text/javascript" src="{{ asset('bundles/frontend/moment/min/moment-with-locales.min.js') }}"></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.min.js') }}' ></script>
     <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/calendar.js') }}'></script>

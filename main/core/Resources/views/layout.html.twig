@@ -25,7 +25,21 @@
 {% block layout %}
     <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
-    <div id="homeAsset" class="hide">{{ app.request.getSchemeAndHttpHost() ~ app.request.getBasePath() ~ '/' }}</div>
+    {% if app.request.isSecure() %}
+        {% set protocol = 'http' %}
+    {% else %}
+        {% set protocol = 'https' %}
+    {% endif %}
+
+    {% if config.getParameter('domain_name') %}
+        {% set host = config.getParameter('domain_name') %}
+    {% else %}
+        {% set host = app.request.headers.get('host') %}
+    {% endif %}
+
+    {% set homeAsset = protocol ~ '://' ~ host ~ app.request.getBasePath() ~ '/' %}
+
+    <div id="homeAsset" class="hide">{{ homeAsset }}</div>
     <div id="baseAsset" class="hide">{{ asset('') }}</div>
     <div id="homeLocale" class="hide">{% spaceless %}
             {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}

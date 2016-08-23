@@ -37,9 +37,12 @@
 
 {% block javascripts %}
     <script src="{{ asset('bundles/bazingajstranslation/js/translator.min.js') }}"></script>
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"></script>
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'agenda' }) }}"></script>
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"></script>
+    {% javascripts debug=false
+        'js/translations/agenda/*.js'
+        'js/translations/cursus/*.js'
+        'js/translations/tools/*.js'
+        %}<script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <script>
         window['sessions_' + {{ widgetInstance.getId() }}] = {{ courseSessions|json_encode|raw }}
         window['registered-sessions_' + {{ widgetInstance.getId() }}] = {{ registeredSessions|json_encode|raw }}

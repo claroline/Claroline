@@ -27,9 +27,12 @@
     <script src="{{ asset('bundles/frontend/moment/min/moment-with-locales.min.js') }}"></script>
     <script src="{{ asset('bundles/frontend/fullcalendar/dist/fullcalendar.min.js') }}"></script>
     <script src="{{ asset('bundles/bazingajstranslation/js/translator.min.js') }}"></script>
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"></script>
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'agenda' }) }}"></script>
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"></script>
+    {% javascripts debug=false
+        'js/translations/agenda/*.js'
+        'js/translations/cursus/*.js'
+        'js/translations/platform/*.js'
+        %}<script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <script>
       (function () {
         const currentUserId = {{ user.getId() }}

@@ -81,6 +81,14 @@ class WidgetInstance
     protected $icon;
 
     /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig",
+     *     mappedBy="widgetInstance"
+     * )
+     */
+    protected $widgetDisplayConfigs;
+
+    /**
      * @ORM\Column(name="template", nullable=true)
      * @Groups({"api_widget"})
      * @SerializedName("template")
@@ -173,6 +181,11 @@ class WidgetInstance
     public function setIcon($icon)
     {
         $this->icon = $icon;
+    }
+
+    public function getWidgetDisplayConfigs()
+    {
+        return $this->widgetDisplayConfigs;
     }
 
     public function getTemplate()

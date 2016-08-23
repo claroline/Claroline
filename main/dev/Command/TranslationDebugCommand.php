@@ -11,24 +11,24 @@
 
 namespace Claroline\DevBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
 
 class TranslationDebugCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:debug:translation')
+        $this->setName('claroline:fixup:translations')
             ->setDescription('Search the translations and order them in their different config.yml files');
         $this->setDefinition(
-            array(
+            [
                 new InputArgument('locale', InputArgument::REQUIRED, 'The locale to fill.'),
-            )
+            ]
         );
         $this->addOption(
             'domain',
@@ -58,9 +58,9 @@ class TranslationDebugCommand extends ContainerAwareCommand
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $params = array(
+        $params = [
             'locale' => 'locale to fill: ',
-        );
+        ];
 
         foreach ($params as $argument => $argumentName) {
             if (!$input->getArgument($argument)) {
@@ -131,22 +131,22 @@ class TranslationDebugCommand extends ContainerAwareCommand
 
     private function getSafeDubious()
     {
-        return array(
-            'en' => array(
+        return [
+            'en' => [
                 'by', 'dsn',
-            ),
-            'fr' => array(
+            ],
+            'fr' => [
                 'dsn',
-            ),
-            'es' => array(
+            ],
+            'es' => [
                 'dsn',
-            ),
-            'nl' => array(
+            ],
+            'nl' => [
 
-            ),
-            'de' => array(
+            ],
+            'de' => [
 
-            ),
-        );
+            ],
+        ];
     }
 }

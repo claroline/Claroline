@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command;
+namespace Claroline\CoreBundle\Command\Import;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -18,52 +18,23 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
 {
+    use BaseCommandTrait;
+    private $params = ['csv_workspace_registration_path' => 'Absolute path to the csv file: '];
+
     protected function configure()
     {
         $this->setName('claroline:workspace:register')
-            ->setDescription('Registers users to workspaces from a csv file');
+            ->setDescription('Registers users to workspaces from a csv file')
+            ->setAliases(['claroline:csv:workspace_register']);
         $this->setDefinition(
-            array(
+            [
                 new InputArgument(
                     'csv_workspace_registration_path',
                     InputArgument::REQUIRED,
                     'The absolute path to the csv file.'
                 ),
-            )
+            ]
         );
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $params = array(
-            'csv_workspace_registration_path' => 'Absolute path to the csv file: ',
-        );
-
-        foreach ($params as $argument => $argumentName) {
-            if (!$input->getArgument($argument)) {
-                $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
-                );
-            }
-        }
-    }
-
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
-        $argument = $this->getHelper('dialog')->askAndValidate(
-            $output,
-            $argumentName,
-            function ($argument) {
-
-                if (empty($argument)) {
-                    throw new \Exception('This argument is required');
-                }
-
-                return $argument;
-            }
-        );
-
-        return $argument;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -90,8 +61,8 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                 $roleKey = trim($datas[2]);
                 $action = trim($datas[3]);
 
-                $user = $userRepo->findOneBy(array('username' => $username));
-                $workspace = $workspaceRepo->findOneBy(array('code' => $workspaceCode));
+                $user = $userRepo->findOneBy(['username' => $username]);
+                $workspace = $workspaceRepo->findOneBy(['code' => $workspaceCode]);
 
                 if (!is_null($user) && !is_null($workspace)) {
                     $roles = $roleRepo->findRolesByWorkspaceCodeAndTranslationKey(

@@ -9,26 +9,26 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command;
+namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
+use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 
-class RightsIntegrityCheckerCommand extends ContainerAwareCommand
+class ResourceWorkspaceIntegrityCheckerCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:rights:check')
-            ->setDescription('Checks the rights integrity of the platform.');
+        $this->setName('claroline:resource_workspace:check')
+            ->setDescription('Checks the resource workspace integrity of the platform.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consoleLogger = ConsoleLogger::get($output);
-        $rightsManager = $this->getContainer()->get('claroline.manager.rights_manager');
-        $rightsManager->setLogger($consoleLogger);
-        $rightsManager->checkIntegrity();
+        $resourceManager = $this->getContainer()->get('claroline.manager.resource_manager');
+        $resourceManager->setLogger($consoleLogger);
+        $resourceManager->checkIntegrity();
     }
 }

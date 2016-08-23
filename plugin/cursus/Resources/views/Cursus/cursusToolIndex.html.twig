@@ -39,7 +39,7 @@
                         {% set cursusId = cursus.getId() %}
                         {% set cursusTitle = cursus.getTitle() %}
                         {% set details = cursus.getDetails() %}
-                    
+
                         <li class="cursus-element"
                             data-cursus-id="{{ cursusId }}"
                         >
@@ -106,7 +106,7 @@
                     {{ 'none'|trans({}, 'platform') }}
                 </div>
             {% endif %}
-                
+
             <div class="btn-group margin-top-sm" role="group">
                 <span id="cursus-create-btn" class="btn btn-primary">
                     <i class="fa fa-plus-circle"></i>
@@ -147,7 +147,7 @@
     {{ parent() }}
 {% javascripts debug=false
     'js/translations/cursus/*.js'
-    %}<script src="{{ asset_url }}"></script>
+%}<script src="{{ asset_url }}"></script>
 {% endjavascripts %}
     <script src='{{ asset('bundles/clarolinecursus/js/cursusToolIndex.js') }}'
             type="text/javascript"
