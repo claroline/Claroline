@@ -1320,7 +1320,7 @@ panel_roles_edited: Rôles du panel édités avec succès
 profile_preference_edited: Préférences du profil éditées avec succès
 organization: Organisation
 workspace_not_exists: L'espace d'activités %code% n'existe pas à la ligne %line%.
-tab_not_exists: 'L'onglet %tab% n''existe pas à la ligne %line%.'
+tab_not_exists: 'L''onglet %tab% n''existe pas à la ligne %line%.'
 file_not_exists: 'Le fichier %file% n''existe pas à la ligne %line%.'
 use_honeypot: Activer le honeypot pour les anonymes (anti-pourriels)
 mandatory: Obligatoire
