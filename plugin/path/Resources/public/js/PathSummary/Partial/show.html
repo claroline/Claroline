@@ -10,16 +10,16 @@
             <span class="sr-only">{{ 'sidebar_close'|trans:{}:'path_wizards' }}</span>
         </a>
 
-        <div class="path-summary">
+        <div class="path-summary path-summary-show">
             <!-- List title -->
             <h2>
                 <span class="fa fa-sitemap"></span>
                 {{ pathSummaryShowCtrl.title }}
             </h2>
 
-            <div>
-                <uib-progressbar max="pathSummaryShowCtrl.totalSteps" value="pathSummaryShowCtrl.getTotalProgression()"><span style="color:white; white-space:nowrap;"> {{ pathSummaryShowCtrl.getTotalProgressionPercentage() }} {{ 'completed'|trans:{}:'path_wizards' }}</span></uib-progressbar>
-            </div>
+            <uib-progressbar max="pathSummaryShowCtrl.totalSteps" value="pathSummaryShowCtrl.getTotalProgression()">
+                <span style="color:white; white-space:nowrap;"> {{ pathSummaryShowCtrl.getTotalProgressionPercentage() }} {{ 'completed'|trans:{}:'path_wizards' }}</span>
+            </uib-progressbar>
 
             <!-- Block to display where there is no structure -->
             <div data-ng-if="pathSummaryShowCtrl.structure.length === 0" class="text-center">
