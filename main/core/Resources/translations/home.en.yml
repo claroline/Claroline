@@ -10,11 +10,7 @@ create_content: 'Create a content'
 days_ago: '%count% day ago|%count% days ago'
 edit_in_page: 'Edit in page'
 for_unlogged_users: 'For not logged users'
-<<<<<<< HEAD
 header: Header
-=======
-header: 'Header'
->>>>>>> om/patch-9
 header_menu_available: 'When main menu is available'
 hours_ago: '%count% hour ago|%count% hours ago'
 interactive_content_add: 'You can add interactive content such as videos or presentations from websites like'
