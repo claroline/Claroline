@@ -23,7 +23,7 @@
             </h2>
 
             <!-- User progression -->
-            <uib-progressbar max="summaryShowCtrl.totalSteps" value="summaryShowCtrl.getTotalProgression()">
+            <uib-progressbar data-ng-if="summaryShowCtrl.progression" max="summaryShowCtrl.totalSteps" value="summaryShowCtrl.getTotalProgression()">
                 <span style="color:white; white-space:nowrap;"> {{ summaryShowCtrl.getTotalProgressionPercentage() }} {{ 'completed'|trans:{}:'path_wizards' }}</span>
             </uib-progressbar>
 

@@ -13,7 +13,7 @@ export default class PathShowDirective {
       this.template = template
       this.scope = {
         path            : '=',  // Data of the path
-        editEnabled     : '@',  // User is allowed to edit current path ?
+        editEnabled     : '=',  // User is allowed to edit current path ?
         userProgression : '=?', // Progression of the current User
         totalProgression: '@'   // The number of total seen or done steps in path
       }

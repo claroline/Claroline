@@ -11,6 +11,7 @@ export default class SummaryShowCtrl extends SummaryBaseCtrl {
     super(SummaryService, PathService)
 
     this.userProgressionService = UserProgressionService
+    this.progression = this.userProgressionService.get()
 
     this.totalSteps = this.pathService.getTotalSteps()
 

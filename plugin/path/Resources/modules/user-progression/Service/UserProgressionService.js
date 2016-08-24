@@ -14,7 +14,7 @@ export default class UserProgressionService {
      * Progression of the current User
      * @type {object}
      */
-    this.progression = {}
+    this.progression = null
 
     /**
      * Current user's total progression for the current path
