@@ -11,6 +11,7 @@
                             </span>
                             <span>
                                 {{ 'step'|trans:{}:'ujm_exo' }} <b>#{{ $index + 1 }}</b>
+                                <span data-ng-if="step.meta.title">: {{ step.meta.title }}</span>
                                 <small>({{ 'step_items_count'|transChoice:step.items.length:{ count: step.items.length }:'ujm_exo' }})</small>
                             </span>
                         </h3>

@@ -8,6 +8,11 @@
 <div class="modal-body">
     <form>
         <div class="form-group">
+            <label for="step-title" class="control-label">{{ 'ujm_exo_exercise_title'|trans:{}:'ujm_exo' }}</label>
+            <input type="text" class="form-control" id="step-title" data-ng-model="stepMetadataCtrl.meta.title" />
+        </div>
+        
+        <div class="form-group">
             <label for="step-description" class="control-label">{{ 'description'|trans:{}:'ujm_exo' }}</label>
             <textarea data-ui-tinymce="stepMetadataCtrl.tinymceOptions" data-before-unload="off" id="step-description" class="form-control" data-ng-model="stepMetadataCtrl.meta.description"></textarea>
         </div>

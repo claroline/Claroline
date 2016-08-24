@@ -70,6 +70,7 @@ class StepManager
         }
 
         // Update Step
+        $step->setTitle($metadata->title);
         $step->setText($metadata->description);
         $step->setMaxAttempts(!empty($metadata->maxAttempts) ? (int) $metadata->maxAttempts : 0);
 
@@ -215,6 +216,7 @@ class StepManager
             'meta' => [
                 'description' => $step->getText(),
                 'maxAttempts' => $step->getMaxAttempts(),
+                'title' => $step->getTitle(),
             ],
             'items' => $items,
         ];
