@@ -1,7 +1,7 @@
 'Show actions for': 'Show actions for'
 all: All
-'for user': 'For user'
-group: Group
+for user: 'For user'
+group: 'Group'
 log_add_user: 'Add user'
 log_change_right: 'Change rights'
 log_change_set: 'List of modified properties'
@@ -180,7 +180,7 @@ log_resource-custom_action_update_file_shortname: Update
 log_resource-custom_action_update_file_sentence: The file was updated.
 global_tracking: Global tracking
 user_tracking: Tracking by user
-user_list: User list
-actions_per_day_chart: Actions per day chart
-click_to_choose: Click to display action list
-download_csv_list: Download list into CSV file
+user_list: 'Users list'
+actions_per_day_chart: 'Actions per day chart'
+click_to_choose: 'Click to display actions list'
+download_csv_list: 'Download list in .CSV format'
