@@ -5,10 +5,35 @@
             {{ 'no_step_selected'|trans:{}:'path_wizards' }}
         </div>
     </div>
+    <!-- User messages -->
+    <p class="navbar-text navbar-center">
+    <!-- User messages -->
+    <alert-box></alert-box>
+    </p>
 
     <!-- User is not authorized to access this step -->
     <div data-ng-if="!stepShowCtrl.authorization.granted" class="col-md-12">
-        <div class="alert alert-info text-center" data-ng-bind-html="stepShowCtrl.authorization.message"></div>
+        <div class="alert alert-info text-left" data-ng-bind-html="stepShowCtrl.authorization.message"></div>
+        <!-- Call for unlock -->
+        <div class="row" data-ng-if="!pathShowCtrl.editEnabled">
+            <div class="col-md-1 col-sm-2 col-xs-2 text-right">
+                <button type="button"
+                    data-ng-click="stepShowCtrl.callForUnlock(stepShowCtrl.step)"
+                    class="btn btn-primary"
+                    data-ng-if="!pathShowCtrl.userProgression[stepShowCtrl.step.id].lockedcall"
+                    data-placement="top"
+                    data-toggle="tooltip"
+                    data-original-title="{{ 'unlock_this'|trans:{}:'path_wizards' }}">
+                    <span class="sr-only">{{ 'unlock_this'|trans:{}:'path_wizards' }}</span>
+                    <span class="fa fa-life-saver"></span> {{ 'unlock_this'|trans:{}:'path_wizards' }}
+                </button>
+            </div>
+        </div>
+        <p class="alert alert-success"
+            data-ng-if="pathShowCtrl.userProgression[stepShowCtrl.step.id].lockedcall">
+            <span class="fa fa-fw fa-check"></span>
+            {{'user_progression_lockedcall_sent'|trans:{}:'path_wizards'}}
+        </p>
     </div>
 
     <!-- Current step is not accessible for now -->

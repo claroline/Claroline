@@ -171,3 +171,8 @@ PathEditCtrl.prototype.preview = function () {
         }
     }
 };
+
+PathEditCtrl.prototype.unlockmanager=function(){
+    var url=Routing.generate('innova_path_manage_results',{id:this.id});
+    this.window.location.href=url;
+};

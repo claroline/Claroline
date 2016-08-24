@@ -73,8 +73,8 @@ class PathManager
         TokenStorageInterface         $securityToken,
         ResourceManager               $resourceManager,
         Utilities                     $utils,
-        StepManager                   $stepManager)
-    {
+        StepManager                   $stepManager
+    ) {
         $this->om = $objectManager;
         $this->securityAuth = $securityAuth;
         $this->securityToken = $securityToken;
@@ -361,5 +361,74 @@ class PathManager
         $path->setStructure($structure);
 
         return $path;
+    }
+
+    /**
+     * Get list of users who have called for unlock.
+     *
+     * @param Path $path
+     *
+     * @return mixed
+     */
+    public function getPathLockedProgression(Path $path)
+    {
+        $results = $this->om->getRepository('InnovaPathBundle:UserProgression')
+            ->findByPathAndLockedStep($path);
+
+        return $results;
+    }
+
+    /**
+     * Get all Paths of the Platform.
+     *
+     * @param bool $toPublish If false, returns all paths, if true returns only paths which need publishing
+     */
+    public function getPlatformPaths($toPublish = false)
+    {
+        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findPlatformPaths($toPublish);
+    }
+
+    /**
+     * Get all Paths of a Workspace.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param bool                                             $toPublish If false, returns all paths, if true returns only paths which need publishing
+     */
+    public function getWorkspacePaths(Workspace $workspace, $toPublish = false)
+    {
+        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findWorkspacePaths($workspace, $toPublish);
+    }
+
+    /**
+     * Find accessible Paths.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     *
+     * @return array
+     */
+    public function findAccessibleByUser(Workspace $workspace = null)
+    {
+        $roots = [];
+        if (!empty($workspace)) {
+            $root = $this->resourceManager->getWorkspaceRoot($workspace);
+            $roots[] = $root->getPath();
+        }
+
+        $token = $this->securityToken->getToken();
+        $userRoles = $this->utils->getRoles($token);
+
+        $entities = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAccessibleByUser($roots, $userRoles);
+
+        // Check edit and delete access for paths
+        $paths = [];
+        foreach ($entities as $entity) {
+            $paths[] = [
+                'entity' => $entity,
+                'canEdit' => $this->isAllow('EDIT', $entity),
+                'canDelete' => $this->isAllow('DELETE', $entity),
+            ];
+        }
+
+        return $paths;
     }
 }
