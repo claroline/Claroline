@@ -731,7 +731,7 @@ class Step implements \JsonSerializable
             $iterator = $this->children->getIterator();
 
             $iterator->uasort(function ($a, $b) {
-                /*
+                /**
                  * @var \Innova\PathBundle\Entity\Step $a
                  * @var \Innova\PathBundle\Entity\Step $b
                  */
