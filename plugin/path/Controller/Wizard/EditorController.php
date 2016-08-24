@@ -22,7 +22,6 @@ use Symfony\Component\Routing\RouterInterface;
  *
  * @Route(
  *      "/editor",
- *      name    = "innova_path_editor",
  *      service = "innova_path.controller.path_editor"
  * )
  */

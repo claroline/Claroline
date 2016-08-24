@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Step.
  *
  * @ORM\Table("innova_step")
- * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\StepRepository")
+ * @ORM\Entity()
  */
 class Step implements \JsonSerializable
 {
@@ -79,7 +79,7 @@ class Step implements \JsonSerializable
      * Parent step.
      *
      * @var \Innova\PathBundle\Entity\Step
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Step", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -89,7 +89,7 @@ class Step implements \JsonSerializable
      * Children steps.
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * 
+     *
      * @ORM\OneToMany(targetEntity="Step", mappedBy="parent", indexBy="id", cascade={"persist", "remove"})
      * @ORM\OrderBy({"order" = "ASC"})
      */
@@ -99,7 +99,7 @@ class Step implements \JsonSerializable
      * Path.
      *
      * @var \Innova\PathBundle\Entity\Path\Path
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
      */
     protected $path;
@@ -635,7 +635,7 @@ class Step implements \JsonSerializable
             'who' => null,
             'where' => null,
             'duration' => null, // Duration in seconds
-            'accessibleFrom' => $accessibleFrom  instanceof \DateTime ? $accessibleFrom->format('Y-m-d H:i:s')  : null,
+            'accessibleFrom' => $accessibleFrom  instanceof \DateTime ? $accessibleFrom->format('Y-m-d H:i:s') : null,
             'accessibleUntil' => $accessibleUntil instanceof \DateTime ? $accessibleUntil->format('Y-m-d H:i:s') : null,
             'evaluationType' => null, // automatic/manual
         ];
@@ -731,7 +731,7 @@ class Step implements \JsonSerializable
             $iterator = $this->children->getIterator();
 
             $iterator->uasort(function ($a, $b) {
-                /**
+                /*
                  * @var \Innova\PathBundle\Entity\Step $a
                  * @var \Innova\PathBundle\Entity\Step $b
                  */

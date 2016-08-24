@@ -13,10 +13,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  * Player controller.
  *
  * @author Innovalangues <contact@innovalangues.net>
- * 
+ *
  * @Route(
  *      "player",
- *      name    = "innova_path_player",
  *      service = "innova_path.controller.path_player"
  * )
  */
@@ -68,7 +67,6 @@ class PlayerController
      * @Route(
      *      "/{id}",
      *      name     = "innova_path_player_wizard",
-     *      defaults = { "stepId" = null },
      *      options  = { "expose" = true }
      * )
      * @Template("InnovaPathBundle:Wizard:player.html.twig")
@@ -86,7 +84,6 @@ class PlayerController
             'userProgression' => $this->pathManager->getUserProgression($path),
             'resourceIcons' => $resourceIcons,
             'editEnabled' => $this->pathManager->isAllow('EDIT', $path),
-            'totalSteps' => $this->pathManager->countAllPublishedSteps($path),
             'totalProgression' => $this->userProgressionManager->calculateUserProgressionInPath($path),
         ];
     }

@@ -1,0 +1,60 @@
+<li>
+    <!-- Item row -->
+    <div data-nodrag="" class="tree-item" data-ng-class="{ 'active-step': summaryItemShowCtrl.current.stepId == summaryItemShowCtrl.step.id || (!summaryItemShowCtrl.current.stepId && 0 == summaryItemShowCtrl.step.lvl) }">
+        <!-- Level indicator -->
+        <div class="lvl-indicator lvl lvl-{{ summaryItemShowCtrl.step.lvl }} lvl-bg"></div>
+
+        <!-- Step name -->
+        <div class="step" data-ng-class="{ 'lvl lvl-{{ summaryItemShowCtrl.step.lvl }} lvl-text': summaryItemShowCtrl.current.stepId == summaryItemShowCtrl.step.id }" data-ng-click="summaryItemShowCtrl.goTo(step)">
+            <!-- Collapse / Expand button -->
+            <a class="step-toggle" href="" data-ng-click="summaryItemShowCtrl.collapsed = !summaryItemShowCtrl.collapsed; $event.stopPropagation();" data-ng-show="0 !== summaryItemShowCtrl.step.children.length" role="button">
+                <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': summaryItemShowCtrl.collapsed, 'fa-caret-down': !summaryItemShowCtrl.collapsed }"></span>
+            </a>
+
+            {{ summaryItemShowCtrl.step.name | truncate }}
+        </div>
+
+        <div class="step-progression dropdown" data-ng-switch="summaryItemShowCtrl.userProgression.status" data-ng-if="summaryItemShowCtrl.userProgression.status">
+            <a href="" id="step-progression-{{ summaryItemShowCtrl.step.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <!-- Step is seen -->
+                <span data-ng-switch-when="seen" class="fa fa-fw fa-eye" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_seen'|trans:{}:'path_wizards' }}"></span>
+
+                <!-- Step is done -->
+                <span data-ng-switch-when="to_do" class="text-warning fa fa-fw fa-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_to_do'|trans:{}:'path_wizards' }}"></span>
+
+                <!-- Step is done -->
+                <span data-ng-switch-when="done" class="text-success fa fa-fw fa-check-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_done'|trans:{}:'path_wizards' }}"></span>
+
+                <!-- Step is to review -->
+                <span data-ng-switch-when="to_review" class="text-info fa fa-fw fa-retweet" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_to_review'|trans:{}:'path_wizards' }}"></span>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="step-progression-{{ summaryItemShowCtrl.step.id }}">
+                <li>
+                    <a href="" class="link-progression link-progression-to_do" data-ng-click="summaryItemShowCtrl.updateProgression('to_do')">
+                        <span class="fa fa-fw fa-square-o"></span>
+                        {{ 'user_progression_step_to_do_label'|trans:{}:'path_wizards' }}
+                    </a>
+                </li>
+
+                <li>
+                    <a href="" class="link-progression link-progression-done" data-ng-click="summaryItemShowCtrl.updateProgression('done')">
+                        <span class="fa fa-fw fa-check-square-o"></span>
+                        {{ 'user_progression_step_done_label'|trans:{}:'path_wizards' }}
+                    </a>
+                </li>
+
+                <li>
+                    <a href="" class="link-progression link-progression-to_review" data-ng-click="summaryItemShowCtrl.updateProgression('to_review')">
+                        <span class="fa fa-fw fa-retweet"></span>
+                        {{ 'user_progression_step_to_review_label'|trans:{}:'path_wizards' }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <ul class="step-children lvl lvl-{{ summaryItemShowCtrl.step.lvl }} lvl-border" data-ui-tree-nodes="" data-ng-model="summaryItemShowCtrl.step.children" data-ng-hide="summaryItemShowCtrl.collapsed">
+        <summary-item-show data-ui-tree-node="" data-ng-repeat="step in summaryItemShowCtrl.step.children" data-step="step"></summary-item-show>
+    </ul>
+</li>

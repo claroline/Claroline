@@ -1,0 +1,22 @@
+.path-container {
+    .path-header {
+        h1 {
+            margin: 0;
+            display: inline-block;
+            padding: 0;
+            margin-bottom: @padding-base-vertical;
+            line-height: @headings-line-height;
+        }
+
+        .path-summary-toggle {
+            z-index: 10;
+            position: relative;
+            margin-bottom: -1px;
+            &.opened {
+                border-bottom-color: @btn-default-bg;
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        }
+    }
+}
