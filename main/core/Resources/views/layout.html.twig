@@ -26,9 +26,9 @@
     <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
     {% if app.request.isSecure() %}
-        {% set protocol = 'http' %}
-    {% else %}
         {% set protocol = 'https' %}
+    {% else %}
+        {% set protocol = 'http' %}
     {% endif %}
 
     {% if config.getParameter('domain_name') %}
