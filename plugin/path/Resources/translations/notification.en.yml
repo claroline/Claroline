@@ -1,0 +1,2 @@
+resource-innova_path-step_unlock: ask to unlock step %step% for path %path%
+resource-innova_path-step_unlockdone: unlocked step %step% for path %path%

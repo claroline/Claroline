@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Manager\Organization;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -63,6 +63,10 @@ class OrganizationManager
 
     public function delete(Organization $organization)
     {
+        if ($organization->isDefault()) {
+            throw new \Exception('Default organization can not be removed');
+        }
+
         $this->om->remove($organization);
         $this->om->flush();
     }
@@ -74,7 +78,7 @@ class OrganizationManager
 
     public function getRoots()
     {
-        return $this->repo->findBy(array('parent' => null));
+        return $this->repo->findBy(['parent' => null]);
     }
 
     public function getDefault()
