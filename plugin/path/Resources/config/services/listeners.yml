@@ -10,3 +10,13 @@ services:
             - { name: kernel.event_listener, event: delete_innova_path,       method: onDelete }
             - { name: kernel.event_listener, event: copy_innova_path,         method: onCopy }
             - { name: kernel.event_listener, event: administrate_innova_path, method: onAdministrate }
+            - { name: kernel.event_listener, event: unlock_innova_path,       method: onUnlock }
+            - { name: kernel.event_listener, event: manageresults_innova_path, method: onManageresults }
+
+    innova_path.listener.notification_listener:
+        class: Innova\PathBundle\EventListener\Notifications\NotificationListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_notification_item_resource-innova_path-step_unlock, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_resource-innova_path-step_unlockdone, method: onCreateNotificationUnlockDone }

@@ -8,15 +8,15 @@
                 }"></span>
             </a>
             <div class="col-xs-6">{{ organization.name }}</div>
-            <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="oc.deleteOrganization(organization)"><span
-                    class="fa fa-trash-o"></span>
-            </a>
-            <a class="pull-right btn btn-success btn-xs" data-nodrag ng-click="oc.parametersOrganization(organization)"><span
-                    class="fa fa-cogs"></span>
-            </a>
-            <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="oc.addDepartment(organization)" style="margin-right: 8px;"><span
-                    class="fa fa-plus"></span>
-            </a>
+            <button class="pull-right btn btn-danger btn-xs" ng-disabled="organization.default" data-nodrag ng-click="oc.deleteOrganization(organization)"><span
+                class="fa fa-trash-o"></span>
+            </button>
+            <button class="pull-right btn btn-success btn-xs" data-nodrag ng-click="oc.parametersOrganization(organization)"><span
+                class="fa fa-cogs"></span>
+            </button>
+            <button class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="oc.addDepartment(organization)" style="margin-right: 8px;"><span
+                class="fa fa-plus"></span>
+            </button>
         </div>
     </div>
     <ol ui-tree-nodes="" ng-model="organization.children" ng-class="{hidden: collapsed}">

@@ -1,4 +1,4 @@
-services: 
+services:
     # Path controller
     innova_path.controller.path:
         class: Innova\PathBundle\Controller\PathController
@@ -36,7 +36,7 @@ services:
             pathManager:   @innova_path.manager.path
             userProgressionManager: @innova_path.manager.user_progression
         scope: request
-          
+
     # Editor controller
     innova_path.controller.path_editor:
         class: Innova\PathBundle\Controller\Wizard\EditorController
@@ -63,4 +63,14 @@ services:
             groupManager:   @claroline.manager.group_manager
             securityToken:  @security.token_storage
             teamManager:    @claroline.manager.team_manager
+            dispatcher:     @event_dispatcher
+            userProgressionManager: @innova_path.manager.user_progression
+        scope: request
+
+    # Results manager controller
+    innova_path.controller.manageresults:
+        class: Innova\PathBundle\Controller\ManageResultsController
+        arguments:
+            pathManager:    @innova_path.manager.path
+            objectManager:  @claroline.persistence.object_manager
         scope: request

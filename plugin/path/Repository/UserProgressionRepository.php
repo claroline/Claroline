@@ -65,4 +65,27 @@ class UserProgressionRepository extends EntityRepository
 
         return intval($qb->getQuery()->getSingleScalarResult());
     }
+
+    /**
+     * Get all step called for unlock for a path.
+     *
+     * @param Path $path
+     *
+     * @return array
+     */
+    public function findByPathAndLockedStep(Path $path)
+    {
+        $query = $this->createQueryBuilder('up')
+            ->join('up.step', 's')
+            // Only for the Steps of the needed Path
+            ->andWhere('s.path = :path')->setParameter('path', $path)
+            ->andWhere('up.lockedcall = 1')
+            // Generate SQL query
+            ->getQuery()
+        ;
+        // Get results of the query
+        $results = $query->getResult();
+
+        return $results;
+    }
 }
