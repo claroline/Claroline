@@ -1,6 +1,7 @@
 <?php
 /**
  * Created by : Vincent SAISSET
+ * Modified by : Eric VINCENT (mars 2015)
  * Date: 22/08/13
  * Time: 09:30.
  */
