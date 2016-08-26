@@ -10,20 +10,21 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources;
 
-use Claroline\CoreBundle\Library\Transfert\Importer;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\HttpFoundation\File\File as SfFile;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\HttpFoundation\File\File as SfFile;
 
 /**
  * @DI\Service("claroline.tool.resources.file_importer")
  * @DI\Tag("claroline.importer")
  */
-class FileImporter extends Importer implements ConfigurationInterface
+class FileImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     private $container;
 
@@ -61,7 +62,7 @@ class FileImporter extends Importer implements ConfigurationInterface
                                         function ($v) use ($rootPath) {
                                             return call_user_func_array(
                                                 __CLASS__.'::fileNotExists',
-                                                array($v, $rootPath)
+                                                [$v, $rootPath]
                                             );
                                         }
                                     )
@@ -78,7 +79,7 @@ class FileImporter extends Importer implements ConfigurationInterface
 
     public function supports($type)
     {
-        return $type == 'yml' ? true : false;
+        return $type === 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -94,10 +95,15 @@ class FileImporter extends Importer implements ConfigurationInterface
         foreach ($array['data'] as $item) {
             $file = new File();
             $tmpFile = new SfFile($this->getRootPath().$ds.$item['file']['path']);
+            $content = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$item['file']['path']);
 
-            return $this->container->get('claroline.listener.file_listener')->createFile(
+            $file = $this->container->get('claroline.listener.file_listener')->createFile(
                 $file, $tmpFile,  $name, $item['file']['mime_type'], $workspace
             );
+
+            file_put_contents(realpath($this->getRootPath()).$ds.$item['file']['path'], $content);
+
+            return $file;
         }
 
         return $this->container->get('claroline.listener.file_listener')->createFile(
@@ -111,16 +117,71 @@ class FileImporter extends Importer implements ConfigurationInterface
         $uid = uniqid().'.'.pathinfo($hash, PATHINFO_EXTENSION);
         $_files[$uid] = $this->container
             ->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$hash;
-        $data = array();
+        $data = [];
 
         if (file_exists($_files[$uid])) {
-            $data = array(array('file' => array(
+            $data = [['file' => [
                 'path' => $uid,
                 'mime_type' => $object->getResourceNode()->getMimeType(),
-            )));
+            ]]];
         }
 
         return $data;
+    }
+
+    // data will usually look like this:
+    //  item:
+    //    name: Test_image.html
+    //    creator: null
+    //    parent: 0
+    //    type: file
+    //    roles:
+    //        -
+    //             role: { name: ROLE_WS_COLLABORATOR, rights: { open: true, export: true } }
+    //    uid: 4
+    //    data:
+    //        -
+    //             file: { path: 57a1a8a17766f.html, mime_type: text/html }
+    /**
+     * @param array $data The file informations from the yml file,
+     */
+    public function format($data)
+    {
+        if (!$this->container->get('claroline.config.platform_config_handler')->getParameter('enable_rich_text_file_import')) {
+            return;
+        }
+
+        $em = $this->container->get('doctrine.orm.entity_manager');
+
+        if (isset($data[0])) {
+            if (strpos('_'.$data[0]['file']['mime_type'], 'text') > 0) {
+                $foundEntity = null;
+                $filePath = null;
+                $path = $data[0]['file']['path'];
+                //very dirty check. Waiting uid for a better one.
+                $content = file_get_contents(realpath($this->getRootPath()).DIRECTORY_SEPARATOR.$path);
+                $entities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                    ->findByWorkspaceAndMimeType($this->getWorkspace(), 'text');
+
+                //search the entity...
+                foreach ($entities as $entity) {
+                    $hashName = $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($entity)
+                        ->getHashName();
+                    $path = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$hashName;
+
+                    if (file_get_contents($path) === $content) {
+                        $foundEntity = $entity;
+                        $filePath = $path;
+                    }
+                }
+
+                //did we really find something ?
+                if ($foundEntity && $filePath && file_get_contents($filePath)) {
+                    $text = $this->container->get('claroline.importer.rich_text_formatter')->format(file_get_contents($filePath));
+                    file_put_contents($filePath, $text);
+                }
+            }
+        }
     }
 
     public function getName()

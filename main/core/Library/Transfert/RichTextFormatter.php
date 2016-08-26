@@ -11,17 +11,17 @@
 
 namespace Claroline\CoreBundle\Library\Transfert;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Manager\TransferManager;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\TransferManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Doctrine\Common\Collections\ArrayCollection;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @DI\Service("claroline.importer.rich_text_formatter")
@@ -62,9 +62,8 @@ class RichTextFormatter
         StrictDispatcher $eventDispatcher,
         PlatformConfigurationHandler $config
     ) {
-        $data = array();
         $this->resourceManagerImporter = null;
-        $this->resourceManagerData = array();
+        $this->resourceManagerData = [];
         $this->resourceManager = $resourceManager;
         $this->router = $router;
         $this->om = $om;
@@ -97,11 +96,11 @@ class RichTextFormatter
             $el = $this->findItemFromUid($uid);
             $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                 ->findOneBy(
-                    array(
+                    [
                         'parent' => $parent,
                         'name' => $el['name'],
                         'resourceType' => $this->resourceManager->getResourceTypeByName($el['type']),
-                    )
+                    ]
                 );
 
             if ($node) {
@@ -113,7 +112,7 @@ class RichTextFormatter
         $event = $this->eventDispatcher->dispatch(
             'rich_text_format_event_import',
             'RichTextFormat',
-            array($text)
+            [$text]
         );
 
         return $event->getText();
@@ -180,10 +179,10 @@ class RichTextFormatter
                             true
                         );
                         $el['item']['parent'] = 'data_folder';
-                        $el['item']['roles'] = array(array('role' => array(
+                        $el['item']['roles'] = [['role' => [
                             'name' => 'ROLE_USER',
                             'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('file')),
-                        )));
+                        ]]];
                         $_data['data']['items'][] = $el;
                     }
                 }
@@ -202,7 +201,7 @@ class RichTextFormatter
             }
         }
 
-        $event = $this->eventDispatcher->dispatch('rich_text_format_event_export', 'RichTextFormat', array($text, $_data, $_files));
+        $event = $this->eventDispatcher->dispatch('rich_text_format_event_export', 'RichTextFormat', [$text, $_data, $_files]);
         $text = $event->getText();
 
         return $text;
@@ -221,7 +220,7 @@ class RichTextFormatter
             $matchReplaced
         );
 
-        if (count($matchReplaced)  > 0) {
+        if (count($matchReplaced) > 0) {
             $txt = str_replace($matchReplaced[0], "[[uid={$nodeId}]]", $txt);
         }
 
@@ -268,7 +267,7 @@ class RichTextFormatter
 
         foreach ($path as $el) {
             $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                ->findOneBy(array('parent' => $node, 'name' => $el['name']));
+                ->findOneBy(['parent' => $node, 'name' => $el['name']]);
         }
 
         return $node;
@@ -326,7 +325,7 @@ class RichTextFormatter
         }
     }
 
-    public function getResourcePathFromItem(array $item, $path = array())
+    public function getResourcePathFromItem(array $item, $path = [])
     {
         $dir = $this->findDirectoryFromUid($item['parent']);
 
@@ -348,7 +347,7 @@ class RichTextFormatter
         //ie: /path/to/web/app_dev.php
         $baseUrl = $this->config->getParameter('base_url');
 
-        //http://stackoverflow.com/questions/173851/what-is-the-canonical-way-to-determine-commandline-vs-http-execution-of-a-php-s
+        //@see http://stackoverflow.com/questions/173851/what-is-the-canonical-way-to-determine-commandline-vs-http-execution-of-a-php-s
         //we need to configure the router if we're doing the import by cli.
         if ($baseUrl && php_sapi_name() === 'cli') {
             $context = $this->router->getContext();
@@ -358,7 +357,7 @@ class RichTextFormatter
         if (strpos('_'.$node->getMimeType(), 'image') > 0) {
             $url = $this->router->generate(
                 'claro_file_get_media',
-                array('node' => $node->getId()),
+                ['node' => $node->getId()],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
 
@@ -368,7 +367,7 @@ class RichTextFormatter
         if (strpos('_'.$node->getMimeType(), 'video') > 0) {
             $url = $this->router->generate(
                 'claro_file_get_media',
-                array('node' => $node->getId()),
+                ['node' => $node->getId()],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
 
@@ -377,10 +376,10 @@ class RichTextFormatter
 
         $url = $this->router->generate(
             'claro_resource_open',
-            array(
+            [
                 'resourceType' => $node->getResourceType()->getName(),
                 'node' => $node->getId(),
-            ),
+            ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
@@ -409,15 +408,15 @@ class RichTextFormatter
             return;
         }
 
-        $roles = array();
-        $roles[] = array('role' => array(
+        $roles = [];
+        $roles[] = ['role' => [
             'name' => 'ROLE_USER',
             'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('directory')),
-        ));
+        ]];
 
         $parentId = $_data['data']['root']['uid'];
 
-        $_data['data']['directories'][] = array('directory' => array(
+        $_data['data']['directories'][] = ['directory' => [
             'name' => 'data_folder',
             'creator' => null,
             'parent' => $parentId,
@@ -425,7 +424,7 @@ class RichTextFormatter
             'uid' => 'data_folder',
             'roles' => $roles,
             'index' => null,
-        ));
+        ]];
     }
 
     private function dataFolderExists($data)

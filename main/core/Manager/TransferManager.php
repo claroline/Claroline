@@ -11,20 +11,19 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Library\Transfert\Importer;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Config\Definition\Dumper\YamlReferenceDumper;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Symfony\Component\Yaml\Yaml;
-use Claroline\CoreBundle\Library\Utilities\FileSystem;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Config\Definition\Dumper\YamlReferenceDumper;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @DI\Service("claroline.manager.transfer_manager")
@@ -53,7 +52,7 @@ class TransferManager
         $this->om = $om;
         $this->container = $container;
         $this->templateDirectory = $container->getParameter('claroline.param.templates_directory');
-        $this->data = array();
+        $this->data = [];
         $this->workspace = null;
     }
 
@@ -67,11 +66,9 @@ class TransferManager
      */
     public function validate(array $data, $validateProperties = true)
     {
-        $groupsImporter = $this->getImporterByName('groups');
         $rolesImporter = $this->getImporterByName('roles');
         $toolsImporter = $this->getImporterByName('tools');
         $importer = $this->getImporterByName('workspace_properties');
-        $usersImporter = $this->getImporterByName('user');
 
         //properties
         if ($validateProperties) {
@@ -134,7 +131,7 @@ class TransferManager
         }
 
         $this->log('Importing tools...');
-        $tools = $this->getImporterByName('tools')->import($data['tools'], $workspace, $importedRoles, $root);
+        $this->getImporterByName('tools')->import($data['tools'], $workspace, $importedRoles, $root);
         $this->om->endFlushSuite();
         //flush has to be forced unless it's a default template
         $defaults = [
@@ -146,7 +143,7 @@ class TransferManager
             $this->om->forceFlush();
         }
 
-        $this->importRichText($workspace, $template);
+        $this->importRichText($workspace, $data);
         $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
     }
 
@@ -228,23 +225,20 @@ class TransferManager
             $workspace,
             null,
             null,
-            array()
+            []
         );
 
         $this->log('Populating the workspace...');
         $this->populateWorkspace($workspace, $template, $root, $entityRoles, true, false);
         $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
         $this->om->endFlushSuite();
-        $fs = new FileSystem();
 
         return $workspace;
     }
 
-    //refactor how workspace are created because this sucks
-    public function importRichText(Workspace $workspace, File $template)
+    public function importRichText(Workspace $workspace, array $data)
     {
         $this->log('Parsing rich texts...');
-        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
         $this->container->get('claroline.importer.rich_text_formatter')->setData($data);
         $this->container->get('claroline.importer.rich_text_formatter')->setWorkspace($workspace);
 
@@ -284,7 +278,7 @@ class TransferManager
         $files = [];
         $data['roles'] = $this->getImporterByName('roles')->export($workspace, $files, null);
         $data['tools'] = $this->getImporterByName('tools')->export($workspace, $files, null);
-        $_resManagerData = array();
+        $_resManagerData = [];
 
         foreach ($data['tools'] as &$_tool) {
             if ($_tool['tool']['type'] === 'resource_manager') {
@@ -330,17 +324,17 @@ class TransferManager
         foreach ($this->listImporters as $importer) {
             $importer->setListImporters($this->listImporters);
         }
-        $data = array();
-        $files = array();
-        $tool = array(
+        $data = [];
+        $files = [];
+        $tool = [
             'type' => 'resource_manager',
             'translation' => 'resource_manager',
-            'roles' => array(),
-        );
+            'roles' => [],
+        ];
         $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
         $tool['data'] = $resourceImporter->exportResources($workspace, $resourceNodes, $files, null);
-        $data['tools'] = array(0 => array('tool' => $tool));
-        $_resManagerData = array();
+        $data['tools'] = [0 => ['tool' => $tool]];
+        $_resManagerData = [];
 
         foreach ($data['tools'] as &$_tool) {
             if ($_tool['tool']['type'] === 'resource_manager') {
@@ -449,7 +443,7 @@ class TransferManager
                     $resourceImporter->import(
                         $tool,
                         $workspace,
-                        array(),
+                        [],
                         $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($directory),
                         false
                     );
@@ -458,7 +452,7 @@ class TransferManager
             }
         }
         $this->om->endFlushSuite();
-        $this->importRichText($directory->getWorkspace(), $template);
+        $this->importRichText($directory->getWorkspace(), $data);
         $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
     }
 
@@ -472,7 +466,7 @@ class TransferManager
             }
         }
 
-        $priorities = array();
+        $priorities = [];
 
         //we currently only reorder resources...
         if (isset($resManager['tool']['data']['items'])) {
@@ -485,7 +479,7 @@ class TransferManager
         }
 
         ksort($priorities);
-        $ordered = array();
+        $ordered = [];
 
         foreach ($priorities as $priority) {
             $ordered = array_merge($ordered, $priority);

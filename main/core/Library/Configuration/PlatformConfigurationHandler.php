@@ -95,6 +95,7 @@ class PlatformConfigurationHandler
         'google_geocoding_signature' => null,
         'google_geocoding_key' => null,
         'portal_enabled_resources' => null,
+        'enable_rich_text_file_import' => false,
     ];
     private $lockedParameters;
 
@@ -219,6 +220,7 @@ class PlatformConfigurationHandler
         $config->setGoogleGeocodingSignature($this->parameters['google_geocoding_signature']);
         $config->setGoogleGeocodingKey($this->parameters['google_geocoding_key']);
         $config->setFormHoneypot($this->parameters['form_honeypot']);
+        $config->setEnableRichTextFileImport($this->parameters['enable_rich_text_file_import']);
 
         return $config;
     }

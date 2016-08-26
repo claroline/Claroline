@@ -11,16 +11,17 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Repository for AbstractResource entities. The methods of this class may return
@@ -88,7 +89,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             ->wherePathLike($resource->getPath(), $includeStartNode);
 
         if ($filterResourceType) {
-            $this->builder->whereTypeIn(array($filterResourceType));
+            $this->builder->whereTypeIn([$filterResourceType]);
         }
 
         $query = $this->_em->createQuery($this->builder->getDql());
@@ -121,7 +122,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             throw new \RuntimeException('Roles cannot be empty');
         }
 
-        $returnedArray = array();
+        $returnedArray = [];
 
         $isWorkspaceManager = $this->isWorkspaceManager($parent, $roles);
         //check if manager of the workspace.
@@ -151,7 +152,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             $query->setParameters($this->builder->getParameters());
 
             $children = $this->executeQuery($query);
-            $childrenWithMaxRights = array();
+            $childrenWithMaxRights = [];
 
             foreach ($children as $child) {
                 if (!isset($childrenWithMaxRights[$child['id']])) {
@@ -165,7 +166,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
                 }
             }
 
-            $returnedArray = array();
+            $returnedArray = [];
 
             foreach ($childrenWithMaxRights as $childMaxRights) {
                 $returnedArray[] = $childMaxRights;
@@ -254,11 +255,11 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         // No need to access DB to get ancestors as they are given by the materialized path.
         $regex = '/-(\d+)'.ResourceNode::PATH_SEPARATOR.'/';
         $parts = preg_split($regex, $resource->getPath(), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        $ancestors = array();
+        $ancestors = [];
         $currentPath = '';
 
         for ($i = 0, $count = count($parts); $i < $count; $i += 2) {
-            $ancestor = array();
+            $ancestor = [];
             $currentPath = $currentPath.$parts[$i].'-'.$parts[$i + 1].'`';
             $ancestor['path'] = $currentPath;
             $ancestor['name'] = $parts[$i];
@@ -386,11 +387,11 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             ->where('resourceNode.workspace = :workspace')
             ->andWhere('resourceNode.resourceType = :resourceType');
 
-        return $results = $qb->getQuery()->execute(
-            array(
+        return $qb->getQuery()->execute(
+            [
                 ':workspace' => $workspace,
                 ':resourceType' => $resourceType,
-            )
+            ]
         );
     }
 
@@ -401,7 +402,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
      *
      * @return QueryBuilder|array
      */
-    public function findByName($name, $extraDatas = array(), $executeQuery = true)
+    public function findByName($name, $extraDatas = [], $executeQuery = true)
     {
         $name = strtoupper($name);
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
@@ -431,16 +432,16 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
      */
     public function findByNameForAjax($search, $extraData)
     {
-        $resultArray = array();
+        $resultArray = [];
 
         /** @var ResourceNode[] $resourceNodes */
         $resourceNodes = $this->findByName($search, $extraData);
 
         foreach ($resourceNodes as $resourceNode) {
-            $resultArray[] = array(
+            $resultArray[] = [
                 'id' => $resourceNode->getId(),
                 'text' => $resourceNode->getPathForDisplay(),
-            );
+            ];
         }
 
         return $resultArray;
@@ -452,14 +453,14 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             $builder->whereHasRoleIn($roles);
         }
 
-        $filterMethodMap = array(
+        $filterMethodMap = [
             'types' => 'whereTypeIn',
             'roots' => 'whereRootIn',
             'dateFrom' => 'whereDateFrom',
             'dateTo' => 'whereDateTo',
             'name' => 'whereNameLike',
             'isExportable' => 'whereIsExportable',
-        );
+        ];
         $allowedFilters = array_keys($filterMethodMap);
 
         foreach ($criteria as $filter => $value) {
@@ -509,10 +510,10 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
 
     private function isWorkspaceManager(ResourceNode $node, array $roles)
     {
-        $rolenames = array();
+        $rolenames = [];
 
         foreach ($roles as $role) {
-            if ($role instanceof \Symfony\Component\Security\Core\Role\Role) {
+            if ($role instanceof Role) {
                 $rolenames[] = $role->getRole();
             } else {
                 $rolenames[] = $role;
@@ -532,5 +533,19 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         }
 
         return $isWorkspaceManager;
+    }
+
+    public function findByWorkspaceAndMimeType(Workspace $workspace, $mimeType)
+    {
+        $dql = '
+            SELECT r FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
+            WHERE r.workspace = :workspace
+            and r.mimeType LIKE :mimeType
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('mimeType', "%{$mimeType}%");
+
+        return $query->getResult();
     }
 }
