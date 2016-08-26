@@ -95,7 +95,10 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setLastName($input->getArgument('user_last_name'));
         $user->setUsername($input->getArgument('user_username'));
         $user->setPlainPassword($input->getArgument('user_password'));
-        $user->setMail($input->getArgument('user_email'));
+        $email = $input->getArgument('user_email');
+        $email = filter_var($email, FILTER_VALIDATE_EMAIL) ?
+            $email : $email.'@debug.net';
+        $user->setMail($email);
 
         if ($input->getOption('admin')) {
             $roleName = PlatformRoles::ADMIN;
