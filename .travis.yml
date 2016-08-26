@@ -14,7 +14,9 @@ before_script:
   - composer validate
   - php scripts/configure.php --default
   - composer sync-dev
+  - rm -rf app/cache/*
   - php app/console claroline:install --env=test
+  - rm -rf app/cache/*
   - export SYMFONY_DEPRECATIONS_HELPER=weak
 
 script: vendor/bin/phpunit -c vendor/claroline/distribution
