@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Form;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\RoleRepository;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Validator\Constraints\Image;
 
 class ProfileType extends AbstractType
@@ -60,44 +60,44 @@ class ProfileType extends AbstractType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('firstName', 'text', array('label' => 'first_name', 'read_only' => !$this->accesses['firstName'], 'disabled' => !$this->accesses['firstName']))
-            ->add('lastName', 'text', array('label' => 'last_name',  'read_only' => !$this->accesses['lastName'], 'disabled' => !$this->accesses['lastName']))
-            ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'username', 'read_only' => !$this->accesses['username'], 'disabled' => !$this->accesses['username']))
+            ->add('firstName', 'text', ['label' => 'first_name', 'read_only' => !$this->accesses['firstName'], 'disabled' => !$this->accesses['firstName']])
+            ->add('lastName', 'text', ['label' => 'last_name',  'read_only' => !$this->accesses['lastName'], 'disabled' => !$this->accesses['lastName']])
+            ->add('username', 'text', ['read_only' => true, 'disabled' => true, 'label' => 'username', 'read_only' => !$this->accesses['username'], 'disabled' => !$this->accesses['username']])
             ->add(
                 'administrativeCode',
                 'text',
-                array('required' => false, 'read_only' => !$this->accesses['administrativeCode'], 'disabled' => !$this->accesses['administrativeCode'], 'label' => 'administrative_code')
+                ['required' => false, 'read_only' => !$this->accesses['administrativeCode'], 'disabled' => !$this->accesses['administrativeCode'], 'label' => 'administrative_code']
             )
-            ->add('mail', 'email', array('required' => false, 'label' => 'email', 'read_only' => !$this->accesses['email'], 'disabled' => !$this->accesses['email']))
-            ->add('phone', 'text', array('required' => false, 'label' => 'phone', 'read_only' => !$this->accesses['phone'], 'disabled' => !$this->accesses['phone']))
-            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'language'))
+            ->add('mail', 'email', ['required' => false, 'label' => 'email', 'read_only' => !$this->accesses['email'], 'disabled' => !$this->accesses['email']])
+            ->add('phone', 'text', ['required' => false, 'label' => 'phone', 'read_only' => !$this->accesses['phone'], 'disabled' => !$this->accesses['phone']])
+            ->add('locale', 'choice', ['choices' => $this->langs, 'required' => false, 'label' => 'language'])
             ->add(
                 'pictureFile',
                 'file',
-                array(
+                [
                     'required' => false,
                     'constraints' => new Image(
-                        array(
+                        [
                             'minWidth' => 50,
                             'maxWidth' => 800,
                             'minHeight' => 50,
                             'maxHeight' => 800,
-                        )
+                        ]
                     ),
                     'label' => 'picture_profile',
                     'read_only' => !$this->accesses['picture'],
                     'disabled' => !$this->accesses['picture'],
-                )
+                ]
             )
             ->add(
                 'description',
                 'tinymce',
-                array('required' => false, 'label' => 'description',  'read_only' => !$this->accesses['description'], 'disabled' => !$this->accesses['description'])
+                ['required' => false, 'label' => 'description',  'read_only' => !$this->accesses['description'], 'disabled' => !$this->accesses['description']]
             )
             ->add(
                 'organizations',
                 'entity',
-                array(
+                [
                     'label' => 'organizations',
                     'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
                     'expanded' => true,
@@ -105,32 +105,32 @@ class ProfileType extends AbstractType
                     'property' => 'name',
                     'read_only' => true,
                     'disabled' => true,
-                )
+                ]
             );
 
         if ($this->isAdmin || $this->isGrantedUserAdministration) {
             $isAdmin = $this->isAdmin;
             $builder
-                ->add('firstName', 'text', array('label' => 'first_name'))
-                ->add('lastName', 'text', array('label' => 'last_name'))
-                ->add('username', 'text', array('label' => 'username'))
-                ->add('administrativeCode', 'text', array('required' => false, 'label' => 'administrative_code'))
-                ->add('mail', 'email', array('required' => false, 'label' => 'email'))
-                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
-                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'language'))
+                ->add('firstName', 'text', ['label' => 'first_name'])
+                ->add('lastName', 'text', ['label' => 'last_name'])
+                ->add('username', 'text', ['label' => 'username'])
+                ->add('administrativeCode', 'text', ['required' => false, 'label' => 'administrative_code'])
+                ->add('mail', 'email', ['required' => false, 'label' => 'email'])
+                ->add('phone', 'text', ['required' => false, 'label' => 'phone'])
+                ->add('locale', 'choice', ['choices' => $this->langs, 'required' => false, 'label' => 'language'])
                 ->add(
                     'authentication',
                     'choice',
-                    array(
+                    [
                         'choices' => $this->authenticationDrivers,
                         'required' => false,
                         'label' => 'authentication',
-                    )
+                    ]
                 )
                 ->add(
                     'platformRoles',
                     'entity',
-                    array(
+                    [
                         'mapped' => false,
                         'data' => $this->platformRoles,
                         'class' => 'Claroline\CoreBundle\Entity\Role',
@@ -150,39 +150,49 @@ class ProfileType extends AbstractType
                             return $query;
                         },
                         'label' => 'roles',
-                    )
+                    ]
                 )
                 ->add(
                     'pictureFile',
                     'file',
-                    array(
+                    [
                         'required' => false,
                         'constraints' => new Image(
-                            array(
+                            [
                                 'minWidth' => 50,
                                 'maxWidth' => 800,
                                 'minHeight' => 50,
                                 'maxHeight' => 800,
-                            )
+                            ]
                         ),
                         'label' => 'picture_profile',
-                    )
+                    ]
                 )
                 ->add(
                     'description',
                     'tinymce',
-                    array('required' => false, 'label' => 'description')
+                    ['required' => false, 'label' => 'description']
+                )
+                ->add(
+                    'expirationDate',
+                    'date',
+                    [
+                        'disabled' => false,
+                        'widget' => 'single_text',
+                        //'format' => $dateFormat,
+                        'label' => 'expiration_date',
+                    ]
                 )
                 ->add(
                     'organizations',
                     'entity',
-                    array(
+                    [
                         'label' => 'organizations',
                         'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
                         'expanded' => true,
                         'multiple' => true,
                         'property' => 'name',
-                    )
+                    ]
                 );
         }
     }
@@ -194,10 +204,10 @@ class ProfileType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $default = array(
+        $default = [
             'data_class' => 'Claroline\CoreBundle\Entity\User',
             'translation_domain' => 'platform',
-        );
+        ];
         if ($this->forApi) {
             $default['csrf_protection'] = false;
         }
