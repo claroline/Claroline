@@ -88,6 +88,7 @@ class DropzoneController extends DropzoneBaseController
         );
 
         $request = $this->getRequest();
+
         if ($request->isMethod('POST')) {
             // see if manual planification option has changed.
             $oldManualPlanning = $dropzone->getManualPlanning();
@@ -138,6 +139,9 @@ class DropzoneController extends DropzoneBaseController
 
             $em = $this->getDoctrine()->getManager();
 
+            // InnovaERV : ici, on a changé l'état du collecticiel.
+            // InnovaERV : j'ajoute une notification.
+            // InnovaERV : #171 Bug : lors de la création d'un collecticiel et de la notification
             if (count($dropzone->getDrops()) > 0) {
                 if ($oldManualPlanningOption !== $dropzone->getManualState()) {
                     // send notification.
@@ -294,6 +298,9 @@ class DropzoneController extends DropzoneBaseController
 
             $em = $this->getDoctrine()->getManager();
 
+            // InnovaERV : ici, on a changé l'état du collecticiel.
+            // InnovaERV : j'ajoute une notification.
+            // InnovaERV : #171 Bug : lors de la création d'un collecticiel et de la notification
             if (count($dropzone->getDrops()) > 0) {
                 if ($oldManualPlanningOption !== $dropzone->getManualState()) {
                     // send notification.
@@ -340,6 +347,7 @@ class DropzoneController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'form' => $form->createView(),
             'adminInnova' => $adminInnova,
+            'maximumNotation' => $dropzone->getMaximumNotation(),
             'collecticielOpenOrNot' => $collecticielOpenOrNot,
         ];
     }
