@@ -107,7 +107,7 @@ attempt: Attempt
 attempts: Attempts
 auth_mode: 'Authentication mode'
 authentication: Authentication
-authentication_invalid: 'The authentication source %authentication% in line %line% is invalid.'
+authentication_invalid: 'The authentication source %authentication% at line %line% is invalid.'
 authentication_source: 'Authentication source'
 author: Author
 automatic: Automatic
