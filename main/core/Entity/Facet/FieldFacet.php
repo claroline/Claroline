@@ -12,10 +12,10 @@
 namespace Claroline\CoreBundle\Entity\Facet;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Accessor;
+use JMS\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\FieldFacetRepository")
@@ -31,6 +31,17 @@ class FieldFacet
     const CHECKBOXES_TYPE = 6;
     const COUNTRY_TYPE = 7;
     const EMAIL_TYPE = 8;
+
+    private static $types = [
+        self::STRING_TYPE,
+        self::FLOAT_TYPE,
+        self::DATE_TYPE,
+        self::RADIO_TYPE,
+        self::SELECT_TYPE,
+        self::CHECKBOXES_TYPE,
+        self::COUNTRY_TYPE,
+        self::EMAIL_TYPE,
+    ];
 
     /**
      * @ORM\Id
@@ -151,6 +162,12 @@ class FieldFacet
 
     public function setType($type)
     {
+        if (!in_array($type, static::$types)) {
+            throw new \InvalidArgumentException(
+                'Type must be a FieldFacet class constant'
+            );
+        }
+
         $this->type = $type;
     }
 
