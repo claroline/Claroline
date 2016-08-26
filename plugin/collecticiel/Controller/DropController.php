@@ -1,9 +1,4 @@
 <?php
-/**
- * Created by : Vincent SAISSET
- * Date: 22/08/13
- * Time: 09:30.
- */
 
 namespace Innova\CollecticielBundle\Controller;
 
@@ -85,8 +80,8 @@ class DropController extends DropzoneBaseController
 
         $recordOrTransmitNotations = [];
 
-        foreach ($dropzone->getDrops() as $drop) {
-            $recordOrTransmitNotations = $dropManager->getRecordOrTransmitNotation($drop);
+        foreach ($dropzone->getDrops() as $dropList) {
+            $recordOrTransmitNotations = $dropManager->getRecordOrTransmitNotation($dropList);
         }
 
         $form_url = $this->createForm(new DocumentType(), null, ['documentType' => 'url']);
