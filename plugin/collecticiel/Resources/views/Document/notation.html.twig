@@ -32,11 +32,15 @@
     id="document_id_{{ document.id }}" name="document_id_{{ document.id }}"
     class="document_validate">
         <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To see a review'|trans({},'innova_collecticiel') }}">
-        {% if dropzone.evaluationType == "notation" %}
-            {{ notationDocuments[document.id] ~ "/" ~ dropzone.maximumNotation }}
-        {% else %}
-            {{notationScaleDocument}}
-        {% endif %}
+            {% if dropzone.evaluationType == "notation" %}
+                {{ notationDocuments[document.id] ~ "/" ~ dropzone.maximumNotation }}
+            {% else %}
+                {% if notationScaleDocument == '0' %}  
+                    <i class="fa fa-graduation-cap" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Review'|trans({},'innova_collecticiel') }}"></i>
+                {% else %}
+                    {{notationScaleDocument}}
+                {% endif %}
+            {% endif %}
         </span>
     </a>
 {% endif %}
@@ -74,6 +78,7 @@
                     'notationDocument': notationDocument,
                     'scalesArray' : scalesArray,
                     'criteriasArray' : criteriasArray,
+                    'notationsArray' : notationsArray,
                     'notationAppreciationDocument': notationAppreciationDocument,
                     }
                 %}
@@ -87,13 +92,18 @@
                 <button data-toggle="modal"
                 data-dropzone_id="{{dropzone.id}}" data-document_id="{{document.id}}"
                 data-document_url="{{document.url}}" data-document_title="{{document.title}}"
+                data-document_name="{{document.resourceNode.name}}"
                 data-document_sender_firstname="{{document.sender.firstname}}"
                 data-document_sender_lastname="{{document.sender.lastname}}"
                 data-document_record_or_transmit="0"
                 data_document_evaluationType="{{ dropzone.evaluationType }}"
 
                 {% if dropzone.evaluationType == 'notation'  %}
-                    data-criteria_nb="0"
+                    {% for i, notation in notationsArray %}
+                        data-criteria_{{i}}_id="{{notation.id}}"
+                        data-criteria_{{i}}_name="{{notation.notationName}}"
+                    {% endfor %}
+                    data-criteria_nb="{{notationsArray|length}}"
                 {% endif %}
 
                 {% if dropzone.evaluationType == 'ratingScale'  %}
@@ -109,13 +119,18 @@
                 <button data-toggle="modal"
                 data-dropzone_id="{{dropzone.id}}" data-document_id="{{document.id}}"
                 data-document_url="{{document.url}}" data-document_title="{{document.title}}"
+                data-document_name="{{document.resourceNode.name}}"
                 data-document_sender_firstname="{{document.sender.firstname}}"
                 data-document_sender_lastname="{{document.sender.lastname}}"
                 data-document_record_or_transmit="1"
                 data_document_evaluationType="{{ dropzone.evaluationType }}"
 
                 {% if dropzone.evaluationType == 'notation'  %}
-                    data-criteria_nb="0"
+                    {% for i, notation in notationsArray %}
+                        data-criteria_{{i}}_id="{{notation.id}}"
+                        data-criteria_{{i}}_name="{{notation.notationName}}"
+                    {% endfor %}
+                    data-criteria_nb="{{notationsArray|length}}"
                 {% endif %}
 
                 {% if dropzone.evaluationType == 'ratingScale'  %}

@@ -53,6 +53,7 @@ class OfficeConnectController extends Controller
         $userManager = $this->get('claroline.manager.user_manager');
         $email = $userResponse->getEmail();
         $user = $userManager->getUserByEmail($email);
+
         if ($user === null) {
             $user = new User();
             $user->setFirstName($userResponse->getNickname());

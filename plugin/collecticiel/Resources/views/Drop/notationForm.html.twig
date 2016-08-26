@@ -72,6 +72,25 @@
                 <div class="form-group row col-md-6">
                 </div>
             </div>
+
+            {% for notation in notationsArray %}
+                <div class="row text-left">
+                    <div class="form-group col-md-6">
+                        <b>{{ notation.notationName }}</b>
+                    </div>
+                </div>
+                <div class="row text-left">
+                    <div class="form-group col-md-6">
+                        <textarea id="innova_collecticiel_notation_form_{{notation.notationName}}_{{document.id}}" name="innova_collecticiel_notation_form[{{notation.notationName}}]" required="required" class="claroline-tiny-mce hide"
+                        {% if recordOrTransmitNotation == 0 %}value="{{notation.notationName}}" {% endif %}
+                        >
+                            {% render(controller('InnovaCollecticielBundle:ChoiceNotation:renderChoiceText',
+                            {'gradingNotationId': notation.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) %}
+                        </textarea>
+                    </div>
+                </div>
+            {% endfor %}
+
         {% endif %}
 
         {#             #}
