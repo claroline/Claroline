@@ -192,12 +192,12 @@ workspace_manage_badges: 'Gestion des badges de l''espace de travail'
 list_by_user: 'Lister par utilisateur'
 show_all_badges: 'Afficher tous les badges'
 back_to_badge_list: 'Retour à la liste de badges'
-badges_per_user: Nombre de badges par utilisateurs
-top_10_most_awarded_badges: Top 10 des Badges les plus attribués
-badges_number: Nombre des badges
-user_number: Nombre des utilisateurs
-import_export: Importer/Exporter
-expired_badge: Badge expiré
+badges_per_user: 'Nombre de badges par utilisateur'
+top_10_most_awarded_badges: 'Top 10 des Badges les plus attribués'
+badges_number: 'Nombre de badges'
+user_number: 'Nombre d''utilisateurs'
+import_export: 'Importer/Exporter'
+expired_badge: 'Badge expiré'
 recalculate_modal_title: 'Démarrer la réattribution automatique des badges ?'
 recalculate_modal_waning: '<strong>Attention !</strong> En raison de la charge de travail conséquente liée au recalcul de l''attribution d''un badge, <strong>les utilisateurs ne recevront pas de notification</strong> du gain ou de la perte de ce badge.'
 recalculate_modal_option_all_users: 'Autoriser la perte du badge si les règles ne sont plus vérifiées.'
