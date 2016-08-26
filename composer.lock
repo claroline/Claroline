@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "f7abe0a427d68d6163dbae67b7156a086b2167f6"
+                "reference": "80bef5f51a887509fec62adc09989d8869415a07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/f7abe0a427d68d6163dbae67b7156a086b2167f6",
-                "reference": "f7abe0a427d68d6163dbae67b7156a086b2167f6",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/80bef5f51a887509fec62adc09989d8869415a07",
+                "reference": "80bef5f51a887509fec62adc09989d8869415a07",
                 "shasum": ""
             },
             "require": {
@@ -144,6 +144,7 @@
                 "ext-gd": "*",
                 "ext-intl": "*",
                 "ext-pdo_mysql": "*",
+                "fabiang/xmpp": "0.6.1",
                 "friendsofsymfony/jsrouting-bundle": "~1.5",
                 "friendsofsymfony/oauth-server-bundle": "~1.4",
                 "friendsofsymfony/rest-bundle": "1.7.9",
@@ -154,7 +155,7 @@
                 "icap/html-diff": "~1.1",
                 "idci/exporter-bundle": "1.0.0",
                 "innova/angular-js-bundle": "~5.0",
-                "innova/angular-ui-pageslide-bundle": "~5.1",
+                "innova/angular-ui-pageslide-bundle": "~5.0",
                 "innova/angular-ui-resource-picker-bundle": "~6.0",
                 "innova/angular-ui-tinymce-bundle": "5.*",
                 "jdorn/sql-formatter": "~1.0",
@@ -306,6 +307,7 @@
                     "Claroline\\FlashCardBundle\\ClarolineFlashCardBundle",
                     "UJM\\ExoBundle\\UJMExoBundle",
                     "Icap\\LessonBundle\\IcapLessonBundle",
+                    "Claroline\\ChatBundle\\ClarolineChatBundle",
                     "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle"
                 ]
             },
@@ -353,6 +355,7 @@
                     "Innova\\PathBundle\\": "plugin/path",
                     "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator",
                     "Claroline\\DevBundle\\": "main/dev",
+                    "Claroline\\ChatBundle\\": "plugin/chat",
                     "Claroline\\WebInstaller\\": "main/web-installer/",
                     "Icap\\WebsiteBundle\\": "plugin/website",
                     "UJM\\ExoBundle\\": "plugin/exo",
@@ -381,7 +384,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-08-16 12:51:29"
+            "time": "2016-08-25 13:22:39"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -1728,6 +1731,64 @@
                 "orm"
             ],
             "time": "2016-01-05 21:34:58"
+        },
+        {
+            "name": "fabiang/xmpp",
+            "version": "0.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fabiang/xmpp.git",
+                "reference": "47fdbe4a60ef0e726c4aaf39d6eb57afd42915c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fabiang/xmpp/zipball/47fdbe4a60ef0e726c4aaf39d6eb57afd42915c8",
+                "reference": "47fdbe4a60ef0e726c4aaf39d6eb57afd42915c8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "behat/behat": "~2.5",
+                "monolog/monolog": "~1.11",
+                "phpunit/phpunit": "~4.3",
+                "satooshi/php-coveralls": "~0.6"
+            },
+            "suggest": {
+                "psr/log-implementation": "Allows more advanced logging of the xmpp connection"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fabiang\\Xmpp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Fabian Grutschus",
+                    "email": "f.grutschus@lubyte.de",
+                    "homepage": "http://www.lubyte.de/",
+                    "role": "developer"
+                }
+            ],
+            "description": "Library for XMPP protocol (Jabber) connections",
+            "homepage": "https://github.com/fabiang/xmpp",
+            "keywords": [
+                "jabber",
+                "xmpp"
+            ],
+            "time": "2014-11-20 08:59:24"
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
@@ -3447,21 +3508,31 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/johngrogg/ics-parser.git",
-                "reference": "949cc45ea1b8890234d53e892dcdf9e0a55bd5d7"
+                "reference": "27939236fc7c2cfe6dd9440feb309225f82ab879"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/949cc45ea1b8890234d53e892dcdf9e0a55bd5d7",
-                "reference": "949cc45ea1b8890234d53e892dcdf9e0a55bd5d7",
+                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/27939236fc7c2cfe6dd9440feb309225f82ab879",
+                "reference": "27939236fc7c2cfe6dd9440feb309225f82ab879",
                 "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "^2.5"
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "class.iCalReader.php"
-                ]
+                "psr-0": {
+                    "ICal": "src/",
+                    "ICal\\Tests": "tests/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
             "authors": [
                 {
                     "name": "Martin Thoma",
@@ -3472,14 +3543,18 @@
                     "name": "John Grogg",
                     "email": "john.grogg@gmail.com",
                     "role": "Developer"
+                },
+                {
+                    "name": "Jonathan Goode",
+                    "role": "Maintainer/Developer"
                 }
             ],
-            "description": "Ics file parser",
+            "description": "ICS file parser",
             "keywords": [
                 "ical",
                 "ics"
             ],
-            "time": "2016-07-07 20:21:41"
+            "time": "2016-08-20 21:27:46"
         },
         {
             "name": "json-quiz/json-quiz",
@@ -3671,7 +3746,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "Knplabs",
+                    "name": "KnpLabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
