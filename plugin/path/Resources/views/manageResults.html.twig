@@ -1,0 +1,84 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block content %}
+    <div class="alert alert-success navbar navbar-default lockmsg">
+        <div class="container-fluid">
+            <p class="navbar-text text-success" id="unlocked"></p>
+        </div>
+    </div>
+    <div class="list-group-item">
+        <a class="btn btn-default" href="{{path('innova_path_editor_wizard', {'id':data.path.id}) }}">{{'path_back'|trans({}, 'innova_tools')}}</a>
+        <h1>{{ 'path_dashboard'|trans({}, 'innova_tools') }} : {{ data.path.resourceNode.name }}</h1>
+
+        {% if data.userdata is iterable %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr><th>{{ 'user'|trans({}, 'platform') }}</th><th>{{ 'progression'|trans({}, 'innova_tools') }}</th></tr>
+                    </thead>
+                    <tbody>
+                    {% for userprogressions in data.userdata %}
+                    <tr class="userstepunlock">
+                        <td class="username">{{ userprogressions.user.firstName ~ ' ' ~ userprogressions.user.lastName }}</td>
+                        <td>
+                            <table class="table userliststeps">
+                                <thead>
+                                <tr>
+                                    <th>{{ 'step'|trans({}, 'innova_tools') }}</th>
+                                    <th>{{ 'status'|trans({}, 'innova_tools') }}</th>
+                                    <th>{{ 'locked'|trans({}, 'innova_tools') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                            {% for userprogression in userprogressions.progression %}
+                                {% if (userprogression.step.activity.title is defined) %}
+                                        <tr>
+                                            <td class="stepname">{{ userprogression.step.activity.title }}</td>
+                                            <td class="stepstatus">{{ userprogression.status | trans({}, 'path_wizards') }}</td>
+                                            <td>
+                                            {% if userprogression.lockedcall %}
+                                                <button class="btn btn-primary btn-xs unlock"
+                                                    data-ng-click="stepShowCtrl.unlockStep(step, userprogressions.user)"
+                                                    data-step="{{ userprogression.step.id }}"
+                                                    data-user="{{ userprogression.user.id }}">
+                                                    <span class="fa fa-lock"></span>
+                                                    {{ 'unlockit'|trans({}, 'innova_tools') }}
+                                                </button>
+                                            {% endif %}
+                                            </td>
+                                        </tr>
+                                {% endif %}
+                            {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# translations #}
+    <script type='text/javascript' src="{{ url('bazinga_jstranslation_js', {'domain':'path_wizards'}) }}"></script>
+
+    <script type='text/javascript' src="{{ asset('bundles/innovapath/js/manageLock.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {# Claroline CSS #}
+    {{ parent() }}
+
+    {# Path Editor styles #}
+    {% stylesheets debug=false filter='less, cssmin' output='vendor/innovapath/wizards.css'
+        '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.css'
+        '@InnovaPathBundle/Resources/less/wizards.less'
+    %}
+    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}

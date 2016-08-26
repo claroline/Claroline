@@ -64,6 +64,10 @@
             var evaluationstatuses=[];
             var useringroup=[];
             var userinteam=[];
+            /**
+             * is the user a manager ? (EDIT rights)
+             */
+            var editEnabled= false;
             var deferred = $q.defer();
 
             //expose the promises
@@ -99,12 +103,19 @@
                 evaluationstatusespromise: evaluationstatusespromise,
                 useringrouppromise: useringrouppromise,
 
+                setEditEnabled: function setEditEnabled(value) {
+                    editEnabled = value;
+                },
+                getEditEnabled: function getEditEnabled() {
+                    return editEnabled;
+                },
+
                 userteampromise: function userteampromise(pathid) {
                     // Initialize a new Promise
                     var deferred = $q.defer();
 
                     $http
-                        .get(Routing.generate('innova_path_criteria_teamsforws', { id: id }))
+                        .get(Routing.generate('innova_path_criteria_teamsforws', { id: pathid }))
                         .success(function (response) {
                             // Store received data
                             userteamlist = response;

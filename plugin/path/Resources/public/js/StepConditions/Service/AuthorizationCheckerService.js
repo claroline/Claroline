@@ -74,10 +74,22 @@
                  * @returns {object}
                  */
                 isAuthorized: function isAuthorized(step, authorization, arr) {
-                    if (PathService.isCompleteBlockingCondition()) {
-                        return this.isAuthorizedAllSteps(step, authorization, arr);
+                    if (!PathService.getEditEnabled()) {
+                        if (PathService.isCompleteBlockingCondition()) {
+                            return this.isAuthorizedAllSteps(step, authorization, arr);
+                        } else {
+                            return this.isAuthorizedNextStep(step, authorization, arr);
+                        }
                     } else {
-                        return this.isAuthorizedNextStep(step, authorization, arr);
+                        if (!authorization) {
+                            authorization = $q.defer();
+                        }
+                        authorization.resolve({granted: true});
+                        var progression=UserProgressionService.getForStep(step);
+                        var status=(typeof progression=='undefined'||null===progression)?"seen":progression.status;
+                        //Enables
+                        UserProgressionService.update(step,'seen',1);
+                        PathService.goTo(step);
                     }
                 },
                 /**

@@ -227,7 +227,7 @@ class PathListener extends ContainerAware
         if ($resourceNode) {
             // Check if Node is in a subdirectory
             $wsRoot = $manager->getWorkspaceRoot($resourceNode->getWorkspace());
-            if ($wsRoot->getId() != $resourceNode->getParent()->getId()) {
+            if ($wsRoot->getId() !== $resourceNode->getParent()->getId()) {
                 // ResourceNode is not stored in WS root => create subdirectories tree
                 $ancestors = $manager->getAncestors($resourceNode);
 
@@ -297,5 +297,31 @@ class PathListener extends ContainerAware
         $manager = $this->container->get('claroline.manager.resource_manager');
         $resourceNode = $manager->getNode($resource->resourceId);
         $resource->resourceId = $processedNodes[$resourceNode->getId()]->getId();
+    }
+
+    public function onUnlock(CustomActionResourceEvent $event)
+    {
+        $path = $event->getResource();
+        $route = $this->container->get('router')->generate(
+            'innova_path_unlock_management',
+            [
+                'id' => $path->getId(),
+            ]
+        );
+        $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
+    }
+
+    public function onManageresults(CustomActionResourceEvent $event)
+    {
+        $path = $event->getResource();
+        $route = $this->container->get('router')->generate(
+            'innova_path_manage_results',
+            [
+                'id' => $path->getId(),
+            ]
+        );
+        $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
     }
 }

@@ -37,6 +37,12 @@
                                 </ul>
 
                                 <ul class="nav navbar-nav navbar-right">
+                                    <!-- unlock management button -->
+                                    <li>
+                                        <a href="" data-ng-click="pathEditCtrl.unlockmanager()">
+                                            <span class="fa fa-lock"></span> {{ 'path_dashboard'|trans:{}:'path_wizards' }}
+                                        </a>
+                                    </li>
                                     <!-- Save button -->
                                     <li data-ng-class="{ 'disabled': !pathEditCtrl.unsaved }">
                                         <a href="" data-ng-click="pathEditCtrl.save()">

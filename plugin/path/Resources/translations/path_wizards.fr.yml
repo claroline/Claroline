@@ -7,7 +7,7 @@ close_summary: Fermer le sommaire
 completed: accompli
 copy: copie
 
-condition_access: Condition d'accès pour
+condition_access: Condition d'accès à l'étape
 condition_and: ET
 condition_condition_delete: Supprimer la condition d'accès
 condition_criterion_add : Ajouter un critère
@@ -26,8 +26,8 @@ condition_criterion_type_activitystatus: Status de l'activité
 condition_criterion_type_usergroup: Groupe d'utilisateur
 condition_criterion_type_userteam: Equipe d'utilisateur
 condition_criterion_type: Type de critère
-condition_criterion_activityrepetition: Nombre de fois où l'activité a été effectuée
-condition_criterion_activitystatus: Statut de l'activité
+condition_criterion_activityrepetition: Nombre de fois où l'activité doit être réalisée
+condition_criterion_activitystatus: Etat de l'activité
 condition_criterion_usergroup: Utilisateur appartient au groupe
 condition_criterion_userteam: Utilisateur appartient à l'équipe
 condition_delete_title: Suppression de la condition
@@ -37,7 +37,7 @@ condition_init_conditionstructure: Créer une condition d'accès
 condition_no_conditionstructure: Aucune condition n'est définie pour l'étape
 condition_or: OU
 condition_step_no_activity: Attention, vous n'avez pas associé d'activité à cette étape
-condition_step_activity_notmanageable : Attention, l'activité que vous avez choisi est en évaluation manuelle : vous ne pouvez utiliser les critères relatifs à une évaluation pour cette étape
+condition_step_activity_notmanageable : Pour cette étape, vous avez choisi un type d'évaluation manuel. Les critères disponibles se limitent dans ce cas aux utilisateurs (groupe ou équipe)
 criteriagroup_delete_title: Suppression du groupe de critère
 criteriagroup_delete_confirm: Souhaitez-vous vraiment supprimer ce groupe de critères ? Cela supprimera tous les critères de ce groupe et les groupes de critères enfants
 criteriagroup_delete: Supprimer
@@ -50,6 +50,7 @@ delete_activity: Supprimer le lien avec l'activité
 delete_step: Supprimer l'étape
 description_help: Saisir une courte description du parcours
 discard_changes: Annuler les modifications
+done: Fait
 draft: Non publié
 
 # e
@@ -79,6 +80,7 @@ open_templates: Ouvrir les modèles
 
 # p
 path_breadcrumbs: Afficher le fil d'Ariane ?
+path_dashboard: Tableau de bord
 path_description: Description
 path_empty_user_can_edit: Ce parcours est vide. Editez et publiez le afin de le remplir.
 path_empty_user_read_only: Ce parcours est vide et n'a pas encore été configuré par son concepteur. Veuillez revenir plus tard.
@@ -127,6 +129,7 @@ save_path_changes: Vous avez des modifications non sauvegardées. Voulez-vous vr
 secondary_resources: Ressources complémentaires
 see_activity: Voir l'activité
 see_step_siblings: Voir les étapes soeurs
+seen: Vu
 select_activity: Sélectionner une activité existante
 show_path_info: Afficher les informations relatives au Parcours
 step_access_denied: Vous n'avez pas effectué les étapes précédentes
@@ -147,6 +150,7 @@ step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
 step_not_accessible: Cette étape n'est pas accessible pour le moment.
 step_paste: Coller
 step_to_template: Sauvegarder comme modèle
+step_unlocked: Etape %step% débloquée pour %user%
 step_who: Modalité de travail
 step_where: Lieu d'apprentissage
 summary: Sommaire
@@ -160,11 +164,15 @@ template_delete: Supprimer
 template_name: Nom
 template_save: Sauvegarder le modèle
 template_edit_title: Modèle
+to_do: A faire
+to_review: A refaire
 toggle_summary: Afficher/Masquer le sommaire
 
 # u
 undo: Annuler
+unlock_this: Demander un déblocage
 unsaved: Non sauvegardé
+unseen: Non vu
 user_progression_step_seen: Vous avez déjà vu cette étape
 user_progression_step_unseen: Vous n'avez pas encore vu cette étape
 user_progression_step_to_do: Vous avez marqué cette étape comme étant à faire
@@ -175,6 +183,9 @@ user_progression_step_to_do_label: A faire
 user_progression_step_done_label: Fait
 user_progression_step_to_review_label: A refaire
 
+user_progression_lockedcall_sent: Votre demande a été transmise
+user_progression_setlock_error: Erreur lors de l'application du verrou
+user_progression_unlock_sent: Déblocage de l'étape effectué
 # w
 with_tutor: Tutoré
 

@@ -41,7 +41,7 @@ informations: Informations
 # L
 local: Local
 library: In a library
-
+locked: Blocage
 
 # M
 my_paths : My paths
@@ -58,6 +58,8 @@ others_paths : Other paths
 # P
 paths: Paths
 path: Path
+path_back: Back to path
+path_dashboard: Path dashboard
 path_not_found: Path not found
 path_delete_success: Path has been deleted
 path_delete_error: Le parcours has not been deleted due to technical problem. Please try again
@@ -76,6 +78,10 @@ submit: Submit
 student: Individually
 status: Status
 select: Select
+step: Step
+
+#U
+unlockit: Unlock it
 
 # W
 warning_primary_resource_deleted: The primary resource 'resourceName' (resourceId) no longer exists. It has been removed from path.

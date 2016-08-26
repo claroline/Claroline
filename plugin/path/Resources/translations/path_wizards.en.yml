@@ -50,6 +50,7 @@ delete_activity: Delete activity link
 delete_step: Delete step
 description_help: Enter a short description of the path
 discard_changes: Discard changes
+done: Done
 draft: Not published
 
 # e
@@ -79,6 +80,7 @@ open_templates: Open templates
 
 # p
 path_breadcrumbs: Show breadcrumbs ?
+path_dashboard: Path dashboard
 path_description: Description
 path_empty_user_can_edit: This path is empty. Please edit and publish it to fill it.
 path_empty_user_read_only: This path is empty and has not been configured by its designer. Please come back later.
@@ -129,6 +131,7 @@ save_path_changes: You have unsaved changes. Are you sure you want to leave this
 secondary_resources: Secondary resources
 see_activity: See activity
 see_step_siblings: See siblings of the step
+seen: Seen
 select_activity: Select existing activity
 show_path_info: Show information o the Path
 sidebar_close: Close
@@ -149,6 +152,7 @@ step_has_duration: step has a duration
 step_no_resource: There is no resource linked to this step.
 step_paste: Paste
 step_to_template: Save as template
+step_unlocked: Step %step% unlocked for %user%
 step_where: Learning place
 step_who: Working mode
 summary: Summary
@@ -161,11 +165,15 @@ template_edit_title: Template
 template_name: Name
 template_save: Save template
 templates: Templates
+to_do: To do
+to_review: To review
 toggle_summary: Display/Hide summary
 
 # u
 undo: Undo
+unlock_this: Ask for unlock
 unsaved: Not saved
+unseen: Unseen
 user_progression_step_seen: You have seen this step
 user_progression_step_unseen: You have not seen this step
 user_progression_step_to_do: You have marked this step as to do
@@ -180,6 +188,9 @@ user_progression_step_to_do_label: To do
 user_progression_step_done_label: Done
 user_progression_step_to_review_label: To review
 
+user_progression_lockedcall_sent: Your call has been sent
+user_progression_setlock_error: Error applying the lock
+user_progression_unlock_sent: Step unlock done
 # w
 with_tutor: Tutored
 

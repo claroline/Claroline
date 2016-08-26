@@ -1,6 +1,7 @@
 <div class="step-container">
     <h4 class="step-title">
         {{ 'step'|trans:{}:'ujm_exo' }} <span class="badge">{{ stepShowCtrl.stepIndex*1 + 1 }}</span>
+        <span data-ng-if="stepShowCtrl.step.meta.title">: {{ stepShowCtrl.step.meta.title }}</span>
 
         <small data-ng-if="stepShowCtrl.step.meta.maxAttempts && stepShowCtrl.feedback.enabled" class="pull-right">
             <span>{{ 'sequence_nb_attempts'|trans:{ "1" : stepShowCtrl.currentTry }:'ujm_sequence' }}</span>

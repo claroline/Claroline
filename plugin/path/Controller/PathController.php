@@ -26,7 +26,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @version    0.1
  *
  * @link       http://innovalangues.net
- * 
+ *
  * @Route(
  *      "/",
  *      name    = "innova_path",
@@ -82,7 +82,7 @@ class PathController
     /**
      * Publish path
      * Create all needed resources for path to be played.
-     * 
+     *
      * @Route(
      *     "/publish/{id}/{redirect}",
      *     name         = "innova_path_publish",

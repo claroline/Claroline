@@ -22,10 +22,10 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Doctrine\ORM\NoResultException;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -34,9 +34,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Controller of the user profile.
@@ -103,7 +103,7 @@ class ProfileController extends Controller
     private function isInRoles($role, $roles)
     {
         foreach ($roles as $current) {
-            if ($role->getId() == $current->getId()) {
+            if ($role->getId() === $current->getId()) {
                 return true;
             }
         }
@@ -130,7 +130,7 @@ class ProfileController extends Controller
         try {
             $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
 
-            return array('user' => $user);
+            return ['user' => $user];
         } catch (NoResultException $e) {
             throw new NotFoundHttpException('Page not found');
         }
@@ -191,7 +191,7 @@ class ProfileController extends Controller
         $completion = $totalVisibleFields === 0 ? null : round($totalFilledVisibleFields / $totalVisibleFields * 100);
         $links = $profileLinksEvent->getLinks();
 
-        return array(
+        return [
             'user' => $loggedUser,
             'publicProfilePreferences' => $publicProfilePreferences,
             'facets' => $facets,
@@ -200,7 +200,7 @@ class ProfileController extends Controller
             'links' => $links,
             'badges' => $dektopBadgesEvent->getContent(),
             'completion' => $completion,
-        );
+        ];
     }
 
     /**
@@ -234,29 +234,27 @@ class ProfileController extends Controller
         $roles = $this->roleManager->getPlatformRoles($user);
         $accesses = $this->profilePropertyManager->getAccessesForCurrentUser();
 
-        $form = $this->createForm(
-            new ProfileType(
-                $this->localeManager,
-                $roles,
-                $isAdmin,
-                $isGrantedUserAdmin,
-                $accesses,
-                $this->authenticationManager->getDrivers()
-            ),
-            $user
+        $profileType = new ProfileType(
+            $this->localeManager,
+            $roles,
+            $isAdmin,
+            $isGrantedUserAdmin,
+            $accesses,
+            $this->authenticationManager->getDrivers()
         );
 
+        $form = $this->createForm($profileType, $user);
         $form->handleRequest($this->request);
         $unavailableRoles = [];
 
         if ($this->get('request')->getMethod() === 'POST') {
             $roles = ($isAdmin || $isGrantedUserAdmin) ?
                 $form->get('platformRoles')->getData() :
-                array($this->roleManager->getRoleByName('ROLE_USER'));
+                [$this->roleManager->getRoleByName('ROLE_USER')];
         } else {
             $roles = ($isAdmin || $isGrantedUserAdmin) ?
                 $this->roleManager->getAllPlatformRoles() :
-                array($this->roleManager->getRoleByName('ROLE_USER'));
+                [$this->roleManager->getRoleByName('ROLE_USER')];
         }
 
         foreach ($roles as $role) {
@@ -276,14 +274,14 @@ class ProfileController extends Controller
             $this->userManager->rename($user, $user->getUsername());
             $this->roleManager->renameUserRole($userRole, $user->getUsername());
 
-            $successMessage = $translator->trans('edit_profile_success', array(), 'platform');
-            $errorMessage = $translator->trans('edit_profile_error', array(), 'platform');
-            $errorRight = $translator->trans('edit_profile_error_right', array(), 'platform');
+            $successMessage = $translator->trans('edit_profile_success', [], 'platform');
+            $errorMessage = $translator->trans('edit_profile_error', [], 'platform');
+            $errorRight = $translator->trans('edit_profile_error_right', [], 'platform');
             $redirectUrl = $this->generateUrl('claro_admin_users_index');
 
             if ($editYourself) {
-                $successMessage = $translator->trans('edit_your_profile_success', array(), 'platform');
-                $errorMessage = $translator->trans('edit_your_profile_error', array(), 'platform');
+                $successMessage = $translator->trans('edit_your_profile_success', [], 'platform');
+                $errorMessage = $translator->trans('edit_your_profile_error', [], 'platform');
                 $redirectUrl = $this->generateUrl('claro_public_profile_view', ['publicUrl' => $user->getPublicUrl()]);
             }
 
@@ -292,7 +290,7 @@ class ProfileController extends Controller
             $unitOfWork->computeChangeSets();
 
             $changeSet = $unitOfWork->getEntityChangeSet($user);
-            $newRoles = array();
+            $newRoles = [];
 
             if (isset($form['platformRoles'])) {
                 //verification:
@@ -302,17 +300,17 @@ class ProfileController extends Controller
                 $this->userManager->setPlatformRoles($user, $newRoles);
             }
 
-            $rolesChangeSet = array();
+            $rolesChangeSet = [];
             //Detect added
             foreach ($newRoles as $role) {
                 if (!$this->isInRoles($role, $roles)) {
-                    $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
+                    $rolesChangeSet[$role->getTranslationKey()] = [false, true];
                 }
             }
             //Detect removed
             foreach ($roles as $role) {
                 if (!$this->isInRoles($role, $newRoles)) {
-                    $rolesChangeSet[$role->getTranslationKey()] = array(true, false);
+                    $rolesChangeSet[$role->getTranslationKey()] = [true, false];
                 }
             }
             if (count($rolesChangeSet) > 0) {
@@ -326,7 +324,7 @@ class ProfileController extends Controller
             $this->eventDispatcher->dispatch(
                 'log',
                 'Log\LogUserUpdate',
-                array($user, $changeSet)
+                [$user, $changeSet]
             );
 
             $sessionFlashBag->add('success', $successMessage);
@@ -334,12 +332,12 @@ class ProfileController extends Controller
             return $this->redirect($redirectUrl);
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'user' => $user,
             'editYourself' => $editYourself,
             'unavailableRoles' => $unavailableRoles,
-        );
+        ];
     }
 
     /**
@@ -387,22 +385,22 @@ class ProfileController extends Controller
                 $entityManager = $this->get('doctrine.orm.entity_manager');
                 $entityManager->persist($user);
                 $entityManager->flush();
-                $sessionFlashBag->add('success', $translator->trans('edit_password_success', array(), 'platform'));
+                $sessionFlashBag->add('success', $translator->trans('edit_password_success', [], 'platform'));
             } else {
-                $sessionFlashBag->add('error', $translator->trans('edit_password_error_current', array(), 'platform'));
+                $sessionFlashBag->add('error', $translator->trans('edit_password_error_current', [], 'platform'));
             }
 
             if ($selfEdit) {
-                return $this->redirect($this->generateUrl('claro_public_profile_view', array('publicUrl' => $user->getPublicUrl())));
+                return $this->redirect($this->generateUrl('claro_public_profile_view', ['publicUrl' => $user->getPublicUrl()]));
             } else {
                 return $this->redirect($this->generateUrl('claro_admin_users_index'));
             }
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'user' => $user,
-        );
+        ];
     }
 
     /**
@@ -436,19 +434,19 @@ class ProfileController extends Controller
                 $entityManager->persist($user);
                 $entityManager->flush();
 
-                $sessionFlashBag->add('success', $translator->trans('tune_public_url_success', array(), 'platform'));
+                $sessionFlashBag->add('success', $translator->trans('tune_public_url_success', [], 'platform'));
             } catch (\Exception $exception) {
-                $sessionFlashBag->add('error', $translator->trans('tune_public_url_error', array(), 'platform'));
+                $sessionFlashBag->add('error', $translator->trans('tune_public_url_error', [], 'platform'));
             }
 
-            return $this->redirect($this->generateUrl('claro_public_profile_view', array('publicUrl' => $user->getPublicUrl())));
+            return $this->redirect($this->generateUrl('claro_public_profile_view', ['publicUrl' => $user->getPublicUrl()]));
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'user' => $loggedUser,
             'currentPublicUrl' => $currentPublicUrl,
-        );
+        ];
     }
 
     /**
@@ -462,7 +460,7 @@ class ProfileController extends Controller
     public function checkPublicUrlAction(Request $request)
     {
         $publicUrl = $request->request->get('publicUrl');
-        $data = array('check' => false);
+        $data = ['check' => false];
         if (preg_match('/^[^\/]+$/', $publicUrl)) {
             $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
             if (null === $existedUser) {
