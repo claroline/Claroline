@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.tool.resources.text_importer")
@@ -63,7 +63,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
                                         function ($v) use ($rootPath) {
                                             return call_user_func_array(
                                                 __CLASS__.'::fileNotExists',
-                                                array($v, $rootPath)
+                                                [$v, $rootPath]
                                             );
                                         }
                                     )
@@ -79,7 +79,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function supports($type)
     {
-        return $type == 'yml' ? true : false;
+        return $type === 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -119,9 +119,9 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
         $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$uid;
         file_put_contents($tmpPath, $content);
         $_files[$uid] = $tmpPath;
-        $data = array(array('file' => array(
+        $data = [['file' => [
             'path' => $uid,
-        )));
+        ]]];
 
         return $data;
     }

@@ -235,7 +235,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                             $owner = $this->getOwner();
                         }
 
-                        $isPublished = isset($item['item']['published']) || false === $item['item']['published'] ? $item['item']['published'] : true;
+                        $isPublished = isset($item['item']['published']) ? $item['item']['published'] : true;
 
                         //add the custom icons
                         $icon = null;
