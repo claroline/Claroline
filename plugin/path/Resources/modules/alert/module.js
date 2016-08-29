@@ -4,8 +4,8 @@
 
 import angular from 'angular/index'
 
-import AlertService from './Service/AlertService';
-import AlertBoxDirective from './Directive/AlertBoxDirective';
+import AlertService from './Service/AlertService'
+import AlertBoxDirective from './Directive/AlertBoxDirective'
 
 angular
   .module('Alert', [])

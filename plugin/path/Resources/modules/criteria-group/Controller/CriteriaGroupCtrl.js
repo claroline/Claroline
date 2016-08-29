@@ -5,7 +5,8 @@ export default class CriteriaGroupCtrl {
    * @param {CriteriaGroupService} CriteriaGroupService
    * @param {CriterionService} CriterionService
    */
-  constructor(ConfirmService, CriteriaGroupService, CriterionService) {
+  constructor(Translator, ConfirmService, CriteriaGroupService, CriterionService) {
+    this.Translator = Translator
     this.ConfirmService = ConfirmService
     this.CriteriaGroupService = CriteriaGroupService
     this.CriterionService = CriterionService
@@ -17,10 +18,10 @@ export default class CriteriaGroupCtrl {
 
   removeGroup() {
     this.ConfirmService.open({
-        title:         Translator.trans('criteriagroup_delete_title',   {}, 'path_wizards'),
-        message:       Translator.trans('criteriagroup_delete_confirm', {}, 'path_wizards'),
-        confirmButton: Translator.trans('criteriagroup_delete',         {}, 'path_wizards')
-      },
+      title:         this.Translator.trans('criteriagroup_delete_title',   {}, 'path_wizards'),
+      message:       this.Translator.trans('criteriagroup_delete_confirm', {}, 'path_wizards'),
+      confirmButton: this.Translator.trans('criteriagroup_delete',         {}, 'path_wizards')
+    },
       // Confirm success callback
       () => {
         this.CriteriaGroupService.removeGroup(this.step, this.criteriaGroup)

@@ -45,7 +45,7 @@ export default class HistoryService {
    * @returns {boolean}
    */
   canRedo() {
-    return !this.disabled.redo;
+    return !this.disabled.redo
   }
 
   /**
@@ -61,11 +61,11 @@ export default class HistoryService {
    * Restore default history state (= empty history)
    */
   clear() {
-    this.disabled.redo = true;
-    this.disabled.undo = true;
+    this.disabled.redo = true
+    this.disabled.undo = true
 
-    this.history = [];
-    this.historyIndex = -1;
+    this.history = []
+    this.historyIndex = -1
   }
 
   /**
@@ -76,7 +76,7 @@ export default class HistoryService {
    * @returns {boolean}
    */
   update(data) {
-    let updated = false;
+    let updated = false
 
     // Get the last data stored in history to show if something has changed
     const lastHistoryData     = this.getFromHistory(this.historyIndex)

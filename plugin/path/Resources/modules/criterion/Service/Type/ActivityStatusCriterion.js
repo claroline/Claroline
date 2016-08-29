@@ -17,7 +17,7 @@ export default class ActivityStatusCriterion extends ActivityCriterion {
       const status = evaluation.status ? evaluation.status : 'N/A'
       if (status !== dataToTest) {
         // The activity has not the correct status
-        errors.push(Translator.trans('condition_criterion_test_status', {activityStatus: dataToTest, userStatus: status}, 'path_wizards'))
+        errors.push(this.Translator.trans('condition_criterion_test_status', {activityStatus: dataToTest, userStatus: status}, 'path_wizards'))
       }
 
       deferred.resolve(errors)

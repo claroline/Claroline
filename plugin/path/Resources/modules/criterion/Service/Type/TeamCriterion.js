@@ -2,8 +2,8 @@
 import BaseCriterion from './BaseCriterion'
 
 export default class TeamCriterion extends BaseCriterion {
-  constructor($log, $q, $http, PathService) {
-    super($log, $q, $http)
+  constructor($log, $q, $http, Translator, url, PathService) {
+    super($log, $q, $http, Translator, url)
 
     // We need the current path to be able to retrieve the workspace
     this.PathService = PathService
@@ -35,9 +35,9 @@ export default class TeamCriterion extends BaseCriterion {
           let message = null
           if (0 === this.userTeams.length) {
             // Current user has no team
-            message = Translator.trans('condition_criterion_test_userteam_noteam', {activityTeam: this.workspaceTeams[dataToTest]}, 'path_wizards')
+            message = this.Translator.trans('condition_criterion_test_userteam_noteam', {activityTeam: this.workspaceTeams[dataToTest]}, 'path_wizards')
           } else {
-            message = Translator.trans('condition_criterion_test_userteam', {activityTeam: this.workspaceTeams[dataToTest], userTeam: this.getTeamNames(this.userTeams)}, 'path_wizards')
+            message = this.Translator.trans('condition_criterion_test_userteam', {activityTeam: this.workspaceTeams[dataToTest], userTeam: this.getTeamNames(this.userTeams)}, 'path_wizards')
           }
 
           errors.push(message)
@@ -71,7 +71,7 @@ export default class TeamCriterion extends BaseCriterion {
         deferred.resolve(this.workspaceTeams)
       } else {
         this.$http
-          .get(Routing.generate('innova_path_criteria_teams', { id: this.PathService.getId() }))
+          .get(this.UrlGenerator('innova_path_criteria_teams', { id: this.PathService.getId() }))
           .success((response) => {
             this.workspaceTeams = response
 
@@ -103,7 +103,7 @@ export default class TeamCriterion extends BaseCriterion {
         deferred.resolve(this.userTeams)
       } else {
         this.$http
-          .get(Routing.generate('innova_path_criteria_user_teams'))
+          .get(this.UrlGenerator('innova_path_criteria_user_teams'))
           .success((response) => {
             this.userTeams = response
             deferred.resolve(response)

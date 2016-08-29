@@ -2,12 +2,15 @@
  * Path edit controller
  */
 
+import angular from 'angular/index'
+
 import PathBaseCtrl from './PathBaseCtrl'
 
 export default class PathEditCtrl extends PathBaseCtrl {
-  constructor($window, $route, $routeParams, PathService, HistoryService, ConfirmService, $scope, tinymceConfig) {
-    super($window, $route, $routeParams, PathService)
+  constructor($window, $route, $routeParams, url, PathService, Translator, HistoryService, ConfirmService, $scope, tinymceConfig) {
+    super($window, $route, $routeParams, url, PathService)
 
+    this.Translator = Translator
     this.historyService = HistoryService
     this.confirmService = ConfirmService
 
@@ -23,7 +26,7 @@ export default class PathEditCtrl extends PathBaseCtrl {
      * Do Path have pending modifications
      * @type {boolean}
      */
-    this.unsaved = false;
+    this.unsaved = false
 
     // listen to path changes to update history
     $scope.$watch(() => this.path, (newValue) => {
@@ -104,9 +107,9 @@ export default class PathEditCtrl extends PathBaseCtrl {
       if (this.modified) {
         // Path modified => modifications will not be visible before publishing so warn user
         this.confirmService.open({
-          title:         Translator.trans('preview_with_pending_changes_title',   {}, 'path_wizards'),
-          message:       Translator.trans('preview_with_pending_changes_message', {}, 'path_wizards'),
-          confirmButton: Translator.trans('preview_with_pending_changes_button',  {}, 'path_wizards')
+          title:         this.Translator.trans('preview_with_pending_changes_title',   {}, 'path_wizards'),
+          message:       this.Translator.trans('preview_with_pending_changes_message', {}, 'path_wizards'),
+          confirmButton: this.Translator.trans('preview_with_pending_changes_button',  {}, 'path_wizards')
         }, () => this.window.location.href = url)
       } else {
         // Open player to preview the path
@@ -116,7 +119,7 @@ export default class PathEditCtrl extends PathBaseCtrl {
 
     if (this.published) {
       // Path needs to be published at least once to be previewed
-      let url = Routing.generate('innova_path_player_wizard', {
+      let url = this.UrlGenerator('innova_path_player_wizard', {
         id: this.path.id
       })
 
@@ -143,6 +146,6 @@ export default class PathEditCtrl extends PathBaseCtrl {
   }
 
   unlockManager() {
-    this.window.location.href = Routing.generate('innova_path_manage_results', {id: this.id});
+    this.window.location.href = this.UrlGenerator('innova_path_manage_results', {id: this.id})
   }
 }

@@ -5,6 +5,7 @@
 
 import angular from 'angular/index'
 
+import '#/main/core/translation/module'
 import './../confirm/module'
 import './../form/module'
 import './../criteria-group/module'
@@ -15,6 +16,7 @@ import ConditionEditDirective from './Directive/ConditionEditDirective'
 
 angular
   .module('Condition', [
+    'translation',
     'Confirm',
     'Form',
     'CriteriaGroup'
@@ -25,6 +27,7 @@ angular
     StepConditionsService
   ])
   .controller('ConditionEditCtrl', [
+    'Translator',
     'ConfirmService',
     'StepConditionsService',
     ConditionEditCtrl

@@ -12,11 +12,11 @@ export default class AlertService {
   }
 
   getCurrent() {
-      if (this.alerts.length > 0) {
-          this.displayAlert(this.alerts.shift())
-      }
+    if (this.alerts.length > 0) {
+      this.displayAlert(this.alerts.shift())
+    }
 
-      return this.current
+    return this.current
   }
 
   /**
@@ -25,7 +25,7 @@ export default class AlertService {
    * @returns {Array}
    */
   getAlerts() {
-      return this.alerts
+    return this.alerts
   }
 
   /**
@@ -37,10 +37,10 @@ export default class AlertService {
    * @returns AlertService
    */
   addAlert(type, msg, timeoutFlag) {
-      let display = false
-      if (this.alerts.length === 0) {
-          display = true
-      }
+    let display = false
+    if (this.alerts.length === 0) {
+      display = true
+    }
 
       // Store alert
     this.alerts.push({ type: type, msg: msg })
@@ -71,15 +71,15 @@ export default class AlertService {
    * Close current displayed alert.
    */
   closeCurrent() {
-      if (this.current) {
+    if (this.current) {
           // Empty the current alert object
-          delete this.current.type
-          delete this.current.msg
-      }
+      delete this.current.type
+      delete this.current.msg
+    }
 
-      if (this.alerts.length > 0) {
+    if (this.alerts.length > 0) {
           // Display next alert in the stack
-          this.displayAlert(this.alerts.shift())
-      }
+      this.displayAlert(this.alerts.shift())
+    }
   }
 }

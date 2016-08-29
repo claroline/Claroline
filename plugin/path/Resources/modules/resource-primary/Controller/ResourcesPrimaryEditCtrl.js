@@ -7,18 +7,18 @@ import angular from 'angular/index'
 import ResourcesPrimaryBaseCtrl from './ResourcesPrimaryBaseCtrl'
 
 export default class ResourcesPrimaryEditCtrl extends ResourcesPrimaryBaseCtrl {
-  constructor($scope, ConfirmService, ResourceService) {
-    super()
+  constructor(url, ResourceService, $scope, Translator, ConfirmService) {
+    super(url, ResourceService)
 
-    this.scope           = $scope;
-    this.confirmService  = ConfirmService;
-    this.resourceService = ResourceService;
+    this.scope           = $scope
+    this.confirmService  = ConfirmService
+    this.Translator = Translator
 
     /**
      * Show or Hide the primary resources panel
      * @type {boolean}
      */
-    this.collapsed = false;
+    this.collapsed = false
 
     /**
      * Configuration for the Claroline Resource Picker
@@ -36,26 +36,26 @@ export default class ResourcesPrimaryEditCtrl extends ResourcesPrimaryBaseCtrl {
         if (angular.isObject(nodes)) {
           for (var nodeId in nodes) {
             if (nodes.hasOwnProperty(nodeId)) {
-              var node = nodes[nodeId];
+              var node = nodes[nodeId]
 
               // Initialize a new Resource object (parameters : claro type, mime type, id, name)
-              var resource = this.resourceService.newResource(node[1], node[2], nodeId, node[0]);
-              if (!this.resourceService.exists(this.resources, resource)) {
+              var resource = this.ResourceService.newResource(node[1], node[2], nodeId, node[0])
+              if (!this.ResourceService.exists(this.resources, resource)) {
                 // While only one resource is authorized, empty the resources array
-                this.resources.splice(0, this.resources.length);
+                this.resources.splice(0, this.resources.length)
 
                 // Resource is not in the list => add it
-                this.resources.push(resource);
+                this.resources.push(resource)
               }
 
-              break; // We need only one node, so only the first one will be kept
+              break // We need only one node, so only the first one will be kept
             }
           }
 
-          this.scope.$apply();
+          this.scope.$apply()
 
           // Remove checked nodes for next time
-          nodes = {};
+          nodes = {}
         }
       }
     }
@@ -67,9 +67,9 @@ export default class ResourcesPrimaryEditCtrl extends ResourcesPrimaryBaseCtrl {
    */
   removeResource(resource) {
     this.confirmService.open({
-      title:         Translator.trans('resource_delete_title',   { resourceName: resource.name }, 'path_wizards'),
-      message:       Translator.trans('resource_delete_confirm', {}                             , 'path_wizards'),
-      confirmButton: Translator.trans('resource_delete',         {}                             , 'path_wizards')
+      title:         this.Translator.trans('resource_delete_title',   { resourceName: resource.name }, 'path_wizards'),
+      message:       this.Translator.trans('resource_delete_confirm', {}                             , 'path_wizards'),
+      confirmButton: this.Translator.trans('resource_delete',         {}                             , 'path_wizards')
     },
     // Confirm success callback
     () => {

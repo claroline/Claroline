@@ -16,8 +16,8 @@ export default class PathShowCtrl extends PathBaseCtrl {
    * @param {AuthorizationCheckerService} AuthorizationCheckerService
    * @param {UserProgressionService} UserProgressionService
    */
-  constructor($window, $route, $routeParams, PathService, AuthorizationCheckerService, UserProgressionService) {
-    super($window, $route, $routeParams, PathService)
+  constructor($window, $route, $routeParams, url, PathService, AuthorizationCheckerService, UserProgressionService) {
+    super($window, $route, $routeParams, url, PathService)
 
     this.AuthorizationCheckerService = AuthorizationCheckerService
 
@@ -40,14 +40,14 @@ export default class PathShowCtrl extends PathBaseCtrl {
    * Open Path editor
    */
   edit() {
-    let url = Routing.generate('innova_path_editor_wizard', {
-      id: this.id
-    });
+    let url = this.UrlGenerator('innova_path_editor_wizard', {
+      id: this.path.id
+    })
 
     if (angular.isObject(this.currentStep) && angular.isDefined(this.currentStep.stepId)) {
-      url += '#/' + this.currentStep.stepId;
+      url += '#/' + this.currentStep.stepId
     }
 
-    this.window.location.href = url;
+    this.window.location.href = url
   }
 }

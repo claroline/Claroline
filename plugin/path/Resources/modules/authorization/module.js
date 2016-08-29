@@ -5,6 +5,7 @@
 
 import angular from 'angular/index'
 
+import '#/main/core/translation/module'
 import './../path/module'
 import './../step/module'
 import './../user-progression/module'
@@ -15,6 +16,7 @@ import AuthorizationBlockDirective from './Directive/AuthorizationBlockDirective
 
 angular
   .module('Authorization', [
+    'translation',
     'Path',
     'Step',
     'UserProgression',
@@ -22,6 +24,7 @@ angular
   ])
   .service('AuthorizationCheckerService', [
     '$q',
+    'Translator',
     'PathService',
     'StepService',
     'UserProgressionService',

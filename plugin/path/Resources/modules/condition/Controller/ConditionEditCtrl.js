@@ -5,10 +5,12 @@
 export default class ConditionEditCtrl {
   /**
    *
+   * @param {Translator} Translator
    * @param {ConfirmService} ConfirmService
    * @param {StepConditionsService} StepConditionsService
    */
-  constructor(ConfirmService, StepConditionsService) {
+  constructor(Translator, ConfirmService, StepConditionsService) {
+    this.Translator = Translator
     this.ConfirmService = ConfirmService
     this.ConditionService = StepConditionsService
   }
@@ -25,9 +27,9 @@ export default class ConditionEditCtrl {
    */
   removeCondition() {
     this.ConfirmService.open({
-      title:         Translator.trans('condition_delete_title',   {}, 'path_wizards'),
-      message:       Translator.trans('condition_delete_confirm', {}, 'path_wizards'),
-      confirmButton: Translator.trans('condition_delete',         {}, 'path_wizards')
+      title:         this.Translator.trans('condition_delete_title',   {}, 'path_wizards'),
+      message:       this.Translator.trans('condition_delete_confirm', {}, 'path_wizards'),
+      confirmButton: this.Translator.trans('condition_delete',         {}, 'path_wizards')
     },
     // Confirm success callback
     () => {

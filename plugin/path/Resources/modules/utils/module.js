@@ -23,4 +23,4 @@ angular
   .filter('trustAsHtml', [
     '$sce',
     trustAsHtmlFilter
-  ]);
+  ])

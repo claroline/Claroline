@@ -7,6 +7,7 @@ import 'angular-bootstrap'
 import 'angular-ui-tree/dist/angular-ui-tree.min'
 import 'angular-ui-pageslide'
 
+import '#/main/core/translation/module'
 import '../utils/module'
 import '../clipboard/module'
 import '../confirm/module'
@@ -20,12 +21,12 @@ import SummaryEditDirective from './Directive/SummaryEditDirective'
 import SummaryItemShowDirective from './Directive/SummaryItemShowDirective'
 import SummaryItemEditDirective from './Directive/SummaryItemEditDirective'
 
-
 angular
   .module('Summary', [
     'ui.bootstrap',
     'ui.tree',
     'pageslide-directive',
+    'translation',
     'Utils',
     'Clipboard',
     'Confirm',

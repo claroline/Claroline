@@ -5,9 +5,11 @@
 import angular from 'angular/index'
 
 export default class UserProgressionService {
-  constructor($http, $q, AlertService) {
+  constructor($http, $q, Translator, url, AlertService) {
     this.$http = $http
     this.$q = $q
+    this.Translator = Translator
+    this.UrlGenerator = url
     this.AlertService = AlertService
 
     /**
@@ -35,7 +37,7 @@ export default class UserProgressionService {
    * @returns {Object}
    */
   get() {
-    return this.progression;
+    return this.progression
   }
 
   /**
@@ -44,7 +46,7 @@ export default class UserProgressionService {
    *  @param value
    */
   set(value) {
-    this.progression = value;
+    this.progression = value
   }
 
   /**
@@ -57,14 +59,14 @@ export default class UserProgressionService {
   getForStep(step) {
     let stepProgression = null
     if (angular.isObject(this.progression) && angular.isObject(this.progression[step.resourceId])) {
-      stepProgression = this.progression[step.resourceId];
+      stepProgression = this.progression[step.resourceId]
     }
 
     return stepProgression
   }
 
   isStepInProgress(step) {
-    return this.inProgress[step.resourceId] || false;
+    return this.inProgress[step.resourceId] || false
   }
 
   /**
@@ -108,7 +110,7 @@ export default class UserProgressionService {
     this.inProgress[step.resourceId] = true
 
     this.$http
-      .post(Routing.generate('innova_path_progression_create', { id: step.resourceId }), params)
+      .post(this.UrlGenerator('innova_path_progression_create', { id: step.resourceId }), params)
       .success((response) => {
         // Store step progression in the Path progression array
         this.inProgress[step.resourceId] = false
@@ -121,7 +123,7 @@ export default class UserProgressionService {
       })
       .error((response) => {
         this.inProgress[step.resourceId] = false
-        this.AlertService.addAlert('error', Translator.trans('progression_save_error', {}, 'path_wizards'))
+        this.AlertService.addAlert('error', this.Translator.trans('progression_save_error', {}, 'path_wizards'))
 
         deferred.reject(response)
       })
@@ -137,7 +139,7 @@ export default class UserProgressionService {
    * @param authorized
    */
   update(step, status, authorized) {
-    const deferred = this.$q.defer();
+    const deferred = this.$q.defer()
 
     const params = {
       user_progression_authorized: authorized || this.progression[step.id].authorized,
@@ -147,13 +149,13 @@ export default class UserProgressionService {
     this.inProgress[step.resourceId] = true
 
     this.$http
-      .put(Routing.generate('innova_path_progression_update', { id: step.resourceId }), params)
+      .put(this.UrlGenerator('innova_path_progression_update', { id: step.resourceId }), params)
 
       .success((response) => {
         this.inProgress[step.resourceId] = false
 
         // Store step progression in the Path progression array
-        let oldStatus = '';
+        let oldStatus = ''
         if (!angular.isObject(this.progression[response.progression.stepId])) {
           this.progression[response.progression.stepId] = response.progression
         } else {
@@ -170,13 +172,13 @@ export default class UserProgressionService {
       })
 
       .error((response) => {
-        this.inProgress[step.resourceId] = false;
-        this.AlertService.addAlert('error', Translator.trans('progression_save_error', {}, 'path_wizards'));
+        this.inProgress[step.resourceId] = false
+        this.AlertService.addAlert('error', this.Translator.trans('progression_save_error', {}, 'path_wizards'))
 
-        deferred.reject(response);
-      });
+        deferred.reject(response)
+      })
 
-    return deferred.promise;
+    return deferred.promise
   }
 
   /**
@@ -185,7 +187,7 @@ export default class UserProgressionService {
    * @returns {number}
    */
   getTotalProgression() {
-    return this.totalProgression;
+    return this.totalProgression
   }
 
   /**
@@ -194,17 +196,17 @@ export default class UserProgressionService {
    * @param value
    */
   setTotalProgression(value) {
-    this.totalProgression = parseInt(value);
+    this.totalProgression = parseInt(value)
   }
 
   /**
    * call for unlock step : call Controller method that triggers log listener and notification
    */
   callForUnlock(step) {
-    const deferred = this.$q.defer();
+    const deferred = this.$q.defer()
 
     this.$http
-        .get(Routing.generate('innova_path_step_callforunlock', {step: step.resourceId}))
+        .get(this.UrlGenerator('innova_path_step_callforunlock', {step: step.resourceId}))
         // returns a progression object
         .success((response) => {
           //update progression

@@ -84,7 +84,7 @@ export default class CriterionService {
      * @returns {boolean}
      */
     function recursiveLoop(criteriaGroup) {
-      let terminated = false;
+      let terminated = false
 
       // Execute callback on current criterion
       if (typeof callback === 'function') {

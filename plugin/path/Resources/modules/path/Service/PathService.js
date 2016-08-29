@@ -5,11 +5,13 @@
 import angular from 'angular/index'
 
 export default class PathService {
-  constructor($http, $q, $timeout, $location, AlertService, StepService, UserProgressionService) {
+  constructor($http, $q, $timeout, $location, Translator, url, AlertService, StepService, UserProgressionService) {
     this.$http = $http
     this.$q = $q
     this.$timeout = $timeout
     this.$location = $location
+    this.Translator = Translator
+    this.UrlGenerator = url
     this.AlertService = AlertService
     this.StepService = StepService
     this.UserProgressionService = UserProgressionService
@@ -129,10 +131,10 @@ export default class PathService {
       }
     }
 
-    const deferred = this.$q.defer();
+    const deferred = this.$q.defer()
 
     this.$http
-      .put(Routing.generate('innova_path_editor_wizard_save', { id: this.path.id }), dataToSave)
+      .put(this.UrlGenerator('innova_path_editor_wizard_save', { id: this.path.id }), dataToSave)
       .success((response) => {
         if ('ERROR_VALIDATION' === response.status) {
           // Display received error messages
@@ -141,25 +143,25 @@ export default class PathService {
           }
 
           // Reject the Promise
-          deferred.reject(response);
+          deferred.reject(response)
         } else {
           // Get updated data
-          angular.merge(this.path, response.data);
+          angular.merge(this.path, response.data)
 
           // Display confirm message
-          this.AlertService.addAlert('success', Translator.trans('path_save_success', {}, 'path_wizards'));
+          this.AlertService.addAlert('success', this.Translator.trans('path_save_success', {}, 'path_wizards'))
 
           // Resolve the Promise
-          deferred.resolve(response);
+          deferred.resolve(response)
         }
       })
 
       .error((response) => {
         // Display generic error for the User
-        this.AlertService.addAlert('error', Translator.trans('path_save_error', {}, 'path_wizards'));
+        this.AlertService.addAlert('error', this.Translator.trans('path_save_error', {}, 'path_wizards'))
 
         // Reject the Promise
-        deferred.reject(response);
+        deferred.reject(response)
       })
 
     return deferred.promise
@@ -172,7 +174,7 @@ export default class PathService {
     const deferred = this.$q.defer()
 
     this.$http
-      .put(Routing.generate('innova_path_publish', { id: this.path.id }))
+      .put(this.UrlGenerator('innova_path_publish', { id: this.path.id }))
 
       .success((response) => {
         if ('ERROR' === response.status) {
@@ -188,7 +190,7 @@ export default class PathService {
           angular.merge(this.path, response.data)
 
           // Display confirm message
-          this.AlertService.addAlert('success', Translator.trans('publish_success', {}, 'path_wizards'))
+          this.AlertService.addAlert('success', this.Translator.trans('publish_success', {}, 'path_wizards'))
 
           // Resolve the promise
           deferred.resolve(response)
@@ -197,7 +199,7 @@ export default class PathService {
 
       .error((response) => {
         // Display generic error to the User
-        this.AlertService.addAlert('error', Translator.trans('publish_error', {}, 'path_wizards'));
+        this.AlertService.addAlert('error', this.Translator.trans('publish_error', {}, 'path_wizards'))
 
         // Reject the Promise
         deferred.reject(response)
@@ -287,7 +289,7 @@ export default class PathService {
    * @returns {Object|Step}
    */
   getNext(step) {
-    let next = null;
+    let next = null
 
     if (angular.isDefined(step) && angular.isObject(step)) {
       if (angular.isObject(step.children) && angular.isObject(step.children[0])) {
@@ -308,7 +310,7 @@ export default class PathService {
    * @returns {Object|Step}
    */
   getNextSibling(step) {
-    let sibling = null;
+    let sibling = null
 
     if (0 !== step.lvl) {
       const parent = this.getParent(step)
@@ -380,7 +382,7 @@ export default class PathService {
       }
 
       return false
-    });
+    })
 
     return parentStep
   }
@@ -399,20 +401,20 @@ export default class PathService {
      * @returns {boolean}
      */
     function recursiveLoop(parentStep, currentStep) {
-      let terminated = false;
+      let terminated = false
 
       // Execute callback on current step
       if (typeof callback === 'function') {
-        terminated = callback(parentStep, currentStep);
+        terminated = callback(parentStep, currentStep)
       }
 
       if (!terminated && typeof currentStep.children !== 'undefined' && currentStep.children.length !== 0) {
         for (let i = 0; i < currentStep.children.length; i++) {
-          terminated = recursiveLoop(currentStep, currentStep.children[i]);
+          terminated = recursiveLoop(currentStep, currentStep.children[i])
         }
       }
 
-      return terminated;
+      return terminated
     }
 
     if (typeof steps !== 'undefined' && steps.length !== 0) {
@@ -474,9 +476,9 @@ export default class PathService {
           }
         } else {
           // We are deleting the root step
-          const pos = steps.indexOf(stepToDelete)
+          const pos = this.path.steps.indexOf(stepToDelete)
           if (-1 !== pos) {
-            steps.splice(pos, 1)
+            this.path.steps.splice(pos, 1)
 
             deleted = true
           }
@@ -489,10 +491,10 @@ export default class PathService {
     if (redirect) {
       if (this.path.steps[0]) {
         // Display root step
-        this.goTo(this.path.steps[0]);
+        this.goTo(this.path.steps[0])
       } else {
         // There is no longer steps into the path => hide step form
-        this.goTo(null);
+        this.goTo(null)
       }
     }
   }
@@ -502,7 +504,7 @@ export default class PathService {
    * @returns {Object}
    */
   getRoot() {
-    let root = null;
+    let root = null
 
     if (angular.isDefined(this.path) && angular.isObject(this.path)
       && angular.isObject(this.path.steps) && angular.isObject(this.path.steps[0])) {
@@ -543,7 +545,7 @@ export default class PathService {
    */
   getStepInheritedResources(step) {
     function retrieveInheritedResources(stepToFind, currentStep, inheritedResources) {
-      let stepFound = false;
+      let stepFound = false
 
       if (stepToFind.id !== currentStep.id && typeof currentStep.children !== 'undefined' && null !== currentStep.children) {
         // Not the step we search for => search in children
@@ -583,7 +585,7 @@ export default class PathService {
     if (this.path.steps && this.path.steps.length !== 0) {
       // Loop over first level of Steps and search recursivly in children for finding InheritedResources
       for (let i = 0; i < this.path.steps.length; i++) {
-        let currentStep = this.path.steps[i];
+        let currentStep = this.path.steps[i]
         stepFound = retrieveInheritedResources(step, currentStep, inheritedResources)
         if (stepFound) {
           break

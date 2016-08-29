@@ -2,8 +2,8 @@
 import BaseCriterion from './BaseCriterion'
 
 export default class ActivityCriterion extends BaseCriterion {
-  constructor($log, $q, $http) {
-    super($log, $q, $http)
+  constructor($log, $q, $http, Translator, url) {
+    super($log, $q, $http, Translator, url)
 
     this.statuses = null
     this.statusesPromise = null
@@ -17,7 +17,7 @@ export default class ActivityCriterion extends BaseCriterion {
         deferred.resolve(this.statuses)
       } else {
         this.$http
-          .get(Routing.generate('innova_path_criteria_activity_statuses'))
+          .get(this.UrlGenerator('innova_path_criteria_activity_statuses'))
           .success((response) => {
             this.statuses = response
             deferred.resolve(response)
@@ -46,7 +46,7 @@ export default class ActivityCriterion extends BaseCriterion {
     const deferred = this.$q.defer()
 
     this.$http
-      .get(Routing.generate('innova_path_criteria_evaluation', {id: step.activityId}))
+      .get(this.UrlGenerator('innova_path_criteria_evaluation', {id: step.activityId}))
       .success((response) => {
         deferred.resolve(response)
       })

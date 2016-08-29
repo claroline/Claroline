@@ -5,8 +5,9 @@
  * @constructor
  */
 export default class PathBaseCtrl {
-  constructor($window, $route, $routeParams, PathService) {
+  constructor($window, $route, $routeParams, url, PathService) {
     this.window = $window
+    this.UrlGenerator = url
     this.pathService = PathService
 
     // Store path to make it available by all UI components

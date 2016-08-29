@@ -7,12 +7,12 @@ import angular from 'angular/index'
 import ResourcesSecondaryBaseCtrl from './ResourcesSecondaryBaseCtrl'
 
 export default class ResourcesSecondaryEditCtrl extends ResourcesSecondaryBaseCtrl {
-  constructor($scope, ConfirmService, ResourceService) {
-    super()
+  constructor(url, ResourceService, $scope, Translator, ConfirmService) {
+    super(url, ResourceService)
 
-    this.scope           = $scope;
-    this.confirmService  = ConfirmService;
-    this.resourceService = ResourceService;
+    this.scope           = $scope
+    this.Translator = Translator
+    this.confirmService  = ConfirmService
 
     /**
      * Configuration for the Claroline Resource Picker
@@ -36,8 +36,8 @@ export default class ResourcesSecondaryEditCtrl extends ResourcesSecondaryBaseCt
           let node = resources[nodeId]
 
           // Initialize a new Resource object (parameters : claro type, mime type, id, name)
-          var resource = this.resourceService.newResource(node[1], node[2], nodeId, node[0])
-          if (!this.resourceService.exists(this.resources, resource)) {
+          var resource = this.ResourceService.newResource(node[1], node[2], nodeId, node[0])
+          if (!this.ResourceService.exists(this.resources, resource)) {
             // Resource is not in the list => add it
             this.resources.push(resource)
           }
@@ -54,9 +54,9 @@ export default class ResourcesSecondaryEditCtrl extends ResourcesSecondaryBaseCt
    */
   removeResource(resource) {
     this.confirmService.open({
-      title:         Translator.trans('resource_delete_title',   { resourceName: resource.name }, 'path_wizards'),
-      message:       Translator.trans('resource_delete_confirm', {}                             , 'path_wizards'),
-      confirmButton: Translator.trans('resource_delete',         {}                             , 'path_wizards')
+      title:         this.Translator.trans('resource_delete_title',   { resourceName: resource.name }, 'path_wizards'),
+      message:       this.Translator.trans('resource_delete_confirm', {}                             , 'path_wizards'),
+      confirmButton: this.Translator.trans('resource_delete',         {}                             , 'path_wizards')
     },
     // Confirm success callback
     () => {

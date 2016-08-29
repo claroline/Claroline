@@ -2,6 +2,8 @@
  * Path app
  */
 
+import angular from 'angular/index'
+
 export default class PathApp {
   // Resolve functions (it's the same between Editor and Player as we navigate in the same way in the 2 apps)
   get resolveFunctions() {
@@ -28,7 +30,7 @@ export default class PathApp {
             deferred.reject('step_not_found')
           }
 
-          return deferred.promise;
+          return deferred.promise
         }
       ],
 
@@ -80,7 +82,7 @@ export default class PathApp {
             inherited = PathService.getStepInheritedResources(root)
           }
 
-          return inherited;
+          return inherited
         }
       ]
     }

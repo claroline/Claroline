@@ -18,7 +18,7 @@ export default class ActivityAttemptCriterion extends ActivityCriterion {
       if (attempts < parseInt(dataToTest)) {
         // Expected number of attempts not reached
 
-        errors.push(Translator.trans('condition_criterion_test_repetition', {activityRep: dataToTest, userRep: attempts}, 'path_wizards'))
+        errors.push(this.Translator.trans('condition_criterion_test_repetition', {activityRep: dataToTest, userRep: attempts}, 'path_wizards'))
       }
 
       deferred.resolve(errors)

@@ -14,7 +14,7 @@ export default class DurationFieldDirective {
     this.scope = {
       model: '='
     }
-    this.link = function (scope, element, attrs) {
+    this.link = function (scope) {
       scope.$watch('model', function (newValue) {
         scope.hours   = 0
         scope.minutes = 0

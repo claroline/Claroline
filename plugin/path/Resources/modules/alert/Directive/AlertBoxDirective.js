@@ -10,10 +10,10 @@ export default class AlertBoxDirective {
     this.template = template
     this.scope = {}
     this.link = function (scope) {
-      scope.current = AlertService.getCurrent();
+      scope.current = AlertService.getCurrent()
 
       scope.closeCurrent  = function () {
-        AlertService.closeCurrent();
+        AlertService.closeCurrent()
       }
     }
   }

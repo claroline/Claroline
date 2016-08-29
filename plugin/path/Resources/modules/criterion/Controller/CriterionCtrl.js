@@ -3,11 +3,12 @@
  */
 export default class CriterionCtrl {
   /**
-   *
+   * @param {Translator} Translator
    * @param {ConfirmService} ConfirmService
    * @param {CriterionService} CriterionService
    */
-  constructor(ConfirmService, CriterionService) {
+  constructor(Translator, ConfirmService, CriterionService) {
+    this.Translator = Translator
     this.ConfirmService = ConfirmService
     this.CriterionService = CriterionService
 
@@ -29,10 +30,10 @@ export default class CriterionCtrl {
 
   removeCriterion() {
     this.ConfirmService.open({
-        title:         Translator.trans('criterion_delete_title',   {}, 'path_wizards'),
-        message:       Translator.trans('criterion_delete_confirm', {}, 'path_wizards'),
-        confirmButton: Translator.trans('criterion_delete',         {}, 'path_wizards')
-      },
+      title:         this.Translator.trans('criterion_delete_title',   {}, 'path_wizards'),
+      message:       this.Translator.trans('criterion_delete_confirm', {}, 'path_wizards'),
+      confirmButton: this.Translator.trans('criterion_delete',         {}, 'path_wizards')
+    },
       // Confirm success callback
       () => {
         this.CriterionService.removeCriterion(this.step, this.criterion)

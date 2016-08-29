@@ -5,6 +5,8 @@
 import angular from 'angular/index'
 import 'angular-ui-tinymce/src/tinymce'
 
+import '#/main/core/fos-js-router/module'
+import '#/main/core/translation/module'
 import './../history/module'
 import './../clipboard/module'
 import './../authorization/module'
@@ -23,6 +25,8 @@ import PathEditDirective from './Directive/PathEditDirective'
 angular
   .module('Path', [
     'ui.tinymce',
+    'ui.fos-js-router',
+    'translation',
     'Utils',
     'History',
     'Clipboard',
@@ -37,6 +41,8 @@ angular
     '$q',
     '$timeout',
     '$location',
+    'Translator',
+    'url',
     'AlertService',
     'StepService',
     'UserProgressionService',
@@ -46,6 +52,7 @@ angular
     '$window',
     '$route',
     '$routeParams',
+    'url',
     'PathService',
     'AuthorizationCheckerService',
     'UserProgressionService',
@@ -55,7 +62,9 @@ angular
     '$window',
     '$route',
     '$routeParams',
+    'url',
     'PathService',
+    'Translator',
     'HistoryService',
     'ConfirmService',
     '$scope',

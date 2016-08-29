@@ -13,8 +13,9 @@ export default class AuthorizationCheckerService {
    * @param {UserProgressionService} UserProgressionService
    * @param {StepConditionsService} StepConditionsService
    */
-  constructor($q, PathService, StepService, UserProgressionService, StepConditionsService) {
+  constructor($q, Translator, PathService, StepService, UserProgressionService, StepConditionsService) {
     this.$q = $q
+    this.Translator = Translator
     this.PathService = PathService
     this.StepService = StepService
     this.UserProgressionService = UserProgressionService
@@ -54,7 +55,7 @@ export default class AuthorizationCheckerService {
       // No access to step that are not in accessibility dates
       deferred.resolve({
         granted: false,
-        errors: [Translator.trans('step_not_accessible', {}, 'path_wizards')]
+        errors: [this.Translator.trans('step_not_accessible', {}, 'path_wizards')]
       })
     } else if (this.UserProgressionService.iStepAlreadyAuthorized(step)) {
       // User has already unlock the step

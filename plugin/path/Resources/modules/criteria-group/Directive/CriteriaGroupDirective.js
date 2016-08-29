@@ -12,6 +12,6 @@ export default class CriteriaGroupDirective {
     this.scope = {
       step: '=',
       criteriaGroup: '='
-  }
+    }
   }
 }

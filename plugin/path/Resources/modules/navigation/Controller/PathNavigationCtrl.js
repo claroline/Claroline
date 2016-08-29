@@ -6,25 +6,25 @@ import angular from 'angular/index'
 
 export default class PathNavigationCtrl {
   constructor($routeParams, $scope, PathService) {
-    this.pathService = PathService;
+    this.pathService = PathService
 
     /**
      * Current matched route
      * @type {object}
      */
-    this.current = $routeParams;
+    this.current = $routeParams
 
     /**
      * Current displayed step
      * @type {object}
      */
-    this.step = {};
+    this.step = {}
 
     /**
      * Parents of the current step
      * @type {object}
      */
-    this.parents = {};
+    this.parents = {}
 
     // Watch the route changes
     $scope.$watch(() => this.current, this.reloadStep.bind(this), true)
@@ -37,7 +37,7 @@ export default class PathNavigationCtrl {
    * Reload the Step from route params
    */
   reloadStep() {
-    this.step = null;
+    this.step = null
 
     // Get step
     if (angular.isDefined(this.current) && angular.isDefined(this.current.stepId)) {

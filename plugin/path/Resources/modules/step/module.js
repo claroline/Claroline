@@ -6,6 +6,8 @@ import angular from 'angular/index'
 import 'angular-ui-resource-picker/angular-resource-picker'
 import 'angular-ui-tinymce/src/tinymce'
 
+import '#/main/core/fos-js-router/module'
+import '#/main/core/translation/module'
 import '../utils/module'
 import '../form/module'
 import '../authorization/module'
@@ -23,6 +25,8 @@ angular
   .module('Step', [
     'ui.tinymce',
     'ui.resourcePicker',
+    'ui.fos-js-router',
+    'translation',
     'Utils',
     'Form',
     'Authorization',
@@ -35,6 +39,8 @@ angular
   .service('StepService', [
     '$http',
     '$filter',
+    'Translator',
+    'url',
     'IdentifierService',
     'ResourceService',
     StepService
@@ -52,6 +58,7 @@ angular
     'step',
     'inheritedResources',
     'PathService',
+    'url',
     '$scope',
     'StepService',
     'tinymceConfig',

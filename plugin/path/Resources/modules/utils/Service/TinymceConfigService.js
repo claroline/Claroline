@@ -2,6 +2,8 @@
  * TinyMCE config
  */
 
+import $ from 'jquery'
+
 export default function tinymceConfig() {
   // Initialize TinyMCE
   let tinymce = window.tinymce
@@ -36,5 +38,5 @@ export default function tinymceConfig() {
   config.trusted = true
   config.format = 'html'
 
-  return config;
+  return config
 }

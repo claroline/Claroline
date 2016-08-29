@@ -5,6 +5,7 @@
 import angular from 'angular/index'
 import 'angular-ui-resource-picker/angular-resource-picker'
 
+import '#/main/core/translation/module'
 import './../confirm/module'
 import './../resource/module'
 
@@ -16,16 +17,21 @@ import ResourcesSecondaryEditDirective from './Directive/ResourcesSecondaryEditD
 angular
   .module('ResourceSecondary', [
     'ui.resourcePicker',
+    'translation',
     'Confirm',
     'Resource'
   ])
   .controller('ResourcesSecondaryShowCtrl', [
+    'url',
+    'ResourceService',
     ResourcesSecondaryShowCtrl
   ])
   .controller('ResourcesSecondaryEditCtrl', [
-    '$scope',
-    'ConfirmService',
+    'url',
     'ResourceService',
+    '$scope',
+    'Translator',
+    'ConfirmService',
     ResourcesSecondaryEditCtrl
   ])
   .directive('resourcesSecondaryShow', [

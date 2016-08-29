@@ -5,12 +5,12 @@
 import StepBaseCtrl from './StepBaseCtrl'
 
 export default class StepEditCtrl extends StepBaseCtrl {
-  constructor(step, inheritedResources, PathService, $scope, StepService, tinymceConfig) {
+  constructor(step, inheritedResources, PathService, url, $scope, StepService, tinymceConfig) {
     super(step, inheritedResources, PathService)
 
     this.scope       = $scope
     this.stepService = StepService
-    this.pathService = PathService
+    this.UrlGenerator = url
 
     /**
      * Defines which panels of the form are collapsed or not
@@ -45,7 +45,7 @@ export default class StepEditCtrl extends StepBaseCtrl {
               // Load activity properties to populate step
               this.stepService.loadActivity(this.step, nodeId)
 
-              break; // We need only one node, so only the last one will be kept
+              break // We need only one node, so only the last one will be kept
             }
           }
 
@@ -62,7 +62,7 @@ export default class StepEditCtrl extends StepBaseCtrl {
    * Display activity linked to the Step
    */
   showActivity() {
-    const activityRoute = Routing.generate('innova_path_show_activity', {
+    const activityRoute = this.UrlGenerator('innova_path_show_activity', {
       activityId: this.step.activityId
     })
 

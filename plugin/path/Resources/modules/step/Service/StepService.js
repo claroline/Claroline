@@ -12,9 +12,11 @@ export default class StepService {
    * @param {IdentifierService} IdentifierService
    * @param {ResourceService} ResourceService
    */
-  constructor($http, $filter, IdentifierService, ResourceService) {
+  constructor($http, $filter, Translator, url, IdentifierService, ResourceService) {
     this.$http = $http
     this.$filter = $filter
+    this.Translator = Translator
+    this.UrlGenerator = url
     this.IdentifierService = IdentifierService
     this.ResourceService = ResourceService
   }
@@ -32,8 +34,8 @@ export default class StepService {
     const newStep = {
       id                : this.IdentifierService.generateUUID(),
       lvl               : lvl,
-      name              : parentStep ? 'Step '+lvl+'.'+(parentStep.children.length + 1) : Translator.trans('root_default_name', {}, 'path_wizards'),
-      description       : " ",
+      name              : parentStep ? 'Step '+lvl+'.'+(parentStep.children.length + 1) : this.Translator.trans('root_default_name', {}, 'path_wizards'),
+      description       : ' ',
       children          : [],
       activityId        : null,
       resourceId        : null,
@@ -70,14 +72,14 @@ export default class StepService {
   isBetweenAccessibilityDates(step) {
     const now = this.$filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss')
 
-    let from = null;
+    let from = null
     if (step.accessibleFrom != null && step.accessibleFrom.length !== 0) {
-      from = step.accessibleFrom;
+      from = step.accessibleFrom
     }
 
-    let until = null;
+    let until = null
     if (step.accessibleUntil != null && step.accessibleUntil.length !== 0) {
-      until = step.accessibleUntil;
+      until = step.accessibleUntil
     }
 
     let accessible = false
@@ -96,7 +98,7 @@ export default class StepService {
    */
   loadActivity(step, activityId) {
     this.$http
-      .get(Routing.generate('innova_path_load_activity', { nodeId: activityId }))
+      .get(this.UrlGenerator('innova_path_load_activity', { nodeId: activityId }))
       .success((data) => this.setActivity(step, data))
   }
 
@@ -109,11 +111,11 @@ export default class StepService {
   setActivity(step, activity) {
     if (angular.isDefined(activity) && angular.isObject(activity)) {
       // Populate step
-      step.activityId  = activity['id'];
-      step.name        = activity['name'];
-      step.description = activity['description'];
-      step.primaryResource = [];
-      step.resources = [];
+      step.activityId  = activity['id']
+      step.name        = activity['name']
+      step.description = activity['description']
+      step.primaryResource = []
+      step.resources = []
 
       // Primary resource
       if (angular.isDefined(activity['primaryResource']) && angular.isObject(activity['primaryResource'])) {
@@ -123,26 +125,26 @@ export default class StepService {
           activity['primaryResource']['mimeType'],
           activity['primaryResource']['resourceId'],
           activity['primaryResource']['name']
-        );
-        this.addResource(step.primaryResource, primaryResource);
+        )
+        this.addResource(step.primaryResource, primaryResource)
       }
 
       // Secondary resources
       if (angular.isDefined(activity['resources']) && angular.isObject(activity['resources'])) {
         for (let i = 0; i < activity['resources'].length; i++) {
-          let current = activity['resources'][i];
+          let current = activity['resources'][i]
 
-          let resource = this.ResourceService.newResource(current['type'], current['mimeType'], current['resourceId'], current['name']);
-          this.addResource(step.resources, resource);
+          let resource = this.ResourceService.newResource(current['type'], current['mimeType'], current['resourceId'], current['name'])
+          this.addResource(step.resources, resource)
         }
       }
 
       // Parameters
-      step.withTutor      = activity['withTutor'];
-      step.who            = activity['who'];
-      step.where          = activity['where'];
-      step.duration       = activity['duration'];
-      step.evaluationType = activity['evaluationType'];
+      step.withTutor      = activity['withTutor']
+      step.who            = activity['who']
+      step.where          = activity['where']
+      step.duration       = activity['duration']
+      step.evaluationType = activity['evaluationType']
     }
   }
 

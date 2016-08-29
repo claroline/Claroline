@@ -6,7 +6,10 @@
             <div class="lvl-indicator lvl lvl-{{ resource.parentStep.lvl }} lvl-bg"></div>
 
             <!-- Resource icon -->
-            <img class="resource-icon" data-ng-src="{{ resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'] }}" alt="{{ resource.mimeType }}" />
+            <img class="resource-icon"
+                 alt="{{ resource.mimeType }}"
+                 data-ng-if="0 !== resourcesSecondaryShowCtrl.resourceIcons.length"
+                 data-ng-src="{{ (resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'])|asset }}" />
 
             <!-- Resource name -->
             {{ resource.name }}
@@ -17,7 +20,10 @@
     <li class="resource" role="presentation" data-ng-repeat="resource in resourcesSecondaryShowCtrl.resources">
         <a href="" role="button" data-ng-click="resourcesSecondaryShowCtrl.showResource(resource)">
             <!-- Resource icon -->
-            <img class="resource-icon" data-ng-src="{{ resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'] }}" alt="{{ resource.mimeType }}" />
+            <img class="resource-icon"
+                 alt="{{ resource.mimeType }}"
+                 data-ng-if="0 !== resourcesSecondaryShowCtrl.resourceIcons.length"
+                 data-ng-src="{{ (resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'])|asset }}" />
 
             <!-- Resource name -->
             {{ resource.name }}

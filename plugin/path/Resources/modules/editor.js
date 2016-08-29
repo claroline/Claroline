@@ -18,7 +18,7 @@ import './condition/module'
 import PathApp from './app'
 import stepTemplate from './step/Partial/edit.html'
 
-const pathApp = new PathApp();
+const pathApp = new PathApp()
 
 angular
   .module('PathEditorApp', [
@@ -53,7 +53,7 @@ angular
         })
         .otherwise({
           redirectTo: '/:stepId?'
-        });
+        })
     }
   ])
 

@@ -16,7 +16,7 @@ export default class SummaryShowCtrl extends SummaryBaseCtrl {
     this.totalSteps = this.pathService.getTotalSteps()
 
     // Check if summary is displayed by default or not
-    const path = this.pathService.getPath();
+    const path = this.pathService.getPath()
     if (angular.isObject(path)) {
       if (!path.summaryDisplayed) {
         this.SummaryService.setOpened(false)

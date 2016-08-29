@@ -1,3 +1,5 @@
+import angular from 'angular/index'
+
 import template from './../Partial/show-item.html'
 
 export default class SummaryItemShowDirective {

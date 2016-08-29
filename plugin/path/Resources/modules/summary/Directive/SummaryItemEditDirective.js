@@ -7,11 +7,12 @@ export default class SummaryItemEditDirective {
     this.template = template
     this.controller = [
       '$routeParams',
+      'Translator',
       'ClipboardService',
       'ConfirmService',
       'IdentifierService',
       'PathService',
-      function($routeParams, ClipboardService, ConfirmService, IdentifierService, PathService) {
+      function($routeParams, Translator, ClipboardService, ConfirmService, IdentifierService, PathService) {
         /**
          * Current displayed Step
          * @type {object}
@@ -83,21 +84,21 @@ export default class SummaryItemEditDirective {
          */
         this.removeStep = function() {
           ConfirmService.open({
-              title:         Translator.trans('step_delete_title',   { resourceName: this.step.name }, 'path_wizards'),
-              message:       Translator.trans('step_delete_confirm', {}                     , 'path_wizards'),
-              confirmButton: Translator.trans('step_delete',         {}                     , 'path_wizards')
-            },
+            title:         Translator.trans('step_delete_title',   { stepName: this.step.name }, 'path_wizards'),
+            message:       Translator.trans('step_delete_confirm', {}                     , 'path_wizards'),
+            confirmButton: Translator.trans('step_delete',         {}                     , 'path_wizards')
+          },
             // Confirm success callback
             () => {
               // Check if we are deleting the current editing step
-              let updatePreview = false;
+              let updatePreview = false
               if (this.step.id == this.current.stepId) {
                 // Need to update preview
-                updatePreview = true;
+                updatePreview = true
               }
 
               // Effective remove
-              PathService.removeStep(this.step, updatePreview);
+              PathService.removeStep(this.step, updatePreview)
             })
         }
       }

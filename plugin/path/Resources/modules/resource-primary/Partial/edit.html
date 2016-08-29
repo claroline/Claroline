@@ -30,7 +30,10 @@
         <!-- Resource -->
         <div data-ng-show="resourcesPrimaryEditCtrl.resources && resourcesPrimaryEditCtrl.resources.length != 0">
             <div style="display:inline-block; vertical-align: middle; margin-right: 15px;">
-                <img height="60" data-ng-src="{{ resourcesPrimaryEditCtrl.resourceIcons[resourcesPrimaryEditCtrl.resources[0].mimeType] || resourcesPrimaryEditCtrl.resourceIcons['custom/default'] }}" alt="{{ resourcesPrimaryEditCtrl.resources[0].mimeType }}" />
+                <img height="60"
+                     alt="{{ resourcesPrimaryEditCtrl.resources[0].mimeType }}"
+                     data-ng-if="0 !== resourcesPrimaryEditCtrl.resourceIcons.length"
+                     data-ng-src="{{ (resourcesPrimaryEditCtrl.resourceIcons[resourcesPrimaryEditCtrl.resources[0].mimeType] || resourcesPrimaryEditCtrl.resourceIcons['custom/default'])|asset }}" />
             </div>
             <div style="display:inline-block; vertical-align: middle;">
                 <p class="h4">{{ resourcesPrimaryEditCtrl.resources[0].name }}</p>

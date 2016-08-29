@@ -4,6 +4,7 @@
 
 import angular from 'angular/index'
 
+import '#/main/core/translation/module'
 import './../confirm/module'
 import './../criterion/module'
 
@@ -13,6 +14,7 @@ import CriteriaGroupDirective from './Directive/CriteriaGroupDirective'
 
 angular
   .module('CriteriaGroup', [
+    'translation',
     'Confirm',
     'Criterion'
   ])
@@ -22,6 +24,7 @@ angular
     CriteriaGroupService
   ])
   .controller('CriteriaGroupCtrl', [
+    'Translator',
     'ConfirmService',
     'CriteriaGroupService',
     'CriterionService',

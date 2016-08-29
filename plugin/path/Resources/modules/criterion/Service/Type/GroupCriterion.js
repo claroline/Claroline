@@ -2,8 +2,8 @@
 import BaseCriterion from './BaseCriterion'
 
 export default class GroupCriterion extends BaseCriterion {
-  constructor($log, $q, $http) {
-    super($log, $q, $http)
+  constructor($log, $q, $http, Translator, url) {
+    super($log, $q, $http, Translator, url)
 
     this.platformGroups = null
     this.platformGroupsPromise = null
@@ -32,9 +32,9 @@ export default class GroupCriterion extends BaseCriterion {
           let message = null
           if (0 === this.userGroups.length) {
             // Current user has no group
-            message = Translator.trans('condition_criterion_test_usergroup_nogroup', {activityGroup: this.platformGroups[dataToTest]}, 'path_wizards')
+            message = this.Translator.trans('condition_criterion_test_usergroup_nogroup', {activityGroup: this.platformGroups[dataToTest]}, 'path_wizards')
           } else {
-            message = Translator.trans('condition_criterion_test_usergroup', {activityGroup: this.platformGroups[dataToTest], userGroup: this.getGroupNames(this.userGroups)}, 'path_wizards')
+            message = this.Translator.trans('condition_criterion_test_usergroup', {activityGroup: this.platformGroups[dataToTest], userGroup: this.getGroupNames(this.userGroups)}, 'path_wizards')
           }
 
           errors.push(message)
@@ -68,7 +68,7 @@ export default class GroupCriterion extends BaseCriterion {
         deferred.resolve(this.platformGroups)
       } else {
         this.$http
-          .get(Routing.generate('innova_path_criteria_groups'))
+          .get(this.UrlGenerator('innova_path_criteria_groups'))
           .success((response) => {
             this.platformGroups = response
             deferred.resolve(response)
@@ -99,7 +99,7 @@ export default class GroupCriterion extends BaseCriterion {
         deferred.resolve(this.userGroups)
       } else {
         this.$http
-          .get(Routing.generate('innova_path_criteria_user_groups'))
+          .get(this.UrlGenerator('innova_path_criteria_user_groups'))
           .success((response) => {
             this.userGroups = response
             deferred.resolve(response)

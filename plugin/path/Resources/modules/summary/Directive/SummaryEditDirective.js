@@ -8,8 +8,8 @@ export default class SummaryEditDirective {
     this.controllerAs = 'summaryEditCtrl'
     this.template = template
     this.scope = {
-          title: '='
-      }
+      title: '='
+    }
     this.bindToController = true
   }
 }

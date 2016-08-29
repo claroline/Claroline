@@ -6,12 +6,12 @@ import angular from 'angular/index'
 export default class ClipboardService {
   constructor() {
     // Clipboard content
-    this.clipboard = null;
+    this.clipboard = null
 
     this.disabled = {
       copy:  false,
       paste: true
-    };
+    }
   }
 
   /**
@@ -35,18 +35,18 @@ export default class ClipboardService {
    * @param {function} [callback] a callback to execute on data before add them into clipboard
    */
   copy(data, callback) {
-    const tempData = angular.copy(data);
+    const tempData = angular.copy(data)
 
     if (typeof callback === 'function') {
       // Process data before copy them into clipboard
-      callback(tempData);
+      callback(tempData)
     }
 
     // Store processed data into clipboard
-    this.clipboard = tempData;
+    this.clipboard = tempData
 
     // Disabled paste buttons
-    this.disabled.paste = false;
+    this.disabled.paste = false
   }
 
   /**
