@@ -68,10 +68,10 @@ before_script:
 
 script:
   # run static analysis tools on modified files if needed
-  - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/phpmd --exclude main/core/Resources/bundle-creator,main/web-installer `echo $DIFF | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml; fi
-  - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/md `echo $DIFF | tr '\n' ' '`; fi
+  - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/phpmd --exclude main/core/Resources/bundle-creator,main/web-installer `echo "$DIFF" | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml; fi
+  - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/md `echo "$DIFF" | tr '\n' ' '`; fi
   - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/php-cs-fixer fix --dry-run --diff --config-file=main/dev/Resources/travis/php-cs.php; fi
-  - if [ "$DIFF" != '' ]; then $ROOT/node_modules/.bin/eslint `echo $DIFF | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
+  - if [ "$DIFF" != '' ]; then $ROOT/node_modules/.bin/eslint `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
   # launch the whole test suite
   - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/bin/phpunit
 
