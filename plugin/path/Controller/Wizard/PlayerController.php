@@ -76,13 +76,10 @@ class PlayerController
         // Check User credentials
         $this->pathManager->checkAccess('OPEN', $path);
 
-        $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
-
         return [
             '_resource' => $path,
             'workspace' => $path->getWorkspace(),
             'userProgression' => $this->pathManager->getUserProgression($path),
-            'resourceIcons' => $resourceIcons,
             'editEnabled' => $this->pathManager->isAllow('EDIT', $path),
             'totalProgression' => $this->userProgressionManager->calculateUserProgressionInPath($path),
         ];

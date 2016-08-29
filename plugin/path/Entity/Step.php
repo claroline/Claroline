@@ -278,7 +278,7 @@ class Step implements \JsonSerializable
      */
     public function setParent(Step $parent = null)
     {
-        if ($parent != $this->parent) {
+        if ($parent !== $this->parent) {
             $this->parent = $parent;
 
             if (null !== $parent) {
@@ -389,7 +389,7 @@ class Step implements \JsonSerializable
      */
     public function getDescription()
     {
-        if (!empty($this->activity) && ' ' != $this->activity->getDescription()) {
+        if (!empty($this->activity) && ' ' !== $this->activity->getDescription()) {
             return $this->activity->getDescription();
         }
 
@@ -537,7 +537,7 @@ class Step implements \JsonSerializable
 
                 /** @var \Innova\PathBundle\Entity\InheritedResource $inherited */
                 foreach ($inheritedResources as $inherited) {
-                    if ($inherited->getLvl() == $lvl) {
+                    if ($inherited->getLvl() === $lvl) {
                         // Resource is inherited from the searched level => get it
                         $propagated[] = $inherited->getResource()->getId();
                     }
@@ -705,7 +705,7 @@ class Step implements \JsonSerializable
 
             /** @var \Innova\PathBundle\Entity\InheritedResource $inherited */
             foreach ($this->inheritedResources as $inherited) {
-                if ($inherited->getResource()->getId() == $resource->getId()) {
+                if ($inherited->getResource()->getId() === $resource->getId()) {
                     $exist = true;
                     break;
                 }

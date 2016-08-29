@@ -45,17 +45,5 @@
         <script src="../translations/error.js"></script>
         <script src="../translations/validators.js"></script>
         <script src="../translations/path_wizards.js"></script>
-
-        {# Set some vars needed by Angular parts #}
-        <script>
-            {# Make Twig variables accessibles by AngularJS #}
-            var AngularApp = {};
-
-            AngularApp.resourceIcons = {
-                {% for resourceIcon in resourceIcons %}
-                "{{ resourceIcon.mimeType }}" : "{{ asset(resourceIcon.relativeUrl) }}"{% if loop.last != true %},{% endif %}
-                {% endfor %}
-            };
-        </script>
     </body>
 </html>

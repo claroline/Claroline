@@ -101,12 +101,9 @@ class EditorController
         // Check User credentials
         $this->pathManager->checkAccess('EDIT', $path);
 
-        $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
-
         return [
             '_resource' => $path,
             'workspace' => $path->getWorkspace(),
-            'resourceIcons' => $resourceIcons,
         ];
     }
 

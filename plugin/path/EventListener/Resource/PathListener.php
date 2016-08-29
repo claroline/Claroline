@@ -190,15 +190,9 @@ class PathListener extends ContainerAware
         /** @var Path $path */
         $path = $event->getResource();
 
-        $resourceIcons = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-            ->findByIsShortcut(false);
-
         $template = $this->container->get('templating')->render(
             'InnovaPathBundle:Scorm:export.html.twig', [
-                'locale' => $event->getLocale(),
                 '_resource' => $path,
-                'resourceIcons' => $resourceIcons,
             ]
         );
 

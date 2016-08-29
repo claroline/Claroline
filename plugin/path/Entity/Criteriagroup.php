@@ -130,7 +130,7 @@ class Criteriagroup implements \JsonSerializable
      */
     public function setParent(Criteriagroup $parent = null)
     {
-        if ($parent != $this->parent) {
+        if ($parent !== $this->parent) {
             $this->parent = $parent;
             $parent->addChild($this);
         }
