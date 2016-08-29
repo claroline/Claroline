@@ -1,0 +1,19 @@
+{% extends "ClarolineScormBundle:Export:layout.html.twig" %}
+
+{% block content %}
+    <div ng-app="PdfViewer">
+        <pdfviewer></pdfviewer>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        var AngularApp = {};
+        AngularApp.nodeId = {{ pdf.getResourceNode.getId() }};
+    </script>
+
+    <script src="../assets/commons.js" ></script>
+    <script src="../assets/claroline-distribution-plugin-pdf-player-pdf-viewer.js" ></script>
+{% endblock %}

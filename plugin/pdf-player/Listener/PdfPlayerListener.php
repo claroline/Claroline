@@ -12,6 +12,7 @@
 namespace Claroline\PdfPlayerBundle\Listener;
 
 use Claroline\CoreBundle\Event\PlayFileEvent;
+use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,6 +33,25 @@ class PdfPlayerListener extends ContainerAware
         );
         $response = new Response($content);
         $event->setResponse($response);
+        $event->stopPropagation();
+    }
+
+    public function onExportScorm(ExportScormResourceEvent $event)
+    {
+        $template = $this->container->get('templating')->render(
+            'ClarolinePdfPlayerBundle:Scorm:export.html.twig', [
+                '_resource' => $event->getResource(),
+            ]
+        );
+
+        // Set export template
+        $event->setTemplate($template);
+
+        // Add assets
+        $webpack = $this->container->get('claroline.extension.webpack');
+        $event->addAsset('commons.js', $webpack->hotAsset('dist/commons.js', true));
+        $event->addAsset('claroline-distribution-plugin-pdf-player-pdf-viewer.js', $webpack->hotAsset('dist/claroline-distribution-plugin-pdf-player-pdf-viewer.js', true));
+
         $event->stopPropagation();
     }
 }
