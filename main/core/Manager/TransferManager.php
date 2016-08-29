@@ -278,6 +278,8 @@ class TransferManager
 
         $data = [];
         $files = [];
+        $data['parameters']['code'] = $workspace->getCode();
+        $data['parameters']['name'] = $workspace->getName();
         $data['roles'] = $this->getImporterByName('roles')->export($workspace, $files, null);
         $data['tools'] = $this->getImporterByName('tools')->export($workspace, $files, null);
         $_resManagerData = [];
