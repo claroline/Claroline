@@ -270,6 +270,8 @@ class TransferManager
      */
     public function export(Workspace $workspace)
     {
+        $this->log("Exporting {$workspace->getCode()}...");
+
         foreach ($this->listImporters as $importer) {
             $importer->setListImporters($this->listImporters);
         }

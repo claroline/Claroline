@@ -213,6 +213,7 @@ class RichTextFormatter
         //files <a href=...open...> - name - </a>
         //imgs <img style='max-width: 100%;' src='{$url}' alt='{$node->getName()}'>
         $matchReplaced = [];
+        $fullMatch = preg_quote($fullMatch);
 
         preg_match(
             "#(<source|<a)(.*){$fullMatch}(.*)(</a>|</source>)#",
