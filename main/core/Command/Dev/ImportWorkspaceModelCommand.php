@@ -91,17 +91,26 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->getContainer()->get('security.context')->setToken($token);
         $iterator = new \DirectoryIterator($dirPath);
+        $total = 0;
 
         foreach ($iterator as $pathinfo) {
             if ($pathinfo->isFile()) {
+                ++$total;
+            }
+        }
+
+        $i = 0;
+
+        foreach ($iterator as $pathinfo) {
+            if ($pathinfo->isFile()) {
+                ++$i;
                 $workspace = new Workspace();
                 $workspace->setCreator($user);
-                $workspace->setName($name);
-                $workspace->setCode($code);
                 $newpath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.uniqid();
-                $extractPath = $fs->copy($template, $newpath);
+                $extractPath = $fs->copy($pathinfo->getPathname(), $newpath);
                 $file = new File($newpath);
-                $workspaceManager->create($workspace, $pathinfo->getPathname(), true);
+                $workspaceManager->create($workspace, $file, true);
+                $output->writeln("<comment> Workspace {$i}/{$total} created. </comment>");
             }
         }
     }

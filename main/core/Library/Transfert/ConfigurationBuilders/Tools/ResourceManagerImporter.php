@@ -295,8 +295,10 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         if ($fullImport) {
             //add the missing roles
-            foreach ($data['data']['root']['roles'] as $role) {
-                $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
+            if (isset($data['data']['root']['roles'])) {
+                foreach ($data['data']['root']['roles'] as $role) {
+                    $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
+                }
             }
         }
     }
@@ -333,6 +335,9 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     }
                 }
             }
+        } else {
+            //root restoration is the answer
+            $_data['root'] = ['uid' => 42];
         }
 
         return $_data;

@@ -917,11 +917,11 @@ class ResourceManager
      *
      * @throws \LogicException
      */
-    public function delete(ResourceNode $resourceNode)
+    public function delete(ResourceNode $resourceNode, $force = false)
     {
         $this->log('Removing '.$resourceNode->getName().'['.$resourceNode->getResourceType()->getName().':id:'.$resourceNode->getId().']');
 
-        if ($resourceNode->getParent() === null) {
+        if ($resourceNode->getParent() === null && !$force) {
             throw new \LogicException('Root directory cannot be removed');
         }
         $workspace = $resourceNode->getWorkspace();
@@ -1028,7 +1028,7 @@ class ResourceManager
 
         $this->om->endFlushSuite();
 
-        if (!$softDelete) {
+        if (!$softDelete && $resourceNode->getParent()) {
             $this->reorder($resourceNode->getParent());
         }
     }

@@ -631,6 +631,16 @@ class WorkspaceManager
     }
 
     /**
+     * @param string $code
+     *
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
+     */
+    public function getOneByCode($code)
+    {
+        return $this->workspaceRepo->findOneByCode($code);
+    }
+
+    /**
      * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
     public function getDisplayableWorkspaces()

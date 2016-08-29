@@ -178,9 +178,16 @@ class TransferManager
 
         if ($replace) {
             $oldWs = $this->container->get('claroline.manager.workspace_manager')->getOneByCode($workspace->getCode());
-            $this->om->remove($oldWs);
-            $this->om->flush();
+            if ($oldWs) {
+                $this->log("Removing {$oldWs}...");
+                $this->container->get('claroline.manager.workspace_manager')->deleteWorkspace($oldWs);
+            }
         }
+
+        //just to be sure doctrine is ok before doing all the work
+        $this->om->clear();
+        $creator = $this->container->get('claroline.manager.user_manager')->getUserByUsername($workspace->getCreator()->getUsername());
+        $workspace->setCreator($creator);
 
         $this->om->startFlushSuite();
         $this->setImporters($template, $workspace->getCreator());
@@ -195,7 +202,7 @@ class TransferManager
         $workspace->setCreationDate($date->getTimestamp());
         $this->om->persist($workspace);
         $this->om->flush();
-        $this->log('Base workspace created...');
+        $this->log("Base {$workspace->getCode()} workspace created...");
 
         //load roles
         $this->log('Importing roles...');
