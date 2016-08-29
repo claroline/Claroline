@@ -1326,3 +1326,5 @@ use_honeypot: Activer le honeypot pour les anonymes (anti-pourriels)
 mandatory: Obligatoire
 leave_empty: Laissez ce champ vide pour prouver que vous n'êtes pas un robot.
 field_not_empty: Veuillez laisser le champ vide
+disable: Désactiver
+enable: Activer

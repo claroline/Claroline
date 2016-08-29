@@ -24,7 +24,7 @@ class CourseSessionUserRepository extends EntityRepository
             SELECT csu
             FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
             JOIN csu.user u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND csu.session = :session
             AND csu.userType = :userType
         ';
@@ -97,7 +97,7 @@ class CourseSessionUserRepository extends EntityRepository
             FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
             JOIN csu.user u
             WHERE csu.session = :session
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             ORDER BY u.lastName ASC
         ';
         $query = $this->_em->createQuery($dql);
@@ -152,7 +152,7 @@ class CourseSessionUserRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND NOT EXISTS (
                 SELECT csu
                 FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
@@ -180,7 +180,7 @@ class CourseSessionUserRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND
             (
                 UPPER(u.firstName) LIKE :search

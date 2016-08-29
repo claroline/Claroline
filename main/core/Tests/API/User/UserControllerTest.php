@@ -531,6 +531,32 @@ class UserControllerTest extends TransactionalTestCase
         );
     }
 
+    public function testEnableUserAction()
+    {
+        $admin = $this->createAdmin();
+        $jane = $this->persister->user('jane');
+        $this->logIn($jane);
+        $this->client->request('POST', "/api/user/{$jane->getId()}/enable.json");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->login($admin);
+        $this->client->request('POST', "/api/user/{$jane->getId()}/enable.json");
+        $user = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals(true, $user['is_enabled']);
+    }
+
+    public function testDisableUserAction()
+    {
+        $admin = $this->createAdmin();
+        $jane = $this->persister->user('jane');
+        $this->logIn($jane);
+        $this->client->request('POST', "/api/user/{$jane->getId()}/disable.json");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->login($admin);
+        $this->client->request('POST', "/api/user/{$jane->getId()}/disable.json");
+        $user = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals(false, $user['is_enabled']);
+    }
+
     private function createAdmin()
     {
         $admin = $this->persister->user('admin');

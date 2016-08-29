@@ -11,34 +11,34 @@
 
 namespace Claroline\CoreBundle\Controller\API\User;
 
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\View;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileCreationType;
 use Claroline\CoreBundle\Form\ProfileType;
-use Claroline\CoreBundle\Manager\ApiManager;
-use Claroline\CoreBundle\Manager\LocaleManager;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\GroupManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Manager\AuthenticationManager;
-use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Claroline\CoreBundle\Library\Security\Collection\UserCollection;
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\Request;
+use Claroline\CoreBundle\Manager\ApiManager;
+use Claroline\CoreBundle\Manager\AuthenticationManager;
+use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\ProfilePropertyManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use JMS\DiExtraBundle\Annotation as DI;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Put;
 
 /**
  * @NamePrefix("api_")
@@ -134,7 +134,7 @@ class UserController extends FOSRestController
         $users = $this->userManager->searchPartialList($data, $page, $limit);
         $count = $this->userManager->searchPartialList($data, $page, $limit, true);
 
-        return array('users' => $users, 'total' => $count);
+        return ['users' => $users, 'total' => $count];
     }
 
     /**
@@ -164,7 +164,7 @@ class UserController extends FOSRestController
 
         $profileType = new ProfileCreationType(
             $this->localeManager,
-            array($roleUser),
+            [$roleUser],
             true,
             $this->authenticationManager->getDrivers()
         );
@@ -202,7 +202,7 @@ class UserController extends FOSRestController
     {
         $this->throwExceptionIfNotGranted('edit', $user);
         $roles = $this->roleManager->getPlatformRoles($user);
-        $accesses = $this->profilePropertyManager->getAccessessByRoles(array('ROLE_ADMIN'));
+        $accesses = $this->profilePropertyManager->getAccessessByRoles(['ROLE_ADMIN']);
 
         $formType = new ProfileType(
             $this->localeManager,
@@ -314,7 +314,7 @@ class UserController extends FOSRestController
         $this->throwExceptionIfNotGranted('delete', $user);
         $this->userManager->deleteUser($user);
 
-        return array('success');
+        return ['success'];
     }
 
     /**
@@ -336,7 +336,7 @@ class UserController extends FOSRestController
 
         $this->container->get('claroline.persistence.object_manager')->endFlushSuite();
 
-        return array('success');
+        return ['success'];
     }
 
     /**
@@ -398,7 +398,7 @@ class UserController extends FOSRestController
     public function addUserGroupAction(User $user, Group $group)
     {
         $this->throwExceptionIfNotGranted('edit', $user);
-        $this->groupManager->addUsersToGroup($group, array($user));
+        $this->groupManager->addUsersToGroup($group, [$user]);
 
         return $user;
     }
@@ -414,7 +414,7 @@ class UserController extends FOSRestController
     public function removeUserGroupAction(User $user, Group $group)
     {
         $this->throwExceptionIfNotGranted('edit', $user);
-        $this->groupManager->removeUsersFromGroup($group, array($user));
+        $this->groupManager->removeUsersFromGroup($group, [$user]);
 
         return $user;
     }
@@ -448,7 +448,7 @@ class UserController extends FOSRestController
             $this->mailManager->sendForgotPassword($user);
         }
 
-        return array('success');
+        return ['success'];
     }
 
     /**
@@ -498,6 +498,28 @@ class UserController extends FOSRestController
         $this->userManager->csvRemove($this->request->files->get('csv'));
     }
 
+    /**
+     * @View(serializerGroups={"api_user"})
+     * @Post("/user/{user}/disable", name="disable_user", options={ "method_prefix" = false })
+     */
+    public function disableUserAction(User $user)
+    {
+        $this->throwsExceptionIfNotAdmin();
+
+        return $this->userManager->disable($user);
+    }
+
+    /**
+     * @View(serializerGroups={"api_user"})
+     * @Post("/user/{user}/enable", name="enable_user", options={ "method_prefix" = false })
+     */
+    public function enableUserAction(User $user)
+    {
+        $this->throwsExceptionIfNotAdmin();
+
+        return $this->userManager->enable($user);
+    }
+
      /**
       * @View(serializerGroups={"api_user"})
       * @Post("/users/csv/facets")
@@ -528,7 +550,7 @@ class UserController extends FOSRestController
 
     private function throwExceptionIfNotGranted($action, $users)
     {
-        $collection = is_array($users) ? new UserCollection($users) : new UserCollection(array($users));
+        $collection = is_array($users) ? new UserCollection($users) : new UserCollection([$users]);
         $isGranted = $this->isUserGranted($action, $collection);
 
         if (!$isGranted) {

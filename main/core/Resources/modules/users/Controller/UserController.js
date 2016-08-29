@@ -61,6 +61,12 @@ export default class UserController {
             <button class='btn btn-default' ng-click='uc.userInfo($row)'><i class='fa fa-info'></i></button>
           `
 
+          let switchTitle = scope.$row['is_enabled'] ? Translator.trans('disable', {}, 'platform'): Translator.trans('enable', {}, 'platform');
+          
+          content += `
+            <button title='${switchTitle}' class='btn btn-default' ng-click='uc.switchUserState($row)'><i ng-class="$row.is_enabled ? 'fa fa-ban': 'fa fa-check'"></i></button>
+          `
+
           return `<div>${content}</div>`
         }
       }
@@ -276,5 +282,13 @@ export default class UserController {
       type: 'success',
       msg: this.translate('roles_updated')
     })
+  }
+
+  switchUserState (user) {
+      user.is_enabled = !user.is_enabled
+      const route = user.is_enabled ? 'api_enable_user': 'api_disable_user'
+
+      this.$http.post(Routing.generate(route, {'user': user.id}))
+
   }
 }

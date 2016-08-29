@@ -76,13 +76,13 @@
                                 {% endif %}
                             </div>
                             <div>
-                                {% if creator.isEnabled() %}
+                                {% if not creator.isRemoved() %}
                                     <a href="{{path('claro_profile_view', {'user': creator.getId()})}}">
                                 {% endif %}
 
                                 {{ message.getAuthor() }}
 
-                                {% if creator.isEnabled() %}
+                                {% if not creator.isRemoved() %}
                                     </a>
                                 {% endif %}
                             </div>
