@@ -12,6 +12,7 @@ export default class ProfileController {
     this.arLinks = []
     this.facets = []
     this.userId = window['userId']
+    this.canEdit = window['canEdit']
     this.disabled = true
     this.profileModeLabel = Translator.trans('edit_mode', {}, 'platform')
     this.fieldForms = {}
