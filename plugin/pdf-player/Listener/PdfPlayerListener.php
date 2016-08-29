@@ -25,11 +25,11 @@ class PdfPlayerListener extends ContainerAware
             .$event->getResource()->getHashName();
         $content = $this->container->get('templating')->render(
             'ClarolinePdfPlayerBundle::pdf.html.twig',
-            array(
+            [
                 'path' => $path,
                 'pdf' => $event->getResource(),
                 '_resource' => $event->getResource(),
-            )
+            ]
         );
         $response = new Response($content);
         $event->setResponse($response);
@@ -38,19 +38,27 @@ class PdfPlayerListener extends ContainerAware
 
     public function onExportScorm(ExportScormResourceEvent $event)
     {
+        $resource = $event->getResource();
+
         $template = $this->container->get('templating')->render(
             'ClarolinePdfPlayerBundle:Scorm:export.html.twig', [
-                '_resource' => $event->getResource(),
+                '_resource' => $resource,
             ]
         );
 
         // Set export template
         $event->setTemplate($template);
 
+        // Add PDF file
+        $event->addFile('pdf_'.$resource->getResourceNode()->getId(), $resource->getHashName());
+
         // Add assets
         $webpack = $this->container->get('claroline.extension.webpack');
         $event->addAsset('commons.js', $webpack->hotAsset('dist/commons.js', true));
         $event->addAsset('claroline-distribution-plugin-pdf-player-pdf-viewer.js', $webpack->hotAsset('dist/claroline-distribution-plugin-pdf-player-pdf-viewer.js', true));
+
+        // Add translations
+        $event->addTranslationDomain('widget');
 
         $event->stopPropagation();
     }
