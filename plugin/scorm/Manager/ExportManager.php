@@ -245,6 +245,7 @@ class ExportManager
         $assets = [
             'bootstrap.css' => 'themes/claroline/bootstrap.css',
             'font-awesome.css' => 'packages/font-awesome/css/font-awesome.min.css',
+            'claroline-reset.css' => 'vendor/clarolinescorm/claroline-reset.css',
             'jquery.min.js' => 'packages/jquery/dist/jquery.min.js',
             'jquery-ui.min.js' => 'packages/jquery-ui/jquery-ui.min.js',
             'translator.js' => 'bundles/bazingajstranslation/js/translator.min.js',
