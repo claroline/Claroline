@@ -163,7 +163,7 @@ class WorkspaceManager
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
-    public function create(Workspace $workspace, File $template)
+    public function create(Workspace $workspace, File $template, $replace = false)
     {
         $transferManager = $this->container->get('claroline.manager.transfer_manager');
 
@@ -171,7 +171,7 @@ class WorkspaceManager
             $transferManager->setLogger($this->logger);
         }
 
-        $workspace = $transferManager->createWorkspace($workspace, $template);
+        $workspace = $transferManager->createWorkspace($workspace, $template, false, $replace);
 
         return $workspace;
     }

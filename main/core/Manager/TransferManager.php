@@ -163,9 +163,25 @@ class TransferManager
     public function createWorkspace(
         Workspace $workspace,
         File $template,
-        $isValidated = false
+        $isValidated = false,
+        $replace = false
     ) {
         $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
+
+        if ($workspace->getCode() === null) {
+            $workspace->setCode($data['parameters']['code']);
+        }
+
+        if ($workspace->getName() === null) {
+            $workspace->setName($data['parameters']['name']);
+        }
+
+        if ($replace) {
+            $oldWs = $this->container->get('claroline.manager.workspace_manager')->getOneByCode($workspace->getCode());
+            $this->om->remove($oldWs);
+            $this->om->flush();
+        }
+
         $this->om->startFlushSuite();
         $this->setImporters($template, $workspace->getCreator());
 

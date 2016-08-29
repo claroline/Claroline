@@ -33,10 +33,8 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
             ->setDescription('Create a workspace from a zip archive (for debug purpose)');
         $this->setDefinition(
             [
-                new InputArgument('import_directory', InputArgument::REQUIRED, 'The absolute path to the zip file.'),
+                new InputArgument('directory_path', InputArgument::REQUIRED, 'The absolute path to the zip file.'),
                 new InputArgument('owner_username', InputArgument::REQUIRED, 'The owner username'),
-                new InputArgument('code', InputArgument::REQUIRED, 'The workspace code'),
-                new InputArgument('name', InputArgument::REQUIRED, 'The workspace name'),
             ]
         );
     }
@@ -45,10 +43,8 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
     {
         //@todo ask authentication source
         $params = [
-            'archive_path' => 'Absolute path to the zip file: ',
+            'directory_path' => 'Absolute path to the archive directory file: ',
             'owner_username' => 'The workspace owner username: ',
-            'code' => 'The workspace code: ',
-            'name' => 'The workspace name: ',
         ];
 
         foreach ($params as $argument => $argumentName) {
@@ -89,20 +85,24 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
         $workspaceManager->setLogger($consoleLogger);
         $validator = $this->getContainer()->get('validator');
-        $template = $input->getArgument('archive_path');
+        $dirPath = $input->getArgument('directory_path');
         $username = $input->getArgument('owner_username');
-        $code = $input->getArgument('code');
-        $name = $input->getArgument('name');
         $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsername($username);
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->getContainer()->get('security.context')->setToken($token);
-        $workspace = new Workspace();
-        $workspace->setCreator($user);
-        $workspace->setName($name);
-        $workspace->setCode($code);
-        $newpath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.uniqid();
-        $extractPath = $fs->copy($template, $newpath);
-        $file = new File($newpath);
-        $workspaceManager->create($workspace, $file);
+        $iterator = new \DirectoryIterator($dirPath);
+
+        foreach ($iterator as $pathinfo) {
+            if ($pathinfo->isFile()) {
+                $workspace = new Workspace();
+                $workspace->setCreator($user);
+                $workspace->setName($name);
+                $workspace->setCode($code);
+                $newpath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.uniqid();
+                $extractPath = $fs->copy($template, $newpath);
+                $file = new File($newpath);
+                $workspaceManager->create($workspace, $pathinfo->getPathname(), true);
+            }
+        }
     }
 }
