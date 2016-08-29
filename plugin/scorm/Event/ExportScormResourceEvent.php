@@ -37,6 +37,13 @@ class ExportScormResourceEvent extends Event implements DataConveyorEventInterfa
     private $assets = [];
 
     /**
+     * List of uploaded files required by the Resource.
+     *
+     * @var array
+     */
+    private $files = [];
+
+    /**
      * List of translation domains to include.
      *
      * @var array
@@ -127,6 +134,27 @@ class ExportScormResourceEvent extends Event implements DataConveyorEventInterfa
     public function addAsset($packageName, $webPath)
     {
         $this->assets[$packageName] = $webPath;
+    }
+
+    /**
+     * Get files of the Resource.
+     *
+     * @return array
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * Add a new uploaded file to include.
+     *
+     * @param string $packageName - Name of the asset in the SCORM package (with extension)
+     * @param string $uploadPath  - Relative path to the file inside the `upload` directory
+     */
+    public function addFile($packageName, $uploadPath)
+    {
+        $this->files[$packageName] = $uploadPath;
     }
 
     /**
