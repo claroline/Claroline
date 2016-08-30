@@ -108,7 +108,7 @@ class CourseSessionUserRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findSessionUsersByUserAndSearchFromCoursesList(User $user, array $coursesList = [], $search, $executeQuery = true)
+    public function findSessionUsersByUserAndSearchFromCoursesList(User $user, array $coursesList = [], $search = '', $executeQuery = true)
     {
         $dql = '
             SELECT csu
@@ -266,7 +266,7 @@ class CourseSessionUserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findSessionUsersByUserAndStatusAndDate(User $user, $status = 'open', \DateTime $date, $search = '', $coursesList = null)
+    public function findSessionUsersByUserAndStatusAndDate(User $user, $status, \DateTime $date, $search = '', $coursesList = null)
     {
         $dql = '
             SELECT csu
