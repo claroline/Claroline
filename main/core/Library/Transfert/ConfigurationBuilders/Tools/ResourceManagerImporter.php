@@ -218,6 +218,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
                 if ($importer) {
                     $this->log("Importing {$item['item']['name']} - uid={$item['item']['uid']} - type={$item['item']['type']}");
+
                     $entity = $importer->import($res, $item['item']['name'], $created, $workspace);
                     //some importers are not fully functionnal yet
                     if ($entity) {

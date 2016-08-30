@@ -163,8 +163,7 @@ class TransferManager
     public function createWorkspace(
         Workspace $workspace,
         File $template,
-        $isValidated = false,
-        $replace = false
+        $isValidated = false
     ) {
         $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
 
@@ -176,18 +175,7 @@ class TransferManager
             $workspace->setName($data['parameters']['name']);
         }
 
-        if ($replace) {
-            $oldWs = $this->container->get('claroline.manager.workspace_manager')->getOneByCode($workspace->getCode());
-            if ($oldWs) {
-                $this->log("Removing {$oldWs}...");
-                $this->container->get('claroline.manager.workspace_manager')->deleteWorkspace($oldWs);
-            }
-        }
-
-        //just to be sure doctrine is ok before doing all the work
-        $this->om->clear();
-        $creator = $this->container->get('claroline.manager.user_manager')->getUserByUsername($workspace->getCreator()->getUsername());
-        $workspace->setCreator($creator);
+        //just to be sure doctrine is ok before doing all the workspace
 
         $this->om->startFlushSuite();
         $this->setImporters($template, $workspace->getCreator());
@@ -234,6 +222,7 @@ class TransferManager
 
         $entityRoles['ROLE_ANONYMOUS'] = $this->om
             ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS');
+
         $entityRoles['ROLE_USER'] = $this->om
             ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
 

@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Claroline\CoreBundle\Library\Transfert\Importer;
-use Symfony\Component\Config\Definition\Processor;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
 
 /**
  * @DI\Service("claroline.importer.role_importer")
@@ -64,7 +64,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
                                     function ($v) {
                                         return call_user_func_array(
                                             __CLASS__.'::nameAlreadyExists',
-                                            array($v)
+                                            [$v]
                                         );
                                     }
                                 )
@@ -129,7 +129,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
 
     public function import(array $roles, Workspace $workspace)
     {
-        $entityRoles = array();
+        $entityRoles = [];
 
         foreach ($roles as $role) {
             $roleEntity = null;
@@ -166,11 +166,11 @@ class RolesImporter extends Importer implements ConfigurationInterface
 
         foreach ($workspace->getRoles() as $role) {
             if ($role !== $this->roleManager->getManagerRole($workspace)) {
-                $data[] = array('role' => array(
+                $data[] = ['role' => [
                     'name' => $this->roleManager->getWorkspaceRoleBaseName($role),
                     'translation' => $role->getTranslationKey(),
                     'is_base_role' => false,
-                ));
+                ]];
             }
         }
 

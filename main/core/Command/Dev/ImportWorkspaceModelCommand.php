@@ -87,11 +87,9 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
         $validator = $this->getContainer()->get('validator');
         $dirPath = $input->getArgument('directory_path');
         $username = $input->getArgument('owner_username');
-        $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsername($username);
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->getContainer()->get('security.context')->setToken($token);
-        $iterator = new \DirectoryIterator($dirPath);
+        $om = $this->getContainer()->get('claroline.persistence.object_manager');
         $total = 0;
+        $iterator = new \DirectoryIterator($dirPath);
 
         foreach ($iterator as $pathinfo) {
             if ($pathinfo->isFile()) {
@@ -100,16 +98,33 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
         }
 
         $i = 0;
+        $output->writeln('<comment> Removing workspaces... </comment>');
+
+        foreach ($iterator as $pathinfo) {
+            if ($pathinfo->isFile()) {
+                $code = pathinfo($pathinfo->getFileName(), PATHINFO_FILENAME);
+                $workspace = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code);
+                if ($workspace) {
+                    $output->writeln("<error> Removing {$workspace->getCode()} </error>");
+                    $this->getContainer()->get('claroline.manager.workspace_manager')->deleteWorkspace($workspace);
+                }
+            }
+        }
 
         foreach ($iterator as $pathinfo) {
             if ($pathinfo->isFile()) {
                 ++$i;
+                $output->writeln('<comment> Clearing object manager... </comment>');
+                $om->clear();
+                $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsername($username);
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->getContainer()->get('security.context')->setToken($token);
                 $workspace = new Workspace();
                 $workspace->setCreator($user);
                 $newpath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.uniqid();
                 $extractPath = $fs->copy($pathinfo->getPathname(), $newpath);
                 $file = new File($newpath);
-                $workspaceManager->create($workspace, $file, true);
+                $workspaceManager->create($workspace, $file);
                 $output->writeln("<comment> Workspace {$i}/{$total} created. </comment>");
             }
         }
