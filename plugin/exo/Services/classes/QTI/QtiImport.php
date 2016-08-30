@@ -247,7 +247,7 @@ abstract class QtiImport
         if (strpos($mimeType, 'image/') !== false) {
             $url = $this->container->get('router')
                         ->generate('claro_file_get_media',
-                                ['node' => $resourceNode->getId()]
+                                ['node' => $resourceNode->getGuid()]
                           );
             $imgTag = $this->assessmentItem->ownerDocument->createElement('img');
 

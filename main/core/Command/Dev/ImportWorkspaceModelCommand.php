@@ -107,6 +107,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
                 if ($workspace) {
                     $output->writeln("<error> Removing {$workspace->getCode()} </error>");
                     $this->getContainer()->get('claroline.manager.workspace_manager')->deleteWorkspace($workspace);
+                    $om->clear();
                 }
             }
         }
