@@ -190,9 +190,20 @@ class PathListener extends ContainerAware
         /** @var Path $path */
         $path = $event->getResource();
 
+        // Add embed resources
+        // Decode the path structure to grab embed resources ans generate resource URL
+        // We export them before rendering the template to have the correct structure in twig/angular
+        $structure = json_decode($path->getStructure());
+        if ($structure && !empty($structure->steps)) {
+            foreach ($structure->steps as $step) {
+                $this->exportStepResources($event, $step);
+            }
+        }
+
         $template = $this->container->get('templating')->render(
             'InnovaPathBundle:Scorm:export.html.twig', [
                 '_resource' => $path,
+                'structure' => json_encode($structure),
             ]
         );
 
@@ -213,10 +224,44 @@ class PathListener extends ContainerAware
         $event->addAsset('claroline-tinymce.js', $webpack->hotAsset('dist/claroline-distribution-main-core-tinymce.js', true));
 
         $event->addAsset('wizards.js', 'vendor/innovapath/wizards.js');
-
         $event->addAsset('wizards.css', 'vendor/innovapath/wizards.css');
 
         $event->stopPropagation();
+    }
+
+    private function exportStepResources(ExportScormResourceEvent $event, \stdClass $step)
+    {
+        if (!empty($step->primaryResource)) {
+            foreach ($step->primaryResource as $primary) {
+                $resource = $this->getResource($primary->resourceId);
+                $event->addEmbedResource($resource);
+                // Generate resource URL
+                $primary->url = '../scos/resource_'.$primary->resourceId.'.html';
+            }
+        }
+
+        if (!empty($step->resources)) {
+            foreach ($step->resources as $secondary) {
+                $resource = $this->getResource($secondary->resourceId);
+                $event->addEmbedResource($resource);
+                // Generate resource URL
+                $secondary->url = '../scos/resource_'.$secondary->resourceId.'.html';
+            }
+        }
+
+        if (!empty($step->children)) {
+            foreach ($step->children as $child) {
+                $this->exportStepResources($event, $child);
+            }
+        }
+    }
+
+    private function getResource($nodeId)
+    {
+        $node = $this->container->get('claroline.manager.resource_manager')->getById($nodeId);
+        $resource = $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($node);
+
+        return $resource;
     }
 
     private function copyStepContent(\stdClass $step, ResourceNode $newParent, array $processedNodes = [])

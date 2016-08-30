@@ -17,13 +17,14 @@
             {# Initialize AngularJS application #}
             <div data-ng-cloak="" data-ng-app="PathPlayerApp" class="path-player">
                 <path-show
-                    data-path="{{ _resource | json_encode }}"
+                    data-path="{{ structure }}"
                     data-edit-enabled="false"></path-show>
             </div>
         </div>
 
         <script src="../commons/jquery.min.js"></script>
         <script src="../commons/jquery-ui.min.js"></script>
+        <script src="../commons/bootstrap.min.js"></script>
         <script src="../commons/router.js"></script>
         <script src="../commons/routes.js"></script>
         <script src="../commons/translator.js"></script>
@@ -45,5 +46,35 @@
         <script src="../translations/error.js"></script>
         <script src="../translations/validators.js"></script>
         <script src="../translations/path_wizards.js"></script>
+
+        <script>
+            var postHeight = function postHeight(height) {
+                if (parent) {
+                    var newHeight = height || document.body.scrollHeight;
+                    var message = 'documentHeight:' + newHeight;
+
+                    parent.postMessage(message, "*");
+                }
+            };
+
+            $(document).ready(function () {
+                postHeight();
+
+                /* Hack for constantly polling iframe inner height and react when angular router loads another page */
+                var getIframeWindowHeight = function() {
+                    return $("iframe#embeddedActivity").contents().find('body').first().height();
+                }
+                var oldHeight= getIframeWindowHeight();
+
+                setInterval(function() {
+                    var newHeight = getIframeWindowHeight();
+                    if (newHeight != oldHeight) {
+                        postHeight(newHeight);
+                    }
+                    oldHeight = newHeight;
+                }, 2000);
+                /* End of Hack */
+            });
+        </script>
     </body>
 </html>

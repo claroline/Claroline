@@ -10,6 +10,10 @@ export default class SummaryEditCtrl extends SummaryBaseCtrl {
   constructor(SummaryService, PathService) {
     super(SummaryService, PathService)
 
+    if (0 === this.structure.length) {
+      this.pathService.initialize()
+    }
+
     /**
      * Summary sortable options
      * @type {object}
