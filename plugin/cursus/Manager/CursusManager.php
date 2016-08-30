@@ -340,7 +340,7 @@ class CursusManager
         $maxUsers = null,
         $defaultSessionDuration = 1,
         $withSessionEvent = true,
-        array $validators
+        array $validators = []
     ) {
         $course = new Course();
         $course->setTitle($title);
@@ -3967,14 +3967,14 @@ class CursusManager
         $content = $documentModel->getContent();
 
         switch ($type) {
-            case DocumentModel::SESSION_INVITATION :
+            case DocumentModel::SESSION_INVITATION:
                 $session = $this->courseSessionRepo->findOneById($sourceId);
                 $users = $this->getUsersBySessionAndType($session, CourseSessionUser::LEARNER);
                 $title = $this->translator->trans('session_invitation', [], 'cursus');
                 $body = $this->convertKeysForSession($session, $content);
                 $this->sendInvitation($title, $users, $body);
                 break;
-            case DocumentModel::SESSION_EVENT_INVITATION :
+            case DocumentModel::SESSION_EVENT_INVITATION:
                 $sessionEvent = $this->sessionEventRepo->findOneById($sourceId);
                 $session = $sessionEvent->getSession();
                 $users = $this->getUsersBySessionAndType($session, CourseSessionUser::LEARNER);
@@ -3982,7 +3982,7 @@ class CursusManager
                 $body = $this->convertKeysForSessionEvent($sessionEvent, $content);
                 $this->sendInvitation($title, $users, $body);
                 break;
-            case DocumentModel::SESSION_CERTIFICATE :
+            case DocumentModel::SESSION_CERTIFICATE:
                 $session = $this->courseSessionRepo->findOneById($sourceId);
                 $users = $this->getUsersBySessionAndType($session, CourseSessionUser::LEARNER);
                 $body = $this->convertKeysForSession($session, $content);

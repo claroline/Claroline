@@ -282,18 +282,18 @@ class CourseSessionUserRepository extends EntityRepository
             ';
         }
         switch ($status) {
-            case 'open' :
+            case 'open':
                 $dql .= '
                     AND s.startDate <= :date
                     AND s.endDate >= :date
                 ';
                 break;
-            case 'closed' :
+            case 'closed':
                 $dql .= '
                     AND s.endDate < :date
                 ';
                 break;
-            case 'unstarted' :
+            case 'unstarted':
                 $dql .= '
                     AND s.startDate > :date
                 ';
