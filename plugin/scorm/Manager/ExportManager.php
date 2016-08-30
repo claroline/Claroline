@@ -219,7 +219,7 @@ class ExportManager
         // Add resources files
         foreach ($scos as $sco) {
             // Dump template into file
-            $this->saveToPackage($archive, 'scos/resource_'.$node->getId().'.html', $sco['template']);
+            $this->saveToPackage($archive, 'scos/resource_'.$sco['node']->getId().'.html', $sco['template']);
 
             // Dump additional resource assets
             if (!empty($sco['assets'])) {
@@ -264,6 +264,7 @@ class ExportManager
             'claroline-reset.css' => 'vendor/clarolinescorm/claroline-reset.css',
             'jquery.min.js' => 'packages/jquery/dist/jquery.min.js',
             'jquery-ui.min.js' => 'packages/jquery-ui/jquery-ui.min.js',
+            'bootstrap.min.js' => 'packages/bootstrap/dist/js/bootstrap.min.js',
             'translator.js' => 'bundles/bazingajstranslation/js/translator.min.js',
             'router.js' => 'bundles/fosjsrouting/js/router.js',
         ];
