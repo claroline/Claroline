@@ -24,25 +24,38 @@
             </span>
         </div>
     </div>
-    <button id="list-view-button"
-            class="btn btn-default pull-right"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="{{ 'list_view'|trans({}, 'cursus') }}"
-    >
-        <i class="fa fa-list"></i>
-    </button>
+    <div class="btn-group pull-right">
+        <button id="list-view-button"
+                class="btn btn-default"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-container="#courses-list-{{ widgetInstance.getId() }}"
+                title="{{ 'list_view'|trans({}, 'cursus') }}"
+        >
+            <i class="fa fa-list"></i>
+        </button>
+        <button id="chronologic-view-button"
+                class="btn btn-default"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-container="#courses-list-{{ widgetInstance.getId() }}"
+                title="{{ 'chronologic_view'|trans({}, 'cursus') }}"
+        >
+            <i class="fa fa-hourglass-o"></i>
+        </button>
+    </div>
     <div id="courses-widget-calendar-{{ widgetInstance.getId() }}" class="col-md-12"></div>
 </div>
 
 {% block javascripts %}
+    <script src="{{ asset('bundles/bazingajstranslation/js/translator.min.js') }}"></script>
     {% javascripts debug=false
         'js/translations/agenda/*.js'
         'js/translations/cursus/*.js'
         'js/translations/tools/*.js'
+        'js/translations/platform/*.js'
         %}<script src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script src="{{ asset('bundles/bazingajstranslation/js/translator.min.js') }}"></script>
     <script>
         window['sessions_' + {{ widgetInstance.getId() }}] = {{ sessions|json_encode|raw }}
         window['editable-sessions_' + {{ widgetInstance.getId() }}] = {{ editableSessions|json_encode|raw }}
