@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+        {% block stylesheets %}
+            <link rel="stylesheet" media="screen" href="../commons/bootstrap.css" />
+            <link rel="stylesheet" media="screen" href="../commons/font-awesome.css" />
+
+            {% stylesheets debug=false filter='less, cssmin' output='vendor/clarolinescorm/claroline-reset.css'
+                '@ClarolineScormBundle/Resources/less/scorm-export.less'
+            %}
+            <link rel="stylesheet" media="screen" href="../commons/claroline-reset.css" />
+            {% endstylesheets %}
+        {% endblock %}
+
+        <title>
+            {% block title %}
+                {% if _resource is defined %}
+                {{ _resource.resourceNode.name }}
+                {% endif %}
+            {% endblock %}
+        </title>
+    </head>
+
+    <body class="scorm-export">
+        <div id="baseAsset" class="hide">/</div>
+
+        <div class="container-fluid">
+            {% block content %}{% endblock %}
+        </div>
+
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

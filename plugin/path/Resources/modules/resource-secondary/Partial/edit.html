@@ -21,7 +21,9 @@
         <ul class="dropdown-menu" role="menu">
             <!-- Go to resource -->
             <li role="presentation">
-                <a href="" role="menuitem" tabindex="-1" data-ng-click="resourcesSecondaryEditCtrl.showResource(resource)">
+                <a href="{{ resource.url || ('claro_resource_open'|path:{node: resource.resourceId, resourceType: resource.type}) }}"
+                   role="menuitem"
+                   tabindex="-1">
                     <span class="fa fa-fw fa-sign-out"></span>
                     {{ 'resource_show'|trans:{}:'path_wizards' }}
                 </a>

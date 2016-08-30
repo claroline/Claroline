@@ -32,6 +32,9 @@ class ExportManager
     /** @var string */
     private $webPath;
 
+    /** @var string */
+    private $uploadPath;
+
     /** @var RouterInterface */
     private $router;
 
@@ -52,6 +55,7 @@ class ExportManager
      *
      * @param string           $tmp
      * @param string           $rootDir
+     * @param string           $uploadDir
      * @param RouterInterface  $router
      * @param Controller       $jsRouterCtrl
      * @param StrictDispatcher $dispatcher
@@ -61,6 +65,7 @@ class ExportManager
      * @DI\InjectParams({
      *     "tmp"             = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
      *     "rootDir"         = @DI\Inject("%kernel.root_dir%"),
+     *     "uploadDir"       = @DI\Inject("%claroline.param.files_directory%"),
      *     "router"          = @DI\Inject("router"),
      *     "jsRouterCtrl"    = @DI\Inject("fos_js_routing.controller"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
@@ -71,6 +76,7 @@ class ExportManager
     public function __construct(
         $tmp,
         $rootDir,
+        $uploadDir,
         RouterInterface $router,
         Controller $jsRouterCtrl,
         StrictDispatcher $dispatcher,
@@ -79,6 +85,7 @@ class ExportManager
     {
         $this->tmpPath = $tmp;
         $this->webPath = $rootDir.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web';
+        $this->uploadPath = $uploadDir;
 
         $this->router = $router;
         $this->jsRouterCtrl = $jsRouterCtrl;
@@ -145,7 +152,8 @@ class ExportManager
         $resources[$resource->getResourceNode()->getId()] = [
             'node' => $resource->getResourceNode(),
             'template' => $event->getTemplate(),
-            'files' => $event->getAssets(),
+            'assets' => $event->getAssets(),
+            'files' => $event->getFiles(),
             'translation_domains' => $event->getTranslationDomains(),
             'resources' => array_keys($embedResources), // We only need IDs
         ];
@@ -211,12 +219,20 @@ class ExportManager
         // Add resources files
         foreach ($scos as $sco) {
             // Dump template into file
-            $this->saveToPackage($archive, 'scos/resource_'.$node->getId().'.html', $sco['template']);
+            $this->saveToPackage($archive, 'scos/resource_'.$sco['node']->getId().'.html', $sco['template']);
 
-            // Dump additional resource files
+            // Dump additional resource assets
+            if (!empty($sco['assets'])) {
+                foreach ($sco['assets'] as $filename => $originalFile) {
+                    $this->copyToPackage($archive, 'assets/'.$filename, $this->getFilePath($this->webPath, $originalFile));
+                }
+            }
+
+            // Add uploaded files
             if (!empty($sco['files'])) {
+                // $this->container->getParameter('claroline.param.files_directory')
                 foreach ($sco['files'] as $filename => $originalFile) {
-                    $this->copyToPackage($archive, 'assets/'.$filename, $originalFile);
+                    $this->copyToPackage($archive, 'files/'.$filename, $this->getFilePath($this->uploadPath, $originalFile));
                 }
             }
 
@@ -224,7 +240,7 @@ class ExportManager
             if (!empty($sco['translation_domains'])) {
                 foreach ($sco['translation_domains'] as $domain) {
                     $translationFile = 'js/translations/'.$domain.'/'.$locale.'.js';
-                    $this->copyToPackage($archive, 'translations/'.$domain.'.js', $translationFile);
+                    $this->copyToPackage($archive, 'translations/'.$domain.'.js', $this->getFilePath($this->webPath, $translationFile));
                 }
             }
         }
@@ -245,8 +261,10 @@ class ExportManager
         $assets = [
             'bootstrap.css' => 'themes/claroline/bootstrap.css',
             'font-awesome.css' => 'packages/font-awesome/css/font-awesome.min.css',
+            'claroline-reset.css' => 'vendor/clarolinescorm/claroline-reset.css',
             'jquery.min.js' => 'packages/jquery/dist/jquery.min.js',
             'jquery-ui.min.js' => 'packages/jquery-ui/jquery-ui.min.js',
+            'bootstrap.min.js' => 'packages/bootstrap/dist/js/bootstrap.min.js',
             'translator.js' => 'bundles/bazingajstranslation/js/translator.min.js',
             'router.js' => 'bundles/fosjsrouting/js/router.js',
         ];
@@ -260,7 +278,7 @@ class ExportManager
         ];
 
         foreach ($assets as $filename => $originalFile) {
-            $this->copyToPackage($archive, 'commons/'.$filename, $originalFile);
+            $this->copyToPackage($archive, 'commons/'.$filename, $this->getFilePath($this->webPath, $originalFile));
         }
 
         // Add FontAwesome font files
@@ -269,7 +287,7 @@ class ExportManager
         foreach ($files as $file) {
             $filePath = $fontDir.DIRECTORY_SEPARATOR.$file;
             if (is_file($filePath)) {
-                $this->copyToPackage($archive, 'fonts/'.$file, 'packages/font-awesome/fonts'.DIRECTORY_SEPARATOR.$file);
+                $this->copyToPackage($archive, 'fonts/'.$file, $this->getFilePath($fontDir, $file));
             }
         }
 
@@ -283,7 +301,7 @@ class ExportManager
         // Add common translations
         foreach ($translationDomains as $domain) {
             $translationFile = 'js/translations/'.$domain.'/'.$locale.'.js';
-            $this->copyToPackage($archive, 'translations/'.$domain.'.js', $translationFile);
+            $this->copyToPackage($archive, 'translations/'.$domain.'.js', $this->getFilePath($this->webPath, $translationFile));
         }
     }
 
@@ -296,9 +314,6 @@ class ExportManager
      */
     private function copyToPackage(\ZipArchive $archive, $pathInArchive, $filePath)
     {
-        $filePath = ltrim($filePath, '/\\');
-        $filePath = $this->webPath.DIRECTORY_SEPARATOR.$filePath;
-
         if (file_exists($filePath)) {
             $archive->addFile($filePath, $pathInArchive);
         } else {
@@ -316,5 +331,13 @@ class ExportManager
     private function saveToPackage(\ZipArchive $archive, $pathInArchive, $content)
     {
         $archive->addFromString($pathInArchive, $content);
+    }
+
+    private function getFilePath($sourceDir, $relativePath)
+    {
+        $filePath = ltrim($relativePath, '/\\');
+        $filePath = $sourceDir.DIRECTORY_SEPARATOR.$filePath;
+
+        return $filePath;
     }
 }

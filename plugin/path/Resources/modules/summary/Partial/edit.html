@@ -26,13 +26,6 @@
             <!-- Block to display where there is no structure -->
             <div data-ng-if="summaryEditCtrl.structure.length === 0" class="text-center col-md-12">
                 <em>{{ 'path_no_structure'|trans:{}:'path_wizards' }}</em>
-
-                <div class="text-center">
-                    <button type="button" role="button" class="btn btn-block btn-primary" data-ng-click="summaryEditCtrl.createNew()">
-                        <span class="fa fa-fw fa-pencil"></span>
-                        {{ 'path_init_structure'|trans:{}:'path_wizards' }}
-                    </button>
-                </div>
             </div>
 
             <!-- Block to display when a structure is set -->

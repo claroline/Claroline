@@ -20,11 +20,16 @@ export default class ResourcesCtrl {
    */
   showResource(resource) {
     // Retrieve resource type
-    const resourceRoute = this.UrlGenerator('claro_resource_open', {
-      node: resource.resourceId,
-      resourceType: resource.type
-    })
+    let route = null
+    if (resource.url) {
+      route = resource.url
+    } else {
+      route = this.UrlGenerator('claro_resource_open', {
+        node: resource.resourceId,
+        resourceType: resource.type
+      })
+    }
 
-    window.open(resourceRoute, '_blank')
+    window.open(route, '_blank')
   }
 }

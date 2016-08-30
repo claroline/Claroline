@@ -12,6 +12,7 @@
 namespace Claroline\ImagePlayerBundle\Listener;
 
 use Claroline\CoreBundle\Event\PlayFileEvent;
+use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,16 +31,35 @@ class ImagePlayerListener extends ContainerAware
             .$event->getResource()->getHashName();
         $content = $this->container->get('templating')->render(
             'ClarolineImagePlayerBundle::image.html.twig',
-            array(
+            [
                 'path' => $path,
                 'image' => $event->getResource(),
                 '_resource' => $event->getResource(),
                 'images' => $images,
-            )
+            ]
         );
 
         $response = new Response($content);
         $event->setResponse($response);
+        $event->stopPropagation();
+    }
+
+    public function onExportScorm(ExportScormResourceEvent $event)
+    {
+        $resource = $event->getResource();
+
+        $template = $this->container->get('templating')->render(
+            'ClarolineImagePlayerBundle:Scorm:export.html.twig', [
+                '_resource' => $resource,
+            ]
+        );
+
+        // Set export template
+        $event->setTemplate($template);
+
+        // Add Image file
+        $event->addFile('image_'.$resource->getResourceNode()->getId(), $resource->getHashName());
+
         $event->stopPropagation();
     }
 }
