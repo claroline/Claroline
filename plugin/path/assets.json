@@ -1,0 +1,8 @@
+{
+  "webpack": {
+    "entry": {
+      "editor": "editor",
+      "player": "player"
+    }
+  }
+}

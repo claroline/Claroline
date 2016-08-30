@@ -2,20 +2,25 @@
 
 namespace Innova\PathBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class UserProgressionController.
  *
  * @Route(
- *      "/progression",
- *      name    = "innova_path_progression",
- *      service = "innova_path.controller.user_progression"
+ *     "/step/{id}/progression",
+ *     service      = "innova_path.controller.user_progression",
+ *     requirements = {"id" = "\d+"},
+ *     options      = { "expose" = true }
  * )
+ * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
  */
 class UserProgressionController
 {
@@ -39,22 +44,24 @@ class UserProgressionController
     /**
      * Log a new action from User (mark the the  step as to do).
      *
+     * @param User                           $user
      * @param \Innova\PathBundle\Entity\Step $step
-     * @param string                         $status
+     * @param Request                        $request
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(
-     *     "/create/{id}/{authorized}/{status}",
-     *     name         = "innova_path_progression_create",
-     *     requirements = {"id" = "\d+"},
-     *     options      = { "expose" = true }
+     *     "",
+     *     name = "innova_path_progression_create"
      * )
      * @Method("POST")
      */
-    public function createAction(Step $step, $status = null, $authorized = 0)
+    public function createAction(User $user, Step $step, Request $request)
     {
-        $progression = $this->userProgressionManager->create($step, null, $status, $authorized);
+        $status = $request->get('user_progression_status');
+        $authorized = $request->get('user_progression_authorized');
+
+        $progression = $this->userProgressionManager->create($step, $user, $status, $authorized);
 
         return new JsonResponse(['progression' => $progression]);
     }
@@ -62,46 +69,25 @@ class UserProgressionController
     /**
      * Update progression of a User.
      *
+     * @param User                           $user
      * @param \Innova\PathBundle\Entity\Step $step
-     * @param string                         $status
+     * @param Request                        $request
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(
-     *     "/step/{id}/{status}/{authorized}",
-     *     name         = "innova_path_progression_update",
-     *     requirements = {"id" = "\d+"},
-     *     options      = { "expose" = true }
+     *     "",
+     *     name = "innova_path_progression_update"
      * )
      * @Method("PUT")
      */
-    public function updateAction(Step $step, $status, $authorized)
+    public function updateAction(User $user, Step $step, Request $request)
     {
-        $progression = $this->userProgressionManager->update($step, null, $status, $authorized);
+        $status = $request->get('user_progression_status');
+        $authorized = $request->get('user_progression_authorized');
+
+        $progression = $this->userProgressionManager->update($step, $user, $status, $authorized);
 
         return new JsonResponse(['progression' => $progression]);
-    }
-
-    /**
-     * Set lock for progression of a User.
-     *
-     * @param \Innova\PathBundle\Entity\Step $step
-     * @param bool                           $lock
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     *
-     * @Route(
-     *     "/steplock/{id}/{locked}",
-     *     name         = "innova_path_progression_setlock",
-     *     requirements = {"id" = "\d+"},
-     *     options      = { "expose" = true }
-     * )
-     * @Method("PUT")
-     */
-    public function setLockAction(Step $step, $locked)
-    {
-        $progression = $this->userProgressionManager->setLock($step, $locked);
-
-        return new JsonResponse($progression);
     }
 }

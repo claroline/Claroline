@@ -555,7 +555,7 @@ class WorkspaceController extends Controller
             ->createQueryBuilder('u')
             ->select('u')
             ->join('u.roles', 'r')
-            ->andWhere('u.isEnabled = true')
+            ->andWhere('u.isRemoved = false')
             ->leftJoin('r.workspace', 'w')
             ->andWhere('r.workspace = :workspace')
             ->setParameter('workspace', $workspace)

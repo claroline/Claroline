@@ -1,0 +1,43 @@
+<div>
+    <div class="path-summary-pin-toggle-btn btn-group">
+        <button role="button" data-ng-click="summaryShowCtrl.toggleOpened()" data-ng-class="{ 'active': summaryShowCtrl.state.opened }" class="btn btn-sm btn-primary">
+            {{ 'summary'|trans:{}:'path_wizards' }}
+        </button>
+        <button class="btn btn-sm btn-default" data-ng-click="summaryShowCtrl.togglePinned()" data-ng-class="{ 'btn-success active': summaryShowCtrl.state.pinned }">
+            <span class="fa fa-map-pin"></span>
+        </button>
+    </div>
+
+    <!-- Angular can't initialize 2 directives on same element (here, PathSummaryDirective & NgPageslideDirective) so we need a container -->
+    <div data-pageslide="" data-ps-open="summaryShowCtrl.state.opened" data-ps-side="left" data-ps-class="path-summary-container" data-ps-push="summaryShowCtrl.state.pinned" data-ps-push-class="path-summary-opened" data-ps-pin-class="path-summary-pinned">
+        <a href="" id="sidebar-left-close" class="ps-close pull-right" data-ng-click="summaryShowCtrl.close()" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'sidebar_close'|trans:{}:'path_wizards' }}">
+            <span class="fa fa-angle-double-left"></span>
+            <span class="sr-only">{{ 'sidebar_close'|trans:{}:'path_wizards' }}</span>
+        </a>
+
+        <div class="path-summary path-summary-show">
+            <!-- List title -->
+            <h2>
+                <span class="fa fa-sitemap"></span>
+                {{ summaryShowCtrl.title }}
+            </h2>
+
+            <!-- User progression -->
+            <uib-progressbar data-ng-if="summaryShowCtrl.progression" max="summaryShowCtrl.totalSteps" value="summaryShowCtrl.getTotalProgression()">
+                <span style="color:white; white-space:nowrap;"> {{ summaryShowCtrl.getTotalProgressionPercentage() }} {{ 'completed'|trans:{}:'path_wizards' }}</span>
+            </uib-progressbar>
+
+            <!-- Block to display where there is no structure -->
+            <div data-ng-if="summaryShowCtrl.structure.length === 0" class="text-center">
+                <em>There is no structure for this path.</em>
+            </div>
+
+            <!-- Block to display when a structure is set -->
+            <div class="path-summary-tree" data-ui-tree="" data-ng-if="summaryShowCtrl.structure.length !== 0">
+                <ul class="tree" data-ui-tree-nodes="" data-ng-model="summaryShowCtrl.structure" data-nodrop="">
+                    <summary-item-show data-ui-tree-node="" data-ng-repeat="step in summaryShowCtrl.structure" data-step="step"></summary-item-show>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

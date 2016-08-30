@@ -77,13 +77,8 @@ class UserProgressionManager
      *
      * @return UserProgression
      */
-    public function create(Step $step, $user = null, $status = null, $authorized = false, $checkDuplicate = true)
+    public function create(Step $step, User $user = null, $status = null, $authorized = false, $checkDuplicate = true)
     {
-        if (empty($user)) {
-            // Load current logged User
-            $user = $this->securityToken->getToken()->getUser();
-        }
-
         // Check if progression already exists, if so return retrieved progression
         if ($checkDuplicate && $user instanceof User) {
             $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy([
@@ -118,11 +113,6 @@ class UserProgressionManager
 
     public function update(Step $step, User $user = null, $status, $authorized = false)
     {
-        if (empty($user)) {
-            // Load current logged User
-            $user = $this->securityToken->getToken()->getUser();
-        }
-
         // Retrieve the current progression for this step
         $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy([
             'step' => $step,
@@ -143,26 +133,6 @@ class UserProgressionManager
         }
 
         return $progression;
-    }
-
-    /**
-     * Set state of the lock for User Progression for a step.
-     *
-     * @param Step $step
-     * @param $lock
-     */
-    public function setLock(Step $step, $lock)
-    {
-        // Load current logged User
-        $user = $this->securityToken->getToken()->getUser();
-        // Retrieve the current progression for this step
-        $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy([
-            'step' => $step,
-            'user' => $user,
-        ]);
-        $progression->setLocked($lock);
-        $this->om->persist($progression);
-        $this->om->flush();
     }
 
     /**

@@ -98,7 +98,7 @@ class CursusUserRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND NOT EXISTS (
                 SELECT cu
                 FROM Claroline\CursusBundle\Entity\CursusUser cu
@@ -123,7 +123,7 @@ class CursusUserRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND
             (
                 UPPER(u.firstName) LIKE :search
@@ -155,7 +155,7 @@ class CursusUserRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND EXISTS (
                 SELECT cu
                 FROM Claroline\CursusBundle\Entity\CursusUser cu
@@ -180,7 +180,7 @@ class CursusUserRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND
             (
                 UPPER(u.firstName) LIKE :search

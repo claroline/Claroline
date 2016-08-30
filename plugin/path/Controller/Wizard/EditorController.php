@@ -22,7 +22,6 @@ use Symfony\Component\Routing\RouterInterface;
  *
  * @Route(
  *      "/editor",
- *      name    = "innova_path_editor",
  *      service = "innova_path.controller.path_editor"
  * )
  */
@@ -102,12 +101,9 @@ class EditorController
         // Check User credentials
         $this->pathManager->checkAccess('EDIT', $path);
 
-        $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
-
         return [
             '_resource' => $path,
             'workspace' => $path->getWorkspace(),
-            'resourceIcons' => $resourceIcons,
         ];
     }
 

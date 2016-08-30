@@ -36,5 +36,17 @@ class Updater070100 extends Updater
         }
 
         $this->om->flush();
+        $this->setDisabledUserAsRemoved();
+    }
+
+    private function setDisabledUserAsRemoved()
+    {
+        $this->log('Updating database for removed users...');
+        $this->om->getRepository('ClarolineCoreBundle:User')->createQueryBuilder('u')
+            ->update()
+            ->set('u.isRemoved', true)
+            ->where('u.isEnabled = false')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

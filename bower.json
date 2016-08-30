@@ -27,6 +27,7 @@
     "angular-ui-tinymce": "0.0.14",
     "angular-ui-translation": "1.0.1",
     "angular-ui-tree": "2.16.0",
+    "angular-ui-pageslide":"1.0.0",
     "at-table": "1.0.4",
     "backbone": "1.2.3",
     "bootstrap": "3.3.6",

@@ -26,7 +26,7 @@ class CourseSessionRegistrationQueueRepository extends EntityRepository
             FROM Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue q
             JOIN q.user u
             WHERE q.session = :session
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             ORDER BY u.lastName ASC
         ';
         $query = $this->_em->createQuery($dql);

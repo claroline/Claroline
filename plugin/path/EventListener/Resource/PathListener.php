@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Innova\PathBundle\Entity\Path\Path;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -181,6 +182,40 @@ class PathListener extends ContainerAware
         // Force the unpublished state (the publication will recreate the correct links, and create new Activities)
         // If we directly copy all the published Entities we can't remap some relations
         $event->setPublish(false);
+        $event->stopPropagation();
+    }
+
+    public function onExportScorm(ExportScormResourceEvent $event)
+    {
+        /** @var Path $path */
+        $path = $event->getResource();
+
+        $template = $this->container->get('templating')->render(
+            'InnovaPathBundle:Scorm:export.html.twig', [
+                '_resource' => $path,
+            ]
+        );
+
+        // Set export template
+        $event->setTemplate($template);
+
+        // Set translations
+        $event->addTranslationDomain('path_wizards');
+
+        // Add template required files
+        $webpack = $this->container->get('claroline.extension.webpack');
+        $event->addAsset('tinymce.jquery.min.js', 'bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js');
+        $event->addAsset('jquery.tinymce.min.js', 'bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js');
+        $event->addAsset('commons.js', $webpack->hotAsset('dist/commons.js', true));
+        $event->addAsset('claroline-distribution-plugin-path-player.js', $webpack->hotAsset('dist/claroline-distribution-plugin-path-player.js', true));
+        $event->addAsset('claroline-home.js', 'bundles/clarolinecore/js/home/home.js');
+        $event->addAsset('claroline-common.js', 'bundles/clarolinecore/js/common.js');
+        $event->addAsset('claroline-tinymce.js', $webpack->hotAsset('dist/claroline-distribution-main-core-tinymce.js', true));
+
+        $event->addAsset('wizards.js', 'vendor/innovapath/wizards.js');
+
+        $event->addAsset('wizards.css', 'vendor/innovapath/wizards.css');
+
         $event->stopPropagation();
     }
 

@@ -262,13 +262,20 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $hasAcceptedTerms;
 
     /**
+     *  This should be renamed because this field really means "is not deleted".
+     *
      * @var bool
      *
      * @ORM\Column(name="is_enabled", type="boolean")
      * @Groups({"api_user", "api_user_min"})
-     * @SerializedName("isEnabled")
      */
     protected $isEnabled = true;
+
+    /**
+     * @ORM\Column(name="is_removed", type="boolean")
+     * @Groups({"api_user", "api_user_min"})
+     */
+    protected $isRemoved = false;
 
     /**
      * @var bool
@@ -1207,5 +1214,30 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function setAdministratedOrganizations($organizations)
     {
         $this->administratedOrganizations = $organizations;
+    }
+
+    public function setIsRemoved($isRemoved)
+    {
+        $this->isRemoved = $isRemoved;
+    }
+
+    public function getIsRemoved()
+    {
+        return $this->isRemoved;
+    }
+
+    public function isRemoved()
+    {
+        return $this->isRemoved;
+    }
+
+    public function enable()
+    {
+        $this->isEnabled = true;
+    }
+
+    public function disable()
+    {
+        $this->isEnabled = false;
     }
 }
