@@ -1,0 +1,46 @@
+<div>
+    <div class="path-summary-pin-toggle-btn btn-group">
+        <button role="button" data-ng-click="summaryEditCtrl.toggleOpened()" data-ng-class="{ 'active': summaryEditCtrl.state.opened }" class="btn btn-sm btn-primary">
+            {{ 'summary'|trans:{}:'path_wizards' }}
+        </button>
+
+        <button class="btn btn-sm btn-default" data-ng-click="summaryEditCtrl.togglePinned()" data-ng-class="{ 'btn-success active': summaryEditCtrl.state.pinned }">
+            <span class="fa fa-map-pin"></span>
+        </button>
+    </div>
+
+    <!-- Angular can't initialize 2 directives on same element (here, PathSummaryDirective & NgPageslideDirective) so we need a container -->
+    <div data-pageslide="" data-ps-open="summaryEditCtrl.state.opened" data-ps-side="left" data-ps-class="path-summary-container" data-ps-push="summaryEditCtrl.state.pinned" data-ps-push-class="path-summary-opened" data-ps-pin-class="path-summary-pinned">
+        <a href="" id="sidebar-left-close" class="ps-close pull-right" data-ng-click="summaryEditCtrl.close()" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'sidebar_close'|trans:{}:'path_wizards' }}">
+            <span class="fa fa-angle-double-left"></span>
+            <span class="sr-only">{{ 'sidebar_close'|trans:{}:'path_wizards' }}</span>
+        </a>
+
+        <div class="path-summary">
+            <!-- List title -->
+            <h2>
+                <span class="fa fa-sitemap"></span>
+                {{ summaryEditCtrl.title }}
+            </h2>
+
+            <!-- Block to display where there is no structure -->
+            <div data-ng-if="summaryEditCtrl.structure.length === 0" class="text-center col-md-12">
+                <em>{{ 'path_no_structure'|trans:{}:'path_wizards' }}</em>
+
+                <div class="text-center">
+                    <button type="button" role="button" class="btn btn-block btn-primary" data-ng-click="summaryEditCtrl.createNew()">
+                        <span class="fa fa-fw fa-pencil"></span>
+                        {{ 'path_init_structure'|trans:{}:'path_wizards' }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Block to display when a structure is set -->
+            <div class="path-summary-tree" ui-tree="summaryEditCtrl.treeOptions" data-ng-if="summaryEditCtrl.structure.length !== 0">
+                <ul class="tree" ui-tree-nodes="" data-ng-model="summaryEditCtrl.structure" data-nodrop-enabled="">
+                    <summary-item-edit data-ui-tree-node="" data-ng-repeat="step in summaryEditCtrl.structure" data-step="step"></summary-item-edit>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+<div>
+    <!-- Initialize condition button -->
+    <button type="button" role="button" class="btn btn-block btn-default" data-ng-click="conditionEditCtrl.addCondition()" data-ng-if="!conditionEditCtrl.step.condition" style="margin-bottom: 20px;">
+        <span class="fa fa-fw fa-lock"></span>
+        {{ 'condition_init_conditionstructure'|trans:{step: conditionEditCtrl.next}:'path_wizards' }} <b>{{ conditionEditCtrl.next.name }}</b>
+    </button>
+
+    <!-- Next step condition -->
+    <div class="panel-condition panel panel-default" data-ng-if="conditionEditCtrl.step.condition">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <span class="fa fa-lock"></span>
+                {{ 'condition_access'|trans:{}:'path_wizards' }} <b>{{ conditionEditCtrl.next.name }}</b>
+            </h4>
+
+            <div class="btns">
+                <!-- Remove condition button -->
+                <button type="button" class="btn btn-sm btn-danger" data-ng-click="conditionEditCtrl.removeCondition()" data-ng-if="conditionEditCtrl.step.condition">
+                    <span class="fa fa-trash"></span>
+                    <span>{{ 'condition_condition_delete'|trans:{}:'path_wizards' }}</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="panel-body" data-ng-if="conditionEditCtrl.step.condition">
+            <div class="alert alert-info" data-ng-if="conditionEditCtrl.step.primaryResource.length === 0">
+                <span class="fa fa-info-circle"></span>
+                {{ 'condition_step_no_activity'|trans:{}:'path_wizards' }}
+            </div>
+
+            <div class="alert alert-info" data-ng-if="conditionEditCtrl.step.evaluationType !== 'automatic'">
+                <span class="fa fa-info-circle"></span>
+                {{ 'condition_step_activity_notmanageable'|trans:{}:'path_wizards' }}
+            </div>
+
+            <ul class="criteria-group" data-ng-if="conditionEditCtrl.step.condition">
+                <li data-ng-repeat="group in conditionEditCtrl.step.condition.criteriagroups">
+                    <criteria-group data-step="conditionEditCtrl.step" data-criteria-group="group"></criteria-group>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
