@@ -22,6 +22,7 @@ class CoursesWidgetConfig
 {
     const MODE_LIST = 0;
     const MODE_CALENDAR = 1;
+    const MODE_CHRONOLOGIC = 2;
 
     /**
      * @ORM\Column(type="integer")
@@ -51,6 +52,11 @@ class CoursesWidgetConfig
      * @ORM\Column(name="public_sessions_only", nullable=false, type="boolean", options={"default" = 0})
      */
     protected $publicSessionsOnly = false;
+
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    protected $extra;
 
     public function getId()
     {
@@ -100,5 +106,15 @@ class CoursesWidgetConfig
     public function setPublicSessionsOnly($publicSessionsOnly)
     {
         $this->publicSessionsOnly = $publicSessionsOnly;
+    }
+
+    public function getExtra()
+    {
+        return $this->extra;
+    }
+
+    public function setExtra($extra)
+    {
+        $this->extra = $extra;
     }
 }

@@ -8,6 +8,8 @@ add_session: Ajouter une session
 application_date: Date de soumission
 blocking: Bloquant
 calendar_view: Vue calendrier
+chronologic_view: Vue chronologique
+chronological_view_options: Options de la vue chronologique
 click_on_link_below_to_confirm_request: Veuillez cliquer sur le lien ci-dessous pour confirmer la demande
 closed_session_events: Séances terminées
 closed_sessions: Sessions terminées
@@ -85,6 +87,7 @@ delete_session_event: Supprimer la séance
 delete_session_event_confirm_message: Êtes-vous sûr de vouloir supprimer cette séance ?
 disable_certificates: Désactiver les certificats
 disable_invitations: Désactiver les invitations
+disable_workspace_link: Désactiver le lien vers l'espace d'activités
 display_course_details: Voir les détails de la formation
 display_session_events: Voir les séances
 display_sessions: Voir les sessions
@@ -140,6 +143,7 @@ no_description: Aucune description
 no_document_model: Aucun modèle d'invitation/certificat
 no_information: Aucune information
 no_location: Aucune localisation
+no_ongoing_session: Aucune session en cours
 no_open_session: Aucune session ouverte
 no_open_session_event: Aucune séance ouverte
 no_pending_learner: Aucun apprenant en attente
@@ -151,10 +155,12 @@ no_session: Aucune session de formation
 no_session_event: Aucune séance
 no_template: Aucun modèle
 no_tutor: Aucun formateur
+no_unstarted_session: Aucune session à venir
 not_authorized: Non autorisé
 not_blank_error: Cette valeur ne doit pas être vide.
 nothing_to_configure: Rien à configurer
 open_session_events: Séances ouvertes
+ongoing_sessions: Sessions en cours
 open_sessions: Sessions ouvertes
 organization_validation: Validation par l'organisation
 placeholder_course_code_message: Ce placeholder sera remplacé par le code de la formation
@@ -270,6 +276,7 @@ unregister_tutor_from_session_confirm_message: Êtes-vous sûr de vouloir désin
 unregister_user_from_cursus_confirm_message: Êtes-vous sûr de vouloir désinscrire cet utilisateur de ce cursus ?
 unregister_user_from_session: Désinscrire l'utilisateur de la session de formation
 unregister_user_from_session_message: Êtes-vous sûr de vouloir désinscrire cet utilisateur de cette session de formation ?
+unstarted_sessions: Sessions à venir
 until: Jusqu'au
 user_sessions_management: Gestion des sessions de formation
 user_validation: Validation de l'utilisateur

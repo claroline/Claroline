@@ -1183,7 +1183,15 @@ class CursusController extends Controller
     public function myCoursesWidgetConfigureFormAction(WidgetInstance $widgetInstance)
     {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
-        $form = $this->formFactory->create(new MyCoursesWidgetConfigurationType($this->translator), $config);
+        $extra = $config->getExtra();
+
+        if (is_null($extra)) {
+            $extra = [];
+        }
+        $form = $this->formFactory->create(
+            new MyCoursesWidgetConfigurationType($this->translator, $extra),
+            $config
+        );
 
         return ['form' => $form->createView(), 'config' => $config];
     }
@@ -1203,6 +1211,19 @@ class CursusController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $extra = $config->getExtra();
+
+            if (is_null($extra)) {
+                $extra = [];
+            }
+            $extra['openSessionsColor'] = $form->get('openSessionsColor')->getData();
+            $extra['closedSessionsColor'] = $form->get('closedSessionsColor')->getData();
+            $extra['unstartedSessionsColor'] = $form->get('unstartedSessionsColor')->getData();
+            $extra['displayClosedSessions'] = $form->get('displayClosedSessions')->getData();
+            $extra['displayUnstartedSessions'] = $form->get('displayUnstartedSessions')->getData();
+            $extra['disableClosedSessionsWs'] = $form->get('disableClosedSessionsWs')->getData();
+            $extra['disableUnstartedSessionsWs'] = $form->get('disableUnstartedSessionsWs')->getData();
+            $config->setExtra($extra);
             $this->cursusManager->persistCoursesWidgetConfiguration($config);
 
             return new JsonResponse('success', 204);
@@ -1247,15 +1268,39 @@ class CursusController extends Controller
         $orderedBy = 'title',
         $order = 'ASC'
     ) {
-        $courses = $this->cursusManager->getCoursesByUser(
-            $authenticatedUser,
-            $search,
-            $orderedBy,
-            $order,
-            true,
-            $page,
-            $max
-        );
+        $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+        $configCursus = $config->getCursus();
+        $coursesList = null;
+
+        if (!is_null($configCursus)) {
+            $coursesList = $this->cursusManager->getDescendantCoursesByCursus(
+                $configCursus,
+                $search,
+                'id',
+                'ASC',
+                false
+            );
+        }
+        $courses = is_null($coursesList) ?
+            $this->cursusManager->getCoursesByUser(
+                $authenticatedUser,
+                $search,
+                $orderedBy,
+                $order,
+                true,
+                $page,
+                $max
+            ) :
+            $this->cursusManager->getCoursesByUserFromList(
+                $authenticatedUser,
+                $coursesList,
+                $search,
+                $orderedBy,
+                $order,
+                true,
+                $page,
+                $max
+            );
         $sessionUsers = $this->cursusManager->getSessionUsersByUser($authenticatedUser);
         $workspacesList = [];
 
@@ -1293,7 +1338,22 @@ class CursusController extends Controller
      */
     public function myCoursesListForWidgetCalendarAction(User $authenticatedUser, WidgetInstance $widgetInstance, $search = '')
     {
-        $sessionUsers = $this->cursusManager->getSessionUsersByUser($authenticatedUser, $search);
+        $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+        $configCursus = $config->getCursus();
+        $coursesList = null;
+
+        if (!is_null($configCursus)) {
+            $coursesList = $this->cursusManager->getDescendantCoursesByCursus(
+                $configCursus,
+                $search,
+                'id',
+                'ASC',
+                false
+            );
+        }
+        $sessionUsers = is_null($coursesList) ?
+            $this->cursusManager->getSessionUsersByUser($authenticatedUser, $search) :
+            $this->cursusManager->getSessionUsersByUserFromCoursesList($authenticatedUser, $coursesList, $search);
         $workspacesList = [];
         $sessions = [];
         $editableSessions = [];
@@ -1327,6 +1387,109 @@ class CursusController extends Controller
             'search' => $search,
             'workspacesList' => $workspacesList,
             'editableSessions' => $editableSessions,
+        ];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/my/courses/widget/{widgetInstance}/chronologic/search/{search}",
+     *     name="claro_cursus_my_courses_list_for_widget_chronologic",
+     *     defaults={"search"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesListForWidgetChronologic.html.twig")
+     */
+    public function myCoursesListForWidgetChronologicAction(User $user, WidgetInstance $widgetInstance, $search = '')
+    {
+        $openSessions = [];
+        $closedSessions = [];
+        $unstartedSessions = [];
+        $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+        $configCursus = $config->getCursus();
+        $extra = $config->getExtra();
+        $openSessionsColor = isset($extra['openSessionsColor']) ? $extra['openSessionsColor'] : null;
+        $closedSessionsColor = isset($extra['closedSessionsColor']) ? $extra['closedSessionsColor'] : null;
+        $unstartedSessionsColor = isset($extra['unstartedSessionsColor']) ? $extra['unstartedSessionsColor'] : null;
+        $displayClosedSessions = isset($extra['displayClosedSessions']) ? $extra['displayClosedSessions'] : true;
+        $displayUnstartedSessions = isset($extra['displayUnstartedSessions']) ? $extra['displayUnstartedSessions'] : true;
+        $disableClosedSessionsWs = isset($extra['disableClosedSessionsWs']) ? $extra['disableClosedSessionsWs'] : false;
+        $disableUnstartedSessionsWs = isset($extra['disableUnstartedSessionsWs']) ? $extra['disableUnstartedSessionsWs'] : false;
+        $coursesList = null;
+
+        if (!is_null($configCursus)) {
+            $coursesList = $this->cursusManager->getDescendantCoursesByCursus(
+                $configCursus,
+                $search,
+                'id',
+                'ASC',
+                false
+            );
+        }
+        $now = new \DateTime();
+        $openSessionUsers = $this->cursusManager->getSessionUsersByUserAndSessionStatus($user, 'open', $now, $search, $coursesList);
+        $closedSessionUsers = $displayClosedSessions ?
+            $this->cursusManager->getSessionUsersByUserAndSessionStatus($user, 'closed', $now, $search, $coursesList) :
+            [];
+        $unstartedSessionUsers = $displayUnstartedSessions ?
+            $this->cursusManager->getSessionUsersByUserAndSessionStatus($user, 'unstarted', $now, $search, $coursesList) :
+            [];
+
+        foreach ($openSessionUsers as $sessionUser) {
+            $openSessions[] = $sessionUser->getSession();
+        }
+        foreach ($closedSessionUsers as $sessionUser) {
+            $closedSessions[] = $sessionUser->getSession();
+        }
+        foreach ($unstartedSessionUsers as $sessionUser) {
+            $unstartedSessions[] = $sessionUser->getSession();
+        }
+
+        return [
+            'widgetInstance' => $widgetInstance,
+            'openSessions' => $openSessions,
+            'closedSessions' => $closedSessions,
+            'unstartedSessions' => $unstartedSessions,
+            'search' => $search,
+            'openSessionsColor' => $openSessionsColor,
+            'closedSessionsColor' => $closedSessionsColor,
+            'unstartedSessionsColor' => $unstartedSessionsColor,
+            'displayClosedSessions' => $displayClosedSessions,
+            'displayUnstartedSessions' => $displayUnstartedSessions,
+            'disableClosedSessionsWs' => $disableClosedSessionsWs,
+            'disableUnstartedSessionsWs' => $disableUnstartedSessionsWs,
+        ];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/my/courses/widget/{widgetInstance}/session/{session}/informations",
+     *     name="claro_cursus_my_courses_widget_session_informations",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Cursus:sessionInformationsModal.html.twig")
+     */
+    public function myCoursesWidgetSessionInformationsAction(WidgetInstance $widgetInstance, CourseSession $session)
+    {
+        $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+        $extra = $config->getExtra();
+        $disableClosedSessionsWs = isset($extra['disableClosedSessionsWs']) ? $extra['disableClosedSessionsWs'] : false;
+        $disableUnstartedSessionsWs = isset($extra['disableUnstartedSessionsWs']) ? $extra['disableUnstartedSessionsWs'] : false;
+        $now = new \DateTime();
+        $startDate = $session->getStartDate();
+        $endDate = $session->getEndDate();
+        $disableWs = ($endDate < $now && $disableClosedSessionsWs) || ($startDate > $now && $disableUnstartedSessionsWs);
+        $sessionEvents = $this->cursusManager->getEventsBySession($session);
+        $tutors = $this->cursusManager->getUsersBySessionAndType($session, CourseSessionUser::TEACHER);
+
+        return [
+            'session' => $session,
+            'course' => $session->getCourse(),
+            'events' => $sessionEvents,
+            'tutors' => $tutors,
+            'workspace' => $session->getWorkspace(),
+            'disableWs' => $disableWs,
         ];
     }
 

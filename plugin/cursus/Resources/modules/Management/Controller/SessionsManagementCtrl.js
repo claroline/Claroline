@@ -38,6 +38,7 @@ export default class SessionsManagementCtrl {
     this.isCollapsed = {}
     this._addSessionCallback = this._addSessionCallback.bind(this)
     this._updateSessionCallback = this._updateSessionCallback.bind(this)
+    this._deleteSessionCallback = this._deleteSessionCallback.bind(this)
     this.initialize()
   }
 
@@ -48,6 +49,11 @@ export default class SessionsManagementCtrl {
 
   _updateSessionCallback (data) {
     this.SessionService._updateSessionCallback(data)
+    this.tableParams.reload()
+  }
+
+  _deleteSessionCallback (data) {
+    this.SessionService._removeSessionCallback(data)
     this.tableParams.reload()
   }
 
@@ -68,7 +74,7 @@ export default class SessionsManagementCtrl {
   }
 
   deleteSession (sessionId) {
-    this.SessionService.deleteSession(sessionId)
+    this.SessionService.deleteSession(sessionId, this._deleteSessionCallback)
   }
 
   createEvent (session) {
