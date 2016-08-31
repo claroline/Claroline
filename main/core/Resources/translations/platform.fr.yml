@@ -1328,3 +1328,4 @@ leave_empty: Laissez ce champ vide pour prouver que vous n'êtes pas un robot.
 field_not_empty: Veuillez laisser le champ vide
 disable: Désactiver
 enable: Activer
+workspace_access_date_invalid: Les dates d'accès de l'espace d'activités sont dépassées
