@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "f030dc63d66e780fb6bc2c80e24d4ba0afc3535d"
+                "reference": "89a5e7b8261cf2e7a75dd25a66eb2fba2c91841f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/f030dc63d66e780fb6bc2c80e24d4ba0afc3535d",
-                "reference": "f030dc63d66e780fb6bc2c80e24d4ba0afc3535d",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/89a5e7b8261cf2e7a75dd25a66eb2fba2c91841f",
+                "reference": "89a5e7b8261cf2e7a75dd25a66eb2fba2c91841f",
                 "shasum": ""
             },
             "require": {
@@ -155,7 +155,6 @@
                 "icap/html-diff": "~1.1",
                 "idci/exporter-bundle": "1.0.0",
                 "innova/angular-js-bundle": "~5.0",
-                "innova/angular-ui-pageslide-bundle": "~5.0",
                 "innova/angular-ui-resource-picker-bundle": "~6.0",
                 "innova/angular-ui-tinymce-bundle": "5.*",
                 "jdorn/sql-formatter": "~1.0",
@@ -384,7 +383,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-08-29 10:50:58"
+            "time": "2016-08-30 14:57:43"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -2733,63 +2732,6 @@
             "time": "2015-06-09 14:59:11"
         },
         {
-            "name": "innova/angular-ui-pageslide-bundle",
-            "version": "5.1.0",
-            "target-dir": "Innova/AngularUIPageslideBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/AngularUIPageslideBundle.git",
-                "reference": "9b70c919368d556f74eb4fc4a5ab09130756dadf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/AngularUIPageslideBundle/zipball/9b70c919368d556f74eb4fc4a5ab09130756dadf",
-                "reference": "9b70c919368d556f74eb4fc4a5ab09130756dadf",
-                "shasum": ""
-            },
-            "require": {
-                "innova/angular-js-bundle": "~5.0",
-                "php": ">=5.3.0",
-                "symfony/symfony": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Innova\\AngularUIPageslideBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "Symfony 2 bundle which provides Angular JS directive to add pageslide effect.",
-            "homepage": "http://github.com/InnovaLangues/AngularUIPageslideBundle",
-            "keywords": [
-                "Pageslide",
-                "Symfony2",
-                "angular"
-            ],
-            "time": "2016-06-22 08:04:59"
-        },
-        {
             "name": "innova/angular-ui-resource-picker-bundle",
             "version": "6.0.0",
             "target-dir": "Innova/AngularUIResourcePickerBundle",
@@ -3508,12 +3450,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/johngrogg/ics-parser.git",
-                "reference": "27939236fc7c2cfe6dd9440feb309225f82ab879"
+                "reference": "fe46d0d6d89066679594b101812590ad8517a635"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/27939236fc7c2cfe6dd9440feb309225f82ab879",
-                "reference": "27939236fc7c2cfe6dd9440feb309225f82ab879",
+                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/fe46d0d6d89066679594b101812590ad8517a635",
+                "reference": "fe46d0d6d89066679594b101812590ad8517a635",
                 "shasum": ""
             },
             "require": {
@@ -3554,7 +3496,7 @@
                 "ical",
                 "ics"
             ],
-            "time": "2016-08-20 21:27:46"
+            "time": "2016-08-27 14:11:00"
         },
         {
             "name": "json-quiz/json-quiz",
@@ -6225,6 +6167,63 @@
                 "test"
             ],
             "time": "2015-05-11 14:41:42"
+        },
+        {
+            "name": "innova/angular-ui-pageslide-bundle",
+            "version": "5.1.0",
+            "target-dir": "Innova/AngularUIPageslideBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/InnovaLangues/AngularUIPageslideBundle.git",
+                "reference": "9b70c919368d556f74eb4fc4a5ab09130756dadf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/InnovaLangues/AngularUIPageslideBundle/zipball/9b70c919368d556f74eb4fc4a5ab09130756dadf",
+                "reference": "9b70c919368d556f74eb4fc4a5ab09130756dadf",
+                "shasum": ""
+            },
+            "require": {
+                "innova/angular-js-bundle": "~5.0",
+                "php": ">=5.3.0",
+                "symfony/symfony": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Innova\\AngularUIPageslideBundle": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud Bey",
+                    "email": "arnaud.bey@u-grenoble3.fr"
+                },
+                {
+                    "name": "Axel Penin",
+                    "email": "axel.penin@u-grenoble3.fr"
+                },
+                {
+                    "name": "Eric Vincent",
+                    "email": "eric.vincent@u-grenoble3.fr"
+                },
+                {
+                    "name": "Donovan Tengblad",
+                    "email": "donovan.tengblad@u-grenoble3.fr"
+                }
+            ],
+            "description": "Symfony 2 bundle which provides Angular JS directive to add pageslide effect.",
+            "homepage": "http://github.com/InnovaLangues/AngularUIPageslideBundle",
+            "keywords": [
+                "Pageslide",
+                "Symfony2",
+                "angular"
+            ],
+            "time": "2016-06-22 08:04:59"
         },
         {
             "name": "mikey179/vfsStream",
