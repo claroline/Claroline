@@ -16,6 +16,7 @@
 {% endblock %}
 
 {% block section_content %}
+    <div>{{ macros.flashBox() }}</div>
     <div class="panel-heading">
         <h3 class="panel-title">{{ survey.getResourceNode().getName() }}</h3>
     </div>
@@ -37,15 +38,21 @@
                 {% endif %}
             </div>
         {% elseif status == 'published' %}
-            <div class="alert alert-info" role="alert">
-                {{ 'published_user_message'|trans({}, 'survey') }}
-                
-                {% if endDate is not empty %}
-                    <br>
-                    <b>{{ 'closing_date'|trans({}, 'survey') }} :</b>
-                    {{ endDate|intl_date_format }}
-                {% endif %}
-            </div>
+            {% if hasAnswered %}
+                <div class="alert alert-info">
+                    {{ 'thanks_for_answering_msg'|trans({}, 'survey') }}
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    {{ 'published_user_message'|trans({}, 'survey') }}
+
+                    {% if endDate is not empty %}
+                        <br>
+                        <b>{{ 'closing_date'|trans({}, 'survey') }} :</b>
+                        {{ endDate|intl_date_format }}
+                    {% endif %}
+                </div>
+            {% endif %}
         {% elseif status == 'closed' %}
             <div class="alert alert-danger" role="alert">
                 {{ 'closed_user_message'|trans({}, 'survey') }}
@@ -61,13 +68,19 @@
             </div>
         {% endif %}
                 
-        {% if status == 'published' or  status == 'closed' %}
+        {% if status == 'published' or (status == 'closed' and hasAnswered) %}
             <hr>
             <a href="{{ path('claro_survey_answer_form', {'survey': surveyId}) }}"
                class="btn btn-primary margin-bottom-md"
             >
                 <i class="fa fa-check-square-o"></i>
-                {{ 'answer_to_survey'|trans({}, 'survey') }}
+                {% if status == 'published' and not hasAnswered %}
+                    {{ 'answer_to_survey'|trans({}, 'survey') }}
+                {% elseif status == 'published' and hasAnswered and allowAnswerEdition %}
+                    {{ 'edit_your_answers'|trans({}, 'survey') }}
+                {% else %}
+                    {{ 'view_your_answers'|trans({}, 'survey') }}
+                {% endif %}
             </a>
             
             {% if hasAnswered and survey.getHasPublicResult() %}  
