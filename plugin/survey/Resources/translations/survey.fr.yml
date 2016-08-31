@@ -34,6 +34,7 @@ edit_parameters: 'Modifier les paramètres'
 edit_question_btn_explanation: 'Modifier la question'
 edit_question_title_btn_explanation: 'Modifier le titre'
 edit_survey: 'Modifier le sondage'
+edit_your_answers: Modifier vos réponses
 edition: Modification
 end_date: 'Date de fin'
 export_all_results: 'Exporter tous les résultats'
@@ -105,6 +106,7 @@ survey_form_description: Description
 survey_parameters: 'Paramètres du sondage'
 survey_parameters_edition: 'Modification des paramètres du sondage'
 survey_results: 'Résultats du sondage'
+thanks_for_answering_msg: Merci d'avoir répondu au sondage.
 title: Titre
 title_creation: 'Création d''un titre'
 title_edition: 'Modification du titre'
@@ -114,3 +116,4 @@ unpublished_user_message: 'Le sondage n''est pas encore publié.'
 vertical: Vertical
 view_question_btn_explanation: 'Aperçu de la question'
 view_survey_results: 'Voir les résultats du sondage'
+view_your_answers: Voir vos réponses
