@@ -572,10 +572,10 @@ class WidgetManager
             $width = isset($values[4]) ? $values[4] : 4;
             $height = isset($values[5]) ? $values[5] : 3;
             $tab = $this->om->getRepository('ClarolineCoreBundle:Home\HomeTab')->findOneBy(['workspace' => $workspace, 'name' => $name]);
-            $widgetInstance = $this->om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
-                ->findOneBy(['workspace' => $workspace, 'name' => $title]);
+            $widgetHomeTabConfig = $this->om->getRepository('ClarolineCoreBundle:Widget\WidgetHomeTabConfig')
+                ->findByWorkspaceAndHomeTabAndWidgetInstanceName($workspace, $tab, $title);
 
-            if (!$widgetInstance) {
+            if (!$widgetHomeTabConfig) {
                 $widgetInstance = $this->createWidgetInstance(
                     $title,
                     $textWidget,
@@ -584,6 +584,7 @@ class WidgetManager
                 );
             } else {
                 $this->log("Widget {$title} already exists in workspace {$code}: Updating...");
+                $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
             }
 
             $simpleTextConfig = $this->container->get('claroline.manager.simple_text_manager')->getTextConfig($widgetInstance);
