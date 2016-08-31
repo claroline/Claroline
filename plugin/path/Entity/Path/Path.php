@@ -400,6 +400,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         }
 
         return [
+            'id' => $this->id,
             'name' => $this->getResourceNode()->getName(),
             'description' => $this->description,
             'breadcrumbs' => $this->breadcrumbs,

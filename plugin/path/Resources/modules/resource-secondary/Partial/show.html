@@ -1,0 +1,32 @@
+<ul class="nav nav-tabs resource-tabs">
+    <!-- Inherited resources -->
+    <li class="resource" role="presentation" data-ng-repeat="resource in resourcesSecondaryShowCtrl.inherited | filter:{isExcluded: false}">
+        <a href="{{ resource.url || ('claro_resource_open'|path:{node: resource.resourceId, resourceType: resource.type}) }}" role="button">
+            <!-- Resource lvl -->
+            <div class="lvl-indicator lvl lvl-{{ resource.parentStep.lvl }} lvl-bg"></div>
+
+            <!-- Resource icon -->
+            <img class="resource-icon"
+                 alt="{{ resource.mimeType }}"
+                 data-ng-if="0 !== resourcesSecondaryShowCtrl.resourceIcons.length"
+                 data-ng-src="{{ (resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'])|asset }}" />
+
+            <!-- Resource name -->
+            {{ resource.name }}
+        </a>
+    </li>
+
+    <!-- Owned resources -->
+    <li class="resource" role="presentation" data-ng-repeat="resource in resourcesSecondaryShowCtrl.resources">
+        <a href="{{ resource.url || ('claro_resource_open'|path:{node: resource.resourceId, resourceType: resource.type}) }}" role="button">
+            <!-- Resource icon -->
+            <img class="resource-icon"
+                 alt="{{ resource.mimeType }}"
+                 data-ng-if="0 !== resourcesSecondaryShowCtrl.resourceIcons.length"
+                 data-ng-src="{{ (resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'])|asset }}" />
+
+            <!-- Resource name -->
+            {{ resource.name }}
+        </a>
+    </li>
+</ul>

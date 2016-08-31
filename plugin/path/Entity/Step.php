@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Step.
  *
  * @ORM\Table("innova_step")
- * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\StepRepository")
+ * @ORM\Entity()
  */
 class Step implements \JsonSerializable
 {
@@ -79,7 +79,7 @@ class Step implements \JsonSerializable
      * Parent step.
      *
      * @var \Innova\PathBundle\Entity\Step
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Step", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -89,7 +89,7 @@ class Step implements \JsonSerializable
      * Children steps.
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * 
+     *
      * @ORM\OneToMany(targetEntity="Step", mappedBy="parent", indexBy="id", cascade={"persist", "remove"})
      * @ORM\OrderBy({"order" = "ASC"})
      */
@@ -99,7 +99,7 @@ class Step implements \JsonSerializable
      * Path.
      *
      * @var \Innova\PathBundle\Entity\Path\Path
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
      */
     protected $path;
@@ -278,7 +278,7 @@ class Step implements \JsonSerializable
      */
     public function setParent(Step $parent = null)
     {
-        if ($parent != $this->parent) {
+        if ($parent !== $this->parent) {
             $this->parent = $parent;
 
             if (null !== $parent) {
@@ -389,7 +389,7 @@ class Step implements \JsonSerializable
      */
     public function getDescription()
     {
-        if (!empty($this->activity) && ' ' != $this->activity->getDescription()) {
+        if (!empty($this->activity) && ' ' !== $this->activity->getDescription()) {
             return $this->activity->getDescription();
         }
 
@@ -537,7 +537,7 @@ class Step implements \JsonSerializable
 
                 /** @var \Innova\PathBundle\Entity\InheritedResource $inherited */
                 foreach ($inheritedResources as $inherited) {
-                    if ($inherited->getLvl() == $lvl) {
+                    if ($inherited->getLvl() === $lvl) {
                         // Resource is inherited from the searched level => get it
                         $propagated[] = $inherited->getResource()->getId();
                     }
@@ -635,7 +635,7 @@ class Step implements \JsonSerializable
             'who' => null,
             'where' => null,
             'duration' => null, // Duration in seconds
-            'accessibleFrom' => $accessibleFrom  instanceof \DateTime ? $accessibleFrom->format('Y-m-d H:i:s')  : null,
+            'accessibleFrom' => $accessibleFrom  instanceof \DateTime ? $accessibleFrom->format('Y-m-d H:i:s') : null,
             'accessibleUntil' => $accessibleUntil instanceof \DateTime ? $accessibleUntil->format('Y-m-d H:i:s') : null,
             'evaluationType' => null, // automatic/manual
         ];
@@ -705,7 +705,7 @@ class Step implements \JsonSerializable
 
             /** @var \Innova\PathBundle\Entity\InheritedResource $inherited */
             foreach ($this->inheritedResources as $inherited) {
-                if ($inherited->getResource()->getId() == $resource->getId()) {
+                if ($inherited->getResource()->getId() === $resource->getId()) {
                     $exist = true;
                     break;
                 }

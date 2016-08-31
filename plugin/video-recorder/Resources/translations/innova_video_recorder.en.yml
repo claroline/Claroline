@@ -1,39 +1,38 @@
 # c
-creating_resource: Creating resource
+creating_resource: 'Creating resource'
 config_update_error: Problem while updating video recorder configuration.
 config_update_success: Video recorder configuration update successfull.
 
 # d
-download_video: Download video file
-db_meter: Db meter
+download_video: 'Download video file'
+db_meter: 'Db meter'
 
 # i
 innova_video_recorder_config: Video recorder configuration
 
 # m
-my_recordings: My recordings
-max_recording_time: Maximum recording time:
+my_recordings: 'My recordings'
+max_recording_time: 'Maximum recording time: '
 
 # o
-ok: Validate
+ok: 'Validate'
 
 # r
-resource_name: Name:
-resource_name_placeholder: The resource name is mandatory.
-resource_creation_error: An error occured while creating resource.
-resource_creation_error_download: Please use the download button to save locally your video file.
-resource_modal_title: Video recorder
-retry: Retry
+resource_name: 'Name: '
+resource_name_placeholder: 'The resource name is mandatory.'
+resource_creation_error: 'An error occured while creating resource.'
+resource_creation_error_download: 'Please use the download button to save your video file locally.'
+resource_modal_title: 'Video recorder'
+retry: 'Retry'
 
 # s
-start_recording: Start recording
-stop_recording: Stop recording
-start: Start
-stop: Stop
-submit_config_label: Save configuration
+start_recording: 'Start recording'
+stop_recording: 'Stop recording'
+start: 'Start'
+stop: 'Stop'
 
 # v
 video_recorder_configuration_max_recording_time: Maximum recording time (Secondes, 0 = infinite)
 
 # w
-warning_message_record_end: Recording has ended<br/>Click Validate if it seems good to you else use the Retry button
+warning_message_record_end: 'The recording is finished.<br/>Click on "Validate" if it suits you or "Retry".<br/>(Retry will delete the current recording.)'

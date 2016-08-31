@@ -153,6 +153,11 @@ claro_resource:
     prefix: resource
     type: annotation
 
+claro_resource_icon:
+    resource: "@ClarolineCoreBundle/Controller/ResourceIconController.php"
+    prefix: resource_icon
+    type: annotation
+
 claro_resource_parameters:
     resource: "@ClarolineCoreBundle/Controller/ResourcePropertiesController.php"
     prefix: resource

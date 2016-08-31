@@ -11,13 +11,14 @@
 
 namespace Claroline\VideoPlayerBundle\Listener;
 
+use Claroline\CoreBundle\Event\InjectJavascriptEvent;
 use Claroline\CoreBundle\Event\PlayFileEvent;
+use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\ScormBundle\Event\ExportScormResourceEvent;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
-use Claroline\CoreBundle\Event\InjectJavascriptEvent;
 
 /**
  * @DI\Service("claroline.listener.video_player_listener")
@@ -52,13 +53,13 @@ class VideoPlayerListener extends ContainerAware
         $path = $this->fileDir.DIRECTORY_SEPARATOR.$event->getResource()->getHashName();
         $content = $this->templating->render(
             'ClarolineVideoPlayerBundle::video.html.twig',
-            array(
+            [
                 'workspace' => $event->getResource()->getResourceNode()->getWorkspace(),
                 'path' => $path,
                 'video' => $event->getResource(),
                 '_resource' => $event->getResource(),
                 'tracks' => $this->container->get('claroline.manager.video_player_manager')->getTracksByVideo($event->getResource()),
-            )
+            ]
         );
         $response = new Response($content);
         $event->setResponse($response);
@@ -73,8 +74,8 @@ class VideoPlayerListener extends ContainerAware
         $requestStack = $this->container->get('request_stack');
         $httpKernel = $this->container->get('http_kernel');
         $request = $requestStack->getCurrentRequest();
-        $params = array('_controller' => 'ClarolineVideoPlayerBundle:VideoPlayer:AdminOpen');
-        $subRequest = $request->duplicate(array(), null, $params);
+        $params = ['_controller' => 'ClarolineVideoPlayerBundle:VideoPlayer:AdminOpen'];
+        $subRequest = $request->duplicate([], null, $params);
         $response = $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();
@@ -89,7 +90,38 @@ class VideoPlayerListener extends ContainerAware
      */
     public function onInjectJs(InjectJavascriptEvent $event)
     {
-        $content = $this->templating->render('ClarolineVideoPlayerBundle::scripts.html.twig', array());
+        $content = $this->templating->render('ClarolineVideoPlayerBundle::scripts.html.twig', []);
         $event->addContent($content);
+    }
+
+    /**
+     * @param ExportScormResourceEvent $event
+     *
+     * @DI\Observe("export_scorm_file_video")
+     * @DI\Observe("export_scorm_file_audio")
+     */
+    public function onExportScorm(ExportScormResourceEvent $event)
+    {
+        $resource = $event->getResource();
+
+        $template = $this->container->get('templating')->render(
+            'ClarolineVideoPlayerBundle:Scorm:export.html.twig', [
+                '_resource' => $resource,
+                'tracks' => $this->container->get('claroline.manager.video_player_manager')->getTracksByVideo($resource),
+            ]
+        );
+
+        // Set export template
+        $event->setTemplate($template);
+
+        // Add Image file
+        $event->addFile('media_'.$resource->getResourceNode()->getId(), $resource->getHashName());
+
+        // Add assets
+        $event->addAsset('video.min.js', 'packages/video.js/dist/video.min.js');
+        $event->addAsset('video-js.min.css', 'packages/video.js/dist/video-js.min.css');
+        $event->addAsset('video-js.swf', 'packages/video.js/dist/video-js.swf');
+
+        $event->stopPropagation();
     }
 }

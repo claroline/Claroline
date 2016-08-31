@@ -127,12 +127,22 @@ abstract class AbstractScormManifest
             ->addAttribute('href', $resourceTemplate);
 
         // Add assets
+        if (!empty($resource['assets']) && is_array($resource['assets'])) {
+            $files = array_keys($resource['assets']);
+            foreach ($files as $fileHref) {
+                $resourceXML
+                    ->addChild('file')
+                    ->addAttribute('href', 'assets/'.$fileHref);
+            }
+        }
+
+        // Add uploaded files
         if (!empty($resource['files']) && is_array($resource['files'])) {
             $files = array_keys($resource['files']);
             foreach ($files as $fileHref) {
                 $resourceXML
                     ->addChild('file')
-                    ->addAttribute('href', 'assets/'.$fileHref);
+                    ->addAttribute('href', 'files/'.$fileHref);
             }
         }
 

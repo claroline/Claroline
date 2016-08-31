@@ -222,6 +222,67 @@ class CourseRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
+    public function findCoursesByUserFromList(
+        User $user,
+        array $coursesList = [],
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    ) {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Course c
+            WHERE c IN (:coursesList)
+            AND EXISTS (
+                SELECT csu
+                FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+                JOIN csu.session csus
+                WHERE csu.user = :user
+                AND csus.course = c
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('coursesList', $coursesList);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSearchedCoursesByUserFromList(
+        User $user,
+        array $coursesList = [],
+        $search = '',
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    ) {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Course c
+            WHERE c IN (:coursesList)
+            AND EXISTS (
+                SELECT csu
+                FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+                JOIN csu.session csus
+                WHERE csu.user = :user
+                AND csus.course = c
+            )
+            AND (
+                UPPER(c.title) LIKE :search
+                OR UPPER(c.code) LIKE :search
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('coursesList', $coursesList);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     public function findCoursesByIds(array $ids, $orderedBy = 'title', $order = 'ASC')
     {
         $dql = "

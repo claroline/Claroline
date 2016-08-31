@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Innova\PathBundle\Entity\Path\Path;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -182,6 +183,85 @@ class PathListener extends ContainerAware
         // If we directly copy all the published Entities we can't remap some relations
         $event->setPublish(false);
         $event->stopPropagation();
+    }
+
+    public function onExportScorm(ExportScormResourceEvent $event)
+    {
+        /** @var Path $path */
+        $path = $event->getResource();
+
+        // Add embed resources
+        // Decode the path structure to grab embed resources ans generate resource URL
+        // We export them before rendering the template to have the correct structure in twig/angular
+        $structure = json_decode($path->getStructure());
+        if ($structure && !empty($structure->steps)) {
+            foreach ($structure->steps as $step) {
+                $this->exportStepResources($event, $step);
+            }
+        }
+
+        $template = $this->container->get('templating')->render(
+            'InnovaPathBundle:Scorm:export.html.twig', [
+                '_resource' => $path,
+                'structure' => json_encode($structure),
+            ]
+        );
+
+        // Set export template
+        $event->setTemplate($template);
+
+        // Set translations
+        $event->addTranslationDomain('path_wizards');
+
+        // Add template required files
+        $webpack = $this->container->get('claroline.extension.webpack');
+        $event->addAsset('tinymce.jquery.min.js', 'bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js');
+        $event->addAsset('jquery.tinymce.min.js', 'bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js');
+        $event->addAsset('commons.js', $webpack->hotAsset('dist/commons.js', true));
+        $event->addAsset('claroline-distribution-plugin-path-player.js', $webpack->hotAsset('dist/claroline-distribution-plugin-path-player.js', true));
+        $event->addAsset('claroline-home.js', 'bundles/clarolinecore/js/home/home.js');
+        $event->addAsset('claroline-common.js', 'bundles/clarolinecore/js/common.js');
+        $event->addAsset('claroline-tinymce.js', $webpack->hotAsset('dist/claroline-distribution-main-core-tinymce.js', true));
+
+        $event->addAsset('wizards.js', 'vendor/innovapath/wizards.js');
+        $event->addAsset('wizards.css', 'vendor/innovapath/wizards.css');
+
+        $event->stopPropagation();
+    }
+
+    private function exportStepResources(ExportScormResourceEvent $event, \stdClass $step)
+    {
+        if (!empty($step->primaryResource)) {
+            foreach ($step->primaryResource as $primary) {
+                $resource = $this->getResource($primary->resourceId);
+                $event->addEmbedResource($resource);
+                // Generate resource URL
+                $primary->url = '../scos/resource_'.$primary->resourceId.'.html';
+            }
+        }
+
+        if (!empty($step->resources)) {
+            foreach ($step->resources as $secondary) {
+                $resource = $this->getResource($secondary->resourceId);
+                $event->addEmbedResource($resource);
+                // Generate resource URL
+                $secondary->url = '../scos/resource_'.$secondary->resourceId.'.html';
+            }
+        }
+
+        if (!empty($step->children)) {
+            foreach ($step->children as $child) {
+                $this->exportStepResources($event, $child);
+            }
+        }
+    }
+
+    private function getResource($nodeId)
+    {
+        $node = $this->container->get('claroline.manager.resource_manager')->getById($nodeId);
+        $resource = $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($node);
+
+        return $resource;
     }
 
     private function copyStepContent(\stdClass $step, ResourceNode $newParent, array $processedNodes = [])

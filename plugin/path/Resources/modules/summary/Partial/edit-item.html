@@ -1,0 +1,57 @@
+<li>
+    <!-- Item row -->
+    <div ui-tree-handle class="tree-item" data-ng-class="{ 'active-step': summaryItemEditCtrl.current.stepId == summaryItemEditCtrl.step.id || (!summaryItemEditCtrl.current.stepId && 0 == summaryItemEditCtrl.step.lvl) }"
+         data-ng-mouseenter="showButtons = true"
+         data-ng-mouseleave="showButtons = false">
+
+        <!-- Level indicator -->
+        <div class="lvl-indicator lvl lvl-{{ summaryItemEditCtrl.step.lvl }} lvl-bg">
+            <!-- Drag&Drop handler -->
+            <div data-ng-if="summaryItemEditCtrl.step.lvl !== 0" data-ui-tree-handle="" class="step-drag-handler" data-toggle="tooltip" data-container="body" title="{{ 'step_drag' | trans:{}:'path_wizards' }}">
+                <span class="fa fa-ellipsis-v"></span>
+                <span class="sr-only">{{ 'step_drag' | trans:{}:'path_wizards' }}</span>
+            </div>
+        </div>
+
+        <!-- Step name -->
+        <div class="step lvl lvl-{{ summaryItemEditCtrl.step.lvl }}" data-nodrag="" data-ng-class="{ 'lvl-text': summaryItemEditCtrl.current.stepId == summaryItemEditCtrl.step.id }" data-ng-click="summaryItemEditCtrl.goTo(step)">
+            <!-- Collapse / Expand button -->
+            <a class="step-toggle" href="" data-ng-click="summaryItemEditCtrl.collapsed = !summaryItemEditCtrl.collapsed; $event.stopPropagation();" data-ng-show="0 !== summaryItemEditCtrl.step.children.length" role="button">
+                <span class="fa fa-fw" data-ng-class="{'fa-caret-right': summaryItemEditCtrl.collapsed, 'fa-caret-down': !summaryItemEditCtrl.collapsed}"></span>
+            </a>
+
+            {{ summaryItemEditCtrl.step.name | truncate }}
+        </div>
+
+        <!-- Actions available -->
+        <span data-ng-show="showButtons || summaryItemEditCtrl.current.stepId == summaryItemEditCtrl.step.id || (!summaryItemEditCtrl.current.stepId && 0 == summaryItemEditCtrl.step.lvl)" class="step-actions btn-group" data-nodrag="">
+            <!-- Add child -->
+            <a href="" role="button" class="btn btn-default btn-sm" data-ng-click="summaryItemEditCtrl.addStep()" data-ng-disabled="summaryItemEditCtrl.step.lvl >= summaryItemEditCtrl.maxDepth" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_wizards' }}">
+                <span class="fa fa-plus"></span>
+                <span class="sr-only">{{ 'step_add_child' | trans:{}:'path_wizards' }}</span>
+            </a>
+
+            <!-- Copy to clipboard -->
+            <a href="" role="button" class="btn btn-default btn-sm" data-ng-click="summaryItemEditCtrl.copy()" data-ng-disabled="summaryItemEditCtrl.clipboardDisabled.copy" data-toggle="tooltip" data-container="body" title="{{ 'step_copy' | trans:{}:'path_wizards' }}">
+                <span class="fa fa-copy"></span>
+                <span class="sr-only">{{ 'step_copy' | trans:{}:'path_wizards' }}</span>
+            </a>
+
+            <!-- Paste from clipboard -->
+            <a href="" role="button" class="btn btn-default btn-sm" data-ng-click="summaryItemEditCtrl.paste()" data-ng-disabled="summaryItemEditCtrl.clipboardDisabled.paste" data-toggle="tooltip" data-container="body" title="{{ 'step_paste' | trans:{}:'path_wizards' }}">
+                <span class="fa fa-paste"></span>
+                <span class="sr-only">{{ 'step_paste' | trans:{}:'path_wizards' }}</span>
+            </a>
+
+            <!-- Delete step -->
+            <a href="" role="button" class="btn btn-danger btn-sm" data-ng-click="summaryItemEditCtrl.removeStep()" data-toggle="tooltip" data-container="body" title="{{ 'step_delete' | trans:{}:'path_wizards' }}">
+                <span class="fa fa-trash-o"></span>
+                <span class="sr-only">{{ 'step_delete' | trans:{}:'path_wizards' }}</span>
+            </a>
+        </span>
+    </div>
+
+    <ul ui-tree-nodes class="step-children lvl lvl-{{ summaryItemEditCtrl.step.lvl }} lvl-border" data-ng-model="summaryItemEditCtrl.step.children" data-ng-hide="summaryItemEditCtrl.collapsed">
+        <summary-item-edit data-ui-tree-node="" data-ng-repeat="step in summaryItemEditCtrl.step.children" data-step="step"></summary-item-edit>
+    </ul>
+</li>

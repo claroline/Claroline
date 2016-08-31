@@ -90,6 +90,48 @@ class CourseSessionUserRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
+    public function findSessionUsersByUserFromCoursesList(User $user, array $coursesList = [], $executeQuery = true)
+    {
+        $dql = '
+            SELECT csu
+            FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+            JOIN csu.session s
+            JOIN s.course c
+            WHERE csu.user = :user
+            AND c IN (:coursesList)
+            ORDER BY c.title ASC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('coursesList', $coursesList);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSessionUsersByUserAndSearchFromCoursesList(User $user, array $coursesList = [], $search = '', $executeQuery = true)
+    {
+        $dql = '
+            SELECT csu
+            FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+            JOIN csu.session s
+            JOIN s.course c
+            WHERE csu.user = :user
+            AND c IN (:coursesList)
+            AND (
+                UPPER(c.title) LIKE :search
+                OR UPPER(s.name) LIKE :search
+            )
+            ORDER BY c.title ASC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('coursesList', $coursesList);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     public function findSessionUsersBySession(CourseSession $session, $executeQuery = true)
     {
         $dql = '
@@ -220,6 +262,68 @@ class CourseSessionUserRepository extends EntityRepository
         $query->setParameter('user', $user);
         $query->setParameter('userType', $userType);
         $query->setParameter('now', new \DateTime());
+
+        return $query->getResult();
+    }
+
+    public function findSessionUsersByUserAndStatusAndDate(User $user, $status, \DateTime $date, $search = '', $coursesList = null)
+    {
+        $dql = '
+            SELECT csu
+            FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+            JOIN csu.session s
+            JOIN s.course c
+            WHERE csu.user = :user
+        ';
+
+        if (!is_null($coursesList)) {
+            $dql .= '
+                AND c IN (:coursesList)
+            ';
+        }
+        switch ($status) {
+            case 'open':
+                $dql .= '
+                    AND s.startDate <= :date
+                    AND s.endDate >= :date
+                ';
+                break;
+            case 'closed':
+                $dql .= '
+                    AND s.endDate < :date
+                ';
+                break;
+            case 'unstarted':
+                $dql .= '
+                    AND s.startDate > :date
+                ';
+                break;
+        }
+        $dql .= '
+            AND (
+                UPPER(c.title) LIKE :search
+                OR UPPER(s.name) LIKE :search
+            )
+        ';
+
+        if ($status === 'closed') {
+            $dql .= '
+                ORDER BY s.endDate ASC
+            ';
+        } else {
+            $dql .= '
+                ORDER BY s.startDate ASC
+            ';
+        }
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        if (!is_null($coursesList)) {
+            $query->setParameter('coursesList', $coursesList);
+        }
+        $query->setParameter('date', $date);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
 
         return $query->getResult();
     }

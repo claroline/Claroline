@@ -3,6 +3,16 @@
 {% block path_wizard %}
     <div data-ng-cloak="" data-ng-app="PathPlayerApp" class="path-player">
         {# Path Player (convert Path Entity into a JSON object to make it understandable by AngularJS) #}
-        <path-show data-id="{{ _resource.id }}" data-path="{{ _resource | json_encode }}" data-user-progression="{{ userProgression | json_encode }}" data-edit-enabled="{{ editEnabled }}" data-total-steps="{{ totalSteps }}" data-total-progression="{{ totalProgression }}"></path-show>
+        <path-show
+                data-path="{{ _resource | json_encode }}"
+                data-user-progression="{{ userProgression | json_encode }}"
+                data-edit-enabled="{{ editEnabled }}"
+                data-total-progression="{{ totalProgression }}">
+        </path-show>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-path-player.js') }}"></script>
 {% endblock %}

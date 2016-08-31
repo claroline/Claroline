@@ -66,14 +66,26 @@
             </span>
         </div>
     </div>
-    <button id="calendar-view-button"
-            class="btn btn-default pull-right"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="{{ 'calendar_view'|trans({}, 'cursus') }}"
-    >
-        <i class="fa fa-calendar"></i>
-    </button>
+    <div class="btn-group pull-right">
+        <button id="calendar-view-button"
+                class="btn btn-default"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-container="#courses-list-{{ widgetInstance.getId() }}"
+                title="{{ 'calendar_view'|trans({}, 'cursus') }}"
+        >
+            <i class="fa fa-calendar"></i>
+        </button>
+        <button id="chronologic-view-button"
+                class="btn btn-default"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-container="#courses-list-{{ widgetInstance.getId() }}"
+                title="{{ 'chronologic_view'|trans({}, 'cursus') }}"
+        >
+            <i class="fa fa-hourglass-o"></i>
+        </button>
+    </div>
 </div>
 
 {% if courses|length > 0 %}

@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Form;
 
 use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -19,15 +20,32 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class MyCoursesWidgetConfigurationType extends AbstractType
 {
+    private $extra;
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, $extra = [])
     {
         $this->translator = $translator;
+        $this->extra = $extra;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add(
+            'cursus',
+            'entity',
+            [
+                'class' => 'ClarolineCursusBundle:Cursus',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.course IS NULL')
+                        ->orderBy('c.title', 'ASC');
+                },
+                'property' => 'titleAndCode',
+                'required' => false,
+                'label' => 'cursus',
+            ]
+        );
         $builder->add(
             'defaultMode',
             'choice',
@@ -36,8 +54,83 @@ class MyCoursesWidgetConfigurationType extends AbstractType
                 'choices' => [
                     CoursesWidgetConfig::MODE_LIST => $this->translator->trans('list_view', [], 'cursus'),
                     CoursesWidgetConfig::MODE_CALENDAR => $this->translator->trans('calendar_view', [], 'cursus'),
+                    CoursesWidgetConfig::MODE_CHRONOLOGIC => $this->translator->trans('chronologic_view', [], 'cursus'),
                 ],
                 'label' => 'default_mode',
+            ]
+        );
+        $builder->add(
+            'openSessionsColor',
+            'text',
+            [
+                'required' => false,
+                'mapped' => false,
+                'data' => isset($this->extra['openSessionsColor']) ? $this->extra['openSessionsColor'] : null,
+                'label' => 'color',
+                'translation_domain' => 'platform',
+                'attr' => ['class' => 'cursus_colorpicker'],
+            ]
+        );
+        $builder->add(
+            'closedSessionsColor',
+            'text',
+            [
+                'required' => false,
+                'mapped' => false,
+                'data' => isset($this->extra['closedSessionsColor']) ? $this->extra['closedSessionsColor'] : null,
+                'label' => 'color',
+                'translation_domain' => 'platform',
+                'attr' => ['class' => 'cursus_colorpicker'],
+            ]
+        );
+        $builder->add(
+            'unstartedSessionsColor',
+            'text',
+            [
+                'required' => false,
+                'mapped' => false,
+                'data' => isset($this->extra['unstartedSessionsColor']) ? $this->extra['unstartedSessionsColor'] : null,
+                'label' => 'color',
+                'translation_domain' => 'platform',
+                'attr' => ['class' => 'cursus_colorpicker'],
+            ]
+        );
+        $builder->add(
+            'displayClosedSessions',
+            'checkbox',
+            [
+                'mapped' => false,
+                'data' => isset($this->extra['displayClosedSessions']) ? $this->extra['displayClosedSessions'] : true,
+                'label' => 'display',
+                'translation_domain' => 'platform',
+            ]
+        );
+        $builder->add(
+            'displayUnstartedSessions',
+            'checkbox',
+            [
+                'mapped' => false,
+                'data' => isset($this->extra['displayUnstartedSessions']) ? $this->extra['displayUnstartedSessions'] : true,
+                'label' => 'display',
+                'translation_domain' => 'platform',
+            ]
+        );
+        $builder->add(
+            'disableClosedSessionsWs',
+            'checkbox',
+            [
+                'mapped' => false,
+                'data' => isset($this->extra['disableClosedSessionsWs']) ? $this->extra['disableClosedSessionsWs'] : false,
+                'label' => 'disable_workspace_link',
+            ]
+        );
+        $builder->add(
+            'disableUnstartedSessionsWs',
+            'checkbox',
+            [
+                'mapped' => false,
+                'data' => isset($this->extra['disableUnstartedSessionsWs']) ? $this->extra['disableUnstartedSessionsWs'] : false,
+                'label' => 'disable_workspace_link',
             ]
         );
     }
