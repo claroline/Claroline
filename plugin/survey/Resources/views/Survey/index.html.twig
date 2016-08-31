@@ -68,7 +68,7 @@
             </div>
         {% endif %}
                 
-        {% if status == 'published' or status == 'closed' %}
+        {% if status == 'published' or (status == 'closed' and hasAnswered) %}
             <hr>
             <a href="{{ path('claro_survey_answer_form', {'survey': surveyId}) }}"
                class="btn btn-primary margin-bottom-md"
