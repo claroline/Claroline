@@ -958,8 +958,8 @@ class SurveyController extends Controller
 
         switch ($questionType) {
 
-            case 'multiple_choice_single' :
-            case 'multiple_choice_multiple' :
+            case 'multiple_choice_single':
+            case 'multiple_choice_multiple':
 
                 return $this->displayMultipleChoiceQuestion($question);
             case 'open_ended':
@@ -1914,8 +1914,8 @@ class SurveyController extends Controller
 
         switch ($questionType) {
 
-            case 'multiple_choice_single' :
-            case 'multiple_choice_multiple' :
+            case 'multiple_choice_single':
+            case 'multiple_choice_multiple':
 
                 return $this->showMultipleChoiceQuestionResults(
                     $survey,
@@ -2051,8 +2051,8 @@ class SurveyController extends Controller
 
         switch ($questionType) {
 
-            case 'multiple_choice_single' :
-            case 'multiple_choice_multiple' :
+            case 'multiple_choice_single':
+            case 'multiple_choice_multiple':
 
                 return $this->displayMultipleChoiceQuestion(
                     $question,
