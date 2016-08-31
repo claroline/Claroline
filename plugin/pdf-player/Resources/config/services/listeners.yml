@@ -5,3 +5,4 @@ services:
         - [setContainer, ["@service_container"]]
     tags:
         - { name: kernel.event_listener, event: play_file_application_pdf, method: onOpenPdf }
+        - { name: kernel.event_listener, event: export_scorm_file_application_pdf, method: onExportScorm }

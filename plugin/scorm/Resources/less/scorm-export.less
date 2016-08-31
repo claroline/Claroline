@@ -1,0 +1,11 @@
+/**
+ * Overrides some Claroline app styles for SCORM export
+ * (e.g. the top padding for header)
+ */
+
+// Bootstrap variables
+@import "../../../../../../../web/packages/bootstrap/less/variables.less";
+
+body.scorm-export {
+    padding-top: floor(@grid-gutter-width / 2);
+}

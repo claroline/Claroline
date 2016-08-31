@@ -5,6 +5,37 @@
       novalidate
 >
     <div class="panel-body">
-        {{ form_widget(form) }}
+        {{ form_row(form.cursus) }}
+        {{ form_row(form.defaultMode) }}
+        <hr>
+        <h3 class="text-center">{{ 'chronological_view_options'|trans({}, 'cursus') }}</h3>
+        <h4>{{ 'open_sessions'|trans({}, 'cursus') }}</h4>
+        {{ form_row(form.openSessionsColor) }}
+        <h4>{{ 'closed_sessions'|trans({}, 'cursus') }}</h4>
+        {{ form_row(form.closedSessionsColor) }}
+        {{ form_row(form.displayClosedSessions) }}
+        {{ form_row(form.disableClosedSessionsWs) }}
+        <h4>{{ 'unstarted_sessions'|trans({}, 'cursus') }}</h4>
+        {{ form_row(form.unstartedSessionsColor) }}
+        {{ form_row(form.displayUnstartedSessions) }}
+        {{ form_row(form.disableUnstartedSessionsWs) }}
     </div>
 </form>
+
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/frontend/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}">
+    </script>
+    <script>
+        $('body').on('focus', '.cursus_colorpicker', function () {
+            $(this).colorpicker();
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ asset('bundles/frontend/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css')}}"
+    >
+{% endblock %}

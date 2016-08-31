@@ -340,7 +340,7 @@ class CursusManager
         $maxUsers = null,
         $defaultSessionDuration = 1,
         $withSessionEvent = true,
-        array $validators
+        array $validators = []
     ) {
         $course = new Course();
         $course->setTitle($title);
@@ -3967,14 +3967,14 @@ class CursusManager
         $content = $documentModel->getContent();
 
         switch ($type) {
-            case DocumentModel::SESSION_INVITATION :
+            case DocumentModel::SESSION_INVITATION:
                 $session = $this->courseSessionRepo->findOneById($sourceId);
                 $users = $this->getUsersBySessionAndType($session, CourseSessionUser::LEARNER);
                 $title = $this->translator->trans('session_invitation', [], 'cursus');
                 $body = $this->convertKeysForSession($session, $content);
                 $this->sendInvitation($title, $users, $body);
                 break;
-            case DocumentModel::SESSION_EVENT_INVITATION :
+            case DocumentModel::SESSION_EVENT_INVITATION:
                 $sessionEvent = $this->sessionEventRepo->findOneById($sourceId);
                 $session = $sessionEvent->getSession();
                 $users = $this->getUsersBySessionAndType($session, CourseSessionUser::LEARNER);
@@ -3982,7 +3982,7 @@ class CursusManager
                 $body = $this->convertKeysForSessionEvent($sessionEvent, $content);
                 $this->sendInvitation($title, $users, $body);
                 break;
-            case DocumentModel::SESSION_CERTIFICATE :
+            case DocumentModel::SESSION_CERTIFICATE:
                 $session = $this->courseSessionRepo->findOneById($sourceId);
                 $users = $this->getUsersBySessionAndType($session, CourseSessionUser::LEARNER);
                 $body = $this->convertKeysForSession($session, $content);
@@ -4109,7 +4109,7 @@ class CursusManager
             $this->cursusRepo->findCursusByParent($parent, $orderedBy, $order) :
             $this->cursusRepo->findSearchedCursusByParent($parent, $search, $orderedBy, $order);
 
-        return $withPager ? $this->pagerFactory->createPagerFromArray($cursus, $page, $max) :  $cursus;
+        return $withPager ? $this->pagerFactory->createPagerFromArray($cursus, $page, $max) : $cursus;
     }
 
     public function getCursusByCodeWithoutId($code, $id)
@@ -4174,6 +4174,23 @@ class CursusManager
         $courses = empty($search) ?
             $this->courseRepo->findCoursesByUser($user, $orderedBy, $order) :
             $this->courseRepo->findSearchedCoursesByUser($user, $search, $orderedBy, $order);
+
+        return $withPager ? $this->pagerFactory->createPagerFromArray($courses, $page, $max) : $courses;
+    }
+
+    public function getCoursesByUserFromList(
+        User $user,
+        array $coursesList,
+        $search = '',
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $withPager = true,
+        $page = 1,
+        $max = 20
+    ) {
+        $courses = empty($search) ?
+            $this->courseRepo->findCoursesByUserFromList($user, $coursesList, $orderedBy, $order) :
+            $this->courseRepo->findSearchedCoursesByUserFromList($user, $coursesList, $search, $orderedBy, $order);
 
         return $withPager ? $this->pagerFactory->createPagerFromArray($courses, $page, $max) : $courses;
     }
@@ -4440,7 +4457,7 @@ class CursusManager
      * Access to SessionEventRepository methods *
      *********************************************/
 
-    public function getEventsBySession(CourseSession $session, $orderedBy = 'creationDate', $order = 'ASC', $executeQuery = true)
+    public function getEventsBySession(CourseSession $session, $orderedBy = 'startDate', $order = 'ASC', $executeQuery = true)
     {
         return $this->sessionEventRepo->findEventsBySession($session, $orderedBy, $order, $executeQuery);
     }
@@ -4473,6 +4490,13 @@ class CursusManager
         return $search === '' ?
             $this->sessionUserRepo->findSessionUsersByUser($user, $executeQuery) :
             $this->sessionUserRepo->findSessionUsersByUserAndSearch($user, $search, $executeQuery);
+    }
+
+    public function getSessionUsersByUserFromCoursesList(User $user, array $coursesList = [], $search = '', $executeQuery = true)
+    {
+        return $search === '' ?
+            $this->sessionUserRepo->findSessionUsersByUserFromCoursesList($user, $coursesList, $executeQuery) :
+            $this->sessionUserRepo->findSessionUsersByUserAndSearchFromCoursesList($user, $coursesList, $search, $executeQuery);
     }
 
     public function getSessionUsersBySession(CourseSession $session, $executeQuery = true)
@@ -4538,6 +4562,13 @@ class CursusManager
             );
 
         return $withPager ? $this->pagerFactory->createPagerFromArray($users, $page, $max) : $users;
+    }
+
+    public function getSessionUsersByUserAndSessionStatus(User $user, $status, $currentDate = null, $search = '', $coursesList = null)
+    {
+        $now = $currentDate ? $currentDate : new \DateTime();
+
+        return $this->sessionUserRepo->findSessionUsersByUserAndStatusAndDate($user, $status, $now, $search, $coursesList);
     }
 
     /**************************************************

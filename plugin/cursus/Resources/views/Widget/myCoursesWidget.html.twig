@@ -14,6 +14,13 @@
                     {'widgetInstance': widgetInstance.getId()}
                 ))
             }}
+        {% elseif mode == 2 %}
+            {{
+                render(controller(
+                    'ClarolineCursusBundle:Cursus:myCoursesListForWidgetChronologic',
+                    {'widgetInstance': widgetInstance.getId()}
+                ))
+            }}
         {% endif %}
     </div>
 </div>
@@ -37,7 +44,19 @@
       (function () {
         const currentUserId = {{ user.getId() }}
         const widgetInstanceId = {{ widgetInstance.getId() }}
-        let mode = ({{ mode }} === 1) ? 'calendar' : 'list'
+        let mode
+
+        switch ({{ mode }}) {
+        case 0 :
+          mode = 'list'
+          break
+        case 1 :
+          mode = 'calendar'
+          break
+        case 2 :
+          mode = 'chronologic'
+          break
+        }
         let currentSearch = ''
         let currentMax = 20
         let currentOrderedBy = 'title'
@@ -55,8 +74,11 @@
         let selectedCommentId = null
 
         function refreshCoursesList () {
-          const route = mode === 'list' ?
-            Routing.generate(
+          let url
+
+          switch (mode) {
+          case 'list' :
+            url = Routing.generate(
               'claro_cursus_my_courses_list_for_widget',
               {
                 'widgetInstance': widgetInstanceId,
@@ -65,14 +87,23 @@
                 'orderedBy': currentOrderedBy,
                 'order': currentOrder
               }
-            ) :
-            Routing.generate(
+            )
+            break
+          case 'calendar' :
+            url = Routing.generate(
               'claro_cursus_my_courses_list_for_widget_calendar',
               {'widgetInstance': widgetInstanceId, 'search': currentSearch}
             )
-
+            break
+          case 'chronologic' :
+            url = Routing.generate(
+              'claro_cursus_my_courses_list_for_widget_chronologic',
+              {'widgetInstance': widgetInstanceId, 'search': currentSearch}
+            )
+            break
+          }
           $.ajax({
-            url: route,
+            url: url,
             type: 'GET',
             success: function (datas) {
               listElement.html(datas)
@@ -87,16 +118,23 @@
         widgetElement.on('click', 'a', function (event) {
           if (!$(this).hasClass('standard-link')) {
             event.preventDefault()
-            const element = event.currentTarget
-            const route = $(element).attr('href')
 
-            $.ajax({
-              url: route,
-              type: 'GET',
-              success: function (datas) {
-                listElement.html(datas)
-              }
-            })
+            if ($(this).hasClass('chronologic-link')) {
+              const sessionId = $(this).data('session-id')
+              const url = Routing.generate('claro_cursus_my_courses_widget_session_informations', {widgetInstance: widgetInstanceId, session: sessionId})
+              window.Claroline.Modal.fromUrl(url)
+            } else {
+              const element = event.currentTarget
+              const route = $(element).attr('href')
+
+              $.ajax({
+                url: route,
+                type: 'GET',
+                success: function (datas) {
+                  listElement.html(datas)
+                }
+              })
+            }
           }
         })
 
@@ -142,6 +180,22 @@
             success: function (datas) {
               listElement.html(datas)
               mode = 'list'
+            }
+          })
+        })
+
+        widgetElement.on('click', '#chronologic-view-button', function () {
+          const route = Routing.generate(
+            'claro_cursus_my_courses_list_for_widget_chronologic',
+            {'widgetInstance': widgetInstanceId, 'search': currentSearch}
+          )
+
+          $.ajax({
+            url: route,
+            type: 'GET',
+            success: function (datas) {
+              listElement.html(datas)
+              mode = 'chronologic'
             }
           })
         })

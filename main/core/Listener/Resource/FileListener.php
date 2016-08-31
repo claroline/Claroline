@@ -13,25 +13,28 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
+use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Form\FileType;
+use Claroline\CoreBundle\Library\Utilities\FileSystem;
+use Claroline\CoreBundle\Library\Utilities\ZipArchive;
+use Claroline\CoreBundle\Listener\NoHttpRequestException;
+use Claroline\ScormBundle\Event\ExportScormResourceEvent;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Form\FileType;
-use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\DownloadResourceEvent;
-use Claroline\CoreBundle\Event\CustomActionResourceEvent;
-use Claroline\CoreBundle\Library\Utilities\ZipArchive;
 
 /**
  * @DI\Service("claroline.listener.file_listener")
@@ -76,10 +79,10 @@ class FileListener implements ContainerAwareInterface
         $form = $this->container->get('form.factory')->create(new FileType(true), new File());
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'resourceType' => 'file',
-            )
+            ]
         );
         $event->setResponseContent($content);
         $event->stopPropagation();
@@ -102,10 +105,10 @@ class FileListener implements ContainerAwareInterface
 
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'resourceType' => $event->getResourceType(),
-            )
+            ]
         );
         $event->setErrorFormContent($content);
         $event->stopPropagation();
@@ -118,7 +121,6 @@ class FileListener implements ContainerAwareInterface
      */
     public function onApiCreate(CreateResourceEvent $event)
     {
-        $request = $this->container->get('request');
         $form = new FileType(true);
         $form->enableApi();
         $form = $this->container->get('form.factory')->create($form, new File());
@@ -139,16 +141,12 @@ class FileListener implements ContainerAwareInterface
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $workspaceCode = $event->getResource()
-            ->getResourceNode()
-            ->getWorkspace()
-            ->getCode();
         $pathName = $this->container->getParameter('claroline.param.files_directory').
             DIRECTORY_SEPARATOR.
             $event->getResource()->getHashName();
 
         if (file_exists($pathName)) {
-            $event->setFiles(array($pathName));
+            $event->setFiles([$pathName]);
         }
 
         $event->stopPropagation();
@@ -191,26 +189,21 @@ class FileListener implements ContainerAwareInterface
     {
         $ds = DIRECTORY_SEPARATOR;
         $resource = $event->getResource();
-        $mimeType = $resource->getResourceNode()->getMimeType();
-        $eventName = strtolower(str_replace('/', '_', 'play_file_'.$mimeType));
-        $eventName = str_replace('"', '', $eventName);
+
         $playEvent = $this->container->get('claroline.event.event_dispatcher')
             ->dispatch(
-                $eventName,
+                $this->generateEventName($resource->getResourceNode(), 'play_file_'),
                 'PlayFile',
-                array($resource)
+                [$resource]
             );
 
         if ($playEvent->getResponse() instanceof Response) {
             $response = $playEvent->getResponse();
         } else {
-            $mimeElements = explode('/', $mimeType);
-            $baseType = strtolower($mimeElements[0]);
-            $fallBackPlayEventName = 'play_file_'.$baseType;
             $fallBackPlayEvent = $this->container->get('claroline.event.event_dispatcher')->dispatch(
-                $fallBackPlayEventName,
+                $this->generateEventName($resource->getResourceNode(), 'play_file_', true),
                 'PlayFile',
-                array($resource)
+                [$resource]
             );
             if ($fallBackPlayEvent->getResponse() instanceof Response) {
                 $response = $fallBackPlayEvent->getResponse();
@@ -248,6 +241,28 @@ class FileListener implements ContainerAwareInterface
     }
 
     /**
+     * @DI\Observe("export_scorm_file")
+     *
+     * @param ExportScormResourceEvent $event
+     */
+    public function onExportScorm(ExportScormResourceEvent $event)
+    {
+        $resource = $event->getResource();
+
+        // Forward event to the correct player
+        $this->container->get('event_dispatcher')
+            ->dispatch($this->generateEventName($resource->getResourceNode(), 'export_scorm_file_'), $event);
+
+        if (!$event->isPopulated()) {
+            // Event not caught, try the fallback event name
+            $this->container->get('event_dispatcher')
+                ->dispatch($this->generateEventName($resource->getResourceNode(), 'export_scorm_file_', true), $event);
+        }
+
+        $event->stopPropagation();
+    }
+
+    /**
      * @DI\Observe("update_file_file")
      *
      * @param CustomActionResourceEvent $event
@@ -258,12 +273,29 @@ class FileListener implements ContainerAwareInterface
             throw new NoHttpRequestException();
         }
 
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCoreBundle:File:updateFileForm';
         $params['file'] = $event->getResource()->getId();
-        $subRequest = $this->request->getCurrentRequest()->duplicate(array(), null, $params);
+        $subRequest = $this->request->getCurrentRequest()->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
+    }
+
+    private function generateEventName(ResourceNode $node, $eventPrefix, $useBaseType = false)
+    {
+        $mimeType = $node->getMimeType();
+
+        if ($useBaseType) {
+            $mimeElements = explode('/', $mimeType);
+            $suffix = strtolower($mimeElements[0]);
+        } else {
+            $suffix = $mimeType;
+        }
+
+        $eventName = strtolower(str_replace('/', '_', $eventPrefix.$suffix));
+        $eventName = str_replace('"', '', $eventName);
+
+        return $eventName;
     }
 
     /**
@@ -314,7 +346,7 @@ class FileListener implements ContainerAwareInterface
             $perms = $this->container->get('claroline.manager.rights_manager')->getCustomRoleRights($root);
             $resources = $this->uploadDir($extractPath, $root, $perms, true, $published);
             $this->om->endFlushSuite();
-            $fs = new \Claroline\CoreBundle\Library\Utilities\FileSystem();
+            $fs = new FileSystem();
             $fs->rmdir($extractPath, true);
 
             return $resources;
@@ -361,8 +393,6 @@ class FileListener implements ContainerAwareInterface
                     $published
                 );
             }
-
-//            $this->om->forceFlush();
         }
 
         // set order manually as we are inside a flush suite
@@ -445,7 +475,7 @@ class FileListener implements ContainerAwareInterface
             $tmpFile = $form->get('file')->getData();
 
             //the tmpFile may require some encoding.
-            if ($encoding = $event->getEncoding() !== 'none') {
+            if ($event->getEncoding() !== 'none') {
                 $tmpFile = $this->encodeFile($tmpFile, $event->getEncoding());
             }
 
@@ -474,7 +504,7 @@ class FileListener implements ContainerAwareInterface
                     $mimeType,
                     $workspace
                 );
-                $event->setResources(array($file));
+                $event->setResources([$file]);
                 $event->stopPropagation();
             }
         }
@@ -483,7 +513,7 @@ class FileListener implements ContainerAwareInterface
     private function encodeFile($file, $encoding)
     {
         $eventName = 'encode_file_'.$encoding;
-        $encodeEvent = $this->container->get('claroline.event.event_dispatcher')->dispatch($eventName, 'EncodeFile', array($file));
+        $encodeEvent = $this->container->get('claroline.event.event_dispatcher')->dispatch($eventName, 'EncodeFile', [$file]);
 
         return $encodeEvent->getFile();
     }
