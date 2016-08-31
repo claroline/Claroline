@@ -478,7 +478,10 @@ MatchQuestionCtrl.prototype.updateStudentData = function () {
  */
 MatchQuestionCtrl.prototype.reset = function reset() {
   if (this.question.toBind) {
-    jsPlumb.detachEveryConnection()
+    var retrievedConnections = jsPlumb.getConnections()
+    for (var i = 0; i < retrievedConnections.length; i++) {
+      jsPlumb.detach(retrievedConnections[i])
+    }
     this.connections.splice(0, this.connections.length)
   } else {
     // init all proposals ui
@@ -620,6 +623,7 @@ MatchQuestionCtrl.prototype.handleBeforeDrop = function handleBeforeDrop(data) {
  * @returns {undefined}
  */
 MatchQuestionCtrl.prototype.removeConnection = function removeConnection(connection) {
+  console.log(connection);
   if (connection._jsPlumb.hoverPaintStyle.strokeStyle === '#FC0000') {
     var sourceId = connection.sourceId.replace('draggable_', '')
     var targetId = connection.targetId.replace('droppable_', '')
