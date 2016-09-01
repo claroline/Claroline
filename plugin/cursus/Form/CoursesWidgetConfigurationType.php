@@ -37,7 +37,6 @@ class CoursesWidgetConfigurationType extends AbstractType
             [
                 'class' => 'ClarolineCursusBundle:Cursus',
                 'query_builder' => function (EntityRepository $er) {
-
                     return $er->createQueryBuilder('c')
                         ->where('c.course IS NULL')
                         ->orderBy('c.title', 'ASC');
