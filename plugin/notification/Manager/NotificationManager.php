@@ -423,7 +423,6 @@ class NotificationManager
         } catch (NotValidCurrentPageException $e) {
             throw new NotFoundHttpException();
         }
-        $colorChooser = $this->buildColorChooser();
         $notifications = $this->renderNotifications($pager->getCurrentPageResults());
 
         return [
