@@ -157,6 +157,9 @@ class PathListener extends ContainerAware
         $path->setName($pathToCopy->getName());
         $path->setDescription($pathToCopy->getDescription());
 
+        // we set the old structure to be able to insert the path in DB tp have its ID
+        $path->setStructure($pathToCopy->getStructure());
+
         $parent = $event->getParent();
         $structure = json_decode($pathToCopy->getStructure());
 
@@ -166,15 +169,20 @@ class PathListener extends ContainerAware
             $processedNodes = $this->copyStepContent($step, $parent, $processedNodes);
         }
 
+        $om->persist($path);
+
         // End the transaction
         $om->endFlushSuite();
         // We need the resources ids
         $om->forceFlush();
 
-        //update the structure tree
+        // update the structure tree
         foreach ($structure->steps as $step) {
             $this->updateStep($step, $processedNodes);
         }
+
+        // Replace the Path ID by the new one
+        $structure->id = $path->getId();
 
         $path->setStructure(json_encode($structure));
         $event->setCopy($path);
@@ -355,12 +363,18 @@ class PathListener extends ContainerAware
     private function updateStep(\stdClass $step, array $processedNodes = [])
     {
         if (!empty($step->primaryResource) && !empty($step->primaryResource[0])) {
-            $this->replaceResourceId($step->primaryResource[0], $processedNodes);
+            $primaryFound = $this->replaceResourceId($step->primaryResource[0], $processedNodes);
+            if (!$primaryFound) {
+                unset($step->primaryResource[0]);
+            }
         }
 
         if (!empty($step->resources)) {
-            foreach ($step->resources as $resource) {
-                $this->replaceResourceId($resource, $processedNodes);
+            foreach ($step->resources as $index => $resource) {
+                $resourceFound = $this->replaceResourceId($resource, $processedNodes);
+                if (!$resourceFound) {
+                    unset($step->resources[$index]);
+                }
             }
         }
 
@@ -376,7 +390,14 @@ class PathListener extends ContainerAware
     {
         $manager = $this->container->get('claroline.manager.resource_manager');
         $resourceNode = $manager->getNode($resource->resourceId);
-        $resource->resourceId = $processedNodes[$resourceNode->getId()]->getId();
+
+        $found = false;
+        if ($processedNodes[$resourceNode->getId()]) {
+            $resource->resourceId = $processedNodes[$resourceNode->getId()]->getId();
+            $found = true;
+        }
+
+        return $found;
     }
 
     public function onUnlock(CustomActionResourceEvent $event)
