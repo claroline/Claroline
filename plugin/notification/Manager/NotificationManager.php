@@ -209,7 +209,7 @@ class NotificationManager
                 $event = $this->eventDispatcher->dispatch($eventName, $event);
                 $views[$notificationView->getId().''] = $event->getResponseContent();
             }
-            if ($notificationView->getStatus() == false) {
+            if ($notificationView->getStatus() === false) {
                 array_push(
                     $unviewedNotificationIds,
                     $notificationView->getId()
@@ -435,7 +435,7 @@ class NotificationManager
 
     public function getUserNotifications($userId, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $executeQuery = true)
     {
-        if ($notificationParameters == null) {
+        if (is_null($notificationParameters)) {
             $notificationParameters = $this
                 ->notificationParametersManager
                 ->getParametersByUserId($userId);
