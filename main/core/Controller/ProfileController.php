@@ -221,15 +221,16 @@ class ProfileController extends Controller
             'OPEN', $this->toolManager->getAdminToolByName('user_management')
         );
 
-        if (null !== $user && !$isAdmin && !$isGrantedUserAdmin) {
-            throw new AccessDeniedException();
-        }
-
         if (null === $user) {
             $user = $loggedUser;
         }
 
         $editYourself = $user->getId() === $loggedUser->getId();
+
+        if (null !== $user && !$isAdmin && !$isGrantedUserAdmin && !$editYourself) {
+            throw new AccessDeniedException();
+        }
+
         $userRole = $this->roleManager->getUserRoleByUser($user);
         $roles = $this->roleManager->getPlatformRoles($user);
         $accesses = $this->profilePropertyManager->getAccessesForCurrentUser();

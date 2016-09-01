@@ -11,13 +11,14 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use Claroline\CoreBundle\Manager\WorkspaceManager;
-use JMS\DiExtraBundle\Annotation as DI;
-use Doctrine\ORM\EntityManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Utilities as SecurityUtilities;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @DI\Service
@@ -59,12 +60,21 @@ class WorkspaceAccessExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
+        return [
             'get_workspaces_accesses' => new \Twig_Function_Method($this, 'getAccesses'),
             'has_role_access_to_workspace' => new \Twig_Function_Method($this, 'hasRoleAccess'),
             'has_access_to_workspace' => new \Twig_Function_Method($this, 'hasAccess'),
             'has_role_in_workspace' => new \Twig_Function_Method($this, 'hasRoleInWorkspace'),
-        );
+            'is_date_access_valid' => new \Twig_Function_Method($this, 'isDateAccessValid'),
+        ];
+    }
+
+    public function isDateAccessValid(Workspace $workspace)
+    {
+        $isEndValid = $workspace->getEndDate() ? $workspace->getEndDate() > new \DateTime() : true;
+        $isStartValid = $workspace->getStartDate() ? $workspace->getStartDate() < new \DateTime() : true;
+
+        return $isEndValid && $isStartValid;
     }
 
     public function getAccesses(array $workspaces)
@@ -77,9 +87,9 @@ class WorkspaceAccessExtension extends \Twig_Extension
         $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\Workspace')
             ->find($workspaceId);
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
-        $tools = $repo->findDisplayedByRolesAndWorkspace(array($role), $workspace);
+        $tools = $repo->findDisplayedByRolesAndWorkspace([$role], $workspace);
 
-        return count($tools) > 0 ? true : false;
+        return count($tools) > 0 && $this->isDateAccessValid($workspace);
     }
 
     public function hasAccess($workspaceId)

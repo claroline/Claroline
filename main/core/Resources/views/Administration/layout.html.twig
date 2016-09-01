@@ -13,12 +13,12 @@
     <div class="panel panel-default">
 
         {% if not is_send_datas_confirmed() %}
-            <div class="alert-update-mode">
+            <div class="alert-claroline-danger">
                 <a href="{{ path('claro_admin_send_datas_confirm_form') }}">
                     <h4 class="label label-danger">
                         {{ 'infos_sending_has_not_been_accepted'|trans({}, 'platform') }}
                             <i class="fa fa-question-circle"
-                               data-container=".alert-update-mode"
+                               data-container=".alert-claroline-danger"
                                data-toggle="tooltip"
                                data-placement="bottom"
                                title="{{ 'infos_sending_bar_msg'|trans({}, 'platform') }}"
