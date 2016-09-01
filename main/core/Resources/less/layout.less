@@ -1035,7 +1035,7 @@ form .global-error {
     text-align: center;
 }
 
-.alert-update-mode {
+.alert-claroline-danger {
   width: 100%;
   position: fixed;
   z-index: 10000; /* @todo: somehow find a "good" z-index */
@@ -1829,4 +1829,9 @@ body.mce-fullscreen .modal.fullscreen {
 //fix for datatable
 .dt.dt-loaded {
     z-index: 0;
+}
+
+.unclickable {
+    pointer-events: none;
+    cursor: default;
 }
