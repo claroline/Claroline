@@ -287,9 +287,10 @@ abstract class QtiImport
     private function createDirQTIImport($ws)
     {
         $manager = $this->container->get('claroline.manager.resource_manager');
-        $parent = $this->om
+        //might be null
+        $parent = $ws ? $this->om
                        ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                       ->findWorkspaceRoot($ws);
+                       ->findWorkspaceRoot($ws) : null;
         $dir = new Directory();
         $dir->setName('QTI_SYS');
         $abstractResource = $manager->create(
@@ -310,9 +311,11 @@ abstract class QtiImport
      */
     private function getDirQTIImport($ws)
     {
-        $this->dirQTI = $this->om
+        if (!$ws) {
+            $this->dirQTI = $this->om
                              ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                              ->findOneBy(['workspace' => $ws, 'name' => 'QTI_SYS']);
+        }
 
         if (!is_object($this->dirQTI)) {
             $this->createDirQTIImport($ws);
