@@ -2,22 +2,22 @@
 
 namespace Icap\NotificationBundle\Manager;
 
+use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Icap\NotificationBundle\Entity\FollowerResource;
-use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\NotificationBundle\Entity\Notification;
 use Icap\NotificationBundle\Entity\NotificationPluginConfiguration;
 use Icap\NotificationBundle\Entity\NotificationViewer;
-use Doctrine\ORM\EntityManager;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
+use Icap\NotificationBundle\Library\ColorChooser;
+use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Icap\NotificationBundle\Library\ColorChooser;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -158,7 +158,7 @@ class NotificationManager
 
     protected function getUsersToNotifyForNotifiable(NotifiableInterface $notifiable)
     {
-        $userIds = array();
+        $userIds = [];
         if ($notifiable->getSendToFollowers() && $notifiable->getResource() !== null) {
             $userIds = $this->getFollowersByResourceIdAndClass(
                 $notifiable->getResource()->getId(),
@@ -173,7 +173,7 @@ class NotificationManager
 
         $userIds = array_unique($userIds);
         $excludeUserIds = $notifiable->getExcludeUserIds();
-        $removeUserIds = array();
+        $removeUserIds = [];
 
         if (!empty($excludeUserIds)) {
             $userIds = array_diff($userIds, $excludeUserIds);
@@ -191,9 +191,9 @@ class NotificationManager
 
     protected function renderNotifications($notificationsViews)
     {
-        $views = array();
+        $views = [];
         $colorChooser = $this->buildColorChooser();
-        $unviewedNotificationIds = array();
+        $unviewedNotificationIds = [];
         foreach ($notificationsViews as $notificationView) {
             $notification = $notificationView->getNotification();
             $iconKey = $notification->getIconKey();
@@ -209,7 +209,7 @@ class NotificationManager
                 $event = $this->eventDispatcher->dispatch($eventName, $event);
                 $views[$notificationView->getId().''] = $event->getResponseContent();
             }
-            if ($notificationView->getStatus() == false) {
+            if ($notificationView->getStatus() === false) {
                 array_push(
                     $unviewedNotificationIds,
                     $notificationView->getId()
@@ -218,7 +218,7 @@ class NotificationManager
         }
         $this->markNotificationsAsViewed($unviewedNotificationIds);
 
-        return array('views' => $views, 'colors' => $colorChooser->getColorObjectArray());
+        return ['views' => $views, 'colors' => $colorChooser->getColorObjectArray()];
     }
 
     /**
@@ -266,7 +266,7 @@ class NotificationManager
     {
         $followerResults = $this->getFollowerResourceRepository()->
             findFollowersByResourceIdAndClass($resourceId, $resourceClass);
-        $followerIds = array();
+        $followerIds = [];
         foreach ($followerResults as $followerResult) {
             array_push($followerIds, $followerResult['id']);
         }
@@ -287,7 +287,7 @@ class NotificationManager
      *
      * @return Notification
      */
-    public function createNotification($actionKey, $iconKey, $resourceId = null, $details = array(), $doer = null)
+    public function createNotification($actionKey, $iconKey, $resourceId = null, $details = [], $doer = null)
     {
         $notification = new Notification();
         $notification->setActionKey($actionKey);
@@ -305,13 +305,13 @@ class NotificationManager
         }
 
         if (!isset($details['doer']) && !empty($doerId)) {
-            $details['doer'] = array(
+            $details['doer'] = [
                 'id' => $doerId,
                 'firstName' => $doer->getFirstName(),
                 'lastName' => $doer->getLastName(),
                 'avatar' => $doer->getPicture(),
                 'publicUrl' => $doer->getPublicUrl(),
-            );
+            ];
         }
         $notification->setDetails($details);
         $notification->setUserId($doerId);
@@ -423,19 +423,18 @@ class NotificationManager
         } catch (NotValidCurrentPageException $e) {
             throw new NotFoundHttpException();
         }
-        $colorChooser = $this->buildColorChooser();
         $notifications = $this->renderNotifications($pager->getCurrentPageResults());
 
-        return array(
+        return [
             'pager' => $pager,
             'notificationViews' => $notifications['views'],
             'colors' => $notifications['colors'],
-        );
+        ];
     }
 
     public function getUserNotifications($userId, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $executeQuery = true)
     {
-        if ($notificationParameters == null) {
+        if (is_null($notificationParameters)) {
             $notificationParameters = $this
                 ->notificationParametersManager
                 ->getParametersByUserId($userId);
@@ -443,8 +442,9 @@ class NotificationManager
 
         if ($isRss) {
             $visibleTypes = $notificationParameters->getRssEnabledTypes();
+        } else {
+            $visibleTypes = $notificationParameters->getDisplayEnabledTypes();
         }
-        $visibleTypes = $notificationParameters->getDisplayEnabledTypes();
 
         $query = $this
             ->getNotificationViewerRepository()
@@ -482,10 +482,10 @@ class NotificationManager
     public function getFollowerResource($userId, $resourceId, $resourceClass)
     {
         $followerResource = $this->getFollowerResourceRepository()->findOneBy(
-            array(
+            [
                 'followerId' => $userId,
                 'hash' => $this->getHash($resourceId, $resourceClass),
-            )
+            ]
         );
 
         return $followerResource;
