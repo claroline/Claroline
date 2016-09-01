@@ -1,9 +1,5 @@
 <?php
 
-/**
- * To import a question in QTI.
- */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -28,7 +24,6 @@ abstract class QtiImport
 
     /**
      * Constructor.
-     *
      *
      * @param \Claroline\CoreBundle\Persistence\ObjectManager                                     $om                    Dependency Injection
      * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorageInterface Dependency Injection
@@ -280,7 +275,6 @@ abstract class QtiImport
 
     /**
      * Create a directory in the personal workspace of user to import documents.
-     *
      *
      * @param Claroline\CoreBundle\Entity\Workspace
      */
