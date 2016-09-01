@@ -2,14 +2,14 @@
 
 namespace Claroline\CoreBundle\Listener\Transfer;
 
-use Claroline\CoreBundle\Event\RichTextFormatEvent;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Routing\RouterInterface;
-use Claroline\CoreBundle\Library\Transfert\RichTextFormatter;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\RichTextFormatEvent;
+use Claroline\CoreBundle\Library\Transfert\RichTextFormatter;
+use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @DI\Service()
@@ -83,10 +83,10 @@ class ImgFormatListener
                             true
                         );
                         $el['item']['parent'] = 'data_folder';
-                        $el['item']['roles'] = array(array('role' => array(
+                        $el['item']['roles'] = [['role' => [
                             'name' => 'ROLE_USER',
                             'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('file')),
-                        )));
+                        ]]];
                         $_data['data']['items'][] = $el;
                     }
                 }
@@ -115,7 +115,7 @@ class ImgFormatListener
             $parent = $this->formatter->findParentFromDataUid($uid);
             $el = $this->formatter->findItemFromUid($uid);
             $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                ->findOneBy(array('parent' => $parent, 'name' => $el['name']));
+                ->findOneBy(['parent' => $parent, 'name' => $el['name']]);
 
             if ($node) {
                 $toReplace = $this->generateDisplayedUrlForTinyMce($node, $match);
@@ -165,7 +165,7 @@ class ImgFormatListener
         $width = $imgdata[1];
         $height = $imgdata[2];
         $style = $imgdata[3];
-        $url = $this->router->generate('claro_file_get_media', array('node' => $node->getId()));
+        $url = $this->router->generate('claro_file_get_media', ['node' => $node->getId()]);
         $img = '<img ';
 
         if ($width !== '') {

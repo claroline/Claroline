@@ -48,7 +48,6 @@ abstract class QtiImport
         $this->question->setDateCreate(new \Datetime());
         $this->question->setUser($this->user);
         $this->question->setCategory($this->qtiCat);
-     //   $this->question->setDescription($this->getPrompt());
         $this->getDescription();
         $this->question->setInvite($this->getPrompt());
         $this->question->setType($type);
@@ -82,7 +81,7 @@ abstract class QtiImport
                              ->getRepository('UJMExoBundle:Category')
                              ->findOneBy(['value' => 'QTI',
                                                'user' => $this->user->getId(), ]);
-        if ($this->qtiCat == null) {
+        if ($this->qtiCat === null) {
             $this->createQTICategory();
         }
     }
@@ -136,7 +135,7 @@ abstract class QtiImport
         foreach ($ib->childNodes as $child) {
             if ($child->nodeType === XML_CDATA_SECTION_NODE || $child->nodeType === XML_TEXT_NODE) {
                 $desc .= $child->textContent;
-            } elseif ($child->nodeName == 'a' || $child->nodeName == 'img') {
+            } elseif ($child->nodeName === 'a' || $child->nodeName === 'img') {
                 $desc .= $this->domElementToString($child);
                 $ib->removeChild($child);
             }
@@ -144,14 +143,14 @@ abstract class QtiImport
         foreach ($ib->getElementsByTagName('img') as $img) {
             $node = $img->parentNode;
             $i = 0;
-            while ($i == 0) {
-                if (($node->nodeName == 'itemBody') || ($node->nodeName == 'prompt') || ($node->nodeName == 'simpleChoice') || ($node->nodeName == 'simpleAssociableChoice')) {
+            while ($i === 0) {
+                if (($node->nodeName === 'itemBody') || ($node->nodeName === 'prompt') || ($node->nodeName === 'simpleChoice') || ($node->nodeName === 'simpleAssociableChoice')) {
                     ++$i;
                 } else {
                     $node = $node->parentNode;
                 }
             }
-            if ($node->nodeName == 'itemBody') {
+            if ($node->nodeName === 'itemBody') {
                 $desc .= $this->domElementToString($img);
             }
         }
@@ -191,8 +190,8 @@ abstract class QtiImport
                                     $ws,
                                     $this->dirQTI
                                 );
-            if ($ob->parentNode->nodeName != 'selectPointInteraction' &&
-                    $ob->parentNode->nodeName != 'hotspotInteraction') {
+            if ($ob->parentNode->nodeName !== 'selectPointInteraction' &&
+                    $ob->parentNode->nodeName !== 'hotspotInteraction') {
                 $elements[] = [$ob, $abstractResource->getResourceNode()];
             }
         }

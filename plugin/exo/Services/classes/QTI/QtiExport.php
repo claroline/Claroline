@@ -19,13 +19,13 @@ abstract class QtiExport
     protected $qtiRepos;
     protected $node;
     protected $document;
-    protected $responseDeclaration = array();
+    protected $responseDeclaration = [];
     protected $nbResponseDeclaration = 0;
     protected $outcomeDeclaration;
     protected $modalFeedback;
     protected $itemBody;
     protected $question;
-    protected $resourcesLinked = array();
+    protected $resourcesLinked = [];
 
     /**
      * Constructor.
@@ -143,7 +143,7 @@ abstract class QtiExport
         $dom = new \DOMDocument();
         //For avoided to have a string only with spaces
         $describe = ltrim($this->question->getDescription());
-        if ($describe != null && $describe != '') {
+        if ($describe !== null && $describe !== '') {
             $body = $this->qtiExportObject($describe);
             foreach ($body->childNodes as $child) {
                 $node = $dom->importNode($child, true);
@@ -184,12 +184,12 @@ abstract class QtiExport
     {
         $urlExplode = explode('/', $path);
         $idNode = end($urlExplode);
-        $objSrc = $this->doctrine->getManager()->getRepository('ClarolineCoreBundle:Resource\File')->findOneBy(array('resourceNode' => $idNode));
+        $objSrc = $this->doctrine->getManager()->getRepository('ClarolineCoreBundle:Resource\File')->findOneBy(['resourceNode' => $idNode]);
         $src = $this->container->getParameter('claroline.param.files_directory').'/'.$objSrc->getHashName();
         $name = $objSrc->getResourceNode()->getName();
         $dest = $this->qtiRepos->getUserDir().$name;
         copy($src, $dest);
-        $ressource = array('name' => $name, 'url' => $src);
+        $ressource = ['name' => $name, 'url' => $src];
         $this->resourcesLinked[] = $ressource;
 
         return $objSrc;
@@ -264,7 +264,7 @@ abstract class QtiExport
             $object->appendChild($objecttxt);
             $object->setAttribute('type', $file->getResourceNode()->getMimeType());
             //Creating one table to replace the tags
-            $elements[] = array($object, $img);
+            $elements[] = [$object, $img];
         }
         //Replaces image tag by the object tag
         if (!empty($elements)) {
@@ -289,7 +289,7 @@ abstract class QtiExport
             $object->setAttribute('data', $file->getResourceNode()->getName());
             $object->setAttribute('type', $file->getResourceNode()->getMimeType());
             //Creating one table to replace the tags
-            $elements[] = array($object, $aTag);
+            $elements[] = [$object, $aTag];
         }
         //Replaces image tag by the object tag
         if (!empty($elements)) {

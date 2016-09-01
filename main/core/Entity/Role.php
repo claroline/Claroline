@@ -11,19 +11,19 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use RuntimeException;
-use Symfony\Component\Security\Core\Role\RoleInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Facet\PanelFacetRole;
-use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
+use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
+use RuntimeException;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
