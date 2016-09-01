@@ -1,5 +1,5 @@
 Add server: 'Ajouter un serveur'
-Allow account creation at the first login: 'Permettre la création d'un compte lors de la première connexion'
+Allow account creation at the first login: Permettre la création d'un compte lors de la première connexion
 Export LDAP users: 'Exporter les utilisateurs LDAP'
 LDAP settings: 'Paramètres LDAP'
 Save settings: 'Enregistrer les paramètres'
