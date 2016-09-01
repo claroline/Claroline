@@ -623,7 +623,6 @@ MatchQuestionCtrl.prototype.handleBeforeDrop = function handleBeforeDrop(data) {
  * @returns {undefined}
  */
 MatchQuestionCtrl.prototype.removeConnection = function removeConnection(connection) {
-  console.log(connection);
   if (connection._jsPlumb.hoverPaintStyle.strokeStyle === '#FC0000') {
     var sourceId = connection.sourceId.replace('draggable_', '')
     var targetId = connection.targetId.replace('droppable_', '')
