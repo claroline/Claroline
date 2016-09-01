@@ -8,12 +8,15 @@ add_session: Add a training session
 application_date: Application date
 blocking: Blocking
 calendar_view: Calendar view
+calendar_view_options: Calendar view options
 chronologic_view: Chronologic view
 chronological_view_options: Chronological view options
 click_on_link_below_to_confirm_request: Please click on link below to confirm request
 closed_session_events: Closed session events
 closed_sessions: Closed sessions
 collaborator: Collaborator
+collapse_courses: Collapse courses
+collapse_sessions: Collapse sessions
 course: Training
 course_code: Training code
 course_creation: Training creation
@@ -128,7 +131,9 @@ learner: Learner
 learner_role_name: Learner role
 learners: Learners
 list_view: List view
+list_view_options: List view options
 location_extra: Extra infos
+location_to_specify: Location to specify
 locations: Locations
 locations_management: Locations management
 manager: Manager
@@ -186,7 +191,7 @@ placeholder_session_name_message: This placeholder will be replaced by the name 
 placeholder_session_start_message: This placeholder will be replaced by the start date of the session
 placeholder_session_trainers_message: This placeholder will be replaced by the list of the session trainers
 public_registration: Public registration
-public_sessions_only: Public sessions only (Calendar view)
+public_sessions_only: Public sessions only
 public_unregistration: Public unregistration
 quantity: Quantity
 queued_user_transfer: Transfer queued user

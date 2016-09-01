@@ -60,7 +60,10 @@ class WidgetDisplayConfig
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance",
+     *     inversedBy="widgetDisplayConfigs"
+     * )
      * @ORM\JoinColumn(name="widget_instance_id", onDelete="CASCADE", nullable=false)
      * @Groups({"api_widget"})
      * @SerializedName("widgetInstance")
