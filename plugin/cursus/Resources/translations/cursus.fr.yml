@@ -8,12 +8,15 @@ add_session: Ajouter une session
 application_date: Date de soumission
 blocking: Bloquant
 calendar_view: Vue calendrier
+calendar_view_options: Options de la vue calendrier
 chronologic_view: Vue chronologique
 chronological_view_options: Options de la vue chronologique
 click_on_link_below_to_confirm_request: Veuillez cliquer sur le lien ci-dessous pour confirmer la demande
 closed_session_events: Séances terminées
 closed_sessions: Sessions terminées
 collaborator: Collaborateur
+collapse_courses: Déplier les formations
+collapse_sessions: Déplier les sessions
 course: Formation
 course_code: Code formation
 course_creation: Création d'une formation
@@ -128,7 +131,9 @@ learner: Apprenant
 learner_role_name: Rôle des apprenants
 learners: Apprenants
 list_view: Vue liste
+list_view_options: Options de la vue liste
 location_extra: Infos complémentaires
+location_to_specify: Lieu à préciser
 locations: Localisations
 locations_management: Gestion des localisations
 manager: Gestionnaire
@@ -187,7 +192,7 @@ placeholder_session_name_message: Ce placeholder sera remplacé par le nom de la
 placeholder_session_start_message: Ce placeholder sera remplacé par la date de début de la session
 placeholder_session_trainers_message: Ce placeholder sera remplacé par la liste des formateurs de la session
 public_registration: Inscription publique
-public_sessions_only: Seulement les sessions publiques (Vue calendrier)
+public_sessions_only: Seulement les sessions publiques
 public_unregistration: Désinscription publique
 quantity: Quantité
 queued_user_transfer: Transférer l'utilisateur en attente
