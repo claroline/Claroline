@@ -14,7 +14,10 @@
                 #}
                 {% for role in workspace.getRoles() %}
                     {% if roleHasAccess[role.getId()] is defined %}
-                        <a class="list-group-item" href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}?view_as={{ role.getName() }}">{{ role.getTranslationKey()|trans({}, 'platform') }}</a>
+                        <a class="list-group-item {% if false == has_role_access_to_workspace(role.getName(), workspace.getId()) %} unclickable {% endif %}"
+                           href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}?view_as={{ role.getName() }}">
+                           {{ role.getTranslationKey()|trans({}, 'platform') }}
+                       </a>
                     {% endif %}
                 {% endfor %}
             </div>

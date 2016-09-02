@@ -210,11 +210,13 @@
                                                                                             {{ tutor.getFirstName() }}
                                                                                             {{ tutor.getLastName() }}
                                                                                         </td>
-                                                                                        <td>
-                                                                                            <a href="{{ path('claro_message_form_for_user', {'user': tutor.getId()}) }}">
-                                                                                                <i class="fa fa-envelope"></i>
-                                                                                            </a>
-                                                                                        </td>
+                                                                                        {% if withMail %}
+                                                                                            <td>
+                                                                                                <a href="{{ path('claro_message_form_for_user', {'user': tutor.getId()}) }}">
+                                                                                                    <i class="fa fa-envelope"></i>
+                                                                                                </a>
+                                                                                            </td>
+                                                                                        {% endif %}
                                                                                     </tr>
                                                                                 {% endfor %}
                                                                             </table>
@@ -249,11 +251,13 @@
                                 {% for tutor in tutors %}
                                     <tr>
                                         <td>{{ tutor.getFirstName() }} {{ tutor.getLastName() }}</td>
-                                        <td>
-                                            <a href="{{ path('claro_message_form_for_user', {'user': tutor.getId()}) }}">
-                                                <i class="fa fa-envelope"></i>
-                                            </a>
-                                        </td>
+                                        {% if withMail %}
+                                            <td>
+                                                <a href="{{ path('claro_message_form_for_user', {'user': tutor.getId()}) }}">
+                                                    <i class="fa fa-envelope"></i>
+                                                </a>
+                                            </td>
+                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                             </table>

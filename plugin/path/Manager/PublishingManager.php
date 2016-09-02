@@ -253,23 +253,24 @@ class PublishingManager
 
                     // Retrieve resource node
                     $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource['resourceId']);
+                    if ($resourceNode) {
+                        if (!$inherited = $step->hasInheritedResource($resourceNode->getId())) {
+                            // Inherited resource doesn't exist => Create inherited resource
+                            $inherited = new InheritedResource();
+                        }
 
-                    if (!$inherited = $step->hasInheritedResource($resourceNode->getId())) {
-                        // Inherited resource doesn't exist => Create inherited resource
-                        $inherited = new InheritedResource();
+                        // Update inherited resource properties
+                        $inherited->setResource($resourceNode);
+                        $inherited->setLvl($resource['lvl']);
+
+                        // Add inherited resource to Step
+                        $step->addInheritedResource($inherited);
+
+                        $this->om->persist($inherited);
+
+                        // Store resource ID to clean step
+                        $inheritedResources[] = $resourceNode->getId();
                     }
-
-                    // Update inherited resource properties
-                    $inherited->setResource($resourceNode);
-                    $inherited->setLvl($resource['lvl']);
-
-                    // Add inherited resource to Step
-                    $step->addInheritedResource($inherited);
-
-                    $this->om->persist($inherited);
-
-                    // Store resource ID to clean step
-                    $inheritedResources[] = $resourceNode->getId();
                 }
             }
         }
@@ -299,7 +300,7 @@ class PublishingManager
         $toRemove = array_filter($existingSteps, function (Step $current) use ($neededSteps) {
             $removeStep = true;
             foreach ($neededSteps as $step) {
-                if ($current->getId() == $step->getId()) {
+                if ($current->getId() === $step->getId()) {
                     $removeStep = false;
                     break;
                 }
