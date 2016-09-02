@@ -12,17 +12,18 @@
 /*global UserPicker*/
 
 export default class CourseEditionModalCtrl {
-  constructor($rootScope, $http, $uibModalInstance, CourseService, title, course, callback) {
+  constructor($rootScope, $http, $uibModalInstance, FormBuilderService, CourseService, title, course, callback) {
     this.$rootScope = $rootScope
     this.$http = $http
     this.$uibModalInstance = $uibModalInstance
+    this.FormBuilderService = FormBuilderService
     this.title = title
     this.source = course
     this.callback = callback
     this.course = {
       title: null,
       code: null,
-      description: null,
+      description: '',
       icon: null,
       publicRegistration: false,
       publicUnregistration: false,
@@ -30,9 +31,9 @@ export default class CourseEditionModalCtrl {
       withSessionEvent: true,
       workspace: null,
       workspaceModel: null,
-      maxUsers: null,
-      tutorRoleName: null,
-      learnerRoleName: null,
+      maxUsers: '',
+      tutorRoleName: '',
+      learnerRoleName: '',
       userValidation: false,
       organizationValidation: false,
       registrationValidation: false,
@@ -176,6 +177,14 @@ export default class CourseEditionModalCtrl {
     } else {
       this.course['workspaceModel'] = null
     }
+
+    if (this.course['tutorRoleName'] === null) {
+      this.course['tutorRoleName'] = ''
+    }
+
+    if (this.course['learnerRoleName'] === null) {
+      this.course['learnerRoleName'] = ''
+    }
     this.course['validators'] = []
     this.validators.forEach(v => {
       this.course['validators'].push(v['id'])
@@ -187,7 +196,7 @@ export default class CourseEditionModalCtrl {
         if (d['status'] === 200) {
           if (d['data'] === 'null') {
             const url = Routing.generate('api_put_course_edition', {course: this.source['id']})
-            this.$http.put(url, {courseDatas: this.course}).then(d => {
+            this.FormBuilderService.submit(url, {courseDatas: this.course}).then(d => {
               this.callback(d['data'])
               this.$uibModalInstance.close()
             })
