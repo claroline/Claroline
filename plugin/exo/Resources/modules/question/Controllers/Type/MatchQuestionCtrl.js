@@ -478,10 +478,7 @@ MatchQuestionCtrl.prototype.updateStudentData = function () {
  */
 MatchQuestionCtrl.prototype.reset = function reset() {
   if (this.question.toBind) {
-    var retrievedConnections = jsPlumb.getConnections()
-    for (var i = 0; i < retrievedConnections.length; i++) {
-      jsPlumb.detach(retrievedConnections[i])
-    }
+    jsPlumb.detachEveryConnection()
     this.connections.splice(0, this.connections.length)
   } else {
     // init all proposals ui
