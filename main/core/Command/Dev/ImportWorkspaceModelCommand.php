@@ -18,7 +18,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -81,7 +80,6 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
             LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         ];
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-        $fs = new FileSystem();
         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
         $workspaceManager->setLogger($consoleLogger);
         $dirPath = $input->getArgument('directory_path');
