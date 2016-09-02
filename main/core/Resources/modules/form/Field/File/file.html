@@ -1,6 +1,6 @@
 <div>
-    <label class="control-label col-sm-2"> {{ fc.label|trans:{}:fc.translationDomain }} </label>
-    <div class="col-sm-10">
+    <label class="control-label col-sm-3"> {{ fc.label|trans:{}:fc.translationDomain }} </label>
+    <div class="col-sm-9">
         <input file-model="fc.ngModel" ng-disabled="fc.field[2].disabled" class="form-control" type="file" name="{{ fc.name }}"></input>
         <help-block ng-model="fc.ngModel" field="fc.field"></help-block>
     </div>

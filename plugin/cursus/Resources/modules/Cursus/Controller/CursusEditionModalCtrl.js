@@ -11,9 +11,10 @@
 /*global Translator*/
 
 export default class CursusEditionModalCtrl {
-  constructor($http, $uibModalInstance, CourseService, title, cursus, callback) {
+  constructor($http, $uibModalInstance, FormBuilderService, CourseService, title, cursus, callback) {
     this.$http = $http
     this.$uibModalInstance = $uibModalInstance
+    this.FormBuilderService = FormBuilderService
     this.callback = callback
     this.title = title
     this.source = cursus
@@ -21,10 +22,11 @@ export default class CursusEditionModalCtrl {
     this.cursus = {
       title: null,
       code: null,
-      description: null,
+      description: '',
+      icon: '',
       workspace: null,
       blocking: false,
-      color: null
+      color: ''
     }
     this.cursusErrors = {
       title: null,
@@ -74,6 +76,12 @@ export default class CursusEditionModalCtrl {
       this.cursusErrors['title'] = null
     }
 
+    if (!this.cursus['code']) {
+      this.cursusErrors['code'] = Translator.trans('form_not_blank_error', {}, 'cursus')
+    } else {
+      this.cursusErrors['code'] = null
+    }
+
     if (this.workspace) {
       this.cursus['workspace'] = this.workspace['id']
     } else {
@@ -86,7 +94,7 @@ export default class CursusEditionModalCtrl {
         if (d['status'] === 200) {
           if (d['data'] === 'null') {
             const url = Routing.generate('api_put_cursus_edition', {cursus: this.source['id']})
-            this.$http.put(url, {cursusDatas: this.cursus}).then(d => {
+            this.FormBuilderService.submit(url, {cursusDatas: this.cursus}).then(d => {
               this.callback(d['data'])
               this.$uibModalInstance.close()
             })

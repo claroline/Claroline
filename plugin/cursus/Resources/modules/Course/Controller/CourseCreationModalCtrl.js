@@ -12,17 +12,18 @@
 /*global UserPicker*/
 
 export default class CourseCreationModalCtrl {
-  constructor($rootScope, $http, $uibModalInstance, CourseService, title, cursusId, callback) {
+  constructor($rootScope, $http, $uibModalInstance, FormBuilderService, CourseService, title, cursusId, callback) {
     this.$rootScope = $rootScope
     this.$http = $http
     this.$uibModalInstance = $uibModalInstance
+    this.FormBuilderService = FormBuilderService
     this.title = title
     this.cursusId = cursusId
     this.callback = callback
     this.course = {
       title: null,
       code: null,
-      description: null,
+      description: '',
       icon: null,
       publicRegistration: false,
       publicUnregistration: false,
@@ -30,9 +31,9 @@ export default class CourseCreationModalCtrl {
       withSessionEvent: true,
       workspace: null,
       workspaceModel: null,
-      maxUsers: null,
-      tutorRoleName: null,
-      learnerRoleName: null,
+      maxUsers: '',
+      tutorRoleName: '',
+      learnerRoleName: '',
       userValidation: false,
       organizationValidation: false,
       registrationValidation: false,
@@ -136,6 +137,14 @@ export default class CourseCreationModalCtrl {
     } else {
       this.course['workspaceModel'] = null
     }
+
+    if (this.course['tutorRoleName'] === null) {
+      this.course['tutorRoleName'] = ''
+    }
+
+    if (this.course['learnerRoleName'] === null) {
+      this.course['learnerRoleName'] = ''
+    }
     this.course['validators'] = []
     this.validators.forEach(v => {
       this.course['validators'].push(v['id'])
@@ -149,7 +158,7 @@ export default class CourseCreationModalCtrl {
             const url = this.cursusId === null ?
               Routing.generate('api_post_course_creation') :
               Routing.generate('api_post_cursus_course_creation', {cursus: this.cursusId})
-            this.$http.post(url, {courseDatas: this.course}).then(d => {
+            this.FormBuilderService.submit(url, {courseDatas: this.course}).then(d => {
               this.callback(d['data'])
               this.$uibModalInstance.close()
             })
