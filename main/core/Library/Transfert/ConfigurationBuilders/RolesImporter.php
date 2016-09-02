@@ -136,7 +136,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
 
             if (!$role['role']['is_base_role']) {
                 //check if the role exists in case we're importing everything in an existing workspace
-                if (count($this->roleManager->getRolesByName("{$role['role']['name']}_{$workspace->getGuid()}")) == 0) {
+                if (count($this->roleManager->getRolesByName("{$role['role']['name']}_{$workspace->getGuid()}")) === 0) {
                     $roleEntity = $this->roleManager->createWorkspaceRole(
                         "{$role['role']['name']}_{$workspace->getGuid()}",
                         $role['role']['translation'],

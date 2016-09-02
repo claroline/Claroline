@@ -84,7 +84,6 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
         $fs = new FileSystem();
         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
         $workspaceManager->setLogger($consoleLogger);
-        $validator = $this->getContainer()->get('validator');
         $dirPath = $input->getArgument('directory_path');
         $username = $input->getArgument('owner_username');
         $om = $this->getContainer()->get('claroline.persistence.object_manager');
@@ -123,7 +122,6 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
                 $workspace = new Workspace();
                 $workspace->setCreator($user);
                 $newpath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.uniqid();
-                $extractPath = $fs->copy($pathinfo->getPathname(), $newpath);
                 $file = new File($newpath);
                 $workspaceManager->create($workspace, $file);
                 $output->writeln("<comment> Workspace {$i}/{$total} created. </comment>");

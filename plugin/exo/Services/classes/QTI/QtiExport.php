@@ -142,7 +142,7 @@ abstract class QtiExport
         $dom = new \DOMDocument();
         //For avoided to have a string only with spaces
         $describe = ltrim($this->question->getDescription());
-        if ($describe != null && $describe != '') {
+        if ($describe !== null && $describe !== '') {
             $body = $this->qtiExportObject($describe);
             foreach ($body->childNodes as $child) {
                 $node = $dom->importNode($child, true);

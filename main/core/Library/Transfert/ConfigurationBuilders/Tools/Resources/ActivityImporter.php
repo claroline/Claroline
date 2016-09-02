@@ -96,7 +96,7 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
 
     public function supports($type)
     {
-        return $type == 'yml' ? true : false;
+        return $type === 'yml' ? true : false;
     }
 
     public function validate(array $data)
