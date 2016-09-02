@@ -136,7 +136,7 @@ class ImgFormatListener
             $matchReplaced
         );
 
-        if (count($matchReplaced)  > 0) {
+        if (count($matchReplaced) > 0) {
             $el = $matchReplaced[0];
             //grep the width
             preg_match('#(.*)width="([^"]+)(.*)#', $el, $widths);
