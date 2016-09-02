@@ -37,9 +37,15 @@ class AdditionalInstaller extends BaseInstaller
         }
 
         if (version_compare($currentVersion, '5.1.0', '<') && version_compare($targetVersion, '5.1.0', '>=')) {
-            $updater010209 = new Updater\Updater050100($this->container);
-            $updater010209->setLogger($this->logger);
-            $updater010209->postUpdate();
+            $updater050100 = new Updater\Updater050100($this->container);
+            $updater050100->setLogger($this->logger);
+            $updater050100->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '7.1.0', '<')) {
+            $updater080000 = new Updater\Updater070100($this->container);
+            $updater080000->setLogger($this->logger);
+            $updater080000->postUpdate();
         }
 
         return $this;

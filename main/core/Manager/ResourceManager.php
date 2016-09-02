@@ -929,11 +929,11 @@ class ResourceManager
         $count = count($nodes);
         $nodes[] = $resourceNode;
         $softDelete = $this->platformConfigHandler->getParameter('resource_soft_delete');
-
         $this->om->startFlushSuite();
         $this->log('Looping through '.$count.' children...');
 
         foreach ($nodes as $node) {
+            $eventSoftDelete = false;
             $this->log('Removing '.$node->getName().'['.$node->getResourceType()->getName().':id:'.$node->getId().']');
             $resource = $this->getResourceFromNode($node);
             /*
@@ -947,6 +947,8 @@ class ResourceManager
                         'DeleteResource',
                         [$resource]
                     );
+
+                    $eventSoftDelete = $event->isSoftDelete();
 
                     foreach ($event->getFiles() as $file) {
                         if ($softDelete) {
@@ -1005,7 +1007,7 @@ class ResourceManager
                 // Delete all associated shortcuts
                 $this->deleteAssociatedShortcuts($node);
 
-                if ($softDelete || $event->isSoftDelete()) {
+                if ($softDelete || $eventSoftDelete) {
                     $node->setActive(false);
                     $this->om->persist($node);
                 } else {
