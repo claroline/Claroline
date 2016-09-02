@@ -3,7 +3,6 @@
 /**
  * To import a question in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -332,8 +331,8 @@ abstract class QtiImport
         $text = $this->assessmentItem->ownerDocument->saveXML($domEl);
         $text = trim($text);
         //delete the line break in $text
-        $text = str_replace(CHR(10), '', $text);
-        $text = str_replace(CHR(13), '', $text);
+        $text = str_replace(chr(10), '', $text);
+        $text = str_replace(chr(13), '', $text);
         //delete CDATA
         $text = str_replace('<![CDATA[', '', $text);
         $text = str_replace(']]>', '', $text);
