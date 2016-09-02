@@ -48,7 +48,7 @@
         <div class="question-info" data-ng-if="questionShowCtrl.question.objects.length > 0">
             <h5>{{ 'question_object'|trans:{}:'ujm_sequence' }}</h5>
             <div data-ng-repeat="object in questionShowCtrl.question.objects">
-                <iframe src="{{ object.url }}" style="height: 400px; width: 600px; resize: both; overflow: scroll;"></iframe>
+                <iframe src="{{ object.url }}" style="height: 550px; width: 750px; resize: both; overflow: scroll;"></iframe>
                 <span data-ng-if="object.type === 'text'" data-ng-bind-html="object.data | unsafe"></span>
             </div>
         </div>
