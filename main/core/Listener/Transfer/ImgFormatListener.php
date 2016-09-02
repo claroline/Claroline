@@ -107,7 +107,6 @@ class ImgFormatListener
     {
         $text = $event->getText();
         preg_match_all(self::REGEX_PLACEHOLDER, $text, $matches, PREG_SET_ORDER);
-        $baseUrl = $this->router->getContext()->getBaseUrl();
 
         foreach ($matches as $match) {
             $imgdata = explode('@', $match[1]);
@@ -128,7 +127,7 @@ class ImgFormatListener
 
     private function replaceLink($txt, $fullMatch, $nodeId)
     {
-        $width = $heigth = $style = null;
+        $width = $height = $style = null;
 
         preg_match(
             "#(<img)(.*){$fullMatch}(.*)(/>)#",

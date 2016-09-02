@@ -242,7 +242,7 @@ class Role implements RoleInterface
     }
 
     /**
-     * @return string The role name.
+     * @return string The role name
      */
     public function getRole()
     {

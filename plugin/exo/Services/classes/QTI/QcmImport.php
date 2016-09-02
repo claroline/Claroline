@@ -3,7 +3,6 @@
 /**
  * To import a QCM question in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Choice;
