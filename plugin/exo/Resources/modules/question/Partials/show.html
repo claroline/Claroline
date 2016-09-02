@@ -43,13 +43,13 @@
             <div data-ng-bind-html="questionShowCtrl.question.invite | unsafe"></div>
 
             <!-- Description of the Question -->
-            <div data-ng-bind="questionShowCtrl.question.description"></div>
+            <div data-ng-bind-html="questionShowCtrl.question.description | unsafe"></div>
         </div>
         <div class="question-info" data-ng-if="questionShowCtrl.question.objects.length > 0">
             <h5>{{ 'question_object'|trans:{}:'ujm_sequence' }}</h5>
             <div data-ng-repeat="object in questionShowCtrl.question.objects">
-                <iframe src="{{ object.url }}"></iframe>
-                <span data-ng-if="object.type === 'text'">{{ object.data }}</span>
+                <iframe src="{{ object.url }}" data-ng-if="object.url" style="height: 350px; width: 40%; resize: both; overflow: scroll;"></iframe>
+                <span data-ng-if="object.type === 'text'" data-ng-bind-html="object.data | unsafe"></span>
             </div>
         </div>
 
@@ -106,12 +106,12 @@
         
         <div class="question-info" data-ng-if="questionShowCtrl.question.specification">
             <h5>{{ 'question_specification'|trans:{}:'ujm_sequence' }}</h5>
-            <div>{{ questionShowCtrl.question.specification }}</div>
+            <div data-ng-bind-html="questionShowCtrl.question.specification | unsafe"></div>
         </div>
         
         <div class="question-info" data-ng-if="questionShowCtrl.question.supplementary">
             <h5>{{ 'question_supplementary'|trans:{}:'ujm_sequence' }}</h5>
-            <div>{{ questionShowCtrl.question.supplementary }}</div>
+            <div data-ng-bind-html="questionShowCtrl.question.supplementary | unsafe"></div>
         </div>
 
         <!-- Display solution of the Question -->
