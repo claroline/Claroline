@@ -1,6 +1,6 @@
 <div>
     <div ng-repeat="(key, value) in chc.field[2].values">
-        <div class="col-sm-2"></div>
+        <div class="col-sm-3"></div>
         <!-- col-sm-offset-2 doesn't work properly -->
         <input type="checkbox" checklist-model="chc.ngModel" checklist-value="value.value" ng-disabled="chc.field[2].disabled">
         <label class="control-label"> {{ value.label|trans:{}:chc.translationDomain }} </label>
