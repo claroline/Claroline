@@ -345,21 +345,29 @@ class CursusManager
         $course = new Course();
         $course->setTitle($title);
         $course->setCode($code);
-        $course->setDescription($description);
         $course->setPublicRegistration($publicRegistration);
         $course->setPublicUnregistration($publicUnregistration);
         $course->setRegistrationValidation($registrationValidation);
-        $course->setTutorRoleName($tutorRoleName);
-        $course->setLearnerRoleName($learnerRoleName);
         $course->setWorkspaceModel($workspaceModel);
         $course->setWorkspace($workspace);
         $course->setIcon($icon);
         $course->setUserValidation($userValidation);
         $course->setOrganizationValidation($organizationValidation);
-        $course->setMaxUsers($maxUsers);
         $course->setDefaultSessionDuration($defaultSessionDuration);
         $course->setWithSessionEvent($withSessionEvent);
 
+        if ($description) {
+            $course->setDescription($description);
+        }
+        if ($tutorRoleName) {
+            $course->setTutorRoleName($tutorRoleName);
+        }
+        if ($learnerRoleName) {
+            $course->setLearnerRoleName($learnerRoleName);
+        }
+        if ($maxUsers) {
+            $course->setMaxUsers($maxUsers);
+        }
         foreach ($validators as $validator) {
             $course->addValidator($validator);
         }

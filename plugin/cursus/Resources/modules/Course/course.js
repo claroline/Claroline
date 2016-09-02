@@ -15,6 +15,7 @@ import 'angular-ui-translation/angular-translation'
 
 import '#/main/core/services/module'
 import '#/main/core/asset/module'
+import '#/main/core/form/module'
 import CourseService from './Service/CourseService'
 import CourseCreationModalCtrl from './Controller/CourseCreationModalCtrl'
 import CourseEditionModalCtrl from './Controller/CourseEditionModalCtrl'
@@ -27,7 +28,8 @@ angular.module('CourseModule', [
   'colorpicker.module',
   'ui.translation',
   'ClarolineAPI',
-  'ui.asset'
+  'ui.asset',
+  'FormBuilder'
 ])
 .service('CourseService', CourseService)
 .controller('CourseCreationModalCtrl', CourseCreationModalCtrl)
