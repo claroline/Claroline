@@ -67,6 +67,8 @@
                         <i class="fa fa-circle" style="color: {{ cursus['details']['color'] }}"></i>
                         &nbsp;
                     </span>
+                    &nbsp;
+                    <img ng-src="{{ 'uploads/thumbnails/' + cursus['icon']|asset }}" alt="" width="20px" ng-if="cursus['icon']">
                     <a ui-sref="cursus({cursusId: cursus['id']})">{{ cursus['title'] }}</a>
                 </td>
                 <td class="text-center">

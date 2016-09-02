@@ -20,11 +20,13 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CoursesWidgetConfigurationType extends AbstractType
 {
+    private $extra;
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, $extra = [])
     {
         $this->translator = $translator;
+        $this->extra = $extra;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -35,7 +37,6 @@ class CoursesWidgetConfigurationType extends AbstractType
             [
                 'class' => 'ClarolineCursusBundle:Cursus',
                 'query_builder' => function (EntityRepository $er) {
-
                     return $er->createQueryBuilder('c')
                         ->where('c.course IS NULL')
                         ->orderBy('c.title', 'ASC');
@@ -61,6 +62,26 @@ class CoursesWidgetConfigurationType extends AbstractType
             'publicSessionsOnly',
             'checkbox',
             ['label' => 'public_sessions_only']
+        );
+        $builder->add(
+            'collapseCourses',
+            'checkbox',
+            [
+                'mapped' => false,
+                'data' => isset($this->extra['collapseCourses']) ? $this->extra['collapseCourses'] : false,
+                'label' => 'collapse_courses',
+                'translation_domain' => 'cursus',
+            ]
+        );
+        $builder->add(
+            'collapseSessions',
+            'checkbox',
+            [
+                'mapped' => false,
+                'data' => isset($this->extra['collapseSessions']) ? $this->extra['collapseSessions'] : false,
+                'label' => 'collapse_sessions',
+                'translation_domain' => 'cursus',
+            ]
         );
     }
 

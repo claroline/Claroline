@@ -941,6 +941,9 @@ class CursusController extends Controller
     ) {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $configCursus = $config->getCursus();
+        $extra = $config->getExtra();
+        $collapseCourses = isset($extra['collapseCourses']) ? $extra['collapseCourses'] : false;
+        $collapseSessions = isset($extra['collapseSessions']) ? $extra['collapseSessions'] : false;
 
         if (is_null($configCursus)) {
             $courses = $this->cursusManager->getAllCourses(
@@ -1012,6 +1015,8 @@ class CursusController extends Controller
             'registeredSessions' => $registeredSessions,
             'pendingSessions' => $pendingSessions,
             'courseQueues' => $courseQueues,
+            'collapseCourses' => $collapseCourses,
+            'collapseSessions' => $collapseSessions,
         ];
     }
 
@@ -1143,7 +1148,12 @@ class CursusController extends Controller
     public function coursesRegistrationWidgetConfigureFormAction(WidgetInstance $widgetInstance)
     {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
-        $form = $this->formFactory->create(new CoursesWidgetConfigurationType($this->translator), $config);
+        $extra = $config->getExtra();
+
+        if (is_null($extra)) {
+            $extra = [];
+        }
+        $form = $this->formFactory->create(new CoursesWidgetConfigurationType($this->translator, $extra), $config);
 
         return ['form' => $form->createView(), 'config' => $config];
     }
@@ -1163,6 +1173,14 @@ class CursusController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $extra = $config->getExtra();
+
+            if (is_null($extra)) {
+                $extra = [];
+            }
+            $extra['collapseCourses'] = $form->get('collapseCourses')->getData();
+            $extra['collapseSessions'] = $form->get('collapseSessions')->getData();
+            $config->setExtra($extra);
             $this->cursusManager->persistCoursesWidgetConfiguration($config);
 
             return new JsonResponse('success', 204);
@@ -1188,10 +1206,7 @@ class CursusController extends Controller
         if (is_null($extra)) {
             $extra = [];
         }
-        $form = $this->formFactory->create(
-            new MyCoursesWidgetConfigurationType($this->translator, $extra),
-            $config
-        );
+        $form = $this->formFactory->create(new MyCoursesWidgetConfigurationType($this->translator, $extra), $config);
 
         return ['form' => $form->createView(), 'config' => $config];
     }
@@ -1463,23 +1478,28 @@ class CursusController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/my/courses/widget/{widgetInstance}/session/{session}/informations",
-     *     name="claro_cursus_my_courses_widget_session_informations",
+     *     "/courses/widget/{widgetInstance}/session/{session}/informations/workspace/{withWorkspace}/mail/{withMail}",
+     *     name="claro_courses_widget_session_informations",
+     *     defaults={"withWorkspace"=1, "withMail"=1},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:sessionInformationsModal.html.twig")
      */
-    public function myCoursesWidgetSessionInformationsAction(WidgetInstance $widgetInstance, CourseSession $session)
+    public function coursesWidgetSessionInformationsAction(WidgetInstance $widgetInstance, CourseSession $session, $withWorkspace = 1, $withMail = 1)
     {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $extra = $config->getExtra();
-        $disableClosedSessionsWs = isset($extra['disableClosedSessionsWs']) ? $extra['disableClosedSessionsWs'] : false;
-        $disableUnstartedSessionsWs = isset($extra['disableUnstartedSessionsWs']) ? $extra['disableUnstartedSessionsWs'] : false;
-        $now = new \DateTime();
-        $startDate = $session->getStartDate();
-        $endDate = $session->getEndDate();
-        $disableWs = ($endDate < $now && $disableClosedSessionsWs) || ($startDate > $now && $disableUnstartedSessionsWs);
+        $disableWs = intval($withWorkspace) === 0;
+
+        if (intval($withWorkspace) === 1) {
+            $disableClosedSessionsWs = isset($extra['disableClosedSessionsWs']) ? $extra['disableClosedSessionsWs'] : false;
+            $disableUnstartedSessionsWs = isset($extra['disableUnstartedSessionsWs']) ? $extra['disableUnstartedSessionsWs'] : false;
+            $now = new \DateTime();
+            $startDate = $session->getStartDate();
+            $endDate = $session->getEndDate();
+            $disableWs = ($endDate < $now && $disableClosedSessionsWs) || ($startDate > $now && $disableUnstartedSessionsWs);
+        }
         $sessionEvents = $this->cursusManager->getEventsBySession($session);
         $tutors = $this->cursusManager->getUsersBySessionAndType($session, CourseSessionUser::TEACHER);
 
@@ -1490,6 +1510,30 @@ class CursusController extends Controller
             'tutors' => $tutors,
             'workspace' => $session->getWorkspace(),
             'disableWs' => $disableWs,
+            'withMail' => intval($withMail) === 1,
+        ];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/courses/widget/session/event/{sessionEvent}/informations/mail/{withMail}",
+     *     name="claro_courses_widget_session_event_informations",
+     *     defaults={"withMail"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Cursus:sessionEventInformationsModal.html.twig")
+     */
+    public function coursesWidgetSessionEventInformationsAction(SessionEvent $sessionEvent, $withMail = 1)
+    {
+        return [
+            'event' => $sessionEvent,
+            'session' => $sessionEvent->getSession(),
+            'course' => $sessionEvent->getSession()->getCourse(),
+            'location' => $sessionEvent->getLocation(),
+            'locationExtra' => $sessionEvent->getLocationExtra(),
+            'tutors' => $sessionEvent->getTutors(),
+            'withMail' => intval($withMail) === 1,
         ];
     }
 

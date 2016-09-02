@@ -58,6 +58,20 @@ class WidgetHomeTabConfigRepository extends EntityRepository implements Containe
             ->getResult();
     }
 
+    public function findByWorkspaceAndHomeTabAndWidgetInstanceName(Workspace $workspace, HomeTab $homeTab, $widgetName)
+    {
+        return $this->buildSelectQuery($homeTab)
+            ->andWhere('whtc.workspace = :workspace')
+            ->andWhere('whtc.user IS NULL')
+            ->andWhere("whtc.type = 'workspace'")
+            ->join('whtc.widgetInstance',  'wi')
+            ->andWhere('wi.name = :name')
+            ->setParameter('workspace', $workspace)
+            ->setParameter('name', $widgetName)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findVisibleWidgetConfigsByUser(HomeTab $homeTab, User $user)
     {
         return $this->buildSelectQuery($homeTab)

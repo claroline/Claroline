@@ -121,7 +121,7 @@
 
             if ($(this).hasClass('chronologic-link')) {
               const sessionId = $(this).data('session-id')
-              const url = Routing.generate('claro_cursus_my_courses_widget_session_informations', {widgetInstance: widgetInstanceId, session: sessionId})
+              const url = Routing.generate('claro_courses_widget_session_informations', {widgetInstance: widgetInstanceId, session: sessionId})
               window.Claroline.Modal.fromUrl(url)
             } else {
               const element = event.currentTarget

@@ -1,6 +1,6 @@
 <div>
-    <label class="control-label col-sm-2"> {{ tc.label|trans:{}:tc.translationDomain }} </label>
-    <div class="col-sm-10">
+    <label class="control-label col-sm-3"> {{ tc.label|trans:{}:tc.translationDomain }} </label>
+    <div class="col-sm-9">
          <input class="form-control" type="text" ng-model="tc.ngModel" name="{{ tc.name }}" ng-disabled="tc.field[2].disabled"></input>
          <help-block ng-model="tc.ngModel" field="tc.field"></help-block>
     </div>

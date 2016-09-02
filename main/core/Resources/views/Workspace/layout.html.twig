@@ -1,5 +1,24 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
+{% if _resource is defined %}
+    {# we're finding wich is the workspace we want to display here #}
+    {% set node = app.session.get('current_resource_node') %}
+    {% if node is not null %}
+        {% set workspace = node.getWorkspace() %}
+    {% else %}
+        {% set workspace = _resource.getResourceNode().getWorkspace() %}
+    {% endif %}
+{% endif %}
+
+{% block claroline_danger %}
+    {# same as leftbar #}
+    {% if is_date_access_valid(workspace) == false %}
+        <h4 class="label label-danger">
+            {{ 'workspace_access_date_invalid'|trans({}, 'platform') }}
+        </h4>
+    {% endif %}
+{% endblock %}
+
 {% block title %}
     {% spaceless %}
         {% if workspace is defined %}
@@ -23,12 +42,6 @@
                  data-resource-name="{{ _resource.getName() }}"
             >
             </div>
-            {% set node = app.session.get('current_resource_node') %}
-            {% if node is not null %}
-                {% set workspace = node.getWorkspace() %}
-            {% else %}
-                {% set workspace = _resource.getResourceNode().getWorkspace() %}
-            {% endif %}
             <ul class="breadcrumb">
                 {% if not has_role('ROLE_ANONYMOUS') and workspace is defined and workspace != null %}
                     <li>
@@ -51,15 +64,6 @@
 {% endblock %}
 
 {% block leftbar %}
-    {% if _resource is defined %}
-        {# we're finding wich is the workspace we want to display here #}
-        {% set node = app.session.get('current_resource_node') %}
-        {% if node is not null %}
-            {% set workspace = node.getWorkspace() %}
-        {% else %}
-            {% set workspace = _resource.getResourceNode().getWorkspace() %}
-        {% endif %}
-    {% endif %}
     {% if workspace is defined and workspace != null %}
         {% if is_granted('OPEN', workspace) %}
             {% render(controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})) %}
@@ -116,10 +120,12 @@
 
             setInterval(function() {
                 var newHeight = getIframeWindowHeight();
-                if (newHeight != oldHeight) {
+    
+                if (newHeight !== null && newHeight !== oldHeight) {
                     postHeight(newHeight);
+                    oldHeight = newHeight;
                 }
-                oldHeight = newHeight;
+
             }, 2000);
             /* End of Hack */
 
