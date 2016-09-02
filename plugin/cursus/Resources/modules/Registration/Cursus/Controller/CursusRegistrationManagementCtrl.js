@@ -18,7 +18,7 @@ import userUnregistrationTemplate from '../Partial/cursus_user_unregistration_mo
 import usersUnregistrationTemplate from '../Partial/cursus_users_unregistration_modal.html'
 
 export default class CursusRegistrationManagementCtrl {
-        
+
   constructor ($stateParams, $http, $uibModal) {
     this.$http = $http
     this.$uibModal = $uibModal
@@ -80,7 +80,7 @@ export default class CursusRegistrationManagementCtrl {
         headerRenderer: () => {
           return `<b>${Translator.trans('registration_date', {}, 'cursus')}</b>`
         },
-        cellRenderer: function(scope) {
+        cellRenderer: function (scope) {
           return `<span>${scope.$row['registrationDate']['date']}</span>`
         }
       },
@@ -96,10 +96,10 @@ export default class CursusRegistrationManagementCtrl {
             </button>
           `
         },
-        cellRenderer: scope => {
+        cellRenderer: () => {
           return `
             <button class="btn btn-danger btn-sm"
-                    ng-click="crmc.unregisterUser(${scope.$row['id']}, \'${scope.$row['firstName']} ${scope.$row['lastName']} (${scope.$row['username']})\')"
+                    ng-click="crmc.unregisterUser($row)"
             >
               ${Translator.trans('unregister', {}, 'cursus')}
             </button>
@@ -139,7 +139,7 @@ export default class CursusRegistrationManagementCtrl {
         headerRenderer: () => {
           return `<b>${Translator.trans('registration_date', {}, 'cursus')}</b>`
         },
-        cellRenderer: function(scope) {
+        cellRenderer: function (scope) {
           return `<span>${scope.$row['registrationDate']['date']}</span>`
         }
       },
@@ -155,10 +155,10 @@ export default class CursusRegistrationManagementCtrl {
             </button>
           `
         },
-        cellRenderer: scope => {
+        cellRenderer: () => {
           return `
             <button class="btn btn-danger btn-sm"
-                    ng-click="crmc.unregisterGroup(${scope.$row['id']}, \'${scope.$row['groupName']}\')"
+                    ng-click="crmc.unregisterGroup($row)"
             >
               ${Translator.trans('unregister', {}, 'cursus')}
             </button>
@@ -218,10 +218,14 @@ export default class CursusRegistrationManagementCtrl {
       controller: 'CursusRegistrationSessionsModalCtrl',
       controllerAs: 'crsmc',
       resolve: {
-        cursusId: () => { return this.currentCursusId },
-        sourceId: () => { return this.usersIdsTxt },
-        sourceType: () => { return 'user' },
-        cursusIdsTxt: () => { return this.unlockedCursusTxt }
+        cursusId: () => {
+          return this.currentCursusId},
+        sourceId: () => {
+          return this.usersIdsTxt},
+        sourceType: () => {
+          return 'user'},
+        cursusIdsTxt: () => {
+          return this.unlockedCursusTxt}
       }
     })
   }
@@ -232,8 +236,10 @@ export default class CursusRegistrationManagementCtrl {
       controller: 'CursusGroupsListRegistrationModalCtrl',
       controllerAs: 'cglrmc',
       resolve: {
-        cursusId: () => { return this.currentCursusId },
-        cursusIdsTxt: () => { return this.unlockedCursusTxt }
+        cursusId: () => {
+          return this.currentCursusId},
+        cursusIdsTxt: () => {
+          return this.unlockedCursusTxt}
       }
     })
   }
@@ -257,15 +263,20 @@ export default class CursusRegistrationManagementCtrl {
     userPicker.open()
   }
 
-  unregisterGroup (cursusGroupId, groupName) {
+  unregisterGroup (group) {
+    const cursusGroupId = group.id
+    const groupName = group.groupName
     this.$uibModal.open({
       template: groupUnregistrationTemplate,
       controller: 'CursusGroupUnregistrationModalCtrl',
       controllerAs: 'cgumc',
       resolve: {
-        cursusGroupId: () => { return cursusGroupId },
-        groupName: () => { return groupName },
-        callBack: () => { return this.removeCursusGroup }
+        cursusGroupId: () => {
+          return cursusGroupId},
+        groupName: () => {
+          return groupName},
+        callBack: () => {
+          return this.removeCursusGroup}
       }
     })
   }
@@ -288,8 +299,10 @@ export default class CursusRegistrationManagementCtrl {
       controller: 'CursusGroupsUnregistrationModalCtrl',
       controllerAs: 'cgumc',
       resolve: {
-        cursusGroupsIdsTxt: () => { return cursusGroupsIdsTxt },
-        callBack: () => { return this.removeCursusGroups }
+        cursusGroupsIdsTxt: () => {
+          return cursusGroupsIdsTxt},
+        callBack: () => {
+          return this.removeCursusGroups}
       }
     })
   }
@@ -321,15 +334,20 @@ export default class CursusRegistrationManagementCtrl {
     }
   }
 
-  unregisterUser (cursusUserId, name) {
+  unregisterUser (user) {
+    const cursusUserId = user.id
+    const name = `${user['firstName']} ${user['lastName']} (${user['username']})`
     this.$uibModal.open({
       template: userUnregistrationTemplate,
       controller: 'CursusUserUnregistrationModalCtrl',
       controllerAs: 'cuumc',
       resolve: {
-        cursusUserId: () => { return cursusUserId },
-        name: () => { return name },
-        callBack: () => { return this.removeCursusUser }
+        cursusUserId: () => {
+          return cursusUserId},
+        name: () => {
+          return name},
+        callBack: () => {
+          return this.removeCursusUser}
       }
     })
   }
@@ -352,9 +370,12 @@ export default class CursusRegistrationManagementCtrl {
       controller: 'CursusUsersUnregistrationModalCtrl',
       controllerAs: 'cuumc',
       resolve: {
-        cursusId: () => { return this.currentCursusId },
-        usersIdsTxt: () => { return idsTxt },
-        callBack: () => { return this.removeCursusUsers }
+        cursusId: () => {
+          return this.currentCursusId},
+        usersIdsTxt: () => {
+          return idsTxt},
+        callBack: () => {
+          return this.removeCursusUsers}
       }
     })
   }
