@@ -1,0 +1,20 @@
+<div class="question-hints">
+    <div data-ng-repeat="hint in hintsCtrl.hints">
+        <!-- Hint not used -->
+        <button
+            data-ng-if="!hintsCtrl.isHintUsed(hint)"
+            type="button"
+            role="button"
+            class="btn btn-default btn-block"
+            data-confirm-modal="{{ 'question_show_hint_confirm'|trans:{ 1: hint.penalty }:'ujm_sequence' }}"
+            data-confirm-modal-action="hintsCtrl.showHint(hint)"
+        >
+            <hint data-hint="hint" data-used="hintsCtrl.isHintUsed(hint)"></hint>
+        </button>
+
+        <!-- Hint used -->
+        <div class="well well-sm" data-ng-if="hintsCtrl.isHintUsed(hint)">
+            <hint data-hint="hint" data-used="hintsCtrl.isHintUsed(hint)"></hint>
+        </div>
+    </div>
+</div>

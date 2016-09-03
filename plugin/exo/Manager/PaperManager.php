@@ -9,7 +9,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
-use UJM\ExoBundle\Entity\LinkHintPaper;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
@@ -36,6 +35,11 @@ class PaperManager
     private $eventDispatcher;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var QuestionHandlerCollector
      */
     private $handlerCollector;
@@ -46,9 +50,9 @@ class PaperManager
     private $questionManager;
 
     /**
-     * @var TranslatorInterface
+     * @var HintManager
      */
-    private $translator;
+    private $hintManager;
 
     /**
      * @var PaperService
@@ -57,34 +61,38 @@ class PaperManager
 
     /**
      * @DI\InjectParams({
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
-     *     "collector"          = @DI\Inject("ujm.exo.question_handler_collector"),
-     *     "questionManager"    = @DI\Inject("ujm.exo.question_manager"),
-     *     "translator"         = @DI\Inject("translator"),
-     *     "paperService"       = @DI\Inject("ujm.exo_paper")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "translator"      = @DI\Inject("translator"),
+     *     "collector"       = @DI\Inject("ujm.exo.question_handler_collector"),
+     *     "questionManager" = @DI\Inject("ujm.exo.question_manager"),
+     *     "hintManager"     = @DI\Inject("ujm.exo.hint_manager"),
+     *     "paperService"    = @DI\Inject("ujm.exo_paper")
      * })
      *
      * @param ObjectManager            $om
      * @param EventDispatcherInterface $eventDispatcher
+     * @param TranslatorInterface      $translator
      * @param QuestionHandlerCollector $collector
      * @param QuestionManager          $questionManager
-     * @param TranslatorInterface      $translator
+     * @param HintManager              $hintManager
      * @param PaperService             $paperService
      */
     public function __construct(
         ObjectManager $om,
         EventDispatcherInterface $eventDispatcher,
+        TranslatorInterface $translator,
         QuestionHandlerCollector $collector,
         QuestionManager $questionManager,
-        TranslatorInterface $translator,
+        HintManager $hintManager,
         PaperService $paperService
     ) {
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
+        $this->translator = $translator;
         $this->handlerCollector = $collector;
         $this->questionManager = $questionManager;
-        $this->translator = $translator;
+        $this->hintManager = $hintManager;
         $this->paperService = $paperService;
     }
 
@@ -231,42 +239,6 @@ class PaperManager
         $this->om->flush();
 
         $this->checkPaperEvaluated($paper);
-    }
-
-    /**
-     * Returns whether a hint is related to a paper.
-     *
-     * @param Paper $paper
-     * @param Hint  $hint
-     *
-     * @return bool
-     */
-    public function hasHint(Paper $paper, Hint $hint)
-    {
-        return $this->om->getRepository('UJMExoBundle:Paper')->hasHint($paper, $hint);
-    }
-
-    /**
-     * Returns the contents of a hint and records a log asserting that the hint
-     * has been consulted for a given paper.
-     *
-     * @param Paper $paper
-     * @param Hint  $hint
-     *
-     * @return string
-     */
-    public function viewHint(Paper $paper, Hint $hint)
-    {
-        $log = $this->om->getRepository('UJMExoBundle:LinkHintPaper')
-            ->findOneBy(['paper' => $paper, 'hint' => $hint]);
-
-        if (!$log) {
-            $log = new LinkHintPaper($hint, $paper);
-            $this->om->persist($log);
-            $this->om->flush();
-        }
-
-        return $hint->getValue();
     }
 
     /**
@@ -453,21 +425,9 @@ class PaperManager
 
     private function applyPenalties(Paper $paper, Question $question, Response $response)
     {
-        $logs = $this->om->getRepository('UJMExoBundle:LinkHintPaper')
-            ->findViewedByPaperAndQuestion($paper, $question);
-
-        if (count($logs) === 0) {
-            return;
-        }
-
-        $penalty = 0;
-
-        foreach ($logs as $log) {
-            $penalty += $log->getHint()->getPenalty();
-        }
+        $penalty = $this->hintManager->getPenalty($paper, $question);
 
         $response->setMark($response->getMark() - $penalty);
-
         if ($response->getMark() < 0) {
             $response->setMark(0);
         }
@@ -540,26 +500,21 @@ class PaperManager
     public function exportPaperAnswer(Question $question, Paper $paper, $withScore = false)
     {
         $responseRepo = $this->om->getRepository('UJMExoBundle:Response');
-        $linkRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
 
         $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
         // TODO: these two queries must be moved out of the loop
         $response = $responseRepo->findOneBy(['paper' => $paper, 'question' => $question]);
-        $links = $linkRepo->findViewedByPaperAndQuestion($paper, $question);
+
+        $usedHints = $this->hintManager->getUsedHints($paper, $question);
+        $hints = array_map(function ($hint) {
+            return $this->hintManager->exportHint($hint, true); // We always grab hint value for used hints
+        }, $usedHints);
 
         $answer = $response ? $handler->convertAnswerDetails($response) : null;
         $answerScore = $response ? $response->getMark() : 0;
         $nbTries = $response ? $response->getNbTries() : 0;
-        $hints = array_map(function ($link) {
-            return [
-                'id' => $link->getHint()->getId(),
-                'value' => $link->getHint()->getValue(),
-                'penalty' => $link->getHint()->getPenalty(),
-            ];
-        }, $links);
 
         $paperQuestion = null;
-
         if ($answer || count($hints) > 0) {
             $paperQuestion = [
                 'id' => (string) $question->getId(),

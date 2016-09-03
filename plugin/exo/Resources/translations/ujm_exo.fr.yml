@@ -167,6 +167,7 @@ hole_edition: Edition d'une question à trous
 hole_selector: Proposer une liste
 home_exercise: Accueil de l'exercice
 hide_additional_info: Masquer les informations supplémentaires
+hint_points: "[0,1] - %count% point|]1,Inf[ - %count% points"
 
 # I
 infiny: Infini

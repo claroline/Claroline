@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\HintRepository")
  * @ORM\Table(name="ujm_hint")
  */
 class Hint
