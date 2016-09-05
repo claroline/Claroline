@@ -392,7 +392,7 @@ class PathListener extends ContainerAware
         $resourceNode = $manager->getNode($resource->resourceId);
 
         $found = false;
-        if ($processedNodes[$resourceNode->getId()]) {
+        if ($resourceNode) {
             $resource->resourceId = $processedNodes[$resourceNode->getId()]->getId();
             $found = true;
         }

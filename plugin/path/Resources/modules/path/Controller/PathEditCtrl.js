@@ -28,8 +28,14 @@ export default class PathEditCtrl extends PathBaseCtrl {
      */
     this.unsaved = false
 
+    // Initialize the step structure if needed
+    if (0 === this.path.steps.length) {
+      this.pathService.initialize()
+    }
+
     // listen to path changes to update history
-    $scope.$watch(() => this.path, (newValue) => {
+    const path = this.path
+    $scope.$watch(() => path, (newValue) => {
       const empty   = this.historyService.isEmpty()
       const updated = this.historyService.update(newValue)
 
