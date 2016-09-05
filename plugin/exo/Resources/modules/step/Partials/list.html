@@ -5,7 +5,7 @@
             <div class="panel panel-default" data-ng-repeat="step in stepListCtrl.steps">
                 <div class="panel-heading">
                     <div class="row">
-                        <h3 class="col-md-10 panel-title">
+                        <h3 class="col-md-10 col-sm-10 panel-title">
                             <span class="handle">
                                 <span class="fa fa-lg fa-ellipsis-v"></span>
                             </span>
@@ -16,7 +16,7 @@
                             </span>
                         </h3>
 
-                        <div class="col-md-2 step-actions text-right">
+                        <div class="col-md-2 col-sm-2 step-actions text-right">
                             <a role="button"
                                href="{{ 'ujm_question_new' | path:{ exoID: stepListCtrl.exerciseId, stepID: step.id } }}"
                                class="btn btn-sm btn-default"
