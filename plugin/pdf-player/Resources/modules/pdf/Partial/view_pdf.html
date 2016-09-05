@@ -10,7 +10,7 @@
                     </div>
                     <div class="col-xs-3">
                         <input type="text" class="form-control input-sm page_num"
-                             ng-init=pdfc.pageNum 
+                             ng-init=pdfc.pageNum
                              ng-model=pdfc.pageNum
                              ng-change=pdfc.renderPage()>
                          </input>
@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <div class="panel-footer" data-ng-if="pdfc.downlaod">
+    <div class="panel-footer" data-ng-if="pdfc.download">
         <a class="btn btn-primary" href="{{ pdfc.downloadUri }}">
             <i class="fa fa-download"></i> {{ 'download'|trans:{}:'platform' }}
         </a>

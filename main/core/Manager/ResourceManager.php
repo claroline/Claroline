@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
 use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
 use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
+use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
 use Claroline\CoreBundle\Manager\Exception\WrongClassException;
@@ -799,7 +800,7 @@ class ResourceManager
                 $this->container
                     ->get('logger')
                     ->error($message);
-                throw new \ResourceNotFoundException($message);
+                throw new ResourceNotFoundException($message);
             }
 
             $event = $this->dispatcher->dispatch(
