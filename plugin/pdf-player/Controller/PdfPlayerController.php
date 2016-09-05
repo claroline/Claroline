@@ -11,10 +11,11 @@
 
 namespace Claroline\PdfPlayerBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PdfPlayerController extends Controller
 {
@@ -27,6 +28,7 @@ class PdfPlayerController extends Controller
      */
     public function fileAction(ResourceNode $node)
     {
+        $this->checkAccess('OPEN', $node);
         $pdf = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
 
         $response = new StreamedResponse();
@@ -41,5 +43,12 @@ class PdfPlayerController extends Controller
         $response->headers->set('Content-Type', $node->getMimeType());
 
         return $response->send();
+    }
+
+    public function checkAccess($permission, ResourceNode $collection)
+    {
+        if (!$this->container->get('security.authorization_checker')->isGranted($permission, $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
     }
 }
