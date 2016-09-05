@@ -92,6 +92,15 @@ class GeneralType extends AbstractType
                 ]
             )
             ->add(
+                'sslEnabled',
+                'checkbox',
+                [
+                    'required' => false,
+                    'label' => 'ssl_enabled',
+                    'disabled' => isset($this->lockedParams['ssl_enabled']),
+                ]
+            )
+            ->add(
                 'selfRegistration',
                 'checkbox',
                 [
