@@ -166,6 +166,7 @@ hole_edition: Hole edition
 hole_selector: Submit a list
 home_exercise: Home exercise
 hide_additional_info: Hide additional information
+hint_points: "[0,1] - %count% point|]1,Inf[ - %count% points"
 
 # I
 infiny: Indefinite
@@ -398,7 +399,7 @@ upload: Upload
 uploading: Uploading
 user: User
 users: Users
-ujm_exo_exercise_title: Title
+ujm_exo_exercise_name: Title
 ujm_exo_exercise_published: Publish resource
 
 # V

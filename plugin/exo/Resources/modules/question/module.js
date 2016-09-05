@@ -9,6 +9,7 @@ import '#/main/core/modal/module'
 
 import './../common/module'
 import './../feedback/module'
+import './../hint/module'
 import './../correction/module'
 import './../image/module'
 
@@ -41,14 +42,13 @@ angular
     'Common',
     'Feedback',
     'Image',
+    'Hint',
     'Correction'
   ])
   .controller('QuestionShowCtrl', [
     '$uibModal',
     'ExerciseService',
-    'QuestionService',
     'FeedbackService',
-    'UserPaperService',
     QuestionShowCtrl
   ])
   .controller('ChoiceQuestionCtrl', [
