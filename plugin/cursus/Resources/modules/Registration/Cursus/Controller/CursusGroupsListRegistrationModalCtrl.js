@@ -67,7 +67,7 @@ export default class CursusGroupsListRegistrationModalCtrl {
       Routing.generate('api_get_searched_unregistered_cursus_groups', {cursus: this.cursusId, search: this.search})
     this.$http.get(route).then(datas => {
       if (datas['status'] === 200) {
-        this.groups = datas['data']
+        this.groups = datas['data'].groups
       }
     })
   }

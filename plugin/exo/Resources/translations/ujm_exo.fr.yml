@@ -167,6 +167,7 @@ hole_edition: Edition d'une question à trous
 hole_selector: Proposer une liste
 home_exercise: Accueil de l'exercice
 hide_additional_info: Masquer les informations supplémentaires
+hint_points: "[0,1] - %count% point|]1,Inf[ - %count% points"
 
 # I
 infiny: Infini
@@ -398,7 +399,7 @@ upload: Télécharger
 uploading: Chargement en cours
 user: Utilisateur
 users: Utilisateurs
-ujm_exo_exercise_title: Titre
+ujm_exo_exercise_name: Titre
 ujm_exo_exercise_published: Publier la ressource
 
 # V
@@ -427,4 +428,5 @@ Multiple response: Réponse multiples
 oneWord: Un mot
 To drag: Panier
 To bind: A lier
+To pair: Appariement
 Unique response: Réponse unique

@@ -34,6 +34,7 @@ edit_parameters: 'Edit parameters'
 edit_question_btn_explanation: 'Edit question'
 edit_question_title_btn_explanation: 'Edit title'
 edit_survey: 'Edit survey'
+edit_your_answers: Edit your answers
 edition: Edition
 end_date: 'End date'
 export_all_results: 'Export all results'
@@ -105,6 +106,7 @@ survey_form_description: Description
 survey_parameters: 'Survey parameters'
 survey_parameters_edition: 'Survey parameters edition'
 survey_results: 'Survey results'
+thanks_for_answering_msg: Thank you for answering the survey.
 title: Title
 title_creation: 'Title creation'
 title_edition: 'Title edition'
@@ -114,3 +116,4 @@ unpublished_user_message: 'The survey is not published yet.'
 vertical: Vertical
 view_question_btn_explanation: 'View question'
 view_survey_results: 'View survey results'
+view_your_answers: View your answers

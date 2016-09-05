@@ -180,60 +180,27 @@ UserPaperService.prototype.end = function end() {
   var deferred = this.$q.defer()
 
   this.$http
-          .put(
-            this.UrlService('exercise_finish_paper', {id: this.paper.id})
-            )
+    .put(
+      this.UrlService('exercise_finish_paper', {id: this.paper.id})
+      )
 
-          // Success callback
-          .success(function onSuccess(response) {
-            // Update the number of finished papers
-            this.nbPapers++
+    // Success callback
+    .success(function onSuccess(response) {
+      // Update the number of finished papers
+      this.nbPapers++
 
-            // Update the current User Paper with updated data (endDate particularly)
-            angular.merge(this.paper, response)
+      // Update the current User Paper with updated data (endDate particularly)
+      angular.merge(this.paper, response)
 
-            deferred.resolve(response)
-          }.bind(this))
+      deferred.resolve(response)
+    }.bind(this))
 
-          // Error callback
-          .error(function onError() {
-            // TODO : display message
+    // Error callback
+    .error(function onError() {
+      // TODO : display message
 
-            deferred.reject([])
-            /*var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});*/
-            /*$window.location = url;*/
-          })
-
-  return deferred.promise
-}
-
-/**
- * Use an hint
- * @returns {promise}
- */
-UserPaperService.prototype.useHint = function useHint(question, hint) {
-  var deferred = this.$q.defer()
-  this.$http
-          .get(
-            this.UrlService('exercise_hint', {paperId: this.paper.id, hintId: hint.id})
-            )
-          .success(function onSuccess(response) {
-            // Update question Paper with used hint
-            var questionPaper = this.getQuestionPaper(question)
-
-            questionPaper.hints.push({
-              id: hint.id,
-              penalty: hint.penalty,
-              value: response
-            })
-
-            deferred.resolve(response)
-          }.bind(this))
-          .error(function onError() {
-            deferred.reject([])
-            /*var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});*/
-            /*$window.location = url;*/
-          })
+      deferred.reject([])
+    })
 
   return deferred.promise
 }
@@ -304,8 +271,6 @@ UserPaperService.prototype.submitStep = function submitStep(step) {
             // TODO : display message
 
             deferred.reject([])
-            /*var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });*/
-            //$window.location = url;
           })
 
   return deferred.promise

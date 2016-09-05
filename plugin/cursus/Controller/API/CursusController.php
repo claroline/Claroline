@@ -252,13 +252,13 @@ class CursusController extends FOSRestController
      */
     public function getUnregisteredCursusGroupsAction(Cursus $cursus)
     {
-        return $this->cursusManager->getUnregisteredGroupsByCursus(
+        return ['groups' => $this->cursusManager->getUnregisteredGroupsByCursus(
             $cursus,
             '',
             'name',
             'ASC',
             false
-        );
+        )];
     }
 
     /**
@@ -270,13 +270,13 @@ class CursusController extends FOSRestController
      */
     public function getSearchedUnregisteredCursusGroupsAction(Cursus $cursus, $search)
     {
-        return $this->cursusManager->getUnregisteredGroupsByCursus(
+        return ['groups' => $this->cursusManager->getUnregisteredGroupsByCursus(
             $cursus,
             $search,
             'name',
             'ASC',
             false
-        );
+        )];
     }
 
     /**

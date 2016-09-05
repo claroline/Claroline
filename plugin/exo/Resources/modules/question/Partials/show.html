@@ -43,13 +43,13 @@
             <div data-ng-bind-html="questionShowCtrl.question.invite | unsafe"></div>
 
             <!-- Description of the Question -->
-            <div data-ng-bind="questionShowCtrl.question.description"></div>
+            <div data-ng-bind-html="questionShowCtrl.question.description | unsafe"></div>
         </div>
         <div class="question-info" data-ng-if="questionShowCtrl.question.objects.length > 0">
             <h5>{{ 'question_object'|trans:{}:'ujm_sequence' }}</h5>
             <div data-ng-repeat="object in questionShowCtrl.question.objects">
-                <iframe src="{{ object.url }}"></iframe>
-                <span data-ng-if="object.type === 'text'">{{ object.data }}</span>
+                <iframe data-ng-src="{{ object.url }}" data-ng-if="object.url" style="height: 350px; width: 40%; resize: both; overflow: scroll;"></iframe>
+                <span data-ng-if="object.type === 'text'" data-ng-bind-html="object.data | unsafe"></span>
             </div>
         </div>
 
@@ -106,12 +106,12 @@
         
         <div class="question-info" data-ng-if="questionShowCtrl.question.specification">
             <h5>{{ 'question_specification'|trans:{}:'ujm_sequence' }}</h5>
-            <div>{{ questionShowCtrl.question.specification }}</div>
+            <div data-ng-bind-html="questionShowCtrl.question.specification | unsafe"></div>
         </div>
         
         <div class="question-info" data-ng-if="questionShowCtrl.question.supplementary">
             <h5>{{ 'question_supplementary'|trans:{}:'ujm_sequence' }}</h5>
-            <div>{{ questionShowCtrl.question.supplementary }}</div>
+            <div data-ng-bind-html="questionShowCtrl.question.supplementary | unsafe"></div>
         </div>
 
         <!-- Display solution of the Question -->
@@ -175,27 +175,10 @@
         </button>
 
         <!-- Display Hints -->
-        <div class="question-hints" data-ng-if="questionShowCtrl.question.hints">
-            <hr/>
-
-            <div class="hint" data-ng-repeat="hint in questionShowCtrl.question.hints">
-                <!-- Button to load the Hint -->
-                <button type="button" role="button" class="btn btn-default"
-                        data-ng-if="!questionShowCtrl.isHintUsed(hint)"
-                        data-ng-disabled="questionShowCtrl.includeCorrection"
-                        data-confirm-modal="{{ 'question_show_hint_confirm'|trans:{ 1: hint.penalty }:'ujm_sequence' }}"
-                        data-confirm-modal-action="questionShowCtrl.showHint(hint)"
-                >
-                    <span class="fa fa-fw fa-eye"></span>
-                    {{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }} {{ $index + 1 }}
-                </button>
-
-                <!-- Hint info if already loaded -->
-                <div class="well well-sm" data-ng-if="questionShowCtrl.isHintUsed(hint)">
-                    <span class="fa fa-fw fa-lightbulb-o"></span>
-                    {{ questionShowCtrl.getHintValue(hint) }}
-                </div>
-            </div>
-        </div>
+        <hints
+            data-ng-if="questionShowCtrl.question.hints"
+            data-hints="questionShowCtrl.question.hints"
+            data-used-hints="questionShowCtrl.questionPaper.hints">
+        </hints>
     </div>
 </div>

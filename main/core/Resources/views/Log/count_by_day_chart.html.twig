@@ -14,7 +14,7 @@
 {% if not app.request.isXmlHttpRequest() %}
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 
-    {#<script type="text/javascript" src="{{ asset('packages/jqPlot/src/jquery.jqplot.js') }}"></script>#}
+    {% include 'ClarolineCoreBundle:Layout:jqplot_script.html.twig' %}
     {% javascripts debug=false filter='jsmin' output='js/corebundle/jqplot.count-by-day.min.js'
     'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
     'packages/jqPlot/src/plugins/jqplot.highlighter.js'
@@ -34,7 +34,6 @@
 {% endif %}
 
 <div id="actions-line-chart" class="line-chart"></div>
-
 <br/>
 <div class="count_by_day_chart_legend"><i class="fa fa-hand-o-up"></i> <em>{{ 'graph_draw_area'|trans({}, 'platform') }}</em></div>
 

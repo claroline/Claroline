@@ -81,16 +81,30 @@
 
         widgetElement.on('click', 'a', function (event) {
           event.preventDefault()
-          const element = event.currentTarget
-          const route = $(element).attr('href')
 
-          $.ajax({
-            url: route,
-            type: 'GET',
-            success: function (datas) {
-              listElement.html(datas)
-            }
-          })
+          if ($(this).hasClass('session-info-link')) {
+            const sessionId = $(this).data('session-id')
+            const url = Routing.generate(
+              'claro_courses_widget_session_informations',
+              {widgetInstance: widgetInstanceId, session: sessionId, withWorkspace: 0, withMail: 0}
+            )
+            window.Claroline.Modal.fromUrl(url)
+          } else if ($(this).hasClass('event-info-link')) {
+            const eventId = $(this).data('event-id')
+            const url = Routing.generate('claro_courses_widget_session_event_informations', {sessionEvent: eventId, withMail: 0})
+            window.Claroline.Modal.fromUrl(url)
+          } else {
+            const element = event.currentTarget
+            const route = $(element).attr('href')
+
+            $.ajax({
+              url: route,
+              type: 'GET',
+              success: function (datas) {
+                listElement.html(datas)
+              }
+            })
+          }
         })
 
         widgetElement.on('click', '#search-course-btn', function () {
