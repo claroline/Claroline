@@ -16,7 +16,7 @@
                 data-id="{{ pdf.resourceNode.id }}"
                 data-name="'{{ pdf.resourceNode.name }}'"
                 data-url="'{{ path('claro_pdf', {node: pdf.resourceNode.id}) }}'"
-                data-download="true">
+                data-download="{{ canDownload }}">
         </pdf-viewer>
     </div>
 {% endblock %}

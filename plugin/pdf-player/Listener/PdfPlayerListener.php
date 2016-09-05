@@ -20,6 +20,8 @@ class PdfPlayerListener extends ContainerAware
 {
     public function onOpenPdf(PlayFileEvent $event)
     {
+        $canDownload = $this->container->get('security.authorization_checker')->isGranted('EXPORT', $event->getResource()->getResourceNode());
+
         $path = $this->container->getParameter('claroline.param.files_directory')
             .DIRECTORY_SEPARATOR
             .$event->getResource()->getHashName();
@@ -28,6 +30,7 @@ class PdfPlayerListener extends ContainerAware
             [
                 'path' => $path,
                 'pdf' => $event->getResource(),
+                'canDownload' => $canDownload,
                 '_resource' => $event->getResource(),
             ]
         );
