@@ -1,0 +1,13 @@
+<div class="hint row">
+    <span class="col-md-10">
+        <span class="fa fa-fw" data-ng-class="{'fa-eye': !hintCtrl.used, 'fa-lightbulb-o': hintCtrl.used}"></span>
+
+        <span data-ng-if="!hintCtrl.used">{{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }}</span>
+        <span data-ng-if="hintCtrl.used" data-ng-bind-html="hintCtrl.hint.value | unsafe"></span>
+    </span>
+
+    <!-- Hint penalty -->
+    <small class="col-md-2 text-danger">
+        {{ 'hint_points'|transChoice:hintCtrl.hint.penalty:{count: hintCtrl.hint.penalty}:'ujm_exo' }}
+    </small>
+</div>

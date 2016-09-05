@@ -49,6 +49,11 @@ ujm_api_paper:
     type: annotation
     prefix: /api
 
+ujm_api_hint:
+    resource: "@UJMExoBundle/Controller/Api/HintController.php"
+    type: annotation
+    prefix: /api
+
 ujm_api_step:
     resource: "@UJMExoBundle/Controller/Api/StepController.php"
     type: annotation
