@@ -1323,3 +1323,4 @@ ssl_enabled: is SSL enabled ?
 disable: Disable
 enable: Enable
 workspace_access_date_invalid: The workspace access dates are passed
+organization_invalid: The organization %organization% doesn't exist at line %line%

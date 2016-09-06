@@ -943,7 +943,7 @@ class UserManager
     }
 
     /**
-     * @todo Please describe me. I couldn't find findOneByResetPasswordHash.
+     * @todo Please describe me. I couldn't find findOneByResetPasswordHash
      *
      * @param string $resetPassword
      *
@@ -1006,7 +1006,7 @@ class UserManager
      * Set the user locale.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string                            $locale Language with format en, fr, es, etc.
+     * @param string                            $locale Language with format en, fr, es, etc
      */
     public function setLocale(User $user, $locale = 'en')
     {
@@ -1187,9 +1187,6 @@ class UserManager
         return $this->userRepo->countAllEnabledUsers($executeQuery);
     }
 
-    /**
-     *
-     */
     public function importPictureFiles($filepath)
     {
         $archive = new \ZipArchive();
@@ -1683,20 +1680,6 @@ class UserManager
         return $this->logger;
     }
 
-    /**
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     * @param string $order
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getAllUsersExcept($page, $max = 20, $orderedBy = 'id', $order = null, array $users)
-    {
-        $query = $this->userRepo->findAllExcept($users);
-
-        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
-    }
     /**
      * @param string $search
      * @param int    $page

@@ -131,6 +131,12 @@ class CsvUserValidator extends ConstraintValidator
                     $modelName = null;
                 }
 
+                if (isset($user[10])) {
+                    $organizationName = trim($user[10]) === '' ? null : $user[10];
+                } else {
+                    $organizationName = null;
+                }
+
                 (!array_key_exists($email, $mails)) ?
                     $mails[$email] = [$i + 1] :
                     $mails[$email][] = $i + 1;
@@ -226,18 +232,33 @@ class CsvUserValidator extends ConstraintValidator
                     );
                 }
             }
-        }
 
-        if ($modelName) {
-            $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')->findOneByName($modelName);
+            if ($modelName) {
+                $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')->findOneByName($modelName);
 
-            if (!$model) {
-                $msg = $this->translator->trans(
-                    'model_invalid',
-                    ['%model%' => $modelName, '%line%' => $i + 1],
-                    'platform'
-                ).' ';
-                $this->context->addViolation($msg);
+                if (!$model) {
+                    $msg = $this->translator->trans(
+                        'model_invalid',
+                        ['%model%' => $modelName, '%line%' => $i + 1],
+                        'platform'
+                    ).' ';
+                    $this->context->addViolation($msg);
+                }
+            }
+
+            if ($organizationName) {
+                $organization = $this->om
+                    ->getRepository('Claroline\CoreBundle\Entity\Organization\Organization')
+                    ->findOneByName($organizationName);
+
+                if (!$organization) {
+                    $msg = $this->translator->trans(
+                        'organization_invalid',
+                        ['%organization%' => $organizationName, '%line%' => $i + 1],
+                        'platform'
+                    ).' ';
+                    $this->context->addViolation($msg);
+                }
             }
         }
 
