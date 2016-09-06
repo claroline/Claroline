@@ -44,7 +44,7 @@
             </a>
 
             <!-- Delete step -->
-            <a href="" role="button" class="btn btn-danger btn-sm" data-ng-click="summaryItemEditCtrl.removeStep()" data-toggle="tooltip" data-container="body" title="{{ 'step_delete' | trans:{}:'path_wizards' }}">
+            <a href="" role="button" class="btn btn-danger btn-sm" data-ng-click="summaryItemEditCtrl.removeStep()" data-ng-disabled="0 === summaryItemEditCtrl.step.lvl" data-toggle="tooltip" data-container="body" title="{{ 'step_delete' | trans:{}:'path_wizards' }}">
                 <span class="fa fa-trash-o"></span>
                 <span class="sr-only">{{ 'step_delete' | trans:{}:'path_wizards' }}</span>
             </a>

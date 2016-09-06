@@ -107,12 +107,9 @@ export default class PathService {
    */
   initialize() {
     // Create a generic root step
-    var rootStep = this.StepService.newStep()
+    const rootStep = this.StepService.newStep()
 
     this.path.steps.push(rootStep)
-
-    // Set root step as current step
-    this.goTo(rootStep)
   }
 
   /**
