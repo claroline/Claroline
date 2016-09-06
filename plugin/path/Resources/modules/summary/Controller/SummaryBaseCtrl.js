@@ -17,9 +17,9 @@ export default class SummaryBaseCtrl {
 
     /**
      * Structure of the current path
-     * @type {object}
+     * @type {array}
      */
-    this.structure = {}
+    this.structure = []
 
     // Get the structure of the current path
     const path = this.pathService.getPath()

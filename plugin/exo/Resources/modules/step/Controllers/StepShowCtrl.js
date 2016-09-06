@@ -3,12 +3,14 @@
  * @param {UserPaperService} UserPaperService
  * @param {FeedbackService} FeedbackService
  * @param {QuestionService} QuestionService
+ * @param {StepService} StepService
  * @constructor
  */
-function StepShowCtrl(UserPaperService, FeedbackService, QuestionService) {
+function StepShowCtrl(UserPaperService, FeedbackService, QuestionService, StepService) {
   this.UserPaperService = UserPaperService
   this.FeedbackService = FeedbackService
   this.QuestionService = QuestionService
+  this.StepService = StepService
 
   // Get the order of items from the Paper of the User (in case they are shuffled)
   this.items = this.UserPaperService.orderStepQuestions(this.step)
@@ -90,6 +92,10 @@ StepShowCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
       this.allAnswersFound = this.FeedbackService.MULTIPLE_ANSWERS_MISSING
     }
   }
+}
+
+StepShowCtrl.prototype.showMinimalCorrection = function showMinimalCorrection() {
+  return this.StepService.getExerciseMeta().minimalCorrection
 }
 
 /**

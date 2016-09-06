@@ -24,7 +24,8 @@
     <question-show data-ng-repeat="question in paperShowCtrl.questions"
                    data-question="question"
                    data-question-paper="paperShowCtrl.getQuestionPaper(question)"
-                   data-include-correction="true">
+                   data-include-correction="true"
+                   data-minimal-correction="paperShowCtrl.showMinimalCorrection()">
     </question-show>
 
     <!-- Display a big button for those who can edit Exercise OR a big button to play the Exercise if no alert -->

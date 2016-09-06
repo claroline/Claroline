@@ -171,7 +171,7 @@ class WorkspaceManager
             $transferManager->setLogger($this->logger);
         }
 
-        $workspace = $transferManager->createWorkspace($workspace, $template);
+        $workspace = $transferManager->createWorkspace($workspace, $template, false);
 
         return $workspace;
     }
@@ -628,6 +628,16 @@ class WorkspaceManager
     public function getOneByGuid($guid)
     {
         return $this->workspaceRepo->findOneByGuid($guid);
+    }
+
+    /**
+     * @param string $code
+     *
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
+     */
+    public function getOneByCode($code)
+    {
+        return $this->workspaceRepo->findOneByCode($code);
     }
 
     /**

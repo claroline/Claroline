@@ -1,8 +1,5 @@
-{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
-
-{% if isDesktop() %}
-    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
-    {% block breadcrumb %}
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% block breadcrumb %}
         {{
             macros.breadcrumbs([
                 {
@@ -16,10 +13,7 @@
                 }
             ])
         }}
-    {% endblock %}
-{% endif %}
-
-{% extends layout %}
+{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}

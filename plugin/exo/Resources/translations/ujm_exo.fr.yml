@@ -223,6 +223,7 @@ maximum_tries: Nombre d'essai maximum
 meaning_measure_difficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
 metadata_visible:      Afficher les informations de l'exercice
 metadata_visible_help: Si coché, un tableau récapitulatif sera affiché sur la vue d'ensemble de l'exercice
+minimal_correction: Vue minimale de la correction
 model: Modèle
 more_info: Plus d'informations
 my_questions: Mes questions

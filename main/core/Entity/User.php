@@ -167,7 +167,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="users",
      *     fetch="EXTRA_LAZY",
-     *     cascade={"merge"}
+     *     cascade={"merge", "refresh"}
      * )
      * @Groups({"api_user"})
      * @ORM\JoinTable(name="claro_user_role")

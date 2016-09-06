@@ -18,9 +18,10 @@
     <question-show data-ng-repeat="item in stepShowCtrl.items"
                    data-question="item"
                    data-question-paper="stepShowCtrl.getQuestionPaper(item)"
-                   data-include-correction="stepShowCtrl.solutionShown">
+                   data-include-correction="stepShowCtrl.solutionShown"
+                   data-minimal-correction="stepShowCtrl.showMinimalCorrection()">
     </question-show>
-    
+
     <div class="alert alert-info" data-ng-if="stepShowCtrl.feedback.visible && !stepShowCtrl.solutionShown">
         {{ stepShowCtrl.getSuiteFeedback()|trans:{}:'ujm_sequence' }}
     </div>

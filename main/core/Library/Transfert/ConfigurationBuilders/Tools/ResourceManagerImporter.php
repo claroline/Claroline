@@ -218,6 +218,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
                 if ($importer) {
                     $this->log("Importing {$item['item']['name']} - uid={$item['item']['uid']} - type={$item['item']['type']}");
+
                     $entity = $importer->import($res, $item['item']['name'], $created, $workspace);
                     //some importers are not fully functionnal yet
                     if ($entity) {
@@ -295,8 +296,10 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         if ($fullImport) {
             //add the missing roles
-            foreach ($data['data']['root']['roles'] as $role) {
-                $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
+            if (isset($data['data']['root']['roles'])) {
+                foreach ($data['data']['root']['roles'] as $role) {
+                    $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
+                }
             }
         }
     }
@@ -306,30 +309,36 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $_data = [];
         //first we get the root
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $_data['root'] = [
-            'uid' => $root->getId(),
-            'roles' => $this->getPermsArray($root),
-        ];
-        $directory = $this->resourceManager->getResourceTypeByName('directory');
-        $resourceNodes = $this->resourceManager->getByWorkspaceAndResourceType($workspace, $directory);
 
-        foreach ($resourceNodes as $resourceNode) {
-            if ($resourceNode->getParent() !== null) {
-                $_data['directories'][] = $this->getDirectoryElement($resourceNode, $_files);
+        if ($root) {
+            $_data['root'] = [
+                'uid' => $root->getId(),
+                'roles' => $this->getPermsArray($root),
+            ];
+            $directory = $this->resourceManager->getResourceTypeByName('directory');
+            $resourceNodes = $this->resourceManager->getByWorkspaceAndResourceType($workspace, $directory);
+
+            foreach ($resourceNodes as $resourceNode) {
+                if ($resourceNode->getParent() !== null) {
+                    $_data['directories'][] = $this->getDirectoryElement($resourceNode, $_files);
+                }
             }
-        }
 
-        foreach ($resourceNodes as $resourceNode) {
-            $children = $resourceNode->getChildren();
+            foreach ($resourceNodes as $resourceNode) {
+                $children = $resourceNode->getChildren();
 
-            foreach ($children as $child) {
-                if ($child && $child->getResourceType()->getName() !== 'directory') {
-                    $item = $this->getResourceElement($child, $workspace, $_files, $_data);
-                    if (!empty($item)) {
-                        $_data['items'][] = $item;
+                foreach ($children as $child) {
+                    if ($child && $child->getResourceType()->getName() !== 'directory') {
+                        $item = $this->getResourceElement($child, $workspace, $_files, $_data);
+                        if (!empty($item)) {
+                            $_data['items'][] = $item;
+                        }
                     }
                 }
             }
+        } else {
+            //root restoration is the answer
+            $_data['root'] = ['uid' => 42];
         }
 
         return $_data;
