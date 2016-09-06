@@ -11,16 +11,16 @@
 
 namespace Claroline\ForumBundle\Transfert;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Claroline\CoreBundle\Library\Transfert\Importer;
-use Symfony\Component\Config\Definition\Processor;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\ForumBundle\Entity\Forum;
-use Claroline\ForumBundle\Entity\Category;
-use Claroline\ForumBundle\Entity\Subject;
-use Claroline\ForumBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\ForumBundle\Entity\Category;
+use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\Message;
+use Claroline\ForumBundle\Entity\Subject;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
 
 /**
  * @DI\Service("claroline.importer.forum_importer")
@@ -102,7 +102,7 @@ class ForumImporter extends Importer implements ConfigurationInterface
     public function validate(array $data)
     {
         $processor = new Processor();
-        $result = $processor->processConfiguration($this, $data);
+        $processor->processConfiguration($this, $data);
     }
 
     public function import(array $data)
@@ -165,6 +165,8 @@ class ForumImporter extends Importer implements ConfigurationInterface
             }
         }
 
+        $this->om->persist($forum);
+
         return $forum;
     }
 
@@ -174,12 +176,12 @@ class ForumImporter extends Importer implements ConfigurationInterface
         $data = [];
 
         foreach ($categories as $category) {
-            $data[] = array(
-                'category' => array(
+            $data[] = [
+                'category' => [
                     'name' => $category->getName(),
-                    'subjects' => array(),
-                ),
-            );
+                    'subjects' => [],
+                ],
+            ];
         }
 
         return $data;
