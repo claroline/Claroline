@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
+use Claroline\CoreBundle\Entity\Action\AdditionalAction;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Action\AdditionalAction;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Administration\ProfilePicsImportType;
 use Claroline\CoreBundle\Form\ImportUserType;
@@ -153,7 +153,7 @@ class UsersController extends Controller
         }
         $profileType = new ProfileCreationType(
             $this->localeManager,
-            array($roleUser),
+            [$roleUser],
             $isAdmin,
             $this->authenticationManager->getDrivers()
         );
@@ -165,11 +165,11 @@ class UsersController extends Controller
             $error = 'mail_not_available';
         }
 
-        return array(
+        return [
             'form_complete_user' => $form->createView(),
             'error' => $error,
             'unavailableRoles' => $unavailableRoles,
-        );
+        ];
     }
 
     /**
@@ -192,7 +192,7 @@ class UsersController extends Controller
 
         $profileType = new ProfileCreationType(
             $this->localeManager,
-            array($roleUser),
+            [$roleUser],
             $isAdmin,
             $this->authenticationManager->getDrivers()
         );
@@ -207,7 +207,7 @@ class UsersController extends Controller
             $this->userManager->createUser($user, true, $newRoles);
             $sessionFlashBag->add(
                 'success',
-                $this->translator->trans('user_creation_success', array(), 'platform')
+                $this->translator->trans('user_creation_success', [], 'platform')
             );
 
             return $this->redirect($this->generateUrl('claro_admin_users_index'));
@@ -219,11 +219,11 @@ class UsersController extends Controller
             $error = 'mail_not_available';
         }
 
-        return array(
+        return [
             'form_complete_user' => $form->createView(),
             'error' => $error,
             'unavailableRoles' => $unavailableRoles,
-        );
+        ];
     }
 
     /**
@@ -240,7 +240,7 @@ class UsersController extends Controller
      */
     public function indexAction()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -253,7 +253,7 @@ class UsersController extends Controller
     {
         $form = $this->formFactory->create(new ImportUserType(true));
 
-        return array('form' => $form->createView(), 'error' => null);
+        return ['form' => $form->createView(), 'error' => null];
     }
 
     /**
@@ -275,7 +275,7 @@ class UsersController extends Controller
     {
         $pager = $this->workspaceManager->getOpenableWorkspacesByRolesPager($user->getRoles(), $page, $max);
 
-        return array('user' => $user, 'pager' => $pager, 'page' => $page, 'max' => $max);
+        return ['user' => $user, 'pager' => $pager, 'page' => $page, 'max' => $max];
     }
 
     /**
@@ -303,8 +303,8 @@ class UsersController extends Controller
             $data = file_get_contents($file);
             $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
             $lines = str_getcsv($data, PHP_EOL);
-            $users = array();
-            $toUpdate = array();
+            $users = [];
+            $toUpdate = [];
             $sessionFlashBag = $this->session->getFlashBag();
 
             foreach ($lines as $line) {
@@ -334,7 +334,7 @@ class UsersController extends Controller
             $total = $this->userManager->countUsersByRoleIncludingGroup($roleUser);
 
             if ($total + count($users) > $max) {
-                return array('form' => $form->createView(), 'error' => 'role_user unavailable');
+                return ['form' => $form->createView(), 'error' => 'role_user unavailable'];
             }
 
             $additionalRoles = $form->get('roles')->getData();
@@ -344,17 +344,19 @@ class UsersController extends Controller
                 $total = $this->userManager->countUsersByRoleIncludingGroup($additionalRole);
 
                 if ($total + count($users) > $max) {
-                    return array(
+                    return [
                         'form' => $form->createView(),
                         'error' => $additionalRole->getName().' unavailable',
-                    );
+                    ];
                 }
             }
 
             if (count($toUpdate) > 0) {
-                $updatedNames = $this->userManager->updateImportedUsers(
+                $updatedNames = $this->userManager->importUsers(
                     $toUpdate,
-                    $additionalRoles->toArray(),
+                    $sendMail,
+                    null,
+                    $additionalRoles,
                     $enableEmailNotification
                 );
 
@@ -362,7 +364,7 @@ class UsersController extends Controller
                     $msg = '<'.$name.'> ';
                     $msg .= $this->translator->trans(
                         'has_been_updated',
-                        array(),
+                        [],
                         'platform'
                     );
                     $sessionFlashBag->add('success', $msg);
@@ -381,7 +383,7 @@ class UsersController extends Controller
                 $msg = '<'.$name.'> ';
                 $msg .= $this->translator->trans(
                     'has_been_created',
-                    array(),
+                    [],
                     'platform'
                 );
                 $sessionFlashBag->add('success', $msg);
@@ -390,7 +392,7 @@ class UsersController extends Controller
             return new RedirectResponse($this->router->generate('claro_admin_users_index'));
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -441,12 +443,12 @@ class UsersController extends Controller
         $roles = $this->roleManager->getAllPlatformRoles();
         $tools = $this->toolManager->getAvailableWorkspaceTools();
 
-        return array(
+        return [
             'personalWsToolConfigs' => $personalWsToolConfigs,
             'roles' => $roles,
             'tools' => $tools,
             'maskDecoders' => $maskDecoders,
-        );
+        ];
     }
 
     /**
@@ -463,10 +465,10 @@ class UsersController extends Controller
         $roles = $this->roleManager->getAllPlatformRoles();
         $rights = $this->rightsManager->getAllPersonalWorkspaceRightsConfig();
 
-        return array(
+        return [
             'roles' => $roles,
             'rights' => $rights,
-        );
+        ];
     }
 
     /**
@@ -480,7 +482,7 @@ class UsersController extends Controller
     {
         $this->toolManager->activatePersonalWorkspaceToolPerm($perm, $tool, $role);
 
-        return new JsonResponse(array(), 200);
+        return new JsonResponse([], 200);
     }
 
     /**
@@ -494,7 +496,7 @@ class UsersController extends Controller
     {
         $this->toolManager->removePersonalWorkspaceToolPerm($perm, $tool, $role);
 
-        return new JsonResponse(array(), 200);
+        return new JsonResponse([], 200);
     }
 
     /**
@@ -508,7 +510,7 @@ class UsersController extends Controller
     {
         $this->rightsManager->activatePersonalWorkspaceRightsPerm($role);
 
-        return new JsonResponse(array(), 200);
+        return new JsonResponse([], 200);
     }
 
     /**
@@ -522,7 +524,7 @@ class UsersController extends Controller
     {
         $this->rightsManager->deactivatePersonalWorkspaceRightsPerm($role);
 
-        return new JsonResponse(array(), 200);
+        return new JsonResponse([], 200);
     }
 
     /**
@@ -540,7 +542,7 @@ class UsersController extends Controller
             throw new \Exception('Workspace already exists');
         }
 
-        return new JsonResponse(array(), 200);
+        return new JsonResponse([], 200);
     }
 
     /**
@@ -553,10 +555,10 @@ class UsersController extends Controller
     public function deletePersonalWorkspace(User $user)
     {
         $personalWorkspace = $user->getPersonalWorkspace();
-        $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', array($personalWorkspace));
+        $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', [$personalWorkspace]);
         $this->workspaceManager->deleteWorkspace($personalWorkspace);
 
-        return new JsonResponse(array(), 200);
+        return new JsonResponse([], 200);
     }
 
     /**
@@ -572,7 +574,7 @@ class UsersController extends Controller
     {
         $form = $this->createForm(new ProfilePicsImportType());
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -593,7 +595,7 @@ class UsersController extends Controller
             $this->userManager->importPictureFiles($file);
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -605,7 +607,7 @@ class UsersController extends Controller
      */
     public function executeUserAdminAction(User $user, AdditionalAction $action)
     {
-        $event = $this->eventDispatcher->dispatch($action->getType().'_'.$action->getAction(), 'AdminUserAction', array('user' => $user));
+        $event = $this->eventDispatcher->dispatch($action->getType().'_'.$action->getAction(), 'AdminUserAction', ['user' => $user]);
 
         return $event->getResponse();
     }
@@ -621,7 +623,7 @@ class UsersController extends Controller
      */
     public function executeGroupAdminAction(Group $group, AdditionalAction $action)
     {
-        $event = $this->eventDispatcher->dispatch($action->getType().'_'.$action->getAction(), 'AdminGroupAction', array('group' => $group));
+        $event = $this->eventDispatcher->dispatch($action->getType().'_'.$action->getAction(), 'AdminGroupAction', ['group' => $group]);
 
         return $event->getResponse();
     }

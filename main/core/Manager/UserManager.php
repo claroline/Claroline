@@ -471,31 +471,46 @@ class UserManager
                 $group = null;
             }
 
-            $newUser = new User();
-            $newUser->setFirstName($firstName);
-            $newUser->setLastName($lastName);
-            $newUser->setUsername($username);
-            $newUser->setPlainPassword($pwd);
-            $newUser->setMail($email);
-            $newUser->setAdministrativeCode($code);
-            $newUser->setPhone($phone);
-            $newUser->setLocale($lg);
-            $newUser->setAuthentication($authentication);
-            $newUser->setIsMailNotified($enableEmailNotifaction);
+            $userEntity = $this->getUserByUsernameOrMail($username, $email);
+            $isNew = false;
 
-            $this->createUser($newUser, $sendMail, $additionalRoles, $model, $username.uniqid(), $organizations);
-            $this->objectManager->persist($newUser);
+            if (!$userEntity) {
+                $isNew = true;
+                $userEntity = new User();
+                $userEntity->setUsername($username);
+                $userEntity->setMail($email);
+            }
+
+            $userEntity->setFirstName($firstName);
+            $userEntity->setLastName($lastName);
+            $userEntity->setPlainPassword($pwd);
+            $userEntity->setAdministrativeCode($code);
+            $userEntity->setPhone($phone);
+            $userEntity->setLocale($lg);
+            $userEntity->setAuthentication($authentication);
+            $userEntity->setIsMailNotified($enableEmailNotifaction);
+
+            if (!$isNew && $logger) {
+                $logger(" User $j ($username) being updated...");
+                $this->roleManager->associateRoles($userEntity, $additionalRoles);
+            }
+
+            if ($isNew) {
+                if ($logger) {
+                    $logger(" User $j ($username) being created...");
+                }
+                $this->createUser($userEntity, $sendMail, $additionalRoles, $model, $username.uniqid(), $organizations);
+            }
+
+            $this->objectManager->persist($userEntity);
             $returnValues[] = $firstName.' '.$lastName;
 
             if ($group) {
-                $this->groupManager->addUsersToGroup($group, [$newUser]);
+                $this->groupManager->addUsersToGroup($group, [$userEntity]);
             }
 
             if ($logger) {
                 $logger(' [UOW size: '.$this->objectManager->getUnitOfWork()->size().']');
-            }
-            if ($logger) {
-                $logger(" User $j ($username) being created");
             }
             ++$i;
             ++$j;
@@ -1241,91 +1256,6 @@ class UserManager
     public function countByRoles(array $roles, $includeGrps = true)
     {
         return $this->userRepo->countByRoles($roles, $includeGrps);
-    }
-
-    /**
-     * Update users imported from an array.
-     * There is the array format:.
-     *
-     * @todo some batch processing
-     *
-     * array(
-     *     array(firstname, lastname, username, pwd, email, code, phone),
-     *     array(firstname2, lastname2, username2, pwd2, email2, code2, phone2),
-     *     array(firstname3, lastname3, username3, pwd3, email3, code3, phone3),
-     * )
-     *
-     * @param array $users
-     * @param bool  $enableEmailNotification default to null so we have the option to not override it
-     *
-     * @return array
-     */
-    public function updateImportedUsers(array $users, $additionalRoles = [], $enableEmailNotification = null)
-    {
-        $returnValues = [];
-        $lg = $this->platformConfigHandler->getParameter('locale_language');
-        $this->objectManager->startFlushSuite();
-        $updatedUsers = [];
-        $i = 1;
-
-        foreach ($users as $user) {
-            $firstName = $user[0];
-            $lastName = $user[1];
-            $username = $user[2];
-            $pwd = $user[3];
-            $email = $user[4];
-
-            if (isset($user[5])) {
-                $code = trim($user[5]) === '' ? null : $user[5];
-            } else {
-                $code = null;
-            }
-
-            if (isset($user[6])) {
-                $phone = trim($user[6]) === '' ? null : $user[6];
-            } else {
-                $phone = null;
-            }
-
-            if (isset($user[7])) {
-                $authentication = trim($user[7]) === '' ? null : $user[7];
-            } else {
-                $authentication = null;
-            }
-            $existingUser = $this->getUserByUsernameOrMail($username, $email);
-
-            if (!is_null($existingUser)) {
-                $existingUser->setFirstName($firstName);
-                $existingUser->setLastName($lastName);
-                $existingUser->setUsername($username);
-                if ($pwd !== '') {
-                    $existingUser->setPlainPassword($pwd);
-                }
-                $existingUser->setMail($email);
-                $existingUser->setAdministrativeCode($code);
-                $existingUser->setPhone($phone);
-                $existingUser->setLocale($lg);
-                $existingUser->setAuthentication($authentication);
-                if ($enableEmailNotification !== null) {
-                    $existingUser->setIsMailNotified($enableEmailNotification);
-                }
-                $this->objectManager->persist($existingUser);
-                $updatedUsers[] = $existingUser;
-                $returnValues[] = $firstName.' '.$lastName;
-
-                if ($i % 100 === 0) {
-                    $this->objectManager->forceFlush();
-                }
-                ++$i;
-            }
-        }
-        $this->objectManager->endFlushSuite();
-
-        if (count($updatedUsers) > 0 && count($additionalRoles) > 0) {
-            $this->roleManager->associateRolesToSubjects($updatedUsers, $additionalRoles);
-        }
-
-        return $returnValues;
     }
 
     /**
