@@ -31,6 +31,7 @@ angular
     'ExerciseService',
     'StepService',
     'QuestionService',
+    'url',
     PaperService
   ])
   .service('UserPaperService', [

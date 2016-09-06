@@ -9,6 +9,7 @@ import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
 import 'angular-ui-tinymce'
 import '#/main/core/modal/module'
+import '#/main/core/fos-js-router/module'
 
 import './../common/module'
 import './../feedback/module'
@@ -36,6 +37,7 @@ angular
   .service('StepService', [
     '$http',
     '$q',
+    'url',
     'ExerciseService',
     'QuestionService',
     StepService
@@ -59,6 +61,7 @@ angular
     'UserPaperService',
     'FeedbackService',
     'QuestionService',
+    'StepService',
     StepShowCtrl
   ])
   .directive('stepShow', [
