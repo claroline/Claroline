@@ -84,6 +84,7 @@ class PlatformConfiguration
     private $googleGeocodingSignature;
     private $googleGeocodingKey;
     private $formHoneypot;
+    private $sslEnabled;
     private $enableRichTextFileImport;
 
     /**
@@ -756,6 +757,16 @@ class PlatformConfiguration
     public function getFormHoneypot()
     {
         return $this->formHoneypot;
+    }
+
+    public function setSslEnabled($sslEnabled)
+    {
+        $this->sslEnabled = $sslEnabled;
+    }
+
+    public function getSslEnabled()
+    {
+        return $this->sslEnabled;
     }
 
     public function setEnableRichTextFileImport($bool)

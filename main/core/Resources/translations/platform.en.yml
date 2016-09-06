@@ -1319,6 +1319,7 @@ group_removed: Group %group% removed.
 mandatory: Mandatory
 leave_empty: Let this field empty to prove that you aren't a bot
 field_not_empty: Please let the field empty
+ssl_enabled: is SSL enabled ?
 disable: Disable
 enable: Enable
 workspace_access_date_invalid: The workspace access dates are passed

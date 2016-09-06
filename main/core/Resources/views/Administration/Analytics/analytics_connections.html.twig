@@ -78,7 +78,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script type="text/javascript" src="{{ asset('packages/jqPlot/src/jquery.jqplot.js') }}"></script>
+    {% include 'ClarolineCoreBundle:Layout:jqplot_script.html.twig' %}
     {% javascripts debug=false filter='jsmin' output='js/corebundle/jqplot.analytics-connections.min.js'
     'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
     'packages/jqPlot/src/plugins/jqplot.highlighter.js'
