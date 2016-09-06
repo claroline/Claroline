@@ -5,9 +5,9 @@
  * This pre-commit hook checks for PHP-CS-fixer errors.
  *
  * @authors Mardix  http://github.com/mardix, Donovan Tengblad http://github.com/purplefish32
+ *
  * @since   Sept 4 2012
  */
-
 $binDir = __DIR__.'/../../../../../../bin';
 $csFixer = realpath("{$binDir}/php-cs-fixer");
 
@@ -31,8 +31,8 @@ foreach ($files as $file) {
             // fix file and add it back
             exec("php-cs-fixer fix {$fileName} --level=symfony --fixers=ordered_use,short_array_syntax; git add {$fileName}");
         } else {
-           echo implode("\n", $output)."\n";
-           exit(1);
+            echo implode("\n", $output)."\n";
+            exit(1);
         }
     }
 }

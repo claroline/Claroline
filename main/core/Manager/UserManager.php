@@ -490,8 +490,9 @@ class UserManager
             $userEntity->setAuthentication($authentication);
             $userEntity->setIsMailNotified($enableEmailNotifaction);
 
-            if (!$isNew) {
+            if (!$isNew && $logger) {
                 $logger(" User $j ($username) being updated...");
+                $this->roleManager->associateRoles($userEntity, $additionalRoles);
             }
 
             if ($isNew) {
@@ -1609,20 +1610,6 @@ class UserManager
         return $this->logger;
     }
 
-    /**
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     * @param string $order
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getAllUsersExcept($page, $max, $orderedBy, $order, array $users)
-    {
-        $query = $this->userRepo->findAllExcept($users);
-
-        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
-    }
     /**
      * @param string $search
      * @param int    $page

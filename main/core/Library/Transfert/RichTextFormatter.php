@@ -213,6 +213,7 @@ class RichTextFormatter
         //files <a href=...open...> - name - </a>
         //imgs <img style='max-width: 100%;' src='{$url}' alt='{$node->getName()}'>
         $matchReplaced = [];
+        $fullMatch = preg_quote($fullMatch);
 
         preg_match(
             "#(<source|<a)(.*){$fullMatch}(.*)(</a>|</source>)#",
@@ -345,13 +346,13 @@ class RichTextFormatter
     public function generateDisplayedUrlForTinyMce(ResourceNode $node)
     {
         //ie: /path/to/web/app_dev.php
-        $baseUrl = $this->config->getParameter('base_url');
+        $host = $this->config->getParameter('domain_name');
 
         //@see http://stackoverflow.com/questions/173851/what-is-the-canonical-way-to-determine-commandline-vs-http-execution-of-a-php-s
         //we need to configure the router if we're doing the import by cli.
-        if ($baseUrl && php_sapi_name() === 'cli') {
+        if ($host && php_sapi_name() === 'cli') {
             $context = $this->router->getContext();
-            $context->setBaseUrl($baseUrl);
+            $context->setHost($host);
         }
 
         if (strpos('_'.$node->getMimeType(), 'image') > 0) {

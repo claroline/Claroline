@@ -354,7 +354,9 @@ class UsersController extends Controller
             if (count($toUpdate) > 0) {
                 $updatedNames = $this->userManager->importUsers(
                     $toUpdate,
-                    $additionalRoles->toArray(),
+                    $sendMail,
+                    null,
+                    $additionalRoles,
                     $enableEmailNotification
                 );
 

@@ -2,14 +2,14 @@
 
 namespace Claroline\CoreBundle\Listener\Transfer;
 
-use Claroline\CoreBundle\Event\RichTextFormatEvent;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Routing\RouterInterface;
-use Claroline\CoreBundle\Library\Transfert\RichTextFormatter;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\RichTextFormatEvent;
+use Claroline\CoreBundle\Library\Transfert\RichTextFormatter;
+use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @DI\Service()
@@ -83,10 +83,10 @@ class ImgFormatListener
                             true
                         );
                         $el['item']['parent'] = 'data_folder';
-                        $el['item']['roles'] = array(array('role' => array(
+                        $el['item']['roles'] = [['role' => [
                             'name' => 'ROLE_USER',
                             'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('file')),
-                        )));
+                        ]]];
                         $_data['data']['items'][] = $el;
                     }
                 }
@@ -107,7 +107,6 @@ class ImgFormatListener
     {
         $text = $event->getText();
         preg_match_all(self::REGEX_PLACEHOLDER, $text, $matches, PREG_SET_ORDER);
-        $baseUrl = $this->router->getContext()->getBaseUrl();
 
         foreach ($matches as $match) {
             $imgdata = explode('@', $match[1]);
@@ -115,7 +114,7 @@ class ImgFormatListener
             $parent = $this->formatter->findParentFromDataUid($uid);
             $el = $this->formatter->findItemFromUid($uid);
             $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                ->findOneBy(array('parent' => $parent, 'name' => $el['name']));
+                ->findOneBy(['parent' => $parent, 'name' => $el['name']]);
 
             if ($node) {
                 $toReplace = $this->generateDisplayedUrlForTinyMce($node, $match);
@@ -128,7 +127,7 @@ class ImgFormatListener
 
     private function replaceLink($txt, $fullMatch, $nodeId)
     {
-        $width = $heigth = $style = null;
+        $width = $height = $style = null;
 
         preg_match(
             "#(<img)(.*){$fullMatch}(.*)(/>)#",
@@ -136,17 +135,17 @@ class ImgFormatListener
             $matchReplaced
         );
 
-        if (count($matchReplaced)  > 0) {
+        if (count($matchReplaced) > 0) {
             $el = $matchReplaced[0];
             //grep the width
             preg_match('#(.*)width="([^"]+)(.*)#', $el, $widths);
-            $width = $widths[2];
+            $width = isset($widths[2]) ? $widths[2] : '';
             //grep the heigth
             preg_match('#(.*)height="([^"]+)(.*)#', $el, $heights);
-            $height = $heights[2];
+            $height = isset($heights[2]) ? $heights[2] : '';
             //grep the style
             preg_match('#(.*)style="([^"]+)(.*)#', $el, $styles);
-            $style = $styles[2];
+            $style = isset($styles[2]) ? $styles[2] : '';
 
             $txt = str_replace($el, "[[img={$nodeId}@{$width}@{$height}@{$style}]]", $txt);
         }
@@ -165,7 +164,7 @@ class ImgFormatListener
         $width = $imgdata[1];
         $height = $imgdata[2];
         $style = $imgdata[3];
-        $url = $this->router->generate('claro_file_get_media', array('node' => $node->getId()));
+        $url = $this->router->generate('claro_file_get_media', ['node' => $node->getId()]);
         $img = '<img ';
 
         if ($width !== '') {

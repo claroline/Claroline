@@ -220,6 +220,7 @@ class ParametersController extends Controller
                             'default_workspace_tag' => $form['defaultWorkspaceTag']->getData(),
                             'registration_mail_validation' => $form['registrationMailValidation']->getData(),
                             'is_pdf_export_active' => $form['isPdfExportActive']->getData(),
+                            'ssl_enabled' => $form['sslEnabled']->getData(),
                         ]
                     );
 
