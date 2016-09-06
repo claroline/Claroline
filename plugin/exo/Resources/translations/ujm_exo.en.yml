@@ -378,6 +378,7 @@ sort: Sort documents
 summative : Summative
 show_additional_info: Display additional information
 step: Step
+step_score: Step score
 statistics: Display statistics
 step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
 step_item_add: Drag'n'drop or click the "+" button to add questions.

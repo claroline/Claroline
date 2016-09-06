@@ -5,11 +5,14 @@
  * @param {PaperService} PaperService
  * @constructor
  */
-function PaperShowCtrl(paperPromise, PaperService) {
+function PaperShowCtrl(paperPromise, PaperService, UserPaperService) {
   this.PaperService = PaperService
 
   this.paper        = paperPromise.paper
   this.questions    = this.PaperService.orderQuestions(this.paper, paperPromise.questions)
+  this.steps        = this.PaperService.getPaperSteps()
+
+  UserPaperService.setPaper(this.paper)
 }
 
 PaperShowCtrl.prototype.paper = {}

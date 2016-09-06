@@ -30,7 +30,7 @@ StepService.prototype.reorderItems = function reorderSteps(step) {
   var deferred = this.$q.defer()
   this.$http
         .put(
-            this.UrlService.generate('exercise_question_reorder', { exerciseId: exercise.id, id: step.id }),
+            this.UrlService('exercise_question_reorder', { exerciseId: exercise.id, id: step.id }),
             order
         )
         .success(function onSuccess(response) {
@@ -70,7 +70,7 @@ StepService.prototype.save = function save(step, meta) {
   var deferred = this.$q.defer()
   this.$http
         .put(
-            this.UrlService.generate('exercise_step_update_meta', { exerciseId: exercise.id, id: step.id }),
+            this.UrlService('exercise_step_update_meta', { exerciseId: exercise.id, id: step.id }),
             meta
         )
         .success(function onSuccess(response) {

@@ -103,7 +103,7 @@ ExerciseService.prototype.save = function save(metadata) {
 
   this.$http
         .put(
-            this.UrlService.generate('ujm_exercise_update_meta', { id: this.exercise.id }),
+            this.UrlService('ujm_exercise_update_meta', { id: this.exercise.id }),
             metadata
         )
         .success(function onSuccess(response) {
@@ -168,7 +168,7 @@ ExerciseService.prototype.reorderSteps = function reorderSteps() {
   var deferred = this.$q.defer()
   this.$http
         .put(
-            this.UrlService.generate('exercise_step_reorder', { exerciseId: this.exercise.id }),
+            this.UrlService('exercise_step_reorder', { exerciseId: this.exercise.id }),
             order
         )
         .success(function onSuccess(response) {
@@ -202,7 +202,7 @@ ExerciseService.prototype.addStep = function addStep() {
   var deferred = this.$q.defer()
   this.$http
         .post(
-            this.UrlService.generate('exercise_step_add', { exerciseId: this.exercise.id }),
+            this.UrlService('exercise_step_add', { exerciseId: this.exercise.id }),
             step
         )
         // Success callback
@@ -241,7 +241,7 @@ ExerciseService.prototype.removeStep = function removeStep(step) {
   var deferred = this.$q.defer()
   this.$http
         .delete(
-            this.UrlService.generate('exercise_step_delete', { exerciseId: this.exercise.id, id: step.id })
+            this.UrlService('exercise_step_delete', { exerciseId: this.exercise.id, id: step.id })
         )
         // Success callback
         .success(function (response) {
@@ -274,7 +274,7 @@ ExerciseService.prototype.removeItem = function removeItem(step, item) {
   var deferred = this.$q.defer()
   this.$http
         .delete(
-            this.UrlService.generate('ujm_exercise_question_delete', { id: this.exercise.id, qid: item.id })
+            this.UrlService('ujm_exercise_question_delete', { id: this.exercise.id, qid: item.id })
         )
         // Success callback
         .success(function (response) {
@@ -308,7 +308,7 @@ ExerciseService.prototype.publish = function publish() {
 
   this.$http
         .post(
-            this.UrlService.generate('ujm_exercise_publish', { id: this.exercise.id })
+            this.UrlService('ujm_exercise_publish', { id: this.exercise.id })
         )
         // Success callback
         .success(function (response) {
@@ -342,7 +342,7 @@ ExerciseService.prototype.unpublish = function unpublish() {
 
   this.$http
         .post(
-            this.UrlService.generate('ujm_exercise_unpublish', { id: this.exercise.id })
+            this.UrlService('ujm_exercise_unpublish', { id: this.exercise.id })
         )
         // Success callback
         .success(function (response) {

@@ -23,7 +23,8 @@ angular
     'ui.bootstrap',
     'angular-table',
     'ui.fos-js-router',
-    'Common'
+    'Common',
+    'Step'
   ])
   .service('PaperService', [
     '$http',
@@ -60,5 +61,6 @@ angular
   .controller('PaperShowCtrl', [
     'paperPromise',
     'PaperService',
+    'UserPaperService',
     PaperShowCtrl
   ])

@@ -63,7 +63,7 @@ PaperService.prototype.getCurrent = function getCurrent(id) {
   if (!this.current || !this.current.paper || id !== this.current.paper.id) {
         // We need to load the paper from the server
     this.$http
-            .get(this.UrlService.generate('exercise_export_paper', { id: id }))
+            .get(this.UrlService('exercise_export_paper', { id: id }))
             .success(function (response) {
               this.current = response
 
@@ -104,7 +104,7 @@ PaperService.prototype.getAll = function getAll() {
 
   var deferred = this.$q.defer()
   this.$http
-        .get(this.UrlService.generate('exercise_papers', { id: exercise.id }))
+        .get(this.UrlService('exercise_papers', { id: exercise.id }))
         .success(function (response) {
           this.setNbPapers(response.length)
 
@@ -169,7 +169,7 @@ PaperService.prototype.deleteAll = function deleteAll(papers) {
 
   var deferred = this.$q.defer()
   this.$http
-        .delete(this.UrlService.generate('ujm_exercise_delete_papers', { id: exercise.id }))
+        .delete(this.UrlService('ujm_exercise_delete_papers', { id: exercise.id }))
         .success(function (response) {
           papers.splice(0, papers.length) // Empty the Papers list
 
@@ -211,7 +211,7 @@ PaperService.prototype.saveScore = function saveScore(question, score) {
   var deferred = this.$q.defer()
   this.$http
         .put(
-            this.UrlService.generate('exercise_save_score', { id: this.current.paper.id, questionId: question.id, score: score })
+            this.UrlService('exercise_save_score', { id: this.current.paper.id, questionId: question.id, score: score })
         )
         .success(function onSuccess(response) {
             // Update paper instance
@@ -226,6 +226,9 @@ PaperService.prototype.saveScore = function saveScore(question, score) {
   return deferred.promise
 }
 
+PaperService.prototype.getPaperSteps = function getPaperSteps(){
+  return this.ExerciseService.getExercise().steps
+}
 /**
  * Calculate the score of the Paper (/20)
  * @param   {Object} paper
