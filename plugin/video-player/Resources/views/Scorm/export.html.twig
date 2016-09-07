@@ -22,7 +22,7 @@
                     <div class="span12">
                         <div>
                             <video controls preload="auto" class="video-js vjs-big-play-centered vjs-default-skin vjs-16-9" data-setup='{}'>
-                                <source src="../files/media_{{ _resource.resourceNode.id }}" type="{{ _resource.resourceNode.mimeType }}" />
+                                <source src="../files/file_{{ _resource.resourceNode.id }}" type="{{ _resource.resourceNode.mimeType }}" />
                                 {% for track in get_video_tracks(_resource) %}
                                     <track
                                             kind="{{ track.getKind() }}"

@@ -189,6 +189,11 @@ class ExportScormResourceEvent extends Event implements DataConveyorEventInterfa
         return $this->embedResources;
     }
 
+    public function setEmbedResources(array $resources = [])
+    {
+        $this->embedResources = $resources;
+    }
+
     /**
      * Add an embed Resource.
      *

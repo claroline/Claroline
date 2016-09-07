@@ -58,7 +58,7 @@ class ImagePlayerListener extends ContainerAware
         $event->setTemplate($template);
 
         // Add Image file
-        $event->addFile('image_'.$resource->getResourceNode()->getId(), $resource->getHashName());
+        $event->addFile('file_'.$resource->getResourceNode()->getId(), $resource->getHashName());
 
         $event->stopPropagation();
     }

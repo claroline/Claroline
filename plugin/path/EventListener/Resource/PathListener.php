@@ -202,7 +202,17 @@ class PathListener extends ContainerAware
         // Decode the path structure to grab embed resources ans generate resource URL
         // We export them before rendering the template to have the correct structure in twig/angular
         $structure = json_decode($path->getStructure());
-        if ($structure && !empty($structure->steps)) {
+
+        if (!empty($structure->description)) {
+            $parsed = $this->container->get('claroline.scorm.rich_text_exporter')->parse($structure->description);
+            $structure->description = $parsed['text'];
+
+            foreach ($parsed['resources'] as $resource) {
+                $event->addEmbedResource($resource);
+            }
+        }
+
+        if (!empty($structure->steps)) {
             foreach ($structure->steps as $step) {
                 $this->exportStepResources($event, $step);
             }
@@ -239,6 +249,14 @@ class PathListener extends ContainerAware
 
     private function exportStepResources(ExportScormResourceEvent $event, \stdClass $step)
     {
+        if (!empty($step->description)) {
+            $parsed = $this->container->get('claroline.scorm.rich_text_exporter')->parse($step->description);
+            $step->description = $parsed['text'];
+            foreach ($parsed['resources'] as $resource) {
+                $event->addEmbedResource($resource);
+            }
+        }
+
         if (!empty($step->primaryResource)) {
             foreach ($step->primaryResource as $primary) {
                 $resource = $this->getResource($primary->resourceId);
