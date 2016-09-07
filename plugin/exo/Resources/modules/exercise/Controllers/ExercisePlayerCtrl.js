@@ -269,7 +269,7 @@ ExercisePlayerCtrl.prototype.end = function end() {
           }
           else {
             // go to exercise papers list (to let the User show his registered paper)
-            this.$location.path('/papers')
+            this.$location.path('/')
           }
         }.bind(this))
       this.feedback.state = {}
