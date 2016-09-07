@@ -115,7 +115,7 @@ class VideoPlayerListener extends ContainerAware
         $event->setTemplate($template);
 
         // Add Image file
-        $event->addFile('media_'.$resource->getResourceNode()->getId(), $resource->getHashName());
+        $event->addFile('file_'.$resource->getResourceNode()->getId(), $resource->getHashName());
 
         // Add assets
         $event->addAsset('video.min.js', 'packages/video.js/dist/video.min.js');

@@ -191,11 +191,23 @@ class ExerciseListener
         /** @var Exercise $exercise */
         $exercise = $event->getResource();
 
+        $exerciseExport = $this->container->get('ujm.exo.exercise_manager')->exportExercise($exercise, true);
+
+        if ($exerciseExport['meta'] && $exerciseExport['meta']['description']) {
+            $exerciseExport['meta']['description'] = $this->exportHtmlContent($event, $exerciseExport['meta']['description']);
+        }
+
+        if ($exerciseExport['steps']) {
+            foreach ($exerciseExport['steps'] as $step) {
+                $this->exportStep($event, $step);
+            }
+        }
+
         $template = $this->container->get('templating')->render(
             'UJMExoBundle:Scorm:export.html.twig', [
                 '_resource' => $exercise,
                 // Angular JS data
-                'exercise' => $this->container->get('ujm.exo.exercise_manager')->exportExercise($exercise, true),
+                'exercise' => $exerciseExport,
                 'locale' => $event->getLocale(),
             ]
         );
@@ -215,6 +227,36 @@ class ExerciseListener
         $event->addTranslationDomain('ujm_sequence');
 
         $event->stopPropagation();
+    }
+
+    private function exportStep(ExportScormResourceEvent $event, array &$step)
+    {
+        if ($step['meta'] && $step['meta']['description']) {
+            $step['meta']['description'] = $this->exportHtmlContent($event, $step['meta']['description']);
+        }
+
+        if ($step['items']) {
+            foreach ($step['items'] as $item) {
+                $item->title = $this->exportHtmlContent($event, $item->title);
+                $item->description = $this->exportHtmlContent($event, $item->description);
+                $item->invite = $this->exportHtmlContent($event, $item->invite);
+                $item->supplementary = $this->exportHtmlContent($event, $item->supplementary);
+                $item->specification = $this->exportHtmlContent($event, $item->specification);
+            }
+        }
+    }
+
+    private function exportHtmlContent(ExportScormResourceEvent $event, $content)
+    {
+        if ($content) {
+            $parsed = $this->container->get('claroline.scorm.rich_text_exporter')->parse($content);
+            $content = $parsed['text'];
+            foreach ($parsed['resources'] as $resource) {
+                $event->addEmbedResource($resource);
+            }
+        }
+
+        return $content;
     }
 
     /**

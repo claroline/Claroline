@@ -182,15 +182,19 @@ class TextListener implements ContainerAwareInterface
         $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\Revision');
 
+        $textContent = $revisionRepo->getLastRevision($text)->getContent();
+        $parsed = $this->container->get('claroline.scorm.rich_text_exporter')->parse($textContent);
+
         $template = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Text:scorm-export.html.twig', [
-                'text' => $revisionRepo->getLastRevision($text)->getContent(),
+                'text' => $parsed['text'],
                 '_resource' => $text,
             ]
         );
 
         // Set export template
         $event->setTemplate($template);
+        $event->setEmbedResources($parsed['resources']);
 
         $event->stopPropagation();
     }

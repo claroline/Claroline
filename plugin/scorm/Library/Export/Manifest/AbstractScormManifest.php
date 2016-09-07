@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ScormBundle\Library\Export;
+namespace Claroline\ScormBundle\Library\Export\Manifest;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 

@@ -53,7 +53,7 @@ class PdfPlayerListener extends ContainerAware
         $event->setTemplate($template);
 
         // Add PDF file
-        $event->addFile('pdf_'.$resource->getResourceNode()->getId(), $resource->getHashName());
+        $event->addFile('file_'.$resource->getResourceNode()->getId(), $resource->getHashName());
 
         // Add assets
         $webpack = $this->container->get('claroline.extension.webpack');
