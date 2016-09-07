@@ -60,15 +60,13 @@ export default class HintService {
   useHint(paperHints, hint) {
     const deferred = this.$q.defer()
 
+    // Hint data re not loaded => call the server
+    const paper = this.UserPaperService.getPaper()
 
-    if (!hint.value) {
-      // Hint data re not loaded => call the server
-      const paper = this.UserPaperService.getPaper()
-
+    if (!this.UserPaperService.isNoSaveMode()) {
+      // Register hint use
       this.$http
-        .get(
-          this.UrlGenerator('exercise_hint_show', {paperId: paper.id, id: hint.id})
-        )
+        .get(this.UrlGenerator('exercise_hint_show', {paperId: paper.id, id: hint.id}))
         .success(response => {
           // Update question Paper with used hint
           paperHints.push({

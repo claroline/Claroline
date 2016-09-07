@@ -5,10 +5,8 @@ import AbstractQuestionService from './AbstractQuestionService'
  * @param {FeedbackService} FeedbackService
  * @constructor
  */
-function ClozeQuestionService(FeedbackService) {
-  AbstractQuestionService.apply(this, arguments)
-
-  this.FeedbackService = FeedbackService
+function ClozeQuestionService($log, FeedbackService) {
+  AbstractQuestionService.call(this, $log, FeedbackService)
 }
 
 // Extends AbstractQuestionCtrl
@@ -27,18 +25,20 @@ ClozeQuestionService.prototype.answersAllFound = function answersAllFound(questi
   if (question.solutions) {
     var numAnswersFound = 0
 
-    for (var i=0; i<question.solutions.length; i++) {
-      for (var j=0; j<question.solutions[i].answers.length; j++) {
-        for (var k=0; k<question.holes.length; k++) {
-          for (var l=0; l<answers.length; l++) {
-            if (answers[l].holeId === question.solutions[i].holeId) {
-              var answer = answers[l]
+    if (answer) {
+      for (var i = 0; i < question.solutions.length; i++) {
+        for (var j=0; j<question.solutions[i].answers.length; j++) {
+          for (var k=0; k<question.holes.length; k++) {
+            for (var l=0; l<answers.length; l++) {
+              if (answers[l].holeId === question.solutions[i].holeId) {
+                var answer = answers[l]
+              }
             }
-          }
-          if (question.holes[k].id === question.solutions[i].holeId && question.solutions[i].answers[j].text === answer.answerText && question.solutions[i].answers[j].score > 0 && !question.holes[k].selector) {
-            numAnswersFound++
-          } else if (question.holes[k].id === question.solutions[i].holeId && question.solutions[i].answers[j].id === answer.answerText && question.solutions[i].answers[j].score > 0 && question.holes[k].selector) {
-            numAnswersFound++
+            if (question.holes[k].id === question.solutions[i].holeId && question.solutions[i].answers[j].text === answer.answerText && question.solutions[i].answers[j].score > 0 && !question.holes[k].selector) {
+              numAnswersFound++
+            } else if (question.holes[k].id === question.solutions[i].holeId && question.solutions[i].answers[j].id === answer.answerText && question.solutions[i].answers[j].score > 0 && question.holes[k].selector) {
+              numAnswersFound++
+            }
           }
         }
       }
@@ -191,6 +191,64 @@ ClozeQuestionService.prototype.getHoleFeedback = function getHoleFeedback(questi
   }
 
   return feedback
+}
+
+ClozeQuestionService.prototype.getTotalScore = function (question) {
+  let total = 0
+
+  for (var i = 0; i < question.solutions.length; i++) {
+    let solution = question.solutions[i]
+
+    let solutionScore = 0
+    for (let j = 0; j < solution.answers.length; j++) {
+      if (solution.answers[j].score > solutionScore) {
+        solutionScore = solution.answers[j].score
+      }
+    }
+
+    total += solutionScore
+  }
+
+  return total
+}
+
+ClozeQuestionService.prototype.getAnswerScore = function (question, answer) {
+  let score = 0
+
+  const solutionsFound = this.getFoundSolutions(question, answer)
+  for (let i = 0; i < solutionsFound.length; i++) {
+    score += solutionsFound[i].score
+  }
+
+  if (0 > score) {
+    score = 0
+  }
+
+  return score
+}
+
+ClozeQuestionService.prototype.getFoundSolutions = function (question, answer) {
+  const found = []
+  if (answer) {
+    for (let i = 0; i < question.holes.length; i++) {
+      // Loop over question holes to find solutions found by user
+      let hole = question.holes[i]
+      let holeAnswer = this.getHoleAnswer(answer, hole)
+      let solution = this.getHoleSolution(question, hole)
+      if (holeAnswer && solution) {
+        for (let j = 0; j < solution.answers.length; j++) {
+          if (hole.selector && holeAnswer.answerText === solution.answers[j].id) {
+            found.push(solution.answers[j])
+          } else if ((solution.answers[j].caseSensitive && solution.answers[j].text === holeAnswer.answerText)
+            || (!solution.answers[j].caseSensitive && solution.answers[j].text.toLowerCase() === holeAnswer.answerText.toLowerCase())) {
+            found.push(solution.answers[j])
+          }
+        }
+      }
+    }
+  }
+
+  return found
 }
 
 export default ClozeQuestionService

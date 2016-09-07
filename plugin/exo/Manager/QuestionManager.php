@@ -8,7 +8,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
-use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
@@ -211,15 +210,6 @@ class QuestionManager
         $handler->convertQuestionAnswers($question, $data);
 
         return $data;
-    }
-
-    public function exportQuestionScore(Question $question, Paper $paper)
-    {
-        $response = $this->om
-            ->getRepository('UJMExoBundle:Response')
-            ->findOneBy(['paper' => $paper, 'question' => $question]);
-
-        return $response ? $response->getMark() : 0;
     }
 
     /**

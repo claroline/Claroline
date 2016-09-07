@@ -9,10 +9,11 @@ export default class QuestionShowCtrl {
    * @param {QuestionService} QuestionService
    * @param {FeedbackService} FeedbackService
    */
-  constructor($uibModal, ExerciseService, FeedbackService) {
+  constructor($uibModal, ExerciseService, QuestionService, FeedbackService) {
     this.$uibModal = $uibModal
-    this.ExerciseService  = ExerciseService
-    this.FeedbackService  = FeedbackService
+    this.ExerciseService = ExerciseService
+    this.QuestionService = QuestionService
+    this.FeedbackService = FeedbackService
 
     /**
      * Is the Question panel collapsed ?
@@ -31,6 +32,11 @@ export default class QuestionShowCtrl {
      * @type {Object}
      */
     this.feedback = this.FeedbackService.get()
+
+    // Initialize answer data if needed
+    if (null === this.questionPaper.answer) {
+      this.questionPaper.answer = this.QuestionService.getTypeService(this.question.type).initAnswer()
+    }
 
     // Force the feedback when correction is shown
     if (this.includeCorrection && !this.FeedbackService.isEnabled()) {
@@ -52,6 +58,31 @@ export default class QuestionShowCtrl {
         }
       }
     })
+  }
+
+  /**
+   * Get the user score for the Question for display.
+   *
+   * @return {String}
+   */
+  getScore() {
+    let score = 0
+    if (this.questionPaper.score || 0 === this.questionPaper.score) {
+      score = this.questionPaper.score
+    } else {
+      score = this.QuestionService.calculateScore(this.question, this.questionPaper)
+    }
+
+    return score + ''
+  }
+
+  /**
+   * Get the total score of the Question for display.
+   *
+   * @return {String}
+   */
+  getTotalScore() {
+    return this.QuestionService.calculateTotal(this.question) + ''
   }
 
   /**

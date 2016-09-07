@@ -7,10 +7,8 @@ import AbstractQuestionService from './AbstractQuestionService'
  * @param {FeedbackService} FeedbackService
  * @constructor
  */
-function MatchQuestionService(FeedbackService) {
-  AbstractQuestionService.apply(this, arguments)
-
-  this.FeedbackService = FeedbackService
+function MatchQuestionService($log, FeedbackService) {
+  AbstractQuestionService.call(this, $log, FeedbackService)
 }
 
 // Extends AbstractQuestionCtrl
@@ -59,25 +57,16 @@ MatchQuestionService.prototype.answersAllFound = function answersAllFound(questi
   var feedbackState = -1
 
   if (question.solutions) {
-    var numAnswersFound = 0
-    for (var j=0; j<question.solutions.length; j++) {
-      for (var i=0; i<answers.length; i++) {
-        var answer = answers[i].split(',')
+    const solutionsFound = this.getFoundSolutions(question, answers)
 
-        if (question.solutions[j].firstId === answer[0] && question.solutions[j].secondId === answer[1]) {
-          numAnswersFound++
-        }
-      }
-    }
-
-    if (numAnswersFound === question.solutions.length) {
-            // all answers have been found
+    if (solutionsFound.length === question.solutions.length) {
+      // all answers have been found
       feedbackState = this.FeedbackService.SOLUTION_FOUND
-    } else if (numAnswersFound === question.solutions.length -1) {
-            // one answer remains to be found
+    } else if (solutionsFound.length === question.solutions.length -1) {
+      // one answer remains to be found
       feedbackState = this.FeedbackService.ONE_ANSWER_MISSING
     } else {
-            // more answers remain to be found
+      // more answers remain to be found
       feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING
     }
   }
@@ -86,7 +75,9 @@ MatchQuestionService.prototype.answersAllFound = function answersAllFound(questi
 }
 
 MatchQuestionService.prototype.initBindMatchQuestion = function initBindMatchQuestion(element) {
-    // defaults parameters for all connections
+  jsPlumb.setSuspendDrawing(false)
+
+  // defaults parameters for all connections
   jsPlumb.importDefaults({
     Anchors: ['RightMiddle', 'LeftMiddle'],
     ConnectionsDetachable: true,
@@ -143,6 +134,48 @@ MatchQuestionService.prototype.initDragMatchQuestion = function initDragMatchQue
     activeClass: 'state-active',
     hoverClass: 'state-hover'
   })
+}
+
+MatchQuestionService.prototype.getTotalScore = function (question) {
+  let total = 0
+
+  for (let i = 0; i < question.solutions.length; i++) {
+    total += question.solutions[i].score
+  }
+
+  return total
+}
+
+MatchQuestionService.prototype.getAnswerScore = function (question, answer) {
+  let score = 0
+
+  const solutionsFound = this.getFoundSolutions(question, answer)
+  for (let i = 0; i < solutionsFound.length; i++) {
+    score += solutionsFound[i].score
+  }
+
+  if (0 > score) {
+    score = 0
+  }
+
+  return score
+}
+
+MatchQuestionService.prototype.getFoundSolutions = function (question, answer) {
+  const found = []
+  if (answer) {
+    for (var j = 0; j < question.solutions.length; j++) {
+      for (var i = 0; i < answer.length; i++) {
+        let parts = answer[i].split(',')
+
+        if (question.solutions[j].firstId === parts[0] && question.solutions[j].secondId === parts[1]) {
+          found.push(question.solutions[j])
+        }
+      }
+    }
+  }
+
+  return found
 }
 
 export default MatchQuestionService

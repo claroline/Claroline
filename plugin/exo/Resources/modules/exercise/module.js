@@ -10,7 +10,6 @@ import 'angular-ui-tinymce'
 import 'angular-ui-translation/angular-translation'
 import '#/main/core/modal/module'
 import '#/main/core/fos-js-router/module'
-import '#/main/core/translation/module'
 
 import './../common/module'
 import './../feedback/module'
@@ -33,7 +32,6 @@ angular
     'ui.tinymce',
     'ui.modal',
     'mgcrea.ngStrap.datepicker',
-    'translation',
     'Common',
     'Feedback',
     'Step',
@@ -51,6 +49,8 @@ angular
     '$location',
     'ExerciseService',
     'TinyMceService',
+    'CorrectionMode',
+    'MarkMode',
     ExerciseMetadataCtrl
   ])
   .controller('ExerciseOverviewCtrl', [
@@ -77,7 +77,6 @@ angular
   .service('ExerciseService', [
     '$http',
     '$q',
-    'Translator',
     'url',
     ExerciseService
   ])

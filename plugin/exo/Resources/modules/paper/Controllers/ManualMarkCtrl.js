@@ -1,53 +1,54 @@
 /**
  * Controller used to let the admins mark questions
- *
- * @param {object} $uibModalInstance
- * @param {PaperService} PaperService
- * @param {Object} question
- * @param {Object} paper
- *
- * @constructor
  */
-function ManualMarkCtrl($uibModalInstance, PaperService, question) {
-    this.$uibModalInstance = $uibModalInstance;
-    this.PaperService = PaperService;
+export default class ManualMarkCtrl {
+  /**
+   * Constructor.
+   *
+   * @param {object} $uibModalInstance
+   * @param {PaperService} PaperService
+   * @param {QuestionService} QuestionService
+   * @param {Object} question
+   */
+  constructor($uibModalInstance, PaperService, QuestionService, question) {
+    this.$uibModalInstance = $uibModalInstance
+    this.PaperService = PaperService
+    this.QuestionService = QuestionService
 
-    this.question = question;
-}
+    this.question = question
 
-ManualMarkCtrl.prototype.question = null;
+    this.score = null
+    this.scoreTotal = this.QuestionService.getTypeService(this.question.type).getTotalScore(this.question)
+    
+    /**
+     * An error message if the given score is incorrect (eg. greater than the question total score).
+     *
+     * @type {null}
+     */
+    this.errors = []
+  }
 
-ManualMarkCtrl.prototype.score = null;
-
-/**
- * An error message if the given score is incorrect (eg. greater than the question total score)
- * @type {null}
- */
-ManualMarkCtrl.prototype.errors = [];
-
-/**
- * Save mark
- */
-ManualMarkCtrl.prototype.save = function save() {
-    this.errors.splice(0, this.errors.length);
-    if (this.score > this.question.scoreTotal) {
-        this.errors.push('mark_bigest');
+  /**
+   * Save mark
+   */
+  save() {
+    this.errors.splice(0, this.errors.length)
+    if (this.score > this.scoreTotal) {
+      this.errors.push('mark_bigest')
     } else {
-        this.PaperService
-            .saveScore(this.question, this.score)
-            .then(function () {
-                this.score = null;
+      this.PaperService
+        .saveScore(this.question, this.score)
+        .then(() => {
+          this.score = null
 
-                // Go back on the paper
-                this.$uibModalInstance.close();
-            }.bind(this));
+          // Go back on the paper
+          this.$uibModalInstance.close()
+        })
     }
-};
+  }
 
-ManualMarkCtrl.prototype.cancel = function cancel() {
-    this.score = null;
-
-    this.$uibModalInstance.dismiss('cancel');
-};
-
-export default ManualMarkCtrl
+  cancel() {
+    this.score = null
+    this.$uibModalInstance.dismiss('cancel')
+  }
+}

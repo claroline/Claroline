@@ -63,8 +63,8 @@ function MatchQuestionDirective(FeedbackService, $timeout, $window, MatchQuestio
 
         // On directive destroy, remove events
         scope.$on('$destroy', function handleDestroyEvent() {
-          jsPlumb.detachEveryConnection()
-          jsPlumb.deleteEveryEndpoint()
+          jsPlumb.detachEveryConnection(element)
+          jsPlumb.deleteEveryEndpoint(element)
         })
       }
     }

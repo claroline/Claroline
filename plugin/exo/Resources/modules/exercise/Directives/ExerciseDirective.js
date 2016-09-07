@@ -13,10 +13,11 @@ export default function ExerciseDirective() {
     controllerAs: 'exerciseCtrl',
     template: exercise,
     scope: {
-      exercise       : '=', // The current Exercise to display
-      nbPapers       : '@', // The number of Papers submitted for this Exercise
-      nbUserPapers   : '@', // The number of Papers submitted by the current User for this Exercise
-      editEnabled    : '=' // User is allowed to edit current exercise ?
+      exercise     : '=', // The current Exercise to display
+      nbPapers     : '@', // The number of Papers submitted for this Exercise
+      nbUserPapers : '@', // The number of Papers submitted by the current User for this Exercise
+      editEnabled  : '=', // User is allowed to edit current exercise ?
+      offline      : '='
     },
     bindToController: true
   }
