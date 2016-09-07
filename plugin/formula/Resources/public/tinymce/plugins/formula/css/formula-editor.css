@@ -339,7 +339,7 @@ body {
 }
 
 .fm-editor .fm-editor-content {
-    min-height: 200px;
+    min-height: 160px;
     width: 97%;
     border: none;
     resize: none;
@@ -352,15 +352,15 @@ body {
 
 /* Result */
 .fm-editor .fm-editor-result-area {
-    padding: 20px;
-    min-height: 200px;
+    padding: 10px;
+    min-height: 160px;
     border: 1px solid #ccc;
 }
 
 .fm-editor .fm-editor-result-area .fm-editor-result-area-label {
     width: auto;
     position: absolute;
-    margin-top: -32px;
+    margin-top: -22px;
     background-color: #fff;
     padding: 2px;
     color: #3d8e3e;
