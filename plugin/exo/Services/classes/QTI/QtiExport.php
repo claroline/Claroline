@@ -190,6 +190,7 @@ abstract class QtiExport
         $urlExplode = explode('/', $path);
         $idNode = end($urlExplode);
         $objSrc = $this->doctrine->getManager()->getRepository('ClarolineCoreBundle:Resource\File')->findOneBy(['resourceNode' => $idNode]);
+
         if (!$objSrc) {
             return;
         }

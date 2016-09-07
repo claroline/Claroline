@@ -3,7 +3,6 @@
 /**
  * To import a QCM question in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Choice;
@@ -85,7 +84,7 @@ class QcmImport extends QtiImport
     {
         $ib = $this->assessmentItem->getElementsByTagName('itemBody')->item(0);
         $ci = $ib->getElementsByTagName('choiceInteraction')->item(0);
-        if ($ci->hasAttribute('shuffle') && $ci->getAttribute('shuffle') == 'true') {
+        if ($ci->hasAttribute('shuffle') && $ci->getAttribute('shuffle') === 'true') {
             $this->interactionQCM->setShuffle(true);
         } else {
             $this->interactionQCM->setShuffle(false);
@@ -98,7 +97,7 @@ class QcmImport extends QtiImport
     protected function getQCMType()
     {
         $ri = $this->assessmentItem->getElementsByTagName('responseDeclaration')->item(0);
-        if ($ri->hasAttribute('cardinality') && $ri->getAttribute('cardinality') == 'multiple') {
+        if ($ri->hasAttribute('cardinality') && $ri->getAttribute('cardinality') === 'multiple') {
             $type = $this->om
                          ->getRepository('UJMExoBundle:TypeQCM')
                          ->findOneBy(['code' => 1]);
@@ -124,7 +123,7 @@ class QcmImport extends QtiImport
 
         foreach ($ci->getElementsByTagName('simpleChoice') as $simpleChoice) {
             $choice = new Choice();
-            if ($simpleChoice->hasAttribute('fixed') && $simpleChoice->getAttribute('fixed') == 'true') {
+            if ($simpleChoice->hasAttribute('fixed') && $simpleChoice->getAttribute('fixed') === 'true') {
                 $choice->setPositionForce(true);
             }
             $feedback = $simpleChoice->getElementsByTagName('feedbackInline');
@@ -176,7 +175,7 @@ class QcmImport extends QtiImport
         if ($mapping->item(0)) {
             $mps = $mapping->item(0)->getElementsByTagName('mapEntry');
             foreach ($mps as $mp) {
-                if ($mp->hasAttribute('mappedValue') && $mp->hasAttribute('mapKey') && $mp->getAttribute('mapKey') == $identifier) {
+                if ($mp->hasAttribute('mappedValue') && $mp->hasAttribute('mapKey') && $mp->getAttribute('mapKey') === $identifier) {
                     $weight = $mp->getAttribute('mappedValue');
                     break;
                 }
@@ -201,7 +200,7 @@ class QcmImport extends QtiImport
         $cr = $ri->getElementsByTagName('correctResponse')->item(0);
         $values = $cr->getElementsByTagName('value');
         foreach ($values as $value) {
-            if ($identifier == $value->nodeValue) {
+            if ($identifier === $value->nodeValue) {
                 $rightResponse = true;
                 break;
             }
@@ -218,7 +217,7 @@ class QcmImport extends QtiImport
         $rp = $this->assessmentItem->getElementsByTagName('responseProcessing')->item(0);
         $responsesIf = $rp->getElementsByTagName('responseIf');
         foreach ($responsesIf as $ri) {
-            if ($ri->getElementsByTagName('match')->item(0) != null) {
+            if ($ri->getElementsByTagName('match')->item(0) !== null) {
                 $val = $ri->getElementsByTagName('baseValue')->item(0)->nodeValue;
                 $this->interactionQCM->setScoreRightResponse($val);
             }
@@ -233,11 +232,11 @@ class QcmImport extends QtiImport
      */
     protected function qtiValidate()
     {
-        if ($this->assessmentItem->getElementsByTagName('responseDeclaration')->item(0) == null) {
+        if ($this->assessmentItem->getElementsByTagName('responseDeclaration')->item(0) === null) {
             return false;
         }
         $ib = $this->assessmentItem->getElementsByTagName('itemBody')->item(0);
-        if ($ib->getElementsByTagName('choiceInteraction')->item(0) == null) {
+        if ($ib->getElementsByTagName('choiceInteraction')->item(0) === null) {
             return false;
         }
 
