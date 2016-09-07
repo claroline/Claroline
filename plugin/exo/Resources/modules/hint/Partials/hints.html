@@ -6,6 +6,7 @@
             type="button"
             role="button"
             class="btn btn-default btn-block"
+            data-ng-disabled="!hintsCtrl.enabled"
             data-confirm-modal="{{ 'question_show_hint_confirm'|trans:{ 1: hint.penalty }:'ujm_sequence' }}"
             data-confirm-modal-action="hintsCtrl.showHint(hint)"
         >

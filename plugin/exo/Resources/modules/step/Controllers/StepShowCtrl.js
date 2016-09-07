@@ -97,7 +97,7 @@ StepShowCtrl.prototype.getStepTotalScore = function getStepTotalScore() {
   this.stepScoreTotal = 0
   for (var i = 0; i < this.items.length; i++) {
     var question = this.items[i]
-    this.stepScoreTotal += question.scoreTotal
+    this.stepScoreTotal += this.QuestionService.getTypeService(question.type).getTotalScore(question)
   }
 }
 
@@ -111,7 +111,7 @@ StepShowCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
     var question = this.items[i]
     var userPaper = this.getQuestionPaper(question)
     var answer = userPaper.answer
-    this.stepScore += userPaper.score
+    this.stepScore += this.QuestionService.getTypeService(question.type).getAnswerScore(question, answer)
     this.feedback.state[question.id] = this.QuestionService.getTypeService(question.type).answersAllFound(question, answer)
     if (this.feedback.state[question.id] !== 0) {
       this.allAnswersFound = this.FeedbackService.MULTIPLE_ANSWERS_MISSING

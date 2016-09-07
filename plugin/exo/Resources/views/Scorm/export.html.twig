@@ -20,11 +20,14 @@
 
     <body>
         {# Initialize AngularJS application #}
-        <div data-ng-app="ExerciseApp" data-ng-cloak="">
-            <exercise
-                data-exercise="{{ exercise | json_encode | raw | escape }}"
-                data-edit-enabled="false">
-            </exercise>
+        <div class="panel panel-default">
+            <div data-ng-app="ExerciseApp" data-ng-cloak="">
+                <exercise
+                    data-exercise="{{ exercise | json_encode | raw | escape }}"
+                    data-edit-enabled="false"
+                    data-offline="true">
+                </exercise>
+            </div>
         </div>
 
         <script src="../commons/jquery.min.js"></script>

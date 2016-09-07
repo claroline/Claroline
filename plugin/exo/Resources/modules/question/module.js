@@ -48,6 +48,7 @@ angular
   .controller('QuestionShowCtrl', [
     '$uibModal',
     'ExerciseService',
+    'QuestionService',
     'FeedbackService',
     QuestionShowCtrl
   ])
@@ -108,6 +109,7 @@ angular
     OpenQuestionDirective
   ])
   .service('QuestionService', [
+    '$log',
     'ChoiceQuestionService',
     'ClozeQuestionService',
     'GraphicQuestionService',
@@ -116,23 +118,28 @@ angular
     QuestionService
   ])
   .service('ChoiceQuestionService', [
+    '$log',
     'FeedbackService',
     ChoiceQuestionService
   ])
   .service('ClozeQuestionService', [
+    '$log',
     'FeedbackService',
     ClozeQuestionService
   ])
   .service('GraphicQuestionService', [
+    '$log',
     'FeedbackService',
     'ImageAreaService',
     GraphicQuestionService
   ])
   .service('MatchQuestionService', [
+    '$log',
     'FeedbackService',
     MatchQuestionService
   ])
   .service('OpenQuestionService', [
+    '$log',
     'FeedbackService',
     OpenQuestionService
   ])

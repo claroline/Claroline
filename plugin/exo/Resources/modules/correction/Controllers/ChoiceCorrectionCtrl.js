@@ -7,13 +7,13 @@ import AbstractCorrectionCtrl from './AbstractCorrectionCtrl'
  * @constructor
  */
 function ChoiceCorrectionCtrl(QuestionService, ChoiceQuestionService) {
-    AbstractCorrectionCtrl.apply(this, arguments);
+  AbstractCorrectionCtrl.apply(this, arguments)
 
-    this.ChoiceQuestionService = ChoiceQuestionService;
-};
+  this.ChoiceQuestionService = ChoiceQuestionService
+}
 
 // Extends AbstractQuestionCtrl
-ChoiceCorrectionCtrl.prototype = Object.create(AbstractCorrectionCtrl.prototype);
+ChoiceCorrectionCtrl.prototype = Object.create(AbstractCorrectionCtrl.prototype)
 
 /**
  * Check if a choice has been selected by User
@@ -21,15 +21,15 @@ ChoiceCorrectionCtrl.prototype = Object.create(AbstractCorrectionCtrl.prototype)
  * @returns {Boolean}
  */
 ChoiceCorrectionCtrl.prototype.isChoiceSelected = function isChoiceSelected(choice) {
-    return this.ChoiceQuestionService.isChoiceSelected(this.answer, choice);
-};
+  return this.ChoiceQuestionService.isChoiceSelected(this.answer, choice)
+}
 
-ChoiceCorrectionCtrl.prototype.getChoiceSolution = function getChoiceScore(choice) {
-    return this.ChoiceQuestionService.getChoiceSolution(this.question, choice);
-};
+ChoiceCorrectionCtrl.prototype.getChoiceSolution = function getChoiceSolution(choice) {
+  return this.ChoiceQuestionService.getChoiceSolution(this.question, choice)
+}
 
 ChoiceCorrectionCtrl.prototype.getChoiceStats = function getChoiceStats(choice) {
-    return this.ChoiceQuestionService.getChoiceStats(this.question, choice);
-};
+  return this.ChoiceQuestionService.getChoiceStats(this.question, choice)
+}
 
 export default ChoiceCorrectionCtrl

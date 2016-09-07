@@ -424,6 +424,9 @@ MatchQuestionCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
     }
   } else {
     this.colorBindings()
+
+    // Disable endpoints
+    jsPlumb.setSuspendDrawing(true)
   }
 }
 
@@ -440,6 +443,9 @@ MatchQuestionCtrl.prototype.onFeedbackHide = function onFeedbackHide() {
       $('#draggable_' + this.dropped[i].source).fadeTo(100, 0.3)
     }
   } else {
+    // Enable endpoints
+    jsPlumb.setSuspendDrawing(false)
+    
     this.colorBindings()
   }
 }

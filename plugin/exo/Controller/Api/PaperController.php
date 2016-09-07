@@ -131,8 +131,7 @@ class PaperController
             foreach ($step->getStepQuestions() as $stepQuestion) {
                 $answers[] = [
                     'question' => $this->questionManager->exportQuestionAnswers($stepQuestion->getQuestion()),
-                    'answer' => $this->paperManager->exportPaperAnswer($stepQuestion->getQuestion(), $paper),
-                    'score' => $this->questionManager->exportQuestionScore($stepQuestion->getQuestion(), $paper),
+                    'answer' => $this->paperManager->exportPaperAnswer($stepQuestion->getQuestion(), $paper, true),
                 ];
             }
 

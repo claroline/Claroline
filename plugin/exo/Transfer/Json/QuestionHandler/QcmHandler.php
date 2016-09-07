@@ -4,12 +4,12 @@ namespace UJM\ExoBundle\Transfer\Json\QuestionHandler;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use UJM\ExoBundle\Entity\Choice;
 use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.qcm_handler")
@@ -25,7 +25,7 @@ class QcmHandler implements QuestionHandlerInterface
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "container"       = @DI\Inject("service_container")
      * })
-     * 
+     *
      * @param ObjectManager      $om
      * @param ContainerInterface $container
      */
@@ -111,9 +111,9 @@ class QcmHandler implements QuestionHandlerInterface
         $interaction = new InteractionQCM();
 
         if ($importData->score->type === 'sum') {
-            $interaction->setWeightResponse(true);//weighted true
+            $interaction->setWeightResponse(true); //weighted true
         } elseif ($importData->score->type === 'fixed') {
-            $interaction->setWeightResponse(false);//no weighted false
+            $interaction->setWeightResponse(false); //no weighted false
             $interaction->setScoreRightResponse($importData->score->success);
             $interaction->setScoreFalseResponse($importData->score->failure);
         }
@@ -184,8 +184,6 @@ class QcmHandler implements QuestionHandlerInterface
             return $choiceData;
         }, $choices);
 
-        $exportData->scoreTotal = $this->container->get('ujm.exo.qcm_service')->maxScore($interaction);
-
         if (!$interaction->getWeightResponse()) {
             $exportData->score = [
                 'type' => 'fixed',
@@ -197,10 +195,15 @@ class QcmHandler implements QuestionHandlerInterface
         }
 
         if ($withSolution) {
-            $exportData->solutions = array_map(function ($choice) {
+            $exportData->solutions = array_map(function ($choice) use ($interaction) {
                 $solutionData = new \stdClass();
                 $solutionData->id = (string) $choice->getId();
-                $solutionData->score = $choice->getWeight();
+
+                if (!$interaction->getWeightResponse()) {
+                    $solutionData->score = $choice->getRightResponse() ? 1 : -1;
+                } else {
+                    $solutionData->score = $choice->getWeight();
+                }
                 $solutionData->rightResponse = $choice->getRightResponse();
 
                 if ($choice->getFeedback()) {

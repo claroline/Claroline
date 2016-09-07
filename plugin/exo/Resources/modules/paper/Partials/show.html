@@ -9,12 +9,12 @@
                 {{ 'paper_need_manual_correction'|trans:{}:'ujm_exo' }}
             </small>
 
-            <span class="label label-primary" data-ng-if="paperShowCtrl.paper.scoreTotal || 0 === paperShowCtrl.paper.scoreTotal">
+            <span class="label label-primary" data-ng-if="paperShowCtrl.paper.score || 0 === paperShowCtrl.paper.score">
                 {{ 'score'|trans:{}:'ujm_exo' }}:
                 {{ paperShowCtrl.getScore() + '/20' }}
             </span>
 
-            <span class="label label-primary" data-ng-if="!paperShowCtrl.paper.scoreTotal && 0 !== paperShowCtrl.paper.scoreTotal">
+            <span class="label label-primary" data-ng-if="!paperShowCtrl.paper.score && 0 !== paperShowCtrl.paper.score">
                 {{ 'score'|trans:{}:'ujm_exo' }}:
                 ?/20
             </span>
@@ -28,9 +28,7 @@
               data-step-index="{{ $index }}"
               data-step="step"
               data-solution-shown="true"
-              data-current-try="0"
-              data-feedback="true"
-              data-all-answers-found="0">
+              data-current-try="0">
       </step-show>
     </div>
 

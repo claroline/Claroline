@@ -1,58 +1,62 @@
+
+import angular from 'angular/index'
+
 /**
  * Exercise Metadata Controller
  * Manages edition of the parameters of the Exercise
- * @param {Object}          $location
- * @param {ExerciseService} ExerciseService
- * @param {TinyMceService} TinyMceService
- * @constructor
  */
-function ExerciseMetadataCtrl($location, ExerciseService, TinyMceService) {
-    this.$location        = $location;
-    this.ExerciseService = ExerciseService;
-    this.TinyMceService = TinyMceService;
+export default class ExerciseMetadataCtrl {
+  /**
+   * Constructor.
+   *
+   * @param {Object}          $location
+   * @param {ExerciseService} ExerciseService
+   * @param {TinyMceService}  TinyMceService
+   * @param {CorrectionMode}  CorrectionMode
+   * @param {MarkMode}        MarkMode
+   */
+  constructor($location, ExerciseService, TinyMceService, CorrectionMode, MarkMode) {
+    this.$location       = $location
+    this.ExerciseService = ExerciseService
+    this.TinyMceService  = TinyMceService
+    this.CorrectionMode  = CorrectionMode
+    this.MarkMode        = MarkMode
 
-    // Create a copy of the exercise
-    angular.copy(this.ExerciseService.getMetadata(), this.meta);
+    /**
+     * A copy of the Exercise to edit (to not override Exercise data if User cancel the edition)
+     * @type {Object}
+     */
+    this.meta = {}
+    angular.copy(this.ExerciseService.getMetadata(), this.meta)
 
-    this.correctionModes = this.ExerciseService.correctionModes;
-    this.markModes       = this.ExerciseService.markModes;
+    /**
+     * List of available correction modes for Exercise
+     * @type {Object}
+     */
+    this.correctionModes = this.CorrectionMode.getList()
 
-    // Initialize TinyMCE
-    this.tinymceOptions = TinyMceService.getConfig();
-};
+    /**
+     * List of available mark modes for Exercise
+     * @type {Object}
+     */
+    this.markModes       = this.MarkMode.getList()
 
-/**
- * Tiny MCE options
- * @type {object}
- */
-ExerciseMetadataCtrl.prototype.tinymceOptions = {};
+    /**
+     * Tiny MCE options
+     * @type {object}
+     */
+    this.tinymceOptions = TinyMceService.getConfig()
+  }
 
-/**
- * A copy of the Exercise to edit (to not override Exercise data if User cancel the edition)
- * @type {Object}
- */
-ExerciseMetadataCtrl.prototype.meta = {};
-
-/**
- * List of available correction modes for Exercise
- * @type {Object}
- */
-ExerciseMetadataCtrl.prototype.correctionModes = {};
-
-/**
- * List of available mark modes for Exercise
- * @type {Object}
- */
-ExerciseMetadataCtrl.prototype.markModes = {};
-
-/**
- * Save modifications of the Exercise
- */
-ExerciseMetadataCtrl.prototype.save = function save() {
-    this.ExerciseService.save(this.meta).then(function onSuccess() {
+  /**
+   * Save modifications of the Exercise
+   */
+  save() {
+    this.ExerciseService
+      .save(this.meta)
+      .then(() => {
         // Go back on the overview
-        this.$location.path('/');
-    }.bind(this));
-};
-
-export default ExerciseMetadataCtrl
+        this.$location.path('/')
+      })
+  }
+}

@@ -7,7 +7,7 @@
             {{ questionShowCtrl.question.title }}
 
             <!-- Score -->
-            <div class="pull-right" data-ng-if="questionShowCtrl.includeCorrection || questionShowCtrl.feedback.enabled">
+            <div class="pull-right" data-ng-if="questionShowCtrl.includeCorrection || questionShowCtrl.feedback.visible">
                 <!-- Display manual correction message for user -->
                 <small class="text-danger" data-ng-if="questionShowCtrl.feedback.visible && -1 === questionShowCtrl.questionPaper.score">
                     <span class="fa fa-warning"></span>
@@ -18,19 +18,14 @@
                 <span class="label label-primary">
                     {{ 'score'|trans:{}:'ujm_exo' }}:
 
-                    <!-- Feedback is hidden -->
-                    <span data-ng-if="!questionShowCtrl.feedback.visible">
-                        ...
-                    </span>
-
                     <!-- Feedback is visible and question is marked -->
-                    <span data-ng-if="questionShowCtrl.feedback.visible && -1 !== questionShowCtrl.questionPaper.score">
-                        {{questionShowCtrl.questionPaper.score + '/' + questionShowCtrl.question.scoreTotal }}
+                    <span data-ng-if="'-1' !== questionShowCtrl.getScore()">
+                        {{ questionShowCtrl.getScore() + '/' + questionShowCtrl.getTotalScore() }}
                     </span>
 
                     <!-- Feedback is visible but question require a manual correction -->
-                    <span data-ng-if="questionShowCtrl.feedback.visible && -1 === questionShowCtrl.questionPaper.score">
-                        {{' ?/' + questionShowCtrl.question.scoreTotal }}
+                    <span data-ng-if="'-1' === questionShowCtrl.getScore()">
+                        {{ '?/' + questionShowCtrl.getTotalScore() }}
                     </span>
                 </span>
             </div>
@@ -178,6 +173,7 @@
         <hints
             data-ng-if="questionShowCtrl.question.hints"
             data-hints="questionShowCtrl.question.hints"
+            data-enabled="!questionShowCtrl.includeCorrection && !questionShowCtrl.feedback.visible"
             data-used-hints="questionShowCtrl.questionPaper.hints">
         </hints>
     </div>

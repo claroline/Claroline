@@ -39,8 +39,8 @@ function ExercisePlayerCtrl(
   this.step = step
 
   this.index = this.UserPaperService.getIndex(step)
-  this.previous = this.ExerciseService.getStep(this.UserPaperService.getPreviousStepId(step))
-  this.next = this.ExerciseService.getStep(this.UserPaperService.getNextStepId(step))
+  this.previous = this.UserPaperService.getPreviousStep(step)
+  this.next = this.UserPaperService.getNextStep(step)
 
   this.allAnswersFound = -1
 
@@ -48,7 +48,7 @@ function ExercisePlayerCtrl(
   this.FeedbackService.reset()
 
   // Configure Feedback
-  if ('3' === this.exercise.meta.type) {
+  if (this.ExerciseService.TYPE_FORMATIVE === this.exercise.meta.type) {
     // Enable feedback
     this.FeedbackService.enable()
   } else {
@@ -250,23 +250,24 @@ ExercisePlayerCtrl.prototype.end = function end() {
     this.TimerService.destroy(this.timer.id)
   }
 
-  this.submit()
-          .then(function onSuccess() {
-            // Answers submitted, we can now end the Exercise
-            this.UserPaperService
-                    .end()
-                    .then(function onSuccess() {
-                      if (this.UserPaperService.isCorrectionAvailable(this.paper)) {
-                        // go to paper correction view
-                        this.$location.path('/papers/' + this.paper.id)
-                      }
-                      else {
-                        // go to exercise papers list (to let the User show his registered paper)
-                        this.$location.path('/papers')
-                      }
-                    }.bind(this))
-            this.feedback.state = {}
-          }.bind(this))
+  this
+    .submit()
+    .then(function onSuccess() {
+      // Answers submitted, we can now end the Exercise
+      this.UserPaperService
+        .end()
+        .then(function onSuccess() {
+          if (this.UserPaperService.isCorrectionAvailable(this.paper)) {
+            // go to paper correction view
+            this.$location.path('/papers/' + this.paper.id)
+          }
+          else {
+            // go to exercise papers list (to let the User show his registered paper)
+            this.$location.path('/papers')
+          }
+        }.bind(this))
+      this.feedback.state = {}
+    }.bind(this))
 }
 
 /**

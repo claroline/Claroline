@@ -5,21 +5,21 @@ import show from './../Partials/show.html'
  * @constructor
  */
 function StepShowDirective() {
-    return {
-        restrict: 'E',
-        replace: true,
-        controller: 'StepShowCtrl',
-        controllerAs: 'stepShowCtrl',
-        bindToController: true,
-        template: show,
-        scope: {
-            step            : '=',
-            stepIndex       : '@',
-            currentTry      : '=',
-            solutionShown   : '=',
-            allAnswersFound : '='
-        }
-    };
+  return {
+    restrict: 'E',
+    replace: true,
+    controller: 'StepShowCtrl',
+    controllerAs: 'stepShowCtrl',
+    bindToController: true,
+    template: show,
+    scope: {
+      step            : '=',
+      stepIndex       : '@',
+      currentTry      : '=',
+      solutionShown   : '=',
+      allAnswersFound : '=?'
+    }
+  }
 }
 
 export default StepShowDirective
