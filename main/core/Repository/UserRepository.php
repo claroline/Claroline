@@ -11,19 +11,19 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
@@ -104,7 +104,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 LEFT JOIN u.groups g
                 LEFT JOIN u.roles r
                 LEFT JOIN r.workspace rws
-                WHERE u.isEnabled = true
+                WHERE u.isRemoved = false
                 ORDER BY u.{$orderedBy} {$order}
             ";
 
@@ -142,7 +142,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
             OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
             )
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             AND r.type = 1
             ORDER BY u.{$orderedBy} {$order}
         ";
@@ -171,7 +171,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
             WHERE g.id = :groupId
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             ORDER BY u.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
@@ -205,7 +205,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             AND (UPPER(u.username) LIKE :search
             OR UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search)
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             ORDER BY u.{$orderedBy} {$order}
         ";
         $upperSearch = strtoupper($search);
@@ -230,7 +230,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $userQueryBuilder = $this->createQueryBuilder('u')
             ->select('u')
             ->join('u.roles', 'r')
-            ->andWhere('u.isEnabled = true')
+            ->andWhere('u.isRemoved = false')
             ->orderBy('u.id');
 
         if (null === $workspace) {
@@ -267,7 +267,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
               w IN (:workspaces) OR
               gw IN (:workspaces)
             )
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             ORDER BY u.id
         ';
         $query = $this->_em->createQuery($dql);
@@ -305,7 +305,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 OR UPPER(u.lastName) LIKE :search
                 OR UPPER(u.username) LIKE :search
             )
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             ORDER BY u.id
         ';
         $query = $this->_em->createQuery($dql);
@@ -344,7 +344,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 OR CONCAT(UPPER(us1.firstName), CONCAT(\' \', UPPER(us1.lastName))) LIKE :search
                 OR CONCAT(UPPER(us1.lastName), CONCAT(\' \', UPPER(us1.firstName))) LIKE :search
             )
-            AND u1.isEnabled = true
+            AND u1.isRemoved = false
             )
             OR u IN (
             SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
@@ -361,7 +361,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 OR CONCAT(UPPER(us2.firstName), CONCAT(\' \', UPPER(us2.lastName))) LIKE :search
                 OR CONCAT(UPPER(us2.lastName), CONCAT(\' \', UPPER(us2.firstName))) LIKE :search
             )
-            AND u2.isEnabled = true)
+            AND u2.isRemoved = false)
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId())
@@ -383,7 +383,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if (count($usernames) > 0) {
             $dql = '
                 SELECT u FROM Claroline\CoreBundle\Entity\User u
-                WHERE u.isEnabled = true
+                WHERE u.isRemoved = false
                 AND u.username IN (:usernames)
             ';
 
@@ -391,7 +391,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $query->setParameter('usernames', $usernames);
             $result = $query->getResult();
         } else {
-            $result = array();
+            $result = [];
         }
 
         return $result;
@@ -425,7 +425,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         $qb = $this->createQueryBuilder('user')
             ->select('COUNT(user.id)')
-            ->where('user.isEnabled = true');
+            ->where('user.isRemoved = false');
 
         return $qb->getQuery()->getSingleScalarResult();
     }
@@ -443,7 +443,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ->select('user.id')
             ->leftJoin('user.roles', 'roles')
             ->andWhere('roles.name IN (:roleNames)')
-            ->andWhere('user.isEnabled = true')
+            ->andWhere('user.isRemoved = false')
             ->setParameter('roleNames', $roleNames);
         $query = $qb->getQuery();
 
@@ -477,7 +477,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 JOIN r2.groups g2
                 JOIN g2.users u2
             )
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             GROUP BY u.id
             ORDER BY total DESC
         ";
@@ -501,7 +501,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.roles r WHERE r IN (:roles) AND u.isEnabled = true
+            JOIN u.roles r WHERE r IN (:roles) AND u.isRemoved = false
             ORDER BY u.lastName
             ";
 
@@ -529,7 +529,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN g.roles r2
             WHERE (r1 in (:roles)
             OR r2 in (:roles))
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             ORDER BY u.{$orderedBy} ".
             $order;
 
@@ -559,7 +559,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN g.roles r2
             WHERE (r1 in (:roles)
             OR r2 in (:roles))
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             ORDER BY u.lastName, u.firstName ASC";
 
         $query = $this->_em->createQuery($dql);
@@ -584,7 +584,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             AND (UPPER(u.username) LIKE :search
             OR UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search)
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             ORDER BY u.lastName
         ';
         $query = $this->_em->createQuery($dql);
@@ -610,7 +610,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             JOIN u.roles ur
             LEFT JOIN u.groups g
             LEFT JOIN g.roles gr
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND (
                 ur IN (:roles) OR gr IN (:roles)
             )
@@ -641,7 +641,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName) AS name, u.username, COUNT(DISTINCT ws.id) AS total
             FROM Claroline\CoreBundle\Entity\Workspace\Workspace ws
             JOIN ws.creator u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             GROUP BY u.id
             ORDER BY total DESC
         ";
@@ -667,7 +667,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             FROM Claroline\CoreBundle\Entity\User u
             WHERE u.username = :username
             OR u.mail = :email
-            AND u.isEnabled = true
+            AND u.isRemoved = false
         ';
 
         $query = $this->_em->createQuery($dql);
@@ -684,15 +684,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function findByNameForAjax($search)
     {
-        $resultArray = array();
+        $resultArray = [];
 
         $users = $this->findByName($search);
 
         foreach ($users as $user) {
-            $resultArray[] = array(
+            $resultArray[] = [
                 'id' => $user->getId(),
                 'text' => $user->getFirstName().' '.$user->getLastName(),
-            );
+            ];
         }
 
         return $resultArray;
@@ -715,7 +715,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 ->getResult();
         }
 
-        return array();
+        return [];
     }
 
     public function findUsernames()
@@ -754,7 +754,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             FROM Claroline\CoreBundle\Entity\User u
             WHERE u.id = :id
             OR u.publicUrl = :publicUrl
-            AND u.isEnabled = true
+            AND u.isRemoved = false
         ';
 
         $query = $this->_em->createQuery($dql);
@@ -865,21 +865,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findEnabledUserById($userId)
-    {
-        $dql = '
-            SELECT u
-            FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.id = :userId
-            AND u.isEnabled = TRUE
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('userId', $userId);
-
-        return $query->getOneOrNullResult();
-    }
-
     public function findAllEnabledUsers($executeQuery = true)
     {
         $dql = '
@@ -897,7 +882,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = '
             SELECT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND NOT EXISTS
             (
                 SELECT r
@@ -922,7 +907,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = "
             SELECT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND EXISTS
             (
                 SELECT rr
@@ -961,7 +946,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = "
             SELECT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND NOT EXISTS
             (
                 SELECT rr
@@ -1001,7 +986,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = "
             SELECT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND
             (
                 UPPER(u.firstName) LIKE :search
@@ -1049,7 +1034,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = "
             SELECT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
             AND
             (
                 UPPER(u.firstName) LIKE :search
@@ -1093,7 +1078,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             SELECT u, ff
             FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.fieldsFacetValue ff
-            WHERE u.isEnabled = true"
+            WHERE u.isRemoved = false"
         ;
 
         $query = $this->_em->createQuery($dql);
@@ -1114,7 +1099,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN ur.workspace uws
             WHERE (uws.id = :wsId
             OR grws.id = :wsId)
-            AND u.isEnabled = true
+            AND u.isRemoved = false
         ";
 
         $query = $this->_em->createQuery($dql);
@@ -1174,7 +1159,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = '
             SELECT COUNT(DISTINCT u)
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
         ';
 
         $query = $this->_em->createQuery($dql);
@@ -1192,7 +1177,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 LEFT JOIN u.groups g
                 LEFT JOIN g.roles r2
                 WHERE r1 in (:roles)
-                AND u.isEnabled = true
+                AND u.isRemoved = false
                 OR r2 in (:roles)';
 
             $query = $this->_em->createQuery($dql);
@@ -1209,14 +1194,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $withCode = false,
         $orderedBy = 'id',
         $order = 'ASC',
-        array $roleRestrictions = array(),
-        array $groupRestrictions = array(),
-        array $workspaceRestrictions = array(),
-        array $excludedUsers = array(),
-        array $forcedUsers = array(),
-        array $forcedGroups = array(),
-        array $forcedRoles = array(),
-        array $forcedWorkspaces = array(),
+        array $roleRestrictions = [],
+        array $groupRestrictions = [],
+        array $workspaceRestrictions = [],
+        array $excludedUsers = [],
+        array $forcedUsers = [],
+        array $forcedGroups = [],
+        array $forcedRoles = [],
+        array $forcedWorkspaces = [],
         $executeQuery = true
     ) {
         $withSearch = !empty($search);
@@ -1232,7 +1217,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = '
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = true
+            WHERE u.isRemoved = false
         ';
 
         if ($withGroups || $withRoles || $withWorkspaces) {
@@ -1467,7 +1452,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 WHERE UPPER(u.firstName) LIKE :search
                 OR UPPER(u.lastName) LIKE :search
                 OR UPPER(u.username) LIKE :search
-                AND u.isEnabled = true
+                AND u.isRemoved = false
             ';
             $query = $this->_em->createQuery($dql);
             $query->setParameter('search', "%{$upperSearch}%");
@@ -1498,7 +1483,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 JOIN us.groups gs
                 WHERE gs.id = :groupId
             )
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             ORDER BY u.{$orderedBy}
         ";
         $query = $this->_em->createQuery($dql);
@@ -1533,7 +1518,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 JOIN us.groups gr
                 WHERE gr.id = :groupId
             )
-            AND u.isEnabled = true
+            AND u.isRemoved = false
             ORDER BY u.{$orderedBy}
         ";
         $search = strtoupper($search);
@@ -1555,7 +1540,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = '
             SELECT u FROM Claroline\CoreBundle\Entity\User u
             WHERE u NOT IN (:userIds)
-            AND u.isEnabled = true
+            AND u.isRemoved = false
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userIds', $excludedUser);
@@ -1579,7 +1564,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN ur.workspace uws
             WHERE (uws.id = :wsId
             OR grws.id = :wsId)
-            AND u.isEnabled = true
+            AND u.isRemoved = false
          ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('wsId', $workspace->getId());

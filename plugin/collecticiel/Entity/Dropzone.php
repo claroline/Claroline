@@ -10,15 +10,16 @@
  * Modify by : Eric VINCENT InnovaERV Add MaximumNotation Column (16/03/2016)
  * Modify by : Eric VINCENT InnovaERV Add ArrayCollection GradingScale (04/2016)
  * Modify by : Eric VINCENT InnovaERV Add ArrayCollection GradingCriteria (04/2016).
+ * Modify by : Eric VINCENT InnovaERV Add ArrayCollection GradingNotation (06/2016).
 */
 
 namespace Innova\CollecticielBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -345,6 +346,18 @@ class Dropzone extends AbstractResource
      */
     public $gradingCriterias;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Innova\CollecticielBundle\Entity\GradingNotation",
+     *     mappedBy="dropzone",
+     *     cascade={"all"},
+     *     orphanRemoval=true
+     * )
+     */
+    public $gradingNotations;
+
     public function __construct()
     {
         $this->notations = new ArrayCollection();
@@ -446,7 +459,7 @@ class Dropzone extends AbstractResource
      */
     public function setForceCommentInCorrection($forceCommentInCorrection)
     {
-        if ($this->getAllowCommentInCorrection() == true) {
+        if ($this->getAllowCommentInCorrection() === true) {
             $this->forceCommentInCorrection = $forceCommentInCorrection;
         } else {
             $this->forceCommentInCorrection = false;
@@ -650,12 +663,12 @@ class Dropzone extends AbstractResource
      */
     public function setManualState($manualState)
     {
-        $ms_tab_values = array(
+        $ms_tab_values = [
             self::MANUAL_STATE_NOT_STARTED,
             self::MANUAL_STATE_PEER_REVIEW,
             self::MANUAL_STATE_ALLOW_DROP,
             self::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW,
-            self::MANUAL_STATE_FINISHED, );
+            self::MANUAL_STATE_FINISHED, ];
         if (array_search($manualState, $ms_tab_values) !== false) {
             $this->manualState = $manualState;
         }
@@ -855,18 +868,18 @@ class Dropzone extends AbstractResource
     public function isNotStarted()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == 'notStarted';
+            return $this->manualState === 'notStarted';
         } else {
             $now = new \DateTime();
 
-            return $now->getTimestamp() < $this->getStartAllowDrop()->getTimestamp() && ($this->getStartReview() == null || $now->getTimestamp() < $this->getStartReview()->getTimestamp());
+            return $now->getTimestamp() < $this->getStartAllowDrop()->getTimestamp() && ($this->getStartReview() === null || $now->getTimestamp() < $this->getStartReview()->getTimestamp());
         }
     }
 
     public function isAllowDrop()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == 'allowDrop' || $this->manualState == 'allowDropAndPeerReview';
+            return $this->manualState === 'allowDrop' || $this->manualState === 'allowDropAndPeerReview';
         } else {
             $now = new \DateTime();
 
@@ -878,7 +891,7 @@ class Dropzone extends AbstractResource
     {
         if ($this->peerReview) {
             if ($this->manualPlanning) {
-                return $this->manualState == 'peerReview' || $this->manualState == 'allowDropAndPeerReview';
+                return $this->manualState === 'peerReview' || $this->manualState === 'allowDropAndPeerReview';
             } else {
                 $now = new \DateTime();
 
@@ -892,7 +905,7 @@ class Dropzone extends AbstractResource
     public function isFinished()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == 'finished';
+            return $this->manualState === 'finished';
         } else {
             $now = new \DateTime();
 
@@ -908,7 +921,7 @@ class Dropzone extends AbstractResource
 
     public function getTimeRemaining($reference)
     {
-        if ($this->manualPlanning || $reference == null) {
+        if ($this->manualPlanning || $reference === null) {
             return -1;
         }
         $now = new \DateTime();
@@ -990,7 +1003,7 @@ class Dropzone extends AbstractResource
      */
     public function setAutoCloseState($autoCloseState)
     {
-        $authorizedValues = array(self::AUTO_CLOSED_STATE_CLOSED, self::AUTO_CLOSED_STATE_WAITING);
+        $authorizedValues = [self::AUTO_CLOSED_STATE_CLOSED, self::AUTO_CLOSED_STATE_WAITING];
         if (in_array($autoCloseState, $authorizedValues)) {
             $this->autoCloseState = $autoCloseState;
         }
@@ -1037,7 +1050,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function addDrop(\Innova\CollecticielBundle\Entity\Drop $drops)
+    public function addDrop(Drop $drops)
     {
         $this->drops[] = $drops;
 
@@ -1049,7 +1062,7 @@ class Dropzone extends AbstractResource
      *
      * @param \Innova\CollecticielBundle\Entity\Drop $drops
      */
-    public function removeDrop(\Innova\CollecticielBundle\Entity\Drop $drops)
+    public function removeDrop(Drop $drops)
     {
         $this->drops->removeElement($drops);
     }
@@ -1061,7 +1074,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function addPeerReviewCriterium(\Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria)
+    public function addPeerReviewCriterium(Criterion $peerReviewCriteria)
     {
         $this->peerReviewCriteria[] = $peerReviewCriteria;
 
@@ -1073,7 +1086,7 @@ class Dropzone extends AbstractResource
      *
      * @param \Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria
      */
-    public function removePeerReviewCriterium(\Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria)
+    public function removePeerReviewCriterium(Criterion $peerReviewCriteria)
     {
         $this->peerReviewCriteria->removeElement($peerReviewCriteria);
     }
@@ -1085,7 +1098,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
+    public function setResourceNode(ResourceNode $resourceNode = null)
     {
         $this->resourceNode = $resourceNode;
 
@@ -1253,7 +1266,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function addGradingScale(\Innova\CollecticielBundle\Entity\GradingScale $gradingScale)
+    public function addGradingScale(GradingScale $gradingScale)
     {
         $this->gradingScales->add($gradingScale);
 
@@ -1265,7 +1278,7 @@ class Dropzone extends AbstractResource
      *
      * @param \Innova\CollecticielBundle\Entity\GradingScale $gradingScale
      */
-    public function removeGradingScale(\Innova\CollecticielBundle\Entity\GradingScale $gradingScale)
+    public function removeGradingScale(GradingScale $gradingScale)
     {
         $this->gradingScales->removeElement($gradingScale);
     }
@@ -1295,7 +1308,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function addGradingCriteria(\Innova\CollecticielBundle\Entity\GradingCriteria $gradingCriteria)
+    public function addGradingCriteria(GradingCriteria $gradingCriteria)
     {
         $this->gradingCriterias[] = $gradingCriteria;
 
@@ -1307,7 +1320,7 @@ class Dropzone extends AbstractResource
      *
      * @param \Innova\CollecticielBundle\Entity\GradingCriteria $gradingCriteria
      */
-    public function removeGradingCriteria(\Innova\CollecticielBundle\Entity\GradingCriteria $gradingCriteria)
+    public function removeGradingCriteria(GradingCriteria $gradingCriteria)
     {
         $this->gradingCriterias->removeElement($gradingCriteria);
     }
@@ -1329,7 +1342,7 @@ class Dropzone extends AbstractResource
      *
      * @return Dropzone
      */
-    public function addNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    public function addNotation(Notation $notation)
     {
         $this->notations[] = $notation;
 
@@ -1341,7 +1354,7 @@ class Dropzone extends AbstractResource
      *
      * @param \Innova\CollecticielBundle\Entity\Notation $notation
      */
-    public function removeNotation(\Innova\CollecticielBundle\Entity\Notation $notation)
+    public function removeNotation(Notation $notation)
     {
         $this->notations->removeElement($notation);
     }
@@ -1354,5 +1367,39 @@ class Dropzone extends AbstractResource
     public function getNotations()
     {
         return $this->notations;
+    }
+
+    /**
+     * Add gradingNotation.
+     *
+     * @param \Innova\CollecticielBundle\Entity\GradingNotation $gradingNotation
+     *
+     * @return Dropzone
+     */
+    public function addGradingNotation(GradingNotation $gradingNotation)
+    {
+        $this->gradingNotations[] = $gradingNotation;
+
+        return $this;
+    }
+
+    /**
+     * Remove gradingNotation.
+     *
+     * @param \Innova\CollecticielBundle\Entity\GradingNotation $gradingNotation
+     */
+    public function removeGradingNotation(GradingNotation $gradingNotation)
+    {
+        $this->gradingNotations->removeElement($gradingNotation);
+    }
+
+    /**
+     * Get gradingNotations.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGradingNotations()
+    {
+        return $this->gradingNotations;
     }
 }

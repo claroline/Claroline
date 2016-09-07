@@ -20,3 +20,8 @@ claro_cursus_bundle_api_cursus:
     defaults: {_format: json}
     options:
         expose: true
+
+claro_cursus_bundle_api_admin_management:
+    resource: "@ClarolineCursusBundle/Controller/API/AdminManagementController.php"
+    type:     annotation
+    prefix:   /

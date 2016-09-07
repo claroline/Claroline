@@ -2,10 +2,10 @@
 
 namespace Claroline\CoreBundle\Tests\API\Organization;
 
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Organization\Location;
-use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\Persister;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 
 class LocationControllerTest extends TransactionalTestCase
 {
@@ -114,7 +114,7 @@ class LocationControllerTest extends TransactionalTestCase
         $this->persister->flush();
 
         $this->logIn($admin);
-        $fields = array(
+        $fields = [
             'name' => 'potterStreet',
             'boxNumber' => 'potterStreet',
             'streetNumber' => 'potterStreet',
@@ -123,8 +123,8 @@ class LocationControllerTest extends TransactionalTestCase
             'town' => 'potterStreet',
             'country' => 'potterStreet',
             'phone' => 'potterStreet',
-        );
-        $form = array('location_form' => $fields);
+        ];
+        $form = ['location_form' => $fields];
         $this->client->request('POST', 'api/locations.json', $form);
 
         //let's check now
@@ -144,7 +144,7 @@ class LocationControllerTest extends TransactionalTestCase
         $this->persister->flush();
 
         $this->logIn($john);
-        $fields = array(
+        $fields = [
             'name' => 'potterStreet',
             'boxNumber' => 'potterStreet',
             'streetNumber' => 'potterStreet',
@@ -153,8 +153,8 @@ class LocationControllerTest extends TransactionalTestCase
             'town' => 'potterStreet',
             'country' => 'potterStreet',
             'phone' => 'potterStreet',
-        );
-        $form = array('location_form' => $fields);
+        ];
+        $form = ['location_form' => $fields];
         $this->client->request('POST', 'api/locations.json', $form);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -169,7 +169,7 @@ class LocationControllerTest extends TransactionalTestCase
         $this->persister->flush();
 
         $this->logIn($admin);
-        $fields = array(
+        $fields = [
             'name' => 'potterStreet',
             'boxNumber' => 'potterStreet',
             'streetNumber' => 'potterStreet',
@@ -178,8 +178,8 @@ class LocationControllerTest extends TransactionalTestCase
             'town' => 'potterStreet',
             'country' => 'potterStreet',
             'phone' => 'potterStreet',
-        );
-        $form = array('location_form' => $fields);
+        ];
+        $form = ['location_form' => $fields];
         $this->client->request('PUT', "api/locations/{$here->getId()}.json", $form);
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
@@ -196,7 +196,7 @@ class LocationControllerTest extends TransactionalTestCase
         $this->persister->flush();
 
         $this->logIn($john);
-        $fields = array(
+        $fields = [
             'name' => 'potterStreet',
             'boxNumber' => 'potterStreet',
             'streetNumber' => 'potterStreet',
@@ -205,8 +205,8 @@ class LocationControllerTest extends TransactionalTestCase
             'town' => 'potterStreet',
             'country' => 'potterStreet',
             'phone' => 'potterStreet',
-        );
-        $form = array('location_form' => $fields);
+        ];
+        $form = ['location_form' => $fields];
         $this->client->request('PUT', "api/locations/{$here->getId()}.json", $form);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }

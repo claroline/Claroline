@@ -1,7 +1,5 @@
-{#% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %#}
 
-{#% if isDesktop() %#}
-{% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 {% block breadcrumb %}
     {{
             macros.breadcrumbs([
@@ -17,10 +15,7 @@
             ])
     }}
 {% endblock %}
-{#% else %#}
-{#% endif %#}
 
-{% extends layout %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -74,13 +69,13 @@
                     <button class="btn btn-default" type="button" id="SubmitBriefSearch"
                             data-toggle="tooltip" title="{{ 'brief_search' | trans({}, 'ujm_exo') }}"
                             onClick="briefSearchSubmit();">
-                        <i class="fa fa-search"></i></button>                   
+                        <i class="fa fa-search"></i></button>
                     <a class="btn btn-default" data-toggle="tooltip" title="{{ 'info_search' | trans({}, 'ujm_exo') }}"
                        accesskey=""href="#" onclick="showInfos();
                                event.preventDefault();">
                         <i class="fa fa-question"></i>
                     </a>
-                       <a class="btn btn-default" href="{{ path('ujm_question_search_question') }}" 
+                       <a class="btn btn-default" href="{{ path('ujm_question_search_question') }}"
                        data-toggle="tooltip" title="{{ 'find_question_advance' | trans({}, 'ujm_exo') }}">
                         <i class="fa fa-cog"></i></a>
                 </span>

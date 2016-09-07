@@ -10,6 +10,8 @@ plugin:
       actions:
         - name: path_administrate
           menu_name: administrate
+        - name: manageresults
+          menu_name: manageresults
 
   widgets:
      - name: innova_path_widget

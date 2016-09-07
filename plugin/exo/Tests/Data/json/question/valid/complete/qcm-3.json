@@ -4,7 +4,6 @@
   "title": "Question ?",
   "description":null,
   "invite":"Question ?",
-  "scoreTotal": 1.5,
   "score": {
     "type": "sum"
   },

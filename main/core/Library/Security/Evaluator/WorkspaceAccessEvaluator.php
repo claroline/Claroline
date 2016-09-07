@@ -2,10 +2,10 @@
 
 namespace Claroline\CoreBundle\Library\Security\Evaluator;
 
+use Claroline\CoreBundle\Controller\Exception\WorkspaceAccessDeniedException;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Controller\Exception\WorkspaceAccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**

@@ -13,10 +13,10 @@ namespace Claroline\CursusBundle\Listener;
 
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * @DI\Service
@@ -50,9 +50,9 @@ class CursusListener
      */
     public function onAdministrationToolOpen(OpenAdministrationToolEvent $event)
     {
-        $params = array();
-        $params['_controller'] = 'ClarolineCursusBundle:Cursus:cursusManagementToolMenu';
-        $subRequest = $this->request->duplicate(array(), null, $params);
+        $params = [];
+        $params['_controller'] = 'ClarolineCursusBundle:API\AdminManagement:index';
+        $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
@@ -66,9 +66,9 @@ class CursusListener
      */
     public function onPluginOptionsOpen(PluginOptionsEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCursusBundle:Cursus:pluginConfigureForm';
-        $subRequest = $this->request->duplicate(array(), null, $params);
+        $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);

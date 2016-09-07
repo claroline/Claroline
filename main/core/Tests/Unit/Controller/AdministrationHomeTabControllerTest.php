@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Mockery as m;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Mockery as m;
 
 class AdministrationHomeTabControllerTest extends MockeryTestCase
 {
@@ -85,68 +85,6 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
         );
     }
 
-    public function testListDesktopAddableWidgetsAction()
-    {
-        $homeTab = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTab');
-        $widgetDisplayConfigs = array('widget_display_a', 'widget_display_b');
-        $widgetConfig =
-            $this->mock('Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig');
-        $widget = $this->mock('Claroline\CoreBundle\Entity\Widget\Widget');
-
-        $this->homeTabManager
-            ->shouldReceive('getAdminWidgetConfigs')
-            ->with($homeTab)
-            ->once()
-            ->andReturn(array($widgetConfig));
-        $widgetConfig->shouldReceive('getWidget')->once()->andReturn($widget);
-        $widget->shouldReceive('getId')->once()->andReturn(1);
-        $homeTab->shouldReceive('getType')->once()->andReturn('admin_desktop');
-        $this->homeTabManager
-            ->shouldReceive('getAdminDesktopWidgetInstance')
-            ->with(array(1))
-            ->once()
-            ->andReturn($widgetDisplayConfigs);
-
-        $this->assertEquals(
-            array(
-                'homeTab' => $homeTab,
-                'widgetDisplayConfigs' => $widgetDisplayConfigs,
-            ),
-            $this->getController()->listAddableWidgetsAction($homeTab)
-        );
-    }
-
-    public function testListWorkspaceAddableWidgetsAction()
-    {
-        $homeTab = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTab');
-        $widgetDisplayConfigs = array('widget_display_a', 'widget_display_b');
-        $widgetConfig =
-            $this->mock('Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig');
-        $widget = $this->mock('Claroline\CoreBundle\Entity\Widget\Widget');
-
-        $this->homeTabManager
-            ->shouldReceive('getAdminWidgetConfigs')
-            ->with($homeTab)
-            ->once()
-            ->andReturn(array($widgetConfig));
-        $widgetConfig->shouldReceive('getWidget')->once()->andReturn($widget);
-        $widget->shouldReceive('getId')->once()->andReturn(1);
-        $homeTab->shouldReceive('getType')->once()->andReturn('admin_workspace');
-        $this->homeTabManager
-            ->shouldReceive('getAdminWorkspaceWidgetInstance')
-            ->with(array(1))
-            ->once()
-            ->andReturn($widgetDisplayConfigs);
-
-        $this->assertEquals(
-            array(
-                'homeTab' => $homeTab,
-                'widgetDisplayConfigs' => $widgetDisplayConfigs,
-            ),
-            $this->getController()->listAddableWidgetsAction($homeTab)
-        );
-    }
-
     public function testAssociateWidgetToHomeTabAction()
     {
         $homeTab = new HomeTab();
@@ -156,7 +94,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
             ->shouldReceive('getOrderOfLastWidgetInAdminHomeTab')
             ->with($homeTab)
             ->once()
-            ->andReturn(array('order_max' => 3));
+            ->andReturn(['order_max' => 3]);
         $this->homeTabManager
             ->shouldReceive('insertWidgetHomeTabConfig')
             ->with(
@@ -299,7 +237,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
         );
     }
 
-    private function getController(array $mockedMethods = array())
+    private function getController(array $mockedMethods = [])
     {
         if (count($mockedMethods) === 0) {
             return new AdministrationHomeTabController(
@@ -321,12 +259,12 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
 
         return $this->mock(
             'Claroline\CoreBundle\Controller\AdministrationHomeTabController'.$stringMocked,
-            array(
+            [
                 $this->formFactory,
                 $this->homeTabManager,
                 $this->request,
                 $this->widgetManager,
-            )
+            ]
         );
     }
 }

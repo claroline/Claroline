@@ -4,13 +4,13 @@ namespace UJM\ExoBundle\Transfer\Json\QuestionHandler;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use UJM\ExoBundle\Entity\Proposal;
-use UJM\ExoBundle\Entity\Label;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use UJM\ExoBundle\Entity\InteractionMatching;
+use UJM\ExoBundle\Entity\Label;
+use UJM\ExoBundle\Entity\Proposal;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.match_handler")
@@ -26,7 +26,7 @@ class MatchHandler implements QuestionHandlerInterface
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "container"       = @DI\Inject("service_container")
      * })
-     * 
+     *
      * @param ObjectManager      $om
      * @param ContainerInterface $container
      */
@@ -125,7 +125,7 @@ class MatchHandler implements QuestionHandlerInterface
         $interaction = new InteractionMatching();
 
         // handle proposals
-        $persistedProposals = array(); // do not add twice the same label!!
+        $persistedProposals = []; // do not add twice the same label!!
         // for each firstSet in data (= proposal)
         for ($i = 0, $max = count($importData->firstSet); $i < $max; ++$i) {
             // temporary limitation
@@ -169,7 +169,7 @@ class MatchHandler implements QuestionHandlerInterface
                             $value = $importData->firstSet[$k]->data;
                             for ($l = 0, $max = count($persistedProposals); $l < $max; ++$l) {
                                 // find proposal by label... Unicity is not ensured!!!!
-                                if ($persistedProposals[$l]->getValue() == $value) {
+                                if ($persistedProposals[$l]->getValue() === $value) {
                                     $persistedProposals[$l]->addAssociatedLabel($label);
                                     $this->om->persist($persistedProposals[$l]);
                                     break;
@@ -238,17 +238,8 @@ class MatchHandler implements QuestionHandlerInterface
             return $secondSetData;
         }, $labels);
 
-        $scoreTotal = 0;
-        foreach ($proposals as $proposal) {
-            $associatedLabels = $proposal->getAssociatedLabel();
-            foreach ($associatedLabels as $label) {
-                $scoreTotal = $scoreTotal + $label->getScoreRightResponse();
-            }
-        }
-        $exportData->scoreTotal = $scoreTotal;
-
         if ($withSolution) {
-            $exportData->solutions = array();
+            $exportData->solutions = [];
             foreach ($proposals as $proposal) {
                 $associatedLabels = $proposal->getAssociatedLabel();
                 foreach ($associatedLabels as $label) {
@@ -273,7 +264,7 @@ class MatchHandler implements QuestionHandlerInterface
         $match = $repo->findOneBy(['question' => $question]);
 
         $proposals = $match->getProposals()->toArray();
-        $exportData->solutions = array();
+        $exportData->solutions = [];
         foreach ($proposals as $proposal) {
             $associatedLabels = $proposal->getAssociatedLabel();
             foreach ($associatedLabels as $label) {
@@ -341,8 +332,8 @@ class MatchHandler implements QuestionHandlerInterface
             return (string) $label->getId();
         }, $labels);
 
-        $sourceIds = array();
-        $targetIds = array();
+        $sourceIds = [];
+        $targetIds = [];
         foreach ($data as $answer) {
             if ($answer !== '') {
                 $set = explode(',', $answer);
@@ -387,7 +378,7 @@ class MatchHandler implements QuestionHandlerInterface
          $labels = $interaction->getLabels();
          // at least one label must have a score
          $score = 0;
-         $tabLabelGraduate = array(); // store labels already considered in calculating the score
+         $tabLabelGraduate = []; // store labels already considered in calculating the score
         foreach ($labels as $label) {
             // if first label
              if (count($tabLabelGraduate) === 0) {

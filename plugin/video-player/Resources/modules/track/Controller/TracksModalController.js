@@ -1,6 +1,9 @@
 import langs from '#/main/core/form/Field/Lang/iso'
-import NotBlank from '#/main/core/form/Validator/NotBlank'
+import trackForm from '../Form/form'
 import editTemplate from '../Partial/edit.html'
+
+/* global Routing */
+/* global Translator */
 
 export default class TracksModalController {
   constructor (tracks, FormBuilderService, ClarolineAPIService, $uibModal) {
@@ -9,12 +12,7 @@ export default class TracksModalController {
     this.FormBuilderService = FormBuilderService
     this.ClarolineAPIService = ClarolineAPIService
     this.$uibModal = $uibModal
-    this.trackForm = {
-      fields: [
-        ['lang', 'lang', {label: Translator.trans('lang', {}, 'platform'), validators: [new NotBlank()]}],
-        ['is_default', 'checkbox', {label: Translator.trans('is_default', {}, 'platform')}],
-        ['track', 'file', {label: Translator.trans('track', {}, 'platform'), validators: [new NotBlank()]}]
-    ]}
+    this.trackForm = trackForm
   }
 
   onCreate () {

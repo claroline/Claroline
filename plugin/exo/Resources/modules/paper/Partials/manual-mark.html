@@ -12,7 +12,7 @@
             <div class="input-group">
                 <input type="text" class="form-control" id="question-score" data-ng-model="manualMarkCtrl.score" />
                 <span class="input-group-addon">
-                    / {{ manualMarkCtrl.question.scoreTotal }}
+                    / {{ manualMarkCtrl.scoreTotal }}
                 </span>
             </div>
             <span class="help-block text-danger" data-ng-if="manualMarkCtrl.errors" data-ng-repeat="error in manualMarkCtrl.errors">

@@ -3,8 +3,6 @@
         <div>
             <video
                 class="video-js vjs-big-play-centered vjs-default-skin vjs-16-9"
-                preload="auto"
-                controls
                 data-setup='{}'
                 >
                  <source src="{{ path('api_get_video_stream', {'video': video.getId() }) }}" type="{{ video.getResourceNode().getMimeType() }}" />

@@ -48,7 +48,7 @@
             <directory>plugin/rss-reader/Tests/</directory>
             <directory>plugin/url/Tests/</directory>
             <directory>plugin/exo/Tests/</directory>
-
+            <directory>plugin/chat/Tests/</directory>
         </testsuite>
     </testsuites>
 

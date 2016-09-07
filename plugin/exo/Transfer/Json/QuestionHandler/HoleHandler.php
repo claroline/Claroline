@@ -156,18 +156,6 @@ class HoleHandler implements QuestionHandlerInterface
         $holes = $holeQuestion->getHoles()->toArray();
         $text = $holeQuestion->getHtmlWithoutValue();
 
-        $scoreTotal = 0;
-        foreach ($holes as $hole) {
-            $maxScore = 0;
-            foreach ($hole->getWordResponses() as $wd) {
-                if ($wd->getScore() > $maxScore) {
-                    $maxScore = $wd->getScore();
-                }
-            }
-            $scoreTotal = $scoreTotal + $maxScore;
-        }
-
-        $exportData->scoreTotal = $scoreTotal;
         $exportData->text = $text;
         if ($withSolution) {
             $exportData->solution = $holeQuestion->getHtml();
@@ -346,7 +334,7 @@ class HoleHandler implements QuestionHandlerInterface
             return ['Answer data must be an array, '.gettype($data).' given'];
         }
 
-        if (0 === $count = count($data)) {
+        if (0 === count($data)) {
             return [];
         }
 

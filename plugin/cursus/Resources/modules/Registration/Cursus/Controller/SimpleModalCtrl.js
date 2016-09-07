@@ -9,13 +9,13 @@
     
 export default class SimpleModalCtrl {
         
-    constructor($uibModalInstance, $sce, title, content) {
-        this.$uibModalInstance = $uibModalInstance
-        this.title = title
-        this.content = $sce.trustAsHtml(content)
-    }
-    
-    closeModal() {
-        this.$uibModalInstance.close()
-    }
+  constructor($uibModalInstance, $sce, title, content) {
+    this.$uibModalInstance = $uibModalInstance
+    this.title = title
+    this.content = $sce.trustAsHtml(content)
+  }
+
+  closeModal() {
+    this.$uibModalInstance.close()
+  }
 }

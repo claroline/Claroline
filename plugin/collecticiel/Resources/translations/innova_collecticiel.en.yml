@@ -1,6 +1,7 @@
 # a
 add_grading_scale_label: Add a grading scale
 add_criteria_label: Add Information/criteria
+add_notation_label: Add Information/criteria
 
 # d
 default_scale_very_good: Very good
@@ -460,6 +461,7 @@ Add a new: 'Information/criterion'
 Criteria number: 'The number of criteria is not limited.'
 Rating Scale appreciation: 'Manage this evaluation'
 Evaluation Appreciation : 'Evaluation'
+Notation appreciation: 'Handle the notation'
 Info ratingScale : 'Information accompanying the appreciation'
 Very good : 'Very good'
 Good : 'Good'

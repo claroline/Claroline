@@ -11,23 +11,25 @@
 
 namespace Claroline\CoreBundle\Controller\API\User;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use JMS\SecurityExtraBundle\Annotation as SEC;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\View;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use Claroline\CoreBundle\Manager\FacetManager;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Put;
-use FOS\RestBundle\Controller\Annotations\Delete;
-use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\Facet\Facet;
-use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
+use Claroline\CoreBundle\Entity\ProfileProperty;
+use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @NamePrefix("api_")
@@ -37,19 +39,22 @@ class FacetController extends FOSRestController
 {
     /**
      * @DI\InjectParams({
-     *     "facetManager" = @DI\Inject("claroline.manager.facet_manager"),
-     *     "request"      = @DI\Inject("request"),
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager")
+     *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
+     *     "request"                = @DI\Inject("request"),
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager")
      * })
      */
     public function __construct(
         FacetManager $facetManager,
         Request $request,
-        ObjectManager $om
+        ObjectManager $om,
+                ProfilePropertyManager $profilePropertyManager
     ) {
         $this->facetManager = $facetManager;
         $this->request = $request;
         $this->om = $om;
+        $this->profilePropertyManager = $profilePropertyManager;
     }
 
     /**
@@ -306,5 +311,15 @@ class FacetController extends FOSRestController
         $this->facetManager->orderFields($ids, $panel);
 
         return $panel;
+    }
+
+    /**
+     * @GET("/property/{property}/invert", name="post_invert_user_properties_edition", options = {"expose"=true, "method_prefix" = false})
+     */
+    public function invertPropertiesEditableAction(ProfileProperty $property)
+    {
+        $this->profilePropertyManager->invertProperty($property);
+
+        return true;
     }
 }

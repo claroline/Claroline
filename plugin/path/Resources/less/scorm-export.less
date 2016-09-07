@@ -1,0 +1,25 @@
+/**
+ * Make some fixes for path when they are embedded in SCORM
+ */
+body.scorm-export {
+    padding-top: floor(@grid-gutter-width / 2);
+    margin-left: 15px !important;
+
+    .path-summary-container {
+        margin: 0;
+    }
+
+    &.path-summary-opened {
+        &.path-summary-pinned{
+            margin-left: @path-summary-width + 15px !important;
+        }
+
+        .path-summary-container {
+            width: @path-summary-width !important;
+        }
+
+        .path-summary-pin-toggle-btn {
+            left: @path-summary-width + 30px !important;
+        }
+    }
+}

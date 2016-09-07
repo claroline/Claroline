@@ -163,6 +163,17 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- Show minimal correction ? -->
+                    <div class="form-group">
+                        <label for="exercise-minimal-correction" class="control-label col-md-4">{{ 'minimal_correction' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <div class="checkbox">
+                                <input type="checkbox" id="exercise-minimal-correction" data-ng-model="exerciseMetadataCtrl.meta.minimalCorrection" />
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

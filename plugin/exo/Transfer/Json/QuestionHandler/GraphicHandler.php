@@ -173,7 +173,6 @@ class GraphicHandler implements QuestionHandlerInterface
 
         $exportData->image = $this->exportImage($interaction->getPicture());
         $exportData->pointers = $interaction->getCoords()->count();
-        $exportData->scoreTotal = $this->graphicService->maxScore($interaction);
 
         if ($withSolution) {
             $exportData->solutions = $this->exportSolutions($interaction->getCoords()->toArray());
@@ -380,7 +379,7 @@ class GraphicHandler implements QuestionHandlerInterface
         }
 
         $rightCoords = $this->om->getRepository('UJMExoBundle:Coords')
-            ->findBy(array('interactionGraphic' => $interaction->getId()));
+            ->findBy(['interactionGraphic' => $interaction->getId()]);
 
         $answer = implode(';', array_map(function ($coords) {
             return (string) $coords['x'].'-'.(string) $coords['y'];

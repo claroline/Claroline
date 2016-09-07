@@ -11,15 +11,15 @@
 
 namespace Claroline\CoreBundle\Entity\Organization;
 
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Claroline\CoreBundle\Entity\User;
-use JMS\Serializer\Annotation\Groups;
 use Claroline\CoreBundle\Entity\Calendar\TimeSlot;
 use Claroline\CoreBundle\Entity\Calendar\Year;
+use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
@@ -46,14 +46,14 @@ class Organization
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})    
+     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})
      */
     protected $name;
 
     /**
      * @ORM\Column(nullable=true)
      * @Assert\Email()
-     * @Groups({"api_organization_tree", "api_organization_list"})    
+     * @Groups({"api_organization_tree", "api_organization_list"})
      */
     protected $email;
 
@@ -156,6 +156,7 @@ class Organization
 
     /**
      * @ORM\Column(name="is_default", type="boolean")
+     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})
      */
     protected $default = false;
 
@@ -307,6 +308,11 @@ class Organization
     public function setDefault($default)
     {
         $this->default = $default;
+    }
+
+    public function isDefault()
+    {
+        return $this->default;
     }
 
     public function getDefault()

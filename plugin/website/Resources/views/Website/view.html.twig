@@ -84,6 +84,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script type="text/javascript" src="{{ hotAsset('dist/commons.js') }}"></script>
     {% if options.menuOrientation == 'horizontal' %}
         <script src="{{ hotAsset('dist/claroline-distribution-plugin-website-view-app-horizontal.js') }}"></script>
     {% else %}

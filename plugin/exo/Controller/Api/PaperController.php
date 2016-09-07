@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Step;
@@ -85,32 +84,6 @@ class PaperController
     }
 
     /**
-     * Returns the value of a question hint, and records the fact that it has
-     * been consulted within the context of a given paper.
-     *
-     * @EXT\Route("/papers/{paperId}/hints/{hintId}", name="exercise_hint")
-     * @EXT\ParamConverter("user",  converter="current_user",   options={"allowAnonymous"=true})
-     * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
-     * @EXT\ParamConverter("hint",  class="UJMExoBundle:Hint",  options={"mapping": {"hintId": "id"}})
-     *
-     * @param Paper $paper
-     * @param Hint  $hint
-     * @param User  $user
-     *
-     * @return JsonResponse
-     */
-    public function showHintAction(Paper $paper, Hint $hint, User $user = null)
-    {
-        $this->assertHasPaperAccess($paper, $user);
-
-        if (!$this->paperManager->hasHint($paper, $hint)) {
-            return new JsonResponse('Hint and paper are not related', 422);
-        }
-
-        return new JsonResponse($this->paperManager->viewHint($paper, $hint));
-    }
-
-    /**
      * Records an answer for an exercise Step.
      *
      * @EXT\Route("/papers/{paperId}/steps/{stepId}", name="exercise_submit_step")
@@ -158,7 +131,7 @@ class PaperController
             foreach ($step->getStepQuestions() as $stepQuestion) {
                 $answers[] = [
                     'question' => $this->questionManager->exportQuestionAnswers($stepQuestion->getQuestion()),
-                    'answer' => $this->paperManager->exportPaperAnswer($stepQuestion->getQuestion(), $paper),
+                    'answer' => $this->paperManager->exportPaperAnswer($stepQuestion->getQuestion(), $paper, true),
                 ];
             }
 

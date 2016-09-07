@@ -8,7 +8,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
-use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
@@ -27,12 +26,18 @@ class QuestionManager
     private $rm;
 
     /**
+     * @var HintManager
+     */
+    private $hintManager;
+
+    /**
      * @DI\InjectParams({
-     *     "router"     = @DI\Inject("router"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "validator"  = @DI\Inject("ujm.exo.json_validator"),
-     *     "collector"  = @DI\Inject("ujm.exo.question_handler_collector"),
-     *     "rm"         = @DI\Inject("claroline.manager.resource_manager")
+     *     "router"       = @DI\Inject("router"),
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "validator"    = @DI\Inject("ujm.exo.json_validator"),
+     *     "collector"    = @DI\Inject("ujm.exo.question_handler_collector"),
+     *     "rm"           = @DI\Inject("claroline.manager.resource_manager"),
+     *     "hintManager"  = @DI\Inject("ujm.exo.hint_manager"),
      * })
      *
      * @param UrlGeneratorInterface    $router
@@ -40,19 +45,22 @@ class QuestionManager
      * @param Validator                $validator
      * @param QuestionHandlerCollector $collector
      * @param ResourceManager          $rm
+     * @param HintManager              $hintManager
      */
     public function __construct(
         UrlGeneratorInterface $router,
         ObjectManager $om,
         Validator $validator,
         QuestionHandlerCollector $collector,
-        ResourceManager $rm
+        ResourceManager $rm,
+        HintManager $hintManager
     ) {
         $this->router = $router;
         $this->om = $om;
         $this->validator = $validator;
         $this->handlerCollector = $collector;
         $this->rm = $rm;
+        $this->hintManager = $hintManager;
     }
 
     /**
@@ -139,15 +147,7 @@ class QuestionManager
 
         if (count($question->getHints()) > 0) {
             $data->hints = array_map(function ($hint) use ($withSolution) {
-                $hintData = new \stdClass();
-                $hintData->id = (string) $hint->getId();
-                $hintData->penalty = $hint->getPenalty();
-
-                if ($withSolution) {
-                    $hintData->text = $hint->getValue();
-                }
-
-                return $hintData;
+                return $this->hintManager->exportHint($hint, $withSolution);
             }, $question->getHints()->toArray());
         }
 
@@ -210,15 +210,6 @@ class QuestionManager
         $handler->convertQuestionAnswers($question, $data);
 
         return $data;
-    }
-
-    public function exportQuestionScore(Question $question, Paper $paper)
-    {
-        $response = $this->om
-            ->getRepository('UJMExoBundle:Response')
-            ->findOneBy(['paper' => $paper, 'question' => $question]);
-
-        return $response ? $response->getMark() : 0;
     }
 
     /**

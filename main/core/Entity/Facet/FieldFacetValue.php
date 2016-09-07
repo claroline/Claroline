@@ -13,8 +13,8 @@ namespace Claroline\CoreBundle\Entity\Facet;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Accessor;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
@@ -76,7 +76,7 @@ class FieldFacetValue
      */
     protected $value;
 
-    public function setDateValue(\DateTime $dateValue)
+    public function setDateValue(\DateTime $dateValue = null)
     {
         $this->dateValue = $dateValue;
     }
@@ -127,7 +127,7 @@ class FieldFacetValue
         return $this->stringValue;
     }
 
-    public function setArrayValue(array $arrayValue)
+    public function setArrayValue(array $arrayValue = null)
     {
         $this->arrayValue = $arrayValue;
     }

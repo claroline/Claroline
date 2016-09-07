@@ -167,6 +167,7 @@ hole_edition: Edition d'une question à trous
 hole_selector: Proposer une liste
 home_exercise: Accueil de l'exercice
 hide_additional_info: Masquer les informations supplémentaires
+hint_points: "[0,1] - %count% point|]1,Inf[ - %count% points"
 
 # I
 infiny: Infini
@@ -222,6 +223,7 @@ maximum_tries: Nombre d'essai maximum
 meaning_measure_difficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
 metadata_visible:      Afficher les informations de l'exercice
 metadata_visible_help: Si coché, un tableau récapitulatif sera affiché sur la vue d'ensemble de l'exercice
+minimal_correction: Vue minimale de la correction
 model: Modèle
 more_info: Plus d'informations
 my_questions: Mes questions
@@ -376,6 +378,7 @@ sort: Trier les documents
 summative : Sommatif
 show_additional_info: Afficher les informations supplémentaires
 step: Etape
+step_score: Score de l'étape
 statistics: Afficher les statistiques
 step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
 step_item_add: Glisser/déposer ou cliquer sur le bouton "+" pour ajouter des questions
@@ -398,7 +401,7 @@ upload: Télécharger
 uploading: Chargement en cours
 user: Utilisateur
 users: Utilisateurs
-ujm_exo_exercise_name: Nom
+ujm_exo_exercise_name: Titre
 ujm_exo_exercise_published: Publier la ressource
 
 # V
@@ -427,4 +430,5 @@ Multiple response: Réponse multiples
 oneWord: Un mot
 To drag: Panier
 To bind: A lier
+To pair: Appariement
 Unique response: Réponse unique

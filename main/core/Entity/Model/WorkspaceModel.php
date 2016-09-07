@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -29,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         )
  *     }
  * )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceModelRepository")
  * @DoctrineAssert\UniqueEntity({"name", "workspace"})
  */
 class WorkspaceModel
@@ -38,12 +39,14 @@ class WorkspaceModel
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_user_min"})
      */
     private $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api_user_min"})
      */
     protected $name;
 

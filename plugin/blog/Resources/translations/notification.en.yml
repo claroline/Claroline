@@ -1,8 +1,8 @@
-resource-icap_blog-comment_create: created a comment in post '%post%' for '%blog%' blog
-resource-icap_blog-comment_update: updated a comment in post '%post%' for '%blog%' blog
-resource-icap_blog-comment_publish: published a comment in post '%post%' for '%blog%' blog
-resource-icap_blog-post_create: created post '%post%' inside '%blog%' blog
-resource-icap_blog-post_update: updated post '%post%' inside '%blog%' blog
-resource-icap_blog-post_publish: published post '%post%' inside '%blog%' blog
-resource-icap_blog-comment-user_tagged: mentioned you in the post '%post%' of '%blog%' blog
-resource-icap_blog-post-user_tagged: mentioned you in a comment for the post '%post%' of '%blog%' blog
+resource-icap_blog-comment_create: 'has created a comment in the post "%post%" of the blog "%blog%"'
+resource-icap_blog-comment_update: 'has updated a comment in the post "%post%" of the blog "%blog%"'
+resource-icap_blog-comment_publish: 'has published a comment in the post "%post%" of the blog "%blog%"'
+resource-icap_blog-post_create: 'has created the post "%post%" in the blog "%blog%"'
+resource-icap_blog-post_update: 'has updated the post "%post%" in the blog "%blog%"'
+resource-icap_blog-post_publish: 'has published the post "%post%" in the blog "%blog%"'
+resource-icap_blog-comment-user_tagged: 'has mentioned you in the post "%post%" of the blog "%blog%"'
+resource-icap_blog-post-user_tagged: 'has mentioned you in a comment about the post "%post%" of the blog "%blog%"'

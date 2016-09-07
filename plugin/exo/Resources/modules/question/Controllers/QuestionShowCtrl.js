@@ -1,144 +1,99 @@
 import markTpl from './../../paper/Partials/manual-mark.html'
 
-/**
- * Question Show Controller
- * Displays a Question
- * @param {Object}           $uibModal
- * @param {ExerciseService}  ExerciseService
- * @param {QuestionService}  QuestionService
- * @param {FeedbackService}  FeedbackService
- * @param {UserPaperService} UserPaperService
- */
-function QuestionShowCtrl($uibModal, ExerciseService, QuestionService, FeedbackService, UserPaperService) {
-    this.$uibModal = $uibModal;
-    this.ExerciseService  = ExerciseService;
-    this.QuestionService  = QuestionService;
-    this.FeedbackService  = FeedbackService;
-    this.UserPaperService = UserPaperService;
+export default class QuestionShowCtrl {
+  /**
+   * Constructor.
+   *
+   * @param {object} $uibModal
+   * @param {ExerciseService} ExerciseService
+   * @param {QuestionService} QuestionService
+   * @param {FeedbackService} FeedbackService
+   */
+  constructor($uibModal, ExerciseService, QuestionService, FeedbackService) {
+    this.$uibModal = $uibModal
+    this.ExerciseService = ExerciseService
+    this.QuestionService = QuestionService
+    this.FeedbackService = FeedbackService
 
-    this.editEnabled = this.ExerciseService.isEditEnabled();
+    /**
+     * Is the Question panel collapsed ?
+     * @type {boolean}
+     */
+    this.collapsed = false
 
-    // Get feedback info to display the general feedback of the Question
-    this.feedback = this.FeedbackService.get();
+    /**
+     * Is edit enabled ?
+     * @type {boolean}
+     */
+    this.editEnabled = this.ExerciseService.isEditEnabled()
+
+    /**
+     * Feedback information
+     * @type {Object}
+     */
+    this.feedback = this.FeedbackService.get()
+
+    // Initialize answer data if needed
+    if (null === this.questionPaper.answer) {
+      this.questionPaper.answer = this.QuestionService.getTypeService(this.question.type).initAnswer()
+    }
 
     // Force the feedback when correction is shown
     if (this.includeCorrection && !this.FeedbackService.isEnabled()) {
-        this.FeedbackService.enable();
-        this.FeedbackService.show();
+      this.FeedbackService.enable()
+      this.FeedbackService.show()
     }
-};
+  }
 
-/**
- * Is the Question panel collapsed ?
- * @type {boolean}
- */
-QuestionShowCtrl.prototype.collapsed = false;
-
-/**
- * Current question
- * @type {Object}
- */
-QuestionShowCtrl.prototype.question = {};
-
-/**
- * Paper data for the current question
- * @type {Object}
- */
-QuestionShowCtrl.prototype.questionPaper = null;
-
-/**
- * Feedback information
- * @type {Object}
- */
-QuestionShowCtrl.prototype.feedback = {};
-
-/**
- * Is edit enabled ?
- * @type {boolean}
- */
-QuestionShowCtrl.prototype.editEnabled = false;
-
-/**
- * Are the correction for the Question displayed ?
- * @type {boolean}
- */
-QuestionShowCtrl.prototype.includeCorrection = false;
-
-/**
- * Mark the question
- */
-QuestionShowCtrl.prototype.mark = function mark() {
-    var question = this.question;
-
+  /**
+   * Mark the question
+   */
+  mark() {
     this.$uibModal.open({
-        template: markTpl,
-        controller: 'ManualMarkCtrl as manualMarkCtrl',
-        resolve: {
-            question: function questionResolve() {
-                return question;
-            }
+      template: markTpl,
+      controller: 'ManualMarkCtrl as manualMarkCtrl',
+      resolve: {
+        question: () => {
+          return this.question
         }
-    });
-};
+      }
+    })
+  }
 
-/**
- * Get the generic feedback
- * @returns {string}
- */
-QuestionShowCtrl.prototype.getGenericFeedback = function getGenericFeedback() {
+  /**
+   * Get the user score for the Question for display.
+   *
+   * @return {String}
+   */
+  getScore() {
+    let score = 0
+    if (this.questionPaper.score || 0 === this.questionPaper.score) {
+      score = this.questionPaper.score
+    } else {
+      score = this.QuestionService.calculateScore(this.question, this.questionPaper)
+    }
+
+    return score + ''
+  }
+
+  /**
+   * Get the total score of the Question for display.
+   *
+   * @return {String}
+   */
+  getTotalScore() {
+    return this.QuestionService.calculateTotal(this.question) + ''
+  }
+
+  /**
+   * Get the generic feedback
+   * @returns {string}
+   */
+  getGenericFeedback() {
     if (this.feedback.state[this.question.id] === 1) {
-        return "one_answer_to_find";
+      return 'one_answer_to_find'
     } else if (this.feedback.state[this.question.id] === 2) {
-        return "answers_not_found";
+      return 'answers_not_found'
     }
-};
-
-/**
- * Check if a Hint has already been used (in paper)
- * @param   {Object} hint
- * @returns {Boolean}
- */
-QuestionShowCtrl.prototype.isHintUsed = function isHintUsed(hint) {
-    var used = false;
-    if (this.questionPaper.hints) {
-        for (var i = 0; i < this.questionPaper.hints.length; i++) {
-            if (this.questionPaper.hints[i].id == hint.id) {
-                used = true;
-                break; // Stop searching
-            }
-        }
-    }
-
-    return used;
-};
-
-/**
- * Get hint data and update student data in common service
- * @param {Object} hint
- */
-QuestionShowCtrl.prototype.showHint = function showHint(hint) {
-    if (!this.isHintUsed(hint)) {
-        // Load Hint data
-        this.UserPaperService.useHint(this.question, hint);
-    }
-};
-
-/**
- * Get Hint value (only available for loaded Hint)
- * @param {Object} hint
- */
-QuestionShowCtrl.prototype.getHintValue = function getHintValue(hint) {
-    var value = '';
-    if (this.questionPaper.hints && this.questionPaper.hints.length > 0) {
-        for (var i = 0; i < this.questionPaper.hints.length; i++) {
-            if (this.questionPaper.hints[i].id == hint.id) {
-                value = this.questionPaper.hints[i].value;
-                break;
-            }
-        }
-    }
-
-    return value;
-};
-
-export default QuestionShowCtrl
+  }
+}

@@ -9,7 +9,7 @@ class InteractionQCMHandler extends QuestionHandler
      */
     public function processAdd()
     {
-        if ($this->request->getMethod() == 'POST') {
+        if ($this->request->getMethod() === 'POST') {
             $this->form->handleRequest($this->request);
              //Uses the default category if no category selected
             $this->checkCategory();
@@ -40,8 +40,8 @@ class InteractionQCMHandler extends QuestionHandler
         $interQCM->getQuestion()->setDateCreate(new \Datetime());
         $interQCM->getQuestion()->setUser($this->user);
 
-        $pointsWrong = str_replace(',', '.', $interQCM->getScoreFalseResponse());
-        $pointsRight = str_replace(',', '.', $interQCM->getScoreRightResponse());
+        $pointsWrong = floatval($interQCM->getScoreFalseResponse());
+        $pointsRight = floatval($interQCM->getScoreRightResponse());
 
         $interQCM->setScoreFalseResponse($pointsWrong);
         $interQCM->setScoreRightResponse($pointsRight);
@@ -88,7 +88,7 @@ class InteractionQCMHandler extends QuestionHandler
             $originalHints[] = $hint;
         }
 
-        if ($this->request->getMethod() == 'POST') {
+        if ($this->request->getMethod() === 'POST') {
             $this->form->handleRequest($this->request);
 
             // Uses the default category if no category selected
@@ -117,7 +117,7 @@ class InteractionQCMHandler extends QuestionHandler
         // filter $originalChoices to contain choice no longer present
         foreach ($interQCM->getChoices() as $choice) {
             foreach ($originalChoices as $key => $toDel) {
-                if ($toDel->getId() == $choice->getId()) {
+                if ($toDel->getId() === $choice->getId()) {
                     unset($originalChoices[$key]);
                 }
             }

@@ -4,12 +4,12 @@ namespace UJM\ExoBundle\Transfer\Json\QuestionHandler;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use UJM\ExoBundle\Entity\InteractionOpen;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Entity\WordResponse;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.open_handler")
@@ -25,7 +25,7 @@ class OpenHandler implements QuestionHandlerInterface
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "container"       = @DI\Inject("service_container")
      * })
-     * 
+     *
      * @param ObjectManager      $om
      * @param ContainerInterface $container
      */
@@ -124,7 +124,23 @@ class OpenHandler implements QuestionHandlerInterface
         $repo = $this->om->getRepository('UJMExoBundle:InteractionOpen');
         $openQuestion = $repo->findOneBy(['question' => $question]);
 
-        $exportData->scoreTotal = 5;
+        $exportData->typeOpen = $openQuestion->getTypeOpenQuestion()->getValue();
+
+        if ('long' === $exportData->typeOpen) {
+            $exportData->score = [
+                'type' => 'fixed',
+                'success' => $openQuestion->getScoreMaxLongResp(),
+                'failure' => 0,
+            ];
+        } elseif ('oneWord' === $exportData->typeOpen) {
+            $exportData->score = [
+                'type' => 'fixed',
+                'success' => $openQuestion->getScoreMaxLongResp(),
+                'failure' => 0,
+            ];
+        } else {
+            $exportData->score = ['type' => 'sum'];
+        }
 
         if ($withSolution) {
             $responses = $openQuestion->getWordResponses();
@@ -140,18 +156,6 @@ class OpenHandler implements QuestionHandlerInterface
                 return $responseData;
             }, $responses->toArray());
         }
-        if ($openQuestion->getTypeOpenQuestion()->getValue() === 'long') {
-            $exportData->scoreMaxLongResp = $openQuestion->getScoreMaxLongResp();
-            $exportData->scoreTotal = $openQuestion->getScoreMaxLongResp();
-        } else {
-            $scoreTotal = 0;
-            foreach ($openQuestion->getWordResponses()->toArray() as $response) {
-                $scoreTotal = $scoreTotal + $response->getScore();
-            }
-            $exportData->scoreTotal = $scoreTotal;
-        }
-
-        $exportData->typeOpen = $openQuestion->getTypeOpenQuestion()->getValue();
 
         return $exportData;
     }

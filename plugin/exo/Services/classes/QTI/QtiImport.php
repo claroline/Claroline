@@ -3,7 +3,6 @@
 /**
  * To import a question in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -29,7 +28,6 @@ abstract class QtiImport
     /**
      * Constructor.
      *
-     *
      * @param \Claroline\CoreBundle\Persistence\ObjectManager                                     $om                    Dependency Injection
      * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorageInterface Dependency Injection
      * @param \Symfony\Component\DependencyInjection\Container                                    $container
@@ -53,7 +51,6 @@ abstract class QtiImport
         $this->question->setDateCreate(new \Datetime());
         $this->question->setUser($this->user);
         $this->question->setCategory($this->qtiCat);
-     //   $this->question->setDescription($this->getPrompt());
         $this->getDescription();
         $this->question->setInvite($this->getPrompt());
         $this->question->setType($type);
@@ -87,7 +84,7 @@ abstract class QtiImport
                              ->getRepository('UJMExoBundle:Category')
                              ->findOneBy(['value' => 'QTI',
                                                'user' => $this->user->getId(), ]);
-        if ($this->qtiCat == null) {
+        if ($this->qtiCat === null) {
             $this->createQTICategory();
         }
     }
@@ -141,7 +138,7 @@ abstract class QtiImport
         foreach ($ib->childNodes as $child) {
             if ($child->nodeType === XML_CDATA_SECTION_NODE || $child->nodeType === XML_TEXT_NODE) {
                 $desc .= $child->textContent;
-            } elseif ($child->nodeName == 'a' || $child->nodeName == 'img') {
+            } elseif ($child->nodeName === 'a' || $child->nodeName === 'img') {
                 $desc .= $this->domElementToString($child);
                 $ib->removeChild($child);
             }
@@ -149,14 +146,14 @@ abstract class QtiImport
         foreach ($ib->getElementsByTagName('img') as $img) {
             $node = $img->parentNode;
             $i = 0;
-            while ($i == 0) {
-                if (($node->nodeName == 'itemBody') || ($node->nodeName == 'prompt') || ($node->nodeName == 'simpleChoice') || ($node->nodeName == 'simpleAssociableChoice')) {
+            while ($i === 0) {
+                if (($node->nodeName === 'itemBody') || ($node->nodeName === 'prompt') || ($node->nodeName === 'simpleChoice') || ($node->nodeName === 'simpleAssociableChoice')) {
                     ++$i;
                 } else {
                     $node = $node->parentNode;
                 }
             }
-            if ($node->nodeName == 'itemBody') {
+            if ($node->nodeName === 'itemBody') {
                 $desc .= $this->domElementToString($img);
             }
         }
@@ -196,8 +193,8 @@ abstract class QtiImport
                                     $ws,
                                     $this->dirQTI
                                 );
-            if ($ob->parentNode->nodeName != 'selectPointInteraction' &&
-                    $ob->parentNode->nodeName != 'hotspotInteraction') {
+            if ($ob->parentNode->nodeName !== 'selectPointInteraction' &&
+                    $ob->parentNode->nodeName !== 'hotspotInteraction') {
                 $elements[] = [$ob, $abstractResource->getResourceNode()];
             }
         }
@@ -247,7 +244,7 @@ abstract class QtiImport
         if (strpos($mimeType, 'image/') !== false) {
             $url = $this->container->get('router')
                         ->generate('claro_file_get_media',
-                                ['node' => $resourceNode->getId()]
+                                ['node' => $resourceNode->getGuid()]
                           );
             $imgTag = $this->assessmentItem->ownerDocument->createElement('img');
 
@@ -281,15 +278,15 @@ abstract class QtiImport
     /**
      * Create a directory in the personal workspace of user to import documents.
      *
-     *
      * @param Claroline\CoreBundle\Entity\Workspace
      */
     private function createDirQTIImport($ws)
     {
         $manager = $this->container->get('claroline.manager.resource_manager');
-        $parent = $this->om
+        //might be null
+        $parent = $ws ? $this->om
                        ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                       ->findWorkspaceRoot($ws);
+                       ->findWorkspaceRoot($ws) : null;
         $dir = new Directory();
         $dir->setName('QTI_SYS');
         $abstractResource = $manager->create(
@@ -310,9 +307,11 @@ abstract class QtiImport
      */
     private function getDirQTIImport($ws)
     {
-        $this->dirQTI = $this->om
+        if (!$ws) {
+            $this->dirQTI = $this->om
                              ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                              ->findOneBy(['workspace' => $ws, 'name' => 'QTI_SYS']);
+        }
 
         if (!is_object($this->dirQTI)) {
             $this->createDirQTIImport($ws);
@@ -332,8 +331,8 @@ abstract class QtiImport
         $text = $this->assessmentItem->ownerDocument->saveXML($domEl);
         $text = trim($text);
         //delete the line break in $text
-        $text = str_replace(CHR(10), '', $text);
-        $text = str_replace(CHR(13), '', $text);
+        $text = str_replace(chr(10), '', $text);
+        $text = str_replace(chr(13), '', $text);
         //delete CDATA
         $text = str_replace('<![CDATA[', '', $text);
         $text = str_replace(']]>', '', $text);

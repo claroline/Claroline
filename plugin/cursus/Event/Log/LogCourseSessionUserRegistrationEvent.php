@@ -22,7 +22,7 @@ class LogCourseSessionUserRegistrationEvent extends LogGenericEvent
     public function __construct(CourseSession $session, User $user)
     {
         $course = $session->getCourse();
-        $details = array();
+        $details = [];
         $details['username'] = $user->getUsername();
         $details['firsName'] = $user->getFirstName();
         $details['lastName'] = $user->getLastName();
@@ -45,6 +45,6 @@ class LogCourseSessionUserRegistrationEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_ADMIN);
+        return [self::DISPLAYED_ADMIN];
     }
 }

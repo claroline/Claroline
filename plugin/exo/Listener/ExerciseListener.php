@@ -2,15 +2,17 @@
 
 namespace UJM\ExoBundle\Listener;
 
-use Claroline\CoreBundle\Event\PublicationChangeEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\PublicationChangeEvent;
+use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Subscription;
@@ -177,6 +179,84 @@ class ExerciseListener
         }
 
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("export_scorm_ujm_exercise")
+     *
+     * @param ExportScormResourceEvent $event
+     */
+    public function onExportScorm(ExportScormResourceEvent $event)
+    {
+        /** @var Exercise $exercise */
+        $exercise = $event->getResource();
+
+        $exerciseExport = $this->container->get('ujm.exo.exercise_manager')->exportExercise($exercise, true);
+
+        if ($exerciseExport['meta'] && $exerciseExport['meta']['description']) {
+            $exerciseExport['meta']['description'] = $this->exportHtmlContent($event, $exerciseExport['meta']['description']);
+        }
+
+        if ($exerciseExport['steps']) {
+            foreach ($exerciseExport['steps'] as $step) {
+                $this->exportStep($event, $step);
+            }
+        }
+
+        $template = $this->container->get('templating')->render(
+            'UJMExoBundle:Scorm:export.html.twig', [
+                '_resource' => $exercise,
+                // Angular JS data
+                'exercise' => $exerciseExport,
+                'locale' => $event->getLocale(),
+            ]
+        );
+
+        // Set export template
+        $event->setTemplate($template);
+
+        // Add template required files
+        $webpack = $this->container->get('claroline.extension.webpack');
+        $event->addAsset('ujm-exo.css', 'vendor/ujmexo/ujm-exo.css');
+        $event->addAsset('jsPlumb-2.1.3-min.js', 'packages/jsPlumb/dist/js/jsPlumb-2.1.3-min.js');
+        $event->addAsset('commons.js', $webpack->hotAsset('dist/commons.js', true));
+        $event->addAsset('claroline-distribution-plugin-exo-app.js', $webpack->hotAsset('dist/claroline-distribution-plugin-exo-app.js', true));
+
+        // Set translations
+        $event->addTranslationDomain('ujm_exo');
+        $event->addTranslationDomain('ujm_sequence');
+
+        $event->stopPropagation();
+    }
+
+    private function exportStep(ExportScormResourceEvent $event, array &$step)
+    {
+        if ($step['meta'] && $step['meta']['description']) {
+            $step['meta']['description'] = $this->exportHtmlContent($event, $step['meta']['description']);
+        }
+
+        if ($step['items']) {
+            foreach ($step['items'] as $item) {
+                $item->title = $this->exportHtmlContent($event, $item->title);
+                $item->description = $this->exportHtmlContent($event, $item->description);
+                $item->invite = $this->exportHtmlContent($event, $item->invite);
+                $item->supplementary = $this->exportHtmlContent($event, $item->supplementary);
+                $item->specification = $this->exportHtmlContent($event, $item->specification);
+            }
+        }
+    }
+
+    private function exportHtmlContent(ExportScormResourceEvent $event, $content)
+    {
+        if ($content) {
+            $parsed = $this->container->get('claroline.scorm.rich_text_exporter')->parse($content);
+            $content = $parsed['text'];
+            foreach ($parsed['resources'] as $resource) {
+                $event->addEmbedResource($resource);
+            }
+        }
+
+        return $content;
     }
 
     /**

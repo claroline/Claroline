@@ -11,8 +11,8 @@
 
 namespace Claroline\CursusBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
@@ -20,6 +20,10 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
  */
 class CoursesWidgetConfig
 {
+    const MODE_LIST = 0;
+    const MODE_CALENDAR = 1;
+    const MODE_CHRONOLOGIC = 2;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -38,6 +42,21 @@ class CoursesWidgetConfig
      * @ORM\JoinColumn(name="cursus_id", nullable=true, onDelete="SET NULL")
      */
     protected $cursus;
+
+    /**
+     * @ORM\Column(name="default_mode", nullable=false, type="integer", options={"default" = 0})
+     */
+    protected $defaultMode = self::MODE_LIST;
+
+    /**
+     * @ORM\Column(name="public_sessions_only", nullable=false, type="boolean", options={"default" = 0})
+     */
+    protected $publicSessionsOnly = false;
+
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    protected $extra;
 
     public function getId()
     {
@@ -67,5 +86,35 @@ class CoursesWidgetConfig
     public function setCursus(Cursus $cursus = null)
     {
         $this->cursus = $cursus;
+    }
+
+    public function getDefaultMode()
+    {
+        return $this->defaultMode;
+    }
+
+    public function setDefaultMode($defaultMode)
+    {
+        $this->defaultMode = $defaultMode;
+    }
+
+    public function isPublicSessionsOnly()
+    {
+        return $this->publicSessionsOnly;
+    }
+
+    public function setPublicSessionsOnly($publicSessionsOnly)
+    {
+        $this->publicSessionsOnly = $publicSessionsOnly;
+    }
+
+    public function getExtra()
+    {
+        return $this->extra;
+    }
+
+    public function setExtra($extra)
+    {
+        $this->extra = $extra;
     }
 }

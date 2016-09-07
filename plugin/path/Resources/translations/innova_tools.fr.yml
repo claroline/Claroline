@@ -39,7 +39,7 @@ informations: Informations
 # L
 library: A la bibliothèque
 local: Locales
-
+locked: Blocage
 # M
 my_paths: Mes parcours
 
@@ -54,13 +54,15 @@ others_paths : Autres parcours
 # P
 paths: Parcours
 path: Parcours
+path_back: Retour au parcours
+path_dashboard: Tableau de bord
 progression: Avancement
 paths_list: Liste des parcours
 path_not_found: Le parcours n'a pas été trouvé
 play: Exécuter
 path_delete_success: Le parcours a été supprimé
 path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
-path_open_not_published_error: Le parcours que vous vouliez ouvrir n'a pas encore été publié par son propriétaire. 
+path_open_not_published_error: Le parcours que vous vouliez ouvrir n'a pas encore été publié par son propriétaire.
 paths_template_list: Liste des modèles de parcours
 publish: Publier
 
@@ -70,8 +72,12 @@ resources: Ressources
 # S
 submit: Sauvegarder
 student: Individuellement
-status: Statut
+status: Etat
 select: Sélectionner
+step: Etape
+
+#U
+unlockit: Débloquer
 
 # W
 warning_primary_resource_deleted: La ressource primaire 'resourceName' (resourceId) n'existe plus. Elle a été supprimée du parcours.

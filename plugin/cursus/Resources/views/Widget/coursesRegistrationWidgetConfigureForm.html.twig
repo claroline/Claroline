@@ -3,8 +3,15 @@
       action="{{ path('claro_cursus_courses_registration_widget_configure', {'config': config.getId()}) }}"
       method="post"
       novalidate
-    >
+>
     <div class="panel-body">
-        {{ form_widget(form) }}
+        {{ form_row(form.cursus) }}
+        {{ form_row(form.defaultMode) }}
+        <hr>
+        <h4 class="text-center">{{ 'calendar_view_options'|trans({}, 'cursus') }}</h4>
+        {{ form_row(form.publicSessionsOnly) }}
+        <hr>
+        <h4 class="text-center">{{ 'list_view_options'|trans({}, 'cursus') }}</h4>
+        {{ form_rest(form) }}
     </div>
 </form>

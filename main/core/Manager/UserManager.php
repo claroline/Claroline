@@ -162,6 +162,7 @@ class UserManager
         $this->objectManager->startFlushSuite();
         $user->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $user->setEmailValidationHash($this->container->get('claroline.utilities.misc')->generateGuid());
+        $user->setOrganizations($organizations);
         $this->objectManager->persist($user);
         $publicUrl ? $user->setPublicUrl($publicUrl) : $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user, 0);
@@ -319,6 +320,7 @@ class UserManager
         $userRole = $this->roleManager->getUserRoleByUser($user);
 
         //soft delete~
+        $user->setIsRemoved(true);
         $user->setMail('mail#'.$user->getId());
         $user->setFirstName('firstname#'.$user->getId());
         $user->setLastName('lastname#'.$user->getId());
@@ -434,6 +436,12 @@ class UserManager
                 $groupName = null;
             }
 
+            if (isset($user[10])) {
+                $organizationName = trim($user[10]) === '' ? null : $user[10];
+            } else {
+                $organizationName = null;
+            }
+
             if ($modelName) {
                 $model = $this->objectManager
                     ->getRepository('Claroline\CoreBundle\Entity\Model\WorkspaceModel')
@@ -442,32 +450,67 @@ class UserManager
                 $model = null;
             }
 
-            $group = $groupName ? $this->groupManager->getGroupByName($groupName) : null;
-            $newUser = new User();
-            $newUser->setFirstName($firstName);
-            $newUser->setLastName($lastName);
-            $newUser->setUsername($username);
-            $newUser->setPlainPassword($pwd);
-            $newUser->setMail($email);
-            $newUser->setAdministrativeCode($code);
-            $newUser->setPhone($phone);
-            $newUser->setLocale($lg);
-            $newUser->setAuthentication($authentication);
-            $newUser->setIsMailNotified($enableEmailNotifaction);
+            if ($organizationName) {
+                $organizations = [$this->objectManager
+                    ->getRepository('Claroline\CoreBundle\Entity\Organization\Organization')
+                    ->findOneByName($organizationName), ];
+            } else {
+                $organizations = [];
+            }
 
-            $this->createUser($newUser, $sendMail, $additionalRoles, $model, $username.uniqid());
-            $this->objectManager->persist($newUser);
+            $group = $groupName ? $this->groupManager->getGroupByName($groupName) : null;
+            if ($groupName) {
+                $group = $this->groupManager->getGroupByNameAndScheduledForInsert($groupName);
+
+                if (!$group) {
+                    $group = new Group();
+                    $group->setName($groupName);
+                    $group = $this->groupManager->insertGroup($group);
+                }
+            } else {
+                $group = null;
+            }
+
+            $userEntity = $this->getUserByUsernameOrMail($username, $email);
+            $isNew = false;
+
+            if (!$userEntity) {
+                $isNew = true;
+                $userEntity = new User();
+                $userEntity->setUsername($username);
+                $userEntity->setMail($email);
+            }
+
+            $userEntity->setFirstName($firstName);
+            $userEntity->setLastName($lastName);
+            $userEntity->setPlainPassword($pwd);
+            $userEntity->setAdministrativeCode($code);
+            $userEntity->setPhone($phone);
+            $userEntity->setLocale($lg);
+            $userEntity->setAuthentication($authentication);
+            $userEntity->setIsMailNotified($enableEmailNotifaction);
+
+            if (!$isNew && $logger) {
+                $logger(" User $j ($username) being updated...");
+                $this->roleManager->associateRoles($userEntity, $additionalRoles);
+            }
+
+            if ($isNew) {
+                if ($logger) {
+                    $logger(" User $j ($username) being created...");
+                }
+                $this->createUser($userEntity, $sendMail, $additionalRoles, $model, $username.uniqid(), $organizations);
+            }
+
+            $this->objectManager->persist($userEntity);
             $returnValues[] = $firstName.' '.$lastName;
 
             if ($group) {
-                $this->groupManager->addUsersToGroup($group, [$newUser]);
+                $this->groupManager->addUsersToGroup($group, [$userEntity]);
             }
 
             if ($logger) {
                 $logger(' [UOW size: '.$this->objectManager->getUnitOfWork()->size().']');
-            }
-            if ($logger) {
-                $logger(" User $j ($username) being created");
             }
             ++$i;
             ++$j;
@@ -915,7 +958,7 @@ class UserManager
     }
 
     /**
-     * @todo Please describe me. I couldn't find findOneByResetPasswordHash.
+     * @todo Please describe me. I couldn't find findOneByResetPasswordHash
      *
      * @param string $resetPassword
      *
@@ -943,16 +986,6 @@ class UserManager
         $user->setIsMailValidated(true);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
-    }
-
-    /**
-     * @param int $userId
-     *
-     * @return User|null
-     */
-    public function getEnabledUserById($userId)
-    {
-        return $this->userRepo->findEnabledUserById($userId);
     }
 
     /**
@@ -988,7 +1021,7 @@ class UserManager
      * Set the user locale.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string                            $locale Language with format en, fr, es, etc.
+     * @param string                            $locale Language with format en, fr, es, etc
      */
     public function setLocale(User $user, $locale = 'en')
     {
@@ -1169,9 +1202,6 @@ class UserManager
         return $this->userRepo->countAllEnabledUsers($executeQuery);
     }
 
-    /**
-     *
-     */
     public function importPictureFiles($filepath)
     {
         $archive = new \ZipArchive();
@@ -1226,91 +1256,6 @@ class UserManager
     public function countByRoles(array $roles, $includeGrps = true)
     {
         return $this->userRepo->countByRoles($roles, $includeGrps);
-    }
-
-    /**
-     * Update users imported from an array.
-     * There is the array format:.
-     *
-     * @todo some batch processing
-     *
-     * array(
-     *     array(firstname, lastname, username, pwd, email, code, phone),
-     *     array(firstname2, lastname2, username2, pwd2, email2, code2, phone2),
-     *     array(firstname3, lastname3, username3, pwd3, email3, code3, phone3),
-     * )
-     *
-     * @param array $users
-     * @param bool  $enableEmailNotification default to null so we have the option to not override it
-     *
-     * @return array
-     */
-    public function updateImportedUsers(array $users, $additionalRoles = [], $enableEmailNotification = null)
-    {
-        $returnValues = [];
-        $lg = $this->platformConfigHandler->getParameter('locale_language');
-        $this->objectManager->startFlushSuite();
-        $updatedUsers = [];
-        $i = 1;
-
-        foreach ($users as $user) {
-            $firstName = $user[0];
-            $lastName = $user[1];
-            $username = $user[2];
-            $pwd = $user[3];
-            $email = $user[4];
-
-            if (isset($user[5])) {
-                $code = trim($user[5]) === '' ? null : $user[5];
-            } else {
-                $code = null;
-            }
-
-            if (isset($user[6])) {
-                $phone = trim($user[6]) === '' ? null : $user[6];
-            } else {
-                $phone = null;
-            }
-
-            if (isset($user[7])) {
-                $authentication = trim($user[7]) === '' ? null : $user[7];
-            } else {
-                $authentication = null;
-            }
-            $existingUser = $this->getUserByUsernameOrMail($username, $email);
-
-            if (!is_null($existingUser)) {
-                $existingUser->setFirstName($firstName);
-                $existingUser->setLastName($lastName);
-                $existingUser->setUsername($username);
-                if ($pwd !== '') {
-                    $existingUser->setPlainPassword($pwd);
-                }
-                $existingUser->setMail($email);
-                $existingUser->setAdministrativeCode($code);
-                $existingUser->setPhone($phone);
-                $existingUser->setLocale($lg);
-                $existingUser->setAuthentication($authentication);
-                if ($enableEmailNotification !== null) {
-                    $existingUser->setIsMailNotified($enableEmailNotification);
-                }
-                $this->objectManager->persist($existingUser);
-                $updatedUsers[] = $existingUser;
-                $returnValues[] = $firstName.' '.$lastName;
-
-                if ($i % 100 === 0) {
-                    $this->objectManager->forceFlush();
-                }
-                ++$i;
-            }
-        }
-        $this->objectManager->endFlushSuite();
-
-        if (count($updatedUsers) > 0 && count($additionalRoles) > 0) {
-            $this->roleManager->associateRolesToSubjects($updatedUsers, $additionalRoles);
-        }
-
-        return $returnValues;
     }
 
     /**
@@ -1519,7 +1464,7 @@ class UserManager
         $qb = $this->objectManager->createQueryBuilder();
         $count ? $qb->select('count(u)') : $qb->select('u');
         $qb->from('Claroline\CoreBundle\Entity\User', 'u')
-            ->where('u.isEnabled = true');
+            ->where('u.isRemoved = false');
 
         //Admin can see everything, but the others... well they can only see their own organizations.
         if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
@@ -1626,6 +1571,18 @@ class UserManager
                     $this->log('Add default organization for user '.$user->getUsername());
                     $user->addOrganization($default);
                     $this->objectManager->persist($user);
+                    $detach[] = $user;
+
+                    if ($i % 250 === 0) {
+                        $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
+                        $this->objectManager->forceFlush();
+
+                        foreach ($detach as $el) {
+                            $this->objectManager->detach($el);
+                        }
+
+                        $detach = [];
+                    }
                 } else {
                     $this->log("Organization for user {$user->getUsername()} already exists");
                 }
@@ -1653,20 +1610,6 @@ class UserManager
         return $this->logger;
     }
 
-    /**
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     * @param string $order
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getAllUsersExcept($page, $max = 20, $orderedBy = 'id', $order = null, array $users)
-    {
-        $query = $this->userRepo->findAllExcept($users);
-
-        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
-    }
     /**
      * @param string $search
      * @param int    $page
@@ -1783,5 +1726,23 @@ class UserManager
         $details['resourceManagerDisplayMode'][$index] = $displayMode;
         $options->setDetails($details);
         $this->persistUserOptions($options);
+    }
+
+    public function enable(User $user)
+    {
+        $user->enable();
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+
+        return $user;
+    }
+
+    public function disable(User $user)
+    {
+        $user->disable();
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+
+        return $user;
     }
 }

@@ -11,22 +11,22 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Config\Definition\Processor;
-use Claroline\CoreBundle\Library\Transfert\Importer;
-use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Claroline\CoreBundle\Manager\RightsManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -86,7 +86,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public function supports($type)
     {
-        return $type == 'yml' ? true : false;
+        return $type === 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -100,7 +100,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $importer = $this->getImporterByName($item['item']['type']);
 
                 if (!$importer && $this->env === 'dev') {
-                    //throw new InvalidConfigurationException('The importer ' . $item['item']['type'] . ' does not exist');
+                    throw new InvalidConfigurationException('The importer '.$item['item']['type'].' does not exist');
                 }
 
                 if ($importer && isset($item['item']['data'])) {
@@ -123,7 +123,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
          * The implementation will change later (if we need to change the perms of
          * ROLE_USER and ROLE_ANONYMOUS) but it's easier to code it that way.
          */
-        $createdResources = array();
 
         if ($fullImport) {
             $directories[$data['data']['root']['uid']] = $root;
@@ -168,7 +167,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $workspace,
                     null,
                     $icon,
-                    array(),
+                    [],
                     $isDirectoryPublished
                 );
 
@@ -204,13 +203,13 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         /* RESOURCES */
         /*************/
 
-        $created = array();
+        $created = [];
 
         if (isset($data['data']['items'])) {
             $this->log('Importing resources...');
             foreach ($data['data']['items'] as $item) {
                 //THIS IS WHERE RES COME FROM !
-                $res = array();
+                $res = [];
                 if (isset($item['item']['data'])) {
                     $res['data'] = $item['item']['data'];
                 }
@@ -219,6 +218,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
                 if ($importer) {
                     $this->log("Importing {$item['item']['name']} - uid={$item['item']['uid']} - type={$item['item']['type']}");
+
                     $entity = $importer->import($res, $item['item']['name'], $created, $workspace);
                     //some importers are not fully functionnal yet
                     if ($entity) {
@@ -236,7 +236,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                             $owner = $this->getOwner();
                         }
 
-                        $isPublished = isset($item['item']['published']) || false === $item['item']['published'] ? $item['item']['published'] : true;
+                        $isPublished = isset($item['item']['published']) ? $item['item']['published'] : true;
 
                         //add the custom icons
                         $icon = null;
@@ -254,7 +254,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                             $workspace,
                             null,
                             $icon,
-                            array(),
+                            [],
                             $isPublished
                         );
 
@@ -296,12 +296,12 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         if ($fullImport) {
             //add the missing roles
-            foreach ($data['data']['root']['roles'] as $role) {
-                $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
+            if (isset($data['data']['root']['roles'])) {
+                foreach ($data['data']['root']['roles'] as $role) {
+                    $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
+                }
             }
         }
-
-        //throw new \Exception('boom');
     }
 
     public function export(Workspace $workspace, array &$_files, $object)
@@ -309,31 +309,36 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $_data = [];
         //first we get the root
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $rootRights = $root->getRights();
-        $_data['root'] = array(
-            'uid' => $root->getId(),
-            'roles' => $this->getPermsArray($root),
-        );
-        $directory = $this->resourceManager->getResourceTypeByName('directory');
-        $resourceNodes = $this->resourceManager->getByWorkspaceAndResourceType($workspace, $directory);
 
-        foreach ($resourceNodes as $resourceNode) {
-            if ($resourceNode->getParent() !== null) {
-                $_data['directories'][] = $this->getDirectoryElement($resourceNode, $_files);
+        if ($root) {
+            $_data['root'] = [
+                'uid' => $root->getId(),
+                'roles' => $this->getPermsArray($root),
+            ];
+            $directory = $this->resourceManager->getResourceTypeByName('directory');
+            $resourceNodes = $this->resourceManager->getByWorkspaceAndResourceType($workspace, $directory);
+
+            foreach ($resourceNodes as $resourceNode) {
+                if ($resourceNode->getParent() !== null) {
+                    $_data['directories'][] = $this->getDirectoryElement($resourceNode, $_files);
+                }
             }
-        }
 
-        foreach ($resourceNodes as $resourceNode) {
-            $children = $resourceNode->getChildren();
+            foreach ($resourceNodes as $resourceNode) {
+                $children = $resourceNode->getChildren();
 
-            foreach ($children as $child) {
-                if ($child && $child->getResourceType()->getName() !== 'directory') {
-                    $item = $this->getResourceElement($child, $workspace, $_files, $_data);
-                    if (!empty($item)) {
-                        $_data['items'][] = $item;
+                foreach ($children as $child) {
+                    if ($child && $child->getResourceType()->getName() !== 'directory') {
+                        $item = $this->getResourceElement($child, $workspace, $_files, $_data);
+                        if (!empty($item)) {
+                            $_data['items'][] = $item;
+                        }
                     }
                 }
             }
+        } else {
+            //root restoration is the answer
+            $_data['root'] = ['uid' => 42];
         }
 
         return $_data;
@@ -341,7 +346,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public function exportResources(Workspace $workspace, array $resourceNodes, array &$_files)
     {
-        $_data = array();
+        $_data = [];
 
         foreach ($resourceNodes as $resourceNode) {
             $resourceTypeName = $resourceNode->getResourceType()->getName();
@@ -469,7 +474,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                                         function ($v) use ($availableRoleName) {
                                                             return call_user_func_array(
                                                                 __CLASS__.'::roleNameExists',
-                                                                array($v, $availableRoleName)
+                                                                [$v, $availableRoleName]
                                                             );
                                                         }
                                                     )
@@ -498,7 +503,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                                 function ($v) use ($rootPath) {
                                                     return call_user_func_array(
                                                         __CLASS__.'::fileNotExists',
-                                                        array($v, $rootPath)
+                                                        [$v, $rootPath]
                                                     );
                                                 }
                                             )
@@ -511,7 +516,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                                 function ($v) use ($availableCreators) {
                                                     return call_user_func_array(
                                                         __CLASS__.'::creatorExists',
-                                                        array($v, $availableCreators)
+                                                        [$v, $availableCreators]
                                                     );
                                                 }
                                             )
@@ -525,7 +530,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                                 function ($v) use ($availableParents) {
                                                     return call_user_func_array(
                                                         __CLASS__.'::parentExists',
-                                                        array($v, $availableParents)
+                                                        [$v, $availableParents]
                                                     );
                                                 }
                                             )
@@ -544,7 +549,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                                                     function ($v) use ($availableRoleName) {
                                                                         return call_user_func_array(
                                                                             __CLASS__.'::roleNameExists',
-                                                                            array($v, $availableRoleName)
+                                                                            [$v, $availableRoleName]
                                                                         );
                                                                     }
                                                                 )
@@ -577,7 +582,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                                 function ($v) use ($rootPath) {
                                                     return call_user_func_array(
                                                         __CLASS__.'::fileNotExists',
-                                                        array($v, $rootPath)
+                                                        [$v, $rootPath]
                                                     );
                                                 }
                                             )
@@ -590,7 +595,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                             function ($v) use ($availableParents) {
                                                 return call_user_func_array(
                                                     __CLASS__.'::parentExists',
-                                                    array($v, $availableParents)
+                                                    [$v, $availableParents]
                                                 );
                                             }
                                         )
@@ -618,7 +623,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                                                     function ($v) use ($availableRoleName) {
                                                                         return call_user_func_array(
                                                                             __CLASS__.'::roleNameExists',
-                                                                            array($v, $availableRoleName)
+                                                                            [$v, $availableRoleName]
                                                                         );
                                                                     }
                                                                 )
@@ -670,7 +675,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     private function getCreationRightsArray($rights)
     {
-        $creations = array();
+        $creations = [];
 
         if ($rights !== null) {
             foreach ($rights as $el) {
@@ -696,14 +701,14 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 //creation rights are missing here but w/e
                 $name = $this->roleManager->getWorkspaceRoleBaseName($right->getRole());
 
-                $data = array(
+                $data = [
                     'name' => $name,
                     'rights' => $perms,
-                );
+                ];
 
                 //don't keep the role manager
                 if (!strpos('_'.$name, 'ROLE_WS_MANAGER')) {
-                    $roles[] = array('role' => $data);
+                    $roles[] = ['role' => $data];
                 }
             }
         }
@@ -715,10 +720,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     {
         $creations = (isset($role['role']['rights']['create'])) ?
             $this->getCreationRightsArray($role['role']['rights']['create']) :
-            array();
-
-        $uow = $this->om->getUnitOfWork();
-        $map = $uow->getIdentityMap();
+            [];
 
         //is it in the identity map ?
         $createdRights = $this->rightManager->getRightsFromIdentityMapOrScheduledForInsert(
@@ -758,7 +760,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         if (isset($data['data']['items'])) {
             foreach ($data['data']['items'] as $item) {
                 foreach ($this->getListImporters() as $importer) {
-                    if ($importer->getName() == $item['item']['type']) {
+                    if ($importer->getName() === $item['item']['type']) {
                         $resourceImporter = $importer;
                     }
                 }
@@ -780,7 +782,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $parentId = null;
         }
 
-        $resElement = array('directory' => array(
+        $resElement = ['directory' => [
             'name' => $resourceNode->getName(),
             'creator' => null,
             'parent' => $parentId,
@@ -788,7 +790,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             'uid' => $resourceNode->getId(),
             'roles' => $this->getPermsArray($resourceNode),
             'index' => $resourceNode->getIndex(),
-        ));
+        ]];
 
         if ($icon = $this->getIcon($resourceNode, $_files)) {
             $resElement['directory']['icon'] = $icon;
@@ -799,23 +801,23 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public function getResourceElement(
         ResourceNode $resourceNode,
-        Workspace $workspace,
-        &$_files,
-        &$_data,
+        $workspace = null,
+        &$_files = [],
+        &$_data = [],
         $setParentNull = false
     ) {
         $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getId() : null;
         $resourceNode = $this->resourceManager->getRealTarget($resourceNode, false);
 
-        $data = array();
-        $resElement = array();
+        $data = [];
+        $resElement = [];
 
         $resource = $this->resourceManager->getResourceFromNode($resourceNode);
 
         if ($resource) {
             // We are not processing an orphan Node so we can run the export of the Resource
             $importer = $this->getImporterByName($resourceNode->getResourceType()->getName());
-            if ($importer) {
+            if ($importer && $workspace) {
                 $importer->setExtendedData($_data);
                 $data = $importer->export(
                     $workspace,
@@ -829,7 +831,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $parentId = null;
             }
 
-            $resElement = array('item' => array(
+            $resElement = ['item' => [
                 'name' => $resourceNode->getName(),
                 'creator' => null,
                 'parent' => $parentId,
@@ -838,7 +840,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 'roles' => $this->getPermsArray($resourceNode),
                 'uid' => $resourceNode->getId(),
                 'data' => $data,
-            ));
+            ]];
 
             if ($icon = $this->getIcon($resourceNode, $_files)) {
                 $resElement['item']['icon'] = $icon;

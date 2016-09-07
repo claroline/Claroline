@@ -1,16 +1,15 @@
 <?php
 
-/**
- * abstract class.
- */
-
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * abstract class.
+ */
 abstract class Interaction
 {
     protected $doctrine;
@@ -19,13 +18,11 @@ abstract class Interaction
      * @DI\InjectParams({
      *     "doctrine"   = @DI\Inject("doctrine")
      * })
-     * 
+     *
      * @param Registry $doctrine
      */
-    public function __construct(
-        Registry $doctrine
-
-    ) {
+    public function __construct(Registry $doctrine)
+    {
         $this->doctrine = $doctrine;
     }
 
@@ -50,7 +47,7 @@ abstract class Interaction
             if (count($lhp) > 0) {
                 $signe = substr($hint->getPenalty(), 0, 1);
 
-                if ($signe == '-') {
+                if ($signe === '-') {
                     $penalty += substr($hint->getPenalty(), 1);
                 } else {
                     $penalty += $hint->getPenalty();
@@ -73,12 +70,12 @@ abstract class Interaction
     protected function getPenalty($question, SessionInterface $session, $paperID)
     {
         $penalty = 0;
-        if ($paperID == 0) {
+        if ($paperID === 0) {
             if ($session->get('penalties')) {
                 foreach ($session->get('penalties') as $penal) {
                     $signe = substr($penal, 0, 1); // In order to manage the symbol of the penalty
 
-                    if ($signe == '-') {
+                    if ($signe === '-') {
                         $penalty += substr($penal, 1);
                     } else {
                         $penalty += $penal;
@@ -105,9 +102,15 @@ abstract class Interaction
      protected function getScoreWordResponse($wr, $response)
      {
          $score = 0;
-         if (((strcasecmp(trim($wr->getResponse()), trim($response)) == 0
-                 && $wr->getCaseSensitive() == false))
-                     || (trim($wr->getResponse()) == trim($response))) {
+
+         $formattedResponse = trim($response);
+         $formattedWord = trim($wr->getResponse());
+         if (!$wr->getCaseSensitive()) {
+             $formattedResponse = strtolower($formattedResponse);
+             $formattedWord = strtolower($formattedWord);
+         }
+
+         if ($formattedResponse === $formattedWord) {
              $score = $wr->getScore();
          }
 
@@ -147,7 +150,7 @@ abstract class Interaction
      {
          $em = $this->doctrine->getEntityManager();
          $response = $em->getRepository('UJMExoBundle:Response')
-                        ->findBy(array('question' => $interaction->getId()));
+                        ->findBy(['question' => $interaction->getId()]);
 
          return count($response);
      }

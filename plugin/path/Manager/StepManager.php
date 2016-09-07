@@ -87,7 +87,7 @@ class StepManager
      *
      * @return \Innova\PathBundle\Entity\Step Edited step
      */
-    public function create(Path $path, $level = 0, Step $parent = null, $order = 0, \stdClass $stepStructure)
+    public function create(Path $path, $level, Step $parent = null, $order, \stdClass $stepStructure)
     {
         $step = new Step();
 
@@ -106,7 +106,7 @@ class StepManager
      *
      * @return \Innova\PathBundle\Entity\Step Edited step
      */
-    public function edit(Path $path, $level = 0, Step $parent = null, $order = 0, \stdClass $stepStructure, Step $step)
+    public function edit(Path $path, $level, Step $parent = null, $order, \stdClass $stepStructure, Step $step)
     {
         // Update step properties
         $step->setPath($path);
@@ -304,14 +304,17 @@ class StepManager
         $publishedResources = [];
         if (!empty($stepStructure->resources)) {
             $i = 0;
-            foreach ($stepStructure->resources as $resource) {
+            foreach ($stepStructure->resources as $index => $resource) {
                 $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
                 if (!empty($resourceNode)) {
                     $parameters->addSecondaryResource($resourceNode);
                     $publishedResources[] = $resourceNode;
                 } else {
+                    // Resource has been deleted => remove the reference in path
                     $warning = $this->translator->trans('warning_compl_resource_deleted', ['resourceId' => $resource->resourceId, 'resourceName' => $resource->name], 'innova_tools');
                     $this->session->getFlashBag()->add('warning', $warning);
+
+                    unset($stepStructure->resources[$index]);
                 }
 
                 ++$i;
@@ -392,8 +395,8 @@ class StepManager
 
         $data = [
             'uid' => $step->getId(),
-            'parent' => !empty($parent)   ? $parent->getId()                      : null,
-            'activityId' => !empty($activity) ? $activity->getId()                    : null,
+            'parent' => !empty($parent) ? $parent->getId() : null,
+            'activityId' => !empty($activity) ? $activity->getId() : null,
             'activityNodeId' => !empty($activity) ? $activity->getResourceNode()->getId() : null,
             'order' => $step->getOrder(),
             'lvl' => $step->getLvl(),

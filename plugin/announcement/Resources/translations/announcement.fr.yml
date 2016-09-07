@@ -1,6 +1,6 @@
 announcement_creation: 'Nouvelle annonce'
 announcement_delete_confirm_message: 'Cette annonce sera définitivement supprimée.'
-announcement_delete_confirm_title: 'Voulez-vous supprimer cette annonce ?'
+announcement_delete_confirm_title: 'Voulez-vous vraiment supprimer cette annonce ?'
 announcement_edition: 'Edition de l''annonce'
 announcement_form_announcer: Editeur
 announcement_form_content: Message

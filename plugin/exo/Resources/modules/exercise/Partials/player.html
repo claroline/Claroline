@@ -14,7 +14,6 @@
                 data-step="exercisePlayerCtrl.step"
                 data-solution-shown="exercisePlayerCtrl.solutionShown"
                 data-current-try="exercisePlayerCtrl.currentStepTry"
-                data-feedback="exercisePlayerCtrl.feedback"
                 data-all-answers-found="exercisePlayerCtrl.allAnswersFound">
         </step-show>
     </div>
@@ -85,7 +84,7 @@
 
         <!-- Interrupt Exercise -->
         <button type="button" role="button" class="btn btn-warning"
-                data-ng-if="!exercisePlayerCtrl.isLastStep && exercisePlayerCtrl.exercise.meta.dispButtonInterrupt"
+                data-ng-if="null !== exercisePlayerCtrl.nextStep && exercisePlayerCtrl.exercise.meta.dispButtonInterrupt"
                 data-confirm-modal="{{ 'sequence_interrupt_sequence_confirm'|trans:{}:'ujm_sequence'}}"
                 data-confirm-modal-action="exercisePlayerCtrl.interrupt()"
         >

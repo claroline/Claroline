@@ -3,7 +3,6 @@
 /**
  * To export a question in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -19,13 +18,13 @@ abstract class QtiExport
     protected $qtiRepos;
     protected $node;
     protected $document;
-    protected $responseDeclaration = array();
+    protected $responseDeclaration = [];
     protected $nbResponseDeclaration = 0;
     protected $outcomeDeclaration;
     protected $modalFeedback;
     protected $itemBody;
     protected $question;
-    protected $resourcesLinked = array();
+    protected $resourcesLinked = [];
 
     /**
      * Constructor.
@@ -143,7 +142,7 @@ abstract class QtiExport
         $dom = new \DOMDocument();
         //For avoided to have a string only with spaces
         $describe = ltrim($this->question->getDescription());
-        if ($describe != null && $describe != '') {
+        if ($describe !== null && $describe !== '') {
             $body = $this->qtiExportObject($describe);
             foreach ($body->childNodes as $child) {
                 $node = $dom->importNode($child, true);
@@ -165,12 +164,18 @@ abstract class QtiExport
     protected function qtiExportObject($str)
     {
         $dom = new \DOMDocument();
-        $dom->loadHTML($str);
-        $this->imgToObject($dom);
-        $this->aToObject($dom);
-        $body = $dom->getElementsByTagName('body')->item(0);
 
-        return $body;
+        //in case html is wrong
+        try {
+            $dom->loadHTML($str);
+            $this->imgToObject($dom);
+            $this->aToObject($dom);
+            $body = $dom->getElementsByTagName('body')->item(0);
+
+            return $body;
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
     /**
@@ -184,12 +189,17 @@ abstract class QtiExport
     {
         $urlExplode = explode('/', $path);
         $idNode = end($urlExplode);
-        $objSrc = $this->doctrine->getManager()->getRepository('ClarolineCoreBundle:Resource\File')->findOneBy(array('resourceNode' => $idNode));
+        $objSrc = $this->doctrine->getManager()->getRepository('ClarolineCoreBundle:Resource\File')->findOneBy(['resourceNode' => $idNode]);
+
+        if (!$objSrc) {
+            return;
+        }
+
         $src = $this->container->getParameter('claroline.param.files_directory').'/'.$objSrc->getHashName();
         $name = $objSrc->getResourceNode()->getName();
         $dest = $this->qtiRepos->getUserDir().$name;
         copy($src, $dest);
-        $ressource = array('name' => $name, 'url' => $src);
+        $ressource = ['name' => $name, 'url' => $src];
         $this->resourcesLinked[] = $ressource;
 
         return $objSrc;
@@ -240,9 +250,12 @@ abstract class QtiExport
     {
         //Managing the resource export
         $body = $this->qtiExportObject($label);
-        foreach ($body->childNodes as $child) {
-            $labelNew = $this->document->importNode($child, true);
-            $domEl->appendChild($labelNew);
+
+        if ($body !== '') {
+            foreach ($body->childNodes as $child) {
+                $labelNew = $this->document->importNode($child, true);
+                $domEl->appendChild($labelNew);
+            }
         }
     }
 
@@ -255,16 +268,18 @@ abstract class QtiExport
     {
         $tagsImg = $DOMdoc->getElementsByTagName('img');
         foreach ($tagsImg as $img) {
-            $object = $DOMdoc->CreateElement('object');
-            //Copy the image in the archiv
             $src = $img->getAttribute('src');
             $file = $this->getFile($src);
-            $object->setAttribute('data', $file->getResourceNode()->getName());
-            $objecttxt = $DOMdoc->CreateTextNode($file->getResourceNode()->getName());
-            $object->appendChild($objecttxt);
-            $object->setAttribute('type', $file->getResourceNode()->getMimeType());
-            //Creating one table to replace the tags
-            $elements[] = array($object, $img);
+            if ($file) {
+                $object = $DOMdoc->CreateElement('object');
+                //Copy the image in the archiv
+                $object->setAttribute('data', $file->getResourceNode()->getName());
+                $objecttxt = $DOMdoc->CreateTextNode($file->getResourceNode()->getName());
+                $object->appendChild($objecttxt);
+                $object->setAttribute('type', $file->getResourceNode()->getMimeType());
+                //Creating one table to replace the tags
+                $elements[] = [$object, $img];
+            }
         }
         //Replaces image tag by the object tag
         if (!empty($elements)) {
@@ -289,7 +304,7 @@ abstract class QtiExport
             $object->setAttribute('data', $file->getResourceNode()->getName());
             $object->setAttribute('type', $file->getResourceNode()->getMimeType());
             //Creating one table to replace the tags
-            $elements[] = array($object, $aTag);
+            $elements[] = [$object, $aTag];
         }
         //Replaces image tag by the object tag
         if (!empty($elements)) {

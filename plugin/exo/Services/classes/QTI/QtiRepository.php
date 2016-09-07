@@ -104,13 +104,14 @@ class QtiRepository
         $info = '';
         $iterator = new RecursiveDirectoryIterator($this->getUserDir(), \FilesystemIterator::SKIP_DOTS);
         foreach (new \RecursiveIteratorIterator($iterator) as $file) {
-            if ($file->getExtension() == 'xml' && $this->alreadyImported(base64_encode($file)) === false) {
+            if ($file->getExtension() === 'xml' && $this->alreadyImported(base64_encode($file)) === false) {
                 $xmlFileFound = true;
                 $document_xml = new \DomDocument();
                 $document_xml->load($file);
                 foreach ($document_xml->getElementsByTagName('assessmentItem') as $ai) {
                     $path = dirname($file);
                     $imported = false;
+                    $interX = false;
                     $ib = $ai->getElementsByTagName('itemBody')->item(0);
                     foreach ($ib->childNodes as $node) {
                         if ($imported === false) {
@@ -145,12 +146,12 @@ class QtiRepository
                         $other = $this->importOther($ai, $path);
                         $interX = $other[0];
                         $imported = $other[1];
-                        if ($imported == false) {
+                        if ($imported === false) {
                             $info .= $file.' qti unsupported format'."\n";
                         }
                     }
 
-                    if ($this->step != null) {
+                    if ($this->step !== null) {
                         $this->exerciseQuestions[] = $file;
                         $this->importedQuestions[dirname($file).'/'.$file->getFileName()] = $interX;
                     }
@@ -162,7 +163,7 @@ class QtiRepository
         }
 
         $this->removeDirectory();
-        if ($info != '') {
+        if ($info !== '') {
             return $info;
         }
 
@@ -206,14 +207,14 @@ class QtiRepository
             if (!($node instanceof \DomText)) {
                 ++$nbNodes;
             }
-            if ($node->nodeName == 'prompt') {
+            if ($node->nodeName === 'prompt') {
                 $promptTag = true;
             }
-            if ($node->nodeName == 'textEntryInteraction') {
+            if ($node->nodeName === 'textEntryInteraction') {
                 $textEntryInteractionTag = true;
             }
         }
-        if ($nbNodes == 2 && $promptTag === true && $textEntryInteractionTag === true) {
+        if ($nbNodes === 2 && $promptTag === true && $textEntryInteractionTag === true) {
             $qtiImport = $this->container->get('ujm.exo_qti_import_open_one_word');
             $interX = $qtiImport->import($this, $ai, $path);
             $imported = true;

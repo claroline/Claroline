@@ -1,0 +1,265 @@
+{% macro renderPager(pager, widgetInstanceId, search, max, orderedBy, order) %}
+    {% if search is empty %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_cursus_my_courses_widget_chronologic',
+                    'routeParams': {'widgetInstance': widgetInstanceId}
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_cursus_my_courses_widget_chronologic',
+                    'routeParams': {'widgetInstance': widgetInstanceId, 'search': search}
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
+    
+{% if search != '' %}
+    <div class="alert alert-info">
+        {{ 'results_for_search_on'|trans({}, 'platform') }} :
+        "{{ search }}"
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-4 pull-right">
+        <div class="input-group margin-bottom-md">
+            <input class="form-control search-course"
+                   type="text"
+                   id="search-course-input"
+                   placeholder="{{ 'search'|trans({}, 'platform') }}"
+                   value="{{ search }}"
+            >
+            <span class="input-group-btn">
+                <button class="filter btn btn-default search-course-btn"
+                        type="button"
+                        id="search-course-btn"
+                >
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+    <div class="btn-group pull-right">
+        <button id="list-view-button"
+                class="btn btn-default"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-container="#courses-list-{{ widgetInstance.getId() }}"
+                title="{{ 'list_view'|trans({}, 'cursus') }}"
+        >
+            <i class="fa fa-list"></i>
+        </button>
+        <button id="calendar-view-button"
+                class="btn btn-default"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-container="#courses-list-{{ widgetInstance.getId() }}"
+                title="{{ 'calendar_view'|trans({}, 'cursus') }}"
+        >
+            <i class="fa fa-calendar"></i>
+        </button>
+    </div>
+</div>
+
+<div class="panel-group" role="tablist">
+    {% if displayClosedSessions %}
+        <div class="panel panel-default" style="border-color: {{ closedSessionsColor }}">
+            <div class="panel-heading" style="background-color: {{ closedSessionsColor }}">
+                <h3 class="panel-title">
+                    <span data-toggle="collapse" href="#closed-sessions-content-{{ widgetInstance.getId() }}" class="pointer-hand">
+                        {{ 'closed_sessions'|trans({}, 'cursus') }}
+                    </span>
+                </h3>
+            </div>
+            <div id="closed-sessions-content-{{ widgetInstance.getId() }}" class="panel-collapse collapse {% if closedSessions|length > 0 %}in{% endif %}">
+                <div class="panel-body">
+                    {% if closedSessions|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <th>{{ 'name'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'duration'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'course'|trans({}, 'cursus') }}</th>
+                                    {% if not disableClosedSessionsWs %}
+                                        <th>
+                                            <i class="fa fa-book"></i>
+                                        </th>
+                                    {% endif %}
+                                </tr>
+                                {% for session in closedSessions %}
+                                    {% set course = session.getCourse() %}
+                                    {% set workspace = session.getWorkspace() %}
+                                    <tr>
+                                        <td>
+                                            <a href="" class="chronologic-link" data-session-id="{{ session.getId() }}">
+                                                {{ session.getName() }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ session.getStartDate()|date('d/m/Y') }}
+                                            <i class="fa fa-long-arrow-right"></i>
+                                            {{ session.getEndDate()|date('d/m/Y') }}
+                                        </td>
+                                        <td>
+                                            {{ course.getTitle() }}
+                                            <small>[{{ course.getCode() }}]</small>
+                                        </td>
+                                        {% if not disableClosedSessionsWs and workspace is not empty %}
+                                            <td>
+                                                <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                                                   class="standard-link"
+                                                >
+                                                    <i class="fa fa-book"></i>
+                                                </a>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            {{ 'no_closed_session'|trans({}, 'cursus') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="panel panel-default" style="border-color: {{ openSessionsColor }}">
+        <div class="panel-heading" style="background-color: {{ openSessionsColor }}">
+            <h3 class="panel-title">
+                <span data-toggle="collapse" href="#open-sessions-content-{{ widgetInstance.getId() }}" class="pointer-hand">
+                    {{ 'ongoing_sessions'|trans({}, 'cursus') }}
+                </span>
+            </h3>
+        </div>
+        <div id="open-sessions-content-{{ widgetInstance.getId() }}" class="panel-collapse collapse in">
+            <div class="panel-body">
+                    {% if openSessions|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <th>{{ 'name'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'duration'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'course'|trans({}, 'cursus') }}</th>
+                                    <th><i class="fa fa-book"></i></th>
+                                </tr>
+                                {% for session in openSessions %}
+                                    {% set course = session.getCourse() %}
+                                    {% set workspace = session.getWorkspace() %}
+                                    <tr>
+                                        <td>
+                                            <a href="" class="chronologic-link" data-session-id="{{ session.getId() }}">
+                                                {{ session.getName() }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ session.getStartDate()|date('d/m/Y') }}
+                                            <i class="fa fa-long-arrow-right"></i>
+                                            {{ session.getEndDate()|date('d/m/Y') }}
+                                        </td>
+                                        <td>
+                                            {{ course.getTitle() }}
+                                            <small>[{{ course.getCode() }}]</small>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                                               class="standard-link"
+                                            >
+                                                <i class="fa fa-book"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            {{ 'no_ongoing_session'|trans({}, 'cursus') }}
+                        </div>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+    {% if displayUnstartedSessions %}
+        <div class="panel panel-default" style="border-color: {{ unstartedSessionsColor }}">
+            <div class="panel-heading" style="background-color: {{ unstartedSessionsColor }}">
+                <h3 class="panel-title">
+                    <span data-toggle="collapse" href="#unstarted-sessions-content-{{ widgetInstance.getId() }}" class="pointer-hand">
+                        {{ 'unstarted_sessions'|trans({}, 'cursus') }}
+                    </span>
+                </h3>
+            </div>
+            <div id="unstarted-sessions-content-{{ widgetInstance.getId() }}" class="panel-collapse collapse {% if unstartedSessions|length > 0 %}in{% endif %}">
+                <div class="panel-body">
+                    {% if unstartedSessions|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <th>{{ 'name'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'duration'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'course'|trans({}, 'cursus') }}</th>
+                                    {% if not disableUnstartedSessionsWs %}
+                                        <th>
+                                            <i class="fa fa-book"></i>
+                                        </th>
+                                    {% endif %}
+                                </tr>
+                                {% for session in unstartedSessions %}
+                                    {% set course = session.getCourse() %}
+                                    {% set workspace = session.getWorkspace() %}
+                                    <tr>
+                                        <td>
+                                            <a href="" class="chronologic-link" data-session-id="{{ session.getId() }}">
+                                                {{ session.getName() }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ session.getStartDate()|date('d/m/Y') }}
+                                            <i class="fa fa-long-arrow-right"></i>
+                                            {{ session.getEndDate()|date('d/m/Y') }}
+                                        </td>
+                                        <td>
+                                            {{ course.getTitle() }}
+                                            <small>[{{ course.getCode() }}]</small>
+                                        </td>
+                                        {% if not disableUnstartedSessionsWs and workspace is not empty %}
+                                            <td>
+                                                <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                                                   class="standard-link"
+                                                >
+                                                    <i class="fa fa-book"></i>
+                                                </a>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            {{ 'no_unstarted_session'|trans({}, 'cursus') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>

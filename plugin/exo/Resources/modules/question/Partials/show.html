@@ -7,7 +7,7 @@
             {{ questionShowCtrl.question.title }}
 
             <!-- Score -->
-            <div class="pull-right" data-ng-if="questionShowCtrl.includeCorrection || questionShowCtrl.feedback.enabled">
+            <div class="pull-right" data-ng-if="questionShowCtrl.includeCorrection || questionShowCtrl.feedback.visible">
                 <!-- Display manual correction message for user -->
                 <small class="text-danger" data-ng-if="questionShowCtrl.feedback.visible && -1 === questionShowCtrl.questionPaper.score">
                     <span class="fa fa-warning"></span>
@@ -18,19 +18,14 @@
                 <span class="label label-primary">
                     {{ 'score'|trans:{}:'ujm_exo' }}:
 
-                    <!-- Feedback is hidden -->
-                    <span data-ng-if="!questionShowCtrl.feedback.visible">
-                        ...
-                    </span>
-
                     <!-- Feedback is visible and question is marked -->
-                    <span data-ng-if="questionShowCtrl.feedback.visible && -1 !== questionShowCtrl.questionPaper.score">
-                        {{questionShowCtrl.questionPaper.score + '/' + questionShowCtrl.question.scoreTotal }}
+                    <span data-ng-if="'-1' !== questionShowCtrl.getScore()">
+                        {{ questionShowCtrl.getScore() + '/' + questionShowCtrl.getTotalScore() }}
                     </span>
 
                     <!-- Feedback is visible but question require a manual correction -->
-                    <span data-ng-if="questionShowCtrl.feedback.visible && -1 === questionShowCtrl.questionPaper.score">
-                        {{' ?/' + questionShowCtrl.question.scoreTotal }}
+                    <span data-ng-if="'-1' === questionShowCtrl.getScore()">
+                        {{ '?/' + questionShowCtrl.getTotalScore() }}
                     </span>
                 </span>
             </div>
@@ -43,13 +38,13 @@
             <div data-ng-bind-html="questionShowCtrl.question.invite | unsafe"></div>
 
             <!-- Description of the Question -->
-            <div data-ng-bind="questionShowCtrl.question.description"></div>
+            <div data-ng-bind-html="questionShowCtrl.question.description | unsafe"></div>
         </div>
         <div class="question-info" data-ng-if="questionShowCtrl.question.objects.length > 0">
             <h5>{{ 'question_object'|trans:{}:'ujm_sequence' }}</h5>
             <div data-ng-repeat="object in questionShowCtrl.question.objects">
-                <iframe src="{{ object.url }}"></iframe>
-                <span data-ng-if="object.type === 'text'">{{ object.data }}</span>
+                <iframe data-ng-src="{{ object.url }}" data-ng-if="object.url" style="height: 350px; width: 40%; resize: both; overflow: scroll;"></iframe>
+                <span data-ng-if="object.type === 'text'" data-ng-bind-html="object.data | unsafe"></span>
             </div>
         </div>
 
@@ -103,19 +98,19 @@
                     data-include-correction="questionShowCtrl.includeCorrection">
             </graphic-question>
         </div>
-        
+
         <div class="question-info" data-ng-if="questionShowCtrl.question.specification">
             <h5>{{ 'question_specification'|trans:{}:'ujm_sequence' }}</h5>
-            <div>{{ questionShowCtrl.question.specification }}</div>
-        </div>
-        
-        <div class="question-info" data-ng-if="questionShowCtrl.question.supplementary">
-            <h5>{{ 'question_supplementary'|trans:{}:'ujm_sequence' }}</h5>
-            <div>{{ questionShowCtrl.question.supplementary }}</div>
+            <div data-ng-bind-html="questionShowCtrl.question.specification | unsafe"></div>
         </div>
 
-        <!-- Display solution of the Question -->
-        <div class="correction-container" data-ng-if="questionShowCtrl.includeCorrection && questionShowCtrl.question.solutions && questionShowCtrl.question.solutions.length > 0">
+        <div class="question-info" data-ng-if="questionShowCtrl.question.supplementary">
+            <h5>{{ 'question_supplementary'|trans:{}:'ujm_sequence' }}</h5>
+            <div data-ng-bind-html="questionShowCtrl.question.supplementary | unsafe"></div>
+        </div>
+        
+        <!-- Display solution of the Question i.e. Expected Answer(s) -->
+        <div class="correction-container" data-ng-if="!questionShowCtrl.minimalCorrection && questionShowCtrl.includeCorrection && questionShowCtrl.question.solutions && questionShowCtrl.question.solutions.length > 0">
             <h5>
                 <span class="fa fa-fw fa-check"></span>
                 {{ 'paper_details_table_expected_answer'|trans:{}:'ujm_sequence' }}
@@ -175,27 +170,11 @@
         </button>
 
         <!-- Display Hints -->
-        <div class="question-hints" data-ng-if="questionShowCtrl.question.hints">
-            <hr/>
-
-            <div class="hint" data-ng-repeat="hint in questionShowCtrl.question.hints">
-                <!-- Button to load the Hint -->
-                <button type="button" role="button" class="btn btn-default"
-                        data-ng-if="!questionShowCtrl.isHintUsed(hint)"
-                        data-ng-disabled="questionShowCtrl.includeCorrection"
-                        data-confirm-modal="{{ 'question_show_hint_confirm'|trans:{ 1: hint.penalty }:'ujm_sequence' }}"
-                        data-confirm-modal-action="questionShowCtrl.showHint(hint)"
-                >
-                    <span class="fa fa-fw fa-eye"></span>
-                    {{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }} {{ $index + 1 }}
-                </button>
-
-                <!-- Hint info if already loaded -->
-                <div class="well well-sm" data-ng-if="questionShowCtrl.isHintUsed(hint)">
-                    <span class="fa fa-fw fa-lightbulb-o"></span>
-                    {{ questionShowCtrl.getHintValue(hint) }}
-                </div>
-            </div>
-        </div>
+        <hints
+            data-ng-if="questionShowCtrl.question.hints"
+            data-hints="questionShowCtrl.question.hints"
+            data-enabled="!questionShowCtrl.includeCorrection && !questionShowCtrl.feedback.visible"
+            data-used-hints="questionShowCtrl.questionPaper.hints">
+        </hints>
     </div>
 </div>

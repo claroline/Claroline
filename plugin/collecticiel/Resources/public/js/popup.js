@@ -530,6 +530,7 @@ $(document).ready(function() {
                 qualityText: qualityText,
                 note: note,
                 recordOrTransmit: recordOrTransmit,
+                evaluationType: evaluationType,
             }),
             method: "GET",
             data: {
@@ -543,6 +544,7 @@ $(document).ready(function() {
                 if (data_link !== 'false') {
                     document.location.href = data_link.link;
                 }
+
             }
         });
 
@@ -558,11 +560,26 @@ $(document).ready(function() {
         event.preventDefault();
         event.stopPropagation();
 
+        var arrayCriteriaId = [];
+        var arrayCriteriaName = [];
+        var arrayCriteriaValue = [];
+
         // Récupération de l'id du document
         var documentId = $(this).attr("data-document_id");
 
         // Récupération de l'id du document
         var evaluationType = $(this).attr("data_document_evaluationType");
+
+        var numberCriterias = $(this).attr("data-criteria_nb");
+
+        // Récupération des critères
+        for (var i=0; i<numberCriterias; i++) {
+            var critereId = $(this).attr("data-criteria_"+i+"_id");
+            var critereName = $(this).attr("data-criteria_"+i+"_name");
+            arrayCriteriaId.push(critereId);
+            arrayCriteriaName.push(critereName);
+            arrayCriteriaValue.push(document.getElementById('innova_collecticiel_notation_form_'+critereName+'_'+documentId).value);
+        }
 
         if (evaluationType === "notation") {
             var appreciation = 0;
@@ -595,9 +612,13 @@ $(document).ready(function() {
                 commentText: commentText,
                 qualityText: qualityText,
                 recordOrTransmit: recordOrTransmit,
+                evaluationType: evaluationType,
             }),
             method: "GET",
             data: {
+                arrayCriteriaId: arrayCriteriaId,
+                arrayCriteriaName: arrayCriteriaName,
+                arrayCriteriaValue: arrayCriteriaValue
             },
             complete: function(data) {
                 var data_link = $.parseJSON(data.responseText)

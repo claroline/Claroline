@@ -11,13 +11,14 @@
 
 namespace Claroline\CoreBundle\Command;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
+use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
@@ -29,13 +30,13 @@ class CreateUserCommand extends ContainerAwareCommand
         $this->setName('claroline:user:create')
             ->setDescription('Creates a new user.');
         $this->setDefinition(
-            array(
+            [
                 new InputArgument('user_first_name', InputArgument::REQUIRED, 'The user first name'),
                 new InputArgument('user_last_name', InputArgument::REQUIRED, 'The user last name'),
                 new InputArgument('user_username', InputArgument::REQUIRED, 'The user username'),
                 new InputArgument('user_password', InputArgument::REQUIRED, 'The user password'),
                 new InputArgument('user_email', InputArgument::REQUIRED, 'The user email'),
-            )
+            ]
         );
         $this->addOption(
             'ws_creator',
@@ -53,13 +54,13 @@ class CreateUserCommand extends ContainerAwareCommand
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $params = array(
+        $params = [
             'user_first_name' => 'first name',
             'user_last_name' => 'last name',
             'user_username' => 'username',
             'user_password' => 'password',
             'user_email' => 'email',
-        );
+        ];
 
         foreach ($params as $argument => $argumentName) {
             if (!$input->getArgument($argument)) {
@@ -94,7 +95,10 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setLastName($input->getArgument('user_last_name'));
         $user->setUsername($input->getArgument('user_username'));
         $user->setPlainPassword($input->getArgument('user_password'));
-        $user->setMail($input->getArgument('user_email'));
+        $email = $input->getArgument('user_email');
+        $email = filter_var($email, FILTER_VALIDATE_EMAIL) ?
+            $email : $email.'@debug.net';
+        $user->setMail($email);
 
         if ($input->getOption('admin')) {
             $roleName = PlatformRoles::ADMIN;
@@ -104,7 +108,9 @@ class CreateUserCommand extends ContainerAwareCommand
             $roleName = PlatformRoles::USER;
         }
 
-        $this->getContainer()->get('claroline.manager.user_manager')
-            ->createUser($user, false, array($roleName));
+        $userManager = $this->getContainer()->get('claroline.manager.user_manager');
+        $consoleLogger = ConsoleLogger::get($output);
+        $userManager->setLogger($consoleLogger);
+        $userManager->createUser($user, false, [$roleName]);
     }
 }

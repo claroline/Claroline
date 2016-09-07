@@ -118,7 +118,7 @@
     
     {# On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
     {% if dropzone.evaluation == 1  %}
-        <td class="{{ classArray }} centered centering-columnsAR-study">
+        <td class="{{ classArray }} centered centering-columnsComment-study">
             <div class="short-div">
                 {% if recordOrTransmitNotationsArray[document.id] == 1 %}
                     {% include 'InnovaCollecticielBundle:Document:viewNotation.html.twig'

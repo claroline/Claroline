@@ -28,13 +28,16 @@
     <div class="visible-xs">
         {{ block("leftbar") }}
     </div>
+    {{ block("section_panel") }}
+{% endblock %}
+
+{% block section_panel %}
     <div class="section-content">
         <div class="panel panel-default">
             {% block section_content %}{% endblock %}
         </div>
+        {% block section_after_content %}{% endblock %}
     </div>
-    {% block section_after_content %}{% endblock %}
-
 {% endblock %}
 
 {% block javascripts %}

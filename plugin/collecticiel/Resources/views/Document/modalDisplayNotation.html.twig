@@ -1,4 +1,3 @@
-
 {# Déclaration de la modal pour saisir la notation #}
 <div class="modal" id="view-modal-evaluation_{{document.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -86,6 +85,22 @@
                             <div class="form-group row col-md-6">
                             </div>
                         </div>
+
+                        {% for notation in notationsArray %}
+                            <div class="row text-left">
+                                <div class="form-group col-md-6">
+                                    <b>{{ notation.notationName }}</b>
+                                </div>
+                            </div>
+                            <div class="row text-left">
+                                <div class="form-group col-md-6">
+                                    {# Pour affichage de la valeur de l'accusé de réception #}
+                                    {% render(controller('InnovaCollecticielBundle:ChoiceNotation:renderChoiceText',
+                                    {'gradingNotationId': notation.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        
                     {% endif %}
 
                     {% if dropzone.evaluationType == "ratingScale" %}

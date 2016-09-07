@@ -1,3 +1,6 @@
+/* global jsPlumb */
+
+import angular from 'angular/index'
 import AbstractQuestionDirective from './AbstractQuestionDirective'
 import match from './../../Partials/Type/match.html'
 
@@ -13,60 +16,62 @@ import match from './../../Partials/Type/match.html'
  * @constructor
  */
 function MatchQuestionDirective(FeedbackService, $timeout, $window, MatchQuestionService) {
-    return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
-        controller: 'MatchQuestionCtrl',
-        controllerAs: 'matchQuestionCtrl',
-        template: match,
-        link: {
-            post: function postLink(scope, element, attr, controller) {
-                // init jsPlumb dom elements
-                $timeout(function () {
-                    // MatchQuestion sub type is ToBind
-                    if (controller.question.toBind) {
-                        MatchQuestionService.initBindMatchQuestion(element);
+  return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
+    controller: 'MatchQuestionCtrl',
+    controllerAs: 'matchQuestionCtrl',
+    template: match,
+    link: {
+      post: function postLink(scope, element, attr, controller) {
+        controller.container = element
 
-                        jsPlumb.bind('beforeDrop', function (info) {
-                            return controller.handleBeforeDrop(info);
-                        });
+        // init jsPlumb dom elements
+        $timeout(function () {
+          // MatchQuestion sub type is ToBind
+          if (controller.question.toBind) {
+            MatchQuestionService.initBindMatchQuestion(element)
 
-                        // remove one connection
-                        jsPlumb.bind('click', function (connection) {
-                            controller.removeConnection(connection);
-                        });
+            jsPlumb.bind('beforeDrop', function (info) {
+              return controller.handleBeforeDrop(info)
+            })
 
-                        controller.addPreviousConnections();
-                    } else {
-                        MatchQuestionService.initDragMatchQuestion(element);
+            // remove one connection
+            jsPlumb.bind('click', function (connection) {
+              controller.removeConnection(connection)
+            })
 
-                        element.on('drop', '.droppable', function (event, ui) {
-                            controller.handleDragMatchQuestionDrop(event, ui);
-                        });
+            controller.addPreviousConnections()
+          } else {
+            MatchQuestionService.initDragMatchQuestion(element)
 
-                        controller.addPreviousDroppedItems();
-                    }
+            element.on('drop', '.droppable', function (event, ui) {
+              controller.handleDragMatchQuestionDrop(event, ui)
+            })
 
-                    // Manually show feedback (as we override the default postLink method)
-                    if (FeedbackService.isVisible()) {
-                        controller.onFeedbackShow();
-                    }
-                }.bind(this));
+            controller.addPreviousDroppedItems()
+          }
 
-                // Redraw connections if the browser is resized
-                angular.element($window).on('resize', function () {
-                    jsPlumb.repaintEverything();
-                });
+          // Manually show feedback (as we override the default postLink method)
+          if (FeedbackService.isVisible()) {
+            controller.onFeedbackShow()
+          }
+        }.bind(this))
 
-                // On directive destroy, remove events
-                scope.$on('$destroy', function handleDestroyEvent() {
-                    jsPlumb.detachEveryConnection();
-                    jsPlumb.deleteEveryEndpoint();
-                });
-            }
-        }
-    });
+        // Redraw connections if the browser is resized
+        angular.element($window).on('resize', function () {
+          jsPlumb.repaintEverything()
+        })
+
+        // On directive destroy, remove events
+        scope.$on('$destroy', function handleDestroyEvent() {
+          jsPlumb.detachEveryConnection(element)
+          jsPlumb.deleteEveryEndpoint(element)
+        })
+      }
+    }
+  })
 }
 
 // Extends AbstractQuestionDirective
-MatchQuestionDirective.prototype = Object.create(AbstractQuestionDirective.prototype);
+MatchQuestionDirective.prototype = Object.create(AbstractQuestionDirective.prototype)
 
 export default MatchQuestionDirective

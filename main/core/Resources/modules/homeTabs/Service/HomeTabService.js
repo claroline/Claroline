@@ -288,20 +288,22 @@ export default class HomeTabService {
         this.options['selectedTabId'] = homeTab['tabId']
         this.options['selectedTabConfigId'] = homeTab['configId']
         this.options['selectedTabIsLocked'] = homeTab['locked']
-      }
-      homeTab = homeTab ? homeTab : this.userHomeTabs.find(ht => ht['tabId'] === parseInt(tabId))
+      } else {
+        homeTab = this.userHomeTabs.find(ht => ht['tabId'] === parseInt(tabId))
 
-      if (homeTab) {
-        this.options['selectedTabId'] = homeTab['tabId']
-        this.options['selectedTabConfigId'] = homeTab['configId']
-        this.options['selectedTabIsLocked'] = false
-      }
-      homeTab = homeTab ? homeTab : this.workspaceHomeTabs.find(ht => ht['tabId'] === parseInt(tabId))
+        if (homeTab) {
+          this.options['selectedTabId'] = homeTab['tabId']
+          this.options['selectedTabConfigId'] = homeTab['configId']
+          this.options['selectedTabIsLocked'] = false
+        } else {
+          homeTab = this.workspaceHomeTabs.find(ht => ht['tabId'] === parseInt(tabId))
 
-      if (homeTab) {
-        this.options['selectedTabId'] = homeTab['tabId']
-        this.options['selectedTabConfigId'] = homeTab['configId']
-        this.options['selectedTabIsLocked'] = true
+          if (homeTab) {
+            this.options['selectedTabId'] = homeTab['tabId']
+            this.options['selectedTabConfigId'] = homeTab['configId']
+            this.options['selectedTabIsLocked'] = true
+          }
+        }
       }
     } else {
       if (this.adminHomeTabs.length > 0) {

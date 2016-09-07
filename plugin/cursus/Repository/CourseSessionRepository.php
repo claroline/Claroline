@@ -12,12 +12,23 @@
 namespace Claroline\CursusBundle\Repository;
 
 use Claroline\CursusBundle\Entity\Course;
-use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\Cursus;
 use Doctrine\ORM\EntityRepository;
 
 class CourseSessionRepository extends EntityRepository
 {
+    public function findAllSessions($orderedBy = 'startDate', $order = 'ASC', $executeQuery = true)
+    {
+        $dql = "
+            SELECT cs
+            FROM Claroline\CursusBundle\Entity\CourseSession cs
+            ORDER BY cs.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     public function findSessionsByCourse(
         Course $course,
         $orderedBy = 'creationDate',
@@ -53,6 +64,38 @@ class CourseSessionRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('course', $course);
         $query->setParameter('status', $status);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findUnclosedSessions($orderedBy = 'startDate', $order = 'ASC', $executeQuery = true)
+    {
+        $dql = "
+            SELECT cs
+            FROM Claroline\CursusBundle\Entity\CourseSession cs
+            WHERE cs.endDate > :now
+            ORDER BY cs.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $now = new \DateTime();
+        $query->setParameter('now', $now);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findUnclosedSessionsByCourse(Course $course, $orderedBy = 'startDate', $order = 'ASC', $executeQuery = true)
+    {
+        $dql = "
+            SELECT cs
+            FROM Claroline\CursusBundle\Entity\CourseSession cs
+            WHERE cs.course = :course
+            AND cs.endDate > :now
+            ORDER BY cs.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('course', $course);
+        $now = new \DateTime();
+        $query->setParameter('now', $now);
 
         return $executeQuery ? $query->getResult() : $query;
     }
@@ -142,11 +185,12 @@ class CourseSessionRepository extends EntityRepository
             SELECT cs
             FROM Claroline\CursusBundle\Entity\CourseSession cs
             JOIN cs.course c
-            WHERE cs.sessionStatus != :sessionClosed
+            WHERE cs.endDate < :now
             ORDER BY c.title ASC
         ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('sessionClosed', CourseSession::SESSION_CLOSED);
+        $now = new \DateTime();
+        $query->setParameter('now', $now);
 
         return $executeQuery ? $query->getResult() : $query;
     }
@@ -157,7 +201,7 @@ class CourseSessionRepository extends EntityRepository
             SELECT cs
             FROM Claroline\CursusBundle\Entity\CourseSession cs
             JOIN cs.course c
-            WHERE cs.sessionStatus != :sessionClosed
+            WHERE cs.endDate < :now
             AND (
                 UPPER(cs.name) LIKE :search
                 OR UPPER(c.title) LIKE :search
@@ -166,7 +210,8 @@ class CourseSessionRepository extends EntityRepository
             ORDER BY c.title ASC
         ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('sessionClosed', CourseSession::SESSION_CLOSED);
+        $now = new \DateTime();
+        $query->setParameter('now', $now);
         $upperSearch = strtoupper($search);
         $query->setParameter('search', "%{$upperSearch}%");
 

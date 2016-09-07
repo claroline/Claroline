@@ -6,6 +6,10 @@ export default class tinyMceConfig {
     _tinymce.get(this).claroline.plugins = _tinymce.get(this).claroline.plugins || {}
     this._setFromTinymceConfiguration()
     this._setPluginsToolbarAndFormat()
+    this.autosave_ask_before_unload = false
+    // Avoid having the "leave this page" confirmation everytime page is loaded
+    this.setup = () => {
+    }
   }
 
   _setPluginsToolbarAndFormat () {
@@ -19,7 +23,7 @@ export default class tinyMceConfig {
     let toolbar1 = 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | fullscreen displayAllButtons'
 
     let tinyPlugins = _tinymce.get(this).claroline.plugins
-    Object.keys(tinyPlugins).forEach((key) =>{
+    Object.keys(tinyPlugins).forEach((key) => {
       let value = tinyPlugins[key]
       if ('autosave' != key && value === true) {
         plugins.push(key)

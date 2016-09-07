@@ -20,21 +20,21 @@
                     <!-- Information about the Exercise -->
                     <li data-ng-class="{ active: 'overview' === exerciseCtrl.$route.current.tab }">
                         <a href="#/">
-                            <span class="fa fa-info"></span> {{ 'overview' | trans:{}:'ujm_exo' }}
+                            <span class="fa fa-fw fa-info"></span> {{ 'overview' | trans:{}:'ujm_exo' }}
                         </a>
                     </li>
 
                     <!-- Edit Exercise metadata -->
                     <li data-ng-class="{ active: 'metadata' === exerciseCtrl.$route.current.tab }">
                         <a href="#/edit">
-                            <span class="fa fa-pencil"></span> {{ 'metadata' | trans:{}:'ujm_exo' }}
+                            <span class="fa fa-fw fa-pencil"></span> {{ 'metadata' | trans:{}:'ujm_exo' }}
                         </a>
                     </li>
 
                     <!-- Questions -->
                     <li data-uib-dropdown="" data-ng-class="{ active: 'steps' === exerciseCtrl.$route.current.tab }">
                         <a href="" data-uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
-                            <span class="fa fa-question"></span>
+                            <span class="fa fa-fw fa-question"></span>
                             {{ 'questions' | trans:{}:'ujm_exo' }}
                             <span class="caret"></span>
                         </a>

@@ -7,11 +7,13 @@
  * file that was distributed with this source code.
  */
 
+import template from '../Partial/registration_queue_courses.html'
+
 export default class RegistrationQueueCoursesDirective {  
         
-    constructor() {
-        this.restrict = 'E'
-        this.replace = true
-        this.template = require('../Partial/registration_queue_courses.html')
-    }
+  constructor() {
+    this.restrict = 'E'
+    this.replace = true
+    this.template = template
+  }
 }

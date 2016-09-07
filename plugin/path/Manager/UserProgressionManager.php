@@ -77,13 +77,8 @@ class UserProgressionManager
      *
      * @return UserProgression
      */
-    public function create(Step $step, $user = null, $status = null, $authorized = false, $checkDuplicate = true)
+    public function create(Step $step, User $user = null, $status = null, $authorized = false, $checkDuplicate = true)
     {
-        if (empty($user)) {
-            // Load current logged User
-            $user = $this->securityToken->getToken()->getUser();
-        }
-
         // Check if progression already exists, if so return retrieved progression
         if ($checkDuplicate && $user instanceof User) {
             $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy([
@@ -118,11 +113,6 @@ class UserProgressionManager
 
     public function update(Step $step, User $user = null, $status, $authorized = false)
     {
-        if (empty($user)) {
-            // Load current logged User
-            $user = $this->securityToken->getToken()->getUser();
-        }
-
         // Retrieve the current progression for this step
         $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy([
             'step' => $step,
@@ -141,6 +131,54 @@ class UserProgressionManager
                 $this->om->flush();
             }
         }
+
+        return $progression;
+    }
+
+    /**
+     * Update state of the lock for User Progression for a step.
+     *
+     * @param User      $user
+     * @param Step      $step
+     * @param bool|null $lockedcall
+     * @param bool|null $lock
+     * @param bool|null $authorized
+     *
+     * @return object UserProgression
+     */
+    public function updateLockedState(User $user, Step $step, $lockedcall = null, $lock = null, $authorized = null, $status = '')
+    {
+        // Retrieve the current progression for this step
+        $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')
+            ->findOneBy([
+            'step' => $step,
+            'user' => $user,
+        ]);
+        if ($progression === null) {
+            $progression = new UserProgression();
+            $progression->setUser($user);
+            $progression->setStep($step);
+            $progression->setStatus($status);
+            $progression->setAuthorized(false);
+        }
+        //if unlock call has changed
+        if ($lockedcall !== null) {
+            $progression->setLockedcall($lockedcall);
+        }
+        //if lock state has changed
+        if ($lock !== null) {
+            $progression->setLocked($lock);
+        }
+        //if authorization has changed
+        if ($authorized !== null) {
+            $progression->setAuthorized($authorized);
+        }
+        //if status has changed
+        if ($status !== null) {
+            $progression->setStatus($status);
+        }
+        $this->om->persist($progression);
+        $this->om->flush();
 
         return $progression;
     }

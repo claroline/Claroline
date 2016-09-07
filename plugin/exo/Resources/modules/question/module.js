@@ -9,6 +9,7 @@ import '#/main/core/modal/module'
 
 import './../common/module'
 import './../feedback/module'
+import './../hint/module'
 import './../correction/module'
 import './../image/module'
 
@@ -41,6 +42,7 @@ angular
     'Common',
     'Feedback',
     'Image',
+    'Hint',
     'Correction'
   ])
   .controller('QuestionShowCtrl', [
@@ -48,7 +50,6 @@ angular
     'ExerciseService',
     'QuestionService',
     'FeedbackService',
-    'UserPaperService',
     QuestionShowCtrl
   ])
   .controller('ChoiceQuestionCtrl', [
@@ -108,6 +109,7 @@ angular
     OpenQuestionDirective
   ])
   .service('QuestionService', [
+    '$log',
     'ChoiceQuestionService',
     'ClozeQuestionService',
     'GraphicQuestionService',
@@ -116,23 +118,28 @@ angular
     QuestionService
   ])
   .service('ChoiceQuestionService', [
+    '$log',
     'FeedbackService',
     ChoiceQuestionService
   ])
   .service('ClozeQuestionService', [
+    '$log',
     'FeedbackService',
     ClozeQuestionService
   ])
   .service('GraphicQuestionService', [
+    '$log',
     'FeedbackService',
     'ImageAreaService',
     GraphicQuestionService
   ])
   .service('MatchQuestionService', [
+    '$log',
     'FeedbackService',
     MatchQuestionService
   ])
   .service('OpenQuestionService', [
+    '$log',
     'FeedbackService',
     OpenQuestionService
   ])

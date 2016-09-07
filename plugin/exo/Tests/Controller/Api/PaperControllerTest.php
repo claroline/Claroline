@@ -126,46 +126,6 @@ class PaperControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAnonymousHint()
-    {
-        $pa1 = $this->persist->paper($this->john, $this->ex1);
-        $this->om->flush();
-
-        $this->request('GET', "/exercise/api/papers/{$pa1->getId()}/hints/{$this->hi1->getId()}");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testHintAfterPaperEnd()
-    {
-        $pa1 = $this->persist->paper($this->john, $this->ex1);
-        $date = new \DateTime();
-        $date->add(\DateInterval::createFromDateString('yesterday'));
-        $pa1->setEnd($date);
-        $this->om->flush();
-
-        $this->request('GET', "/exercise/api/papers/{$pa1->getId()}/hints/{$this->hi1->getId()}", $this->john);
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testHintByNotPaperUser()
-    {
-        $pa1 = $this->persist->paper($this->john, $this->ex1);
-        $this->om->flush();
-
-        $this->request('GET', "/exercise/api/papers/{$pa1->getId()}/hints/{$this->hi1->getId()}", $this->bob);
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testHint()
-    {
-        $pa1 = $this->persist->paper($this->john, $this->ex1);
-        $this->om->flush();
-
-        $this->request('GET', "/exercise/api/papers/{$pa1->getId()}/hints/{$this->hi1->getId()}", $this->john);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals('hi1', json_decode($this->client->getResponse()->getContent()));
-    }
-
     public function testFinishPaperByNotPaperCreator()
     {
         $pa1 = $this->persist->paper($this->john, $this->ex1);
