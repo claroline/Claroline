@@ -532,19 +532,22 @@ class CursusManager
         }
     }
 
-    public function registerUserToMultipleCursus(array $multipleCursus, User $user, $withWorkspace = true, $withCourse = false)
+    public function registerUserToMultipleCursus(array $multipleCursus, User $user, $withWorkspace = true, $withCourse = false, $force = false)
     {
         $registrationDate = new \DateTime();
 
         $this->om->startFlushSuite();
 
         foreach ($multipleCursus as $cursus) {
-            $cursusUser = $this->cursusUserRepo->findOneCursusUserByCursusAndUser(
-                $cursus,
-                $user
-            );
+            $cursusUser = null;
+            if (!$force) {
+                $cursusUser = $this->cursusUserRepo->findOneCursusUserByCursusAndUser(
+                    $cursus,
+                    $user
+                );
+            }
 
-            if (is_null($cursusUser)) {
+            if (is_null($cursusUser) || $force) {
                 $cursusUser = new CursusUser();
                 $cursusUser->setCursus($cursus);
                 $cursusUser->setUser($user);
@@ -1086,7 +1089,7 @@ class CursusManager
         return $results;
     }
 
-    public function registerUsersToSessions(array $sessions, array $users, $type = 0)
+    public function registerUsersToSessions(array $sessions, array $users, $type = 0, $force = false)
     {
         $results = ['status' => 'success', 'datas' => []];
 
@@ -1115,13 +1118,17 @@ class CursusManager
 
             foreach ($sessions as $session) {
                 foreach ($users as $user) {
-                    $sessionUser = $this->sessionUserRepo->findOneSessionUserBySessionAndUserAndType(
-                        $session,
-                        $user,
-                        $type
-                    );
+                    $sessionUser = null;
 
-                    if (is_null($sessionUser)) {
+                    if (!$force) {
+                        $sessionUser = $this->sessionUserRepo->findOneSessionUserBySessionAndUserAndType(
+                            $session,
+                            $user,
+                            $type
+                        );
+                    }
+
+                    if (is_null($sessionUser) || $force) {
                         $sessionUser = new CourseSessionUser();
                         $sessionUser->setSession($session);
                         $sessionUser->setUser($user);

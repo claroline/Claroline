@@ -87,7 +87,9 @@ class CursusRegistrationListener
 
         if ($action === 'group-add_user') {
             $multipleCursus = $this->cursusManager->getCursusByGroup($group);
-            $this->cursusManager->registerUserToMultipleCursus($multipleCursus, $user);
+            //check if the user is already persisted in database
+            $force = $user->getId() ? false : true;
+            $this->cursusManager->registerUserToMultipleCursus($multipleCursus, $user, true, false, $force);
 
             $sessionGroups = $this->cursusManager->getSessionGroupsByGroup($group);
 
@@ -102,11 +104,11 @@ class CursusRegistrationListener
             }
 
             if (count($sessions['learner']) > 0) {
-                $this->cursusManager->registerUsersToSessions($sessions['learner'], [$user], 0);
+                $this->cursusManager->registerUsersToSessions($sessions['learner'], [$user], 0, $force);
             }
 
             if (count($sessions['tutor']) > 0) {
-                $this->cursusManager->registerUsersToSessions($sessions['tutor'], [$user], 1);
+                $this->cursusManager->registerUsersToSessions($sessions['tutor'], [$user], 1, $force);
             }
         } elseif ($action === 'group-remove_user') {
             $multipleCursus = $this->cursusManager->getCursusByGroup($group);
