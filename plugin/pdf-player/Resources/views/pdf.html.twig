@@ -14,7 +14,7 @@
     <div data-ng-app="PdfViewer" data-ng-cloak="">
         <pdf-viewer
                 data-id="{{ pdf.resourceNode.id }}"
-                data-name="'{{ pdf.resourceNode.name }}'"
+                data-name="'{{ pdf.resourceNode.name|ng_escape }}'"
                 data-url="'{{ path('claro_pdf', {node: pdf.resourceNode.id}) }}'"
                 data-download="{{ canDownload }}">
         </pdf-viewer>

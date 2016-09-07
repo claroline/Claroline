@@ -3,12 +3,14 @@
  * @param {UserPaperService} UserPaperService
  * @param {FeedbackService} FeedbackService
  * @param {QuestionService} QuestionService
+ * @param {StepService} StepService
  * @constructor
  */
-function StepShowCtrl(UserPaperService, FeedbackService, QuestionService) {
+function StepShowCtrl(UserPaperService, FeedbackService, QuestionService, StepService) {
   this.UserPaperService = UserPaperService
   this.FeedbackService = FeedbackService
   this.QuestionService = QuestionService
+  this.StepService = StepService
 
   // Get the order of items from the Paper of the User (in case they are shuffled)
   this.items = this.UserPaperService.orderStepQuestions(this.step)
@@ -30,6 +32,8 @@ function StepShowCtrl(UserPaperService, FeedbackService, QuestionService) {
       this.solutionShown = true
     }
   }
+
+  this.getStepTotalScore()
 }
 
 /**
@@ -57,6 +61,18 @@ StepShowCtrl.prototype.items = []
 StepShowCtrl.prototype.stepIndex = 0
 
 /**
+ * Current step score
+ * @type {Number}
+ */
+StepShowCtrl.prototype.stepScore = 0
+
+/**
+ * Current step total score
+ * @type {Number}
+ */
+StepShowCtrl.prototype.stepScoreTotal = 0
+
+/**
  *
  * @type {boolean}
  */
@@ -77,19 +93,34 @@ StepShowCtrl.prototype.getQuestionPaper = function getQuestionPaper(question) {
   return this.UserPaperService.getQuestionPaper(question)
 }
 
+StepShowCtrl.prototype.getStepTotalScore = function getStepTotalScore() {
+  this.stepScoreTotal = 0
+  for (var i = 0; i < this.items.length; i++) {
+    var question = this.items[i]
+    this.stepScoreTotal += question.scoreTotal
+  }
+}
+
 /**
  * On Feedback Show
  */
 StepShowCtrl.prototype.onFeedbackShow = function onFeedbackShow() {
   this.allAnswersFound = this.FeedbackService.SOLUTION_FOUND
+  this.stepScore = 0
   for (var i = 0; i < this.items.length; i++) {
     var question = this.items[i]
-    var answer = this.getQuestionPaper(question).answer
+    var userPaper = this.getQuestionPaper(question)
+    var answer = userPaper.answer
+    this.stepScore += userPaper.score
     this.feedback.state[question.id] = this.QuestionService.getTypeService(question.type).answersAllFound(question, answer)
     if (this.feedback.state[question.id] !== 0) {
       this.allAnswersFound = this.FeedbackService.MULTIPLE_ANSWERS_MISSING
     }
   }
+}
+
+StepShowCtrl.prototype.showMinimalCorrection = function showMinimalCorrection() {
+  return this.StepService.getExerciseMeta().minimalCorrection
 }
 
 /**

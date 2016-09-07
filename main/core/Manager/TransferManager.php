@@ -166,6 +166,17 @@ class TransferManager
         $isValidated = false
     ) {
         $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
+
+        if ($workspace->getCode() === null) {
+            $workspace->setCode($data['parameters']['code']);
+        }
+
+        if ($workspace->getName() === null) {
+            $workspace->setName($data['parameters']['name']);
+        }
+
+        //just to be sure doctrine is ok before doing all the workspace
+
         $this->om->startFlushSuite();
         $this->setImporters($template, $workspace->getCreator());
 
@@ -179,7 +190,7 @@ class TransferManager
         $workspace->setCreationDate($date->getTimestamp());
         $this->om->persist($workspace);
         $this->om->flush();
-        $this->log('Base workspace created...');
+        $this->log("Base {$workspace->getCode()} workspace created...");
 
         //load roles
         $this->log('Importing roles...');
@@ -211,6 +222,7 @@ class TransferManager
 
         $entityRoles['ROLE_ANONYMOUS'] = $this->om
             ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS');
+
         $entityRoles['ROLE_USER'] = $this->om
             ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
 
@@ -270,12 +282,16 @@ class TransferManager
      */
     public function export(Workspace $workspace)
     {
+        $this->log("Exporting {$workspace->getCode()}...");
+
         foreach ($this->listImporters as $importer) {
             $importer->setListImporters($this->listImporters);
         }
 
         $data = [];
         $files = [];
+        $data['parameters']['code'] = $workspace->getCode();
+        $data['parameters']['name'] = $workspace->getName();
         $data['roles'] = $this->getImporterByName('roles')->export($workspace, $files, null);
         $data['tools'] = $this->getImporterByName('tools')->export($workspace, $files, null);
         $_resManagerData = [];

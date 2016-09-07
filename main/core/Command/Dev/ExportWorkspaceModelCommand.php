@@ -11,65 +11,86 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
+use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ExportWorkspaceModelCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this->setName('claroline:workspace:export_model')
-            ->setDescription('export a workspace');
+            ->setDescription('export workspace into archives');
         $this->setDefinition(
-            array(
-                new InputArgument('archive_path', InputArgument::REQUIRED, 'The absolute path to the zip file.'),
-                new InputArgument('code', InputArgument::REQUIRED, 'The owner username'),
-            )
+            [
+                new InputArgument('export_directory', InputArgument::REQUIRED, 'The absolute path to the zip file.'),
+                new InputArgument('owner_username', InputArgument::REQUIRED, 'The user doing the action (because otherwise qti exo crashes)'),
+                new InputArgument('code', InputArgument::OPTIONAL, 'The workspace code'),
+            ]
         );
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        //@todo ask authentication source
-        $params = array(
-            'archive_path' => 'Absolute path to the zip file: ',
-            'code' => 'The workspace code: ',
+        $this->addOption(
+            'personal',
+            'p',
+            InputOption::VALUE_NONE,
+            'When set to true, export all personal workspaces'
         );
-
-        foreach ($params as $argument => $argumentName) {
-            if (!$input->getArgument($argument)) {
-                $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
-                );
-            }
-        }
-    }
-
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
-        $argument = $this->getHelper('dialog')->askAndValidate(
-            $output,
-            $argumentName,
-            function ($argument) {
-                if (empty($argument)) {
-                    throw new \Exception('This argument is required');
-                }
-
-                return $argument;
-            }
+        $this->addOption(
+            'standard',
+            'r',
+            InputOption::VALUE_NONE,
+            'When set to true, export all standard workspaces'
         );
-
-        return $argument;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = $input->getArgument('archive_path');
         $code = $input->getArgument('code');
-        $workspace = $this->getContainer()->get('claroline.manager.workspace_manager')->getWorkspaceByCode($code);
-        $arch = $this->getContainer()->get('claroline.manager.transfer_manager')->export($workspace);
-        rename($arch, $path);
+        $path = $input->getArgument('export_directory');
+        $username = $input->getArgument('owner_username');
+        //set the token for qti
+        $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsername($username);
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->getContainer()->get('security.context')->setToken($token);
+
+        $workspaces = [];
+        $workspaceRepo = $this->getContainer()->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Workspace\Workspace');
+
+        $transferManager = $this->getContainer()->get('claroline.manager.transfer_manager');
+        $verbosityLevelMap = [
+                LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+                LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
+                LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
+            ];
+        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+        $transferManager->setLogger($consoleLogger);
+
+        if ($code) {
+            $workspaces[] = $this->getContainer()->get('claroline.manager.workspace_manager')->getWorkspaceByCode($code);
+        }
+
+        if ($input->getOption('personal')) {
+            $workspaces = array_merge($workspaces, $workspaceRepo->findBy(['isPersonal' => true]));
+        }
+
+        if ($input->getOption('standard')) {
+            $workspaces = array_merge($workspaces, $workspaceRepo->findBy(['isPersonal' => false]));
+        }
+
+        $i = 0;
+        $count = count($workspaces);
+
+        foreach ($workspaces as $workspace) {
+            ++$i;
+            $expPath = $path.'/'.$workspace->getCode().'.zip';
+            $arch = $transferManager->export($workspace);
+            $output->writeln("<comment>Moving to export directory ($i/$count)</comment>");
+            rename($arch, $expPath);
+        }
     }
 }

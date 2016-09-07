@@ -103,19 +103,19 @@
                     data-include-correction="questionShowCtrl.includeCorrection">
             </graphic-question>
         </div>
-        
+
         <div class="question-info" data-ng-if="questionShowCtrl.question.specification">
             <h5>{{ 'question_specification'|trans:{}:'ujm_sequence' }}</h5>
             <div data-ng-bind-html="questionShowCtrl.question.specification | unsafe"></div>
         </div>
-        
+
         <div class="question-info" data-ng-if="questionShowCtrl.question.supplementary">
             <h5>{{ 'question_supplementary'|trans:{}:'ujm_sequence' }}</h5>
             <div data-ng-bind-html="questionShowCtrl.question.supplementary | unsafe"></div>
         </div>
-
-        <!-- Display solution of the Question -->
-        <div class="correction-container" data-ng-if="questionShowCtrl.includeCorrection && questionShowCtrl.question.solutions && questionShowCtrl.question.solutions.length > 0">
+        
+        <!-- Display solution of the Question i.e. Expected Answer(s) -->
+        <div class="correction-container" data-ng-if="!questionShowCtrl.minimalCorrection && questionShowCtrl.includeCorrection && questionShowCtrl.question.solutions && questionShowCtrl.question.solutions.length > 0">
             <h5>
                 <span class="fa fa-fw fa-check"></span>
                 {{ 'paper_details_table_expected_answer'|trans:{}:'ujm_sequence' }}

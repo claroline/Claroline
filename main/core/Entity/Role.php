@@ -242,6 +242,8 @@ class Role implements RoleInterface
     }
 
     /**
+     * Alias of getName().
+     *
      * @return string The role name
      */
     public function getRole()
@@ -374,9 +376,7 @@ class Role implements RoleInterface
 
     public function __toString()
     {
-        return is_null($this->workspace) ?
-            $this->translationKey :
-            '['.$this->workspace->getName().'] '.$this->translationKey;
+        return $this->workspace ? '['.$this->workspace->getName().'] '.$this->name : $this->name;
     }
 
     public function addPanelFacetRole(PanelFacetRole $pfr)

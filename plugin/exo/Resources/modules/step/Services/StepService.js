@@ -1,3 +1,5 @@
+import angular from 'angular/index'
+
 /**
  * Step Service
  * @param {Object}          $http
@@ -6,39 +8,40 @@
  * @param {QuestionService} QuestionService
  * @constructor
  */
-function StepService($http, $q, ExerciseService, QuestionService) {
-    this.$http = $http;
-    this.$q = $q;
-    this.ExerciseService = ExerciseService;
-    this.QuestionService = QuestionService;
+function StepService($http, $q, url, ExerciseService, QuestionService) {
+  this.$http = $http
+  this.$q = $q
+  this.UrlService = url
+  this.ExerciseService = ExerciseService
+  this.QuestionService = QuestionService
 }
 
 /**
  * Reorder the Steps of the current Exercise.
  */
 StepService.prototype.reorderItems = function reorderSteps(step) {
-    var exercise = this.ExerciseService.getExercise();
+  var exercise = this.ExerciseService.getExercise()
 
     // Only send the IDs of the steps
-    var order = step.items.map(function getIds(item) {
-        return item.id;
-    });
+  var order = step.items.map(function getIds(item) {
+    return item.id
+  })
 
-    var deferred = this.$q.defer();
-    this.$http
+  var deferred = this.$q.defer()
+  this.$http
         .put(
-            Routing.generate('exercise_question_reorder', { exerciseId: exercise.id, id: step.id }),
+            this.UrlService('exercise_question_reorder', { exerciseId: exercise.id, id: step.id }),
             order
         )
         .success(function onSuccess(response) {
-            deferred.resolve(response);
+          deferred.resolve(response)
         })
-        .error(function onError(data, status) {
-            deferred.reject([]);
-        });
+        .error(function onError() {
+          deferred.reject([])
+        })
 
-    return deferred.promise;
-};
+  return deferred.promise
+}
 
 /**
  * Get a Step question by its ID
@@ -47,14 +50,14 @@ StepService.prototype.reorderItems = function reorderSteps(step) {
  * @returns {Object|null}
  */
 StepService.prototype.getQuestion = function getQuestion(step, questionId) {
-    var question = null;
+  var question = null
 
-    if (step && step.items && 0 !== step.items.length) {
-        question = this.QuestionService.getQuestion(step.items, questionId);
-    }
+  if (step && step.items && 0 !== step.items.length) {
+    question = this.QuestionService.getQuestion(step.items, questionId)
+  }
 
-    return question;
-};
+  return question
+}
 
 /**
  * Save modifications of the metadata of the Step
@@ -63,26 +66,34 @@ StepService.prototype.getQuestion = function getQuestion(step, questionId) {
  * @returns {Promise}
  */
 StepService.prototype.save = function save(step, meta) {
-    var exercise = this.ExerciseService.getExercise();
-    var deferred = this.$q.defer();
-    this.$http
+  var exercise = this.ExerciseService.getExercise()
+  var deferred = this.$q.defer()
+  this.$http
         .put(
-            Routing.generate('exercise_step_update_meta', { exerciseId: exercise.id, id: step.id }),
+            this.UrlService('exercise_step_update_meta', { exerciseId: exercise.id, id: step.id }),
             meta
         )
         .success(function onSuccess(response) {
             // Inject updated data into the Exercise
-            angular.merge(step.meta, response.meta);
+          angular.merge(step.meta, response.meta)
 
-            deferred.resolve(response);
+          deferred.resolve(response)
         })
-        .error(function onError(response, status) {
+        .error(function onError(response) {
             // TODO : display message
 
-            deferred.reject(response);
-        });
+          deferred.reject(response)
+        })
 
-    return deferred.promise;
-};
+  return deferred.promise
+}
+
+/**
+ * Get Exercise Metadata
+ */
+StepService.prototype.getExerciseMeta = function getExerciseMeta() {
+  var exercise = this.ExerciseService.getExercise()
+  return exercise.meta
+}
 
 export default StepService

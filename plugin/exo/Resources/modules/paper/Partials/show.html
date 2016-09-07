@@ -21,11 +21,18 @@
         </div>
     </h4>
 
-    <question-show data-ng-repeat="question in paperShowCtrl.questions"
-                   data-question="question"
-                   data-question-paper="paperShowCtrl.getQuestionPaper(question)"
-                   data-include-correction="true">
-    </question-show>
+    <!-- Display the current paper grouped by step -->
+    <div data-ng-repeat="step in paperShowCtrl.steps">
+      <hr>
+      <step-show
+              data-step-index="{{ $index }}"
+              data-step="step"
+              data-solution-shown="true"
+              data-current-try="0"
+              data-feedback="true"
+              data-all-answers-found="0">
+      </step-show>
+    </div>
 
     <!-- Display a big button for those who can edit Exercise OR a big button to play the Exercise if no alert -->
     <div class="row">

@@ -139,13 +139,13 @@ class ImgFormatListener
             $el = $matchReplaced[0];
             //grep the width
             preg_match('#(.*)width="([^"]+)(.*)#', $el, $widths);
-            $width = $widths[2];
+            $width = isset($widths[2]) ? $widths[2] : '';
             //grep the heigth
             preg_match('#(.*)height="([^"]+)(.*)#', $el, $heights);
-            $height = $heights[2];
+            $height = isset($heights[2]) ? $heights[2] : '';
             //grep the style
             preg_match('#(.*)style="([^"]+)(.*)#', $el, $styles);
-            $style = $styles[2];
+            $style = isset($styles[2]) ? $styles[2] : '';
 
             $txt = str_replace($el, "[[img={$nodeId}@{$width}@{$height}@{$style}]]", $txt);
         }

@@ -164,12 +164,18 @@ abstract class QtiExport
     protected function qtiExportObject($str)
     {
         $dom = new \DOMDocument();
-        $dom->loadHTML($str);
-        $this->imgToObject($dom);
-        $this->aToObject($dom);
-        $body = $dom->getElementsByTagName('body')->item(0);
 
-        return $body;
+        //in case html is wrong
+        try {
+            $dom->loadHTML($str);
+            $this->imgToObject($dom);
+            $this->aToObject($dom);
+            $body = $dom->getElementsByTagName('body')->item(0);
+
+            return $body;
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
     /**
@@ -184,6 +190,11 @@ abstract class QtiExport
         $urlExplode = explode('/', $path);
         $idNode = end($urlExplode);
         $objSrc = $this->doctrine->getManager()->getRepository('ClarolineCoreBundle:Resource\File')->findOneBy(['resourceNode' => $idNode]);
+
+        if (!$objSrc) {
+            return;
+        }
+
         $src = $this->container->getParameter('claroline.param.files_directory').'/'.$objSrc->getHashName();
         $name = $objSrc->getResourceNode()->getName();
         $dest = $this->qtiRepos->getUserDir().$name;
@@ -239,9 +250,12 @@ abstract class QtiExport
     {
         //Managing the resource export
         $body = $this->qtiExportObject($label);
-        foreach ($body->childNodes as $child) {
-            $labelNew = $this->document->importNode($child, true);
-            $domEl->appendChild($labelNew);
+
+        if ($body !== '') {
+            foreach ($body->childNodes as $child) {
+                $labelNew = $this->document->importNode($child, true);
+                $domEl->appendChild($labelNew);
+            }
         }
     }
 
@@ -254,16 +268,18 @@ abstract class QtiExport
     {
         $tagsImg = $DOMdoc->getElementsByTagName('img');
         foreach ($tagsImg as $img) {
-            $object = $DOMdoc->CreateElement('object');
-            //Copy the image in the archiv
             $src = $img->getAttribute('src');
             $file = $this->getFile($src);
-            $object->setAttribute('data', $file->getResourceNode()->getName());
-            $objecttxt = $DOMdoc->CreateTextNode($file->getResourceNode()->getName());
-            $object->appendChild($objecttxt);
-            $object->setAttribute('type', $file->getResourceNode()->getMimeType());
-            //Creating one table to replace the tags
-            $elements[] = [$object, $img];
+            if ($file) {
+                $object = $DOMdoc->CreateElement('object');
+                //Copy the image in the archiv
+                $object->setAttribute('data', $file->getResourceNode()->getName());
+                $objecttxt = $DOMdoc->CreateTextNode($file->getResourceNode()->getName());
+                $object->appendChild($objecttxt);
+                $object->setAttribute('type', $file->getResourceNode()->getMimeType());
+                //Creating one table to replace the tags
+                $elements[] = [$object, $img];
+            }
         }
         //Replaces image tag by the object tag
         if (!empty($elements)) {

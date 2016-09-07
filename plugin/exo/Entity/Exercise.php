@@ -133,6 +133,14 @@ class Exercise extends AbstractResource
     private $lockAttempt = false;
 
     /**
+     * Flag indicating that we do not show the entire correction for the exercise
+     * (equals hide Awaited answer filed) when displaying instant feedback and exercise correction page.
+     *
+     * @ORM\Column(name="minimal_correction", type="boolean")
+     */
+    private $minimalCorrection = false;
+
+    /**
      * Flag indicating whether the exercise has been published at least
      * one time. An exercise that has never been published has all its
      * existing papers deleted at the first publication.
@@ -456,6 +464,26 @@ class Exercise extends AbstractResource
     public function getLockAttempt()
     {
         return $this->lockAttempt;
+    }
+
+    /**
+     * Do we have to show the minimal correction view ?
+     */
+    public function setMinimalCorrection($minimalCorrection)
+    {
+        $this->minimalCorrection = $minimalCorrection;
+
+        return $this;
+    }
+
+    /**
+     * Do we have to show the minimal correction view ?
+     *
+     * @return bool
+     */
+    public function isMinimalCorrection()
+    {
+        return $this->minimalCorrection;
     }
 
     public function archiveExercise()

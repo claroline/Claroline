@@ -788,6 +788,7 @@ class ResourceManager
     ) {
         $this->log("Copying {$node->getName()} from type {$node->getResourceType()->getName()}");
         $resource = $this->getResourceFromNode($node);
+        $env = $this->container->get('kernel')->getEnvironment();
 
         if ($resource instanceof ResourceShortcut) {
             $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
@@ -796,11 +797,14 @@ class ResourceManager
             $copy->setResourceNode($newNode);
         } else {
             if (!$resource) {
-                $message = 'The resource '.$node->getName().' was not found';
-                $this->container
-                    ->get('logger')
-                    ->error($message);
-                throw new ResourceNotFoundException($message);
+                if ($env === 'dev') {
+                    $message = 'The resource '.$node->getName().' was not found (node id is '.$node->getId().')';
+                    $this->container->get('logger')->error($message);
+                    throw new ResourceNotFoundException($message);
+                } else {
+                    //if something is malformed in production, try to not break everything if we don't need to. Just retun null.
+                    return;
+                }
             }
 
             $event = $this->dispatcher->dispatch(
@@ -918,11 +922,11 @@ class ResourceManager
      *
      * @throws \LogicException
      */
-    public function delete(ResourceNode $resourceNode)
+    public function delete(ResourceNode $resourceNode, $force = false)
     {
         $this->log('Removing '.$resourceNode->getName().'['.$resourceNode->getResourceType()->getName().':id:'.$resourceNode->getId().']');
 
-        if ($resourceNode->getParent() === null) {
+        if ($resourceNode->getParent() === null && !$force) {
             throw new \LogicException('Root directory cannot be removed');
         }
         $workspace = $resourceNode->getWorkspace();
@@ -1031,7 +1035,7 @@ class ResourceManager
 
         $this->om->endFlushSuite();
 
-        if (!$softDelete) {
+        if (!$softDelete && $resourceNode->getParent()) {
             $this->reorder($resourceNode->getParent());
         }
     }

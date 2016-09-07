@@ -83,23 +83,26 @@ export default class SummaryItemEditDirective {
          * Remove a step from Tree
          */
         this.removeStep = function() {
-          ConfirmService.open({
-            title:         Translator.trans('step_delete_title',   { stepName: this.step.name }, 'path_wizards'),
-            message:       Translator.trans('step_delete_confirm', {}                     , 'path_wizards'),
-            confirmButton: Translator.trans('step_delete',         {}                     , 'path_wizards')
-          },
-            // Confirm success callback
-            () => {
-              // Check if we are deleting the current editing step
-              let updatePreview = false
-              if (this.step.id == this.current.stepId) {
-                // Need to update preview
-                updatePreview = true
-              }
+          if (0 !== this.step.lvl) {
+            ConfirmService.open({
+              title:         Translator.trans('step_delete_title',   { stepName: this.step.name }, 'path_wizards'),
+              message:       Translator.trans('step_delete_confirm', {}                     , 'path_wizards'),
+              confirmButton: Translator.trans('step_delete',         {}                     , 'path_wizards')
+            },
+              // Confirm success callback
+              () => {
+                // Check if we are deleting the current editing step
+                let updatePreview = false
+                if (this.step.id == this.current.stepId) {
+                  // Need to update preview
+                  updatePreview = true
+                }
 
-              // Effective remove
-              PathService.removeStep(this.step, updatePreview)
-            })
+                // Effective remove
+                PathService.removeStep(this.step, updatePreview)
+              }
+            )
+          }
         }
       }
     ]
