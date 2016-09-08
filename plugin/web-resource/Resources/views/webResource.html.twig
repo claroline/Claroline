@@ -6,11 +6,13 @@
 
 {% extends layout %}
 
-{% block title %}{{ resource.getResourceNode().getName() ~ ' - ' ~ parent()|striptags|raw }}{% endblock %}
+{% block title %}{{ _resource.getResourceNode().getName() ~ ' - ' ~ parent()|striptags|raw }}{% endblock %}
+
+{% set absolutePath = asset("uploads/webresource/" ~ path) %}
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title"> {{ resource.getResourceNode().getName() }} </h3>
+        <h3 class="panel-title"> {{ _resource.getResourceNode().getName() }} </h3>
     </div>
     <div class="panel-body">
         {% if not path is empty %}
@@ -44,73 +46,10 @@
 {% endblock %}
 {% block javascripts_header %}
     {{ parent() }}
-    <script type="text/javascript">
-        function runPrefixedMethod(obj, method) {
-            var pfx = ['webkit', 'moz', 'ms', 'o', ''];
-            var p = 0, m = null, t = null;
-
-            while (p < pfx.length && !obj[m]) {
-                m = method;
-
-                if (pfx[p] == '') {
-                    m = m.substr(0,1).toLowerCase() + m.substr(1);
-                }
-
-                m = pfx[p] + m;
-
-                if ('undefined' !== (t = typeof obj[m])) {
-                    pfx = [pfx[p]];
-
-                    return t === 'function' ? obj[m]() : obj[m];
-                }
-
-                p++;
-            }
-        }
-
-        function enterFullScreen() {
-            if (runPrefixedMethod(document, 'FullScreen') || runPrefixedMethod(document, 'IsFullScreen')) {
-                runPrefixedMethod(document, 'CancelFullScreen');
-            }
-            else {
-                runPrefixedMethod(document.getElementById('web-resource-frame'), 'RequestFullScreen');
-            }
-        }
-    </script>
+    {% include "Layout/javascripts_header.html.twig" %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            var $frame = $('iframe#web-resource-frame');
-
-            // Resize IFrame on load
-            $frame.load(function () {
-                resizeIframe($(this));
-
-                // Observe DOM modifications to resize IFrame to fit content
-                var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-                var observer = new MutationObserver(function (mutations, observer) {
-                    resizeIframe($frame);
-                });
-
-                observer.observe($frame.get(0).contentDocument.body, {
-                    subtree: true,
-                    childList: true
-                });
-            }).attr('src', '{{ asset("uploads/webresource/" ~ path) }}');
-
-            // Resize IFrame on window resize
-            $(window).on('resize', function () {
-                resizeIframe($frame);
-            });
-        });
-
-        function resizeIframe(frame) {
-            var height = frame.contents().height();
-            frame.animate({ height: height }, 100, function() {});
-        }
-    </script>
+    {% include "Layout/javascripts.html.twig" %}
 {% endblock %}
