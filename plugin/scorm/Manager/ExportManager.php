@@ -311,14 +311,34 @@ class ExportManager
      *
      * @param \ZipArchive $archive
      * @param string      $pathInArchive
-     * @param string      $filePath
+     * @param string      $path
      */
-    private function copyToPackage(\ZipArchive $archive, $pathInArchive, $filePath)
+    private function copyToPackage(\ZipArchive $archive, $pathInArchive, $path)
     {
-        if (file_exists($filePath)) {
-            $archive->addFile($filePath, $pathInArchive);
+        if (file_exists($path)) {
+            if (is_dir($path)) {
+                /** @var \SplFileInfo[] $files */
+                $files = new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::LEAVES_ONLY
+                );
+
+                foreach ($files as $name => $file) {
+                    // Skip directories
+                    if (!$file->isDir()) {
+                        // Get real and relative path for current file
+                        $filePath = $file->getRealPath();
+
+                        // Add current file to archive
+                        $archive->addFile(
+                            $path.DIRECTORY_SEPARATOR.$file->getFilename(),
+                            $pathInArchive.DIRECTORY_SEPARATOR.$file->getFilename());
+                    }
+                }
+            } else {
+                $archive->addFile($path, $pathInArchive);
+            }
         } else {
-            throw new FileNotFoundException(sprintf('File "%s" could not be found.', $filePath));
+            throw new FileNotFoundException(sprintf('File "%s" could not be found.', $path));
         }
     }
 
