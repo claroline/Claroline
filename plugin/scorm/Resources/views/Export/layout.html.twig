@@ -32,7 +32,11 @@
         <div id="baseAsset" class="hide">/</div>
 
         <div class="container-fluid">
-            {% block content %}{% endblock %}
+            <div class="row content">
+                <div class="col-md-12">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
         </div>
 
         {% block javascripts %}
