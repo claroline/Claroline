@@ -5,11 +5,6 @@
     {% set tag = 'audio' %}
 {% endif %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link href="../assets/video-js.min.css" rel="stylesheet" media="all" />
-{% endblock %}
-
 {% block content %}
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -44,14 +39,10 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script src="../commons/jquery.min.js"></script>
-    <script src="../assets/video.min.js"></script>
-
     <script>
         window.videoId = {{ _resource.id }}
         window.nodeId  = {{ _resource.resourceNode.id }}
         window.tracks  = {{ tracks|json_serialize('api_resource')|raw }}
-        videojs.options.flash.swf = '../assets/video-js.swf'
     </script>
 
     <script src="../commons/translator.js"></script>

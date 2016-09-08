@@ -57,7 +57,6 @@ class PdfPlayerListener extends ContainerAware
 
         // Add assets
         $webpack = $this->container->get('claroline.extension.webpack');
-        $event->addAsset('commons.js', $webpack->hotAsset('dist/commons.js', true));
         $event->addAsset('claroline-distribution-plugin-pdf-player-pdf-viewer.js', $webpack->hotAsset('dist/claroline-distribution-plugin-pdf-player-pdf-viewer.js', true));
 
         // Add translations
