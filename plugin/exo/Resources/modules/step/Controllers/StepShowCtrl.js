@@ -21,7 +21,7 @@ function StepShowCtrl(UserPaperService, FeedbackService, QuestionService, StepSe
   this.FeedbackService
           .on('show', this.onFeedbackShow.bind(this))
 
-  if (this.getQuestionPaper(this.items[0]).nbTries && this.getQuestionPaper(this.items[0]).nbTries >= this.step.meta.maxAttempts && this.feedback.enabled) {
+  if (this.getQuestionPaper(this.items[0]).nbTries && this.getQuestionPaper(this.items[0]).nbTries >= this.step.meta.maxAttempts && this.feedback.enabled && this.step.meta.maxAttempts !== 0) {
     this.solutionShown = true
   }
   if (this.feedback.enabled && this.getQuestionPaper(this.items[0]).nbTries) {
@@ -153,7 +153,9 @@ StepShowCtrl.prototype.getSuiteFeedback = function getSuiteFeedback() {
     if (this.currentTry < this.step.meta.maxAttempts) {
       sentence = 'some_answers_miss_try_again'
     } else {
-      sentence = 'max_attempts_reached_see_solution'
+      if (this.step.maxAttempts !== 0) {
+        sentence = 'max_attempts_reached_see_solution'
+      }
     }
   }
 
