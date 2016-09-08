@@ -232,7 +232,8 @@ class ExportManager
             if (!empty($sco['files'])) {
                 // $this->container->getParameter('claroline.param.files_directory')
                 foreach ($sco['files'] as $filename => $originalFile) {
-                    $this->copyToPackage($archive, 'files/'.$filename, $this->getFilePath($this->uploadPath, $originalFile));
+                    $filePath = $originalFile['absolute'] ? $originalFile['path'] : $this->getFilePath($this->uploadPath, $originalFile['path']);
+                    $this->copyToPackage($archive, 'files/'.$filename, $filePath);
                 }
             }
 
