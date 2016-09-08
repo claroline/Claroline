@@ -63,7 +63,7 @@ choose_image : Choose an image
 choose_category : Choose a category
 choose_type: Choose type
 color: Color
-comment: Comment
+comment: Feedback
 compose: Answer
 consult_hint: Consult the hint results in a penalty of X points, do you want to continue
 contain_search: Whose question contains
@@ -129,7 +129,7 @@ export_csv_results: Export CSV of results
 export_qti_exercise : Export questions of exercise in QTI format
 
 # F
-feedback: Feedback general
+feedback: Comment
 feedback_answer_check: Feedback if this answer is checked (optional)
 find_by: Find by
 find_in: Find in

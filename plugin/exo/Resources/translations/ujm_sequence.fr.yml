@@ -86,6 +86,7 @@ perfectly_correct: Votre solution est parfaitement correcte. Passez à la suite.
 points: Points
 
 # q
+question_functional_instruction: Consigne fonctionnelle
 question_hints: Indices
 question_hint_label: Indice
 question_hint_show_title: Voir l'indice

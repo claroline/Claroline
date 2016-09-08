@@ -85,6 +85,7 @@ perfectly_correct: Your solution is perfectly correct. Move to the next step.
 points: Points
 
 # q
+question_functional_instruction: Functional instruction
 question_hints: Hints
 question_hint_label: Hint
 question_hint_show_title: Show hint

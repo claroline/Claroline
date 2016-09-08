@@ -34,11 +34,12 @@
 
     <div class="panel-body" data-ng-show="!questionShowCtrl.collapsed">
         <div class="question-info">
-            <!-- Invite of the Question -->
-            <div data-ng-bind-html="questionShowCtrl.question.invite | unsafe"></div>
-
             <!-- Description of the Question -->
+            <h5 data-ng-if="questionShowCtrl.question.description">{{ 'question_functional_instruction'|trans:{}:'ujm_sequence' }}</h5>
             <div data-ng-bind-html="questionShowCtrl.question.description | unsafe"></div>
+            
+            <!-- Invite of the Question -->
+            <h5 data-ng-bind-html="questionShowCtrl.question.invite | unsafe"></h5>
         </div>
         <div class="question-info" data-ng-if="questionShowCtrl.question.objects.length > 0">
             <h5>{{ 'question_object'|trans:{}:'ujm_sequence' }}</h5>
