@@ -149,12 +149,16 @@ class ExportScormResourceEvent extends Event implements DataConveyorEventInterfa
     /**
      * Add a new uploaded file to include.
      *
-     * @param string $packageName - Name of the asset in the SCORM package (with extension)
-     * @param string $uploadPath  - Relative path to the file inside the `upload` directory
+     * @param string $packageName  - Name of the asset in the SCORM package (with extension)
+     * @param string $filePath     - Path to the file
+     * @param bool   $absolutePath - if false $filePath will be searched in `files` directory
      */
-    public function addFile($packageName, $uploadPath)
+    public function addFile($packageName, $filePath, $absolutePath = false)
     {
-        $this->files[$packageName] = $uploadPath;
+        $this->files[$packageName] = [
+            'path' => $filePath,
+            'absolute' => $absolutePath,
+        ];
     }
 
     /**
