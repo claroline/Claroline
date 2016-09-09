@@ -9,7 +9,7 @@
             <span>({{ 'exercise_tries'|transChoice:stepShowCtrl.step.meta.maxAttempts:{ count: stepShowCtrl.step.meta.maxAttempts }:'ujm_exo'}})</span>
         </small>
 
-        <span class="label label-success pull-right" data-ng-if="stepShowCtrl.solutionShown || stepShowCtrl.feedback.visible">
+        <span class="label label-success pull-right" data-ng-if="stepShowCtrl.showScore && (stepShowCtrl.solutionShown || stepShowCtrl.feedback.visible)">
             {{ 'step_score'|trans:{}:'ujm_exo' }}: {{ stepShowCtrl.feedback.visible ? stepShowCtrl.stepScore : 0 }}/{{ stepShowCtrl.stepScoreTotal }}
         </span>
     </h4>
@@ -24,7 +24,8 @@
            data-question="item"
            data-question-paper="stepShowCtrl.getQuestionPaper(item)"
            data-include-correction="stepShowCtrl.solutionShown"
-           data-minimal-correction="stepShowCtrl.showMinimalCorrection()">
+           data-minimal-correction="stepShowCtrl.showMinimalCorrection()"
+           data-show-score="stepShowCtrl.showScore">
     </question-show>
 
     <div class="alert alert-info" data-ng-if="stepShowCtrl.feedback.visible && !stepShowCtrl.solutionShown">

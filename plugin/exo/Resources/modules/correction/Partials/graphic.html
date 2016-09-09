@@ -21,7 +21,7 @@
                 </td>
 
                 <td class="col-md-2 text-primary">
-                    <small>{{ 'item_points'|transChoice:solution.score:{count: solution.score}:'ujm_exo' }}</small>
+                    <small data-ng-if="clozeCorrectionCtrl.showScore">{{ 'item_points'|transChoice:solution.score:{count: solution.score}:'ujm_exo' }}</small>
                 </td>
 
                 <!-- Feedback -->

@@ -106,6 +106,7 @@ edit_question: Editer une question
 edit_step: Editer les informations
 end_date: Date de fin
 entry: Entrer
+error_no_step_found: Une erreur est survenue lors de la récupération de l'étape courrante.
 exercise: Exercice
 exercise_alert_break: Interuption non autorisée. Votre copie sera considérée comme terminée !
 exercise_definition: Vue d'ensemble

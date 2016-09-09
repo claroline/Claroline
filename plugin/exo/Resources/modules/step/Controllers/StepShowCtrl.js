@@ -21,10 +21,11 @@ function StepShowCtrl(UserPaperService, FeedbackService, QuestionService, StepSe
   this.FeedbackService
           .on('show', this.onFeedbackShow.bind(this))
 
-  if (this.getQuestionPaper(this.items[0]).nbTries && this.getQuestionPaper(this.items[0]).nbTries >= this.step.meta.maxAttempts && this.feedback.enabled && this.step.meta.maxAttempts !== 0) {
+  if (this.items[0] && this.getQuestionPaper(this.items[0]).nbTries && this.getQuestionPaper(this.items[0]).nbTries >= this.step.meta.maxAttempts && this.feedback.enabled) {
     this.solutionShown = true
   }
-  if (this.feedback.enabled && this.getQuestionPaper(this.items[0]).nbTries) {
+
+  if (this.items[0] &&  this.feedback.enabled && this.getQuestionPaper(this.items[0]).nbTries) {
     this.onFeedbackShow()
 
     if (this.allAnswersFound === 0) {
@@ -32,6 +33,8 @@ function StepShowCtrl(UserPaperService, FeedbackService, QuestionService, StepSe
       this.solutionShown = true
     }
   }
+
+  this.showScore = this.UserPaperService.isScoreAvailable(this.UserPaperService.getPaper())
 
   this.getStepTotalScore()
 }
@@ -83,6 +86,12 @@ StepShowCtrl.prototype.solutionShown = false
  * @type {Integer}
  */
 StepShowCtrl.prototype.allAnswersFound = -1
+
+/**
+ *
+ * @type {boolean}
+ */
+StepShowCtrl.prototype.showScore = true
 
 /**
  * Get the Paper related to the Question

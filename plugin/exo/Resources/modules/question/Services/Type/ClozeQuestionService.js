@@ -25,7 +25,7 @@ ClozeQuestionService.prototype.answersAllFound = function answersAllFound(questi
   if (question.solutions) {
     var numAnswersFound = 0
 
-    if (answer) {
+    if (answers) {
       for (var i = 0; i < question.solutions.length; i++) {
         for (var j=0; j<question.solutions[i].answers.length; j++) {
           for (var k=0; k<question.holes.length; k++) {
@@ -47,7 +47,7 @@ ClozeQuestionService.prototype.answersAllFound = function answersAllFound(questi
     if (numAnswersFound === question.solutions.length) {
       // all answers have been found
       feedbackState = this.FeedbackService.SOLUTION_FOUND
-    } else if (numAnswersFound === question.solutions.length -1) {
+    } else if (numAnswersFound === (question.solutions.length - 1)) {
       // one answer remains to be found
       feedbackState = this.FeedbackService.ONE_ANSWER_MISSING
     } else {
@@ -55,7 +55,6 @@ ClozeQuestionService.prototype.answersAllFound = function answersAllFound(questi
       feedbackState = this.FeedbackService.MULTIPLE_ANSWERS_MISSING
     }
   }
-
   return feedbackState
 }
 
@@ -196,19 +195,22 @@ ClozeQuestionService.prototype.getHoleFeedback = function getHoleFeedback(questi
 ClozeQuestionService.prototype.getTotalScore = function (question) {
   let total = 0
 
-  for (var i = 0; i < question.solutions.length; i++) {
-    let solution = question.solutions[i]
+  if(question.solutions){
 
-    let solutionScore = 0
-    for (let j = 0; j < solution.answers.length; j++) {
-      if (solution.answers[j].score > solutionScore) {
-        solutionScore = solution.answers[j].score
+    for (var i = 0; i < question.solutions.length; i++) {
+      let solution = question.solutions[i]
+
+      let solutionScore = 0
+      for (let j = 0; j < solution.answers.length; j++) {
+        if (solution.answers[j].score > solutionScore) {
+          solutionScore = solution.answers[j].score
+        }
       }
+
+      total += solutionScore
     }
 
-    total += solutionScore
   }
-
   return total
 }
 

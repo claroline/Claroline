@@ -92,7 +92,6 @@ display_all_list: Display the whole list
 display_all_on_this_page: Display all on this page
 display_pagination: Display with pagination
 docimology: Docimology
-pic_manage: Manage my documents
 document: Document
 drop_category: Drop this category
 duplicate: Duplicate
@@ -106,6 +105,7 @@ edit_question: Edit a question
 edit_step: Edit information
 end_date: End date
 entry: Entry
+error_no_step_found: An error occured while retrieving the current step.
 exercise: Exercise
 exercise_alert_break: The interruption of this exercise is not allowed. Your paper will be considered finish !
 exercise_definition: Exercise definition
@@ -220,6 +220,7 @@ matching_value: Type of associative question
 maximum_attempts: Maximum number of attempts
 maximum_tries: Maximum number of tries
 meaning_measure_difficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
+metadata: Parameters
 metadata_visible:      Display exercise information
 metadata_visible_help: If checked a table with the exercise information will be displayed on the overview
 minimal_correction: Show minimal correction
@@ -286,10 +287,10 @@ paper_legend: Papers which need manual correction
 paper_list: Paper list
 paper_count: "{0} no paper|{1} %count% paper|]1,Inf[ %count% papers"
 paper_need_manual_correction: This paper needs a manual correction
-metadata: Parameters
 partially: Partially correct
 penalty: Penalty
 percentage: Percentage
+pic_manage: Manage my documents
 picture_name: Picture name
 points: Points
 point_answer: You must assign a point to the correct answer
