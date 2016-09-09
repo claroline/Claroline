@@ -125,6 +125,7 @@ class DropController extends DropzoneBaseController
             'collecticielOpenOrNot' => $isOpen,
             'returnReceiptArray' => $returnReceipts,
             'teacherCommentDocArray' => $teacherComments,
+            'notationsArray' => [],
             'notationDocumentsArray' => $notationDocuments,
             'notationCommentDocumentsArray' => $notationCommentDocuments,
             'notationQualityDocumentsArray' => $notationQualityDocuments,
