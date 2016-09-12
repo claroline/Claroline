@@ -46,10 +46,11 @@
 {% endblock %}
 {% block javascripts_header %}
     {{ parent() }}
-    {% include "Layout/javascripts_header.html.twig" %}
+    {% include "ClarolineWebResourceBundle:Layout:javascripts_header.html.twig" %}
+    
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {% include "Layout/javascripts.html.twig" %}
+    {% include "ClarolineWebResourceBundle:Layout:javascripts.html.twig" %}
 {% endblock %}
