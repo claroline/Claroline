@@ -8,7 +8,7 @@ export default class CorrectionMode {
     /**
      * The solutions are available once the User has validated his Paper.
      *
-     * @var int
+     * @var string
      */
     this.AFTER_END = '1'
 
@@ -16,7 +16,7 @@ export default class CorrectionMode {
      * The solutions are available once the User has validated his Paper for his last attempt
      * (Exercise must define `maxAttempts`).
      *
-     * @var int
+     * @var string
      */
     this.AFTER_LAST_ATTEMPT = '2'
 
@@ -24,14 +24,14 @@ export default class CorrectionMode {
      * The solutions are available after a fixed date
      * (Exercise must define `dateCorrection`).
      *
-     * @var int
+     * @var string
      */
     this.AFTER_DATE = '3'
 
     /**
      * The solutions will never be available to Users.
      *
-     * @var int
+     * @var string
      */
     this.NEVER = '4'
   }

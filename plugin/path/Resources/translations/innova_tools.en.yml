@@ -11,7 +11,7 @@ back_to: Back to
 # C
 create_path: Create
 create_path_from_model: Create from model
-create_path_from_model_loading: Models loading...
+create_path_from_model_loading: Loading models...
 current_position: Current position
 class: The class
 classroom: In a classroom
@@ -32,16 +32,16 @@ group: In group
 
 # H
 
-heritated_from: Heritated from
+heritated_from: Inherited from
 
 # I
-informations: Informations
+informations: Information
 
 
 # L
 local: Local
 library: In a library
-locked: Blocage
+locked: Blocking
 
 # M
 my_paths : My paths
@@ -62,7 +62,7 @@ path_back: Back to path
 path_dashboard: Path dashboard
 path_not_found: Path not found
 path_delete_success: Path has been deleted
-path_delete_error: Le parcours has not been deleted due to technical problem. Please try again
+path_delete_error: the path has not been deleted due to technical problem. Please try again.
 play: Execute
 paths_list: Paths list
 progression: Progression
@@ -91,6 +91,6 @@ without_computer: Without a computer
 with_tutor: With a tutor
 without_tutor: Without a tutor
 
-back_to_home: Back to Workspace home
+back_to_home: Back to workspace home
 
-no_path: There is no Path to display.
+no_path: There is no path to display.

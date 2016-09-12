@@ -2,7 +2,7 @@
 all_answers_found: Toutes vos réponses sont correctes. Passez à la suite.
 answer_zone: Zone de réponse
 answers_correct: Votre solution est maintenant correcte. Passez à la suite.
-answers_not_found: Il reste plusieurs réponses à trouver
+answers_not_found: Il reste plusieurs réponses à trouver.
 answers_now_correct: Toutes vos réponses sont maintenant correctes. Passez à la suite.
 
 # b
@@ -25,7 +25,7 @@ dropdown_step_navigate_choice_label: Etape n°%1% / %2%
 # g
 good_solution_found: XXXXX Solution trouvée
 graphic_setpoint_first: Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur définit votre réponse.
-graphic_setpoint_second: Pour répondre, utiliser la technique du glisser/déposer.
+graphic_setpoint_second: Pour répondre, utilisez la technique du glisser/déposer.
 graphic_setpoint_third: Les bonnes réponses ne sont comptabilisées qu'une seule fois.
 graphic_reset_answers: Réinitialiser les réponses.
 
@@ -86,21 +86,22 @@ perfectly_correct: Votre solution est parfaitement correcte. Passez à la suite.
 points: Points
 
 # q
+question_functional_instruction: Consigne fonctionnelle
 question_hints: Indices
 question_hint_label: Indice
 question_hint_show_title: Voir l'indice
 question_object: Objet de la question
 question_specification: Consigne pédagogique
 question_supplementary: Information complémentaire
-question_show_hint_confirm: Êtes vous sûr de vouloir utiliser l'indice ? <br/> Cela entrainera une pénalité de %1% points.
+question_show_hint_confirm: Êtes vous sûr de vouloir utiliser l'indice ? <br/> Cela entraînera une pénalité de %1% points.
 
 # s
 sequence_step: Etape
 sequence_attempts_infos: "[0, 1] Vous avez droit à %count% tentative|]1,Inf[ Vous avez droit à %count% tentatives"
 sequence_nb_attempts: Essai n° %1%
-sequence_interrupt_sequence_confirm: Êtes vous sûr de vouloir interrompre l'exercice ?
-sequence_end_sequence_confirm: Êtes vous sûr de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.
-sequence_play_leave_confirm: Êtes vous sûr de vouloir quitter l'application ?
+sequence_interrupt_sequence_confirm: Êtes-vous sûr de vouloir interrompre l'exercice ?
+sequence_end_sequence_confirm: Êtes-vous sûr de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.
+sequence_play_leave_confirm: Êtes-vous sûr de vouloir quitter l'application ?
 sequence_score: Score
 some_answers_miss_try_again: Il manque des réponses ou certaines réponses sont incorrectes. Essayez à nouveau.
 

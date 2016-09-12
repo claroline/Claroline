@@ -4,6 +4,7 @@ namespace Claroline\ScormBundle\Library\Export;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -17,20 +18,29 @@ use JMS\DiExtraBundle\Annotation as DI;
 class RichTextExporter
 {
     /**
+     * @var ObjectManager
+     */
+    private $om;
+
+    /**
      * @var ResourceManager
      */
     private $resourceManager;
+
     /**
      * Class constructor.
      *
+     * @param ObjectManager   $om
      * @param ResourceManager $resourceManager
      *
      * @DI\InjectParams({
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "resourceManager" = @Di\Inject("claroline.manager.resource_manager")
      * })
      */
-    public function __construct(ResourceManager $resourceManager)
+    public function __construct(ObjectManager $om, ResourceManager $resourceManager)
     {
+        $this->om = $om;
         $this->resourceManager = $resourceManager;
     }
 
@@ -58,6 +68,26 @@ class RichTextExporter
 
                     if ($replaceLinks) {
                         $text = $this->replaceLink($text, $match[1], '../files/file_'.$match[2]);
+                    }
+                }
+            }
+        }
+
+        // Find videos (it's a particular case because the url is not same)
+        // We also have the Resource id, not the Node one
+        $regex = '#[src|href]+="([^"]*video-player/api/video/([^\'"]+)/stream)"#';
+
+        preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
+        if (count($matches) > 0) {
+            foreach ($matches as $match) {
+                // We have the ID of the Resource, not the Node
+                $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\File')->find($match[2]);
+                if ($resource) {
+                    $node = $resource->getResourceNode();
+                    $resources = $this->storeResource($resources, $node);
+
+                    if ($replaceLinks) {
+                        $text = $this->replaceLink($text, $match[1], '../files/file_'.$node->getId());
                     }
                 }
             }

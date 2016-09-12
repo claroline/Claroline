@@ -11,7 +11,7 @@ calendar_view: Calendar view
 calendar_view_options: Calendar view options
 chronologic_view: Chronologic view
 chronological_view_options: Chronological view options
-click_on_link_below_to_confirm_request: Please click on link below to confirm request
+click_on_link_below_to_confirm_request: Please click on the link below to confirm your request
 closed_session_events: Closed session events
 closed_sessions: Closed sessions
 collaborator: Collaborator
@@ -19,12 +19,12 @@ collapse_courses: Collapse courses
 collapse_sessions: Collapse sessions
 course: Training
 course_code: Training code
-course_creation: Training creation
-course_deletion: Training deletion
+course_creation: Create training
+course_deletion: Remove training
 course_description: Training description
-course_edition: Training edition
+course_edition: Edit training
 course_registration_request_confirmation: Training registration request confirmation
-course_request_confirm_msg: You have request to register to training "%courseTitle% [%courseCode%]"
+course_request_confirm_msg: You have requested to register to training "%courseTitle% [%courseCode%]"
 course_request_confirmation_success: Registration request to training "%courseTitle%" confirmed.
 course_session_form_cursus: Cursus
 course_session_form_defaultSession: Mark as default
@@ -63,9 +63,9 @@ cursus_import: Cursus import
 cursus_import_error_from_file: Cannot import cursus from this file
 cursus_management: Cursus management
 cursus_plugin_configuration: Cursus plugin configuration
-decline_failed: Decline failed
-decline_registration: Decline registration
-decline_registration_confirm_message: Are you sure you want to decline this user registration ?
+decline_failed: Denial failed
+decline_registration: Denial registration
+decline_registration_confirm_message: Are you sure you want to deny this user's registration ?
 default: Default
 default_mode: Default mode
 default_session: Default training session
@@ -110,11 +110,11 @@ every_day: Every day
 every_month: Every month
 every_week: Every week
 export_all_courses: Export all trainings
-form_not_blank_error: This value should not be blank.
+form_not_blank_error: This value may not be blank.
 form_not_unique_error: This value is already used.
 form_not_valid_error: This value is not valid.
-form_number_inferior_error: This value should be %value% or less.
-form_number_superior_error: This value should be %value% or more.
+form_number_inferior_error: This value must be %value% or less.
+form_number_superior_error: This value must be %value% or more.
 full_session_msg: Training session users limit has been reached
 general_parameters: General parameters
 generate_certificates: Generate certificates
@@ -137,8 +137,8 @@ location_to_specify: Location to specify
 locations: Locations
 locations_management: Locations management
 manager: Manager
-max_time_reservation: Max time reservation
-max_users: Max number of users
+max_time_reservation: Maximum reservation time
+max_users: Maximum number of users
 no: No
 no_closed_session: No closed session
 no_closed_session_event: No closed session event
@@ -161,7 +161,7 @@ no_session_event: No session event
 no_template: No template
 no_tutor: No tutor
 no_unstarted_session: No unstarted session
-not_authorized: Not authorized
+not_authorized: Not allowed
 nothing_to_configure: Nothing to configure
 open_session_events: Open session events
 ongoing_sessions: Ongoing sessions
@@ -171,8 +171,8 @@ placeholder_course_code_message: This placeholder will be replaced by the code o
 placeholder_course_description_message: This placeholder will be replaced by the description of the training
 placeholder_course_title_message: This placeholder will be replaced by the title of the training
 placeholder_date_message: This placeholder will be replaced by the generation date of the document
-placeholder_first_name_message: This placeholder will be replaced by the receiver first name
-placeholder_last_name_message: This placeholder will be replaced by the receiver last name
+placeholder_first_name_message: This placeholder will be replaced by the receiver's first name
+placeholder_last_name_message: This placeholder will be replaced by the receiver's last name
 placeholder_organization_address_message: This placeholder will be replaced by the organization address
 placeholder_organization_mail_message: This placeholder will be replaced by the organization email
 placeholder_organization_name_message: This placeholder will be replaced by the organization name
@@ -182,7 +182,7 @@ placeholder_session_end_message: This placeholder will be replaced by the end da
 placeholder_session_event_description_message: This placeholder will be replaced by the description of the session event
 placeholder_session_event_end_message: This placeholder will be replaced by the end date of the session event
 placeholder_session_event_name_message: This placeholder will be replaced by the name of the session event
-placeholder_session_event_location_extra_message: This placeholder will be replaced by the extra informations about the location of the session event
+placeholder_session_event_location_extra_message: This placeholder will be replaced by extra information about the location of the session event
 placeholder_session_event_location_message: This placeholder will be replaced by the location of the session event
 placeholder_session_event_start_message: This placeholder will be replaced by the start date of the session event
 placeholder_session_event_trainers_message: This placeholder will be replaced by the list of the session event trainers
@@ -210,11 +210,11 @@ remove_course: Remove training
 remove_course_confirm_message: Are you sure you want to remove this training ?
 repeat_session_event: Repeat session event
 repetition: Repetition
-send_confirmation_mail: Send a confirmation mail
-send_confirmation_mail_to_session: Send a confirmation mail to all learners of the training session
-send_confirmation_mail_to_session_message: Are you sure you want to send a confirmation mail to all learners of the training session ?
-send_confirmation_mail_to_user: Send a confirmation mail to this user
-send_confirmation_mail_to_user_message: Are you sure you want to send a confirmation mail to this user ?
+send_confirmation_mail: Send a confirmation email
+send_confirmation_mail_to_session: Send a confirmation email to all learners of the training session
+send_confirmation_mail_to_session_message: Are you sure you want to send a confirmation email to all learners of the training session ?
+send_confirmation_mail_to_user: Send a confirmation email to this user
+send_confirmation_mail_to_user_message: Are you sure you want to send a confirmation email to this user ?
 send_email: Send email
 send_message_to_session_participants: Send a message to session participants
 send_platform_message: Send platform message
@@ -226,11 +226,11 @@ self_register: Register
 session: Training session
 session_certificate: Session certificate
 session_closed: Closed
-session_creation: Training session creation
-session_deletion: Training session deletion
+session_creation: Create training session
+session_deletion: Delete training session
 session_description: Training session description
 session_details: Training session details
-session_edition: Training session edition
+session_edition: Edit training session
 session_end_title: End of session "%sessionName%"
 session_event: Session event
 session_event_creation: Session event creation
@@ -247,7 +247,7 @@ session_not_started: Not started
 session_open: Ongoing
 session_registration: Training session registration
 session_registration_request_confirmation: Training session registration request confirmation
-session_request_confirm_msg: You have request to register to session "%sessionName%" of training "%courseTitle% [%courseCode%]"
+session_request_confirm_msg: You have requested to register to session "%sessionName%" of training "%courseTitle% [%courseCode%]"
 session_request_confirmation_success: Registration request to session "%sessionName%" of training "%courseTitle%" confirmed.
 session_self_registration_message: Are you sure you want to register to this training session ?
 session_start_title: Start of session "%sessionName%"
@@ -259,7 +259,7 @@ sessions_management: Training sessions management
 sessions_registration: Training sessions registration
 sessions_registration_as_learner: Training sessions registration as learner
 sessions_registration_as_tutor: Training sessions registration as tutor
-show_hide_closed_sessions: Show/Hide closed training sessions
+show_hide_closed_sessions: Show/hide closed training sessions
 the_displayed_word_for: The displayed word for
 to_define: To define
 tutor: Tutor

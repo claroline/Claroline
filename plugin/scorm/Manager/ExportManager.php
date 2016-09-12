@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Twig\WebpackExtension;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Claroline\ScormBundle\Library\Export\Manifest\AbstractScormManifest;
 use Claroline\ScormBundle\Library\Export\Manifest\Scorm12Manifest;
@@ -50,6 +51,9 @@ class ExportManager
     /** @var ResourceManager */
     private $resourceManager;
 
+    /** @var WebpackExtension */
+    private $webpack;
+
     /**
      * Constructor.
      *
@@ -61,6 +65,7 @@ class ExportManager
      * @param StrictDispatcher $dispatcher
      * @param ClaroUtilities   $utilities
      * @param ResourceManager  $resourceManager
+     * @param WebpackExtension $webpack
      *
      * @DI\InjectParams({
      *     "tmp"             = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
@@ -70,7 +75,8 @@ class ExportManager
      *     "jsRouterCtrl"    = @DI\Inject("fos_js_routing.controller"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "utilities"       = @DI\Inject("claroline.utilities.misc"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager")
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "webpack"         = @DI\Inject("claroline.extension.webpack")
      * })
      */
     public function __construct(
@@ -81,7 +87,8 @@ class ExportManager
         Controller $jsRouterCtrl,
         StrictDispatcher $dispatcher,
         ClaroUtilities $utilities,
-        ResourceManager $resourceManager)
+        ResourceManager $resourceManager,
+        WebpackExtension $webpack)
     {
         $this->tmpPath = $tmp;
         $this->webPath = $rootDir.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web';
@@ -92,6 +99,7 @@ class ExportManager
         $this->dispatcher = $dispatcher;
         $this->utilities = $utilities;
         $this->resourceManager = $resourceManager;
+        $this->webpack = $webpack;
     }
 
     /**
@@ -232,7 +240,8 @@ class ExportManager
             if (!empty($sco['files'])) {
                 // $this->container->getParameter('claroline.param.files_directory')
                 foreach ($sco['files'] as $filename => $originalFile) {
-                    $this->copyToPackage($archive, 'files/'.$filename, $this->getFilePath($this->uploadPath, $originalFile));
+                    $filePath = $originalFile['absolute'] ? $originalFile['path'] : $this->getFilePath($this->uploadPath, $originalFile['path']);
+                    $this->copyToPackage($archive, 'files/'.$filename, $filePath);
                 }
             }
 
@@ -267,6 +276,14 @@ class ExportManager
             'bootstrap.min.js' => 'packages/bootstrap/dist/js/bootstrap.min.js',
             'translator.js' => 'bundles/bazingajstranslation/js/translator.min.js',
             'router.js' => 'bundles/fosjsrouting/js/router.js',
+            'video.min.js' => 'packages/video.js/dist/video.min.js',
+            'video-js.min.css' => 'packages/video.js/dist/video-js.min.css',
+            'video-js.swf' => 'packages/video.js/dist/video-js.swf',
+        ];
+
+        $webpackAssets = [
+            'commons.js' => 'dist/commons.js',
+            'claroline-distribution-plugin-video-player-watcher.js' => 'dist/claroline-distribution-plugin-video-player-watcher.js',
         ];
 
         $translationDomains = [
@@ -279,6 +296,15 @@ class ExportManager
 
         foreach ($assets as $filename => $originalFile) {
             $this->copyToPackage($archive, 'commons/'.$filename, $this->getFilePath($this->webPath, $originalFile));
+        }
+
+        // Add webpack assets
+        foreach ($webpackAssets as $filename => $originalFile) {
+            $this->copyToPackage(
+                $archive,
+                'commons/'.$filename,
+                $this->getFilePath($this->webPath, $this->webpack->hotAsset($originalFile, true))
+            );
         }
 
         // Add FontAwesome font files
@@ -310,14 +336,32 @@ class ExportManager
      *
      * @param \ZipArchive $archive
      * @param string      $pathInArchive
-     * @param string      $filePath
+     * @param string      $path
      */
-    private function copyToPackage(\ZipArchive $archive, $pathInArchive, $filePath)
+    private function copyToPackage(\ZipArchive $archive, $pathInArchive, $path)
     {
-        if (file_exists($filePath)) {
-            $archive->addFile($filePath, $pathInArchive);
+        if (file_exists($path)) {
+            if (is_dir($path)) {
+                /** @var \SplFileInfo[] $files */
+                $files = new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::LEAVES_ONLY
+                );
+
+                foreach ($files as $file) {
+                    // Skip directories
+                    if (!$file->isDir()) {
+                        // Get real and relative path for current file
+                        // Add current file to archive
+                        $archive->addFile(
+                            $path.DIRECTORY_SEPARATOR.$file->getFilename(),
+                            $pathInArchive.DIRECTORY_SEPARATOR.$file->getFilename());
+                    }
+                }
+            } else {
+                $archive->addFile($path, $pathInArchive);
+            }
         } else {
-            throw new FileNotFoundException(sprintf('File "%s" could not be found.', $filePath));
+            throw new FileNotFoundException(sprintf('File "%s" could not be found.', $path));
         }
     }
 

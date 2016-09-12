@@ -45,7 +45,7 @@ ChoiceQuestionService.prototype.answersAllFound = function answersAllFound(quest
         }
       }
     }
-    
+
     if (numAnswersFound === numSolutions || uniqueSolutionFound) {
             // all answers have been found
       feedbackState = this.FeedbackService.SOLUTION_FOUND
@@ -90,7 +90,7 @@ ChoiceQuestionService.prototype.getCorrectAnswer = function getCorrectAnswer(que
     }
   }
 
-  if (!question.multiple) {
+  if (!question.multiple && betterFound) {
     answer.push(betterFound.id)
   }
 
@@ -166,7 +166,7 @@ ChoiceQuestionService.prototype.getChoiceFeedback = function getChoiceFeedback(q
 
 /**
  * Get the Score of a Choice.
- * 
+ *
  * @param   {Object} question
  * @param   {Object} choice
  * @returns {String}
@@ -270,10 +270,12 @@ ChoiceQuestionService.prototype.getAnswerScore = function (question, answer) {
 
 ChoiceQuestionService.prototype.getFoundSolutions = function (question, answer) {
   let found = []
-  for (let i = 0; i < question.solutions.length; i++) {
-    for (let j = 0; j < answer.length; j++) {
-      if (question.solutions[i].id === answer[j]) {
-        found.push(question.solutions[i])
+  if(question.solutions){
+    for (let i = 0; i < question.solutions.length; i++) {
+      for (let j = 0; j < answer.length; j++) {
+        if (question.solutions[i].id === answer[j]) {
+          found.push(question.solutions[i])
+        }
       }
     }
   }

@@ -20,7 +20,7 @@
 
                 <!-- Score -->
                 <td class="col-md-2 text-primary">
-                    <small>{{ 'item_points'|transChoice:keyword.score:{count: keyword.score}:'ujm_exo' }}</small>
+                    <small data-ng-if="clozeCorrectionCtrl.showScore">{{ 'item_points'|transChoice:keyword.score:{count: keyword.score}:'ujm_exo' }}</small>
                 </td>
 
                 <!-- Feedback -->

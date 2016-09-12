@@ -19,13 +19,13 @@
                         if (currentNode.getAttribute("data-mlang")) mlangParam = "&mlang=" + currentNode.getAttribute("data-mlang");
                         if (currentNode.getAttribute("data-equation")) equationParam = "&equation=" + currentNode.getAttribute("data-equation");
                     }
-                    var html = '<iframe name="tinymceFormula" id="tinymceFormula" src="' + window.Claroline.Home.asset + 'bundles/icapformulaplugin/tinymce/plugins/formula/index.html' + '?lang=' + lang + mlangParam + equationParam + '" scrolling="no" frameborder="0"></iframe>';
+                    var html = '<iframe name="tinymceFormula" id="tinymceFormula" src="' + window.Claroline.Home.asset + 'bundles/icapformulaplugin/tinymce/plugins/formula/index.html' + '?lang=' + lang + mlangParam + equationParam + '" scrolling="yes" frameborder="0"></iframe>';
                     return html;
                 };
                 editor.windowManager.open({
                     title: "Formula",
                     width: 900,
-                    height: 610,
+                    height: 510,
                     html: getFrame(),
                     buttons: [
                         {

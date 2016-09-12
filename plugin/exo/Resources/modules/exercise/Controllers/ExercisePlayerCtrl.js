@@ -65,6 +65,12 @@ function ExercisePlayerCtrl(
   if (0 !== this.exercise.meta.duration) {
     this.timer = this.TimerService.new(this.exercise.id, this.exercise.meta.duration * 60, this.end.bind(this), true)
   }
+  if (this.step && this.step.items[0]) {
+    const questionPaper = this.UserPaperService.getQuestionPaper(this.step.items[0])
+    if (questionPaper.nbTries) {
+      this.currentStepTry = questionPaper.nbTries
+    }
+  }
 }
 
 /**
@@ -156,7 +162,7 @@ ExercisePlayerCtrl.prototype.submit = function submit() {
  * Check if the step's maxAttempts is reached
  */
 ExercisePlayerCtrl.prototype.areMaxAttemptsReached = function areMaxAttemptsReached() {
-  if (this.feedback.enabled) {
+  if (this.feedback.enabled && this.step.meta.maxAttempts !== 0) {
     for (var i = 0; i < this.paper.questions.length; i++) {
       if (this.step.items[0].id.toString() === this.paper.questions[i].id.toString() && this.paper.questions[i].nbTries >= this.step.meta.maxAttempts) {
         this.feedback.visible = true
@@ -176,7 +182,7 @@ ExercisePlayerCtrl.prototype.areMaxAttemptsReached = function areMaxAttemptsReac
 ExercisePlayerCtrl.prototype.isButtonEnabled = function isButtonEnabled(button) {
   var buttonEnabled
   if (button === 'retry') {
-    buttonEnabled = this.feedback.enabled && this.feedback.visible && this.currentStepTry < this.step.meta.maxAttempts && this.allAnswersFound !== 0
+    buttonEnabled = this.feedback.enabled && this.feedback.visible && (this.currentStepTry < this.step.meta.maxAttempts || this.step.meta.maxAttempts === 0) && this.allAnswersFound !== 0
   } else if (button === 'next') {
     buttonEnabled = !this.next || (this.feedback.enabled && !this.feedback.visible && !(this.allAnswersFound === 0)) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0))
   } else if (button === 'navigation') {
@@ -184,7 +190,7 @@ ExercisePlayerCtrl.prototype.isButtonEnabled = function isButtonEnabled(button) 
   } else if (button === 'end') {
     buttonEnabled = (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0))
   } else if (button === 'validate') {
-    buttonEnabled = this.feedback.enabled && !this.feedback.visible && this.currentStepTry <= this.step.meta.maxAttempts && this.allAnswersFound !== 0
+    buttonEnabled = this.feedback.enabled && !this.feedback.visible && (this.currentStepTry <= this.step.meta.maxAttempts || this.step.meta.maxAttempts === 0) && this.allAnswersFound !== 0
   } else if (button === 'previous') {
     buttonEnabled = !this.previous || (this.feedback.enabled && !this.feedback.visible && !(this.allAnswersFound === 0)) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0))
   }
@@ -263,7 +269,7 @@ ExercisePlayerCtrl.prototype.end = function end() {
           }
           else {
             // go to exercise papers list (to let the User show his registered paper)
-            this.$location.path('/papers')
+            this.$location.path('/')
           }
         }.bind(this))
       this.feedback.state = {}

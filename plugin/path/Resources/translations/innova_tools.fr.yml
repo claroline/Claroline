@@ -1,6 +1,6 @@
 # A
-abstract_resources: Ressource Type
-at_home: A la maison
+abstract_resources: Ressource type
+at_home: À la maison
 anywhere: N'importe où
 available_actions: Actions disponibles
 
@@ -61,7 +61,7 @@ paths_list: Liste des parcours
 path_not_found: Le parcours n'a pas été trouvé
 play: Exécuter
 path_delete_success: Le parcours a été supprimé
-path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
+path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer.
 path_open_not_published_error: Le parcours que vous vouliez ouvrir n'a pas encore été publié par son propriétaire.
 paths_template_list: Liste des modèles de parcours
 publish: Publier
@@ -76,7 +76,7 @@ status: Etat
 select: Sélectionner
 step: Etape
 
-#U
+# U
 unlockit: Débloquer
 
 # W
@@ -87,6 +87,6 @@ without_computer: Sans ordinateur
 with_tutor: Avec un tuteur
 without_tutor: Sans tuteur
 
-back_to_home: Retour à l'accueil de l'Espace d'activités
+back_to_home: Retour à l'accueil de l'espace d'activités
 
-no_path: Il n'y a aucun Parcours à afficher.
+no_path: Il n'y a aucun parcours à afficher.

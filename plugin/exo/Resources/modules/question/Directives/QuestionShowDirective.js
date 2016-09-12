@@ -17,6 +17,7 @@ export default function QuestionShowDirective() {
       questionPaper: '=',
       includeCorrection: '=', // Is the solution for the current question displayed ?
       minimalCorrection: '=', // shall we display expected answer field in correction ?
+      showScore: '=', // shall we display score info ?
       collapsed: '=?'
     },
     bindToController: true

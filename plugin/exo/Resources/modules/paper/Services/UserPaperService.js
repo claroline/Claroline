@@ -422,7 +422,7 @@ export default class UserPaperService {
    * Check if the score obtained by the User for the Exercise is available.
    *
    * @param {Object} paper
-   * 
+   *
    * @returns {Boolean}
    */
   isScoreAvailable(paper) {
@@ -442,6 +442,10 @@ export default class UserPaperService {
 
       case this.MarkMode.AFTER_END:
         available = null !== paper.end
+        break
+
+      case this.MarkMode.NEVER:
+        available = false
         break
 
         // Show score if nothing specified

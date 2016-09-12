@@ -1,119 +1,119 @@
 actions: Actions
-add_choice: 'Ajouter un choix'
-add_choice_other: 'Ajouter un choix "Autre"'
-add_question: 'Ajouter une question'
-add_question_box_title: 'Ajouter une question au sondage'
-all_survey_answers_deletion: 'Supprimer toutes les réponses au sondage'
-all_survey_answers_deletion_confirm_message: 'Êtes-vous sûr de vouloir supprimer toutes les réponses à ce sondage ?'
-allow_edition_after_submission: 'Authoriser la modification de la réponse'
-allow_multiple_response: 'Réponses multiples'
-an_answer_is_required: 'Une réponse est requise'
+add_choice: Ajouter un choix
+add_choice_other: Ajouter un choix "Autre"
+add_question: Ajouter une question
+add_question_box_title: Ajouter une question au sondage
+all_survey_answers_deletion: Supprimer toutes les réponses au sondage
+all_survey_answers_deletion_confirm_message: Êtes-vous sûr de vouloir supprimer toutes les réponses à ce sondage ?
+allow_edition_after_submission: Autoriser la modification de la réponse
+allow_multiple_response: Réponses multiples
+an_answer_is_required: Une réponse est requise
 answer: Réponse
 answers: Réponses
-answer_to_survey: 'Répondre au sondage'
+answer_to_survey: Répondre au sondage
 choice: Choix
-choice_display: 'Affichage des choix'
-choices_management: 'Gestion des choix'
+choice_display: Affichage des choix
+choices_management: Gestion des choix
 close: Fermer
 closed: Fermé
-closed_survey_message: 'Le sondage est fermé. Plus personne ne peut y répondre.'
-closed_user_message: 'Le sondage est clôturé.'
-closing_date: 'Date de clôture'
-closing_date_next: 'Prochaine date de clôture'
+closed_survey_message: Le sondage est fermé. Plus personne ne peut y répondre.
+closed_user_message: Le sondage est clôturé.
+closing_date: Date de clôture
+closing_date_next: Prochaine date de clôture
 comment: Commentaire
 comments: Commentaires
-create_model_from_question: 'Créer un modèle à partir de la question'
-create_question: 'Créer une question'
-create_title: 'Créer un titre'
-delete_all_answers: 'Supprimer toutes les réponses'
-delete_question_title_btn_explanation: 'Supprimer le titre'
-delete_selected_answers: 'Supprimer les réponses sélectionnées'
+create_model_from_question: Créer un modèle à partir de la question
+create_question: Créer une question
+create_title: Créer un titre
+delete_all_answers: Supprimer toutes les réponses
+delete_question_title_btn_explanation: Supprimer le titre
+delete_selected_answers: Supprimer les réponses sélectionnées
 description: Description
-display_survey: 'Afficher le sondage'
-edit_parameters: 'Modifier les paramètres'
-edit_question_btn_explanation: 'Modifier la question'
-edit_question_title_btn_explanation: 'Modifier le titre'
-edit_survey: 'Modifier le sondage'
+display_survey: Afficher le sondage
+edit_parameters: Modifier les paramètres
+edit_question_btn_explanation: Modifier la question
+edit_question_title_btn_explanation: Modifier le titre
+edit_survey: Modifier le sondage
 edit_your_answers: Modifier vos réponses
 edition: Modification
-end_date: 'Date de fin'
-export_all_results: 'Exporter tous les résultats'
-export_question_results: 'Exporter les résultats de la question'
-export_survey_answers: 'Exporter les réponses au sondage '
+end_date: Date de fin
+export_all_results: Exporter tous les résultats
+export_question_results: Exporter les résultats de la question
+export_survey_answers: Exporter les réponses au sondage 
 horizontal: Horizontal
-how_to_publish_message: 'Le sondage n''est pas encore publié. Personne ne peut y répondre. Vous pouvez le publier dans <Paramètres>.'
-label_for_choice_other: 'Libellé du choix "Autre"'
-mandatory_answer_message: 'Une réponse est requise'
+how_to_publish_message: Le sondage nest pas encore publié. Personne ne peut y répondre. Vous pouvez le publier dans <Paramètres>.
+label_for_choice_other: Libellé du choix "Autre"
+mandatory_answer_message: Une réponse est requise.
 model: Modèle
-model_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce modèle ?'
-model_delete_confirm_title: 'Suppression du modèle'
-models_management: 'Gestion des modèles'
-multiple_choice_multiple: 'Choix multiple (Réponses multiples)'
-multiple_choice_multiple_answers: 'Choix multiple (Réponses multiples)'
-multiple_choice_single: 'Choix multiple (Réponse unique)'
-multiple_choice_single_answer: 'Choix multiple (Réponse unique)'
+model_delete_confirm_message: Êtes-vous sûr de vouloir supprimer ce modèle ?
+model_delete_confirm_title: Suppression du modèle
+models_management: Gestion des modèles
+multiple_choice_multiple: Choix multiple (Réponses multiples)
+multiple_choice_multiple_answers: Choix multiple (Réponses multiples)
+multiple_choice_single: Choix multiple (Réponse unique)
+multiple_choice_single_answer: Choix multiple (Réponse unique)
 name: Nom
-no_answer: 'Aucune réponse'
-no_choice_warning: 'Attention! Il n''y a aucun choix.'
-no_model: 'Aucun modèle'
-no_question: 'Aucune question'
-not_mandatory_answer_message: 'Une réponse n''est pas requise'
-number_of_respondents: 'Nombre de personnes ayant répondu'
-number_of_responses: 'Nombre de réponses'
-open_ended: 'Ouverte'
+no_answer: Aucune réponse
+no_choice_warning: Attention! Il ny a aucun choix.
+no_model: Aucun modèle
+no_question: Aucune question
+not_mandatory_answer_message: Une réponse n'est pas requise
+number_of_respondents: Nombre de personnes ayant répondu
+number_of_responses: Nombre de réponses
+open_ended: Ouverte
 parameters: Paramètres
-parameters_edition: 'Modification des paramètres'
-publication_date: 'Date de publication'
-publication_date_next: 'Prochaine date de publication'
+parameters_edition: Modification des paramètres
+publication_date: Date de publication
+publication_date_next: Prochaine date de publication
 publish: Publier
 published: Publié
-published_survey_message: 'Le sondage est publié.'
-published_user_message: 'Le sondage est ouvert.'
-question_answers_deletion_warning: 'Si vous modifiez la question, toutes les réponses liées à cette question (présente dans d''autres sondages) seront supprimées.'
-question_creation: 'Création d''une question'
-question_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer cette question ?'
-question_delete_confirm_title: 'Suppression de la question'
+published_survey_message: Le sondage est publié.
+published_user_message: Le sondage est ouvert.
+question_answers_deletion_warning: Si vous modifiez la question, toutes les réponses liées à cette question (présentes dans d'autres sondages) seront supprimées.
+question_creation: Création dune question
+question_delete_confirm_message: Êtes-vous sûr de vouloir supprimer cette question ?
+question_delete_confirm_title: Suppression de la question
 question_disabled_edit_button_info: Les questions dont le bouton d'édition est désactivé ne peuvent pas être modifiées car des réponses y sont associées.
-question_edition: 'Modification de la question'
-question_form_commentAllowed: 'Avec commentaire'
-question_form_commentLabel: 'Libellé du commentaire'
-question_form_mandatory: 'Réponse requise'
-question_form_question: 'Question'
-question_form_title: 'Titre'
-question_form_type: 'Type de question'
+question_edition: Modification de la question
+question_form_commentAllowed: Avec commentaire
+question_form_commentLabel: Libellé du commentaire
+question_form_mandatory: Réponse requise
+question_form_question: Question
+question_form_title: Titre
+question_form_type: Type de question
 question_multi_survey_info: La question est peut-être utilisée dans un autre sondage.
 question_title_form_question: Titre
-questions_management: 'Gestion des questions'
+questions_management: Gestion des questions
 ratio: Ratio
-remove_question_btn_explanation: 'Retirer la question du sondage'
+remove_question_btn_explanation: Retirer la question du sondage
 results: Résultats
 return: Retour
-selected_answers_deletion: 'Supprimer les réponses sélectionnées'
-selected_answers_deletion_confirm_message: 'Êtes-vous sûr de vouloir supprimer les réponses sélectionnées ?'
-show_result_to_users: 'Afficher le résultat aux utilisateurs'
-start_date: 'Date de début'
+selected_answers_deletion: Supprimer les réponses sélectionnées
+selected_answers_deletion_confirm_message: Êtes-vous sûr de vouloir supprimer les réponses sélectionnées ?
+show_result_to_users: Afficher le résultat aux utilisateurs
+start_date: Date de début
 status: Statut
 survey_answer: Réponse
-survey_answers_list: 'Liste des réponses au sondage'
-survey_answers_management: 'Gestion des réponses au sondage'
-survey_edition: 'Modification du sondage'
-survey_edition_form_allowAnswerEdition: 'Authoriser la modification de la réponse'
+survey_answers_list: Liste des réponses au sondage
+survey_answers_management: Gestion des réponses au sondage
+survey_edition: Modification du sondage
+survey_edition_form_allowAnswerEdition: Autoriser la modification de la réponse
 survey_edition_form_description: Description
-survey_edition_form_endDate: 'Date de fin'
-survey_edition_form_hasPublicResult: 'Afficher le résultat aux utilisateurs'
-survey_edition_form_startDate: 'Date de début'
+survey_edition_form_endDate: Date de fin
+survey_edition_form_hasPublicResult: Afficher le résultat aux utilisateurs
+survey_edition_form_startDate: Date de début
 survey_form_description: Description
-survey_parameters: 'Paramètres du sondage'
-survey_parameters_edition: 'Modification des paramètres du sondage'
-survey_results: 'Résultats du sondage'
+survey_parameters: Paramètres du sondage
+survey_parameters_edition: Modification des paramètres du sondage
+survey_results: Résultats du sondage
 thanks_for_answering_msg: Merci d'avoir répondu au sondage.
 title: Titre
-title_creation: 'Création d''un titre'
-title_edition: 'Modification du titre'
+title_creation: Création d'un titre
+title_edition: Modification du titre
 type: Type
-unpublished: 'Non publié'
-unpublished_user_message: 'Le sondage n''est pas encore publié.'
+unpublished: Non publié
+unpublished_user_message: Le sondage nest pas encore publié.
 vertical: Vertical
-view_question_btn_explanation: 'Aperçu de la question'
-view_survey_results: 'Voir les résultats du sondage'
+view_question_btn_explanation: Aperçu de la question
+view_survey_results: Voir les résultats du sondage
 view_your_answers: Voir vos réponses

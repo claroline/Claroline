@@ -33,11 +33,11 @@ log_resource-claroline_forum-move_subject_shortname: Déplacement de sujet
 log_resource-claroline_forum-move_subject_filter: Déplacement de sujet
 log_resource-claroline_forum-move_subject_sentence: a déplacé un sujet dans le forum %resource%
 log_resource-claroline_forum-open_subject_filter: Ouverture de sujet
-log_resource-claroline_forum-stick_subject_shortname: Épinglement de sujet
-log_resource-claroline_forum-stick_subject_filter: Épinglement de sujet
+log_resource-claroline_forum-stick_subject_shortname: Épinglage de sujet
+log_resource-claroline_forum-stick_subject_filter: Épinglage de sujet
 log_resource-claroline_forum-stick_subject_sentence: a épinglé un sujet dans le forum %resource%
-log_resource-claroline_forum-unstick_subject_shortname: Désépinglement de sujet
-log_resource-claroline_forum-unstick_subject_filter: Désépinglement de sujet
+log_resource-claroline_forum-unstick_subject_shortname: Désépinglage de sujet
+log_resource-claroline_forum-unstick_subject_filter: Désépinglage de sujet
 log_resource-claroline_forum-unstick_subject_sentence: a désépinglé un sujet dans le forum %resource%
 log_resource-claroline_forum-subscribe_shortname: Affiliation à un sujet de forum
 log_resource-claroline_forum-subscribe_filter: Affiliation à un sujet de forum
@@ -58,7 +58,7 @@ log_resource-claroline_forum-edit_subject_title: Modification d'un sujet de foru
 log_resource-claroline_forum-move_message_title: Déplacement d'un message de forum
 log_resource-claroline_forum-move_subject_title: Déplacement d'un sujet de forum
 log_resource-claroline_forum-open_subject_title: Ouverture d'un sujet de forum
-log_resource-claroline_forum-stick_subject_title: Épinglement d'un sujet de forum
+log_resource-claroline_forum-stick_subject_title: Épinglage d'un sujet de forum
 log_resource-claroline_forum-subscribe_title: Affiliation à un sujet de forum
-log_resource-claroline_forum-unstick_subject_title: Désépinglement d'un sujet
+log_resource-claroline_forum-unstick_subject_title: Désépinglage d'un sujet
 log_resource-claroline_forum-unsubscribe_title: Désaffiliation d'un sujet de forum

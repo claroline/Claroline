@@ -649,7 +649,9 @@ class PaperManager
             case MarkMode::AFTER_END:
                 $available = !empty($paper->getEnd());
                 break;
-
+            case MarkMode::NEVER:
+                $available = false;
+                break;
             case MarkMode::WITH_CORRECTION:
             default:
                 $available = $this->isSolutionAvailable($exercise, $paper);

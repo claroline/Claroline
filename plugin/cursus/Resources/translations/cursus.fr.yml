@@ -137,7 +137,7 @@ location_to_specify: Lieu à préciser
 locations: Localisations
 locations_management: Gestion des localisations
 manager: Gestionnaire
-max_time_reservation: Temps max de réservation
+max_time_reservation: Temps maximum de réservation
 max_users: Nombre maximum d'utilisateurs
 no: Non
 no_closed_session: Aucune session terminée
@@ -206,16 +206,16 @@ register_groups_to_session: Inscrire des groupes à la session de formation
 register_learners_to_session: Inscrire des apprenants à la session de formation
 register_tutors_to_session: Inscrire des formateurs à la session de formation
 register_users_to_cursus: Inscrire des utilisateurs au cursus
-registration_failed: L'inscription a échouée
+registration_failed: L'inscription a échoué
 remove_course: Retirer la formation
 remove_course_confirm_message: Êtes-vous sûr de vouloir retirer cette formation ?
 repeat_session_event: Répéter la séance
 repetition: Répétition
-send_confirmation_mail: Envoyer un mail de confirmation
-send_confirmation_mail_to_session: Envoyer un mail de confirmation à tous les apprenants de la session de formation
-send_confirmation_mail_to_session_message: Êtes-vous sûr de vouloir envoyer un mail de confirmation à tous les apprenants de la session de formation ?
-send_confirmation_mail_to_user: Envoyer un mail de confirmation à cet utilisateur
-send_confirmation_mail_to_user_message: Êtes-vous sûr de vouloir envoyer un mail de confirmation à cet utilisateur ?
+send_confirmation_mail: Envoyer un courriel de confirmation
+send_confirmation_mail_to_session: Envoyer un courriel de confirmation à tous les apprenants de la session de formation.
+send_confirmation_mail_to_session_message: Êtes-vous sûr de vouloir envoyer un courriel de confirmation à tous les apprenants de la session de formation ?
+send_confirmation_mail_to_user: Envoyer un courriel de confirmation à cet utilisateur
+send_confirmation_mail_to_user_message: Êtes-vous sûr de vouloir envoyer un courriel de confirmation à cet utilisateur ?
 send_email: Envoyer un courrier
 send_message_to_session_participants: Envoyer un message aux participants de la session
 send_platform_message: Envoyer un message sur la plateforme

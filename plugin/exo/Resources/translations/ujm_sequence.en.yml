@@ -2,43 +2,43 @@
 all_answers_found: All your answers are correct. Move to the next step.
 answer_zone: Answer zone
 answers_correct: Your answer is now correct. Move to the next step.
-answers_not_found: All answers were not found
+answers_not_found: Not all answers have been found.
 answers_now_correct: All your answers are now correct. Move to the next step.
 
 # b
-btn_end_sequence_label: End exercise
+btn_end_sequence_label: Finish exercise
 btn_interrupt_sequence_label: Interrupt
 btn_prev_step_label: Go to previous step
 btn_next_step_label: Go to next step
 btn_retry_step: Retry step
-btn_show_solution: Show solution
+btn_show_solution: Show answer
 btn_validate_step: Validate
-btn_toggle_all_paper_question_panels: Show / Hide all questions
+btn_toggle_all_paper_question_panels: Show / Hide all the questions
 
 # c
 case_sensitive: Case sensitive
 comment: Comment
 
 # d
-dropdown_step_navigate_choice_label: Step N°%1% / %2%
+dropdown_step_navigate_choice_label: Step #%1% / %2%
 
 
 # g
 good_solution_found: XXXXX Solution found
-graphic_setpoint_first: Drag the "sights" on the picture. The sight center defines your answer.
+graphic_setpoint_first: Drag the pointer on the picture. The pointer center defines your answer.
 graphic_setpoint_second: Use drag and drop to answer.
 graphic_setpoint_third: Correct answers are only counted once.
-graphic_reset_answers: Init answers.
+graphic_reset_answers: Reset answers.
 
 # k
 keys_words: Keys words
 
 # l
 link_exercice_home: Exercise home
-link_exercise_continue: Continue
+link_exercise_continue: Resume
 link_exercise_retry: Retry
 link_exercise_play: Answer
-link_exercise_docimology: Docimology
+link_exercise_docimology: Grading system
 link_csv_export: CSV export
 label_exercise_score: Global score
 label_exercise_question_score: Score
@@ -47,17 +47,17 @@ label_no_labels_associated: No associated label(s)
 label_manual_correction_needed: Manual correction needed!
 
 # m
-max_attempts_reached_see_solution: You reached the maximum number of tries. Consult the solution and get to the next step.
+max_attempts_reached_see_solution: You've reached the maximum number of attempts. Have a look at the answer and go to the next step.
 
 # n
-need_correction: This answer needs a manual correction
-note_question: Note this question
+need_correction: This answer needs a manual correction.
+note_question: Give a score to this question.
 
 # o
-one_answer_to_find: There is one answer left to find
+one_answer_to_find: There is one answer left to find.
 
 # p
-paper_list: Paper list
+paper_list: Papers list
 paper_list_no_paper: No paper found.
 paper_search: Search a paper
 paper_list_manual_correction_needed: Manual correction needed
@@ -80,28 +80,29 @@ paper_details_paper_score: Global score
 paper_details_question_score: Question score
 paper_details_correction_label: Correction
 
-perfectly_correct: Your solution is perfectly correct. Move to the next step.
+perfectly_correct: Your answer is perfectly correct. Go to to the next step.
 
 points: Points
 
 # q
+question_functional_instruction: Functional instruction
 question_hints: Hints
 question_hint_label: Hint
 question_hint_show_title: Show hint
 question_object: Object of the question
 question_specification: Specification
-question_supplementary: Supplementary information
+question_supplementary: More information
 question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This will give you a penalty of %1% points.
 
 # s
 sequence_step: Step
 sequence_attempts_infos: "[0, 1] You have %count% attempt|]1,Inf[ You have %count% attempts"
-sequence_nb_attempts: Attempt n° %1%
-sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the exercise ?
-sequence_end_sequence_confirm: Are you sure you want to go to finish the exercise ? <br/> Yon won't be able to edit your answers.
-sequence_play_leave_confirm: Are you sure you want to leave the application ?
+sequence_nb_attempts: Attempt #%1%
+sequence_interrupt_sequence_confirm: Are you sure you want to interrupt the exercise ?
+sequence_end_sequence_confirm: Are you sure you want to finish the exercise ? <br/> Yon won't be allowed to change your answers anymore.
+sequence_play_leave_confirm: Are you sure you want to leave ?
 sequence_score: Score
-some_answers_miss_try_again: Some answers miss or are incorrect. Try again.
+some_answers_miss_try_again: Some answers are missing or incorrect. Try again.
 
 # v
 validate: Validate

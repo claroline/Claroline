@@ -235,7 +235,6 @@ class PathListener extends ContainerAware
         $webpack = $this->container->get('claroline.extension.webpack');
         $event->addAsset('tinymce.jquery.min.js', 'bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js');
         $event->addAsset('jquery.tinymce.min.js', 'bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js');
-        $event->addAsset('commons.js', $webpack->hotAsset('dist/commons.js', true));
         $event->addAsset('claroline-distribution-plugin-path-player.js', $webpack->hotAsset('dist/claroline-distribution-plugin-path-player.js', true));
         $event->addAsset('claroline-home.js', 'bundles/clarolinecore/js/home/home.js');
         $event->addAsset('claroline-common.js', 'bundles/clarolinecore/js/common.js');

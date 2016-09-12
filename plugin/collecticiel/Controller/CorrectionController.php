@@ -1,9 +1,4 @@
 <?php
-/**
- * Created by : Vincent SAISSET
- * Date: 22/08/13
- * Time: 09:30.
- */
 
 namespace Innova\CollecticielBundle\Controller;
 
@@ -2252,7 +2247,6 @@ class CorrectionController extends DropzoneBaseController
 
         $this->dispatch($event);
 
-        die('AddMoreCommentsInnovaAction');
         // Redirection vers la page des commentaires. InnovaERV.
         return $this->redirect(
             $this->generateUrl(
@@ -2279,9 +2273,8 @@ class CorrectionController extends DropzoneBaseController
      */
     public function addCommentForDocsInnovaAction(User $user, Dropzone $dropzone)
     {
-        //
+
         // Saisie des commentaires à la volée.
-        //
 
         // Récupération de l'USER
         $user = $this->get('security.context')->getToken()->getUser();

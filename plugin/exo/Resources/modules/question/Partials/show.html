@@ -15,7 +15,7 @@
                 </small>
 
                 <!-- Display score -->
-                <span class="label label-primary">
+                <span class="label label-primary" data-ng-if="questionShowCtrl.showScore">
                     {{ 'score'|trans:{}:'ujm_exo' }}:
 
                     <!-- Feedback is visible and question is marked -->
@@ -34,11 +34,12 @@
 
     <div class="panel-body" data-ng-show="!questionShowCtrl.collapsed">
         <div class="question-info">
-            <!-- Invite of the Question -->
-            <div data-ng-bind-html="questionShowCtrl.question.invite | unsafe"></div>
-
             <!-- Description of the Question -->
+            <h5 data-ng-if="questionShowCtrl.question.description">{{ 'question_functional_instruction'|trans:{}:'ujm_sequence' }}</h5>
             <div data-ng-bind-html="questionShowCtrl.question.description | unsafe"></div>
+            
+            <!-- Invite of the Question -->
+            <h5 data-ng-bind-html="questionShowCtrl.question.invite | unsafe"></h5>
         </div>
         <div class="question-info" data-ng-if="questionShowCtrl.question.objects.length > 0">
             <h5>{{ 'question_object'|trans:{}:'ujm_sequence' }}</h5>
@@ -61,6 +62,7 @@
                 ({{ (questionShowCtrl.question.stats.answered * 100 / questionShowCtrl.question.stats.seen)|number:1 }}%)
             </small>
         </h5>
+
         <div data-ng-switch="questionShowCtrl.question.type">
             <!-- Choice Type -->
             <choice-question
@@ -108,7 +110,7 @@
             <h5>{{ 'question_supplementary'|trans:{}:'ujm_sequence' }}</h5>
             <div data-ng-bind-html="questionShowCtrl.question.supplementary | unsafe"></div>
         </div>
-        
+
         <!-- Display solution of the Question i.e. Expected Answer(s) -->
         <div class="correction-container" data-ng-if="!questionShowCtrl.minimalCorrection && questionShowCtrl.includeCorrection && questionShowCtrl.question.solutions && questionShowCtrl.question.solutions.length > 0">
             <h5>
@@ -120,31 +122,36 @@
                 <!-- Choice Type -->
                 <choice-correction
                         data-ng-switch-when="application/x.choice+json"
-                        data-question="questionShowCtrl.question">
+                        data-question="questionShowCtrl.question"
+                        data-show-score="questionShowCtrl.showScore">
                 </choice-correction>
 
                 <!-- Match Type -->
                 <match-correction
                         data-ng-switch-when="application/x.match+json"
-                        data-question="questionShowCtrl.question">
+                        data-question="questionShowCtrl.question"
+                        data-show-score="questionShowCtrl.showScore">
                 </match-correction>
 
                 <!-- Cloze Type -->
                 <cloze-correction
                         data-ng-switch-when="application/x.cloze+json"
-                        data-question="questionShowCtrl.question">
+                        data-question="questionShowCtrl.question"
+                        data-show-score="questionShowCtrl.showScore">
                 </cloze-correction>
 
                 <!-- Open Type -->
                 <open-correction
                         data-ng-switch-when="application/x.short+json"
-                        data-question="questionShowCtrl.question">
+                        data-question="questionShowCtrl.question"
+                        data-show-score="questionShowCtrl.showScore">
                 </open-correction>
 
                 <!-- Graphic Type -->
                 <graphic-correction
                         data-ng-switch-when="application/x.graphic+json"
-                        data-question="questionShowCtrl.question">
+                        data-question="questionShowCtrl.question"
+                        data-show-score="questionShowCtrl.showScore">
                 </graphic-correction>
             </div>
         </div>
