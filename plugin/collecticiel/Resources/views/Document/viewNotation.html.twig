@@ -23,19 +23,18 @@
             </div>
             <!-- #MODAL BODY -->
             <div class="modal-body">
-
-                <div class="row">
-                    <div class="col-md-12">
-                        {# Bloc "Rappel des instructions" #}
-                        {% if dropzone.instruction != null %}
+                {% if dropzone.instruction != null %}
+                  <div class="row">
+                      <div class="col-md-12">
+                          {# Bloc "Rappel des instructions" #}
                           {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionTeacherNotation.html.twig' %}
-                        {% endif %}
-                    </div>
-                </div>
-
+                      </div>
+                  </div>
+                  <hr>
+                {% endif %}
                 <div class="row text-left">
                     <div class="col-md-12">
-                        <b>{{ 'Review on'|trans({}, 'innova_collecticiel') }}</b>
+                        <h5><b>{{ 'Review on'|trans({}, 'innova_collecticiel') }}</b></h5>
                     </div>
                 </div>
 
@@ -68,24 +67,23 @@
                         </table>
                     </div>
                 </div>
-
+                <hr>
                 <div class="row text-left">
                     <div class="col-md-12">
-                        <b>{{ 'Author'|trans({}, 'innova_collecticiel') }}</b>
-                        {{ drop.user.firstName }}
-                        {{ drop.user.lastName }}
+                        <h5>
+                          <b>{{ 'Author'|trans({}, 'innova_collecticiel') }}</b>
+                          {{ drop.user.firstName }}
+                          {{ drop.user.lastName }}
+                        </h5>
+                        <h5>
+                          <b>{{ 'Assessor'|trans({}, 'innova_collecticiel') }}</b>
+                          {{ notationAssessorDocument.firstName }}
+                          {{ notationAssessorDocument.lastName }}
+                        </h5>
                     </div>
                 </div>
-                <div class="row text-left">
-                    <div class="col-md-12">
-                        <b>{{ 'Assessor'|trans({}, 'innova_collecticiel') }}</b>
-                        {{ notationAssessorDocument.firstName }}
-                        {{ notationAssessorDocument.lastName }}
-                    </div>
-                </div>
-
+                <hr>
                 {% if dropzone.evaluationType == "notation" %}
-                    <p></p>
 
                     <div class="row text-left">
                         <div class="col-md-12">
@@ -96,7 +94,7 @@
                             {{ ')' }}
                         </div>
                     </div>
-
+                    <hr>
                     {% for notation in notationsArray %}
                         <div class="row text-left">
                             <div class="col-md-12">
@@ -116,27 +114,29 @@
 
                     <div class="row text-left">
                       <div class="col-md-12">
-                        <b>{{ 'Appreciation'|trans({}, 'innova_collecticiel') }}</b>
+                        <h5><b>{{ 'Appreciation'|trans({}, 'innova_collecticiel') }}</b></h5>
                       </div>
                     </div>
                     <div class="row text-left">
-                      <div class="col-md-12"> {{ notationScaleDocument }} </div>
+                      <div class="col-md-12">{{ notationScaleDocument }}</div>
                     </div>
+                    <hr>
                     {% for criteria in criteriasArray %}
                       <div class="row text-left">
                         <div class="col-md-12">
-                          <b>{{ criteria.criteriaName }}</b>
+                          <h5><b>{{ criteria.criteriaName }}</b></h5>
                         </div>
                       </div>
                       <div class="row text-left">
                         <div class="col-md-12">
-                          {% render(
+                        {%
+                          render(
                             controller(
                               'InnovaCollecticielBundle:ChoiceCriteria:renderChoiceText',
                                 { 'gradingCriteriaId': criteria.id, 'documentId': document.id, 'dropzoneId': dropzone.id }
                               )
                             )
-                          %}
+                        %}
                         </div>
                       </div>
                     {% endfor %}

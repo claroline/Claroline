@@ -1,8 +1,4 @@
 <?php
-/**
- * Created by : Eric VINCENT
- * Date: 05/16.
- */
 
 namespace Innova\CollecticielBundle\Controller;
 
@@ -37,6 +33,7 @@ class NotationController extends DropzoneBaseController
         $note = (int) $this->get('request')->query->get('note');
         $appreciation = $this->get('request')->query->get('appreciation');
         $recordOrTransmit = (int) $this->get('request')->query->get('recordOrTransmit');
+        $evaluationType = $this->get('request')->query->get('evaluationType');
 
         $em = $this->getDoctrine()->getManager();
         $dropzone = $em->getRepository('InnovaCollecticielBundle:Dropzone')->find($dropzoneId);
@@ -204,7 +201,7 @@ class NotationController extends DropzoneBaseController
     public function ajaxValidateTransmitEvaluationDocumentAction(Document $document, Dropzone $dropzone)
     {
 
-        // Appel pour accés base         
+        // Appel pour accés base
         $em = $this->getDoctrine()->getManager();
 
         // Recherche en base des données du document à mettre à jour
