@@ -1,119 +1,119 @@
 actions: Actions
-add_choice: 'Add a choice'
-add_choice_other: 'Add a choice "Other"'
-add_question: 'Add a question'
-add_question_box_title: 'Add a question to survey'
-all_survey_answers_deletion: 'Delete all survey answers'
-all_survey_answers_deletion_confirm_message: 'Are you sure you want to delete all answers to this survey ?'
-allow_edition_after_submission: 'Allow edition after submission'
-allow_multiple_response: 'Multiple response'
-an_answer_is_required: 'An answer is required'
+add_choice: Add a choice
+add_choice_other: Add a choice "Other"
+add_question: Add a question
+add_question_box_title: Add a question to survey
+all_survey_answers_deletion: Delete all survey answers
+all_survey_answers_deletion_confirm_message: Are you sure you want to delete all answers to this survey ?
+allow_edition_after_submission: Allow edition after submission
+allow_multiple_response: Multiple response
+an_answer_is_required: An answer is required
 answer: Answer
 answers: Answers
-answer_to_survey: 'Answer to survey'
+answer_to_survey: Answer to survey
 choice: Choice
-choice_display: 'Choice display'
-choices_management: 'Choices management'
+choice_display: Choice display
+choices_management: Choices management
 close: Close
 closed: Closed
-closed_survey_message: 'The survey is closed. Nobody can answer it anymore.'
-closed_user_message: 'The survey is closed.'
-closing_date: 'Closing date'
-closing_date_next: 'Next closing date'
+closed_survey_message: The survey is closed. Nobody can answer it anymore.
+closed_user_message: The survey is closed.
+closing_date: Closing date
+closing_date_next: Next closing date
 comment: Comment
 comments: Comments
-create_model_from_question: 'Create a model from question'
-create_question: 'Create a question'
-create_title: 'Create a title'
-delete_all_answers: 'Delete all answers'
-delete_question_title_btn_explanation: 'Delete title'
-delete_selected_answers: 'Delete selected answers'
+create_model_from_question: Create a model
+create_question: Create a question
+create_title: Create a title
+delete_all_answers: Delete all answers
+delete_question_title_btn_explanation: Delete title
+delete_selected_answers: Delete selected answers
 description: Description
-display_survey: 'Display survey'
-edit_parameters: 'Edit parameters'
-edit_question_btn_explanation: 'Edit question'
-edit_question_title_btn_explanation: 'Edit title'
-edit_survey: 'Edit survey'
+display_survey: Display survey
+edit_parameters: Edit parameters
+edit_question_btn_explanation: Edit question
+edit_question_title_btn_explanation: Edit title
+edit_survey: Edit survey
 edit_your_answers: Edit your answers
 edition: Edition
-end_date: 'End date'
-export_all_results: 'Export all results'
-export_question_results: 'Export question results'
-export_survey_answers: 'Export survey answers'
+end_date: End date
+export_all_results: Export all results
+export_question_results: Export question results
+export_survey_answers: Export survey answers
 horizontal: Horizontal
-how_to_publish_message: 'The survey is not published yet. Nobody can answer it. You can publish it in <Parameters>.'
-label_for_choice_other: 'Label for choice "Other"'
-mandatory_answer_message: 'An answer is required'
+how_to_publish_message: The survey is not published yet. Nobody can answer it. You can publish it in <Parameters>.
+label_for_choice_other: Label for choice "Other"
+mandatory_answer_message: An answer is required
 model: Model
-model_delete_confirm_message: 'Do you really want to delete this model ?'
-model_delete_confirm_title: 'Delete model'
-models_management: 'Models management'
-multiple_choice_multiple: 'Multiple choice (Multiple answers)'
-multiple_choice_multiple_answers: 'Multiple choice (Multiple answers)'
-multiple_choice_single: 'Multiple choice (Unique answer)'
-multiple_choice_single_answer: 'Multiple choice (Unique answer)'
+model_delete_confirm_message: Do you really want to delete this model ?
+model_delete_confirm_title: Delete model
+models_management: Models management
+multiple_choice_multiple: Multiple choice (Multiple answers)
+multiple_choice_multiple_answers: Multiple choice (Multiple answers)
+multiple_choice_single: Multiple choice (Unique answer)
+multiple_choice_single_answer: Multiple choice (Unique answer)
 name: Name
-no_answer: 'No answer'
-no_choice_warning: 'Warning! There is no choice.'
-no_model: 'No model'
-no_question: 'No question'
-not_mandatory_answer_message: 'An answer is not required'
-number_of_respondents: 'Number of respondents'
-number_of_responses: 'Number of responses'
-open_ended: 'Open-ended'
+no_answer: No answer
+no_choice_warning: Warning! There is no choice.
+no_model: No model
+no_question: No question
+not_mandatory_answer_message: An answer is not required.
+number_of_respondents: Number of respondents
+number_of_responses: Number of responses
+open_ended: Open-ended
 parameters: Parameters
-parameters_edition: 'Parameters edition'
-publication_date: 'Publication date'
-publication_date_next: 'Next publication date'
+parameters_edition: Edit parameters
+publication_date: Publication date
+publication_date_next: Next publication date
 publish: Publish
 published: Published
-published_survey_message: 'The survey is published.'
-published_user_message: 'The survey is published.'
-question_answers_deletion_warning: 'By editing the question you will delete all answers to this question in others surveys.'
-question_creation: 'Question creation'
-question_delete_confirm_message: 'Do you really want to delete this question ?'
-question_delete_confirm_title: 'Delete question'
+published_survey_message: The survey is published.
+published_user_message: The survey is published.
+question_answers_deletion_warning: By editing the question, you will delete all the answers to this question in others surveys.
+question_creation: Creating question
+question_delete_confirm_message: Do you really want to delete this question ?
+question_delete_confirm_title: Delete question
 question_disabled_edit_button_info: The questions that have a disabled edit button cannot be edited because there are answers associated to them.
-question_edition: 'Question edition'
-question_form_commentAllowed: 'With comment'
-question_form_commentLabel: 'Comment label'
-question_form_mandatory: 'Required answer'
-question_form_question: 'Question'
-question_form_title: 'Title'
-question_form_type: 'Question type'
-question_multi_survey_info: It is also possible that the question is used in another survey.
+question_edition: Question edition
+question_form_commentAllowed: With comment
+question_form_commentLabel: Comment label
+question_form_mandatory: Required answer
+question_form_question: Question
+question_form_title: Title
+question_form_type: Question type
+question_multi_survey_info: The question may be used in another survey.
 question_title_form_question: Title
-questions_management: 'Questions management'
+questions_management: Questions management
 ratio: Ratio
-remove_question_btn_explanation: 'Remove question from survey'
+remove_question_btn_explanation: Remove question from survey
 results: Results
 return: Return
-selected_answers_deletion: 'Delete selected answers'
-selected_answers_deletion_confirm_message: 'Are you sure you want to delete the selected answers ?'
-show_result_to_users: 'Show result to users'
-start_date: 'Starting date'
+selected_answers_deletion: Delete selected answers
+selected_answers_deletion_confirm_message: Are you sure you want to delete the selected answers ?
+show_result_to_users: Show result to users
+start_date: Starting date
 status: Status
 survey_answer: Answer
-survey_answers_list: 'Survey answers list'
-survey_answers_management: 'Survey answers management'
-survey_edition: 'Survey edition'
-survey_edition_form_allowAnswerEdition: 'Allow edition after submission'
+survey_answers_list: Survey answers list
+survey_answers_management: Survey answers management
+survey_edition: Survey edition
+survey_edition_form_allowAnswerEdition: Allow edition after submission
 survey_edition_form_description: Description
-survey_edition_form_endDate: 'End date'
-survey_edition_form_hasPublicResult: 'Show result to users'
-survey_edition_form_startDate: 'Starting date'
+survey_edition_form_endDate: End date
+survey_edition_form_hasPublicResult: Show result to users
+survey_edition_form_startDate: Start date
 survey_form_description: Description
-survey_parameters: 'Survey parameters'
-survey_parameters_edition: 'Survey parameters edition'
-survey_results: 'Survey results'
+survey_parameters: Survey parameters
+survey_parameters_edition: Survey parameters edition
+survey_results: Survey results
 thanks_for_answering_msg: Thank you for answering the survey.
 title: Title
-title_creation: 'Title creation'
-title_edition: 'Title edition'
+title_creation: Title creation
+title_edition: Title edition
 type: Type
 unpublished: Unpublished
-unpublished_user_message: 'The survey is not published yet.'
+unpublished_user_message: The survey is not published yet.
 vertical: Vertical
-view_question_btn_explanation: 'View question'
-view_survey_results: 'View survey results'
+view_question_btn_explanation: View question
+view_survey_results: View survey results
 view_your_answers: View your answers

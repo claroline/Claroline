@@ -1,121 +1,121 @@
-log_resource-icap_dropzone-drop_evaluate_filter: 'Copy evaluated'
-log_resource-icap_dropzone-drop_evaluate_shortname: 'Evaluation'
-log_resource-icap_dropzone-drop_evaluate_sentence: 'was evaluated in %resource%'
-log_resource-icap_dropzone-drop_evaluate_title: 'Evaluation'
+log_resource-icap_dropzone-drop_evaluate_filter: Evaluation of a copy
+log_resource-icap_dropzone-drop_evaluate_shortname: Evaluation
+log_resource-icap_dropzone-drop_evaluate_sentence: has been evaluated in %resource%
+log_resource-icap_dropzone-drop_evaluate_title: Evaluation of a copy
 
-log_resource-icap_dropzone-dropzone_configure_filter: 'Evaluation configuration'
-log_resource-icap_dropzone-dropzone_configure_shortname : 'Evaluation Configuration'
-log_resource-icap_dropzone-dropzone_configure_sentence: 'has configure %resource%'
-log_resource-icap_dropzone-dropzone_configure_title: 'Evaluation configuration'
-instruction: 'instruction'
-allowRichText: 'allow free rich text zone'
-allowWorkspaceResource: 'allow workspace resources'
-allowUpload: 'allow upload'
-allowUrl: 'allow external web links'
-peerReview: 'peer review'
-expectedTotalCorrection: 'expected total correction (peer review)'
-minimumScoreToPass: 'minimum score to pass'
-displayNotationMessageToLearners: 'display notation message to learners'
-displayNotationToLearners: 'display notation to learners'
-manualPlanning: 'manual planning'
-manualState: 'manual state'
-startAllowDrop: 'start drop'
-endAllowDrop: 'end drop'
-allowCommentInCorrection: 'allow comment in correction'
-totalCriteriaColumn: 'scale notation'
+log_resource-icap_dropzone-dropzone_configure_filter: Evaluation settings
+log_resource-icap_dropzone-dropzone_configure_shortname : Evaluation settings
+log_resource-icap_dropzone-dropzone_configure_sentence: has configured %resource%
+log_resource-icap_dropzone-dropzone_configure_title: Evaluation settings
+instruction: instruction
+allowRichText: allows rich text box
+allowWorkspaceResource: allows workspace resources
+allowUpload: allows uploads
+allowUrl: allows external web links
+peerReview: peer review
+expectedTotalCorrection: Amount of corrections expected. (Peer review)
+minimumScoreToPass: Minimum score to pass
+displayNotationMessageToLearners: Message in case of success or of failure
+displayNotationToLearners: Display score to learners
+manualPlanning: Manual planning
+manualState: Chosen state
+startAllowDrop: Starting drop
+endAllowDrop: End of drop
+allowCommentInCorrection: allow comments while correcting
+totalCriteriaColumn: notation scale for evaluation criteria
 
-log_resource-icap_dropzone-criterion_create_sentence: 'add a review criterion to %resource%'
-log_resource-icap_dropzone-criterion_create_shortname: 'Criterion creation'
-log_resource-icap_dropzone-criterion_create_filter: 'Evaluation criterion creation'
-log_resource-icap_dropzone-criterion_create_title: 'Evaluation criterion creation'
-log_created_criterion: 'New criterion'
-log_dropzone_change_set: 'Evaluation change set'
+log_resource-icap_dropzone-criterion_create_sentence: has added a review criterion to %resource%
+log_resource-icap_dropzone-criterion_create_shortname: Creating a criterion
+log_resource-icap_dropzone-criterion_create_filter: Creating an evaluation criterion
+log_resource-icap_dropzone-criterion_create_title: Creating an evaluation criterion
+log_created_criterion: New criterion
+log_dropzone_change_set: Evaluation change set
 
-log_resource-icap_dropzone-criterion_update_shortname: 'Criterion update'
-log_resource-icap_dropzone-criterion_update_sentence: 'update a review criterion in %resource%'
-log_resource-icap_dropzone-criterion_update_filter: 'Evaluation criterion update'
-log_resource-icap_dropzone-criterion_update_title: 'Evaluation criterion update'
-log_criterion_change_set: 'Criterion change set'
+log_resource-icap_dropzone-criterion_update_shortname: Updating a criterion
+log_resource-icap_dropzone-criterion_update_sentence: Updating an evaluation criterion in %resource%
+log_resource-icap_dropzone-criterion_update_filter: Updating an evaluation criterion
+log_resource-icap_dropzone-criterion_update_title: Updating an evaluation criterion
+log_criterion_change_set: Criterion change set
 
-log_resource-icap_dropzone-criterion_delete_shortname: 'Criterion deletion'
-log_resource-icap_dropzone-criterion_delete_sentence: 'delete a review criterion in %resource%'
-log_resource-icap_dropzone-criterion_delete_filter: 'Evaluation criterion deletion'
-log_resource-icap_dropzone-criterion_delete_title: 'Evaluation criterion deletion'
-log_delete_criterion: 'Deleted criterion'
+log_resource-icap_dropzone-criterion_delete_shortname: Removing a criterion
+log_resource-icap_dropzone-criterion_delete_sentence: Removing an evaluation criterion in %resource%
+log_resource-icap_dropzone-criterion_delete_filter: Removing an evaluation criterion
+log_resource-icap_dropzone-criterion_delete_title: Removing an evaluation criterion
+log_delete_criterion: Removed criterion
 
-log_resource-icap_dropzone-drop_start_shortname: 'Copy start'
-log_resource-icap_dropzone-drop_start_filter: 'Evaluation Copy start'
-log_resource-icap_dropzone-drop_start_sentence: 'start his copy in %resource%'
-log_resource-icap_dropzone-drop_start_title: 'Evaluation copy start'
+log_resource-icap_dropzone-drop_start_shortname: Copy start
+log_resource-icap_dropzone-drop_start_filter: Copy start in an evaluation
+log_resource-icap_dropzone-drop_start_sentence: has started his copy in %resource%
+log_resource-icap_dropzone-drop_start_title: Copy start in an evaluation
 
-log_resource-icap_dropzone-drop_end_shortname: 'Copy made'
-log_resource-icap_dropzone-drop_end_sentence: 'made its copy in %resource%'
-log_resource-icap_dropzone-drop_end_title: 'Evaluation copy made'
-log_resource-icap_dropzone-drop_end_filter: 'Evaluation copy made'
-log_drop_documents: 'Documents'
+log_resource-icap_dropzone-drop_end_shortname: Copy made
+log_resource-icap_dropzone-drop_end_sentence: has rendered his copy in %resource%
+log_resource-icap_dropzone-drop_end_title: End of copy in evaluation
+log_resource-icap_dropzone-drop_end_filter: End of copy in evaluation
+log_drop_documents: Documents
 
-log_resource-icap_dropzone-document_create_shortname: 'Document creation'
-log_resource-icap_dropzone-document_create_sentence: 'add a document to his copy in %resource%'
-log_resource-icap_dropzone-document_create_title: 'Evaluation document creation'
-log_resource-icap_dropzone-document_create_filter: 'Evaluation document creation'
-log_drop_all_documents: 'All documents for copy'
-log_create_document: 'Document added'
+log_resource-icap_dropzone-document_create_shortname: Creating a document
+log_resource-icap_dropzone-document_create_sentence: has added a document to his copy in %resource%
+log_resource-icap_dropzone-document_create_title: Creating a document for an evaluation
+log_resource-icap_dropzone-document_create_filter: Creating a document for an evaluation
+log_drop_all_documents: All the documents of the copy
+log_create_document: Document added
 
-log_resource-icap_dropzone-document_delete_shortname: 'Document deletion'
-log_resource-icap_dropzone-document_delete_sentence: 'delete a document from his copy in %resource%'
-log_resource-icap_dropzone-document_delete_title: 'Evaluation document deletion'
-log_resource-icap_dropzone-document_delete_filter: 'Evaluation document deletion'
-log_delete_document: 'Document deleted'
+log_resource-icap_dropzone-document_delete_shortname: Removing a document
+log_resource-icap_dropzone-document_delete_sentence: has removed a document from his copy in %resource%
+log_resource-icap_dropzone-document_delete_title: Removing a document for an evaluation
+log_resource-icap_dropzone-document_delete_filter: Removing a document for an evaluation
+log_delete_document: Document deleted
 
-log_resource-icap_dropzone-document_open_shortname: 'Document open'
-log_resource-icap_dropzone-document_open_sentence: 'open a document from a copy in %resource%'
-log_resource-icap_dropzone-document_open_title: 'Evaluation document open'
-log_resource-icap_dropzone-document_open_filter: 'Evaluation document open'
-log_open_document: 'Document opened'
-log_owner_drop: 'Copy owner'
+log_resource-icap_dropzone-document_open_shortname: Opening a document
+log_resource-icap_dropzone-document_open_sentence: has opened a document of his copy in %resource%
+log_resource-icap_dropzone-document_open_title: Opening a document for an evaluation
+log_resource-icap_dropzone-document_open_filter: Opening a document for an evaluation
+log_open_document: Document opened
+log_owner_drop: Copy owner
 
-log_resource-icap_dropzone-correction_start_shortname: 'Correction start'
-log_resource-icap_dropzone-correction_start_sentence: 'start correction for a copy in %resource%'
-log_resource-icap_dropzone-correction_start_title: 'Evaluation correction start'
-log_resource-icap_dropzone-correction_start_filter: 'Evaluation correction start'
-log_correction: 'Correction properties'
+log_resource-icap_dropzone-correction_start_shortname: Start of a correction
+log_resource-icap_dropzone-correction_start_sentence: has started a correction of a copy in %resource%
+log_resource-icap_dropzone-correction_start_title: Start of a correction
+log_resource-icap_dropzone-correction_start_filter: Start of a correction in an evaluation
+log_correction: Correction properties
 
-log_resource-icap_dropzone-correction_end_shortname: 'Correction end'
-log_resource-icap_dropzone-correction_end_sentence: 'finish his correction for a copy in %resource%'
-log_resource-icap_dropzone-correction_end_title: 'Evaluation correction end'
-log_resource-icap_dropzone-correction_end_filter: 'Evaluation correction end'
+log_resource-icap_dropzone-correction_end_shortname: End of a correction
+log_resource-icap_dropzone-correction_end_sentence: has finished the correction of a copy in %resource%
+log_resource-icap_dropzone-correction_end_title: End of a correction in an evaluation
+log_resource-icap_dropzone-correction_end_filter: End of a correction in an evaluation
 
-log_resource-icap_dropzone-correction_update_shortname: 'Correction update'
-log_resource-icap_dropzone-correction_update_sentence: 'update a correction in %resource%'
-log_resource-icap_dropzone-correction_update_title: 'Evaluation correction update'
-log_resource-icap_dropzone-correction_update_filter: 'Evaluation correction update'
+log_resource-icap_dropzone-correction_update_shortname: Updating a correction
+log_resource-icap_dropzone-correction_update_sentence: has updateed a correction in %resource%
+log_resource-icap_dropzone-correction_update_title: Updating a correction in an evaluation
+log_resource-icap_dropzone-correction_update_filter: Updating a correction in an evaluation
 
-log_resource-icap_dropzone-correction_delete_shortname: 'Correction deletion'
-log_resource-icap_dropzone-correction_delete_sentence: 'delete a correction in %resource%'
-log_resource-icap_dropzone-correction_delete_title: 'Evaluation correction delete'
-log_resource-icap_dropzone-correction_delete_filter: 'Evaluation correction delete'
+log_resource-icap_dropzone-correction_delete_shortname: Removing a correction
+log_resource-icap_dropzone-correction_delete_sentence: has removed a correction in %resource%
+log_resource-icap_dropzone-correction_delete_title: Removing a correction in an evaluation
+log_resource-icap_dropzone-correction_delete_filter: Removing a correction in an evaluation
 
-log_resource-icap_dropzone-correction_validation_change_shortname: 'Correction validation change'
-log_resource-icap_dropzone-correction_validation_change_sentence: 'change validation for a correction in %resource%'
-log_resource-icap_dropzone-correction_validation_change_title: 'Evaluation correction validation change'
-log_resource-icap_dropzone-correction_validation_change_filter: 'Evaluation correction validation change'
+log_resource-icap_dropzone-correction_validation_change_shortname: Changing the validation of a correction
+log_resource-icap_dropzone-correction_validation_change_sentence: has changed the validation of a correction in %resource%
+log_resource-icap_dropzone-correction_validation_change_title: Changing the validation of a correction in an evaluation
+log_resource-icap_dropzone-correction_validation_change_filter: Changing the validation of a correction in an evaluation
 
-log_resource-icap_dropzone-drop_report_shortname: 'Copy reported '
-log_resource-icap_dropzone-drop_report_sentence: 'reported a copy in %resource%'
-log_resource-icap_dropzone-correction_report_title: 'A copy was reported'
-log_resource-icap_dropzone-correction_report_filter: 'A copy was reported'
+log_resource-icap_dropzone-drop_report_shortname: Copy reported 
+log_resource-icap_dropzone-drop_report_sentence: has reported a copy in %resource%
+log_resource-icap_dropzone-correction_report_title: A copy has been reported
+log_resource-icap_dropzone-correction_report_filter: A copy has been reported
 
-log_resource-icap_dropzone-correction_report_shortname: 'Correction reported '
-log_resource-icap_dropzone-correction_report_sentence: 'reported a Correction in %resource%'
-log_resource-icap_dropzone-correction_report_title: 'A correction was reported'
-log_resource-icap_dropzone-correction_report_filter: 'A correction was reported'
+log_resource-icap_dropzone-correction_report_shortname: Correction reported 
+log_resource-icap_dropzone-correction_report_sentence: has reported a correction in %resource%
+log_resource-icap_dropzone-correction_report_title: A correction has been reported
+log_resource-icap_dropzone-correction_report_filter: A correction has been reported
 
-log_resource-icap_dropzone-drop_grade_available_shortname: 'Available grade'
-log_resource-icap_dropzone-drop_grade_available_sentence: 'did last correction needed for a copy, grade for this copy is now available'
-log_resource-icap_dropzone-drop_grade_available_title: 'copy is corrected, grade for this copy is now available in %resource%'
-log_resource-icap_dropzone-drop_grade_available_filter: 'copy is corrected, grade for this copy is now available in %resource%'
+log_resource-icap_dropzone-drop_grade_available_shortname: Score available
+log_resource-icap_dropzone-drop_grade_available_sentence: has made the last correction for a copy in %resource%
+log_resource-icap_dropzone-drop_grade_available_title: Score available
+log_resource-icap_dropzone-drop_grade_available_filter: Score available
 
-log_resource-icap_dropzone-dropzone_manual_state_changed_shortname: "%resources%'s phase changed"
-log_resource-icap_dropzone-dropzone_manual_state_changed_sentence: "has changed  the phase of %resources%"
-log_resource-icap_dropzone-dropzone_manual_state_changed_title: "Dropzone phase changed"
-log_resource-icap_dropzone-dropzone_manual_state_changed_filter: "Dropzone phase changed"
+log_resource-icap_dropzone-dropzone_manual_state_changed_shortname: Change of state of %resources%s
+log_resource-icap_dropzone-dropzone_manual_state_changed_sentence: has changed the evaluation phase of %resources%
+log_resource-icap_dropzone-dropzone_manual_state_changed_title: Dropzone phase changed
+log_resource-icap_dropzone-dropzone_manual_state_changed_filter: Dropzone phase changed

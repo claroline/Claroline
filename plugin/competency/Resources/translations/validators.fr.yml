@@ -3,6 +3,6 @@
 framework_import:
   conflict_issue: Certaines données contenues dans ce référentiel sont en conflit avec les données existantes.
   data_issue: Certaines données contenues dans ce référentiel sont inconsistantes.
-  json_issue: Ce fichier ne peut pas être analysé. Vérifiez qu'il s'agit bien d'un fichier JSON.
-  original_error: "Erreur : %msg%"
+  json_issue: Ce fichier ne peut pas être analysé. Vérifiez qu'il sagit bien d'un fichier JSON.
+  original_error: Erreur : %msg%
   schema_issue: Les données contenues dans ce fichier ne répondent pas au format de référentiel attendu.

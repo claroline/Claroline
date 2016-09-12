@@ -1,489 +1,544 @@
-# a
+# A
+
+Action : Actions
+Add a %type% document: Add a %type% document
+Add a correction: Add a correction
+Add a criterion: Add a criterion
+Add a criterion Innova: Add an INNOVA criterion
+Add a document: Add a document
+# Check next line in the context where it appears !!! #
+Add a new: Information/criterion
+Add at least one document: Add at least one document
+Add: Add
+Add comment: Add a comment
+Add grading scale : + Grading scale
+Addressed requests: Addressed requests
 add_grading_scale_label: Add a grading scale
 add_criteria_label: Add Information/criteria
 add_notation_label: Add Information/criteria
+Allow comment in correction: Propose a comment box
+Allow correction deny: Allow the learners to report a correction they perceive to be unfair.
+Allow drop in review: Allow document drop during peer review.
+Allow student to see his copy whereas the copy didnt received the expected number of correction.: Allow the learner to see his copy even if the copy hasn't received the expected number of corrections.
+Allow workspace resource: Workspace resources
+Allow upload: Uploaded files
+Allow url: Web links
+Allow rich text: Rich text box
+allowDrop: Drops allowed
+allowDropAndPeerReview: Drops and peer review allowed
+allowDropAndPeerReviewManualState: The learners can return their copy AND they can correct the copies. (Peer review).
+allowDropManualState: The learners can submit their works.
+Already reported: Already reported
+Appreciation : Appreciation
+Are you sure to want to close this collecticiel: Are you sure you want to close this groupware ?
+Are you sure to want to delete this document: Are you sure you want to delete this document ?
+Are you sure you have done?: Are you sure you have finished ?
+Are you sure you want to delete the %number%: Are you sure you want to delete the \#%number%
+Are you sure you want to do this?: Are you sure you want to do this ?
+Assessor : Assessor :
+Author: Author:
+Auto close opened drops when time is up: Automatically validate the unfinished copies when the dropping period is over.
+Average validated corrections: Average of validated corrections :
+Awaiting: Awaiting
+Awaiting for correction copies: Finished copies waiting for corrections
+awaiting for drop: The evaluation has started. Waiting for drops.
 
-# d
+# B
+
+Back to corrections: Back to corrections
+
+# C
+
+cancel_unlock: Cancel unlocking
+Cancel: Cancel
+Cancel request : Cancel request
+Cancel request for comment: Cancel request for comment
+Cancel request for review: Cancel request for review
+Change: Change
+Change scale: Change the scale
+Choose a date: Choose a date
+Choose a resource: Choose a resource
+Choose at least one type of document: Choose at least one document type
+Choose at least one type of ranking: Choose at least one rating type
+Choose current phase: Choose the phase in progress :
+Close unterminated drops: Validate the unfinished copies
+Closed: Closed
+Closed collecticiel: This groupware is not opened yet.
+Comment: Comment
+Comment Auto: Automatic comment
+Comment submit student: Comment submit
+Comment transmission: Comment transmission
+Comment validation: Validate this comment
+Commented document: Document to comment
+Commented document modal: Communication of an application comment
+Comments list: List of comments
+Comments add: Add comment
+Comments on: Comment - Assessment on
+Comment evaluation: Comment
+Common: Common
+Common information: Common information
+common_explication: This tool provides the learners a space to drop their documents in order to be evaluated.<br/>The corrections can be made by the teachers or by the learners themselves thanks to peer review.<br/>The planning tool allows you to manage the different evaluation phases
+Complete collecticiel: Complete the groupware
+Complete Corrections: Corrections finished
+Complete my copy: Complete my copy
+Complete my correction: Complete my correction
+Condition: Condition
+Confirm and finished: Confirm and finish
+Confirm the correction delete: Confirm the removal of the correction
+Confirm delete: Confirm the removal
+Confirm the correction report: Validate the correction report
+Copies being evaluated: Copies being evaluated
+Copies evaluated_: Evaluated copies
+Copies evaluation finished: Copies of finished evaluation
+copy: copy
+copy authors: Copy of
+Copy detail: Details of a copy
+Copy n°%number%: Copy \#%number%
+Copy of %firstName% %lastName%: Copy of %firstName% %lastName%
+Corr.: Corr.
+Correct a copy: Correct a copy
+Correct an evaluation requires authentication. Please login.: Correcting an evaluation requires an authentication. Please log in.
+corrected copy: Copy corrected
+Correcting a copy: Correct a copy
+Correction: Correction
+Correction by %firstName% %lastName%: Correction by %firstName% %lastName%
+Correction denied: Correction denied
+Correction number %num%: Correction \#%num%
+correction n°%nb_correction%/%expected_correction%: correction \# %nb_correction% / %expected_correction% made
+Correction of your copy: Correction of your copy
+corrections by user: corrections by user
+corrections were already created: one: A correction has already been created with these criteria.|some:%count% corrections have already been created with these criteria.
+corrections_denied: Corrections made by the examiner that have been reported.
+Corrector: Examiner :
+Create: Create
+created by a manager: created by a manager
+Criterion information : Information accompanying the notation
+Criteria number: The number of criteria is not limited.
+criteria_explication: Please create here the evaluation form to be filled the examiners.<br/>The amount of criteria is unlimited.<br/>You can propose a free comment box to the examiner.
+Criteria: Criteria
+
+# D
+Date hour: Date - Hour
+Dated: Document dropped on date
+Deal Pending : deal pending
+Deals Pending : deals pending
+default sort: Default sort
 default_scale_very_good: Very good
 default_scale_satisfying: Satisfying
 default_scale_insufficient: Not satisfying
 default_criteria_comment: Comment
+Delete: Delete
+Delete a copy: Delete a copy
+Delete copy: Delete the copy
+Delete a criterion: Delete a criterion
+Delete a document: Delete a document
+Deleted drop: Copy removed
+Deny correction: Deny this correction
+Deposit phase: Dropping phase
+Deposit phase of the %dropzonename% evaluation: Dropping phase of %dropzonename%
+Details of your copy: Details of your copy
+Display: Display
+Diplay corrections to learners: Display the corrections to the learners.
+Display notation message to learners: Display a message of success or failure to the learners.
+Display notation to learners: Display scores to learners
+Do nothing: Don't do anything with these copies
+Do you want to cancel your request for comment : Do you want to cancel this comment request ?
+Do you want to cancel your request for review : Do you want to cancel this review request ?
+Do you want to valid all drop started but not validated yet ?: Do you want to automatically validate the unfinished copies that have started ?
+Document: Document
+Documents added  the copy: Documents added to the copy
+Document commented : has treated this request
+Document invalid: Document invalid
+Document not commented : Untreated request
+Document n°%count%: Document \#%count%
+Document received : Document received
+Document type allowed: Allowed document types
+Document unreadable : Document unreadable
+Documents: Documents:
+Doubloon : Doubloon
+Drop by: Rendered by :
+Drop have been unlocked: The copy has been unlocked.
+drop provided: Copy dropped
+Dropzone progress: Progress of your evaluation
+dropzone_edit: Edit
+drop_info: Every added document is automatically saved. Anyway think of clicking on "Finish" at the bottom right once you have finished. If you don't do so your copy will be considered as not rendered.
+dropzone_startedNotValidatedYet_infos: These copies have to do with the people who have started dropping files but haven't ckicked on "Finish" to validate their copies. If you don't do anything
 
-# to sort
-formatDatetime: 'm/d/Y H:i'
-Resource: 'Resource'
-dropzone_edit: 'Edit'
-Common: 'Common'
-Peer review criteria: 'Peer review criteria'
-Participant: 'Participant'
-Common information: 'Commons informations'
-Instruction: 'Instructions'
-innova_collecticiel_common_form_instruction: 'Instruction'
-Document type allowed: 'Document type allowed'
-Allow workspace resource: 'Workspace resources'
-Allow upload: 'Uploaded files'
-Allow url: 'Web links'
-Allow rich text: 'Free text areas'
-Type of evaluation: 'Type of correction'
-Standard evaluation: 'Corrected by a teacher'
-Peer review evaluation: 'The learners will correct them (Peer Review)'
-Expected total correction: 'Correction number expected by copy'
-Allow drop in review: 'Allow deposit in peer review'
-Rating: 'Rating'
-Display notationd to learners: 'Display notation to learners'
-Display notation message to learners: 'Display a success or an error message.'
-Minimum score to pass: 'Minimum score to pass the evaluation (of 20)'
-Planning: 'Planning'
-manualPlanning: 'Manual'
-scheduleByDatePlanning: 'Schedule by date'
-notStartedManualState: 'The evaluation has not yet begun.'
-allowDropManualState: 'Learners can make their copy.'
-peerReviewManualState: 'Learners can correct copies (Peer Review).'
-allowDropAndPeerReviewManualState: 'Learners can make their copy AND can correct copies (Peer Review).'
-finishedManualState: 'The evaluation is completed. No one can attend.'
-Start allow drop: 'Start of deposit'
-End allow drop: 'End of deposit'
-End review: 'End of peer review'
-innova_collecticiel_criterion_form_instruction: 'Instruction'
-Create: 'Create'
-Cancel: 'Cancel'
-Save and continue: 'Save and continue'
-Return: 'Return'
-Allow comment in correction: 'Allow comment in correction'
-Total criteria column: 'Total column'
-Evaluation Criteria: 'Peer review evaluation criteria'
-Evaluation Criteria Innova: 'Evaluation criteria'
-Add a criterion: 'Add a criterion'
-Add a criterion Innova: 'Add a criterion'
-Delete: 'Delete'
-Edit a criterion: 'Edit a criterion'
-Delete a criterion: 'Delete a criterion'
-Choose at least one type of document: 'Choose at least one type of document'
-Choose at least one type of ranking: 'Choose at least one type of ranking'
-Must be before end allow drop: 'Must be before end allow drop'
-Must be after start allow drop: 'Must be after start allow drop'
-Must be before end peer review: 'Must be before end peer review'
-Must be after start peer review: 'Must be after start peer review'
-Must be before start peer review: 'Must be before start peer review'
-Must be after end allow drop: 'Must be after end allow drop'
-Choose a date: 'Choose a date'
-Evaluation not started: 'Evaluation not started'
-Start %date%: 'start %date%'
-From %startDate% to %endDate%: 'from %startDate% to %endDate%'
-Deposit phase: 'Deposit phase'
-Peer review phase: 'Peer review phase'
-Evaluation finished: 'Evaluation finished'
-nbDocumentsInThisEvaluation: 'one: You made a document for this evaluation:|some: You made %count% documents for this evaluation:'
-There are only nb days to get your copy: 'one: There are only one day to get your copy|some: There are only %count% days to get your copy'
-There are only nb hours to get your copy: 'one: There are only one hour to get your copy|some: There are only %count% hours to get your copy'
-There are only nb minutes to get your copy: 'one: There are only one minute to get your copy|some: There are only %count% minutes to get your copy'
-You have not yet made a copy: 'You have not yet made a copy'
-You have not made ​​a copy. It is too late to take part in this evaluation.: 'You have not made ​​a copy. It is too late to take part in this evaluation.'
-There are only nb days before the beginning of the peer review: 'one: There are only one day before the beginning of the peer review|some: There are only %count% days before the beginning of the peer review'
-There are only nb hours before the beginning of the peer review: 'one: There are only one hour before the beginning of the peer review|some: There are only %count% hours before the beginning of the peer review'
-There are only nb minutes before the beginning of the peer review: 'one: There are only one minute before the beginning of the peer review|some: There are only %count% minutes before the beginning of the peer review'
-There are only nb days before the end of the peer review: 'one: There are only one day before the end of the peer review|some: There are only %count% days before the end of the peer review'
-There are only nb hours before the end of the peer review: 'one: There are only one hour before the end of the peer review|some: There are only %count% hours before the end of the peer review'
-There are only nb minutes before the end of the peer review: 'one: There are only one minute before the end of the peer review|some: There are only %count% minutes before the end of the peer review'
-nb correction remains: 'one: You have one copy to correct to complete this evaluation.|some: You have %count% copies to correct to complete this evaluation.'
-Correct a copy: 'Correct a copy'
-Finished! You have realized the nb corrections expected. Patience your copy is being corrected.: 'one: Finished! You have realized the expected correction. Patience your copy is being corrected.|some: Finished! You have realized the %count% corrections expected. Patience your copy is being corrected.'
-Finished! Patience your copy is being corrected.: 'Finished ! Patience your copy is being corrected.'
-Add at least one document: 'Add at least one document'
-Save and finished: 'Save and finished'
-Your correction has been saved: 'Your correction has been saved'
-No document associated: 'No document associated'
-Unfortunately there is no copy to correct for the moment. Please try again later: 'Unfortunately there is no copy to correct for the moment. Please try again later'
-Relevant documents: 'Relevant documents'
-Correction: 'Correction'
-Instruction_: 'Instruction:'
-You ve already made ​​your copy for this review: 'You''ve already made ​​your copy for this review'
-You must have made ​​your copy before correcting: 'You must have made ​​your copy before correcting'
-The peer review is not enabled: 'The peer review is not enabled'
-You no longer have any copies to correct: 'You no longer have any copies to correct'
-Participants_: 'Participants:'
-Copies evaluated_: 'Copies evaluated:'
-Total copies_: 'Total copies:'
-List of copies: 'List of copies'
-List of corrections: 'List of corrections'
-Copies evaluation finished: 'Copies evaluation finished'
-Copies being evaluated: 'Copies being evaluated'
-Sort by user: 'Sort by user'
-Established on: 'Established on:'
-Last correction: 'Last correction:'
-Documents: 'Documents:'
-Grade: 'Grade:'
-Sort by date: 'Sort by date'
-Author: 'Author:'
-Awaiting: 'Awaiting'
-Corr.: 'Corr.'
-Delete a copy: 'Delete a copy'
-Drop by: 'Drop by:'
-This copy has been reported: 'This copy has been reported'
-Copy detail: 'Copy detail'
-Learner: 'Learner:'
-Number of validated corrections: 'Number of validated corrections:'
-Average validated corrections: 'Average validated corrections:'
-Add a correction: 'Add a correction'
-Invalidate all corrections: 'Invalidate all corrections'
-Not finished: 'Not finished'
-Started: 'Started:'
-Last open: 'Last open:'
-Finished: 'Finished:'
-Invalidate: 'Invalidate'
-Validate: 'Validate'
-Retail copy of %firstName% %lastName%: 'Retail copy of %firstName% %lastName%'
-Copy of %firstName% %lastName%: 'Copy of %firstName% %lastName%'
-Correction by %firstName% %lastName%: 'Correction by %firstName% %lastName%'
-Corrector: 'Corrector:'
-Grade attribuated: 'Grade attribuated:'
-Correcting a copy: 'Correcting a copy'
-Report: 'Report'
-Report copy and close correction: 'Report copy and close correction'
-You are about to report a copy. This action is not without consequence.: 'You are about to report a copy. This action is not without consequence.'
-This ends your correction and assigns zero to the copy. Are you sure you want to do this?: 'This ends your correction and assigns zero to the copy. Are you sure you want to do this?'
-Warning: 'Warning'
-Already reported: 'Already reported'
-Report comment: 'Explain the reason for your report'
-Your report has been saved: 'Your report has been saved'
-This correction has reported abuse: 'This correction has reported abuse'
-Remove report: 'Remove report'
-Reason of reporting: 'Reason of reporting'
-Edit evaluation: 'Edit evaluation'
-Start review: 'Start review'
-Planification instruction: 'The opening of the evaluation can be done manually or automatically.'
-Planification peer review instruction: 'It is divided into several stages: the opening of the evaluation by allowing deposition early peer review that the deposit and closing the end of the evaluation'
-Choose current phase: 'Choose current phase:'
-The evaluation has been successfully saved: 'The evaluation has been successfully saved'
-Save criterion: 'Save criterion'
-Are you sure you want to delete the %number%: 'Are you sure you want to delete the #%number%'
-There are no evaluation criterion: 'There are no evaluation criterion'
-noCopyExpectedCorrection: 'one: No copy has received correction.|some: No copy has received the %count% correction expected.'
-noCorrectionExeption: "No correction available."
-No copy was made: 'No copy was made'
-Evaluation finished: 'Evaluation finished'
-Keep this correction scored zero: 'Keep this correction scored zero'
-Invalidate this correction: 'Invalidate this correction'
-You are about to remove a report. What do you do: 'You are about to remove a report. What do you do?'
-created by a manager: 'created by a manager'
-Recalculate the score: 'Recalculate the score'
-Make my copy: 'Make my copy'
-resource: 'Workspace''s resource'
-file: 'Upload file'
-url: 'Web link'
-text: 'Free text area'
-resource_type: 'Workspace''s resource'
-file_type: 'Uploaded file'
-url_type: 'Web link'
-text_type: 'Free text area'
-Add a document: 'Add a document'
-url_placeholder: 'http://...'
-text_placeholder: 'Title of your document'
-Confirm and finished: 'Confirm and finished'
-You are about to make your copy. This action is final. Are you sure you have done: 'You are about to make your copy. This action is final. Are you sure you have done?'
-No document type allowed: 'No document''s type allowed'
-Add a %type% document: 'Add a %type% document'
-Delete a document: 'Delete a document'
-Are you sure to want to delete this document: 'Are you sure to want to delete this document ?'
-Add: 'Add'
-Confirm delete: 'Confirm delete'
-Copy n°%number%: 'Copy n°%number%'
-Hidden folder for '%dropzoneName%': 'Hidden folder for %dropzoneName%'
-Document n°%count%: 'Document n°%count%'
-Document invalid: 'Document invalid'
-Resource selected: 'Resource selected:'
-Change: 'Change'
-Previous: 'Previous'
-innova_collecticiel_form_name: 'Evaluation name'
-loading: 'loading...'
-Retry: 'Retry'
-Save: 'Save'
-Free text: 'Free text'
-You have an incomplete copy in progress: 'You have an incomplete copy in progress'
-Complete my copy: 'Complete my copy'
-Not at all: 'Not at all'
-Entirely: 'Entirely'
-Start evaluation: 'Start evaluation'
-Recall instructions: 'Recall instructions'
-Evaluation criteria: 'Evaluation criteria'
-Here is the list of documents which you must correct: 'Here is the list of documents which you must correct:'
-Note that you will assign depends on the following criteria: 'Note that you will assign depends on the following criteria:'
-Next: 'Next'
-Are you sure you have done?: 'Are you sure you have done?'
-You are about to make your correction. This action is final. The rating is %grade%/20: 'You are about to make your correction. This action is final. The rating is %grade%/20.'
-Select the types of documents that learners can make: 'Select the types of documents that learners can make:'
-Select how copies will be corrected: 'Select how copies will be corrected:'
-Must be an integer: 'Must be an integer'
-You have already begun a correction.: 'You have already begun a correction.'
-Complete my correction: 'Complete my correction'
-Your copy has been saved: 'Your copy has been saved'
-Comment: 'Comment'
-Would you like to comment?: 'Would you like to comment?'
-Total grade: 'totalGrade'
-Change scale: 'Change scale'
-common_explication: 'This tool provides a space for students to file documents to be evaluated.<br/>Corrections can be made by teachers, or by students themselves through peer review.<br/>Planning tool allows you to manage the various phases of the evaluation, either manually or automatically by date.'
-criteria_explication: 'Please create here an evaluation form to be completed by the editors.<br/>The number of criteria is not limited.<br/>You can offer a free comment checker.'
-expected_total_correction: 'Three conditions are necessary for a student to valid his evaluation:<br/>- He must have made ​​a copy.<br/>- It must be corrected N other (s) copy (s).<br/>- The copy must be received N correction (s).<br/><br/>A draw for a copy during a correction is made ​​randomly and anonymously.'
-See corrections: 'See corrections'
-See copy: 'See copy'
-Delete copy: 'Delete copy'
-Reported: 'Reported'
-Invalidated: 'Invalidated'
-Return to copies: 'Return to copies'
-Return to corrections: 'Return to corrections'
-See copies: 'See copies'
-Participate in an evaluation requires authentication. Please login.: 'Participate in an evaluation requires authentication. Please login.'
-Correct an evaluation requires authentication. Please login.: 'Correct an evaluation requires authentication. Please login.'
-Warning your peer review offers no criteria on which to base correct copies: 'Warning your peer review offers no criteria on which to base correct copies'
-Unrecognized type: 'Unrecognized type'
-reportComment: 'Report comment'
-No correction: 'No correction.'
-Diplay corrections to learners: 'Display corrections to learners'
-See Corrections: 'See Corrections'
-See correction: 'See correction'
-Details of your copy: 'Details of your copy'
-Correction number %num%: 'Correction n° %num%'
-Correction of your copy: 'Correction of your copy'
-Note assigned depends on the following criteria: 'Note assigned depends on the following criteria:'
-Back to corrections: 'Back to corrections'
-Here is the list of the corrected documents: 'Here is the list of the corrected documents :'
-Deny correction: 'Deny correction'
-Correction denied: 'Correction denied'
-Allow correction deny: 'Allow learners  to warn about a correction they aren''t agree with'
-You are about to report a correction. This action is not without consequence.: 'You are about to report a correction. This action is not without consequence.'
-Are you sure you want to do this?: 'Are you sure you want to do this?'
-Confirm the correction report: 'Confirm the correction report'
-This copy contain a denied correction: 'This copy contain a denied correction'
-notStarted: ' Not started'
-allowDrop:  ' allow drop'
-allowDropAndPeerReview: 'allow drop and peer review'
-peerReview: ' peer Review'
-finished :  ' finished'
-user : ' user'
-tools: 'tools'
-fully corrected copies: 'Fully corrected copies'
-Awaiting for correction copies: 'Awaiting for correction copies'
-revalidate: 'revalidate'
-Need to be the author: 'Need to be the author'
-sort by reported: 'Reported'
-default sort: 'Default sort'
-no reported copies: 'No reported copies'
-Examiners : 'Examiners'
-Empty field warning: 'Warn, some field are not empty, they will not be saved until you click the "Add" button. Only the document in the top list will be in your copy.'
-Documents added  the copy: 'Documents added to the copy'
-no document added yet: 'no document added yet'
-Instructions for examiners: 'Instructions for examiners'
-Examiners Instructions: 'Examiners Instructions'
-successMessage: 'success message '
-failMessage: 'failure message'
-Evaluation not started: 'Evaluation not started'
-awaiting for drop: 'awaiting for drop'
-drop provided: 'drop provided'
-correction n°%nb_correction%/%expected_correction%: 'correction n°%nb_correction%/%expected_correction% done'
-waiting for correction: 'waiting for correction'
-corrected copy: 'corrected copy'
-Dropzone progress: 'Dropzone progress'
-Choose a resource: 'Choose a resource'
-Auto close opened drops when time is up: 'Close automaticaly unvalidated drops when the drop time is up.'
-People will not be able to drop anymore: 'Closing the groupware'
-Do you want to valid all drop started but not validated yet ?: 'Do you want to valid all drop started but not validated yet ?'
-yes: 'yes'
-no: 'no'
-People that have a copy in this dropzone: 'People that have a copy in this dropzone'
-List of examiners: 'List of examiners'
-Started Corrections: 'Started Corrections'
-Complete Corrections: 'Complete Corrections'
-number of Report: 'number of Report'
-was reported: 'was reported'
-You will reactivate a correction but the expected number of correction is already reached. Are you sure ?: 'You will reactivate a correction, but the expected number of correction is already reached. Are you sure ?'
-recalculate_helper: 'Usefull if you have deleted some criterias whereas people have already started to correct. This will adapt the note. If you added new Criteria, the note of this criteria will be 0. '
-corrections were already created: "one: A correction was already  created.|some:%count% corrections were already created."
-Modify add or delete criteria will affect this corrections if you recalculate the note on it.: "Update, add or delete criteria will affect this corrections if you recalculate their  given note "
-Evaluation criterions: 'Evaluation criterions'
-corrections_denied: 'Correction examiner have made that were reported'
-number_of_denied_corrections: 'Number of copy that the examiner have  reported'
-corrections by user: 'corrections by user'
-copy author's: 'copy author'
-Examiner: 'Examiner'
-List of corrections made by %user%: 'List of corrections made by %user%'
-You are about to delete a correction. This action is not without consequence.: 'You are about to delete a correction. This action is not without consequence. '
-Confirm the correction delete: 'Confirm the correction delete'
-See my copy: 'See my copy'
-Notify on drop: "Notify the evaluation administrators' when someone make a drop."
-Notifications: "Notifications"
-Unlock copy: 'Unlock copy'
-You need at least one correction on the copy to unlock it: 'You need at least one correction on the copy to unlock it'
-Allow student to see his copy whereas the copy didn't received the expected number of correction.: "Allow student to see his copy whereas the copy didn't received the expected number of correction."
-Drop have been unlocked: 'Drop have been unlocked'
-This copy has been unlocked by admin.(it did not received the expected number of correction): "This copy has been unlocked by admin.(it did not received the expected number of correction)."
-No copy waiting for correction: 'No copy waiting for correction'
-unterminated drops: 'unterminated drops'
-Notify on drop: 'Notify administrators when someone made a drop'
-Notifications: "Notifications"
-unterminated drops: 'Document(s) not completed'
-Notify on drop: 'Notify administrators when a document is filed'
-drop_info: "Documents are automaticaly saved, but don't forget to click on the 'finish' button when you have no more thing to add, if you don't, your copy will be like undelivered."
-dropzone_startedNotValidatedYet_infos: "Started but not validated drops are drop where people started to depose some files to the evaluation but had nevers clicked on the 'finished' button. If you do nothing, they will be considered as not deposited."
-Close unterminated drops: "Close unterminated drops"
-Sorted by date with reported drops first: "Sorted by date with reported drops first"
-only reported drops: "only reported drops"
-The drop was deleted by administator: "The drop was deleted by administator"
-Deleted drop: "Deleted drop"
-Recalculate all grade: "Recalculate all grade"
-Grades were recalculated: "Grades were recalculated"
-Just save: "Save and don't recalculate"
-Save and recalculate all grade: "Save and recalculate all grade"
-You will be abble to do it later if you want: "You will be abble to do it later if you want"
-copy: "copy"
-Report reason: "Report reason"
-Reported copy : "Reported copy"
-Your modifications will only affect new corrections. For older, do you want to apply modification and recalculate grades: "Your modifications will only affect new corrections. For older, do you want to apply modification and recalculate grades ?"
-Validate copies: "Validate copies"
-Do nothing: "Do nothing for this copies"
-Help on peerReview mode: "Help on peerReview mode"
-PeerReview_helper_ideal_case: "In PeerReview mode, people will correct themselves without any help coming from the administrator only in a specific case where  the poeple number is equal to the number of required correction +1 or a multiple of this number."
-PeerReview_helper_ideal_case_example: "Example: if we have 2 expected corrections, the evaluation will be totally autonomous only in the specific case where we will have a number of participant equal to a multiple of 3. ( E1 correct E2 and E3, E2 correct E1 and E3, E3 correct E2 and E1)."
-PeerReview_helper_other_cases: "In the other cases, the evaluation administrator will have to add some correction in order to finish the process."
-PeerReview_helper_unlock_tool: "Note: an unlock tool is available in order to avoid the admin to have to add many correction if a copy need more than one correction. This tool is only available if the dropzone is in peerReview mode and the evaluation status is set to closed."
-Made by: "Made by"
-Force comment in correction: "Force comment in correction"
-Please comment: "Please comment"
-This field is required.: "This field is required."
-The comment field is required please let a comment: "The comment field is required, please let a comment"
-Criteria: "Criteria"
-Evaluation %dropzonename% opening: "Evaluation %dropzonename% opening"
-Deposit phase of the %dropzonename% evaluation: "Deposit phase of the %dropzonename% evaluation"
-Peer Review is starting in %dropzonename% evaluation: "Peer Review is starting in %dropzonename% Evaluation"
-unlocked user: "unlocked user"
-unlock user: "unlock user"
-unlock_user_tooltip: "An unlocked user will be able to see his copy without doing the expected correction"
-unlock_all: "unlock all"
-cancel_unlock: "cancel unlock for all"
-Start evaluation: 'Démarrer le collecticiel'
-Complete collecticiel: 'Compléter le collecticiel'
-Type of document: 'Type of document'
-Name of document: 'Document'
-Validated document: 'To be validated'
-See personal view: 'See personal view'
-Study: 'Study'
-No read comments: 'No read comments'
-To be corrected documents: 'To be corrected documents'
-See document: 'See document'
-To See: 'See'
-Comments list: 'List of comments'
-Comments add: 'Add comment'
-Comment validation: 'Validate this comment'
-Instruction Innova: 'Instructions'
-Edit evaluation admin: 'Collecticiel - Teacher view'
-Edit evaluation user: 'Collecticiel - Learner view'
-Add comment: 'Add a comment'
-Parameters : 'Parameters'
-Commented document: 'Document to comment'
-Commented document modal: 'Communication of an application comment'
-Evaluation document modal: 'Communication of the evaluation to students'
-Closed collecticiel: 'This groupware is not yet opened'
-Sure to ask comment for document: 'Will you transmit the evaluation ?'
-Sure to ask evaluation for document: 'Do you want to transmit the evaluation ? This action is irreversible and you can not change the evaluation.'
-Date hour: 'Date - Hour'
-Comment: 'Comment'
-See collecticiel: 'See collecticiel'
-Request sent: 'Request sent'
-First name: 'First name'
-Name: 'Name'
-Nickname: 'Nickname'
-Dated: 'Document dropped on date'
-Document: 'Document'
-Comments on: 'Comment - Assessment on'
-Condition: 'Condition'
-Comment evaluation: 'Comment'
-Requests: 'Requests'
-Shared spaces: 'Shared spaces'
-OK: 'OK'
-Are you sure to want to close this collecticiel: 'Do you want to close this groupware ?'
-The collecticiel has been successfully saved: 'The collecticiel has been successfully saved'
-Shared list: 'Shared collecticiel list'
-Spaces collecticiel: 'Spaces collecticiel'
-Submissions: 'Submissions'
-Addressed requests: 'Addressed requests'
-To display: 'To display'
-To drop: 'To comment'
-NotAllowToAddAnyDocument: 'This groupware is not yet opened'
-Title: 'Title :'
-Publication Title: 'Publication'
-Published: 'Published'
-Closed: 'Closed'
-Open: 'Open'
-returnReceipt: 'Return receipt'
-Evaluation: 'Evaluation'
-Comment Auto: 'Automatic comment'
-Selection: 'All (un)select'
-No return recept : 'No return recept'
-Document received : 'Document received'
-Document unreadable : 'Document unreadable'
-Incomplete document : 'Incomplete document'
-Error document : 'Error document'
-Doubloon : 'Doubloon'
-Transmitted evaluation : 'Transmitted evaluation'
-To add a return receipt : 'To add a return receipt'
-Deal Pending : 'deal pending'
-Deals Pending : 'deals pending'
-No action allowed : 'No action allowed'
-Display: 'Display'
-Picture: 'Picture'
-Username: 'Pseudo'
-Evaluation transmission: 'Evaluation transmission'
-Comment transmission: 'Comment transmission'
-Evaluation submit student: 'Evaluation submit'
-Comment submit student: 'Comment submit'
-See comments : 'See comments'
-Action : 'Actions'
-Document not commented : 'Untreated request'
-Document commented : 'has treated this request'
-Request for comment: 'Send a request for comment'
-Request comment: 'Request for comment'
-Cancel request for comment: 'Cancel request for comment'
-Do you want to cancel your request for comment : 'Do you want to cancel this request for comment ?'
-Cancel request for review: 'Cancel request for review'
-Do you want to cancel your request for review : 'Do you want to cancel this request for review ?'
-Please complete this field : 'Please complete this field'
-This field is required : 'The field ''Text'' is required'
-Please complete text : 'Please complete the field ''Text'' '
-Return receipt choice : 'Return receipt choice'
-My collecticiel : 'My collecticiel'
-Evaluation for documents : 'The documents on this groupware will be evaluated ?'
-Evaluation type : 'Evaluation type'
-noEvaluation : 'No evaluation'
-notation : 'Notation'
-ratingScale : 'Rating scale'
-Maximum notation : 'Maximum (notation) :'
-Criterion information : 'Information accompanying the notation'
-Add a new: 'Information/criterion'
-Criteria number: 'The number of criteria is not limited.'
-Rating Scale appreciation: 'Manage this evaluation'
-Evaluation Appreciation : 'Evaluation'
-Notation appreciation: 'Handle the notation'
-Info ratingScale : 'Information accompanying the appreciation'
-Very good : 'Very good'
-Good : 'Good'
-Insufficient : 'Insufficient'
-Add grading scale : '+ Grading scale'
-Notation validation: 'Send'
-Global comment: 'Global comment:'
-Quality argument : 'Quality argument'
-To record : 'To record'
-To transmit : 'To transmit'
-To post a review : 'To post a review'
-Review on : 'Review on'
-Type: 'Type'
-Notation Max : '(/ '
-Transmitted review : 'Transmitted review'
-Not Transmitted review : 'No Transmitted review'
-No review : 'No review'
-Sure to transmit evaluation for document: 'Sure to transmit evaluation for document ?'
-Assessor : 'Assessor :'
-Review : 'Review'
-Review state : 'Review state'
-To see a review : 'To see a review'
-Cancel request : 'Cancel request'
-To modify a review : 'Modify or display the review'
-Appreciation : 'Appreciation'
+# E
+
+Edit a criterion: Edit a criterion
+Edit evaluation: Edit the evaluation
+Edit evaluation admin: Collecticiel - Teacher view
+Edit evaluation user: Collecticiel - Learner view
+Empty field warning: Warning: Some fields aren't empty. They will only be integrated into the copy once you've clicked onn "Add". Only the documents listed above will be part of the copy.
+End allow drop: End of dropping period
+End review: End of peer review
+Entirely: Entirely
+Error document : Error document
+Established on: Copy rendered on :
+Evaluation: Evaluation
+Evaluation Appreciation : Evaluation
+Evaluation Criteria: Criteria for peer review
+Evaluation criteria: Evaluation criteria
+Evaluation Criteria Innova: Evaluation criteria
+Evaluation criterions: Evaluation criteria
+Evaluation document modal: Communication of the evaluation to students
+Evaluation finished: The evaluation is finished
+Evaluation for documents : The documents on this groupware will be evaluated.
+Evaluation not started: The evaluation has not started yet.
+Evaluation submit student: Evaluation submit
+Evaluation transmission: Evaluation transmission
+Evaluation type : Evaluation type
+Evaluation %dropzonename% opening: Evaluation dropping phase of %dropzonename%
+Examiner: Examiner
+Examiners : Examiners
+Examiners Instructions: Instructions for the examiners
+Expected total correction: Expected number of corrections for each copy.
+expected_total_correction: The learner must meet three conditions to validate his evaluation:<br/>- He must have rendered his copy.<br/>- He must have corrected N other copy/copies.<br/>- His copy must have been corrected N time(s).<br/><br/>The draw of a copy to be corrected is made anonymously and on a random basis.
+
+# F
+
+failMessage: Message in case of failure
+finished :   finished
+file: Upload a file.
+file_type: Uploaded file
+finished : The evaluation finished
+Finished! Patience your copy is being corrected.: Finished ! Patience your copy is being corrected.
+Finished! You have realized the nb corrections expected. Patience your copy is being corrected.: one: Finished! Patience: your copy is being corrected.|some: Finised! You have corrected the expected %count% copies. Patience: your copy is being corrected.
+finishedManualState: The evaluation is finished. Nobody can take part in it anymore.
+First name: First name
+Force comment in correction: Make the comment compulsory.
+formatDatetime: m/d/Y H:i
+Free text: Free text
+From %startDate% to %endDate%: from %startDate% to %endDate%
+fully corrected copies: Finished copies with complete evaluation
+
+# G
+
+Global comment: Global comment:
+Good : Good
+Grade: Score :
+Grade attribuated: Awarded score :
+Grades were recalculated: The scores have been recalculated.
+
+# H
+
+Help on peerReview mode: Help on peer review mode.
+Here is the list of documents which you must correct: This is the list of the documents you have to correct. Your rating depends on the following criteria :
+Here is the list of the corrected documents: This is the list of the corrected documents :
+Hidden folder for "%dropzoneName%": Hidden folder for "%dropzoneName%"
+
+# I
+
+Incomplete document : Incomplete document
+Info ratingScale : Information accompanying the appreciation
+innova_collecticiel_common_form_instruction: Instruction
+innova_collecticiel_criterion_form_instruction: Instruction
+innova_collecticiel_form_name: Evaluation name
+Instruction: Instructions
+Instruction Innova: Instructions
+Instruction_: Instruction:
+Instructions for examiners: Specific instructions for the examiners
+Insufficient : Insufficient
+Invalidate: Invalidate
+Invalidate all corrections: Invalidate all the corrections.
+Invalidate this correction: Invalidate this correction.
+Invalidated: Invalidated
+
+# J
+
+Just save: Save without recalculating.
+
+# K
+
+Keep this correction scored zero: Keep a "zero" for this copy.
+
+# L
+
+Last correction: Last correction on :
+Last open: Last opened on :
+Learner: Learner :
+List of copies: List of copies
+List of corrections made by %user%: List of the corrections made by %user%
+List of corrections: List of corrections for this copy
+List of examiners: List of examiners
+loading: Loading...
+
+# M
+
+Made by: Rendered by
+Make my copy: Render my copy.
+manualPlanning: Manually
+Minimum score to pass: Minimum score to succeed (out of 20).
+Modify add or delete criteria will affect this corrections if you recalculate the note on it.: Modifying
+Must be after end allow drop: Has to take place after the end of the dropping period
+Must be after start allow drop: Has to take place after the beginning of the dropping period
+Must be after start peer review: Has to take place after the beginning of the peer review
+Must be an integer: Must be an integer
+Must be before end allow drop: Has to take place before the end of the dropping period
+Must be before end peer review: Has to take place before the end of the peer review
+Must be before start peer review: Has to take place before the beginning of the peer review
+My collecticiel : My collecticiel
+
+# N
+
+Name: Name
+Name of document: Document
+nb correction remains: one: You have one remaining copy to correct to finish this evaluation. |some: You have %count% remaining copies to correct to finish this evaluation.
+nbDocumentsInThisEvaluation: one: You have rendered one document for this evaluation. |some: You have rendered %count% documents for this evaluation.
+Need to be the author: You must be the author of the correction to perform this action
+Next: Next
+Nickname: Nickname
+no: No
+No action allowed : No action allowed
+No copy waiting for correction: No copy waiting for correction.
+No copy was made: No copy has been rendered
+No correction: No correction.
+no document added yet: No document added yet
+No document associated: No associated document...
+No document type allowed: No document type allowed
+No read comments: No read comments
+no reported copies: No reported copy
+No return recept : No return recept
+No review : No review
+Not at all: Not at all
+notStarted:  Not started
+Note that you will assign depends on the following criteria: Note that you will assign depends on the following criteria:
+noCopyExpectedCorrection: one: No copy has been evaluated.|some: No copy has met the %count% expected corrections.
+noCorrectionExeption: No avalaible correction
+noEvaluation : No evaluation
+Not finished: Not finished
+Not Transmitted review : No Transmitted review
+notation : Notation
+Notation appreciation: Handle the notation
+Notation Max : (/
+Notation validation: Send
+Note assigned depends on the following criteria: The rating depends on the following criteria :
+Notifications: Notifications
+Notify on drop: Nofify the evaluation managers when someone drops a copy.
+NotAllowToAddAnyDocument: This groupware is not yet opened
+notStartedManualState: The evaluation has not begun yet.
+number of Report: Amount of reports
+Number of validated corrections: Number of validated corrections :
+number_of_denied_corrections: Amount of copies reported by the examiner.
+
+# O
+
+OK: OK
+only reported drops: Only the reported copies
+Open: Open
+
+# P
+
+Parameters : Settings
+Participant: Participant
+Participants_: Participants:
+Participate in an evaluation requires authentication. Please login.: Taking part in an evaluation requires an authentication. Please log in.
+Peer review criteria: Criteria for peer review
+Peer review evaluation: Learners correct each others. (Peer review)
+Peer Review is starting in %dropzonename% evaluation: Peer review phase of %dropzonename%
+People that have a copy in this dropzone: People that have a copy in this dropzone
+People will not be able to drop anymore: Closing the groupware
+peerReview:  peer Review
+PeerReview_helper_ideal_case_example: Example : If two corrections are expected
+PeerReview_helper_ideal_case: In the peer review
+PeerReview_helper_other_cases: In the other cases
+PeerReview_helper_unlock_tool: Remark: A tool allows the manager to "unlock" a copy if it has been corrected at least once. He may correct it himself. It allows the administrator to avoid to create all the expected corrections (e.g. 3)  if there are no corrections for a copy. This tool is only available when the evaluation is in the "finished" phase.
+Picture: Picture
+Planification instruction: The opening of the evaluation can be made manually or automatically by dates.
+Planification peer review instruction: It's divided into several steps: the opening of the evaluation by allowing to drop copies
+Planning: Planning
+Please comment: Please leave a comment.
+Please complete text : Please complete the field Text
+Please complete this field : Please complete this field
+Peer review phase: Peer review phase
+peerReviewManualState: The learners can correct the copies. (Peer review).
+Previous: Previous
+Publication Title: Publication
+Published: Published
+
+# Q
+
+Quality argument : Quality argument
+
+# R
+
+Rating: Score
+Rating Scale appreciation: Manage this evaluation
+ratingScale : Rating scale
+Reason of reporting: Reason of reporting
+Recall instructions: Reminder of the instructions
+Recalculate all grade: Recalculate all the scores
+Recalculate the score: Recalculate the score
+recalculate_helper: This is useful if you have deleted correction criteria whereas people have already started correcting. It will adapt the scores. If you have added new criteria, the scores for them will be 0 by default.
+Relevant documents: Relevant documents
+Remove report: Remove the report
+Report: Report
+Report comment: Explain why you report this copy.
+Report copy and close correction: Report the copy and close the correction:
+Report reason: Reason
+reportComment: Comment of the report
+Reported: Has reported
+Reported copy : The copy has been reported.
+Request comment: Request for comment
+Request for comment: Send a request for comment
+Request sent: Request sent
+Requests: Requests
+resource_type: Resource of a workspace
+Resource selected: Resource selected:
+resource_type: Workspaces resource
+Retail copy of %firstName% %lastName%: Details of the copy of %firstName% %lastName%
+Retry: Retry
+Return: Return
+Return to copies: Back to copies
+Return to corrections: Back to corrections
+Return receipt choice : Return receipt choice
+returnReceipt: Return receipt
+revalidate: revalidate
+Review : Review
+Review on : Review on
+Review state : Review state
+
+# S
+
+Save: Save
+Save and continue: Save and continue
+Save and finished: Save and finish
+Save and recalculate all grade: Save and recalculate the scores
+Save criterion: Save the criterion
+scheduleByDatePlanning: By dates
+See collecticiel: See collecticiel
+See comments : See comments
+See copies: Access the copies
+See copy: See the copy
+See correction: See the correction
+See corrections: See the corrections
+See Corrections: See the corrections
+See document: See document
+See my copy: See my copy
+See personal view: See personal view
+Shared spaces: Shared spaces
+Shared list: Shared collecticiel list
+Select how copies will be corrected: Select the way the copies will be corrected :
+Select the types of documents that learners can make: Select the types of documents the learners will be allowed to render :
+Selection: All (un)select
+Sort by date: Sort by date
+Sort by user: Sort by user
+sort by reported: Reported
+Sorted by date with reported drops first: Sort by date with reported copies first.
+Spaces collecticiel: Groupware spaces
+Standard evaluation: Teachers correct the copies.
+Start %date%: starts on %date%
+Start allow drop: Beginning of dropping period
+Start evaluation: Start the evaluation
+Start review: Start of peer review
+Started: Started on :
+Started Corrections: Corrections started
+Study: Study
+successMessage: Message in case of success
+Submissions: Submissions
+Sure to ask comment for document: Do you want to transmit the evaluation ?
+Sure to ask evaluation for document: Do you want to transmit the evaluation ? This action is irreversible and you can not change the evaluation.
+Sure to transmit evaluation for document: Are you sure you want to transmit an evaluation for this document ?
+
+# T
+
+text: Rich text box
+text_placeholder: Title of your document
+text_type: Free text area
+The collecticiel has been successfully saved: The collecticiel has been successfully saved
+The comment field is required please let a comment: The comment field is required. Please leave a comment.
+The evaluation has been successfully saved: The evaluation has been sucessfully saved.
+he drop was deleted by administator: The copy has been removed by a manager.
+The peer review is not enabled: The peer review is not enabled.
+There are no evaluation criterion: There are no evaluation criteria.
+There are only nb days before the beginning of the peer review: one: Only one day left before the beginning of the peer review.|some: Only %count% days left before the beginning of the peer review.
+There are only nb days before the end of the peer review: one: Only one day left before the end of the peer review.|some: Only %count% days left before the end of the peer review.
+There are only nb days to get your copy: one: Only one day left to render your copy. |some: Only %count% days left to render your copy.	 but the expected number of corrections is already reached. Are you sure you want to do this ?
+There are only nb hours before the beginning of the peer review: one: Only one hour left before the beginning of the peer review.|some: Only %count% hours left before the beginning of the peer review.	 the scores for them will be 0 by default.
+There are only nb hours before the end of the peer review: one: Only one hour left end the beginning of the peer review.|some: Only %count% hours left end the beginning of the peer review.
+There are only nb hours to get your copy: one: Only one hour left to render your copy. |some: Only %count% hours left to render your copy.	 adding or deleting criteria will only affect new corrections. To update the older ones	 you have to recalculate their scores.
+There are only nb minutes before the beginning of the peer review: one: Only one minute left before the beginning of the peer review.|some: Only %count% minutes left before the beginning of the peer review.
+There are only nb minutes before the end of the peer review: one: Only one minute left before the end of the peer review.|some: Only %count% minutes left before the end of the peer review.
+There are only nb minutes to get your copy: one: Only one minute left to render your copy. |some: Only %count% minutes left to render your copy.
+This copy contain a denied correction: This copy contains a denied correction.
+This copy has been reported: This copy has been reported.
+This copy has been unlocked by admin.(it did not received the expected number of correction): This copy has been unlocked by a manager. (It hasn't received the expected number of corrections.)
+This correction has reported abuse: This correction has reported abuse.
+This ends your correction and assigns zero to the copy. Are you sure you want to do this?: This puts an end to your correction with a score of "zero". Are you sure you want to do this ?
+This field is required.: This field is required.
+Title: Title :
+To add a return receipt : To add a return receipt
+To be corrected documents: To be corrected documents
+To display: To display
+To drop: To comment
+To modify a review : Modify or display the review
+To post a review : To post a review
+To record : To record
+To See: See
+To see a review : To see a review
+To transmit : To transmit
+tools: Tools
+Total copies_: Total amount of copies :
+Total criteria column: Number of columns
+Total grade: Global score
+Transmitted evaluation : Transmitted evaluation
+Transmitted review : Transmitted review
+Type of document: Type of document
+Type of evaluation: Evaluation type
+Type: Type
+
+# U
+
+Unfortunately there is no copy to correct for the moment. Please try again later: Unfortunately there is no copy to correct for the moment. Please try again later
+Unlock copy: Unlock the copy
+unlock user: unlock
+unlock_all: unlock all
+unlock_user_tooltip: Unlocking a user will allow him to see his copy without having to make the required corrections.
+unlocked user: unlocked user
+Unrecognized type: Unrecognized type
+unterminated drops: unfinished copie(s)
+url_placeholder: http://...
+url_type: Weblink
+url: Web link
+user : User
+Username: Pseudo
+
+# V
+
+Validate: Validate
+Validate copies: Validate the copies
+Validated document: To be validated
+Very good : Very good
+
+# W
+
+waiting for correction: Waiting for corrections
+Warning your peer review offers no criteria on which to base correct copies: Warning: Your peer review has to propose criteria to correct the copies.
+Warning: Warning
+was reported: Has been reported
+Would you like to comment?: Would you like to add a comment ?
+
+# Y
+
+yes: Yes
+You are about to delete a correction. This action is not without consequence.: You are about to delete a correction. This action is not without consequence.
+You are about to make your copy. This action is final. Are you sure you have done: You are about to render your copy. This action is definitive. Are you sure you have finished ?
+You are about to make your correction. This action is final. The rating is %grade%/20: You are about to make your correction. This action is final. The rating is %grade%/20.
+You are about to remove a report. What do you do: You are about to remove a report. What do you want to do ?
+You are about to report a copy. This action is not without consequence.: You are about to report a copy. This action is not without consequences.
+You are about to report a correction. This action is not without consequence.: You are about to report a correction. This action is not without consequences.
+You have already begun a correction.: You have already started a correction.
+You have an incomplete copy in progress: You have an incomplete copy in progress.
+You have not made ​​a copy. It is too late to take part in this evaluation.: You haven't rendered any copy. It's too late to take part in this evaluation.
+You have not yet made a copy: You haven't rendered any copy yet.
+Your copy has been saved: Your copy has been saved.
+You've already made ​​your copy for this review: You have already rendered your copy for this evaluation.
+You must have made ​​your copy before correcting: You must have made ​​your copy before correcting
+You need at least one correction on the copy to unlock it: You need at least one correction of the copy to be allowed to unlock it.
+You no longer have any copies to correct: You have no remaining copies to correct.
+You will be abble to do it later if you want: Remark: You will be able to do it later if you want
+You will reactivate a correction but the expected number of correction is already reached. Are you sure ?: You are about to reactivate a correction, but the expected number of corrections is already reached. Are you sure you want to do this ?
+Your correction has been saved: Your correction has been saved.
+Your modifications will only affect new corrections. For older, do you want to apply modification and recalculate grades: Your modifications will only affect new corrections. Do you want to apply the changes and recalculate the grades for older corrections?
+Your report has been saved: Your report has been saved.

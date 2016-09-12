@@ -10,12 +10,12 @@ delete_tag: Delete Tag
 no_tag: No tag
 number_of_tags: Number of Tags
 remove_tag: Remove Tag
-remove_tag_from_object_message: Are you sure you want to remove this Tag from this object ?
+remove_tag_from_object_message: Are you sure you want to remove this tag from this object ?
 tag_action: Tag
 tag_deletion: Tag deletion
-tag_deletion_message: Are you sure you want to delete this Tag ?
+tag_deletion_message: Are you sure you want to delete this tag ?
 tag_group: Tag the group
 tag_resource: Tag the resource
-tag_resource_help: Enter your comma separated tags here. Tags allow you to quickly search for resources through the search engine.
+tag_resource_help: Enter your tags here (use commas to separate them). Tags allow you to quickly look for resources with the search engine.
 tag_user: Tag the user
 tag_workspace: Tag the workspace

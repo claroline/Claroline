@@ -11,21 +11,21 @@ condition_access: Condition d'accès à l'étape
 condition_and: ET
 condition_condition_delete: Supprimer
 condition_criterion_add : Ajouter un critère
-condition_criteria_group_add : Ajouter un groupe de critère
+condition_criteria_group_add : Ajouter un groupe de critères
 condition_criteria_group_delete : Supprimer
 condition_criteria_group_no_criterion: Il n'y a aucun critère.
 condition_criterion_choice: Votre choix
 condition_criterion_delete: Supprimer le critère
-condition_criterion_test_repetition: L'activité doit être tenté <b>%activityRep%</b> fois, actuellement vous l'avez tenté <b>%userRep%</b> fois
-condition_criterion_test_status: Le statut de l'activité doit être <b>%activityStatus%</b>, actuellement il est <b>%userStatus%</b>
-condition_criterion_test_usergroup : Vous devez appartenir au groupe <b>%activityGroup%</b>, actuellement vous appartenez au(x) groupe(s) <b>%userGroup%</b>
-condition_criterion_test_usergroup_nogroup : Vous devez appartenir au groupe <b>%activityGroup%</b>, actuellement vous n'appartenez à <b>aucun groupe</b>
-condition_criterion_test_userteam : Vous devez appartenir à l'équipe <b>%activityTeam%</b>, actuellement vous appartenez à l'équipe <b>%userTeam%</b>
-condition_criterion_test_userteam_noteam : Vous devez appartenir à l'équipe <b>%activityTeam%</b>, actuellement vous n'appartenez à <b>aucune équipe</b>
+condition_criterion_test_repetition: L'activité doit être tentée <b>%activityRep%</b> fois. Actuellement vous l'avez tentée <b>%userRep%</b> fois.
+condition_criterion_test_status: Le statut de l'activité doit être <b>%activityStatus%</b>. Actuellement il est <b>%userStatus%</b>.
+condition_criterion_test_usergroup : Vous devez appartenir au groupe <b>%activityGroup%</b>. Actuellement vous appartenez au(x) groupe(s) <b>%userGroup%</b>.
+condition_criterion_test_usergroup_nogroup : Vous devez appartenir au groupe <b>%activityGroup%</b>. Actuellement vous n'appartenez à <b>aucun groupe</b>.
+condition_criterion_test_userteam : Vous devez appartenir à l'équipe <b>%activityTeam%</b>. Actuellement vous appartenez à l'équipe <b>%userTeam%</b>.
+condition_criterion_test_userteam_noteam : Vous devez appartenir à l'équipe <b>%activityTeam%</b>. Actuellement vous n'appartenez à <b>aucune équipe</b>.
 condition_criterion_type_activityrepetition: Répétition de l'activité
-condition_criterion_type_activitystatus: Status de l'activité
-condition_criterion_type_usergroup: Groupe d'utilisateur
-condition_criterion_type_userteam: Equipe d'utilisateur
+condition_criterion_type_activitystatus: Statut de l'activité
+condition_criterion_type_usergroup: Groupe de l'utilisateur
+condition_criterion_type_userteam: Équipe de l'utilisateur
 condition_criterion_type: Type de critère
 condition_criterion_activityrepetition: Nombre de fois où l'activité doit être réalisée
 condition_criterion_activitystatus: Etat de l'activité
@@ -37,10 +37,10 @@ condition_delete: Supprimer
 condition_init_conditionstructure: Créer une condition d'accès pour l'étape
 condition_no_conditionstructure: Aucune condition n'est définie pour l'étape
 condition_or: OU
-condition_step_no_activity: Attention, vous n'avez pas associé d'activité à cette étape
-condition_step_activity_notmanageable : Pour cette étape, vous avez choisi un type d'évaluation manuel. Les critères disponibles se limitent dans ce cas aux utilisateurs (groupe ou équipe)
-criteriagroup_delete_title: Suppression du groupe de critère
-criteriagroup_delete_confirm: Souhaitez-vous vraiment supprimer ce groupe de critères ? Cela supprimera tous les critères de ce groupe et les groupes de critères enfants
+condition_step_no_activity: Attention, vous n'avez pas associé d'activité à cette étape.
+condition_step_activity_notmanageable : Pour cette étape, vous avez choisi un type d'évaluation manuel. Les critères disponibles se limitent dans ce cas aux utilisateurs (groupe ou équipe).
+criteriagroup_delete_title: Suppression du groupe de critères
+criteriagroup_delete_confirm: Souhaitez-vous vraiment supprimer ce groupe de critères ? Cela supprimera tous les critères de ce groupe et les groupes de critères enfants.
 criteriagroup_delete: Supprimer
 criterion_delete_title: Suppression du critère
 criterion_delete_confirm: Souhaitez-vous vraiment supprimer ce critère ?
@@ -56,10 +56,10 @@ draft: Non publié
 
 # e
 edit: Modifier
-editor: Editeur de Parcours
+editor: Editeur de parcours
 
 # h
-hide_path_info: Masquer les informations relatives au Parcours
+hide_path_info: Masquer les informations relatives au parcours
 
 # m
 modified: avec des modifications en attente
@@ -67,12 +67,12 @@ my_progression: Ma progression :
 
 # n
 name_help: Saisir le nom du parcours
-next_step: Etape suivante
+next_step: Étape suivante
 next_steps: Voir les étapes suivantes
 no: Non
 no_primary_resource: Il n'y a aucune ressource principale sur cette étape.
-no_secondary_resources: Il n'y a aucune ressources complémentaires sur cette étape.
-no_step_selected: Il n'y a aucune étape sélectionnée. Veuillez en sélectionner une dans le sommaire du Parcours.
+no_secondary_resources: Il n'y a aucune ressource complémentaire sur cette étape.
+no_step_selected: Il n'y a aucune étape sélectionnée. Veuillez en sélectionner une dans le sommaire du parcours.
 no_templates: Il n'y a aucun modèle disponible.
 
 # o
@@ -83,13 +83,13 @@ open_templates: Ouvrir les modèles
 path_breadcrumbs: Afficher le fil d'Ariane ?
 path_dashboard: Tableau de bord
 path_description: Description
-path_empty_user_can_edit: Ce parcours est vide. Editez et publiez le afin de le remplir.
+path_empty_user_can_edit: Ce parcours est vide. Éditez et publiez-le afin de le remplir.
 path_empty_user_read_only: Ce parcours est vide et n'a pas encore été configuré par son concepteur. Veuillez revenir plus tard.
 path_init_structure: Créer une nouvelle structure vide
 path_init_structure_template: Créer une structure à partir d'un modèle
 path_complete_blocking_condition: Conditions bloquantes pour toutes les étapes enfants ?
 path_name: Nom
-path_no_structure: Ce Parcours n'a aucune structure.
+path_no_structure: Ce parcours n'a aucune structure.
 path_status: Statut
 path_save_success: Le parcours a correctement été sauvegardé.
 path_save_error: Une erreur s'est produite lors de la sauvegarde du parcours.
@@ -98,9 +98,9 @@ path_template_save_success: Le modèle a correctement été sauvegardé.
 path_template_save_error: Une erreur s'est produite lors de la sauvegarde du modèle.
 preview: Retour au Parcours
 preview_with_pending_changes_button: Prévisualiser la dernière version publiée
-preview_with_pending_changes_message: Le Parcours a des modifications non publiées.<br/><br/> Si vous le visualisez sans publication préalable, les changements effectués ne seront pas visibles.<br/><br/> Voulez-vous continuer et voir la dernière version publiée du Parcours ?
+preview_with_pending_changes_message: Le Parcours a des modifications non publiées.<br/><br/> Si vous le visualisez sans publication préalable, les changements effectués ne seront pas visibles.<br/><br/> Voulez-vous continuer et voir la dernière version publiée du parcours ?
 preview_with_pending_changes_title: Modifications non publiées
-previous_step: Etape précédente
+previous_step: Étape précédente
 primary_resource: Ressource principale
 properties: Propriétés
 publish: Publier
@@ -132,10 +132,10 @@ see_activity: Voir l'activité
 see_step_siblings: Voir les étapes soeurs
 seen: Vu
 select_activity: Sélectionner une activité existante
-show_path_info: Afficher les informations relatives au Parcours
+show_path_info: Afficher les informations relatives au parcours
 step_access_denied: Vous n'avez pas effectué les étapes précédentes
 step_access_denied_condition: Vous n'avez pas rempli les conditions pour accéder à l'étape %stepName% parce que : %conditionList%
-step_access_denied_no_activity_set: Vous ne pouvez accéder à l'étape %stepName% car aucune activité ne lui a été attribuée. Contactez le gestionnaire
+step_access_denied_no_activity_set: Vous ne pouvez accéder à l'étape %stepName% car aucune activité ne lui a été attribuée. Contactez le gestionnaire.
 step_add_child: Ajouter une étape
 step_copy: Copier
 step_delete: Supprimer l'étape
@@ -153,7 +153,7 @@ step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
 step_not_accessible: Cette étape n'est pas accessible pour le moment.
 step_paste: Coller
 step_to_template: Sauvegarder comme modèle
-step_unlocked: Etape %step% débloquée pour %user%
+step_unlocked: Étape %step% débloquée pour %user%
 step_who: Modalité de travail
 step_where: Lieu d'apprentissage
 summary: Sommaire
@@ -176,18 +176,18 @@ undo: Annuler
 unlock_this: Demander un déblocage
 unsaved: Non sauvegardé
 unseen: Non vu
-user_progression_step_seen: Vous avez déjà vu cette étape
-user_progression_step_unseen: Vous n'avez pas encore vu cette étape
-user_progression_step_to_do: Vous avez marqué cette étape comme étant à faire
-user_progression_step_done: Vous avez marqué cette étape comme étant terminée
-user_progression_step_to_review: Vous avez marqué cette étape comme étant à refaire
+user_progression_step_seen: Vous avez déjà vu cette étape.
+user_progression_step_unseen: Vous n'avez pas encore vu cette étape.
+user_progression_step_to_do: Vous avez marqué cette étape comme étant à faire.
+user_progression_step_done: Vous avez marqué cette étape comme étant terminée.
+user_progression_step_to_review: Vous avez marqué cette étape comme étant à refaire.
 
 user_progression_step_to_do_label: A faire
 user_progression_step_done_label: Fait
 user_progression_step_to_review_label: A refaire
 
 user_progression_lockedcall_sent: Votre demande de déblocage est en attente.
-user_progression_unlock_sent: Déblocage de l'étape effectué
+user_progression_unlock_sent: Déblocage de l'étape effectué.
 # w
 with_tutor: Tutoré
 
