@@ -1082,9 +1082,10 @@ class UserManager
     {
         $accountDuration = $this->platformConfigHandler->getParameter('account_duration');
         $expirationDate = new \DateTime();
+        $expirationYear = (strtotime('2100-01-01')) ? 2100 : 2038;
 
         ($accountDuration === null) ?
-            $expirationDate->setDate(2100, 1, 1) :
+            $expirationDate->setDate($expirationYear, 1, 1) :
             $expirationDate->add(new \DateInterval('P'.$accountDuration.'D'));
 
         $user->setExpirationDate($expirationDate);
