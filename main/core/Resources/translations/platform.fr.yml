@@ -744,7 +744,7 @@ public_unregistration: 'Désinscription publique'
 public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
 public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
-publish: Publié
+publish: Publier
 publish_resource: 'Publier la ressource'
 published: Publié
 published_to_portal: Publié sur le portail de ressources
@@ -827,14 +827,18 @@ resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %t
 resource_delete: 'Êtes-vous sûr de vouloir supprimer cette ressource ?'
 resource_limit_exceeded: 'La limite maximale (%max%) de ressources est dépassée. Vous avez déjà créé %current% ressources.'
 resource_picker: 'Sélecteur de ressources'
+resource_publish: 'Êtes-vous sûr de vouloir publier cette ressource ?'
 resource_to_open: 'Ressource à ouvrir'
 resource_type: 'Type de ressource'
+resource_unpublish: 'Êtes-vous sûr de vouloir dépublier cette ressource ?'
 resources: Ressources
 resources_delete: 'Êtes-vous sûr de vouloir supprimer ces ressources ?'
+resources_publish: 'Êtes-vous sûr de vouloir publier ces ressources ?'
 resources_import: 'Importation de ressources'
 resources_most_downloaded: 'Ressources les plus téléchargées'
 resources_rights: 'Droits des ressources'
 resources_rights_management: 'Gestion des droits des ressources'
+resources_unpublish: 'Êtes-vous sûr de vouloir dépublier ces ressources ?'
 resources_usage_list: 'Liste d''utilisation des ressources'
 resources_usage_ratio: 'Taux d''utilisation des ressources'
 restore: Restaurer
@@ -1031,7 +1035,7 @@ uncompress_file: 'Décompresser le fichier si possible'
 under_min_length: 'Cette valeur est trop courte'
 unique_connections: 'Nb Cnx. uniques'
 unknown: Inconnu
-unpublish: Depublier
+unpublish: Dépublier
 unpublished: 'Non publié'
 unregister: Désinscription
 unregister_from_a_workspace: 'Me désinscrire d''un espace d''activités'

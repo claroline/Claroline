@@ -11,36 +11,36 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Manager\UserManager;
-use Exception;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ImportResourcesType;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
 use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundExcetion;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\FileManager;
+use Claroline\CoreBundle\Manager\LogManager;
 use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\LogManager;
 use Claroline\CoreBundle\Manager\TransferManager;
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\CoreBundle\Manager\UserManager;
+use Exception;
 use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ResourceController
 {
@@ -165,27 +165,27 @@ class ResourceController
         User $user,
         $published = 0
     ) {
-        $collection = new ResourceCollection(array($parent));
-        $collection->setAttributes(array('type' => $resourceType));
+        $collection = new ResourceCollection([$parent]);
+        $collection->setAttributes(['type' => $resourceType]);
 
         if (!$this->authorization->isGranted('CREATE', $collection)) {
             $errors = $collection->getErrors();
             $content = $this->templating->render(
                 'ClarolineCoreBundle:Resource:errors.html.twig',
-                array('errors' => $errors)
+                ['errors' => $errors]
             );
 
             $response = new Response($content, 403);
-            $response->headers->add(array('XXX-Claroline' => 'resource-error'));
+            $response->headers->add(['XXX-Claroline' => 'resource-error']);
 
             return $response;
         }
 
-        $event = $this->dispatcher->dispatch('create_'.$resourceType, 'CreateResource', array($parent, $resourceType));
+        $event = $this->dispatcher->dispatch('create_'.$resourceType, 'CreateResource', [$parent, $resourceType]);
         $isPublished = intval($published) === 1 ? true : $event->isPublished();
 
         if (count($event->getResources()) > 0) {
-            $nodesArray = array();
+            $nodesArray = [];
 
             foreach ($event->getResources() as $resource) {
                 if ($event->getProcess()) {
@@ -196,13 +196,13 @@ class ResourceController
                         $parent->getWorkspace(),
                         $parent,
                         null,
-                        array(),
+                        [],
                         $isPublished
                     );
                     $this->dispatcher->dispatch(
                         'resource_created_'.$resourceType,
                         'ResourceCreated',
-                        array($createdResource->getResourceNode())
+                        [$createdResource->getResourceNode()]
                     );
 
                     $nodesArray[] = $this->resourceManager->toArray(
@@ -253,7 +253,7 @@ class ResourceController
         $this->request->getSession()->set('current_resource_node', $node);
 
         //double check... first the resource, then the target
-        $collection = new ResourceCollection(array($node));
+        $collection = new ResourceCollection([$node]);
         $this->checkAccess('OPEN', $collection);
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
@@ -264,9 +264,9 @@ class ResourceController
         $event = $this->dispatcher->dispatch(
             'open_'.$resourceType,
             'OpenResource',
-            array($this->resourceManager->getResourceFromNode($node))
+            [$this->resourceManager->getResourceFromNode($node)]
         );
-        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', [$node]);
 
         return $event->getResponse();
     }
@@ -304,6 +304,62 @@ class ResourceController
 
     /**
      * @EXT\Route(
+     *     "/publish",
+     *     name="claro_resource_publish",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "nodes",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"multipleIds" = true}
+     * )
+     *
+     * Publishes many nodes from a workspace.
+     * Takes an array of ids as parameters (query string: "ids[]=1&ids[]=2" ...).
+     *
+     * @param array $nodes
+     *
+     * @return Response
+     */
+    public function publishAction(array $nodes)
+    {
+        $collection = new ResourceCollection($nodes);
+        $this->checkAccess('ADMINISTRATE', $collection);
+        $this->resourceManager->setPublishedStatus($nodes, true);
+
+        return new Response('Resources published', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/unpublish",
+     *     name="claro_resource_unpublish",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "nodes",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"multipleIds" = true}
+     * )
+     *
+     * Unpublishes many nodes from a workspace.
+     * Takes an array of ids as parameters (query string: "ids[]=1&ids[]=2" ...).
+     *
+     * @param array $nodes
+     *
+     * @return Response
+     */
+    public function unpublishAction(array $nodes)
+    {
+        $collection = new ResourceCollection($nodes);
+        $this->checkAccess('ADMINISTRATE', $collection);
+        $this->resourceManager->setPublishedStatus($nodes, false);
+
+        return new Response('Resources unpublished', 204);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/move/{newParent}",
      *     name="claro_resource_move",
      *     options={"expose"=true}
@@ -334,11 +390,11 @@ class ResourceController
             $errors = $collection->getErrors();
             $content = $this->templating->render(
                 'ClarolineCoreBundle:Resource:errors.html.twig',
-                array('errors' => $errors)
+                ['errors' => $errors]
             );
 
             $response = new Response($content, 403);
-            $response->headers->add(array('XXX-Claroline' => 'resource-error'));
+            $response->headers->add(['XXX-Claroline' => 'resource-error']);
 
             return $response;
         }
@@ -348,7 +404,7 @@ class ResourceController
                 $movedNode = $this->resourceManager->move($node, $newParent);
                 $movedNodes[] = $this->resourceManager->toArray($movedNode, $this->tokenStorage->getToken());
             } catch (ResourceMoveException $e) {
-                return new Response($this->translator->trans('invalid_move', array(), 'error'), 422);
+                return new Response($this->translator->trans('invalid_move', [], 'error'), 422);
             }
         }
 
@@ -384,7 +440,7 @@ class ResourceController
             throw new \Exception("The menu {$action} doesn't exists");
         }
 
-        $collection = new ResourceCollection(array($node));
+        $collection = new ResourceCollection([$node]);
 
         if ($menuAction->getResourceType() === null) {
             if (!$this->authorization->isGranted('ROLE_USER')) {
@@ -401,7 +457,7 @@ class ResourceController
         $event = $this->dispatcher->dispatch(
             $eventName,
             'CustomActionResource',
-            array($this->resourceManager->getResourceFromNode($node))
+            [$this->resourceManager->getResourceFromNode($node)]
         );
 
         return $event->getResponse();
@@ -437,10 +493,8 @@ class ResourceController
     public function logAction(ResourceNode $node, $page)
     {
         $resource = $this->resourceManager->getResourceFromNode($node);
-        $collection = new ResourceCollection(array($node));
+        $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
-
-        //$type = $node->getResourceType();
         $logs = $this->logManager->getResourceList($resource, $page);
 
         return $logs;
@@ -476,10 +530,9 @@ class ResourceController
     public function logByUserAction(ResourceNode $node, $page)
     {
         $resource = $this->resourceManager->getResourceFromNode($node);
-        $collection = new ResourceCollection(array($node));
+        $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
 
-        //$type = $node->getResourceType();
         return $this->logManager->countByUserResourceList($resource, $page);
     }
 
@@ -500,19 +553,18 @@ class ResourceController
     public function logByUserCSVAction(ResourceNode $node)
     {
         $resource = $this->resourceManager->getResourceFromNode($node);
-        $collection = new ResourceCollection(array($node));
+        $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
 
         $logManager = $this->logManager;
 
         $response = new StreamedResponse(function () use ($logManager, $resource) {
-
             $results = $logManager->countByUserListForCSV('workspace', null, $resource);
             $handle = fopen('php://output', 'w+');
             while (false !== ($row = $results->next())) {
                 // add a line in the csv file. You need to implement a toArray() method
                 // to transform your object into an array
-                fputcsv($handle, array($row[$results->key()]['name'], $row[$results->key()]['actions']));
+                fputcsv($handle, [$row[$results->key()]['name'], $row[$results->key()]['actions']]);
             }
 
             fclose($handle);
@@ -613,11 +665,11 @@ class ResourceController
     public function openDirectoryAction(ResourceNode $node = null)
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $path = array();
-        $creatableTypes = array();
+        $path = [];
+        $creatableTypes = [];
         $currentRoles = $this->roleManager->getStringRolesFromToken($this->tokenStorage->getToken());
         $canChangePosition = false;
-        $nodesWithCreatorPerms = array();
+        $nodesWithCreatorPerms = [];
 
         if ($node === null) {
             $nodes = $this->resourceManager->getRoots($user);
@@ -627,9 +679,9 @@ class ResourceController
             foreach ($nodes as $el) {
                 $item = $el;
                 $dateModification = $el['modification_date'];
-                $item['modification_date'] = $dateModification->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+                $item['modification_date'] = $dateModification->format($this->translator->trans('date_range.format.with_hours', [], 'platform'));
                 $dateCreation = $el['creation_date'];
-                $item['creation_date'] = $dateCreation->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+                $item['creation_date'] = $dateCreation->format($this->translator->trans('date_range.format.with_hours', [], 'platform'));
                 $nodesWithCreatorPerms[] = $item;
             }
         } else {
@@ -637,7 +689,7 @@ class ResourceController
             $workspaceId = $node->getWorkspace()->getId();
             $isPws = $node->getWorkspace()->isPersonal();
             $node = $this->getRealTarget($node);
-            $collection = new ResourceCollection(array($node));
+            $collection = new ResourceCollection([$node]);
             $this->checkAccess('OPEN', $collection);
 
             if ($user !== 'anon.') {
@@ -659,7 +711,7 @@ class ResourceController
 
                 foreach ($resourceTypes as $resourceType) {
                     $adminTypes[$resourceType->getName()] = $this->translator
-                        ->trans($resourceType->getName(), array(), 'resource');
+                        ->trans($resourceType->getName(), [], 'resource');
                 }
             }
 
@@ -684,7 +736,7 @@ class ResourceController
                 $item['new'] = true;
                 $item['enableRightsEdition'] = $enableRightsEdition;
                 $dateModification = $el['modification_date'];
-                $item['modification_date'] = $dateModification->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+                $item['modification_date'] = $dateModification->format($this->translator->trans('date_range.format.with_hours', [], 'platform'));
                 $dateCreation = $el['creation_date'];
                 $item['timestamp_last_modification'] = $dateModification->getTimeStamp();
                 if (isset($el['last_opened'])) {
@@ -693,7 +745,7 @@ class ResourceController
                         $item['new'] = false;
                     }
                 }
-                $item['creation_date'] = $dateCreation->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+                $item['creation_date'] = $dateCreation->format($this->translator->trans('date_range.format.with_hours', [], 'platform'));
 
                 foreach ($files as $file) {
                     if ($file->getResourceNode()->getId() === $el['id']) {
@@ -723,7 +775,7 @@ class ResourceController
             $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $node);
             $creatableTypes = array_merge($creatableTypes, $adminTypes);
             asort($creatableTypes);
-            $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
+            $this->dispatcher->dispatch('log', 'Log\LogResourceRead', [$node]);
         }
 
         $directoryId = $node ? $node->getId() : '0';
@@ -737,7 +789,7 @@ class ResourceController
         }
 
         $jsonResponse = new JsonResponse(
-            array(
+            [
                 'id' => $directoryId,
                 'path' => $path,
                 'creatableTypes' => $creatableTypes,
@@ -745,11 +797,11 @@ class ResourceController
                 'canChangePosition' => $canChangePosition,
                 'workspace_id' => $workspaceId,
                 'is_root' => $isRoot,
-            )
+            ]
         );
 
         $jsonResponse->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
-        $jsonResponse->headers->add(array('Expires' => '-1'));
+        $jsonResponse->headers->add(['Expires' => '-1']);
 
         return $jsonResponse;
     }
@@ -778,7 +830,7 @@ class ResourceController
      */
     public function copyAction(ResourceNode $parent, array $nodes, User $user)
     {
-        $newNodes = array();
+        $newNodes = [];
         $collection = new ResourceCollection($nodes);
         $collection->addAttribute('parent', $parent);
 
@@ -786,11 +838,11 @@ class ResourceController
             $errors = $collection->getErrors();
             $content = $this->templating->render(
                 'ClarolineCoreBundle:Resource:errors.html.twig',
-                array('errors' => $errors)
+                ['errors' => $errors]
             );
 
             $response = new Response($content, 403);
-            $response->headers->add(array('XXX-Claroline' => 'resource-error'));
+            $response->headers->add(['XXX-Claroline' => 'resource-error']);
 
             return $response;
         }
@@ -806,13 +858,13 @@ class ResourceController
                 ++$i;
             }
         } catch (ResourceNotFoundExcetion $e) {
-            $errors = array($e->getMessage());
+            $errors = [$e->getMessage()];
             $content = $this->templating->render(
                 'ClarolineCoreBundle:Resource:errors.html.twig',
-                array('errors' => $errors)
+                ['errors' => $errors]
             );
             $response = new Response($content, 403);
-            $response->headers->add(array('XXX-Claroline' => 'resource-error'));
+            $response->headers->add(['XXX-Claroline' => 'resource-error']);
 
             return $response;
         }
@@ -843,19 +895,19 @@ class ResourceController
     public function filterAction(ResourceNode $node = null)
     {
         $criteria = $this->resourceManager->buildSearchArray($this->request->query->all());
-        $criteria['roots'] = $node ? array($node->getPath()) : array();
-        $path = $node ? $this->resourceManager->getAncestors($node) : array();
+        $criteria['roots'] = $node ? [$node->getPath()] : [];
+        $path = $node ? $this->resourceManager->getAncestors($node) : [];
         $userRoles = $this->roleManager->getStringRolesFromToken($this->tokenStorage->getToken());
 
         //by criteria recursive => infinite loop
         $resources = $this->resourceManager->getByCriteria($criteria, $userRoles);
 
         return new JsonResponse(
-            array(
+            [
                 'id' => $node ? $node->getId() : '0',
                 'nodes' => $resources,
                 'path' => $path,
-            )
+            ]
         );
     }
 
@@ -883,8 +935,8 @@ class ResourceController
      */
     public function createShortcutAction(ResourceNode $parent, User $creator, array $nodes)
     {
-        $collection = new ResourceCollection(array($parent));
-        $collection->setAttributes(array('type' => 'resource_shortcut'));
+        $collection = new ResourceCollection([$parent]);
+        $collection->setAttributes(['type' => 'resource_shortcut']);
         $this->checkAccess('CREATE', $collection);
 
         foreach ($nodes as $node) {
@@ -915,10 +967,10 @@ class ResourceController
         $workspace = $node->getWorkspace();
         $ancestors = $this->resourceManager->getAncestors($node);
 
-        return array(
+        return [
             'ancestors' => $ancestors,
             'workspaceId' => $workspace->getId(),
-        );
+        ];
     }
 
     /**
@@ -994,11 +1046,11 @@ class ResourceController
      */
     public function managerParametersAction()
     {
-        $response = new Response('', 401, array('Content-Type' => 'application/json'));
+        $response = new Response('', 401, ['Content-Type' => 'application/json']);
         if ($this->authorization->isGranted('ROLE_USER')) {
             $json = $this->templating->render(
                 'ClarolineCoreBundle:Resource:managerParameters.json.twig',
-                array('resourceTypes' => $this->resourceManager->getAllResourceTypes())
+                ['resourceTypes' => $this->resourceManager->getAllResourceTypes()]
             );
             $response
                 ->setContent($json)
@@ -1020,18 +1072,18 @@ class ResourceController
      */
     public function embedResourceAction(ResourceNode $node, $type, $extension, $openInNewTab)
     {
-        $view = in_array($type, array('video', 'audio', 'image')) ? $type : 'default';
+        $view = in_array($type, ['video', 'audio', 'image']) ? $type : 'default';
 
         return new Response(
             $this->templating->render(
                 "ClarolineCoreBundle:Resource:embed/{$view}.html.twig",
-                array(
+                [
                     'node' => $node,
                     'resource' => $this->resourceManager->getResourceFromNode($node),
                     'type' => $type,
                     'extension' => $extension,
                     'openInNewTab' => $openInNewTab !== '0',
-                )
+                ]
             )
         );
     }
@@ -1113,7 +1165,7 @@ class ResourceController
     {
         $form = $this->formFactory->create(new ImportResourcesType());
 
-        return array('form' => $form->createView(), 'directory' => $node);
+        return ['form' => $form->createView(), 'directory' => $node];
     }
 
     /**
@@ -1136,10 +1188,10 @@ class ResourceController
             $user = $this->tokenStorage->getToken()->getUser();
             $this->transferManager->importResources($template, $user, $directory);
 
-            return new JsonResponse(array());
+            return new JsonResponse([]);
         }
 
-        return array('form' => $form->createView(), 'directory' => $directory);
+        return ['form' => $form->createView(), 'directory' => $directory];
     }
 
     /**

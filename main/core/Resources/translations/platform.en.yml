@@ -826,14 +826,18 @@ resource_creation_wrong_type: 'You don''t have the permission to create a(n) %ty
 resource_delete: 'Are you sure you want to delete this resource ?'
 resource_limit_exceeded: 'The maximmum amount of resources (%max%) has been reached. You already have %current% resources.'
 resource_picker: 'Resource picker'
+resource_publish: 'Are you sure you want to publish this resource ?'
 resource_to_open: 'Resource to open'
 resource_type: 'Resource type'
+resource_unpublish: 'Are you sure you want to unpublish this resource ?'
 resources: Resources
 resources_delete: 'Are you sure you want to delete these resources?'
 resources_import: 'Resources import'
 resources_most_downloaded: 'Most downloaded resources'
+resources_publish: 'Are you sure you want to publish these resources?'
 resources_rights: 'Resources rights'
 resources_rights_management: 'Resources rights management'
+resources_unpublish: 'Are you sure you want to unpublish these resources?'
 resources_usage_list: 'Resources usage list'
 resources_usage_ratio: 'Resources usage ratio'
 restore: Restore

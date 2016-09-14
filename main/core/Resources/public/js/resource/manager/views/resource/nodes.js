@@ -34,7 +34,8 @@
             'deleted-nodes': 'removeNodes',
             'renamed-node': 'renameNode',
             'edited-node': 'editNode',
-            'reload-page': 'reloadPage'
+            'reload-page': 'reloadPage',
+            'published-change-nodes': 'changePublishedNodes'
         },
         initialize: function (parameters, dispatcher) {
             this.parameters = parameters;
@@ -78,6 +79,15 @@
             } else {
                 $('#node-element-' + nodeId).addClass('unpublished');
             }
+        },
+        changePublishedNodes: function (event) {
+            event.ids.forEach(function (nodeId) {
+                if (event.published) {
+                    $('#node-element-' + nodeId).removeClass('unpublished');
+                } else {
+                    $('#node-element-' + nodeId).addClass('unpublished');
+                }
+            })
         },
         editNode: function (event) {
             this.renameNode(event);

@@ -29,6 +29,8 @@
             'click a.copy': 'copy',
             'click a.cut': 'cut',
             'click a.paste': 'paste',
+            'click a.publish': 'publish',
+            'click a.unpublish': 'unpublish',
             'click button.config-search-panel': 'toggleFilters',
             'click button.filter': 'filter',
             'keypress input.name': 'filter',
@@ -134,7 +136,9 @@
                 }
             }
         },
-        'toggleFilters': function () {
+        publish: makePublicationHandler('publish', ResourcePublishConfirmMessage),
+        unpublish: makePublicationHandler('unpublish', ResourceUnpublishConfirmMessage),
+        toggleFilters: function () {
             this.initFilters();
             this.filters.toggle();
         },
@@ -293,6 +297,8 @@
                     this.setButtonEnabledState(this.$('a.cut'), isSelectionNotEmpty);
                     this.setButtonEnabledState(this.$('a.copy'), isSelectionNotEmpty);
                     this.setButtonEnabledState(this.$('a.delete'), isSelectionNotEmpty);
+                    this.setButtonEnabledState(this.$('a.publish'), isSelectionNotEmpty);
+                    this.setButtonEnabledState(this.$('a.unpublish'), isSelectionNotEmpty);
                 }
 
                 var that = this;
@@ -300,6 +306,8 @@
                 //copy/cut paste is not fully supported yet
                 $.each(this.checkedNodes.nodes, function(i, node) {
                     if (node) {
+                       if (that.isActionAvailable(node, 'edit-properties') === 0) that.setButtonEnabledState(that.$('a.publish'), false);
+                       if (that.isActionAvailable(node, 'edit-properties') === 0) that.setButtonEnabledState(that.$('a.unpublish'), false);
                        if (that.isActionAvailable(node, 'delete') === 0) that.setButtonEnabledState(that.$('a.delete'), false);
                        if (that.isActionAvailable(node, 'copy') === 0) that.setButtonEnabledState(that.$('a.copy'), false);
                        if (that.isActionAvailable(node, 'copy') === 0) that.setButtonEnabledState(that.$('a.cut'), false);
@@ -424,4 +432,23 @@
             });
         }
     });
+
+    function makePublicationHandler(status, view) {
+        return function (event) {
+            if (!this.$(event.currentTarget).hasClass('disabled')) {
+                var body = Twig.render(view, {'nodes': this.checkedNodes.nodes});
+                this.dispatcher.trigger('confirm', {
+                    header: Translator.trans(status, {}, 'platform'),
+                    body: body,
+                    callback: _.bind(function () {
+                        this.dispatcher.trigger(status, {
+                            ids: _.keys(this.checkedNodes.nodes),
+                            view: this.parameters.viewName
+                        });
+                    }, this)
+                });
+            }
+        }
+    }
+
 })();
