@@ -17,4 +17,6 @@ before_script:
   - php app/console claroline:install --env=test
   - export SYMFONY_DEPRECATIONS_HELPER=weak
 
-script: vendor/bin/phpunit -c vendor/claroline/distribution
+script:
+  - vendor/bin/phpunit -c vendor/claroline/distribution
+  - node_modules/.bin/karma start vendor/claroline/distribution/karma.conf.js --single-run --browsers PhantomJS
