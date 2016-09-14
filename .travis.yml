@@ -54,10 +54,12 @@ before_script:
   # override platform composer.json with build/repo local reference
   - rm -rf ../$TRAVIS_REPO_SLUG/.git
   - php ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/pre-composer.php claroline/distribution ../$TRAVIS_REPO_SLUG dev-$TRAVIS_BRANCH
-  # fetch dependencies and build
+  # fetch dependencies and build (currently this is done in prod mode)
   - export TRAVIS_REPO_SLUG REMOTE_HOST REMOTE_USER REMOTE_PASS CACHE_PATH
   - bash ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/fetch-deps.bash
+  - export NODE_ENV=production
   - composer build
+  - export NODE_ENV=development
   - php app/console claroline:install --env=test -vvv
   # move to distribution directory
   - export ROOT=`pwd`
@@ -72,8 +74,10 @@ script:
   - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/md `echo "$DIFF" | tr '\n' ' '`; fi
   - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/php-cs-fixer fix --dry-run --diff --config-file=main/dev/Resources/travis/php-cs.php; fi
   - if [ "$DIFF" != '' ]; then $ROOT/node_modules/.bin/eslint `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
-  # launch the whole test suite
+  # launch js tests
   - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/bin/phpunit
+  # launc php tests
+  - $ROOT/node_modules/.bin/karma start --single-run --browsers PhantomJS
 
 after_success:
   # send a preview release to a remote server (only for internal PRs)
