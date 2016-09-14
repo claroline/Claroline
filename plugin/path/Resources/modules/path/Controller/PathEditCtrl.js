@@ -41,9 +41,7 @@ export default class PathEditCtrl extends PathBaseCtrl {
 
       if (!empty && updated) {
         // Initialization is already done, so mark path as unsaved for each modification
-        if (this.published !== true) {
-          this.unsaved = true
-        }
+        this.unsaved = true
       }
     }, true)
   }
