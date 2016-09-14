@@ -17,8 +17,11 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ResultBundle\Entity\Mark;
 use Claroline\ResultBundle\Entity\Result;
+use Claroline\ResultBundle\Event\Log\LogResultsDeleteMarkEvent;
+use Claroline\ResultBundle\Event\Log\LogResultsNewMarkEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -36,26 +39,33 @@ class ResultManager
     private $om;
     private $templating;
     private $utils;
+    private $dispatcher;
+    private $logRepository;
 
     /**
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "templating" = @DI\Inject("templating"),
-     *     "utils"      = @DI\Inject("claroline.utilities.misc")
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "templating"     = @DI\Inject("templating"),
+     *     "utils"          = @DI\Inject("claroline.utilities.misc"),
+     *     "dispatcher"    = @DI\Inject("event_dispatcher")
      * })
      *
-     * @param ObjectManager   $om
-     * @param EngineInterface $templating
-     * @param ClaroUtilities  $utils
+     * @param ObjectManager            $om
+     * @param EngineInterface          $templating
+     * @param ClaroUtilities           $utils
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
         ObjectManager $om,
         EngineInterface $templating,
-        ClaroUtilities $utils
+        ClaroUtilities $utils,
+        EventDispatcherInterface $dispatcher
     ) {
         $this->om = $om;
         $this->templating = $templating;
         $this->utils = $utils;
+        $this->dispatcher = $dispatcher;
+        $this->logRepository = $om->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
     /**
@@ -199,6 +209,9 @@ class ResultManager
         $this->om->persist($mark);
         $this->om->flush();
 
+        $newMarkEvent = new LogResultsNewMarkEvent($mark);
+        $this->dispatcher->dispatch('log', $newMarkEvent);
+
         return $mark;
     }
 
@@ -211,6 +224,11 @@ class ResultManager
     {
         $this->om->remove($mark);
         $this->om->flush();
+        // First of all update older mark events so as result would be 0
+        $this->updateNewMarkEventResult($mark->getUser(), $mark->getId(), 0);
+        // Then delete mark
+        $deleteMarkEvent = new LogResultsDeleteMarkEvent($mark);
+        $this->dispatcher->dispatch('log', $deleteMarkEvent);
     }
 
     /**
@@ -221,8 +239,14 @@ class ResultManager
      */
     public function updateMark(Mark $mark, $value)
     {
+        $oldMark = $mark->getValue();
         $mark->setValue($value);
         $this->om->flush();
+        // First of all update older mark events so as result would be new value
+        $this->updateNewMarkEventResult($mark->getUser(), $mark->getId(), $value);
+        // Then create new mark event to log update
+        $newMarkEvent = new LogResultsNewMarkEvent($mark, $oldMark);
+        $this->dispatcher->dispatch('log', $newMarkEvent);
     }
 
     /**
@@ -231,6 +255,8 @@ class ResultManager
      * @param Result       $result
      * @param UploadedFile $csvFile
      * @param string       $importType Either "fullname", "code" or "username"
+     *
+     * @return array
      */
     public function importMarksFromCsv(Result $result, UploadedFile $csvFile, $importType = 'fullname')
     {
@@ -315,10 +341,34 @@ class ResultManager
                     $this->om->persist($mark);
                     $this->om->flush();
                     $data['marks'][] = $mark;
+                    //Create log for mark
+                    $newMarkEvent = new LogResultsNewMarkEvent($mark);
+                    $this->dispatcher->dispatch('log', $newMarkEvent);
                 }
             }
         }
 
         return $data;
+    }
+
+    private function updateNewMarkEventResult(User $receiver, $markId, $newValue)
+    {
+        $logs = $this->logRepository->findBy([
+            'receiver' => $receiver,
+            'action' => LogResultsNewMarkEvent::ACTION,
+        ]);
+        $updatedCnt = 0;
+        foreach ($logs as $log) {
+            $details = $log->getDetails();
+            if ($details['mark']['id'] === $markId) {
+                $details['result'] = $newValue;
+                $log->setDetails($details);
+                $this->om->persist($log);
+                $updatedCnt += 1;
+            }
+        }
+        if ($updatedCnt > 0) {
+            $this->om->flush();
+        }
     }
 }

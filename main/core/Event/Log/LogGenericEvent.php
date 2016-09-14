@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Event\Log;
 
-use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Symfony\Component\EventDispatcher\Event;
 
 abstract class LogGenericEvent extends Event implements RestrictionnableInterface
 {
@@ -104,6 +104,20 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     public function getReceiver()
     {
         return $this->receiver;
+    }
+
+    /**
+     * Sets receiver's data.
+     *
+     * @param User $receiver
+     *
+     * @return $this
+     */
+    public function setReceiver(User $receiver)
+    {
+        $this->receiver = $receiver;
+
+        return $this;
     }
 
     /**
