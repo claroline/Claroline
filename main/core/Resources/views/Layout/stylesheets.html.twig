@@ -1,10 +1,4 @@
-{% if config.getParameter('theme') is defined and asset_exists('themes/' ~ config.getParameter('theme') ~ '/bootstrap.css') %}
-    {# from theme #}
-    {% set themeCSS = getAssetPath() ~ '/themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' %}
-{% else %}
-    {# default #}
-    {% set themeCSS = getAssetPath() ~ '/themes/claroline/bootstrap.css' %}
-{% endif %}
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {# Angular UI #}
 {% stylesheets debug=false output='vendor/angular-ui.css'
@@ -18,6 +12,6 @@
 %}
 {% endstylesheets %}
 
-<link rel="stylesheet" href="{{ themeCSS }}" media="screen" />
+<link rel="stylesheet" href="{{ macros.getTheme(config)|trim }}" media="screen" />
 <link rel='stylesheet' type='text/css' href='{{ asset('packages/font-awesome/css/font-awesome.min.css') }}'/>
 <link rel='stylesheet' type='text/css' href='{{ asset('packages/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css')}}'>

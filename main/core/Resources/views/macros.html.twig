@@ -141,3 +141,17 @@
         {% endif %}
     </div>
 {% endmacro %}
+
+{% macro getTheme(config) %}
+    {% spaceless %}
+        {% if config.getParameter('theme') is defined and asset_exists('themes/' ~ config.getParameter('theme') ~ '/bootstrap.css') %}
+            {# from theme #}
+            {% set themeCSS = getAssetPath() ~ '/themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' %}
+        {% else %}
+            {# default #}
+            {% set themeCSS = getAssetPath() ~ '/themes/claroline/bootstrap.css' %}
+        {% endif %}
+
+        {{ themeCSS }}
+    {% endspaceless %}
+{% endmacro %}
