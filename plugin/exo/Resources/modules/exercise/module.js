@@ -61,7 +61,7 @@ angular
   .controller('ExercisePlayerCtrl', [
     '$location',
     'step',
-    'paper',
+    'attempt',
     'ExerciseService',
     'FeedbackService',
     'UserPaperService',

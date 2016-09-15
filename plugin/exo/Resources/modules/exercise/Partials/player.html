@@ -10,8 +10,9 @@
 
         <!-- Display the current Step -->
         <step-show data-ng-if="null !== exercisePlayerCtrl.step"
-                data-step-index="{{ exercisePlayerCtrl.index }}"
+                data-position="{{ exercisePlayerCtrl.index }}"
                 data-step="exercisePlayerCtrl.step"
+                data-items="exercisePlayerCtrl.stepQuestions"
                 data-solution-shown="exercisePlayerCtrl.solutionShown"
                 data-current-try="exercisePlayerCtrl.currentStepTry"
                 data-all-answers-found="exercisePlayerCtrl.allAnswersFound">

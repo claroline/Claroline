@@ -22,11 +22,12 @@
     </h4>
 
     <!-- Display the current paper grouped by step -->
-    <div data-ng-repeat="step in paperShowCtrl.steps">
+    <div data-ng-repeat="step in paperShowCtrl.steps" data-ng-init="stepQuestions = paperShowCtrl.orderStepQuestions(step)">
       <hr>
       <step-show
-              data-step-index="{{ $index }}"
+              data-position="{{ $index }}"
               data-step="step"
+              data-items="stepQuestions"
               data-solution-shown="true"
               data-current-try="0">
       </step-show>

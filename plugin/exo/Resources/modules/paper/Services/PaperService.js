@@ -315,62 +315,29 @@ export default class PaperService {
 
     return questionPaper.score
   }
-
+  
   /**
-   * Order the Questions of a Step
-   * @param   {Object} paper
-   * @param   {Array}  questions
-   * @returns {Array}
-   */
-  orderQuestions(paper, questions) {
-    var ordered = []
-
-    if (paper && paper.order) {
-      for (var i = 0; i < paper.order.length; i++) {
-        var stepOrder = paper.order[i]
-        for (var j = 0; j < stepOrder.items.length; j++) {
-          var item = stepOrder.items[j]
-          var question = this.QuestionService.getQuestion(questions, item)
-          if (question) {
-            ordered.push(question)
-          }
-        }
-      }
-    }
-
-    return ordered
-  }
-
-  /**
-   * Order the Questions of a Step
+   * Get the Questions of a Step.
+   * 
    * @param   {Object} paper
    * @param   {Object} step
-   * @returns {Array} The ordered list of Questions
+   * @param   {array}  questions
+   *
+   * @returns {array} The ordered list of Questions
    */
-  orderStepQuestions(paper, step) {
+  orderStepQuestions(paper, step, questions) {
     let ordered = []
     if (step.items && 0 !== step.items.length) {
       // Get order for the current Step
-      let itemsOrder = null
-      if (paper && paper.order) {
-        for (let i = 0; i < paper.order.length; i++) {
-          if (step.id === paper.order[i].id) {
-            // Order for the current step found
-            itemsOrder = paper.order[i].items
-            break // Stop searching
-          }
-        }
-      }
+      const stepPaper = paper.order.find(current => current.id === step.id)
 
-      if (itemsOrder) {
-        for (let i = 0; i < itemsOrder.length; i++) {
-          var question = this.StepService.getQuestion(step, itemsOrder[i])
+      if (stepPaper) {
+        for (let i = 0; i < stepPaper.items.length; i++) {
+          let question = questions.find(question => question.id === stepPaper.items[i])
           if (question) {
             ordered.push(question)
           }
         }
-      } else {
-        ordered = step.items
       }
     }
 

@@ -1,6 +1,6 @@
 <div class="step-container">
     <h4 class="step-title">
-        {{ 'step'|trans:{}:'ujm_exo' }} <span class="badge">{{ stepShowCtrl.stepIndex*1 + 1 }}</span>
+        {{ 'step'|trans:{}:'ujm_exo' }} <span class="badge">{{ stepShowCtrl.position*1 + 1 }}</span>
         <span data-ng-if="stepShowCtrl.step.meta.title">: {{ stepShowCtrl.step.meta.title }}</span>
 
         <small data-ng-if="!stepShowCtrl.solutionShown && stepShowCtrl.step.meta.maxAttempts">

@@ -103,7 +103,7 @@ class PaperManager
      * @param Exercise $exercise
      * @param User     $user
      *
-     * @return array
+     * @return Paper
      */
     public function openPaper(Exercise $exercise, User $user = null)
     {
@@ -127,7 +127,7 @@ class PaperManager
             }
         }
 
-        return $this->exportPaper($paper);
+        return $paper;
     }
 
     /**

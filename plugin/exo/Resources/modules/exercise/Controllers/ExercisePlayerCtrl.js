@@ -4,7 +4,7 @@
  *
  * @param {Object}           $location
  * @param {Object}           step
- * @param {Object}           paper
+ * @param {Object}           attempt
  * @param {ExerciseService}  ExerciseService
  * @param {FeedbackService}  FeedbackService
  * @param {UserPaperService} UserPaperService
@@ -14,7 +14,7 @@
 function ExercisePlayerCtrl(
         $location,
         step,
-        paper,
+        attempt,
         ExerciseService,
         FeedbackService,
         UserPaperService,
@@ -29,14 +29,18 @@ function ExercisePlayerCtrl(
 
   // Initialize some data
   this.exercise = this.ExerciseService.getExercise() // Current exercise
-  this.paper = paper    // Paper of the current User
+  this.paper = attempt.paper    // Paper of the current User
+  this.questions = attempt.questions
 
-  if (!step && paper.order.length > 0) {
+  if (!step && this.paper.order.length > 0) {
     // No step passed to the route => Get the first Step defined in the UserPaper
-    step = this.ExerciseService.getStep(paper.order[0].id)
+    step = this.ExerciseService.getStep(this.paper.order[0].id)
   }
 
   this.step = step
+  if (this.step) {
+    this.stepQuestions = this.orderStepQuestions()
+  }
 
   this.index = this.UserPaperService.getIndex(step)
   this.previous = this.UserPaperService.getPreviousStep(step)
@@ -65,6 +69,7 @@ function ExercisePlayerCtrl(
   if (0 !== this.exercise.meta.duration) {
     this.timer = this.TimerService.new(this.exercise.id, this.exercise.meta.duration * 60, this.end.bind(this), true)
   }
+
   if (this.step && this.step.items[0]) {
     const questionPaper = this.UserPaperService.getQuestionPaper(this.step.items[0])
     if (questionPaper.nbTries) {
@@ -104,6 +109,12 @@ ExercisePlayerCtrl.prototype.index = 0
 ExercisePlayerCtrl.prototype.step = null
 
 /**
+ * Questions for the current Step
+ * @type {array}
+ */
+ExercisePlayerCtrl.prototype.stepQuestions = []
+
+/**
  * Previous step
  * @type {Object}
  */
@@ -138,6 +149,10 @@ ExercisePlayerCtrl.prototype.currentStepTry = 1
  * @type {Object|null}
  */
 ExercisePlayerCtrl.prototype.timer = null
+
+ExercisePlayerCtrl.prototype.orderStepQuestions = function () {
+  return this.UserPaperService.orderStepQuestions(this.step)
+}
 
 /**
  * Submit answers for the current Step

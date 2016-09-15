@@ -129,6 +129,8 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
 
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertInternalType('object', $content);
+        $this->assertTrue(property_exists($content, 'questions'));
+        $this->assertTrue(property_exists($content, 'paper'));
     }
 
     /**
