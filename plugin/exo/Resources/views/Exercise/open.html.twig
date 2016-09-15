@@ -41,13 +41,5 @@
     <script src="{{ asset('packages/jsPlumb/dist/js/jsPlumb-2.1.3-min.js') }}"></script>
     <script src="{{ asset('packages/jquery-ui/jquery-ui.min.js') }}"></script>
 
-    {# Set some vars needed by Angular parts #}
-    <script>
-        {# Make Twig variables accessibles by AngularJS #}
-        var AngularApp = {};
-
-        AngularApp.webDir = "{{ path('claro_index') }}".split('/').slice(0, -2).join('/') + "/";
-        AngularApp.locale = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
-    </script>
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-exo-app.js') }}"></script>
 {% endblock %}
