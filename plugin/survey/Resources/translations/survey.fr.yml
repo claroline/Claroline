@@ -60,7 +60,8 @@ no_question: Aucune question
 not_mandatory_answer_message: Une réponse n'est pas requise
 number_of_respondents: Nombre de personnes ayant répondu
 number_of_responses: Nombre de réponses
-open_ended: Ouverte
+open_ended: Ouverte, avec éditeur
+open_ended_bare: Ouverte, sans éditeur
 parameters: Paramètres
 parameters_edition: Modification des paramètres
 publication_date: Date de publication
@@ -91,6 +92,7 @@ return: Retour
 selected_answers_deletion: Supprimer les réponses sélectionnées
 selected_answers_deletion_confirm_message: Êtes-vous sûr de vouloir supprimer les réponses sélectionnées ?
 show_result_to_users: Afficher le résultat aux utilisateurs
+simple_text: Texte simple
 start_date: Date de début
 status: Statut
 survey_answer: Réponse
