@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "23db1b7b26cab119fb89055de8683f1eaa89cfd8"
+                "reference": "86c519563c2fccbff20e28690932a0331fa55ef2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/23db1b7b26cab119fb89055de8683f1eaa89cfd8",
-                "reference": "23db1b7b26cab119fb89055de8683f1eaa89cfd8",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/86c519563c2fccbff20e28690932a0331fa55ef2",
+                "reference": "86c519563c2fccbff20e28690932a0331fa55ef2",
                 "shasum": ""
             },
             "require": {
@@ -383,7 +383,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-09-14 12:39:47"
+            "time": "2016-09-15 16:12:10"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3450,12 +3450,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/johngrogg/ics-parser.git",
-                "reference": "5ab693b5dfafeee3cb96403095e795b32a241610"
+                "reference": "9cb282b8e3f40b27b53ff3640d806e087a695ba5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/5ab693b5dfafeee3cb96403095e795b32a241610",
-                "reference": "5ab693b5dfafeee3cb96403095e795b32a241610",
+                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/9cb282b8e3f40b27b53ff3640d806e087a695ba5",
+                "reference": "9cb282b8e3f40b27b53ff3640d806e087a695ba5",
                 "shasum": ""
             },
             "require": {
@@ -3496,7 +3496,7 @@
                 "ical",
                 "ics"
             ],
-            "time": "2016-09-05 20:32:32"
+            "time": "2016-09-13 18:35:22"
         },
         {
             "name": "json-quiz/json-quiz",
