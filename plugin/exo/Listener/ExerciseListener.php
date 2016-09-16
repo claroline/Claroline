@@ -208,7 +208,6 @@ class ExerciseListener
                 '_resource' => $exercise,
                 // Angular JS data
                 'exercise' => $exerciseExport,
-                'locale' => $event->getLocale(),
             ]
         );
 
@@ -241,6 +240,17 @@ class ExerciseListener
                 $item->invite = $this->exportHtmlContent($event, $item->invite);
                 $item->supplementary = $this->exportHtmlContent($event, $item->supplementary);
                 $item->specification = $this->exportHtmlContent($event, $item->specification);
+
+                // Export graphic question image
+                if ('application/x.graphic+json' === $item->type) {
+                    $filename = 'file_'.$item->id;
+                    $event->addFile(
+                        $filename,
+                        $this->container->getParameter('claroline.param.web_dir').DIRECTORY_SEPARATOR.$item->image->url,
+                        true
+                    );
+                    $item->image->url = '../files/'.$filename;
+                }
             }
         }
     }

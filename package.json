@@ -41,7 +41,8 @@
     "uglify-js": "^2.6.2",
     "webpack": "^1.12.13",
     "webpack-dev-server": "^1.14.1",
-    "webpack-fail-plugin": "^1.0.4"
+    "webpack-fail-plugin": "^1.0.4",
+    "image-webpack-loader": "^2.0.0"
   },
   "scripts": {
     "test": "mocha Resources/scripts/test"

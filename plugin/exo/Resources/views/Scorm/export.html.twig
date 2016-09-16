@@ -36,15 +36,6 @@
     <script src="../translations/ujm_sequence.js"></script>
     <script src="../translations/ujm_exo.js"></script>
 
-    {# Set some vars needed by Angular parts #}
-    <script>
-        {# Make Twig variables accessibles by AngularJS #}
-        var AngularApp = {};
-
-        AngularApp.webDir = "{{ path('claro_index') }}".split('/').slice(0, -2).join('/') + "/";
-        AngularApp.locale = "{{ locale ~ '_' ~ locale|upper }}";
-    </script>
-
     <script src="../assets/jsPlumb-2.1.3-min.js"></script>
     <script src="../assets/claroline-distribution-plugin-exo-app.js"></script>
 {% endblock %}

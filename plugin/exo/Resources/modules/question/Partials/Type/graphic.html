@@ -38,7 +38,7 @@
 
             <!-- Question image -->
             <img class="img-question img-responsive"
-                 data-ng-src="{{ graphicQuestionCtrl.getImageUrl() }}"
+                 data-ng-src="{{ graphicQuestionCtrl.question.image.url|asset }}"
                  alt="{{ graphicQuestionCtrl.question.image.label }}"
                  data-original-width="{{ graphicQuestionCtrl.question.image.width }}"
                  data-original-height="{{ graphicQuestionCtrl.question.image.height }}" />

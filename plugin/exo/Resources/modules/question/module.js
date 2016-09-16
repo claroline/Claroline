@@ -6,6 +6,7 @@ import angular from 'angular/index'
 import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
 import '#/main/core/modal/module'
+import '#/main/core/asset/module'
 
 import './../common/module'
 import './../feedback/module'
@@ -38,6 +39,7 @@ angular
   .module('Question', [
     'ui.translation',
     'ui.bootstrap',
+    'ui.asset',
     'ui.modal',
     'Common',
     'Feedback',
