@@ -77,6 +77,9 @@ export default class ScormResultsService {
   }
 
   convertScorm12Time (time) {
+    if (time === undefined || time === null) {
+      return null
+    }
     let remainingTime = Math.floor(time / 100)
     const hours = Math.floor(remainingTime / 3600)
     remainingTime %= 3600
@@ -89,6 +92,9 @@ export default class ScormResultsService {
   }
 
   convertScorm2004Time (time) {
+    if (time === undefined || time === null) {
+      return null
+    }
     const pattern = /T([0-9]+H)?([0-9]+M)?([0-9]+S)?$/
     const formattedTime =  this.formatScorm2004Date(time)
     const matches = formattedTime.match(pattern)
