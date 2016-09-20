@@ -43,6 +43,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
         $roleManager = $this->getContainer()->get('claroline.manager.role_manager');
         $roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $userRepo = $om->getRepository('ClarolineCoreBundle:User');
+        $groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
 
         $file = $input->getArgument('csv_workspace_registration_path');
@@ -56,15 +57,15 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
             $datas = str_getcsv($line, ';');
 
             if (count($datas) === 4) {
-                $username = trim($datas[0]);
+                $name = trim($datas[0]);
                 $workspaceCode = trim($datas[1]);
                 $roleKey = trim($datas[2]);
                 $action = trim($datas[3]);
-
-                $user = $userRepo->findOneBy(['username' => $username]);
+                $isGroup = $action === 'register_group' || $action === 'unregister_group';
+                $ars = $isGroup ? $groupRepo->findOneBy(['name' => $name]) : $userRepo->findOneBy(['username' => $name]);
                 $workspace = $workspaceRepo->findOneBy(['code' => $workspaceCode]);
 
-                if (!is_null($user) && !is_null($workspace)) {
+                if (!is_null($ars) && !is_null($workspace)) {
                     $roles = $roleRepo->findRolesByWorkspaceCodeAndTranslationKey(
                         $workspaceCode,
                         $roleKey
@@ -72,18 +73,28 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
 
                     if (count($roles) === 1) {
                         if ($action === 'register') {
-                            $roleManager->associateRole($user, $roles[0]);
+                            $roleManager->associateRole($ars, $roles[0]);
                             $output->writeln(
-                                "<info> Line $i: {User [$username] has been registered to workspace [$workspaceCode] with role [$roleKey].} </info>"
+                                "<info> Line $i: {User [$name] has been registered to workspace [$workspaceCode] with role [$roleKey].} </info>"
                             );
                         } elseif ($action === 'unregister') {
-                            $roleManager->dissociateRole($user, $roles[0]);
+                            $roleManager->dissociateRole($ars, $roles[0]);
                             $output->writeln(
-                                "<info> Line $i: {User [$username] has been unregistered from role [$roleKey] of workspace [$workspaceCode].} </info>"
+                                "<info> Line $i: {User [$name] has been unregistered from role [$roleKey] of workspace [$workspaceCode].} </info>"
+                            );
+                        } elseif ($action === 'register_group') {
+                            $roleManager->associateRole($ars, $roles[0]);
+                            $output->writeln(
+                                "<info> Line $i: {Group [$name] has been registered to workspace [$workspaceCode] with role [$roleKey].} </info>"
+                            );
+                        } elseif ($action === 'unregister_group') {
+                            $roleManager->dissociateRole($ars, $roles[0]);
+                            $output->writeln(
+                                "<info> Line $i: {Group [$name] has been unregistered from role [$roleKey] of workspace [$workspaceCode].} </info>"
                             );
                         } else {
                             $output->writeln(
-                                "<error> Line $i: {Unknown action [$action]. Allowed actions are [register] and [unregister]} </error>"
+                                "<error> Line $i: {Unknown action [$action]. Allowed actions are [register], [unregister], [register_group] and [unregister_group]} </error>"
                             );
                         }
                     } elseif (count($roles) < 1) {
@@ -96,8 +107,12 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                         );
                     }
                 } else {
-                    if (is_null($user)) {
-                        $output->writeln("<error> Line $i: {User [$username] doesn't exist.} </error>");
+                    if (is_null($ars)) {
+                        if ($isGroup) {
+                            $output->writeln("<error> Line $i: {Group [$name] doesn't exist.} </error>");
+                        } else {
+                            $output->writeln("<error> Line $i: {User [$name] doesn't exist.} </error>");
+                        }
                     }
 
                     if (is_null($workspace)) {
@@ -105,7 +120,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                     }
                 }
             } else {
-                $output->writeln("<error> Line $i: {Each row must have 4 parameters. Required format is [Username];[Workspace code];[Role translation key];[register|unregister]} </error>");
+                $output->writeln("<error> Line $i: {Each row must have 4 parameters. Required format is [Username|Group name];[Workspace code];[Role translation key];[register|unregister|register_group|unregister_group]} </error>");
             }
 
             if ($i % 100 === 0) {
