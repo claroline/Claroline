@@ -49,6 +49,11 @@
       "from": "amdefine@>=0.0.4",
       "resolved": "https://registry.npmjs.org/amdefine/-/amdefine-1.0.0.tgz"
     },
+    "angular": {
+      "version": "1.5.8",
+      "from": "angular@>=1.0.8",
+      "resolved": "https://registry.npmjs.org/angular/-/angular-1.5.8.tgz"
+    },
     "ansi-escapes": {
       "version": "1.4.0",
       "from": "ansi-escapes@>=1.1.0 <2.0.0",
@@ -638,6 +643,11 @@
         }
       }
     },
+    "checklist-model": {
+      "version": "0.10.0",
+      "from": "checklist-model@>=0.10.0 <0.11.0",
+      "resolved": "https://registry.npmjs.org/checklist-model/-/checklist-model-0.10.0.tgz"
+    },
     "chokidar": {
       "version": "1.6.0",
       "from": "chokidar@>=1.4.1 <2.0.0",
@@ -655,8 +665,8 @@
     },
     "claroline-core": {
       "version": "1.0.0",
-      "from": "vendor\\claroline\\distribution",
-      "resolved": "file:vendor\\claroline\\distribution"
+      "from": "vendor/claroline/distribution",
+      "resolved": "file:vendor/claroline/distribution"
     },
     "cli-cursor": {
       "version": "1.0.2",
