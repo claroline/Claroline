@@ -9,8 +9,11 @@
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
         <div id="portfolio-container"{% if not viewMode %} data-ng-if="portfolio.$resolved"{% endif %}>
             <header>
+                {% if not viewMode %}
+                    <a id="back-to-portfolio-btn" class="btn btn-default" href="{{ path('icap_portfolio_index') }}"><i class="fa fa-chevron-left"></i> {{ 'back' | trans({}, 'platform') }}</a>
+                {% endif %}
                 <div class="row">
-                    <div class="col-md-offset-2">
+                    <div class="col-md-offset-2 col-xs-offset-1">
                         <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
                         {% if not viewMode %}
                             <div class="portfolio-title-container{% if not editMode %} margin{% endif %}">
@@ -44,9 +47,9 @@
                     </div>
                 </div>
             </header>
-            <section class="col-md-12">
+            <section class="col-xs-12">
                 {% if not viewMode %}
-                <div class="communication_panel_container col-md-5">
+                <div class="communication_panel_container col-md-5 col-xs-10">
                     <div class="communication_panel_toggle" data-ng-init="displayComment=false" data-ng-class="{'expanded': displayComment}">
                         <button class="btn btn-default btn-sm" data-ng-click="updateCountViewComments()" data-ng-class="{'info': 0 < portfolio.unreadComments}">
                             {{ 'communication_panel' | trans({}, 'icap_portfolio') }}
@@ -102,13 +105,18 @@
                     <div class="modal-body portfolio_widget_selection_panel">
                         <div class="panel-group" id="data_widget_list" role="tablist" data-ng-show="portfolioWidgets.length">
                             <div class="panel" data-ng-repeat="portfolioWidget in portfolioWidgets"
-                                 data-ng-class="{'panel-default': $parent.selectedPortfolioWidget.widget_id != portfolioWidget.widget_id,
-                                 'panel-primary': $parent.selectedPortfolioWidget.widget_id == portfolioWidget.widget_id}">
+                                 data-ng-class="{'panel-default': !isSelected(portfolioWidget),
+                                 'panel-primary': isSelected(portfolioWidget)}">
                                 <div class="panel-heading clearfix" role="tab" id="heading-widget{{ portfolioWidget.id }}">
                                     <h4 class="panel-title pull-left" id="collapsible-widget{{ portfolioWidget.id }}">
-                                        <input type="radio" name="portfolioWidget" id="portfolioWidget{{ portfolioWidget.widget_id }}"
-                                               data-ng-model="$parent.selectedPortfolioWidget" data-ng-value="portfolioWidget">
-                                        <label></label>
+                                        <span data-ng-if="!isEdit">
+                                            <input type="checkbox" id="portfolioWidget{{ portfolioWidget.widget_id }}"
+                                                data-checklist-model="selectedPortfolioWidgets" data-checklist-value="portfolioWidget">
+                                        </span>
+                                        <span data-ng-if="isEdit">
+                                            <input type="radio" name="portfolioWidget" id="portfolioWidget{{ portfolioWidget.widget_id }}"
+                                                data-ng-model="selectedPortfolioWidget" data-ng-change="radioChanged(portfolioWidget)" data-ng-value="portfolioWidget">
+                                        </span>
                                         <span class="fa"
                                               data-ng-class="{'fa-caret-right': portfolioWidget.isCollapsed, 'fa-caret-down': !portfolioWidget.isCollapsed}"></span>
                                         <span class="portfolio_widget_selector" data-ng-click="portfolioWidget.isCollapsed = !portfolioWidget.isCollapsed">
@@ -133,7 +141,7 @@
                     </div>
                 </script>
 
-                <div class="main-content col-md-10 col-md-offset-1"{% if viewMode %} data-ng-controller="viewCtrl"{% endif %}>
+                <div class="main-content col-xs-12"{% if viewMode %} data-ng-controller="viewCtrl"{% endif %}>
                     {% if not viewMode %}
                         {% if editMode %}
                         <div class="add_widget" data-ng-show="!isAdding">
@@ -173,7 +181,7 @@
                         </p>
                         <ul class="list-unstyled" data-gridster="gridsterOptions">
                             {% verbatim %}
-                            <li data-gridster-item="portfolioWidget" data-ng-repeat="portfolioWidget in portfolioWidgets | orderBy:'+row +col' track by portfolioWidget.id">
+                            <li data-gridster-item="portfolioWidget" data-ng-repeat="portfolioWidget in portfolioWidgets | orderBy:'+row +col' track by getId(portfolioWidget)">
                                 {% endverbatim %}
                                 {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                             </li>
@@ -261,6 +269,7 @@
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
+        <script src="{{ hotAsset('dist/claroline-distribution-plugin-portfolio-checklist-model.js') }}"></script>
 
         {% javascripts debug=false filter='jsmin' output='js/portfolio/portfolio/script.js'
             '@IcapPortfolioBundle/Resources/public/js/utils/Array.js'

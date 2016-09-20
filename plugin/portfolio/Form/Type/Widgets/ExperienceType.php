@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ExperienceType extends AbstractWidgetType
 {
-    /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler  */
+    /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
     private $platformConfigHandler;
 
     /**
@@ -49,7 +49,11 @@ class ExperienceType extends AbstractWidgetType
                ]
             )
             ->add('description', 'tinymce')
-            ->add('website', 'url');
+            ->add('website', 'url',
+                [
+                    'required' => false,
+                ]
+            );
     }
 
     public function getName()
