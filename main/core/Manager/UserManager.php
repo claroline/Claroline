@@ -1379,9 +1379,8 @@ class UserManager
     private function generateRoleRestrictions(User $user)
     {
         $restrictions = [];
-        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
 
-        if (is_null($adminRole)) {
+        if (!$user->hasRole('ROLE_ADMIN')) {
             $wsRoles = $this->roleManager->getWorkspaceRolesByUser($user);
 
             foreach ($wsRoles as $wsRole) {
@@ -1412,9 +1411,8 @@ class UserManager
     private function generateGroupRestrictions(User $user)
     {
         $restrictions = [];
-        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
 
-        if (is_null($adminRole)) {
+        if (!$user->hasRole('ROLE_ADMIN')) {
             $restrictions = $user->getGroups()->toArray();
         }
 
@@ -1424,9 +1422,8 @@ class UserManager
     private function generateWorkspaceRestrictions(User $user)
     {
         $restrictions = [];
-        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
 
-        if (is_null($adminRole)) {
+        if (!$user->hasRole('ROLE_ADMIN')) {
             $restrictions = $this->workspaceManager->getWorkspacesByUser($user);
         }
 
