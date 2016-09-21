@@ -226,7 +226,7 @@ meaning_measure_difficulty: If the measure is high, the question is easy. If the
 metadata_visible: Display exercise information
 metadata_visible_help: If checked, a table with the information about the exercise will be displayed.
 metadata: Parameters
-minimal_correction: Show minimal correction
+minimal_correction: Hide solutions
 model: Model
 more_info: More information
 my_questions: My questions
