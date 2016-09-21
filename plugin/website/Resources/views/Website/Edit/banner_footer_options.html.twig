@@ -20,8 +20,8 @@
         <label for="{{ tag }}-text">{{ 'rich_content'|trans({}, 'icap_website') }}</label><br/>
         <div>{{ 'rich_content_explain'|trans({}, 'icap_website') }}</div>
         <div class="btn-group" role="group">
-            <button data-ng-class="{'active':vm.options.{{ tag }}EditorActive}" data-ng-click="vm.options.{{ tag }}EditorActive=true" class="btn btn-default">{{ 'editor_enable'|trans({}, 'icap_website') }}</button>
-            <button data-ng-class="{'active':!vm.options.{{ tag }}EditorActive}" data-ng-click="vm.options.{{ tag }}EditorActive=false" class="btn btn-default">{{ 'editor_disable'|trans({}, 'icap_website') }}</button>
+            <button data-ng-class="{'active':vm.options.data.{{ tag }}EditorActive}" data-ng-click="vm.options.data.{{ tag }}EditorActive=true" class="btn btn-default">{{ 'editor_enable'|trans({}, 'icap_website') }}</button>
+            <button data-ng-class="{'active':!vm.options.data.{{ tag }}EditorActive}" data-ng-click="vm.options.data.{{ tag }}EditorActive=false" class="btn btn-default">{{ 'editor_disable'|trans({}, 'icap_website') }}</button>
         </div>
     </div>
     {% include 'IcapWebsiteBundle:Website:Edit/bg_image_repeat.html.twig' with {'tag':tag} %}
