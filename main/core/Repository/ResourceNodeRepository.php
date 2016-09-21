@@ -41,16 +41,27 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         $this->builder->setBundles($bundles);
     }
 
+    /**
+     * Finds a resource node by its id or guid.
+     *
+     * @param string|int $id The id or guid of the node
+     *
+     * @return ResourceNode|null
+     */
     public function find($id)
     {
-        $dql = '
-            SELECT n FROM Claroline\CoreBundle\Entity\Resource\ResourceNode n
-            WHERE n.id = :id OR n.guid LIKE :id
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('id', $id);
+        $qb = $this->createQueryBuilder('n');
 
-        return $query->getOneOrNullResult();
+        if (preg_match('/^\d+$/', $id)) {
+            $qb->where('n.id = :id');
+        } else {
+            $qb->where('n.guid = :id');
+        }
+
+        return $qb
+            ->getQuery()
+            ->setParameter('id', $id)
+            ->getOneOrNullResult();
     }
 
     /**
