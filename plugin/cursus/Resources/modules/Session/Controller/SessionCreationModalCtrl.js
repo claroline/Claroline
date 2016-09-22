@@ -33,7 +33,8 @@ export default class SessionCreationModalCtrl {
       userValidation: false,
       organizationValidation: false,
       registrationValidation: false,
-      validators: []
+      validators: [],
+      eventRegistrationType: 0
     }
     this.sessionErrors = {
       name: null,
@@ -55,6 +56,12 @@ export default class SessionCreationModalCtrl {
     this.cursus = []
     this.validatorsRoles = []
     this.validators = []
+    this.eventRegistrationTypeChoices = [
+      {value: 0, name: Translator.trans('event_registration_automatic', {}, 'cursus')},
+      {value: 1, name: Translator.trans('event_registration_manual', {}, 'cursus')},
+      {value: 2, name: Translator.trans('event_registration_public', {}, 'cursus')}
+    ]
+    this.eventRegistrationType = this.eventRegistrationTypeChoices[0]
     this._userpickerCallback = this._userpickerCallback.bind(this)
     this.initializeSession()
   }
@@ -85,6 +92,10 @@ export default class SessionCreationModalCtrl {
     this.session['userValidation'] = this.course['userValidation']
     this.session['organizationValidation'] = this.course['organizationValidation']
     this.session['registrationValidation'] = this.course['registrationValidation']
+
+    if (this.course['description']) {
+      this.session['description'] = this.course['description']
+    }
   }
 
   displayValidators () {
@@ -129,6 +140,12 @@ export default class SessionCreationModalCtrl {
       if (this.session['maxUsers'] < 0) {
         this.sessionErrors['maxUsers'] = Translator.trans('form_number_superior_error', {value: 0}, 'cursus')
       }
+    }
+
+    if (this.eventRegistrationType) {
+      this.session['eventRegistrationType'] = this.eventRegistrationType['value']
+    } else {
+      this.session['eventRegistrationType'] = 0
     }
     this.session['cursus'] = []
     this.cursus.forEach(c => {

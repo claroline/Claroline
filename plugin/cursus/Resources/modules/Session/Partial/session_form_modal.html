@@ -117,10 +117,21 @@
         </div>
         <div class="form-group row">
             <label class="control-label col-md-3">
+                {{ 'session_event_registration'|trans:{}:'cursus' }}
+            </label>
+            <div class="col-md-9">
+                <select class="form-control" ng-model="cmc.eventRegistrationType" ng-options="c['name'] for c in cmc.eventRegistrationTypeChoices">
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-md-3">
                 {{ 'cursus'|trans:{}:'cursus' }}
             </label>
             <div class="col-md-9">
-                <select multiple class="form-control" ng-model="cmc.cursus" ng-options="c['title'] for c in cmc.cursusList"><option></option></select>
+                <select multiple class="form-control" ng-model="cmc.cursus" ng-options="c['title'] for c in cmc.cursusList">
+                    <option></option>
+                </select>
             </div>
         </div>
         <div class="form-group row" ng-class="cmc.sessionErrors['maxUsers'] ? 'has-error' : ''">

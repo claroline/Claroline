@@ -56,6 +56,14 @@
     </div>
     <div class="form-group row">
         <label class="control-label col-md-3">
+            {{ 'disable_session_event_registration'|trans:{}:'cursus' }}
+        </label>
+        <div class="col-md-9">
+            <input type="checkbox" ng-model="cmc.configs['disableSessionEventRegistration']">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-md-3">
             {{ 'enable_courses_tab_in_profile'|trans:{}:'cursus' }}
         </label>
         <div class="col-md-9">

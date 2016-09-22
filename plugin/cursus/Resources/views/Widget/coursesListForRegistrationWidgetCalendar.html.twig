@@ -41,11 +41,13 @@
         'js/translations/agenda/*.js'
         'js/translations/cursus/*.js'
         'js/translations/tools/*.js'
+        'js/translations/platform/*.js'
         %}<script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>
         window['sessions_' + {{ widgetInstance.getId() }}] = {{ courseSessions|json_encode|raw }}
         window['registered-sessions_' + {{ widgetInstance.getId() }}] = {{ registeredSessions|json_encode|raw }}
         window['pending-sessions_' + {{ widgetInstance.getId() }}] = {{ pendingSessions|json_encode|raw }}
+        window['session-event-users-status_' + {{ widgetInstance.getId() }}] = {{ sessionEventUsersStatus|json_encode|raw }}
     </script>
 {% endblock %}

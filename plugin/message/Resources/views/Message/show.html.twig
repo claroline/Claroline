@@ -25,7 +25,10 @@
                                     <h1 class="profile_picture_placeholder"><i class="fa fa-user"></i></h1>
                                {% endif %}
                                 <p class="text-muted">
-                                    {{ ancestor.getSenderUsername() }} ({{ ancestor.getSender().getFirstName()}} {{ ancestor.getSender().getLastName()}})
+                                    {{ ancestor.getSenderUsername() }}
+                                    {% if ancestor.getSender() %}
+                                        ({{ ancestor.getSender().getFirstName()}} {{ ancestor.getSender().getLastName()}})
+                                    {% endif %}
                                 </p>
                             </div>
                             <div class="col-md-9">

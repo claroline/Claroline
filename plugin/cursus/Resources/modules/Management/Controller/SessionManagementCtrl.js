@@ -184,8 +184,8 @@ export default class SessionManagementCtrl {
     this.SessionService.editSession(this.session, this._updateSessionCallback)
   }
 
-  editEvent (eventId) {
-    this.SessionEventService.editSessionEvent(eventId, this._updateSessionEventCallback)
+  editEvent (event) {
+    this.SessionEventService.editSessionEvent(event, this._updateSessionEventCallback)
   }
 
   deleteEvent (eventId) {

@@ -375,9 +375,6 @@ export default class SessionService {
     const startDate = new Date(start)
     const endDate = new Date(end)
     const currentDate = (now === null) ? new Date() : now
-    //startDate.setHours(0, 0, 0, 0, 0)
-    //endDate.setHours(0, 0, 0, 0, 0)
-    //currentDate.setHours(0, 0, 0, 0, 0)
 
     if (startDate.getTime() > currentDate.getTime()) {
       status = 'not_started'

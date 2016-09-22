@@ -29,6 +29,7 @@ use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\DocumentModel;
 use Claroline\CursusBundle\Entity\SessionEvent;
+use Claroline\CursusBundle\Entity\SessionEventUser;
 use Claroline\CursusBundle\Event\Log\LogCourseEditEvent;
 use Claroline\CursusBundle\Event\Log\LogCourseSessionEditEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusEditEvent;
@@ -740,7 +741,8 @@ class AdminManagementController extends Controller
             $sessionDatas['organizationValidation'],
             $sessionDatas['maxUsers'],
             0,
-            $validators
+            $validators,
+            $sessionDatas['eventRegistrationType']
         );
         $serializedSession = $this->serializer->serialize(
             $createdSession,
@@ -781,6 +783,7 @@ class AdminManagementController extends Controller
         $session->setMaxUsers($sessionDatas['maxUsers']);
         $session->setOrganizationValidation($sessionDatas['organizationValidation']);
         $session->setRegistrationValidation($sessionDatas['registrationValidation']);
+        $session->setEventRegistrationType($sessionDatas['eventRegistrationType']);
         $cursus = $this->cursusManager->getCursusByIds($sessionDatas['cursus']);
         $validators = $this->userManager->getUsersByIds($sessionDatas['validators']);
         $session->emptyCursus();
@@ -850,6 +853,29 @@ class AdminManagementController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/api/session/event/{sessionEvent}/get/by/id",
+     *     name="api_get_session_event_by_id",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * Returns the session event
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getSessionEventByIdAction(SessionEvent $sessionEvent)
+    {
+        $serializedSessionEvent = $this->serializer->serialize(
+            $sessionEvent,
+            'json',
+            SerializationContext::create()->setGroups(['api_user_min'])
+        );
+
+        return new JsonResponse($serializedSessionEvent, 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/api/session/{session}/event/create",
      *     name="api_post_session_event_creation",
      *     options = {"expose"=true}
@@ -882,7 +908,9 @@ class AdminManagementController extends Controller
             $location,
             $sessionEventDatas['locationExtra'],
             $locationResource,
-            $tutors
+            $tutors,
+            $sessionEventDatas['registrationType'],
+            $sessionEventDatas['maxUsers']
         );
         $serializedSessionEvent = $this->serializer->serialize(
             $createdSessionEvent,
@@ -917,6 +945,8 @@ class AdminManagementController extends Controller
         $sessionEvent->setEndDate($endDate);
         $sessionEvent->setDescription($sessionEventDatas['description']);
         $sessionEvent->setLocationExtra($sessionEventDatas['locationExtra']);
+        $sessionEvent->setRegistrationType($sessionEventDatas['registrationType']);
+        $sessionEvent->setMaxUsers($sessionEventDatas['maxUsers']);
         $sessionEvent->setLocationResource(null);
         $sessionEvent->setLocation(null);
 
@@ -943,6 +973,11 @@ class AdminManagementController extends Controller
         $this->cursusManager->persistSessionEvent($sessionEvent);
         $event = new LogSessionEventEditEvent($sessionEvent);
         $this->eventDispatcher->dispatch('log', $event);
+        $this->cursusManager->checkPendingSessionEventUsers($sessionEvent);
+
+        if ($sessionEvent->getRegistrationType() === CourseSession::REGISTRATION_AUTO) {
+            $this->cursusManager->registerSessionUsersToSessionEvent($sessionEvent);
+        }
         $serializedSessionEvent = $this->serializer->serialize(
             $sessionEvent,
             'json',
@@ -1136,7 +1171,7 @@ class AdminManagementController extends Controller
     {
         $user = $queue->getUser();
         $session = $queue->getSession();
-        $results = $this->cursusManager->registerUsersToSession($session, [$user], 0);
+        $results = $this->cursusManager->registerUsersToSession($session, [$user], CourseSessionUser::LEARNER, true);
 
         if ($results['status'] === 'success') {
             $serializedQueue = $this->serializer->serialize(
@@ -1259,6 +1294,97 @@ class AdminManagementController extends Controller
         $results = $this->cursusManager->registerGroupToSession($session, $group, $groupType);
 
         return new JsonResponse($results, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/session/event/{sessionEvent}/unregistered/users",
+     *     name="api_get_session_event_unregistered_users",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * Displays the list of users who are not registered to the session event
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getSessionEventUnregisteredUsersAction(SessionEvent $sessionEvent)
+    {
+        $users = $this->cursusManager->getUnregisteredUsersBySessionEvent($sessionEvent);
+        $serializedUsers = $this->serializer->serialize(
+            $users,
+            'json',
+            SerializationContext::create()->setGroups(['api_user_min'])
+        );
+
+        return new JsonResponse($serializedUsers, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/session/event/{sessionEvent}/user/{user}/register",
+     *     name="api_post_session_event_user_registration",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", converter="current_user")
+     *
+     * Registers an user to a session event
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function postSessionEventUserRegisterAction(SessionEvent $sessionEvent, User $user)
+    {
+        $results = $this->cursusManager->registerUsersToSessionEvent($sessionEvent, [$user]);
+
+        return new JsonResponse($results, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/session/event/{sessionEvent}/users",
+     *     name="api_get_session_event_users_by_session_event",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * Get the users list of the session event
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getSessionEventUsersBySessionEventAction(SessionEvent $sessionEvent)
+    {
+        $sessionEventUsers = $this->cursusManager->getSessionEventUsersBySessionEvent($sessionEvent);
+        $serializedSessionEventUsers = $this->serializer->serialize(
+            $sessionEventUsers,
+            'json',
+            SerializationContext::create()->setGroups(['api_user_min'])
+        );
+
+        return new JsonResponse($serializedSessionEventUsers, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/session/event/user/{sessionEventUser}/delete",
+     *     name="api_delete_session_event_user",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * Deletes an user from session event
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function deleteSessionEventUserAction(SessionEventUser $sessionEventUser)
+    {
+        $serializedSessionEventUser = $this->serializer->serialize(
+            $sessionEventUser,
+            'json',
+            SerializationContext::create()->setGroups(['api_cursus'])
+        );
+        $this->cursusManager->unregisterUsersFromSessionEvent([$sessionEventUser]);
+
+        return new JsonResponse($serializedSessionEventUser, 200);
     }
 
     /**
@@ -1478,6 +1604,9 @@ class AdminManagementController extends Controller
         $datas['disableCertificates'] = $this->configHandler->hasParameter('cursus_disable_certificates') ?
             $this->configHandler->getParameter('cursus_disable_certificates') :
             false;
+        $datas['disableSessionEventRegistration'] = $this->configHandler->hasParameter('cursus_disable_session_event_registration') ?
+            $this->configHandler->getParameter('cursus_disable_session_event_registration') :
+            true;
         $datas['enableCoursesProfileTab'] = $this->configHandler->hasParameter('cursus_enable_courses_profile_tab') ?
             $this->configHandler->getParameter('cursus_enable_courses_profile_tab') :
             false;
@@ -1502,6 +1631,7 @@ class AdminManagementController extends Controller
         $parameters = $this->request->request->get('parameters', false);
         $this->configHandler->setParameter('cursus_disable_invitations', $parameters['disableInvitations']);
         $this->configHandler->setParameter('cursus_disable_certificates', $parameters['disableCertificates']);
+        $this->configHandler->setParameter('cursus_disable_session_event_registration', $parameters['disableSessionEventRegistration']);
         $this->configHandler->setParameter('cursus_enable_courses_profile_tab', $parameters['enableCoursesProfileTab']);
 
         return new JsonResponse($parameters, 200);

@@ -10,48 +10,50 @@
 /*global Routing*/
 /*global Translator*/
 
-export default class GroupsRegistrationModalCtrl {
-  constructor($http, $uibModalInstance, NgTableParams, sessionId, groupType, callback) {
+export default class SessionEventUsersRegistrationModalCtrl {
+  constructor($http, $uibModalInstance, NgTableParams, sessionId, sessionEventId, callback) {
     this.$http = $http
     this.$uibModalInstance = $uibModalInstance
     this.sessionId = sessionId
-    this.groupType = groupType
+    this.sessionEventId = sessionEventId
     this.callback = callback
-    this.groups = []
+    this.users = []
     this.tableParams = new NgTableParams(
       {count: 20},
-      {counts: [10, 20, 50, 100], dataset: this.groups}
+      {counts: [10, 20, 50, 100], dataset: this.users}
     )
     this.errorMessages = []
-    this.loadGroups()
+    this.loadUsers()
   }
 
-  loadGroups () {
-    const route = Routing.generate('api_get_session_unregistered_groups', {session: this.sessionId, groupType: this.groupType})
+  loadUsers () {
+    const route = Routing.generate('api_get_session_event_unregistered_users', {sessionEvent: this.sessionEventId})
     this.$http.get(route).then(d => {
       if (d['status'] === 200) {
-        this.groups.splice(0, this.groups.length)
-        const groups = JSON.parse(d['data'])
-        groups.forEach(g => {
-          this.groups.push(g)
+        this.users.splice(0, this.users.length)
+        const users = JSON.parse(d['data'])
+        users.forEach(u => {
+          this.users.push(u)
         })
       }
     })
   }
 
-  registerGroup (groupId) {
+  registerUser (userId) {
     this.errorMessages = []
-    const route = Routing.generate('api_post_session_group_registration', {session: this.sessionId, group: groupId, groupType: this.groupType})
+    const route = Routing.generate('api_post_session_event_user_registration', {sessionEvent: this.sessionEventId, user: userId})
     this.$http.post(route).then(d => {
       if (d['status'] === 200) {
         const datas = d['data']
 
         if (datas['status'] === 'success') {
-          this.callback(datas['sessionGroup'], datas['sessionUsers'])
-          const index = this.groups.findIndex(g => g['id'] === groupId)
+          if (this.callback) {
+            this.callback(datas['sessionEventUsers'])
+          }
+          const index = this.users.findIndex(u => u['id'] === userId)
 
           if (index > -1) {
-            this.groups.splice(index, 1)
+            this.users.splice(index, 1)
             this.tableParams.reload()
           }
         } else if (datas['status'] === 'failed') {

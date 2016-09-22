@@ -64,11 +64,13 @@
         const sessionsIdx = 'sessions_' + widgetInstanceId
         const editableSessionsIdx = 'editable-sessions_' + widgetInstanceId
         const workspacesIdx = 'workspaces_' + widgetInstanceId
+        const sessionEventUsersStatusIdx = 'session-event-users-status_' + widgetInstanceId
         const widgetElement = $(`#my-courses-widget-${widgetInstanceId}`)
         const listElement = $(`#courses-list-${widgetInstanceId}`)
         let sessions = []
         let events = []
         let editableSessions = []
+        let sessionEventUsersStatus = []
         let workspaces = {}
         let selectedEventId = null
         let selectedCommentId = null
@@ -300,6 +302,7 @@
             events.push(sessionStartEvent)
             events.push(sessionEndEvent)
             s['events'].forEach(e => {
+              if (sessionEventUsersStatus[e['id']] === 0) {
                 e['title'] = e['comments'].length > 0 ? `!!! ${e['name']}` :  e['name']
                 e['start']= e['startDate']
                 e['end']= e['endDate']
@@ -318,6 +321,7 @@
                 e['courseCode'] = s['course']['code']
                 e['courseDescription'] = s['course']['description']
                 events.push(e)
+              }
             })
           })
         }
@@ -326,6 +330,7 @@
           sessions = (typeof window[sessionsIdx] === 'undefined') ? [] : JSON.parse(window[sessionsIdx])
           editableSessions = (typeof window[editableSessionsIdx] === 'undefined') ? [] : window[editableSessionsIdx]
           workspaces = (typeof window[workspacesIdx] === 'undefined') ? {} : window[workspacesIdx]
+          sessionEventUsersStatus = (typeof window[sessionEventUsersStatusIdx] === 'undefined') ? [] : window[sessionEventUsersStatusIdx]
           initializeEvents()
           $('#courses-widget-calendar-' + widgetInstanceId).fullCalendar({
             header: {
