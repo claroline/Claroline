@@ -10,6 +10,7 @@ import 'angular-ui-tinymce'
 import 'angular-ui-translation/angular-translation'
 import '#/main/core/modal/module'
 import '#/main/core/fos-js-router/module'
+import '#/main/core/anchor/module'
 
 import './../common/module'
 import './../feedback/module'
@@ -32,6 +33,7 @@ angular
     'ui.tinymce',
     'ui.modal',
     'mgcrea.ngStrap.datepicker',
+    'anchor',
     'Common',
     'Feedback',
     'Step',
