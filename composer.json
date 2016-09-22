@@ -69,6 +69,7 @@
         "symfony/twig-bundle": "~2.0",
         "symfony/yaml": "*",
         "twig/extensions": "1.2.0",
+        "twig/twig": "1.24.2",
         "werkint/jsmin": "1.0.0",
         "white-october/pagerfanta-bundle": "1.0.2",
         "willdurand/js-translation-bundle": "~2.1",
