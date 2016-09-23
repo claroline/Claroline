@@ -2,7 +2,7 @@
 'Each row requires 2 parameters.': 'Each row requires 2 parameters.'
 'Each row requires at least 5 parameters.': 'Each row requires at least 5 parameters.'
 'The code {{ code }} is already assigned to another workspace.': 'The code {{ code }} is already assigned to another workspace.'
-'The name {{ name }} is already in use.': 'The name {{ name }} is already in use.'
+'The name {{ name }} is already in use.': De naam {{ name }} is already in use.'
 'The user or group {{ name }} does not exist.': 'The user or group {{ name }} does not exist.'
 google_meta_tag_error: google_meta_tag_error
 invalid_date_range: invalid_date_range

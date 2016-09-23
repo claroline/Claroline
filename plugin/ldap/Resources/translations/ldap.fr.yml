@@ -15,14 +15,14 @@ ldap_error_conexion: 'Impossible de se connecter au serveur LDAP'
 ldap_group_class: 'Classe d''un groupe'
 ldap_save_groups_settings_error: 'Afin d''enregistrer les paramètres, vous devez fournir le nom et le code'
 ldap_save_users_settings_error: 'Afin d''enregistrer les paramètres, vous devez fournir le nom d''utilisateur, nom, prénom, courriel et mot de passe.'
-ldap_user_class: 'Classe d''utilisateur'
-users_settings: 'Réglages d''utilisateurs'
+ldap_user_class: Classe d'utilisateur
+users_settings: Réglages d'utilisateurs
 name: 'Nom'
 host: 'Hôte'
 port: 'Port'
-distinguished_name: 'DN'
-username: 'Utilisateur'
-password: 'Mot de passe'
-protocol_version: 'Version'
+distinguished_name: DN
+username: Utilisateur
+password: Mot de passe
+protocol_version: Version
 append_dn: Ajouter le DN au nom d'utilisateur
-auto_creation: 'Créer l''utilisateur s''il n''existe pas.'
+auto_creation: Créer l'utilisateur s'il n'existe pas.

@@ -1,182 +1,186 @@
-'Show actions for': 'Show actions for'
-all: all
-'for user': 'for user'
-group: group
-log_add_user: log_add_user
-log_change_right: log_change_right
-log_change_set: log_change_set
-log_context: log_context
-log_copy: log_copy
-log_copy_source: log_copy_source
-log_create: log_create
-log_default_user: log_default_user
-log_delete: log_delete
-log_doer: log_doer
-log_export: log_export
-log_filter_actions: log_filter_actions
-log_group-add_user_filter: log_group-add_user_filter
-log_group-add_user_sentence: log_group-add_user_sentence
-log_group-add_user_shortname: log_group-add_user_shortname
-log_group-add_user_title: log_group-add_user_title
-log_group-create_filter: log_group-create_filter
-log_group-create_sentence: log_group-create_sentence
-log_group-create_shortname: log_group-create_shortname
-log_group-create_title: log_group-create_title
-log_group-delete_filter: log_group-delete_filter
-log_group-delete_sentence: log_group-delete_sentence
-log_group-delete_shortname: log_group-delete_shortname
-log_group-delete_title: log_group-delete_title
-log_group-remove_user_filter: log_group-remove_user_filter
-log_group-remove_user_sentence: log_group-remove_user_sentence
-log_group-remove_user_shortname: log_group-remove_user_shortname
-log_group-remove_user_title: log_group-remove_user_title
-log_group-update_filter: log_group-update_filter
-log_group-update_sentence: log_group-update_sentence
-log_group-update_shortname: log_group-update_shortname
-log_group-update_title: log_group-update_title
-log_has_not_changed: log_has_not_changed
-log_hidden_workspace_widget_config_amount: log_hidden_workspace_widget_config_amount
-log_himself: log_himself
-log_login: log_login
-log_move: log_move
-log_new_values: log_new_values
-log_no_actions_found: log_no_actions_found
-log_old_folder: log_old_folder
-log_old_values: log_old_values
-log_old_workspace: log_old_workspace
-log_owner: log_owner
-log_platform_roles: log_platform_roles
-log_read: log_read
-log_receiver_group: log_receiver_group
-log_receiver_user: log_receiver_user
-log_remove_user: log_remove_user
-log_resource: log_resource
-log_resource-copy_filter: log_resource-copy_filter
-log_resource-copy_sentence: log_resource-copy_sentence
-log_resource-copy_shortname: log_resource-copy_shortname
-log_resource-copy_title: log_resource-copy_title
-log_resource-create_filter: log_resource-create_filter
-log_resource-create_sentence: log_resource-create_sentence
-log_resource-create_shortname: log_resource-create_shortname
-log_resource-create_title: log_resource-create_title
-log_resource-custom_action_filter: log_resource-custom_action_filter
-log_resource-delete_filter: log_resource-delete_filter
-log_resource-delete_sentence: log_resource-delete_sentence
-log_resource-delete_shortname: log_resource-delete_shortname
-log_resource-delete_title: log_resource-delete_title
-log_resource-export_filter: log_resource-export_filter
-log_resource-export_sentence: log_resource-export_sentence
-log_resource-export_shortname: log_resource-export_shortname
-log_resource-export_title: log_resource-export_title
-log_resource-move_filter: log_resource-move_filter
-log_resource-move_sentence: log_resource-move_sentence
-log_resource-move_shortname: log_resource-move_shortname
-log_resource-move_title: log_resource-move_title
-log_resource-read_filter: log_resource-read_filter
-log_resource-read_sentence: log_resource-read_sentence
-log_resource-read_shortname: log_resource-read_shortname
-log_resource-read_title: log_resource-read_title
-log_resource-shortcut_filter: log_resource-shortcut_filter
-log_resource-shortcut_sentence: log_resource-shortcut_sentence
-log_resource-shortcut_shortname: log_resource-shortcut_shortname
-log_resource-shortcut_title: log_resource-shortcut_title
-log_resource-update_filter: log_resource-update_filter
-log_resource-update_rename_filter: log_resource-update_rename_filter
-log_resource-update_rename_sentence: log_resource-update_rename_sentence
-log_resource-update_rename_shortname: log_resource-update_rename_shortname
-log_resource-update_rename_title: log_resource-update_rename_title
-log_resource-update_sentence: log_resource-update_sentence
-log_resource-update_shortname: log_resource-update_shortname
-log_resource-update_title: log_resource-update_title
-log_resource_owner: log_resource_owner
-log_role: log_role
-log_role-subscribe_group_filter: log_role-subscribe_group_filter
-log_role-subscribe_user_filter: log_role-subscribe_user_filter
-log_see_details: log_see_details
-log_shortcut: log_shortcut
-log_subscribe_group: log_subscribe_group
-log_subscribe_user: log_subscribe_user
-log_unsubscribe_group: log_unsubscribe_group
-log_unsubscribe_user: log_unsubscribe_user
-log_update: log_update
-log_user-create_filter: log_user-create_filter
-log_user-create_sentence: log_user-create_sentence
-log_user-create_shortname: log_user-create_shortname
-log_user-create_title: log_user-create_title
-log_user-delete_filter: log_user-delete_filter
-log_user-delete_sentence: log_user-delete_sentence
-log_user-delete_shortname: log_user-delete_shortname
-log_user-delete_title: log_user-delete_title
-log_user-login_filter: log_user-login_filter
-log_user-login_sentence: log_user-login_sentence
-log_user-login_shortname: log_user-login_shortname
-log_user-login_title: log_user-login_title
-log_user-update_filter: log_user-update_filter
-log_user-update_sentence: log_user-update_sentence
-log_user-update_shortname: log_user-update_shortname
-log_user-update_title: log_user-update_title
-log_widget_config_amount: log_widget_config_amount
-log_widget_config_restrictions: log_widget_config_restrictions
-log_workspace-create_filter: log_workspace-create_filter
-log_workspace-create_sentence: log_workspace-create_sentence
-log_workspace-create_shortname: log_workspace-create_shortname
-log_workspace-create_title: log_workspace-create_title
-log_workspace-delete_filter: log_workspace-delete_filter
-log_workspace-delete_sentence: log_workspace-delete_sentence
-log_workspace-delete_shortname: log_workspace-delete_shortname
-log_workspace-delete_title: log_workspace-delete_title
-log_workspace-enter_filter: log_workspace-enter_filter
-log_workspace-enter_sentence: log_workspace-enter_sentence
-log_workspace-enter_shortname: log_workspace-enter_shortname
-log_workspace-enter_title: log_workspace-enter_title
-log_workspace-role-change_right_filter: log_workspace-role-change_right_filter
-log_workspace-role-change_right_sentence: log_workspace-role-change_right_sentence
-log_workspace-role-change_right_shortname: log_workspace-role-change_right_shortname
-log_workspace-role-change_right_title: log_workspace-role-change_right_title
-log_workspace-role-create_filter: log_workspace-role-create_filter
-log_workspace-role-create_sentence: log_workspace-role-create_sentence
-log_workspace-role-create_shortname: log_workspace-role-create_shortname
-log_workspace-role-create_title: log_workspace-role-create_title
-log_workspace-role-delete_filter: log_workspace-role-delete_filter
-log_workspace-role-delete_sentence: log_workspace-role-delete_sentence
-log_workspace-role-delete_shortname: log_workspace-role-delete_shortname
-log_workspace-role-delete_title: log_workspace-role-delete_title
-log_workspace-role-subscribe_group_filter: log_workspace-role-subscribe_group_filter
-log_workspace-role-subscribe_group_sentence: log_workspace-role-subscribe_group_sentence
-log_workspace-role-subscribe_group_shortname: log_workspace-role-subscribe_group_shortname
-log_workspace-role-subscribe_group_title: log_workspace-role-subscribe_group_title
-log_workspace-role-subscribe_user_filter: log_workspace-role-subscribe_user_filter
-log_workspace-role-subscribe_user_sentence: log_workspace-role-subscribe_user_sentence
-log_workspace-role-subscribe_user_shortname: log_workspace-role-subscribe_user_shortname
-log_workspace-role-subscribe_user_title: log_workspace-role-subscribe_user_title
-log_workspace-role-unsubscribe_group_filter: log_workspace-role-unsubscribe_group_filter
-log_workspace-role-unsubscribe_group_sentence: log_workspace-role-unsubscribe_group_sentence
-log_workspace-role-unsubscribe_group_shortname: log_workspace-role-unsubscribe_group_shortname
-log_workspace-role-unsubscribe_group_title: log_workspace-role-unsubscribe_group_title
-log_workspace-role-unsubscribe_user_filter: log_workspace-role-unsubscribe_user_filter
-log_workspace-role-unsubscribe_user_sentence: log_workspace-role-unsubscribe_user_sentence
-log_workspace-role-unsubscribe_user_shortname: log_workspace-role-unsubscribe_user_shortname
-log_workspace-role-unsubscribe_user_title: log_workspace-role-unsubscribe_user_title
-log_workspace-role-update_filter: log_workspace-role-update_filter
-log_workspace-role-update_sentence: log_workspace-role-update_sentence
-log_workspace-role-update_shortname: log_workspace-role-update_shortname
-log_workspace-role-update_title: log_workspace-role-update_title
-log_workspace-tool-read_filter: log_workspace-tool-read_filter
-log_workspace-tool-read_sentence: log_workspace-tool-read_sentence
-log_workspace-tool-read_shortname: log_workspace-tool-read_shortname
-log_workspace-tool-read_title: log_workspace-tool-read_title
-log_workspace-update_filter: log_workspace-update_filter
-log_workspace-update_shortname: log_workspace-update_shortname
-log_workspace-update_title: log_workspace-update_title
-log_workspace_read: log_workspace_read
-log_workspace_roles: log_workspace_roles
-log_workspace_source: log_workspace_source
-resource: resource
-role: role
-user: user
-workspace: workspace
-global_tracking: global_tracking
-user_tracking: user_tracking
-user_list: user_list
-actions_per_day_chart: actions_per_day_chart
-download_csv_list: download_csv_list
+'Show actions for': Toon de volgende acties
+all: allen
+'for user': voor gebruiker
+group: Groep
+log_add_user: Gebruiker toevoegen
+log_change_right: Verandering van rechten
+log_change_set: Lijst van de bewerkte eigenschappen
+log_context: Context :
+log_copy: Kopie
+log_copy_source: Bron van de kopie
+log_create: Maken
+log_default_user: Claroline Connect
+log_delete: Verwijderen
+log_doer: Auteur van de actie
+log_export: Download
+log_filter_actions: Acties tonen
+log_group-add_user_filter: Een gebruiker aan een groep toevoegen
+log_group-add_user_sentence: heeft %receiver_user% toegevoegd aan groep %receiver_group%
+log_group-add_user_shortname: Toevoegen
+log_group-add_user_title: Een gebruiker aan een groep toevoegen
+log_group-create_filter: Een groep maken
+log_group-create_sentence: heeft de groep %receiver_group% gemaakt
+log_group-create_shortname: Maken
+log_group-create_title: Een groep maken
+log_group-delete_filter: Een groep verwijderen
+log_group-delete_sentence: heeft de groep %receiver_group% verwijderd
+log_group-delete_shortname: Verwijderen
+log_group-delete_title: Een groep verwijderen
+log_group-remove_user_filter: Gebruiker uit een groep verwijderd
+log_group-remove_user_sentence: heeft %receiver_user% verwijderd uit de groep %receiver_group%
+log_group-remove_user_shortname: Verwijderen
+log_group-remove_user_title: Gebruiker uit een groep verwijderd
+log_group-update_filter: Update van een groep
+log_group-update_sentence: heeft de groep %receiver_group% bewerkt
+log_group-update_shortname: Update
+log_group-update_title: Update van een groep
+log_has_not_changed: Is niet veranderd
+log_hidden_workspace_widget_config_amount: Aantal acties
+log_himself: De auteur zelf
+log_login: Connectie
+log_move: Verplaatsing
+log_new_values: Nieuwe waarden
+log_no_actions_found: Geen actie gevonden
+log_old_folder: Vroegere dossier
+log_old_values: Vroegere waarden
+log_old_workspace: Vroegere werkruimte
+log_owner: Eigenaar van het doelleermiddel
+log_platform_roles: Rollen op het platform
+log_read: Lezen
+log_receiver_group: Doelgroep van de actie
+log_receiver_user: Doelgebruiker van de actie
+log_remove_user: Een gebruiker verwijderen
+log_resource: Doelleermiddel van de actie
+log_resource-copy_filter: Kopie van een leermiddel
+log_resource-copy_sentence: heeft %resource% gekopieerd
+log_resource-copy_shortname: Kopie
+log_resource-copy_title: Kopie van een leermiddel
+log_resource-create_filter: Een leermiddel maken
+log_resource-create_sentence: heeft %resource% gemaakt
+log_resource-create_shortname: Maken
+log_resource-create_title: Een leermiddel maken
+log_resource-custom_action_filter: Speciale actie op een leermiddel
+log_resource-delete_filter: Een leermiddel verwijderen
+log_resource-delete_sentence: heeft %resource% verwijderd
+log_resource-delete_shortname: Verwijderen
+log_resource-delete_title: Een leermiddel verwijderen
+log_resource-export_filter: Een leermiddel downloaden
+log_resource-export_sentence: heeft %resource% gedownload
+log_resource-export_shortname: Download
+log_resource-export_title: Een leermiddel downloaden
+log_resource-move_filter: Een leermiddel verplaatsen
+log_resource-move_sentence: heeft %resource% verplaatst
+log_resource-move_shortname: Verplaatsen
+log_resource-move_title: Een leermiddel verplaatsen
+log_resource-read_filter: Een leermiddel openen
+log_resource-read_sentence: heeft %resource% geopend
+log_resource-read_shortname: Openen
+log_resource-read_title: Een leermiddel openen
+log_resource-shortcut_filter: Een sneltoets maken
+log_resource-shortcut_sentence: heeft de sneltoets %resource% gemaakt
+log_resource-shortcut_shortname: Sneltoets
+log_resource-shortcut_title: Een sneltoets maken
+log_resource-update_filter: Een leermiddel bewerken
+log_resource-update_rename_filter: Een leermiddel hernoemen
+log_resource-update_rename_sentence: heeft %resource% hernoemd
+log_resource-update_rename_shortname: Hernoemen
+log_resource-update_rename_title: Een leermiddel hernoemen
+log_resource-update_sentence: heeft %resource% bewerkt
+log_resource-update_shortname: Bewerken
+log_resource-update_title: Een leermiddel bewerken
+log_resource_owner: Eigenaar van het leermiddel
+log_resource-text-update_filter: Een tekst bewerken
+log_role: Doelrol van de actie
+log_role-subscribe_group_filter: Een rol toewijzen aan een groep
+log_role-subscribe_user_filter: Een rol toewijzen aan een gebruiker
+log_see_details: Zie details
+log_shortcut: Sneltoets
+log_subscribe_group: Een groep inschrijven
+log_subscribe_user: Een gebruiker inschrijven
+log_unsubscribe_group: Een groep afschrijven
+log_unsubscribe_user: Een gebruiker afschrijven
+log_update: Update
+log_user-create_filter: Een gebruiker maken
+log_user-create_sentence: heeft %receiver_user% gemaakt
+log_user-create_shortname: Maken
+log_user-create_title: Een gebruiker maken
+log_user-delete_filter: Een gebruiker verwijderen
+log_user-delete_sentence: heeft %receiver_user% verwijderd
+log_user-delete_shortname: Verwijderen
+log_user-delete_title: Een gebruiker verwijderen
+log_user-login_filter: Connectie van een gebruiker
+log_user-login_sentence: heeft zich ingelogd
+log_user-login_shortname: Connectie
+log_user-login_title: Connectie van een gebruiker
+log_user-update_filter: Update van een gebruiker
+log_user-update_sentence: heeft %receiver_user% bewerkt
+log_user-update_shortname: Update
+log_user-update_title: Update van een gebruiker
+log_widget_config_amount: Aantal regels
+log_widget_config_restrictions: Acties te tonen
+log_workspace-create_filter: Een werkruimte maken
+log_workspace-create_sentence: heeft de werkruimte %workspace% gemaakt
+log_workspace-create_shortname: Maken
+log_workspace-create_title: Een werkruimte maken
+log_workspace-delete_filter: Een werkruimte verwijderen
+log_workspace-delete_sentence: heeft %workspace% verwijderd
+log_workspace-delete_shortname: Verwijderen
+log_workspace-delete_title: Een werkruimte verwijderen
+log_workspace-enter_filter: Toegang tot een werkruimte
+log_workspace-enter_sentence: heeft zich ingelogd in %workspace%
+log_workspace-enter_shortname: Toegang
+log_workspace-enter_title: Toegang tot een werkruimte
+log_workspace-role-change_right_filter: De rechten voor een rol bewerken
+log_workspace-role-change_right_sentence: heeft de rechten voor %role% in %resource% bewerkt
+log_workspace-role-change_right_shortname: Rechten bewerken
+log_workspace-role-change_right_title: De rechten voor een rol bewerken (werkruimte)
+log_workspace-role-create_filter: Een rol maken
+log_workspace-role-create_sentence: heeft een rol gemaakt in %workspace%
+log_workspace-role-create_shortname: Maken
+log_workspace-role-create_title: Een rol maken (werkruimte)
+log_workspace-role-delete_filter: Een rol verwijderen
+log_workspace-role-delete_sentence: heeft een rol verwijderd in %workspace%
+log_workspace-role-delete_shortname: Verwijderen
+log_workspace-role-delete_title: Een rol verwijderen (werkruimte)
+log_workspace-role-subscribe_group_filter: Een rol aan een groep toewijzen
+log_workspace-role-subscribe_group_sentence: heeft de rol %role% toegewezen aan de groep %receiver_group% in %workspace%
+log_workspace-role-subscribe_group_shortname: Toewijzen
+log_workspace-role-subscribe_group_title: Een rol aan een groep toewijzen (werkruimte)
+log_workspace-role-subscribe_user_filter: Een rol aan een gebruiker toewijzen
+log_workspace-role-subscribe_user_sentence: heeft de rol %role% toegewezen aan de gebruiker %receiver_user% in %workspace%
+log_workspace-role-subscribe_user_shortname: Toewijzen
+log_workspace-role-subscribe_user_title: Een rol aan een gebruiker toewijzen (werkruimte)
+log_workspace-role-unsubscribe_group_filter: Een rol verwijderen voor een groep
+log_workspace-role-unsubscribe_group_sentence: heeft de rol %role% verwijderd voor de  groep %receiver_group% in %workspace%
+log_workspace-role-unsubscribe_group_shortname: Verwijderen
+log_workspace-role-unsubscribe_group_title: Een rol verwijderen voor een groep (werkruimte)
+log_workspace-role-unsubscribe_user_filter: Een rol verwijderen voor een gebruiker
+log_workspace-role-unsubscribe_user_sentence: heeft de rol %role% verwijderd voor de gebruiker %receiver_user% in %workspace%
+log_workspace-role-unsubscribe_user_shortname: Verwijderen
+log_workspace-role-unsubscribe_user_title: Een rol verwijderen voor een gebruiker (werkruimte)
+log_workspace-role-update_filter: Een rol bewerken
+log_workspace-role-update_sentence: heeft een rol bewerkt in %workspace%
+log_workspace-role-update_shortname: Bewerken
+log_workspace-role-update_title: Een rol bewerken (werkruimte)
+log_workspace-tool-read_filter: Een hulpmiddel openen
+log_workspace-tool-read_sentence: heeft de hulpmiddel %tool% geopend in %workspace%
+log_workspace-tool-read_shortname: Openen
+log_workspace-tool-read_title: Een hulpmiddel in een werkruimte openen
+log_workspace-update_filter: Update
+log_workspace-update_shortname: Bewerken
+log_workspace-update_title: Update van een werkruimte
+log_workspace_read: Toegang tot de werkruimte
+log_workspace_roles: Rollen in de werkruimte
+log_workspace_source: Bronwerkruimte
+resource: Leermiddel
+role: Rol
+user: Gebruiker
+workspace: Werkruimte
+log_resource-custom_action_update_file_shortname: Update
+log_resource-custom_action_update_file_sentence: Het bestand is bewerkt.
+global_tracking: Globaal toezicht
+user_tracking: Toezicht per gebruiker
+user_list: Lijst van de gebruikers
+actions_per_day_chart: Grafiek van de acties per dag
+click_to_choose: Klik om de lijst van de acties te tonen
+download_csv_list: De lijst in .CSV-formaat downloaden

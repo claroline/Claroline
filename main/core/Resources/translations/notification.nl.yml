@@ -1,10 +1,15 @@
-badge-award: badge-award
-registration-decline: registration-decline
-role-change_right: role-change_right
-role-subscribe: role-subscribe
-role-subscribe_group: role-subscribe_group
-role-subscribe_user: role-subscribe_user
-workspace-registration-decline: workspace-registration-decline
-workspace-role-change_right: workspace-role-change_right
-workspace-role-subscribe_group: workspace-role-subscribe_group
-workspace-role-subscribe_user: workspace-role-subscribe_user
+badge-award: Badges
+registration-decline: Inschrijving weigeren
+resource-create: Leermiddel maken
+role-change_right: Toegang tot leermiddel
+role-subscribe: Nieuwe inschrijving
+role-subscribe_group: heeft u de rol "%role%" toegewezen
+role-subscribe_user: heeft u de rol "%role%" toegewezen
+workspace-registration-decline: heeft uw inschrijvingsaanvraag geweigerd in de werkruimte
+workspace-role-change_right: heeft u toegang gegeven tot %resource% in %workspace%
+workspace-role-subscribe_group: heeft u de rol "%role%" toegewezen in %workspace%
+workspace-role-subscribe_user: heeft u de rol "%role%" toegewezen in %workspace%
+resource_creation_notification_message: heeft de leermiddel %resource% gemaakt in de werkruimte %workspace%
+role-subscribe-queue: wenst ingeschreven te worden in werkruimte %workspace%
+text_update_notification_message: heeft de tekst "%resource%" bewerkt in de werkruimte %workspace%
+resource-text: Teksten
