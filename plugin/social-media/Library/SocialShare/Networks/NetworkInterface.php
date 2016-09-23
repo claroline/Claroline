@@ -5,10 +5,9 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/23/15
  */
-
 namespace Icap\SocialmediaBundle\Library\SocialShare\Networks;
 
 interface NetworkInterface
@@ -42,7 +41,7 @@ interface NetworkInterface
      *
      * @return string
      */
-    public function getShareLink($url, array $options = array());
+    public function getShareLink($url, array $options = []);
 
     /**
      * Gets the number of shares of the URL.
