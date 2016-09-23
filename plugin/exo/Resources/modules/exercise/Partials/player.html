@@ -54,7 +54,7 @@
 
             <!-- Show solution (for Formative exercises) -->
             <button type="button" role="button" class="btn btn-default"
-                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.currentStepTry === exercisePlayerCtrl.step.meta.maxAttempts && !exercisePlayerCtrl.solutionShown"
+                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.currentStepTry === exercisePlayerCtrl.step.meta.maxAttempts && !exercisePlayerCtrl.solutionShown && !exercisePlayerCtrl.exercise.meta.minimalCorrection"
                     data-ng-click="exercisePlayerCtrl.showSolution()"
             >
                 {{ 'btn_show_solution'|trans:{}:'ujm_sequence' }}

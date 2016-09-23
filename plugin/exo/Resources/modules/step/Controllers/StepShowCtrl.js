@@ -159,7 +159,11 @@ StepShowCtrl.prototype.getSuiteFeedback = function getSuiteFeedback() {
       sentence = 'some_answers_miss_try_again'
     } else {
       if (this.step.maxAttempts !== 0) {
-        sentence = 'max_attempts_reached_see_solution'
+        if (this.StepService.getExerciseMeta().minimalCorrection === false) {
+          sentence = 'max_attempts_reached_see_solution'
+        } else {
+          sentence = 'max_attempts_reached_continue'
+        }
       }
     }
   }
