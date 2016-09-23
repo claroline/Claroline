@@ -22,6 +22,7 @@ For a development installation, you'll need at least:
     - fileinfo
     - [gd][gd]
     - intl
+    - mbstring
     - mcrypt
     - xml
     - json
@@ -36,12 +37,12 @@ It's also highly recommended to develop on an UNIX-like OS.
 
 For mysql >= 5.7, there is an additonal step:
 
-``` 
+```
     mysql -u**** -p
     set global sql_mode='';
     exit;
 ```
-    
+
 
 Installation
 ------------
@@ -70,7 +71,7 @@ file. For an installation from scratch, the commands would be:
     cd Claroline
     php scripts/configure.php
     composer sync-dev
-    
+
 ### 3. From web installer
 
 ``` curl packages.claroline.net/releases/latest/claroline-16.05.tar.gz | tar xzv ```
