@@ -16,6 +16,7 @@
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-intl": "*",
+        "ext-mbstring": "*",
         "ext-pdo_mysql": "*",
         "besimple/sso-auth-bundle": "*",
         "cocur/slugify": "~1.0",
