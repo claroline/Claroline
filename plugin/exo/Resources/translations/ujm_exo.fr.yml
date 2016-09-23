@@ -410,7 +410,7 @@ validate: Valider
 
 # W
 warning: Êtes-vous sûr de vouloir supprimer cette image ?
-warning_change_type_q: Attention: vous risquez de perdre vos données saisies. Continuer?
+warning_change_type_q: Attention: vous risquez de perdre vos données saisies. Continuer ?
 warning_one_word: Vous avez choisi une question à un mot. Attention, il y a des espaces dans votre réponse.
 weight_choice: Attribuer les points par réponse
 wrong: Fausse

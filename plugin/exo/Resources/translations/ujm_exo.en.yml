@@ -417,7 +417,7 @@ validate: Validate
 
 # W
 warning: Are you sure you want to delete this picture ?
-warning_change_type_q: Warning: you may lose the data you've entered. Continue ?
+warning_change_type_q: Warning: you may lose the data you\'ve entered. Continue?
 warning_one_word: You have chosen a question word. Caution: You need spaces in your answer.
 weight_choice: Assign points by answer
 wrong: Wrong
