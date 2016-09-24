@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "99b530995c09da0705c62aaa0c521e28226b9bdc"
+                "reference": "b6023f6bf313833c4426c96cf1bdc36768bb3b09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/99b530995c09da0705c62aaa0c521e28226b9bdc",
-                "reference": "99b530995c09da0705c62aaa0c521e28226b9bdc",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/b6023f6bf313833c4426c96cf1bdc36768bb3b09",
+                "reference": "b6023f6bf313833c4426c96cf1bdc36768bb3b09",
                 "shasum": ""
             },
             "require": {
@@ -383,7 +383,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-09-22 14:59:42"
+            "time": "2016-09-23 14:13:55"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3449,13 +3449,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/johngrogg/ics-parser.git",
-                "reference": "9cb282b8e3f40b27b53ff3640d806e087a695ba5"
+                "url": "https://github.com/u01jmg3/ics-parser.git",
+                "reference": "0d2844104074a77c7abf05c462290b9d5ef39004"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/9cb282b8e3f40b27b53ff3640d806e087a695ba5",
-                "reference": "9cb282b8e3f40b27b53ff3640d806e087a695ba5",
+                "url": "https://api.github.com/repos/u01jmg3/ics-parser/zipball/0d2844104074a77c7abf05c462290b9d5ef39004",
+                "reference": "0d2844104074a77c7abf05c462290b9d5ef39004",
                 "shasum": ""
             },
             "require": {
@@ -3496,7 +3496,7 @@
                 "ical",
                 "ics"
             ],
-            "time": "2016-09-13 18:35:22"
+            "time": "2016-09-16 19:43:19"
         },
         {
             "name": "json-quiz/json-quiz",
