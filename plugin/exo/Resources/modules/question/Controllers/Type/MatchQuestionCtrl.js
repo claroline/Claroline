@@ -445,7 +445,7 @@ MatchQuestionCtrl.prototype.onFeedbackHide = function onFeedbackHide() {
   } else {
     // Enable endpoints
     jsPlumb.setSuspendDrawing(false)
-    
+
     this.colorBindings()
   }
 }
