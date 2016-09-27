@@ -14,23 +14,28 @@
 </ul>
 <br>
 
-<ul style="list-style-type: none;">
+<div id="workspaces-list-element-{{ widgetInstanceId }}">
     {% if workspaces|length == 0 %}
-        {{ 'no_workspace'|trans({}, 'platform') }}
+        <div class="alert alert-warning">{{ 'no_workspace'|trans({}, 'platform') }}</div>
     {% else %}
         {% for workspace in workspaces %}
-        <li id="workspaces-list-element-{{ workspace.getId() }}">
-            <a
-                {% if has_access_to_workspace(workspace.getId()) %}
-                    href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
-                {% endif %}
-            >
-                <i class="fa fa-book"></i>&nbsp {{ workspace.getName() }} &nbsp<small>({{ workspace.getCode()}})</small>
-            </a>
-        </li>
+            <div>
+                <a {% if has_access_to_workspace(workspace.getId()) %}
+                       href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
+                   {% endif %}
+                >
+                    <i class="fa fa-book"></i>
+                    {{ workspace.getName() }}
+                    <span>
+                        <small>
+                            ({{ workspace.getCode() }})
+                        </small>
+                    </span>
+                </a>
+            </div>
         {% endfor %}
     {% endif %}
-</ul>
+</div>
 
 {% block javascripts %}
     <script type="text/javascript">

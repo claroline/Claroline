@@ -15,10 +15,10 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use JMS\DiExtraBundle\Annotation as DI;
 
 class MyWorkspacesWidgetController extends Controller
 {
@@ -63,35 +63,20 @@ class MyWorkspacesWidgetController extends Controller
      */
     public function displayMyWorkspacesWidgetAction($mode, User $user)
     {
-        $workspaces = array();
-        $retrieveWorkspaces = true;
-
-        if ($mode === 0) {
-            $workspaces = $this->workspaceManager
-                ->getFavouriteWorkspacesByUser($user);
-
-            if (count($workspaces) > 0) {
-                $mode = 1;
-                $retrieveWorkspaces = false;
-            }
-        }
+        $workspaces = [];
 
         switch ($mode) {
-            case 1:
-
-                if ($retrieveWorkspaces) {
-                    $workspaces = $this->workspaceManager
-                        ->getFavouriteWorkspacesByUser($user);
-                }
-                break;
-            default:
+            case 0:
                 $token = $this->tokenStorage->getToken();
                 $roles = $this->utils->getRoles($token);
-                $datas = $this->workspaceTagManager
-                    ->getDatasForWorkspaceListByUser($user, $roles);
+                $datas = $this->workspaceTagManager->getDatasForWorkspaceListByUser($user, $roles);
                 $workspaces = $datas['workspaces'];
+                break;
+            case 1:
+                $workspaces = $this->workspaceManager->getFavouriteWorkspacesByUser($user);
+                break;
         }
 
-        return array('workspaces' => $workspaces, 'mode' => $mode);
+        return ['workspaces' => $workspaces, 'mode' => $mode];
     }
 }
