@@ -60,8 +60,10 @@ class AdministrationToolRepository extends EntityRepository implements Container
                 JOIN tool.roles role
                 LEFT JOIN tool.plugin p
                 WHERE role.name IN (:roleNames)
-                AND CONCAT(p.vendorName, p.bundleName) IN (:bundles)
-                OR tool.plugin IS NULL
+                AND (
+                    CONCAT(p.vendorName, p.bundleName) IN (:bundles)
+                    OR tool.plugin IS NULL
+                )
             ";
         }
 
