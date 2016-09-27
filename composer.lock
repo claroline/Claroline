@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "b6023f6bf313833c4426c96cf1bdc36768bb3b09"
+                "reference": "8b6a6eb650772736f8231dee65d07c60ffb239d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/b6023f6bf313833c4426c96cf1bdc36768bb3b09",
-                "reference": "b6023f6bf313833c4426c96cf1bdc36768bb3b09",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/8b6a6eb650772736f8231dee65d07c60ffb239d2",
+                "reference": "8b6a6eb650772736f8231dee65d07c60ffb239d2",
                 "shasum": ""
             },
             "require": {
@@ -383,7 +383,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-09-23 14:13:55"
+            "time": "2016-09-26 14:50:01"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -4852,15 +4852,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/stefk/JVal.git",
-                "reference": "81466a5e8120229b9185a22000418a2c2f28f74c"
+                "reference": "1c26dd2c16e5273d1c0565ff6c9dc51e6316c564"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stefk/JVal/zipball/81466a5e8120229b9185a22000418a2c2f28f74c",
-                "reference": "81466a5e8120229b9185a22000418a2c2f28f74c",
+                "url": "https://api.github.com/repos/stefk/JVal/zipball/1c26dd2c16e5273d1c0565ff6c9dc51e6316c564",
+                "reference": "1c26dd2c16e5273d1c0565ff6c9dc51e6316c564",
                 "shasum": ""
             },
             "require": {
+                "ext-mbstring": "*",
                 "php": ">=5.4.1"
             },
             "require-dev": {
@@ -4895,7 +4896,7 @@
                 "json",
                 "validation"
             ],
-            "time": "2016-06-26 20:33:44"
+            "time": "2016-09-25 10:45:09"
         },
         {
             "name": "stfalcon/tinymce-bundle",
