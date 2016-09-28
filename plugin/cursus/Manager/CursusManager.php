@@ -345,7 +345,8 @@ class CursusManager
         $maxUsers = null,
         $defaultSessionDuration = 1,
         $withSessionEvent = true,
-        array $validators = []
+        array $validators = [],
+        $displayOrder = 500
     ) {
         $course = new Course();
         $course->setTitle($title);
@@ -360,6 +361,7 @@ class CursusManager
         $course->setOrganizationValidation($organizationValidation);
         $course->setDefaultSessionDuration($defaultSessionDuration);
         $course->setWithSessionEvent($withSessionEvent);
+        $course->setDisplayOrder($displayOrder);
 
         if ($description) {
             $course->setDescription($description);
@@ -1460,7 +1462,9 @@ class CursusManager
         $maxUsers = null,
         $type = 0,
         array $validators = [],
-        $eventRegistrationType = CourseSession::REGISTRATION_AUTO
+        $eventRegistrationType = CourseSession::REGISTRATION_AUTO,
+        $displayOrder = 500,
+        $color = null
     ) {
         if (is_null($creationDate)) {
             $creationDate = new \DateTime();
@@ -1485,6 +1489,14 @@ class CursusManager
         $session->setMaxUsers($maxUsers);
         $session->setType($type);
         $session->setEventRegistrationType($eventRegistrationType);
+        $session->setDisplayOrder($displayOrder);
+        $details = [];
+        $details['color'] = $color;
+        $total = $this->platformConfigHandler->hasParameter('cursus_session_default_total') ?
+            $this->platformConfigHandler->getParameter('cursus_session_default_total') :
+            null;
+        $details['total'] = $total;
+        $session->setDetails($details);
 
         if ($defaultSession) {
             $this->resetDefaultSessionByCourse($course);
@@ -2859,16 +2871,10 @@ class CursusManager
         $root = 0;
         $cursusRoot = null;
         $registrationDate = new \DateTime();
-        $configStartDate = $this->platformConfigHandler
-            ->getParameter('cursusbundle_default_session_start_date');
-        $configEndDate = $this->platformConfigHandler
-            ->getParameter('cursusbundle_default_session_end_date');
-        $startDate = empty($configStartDate) ?
-            null :
-            new \DateTime($configStartDate);
-        $endDate = empty($configEndDate) ?
-            null :
-            new \DateTime($configEndDate);
+        $configStartDate = $this->platformConfigHandler->getParameter('cursusbundle_default_session_start_date');
+        $configEndDate = $this->platformConfigHandler->getParameter('cursusbundle_default_session_end_date');
+        $startDate = empty($configStartDate) ? null : new \DateTime($configStartDate);
+        $endDate = empty($configEndDate) ? null : new \DateTime($configEndDate);
 
         foreach ($sessions as $session) {
             $course = $session->getCourse();
@@ -2909,7 +2915,9 @@ class CursusManager
                 $course->getOrganizationValidation(),
                 $course->getMaxUsers(),
                 0,
-                $course->getValidators()
+                $course->getValidators(),
+                CourseSession::REGISTRATION_AUTO,
+                $course->getDisplayOrder()
             );
             $sessions[] = $session;
         }
@@ -2930,16 +2938,10 @@ class CursusManager
         $root = 0;
         $cursusRoot = null;
         $registrationDate = new \DateTime();
-        $configStartDate = $this->platformConfigHandler
-            ->getParameter('cursusbundle_default_session_start_date');
-        $configEndDate = $this->platformConfigHandler
-            ->getParameter('cursusbundle_default_session_end_date');
-        $startDate = empty($configStartDate) ?
-            null :
-            new \DateTime($configStartDate);
-        $endDate = empty($configEndDate) ?
-            null :
-            new \DateTime($configEndDate);
+        $configStartDate = $this->platformConfigHandler->getParameter('cursusbundle_default_session_start_date');
+        $configEndDate = $this->platformConfigHandler->getParameter('cursusbundle_default_session_end_date');
+        $startDate = empty($configStartDate) ? null : new \DateTime($configStartDate);
+        $endDate = empty($configEndDate) ? null : new \DateTime($configEndDate);
 
         foreach ($sessions as $session) {
             $course = $session->getCourse();
@@ -2985,7 +2987,9 @@ class CursusManager
                 $course->getOrganizationValidation(),
                 $course->getMaxUsers(),
                 0,
-                $course->getValidators()
+                $course->getValidators(),
+                CourseSession::REGISTRATION_AUTO,
+                $course->getDisplayOrder()
             );
             $sessions[] = $session;
         }

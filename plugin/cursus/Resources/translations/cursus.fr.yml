@@ -93,6 +93,7 @@ disable_invitations: Désactiver les invitations
 disable_session_event_registration: Désactiver l'inscription aux séances
 disable_workspace_link: Désactiver le lien vers l'espace d'activités
 display_course_details: Voir les détails de la formation
+display_order: Ordre d'affichage
 display_session_events: Voir les séances
 display_sessions: Voir les sessions
 display_sessions_from: Afficher les sessions du
@@ -256,6 +257,7 @@ session_and_event_registration_success_pending_msg: |
 session_certificate: Certificat pour une session
 session_closed: Terminé
 session_creation: Création d'une session de formation
+session_default_total: Total par défaut pour les sessions
 session_deletion: Suppression de la session de formation
 session_description: Description de la session de formation
 session_details: Détails de la session de formation

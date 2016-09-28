@@ -381,7 +381,8 @@ class AdminManagementController extends Controller
             $courseDatas['maxUsers'],
             $courseDatas['defaultSessionDuration'],
             $courseDatas['withSessionEvent'],
-            $validators
+            $validators,
+            $courseDatas['displayOrder']
         );
         $createdCursus = $this->cursusManager->addCoursesToCursus($cursus, [$createdCourse]);
         $serializedCursus = $this->serializer->serialize(
@@ -437,7 +438,8 @@ class AdminManagementController extends Controller
             $courseDatas['maxUsers'],
             $courseDatas['defaultSessionDuration'],
             $courseDatas['withSessionEvent'],
-            $validators
+            $validators,
+            $courseDatas['displayOrder']
         );
         $serializedCourse = $this->serializer->serialize(
             $createdCourse,
@@ -517,6 +519,7 @@ class AdminManagementController extends Controller
         $course->setMaxUsers($maxUsers);
         $course->setDefaultSessionDuration($courseDatas['defaultSessionDuration']);
         $course->setWithSessionEvent($courseDatas['withSessionEvent']);
+        $course->setDisplayOrder($courseDatas['displayOrder']);
         $course->emptyValidators();
         $validators = isset($courseDatas['validators']) && count($courseDatas['validators']) > 0 ?
             $this->userManager->getUsersByIds($courseDatas['validators']) :
@@ -723,8 +726,10 @@ class AdminManagementController extends Controller
         $trimmedEndDate = trim($sessionDatas['endDate'], 'Zz');
         $startDate = new \DateTime($trimmedStartDate);
         $endDate = new \DateTime($trimmedEndDate);
-        $cursus = $this->cursusManager->getCursusByIds($sessionDatas['cursus']);
-        $validators = $this->userManager->getUsersByIds($sessionDatas['validators']);
+        $cursusIds = $sessionDatas['cursus'] ? $sessionDatas['cursus'] : [];
+        $validatorsIds = $sessionDatas['validators'] ? $sessionDatas['validators'] : [];
+        $cursus = $this->cursusManager->getCursusByIds($cursusIds);
+        $validators = $this->userManager->getUsersByIds($validatorsIds);
         $createdSession = $this->cursusManager->createCourseSession(
             $course,
             $sessionDatas['name'],
@@ -742,7 +747,9 @@ class AdminManagementController extends Controller
             $sessionDatas['maxUsers'],
             0,
             $validators,
-            $sessionDatas['eventRegistrationType']
+            $sessionDatas['eventRegistrationType'],
+            $sessionDatas['displayOrder'],
+            $sessionDatas['color']
         );
         $serializedSession = $this->serializer->serialize(
             $createdSession,
@@ -784,8 +791,18 @@ class AdminManagementController extends Controller
         $session->setOrganizationValidation($sessionDatas['organizationValidation']);
         $session->setRegistrationValidation($sessionDatas['registrationValidation']);
         $session->setEventRegistrationType($sessionDatas['eventRegistrationType']);
-        $cursus = $this->cursusManager->getCursusByIds($sessionDatas['cursus']);
-        $validators = $this->userManager->getUsersByIds($sessionDatas['validators']);
+        $session->setDisplayOrder($sessionDatas['displayOrder']);
+        $details = $session->getDetails();
+
+        if (is_null($details)) {
+            $details = [];
+        }
+        $details['color'] = $sessionDatas['color'];
+        $session->setDetails($details);
+        $cursusIds = $sessionDatas['cursus'] ? $sessionDatas['cursus'] : [];
+        $validatorsIds = $sessionDatas['validators'] ? $sessionDatas['validators'] : [];
+        $cursus = $this->cursusManager->getCursusByIds($cursusIds);
+        $validators = $this->userManager->getUsersByIds($validatorsIds);
         $session->emptyCursus();
         $session->emptyValidators();
 
@@ -891,7 +908,8 @@ class AdminManagementController extends Controller
         $endDate = new \DateTime($trimmedEndDate);
         $location = null;
         $locationResource = null;
-        $tutors = $this->userManager->getUsersByIds($sessionEventDatas['tutors']);
+        $tutorsIds = $sessionEventDatas['tutors'] ? $sessionEventDatas['tutors'] : [];
+        $tutors = $this->userManager->getUsersByIds($tutorsIds);
 
         if ($sessionEventDatas['location']) {
             $location = $this->locationManager->getLocationById($sessionEventDatas['location']);
@@ -965,7 +983,8 @@ class AdminManagementController extends Controller
             }
         }
         $sessionEvent->emptyTutors();
-        $tutors = $this->userManager->getUsersByIds($sessionEventDatas['tutors']);
+        $tutorsIds = $sessionEventDatas['tutors'] ? $sessionEventDatas['tutors'] : [];
+        $tutors = $this->userManager->getUsersByIds($tutorsIds);
 
         foreach ($tutors as $tutor) {
             $sessionEvent->addTutor($tutor);
@@ -1610,6 +1629,9 @@ class AdminManagementController extends Controller
         $datas['enableCoursesProfileTab'] = $this->configHandler->hasParameter('cursus_enable_courses_profile_tab') ?
             $this->configHandler->getParameter('cursus_enable_courses_profile_tab') :
             false;
+        $datas['sessionDefaultTotal'] = $this->configHandler->hasParameter('cursus_session_default_total') ?
+            $this->configHandler->getParameter('cursus_session_default_total') :
+            false;
 
         return new JsonResponse($datas, 200);
     }
@@ -1633,6 +1655,7 @@ class AdminManagementController extends Controller
         $this->configHandler->setParameter('cursus_disable_certificates', $parameters['disableCertificates']);
         $this->configHandler->setParameter('cursus_disable_session_event_registration', $parameters['disableSessionEventRegistration']);
         $this->configHandler->setParameter('cursus_enable_courses_profile_tab', $parameters['enableCoursesProfileTab']);
+        $this->configHandler->setParameter('cursus_session_default_total', $parameters['sessionDefaultTotal']);
 
         return new JsonResponse($parameters, 200);
     }

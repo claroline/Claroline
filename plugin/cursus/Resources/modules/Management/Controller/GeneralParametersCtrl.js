@@ -15,7 +15,8 @@ export default class GeneralParametersCtrl {
       disableInvitations: false,
       disableCertificates: false,
       disableSessionEventRegistration: false,
-      enableCoursesProfileTab: false
+      enableCoursesProfileTab: false,
+      sessionDefaultTotal: null
     }
     this.initialize()
   }
@@ -26,6 +27,7 @@ export default class GeneralParametersCtrl {
       this.configs['disableCertificates'] = d['disableCertificates']
       this.configs['disableSessionEventRegistration'] = d['disableSessionEventRegistration']
       this.configs['enableCoursesProfileTab'] = d['enableCoursesProfileTab']
+      this.configs['sessionDefaultTotal'] = parseInt(d['sessionDefaultTotal'])
     })
   }
 

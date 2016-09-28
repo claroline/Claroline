@@ -227,6 +227,19 @@ class CourseSession
      */
     protected $eventRegistrationType = self::REGISTRATION_AUTO;
 
+    /**
+     * @ORM\Column(name="display_order", type="integer", options={"default" = 500})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_bulletin"})
+     * @SerializedName("displayOrder")
+     */
+    protected $displayOrder = 500;
+
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_bulletin"})
+     */
+    protected $details;
+
     public function __construct()
     {
         $this->cursus = new ArrayCollection();
@@ -555,6 +568,52 @@ class CourseSession
     public function setEventRegistrationType($eventRegistrationType)
     {
         $this->eventRegistrationType = $eventRegistrationType;
+    }
+
+    public function getDisplayOrder()
+    {
+        return $this->displayOrder;
+    }
+
+    public function setDisplayOrder($displayOrder)
+    {
+        $this->displayOrder = $displayOrder;
+    }
+
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    public function setDetails($details)
+    {
+        $this->details = $details;
+    }
+
+    public function getColor()
+    {
+        return !is_null($this->details) && isset($this->details['color']) ? $this->details['color'] : null;
+    }
+
+    public function setColor($color)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['color'] = $color;
+    }
+
+    public function getTotal()
+    {
+        return !is_null($this->details) && isset($this->details['total']) ? $this->details['total'] : null;
+    }
+
+    public function setTotal($total)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['total'] = $total;
     }
 
     public function __toString()

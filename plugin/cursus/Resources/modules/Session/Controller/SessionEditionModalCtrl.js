@@ -32,7 +32,9 @@ export default class SessionEditionModalCtrl {
       organizationValidation: false,
       registrationValidation: false,
       validators: [],
-      eventRegistrationType: 0
+      eventRegistrationType: 0,
+      displayOrder: 500,
+      color: null
     }
     this.source = session
     this.callback = callback
@@ -40,7 +42,8 @@ export default class SessionEditionModalCtrl {
       name: null,
       startDate: null,
       endDate: null,
-      maxUsers: null
+      maxUsers: null,
+      displayOrder: null
     }
     this.dateOptions = {
       formatYear: 'yy',
@@ -72,8 +75,8 @@ export default class SessionEditionModalCtrl {
   }
 
   initializeSession () {
-    const startDate = this.source['startDate'].replace(/\+.*$/, '')
-    const endDate = this.source['endDate'].replace(/\+.*$/, '')
+    const startDate = this.source['startDate'] ? this.source['startDate'].replace(/\+.*$/, '') : new Date()
+    const endDate = this.source['endDate'] ? this.source['endDate'].replace(/\+.*$/, '') : new Date(startDate)
     this.CursusService.getRootCursus().then(d => {
       d.forEach(c => this.cursusList.push(c))
       this.source['cursus'].forEach(sc => {
@@ -98,7 +101,11 @@ export default class SessionEditionModalCtrl {
     this.session['userValidation'] = this.source['userValidation']
     this.session['organizationValidation'] = this.source['organizationValidation']
     this.session['registrationValidation'] = this.source['registrationValidation']
+    this.session['displayOrder'] = this.source['displayOrder']
 
+    if (this.source['details']['color']) {
+      this.session['color'] = this.source['details']['color']
+    }
     if (this.source['description']) {
       this.session['description'] = this.source['description']
     }
@@ -143,6 +150,13 @@ export default class SessionEditionModalCtrl {
       }
     } else {
       this.sessionErrors['endDate'] = null
+    }
+
+    if (this.session['displayOrder'] === null || this.session['displayOrder'] === undefined) {
+      this.sessionErrors['displayOrder'] = Translator.trans('form_not_blank_error', {}, 'cursus')
+    } else {
+      this.session['displayOrder'] = parseInt(this.session['displayOrder'])
+      this.sessionErrors['displayOrder'] = null
     }
 
     if (this.session['maxUsers']) {

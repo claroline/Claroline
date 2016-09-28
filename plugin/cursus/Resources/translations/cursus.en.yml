@@ -93,6 +93,7 @@ disable_invitations: Disable invitations
 disable_session_event_registration: Disable registration for session event
 disable_workspace_link: Disable workspace link
 display_course_details: Display training details
+display_order: Display order
 display_session_events: Display session events
 display_sessions: Display sessions
 display_sessions_from: Display sessions from
@@ -255,6 +256,7 @@ session_and_event_registration_success_pending_msg: |
 session_certificate: Session certificate
 session_closed: Closed
 session_creation: Create training session
+session_default_total: Default total for training session
 session_deletion: Delete training session
 session_description: Training session description
 session_details: Training session details

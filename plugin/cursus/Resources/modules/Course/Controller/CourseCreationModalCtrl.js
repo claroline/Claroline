@@ -37,13 +37,15 @@ export default class CourseCreationModalCtrl {
       userValidation: false,
       organizationValidation: false,
       registrationValidation: false,
-      validators: []
+      validators: [],
+      displayOrder: 500
     }
     this.courseErrors = {
       title: null,
       code: null,
       defaultSessionDuration: null,
-      maxUsers: null
+      maxUsers: null,
+      displayOrder: null
     }
     this.tinymceOptions = CourseService.getTinymceConfiguration()
     this.validatorsRoles = []
@@ -116,6 +118,13 @@ export default class CourseCreationModalCtrl {
       if (this.course['defaultSessionDuration'] < 0) {
         this.courseErrors['defaultSessionDuration'] = Translator.trans('form_number_superior_error', {value: 0}, 'cursus')
       }
+    }
+
+    if (this.course['displayOrder'] === null || this.course['displayOrder'] === undefined) {
+      this.courseErrors['displayOrder'] = Translator.trans('form_not_blank_error', {}, 'cursus')
+    } else {
+      this.course['displayOrder'] = parseInt(this.course['displayOrder'])
+      this.courseErrors['displayOrder'] = null
     }
 
     if (this.course['maxUsers']) {

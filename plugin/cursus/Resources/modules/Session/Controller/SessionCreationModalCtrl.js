@@ -17,6 +17,7 @@ export default class SessionCreationModalCtrl {
     this.$http = $http
     this.$uibModalInstance = $uibModalInstance
     this.CursusService = CursusService
+    this.CourseService = CourseService
     this.title = title
     this.course = course
     this.callback = callback
@@ -34,13 +35,16 @@ export default class SessionCreationModalCtrl {
       organizationValidation: false,
       registrationValidation: false,
       validators: [],
-      eventRegistrationType: 0
+      eventRegistrationType: 0,
+      displayOrder: 500,
+      color: null
     }
     this.sessionErrors = {
       name: null,
       startDate: null,
       endDate: null,
-      maxUsers: null
+      maxUsers: null,
+      displayOrder: null
     }
     this.dateOptions = {
       formatYear: 'yy',
@@ -92,6 +96,7 @@ export default class SessionCreationModalCtrl {
     this.session['userValidation'] = this.course['userValidation']
     this.session['organizationValidation'] = this.course['organizationValidation']
     this.session['registrationValidation'] = this.course['registrationValidation']
+    this.session['displayOrder'] = this.course['displayOrder']
 
     if (this.course['description']) {
       this.session['description'] = this.course['description']
@@ -132,6 +137,13 @@ export default class SessionCreationModalCtrl {
       }
     } else {
       this.sessionErrors['endDate'] = null
+    }
+
+    if (this.session['displayOrder'] === null || this.session['displayOrder'] === undefined) {
+      this.sessionErrors['displayOrder'] = Translator.trans('form_not_blank_error', {}, 'cursus')
+    } else {
+      this.session['displayOrder'] = parseInt(this.session['displayOrder'])
+      this.sessionErrors['displayOrder'] = null
     }
 
     if (this.session['maxUsers']) {

@@ -180,6 +180,13 @@ class Course
      */
     protected $organizations;
 
+    /**
+     * @ORM\Column(name="display_order", type="integer", options={"default" = 500})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @SerializedName("displayOrder")
+     */
+    protected $displayOrder = 500;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
@@ -416,6 +423,16 @@ class Course
         }
 
         return $this;
+    }
+
+    public function getDisplayOrder()
+    {
+        return $this->displayOrder;
+    }
+
+    public function setDisplayOrder($displayOrder)
+    {
+        $this->displayOrder = $displayOrder;
     }
 
     public function __toString()
