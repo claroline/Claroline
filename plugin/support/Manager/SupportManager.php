@@ -201,10 +201,10 @@ class SupportManager
             $config = $configs[0];
         } else {
             $config = new Configuration();
-            $details = array(
+            $details = [
                 'with_credits' => false,
-                'contacts' => array(),
-            );
+                'contacts' => [],
+            ];
             $config->setDetails($details);
             $this->persistConfiguration($config);
         }
@@ -231,27 +231,24 @@ class SupportManager
         $config = $this->getConfiguration();
         $details = $config->getDetails();
 
-        return isset($details['contacts']) ? $details['contacts'] : array();
+        return isset($details['contacts']) ? $details['contacts'] : [];
     }
 
-    public function sendTicketMail(
-        User $user,
-        Ticket $ticket,
-        $type = '',
-        Comment $comment = null
-    ) {
-        $receivers = array();
-        $extra = array();
+    public function sendTicketMail(User $user, Ticket $ticket, $type = '', Comment $comment = null)
+    {
+        $contactMail = null;
+        $receivers = [];
+        $extra = [];
 
         switch ($type) {
-
-            case 'new_ticket' :
+            case 'new_ticket':
                 $contactIds = $this->getConfigurationContactsOption();
+                $contactMail = $ticket->getContactMail();
 
                 if (count($contactIds) > 0) {
                     $receivers = $this->userManager->getUsersByIds($contactIds);
                     $subject = '['.
-                        $this->translator->trans('new_ticket', array(), 'support').
+                        $this->translator->trans('new_ticket', [], 'support').
                         ']['.
                         $user->getFirstName().
                         ' '.
@@ -260,24 +257,25 @@ class SupportManager
                         $ticket->getTitle();
                     $content = $ticket->getDescription().
                         '<br><br>'.
-                        $this->translator->trans('mail', array(), 'platform').
+                        $this->translator->trans('mail', [], 'platform').
                         ' : '.
                         $ticket->getContactMail().
                         '<br>'.
-                        $this->translator->trans('phone', array(), 'platform').
+                        $this->translator->trans('phone', [], 'platform').
                         ' : '.
                         $ticket->getContactPhone().
                         '<br><br>';
                 }
                 break;
 
-            case 'ticket_edition' :
+            case 'ticket_edition':
                 $contactIds = $this->getConfigurationContactsOption();
+                $contactMail = $ticket->getContactMail();
 
                 if (count($contactIds) > 0) {
                     $receivers = $this->userManager->getUsersByIds($contactIds);
                     $subject = '['.
-                        $this->translator->trans('ticket_edition', array(), 'support').
+                        $this->translator->trans('ticket_edition', [], 'support').
                         ']['.
                         $user->getFirstName().
                         ' '.
@@ -286,43 +284,43 @@ class SupportManager
                         $ticket->getTitle();
                     $content = $ticket->getDescription().
                         '<br><br>'.
-                        $this->translator->trans('mail', array(), 'platform').
+                        $this->translator->trans('mail', [], 'platform').
                         ' : '.
                         $ticket->getContactMail().
                         '<br>'.
-                        $this->translator->trans('phone', array(), 'platform').
+                        $this->translator->trans('phone', [], 'platform').
                         ' : '.
                         $ticket->getContactPhone().
                         '<br><br>';
                 }
                 break;
 
-            case 'ticket_deletion' :
+            case 'ticket_deletion':
                 $contactIds = $this->getConfigurationContactsOption();
 
                 if (count($contactIds) > 0) {
                     $receivers = $this->userManager->getUsersByIds($contactIds);
                     $subject = '['.
-                        $this->translator->trans('ticket_deletion', array(), 'support').
+                        $this->translator->trans('ticket_deletion', [], 'support').
                         ']['.
                         $user->getFirstName().
                         ' '.
                         $user->getLastName().
                         '] '.
                         $ticket->getTitle();
-                    $content = $this->translator->trans('ticket_deletion', array(), 'support').
+                    $content = $this->translator->trans('ticket_deletion', [], 'support').
                         '<br><br>';
                 }
                 break;
 
-            case 'new_admin_comment' :
-                $extra['to'] = array($ticket->getContactMail());
+            case 'new_admin_comment':
+                $extra['to'] = [$ticket->getContactMail()];
 
                 if (!is_null($comment)) {
                     $subject = '['.
-                        $this->translator->trans('new_comment', array(), 'support').
+                        $this->translator->trans('new_comment', [], 'support').
                         ']['.
-                        $this->translator->trans('ticket', array(), 'support').
+                        $this->translator->trans('ticket', [], 'support').
                         ' #'.
                         $ticket->getNum().
                         '] '.
@@ -331,13 +329,14 @@ class SupportManager
                 }
                 break;
 
-            case 'new_comment' :
+            case 'new_comment':
                 $contactIds = $this->getConfigurationContactsOption();
+                $contactMail = $ticket->getContactMail();
 
                 if (count($contactIds) > 0 && !is_null($comment)) {
                     $receivers = $this->userManager->getUsersByIds($contactIds);
                     $subject = '['.
-                        $this->translator->trans('new_comment', array(), 'support').
+                        $this->translator->trans('new_comment', [], 'support').
                         ']['.
                         $user->getFirstName().
                         ' '.
@@ -346,23 +345,23 @@ class SupportManager
                         $ticket->getTitle();
                     $content = $comment->getContent().
                         '<br><br>'.
-                        $this->translator->trans('mail', array(), 'platform').
+                        $this->translator->trans('mail', [], 'platform').
                         ' : '.
                         $ticket->getContactMail().
                         '<br>'.
-                        $this->translator->trans('phone', array(), 'platform').
+                        $this->translator->trans('phone', [], 'platform').
                         ' : '.
                         $ticket->getContactPhone().
                         '<br><br>';
                 }
                 break;
 
-            default :
+            default:
                 break;
         }
 
         if (count($receivers) > 0 || count($extra) > 0) {
-            $this->mailManager->send($subject, $content, $receivers, null, $extra);
+            $this->mailManager->send($subject, $content, $receivers, null, $extra, false, $contactMail);
         }
     }
 
