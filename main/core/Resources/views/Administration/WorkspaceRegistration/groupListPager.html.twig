@@ -46,7 +46,7 @@
                         <td>{{ group.getName() }}</td>
                         <td>
                             <a
-                                href="{{ path('claro_admin_user_of_group_list', {'groupId': group.getId()}) }}"
+                                href="{{ path('claro_admin_users_index') ~ '#/user/groups/' ~ group.getId() }}"
                                 id="link-show-{{ group.getId() }}"
                             >
                                 {{ 'show'|trans({}, 'platform') }}
