@@ -505,7 +505,15 @@ class UserControllerTest extends TransactionalTestCase
         $this->client->request('GET', "/api/user/{$user->getId()}/public");
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(
-            ['email' => 'user@mail.com', 'firstName' => 'user', 'lastName' => 'user', 'username' => 'user'],
+            [
+                'firstName' => 'user',
+                'lastName' => 'user',
+                'username' => 'user',
+                'mail' => 'user@mail.com',
+                'allowSendMail' => true,
+                'allowSendMessage' => true,
+                'id' => $user->getId(),
+            ],
             $data
         );
 
@@ -519,14 +527,22 @@ class UserControllerTest extends TransactionalTestCase
         $this->persister->flush();
         $this->client->request('GET', "/api/user/{$admin->getId()}/public");
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals(['username' => 'admin'], $data);
+        $this->assertEquals([], $data);
 
         //and the admin can see everyone.
         $this->logIn($admin);
         $this->client->request('GET', "/api/user/{$user->getId()}/public");
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(
-            ['email' => 'user@mail.com', 'firstName' => 'user', 'lastName' => 'user', 'username' => 'user'],
+            [
+                'firstName' => 'user',
+                'lastName' => 'user',
+                'username' => 'user',
+                'mail' => 'user@mail.com',
+                'allowSendMail' => true,
+                'allowSendMessage' => true,
+                'id' => $user->getId(),
+            ],
             $data
         );
     }

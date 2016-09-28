@@ -11,24 +11,24 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation\Service;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
-use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use Claroline\CoreBundle\Entity\Facet\PanelFacetRole;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
+use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Facet\PanelFacetRole;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
-use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Service("claroline.manager.facet_manager")
@@ -262,7 +262,7 @@ class FacetManager
         }
 
         $fieldFacetValue = $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetValue')
-            ->findOneBy(array('user' => $user, 'fieldFacet' => $field));
+            ->findOneBy(['user' => $user, 'fieldFacet' => $field]);
 
         if ($fieldFacetValue === null) {
             $fieldFacetValue = new FieldFacetValue();
@@ -294,7 +294,7 @@ class FacetManager
     public function getFieldValuesByUser(User $user)
     {
         return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetValue')
-            ->findBy(array('user' => $user));
+            ->findBy(['user' => $user]);
     }
 
     /**
@@ -310,7 +310,7 @@ class FacetManager
             $nextPosition = $currentPosition + 1;
             $nextFacet = $this->om
                 ->getRepository('ClarolineCoreBundle:Facet\Facet')
-                ->findOneBy(array('position' => $nextPosition));
+                ->findOneBy(['position' => $nextPosition]);
             $nextFacet->setPosition($currentPosition);
             $facet->setPosition($nextPosition);
             $this->om->persist($nextFacet);
@@ -332,7 +332,7 @@ class FacetManager
             $prevPosition = $currentPosition - 1;
             $prevFacet = $this->om
                 ->getRepository('ClarolineCoreBundle:Facet\Facet')
-                ->findOneBy(array('position' => $prevPosition));
+                ->findOneBy(['position' => $prevPosition]);
             $prevFacet->setPosition($currentPosition);
             $facet->setPosition($prevPosition);
             $this->om->persist($prevFacet);
@@ -408,7 +408,7 @@ class FacetManager
     {
         return $this->om
             ->getRepository('ClarolineCoreBundle:Facet\FieldFacet')
-            ->findBy(array('facet' => $facet), array('position' => 'ASC'));
+            ->findBy(['facet' => $facet], ['position' => 'ASC']);
     }
 
     /**
@@ -418,7 +418,7 @@ class FacetManager
     {
         return $this->om
             ->getRepository('ClarolineCoreBundle:Facet\Facet')
-            ->findBy(array(), array('position' => 'ASC'));
+            ->findBy([], ['position' => 'ASC']);
     }
 
     public function setFacetRoles(Facet $facet, array $roles)
@@ -432,7 +432,7 @@ class FacetManager
 
     public function setPanelFacetRole(PanelFacet $panelFacet, Role $role, $canOpen, $canEdit)
     {
-        $panelFacetRole = $this->panelRoleRepo->findOneBy(array('role' => $role, 'panelFacet' => $panelFacet));
+        $panelFacetRole = $this->panelRoleRepo->findOneBy(['role' => $role, 'panelFacet' => $panelFacet]);
 
         if (!$panelFacetRole) {
             $panelFacetRole = new PanelFacetRole();
@@ -474,13 +474,13 @@ class FacetManager
         $entities = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')->findVisibleFacets($token, $max);
 
         foreach ($entities as $entity) {
-            $data[] = array(
+            $data[] = [
                 'id' => $entity->getId(),
                 'canOpen' => true,
                 'name' => $entity->getName(),
                 'position' => $entity->getPosition(),
                 'panels' => $entity->getPanelFacets(),
-            );
+            ];
         }
 
         return $data;
@@ -498,7 +498,7 @@ class FacetManager
         switch ($ffv->getFieldFacet()->getType()) {
             case FieldFacet::FLOAT_TYPE: return $ffv->getFloatValue();
             case FieldFacet::DATE_TYPE:
-                return $ffv->getDateValue()->format($this->translator->trans('date_form_datepicker_php', array(), 'platform'));
+                return $ffv->getDateValue()->format($this->translator->trans('date_form_datepicker_php', [], 'platform'));
             case FieldFacet::STRING_TYPE || FieldFacet::COUNTRY_TYPE || FieldFacet::SELECT_TYPE || FieldFacet::RADIO_TYPE || FieldFacet::EMAIL_TYPE: return $ffv->getStringValue();
             case FieldFacet::CHECKBOXES_TYPE: return $ffv->getArrayValue();
             default: return 'error';
@@ -541,7 +541,7 @@ class FacetManager
     public function getVisiblePublicPreference()
     {
         $tokenRoles = $this->tokenStorage->getToken()->getRoles();
-        $roles = array();
+        $roles = [];
 
         foreach ($tokenRoles as $tokenRole) {
             $roles[] = $tokenRole->getRole();
@@ -562,7 +562,7 @@ class FacetManager
     public function findForcedRegistrationFacet()
     {
         return $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')
-            ->findBy(array('forceCreationForm' => true));
+            ->findBy(['forceCreationForm' => true]);
     }
 
     public function addFacetFieldChoice($label, FieldFacet $field)
