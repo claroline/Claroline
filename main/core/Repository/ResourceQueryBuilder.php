@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Symfony\Component\Security\Core\Role\RoleInterface;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException;
+use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * Builder for DQL queries on AbstractResource entities.
@@ -209,7 +209,7 @@ class ResourceQueryBuilder
      */
     public function whereRoleIn(array $roles)
     {
-        if (0 < $count = count($roles)) {
+        if (0 < count($roles)) {
             $this->leftJoinRights = true;
             $eol = PHP_EOL;
             $clause = "{$eol}({$eol}";
@@ -576,8 +576,8 @@ class ResourceQueryBuilder
      */
     public function whereHasRoleIn(array $roles)
     {
-        $managerRoles = array();
-        $otherRoles = array();
+        $managerRoles = [];
+        $otherRoles = [];
 
         foreach ($roles as $role) {
             $roleName = $role instanceof RoleInterface ? $role->getRole() : $role;

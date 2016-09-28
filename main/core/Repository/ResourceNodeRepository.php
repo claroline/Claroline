@@ -210,6 +210,15 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             }
         }
 
+        //and now we order by index
+        usort($returnedArray, function ($a, $b) {
+            if ($a['index_dir'] === $b['index_dir']) {
+                return 0;
+            }
+
+            return ($a['index_dir'] < $b['index_dir']) ? -1 : 1;
+        });
+
         return $returnedArray;
     }
 
