@@ -315,10 +315,10 @@ export default class PaperService {
 
     return questionPaper.score
   }
-  
+
   /**
    * Get the Questions of a Step.
-   * 
+   *
    * @param   {Object} paper
    * @param   {Object} step
    * @param   {array}  questions
@@ -353,7 +353,23 @@ export default class PaperService {
     return exercise.meta
   }
 
+  /**
+   * Get paper steps depending on exercise configuration (pick some step among all, random step order and so on)
+   */
   getPaperSteps(){
-    return this.ExerciseService.getExercise().steps
+    // get all steps (with all meta data)
+    const steps = this.ExerciseService.getExercise().steps
+    // get order and steps for the paper
+    const order = this.current.paper.order
+    let orderedSteps = []
+    if(undefined !== order && null !== order){
+      for(const ordered of order){
+        const current = steps.find(step => step.id === ordered.id)
+        if(undefined !== current){
+          orderedSteps.push(current)
+        }
+      }
+    }
+    return orderedSteps
   }
 }

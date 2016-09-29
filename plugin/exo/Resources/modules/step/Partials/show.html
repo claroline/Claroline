@@ -9,12 +9,17 @@
             <span>({{ 'exercise_tries'|transChoice:stepShowCtrl.step.meta.maxAttempts:{ count: stepShowCtrl.step.meta.maxAttempts }:'ujm_exo'}})</span>
         </small>
 
-        <span class="label label-success pull-right" data-ng-if="stepShowCtrl.showScore && (stepShowCtrl.solutionShown || stepShowCtrl.feedback.visible)">
-            {{ 'step_score'|trans:{}:'ujm_exo' }}: {{ stepShowCtrl.feedback.visible ? stepShowCtrl.stepScore : 0 }}/{{ stepShowCtrl.stepScoreTotal }}
+        <!-- STEP SCORE -->
+        <span class="pull-right" data-ng-if="stepShowCtrl.items.length > 0 && stepShowCtrl.showScore && (stepShowCtrl.solutionShown || stepShowCtrl.feedback.visible)">
+            <small class="text-danger" data-ng-if="stepShowCtrl.stepNeedsManualCorrection">
+                <span class="fa fa-warning"></span>
+                {{ 'step_need_manual_correction'|trans:{}:'ujm_exo' }}
+            </small>
+            <span class="label label-success"> {{ 'step_score'|trans:{}:'ujm_exo' }}: {{ stepShowCtrl.getStepScores() }}</span>
         </span>
     </h4>
 
-    <div class="step-description panel panel-default" data-ng-if="0 !== stepShowCtrl.step.meta.description.length">
+    <div class="step-description panel panel-default" data-ng-if="stepShowCtrl.step.meta.description && 0 !== stepShowCtrl.step.meta.description.length">
         <div class="panel-body" data-ng-bind-html="stepShowCtrl.step.meta.description"></div>
     </div>
 

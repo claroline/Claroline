@@ -390,6 +390,7 @@ step_score: Step score
 statistics: Display statistics
 step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
 step_item_add: Drag'n' drop or click the "+" button to add questions.
+step_need_manual_correction: This step needs manual correction
 stat_users: "[0, 1] %count% user|]1,Inf[ %count% users"
 stat_have_responded: have responded
 
