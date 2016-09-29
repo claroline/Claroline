@@ -37,6 +37,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE u.username LIKE :username
             OR u.mail LIKE :username
             OR u.administrativeCode LIKE :username
+            AND u.isEnabled = true
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('username', $username);
@@ -240,7 +241,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 ->leftJoin('r.workspace', 'w')
                 ->andWhere('r.workspace = :workspace')
                 ->setParameter('workspace', $workspace);
-        };
+        }
 
         return $executeQuery ? $userQueryBuilder->getQuery()->getResult() : $userQueryBuilder->getQuery();
     }
@@ -589,6 +590,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
+        $query->setParameter('search', $search);
 
         return ($getQuery) ? $query : $query->getResult();
     }
