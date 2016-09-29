@@ -146,7 +146,8 @@ class UserManager
         $rolesToAdd = [],
         $model = null,
         $publicUrl = null,
-        $organizations = []
+        $organizations = [],
+        $forcePersonalWorkspace = null
     ) {
         $additionnalRoles = [];
 
@@ -196,8 +197,14 @@ class UserManager
 
         $this->strictEventDispatcher->dispatch('user_created_event', 'UserCreated', ['user' => $user]);
 
-        if ($this->personalWorkspaceAllowed($additionnalRoles)) {
-            $this->setPersonalWorkspace($user, $model);
+        if ($forcePersonalWorkspace !== null) {
+            if ($forcePersonalWorkspace) {
+                $this->setPersonalWorkspace($user, $model);
+            }
+        } else {
+            if ($this->personalWorkspaceAllowed($additionnalRoles)) {
+                $this->setPersonalWorkspace($user, $model);
+            }
         }
 
         $this->objectManager->endFlushSuite();
@@ -312,7 +319,7 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
-
+        $this->log('Removing '.$user->getUsername().'...');
         /* When the api will identify a user, please uncomment this
         if ($this->container->get('security.token_storage')->getToken()->getUser()->getId() === $user->getId()) {
             throw new \Exception('A user cannot delete himself');
@@ -371,8 +378,19 @@ class UserManager
      *
      * @return array
      */
-    public function importUsers(array $users, $sendMail = true, $logger = null, $additionalRoles = [], $enableEmailNotifaction = false)
-    {
+    public function importUsers(
+        array $users,
+        $sendMail = true,
+        $logger = null,
+        $additionalRoles = [],
+        $enableEmailNotifaction = false,
+        $options = []
+    ) {
+        //build options
+        if (!isset($options['ignore-update'])) {
+            $options['ignore-update'] = false;
+        }
+
         $returnValues = [];
         //keep these roles before the clear() will mess everything up. It's not what we want.
         $tmpRoles = $additionalRoles;
@@ -442,6 +460,10 @@ class UserManager
                 $organizationName = null;
             }
 
+            $hasPersonalWorkspace = isset($user[11]) ? (bool) $user[11] : false;
+            $isMailValidated = isset($user[12]) ? (bool) $user[12] : false;
+            $isMailNotified = isset($user[13]) ? (bool) $user[13] : $enableEmailNotifaction;
+
             if ($modelName) {
                 $model = $this->objectManager
                     ->getRepository('Claroline\CoreBundle\Entity\Model\WorkspaceModel')
@@ -472,6 +494,12 @@ class UserManager
             }
 
             $userEntity = $this->getUserByUsernameOrMail($username, $email);
+
+            if ($userEntity && $options['ignore-update']) {
+                $logger(" Skipping  {$userEntity->getUsername()}...");
+                continue;
+            }
+
             $isNew = false;
 
             if (!$userEntity) {
@@ -488,7 +516,8 @@ class UserManager
             $userEntity->setPhone($phone);
             $userEntity->setLocale($lg);
             $userEntity->setAuthentication($authentication);
-            $userEntity->setIsMailNotified($enableEmailNotifaction);
+            $userEntity->setIsMailNotified($isMailNotified);
+            $userEntity->setIsMailValidated($isMailValidated);
 
             if (!$isNew && $logger) {
                 $logger(" User $j ($username) being updated...");
@@ -499,7 +528,16 @@ class UserManager
                 if ($logger) {
                     $logger(" User $j ($username) being created...");
                 }
-                $this->createUser($userEntity, $sendMail, $additionalRoles, $model, $username.uniqid(), $organizations);
+
+                $this->createUser(
+                    $userEntity,
+                    $sendMail,
+                    $additionalRoles,
+                    $model,
+                    $username.uniqid(),
+                    $organizations,
+                    $hasPersonalWorkspace
+                );
             }
 
             $this->objectManager->persist($userEntity);
@@ -915,6 +953,19 @@ class UserManager
             ->findUsersByRolesIncludingGroups($roles, $executeQuery);
 
         return $this->pagerFactory->createPagerFromArray($users, $page, $max);
+    }
+
+    /*
+     * I don't want to break the old pager wich is oddly written
+     */
+    public function getUsersByRolesWithGroups(array $roles)
+    {
+        return $this->userRepo->findUsersByRolesIncludingGroups($roles, true);
+    }
+
+    public function getUsersExcudingRoles(array $roles, $offet = null, $limit = null)
+    {
+        return $this->userRepo->findUsersExcludingRoles($roles, $offet, $limit);
     }
 
     /**

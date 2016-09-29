@@ -856,11 +856,12 @@ class WorkspaceManager
     public function importWorkspaces(array $workspaces, $logger = null)
     {
         $i = 0;
-        $j = 0;
         $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
 
         foreach ($workspaces as $workspace) {
+            ++$i;
             $this->om->startFlushSuite();
+            $endDate = null;
             $model = null;
             $name = $workspace[0];
             $code = $workspace[1];
@@ -869,6 +870,10 @@ class WorkspaceManager
             $registrationValidation = $workspace[4];
             $selfUnregistration = $workspace[5];
             $errors = [];
+
+            if ($logger) {
+                $logger('Creating '.$code.' ('.$i.'/'.count($workspaces).') ...');
+            }
 
             if (isset($workspace[6]) && trim($workspace[6]) !== '') {
                 $user = $this->om->getRepository('ClarolineCoreBundle:User')
@@ -882,6 +887,11 @@ class WorkspaceManager
                 ->findOneByName($workspace[7]);
             }
 
+            if (isset($workspace[8])) {
+                $endDate = new \DateTime();
+                $endDate->setTimestamp($workspace[8]);
+            }
+
             if ($model) {
                 $guid = $this->ut->generateGuid();
                 $workspace = new Workspace();
@@ -893,6 +903,9 @@ class WorkspaceManager
                 $workspace->setSelfUnregistration($selfUnregistration);
                 $workspace->setRegistrationValidation($registrationValidation);
                 $workspace->setGuid($guid);
+                if ($endDate) {
+                    $workspace->setEndDate($date);
+                }
                 $date = new \Datetime(date('d-m-Y H:i'));
                 $workspace->setCreationDate($date->getTimestamp());
                 $workspace->setCreator($user);
@@ -905,20 +918,26 @@ class WorkspaceManager
                 $workspace->setDisplayable($isVisible);
                 $workspace->setSelfRegistration($selfRegistration);
                 $workspace->setSelfUnregistration($registrationValidation);
+                $workspace->setCreator($user);
+                if ($endDate) {
+                    $workspace->setEndDate($endDate);
+                }
                 $template = new File($this->container->getParameter('claroline.param.default_template'));
-                $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template);
+                $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template, true);
             }
 
-            ++$i;
-            ++$j;
+            $logger('UOW: '.$this->om->getUnitOfWork()->size());
 
-            if ($i % self::MAX_WORKSPACE_BATCH_SIZE === 0) {
+            if ($i % 100 === 0) {
                 $this->om->forceFlush();
-                $this->om->clear();
+                $user = $this->om->getRepository('ClarolineCoreBundle:User')->find($user->getId());
+                $this->om->merge($user);
+                $this->om->refresh($user);
             }
-
-            $this->om->endFlushSuite();
         }
+
+        $logger('Final flush...');
+        $this->om->endFlushSuite();
     }
 
     public function getDisplayableNonPersonalWorkspaces(
@@ -1161,5 +1180,22 @@ class WorkspaceManager
         $extractPath = $this->templateDirectory.DIRECTORY_SEPARATOR.$fileName;
         $fs = new FileSystem();
         $fs->remove($extractPath);
+    }
+
+    public function getPersonalWorkspaceExcudingRoles(array $roles, $includeOrphans, $empty = false, $offset = null, $limit = null)
+    {
+        return $this->workspaceRepo->findPersonalWorkspaceExcudingRoles($roles, $includeOrphans, $empty, $offset, $limit);
+    }
+
+    public function getPersonalWorkspaceByRolesIncludingGroups(array $roles, $includeOrphans, $empty = false, $offset = null, $limit = null)
+    {
+        return $this->workspaceRepo->findPersonalWorkspaceByRolesIncludingGroups($roles, $includeOrphans, $empty, $offset, $limit);
+    }
+
+    public function getNonPersonalByCodeAndName($code, $name, $offset = null, $limit = null)
+    {
+        return !$code && !$name ?
+            $this->workspaceRepo->findBy(['isPersonal' => false]) :
+            $this->workspaceRepo->findNonPersonalByCodeAndName($code, $name, $offset, $limit);
     }
 }

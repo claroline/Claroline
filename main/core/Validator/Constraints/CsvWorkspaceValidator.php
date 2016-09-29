@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Validator\Constraints;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Claroline\CoreBundle\Entity\User;
-use Symfony\Component\Translation\TranslatorInterface;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
  * @DI\Validator("csv_workspace_validator")
@@ -55,16 +55,9 @@ class CsvWorkspaceValidator extends ConstraintValidator
             $linesTab = explode(';', $line);
             $nbElements = count($linesTab);
 
-            if (trim($line) != '') {
+            if (trim($line) !== '') {
                 if ($nbElements < 6) {
                     $msg = $this->translator->trans('6_parameters_min_msg');
-                    $this->context->addViolation($msg);
-
-                    return;
-                }
-
-                if (php_sapi_name() === 'cli' && $nbElements < 7) {
-                    $msg = $this->translator->trans('7_parameters_min_msg');
                     $this->context->addViolation($msg);
 
                     return;
@@ -73,7 +66,7 @@ class CsvWorkspaceValidator extends ConstraintValidator
         }
 
         foreach ($lines as $i => $line) {
-            if (trim($line) != '') {
+            if (trim($line) !== '') {
                 $workspace = explode(';', $line);
                 $code = $workspace[1];
 
@@ -91,13 +84,13 @@ class CsvWorkspaceValidator extends ConstraintValidator
 
                 //find codes duplicatas
                 (!array_key_exists($code, $codes)) ?
-                    $codes[$code] = array($i + 1) :
+                    $codes[$code] = [$i + 1] :
                     $codes[$code][] = $i + 1;
 
                 if ($this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code)) {
                     $msg = $this->translator->trans(
                             'workspace_code_invalid',
-                            array('%code%' => $code, '%line%' => $i + 1),
+                            ['%code%' => $code, '%line%' => $i + 1],
                             'platform'
                         ).' ';
 
@@ -108,7 +101,7 @@ class CsvWorkspaceValidator extends ConstraintValidator
                     if (!$this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')->findOneByName($modelName)) {
                         $msg = $this->translator->trans(
                                 'workspace_model_invalid',
-                                array('%model%' => $modelName, '%line%' => $i + 1),
+                                ['%model%' => $modelName, '%line%' => $i + 1],
                                 'platform'
                             ).' ';
 
@@ -120,7 +113,7 @@ class CsvWorkspaceValidator extends ConstraintValidator
                     if (!$this->om->getRepository('ClarolineCoreBundle:User')->findOneByUsername($username)) {
                         $msg = $this->translator->trans(
                                 'workspace_user_invalid',
-                                array('%username%' => $username, '%line%' => $i + 1),
+                                ['%username%' => $username, '%line%' => $i + 1],
                                 'platform'
                             ).' ';
 
@@ -134,7 +127,7 @@ class CsvWorkspaceValidator extends ConstraintValidator
             if (count($lines) > 1) {
                 $msg = $this->translator->trans(
                 'code_found_at',
-                array('%code%' => $code, '%lines%' => $this->getLines($lines)),
+                ['%code%' => $code, '%lines%' => $this->getLines($lines)],
                 'platform'
                 ).' ';
                 $this->context->addViolation($msg);

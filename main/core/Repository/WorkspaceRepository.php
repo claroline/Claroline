@@ -220,7 +220,7 @@ class WorkspaceRepository extends EntityRepository
         $orderedToolType = 0
     ) {
         if (count($roleNames) === 0 || count($workspaces) === 0) {
-            return array();
+            return [];
         } else {
             $dql = '
                 SELECT DISTINCT w.id
@@ -1045,5 +1045,116 @@ class WorkspaceRepository extends EntityRepository
         $query->setParameter('search', "{$upperSearch}%");
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findPersonalWorkspaceExcudingRoles(array $roles, $includeOrphans = false, $empty = false, $offset = null, $limit = null)
+    {
+        $dql = '
+            SELECT w from Claroline\CoreBundle\Entity\Workspace\Workspace w
+        ';
+
+        if ($empty) {
+            $dql .= '
+                LEFT JOIN w.resources r
+            ';
+        }
+
+        $dql .= '
+            LEFT JOIN w.personalUser u
+            WHERE u NOT IN (
+                SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
+                LEFT JOIN u2.roles ur
+                LEFT JOIN u2.groups g
+                LEFT JOIN g.roles gr
+                WHERE (gr IN (:roles) OR ur IN (:roles))
+
+            )
+            AND w.isPersonal = true
+        ';
+
+        if (!$includeOrphans) {
+            $dql .= ' AND u.isRemoved = false';
+        }
+
+        if ($empty) {
+            $dql .= '
+            GROUP BY w.id
+            HAVING COUNT(r) <= 2';
+        }
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        $query->setMaxResults($limit);
+
+        return $query->getResult();
+    }
+
+    public function findPersonalWorkspaceByRolesIncludingGroups(array $roles, $includeOrphans = false, $empty = false, $offset = null, $limit = null)
+    {
+        $dql = '
+            SELECT w from Claroline\CoreBundle\Entity\Workspace\Workspace w
+            LEFT JOIN w.personalUser u
+            JOIN u.roles ur
+            LEFT JOIN u.groups g
+            LEFT JOIN g.roles gr
+            LEFT JOIN gr.workspace grws
+            LEFT JOIN ur.workspace uws
+            WHERE (uws.id = :wsId
+            OR grws.id = :wsId)
+            AND u.isRemoved = :isRemoved
+            AND w.isPersonal = true
+        ';
+
+        if (!$includeOrphans) {
+            $dql .= ' AND u.isRemoved = false';
+        }
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+        $query->setMaxResults($limit);
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+
+        return $query->getResult();
+    }
+
+    public function findNonPersonalByCodeAndName($code, $name, $offset = null, $limit = null)
+    {
+        $dql = '
+            SELECT w FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.isPersonal = false
+        ';
+
+        if ($code) {
+            $dql .= ' AND w.code LIKE :code';
+        }
+
+        if ($name) {
+            $dql .= ' AND w.name LIKE :name';
+        }
+
+        $code = addcslashes($code, '%_');
+        $name = addcslashes($name, '%_');
+        $query = $this->_em->createQuery($dql);
+
+        if ($code) {
+            $query->setParameter('code', "%{$code}%");
+        }
+
+        if ($name) {
+            $query->setParameter('name', "%{$name}%");
+        }
+
+        $query->setMaxResults($limit);
+
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+
+        return $query->getResult();
     }
 }
