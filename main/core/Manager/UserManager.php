@@ -240,8 +240,11 @@ class UserManager
 
         foreach ($usernames as $username) {
             $user = $this->getUserByUsername($username);
-            $this->deleteUser($user);
-            ++$i;
+
+            if ($user) {
+                $this->deleteUser($user);
+                ++$i;
+            }
 
             if ($i % 50 === 0) {
                 $this->objectManager->forceFlush();
