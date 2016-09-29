@@ -40,7 +40,7 @@ class Workspace
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_workspace", "api_workspace_min", "api_user_min"})
+     * @Groups({"api_workspace", "api_workspace_min", "api_user_min", "api_user"})
      * @SerializedName("id")
      */
     protected $id;

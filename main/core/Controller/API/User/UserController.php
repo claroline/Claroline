@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
@@ -60,7 +61,8 @@ class UserController extends FOSRestController
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
      *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager"),
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
-     *     "apiManager"             = @DI\Inject("claroline.manager.api_manager")
+     *     "apiManager"             = @DI\Inject("claroline.manager.api_manager"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
@@ -76,7 +78,8 @@ class UserController extends FOSRestController
         ObjectManager $om,
         ProfilePropertyManager $profilePropertyManager,
         MailManager $mailManager,
-        ApiManager $apiManager
+        ApiManager $apiManager,
+        WorkspaceManager $workspaceManager
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->eventDispatcher = $eventDispatcher;
@@ -86,6 +89,7 @@ class UserController extends FOSRestController
         $this->userManager = $userManager;
         $this->groupManager = $groupManager;
         $this->roleManager = $roleManager;
+        $this->workspaceManager = $workspaceManager;
         $this->om = $om;
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
@@ -545,6 +549,34 @@ class UserController extends FOSRestController
     private function isUserGranted($action, $object)
     {
         return $this->container->get('security.authorization_checker')->isGranted($action, $object);
+    }
+
+    /**
+     * @View(serializerGroups={"api_user"})
+     * @Post("/pws/create/{user}")
+     */
+    public function createPersonalWorkspaceAction(User $user)
+    {
+        if (!$user->getPersonalWorkspace()) {
+            $this->userManager->setPersonalWorkspace($user);
+        } else {
+            throw new \Exception('Workspace already exists');
+        }
+
+        return $user;
+    }
+
+    /**
+     * @View(serializerGroups={"api_user"})
+     * @Post("/pws/delete/{user}")
+     */
+    public function deletePersonalWorkspaceAction(User $user)
+    {
+        $personalWorkspace = $user->getPersonalWorkspace();
+        $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', [$personalWorkspace]);
+        $this->workspaceManager->deleteWorkspace($personalWorkspace);
+
+        return $user;
     }
 
     private function throwExceptionIfNotGranted($action, $users)
