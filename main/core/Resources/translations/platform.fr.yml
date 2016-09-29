@@ -7,11 +7,11 @@ account_created: 'Les informations de votre compte vous ont été envoyées par 
 account_duration_label: 'Durée de vie des comptes (jours)'
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
-action_list: 'Liste des actions'
+action_list: Liste des actions
 actions: Actions
-actions_per_day: 'Nombre d''actions par jour'
-activate_account: 'Activation du compte'
-activate_account_click: 'Cliquez ici pour activer votre compte.'
+actions_per_day: Nombre d'actions par jour
+activate_account: Activation du compte
+activate_account_click: Cliquez ici pour activer votre compte.
 activate_maintenance_mode: 'Vous devriez activer le mode de maintenance afin de signaler aux utilisateurs qu''une mise à jour est en cours.'
 activate_notifications: 'Activer les notifications'
 activate_pdf_export: "Activer l'export PDF"
@@ -105,61 +105,61 @@ apply_recursively_to_directories: 'Appliquer au contenu du répertoire et aux so
 at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
 attempt: Tentative
 attempts: Tentatives
-auth_mode: 'Mode d''authentification'
-authentication: Authentification
-authentication_invalid: 'La source d''authentification %authentication% de la ligne %line% n''est pas valide.'
-authentication_source: 'Source d''authentification'
+auth_mode: Mode d'authentification
+authentication: Authentificatio
+authentication_invalid: La source d'authentification %authentication% de la ligne %line% n'est pas valide.
+authentication_source: Source d'authentification
 author: Auteur
 automatic: Automatique
 available: Disponible
-available_widgets: 'Widgets disponibles'
-available_workspaces: 'Espaces d''activités disponibles'
+available_widgets: Widgets disponibles
+available_workspaces: Espaces d'activités disponibles
 back: Retour
-back_to_activities_list: 'Retour à la liste des activités'
-back_to_profile: 'Retour au profil'
-background_color: 'Couleur du fond d''écran'
-backup_reminder: 'Pensez à faire une sauvegarde de la plateforme avant de procéder à une mise à jour.'
-bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
-base_informations: 'Informations de base'
-best_score: 'Meilleur score'
+back_to_activities_list: Retour à la liste des activités
+back_to_profile: Retour au profil
+background_color: Couleur du fond d'écran
+backup_reminder: Pensez à faire une sauvegarde de la plateforme avant de procéder à une mise à jour.
+bad_request: La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l'administrateur de la plateforme.
+base_informations: Informations de base
+best_score: Meilleur score
 by: par
-by_user: 'Par utilisateur'
-by_workspace: 'Par espace'
-canCopy: 'Droit de copier'
-canCreate: 'Création de %type%'
-canDelete: 'Droit de supprimer'
-canEdit: 'Droit de modifier'
-canExport: 'Droit d''exporter'
-canOpen: 'Droit d''ouvrir'
-can_edit_permission: 'Peut éditer les permissions'
+by_user: Par utilisateur
+by_workspace: Par espace
+canCopy: Droit de copier
+canCreate: Création de %type%
+canDelete: Droit de supprimer
+canEdit: Droit de modifier
+canExport: Droit d'exporter
+canOpen: Droit d'ouvrir
+can_edit_permission: Peut éditer les permissions
 cancel: Annuler
-cannot_change_password: 'Vous ne pouvez pas changer votre mot de passe.'
-cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
-cannot_unsubscribe_from_workspace: 'Impossible de vous désinscrire de l''espace d''activités.'
+cannot_change_password: Vous ne pouvez pas changer votre mot de passe.
+cannot_delete_unique_manager: Impossible de supprimer le seul gestionnaire.
+cannot_unsubscribe_from_workspace: Impossible de vous désinscrire de l'espace d'activités.
 captcha: Captcha
 categories: Catégories
-categories_organization: 'Organisation des catégories'
-categorize: 'Classer par catégorie'
+categories_organization: Organisation des catégories
+categorize: Classer par catégorie
 category: Catégorie
-category_creation: 'Création d''une catégorie'
-category_edition: 'Modification de la catégorie'
-category_explanations_1: 'Chaque catégorie doit avoir un nom unique.'
-category_explanations_2: 'Sélectionnez une catégorie pour gérer ses sous-catégories.'
-category_root: 'Catégories de base'
-category_structure: 'Structure des catégories'
-change_view: 'Changer l''affichage'
-choose_from_resource_manager: 'Ou veuillez choisir un fichier existant dans le gestionnaire de ressources'
-choose_logo: 'Choisir un logo'
-choose_resource_form_type: 'Type de ressource'
+category_creation: Création d'une catégorie
+category_edition: Modification de la catégorie
+category_explanations_1: Chaque catégorie doit avoir un nom unique.
+category_explanations_2: Sélectionnez une catégorie pour gérer ses sous-catégories.
+category_root: Catégories de base
+category_structure: Structure des catégories
+change_view: Changez l'affichage
+choose_from_resource_manager: ou veuillez choisir un fichier existant dans le gestionnaire de ressources.
+choose_logo: Choisir un logo
+choose_resource_form_type: Type de ressource
 claroline_bundle_missing: 'Le bundle %bundle% n''est pas installé. Veuillez l''installer avant d''aller plus loin.'
 classify_my_workspaces: 'Classer mes espaces'
 classify_workspaces: 'Classer les espaces'
-classroom: 'En classe'
-click_to_view_modify_profile: 'Voir/modifier votre profil'
-client_ip: 'Adresse IP du client'
-client_name: 'Nom du client'
+classroom: En classe
+click_to_view_modify_profile: Voir/modifier votre profil
+client_ip: Adresse IP du client
+client_name: Nom du client
 close: Fermer
-closed_account: 'Compte clôturé'
+closed_account: Compte clôturé
 code: Code
 code_found_at: 'Le code %code% a été trouvé aux lignes %lines%.'
 collaborative: Collaboratif
@@ -177,48 +177,48 @@ connections: 'Nb Cnx.'
 contact: Contact
 contacts_per_page: 'Contacts par page'
 content: Contenu
-cookie_lifetime: 'Durée de vie du cookie'
+cookie_lifetime: Durée de vie du cookie
 copiable: Copiable
 copies: Copies
 copy: Copier
-count_resources: 'Nombre de ressources'
+count_resources: Nombre de ressources
 create: Créer
-create_account: 'Créer le compte'
-create_and_update: 'Création et mise à jour'
-create_category: 'Créer une catégorie'
-create_client: 'Créer un client'
-create_facet: 'Créer une facette'
-create_field: 'Créer un champ'
-create_group: 'Créer un groupe'
-create_learning_outcomes: 'Créer un référentiel de compétences'
-create_model: 'Créer un modèle'
-create_new_admin_tag: 'Créer un nouveau Tag administrateur'
-create_new_home_tab: 'Créer un nouvel onglet'
-create_new_tag: 'Créer un nouveau Tag'
-create_new_user_account: 'Création de votre compte Claroline Connect'
-create_only: 'Création seulement'
-create_pane: 'Créer un panel'
-create_resource: 'Créer une nouvelle ressource'
-create_role: 'Créer un rôle'
-create_security_token: 'Créer un jeton d''authentification'
-create_subcategory: 'Créer une sous-catégorie'
-create_user: 'Créer un utilisateur'
-create_users: 'Créer les utilisateurs'
-create_widget_instance: 'Créer un nouveau Widget'
-create_workspace: 'Créer un espace d''activités'
-created_by: 'Créé par %creator% le %creationDate%'
-creating: 'En cours de création'
+create_account: Créer le compte
+create_and_update: Création et mise à jour
+create_category: Créer une catégorie
+create_client: Créer un client
+create_facet: Créer une facette
+create_field: Créer un champ
+create_group: Créer un groupe
+create_learning_outcomes: Créer un référentiel de compétences
+create_model: Créer un modèle
+create_new_admin_tag: Créer un nouveau Tag administrateur
+create_new_home_tab: Créer un nouvel onglet
+create_new_tag: Créer un nouveau Tag
+create_new_user_account: Création de votre compte Claroline Connect
+create_only: Création seulement
+create_pane: Créer un panel
+create_resource: Créer une nouvelle ressource
+create_role: Créer un rôle
+create_security_token: Créer un jeton d'authentification
+create_subcategory: Créer une sous-catégorie
+create_user: Créer un utilisateur
+create_users: Créer les utilisateurs
+create_widget_instance: Créer un nouveau Widget
+create_workspace: Créer un espace d'activités
+created_by: Créé par %creator% le %creationDate%
+creating: En cours de création
 creation: Création
-creation_date: 'Date de création'
+creation_date: Date de création
 creator: Créateur
-csv_export: 'Export csv'
-csv_select: 'Sélectionnez un fichier csv:'
-csv_format_info: 'Informations sur le format du fichier csv'
-csv_format_user_list: 'Format: liste des noms d''utilisateur séparés par un retour à la ligne.'
-csv_users_import_infos: 'Informations sur le format du fichier csv'
+csv_export: Export csv
+csv_select: Sélectionnez un fichier csv:
+csv_format_info: Informations sur le format du fichier csv
+csv_format_user_list: Format: liste des noms d''utilisateur séparés par un retour à la ligne.
+csv_users_import_infos: Informations sur le format du fichier csv
 csv_users_import_infos_format: Format
-csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule.'
-csv_users_import_infos_format_b: 'Notez que vous ne devez pas ajouter d''en-tête au fichier.'
+csv_users_import_infos_format_a: Les données d'un utilisateur doivent être définies sur une ligne et séparées par un point virgule.
+csv_users_import_infos_format_b: Notez que vous ne devez pas ajouter d'en-tête au fichier.
 csv_users_import_infos_optional: Optionnel
 csv_users_import_infos_required: Requis
 csv_users_import_infos_ws_role_a: 'Les rôles prédéfinis par la plateforme sont "Collaborateur" et "Gestionnaire" et les valeurs à utiliser dans le csv sont respectivement "collaborator" et "manager".'
@@ -226,12 +226,12 @@ csv_users_import_infos_ws_role_b: 'Si ces rôles sont modifiés, le nouveau nom 
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule.'
 csv_workspaces_import_infos_format_a: 'Les données d''un espace d''activités doivent être définies sur une ligne et séparées par un point virgule.'
 curl_facebook_application_validation_error: 'Extension php curl manquante.'
-current_category: 'Catégorie courante'
+current_category: Catégorie courante
 cut: Couper
-dashboard: 'Tableau de bord'
-data_col: 'Colonne des données'
-database: 'Base de données'
-database_connection_failed: 'La connexion à la base de données a échoué.'
+dashboard: Tableau de bord
+data_col: Colonne des données
+database: Base de données
+database_connection_failed: La connexion à la base de données a échoué.
 date: Date
 date_agenda_display_format_for_form: dd-MM-yyyy
 date_form_datepicker_format: dd/mm/yyyy
@@ -388,10 +388,10 @@ generate_token: 'Générer un token aléatoire'
 generate_url: 'Inscription publique'
 generate_url_subscription: 'Inscription à l''espace d''activités par un utilisateur'
 generate_url_subscription_anonyme: 'Inscription à l''espace d''activités par un anonyme'
-generate_url_subscription_fail: 'Vous devez d''abord cochez la case de l''inscription publique avant de pouvoir voir l''url.'
-get_mail_notifications: 'Recevoir une copie des messages sur %adress%.'
-google_tag_validation: 'Balise HTML de validation Google'
-grant_access: 'Donner l''accès'
+generate_url_subscription_fail: Vous devez d'abord cocher la case de l'inscription publique avant de pouvoir voir l'url.
+get_mail_notifications: Recevoir une copie des messages sur %adress%.
+google_tag_validation: Balise HTML de validation Google
+grant_access: Donner l'accès
 grant_type: Permissions
 graph_draw_area: 'Tracez une zone sur le graphique pour zoomer. Double cliquez pour annuler'
 group: Groupe
@@ -421,32 +421,32 @@ has_been_updated: 'a été mis à jour'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 height: Hauteur
-help_url: 'URL de l''aide'
+help_url: URL de l'aide
 hide: Cacher
-hide_breadcrumb: 'Cacher le fil d''Ariane'
-hide_tools_menu: 'Cacher le menu d''outils (sauf pour les gestionnaires)'
+hide_breadcrumb: Cacher le fil d'Ariane
+hide_tools_menu: Cacher le menu d'outils (sauf pour les gestionnaires).
 history: Historique
 home: Accueil
-home_lock: 'Verrouillage du bureau'
-home_manager: 'Gestionnaire de l''accueil'
-home_parameters: 'Paramètres de l''accueil'
+home_lock: Verrouillage du bureau
+home_manager: Gestionnaire de l'accueil
+home_parameters: Paramètres de l'accueil
 home_tab: Onglet
-home_tab_bookmark_confirm_message: 'Cet onglet sera disponible sur votre bureau.'
-home_tab_bookmark_confirm_title: 'Epingler cet onglet au bureau'
-home_tab_bookmark_delete_confirm_message: 'Voulez-vous vraiment retirer cet onglet de votre bureau ?'
-home_tab_bookmark_delete_confirm_title: 'Retrait de l''onglet'
-home_tab_creation: 'Création d''un onglet'
+home_tab_bookmark_confirm_message: Cet onglet sera disponible sur votre bureau.
+home_tab_bookmark_confirm_title: Épingler cet onglet au bureau
+home_tab_bookmark_delete_confirm_message: Voulez-vous vraiment retirer cet onglet de votre bureau ?
+home_tab_bookmark_delete_confirm_title: Retrait de l'onglet
+home_tab_creation: Création d'un onglet
 home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet ?'
 home_tab_delete_confirm_title: 'Suppression de l''onglet'
 home_tab_edition: 'Edition de l''onglet'
-home_tab_roles_explanation: 'Si aucun rôle n''est coché, l''onglet sera visible par tous les utilisateurs.<br>Sinon, il sera uniquement visiible par les utilisateurs ayant un des rôles sélectionnés.'
+home_tab_roles_explanation: Si aucun rôle n'est coché, l'onglet sera visible par tous les utilisateurs.<br>Sinon, il sera uniquement visible par les utilisateurs ayant un des rôles sélectionnés.
 home_tab_widgets: 'Widgets de l''onglet'
 home_tab_widgets_configuration: 'Configuration des widgets de l''onglet'
 home_tabs: 'Onglets de la page d''accueil'
 home_tabs_configuration: 'Configuration des onglets de la page d''accueil'
 host: Hôte
 icon: Icône
-id: Id
+id: ID
 id_col: 'Colonne des identifiants'
 identical_group_name: 'Nom de groupe identique'
 identical_role_name: 'Nom de rôle identique'
@@ -540,7 +540,7 @@ mail_not_exist: 'Ce courriel n''existe pas '
 mail_sent: 'Un courriel vient de vous être envoyé. Vérifiez votre dossier "pourriels" au cas où celui-ci n''apparaîtrait pas dans votre boîte de réception.'
 maintenance: Maintenance
 maintenance_message_edit_success: Le message de maintenance a bien été modifié
-maintenance_mode_enabled: 'Le mode maintenance est activé'
+maintenance_mode_enabled: Le mode maintenance est activé
 maintenance_mode_message: 'L''accès à la plateforme est désactivé pour les utilisateurs. Vous pouvez le réactiver dans la section maintenance des paramètres de l''administration.'
 make_my_public_profil_visible: 'Rendre mon profil public visible'
 make_public_profile_visible_to_everybody: 'à <strong>tout le monde</strong>'
@@ -558,8 +558,8 @@ max_second_duration: 'Temps limite accordé (en secondes)'
 max_size_is: 'La taille maximale est %size%'
 max_storage_size: 'Espace de stockage maximum'
 media_most_viewed: 'Médias les plus consultés'
-menu_bar: 'Barre de menu'
-menu_bar_configuration: 'Configuration de la barre de menu'
+menu_bar: Barre de menu
+menu_bar_configuration: Configuration de la barre de menu
 message: Message
 message_form_content: Contenu
 message_form_object: Objet
@@ -574,7 +574,7 @@ messages_removed: 'Messages supprimés'
 messages_sent: 'Messages envoyés'
 messages_sent_removed: 'Messages envoyés supprimés'
 meta_tag_paste: 'Collez ici la balise meta fournie par Google Webmaster.'
-method_of_work: 'Modalités de travail'
+method_of_work: Modalités de travail
 misc: Divers
 missing_%content%: 'La variable %content% est manquante pour la langue "%language%".'
 missing_%password%: 'La variable %password% est manquante pour la langue "%language%".'
@@ -669,45 +669,45 @@ over_max_length: 'Cette valeur est trop longue.'
 owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
-parameters_save_error: 'Une erreur est survenue pendant la sauvegarde des paramètres.'
-parameters_save_success: 'Paramètres sauvegardés avec succès.'
+parameters_save_error: Une erreur est survenue pendant la sauvegarde des paramètres.
+parameters_save_success: Paramètres sauvegardés avec succès.
 passed: Réussi
-passing_score: 'Score pour réussir'
-password: 'Mot de passe'
-password_mismatch: 'Les mots de passe ne correspondent pas.'
-password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
+passing_score: Score pour réussir
+password: Mot de passe
+password_mismatch: Les mots de passe ne correspondent pas.
+password_ok: Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.
 paste: Coller
 path: Emplacement
 pdf_export: Export PDF
-pending: 'En attente'
-pending_friends: 'Amis en attente'
-pending_users_list: 'Liste des utilisateurs en attente'
+pending: En attente
+pending_friends: Amis en attente
+pending_users_list: Liste des utilisateurs en attente
 permissions: Permissions
 personal_data: 'Aucune donnée personnelle ne sera récupérée. Les données techniques et statistiques récupérées seront exclusivement utilisées en relation avec le projet Claroline Connect et ne seront pas diffusées autrement.'
-personal_workspace: 'Espace personnel'
-personal_workspace_management: 'Gestion de l''espace personnel'
-personal_workspace_tools_management: 'Gestion des outils de l''espace personnel'
-personal_workspaces_only: 'Les espaces personnels seulement'
+personal_workspace: Espace personne
+personal_workspace_management: Gestion de l'espace personnel
+personal_workspace_tools_management: Gestion des outils de l'espace personnel
+personal_workspaces_only: Les espaces personnels seulement
 phone: Téléphone
-picture: 'Photo de profil'
-picture_profile: 'Photo de profil'
+picture: Photo de profil
+picture_profile: Photo de profil
 placeholder_first_name_message: 'Ce paramètre fictif est optionnel et sera remplacé par le prénom de l''auteur'
 placeholder_last_name_message: 'Ce paramètre fictif est optionnel et sera remplacé par le nom de l''auteur'
 placeholder_mail_content_message: 'Ce paramètre fictif est requis et sera remplacé par le contenu du courriel'
 placeholder_platform_mail_content_message: 'Cette variable est requise et sera remplacée par le contenu du courriel'
 placeholder_platform_name_message: 'Ce paramètre fictif est optionnel et sera remplacé par le nom de la plateforme'
 platform_appearance: 'Apparence de la plateforme'
-platform_expiration_date: 'Date d''expiration de la plateforme'
-platform_icon: 'Icône de la plateforme'
-platform_init_date: 'Date d''activation de la plateforme'
-platform_parameters: 'Paramètres de la plateforme'
-platform_plugins: 'Plugins de la plateforme'
-platform_refresh: 'Rafraîchir les fichiers de la plateforme'
-platform_refresh_confirm: 'Êtes-vous sûr de vouloir rafraîchir les fichiers de la plateforme ?'
-platform_role: 'Rôle plateforme'
-platform_widgets: 'Widgets de la plateforme'
-please_validate_your_account: 'Un courriel vient de vous être envoyé pour activer votre compte.'
-please_wait: 'Veuillez patienter...'
+platform_expiration_date: Date d'expiration de la plateforme
+platform_icon: Icône de la plateforme
+platform_init_date: Date d'activation de la plateforme
+platform_parameters: Paramètres de la plateforme
+platform_plugins: Plugins de la plateforme
+platform_refresh: Rafraîchir les fichiers de la plateforme
+platform_refresh_confirm: Êtes-vous sûr de vouloir rafraîchir les fichiers de la plateforme ?
+platform_role: Rôle plateforme
+platform_widgets: Widgets de la plateforme
+please_validate_your_account: Un courriel vient de vous être envoyé pour activer votre compte.
+please_wait: Veuillez patienter...
 port: Port
 portal: Portail de ressources
 portal_access_disabled: L'accès au portail est bloqué car aucune des ses options est activée.
@@ -719,8 +719,8 @@ portal_search_total_results: '%totalItems% résultat(s) dans ''%type%'' [classé
 portal_short: Portail
 portfolio_url: 'Url d''accès à l''outil portfolio'
 position: Position
-positive_number_expected: 'Cette valeur doit être un nombre positif'
-powered_by: 'Développé par'
+positive_number_expected: Cette valeur doit être un nombre positif.
+powered_by: Développé par
 preferences: Préférences
 preview: Aperçu
 previous: Précédent
@@ -865,10 +865,10 @@ save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle
 saved_changes: 'Vos changements ont été sauvegardés'
 score: Score
 search: Rechercher
-search_group: 'Rechercher un groupe'
-search_user: 'Rechercher un utilisateur'
-search_workspace: 'Rechercher un espace d''activités'
-security_token: 'Jeton d''authentification'
+search_group: Rechercher un groupe
+search_user: Rechercher un utilisateur
+search_workspace: Rechercher un espace d''activités
+security_token: Jeton d''authentification
 security_token_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce jeton d''authentification ?'
 security_token_delete_confirm_title: 'Suppression du jeton d''authentification'
 security_token_list: 'Liste des jetons d''authentification'
@@ -938,36 +938,36 @@ size: Taille
 start_date: 'Date de début'
 start_maintenance: 'Lancer le mode maintenance'
 statistics: Statistiques
-statistics_data: 'nombre d''espaces, nombre d''utilisateurs'
+statistics_data: nombre d'espaces, nombre d'utilisateurs
 status: Statut
-steal_session: 'Voler la session'
-storage_limit_exceeded: 'Il ne vous reste pas assez d''espace de stockage (%storageLeft%) dans votre espace d''activités. La taille de votre fichier est de %fileSize%.'
-storage_type: 'Type de stockage'
-storage_used: 'Espace de stockage utlisé'
+steal_session: Voler la session
+storage_limit_exceeded: Il ne vous reste pas assez d'espace de stockage (%storageLeft%) dans votre espace d'activités. La taille de votre fichier est de %fileSize%.
+storage_type: Type de stockage
+storage_used: Espace de stockage utilisé
 subcategories: Sous-catégories
-subscribe_groups: 'Inscrire des groupes'
-subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
-subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
-subscribe_users: 'Inscrire des utilisateurs'
+subscribe_groups: Inscrire des groupes
+subscribe_selected_groups: Inscrire les groupes sélectionnés
+subscribe_selected_users: Inscrire les utilisateurs sélectionnés
+subscribe_users: Inscrire des utilisateurs
 subscription: Inscription
-success_rate: 'Taux de réussite'
-successfull_workspace_creation: 'L''espace d''activité %name% a été créé avec succès.'
-support_email: 'Courriel du support'
+success_rate: Taux de réussite
+successfull_workspace_creation: L'espace d'activités %name% a été créé avec succès.
+support_email: Courriel du support
 switch: Echanger
 tab: Onglet
 tabs: Onglets
 tag: Tag
-tag_children_list: 'Liste des enfants'
-tag_potential_children_list: 'Liste des enfants potentiels'
-tags_add_remove_children_to: 'Ajouter/Retirer des enfants au Tag'
-tags_hierarchy: 'Hiérarchie des Tags'
+tag_children_list: Liste des enfants
+tag_potential_children_list: Liste des enfants potentiels
+tags_add_remove_children_to: Ajouter/Retirer des enfants au Tag
+tags_hierarchy: Hiérarchie des Tags
 tags_list: 'Liste des Tags'
-tags_management: 'Gestion des Tags'
-tags_organization: 'Organisation des Tags'
+tags_management: Gestion des Tags
+tags_organization: Organisation des Tags
 teacher: Professeur
 technical: Techniques
-technical_data: 'URL, version, langue principale, IP et courriel du support'
-term_of_service: 'Conditions d''utilisation'
+technical_data: URL, version, langue principale, IP et courriel du support
+term_of_service: Conditions d''utilisation
 term_of_service_activation_message: 'Activez les conditions d''utilisation dans la plateforme'
 terms_enabled_but_empty: 'Les conditions d''utilisation ne peuvent être activées que si le texte est fourni dans au moins une langue.'
 terms_of_service_acceptance: 'J''accepte les conditions d''utilisation'
@@ -1056,13 +1056,13 @@ updated_by: 'Dernière mise à jour : %modificationDate%'
 upgrade: 'Mettre à jour'
 upload: Téléchargement
 upload_denied: 'Vous n''avez pas la permission de créer une ressource à cet endroit'
-upload_fail: 'Echec du téléchargement'
-upload_file: 'Télécharger un fichier'
-url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
+upload_fail: Échec du téléchargement
+upload_file: Télécharger un fichier
+url_invalid: Le code n'est pas correct, n'essayez pas de changer l'adresse.
 use_stable_repo: 'Utiliser les dépôts stables'
 use_test_repo: 'Utiliser les dépôts de test'
 user: Utilisateur
-user_accounts: 'Comptes utilisateur'
+user_accounts: Comptes utilisateur
 user_enable_mail_notification_label: 'Activer les notifications par courriel'
 user_creation: 'Création d''un utilisateur'
 user_creation_success: 'Le compte utilisateur a été créé avec succès.'
@@ -1157,34 +1157,34 @@ workspace_role_type_form_requireDir: 'Créer un répertoire'
 workspace_role_type_form_translationKey: Nom
 workspace_tag_form_name: Nom
 workspace_tag_remove_confirm_message: 'Voulez-vous vraiment retirer cette catégorie ?'
-workspace_tag_remove_confirm_title: 'Retrait d''une catégorie'
+workspace_tag_remove_confirm_title: Retrait d'une catégorie
 workspace_template_form_name: Nom
 workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_user_invalid: 'L''utilisateur %username% n''existe pas à la ligne %line%.'
 workspace_welcome: Accueil
-workspaces: 'Espaces d''activités'
-workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
-workspaces_management: 'Gestions des espaces d''activités '
-workspaces_per_page: 'Espaces par page'
-wrong_captcha: 'Le code ne correspond pas avec l''image indiquée'
-ws_creator: 'Créateur d''espaces'
-ws_most_viewed: 'Espaces d''activités les plus consultés'
+workspaces: Espaces d'activités
+workspaces_included_in_category: Espaces d'activités enregistrés dans cette catégorie
+workspaces_management: Gestions des espaces d'activités
+workspaces_per_page: Espaces par page
+wrong_captcha: Le code ne correspond pas avec l'image indiquée
+ws_creator: Créateur d'espaces
+ws_most_viewed: Espaces d''activités les plus consultés
 'yes': Oui
-yesterday_activity: 'Activité de la veille'
-your_current_url: 'Votre URL actuelle'
-your_platform_id: 'Votre identifiant sur la plateforme'
-your_profile_is_n_complete: 'Votre profil est %n%% complet'
-your_username: 'Votre nom d''utilisateur est '
-your_workspace_activity_overview: 'Aperçu des activités récentes de vos espaces de travail'
-404: 'La page que vous cherchez n''existe pas.'
+yesterday_activity: Activité de la veille
+your_current_url: Votre URL actuelle
+your_platform_id: Votre identifiant sur la plateforme
+your_profile_is_n_complete: Votre profil est complété à %n%%
+your_username: Votre nom d'utilisateur est
+your_workspace_activity_overview: Aperçu des activités récentes de vos espaces de travail
+404: La page que vous cherchez n'existe pas.
 initialize_your_password: Initialisation du mot de passe
 hide_client: Cacher un client
 hide_client_message: Êtes-vous sûr de vouloir cacher ce client ?
 filter_by: Filtrer sur
-domain_name: 'Nom de domaine'
-import_csv: 'Importer un csv'
-admin_profile_properties_explanations: 'Les propriétés cochées seront modifiables par les utilisateurs disposant du rôle requis.'
+domain_name: Nom de domaine
+import_csv: Importer un CSV
+admin_profile_properties_explanations: Les propriétés cochées seront modifiables par les utilisateurs disposant du rôle requis.
 self_unregistration: Auto-désinscription
 is_visible: Visible par les utilisateurs
 year: an

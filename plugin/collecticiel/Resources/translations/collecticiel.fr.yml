@@ -9,13 +9,13 @@ Add: Ajouter
 Allow comment in correction: Proposer une zone de commentaire
 Allow correction deny: Autoriser les apprenants à signaler une correction qu'ils trouvent injuste.
 Allow drop in review: Autoriser le dépôt de document lors de l'évaluation par les pairs
-Allow rich text: Zones de texte libre
+Allow rich text: Texte libre (rédaction en ligne)
 Allow student to see his copy whereas the copy didnt received the expected number of correction.: Permettre à l'étudiant de voir sa copie, même si celle-ci n'a pas reçu le nombre de corrections requises.
-Allow upload: Autoriser l'upload de fichiers
-Allow url: Autoriser les liens web
+Allow upload: Fichiers (téléversement depuis leur ordinateur)
+Allow url: Lien Internet (adresse URL)
 Allow workspace resource: Ressources de l'espace d'activités
-allowDrop:   dépôts autorisés
-allowDropAndPeerReview: dépôts autorisés et corrections par les pairs
+allowDrop: Dépôts autorisés
+allowDropAndPeerReview: Dépôts autorisés et corrections par les pairs
 allowDropAndPeerReviewManualState: Les apprenants peuvent rendre leur copie ET peuvent corriger les copies. (Évaluation par les pairs).
 allowDropManualState: Les apprenants peuvent soumettre leurs travaux.
 Already reported: Déjà signalé
@@ -48,7 +48,7 @@ Choose current phase: Choisissez la phase en cours :
 Close unterminated drops: Valider les copies non terminées
 Comment: Commentaire
 Common information: Informations Générales
-common_explication: Cet outil met à disposition des apprenants un espace pour déposer des documents afin d'être évalués.<br/>Les corrections peuvent être faites par les enseignants
+common_explication: Cet outil met à disposition des apprenants un espace pour déposer des documents afin d'être évalués.<br/>Les corrections peuvent être faites par les enseignants.
 Common: Général
 Complete Corrections: Corrections terminées
 Complete my copy: Compléter ma copie
@@ -134,7 +134,7 @@ Evaluation not started: l'évaluation n'a pas démarré
 Evaluation not started: L'évaluation n'a pas encore commencé.
 Examiner: Correcteur
 Examiners : Correcteurs
-Examiners Instructions: Instructions aux correcteurs
+Examiners Instructions: Consignes aux correcteurs
 Expected total correction: Nombre de corrections attendues par copie
 expected_total_correction: Trois conditions sont nécessaires pour qu'un étudiant valide son évaluation :<br/>- Il doit avoir rendu sa copie.<br/>- Il doit avoir corrigé N autre(s) copie(s).<br/>- Sa copie doit avoir reçu N correction(s).<br/><br/>Le tirage d''une copie lors d'une correction est fait de manière aléatoire et anonyme.
 
@@ -173,8 +173,8 @@ icap_dropzone_common_form_instruction: Instruction
 icap_dropzone_criterion_form_instruction: Instruction
 icap_dropzone_form_name: Nom de l'évaluation
 Instruction_: Instruction :
-Instruction: Instructions
-Instructions for examiners: Instructions spécifiques aux correcteurs
+Instruction: Consignes
+Instructions for examiners: Consignes spécifiques aux correcteurs
 Invalidate all corrections: Invalider toutes les corrections
 Invalidate this correction: Invalider la correction
 Invalidate: Invalider
@@ -220,7 +220,7 @@ nb correction remains: one: Il vous reste une copie à corriger pour terminer ce
 nbDocumentsInThisEvaluation: one: Vous avez rendu un document pour cette évaluation :|some: Vous avez rendu %count% documents pour cette évaluation :
 Need to be the author: Vous devez être l'auteur de la correction pour effectuer cette action.
 Next: Suivant
-No copy waiting for correction: Aucune copie en attente de correction
+No copy waiting for correction: À ce jour, aucune demande ne vous a été adressée.
 No copy was made: Aucune copie na été rendue.
 No correction: Aucune correction.
 no document added yet: Aucun document ajouté pour l'instant.
@@ -265,7 +265,7 @@ peerReviewManualState: Les apprenants peuvent corriger les copies. (Évaluation 
 People that have a copy in this dropzone: Personnes ayant déposé une copie dans la zone de dépôt.
 People will not be able to drop anymore: Les utilisateurs ne pourront plus déposer/terminer de copie.
 Planification instruction: L'ouverture de l'évaluation peut se faire de manière manuelle ou automatique par dates.
-Planification peer review instruction: Elle se divise en plusieurs étapes : l'ouverture de l'évaluation en autorisant le dépôt, début de l'évaluation par les pairs qui clôture le dépôt et la fin de l'évaluation.
+Planification peer review instruction: Elle se divise en plusieurs étapes: l'ouverture de l'évaluation en autorisant le dépôt, début de l'évaluation par les pairs qui clôture le dépôt et la fin de l'évaluation.
 Planning: Planification
 Please comment: Merci de laisser un commentaire
 Previous: Précédent
@@ -277,7 +277,7 @@ Reason of reporting: Raison du signalement
 Recalculate all grade: Recalculer toutes les notes
 Recalculate the score: Recalculer le score
 recalculate_helper: Utile si vous avez supprimé des critères de correction alors que des gens avaient déjà commencé à corriger. Cela adaptera la note. Si vous avez ajouté de nouveaux critères, la note pour ce critère sera de 0 par défaut.
-Recall instructions: Rappel des instructions
+Recall instructions: Rappel des consignes
 Relevant documents: Documents concernés
 Remove report: Retirer le signalement
 Report comment: Expliquez la raison de votre signalement

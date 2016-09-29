@@ -1,21 +1,23 @@
-agenda: agenda
-analytics: analytics
-desktop_and_home: desktop_and_home
-desktop_tools: desktop_tools
-home: home
-home_tabs: home_tabs
-learning_outcomes: learning_outcomes
-learning_profil: learning_profil
-logs: logs
-my_contacts: my_contacts
-parameters: parameters
-platform_analytics: platform_analytics
-platform_logs: platform_logs
-platform_parameters: platform_parameters
-platform_plugins: platform_plugins
-registration_to_workspace: registration_to_workspace
-resource_manager: resource_manager
-roles_management: roles_management
-user_management: user_management
-users: users
-workspace_management: workspace_management
+agenda: Kalender
+analytics: Dashboard
+desktop_and_home: Bureaublad en startpagina
+desktop_tools: Hulpmiddelen van het bureaublad
+home: Startpagina
+home_tabs: Tans van de startpagina
+learning_outcomes: Competentieframework
+learning_profil: Leerprofiel
+logs: ogs
+my_contacts: Mijn contactpersonen
+parameters: Instellingen
+platform_analytics: Statistieken van het platform
+platform_logs: Toezicht van het platform
+platform_parameters: Instellingen van het platform
+platform_plugins: Plugins van het platform
+registration_to_workspace: Inschrijving aan werkruimten
+resource_manager: Leermiddelen
+roles_management: De rollen beheren
+user_management: De gebruikers beheren
+users: Gebruikers
+widgets_management: De widgets beheren
+workspace_management: De werkruimten beheren
+organization_management: De organisaties beheren
