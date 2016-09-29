@@ -91,6 +91,7 @@ class GeneralType extends AbstractType
                     'label' => 'domain_name',
                     'disabled' => isset($this->lockedParams['domain_name']),
                     'constraints' => new DomainName(),
+                    'required' => false,
                 ]
             )
             ->add(
