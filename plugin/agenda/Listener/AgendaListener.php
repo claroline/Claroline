@@ -12,18 +12,18 @@
 namespace Claroline\AgendaBundle\Listener;
 
 use Claroline\AgendaBundle\Manager\AgendaManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  *  @DI\Service()
@@ -93,7 +93,7 @@ class AgendaListener
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Widget:agenda_widget.html.twig',
-            array('listEvents' => $listEvents, 'isDesktop' => false)
+            ['listEvents' => $listEvents, 'isDesktop' => false]
         );
     }
 
@@ -112,7 +112,7 @@ class AgendaListener
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Widget:agenda_widget.html.twig',
-            array('listEvents' => $listEvents, 'isDesktop' => true)
+            ['listEvents' => $listEvents, 'isDesktop' => true]
         );
     }
 
@@ -140,20 +140,20 @@ class AgendaListener
         $listWorkspaceTasks = $em->getRepository('ClarolineAgendaBundle:Event')->getWorkspaceTaskNotDone($user);
         $listTasksSort = $this->agendaManager->sortEvents(array_merge($listWorkspaceTasks, $listDesktopTasks));
 
-        $editableWorkspaces = array(0 => true);
+        $editableWorkspaces = [0 => true];
 
         foreach ($listWorkspaceTasks as $task) {
             $workspaceId = $task->getWorkspace()->getId();
-            $editableWorkspaces[$workspaceId] = $this->authorization->isGranted(array('agenda_', 'edit'), $task->getWorkspace());
+            $editableWorkspaces[$workspaceId] = $this->authorization->isGranted(['agenda_', 'edit'], $task->getWorkspace());
         }
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Widget:task_widget.html.twig',
-            array(
+            [
                 'listTasks' => $listTasksSort,
                 'editableWorkspaces' => $editableWorkspaces,
                 'isDesktop' => true,
-            )
+            ]
         );
     }
 
@@ -162,17 +162,17 @@ class AgendaListener
         $em = $this->container->get('doctrine.orm.entity_manager');
         $listWorkspaceTasks = $em->getRepository('ClarolineAgendaBundle:Event')->findLastEventsOrTasksByWorkspaceId($workspace->getId(), true);
 
-        $editableWorkspaces = array(
-            $workspace->getId() => $this->authorization->isGranted(array('agenda_', 'edit'), $workspace),
-        );
+        $editableWorkspaces = [
+            $workspace->getId() => $this->authorization->isGranted(['agenda_', 'edit'], $workspace),
+        ];
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Widget:task_widget.html.twig',
-            array(
+            [
                 'listTasks' => $listWorkspaceTasks,
                 'editableWorkspaces' => $editableWorkspaces,
                 'isDesktop' => false,
-            )
+            ]
         );
     }
 
@@ -198,14 +198,14 @@ class AgendaListener
 
     public function workspaceAgenda(Workspace $workspace)
     {
-        $editableWorkspace = $this->authorization->isGranted(array('agenda_', 'edit'), $workspace);
+        $editableWorkspace = $this->authorization->isGranted(['agenda_', 'edit'], $workspace);
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Tool:agenda.html.twig',
-            array(
+            [
                 'workspace' => $workspace,
-                'editableWorkspaces' => array($workspace->getId() => $editableWorkspace),
-            )
+                'editableWorkspaces' => [$workspace->getId() => $editableWorkspace],
+            ]
         );
     }
 
@@ -215,28 +215,28 @@ class AgendaListener
         $usr = $this->tokenStorage->getToken()->getUser();
         $listEventsDesktop = $em->getRepository('ClarolineAgendaBundle:Event')->findDesktop($usr, true);
         $listEvents = $em->getRepository('ClarolineAgendaBundle:Event')->findByUser($usr, false);
-        $filters = array();
-        $editableWorkspaces = array(0 => true);
+        $filters = [];
+        $editableWorkspaces = [0 => true];
 
         foreach ($listEvents as $event) {
             $workspaceId = $event->getWorkspace()->getId();
             $filters[$workspaceId] = $event->getWorkspace()->getName();
             $editableWorkspaces[$workspaceId] = $this->authorization->isGranted(
-                array('agenda_', 'edit'),
+                ['agenda_', 'edit'],
                 $event->getWorkspace()
             );
         }
 
         if (count($listEventsDesktop) > 0) {
-            $filters[0] = $this->container->get('translator')->trans('desktop', array(), 'platform');
+            $filters[0] = $this->container->get('translator')->trans('desktop', [], 'platform');
         }
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Tool:agenda.html.twig',
-            array(
+            [
                 'filters' => $filters,
                 'editableWorkspaces' => $editableWorkspaces,
-            )
+            ]
         );
     }
 }

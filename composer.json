@@ -194,7 +194,8 @@
             "Icap\\LessonBundle\\": "plugin/lesson",
             "Claroline\\FlashCardBundle\\": "plugin/flashcard",
             "Innova\\MediaResourceBundle\\": "plugin/media-resource",
-            "FormaLibre\\OfficeConnectBundle\\": "plugin/o365"
+            "FormaLibre\\OfficeConnectBundle\\": "plugin/o365",
+            "Claroline\\DashboardBundle\\": "plugin/dashboard"
         }
     },
     "extra": {
@@ -248,7 +249,8 @@
             "UJM\\ExoBundle\\UJMExoBundle",
             "Icap\\LessonBundle\\IcapLessonBundle",
             "Claroline\\ChatBundle\\ClarolineChatBundle",
-            "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle"
+            "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle",
+            "Claroline\\DashboardBundle\\ClarolineDashboardBundle"
         ]
     }
 }

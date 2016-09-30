@@ -1,0 +1,20 @@
+<div class="panel-heading">
+    <h3 data-ng-if="adminDashboardCtrl.isEditMode === false" class="panel-title">{{'new_dashboard_title' | trans:{}:'dashboard'}}</h3>
+    <h3 data-ng-if="adminDashboardCtrl.isEditMode === true" class="panel-title">{{'edit_dashboard_title' | trans:{}:'dashboard'}} - {{adminDashboardCtrl.dashboard.name}} </h3>
+</div>
+<div class="panel-body">
+    <!-- ADMIN DASHBOARD STEP ONE :: WORKSPACE CHOICE -->
+    <step-one data-ng-if="adminDashboardCtrl.currentStep === 1 && !adminDashboardCtrl.isPreview" data-user="adminDashboardCtrl.user" data-workspaces="adminDashboardCtrl.workspaces" data-dashboard="adminDashboardCtrl.dashboard"></step-one>
+    <!-- ADMIN DASHBOARD PREVIEW QUERY -->
+    <dashboard-details data-ng-if="adminDashboardCtrl.isPreview" data-user="adminDashboardCtrl.user" data-computed="adminDashboardCtrl.computed" data-dashboard="adminDashboardCtrl.dashboard"><dashboard-details>
+</div>
+<div class="panel-footer">
+  <div class="row">
+    <div class="col-md-12 text-right">
+        <button class="btn btn-default" data-ng-if="adminDashboardCtrl.currentStep > 1" data-ng-click="adminDashboardCtrl.setStep(adminDashboardCtrl.currentStep - 1)">{{'previous' | trans:{}:'platform'}}</button>
+        <a class="btn btn-default" href="#/">{{'cancel' | trans:{}:'platform'}}</a>
+        <button class="btn btn-primary" data-ng-if="adminDashboardCtrl.currentStep <= adminDashboardCtrl.nbSteps" data-ng-click="adminDashboardCtrl.setStep(adminDashboardCtrl.currentStep + 1)">{{'next' | trans:{}:'dashboard'}}</button>
+        <button  data-ng-if="adminDashboardCtrl.isPreview" class="btn btn-primary" data-ng-click="adminDashboardCtrl.saveDashboard()">{{'save' | trans:{}:'platform'}}</button>
+    </div>
+  </div>
+</div>
