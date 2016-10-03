@@ -4703,6 +4703,11 @@ class CursusManager
         return $this->courseRepo->findCourseByCodeWithoutId($code, $id);
     }
 
+    public function getIndependentCourses()
+    {
+        return $this->courseRepo->findIndependentCourses();
+    }
+
     /******************************************
      * Access to CursusUserRepository methods *
      ******************************************/
