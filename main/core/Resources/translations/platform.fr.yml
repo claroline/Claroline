@@ -1125,6 +1125,7 @@ with_tutor: Tutoré
 workspace: 'Espace d''activités'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour cet espace d''activités.'
+workspace_access_disabled: Votre accès à cet espace d'activités est désactivé
 workspace_activity_overview: 'Aperçu des activités récentes de %workspaceName%'
 workspace_administration: Administration
 workspace_classification: 'Classification des espaces d''activités'

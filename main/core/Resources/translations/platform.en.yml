@@ -1126,6 +1126,7 @@ with_tutor: Tutored
 workspace: Workspace
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
+workspace_access_disabled: Your access to the workspace is disabled.
 workspace_activity_overview: 'Overview of recent activities in %workspaceName%'
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'

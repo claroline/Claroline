@@ -19,19 +19,28 @@
         <div class="alert alert-warning">{{ 'no_workspace'|trans({}, 'platform') }}</div>
     {% else %}
         {% for workspace in workspaces %}
+            {% set hasWsAccess = has_access_to_workspace(workspace.getId()) %}
             <div>
-                <a {% if has_access_to_workspace(workspace.getId()) %}
-                       href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
-                   {% endif %}
-                >
-                    <i class="fa fa-book"></i>
-                    {{ workspace.getName() }}
-                    <span>
-                        <small>
-                            ({{ workspace.getCode() }})
-                        </small>
-                    </span>
-                </a>
+                {% if hasWsAccess %}
+                    <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}">
+                {% endif %}
+                <i class="fa fa-book"></i>
+                {{ workspace.getName() }}
+                <span>
+                    <small>
+                        ({{ workspace.getCode() }})
+                    </small>
+                </span>
+                {% if hasWsAccess %}
+                    </a>
+                {% else %}
+                    <i class="fa fa-warning pointer-hand"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       title="{{ 'workspace_access_disabled'|trans({}, 'platform') }}"
+                    >
+                    </i>
+                {% endif %}
             </div>
         {% endfor %}
     {% endif %}
