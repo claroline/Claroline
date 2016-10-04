@@ -80,8 +80,8 @@ class AnnouncementManager
 
     public function getVisibleAnnouncementsByWorkspaces(array $workspaces, array $roles)
     {
-        $managerWorkspaces = array();
-        $nonManagerWorkspaces = array();
+        $managerWorkspaces = [];
+        $nonManagerWorkspaces = [];
 
         foreach ($workspaces as $workspace) {
             if (in_array("ROLE_WS_MANAGER_{$workspace->getGuid()}", $roles)) {
@@ -114,25 +114,20 @@ class AnnouncementManager
         $this->eventDispatcher->dispatch(
             'claroline_message_sending_to_users',
             'SendMessage',
-            array(
+            [
                 $announcement->getCreator(),
                 $announcement->getContent(),
                 $announcement->getTitle(),
                 null,
                 $targets,
-            )
+            ]
         );
     }
 
-    public function sendMail(Announcement $announcement)
+    public function sendMail(Announcement $announcement, $users = null)
     {
-        $targets = $this->getUsersByResource($announcement->getAggregate()->getResourceNode(), 1);
-        $this->mailManager->send(
-            $announcement->getTitle(),
-            $announcement->getContent(),
-            $targets,
-            $announcement->getCreator()
-        );
+        $targets = is_null($users) ? $this->getUsersByResource($announcement->getAggregate()->getResourceNode(), 1) : $users;
+        $this->mailManager->send($announcement->getTitle(), $announcement->getContent(), $targets, $announcement->getCreator());
     }
 
     //@todo make a dql request to retrieve the users (it may be a difficult one to do)

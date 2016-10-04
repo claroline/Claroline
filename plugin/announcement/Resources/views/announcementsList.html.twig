@@ -18,11 +18,8 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script
-        src='{{ asset('bundles/clarolineannouncement/js/announcements_list.js') }}'
-        type="text/javascript"
-    >
-    </script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'announcement' }) }}"></script>
+    <script type="text/javascript" src='{{ asset('bundles/clarolineannouncement/js/announcements_list.js') }}'></script>
 {% endblock %}
 
 {% block section_content %}
@@ -70,10 +67,16 @@
                             <i class="fa fa-pencil-square-o"></i>
                         </button>
                     </a>
-                    <button
-                        type="button"
-                        class="announcement-delete-button btn btn-default"
-                        btn-announcement-id="{{ announcement.getId() }}"
+                    <button type="button"
+                            class="announcement-send-button btn btn-default"
+                            data-announcement-id="{{ announcement.getId() }}"
+                            data-workspace-id="{{ workspace.getId() }}"
+                    >
+                        <i class="fa fa-envelope"></i>
+                    </button>
+                    <button type="button"
+                            class="announcement-delete-button btn btn-default"
+                            btn-announcement-id="{{ announcement.getId() }}"
                     >
                         &times;
                     </button>

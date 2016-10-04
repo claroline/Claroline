@@ -49,10 +49,7 @@
                             {{ 'published_on'|trans({}, 'announcement') }}
                             {{ data['announcement'].getPublicationDate().format('d-m-Y') }}
                             {{ 'in_workspace'|trans({}, 'widget') }}
-                            <a href="{{
-                                path('claro_workspace_open',
-                                {'workspaceId': data['workspaceId'], 'toolName': 'home'})
-                            }}">
+                            <a href="{{ path('claro_resource_open_short', {'node': data['resourceNodeId']}) }}">
                                 {{ data['workspaceName'] }}
                                 <span class="workspace-code">({{ data['workspaceCode'] }})</span>
                             </a>

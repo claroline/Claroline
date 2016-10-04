@@ -8,11 +8,14 @@ announcement_form_title: Title
 announcement_form_visible: Visible
 announcement_form_visible_from: From
 announcement_form_visible_until: To
+announcement_sent: Announcement sent
 announcements_list: 'Announcements list'
 at: at
 by: by
 created_on: 'Created on'
 create_new_announcement: 'Add an announcement'
-published_on: 'Published on'
-visible_from_until_condition: '"To" date must be after "From" date'
+notification_option_info: The notification option is disabled if a start date is defined.
 notify_user: "Notify the user"
+published_on: 'Published on'
+send_mail_user_picker_title: Please select the users to who you to send the announcement
+visible_from_until_condition: '"To" date must be after "From" date'
