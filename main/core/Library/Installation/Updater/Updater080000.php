@@ -10,10 +10,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater070100 extends Updater
+class Updater080000 extends Updater
 {
     private $container;
 
@@ -37,6 +38,10 @@ class Updater070100 extends Updater
 
         $this->om->flush();
         $this->setDisabledUserAsRemoved();
+
+        if (!$this->om->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneByName('resources_widget')) {
+            $this->createResourcesWidget();
+        }
     }
 
     private function setDisabledUserAsRemoved()
@@ -48,5 +53,24 @@ class Updater070100 extends Updater
             ->where('u.isEnabled = false')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    private function createResourcesWidget()
+    {
+        $this->log('Creating resources_widget widget...');
+        $roles = $this->om->getRepository('ClarolineCoreBundle:Role')->findAllPlatformRoles();
+        $widget = new Widget();
+        $widget->setName('resources_widget');
+        $widget->setConfigurable(true);
+        $widget->setPlugin(null);
+        $widget->setExportable(false);
+        $widget->setDisplayableInDesktop(true);
+        $widget->setDisplayableInWorkspace(true);
+
+        foreach ($roles as $role) {
+            $widget->addRole($role);
+        }
+        $this->om->persist($widget);
+        $this->om->flush();
     }
 }

@@ -568,4 +568,57 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
 
         return $query->getResult();
     }
+
+    public function findResourcesByIds(array $roles, $user, array $ids)
+    {
+        //if we usurpate a role, then it's like we're anonymous.
+        if (in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roles)) {
+            $user = 'anon.';
+        }
+        if (count($roles) === 0) {
+            throw new \RuntimeException('Roles cannot be empty');
+        }
+        if (count($ids) === 0) {
+            throw new \RuntimeException('List of id cannot be empty');
+        }
+        $this->builder->selectAsArray(true)
+            ->whereIdIn($ids)
+            ->whereActiveIs(true)
+            ->whereHasRoleIn($roles)
+            ->whereIsAccessible($user);
+
+        $query = $this->_em->createQuery($this->builder->getDql());
+        $query->setParameters($this->builder->getParameters());
+
+        $children = $this->executeQuery($query);
+        $childrenWithMaxRights = [];
+
+        foreach ($children as $child) {
+            if (!isset($childrenWithMaxRights[$child['id']])) {
+                $childrenWithMaxRights[$child['id']] = $child;
+            }
+
+            foreach ($childrenWithMaxRights as $id => $childMaxRights) {
+                if ($id === $child['id']) {
+                    $childrenWithMaxRights[$id]['mask'] |= $child['mask'];
+                }
+            }
+        }
+        $returnedArray = [];
+
+        foreach ($childrenWithMaxRights as $childMaxRights) {
+            $returnedArray[] = $childMaxRights;
+        }
+
+        //and now we order by index
+        usort($returnedArray, function ($a, $b) {
+            if ($a['index_dir'] === $b['index_dir']) {
+                return 0;
+            }
+
+            return ($a['index_dir'] < $b['index_dir']) ? -1 : 1;
+        });
+
+        return $returnedArray;
+    }
 }

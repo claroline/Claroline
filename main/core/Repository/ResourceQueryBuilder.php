@@ -634,4 +634,19 @@ class ResourceQueryBuilder
 
         return $this;
     }
+
+    /**
+     * Filters nodes by ids.
+     *
+     * @param array $ids
+     *
+     * @return ResourceQueryBuilder
+     */
+    public function whereIdIn($ids)
+    {
+        $this->addWhereClause('node.id IN (:ids)');
+        $this->parameters[':ids'] = $ids;
+
+        return $this;
+    }
 }

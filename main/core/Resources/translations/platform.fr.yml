@@ -630,6 +630,7 @@ no_home_tab: 'Il n''y a aucun onglet'
 no_learning_outcomes: 'Aucun référentiel de compétences'
 no_message: 'Aucun message'
 no_model: 'Aucun modèle'
+no_resource: Aucune ressource
 no_resources_in_workspace: 'Cet espace ne contient actuellement aucune ressource.'
 no_role_selected_message: 'Aucun rôle sélectionné.'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'

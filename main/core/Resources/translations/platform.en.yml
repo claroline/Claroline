@@ -629,6 +629,7 @@ no_home_tab: 'There is no Home tab'
 no_learning_outcomes: 'No learning outcomes'
 no_message: 'No message'
 no_model: 'No model'
+no_resource: No resource
 no_resources_in_workspace: 'There are currently no resources in this workspace.'
 no_role_selected_message: 'No role selected.'
 no_search_results: 'Your search hasn''t returned any result.'

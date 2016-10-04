@@ -447,4 +447,9 @@ class TagManager
             $roleNames
         );
     }
+
+    public function getTaggedResourceNodesByTagName($tagName)
+    {
+        return $this->taggedObjectRepo->findTaggedResourceNodesByTagName($tagName);
+    }
 }
