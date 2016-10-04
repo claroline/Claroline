@@ -14,6 +14,7 @@ export default class FlashCardService {
     this._deck = FlashCardService._getGlobal('deck')
     this._deckNode = FlashCardService._getGlobal('deckNode')
     this._canEdit = FlashCardService._getGlobal('canEdit')
+    this.routing = window.Routing
   }
 
   getDeck () {
@@ -29,33 +30,33 @@ export default class FlashCardService {
   }
 
   findAllNoteType () {
-    const url = Routing.generate('claroline_getall_note_type')
+    const url = this.routing.generate('claroline_getall_note_type')
     return this.$http.get(url)
   }
 
   findNewCardToLearn (deck) {
-    const url = Routing.generate('claroline_new_card_to_learn', {
+    const url = this.routing.generate('claroline_new_card_to_learn', {
       deck: deck.id
     })
     return this.$http.get(url)
   }
 
   findCardToLearn (deck) {
-    const url = Routing.generate('claroline_card_to_review', {
+    const url = this.routing.generate('claroline_card_to_review', {
       deck: deck.id
     })
     return this.$http.get(url)
   }
 
   findAllCardLearning (deck) {
-    const url = Routing.generate('claroline_getall_card_learning', {
+    const url = this.routing.generate('claroline_getall_card_learning', {
       deck: deck.id
     })
     return this.$http.get(url)
   }
 
   createNote (noteType, fields) {
-    const url = Routing.generate('claroline_create_note', {
+    const url = this.routing.generate('claroline_create_note', {
       deck: this._deck.id,
       noteType: noteType.id
     })
@@ -65,7 +66,7 @@ export default class FlashCardService {
   }
 
   editNote (note, fieldValues) {
-    const url = Routing.generate('claroline_edit_note', {
+    const url = this.routing.generate('claroline_edit_note', {
       note: note.id,
     })
 
@@ -73,7 +74,7 @@ export default class FlashCardService {
   }
 
   findNote (id) {
-    const url = Routing.generate('claroline_get_note', {
+    const url = this.routing.generate('claroline_get_note', {
       note: id
     })
 
@@ -81,7 +82,7 @@ export default class FlashCardService {
   }
 
   findNoteByNoteType (noteType) {
-    const url = Routing.generate('claroline_list_notes', {
+    const url = this.routing.generate('claroline_list_notes', {
       deck: this._deck.id,
       noteType: noteType.id
     })
@@ -90,7 +91,7 @@ export default class FlashCardService {
   }
 
   findNoteType (id) {
-    const url = Routing.generate('claroline_get_note_type', {
+    const url = this.routing.generate('claroline_get_note_type', {
       noteTypeId: id
     })
 
@@ -98,18 +99,18 @@ export default class FlashCardService {
   }
 
   editNoteType (noteType) {
-    const url = Routing.generate('claroline_edit_note_type')
+    const url = this.routing.generate('claroline_edit_note_type')
 
     return this.$http.post(url, { noteType: noteType })
   }
 
   createSession () {
-    const url = Routing.generate('claroline_create_session')
+    const url = this.routing.generate('claroline_create_session')
     return this.$http.get(url)
   }
 
   studyCard (deck, sessionId, card, answerQuality) {
-    const url = Routing.generate('claroline_study_card', {
+    const url = this.routing.generate('claroline_study_card', {
       deck: deck.id,
       sessionId: sessionId,
       card: card.id,
@@ -119,7 +120,7 @@ export default class FlashCardService {
   }
 
   cancelLastStudy (deck, sessionId, card) {
-    const url = Routing.generate('claroline_cancel_last_study', {
+    const url = this.routing.generate('claroline_cancel_last_study', {
       deck: deck.id,
       sessionId: sessionId,
       card: card.id,
@@ -128,7 +129,7 @@ export default class FlashCardService {
   }
 
   suspendCard (card, suspend) {
-    const url = Routing.generate('claroline_suspend_card', {
+    const url = this.routing.generate('claroline_suspend_card', {
       card: card.id,
       suspend: suspend
     })
@@ -136,14 +137,14 @@ export default class FlashCardService {
   }
 
   resetCard (card) {
-    const url = Routing.generate('claroline_reset_card', {
+    const url = this.routing.generate('claroline_reset_card', {
       card: card.id
     })
     return this.$http.get(url)
   }
 
   editDefaultParam (deck, newCardDay) {
-    const url = Routing.generate('claroline_edit_default_param', {
+    const url = this.routing.generate('claroline_edit_default_param', {
       deck: deck.id,
     })
 
@@ -151,7 +152,7 @@ export default class FlashCardService {
   }
 
   editUserParam (deck, newCardDay) {
-    const url = Routing.generate('claroline_edit_user_param', {
+    const url = this.routing.generate('claroline_edit_user_param', {
       deck: deck.id,
     })
 
@@ -159,7 +160,7 @@ export default class FlashCardService {
   }
 
   getUserPreference (id) {
-    const url = Routing.generate('claroline_get_user_pref', {
+    const url = this.routing.generate('claroline_get_user_pref', {
       deck: deck.id,
     })
 

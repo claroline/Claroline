@@ -19,15 +19,14 @@ export default class CreateNoteCtrl {
     this.noteTypes = []
     this.noteTypeChoosen = null
     this.noteTypeField = [
-        'type',
-        'select',
-        {
-            values: [],
-            label: 'note_type',
-            choice_name: 'name',
-            validators: [new NotBlank()]
-        }
-
+      'type',
+      'select',
+      {
+        values: [],
+        label: 'note_type',
+        choice_name: 'name',
+        validators: [new NotBlank()]
+      }
     ]
     this.fieldValues = []
     this.newCards = []
@@ -51,8 +50,8 @@ export default class CreateNoteCtrl {
       for (let i = 0; i < this.fieldValues.length; i++) {
         fieldLabel = this.noteTypeChoosen.field_labels[i]
         fields[i] = {
-          "id": fieldLabel.id,
-          "fieldValue": this.fieldValues[i]
+          'id': fieldLabel.id,
+          'fieldValue': this.fieldValues[i]
         }
       }
 

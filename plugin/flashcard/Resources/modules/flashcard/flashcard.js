@@ -6,6 +6,7 @@
  * For the full copyright and license information, please view
  * the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 import angular from 'angular/index'
@@ -91,9 +92,9 @@ angular
     EditUserParamCtrl
   ])
   .filter('trans', () => (string, domain = 'platform') =>
-    Translator.trans(string, domain)
+    window.Translator.trans(string, domain)
   )
-  .config(["$routeProvider",
+  .config(['$routeProvider',
     $routeProvider => {
       $routeProvider
         .when('/', {
@@ -145,7 +146,7 @@ angular
           controllerAs: 'vm'
         })
         .otherwise({
-          redirectTo: "/"
+          redirectTo: '/'
         })
     }
-  ]);
+  ])

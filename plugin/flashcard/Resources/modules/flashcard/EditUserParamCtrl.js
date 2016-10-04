@@ -9,7 +9,7 @@
  */
 
 export default class EditUserParamCtrl {
-  constructor (service, $routeParams, $location, $http) {
+  constructor (service, $routeParams, $location) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
