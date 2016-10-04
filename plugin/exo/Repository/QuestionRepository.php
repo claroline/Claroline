@@ -59,6 +59,8 @@ class QuestionRepository extends EntityRepository
     /**
      * Returns all the questions linked to a given step.
      *
+     * @deprecated this methods is only used in incorrect way. It will be deleted when there will be no more use
+     *
      * @param Step $step
      *
      * @return Question[]

@@ -276,7 +276,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
             $questions = opendir($exoPath.'/'.$step['order']);
             $questionFiles = [];
             while (($question = readdir($questions)) !== false) {
-                if ($question != '.' && $question != '..') {
+                if ($question !== '.' && $question !== '..') {
                     $questionFiles[] = $exoPath.'/'.$step['order'].'/'.$question;
                 }
             }
@@ -285,7 +285,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
                 $this->qtiRepository->createDirQTI();
                 $files = opendir($question);
                 while (($file = readdir($files)) !== false) {
-                    if ($file != '.' && $file != '..') {
+                    if ($file !== '.' && $file !== '..') {
                         copy($question.'/'.$file, $this->qtiRepository->getUserDir().'ws/'.$file);
                     }
                 }
@@ -322,6 +322,8 @@ class ExoImporter extends Importer implements ConfigurationInterface
             ];
 
             $steps[] = $s;
+
+            // TODO : do not load the Questions from DB they already are in `$step->getStepQuestions()`
             $questions = $questionRepo->findByStep($step);
             $this->qtiService->createQuestionsDirectory($questions, $step->getOrder());
             $dirs = $this->qtiService->sortPathOfQuestions($this->qtiRepository, $step->getOrder());

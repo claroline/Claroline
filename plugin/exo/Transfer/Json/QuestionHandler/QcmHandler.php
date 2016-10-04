@@ -220,13 +220,23 @@ class QcmHandler implements QuestionHandlerInterface
     public function convertQuestionAnswers(Question $question, \stdClass $exportData)
     {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionQCM');
-        $qcm = $repo->findOneBy(['question' => $question]);
 
-        $choices = $qcm->getChoices()->toArray();
-        $exportData->solutions = array_map(function ($choice) {
+        /** @var InteractionQCM $interaction */
+        $interaction = $repo->findOneBy(['question' => $question]);
+
+        $choices = $interaction->getChoices()->toArray();
+        $exportData->solutions = array_map(function ($choice) use ($interaction) {
+            /* @var Choice $choice */
+
             $solutionData = new \stdClass();
             $solutionData->id = (string) $choice->getId();
-            $solutionData->score = $choice->getWeight();
+
+            if (!$interaction->getWeightResponse()) {
+                $solutionData->score = $choice->getRightResponse() ? 1 : -1;
+            } else {
+                $solutionData->score = $choice->getWeight();
+            }
+
             $solutionData->rightResponse = $choice->getRightResponse();
 
             if ($choice->getFeedback()) {

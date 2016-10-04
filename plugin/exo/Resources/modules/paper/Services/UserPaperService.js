@@ -284,23 +284,15 @@ export default class UserPaperService {
           if (response) {
             for (let i = 0; i < response.length; i++) {
               if (response[i]) {
-                let item = null
+                let question = this.questions.find(question => response[i].question.id === question.id)
 
-                // Get item in Step
-                for (let j = 0; j < step.items.length; j++) {
-                  if (response[i].question.id === step.items[j].id) {
-                    item = step.items[j]
-                    break // Stop searching
-                  }
-                }
-
-                if (item) {
+                if (question) {
                   // Update question with solutions and feedback
-                  item.solutions = response[i].question.solutions ? response[i].question.solutions : []
-                  item.feedback = response[i].question.feedback ? response[i].question.feedback : null
+                  question.solutions = response[i].question.solutions ? response[i].question.solutions : []
+                  question.feedback = response[i].question.feedback ? response[i].question.feedback : null
 
                   // Update paper with Score
-                  const paper = this.getQuestionPaper(item)
+                  let paper = this.getQuestionPaper(question)
                   paper.score = response[i].answer.score
                   paper.nbTries = response[i].answer.nbTries
                 }

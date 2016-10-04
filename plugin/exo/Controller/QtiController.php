@@ -19,7 +19,7 @@ class QtiController extends Controller
         $exoID = $request->get('exerciceID');
         $file = $request->files->get('qtifile');
 
-        if ($file->getMimeType() != 'application/zip') {
+        if ($file->getMimeType() !== 'application/zip') {
             return $this->importError('qti_format_warning', $exoID);
         }
 
@@ -29,7 +29,7 @@ class QtiController extends Controller
             return $this->importError('qti can\'t open zip', $exoID);
         }
 
-        if ($exoID == -1) {
+        if ((int) $exoID === -1) {
             $scanFile = $qtiRepo->scanFiles();
         } else {
             $em = $this->getDoctrine()->getManager();
@@ -43,8 +43,8 @@ class QtiController extends Controller
             return $this->importError($scanFile, $exoID);
         }
 
-        if ($exoID == -1) {
-            return $this->forward('UJMExoBundle:Question:index', array());
+        if ((int) $exoID === -1) {
+            return $this->forward('UJMExoBundle:Question:index', []);
         } else {
             $qtiRepo->assocExerciseQuestion(false);
 
@@ -66,7 +66,7 @@ class QtiController extends Controller
             $exoID = $request->request->get('exoID');
         }
 
-        return $this->render('UJMExoBundle:QTI:import.html.twig', array('exoID' => $exoID));
+        return $this->render('UJMExoBundle:QTI:import.html.twig', ['exoID' => $exoID]);
     }
 
     /**
@@ -83,8 +83,8 @@ class QtiController extends Controller
         $file = $request->files->get('qtifile');
 
         $qtiRepo->createDirQTI();
-        $root = array();
-        $fichier = array();
+        $root = [];
+        $fichier = [];
 
         $file->move($qtiRepo->getUserDir(), $file->getClientOriginalName());
         $zip = new \ZipArchive();
@@ -98,7 +98,7 @@ class QtiController extends Controller
         while ($zip_entry = zip_read($res)) {
             if (zip_entry_filesize($zip_entry) > 0) {
                 $nom_fichier = zip_entry_name($zip_entry);
-                if (substr($nom_fichier, -4, 4) == '.xml') {
+                if (substr($nom_fichier, -4, 4) === '.xml') {
                     $root[$i] = $fichier = explode('/', $nom_fichier);
                 }
             }
@@ -118,19 +118,19 @@ class QtiController extends Controller
      */
     private function importError($mssg, $exoID)
     {
-        if ($exoID == -1) {
+        if ((int) $exoID === -1) {
             return $this->forward('UJMExoBundle:Question:index',
-                array('qtiError' => $this->get('translator')->trans($mssg, array(), 'ujm_exo'))
+                ['qtiError' => $this->get('translator')->trans($mssg, [], 'ujm_exo')]
             );
         } else {
             return $this->forward('UJMExoBundle:Exercise:showQuestions',
-                array(
+                [
                     'id' => $exoID,
-                    'qtiError' => $this->get('translator')->trans($mssg, array(), 'ujm_exo'),
+                    'qtiError' => $this->get('translator')->trans($mssg, [], 'ujm_exo'),
                     'pageNow' => 0,
                     'categoryToFind' => 'z',
                     'titleToFind' => 'z',
-                    'displayAll' => 0, )
+                    'displayAll' => 0, ]
             );
         }
     }
@@ -144,7 +144,7 @@ class QtiController extends Controller
     {
         $request = $this->container->get('request');
         $exoID = $request->get('exoID');
-        $search = array(' ', '/');
+        $search = [' ', '/'];
         $title = str_replace($search, '_', $request->get('exoName'));
 
         $qtiRepo = $this->container->get('ujm.exo_qti_repository');
@@ -202,6 +202,7 @@ class QtiController extends Controller
         $qtiRepo = $this->container->get('ujm.exo_qti_repository');
 
         foreach ($exercise->getSteps() as $step) {
+            // TODO : do not load the Questions from DB they already are in `$step->getStepQuestions()`
             $questions = $questionRepo->findByStep($step);
 
             $qtiSer->createQuestionsDirectory($questions, $step->getOrder());

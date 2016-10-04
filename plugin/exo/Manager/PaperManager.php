@@ -677,6 +677,7 @@ class PaperManager
         $finalQuestions = [];
 
         foreach ($steps as $step) {
+            // TODO : do not load the Questions from DB they already are in `$step->getStepQuestions()`
             $questions = $questionRepo->findByStep($step);
             $finalQuestions = array_merge($finalQuestions, $questions);
         }
