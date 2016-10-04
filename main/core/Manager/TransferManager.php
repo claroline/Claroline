@@ -256,6 +256,7 @@ class TransferManager
 
         foreach ($data['tools'] as $tool) {
             $importer = $this->getImporterByName($tool['tool']['type']);
+            $importer->setWorkspace($workspace);
 
             if (isset($tool['tool']['data']) && $importer instanceof RichTextInterface) {
                 $data['data'] = $tool['tool']['data'];
