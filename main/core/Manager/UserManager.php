@@ -45,7 +45,7 @@ class UserManager
 {
     use LoggableTrait;
 
-    const MAX_USER_BATCH_SIZE = 20;
+    const MAX_USER_BATCH_SIZE = 100;
     const MAX_EDIT_BATCH_SIZE = 100;
 
     private $container;
@@ -147,7 +147,8 @@ class UserManager
         $model = null,
         $publicUrl = null,
         $organizations = [],
-        $forcePersonalWorkspace = null
+        $forcePersonalWorkspace = null,
+        $forceRoleValidation = true
     ) {
         $additionnalRoles = [];
 
@@ -164,13 +165,11 @@ class UserManager
         $user->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $user->setEmailValidationHash($this->container->get('claroline.utilities.misc')->generateGuid());
         $user->setOrganizations($organizations);
-        $this->objectManager->persist($user);
         $publicUrl ? $user->setPublicUrl($publicUrl) : $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);
-        $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
-        $this->objectManager->persist($user);
-        $this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', [$user]);
+        $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
+        $user->addRole($roleUser);
         $this->roleManager->createUserRole($user);
 
         foreach ($additionnalRoles as $role) {
@@ -186,16 +185,12 @@ class UserManager
                 $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
                 $user->setResetPasswordHash($password);
                 $user->setIsEnabled(false);
-                $this->objectManager->persist($user);
-                $this->objectManager->flush();
                 $this->mailManager->sendEnableAccountMessage($user);
             } elseif ($mailValidation === PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL) {
                 //don't change anything
                 $this->mailManager->sendCreationMessage($user);
             }
         }
-
-        $this->strictEventDispatcher->dispatch('user_created_event', 'UserCreated', ['user' => $user]);
 
         if ($forcePersonalWorkspace !== null) {
             if ($forcePersonalWorkspace) {
@@ -207,6 +202,9 @@ class UserManager
             }
         }
 
+        $this->objectManager->persist($user);
+        $this->strictEventDispatcher->dispatch('user_created_event', 'UserCreated', ['user' => $user]);
+        $this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', [$user]);
         $this->objectManager->endFlushSuite();
 
         return $user;
@@ -539,7 +537,8 @@ class UserManager
                     $model,
                     $username.uniqid(),
                     $organizations,
-                    $hasPersonalWorkspace
+                    $hasPersonalWorkspace,
+                    false
                 );
             }
 

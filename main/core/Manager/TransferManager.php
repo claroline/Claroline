@@ -204,7 +204,7 @@ class TransferManager
         );
 
         //batch import with default template shouldn't be flushed
-        if (strpos($template->getPathname(), 'default.zip') === false) {
+        if (strpos($template->getPathname(), 'default.zip') === false && strpos($template->getPathname(), 'personal.zip') === false) {
             $this->om->forceFlush();
         }
 
