@@ -66,8 +66,8 @@ function ExercisePlayerCtrl(
   this.areMaxAttemptsReached()
 
   // Initialize Timer if needed
-  if (0 !== this.exercise.meta.duration) {
-    this.timer = this.TimerService.new(this.exercise.id, this.exercise.meta.duration * 60, this.end.bind(this), true)
+  if (!isNaN(Number(this.exercise.meta.duration)) && 0 !== Number(this.exercise.meta.duration)) {
+    this.timer = this.TimerService.new(this.exercise.id, Number(this.exercise.meta.duration) * 60, this.end.bind(this), true)
   }
 
   if (this.step && this.step.items[0]) {
@@ -196,15 +196,15 @@ ExercisePlayerCtrl.prototype.areMaxAttemptsReached = function areMaxAttemptsReac
  */
 ExercisePlayerCtrl.prototype.isButtonEnabled = function isButtonEnabled(button) {
   var buttonEnabled
-  
+
   var isFormative = this.feedback.enabled
   var feedbackShown = this.feedback.visible
   var allAnswersFound = this.allAnswersFound === 0
   var maxStepReached = this.currentStepTry >= this.step.meta.maxAttempts
   var minimalCorrection = this.exercise.meta.minimalCorrection
-  
+
   var navigateOneStep = isFormative && !allAnswersFound && (!feedbackShown || (feedbackShown && (!maxStepReached || (maxStepReached && !minimalCorrection && !this.solutionShown))))
-  
+
   if (button === 'retry') {
     buttonEnabled = isFormative && feedbackShown && (this.currentStepTry < this.step.meta.maxAttempts || this.step.meta.maxAttempts === 0) && !allAnswersFound
   } else if (button === 'next') {
