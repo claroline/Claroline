@@ -929,7 +929,7 @@ class WorkspaceManager
                 $workspace->setRegistrationValidation($registrationValidation);
                 $workspace->setGuid($guid);
                 if ($endDate) {
-                    $workspace->setEndDate($date);
+                    $workspace->setEndDate($endDate);
                 }
                 $date = new \Datetime(date('d-m-Y H:i'));
                 $workspace->setCreationDate($date->getTimestamp());
