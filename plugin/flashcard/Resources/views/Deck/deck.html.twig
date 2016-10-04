@@ -6,6 +6,14 @@
 
 {% extends layout %}
 
+{% block stylesheets %}
+  {{ parent() }}
+  <link href="{{ asset('bundles/clarolineflashcard/css/base.css') }}"
+        rel="stylesheet">
+  <link href="{{ asset('bundles/clarolineflashcard/css/'~_theme~'.css') }}"
+        rel="stylesheet">
+{% endblock %}
+
 {% block title %}{{ _resource.getResourceNode().getName()|striptags|raw }}{% endblock %}
 
 {% block section_content %}

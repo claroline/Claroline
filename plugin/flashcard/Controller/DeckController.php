@@ -74,9 +74,12 @@ class DeckController
 
         $canEdit = $this->checker->isGranted('EDIT', $deck);
 
+        $theme = "theme-std";
+
         return [
             '_resource' => $deck,
             '_canEdit' => $canEdit,
+            '_theme' => $theme,
         ];
     }
 
