@@ -106,6 +106,13 @@ class PathListener extends ContainerAware
             $published = $form->get('published')->getData();
             $event->setPublished($published);
 
+            $path->setStructure('');
+
+            // We need to force the save of the Path to get its ID
+            $this->container->get('claroline.persistence.object_manager')->persist($path);
+            $this->container->get('claroline.persistence.object_manager')->flush();
+
+            // Initialize JSON structure for the Path
             $path->initializeStructure();
 
             // Send new path to dispatcher through event object

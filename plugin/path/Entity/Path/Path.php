@@ -347,6 +347,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     public function initializeStructure()
     {
         $structure = [
+            'id' => $this->getId(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),
             'breadcrumbs' => $this->breadcrumbs,
