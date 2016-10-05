@@ -67,7 +67,7 @@ export default class FlashCardService {
 
   editNote (note, fieldValues) {
     const url = this.routing.generate('claroline_edit_note', {
-      note: note.id,
+      note: note.id
     })
 
     return this.$http.post(url, { fieldValues: fieldValues })
@@ -114,7 +114,7 @@ export default class FlashCardService {
       deck: deck.id,
       sessionId: sessionId,
       card: card.id,
-      result: answerQuality,
+      result: answerQuality
     })
     return this.$http.get(url)
   }
@@ -123,7 +123,7 @@ export default class FlashCardService {
     const url = this.routing.generate('claroline_cancel_last_study', {
       deck: deck.id,
       sessionId: sessionId,
-      card: card.id,
+      card: card.id
     })
     return this.$http.get(url)
   }
@@ -145,7 +145,7 @@ export default class FlashCardService {
 
   editDefaultParam (deck, newCardDay) {
     const url = this.routing.generate('claroline_edit_default_param', {
-      deck: deck.id,
+      deck: deck.id
     })
 
     return this.$http.post(url, { newCardDay: newCardDay })
@@ -153,15 +153,15 @@ export default class FlashCardService {
 
   editUserParam (deck, newCardDay) {
     const url = this.routing.generate('claroline_edit_user_param', {
-      deck: deck.id,
+      deck: deck.id
     })
 
     return this.$http.post(url, { newCardDay: newCardDay })
   }
 
-  getUserPreference (id) {
+  getUserPreference (deck) {
     const url = this.routing.generate('claroline_get_user_pref', {
-      deck: deck.id,
+      deck: deck.id
     })
 
     return this.$http.get(url)

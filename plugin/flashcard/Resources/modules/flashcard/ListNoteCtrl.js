@@ -143,7 +143,7 @@ export default class ListNoteCtrl {
   }
 
   confirmDeleteNote (note) {
-    const url = Routing.generate('claroline_delete_note', {
+    const url = this.routing.generate('claroline_delete_note', {
       note: note.id
     })
 

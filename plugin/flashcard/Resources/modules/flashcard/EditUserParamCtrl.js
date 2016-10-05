@@ -21,7 +21,7 @@ export default class EditUserParamCtrl {
     this._service = service
     this.$location = $location
     
-    service.getUserPreference($routeParams.id).then(d => this.userPref = d.data)
+    service.getUserPreference(this.deck).then(d => this.userPref = d.data)
   }
 
   editUserParam (form) {
