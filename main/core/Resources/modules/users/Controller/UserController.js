@@ -136,7 +136,7 @@ export default class UserController {
     let qs = ''
 
     for (let i = 0; i < this.selected.length; i++) {
-      qs += 'roleIds[]=' + this.roles[i].id + '&'
+      qs += 'roleIds[]=' + this.selectedRoles[i].id + '&'
     }
 
     return qs
@@ -225,7 +225,8 @@ export default class UserController {
     const url = Routing.generate('api_put_users_roles') + '?' + this.generateQsForSelectedRoles() + this.generateQsForSelectedUsers()
 
     const users = this.selected.map(s => s.username).join(', ')
-    const roles = this.roles.map(r => this.translate(r.translation_key)).join(', ')
+    const roles = this.selectedRoles.map(r => this.translate(r.translation_key)).join(', ')
+
 
     this.ClarolineAPIService.confirm(
       {url, method: 'PUT'},

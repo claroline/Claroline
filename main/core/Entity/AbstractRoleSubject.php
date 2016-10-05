@@ -21,7 +21,7 @@ abstract class AbstractRoleSubject
     public function __construct()
     {
         $this->roles = new ArrayCollection();
-        $this->rolesStringAsArray = array();
+        $this->rolesStringAsArray = [];
     }
 
     /**
@@ -82,7 +82,7 @@ abstract class AbstractRoleSubject
             return $this->rolesStringAsArray;
         }
 
-        $roleNames = array();
+        $roleNames = [];
 
         foreach ($this->getEntityRoles(true) as $role) {
             $roleNames[] = $role->getName();
