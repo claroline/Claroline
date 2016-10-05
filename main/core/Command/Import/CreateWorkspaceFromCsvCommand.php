@@ -15,9 +15,11 @@ use Claroline\CoreBundle\Command\Traits\BaseCommandTrait;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Listener\DoctrineDebug;
 use Claroline\CoreBundle\Validator\Constraints\CsvWorkspace;
+use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -37,14 +39,21 @@ class CreateWorkspaceFromCsvCommand extends ContainerAwareCommand
             ->setAliases(['claroline:csv:workspace']);
         $this->setDefinition(
             [
-        new InputArgument('csv_workspace_path', InputArgument::REQUIRED, 'The absolute path to the csv file.'),
+                new InputArgument('csv_workspace_path', InputArgument::REQUIRED, 'The absolute path to the csv file.'),
                 new InputArgument('owner_username', InputArgument::REQUIRED, 'The owner username'),
-        ]
+            ]
+        );
+        $this->addOption(
+            'update',
+            'u',
+            InputOption::VALUE_NONE,
+            'When set to true, updates are triggered'
         );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $update = $input->getOption('update');
         $username = $input->getArgument('owner_username');
         $consoleLogger = ConsoleLogger::get($output);
         $om = $this->getContainer()->get('claroline.persistence.object_manager');
@@ -61,7 +70,11 @@ class CreateWorkspaceFromCsvCommand extends ContainerAwareCommand
         $validator = $this->getContainer()->get('validator');
         $file = $input->getArgument('csv_workspace_path');
         $lines = str_getcsv(file_get_contents($file), PHP_EOL);
-        $errors = $validator->validateValue($file, new CsvWorkspace());
+        $constraint = new CsvWorkspace();
+        if ($update) {
+            $constraint->updateMode();
+        }
+        $errors = $validator->validateValue($file, $constraint);
 
         if (count($errors)) {
             foreach ($errors as $error) {
@@ -77,8 +90,8 @@ class CreateWorkspaceFromCsvCommand extends ContainerAwareCommand
         }
 
         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
-        $workspaceManager->importWorkspaces($workspaces, function ($message) use ($output) {
-            $output->writeln($message);
-        });
+        $workspaceManager->importWorkspaces($workspaces, function ($message) use ($consoleLogger) {
+            $consoleLogger->log(LogLevel::DEBUG, $message);
+        }, $update);
     }
 }

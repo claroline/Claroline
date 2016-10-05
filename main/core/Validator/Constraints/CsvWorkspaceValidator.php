@@ -50,6 +50,7 @@ class CsvWorkspaceValidator extends ConstraintValidator
         $data = $this->ut->formatCsvOutput(file_get_contents($value));
         $lines = str_getcsv($data, PHP_EOL);
         $codes = [];
+        $update = $constraint->update;
 
         foreach ($lines as $line) {
             $linesTab = explode(';', $line);
@@ -87,7 +88,7 @@ class CsvWorkspaceValidator extends ConstraintValidator
                     $codes[$code] = [$i + 1] :
                     $codes[$code][] = $i + 1;
 
-                if ($this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code)) {
+                if ($this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code) && !$update) {
                     $msg = $this->translator->trans(
                             'workspace_code_invalid',
                             ['%code%' => $code, '%line%' => $i + 1],
