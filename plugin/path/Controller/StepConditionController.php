@@ -198,34 +198,6 @@ class StepConditionController extends Controller
     }
 
     /**
-     * Get list of teams available in the Workspace of the current Path.
-     *
-     * @param Path $path
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     *
-     * @Route(
-     *     "/team/{id}",
-     *     name = "innova_path_criteria_teams"
-     * )
-     * @Method("GET")
-     */
-    public function listTeamsAction(Path $path)
-    {
-        $data = [];
-        // retrieve list of groups object for this user
-        $teams = $this->teamManager->getTeamsByWorkspace($path->getWorkspace());
-        if ($teams) {
-            // data needs to be explicitly set because Team does not extends Serializable
-            /** @var \Claroline\TeamBundle\Entity\Team $team */
-            foreach ($teams as $team) {
-                $data[$team->getId()] = $team->getName();
-            }
-        }
-
-        return new JsonResponse($data);
-    }
-    /**
      * Get list of teams a user belongs to.
      *
      * @param User $user
@@ -258,8 +230,36 @@ class StepConditionController extends Controller
     }
 
     /**
+     * Get list of teams available in the Workspace of the current Path.
+     *
+     * @param Path $path
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * @Route(
+     *     "/team/{id}",
+     *     name = "innova_path_criteria_teams"
+     * )
+     * @Method("GET")
+     */
+    public function listTeamsAction(Path $path)
+    {
+        $data = [];
+        // retrieve list of groups object for this user
+        $teams = $this->teamManager->getTeamsByWorkspace($path->getWorkspace());
+        if ($teams) {
+            // data needs to be explicitly set because Team does not extends Serializable
+            /** @var \Claroline\TeamBundle\Entity\Team $team */
+            foreach ($teams as $team) {
+                $data[$team->getId()] = $team->getName();
+            }
+        }
+
+        return new JsonResponse($data);
+    }
+
+    /**
      * @param Step $step
-     * @param Step $nextstep
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @Route(
