@@ -10,6 +10,7 @@ announcement_form_visible_from: Du
 announcement_form_visible_until: Au
 announcement_sent: Annonce envoyée
 announcements_list: 'Liste des annonces'
+announcements_widget_configuration_info: Vous pouvez spécifier la source des annonces en choisissant une ressource.
 at: à
 by: par
 created_on: 'Créée le'
