@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "e85a21f767e945325fbf714328742d7273b6dbfd"
+                "reference": "dace142244bda2ea57bc50e9538039c0aa689545"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/e85a21f767e945325fbf714328742d7273b6dbfd",
-                "reference": "e85a21f767e945325fbf714328742d7273b6dbfd",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/dace142244bda2ea57bc50e9538039c0aa689545",
+                "reference": "dace142244bda2ea57bc50e9538039c0aa689545",
                 "shasum": ""
             },
             "require": {
@@ -383,7 +383,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-09-29 15:05:10"
+            "time": "2016-10-05 13:06:41"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3450,12 +3450,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/u01jmg3/ics-parser.git",
-                "reference": "0d2844104074a77c7abf05c462290b9d5ef39004"
+                "reference": "45191551df10eaf13cb59218116b8ca2575dc3ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/u01jmg3/ics-parser/zipball/0d2844104074a77c7abf05c462290b9d5ef39004",
-                "reference": "0d2844104074a77c7abf05c462290b9d5ef39004",
+                "url": "https://api.github.com/repos/u01jmg3/ics-parser/zipball/45191551df10eaf13cb59218116b8ca2575dc3ae",
+                "reference": "45191551df10eaf13cb59218116b8ca2575dc3ae",
                 "shasum": ""
             },
             "require": {
@@ -3496,7 +3496,7 @@
                 "ical",
                 "ics"
             ],
-            "time": "2016-09-16 19:43:19"
+            "time": "2016-09-23 16:09:33"
         },
         {
             "name": "json-quiz/json-quiz",
@@ -3504,17 +3504,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "34624f84aa6510577a67fa5665e4ad109b3ac25c"
+                "reference": "c7bcdf99870473feab91ec526aa0ab7bb7d2df2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/34624f84aa6510577a67fa5665e4ad109b3ac25c",
-                "reference": "34624f84aa6510577a67fa5665e4ad109b3ac25c",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/c7bcdf99870473feab91ec526aa0ab7bb7d2df2f",
+                "reference": "c7bcdf99870473feab91ec526aa0ab7bb7d2df2f",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2016-09-27 09:57:41"
+            "time": "2016-10-05 07:19:06"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -4213,12 +4213,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "73d4db51e1f16cda1802e3e0e3977d506971d32d"
+                "reference": "958e697981ca958a8bf9dc2be890cf23d316367c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/73d4db51e1f16cda1802e3e0e3977d506971d32d",
-                "reference": "73d4db51e1f16cda1802e3e0e3977d506971d32d",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/958e697981ca958a8bf9dc2be890cf23d316367c",
+                "reference": "958e697981ca958a8bf9dc2be890cf23d316367c",
                 "shasum": ""
             },
             "require": {
@@ -4289,7 +4289,7 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2016-09-10 06:38:33"
+            "time": "2016-10-03 19:10:35"
         },
         {
             "name": "ocramius/proxy-manager",
