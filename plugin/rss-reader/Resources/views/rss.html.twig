@@ -3,9 +3,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#rss-flux-{{ widgetId }}" href="#rss-flux-{{ widgetId ~ loop.index }}">
+                    <span class="accordion-toggle pointer-hand" data-toggle="collapse" data-parent="#rss-flux-{{ widgetId }}" href="#rss-flux-{{ widgetId ~ loop.index }}">
                         {{ item.getTitle() }}
-                    </a>
+                    </span>
                 </h3>
             </div>
             <div class="panel-body collapse" id="rss-flux-{{ widgetId ~ loop.index }}">
