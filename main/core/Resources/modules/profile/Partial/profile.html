@@ -63,7 +63,7 @@
                       <p ng-if="pc.user.allowSendMessage">
                           <a class="fa fa-pencil" href="{{ 'claro_message_form_for_user'|path:{user: pc.user.id} }}"> {{ 'send_message'|trans:{}:'platform' }}</a>
                       </p>
-                      <p ng-if="pc.user.phone"><span class="fa fa-phone"></span> pc.{{ user.phone }}</p>
+                      <p ng-if="pc.user.phone"><span class="fa fa-phone"></span> {{ pc.user.phone }}</p>
                       <p ng-repeat="(key, link) in pc.arLinks"><a href="{{ link.url }}">
                           {{ link.name|trans:{}: 'resource' }}
                       </a></p>
