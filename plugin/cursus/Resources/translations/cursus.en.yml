@@ -108,6 +108,7 @@ edit_location: Edit location
 edit_session: Edit training session
 edit_session_event: Edit session event
 enable_courses_tab_in_profile: Enable trainings tab in profile
+enable_workspace_in_courses_tab_in_profile: Display workspace link in trainings tab of profile
 event_registration_automatic: Automatic
 event_registration_manual: Manual
 event_registration_public: Public

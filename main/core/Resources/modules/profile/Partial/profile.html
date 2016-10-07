@@ -101,6 +101,11 @@
                       <td class="text-center" data-title="'end_date'|trans:{}:'platform'" sortable="'endDate'">
                           {{ session['endDate']|date:'dd/MM/yyyy' }}
                       </td>
+                      <td class="text-center" ng-if="pc.displayCourseWorkspace">
+                          <a ng-if="session['workspace']" href="{{ 'claro_workspace_open'|path:{'workspaceId': session['workspace']['id']} }}">
+                              <i class="fa fa-book"></i>
+                          </a>
+                      </td>
                   </tr>
               </table>
           </div>
