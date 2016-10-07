@@ -48,19 +48,19 @@ class O365ResponseUser
         $missingProperties = [];
 
         if ($this->username === null) {
-            $missingProperties[] = $this->username;
+            $missingProperties[] = 'username';
         }
 
         if ($this->email === null) {
-            $missingProperties[] = $this->email;
+            $missingProperties[] = 'email';
         }
 
         if ($this->nickname === null) {
-            $missingProperties[] = $this->nickname;
+            $missingProperties[] = 'nickname';
         }
 
         if ($this->realname === null) {
-            $missingProperties[] = $this->realname;
+            $missingProperties[] = 'realname';
         }
 
         return $missingProperties;

@@ -8,6 +8,6 @@
     <h3> {{ 'user_creation_impossible'|trans({}, 'office') }} </h3>
 
     {% for missingProperty in missingProperties %}
-        <p> {{ 'missing_property'|trans({'property': missingProperty}, 'office') }} </p>
+        <p> {{ 'missing_property'|trans({'%property%': missingProperty}, 'office') }} </p>
     {% endfor %}
 {% endblock %}
