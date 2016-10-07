@@ -11,6 +11,7 @@ export default class ProfileController {
     this.user = []
     this.arLinks = []
     this.facets = []
+    this.forms = []
     this.userId = window['userId']
     this.canEdit = window['canEdit']
     this.disabled = true

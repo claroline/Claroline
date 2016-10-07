@@ -1,6 +1,6 @@
 
 <script type="text/ng-template" id="facet_renderer.html">
-    <form class="form-horizontal" name="panel.name">
+    <form class="form-horizontal">
         <div class="panel-body">
             <div class="panel-group" id="panel-facet-{{ facet.id }}" role="tablist">
                 <div class="panel panel-default" ng-repeat="(key, panel) in facet.panels">
@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <input ng-if="!pc.disabled" data-ng-disabled="!panel.name.$valid" type="submit" ng-click="pc.onSubmit(facet)" class="btn btn-primary" aria-hidden="true" value="{{ 'edit'|trans:{}:'platform' }}"></input>
+            <input ng-if="!pc.disabled" type="submit" ng-click="pc.onSubmit(facet)" class="btn btn-primary" aria-hidden="true" value="{{ 'edit'|trans:{}:'platform' }}"></input>
         </div>
     </form>
 </script>

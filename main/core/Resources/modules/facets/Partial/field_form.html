@@ -16,13 +16,13 @@
                         >
                             <div>
                                 <div class="col-xs-10"><form-field field="['choice', 'text']" ng-model="choice.label"></form-field></div>
-                                <div><button class="btn btn-primary btn-xs" ng-click="fmc.removeChoice(choice)">x</button></div>
+                                <div><button class="btn btn-primary btn-danger btn-xs " ng-click="fmc.removeChoice(choice)">x</button></div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-10"><form-field field="['choice', 'text']" ng-model="fmc.newChoice.label"></form-field></div>
-                        <div><button ng-click="fmc.addChoice()" class="btn btn-primary btn-xs">+</button></div>
+                        <div><button ng-click="fmc.addChoice()" class="btn btn-primary btn-xs btn-success">+</button></div>
                     </div>
                 </div>
                 <input data-ng-disabled="!fieldForm.$valid" ng-click="fmc.onSubmit(fieldForm)" type="submit" class="btn btn-primary" aria-hidden="true" value="{{ fmc.submit|trans:{}:'platform' }}"> </input>

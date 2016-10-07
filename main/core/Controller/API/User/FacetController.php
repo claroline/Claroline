@@ -322,4 +322,26 @@ class FacetController extends FOSRestController
 
         return true;
     }
+
+    /**
+     * @View(serializerGroups={"api_facet_admin"})
+     * @Put("/facet/{facet}/down", name="move_facet_down", options={ "method_prefix" = false })
+     */
+    public function moveFacetDownAction(Facet $facet)
+    {
+        $this->facetManager->moveFacetDown($facet);
+
+        return $facet;
+    }
+
+    /**
+     * @View(serializerGroups={"api_facet_admin"})
+     * @Put("/facet/{facet}/up", name="move_facet_up", options={ "method_prefix" = false })
+     */
+    public function moveFacetUpAction(Facet $facet)
+    {
+        $this->facetManager->moveFacetUp($facet);
+
+        return $facet;
+    }
 }
