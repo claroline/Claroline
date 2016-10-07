@@ -154,9 +154,10 @@ class CsvUserValidator extends ConstraintValidator
 
                 if ($mode === 1) {
                     try {
-                        $existingUser = $this->userManager->getUserByUsernameOrMail(
+                        $existingUser = $this->userManager->getUserByUsernameOrMailOrCode(
                             $username,
-                            $email
+                            $email,
+                            $code
                         );
                     } catch (NonUniqueResultException $e) {
                         $msg = $this->translator->trans(

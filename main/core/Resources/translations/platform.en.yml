@@ -215,7 +215,7 @@ csv_delete: Csv suppression
 csv_export: 'CSV export'
 csv_select: 'Select csv to upload:'
 csv_format_info: 'CSV file information'
-csv_format_user_list: 'Format: username list separated by a carriage return'
+csv_format_user_list: 'Format: username, administrative code or email list separated by a carriage return'
 csv_users_import_infos: 'CSV file information'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User information must be defined in one line and separated by semicolon'

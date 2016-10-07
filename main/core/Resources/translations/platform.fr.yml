@@ -214,7 +214,7 @@ creator: Créateur
 csv_export: Export csv
 csv_select: Sélectionnez un fichier csv:
 csv_format_info: Informations sur le format du fichier csv
-csv_format_user_list: Format: liste des noms d''utilisateur séparés par un retour à la ligne.
+csv_format_user_list: Format: liste de noms d''utilisateur, d''email ou de code administratifs séparés par un retour à la ligne.
 csv_users_import_infos: Informations sur le format du fichier csv
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: Les données d'un utilisateur doivent être définies sur une ligne et séparées par un point virgule.

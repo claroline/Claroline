@@ -498,6 +498,9 @@ class UserManager
 
             if (!$userEntity) {
                 $userEntity = $this->userRepo->findOneByUsername($username);
+                if (!$userEntity) {
+                    $userEntity = $this->userRepo->findOneByAdministrativeCode($code);
+                }
             }
 
             if ($userEntity && $options['ignore-update']) {
@@ -1244,6 +1247,11 @@ class UserManager
             $mail,
             $executeQuery
         );
+    }
+
+    public function getUserByUsernameOrMailOrCode($username, $mail, $code)
+    {
+        return $this->userRepo->findUserByUsernameOrMailOrCode($username, $mail, $code);
     }
 
     public function getUserByUsernameAndMail($username, $mail, $executeQuery = true)
