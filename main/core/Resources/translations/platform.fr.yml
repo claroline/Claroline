@@ -298,6 +298,8 @@ display: Afficher
 display_at_registration: 'Afficher à la création du compte'
 display_captcha: 'Afficher les captchas pour les anonymes'
 display_options: 'Options d''affichage'
+displayable_in_desktop: Disponible dans le bureau
+displayable_in_workspace: Disponible dans l'espace d'activités
 displayable_in_workspace_list: 'Visible dans la liste des espaces'
 distinguished_name: 'Nom distinctif (DN)'
 does_not_exist: 'n''existe pas'
@@ -859,6 +861,7 @@ role_name_type_form_translationKey: Nom
 roles: Rôles
 roles_facet_form_explanation: 'Ce formulaire vous permet de spécifier quels rôles peuvent voir la facette dans le profil public de l''utilisateur.'
 roles_fields_form_explanation: 'Ce formulaire vous permet de spécifier quels rôles peuvent voir et éditer le champ dans le profil public de l''utilisateur.'
+roles_for_desktop_widget: Rôles (Bureau)
 roles_management: 'Gestion des rôles'
 save: Sauvegarder
 save_as_template: 'Exporter'

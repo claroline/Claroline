@@ -50,17 +50,17 @@ class FavouriteListener extends ContainerAware
     {
         $nodeId = $event->getResource()->getResourceNode()->getId();
         $favourite = $this->om->getRepository('HeVinciFavouriteBundle:Favourite')
-            ->findBy(array(
+            ->findBy([
                 'resourceNode' => $nodeId,
                 'user' => $this->tokenStorage->getToken()->getUser(),
-            ));
+            ]);
 
         $content = $this->templatingEngine->render(
             'HeVinciFavouriteBundle:Favourite:form.html.twig',
-            array(
+            [
                 'isFavourite' => (bool) $favourite,
                 'nodeId' => $nodeId,
-            )
+            ]
         );
 
         $event->setResponse(new Response($content));
@@ -74,16 +74,22 @@ class FavouriteListener extends ContainerAware
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $favourites = $this->om->getRepository('HeVinciFavouriteBundle:Favourite')
-            ->findBy(array('user' => $this->tokenStorage->getToken()->getUser()));
+        $widgetInstance = $event->getInstance();
+        $workspace = $widgetInstance->getWorkspace();
+        $user = $this->tokenStorage->getToken()->getUser();
+        $isAnon = $user === 'anon.';
+        $favourites = [];
 
+        if (!$isAnon) {
+            $favouriteRepo = $this->om->getRepository('HeVinciFavouriteBundle:Favourite');
+            $favourites = is_null($workspace) ?
+                $favouriteRepo->findBy(['user' => $user]) :
+                $favouriteRepo->findFavouritesByUserAndWorkspace($user, $workspace);
+        }
         $content = $this->templatingEngine->render(
             'HeVinciFavouriteBundle:widget:favourite.html.twig',
-            array(
-                'favourites' => $favourites,
-            )
+            ['favourites' => $favourites]
         );
-
         $event->setContent($content);
         $event->stopPropagation();
     }

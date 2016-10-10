@@ -7,55 +7,55 @@
 {% endblock %}
 
 <div {% if simple_view_widget %}class="widget_simple_view"{% endif %}>
-<p class="no_simple_view">{{ 'last_awarded_badges'|trans({}, 'icap_badge') }} :</p>
-<ul class="media-list list-inline">
-    {% for userBadge in lastAwardedBadges %}
-        <li class="media">
-            <a class="pull-left" href="{{ path('icap_badge_view_badge', {'slug': userBadge.badge.slug}) }}" title="{{ userBadge.badge.name }}">
-                <img class="media-object badge_image" src="{{ asset(userBadge.badge.webPath) }}" alt="{{ userBadge.badge.name }}">
-            </a>
+    <p class="no_simple_view">{{ 'last_awarded_badges'|trans({}, 'icap_badge') }} :</p>
+    <ul class="media-list list-inline">
+        {% for userBadge in lastAwardedBadges %}
+            <li class="media">
+                <a class="pull-left" href="{{ path('icap_badge_view_badge', {'slug': userBadge.badge.slug}) }}" title="{{ userBadge.badge.name }}">
+                    <img class="media-object badge_image" src="{{ asset(userBadge.badge.webPath) }}" alt="{{ userBadge.badge.name }}">
+                </a>
 
-            <div class="media-body">
-                <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': userBadge.badge.slug}) }}" title="{{ userBadge.badge.name }}">{{ userBadge.badge.name }}</a></h4>
-                <span class="description">{{ userBadge.badge.description }}</span>
-            </div>
-        </li>
-    {% else %}
-        <li>{{ 'no_badges'|trans({}, 'icap_badge') }}</li>
-    {% endfor %}
-</ul>
+                <div class="media-body">
+                    <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': userBadge.badge.slug}) }}" title="{{ userBadge.badge.name }}">{{ userBadge.badge.name }}</a></h4>
+                    <span class="description">{{ userBadge.badge.description }}</span>
+                </div>
+            </li>
+        {% else %}
+            <li>{{ 'no_badges'|trans({}, 'icap_badge') }}</li>
+        {% endfor %}
+    </ul>
 
-<p class="no_simple_view">{{ 'ladder_awarded_badges'|trans({}, 'icap_badge') }} :</p>
-<ul class="media-list list-inline no_simple_view">
-    {% for badgeLine in mostAwardedBadges %}
-    <li class="media">
-        <a class="pull-left" href="#" title="{{ badgeLine.userBadge.badge.name }}">
-            <img class="media-object badge_image" src="{{ asset(badgeLine.userBadge.badge.webPath) }}" alt="{{ badgeLine.userBadge.badge.name }}">
-        </a>
+    {% if widgetType == 'workspace' %}
+        <p class="no_simple_view">{{ 'ladder_awarded_badges'|trans({}, 'icap_badge') }} :</p>
+        <ul class="media-list list-inline no_simple_view">
+            {% for badgeLine in mostAwardedBadges %}
+            <li class="media">
+                <a class="pull-left" href="#" title="{{ badgeLine.userBadge.badge.name }}">
+                    <img class="media-object badge_image" src="{{ asset(badgeLine.userBadge.badge.webPath) }}" alt="{{ badgeLine.userBadge.badge.name }}">
+                </a>
 
-        <div class="media-body">
-            <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': badgeLine.userBadge.badge.slug}) }}" title="{{ badgeLine.userBadge.badge.name }}">{{ badgeLine.userBadge.badge.name }}</a></h4>
-            <span class="description">{{ badgeLine.userBadge.badge.description }}</span>
-        </div>
-    </li>
-    {% else %}
-        <li>{{ 'no_badges'|trans({}, 'icap_badge') }}</li>
-    {% endfor %}
-</ul>
+                <div class="media-body">
+                    <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': badgeLine.userBadge.badge.slug}) }}" title="{{ badgeLine.userBadge.badge.name }}">{{ badgeLine.userBadge.badge.name }}</a></h4>
+                    <span class="description">{{ badgeLine.userBadge.badge.description }}</span>
+                </div>
+            </li>
+            {% else %}
+                <li>{{ 'no_badges'|trans({}, 'icap_badge') }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-{%  if availableBadges %}
-<ul class="media-list list-inline available_badges_simple_view">
-    {% for userBadge in availableBadges %}
-        <li class="media">
-            <a class="pull-left" href="#" title="{{ userBadge.name }}">
-                <img class="media-object badge_image" src="{{ asset(userBadge.webPath) }}" alt="{{ userBadge.name }}">
-            </a>
-        </li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-
+    {% if availableBadges %}
+        <ul class="media-list list-inline available_badges_simple_view">
+            {% for userBadge in availableBadges %}
+                <li class="media">
+                    <a class="pull-left" href="#" title="{{ userBadge.name }}">
+                        <img class="media-object badge_image" src="{{ asset(userBadge.webPath) }}" alt="{{ userBadge.name }}">
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 </div>
 
 <script>

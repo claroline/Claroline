@@ -11,23 +11,19 @@
 
 namespace Claroline\ResultBundle\Listener;
 
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Testing\Persister;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ResultListenerTest extends TransactionalTestCase
 {
-    /** @var  ResultListener */
+    /** @var ResultListener */
     private $listener;
     /** @var ObjectManager */
     private $om;
@@ -67,33 +63,5 @@ class ResultListenerTest extends TransactionalTestCase
     {
         $this->listener->setRequest(new Request());
         $this->listener->onDelete(new DeleteResourceEvent(new Result()));
-    }
-
-    /**
-     * @expectedException \LogicException
-     */
-    public function testOnWidgetThrowsIfNoUser()
-    {
-        $this->listener->setRequest(new Request());
-        $this->listener->onDisplayWidget(new DisplayWidgetEvent(new WidgetInstance()));
-    }
-
-    /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     */
-    public function testOnWidgetThrowsIfUserIsNotWorkspaceMember()
-    {
-        $user = $this->persist->user('bob');
-        $this->om->flush();
-
-        /** @var TokenStorage $storage */
-        $storage = $this->client->getContainer()->get('security.context');
-        $storage->setToken(new UsernamePasswordToken($user, null, 'main'));
-
-        $widget = new WidgetInstance();
-        $widget->setWorkspace($user->getPersonalWorkspace());
-
-        $this->listener->setRequest(new Request());
-        $this->listener->onDisplayWidget(new DisplayWidgetEvent($widget));
     }
 }

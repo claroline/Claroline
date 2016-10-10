@@ -151,56 +151,61 @@ class ProfileController extends Controller
     }
 
     /**
-     * @SEC\Secure(roles="ROLE_USER")
      * @EXT\Template()
-     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function myProfileWidgetAction(Request $request, User $loggedUser)
+    public function myProfileWidgetAction(Request $request)
     {
-        $facets = $this->facetManager->getVisibleFacets(5);
-        $fieldFacetValues = $this->facetManager->getFieldValuesByUser($loggedUser);
-        $fieldFacets = $this->facetManager->getVisibleFieldForCurrentUserFacets();
-        $profileLinksEvent = new ProfileLinksEvent($loggedUser, $request->getLocale());
-        $publicProfilePreferences = $this->facetManager->getVisiblePublicPreference();
-        $this->get('event_dispatcher')->dispatch(
-            'profile_link_event',
-            $profileLinksEvent
-        );
-        $dektopBadgesEvent = new DisplayToolEvent();
-        $this->get('event_dispatcher')->dispatch(
-            'list_all_my_badges',
-            $dektopBadgesEvent
-        );
+        $user = $this->tokenStorage->getToken()->getUser();
 
-        //Test profile completeness
-        $totalVisibleFields = count($fieldFacets);
-        $totalFilledVisibleFields = count(array_filter($fieldFacetValues));
-        if ($publicProfilePreferences['baseData']) {
-            ++$totalVisibleFields;
-            if (!empty($loggedUser->getDescription())) {
-                ++$totalFilledVisibleFields;
+        if ($user === 'anon.') {
+            return ['isAnon' => true];
+        } else {
+            $facets = $this->facetManager->getVisibleFacets(5);
+            $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
+            $fieldFacets = $this->facetManager->getVisibleFieldForCurrentUserFacets();
+            $profileLinksEvent = new ProfileLinksEvent($user, $request->getLocale());
+            $publicProfilePreferences = $this->facetManager->getVisiblePublicPreference();
+            $this->get('event_dispatcher')->dispatch(
+                'profile_link_event',
+                $profileLinksEvent
+            );
+            $dektopBadgesEvent = new DisplayToolEvent();
+            $this->get('event_dispatcher')->dispatch(
+                'list_all_my_badges',
+                $dektopBadgesEvent
+            );
+
+            //Test profile completeness
+            $totalVisibleFields = count($fieldFacets);
+            $totalFilledVisibleFields = count(array_filter($fieldFacetValues));
+            if ($publicProfilePreferences['baseData']) {
+                ++$totalVisibleFields;
+                if (!empty($user->getDescription())) {
+                    ++$totalFilledVisibleFields;
+                }
             }
-        }
-        if ($publicProfilePreferences['phone']) {
-            ++$totalVisibleFields;
-            if (!empty($loggedUser->getPhone())) {
-                ++$totalFilledVisibleFields;
+            if ($publicProfilePreferences['phone']) {
+                ++$totalVisibleFields;
+                if (!empty($user->getPhone())) {
+                    ++$totalFilledVisibleFields;
+                }
             }
+
+            $completion = $totalVisibleFields === 0 ? null : round($totalFilledVisibleFields / $totalVisibleFields * 100);
+            $links = $profileLinksEvent->getLinks();
+
+            return [
+                'user' => $user,
+                'publicProfilePreferences' => $publicProfilePreferences,
+                'facets' => $facets,
+                'fieldFacetValues' => $fieldFacetValues,
+                'fieldFacets' => $fieldFacets,
+                'links' => $links,
+                'badges' => $dektopBadgesEvent->getContent(),
+                'completion' => $completion,
+                'isAnon' => false,
+            ];
         }
-
-        $completion = $totalVisibleFields === 0 ? null : round($totalFilledVisibleFields / $totalVisibleFields * 100);
-        $links = $profileLinksEvent->getLinks();
-
-        return [
-            'user' => $loggedUser,
-            'publicProfilePreferences' => $publicProfilePreferences,
-            'facets' => $facets,
-            'fieldFacetValues' => $fieldFacetValues,
-            'fieldFacets' => $fieldFacets,
-            'links' => $links,
-            'badges' => $dektopBadgesEvent->getContent(),
-            'completion' => $completion,
-        ];
     }
 
     /**

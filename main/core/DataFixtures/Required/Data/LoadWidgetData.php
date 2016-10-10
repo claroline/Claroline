@@ -44,8 +44,8 @@ class LoadWidgetData implements RequiredFixture
             $widget->setConfigurable($item[1]);
             $widget->setPlugin(null);
             $widget->setExportable(false);
-            $widget->setDisplayableInDesktop($item[2]);
-            $widget->setDisplayableInWorkspace($item[3]);
+            $widget->setIsDisplayableInDesktop($item[2]);
+            $widget->setIsDisplayableInWorkspace($item[3]);
 
             foreach ($roles as $role) {
                 $widget->addRole($role);

@@ -298,6 +298,8 @@ display: Display
 display_at_registration: 'Display at registration'
 display_captcha: 'Display captcha for anonymous'
 display_options: 'Display options'
+displayable_in_desktop: Displayable in desktop
+displayable_in_workspace: Displayable in workspace
 displayable_in_workspace_list: Displayable
 distinguished_name: 'Distinguished Name (DN)'
 does_not_exist: 'doesn''t exist'
@@ -858,6 +860,7 @@ role_name_type_form_translationKey: Name
 roles: Roles
 roles_facet_form_explanation: 'This form allows you to set which roles can see the facet in the public profile.'
 roles_fields_form_explanation: 'This form allows you to set which roles can see and edit the field in the public profile.'
+roles_for_desktop_widget: Roles (Desktop)
 roles_management: 'Roles management'
 save: Save
 save_as_template: 'Export'

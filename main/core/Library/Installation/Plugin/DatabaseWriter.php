@@ -11,28 +11,28 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Claroline\CoreBundle\Entity\Action\AdditionalAction;
+use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
+use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Claroline\CoreBundle\Entity\Resource\MenuAction;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Theme\Theme;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
+use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
-use Claroline\CoreBundle\Library\PluginBundle;
-use Claroline\CoreBundle\Manager\IconManager;
-use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
-use Claroline\CoreBundle\Entity\Plugin;
-use Claroline\CoreBundle\Entity\Theme\Theme;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
-use Claroline\CoreBundle\Entity\Resource\MenuAction;
-use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Action\AdditionalAction;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
-use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
-use Claroline\CoreBundle\Entity\Widget\Widget;
-use Symfony\Component\Filesystem\Filesystem;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * This class is used to save/delete a plugin and its possible dependencies (like
@@ -113,10 +113,10 @@ class DatabaseWriter
     {
         /** @var Plugin $plugin */
         $plugin = $this->em->getRepository('ClarolineCoreBundle:Plugin')->findOneBy(
-            array(
+            [
                  'vendorName' => $pluginBundle->getVendorName(),
                  'bundleName' => $pluginBundle->getBundleName(),
-            )
+            ]
         );
 
         if (null === $plugin) {
@@ -318,20 +318,22 @@ class DatabaseWriter
         $widgetConfiguration,
         PluginBundle $pluginBundle,
         Plugin $plugin,
-        array $roles = array()
+        array $roles = []
     ) {
         $widget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findOneByName($widgetConfiguration['name']);
+        $withDisplay = false;
 
-        if ($widget === null) {
+        if (is_null($widget)) {
             $widget = new Widget();
 
             foreach ($roles as $role) {
                 $widget->addRole($role);
             }
+            $withDisplay = true;
         }
 
-        $this->persistWidget($widgetConfiguration, $plugin, $pluginBundle, $widget);
+        $this->persistWidget($widgetConfiguration, $plugin, $pluginBundle, $widget, $withDisplay);
     }
 
     private function createAdditionalAction(array $action, PluginBundle $pluginBundle)
@@ -361,7 +363,7 @@ class DatabaseWriter
             $webPluginDir = "{$webBundleDir}{$ds}{$pluginBundle->getAssetsFolder()}";
             $webPluginImgDir = "{$webPluginDir}{$ds}images";
             $webPluginIcoDir = "{$webPluginImgDir}{$ds}icons";
-            $this->fileSystem->mkdir(array($webBundleDir, $webPluginDir, $webPluginImgDir, $webPluginIcoDir));
+            $this->fileSystem->mkdir([$webBundleDir, $webPluginDir, $webPluginImgDir, $webPluginIcoDir]);
             $this->fileSystem->copy(
                 "{$pluginBundle->getImgFolder()}{$ds}{$resource['icon']}",
                 "{$webPluginIcoDir}{$ds}{$resource['icon']}"
@@ -435,7 +437,7 @@ class DatabaseWriter
     public function updateResourceAction(array $action)
     {
         $resourceAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
-            ->findOneBy(array('name' => $action['name'], 'resourceType' => null, 'isCustom' => true));
+            ->findOneBy(['name' => $action['name'], 'resourceType' => null, 'isCustom' => true]);
 
         if ($resourceAction === null) {
             $this->persistResourceAction($action);
@@ -451,12 +453,12 @@ class DatabaseWriter
     private function persistCustomAction($actions, ResourceType $resourceType)
     {
         $decoderRepo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
-        $existingDecoders = $decoderRepo->findBy(array('resourceType' => $resourceType));
+        $existingDecoders = $decoderRepo->findBy(['resourceType' => $resourceType]);
         $exp = count($existingDecoders);
-        $newDecoders = array();
+        $newDecoders = [];
 
         foreach ($actions as $action) {
-            $decoder = $decoderRepo->findOneBy(array('name' => $action['name'], 'resourceType' => $resourceType));
+            $decoder = $decoderRepo->findOneBy(['name' => $action['name'], 'resourceType' => $resourceType]);
 
             if (!$decoder) {
                 if (array_key_exists($action['name'], $newDecoders)) {
@@ -492,12 +494,12 @@ class DatabaseWriter
     private function updateCustomAction($actions, ResourceType $resourceType)
     {
         $decoderRepo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
-        $existingDecoders = $decoderRepo->findBy(array('resourceType' => $resourceType));
+        $existingDecoders = $decoderRepo->findBy(['resourceType' => $resourceType]);
         $exp = count($existingDecoders);
-        $newDecoders = array();
+        $newDecoders = [];
 
         foreach ($actions as $action) {
-            $decoder = $decoderRepo->findOneBy(array('name' => $action['name'], 'resourceType' => $resourceType));
+            $decoder = $decoderRepo->findOneBy(['name' => $action['name'], 'resourceType' => $resourceType]);
 
             if (!$decoder) {
                 if (array_key_exists($action['name'], $newDecoders)) {
@@ -569,7 +571,7 @@ class DatabaseWriter
 
         foreach ($rightsName as $rights) {
             foreach ($permMap as $value => $perm) {
-                if ($perm == $rights['name']) {
+                if ($perm === $rights['name']) {
                     $mask += $value;
                 }
             }
@@ -584,7 +586,7 @@ class DatabaseWriter
      * @param Plugin       $plugin
      * @param PluginBundle $pluginBundle
      */
-    private function createWidget($widgetConfiguration, Plugin $plugin, PluginBundle $pluginBundle, array $roles = array())
+    private function createWidget($widgetConfiguration, Plugin $plugin, PluginBundle $pluginBundle, array $roles = [])
     {
         $widget = new Widget();
 
@@ -600,16 +602,19 @@ class DatabaseWriter
      * @param PluginBundle $pluginBundle
      * @param Widget       $widget
      */
-    private function persistWidget($widgetConfiguration, Plugin $plugin, PluginBundle $pluginBundle, Widget $widget)
+    private function persistWidget($widgetConfiguration, Plugin $plugin, PluginBundle $pluginBundle, Widget $widget, $withDisplay = true)
     {
         $widget->setName($widgetConfiguration['name']);
         $widget->setConfigurable($widgetConfiguration['is_configurable']);
-        $widget->setDisplayableInDesktop($widgetConfiguration['is_displayable_in_desktop']);
-        $widget->setDisplayableInWorkspace($widgetConfiguration['is_displayable_in_workspace']);
         $widget->setExportable($widgetConfiguration['is_exportable']);
         $widget->setPlugin($plugin);
         $widget->setDefaultWidth($widgetConfiguration['default_width']);
         $widget->setDefaultHeight($widgetConfiguration['default_height']);
+
+        if ($withDisplay) {
+            $widget->setIsDisplayableInDesktop($widgetConfiguration['is_displayable_in_desktop']);
+            $widget->setIsDisplayableInWorkspace($widgetConfiguration['is_displayable_in_workspace']);
+        }
         $this->em->persist($widget);
     }
 
@@ -747,7 +752,7 @@ class DatabaseWriter
 
         foreach ($rules as $rule) {
             $ruleAction = $activityRuleActionRepository->findOneBy(
-                array('action' => $rule['action'], 'resourceType' => $resourceType)
+                ['action' => $rule['action'], 'resourceType' => $resourceType]
             );
 
             if (is_null($ruleAction)) {
@@ -768,7 +773,7 @@ class DatabaseWriter
     {
         $aRuleActionRepo = $this->em
             ->getRepository('Claroline\CoreBundle\Entity\Activity\ActivityRuleAction');
-        $ruleActions = $aRuleActionRepo->findBy(array('resourceType' => $resourceType));
+        $ruleActions = $aRuleActionRepo->findBy(['resourceType' => $resourceType]);
 
         foreach ($ruleActions as $ruleAction) {
             $this->em->remove($ruleAction);
