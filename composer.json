@@ -42,7 +42,7 @@
         "jms/security-extra-bundle": "1.5.1",
         "jms/serializer-bundle": "~0.13",
         "jms/twig-js-bundle": "1.0.0",
-        "johngrogg/ics-parser": "dev-master",
+        "johngrogg/ics-parser": "2.0.0",
         "json-quiz/json-quiz": "0.1.0",
         "knplabs/knp-menu-bundle": "2.0.0",
         "knplabs/knp-snappy-bundle": "1.3",

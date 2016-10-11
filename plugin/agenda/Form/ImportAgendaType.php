@@ -11,12 +11,12 @@
 
 namespace Claroline\AgendaBundle\Form;
 
+use Claroline\CoreBundle\Validator\Constraints\IcsFile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Validator\Constraints\IcsFile;
 
 class ImportAgendaType extends AbstractType
 {
@@ -25,15 +25,16 @@ class ImportAgendaType extends AbstractType
         $builder->add(
             'file',
             'file',
-            array(
+            [
                 'required' => true,
                 'mapped' => false,
-                'constraints' => array(
+                'label' => 'import_agenda_file',
+                'constraints' => [
                     new NotBlank(),
                     new File(),
                     new IcsFile(),
-                ),
-           )
+                ],
+           ]
         );
     }
 
@@ -46,9 +47,9 @@ class ImportAgendaType extends AbstractType
     {
         $resolver
         ->setDefaults(
-            array(
+            [
                 'translation_domain' => 'agenda',
-                )
+                ]
         );
     }
 }
