@@ -12,22 +12,22 @@
 namespace Claroline\FlashCardBundle\Controller;
 
 use Claroline\CoreBundle\Form\Handler\FormHandler;
-use Claroline\FlashCardBundle\Entity\CardLearning;
-use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Entity\Card;
+use Claroline\FlashCardBundle\Entity\CardLearning;
 use Claroline\FlashCardBundle\Entity\CardLog;
+use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Entity\Session;
 use Claroline\FlashCardBundle\Manager\CardLearningManager;
 use Claroline\FlashCardBundle\Manager\CardLogManager;
 use Claroline\FlashCardBundle\Manager\CardManager;
 use Claroline\FlashCardBundle\Manager\SessionManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})

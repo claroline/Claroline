@@ -13,8 +13,8 @@ namespace Claroline\FlashCardBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\FlashCardBundle\Entity\CardLog;
 use Claroline\FlashCardBundle\Entity\Card;
+use Claroline\FlashCardBundle\Entity\CardLog;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 

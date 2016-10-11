@@ -12,21 +12,21 @@
 namespace Claroline\FlashCardBundle\Controller;
 
 use Claroline\CoreBundle\Form\Handler\FormHandler;
-use Claroline\FlashCardBundle\Entity\Note;
-use Claroline\FlashCardBundle\Entity\NoteType;
+use Claroline\FlashCardBundle\Entity\Card;
 use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Entity\FieldValue;
 use Claroline\FlashCardBundle\Entity\FieldValueText;
 use Claroline\FlashCardBundle\Entity\FieldValueImage;
-use Claroline\FlashCardBundle\Entity\Card;
+use Claroline\FlashCardBundle\Entity\Note;
+use Claroline\FlashCardBundle\Entity\NoteType;
 use Claroline\FlashCardBundle\Manager\NoteManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})
