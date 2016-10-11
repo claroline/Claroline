@@ -13,7 +13,8 @@
         "symfony/phpunit-bridge": "*",
         "mockery/mockery": "^0.9.4",
         "phpmd/phpmd": "@stable",
-        "stefk/md": "dev-master"
+        "stefk/md": "dev-master",
+        "zendframework/zend-stdlib": "~2.7"
     },
     "scripts": {
         "fast-install" : [
