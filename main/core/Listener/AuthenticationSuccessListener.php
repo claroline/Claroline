@@ -293,6 +293,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             'login_check',
             'login',
             'claro_registration_user_registration_form',
+            'claro_o365_login',
         ];
     }
 
