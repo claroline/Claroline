@@ -54,22 +54,6 @@ tinymce.claroline.editorChange = function (editor) {
 }
 
 /**
- * This method if fired when paste in a TinyMCE editor.
- *
- *  @param plugin TinyMCE paste plugin object.
- *  @param args TinyMCE paste plugin arguments.
- *
- */
-tinymce.claroline.paste = function (plugin, args) {
-  var link = $('<div>' + args.content + '</div>').text().trim() // inside div because a bug of jquery
-
-  home.canGenerateContent(link, function (data) {
-    tinymce.activeEditor.insertContent('<div>' + data + '</div>')
-    tinymce.claroline.editorChange(tinymce.activeEditor)
-  })
-}
-
-/**
  * Check if a TinyMCE editor has change.
  *
  * @return boolean.

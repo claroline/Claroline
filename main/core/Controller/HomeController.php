@@ -118,11 +118,11 @@ class HomeController
                 'ClarolineCoreBundle:Home\templates\custom:'.$typeTemplate;
             $response = $this->render(
                 $template,
-                array(
+                [
                     'type' => $type,
                     'region' => $this->renderRegions($this->manager->getRegionContents()),
                     'content' => $this->typeAction($type)->getContent(),
-                )
+                ]
             );
             $response->headers->addCacheControlDirective('no-cache', true);
             $response->headers->addCacheControlDirective('max-age', 0);
@@ -147,7 +147,7 @@ class HomeController
             return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($layout));
         }
 
-        return $this->render('ClarolineCoreBundle:Home:error.html.twig', array('path' => $type));
+        return $this->render('ClarolineCoreBundle:Home:error.html.twig', ['path' => $type]);
     }
 
     /**
@@ -165,14 +165,14 @@ class HomeController
 
         $response = $this->render(
             'ClarolineCoreBundle:Home:home.html.twig',
-            array(
+            [
                 'type' => '_pages',
                 'region' => $this->renderRegions($this->manager->getRegionContents()),
                 'content' => $this->render(
                     'ClarolineCoreBundle:Home:types.html.twig',
-                    array('types' => $types, 'hasCustomTemplates' => $hasCustomTemplates)
+                    ['types' => $types, 'hasCustomTemplates' => $hasCustomTemplates]
                 )->getContent(),
-            )
+            ]
         );
         $response->headers->addCacheControlDirective('no-cache', true);
         $response->headers->addCacheControlDirective('max-age', 0);
@@ -210,7 +210,7 @@ class HomeController
      */
     public function renameContentFormAction($type)
     {
-        return array('type' => $type);
+        return ['type' => $type];
     }
 
     /**
@@ -255,7 +255,7 @@ class HomeController
             $type
         );
 
-        return array('form' => $form->createView(), 'type' => $type);
+        return ['form' => $form->createView(), 'type' => $type];
     }
 
     /**
@@ -285,7 +285,7 @@ class HomeController
 
             return new JsonResponse('success', 200);
         } else {
-            return array('form' => $form->createView(), 'type' => $type);
+            return ['form' => $form->createView(), 'type' => $type];
         }
     }
 
@@ -301,7 +301,7 @@ class HomeController
      */
     public function moveContentFormAction($currentType)
     {
-        return array('currentType' => $currentType, 'pages' => $this->manager->getTypes());
+        return ['currentType' => $currentType, 'pages' => $this->manager->getTypes()];
     }
 
     /**
@@ -335,7 +335,7 @@ class HomeController
      *
      * @Route("/content/creator/{type}/{id}/{father}", name="claroline_content_creator", defaults={"father" = null})
      *
-     * @param string $type The type of the content to create.
+     * @param string $type The type of the content to create
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -356,9 +356,9 @@ class HomeController
     /**
      * Render the page of the menu.
      *
-     * @param string $id   The id of the content.
-     * @param string $size The size (content-12) of the content.
-     * @param string $type The type of the content.
+     * @param string $id   The id of the content
+     * @param string $size The size (content-12) of the content
+     * @param string $type The type of the content
      *
      * @Template("ClarolineCoreBundle:Home:menu.html.twig")
      *
@@ -372,9 +372,9 @@ class HomeController
     /**
      * Render the HTML of the menu of sizes of the contents.
      *
-     * @param string $id   The id of the content.
-     * @param string $size The size (content-12) of the content.
-     * @param string $type The type of the content.
+     * @param string $id   The id of the content
+     * @param string $size The size (content-12) of the content
+     * @param string $type The type of the content
      *
      * @Route("/content/size/{id}/{size}/{type}", name="claroline_content_size", options = {"expose" = true})
      *
@@ -384,7 +384,7 @@ class HomeController
      */
     public function sizeAction($id, $size, $type)
     {
-        return array('id' => $id, 'size' => $size, 'type' => $type);
+        return ['id' => $id, 'size' => $size, 'type' => $type];
     }
 
     /**
@@ -401,7 +401,7 @@ class HomeController
         if (isset($graph['type'])) {
             return $this->render(
                 'ClarolineCoreBundle:Home/graph:'.$graph['type'].'.html.twig',
-                array('content' => $graph),
+                ['content' => $graph],
                 true
             );
         }
@@ -414,7 +414,7 @@ class HomeController
      *
      * @Route("/content/region/{content}", name="claroline_content_region", options = {"expose" = true})
      *
-     * @param string $content The id of the content or the entity object of a content.
+     * @param string $content The id of the content or the entity object of a content
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
@@ -424,7 +424,7 @@ class HomeController
      */
     public function regionAction(Content $content)
     {
-        return array('id' => $content->getId(), 'region' => $this->manager->getRegion($content));
+        return ['id' => $content->getId(), 'region' => $this->manager->getRegion($content)];
     }
 
     /**
@@ -480,10 +480,10 @@ class HomeController
      * Reorder contents in types. This method is used by ajax.
      * The response is the word true in a string in success, otherwise false.
      *
-     * @param string $type   The type of the content.
-     * @param string $a      The id of the content 1.
-     * @param string $b      The id of the content 2.
-     * @param string $father The father content.
+     * @param string $type   The type of the content
+     * @param string $a      The id of the content 1
+     * @param string $b      The id of the content 2
+     * @param string $father The father content
      *
      * @Route("/content/reorder/{type}/{a}/{b}/{father}", requirements={"a" = "\d+"}, name="claroline_content_reorder")
      *
@@ -560,7 +560,7 @@ class HomeController
     public function createTypeAction($name)
     {
         try {
-            return array('type' => $this->manager->createType($name));
+            return ['type' => $this->manager->createType($name)];
         } catch (\Exeption $e) {
             return new Response('false'); //useful in ajax
         }
@@ -639,30 +639,6 @@ class HomeController
     }
 
     /**
-     * Check if a string is a valid URL.
-     *
-     * @Route("/cangeneratecontent", name="claroline_can_generate_content")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function canGenerateContentAction()
-    {
-        if ($this->manager->isValidUrl($this->request->get('url'))) {
-            $graph = $this->manager->getGraph($this->request->get('url'));
-
-            if (isset($graph['type'])) {
-                return $this->render(
-                    'ClarolineCoreBundle:Home/graph:'.$graph['type'].'.html.twig',
-                    array('content' => $graph),
-                    true
-                );
-            }
-        }
-
-        return new Response('false'); //in case is not valid URL
-    }
-
-    /**
      * menu_settings.
      *
      * @Route("/content/menu/settings/{content}", name="claroline_content_menu_settings")
@@ -676,11 +652,11 @@ class HomeController
      */
     public function menuSettingsAction($content)
     {
-        return array(
+        return [
             'content' => $content,
             'menu' => $this->manager->getContentByType('menu', $content->getId()),
             'parameters' => $this->manager->getHomeParameters(),
-        );
+        ];
     }
 
     /**
@@ -741,7 +717,7 @@ class HomeController
      */
     public function renderRegions($regions)
     {
-        $tmp = array();
+        $tmp = [];
 
         foreach ($regions as $name => $region) {
             $tmp[$name] = '';
