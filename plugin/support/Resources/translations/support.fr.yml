@@ -22,6 +22,7 @@ contact_phone: 'N° de téléphone de contact'
 create_ticket: 'Créer un ticket'
 create_ticket_for_issue: 'Créer un ticket pour cette erreur'
 created_on: 'Créé le'
+description_placeholder_text: Décrivez comment l'erreur est survenue
 duration_in_minute: 'Durée (en minutes)'
 duration_is_required: 'Le champs "Durée" est requis'
 end_date_is_required: 'Le champs "Date de fin" est requis'

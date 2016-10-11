@@ -294,7 +294,7 @@ class GroupManager
      * @param string $orderedBy
      * @param string $order
      *
-     * @deprecated use api instead.
+     * @deprecated use api instead
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -311,7 +311,7 @@ class GroupManager
      * @param int    $max
      * @param string $orderedBy
      *
-     * @deprecated use api instead.
+     * @deprecated use api instead
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -407,7 +407,7 @@ class GroupManager
      *
      * @param WorkspaceModel $model
      */
-    public function getUsersNotSharingModelBySearch(WorkspaceModel $model, $page = 1, $search, $max = 20)
+    public function getUsersNotSharingModelBySearch(WorkspaceModel $model, $page, $search, $max = 20)
     {
         $res = $this->groupRepo->findGroupsNotSharingModelBySearch($model, $search, false);
 
@@ -478,7 +478,20 @@ class GroupManager
         }
     }
 
-    public function searchPartialList($searches, $page, $limit, $count = false)
+    public function emptyGroup(Group $group)
+    {
+        $users = $group->getUsers();
+
+        foreach ($users as $user) {
+            $group->removeUser($user);
+            $this->om->persist($user);
+        }
+
+        $this->om->persist($group);
+        $this->om->flush();
+    }
+
+    public function searchPartialList($searches, $page, $limit, $count = false, $exclude = false)
     {
         $baseFieldsName = Group::getSearchableFields();
 
@@ -487,18 +500,26 @@ class GroupManager
         $qb->from('Claroline\CoreBundle\Entity\Group', 'g');
 
         //Admin can see everything, but the others... well they can only see their own organizations.
-        if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
-            $qb->join('g.organizations', 'go');
-            $qb->join('go.administrators', 'ga');
-            $qb->andWhere('ga.id = :userId');
-            $qb->setParameter('userId', $currentUser->getId());
+        //Cli always win aswell
+        if (php_sapi_name() !== 'cli' || $this->container->get('kernel')->getEnvironment() === 'test') {
+            if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+                $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
+                $qb->join('g.organizations', 'go');
+                $qb->join('go.administrators', 'ga');
+                $qb->andWhere('ga.id = :userId');
+                $qb->setParameter('userId', $currentUser->getId());
+            }
         }
 
         foreach ($searches as $key => $search) {
             foreach ($search as $id => $el) {
                 if (in_array($key, $baseFieldsName)) {
-                    $qb->andWhere("UPPER (g.{$key}) LIKE :{$key}{$id}");
+                    $string = "UPPER (g.{$key})";
+                    if ($exclude) {
+                        $string .= ' NOT';
+                    }
+                    $string .= " LIKE :{$key}{$id}";
+                    $qb->andWhere($string);
                     $qb->setParameter($key.$id, '%'.strtoupper($el).'%');
                 }
             }

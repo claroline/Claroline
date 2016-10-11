@@ -29,6 +29,9 @@ class CourseSession
     const SESSION_NOT_STARTED = 0;
     const SESSION_OPEN = 1;
     const SESSION_CLOSED = 2;
+    const REGISTRATION_AUTO = 0;
+    const REGISTRATION_MANUAL = 1;
+    const REGISTRATION_PUBLIC = 2;
 
     /**
      * @ORM\Column(type="integer")
@@ -216,6 +219,26 @@ class CourseSession
      * @Groups({"api_cursus", "api_user_min"})
      */
     protected $events;
+
+    /**
+     * @ORM\Column(name="event_registration_type", type="integer", nullable=false, options={"default" = 0})
+     * @Groups({"api_cursus", "api_user_min"})
+     * @SerializedName("eventRegistrationType")
+     */
+    protected $eventRegistrationType = self::REGISTRATION_AUTO;
+
+    /**
+     * @ORM\Column(name="display_order", type="integer", options={"default" = 500})
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_bulletin"})
+     * @SerializedName("displayOrder")
+     */
+    protected $displayOrder = 500;
+
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_bulletin"})
+     */
+    protected $details;
 
     public function __construct()
     {
@@ -529,12 +552,68 @@ class CourseSession
 
     public function hasValidation()
     {
-        return $this->userValidation || $this->registrationValidation;
+        return $this->userValidation || $this->registrationValidation || $this->organizationValidation || count($this->getValidators()) > 0;
     }
 
     public function getEvents()
     {
         return $this->events->toArray();
+    }
+
+    public function getEventRegistrationType()
+    {
+        return $this->eventRegistrationType;
+    }
+
+    public function setEventRegistrationType($eventRegistrationType)
+    {
+        $this->eventRegistrationType = $eventRegistrationType;
+    }
+
+    public function getDisplayOrder()
+    {
+        return $this->displayOrder;
+    }
+
+    public function setDisplayOrder($displayOrder)
+    {
+        $this->displayOrder = $displayOrder;
+    }
+
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    public function setDetails($details)
+    {
+        $this->details = $details;
+    }
+
+    public function getColor()
+    {
+        return !is_null($this->details) && isset($this->details['color']) ? $this->details['color'] : null;
+    }
+
+    public function setColor($color)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['color'] = $color;
+    }
+
+    public function getTotal()
+    {
+        return !is_null($this->details) && isset($this->details['total']) ? $this->details['total'] : null;
+    }
+
+    public function setTotal($total)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['total'] = $total;
     }
 
     public function __toString()

@@ -8,6 +8,7 @@
  */
 
 /*global Routing*/
+/*global Translator*/
 
 export default class UsersRegistrationModalCtrl {
   constructor($http, $uibModalInstance, NgTableParams, sessionId, userType, callback) {
@@ -21,6 +22,7 @@ export default class UsersRegistrationModalCtrl {
       {count: 20},
       {counts: [10, 20, 50, 100], dataset: this.users}
     )
+    this.errorMessages = []
     this.loadUsers()
   }
 
@@ -38,6 +40,7 @@ export default class UsersRegistrationModalCtrl {
   }
 
   registerUser (userId) {
+    this.errorMessages = []
     const route = Routing.generate('api_post_session_user_registration', {session: this.sessionId, user: userId, userType: this.userType})
     this.$http.post(route).then(d => {
       if (d['status'] === 200) {
@@ -51,6 +54,13 @@ export default class UsersRegistrationModalCtrl {
             this.users.splice(index, 1)
             this.tableParams.reload()
           }
+        } else if (datas['status'] === 'failed') {
+          const msg = Translator.trans(
+            'required_places_msg',
+            {remainingPlaces: datas['datas']['remainingPlaces'], requiredPlaces: datas['datas']['requiredPlaces']},
+            'cursus'
+          )
+          this.errorMessages.push(msg)
         }
       }
     })

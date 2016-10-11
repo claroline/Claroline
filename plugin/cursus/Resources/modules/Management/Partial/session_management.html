@@ -279,7 +279,9 @@
                 <table class="table cursus-table" ng-table="cmc.tableParams['openEvents']" show-filter="false">
                     <tr ng-repeat="event in $data">
                         <td data-title="'name'|trans:{}:'platform'" filter="{name: 'text'}" sortable="'name'">
-                            {{ event['name'] }}
+                            <a ui-sref="session_event({sessionId: cmc.session['id'], sessionEventId: event['id']})">
+                                {{ event['name'] }}
+                            </a>
                         </td>
                         <td class="text-center" data-title="'start_date'|trans:{}:'platform'" sortable="'startDate'">
                             {{ event['startDate']|date:'dd/MM/yyyy HH:mm' }}
@@ -355,7 +357,9 @@
                 <table class="table cursus-table" ng-table="cmc.tableParams['closedEvents']" show-filter="false">
                     <tr ng-repeat="event in $data">
                         <td data-title="'name'|trans:{}:'platform'" filter="{name: 'text'}" sortable="'name'">
-                            {{ event['name'] }}
+                            <a ui-sref="session_event({sessionId: cmc.session['id'], sessionEventId: event['id']})">
+                                {{ event['name'] }}
+                            </a>
                         </td>
                         <td class="text-center" data-title="'start_date'|trans:{}:'platform'" sortable="'startDate'">
                             {{ event['startDate']|date:'dd/MM/yyyy HH:mm' }}

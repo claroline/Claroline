@@ -11,21 +11,21 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Repository\OrderedToolRepository;
-use Claroline\CoreBundle\Repository\ToolRepository;
-use Claroline\CoreBundle\Repository\RoleRepository;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
-use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Repository\OrderedToolRepository;
+use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\ToolRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
@@ -117,7 +117,7 @@ class ToolManager
      *
      * @throws ToolPositionAlreadyOccupiedException
      */
-    public function addWorkspaceTool(
+    public function setWorkspaceTool(
         Tool $tool,
         $position,
         $name,
@@ -126,21 +126,28 @@ class ToolManager
     ) {
         $switchTool = null;
 
+        $orderedTool = $this->orderedToolRepo->findOneBy(
+            ['workspace' => $workspace, 'tool' => $tool]
+        );
+
+        if (!$orderedTool) {
+            $orderedTool = new OrderedTool();
+        }
+
         // At the workspace creation, the workspace id is still null because we only flush once at the very end.
         if ($workspace->getId() !== null) {
             $switchTool = $this->orderedToolRepo->findOneBy(
-                array('workspace' => $workspace, 'order' => $position, 'type' => $orderedToolType)
+                ['workspace' => $workspace, 'order' => $position, 'type' => $orderedToolType]
             );
         }
 
         while (!is_null($switchTool)) {
             ++$position;
             $switchTool = $this->orderedToolRepo->findOneBy(
-                array('workspace' => $workspace, 'order' => $position, 'type' => $orderedToolType)
+                ['workspace' => $workspace, 'order' => $position, 'type' => $orderedToolType]
             );
         }
 
-        $orderedTool = $this->om->factory('Claroline\CoreBundle\Entity\Tool\OrderedTool');
         $orderedTool->setWorkspace($workspace);
         $orderedTool->setName($name);
         $orderedTool->setOrder($position);
@@ -162,7 +169,7 @@ class ToolManager
     public function getDisplayedDesktopOrderedTools(
         User $user,
         $type = 0,
-        array $excludedTools = array()
+        array $excludedTools = []
     ) {
         return count($excludedTools) === 0 ?
             $this->toolRepo->findDesktopDisplayedToolsByUser($user, $type) :
@@ -192,7 +199,7 @@ class ToolManager
      */
     public function getDesktopToolsConfigurationArray(User $user, $type = 0)
     {
-        $orderedToolList = array();
+        $orderedToolList = [];
         $desktopTools = $this->orderedToolRepo->findDisplayableDesktopOrderedToolsByUser(
             $user,
             $type
@@ -228,7 +235,7 @@ class ToolManager
      */
     public function getDesktopToolsConfigurationArrayForAdmin($type = 0)
     {
-        $orderedToolList = array();
+        $orderedToolList = [];
         $desktopTools = $this->orderedToolRepo
             ->findDisplayableDesktopOrderedToolsByTypeForAdmin($type);
 
@@ -284,14 +291,14 @@ class ToolManager
     public function getWorkspaceExistingTools(Workspace $workspace, $type = 0)
     {
         $ot = $this->orderedToolRepo->findBy(
-            array('workspace' => $workspace, 'type' => $type),
-            array('order' => 'ASC')
+            ['workspace' => $workspace, 'type' => $type],
+            ['order' => 'ASC']
         );
         $wsRoles = $this->roleManager->getWorkspaceConfigurableRoles($workspace);
-        $existingTools = array();
-        $maskDecoders = array();
-        $otVisibility = array();
-        $otDecoders = array();
+        $existingTools = [];
+        $maskDecoders = [];
+        $otVisibility = [];
+        $otDecoders = [];
         $rights = $this->toolRightsManager->getRightsForOrderedTools($ot);
         $decoders = $this->toolMaskManager->getAllMaskDecoders();
 
@@ -299,12 +306,12 @@ class ToolManager
             $tool = $decoder->getTool();
 
             if (!isset($maskDecoders[$tool->getId()])) {
-                $maskDecoders[$tool->getId()] = array();
+                $maskDecoders[$tool->getId()] = [];
             }
             $maskDecoders[$tool->getId()][$decoder->getName()] = $decoder;
 
             if (!isset($otDecoders[$tool->getId()])) {
-                $otDecoders[$tool->getId()] = array();
+                $otDecoders[$tool->getId()] = [];
             }
             $otDecoders[$tool->getId()][] = $decoder;
         }
@@ -316,7 +323,7 @@ class ToolManager
             $mask = $right->getMask();
 
             if (!isset($otVisibility[$rightOt->getId()])) {
-                $otVisibility[$rightOt->getId()] = array();
+                $otVisibility[$rightOt->getId()] = [];
             }
             $otVisibility[$rightOt->getId()][$rightRole->getId()] =
                 $this->toolMaskManager->decodeMaskWithDecoders(
@@ -329,7 +336,7 @@ class ToolManager
             if ($orderedTool->getTool()->isDisplayableInWorkspace()) {
                 //creates the visibility array
                 foreach ($wsRoles as $role) {
-                    $roleVisibility[$role->getId()] = array();
+                    $roleVisibility[$role->getId()] = [];
                 }
 
                 if (isset($otVisibility[$orderedTool->getId()])) {
@@ -338,21 +345,21 @@ class ToolManager
                     }
                 }
 
-                $existingTools[] = array(
+                $existingTools[] = [
                     'tool' => $orderedTool->getTool(),
                     'visibility' => $roleVisibility,
                     'position' => $orderedTool->getOrder(),
                     'workspace' => $workspace,
                     'displayedName' => $orderedTool->getName(),
                     'orderTool' => $orderedTool,
-                );
+                ];
             }
         }
 
-        return array(
+        return [
             'existingTools' => $existingTools,
             'maskDecoders' => $maskDecoders,
-        );
+        ];
     }
 
     /**
@@ -381,18 +388,18 @@ class ToolManager
 
         $initPos = $this->toolRepo->countDisplayedToolsByWorkspace($workspace, $type);
         ++$initPos;
-        $missingTools = array();
+        $missingTools = [];
         $wsRoles = $this->roleManager->getWorkspaceConfigurableRoles($workspace);
         $this->om->startFlushSuite();
 
         foreach ($undisplayedTools as $undisplayedTool) {
             $wot = $this->orderedToolRepo->findOneBy(
-                array('workspace' => $workspace, 'tool' => $undisplayedTool, 'type' => $type)
+                ['workspace' => $workspace, 'tool' => $undisplayedTool, 'type' => $type]
             );
 
             //create a WorkspaceOrderedTool for each Tool that hasn't already one
             if ($wot === null) {
-                $this->addWorkspaceTool(
+                $this->setWorkspaceTool(
                     $undisplayedTool,
                     $initPos,
                     $undisplayedTool->getName(),
@@ -407,13 +414,13 @@ class ToolManager
                 $roleVisibility[$role->getId()] = false;
             }
 
-            $missingTools[] = array(
+            $missingTools[] = [
                 'tool' => $undisplayedTool,
                 'workspace' => $workspace,
                 'position' => $initPos,
                 'visibility' => $roleVisibility,
                 'displayedName' => $undisplayedTool->getName(),
-            );
+            ];
 
             ++$initPos;
         }
@@ -436,7 +443,7 @@ class ToolManager
         }
 
         $orderedTool = $this->orderedToolRepo->findOneBy(
-            array('user' => $user, 'tool' => $tool, 'type' => $type)
+            ['user' => $user, 'tool' => $tool, 'type' => $type]
         );
         $orderedTool->setVisibleInDesktop(false);
         $this->om->flush();
@@ -453,7 +460,7 @@ class ToolManager
     public function addDesktopTool(Tool $tool, User $user, $position, $name, $type = 0)
     {
         $switchTool = $this->orderedToolRepo->findOneBy(
-            array('user' => $user, 'order' => $position, 'type' => $type)
+            ['user' => $user, 'order' => $position, 'type' => $type]
         );
 
         if (!$switchTool) {
@@ -488,10 +495,10 @@ class ToolManager
         $type = 0
     ) {
         $movingTool = $this->orderedToolRepo->findOneBy(
-             array('user' => $user, 'tool' => $tool, 'workspace' => $workspace, 'type' => $type)
+             ['user' => $user, 'tool' => $tool, 'workspace' => $workspace, 'type' => $type]
          );
         $switchTool = $this->orderedToolRepo->findOneBy(
-             array('user' => $user, 'order' => $position, 'workspace' => $workspace, 'type' => $type)
+             ['user' => $user, 'order' => $position, 'workspace' => $workspace, 'type' => $type]
          );
 
         $newPosition = $movingTool->getOrder();
@@ -519,7 +526,7 @@ class ToolManager
         $type = 0
     ) {
         $movingTool = $this->orderedToolRepo->findOneBy(
-            array('user' => $user, 'tool' => $tool, 'workspace' => $workspace, 'type' => $type)
+            ['user' => $user, 'tool' => $tool, 'workspace' => $workspace, 'type' => $type]
         );
         $movingTool->setOrder($position);
         $this->om->persist($movingTool);
@@ -538,7 +545,7 @@ class ToolManager
         $type = 0
     ) {
         $orderedTools = $this->orderedToolRepo->findBy(
-            array('user' => $user, 'workspace' => $workspace, 'type' => $type)
+            ['user' => $user, 'workspace' => $workspace, 'type' => $type]
         );
 
         foreach ($orderedTools as $orderedTool) {
@@ -587,7 +594,7 @@ class ToolManager
     public function getOneByWorkspaceAndTool(Workspace $ws, Tool $tool, $type = 0)
     {
         return $this->orderedToolRepo->findOneBy(
-            array('workspace' => $ws, 'tool' => $tool, 'type' => $type)
+            ['workspace' => $ws, 'tool' => $tool, 'type' => $type]
         );
     }
 
@@ -600,7 +607,7 @@ class ToolManager
     public function setDesktopToolVisible(Tool $tool, User $user, $type = 0)
     {
         $orderedTool = $this->orderedToolRepo->findOneBy(
-            array('user' => $user, 'tool' => $tool, 'type' => $type)
+            ['user' => $user, 'tool' => $tool, 'type' => $type]
         );
         $orderedTool->setVisibleInDesktop(true);
         $this->om->persist($orderedTool);
@@ -614,7 +621,7 @@ class ToolManager
      */
     public function addRequiredToolsToUser(User $user, $type = 0)
     {
-        $requiredTools = array();
+        $requiredTools = [];
         $adminOrderedTools = $this->getConfigurableDesktopOrderedToolsByTypeForAdmin($type);
 
         foreach ($adminOrderedTools as $orderedTool) {
@@ -677,7 +684,7 @@ class ToolManager
         $archive = $this->om->factory('ZipArchive');
         $archive->open($archpath);
         $archive->extractTo($extractPath);
-        $realPaths = array();
+        $realPaths = [];
 
         if (isset($confTools['files'])) {
             foreach ($confTools['files'] as $path) {
@@ -725,8 +732,8 @@ class ToolManager
         }
 
         return $this->orderedToolRepo->findBy(
-            array('workspace' => $workspace, 'type' => $type),
-            array('order' => 'ASC')
+            ['workspace' => $workspace, 'type' => $type],
+            ['order' => 'ASC']
         );
     }
 
@@ -791,8 +798,8 @@ class ToolManager
     public function getOrderedToolsByUser(User $user, $type = 0)
     {
         return $this->orderedToolRepo->findBy(
-            array('user' => $user, 'type' => $type),
-            array('order' => 'ASC')
+            ['user' => $user, 'type' => $type],
+            ['order' => 'ASC']
         );
     }
 
@@ -804,7 +811,7 @@ class ToolManager
     ) {
         foreach ($missingTools as $tool) {
             $wot = $this->orderedToolRepo->findOneBy(
-                array('user' => $user, 'tool' => $tool, 'type' => $type)
+                ['user' => $user, 'tool' => $tool, 'type' => $type]
             );
 
             if (!$wot) {
@@ -831,7 +838,7 @@ class ToolManager
     ) {
         foreach ($missingTools as $tool) {
             $wot = $this->orderedToolRepo->findOneBy(
-                array('user' => null, 'workspace' => null, 'tool' => $tool, 'type' => $type)
+                ['user' => null, 'workspace' => null, 'tool' => $tool, 'type' => $type]
             );
 
             if (!$wot) {
@@ -888,7 +895,7 @@ class ToolManager
     ) {
         $orderedTools = $this->getConfigurableDesktopOrderedToolsByUser(
             $user,
-            array(),
+            [],
             $type
         );
         $nextId = intval($nextOrderedToolId);
@@ -962,7 +969,7 @@ class ToolManager
 
     public function getAvailableWorkspaceTools()
     {
-        return $this->toolRepo->findBy(array('isDisplayableInWorkspace' => true));
+        return $this->toolRepo->findBy(['isDisplayableInWorkspace' => true]);
     }
 
     public function getPersonalWorkspaceToolConfigAsArray()
@@ -972,27 +979,27 @@ class ToolManager
         $data = [];
 
         foreach ($roles as $role) {
-            $data[$role->getId()] = array();
+            $data[$role->getId()] = [];
             $perms = $this->pwsToolConfigRepo->findByRole($role);
 
-            if ($perms === array() || $perms === null) {
+            if ($perms === [] || $perms === null) {
                 foreach ($availableTools as $availableTool) {
-                    $data[$role->getId()][$availableTool->getId()] = array(
+                    $data[$role->getId()][$availableTool->getId()] = [
                         'toolId' => $availableTool->getId(),
                         'name' => $availableTool->getName(),
                         'mask' => 0,
                         'id' => 0,
-                    );
+                    ];
                 }
             } else {
                 $tools = [];
                 foreach ($perms as $perm) {
-                    $tools[$perm->getTool()->getId()] = array(
+                    $tools[$perm->getTool()->getId()] = [
                         'toolId' => $perm->getTool()->getId(),
                         'name' => $perm->getTool()->getName(),
                         'mask' => $perm->getMask(),
                         'id' => $perm->getId(),
-                    );
+                    ];
                 }
 
                 //then we'll have to add the missing roles
@@ -1007,12 +1014,12 @@ class ToolManager
                     }
 
                     if (!$found) {
-                        $tools[$availableTool->getId()] = array(
+                        $tools[$availableTool->getId()] = [
                             'toolId' => $availableTool->getId(),
                             'name' => $availableTool->getName(),
                             'mask' => 0,
                             'id' => null,
-                        );
+                        ];
                     }
                 }
 
@@ -1027,7 +1034,6 @@ class ToolManager
     public function getPersonalWorkspaceToolConfigForCurrentUser()
     {
         $token = $this->container->get('security.token_storage')->getToken();
-        $user = $token->getUser();
 
         //maybe from the utils thing
         $roles = $token->getRoles();
@@ -1062,7 +1068,7 @@ class ToolManager
 
     public function activatePersonalWorkspaceToolPerm($value, Tool $tool, Role $role)
     {
-        $value = (integer) $value;
+        $value = (int) $value;
         $config = $this->getPersonalWorkspaceToolConfig($tool, $role);
         $config->setMask($config->getMask() | $value);
         $this->om->persist($config);
@@ -1071,7 +1077,7 @@ class ToolManager
 
     public function removePersonaLWorkspaceToolPerm($value, Tool $tool, Role $role)
     {
-        $value = (integer) $value;
+        $value = (int) $value;
         $config = $this->getPersonalWorkspaceToolConfig($tool, $role);
         $config->setMask($config->getMask() & ~$value);
         $this->om->persist($config);
@@ -1080,7 +1086,7 @@ class ToolManager
 
     public function getPersonalWorkspaceToolConfig(Tool $tool, Role $role)
     {
-        $pwstc = $this->pwsToolConfigRepo->findBy(array('tool' => $tool, 'role' => $role));
+        $pwstc = $this->pwsToolConfigRepo->findBy(['tool' => $tool, 'role' => $role]);
 
         if ($pwstc) {
             return $pwstc[0];
@@ -1123,7 +1129,7 @@ class ToolManager
 
     public function getConfigurableDesktopOrderedToolsByTypeForAdmin(
         $type = 0,
-        array $excludedToolNames = array(),
+        array $excludedToolNames = [],
         $executeQuery = true
     ) {
         $excludedToolNames[] = 'home';
@@ -1141,7 +1147,7 @@ class ToolManager
 
     public function getLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
         $type = 0,
-        array $excludedToolNames = array(),
+        array $excludedToolNames = [],
         $executeQuery = true
     ) {
         $excludedToolNames[] = 'home';
@@ -1160,7 +1166,7 @@ class ToolManager
     public function getOneAdminOrderedToolByToolAndType(Tool $tool, $type = 0)
     {
         return $this->orderedToolRepo->findOneBy(
-            array('user' => null, 'workspace' => null, 'tool' => $tool, 'type' => $type)
+            ['user' => null, 'workspace' => null, 'tool' => $tool, 'type' => $type]
         );
     }
 
@@ -1237,7 +1243,7 @@ class ToolManager
     {
         $usersOts = $this->orderedToolRepo->findDuplicatedOldOrderedToolsByUsers();
         $wsOts = $this->orderedToolRepo->findDuplicatedOldOrderedToolsByWorkspaces();
-        $exitingUsers = array();
+        $exitingUsers = [];
 
         foreach ($usersOts as $ot) {
             $toolId = $ot->getTool()->getId();
@@ -1250,12 +1256,12 @@ class ToolManager
                     $exitingUsers[$toolId][$userId] = true;
                 }
             } else {
-                $exitingUsers[$toolId] = array();
+                $exitingUsers[$toolId] = [];
                 $exitingUsers[$toolId][$userId] = true;
             }
         }
         $this->om->flush();
-        $exitingWorkspaces = array();
+        $exitingWorkspaces = [];
 
         foreach ($wsOts as $ot) {
             $toolId = $ot->getTool()->getId();
@@ -1268,7 +1274,7 @@ class ToolManager
                     $exitingWorkspaces[$toolId][$workspaceId] = true;
                 }
             } else {
-                $exitingWorkspaces[$toolId] = array();
+                $exitingWorkspaces[$toolId] = [];
                 $exitingWorkspaces[$toolId][$workspaceId] = true;
             }
         }

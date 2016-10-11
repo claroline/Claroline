@@ -24,7 +24,6 @@ ClozeQuestionService.prototype.answersAllFound = function answersAllFound(questi
 
   if (question.solutions) {
     var numAnswersFound = 0
-
     if (answers) {
       for (var i = 0; i < question.solutions.length; i++) {
         for (var j=0; j<question.solutions[i].answers.length; j++) {
@@ -34,16 +33,15 @@ ClozeQuestionService.prototype.answersAllFound = function answersAllFound(questi
                 var answer = answers[l]
               }
             }
-            if (question.holes[k].id === question.solutions[i].holeId && question.solutions[i].answers[j].text === answer.answerText && question.solutions[i].answers[j].score > 0 && !question.holes[k].selector) {
+            if (answer && question.holes[k].id === question.solutions[i].holeId && question.solutions[i].answers[j].text === answer.answerText && question.solutions[i].answers[j].score > 0 && !question.holes[k].selector) {
               numAnswersFound++
-            } else if (question.holes[k].id === question.solutions[i].holeId && question.solutions[i].answers[j].id === answer.answerText && question.solutions[i].answers[j].score > 0 && question.holes[k].selector) {
+            } else if (answer && question.holes[k].id === question.solutions[i].holeId && question.solutions[i].answers[j].id === answer.answerText && question.solutions[i].answers[j].score > 0 && question.holes[k].selector) {
               numAnswersFound++
             }
           }
         }
       }
     }
-
     if (numAnswersFound === question.solutions.length) {
       // all answers have been found
       feedbackState = this.FeedbackService.SOLUTION_FOUND
@@ -116,10 +114,12 @@ ClozeQuestionService.prototype.getHoleCorrectAnswers = function getHoleCorrectAn
  */
 ClozeQuestionService.prototype.getHoleAnswer = function getHoleAnswer(answer, hole) {
   var holeAnswer = null
-  for (var i = 0; i < answer.length; i++) {
-    if (hole.id === answer[i].holeId) {
-      holeAnswer = answer[i]
-      break // Stop searching
+  if(null !== answer){
+    for (var i = 0; i < answer.length; i++) {
+      if (hole.id === answer[i].holeId) {
+        holeAnswer = answer[i]
+        break // Stop searching
+      }
     }
   }
 

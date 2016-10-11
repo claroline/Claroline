@@ -46,6 +46,7 @@ label_no_labels_associated: Pas de label(s) associé(s)
 label_manual_correction_needed: Correction manuelle nécessaire!
 
 # m
+max_attempts_reached_continue: Vous avez atteint le maximum d'essais autorisés. Poursuivez.
 max_attempts_reached_see_solution: Vous avez atteint le maximum d'essais autorisés. Consultez la solution proposée et poursuivez.
 
 # n

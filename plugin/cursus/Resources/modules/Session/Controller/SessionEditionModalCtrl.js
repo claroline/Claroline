@@ -31,7 +31,10 @@ export default class SessionEditionModalCtrl {
       userValidation: false,
       organizationValidation: false,
       registrationValidation: false,
-      validators: []
+      validators: [],
+      eventRegistrationType: 0,
+      displayOrder: 500,
+      color: null
     }
     this.source = session
     this.callback = callback
@@ -39,7 +42,8 @@ export default class SessionEditionModalCtrl {
       name: null,
       startDate: null,
       endDate: null,
-      maxUsers: null
+      maxUsers: null,
+      displayOrder: null
     }
     this.dateOptions = {
       formatYear: 'yy',
@@ -55,6 +59,12 @@ export default class SessionEditionModalCtrl {
     this.cursus = []
     this.validatorsRoles = []
     this.validators = []
+    this.eventRegistrationTypeChoices = [
+      {value: 0, name: Translator.trans('event_registration_automatic', {}, 'cursus')},
+      {value: 1, name: Translator.trans('event_registration_manual', {}, 'cursus')},
+      {value: 2, name: Translator.trans('event_registration_public', {}, 'cursus')}
+    ]
+    this.eventRegistrationType = this.eventRegistrationTypeChoices[0]
     this._userpickerCallback = this._userpickerCallback.bind(this)
     this.initializeSession()
   }
@@ -65,8 +75,8 @@ export default class SessionEditionModalCtrl {
   }
 
   initializeSession () {
-    const startDate = this.source['startDate'].replace(/\+.*$/, '')
-    const endDate = this.source['endDate'].replace(/\+.*$/, '')
+    const startDate = this.source['startDate'] ? this.source['startDate'].replace(/\+.*$/, '') : new Date()
+    const endDate = this.source['endDate'] ? this.source['endDate'].replace(/\+.*$/, '') : new Date(startDate)
     this.CursusService.getRootCursus().then(d => {
       d.forEach(c => this.cursusList.push(c))
       this.source['cursus'].forEach(sc => {
@@ -91,13 +101,19 @@ export default class SessionEditionModalCtrl {
     this.session['userValidation'] = this.source['userValidation']
     this.session['organizationValidation'] = this.source['organizationValidation']
     this.session['registrationValidation'] = this.source['registrationValidation']
+    this.session['displayOrder'] = this.source['displayOrder']
 
+    if (this.source['details']['color']) {
+      this.session['color'] = this.source['details']['color']
+    }
     if (this.source['description']) {
       this.session['description'] = this.source['description']
     }
     if (this.source['maxUsers']) {
       this.session['maxUsers'] = this.source['maxUsers']
     }
+    this.session['eventRegistrationType'] = this.source['eventRegistrationType']
+    this.eventRegistrationType = this.eventRegistrationTypeChoices[this.source['eventRegistrationType']]
   }
 
   displayValidators () {
@@ -136,12 +152,25 @@ export default class SessionEditionModalCtrl {
       this.sessionErrors['endDate'] = null
     }
 
+    if (this.session['displayOrder'] === null || this.session['displayOrder'] === undefined) {
+      this.sessionErrors['displayOrder'] = Translator.trans('form_not_blank_error', {}, 'cursus')
+    } else {
+      this.session['displayOrder'] = parseInt(this.session['displayOrder'])
+      this.sessionErrors['displayOrder'] = null
+    }
+
     if (this.session['maxUsers']) {
       this.session['maxUsers'] = parseInt(this.session['maxUsers'])
 
       if (this.session['maxUsers'] < 0) {
         this.sessionErrors['maxUsers'] = Translator.trans('form_number_superior_error', {value: 0}, 'cursus')
       }
+    }
+
+    if (this.eventRegistrationType) {
+      this.session['eventRegistrationType'] = this.eventRegistrationType['value']
+    } else {
+      this.session['eventRegistrationType'] = 0
     }
     this.session['cursus'] = []
     this.cursus.forEach(c => {

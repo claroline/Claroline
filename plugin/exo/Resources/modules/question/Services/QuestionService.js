@@ -66,16 +66,20 @@ export default class QuestionService {
   }
 
   calculateScore(question, questionPaper) {
-    questionPaper.score = this.getTypeService(question.type).getAnswerScore(question, questionPaper.answer)
-
-    // Apply hints penalties
-    if (questionPaper.hints) {
-      for (let i = 0; i < questionPaper.hints.length; i++) {
-        questionPaper.score -= questionPaper.hints[i].penalty
+    let score = 0
+    if (questionPaper.score || 0 === questionPaper.score) {
+      score = questionPaper.score
+    } else {
+      score = this.getTypeService(question.type).getAnswerScore(question, questionPaper.answer)
+      // Apply hints penalties
+      if (questionPaper.hints) {
+        for (let i = 0; i < questionPaper.hints.length; i++) {
+          score -= questionPaper.hints[i].penalty
+        }
       }
     }
 
-    return questionPaper.score
+    return score
   }
 
   calculateTotal(question) {

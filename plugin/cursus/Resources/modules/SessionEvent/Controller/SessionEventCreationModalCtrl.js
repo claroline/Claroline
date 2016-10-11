@@ -28,12 +28,15 @@ export default class SessionEventCreationModalCtrl {
       locationExtra: null,
       internalLocation: false,
       locationResource: null,
-      tutors: []
+      tutors: [],
+      maxUsers: null,
+      registrationType: 0
     }
     this.sessionEventErrors = {
       name: null,
       startDate: null,
-      endDate: null
+      endDate: null,
+      maxUsers: null
     }
     this.dateOptions = {
       formatYear: 'yy',
@@ -49,14 +52,34 @@ export default class SessionEventCreationModalCtrl {
     this.location = null
     this.locationResources = []
     this.locationResource = null
+    this.registrationTypeChoices = [
+      {value: 0, name: Translator.trans('event_registration_automatic', {}, 'cursus')},
+      {value: 1, name: Translator.trans('event_registration_manual', {}, 'cursus')},
+      {value: 2, name: Translator.trans('event_registration_public', {}, 'cursus')}
+    ]
+    this.registrationType = this.registrationTypeChoices[0]
     this.tutorsList = SessionService.getTutorsBySession(session['id'])
     this.tutors = SessionService.getTutorsBySession(session['id'])
+    this.isSessionEventRegistrationDisabled = true
     this.initializeSessionEvent()
   }
 
   initializeSessionEvent () {
+    if (this.session['description']) {
+      this.sessionEvent['description'] = this.session['description']
+    }
+    if (this.session['eventRegistrationType']) {
+      this.sessionEvent['registrationType'] = this.session['eventRegistrationType']
+      this.registrationType = this.registrationTypeChoices[this.session['eventRegistrationType']]
+    }
+    if (this.session['maxUsers']) {
+      this.sessionEvent['maxUsers'] = this.session['maxUsers']
+    }
     this.sessionEvent['startDate'] = this.session['startDate'].replace(/\+.*$/, '')
     this.sessionEvent['endDate'] = this.session['endDate'].replace(/\+.*$/, '')
+    this.CourseService.getGeneralParameters().then(d => {
+      this.isSessionEventRegistrationDisabled = d['disableSessionEventRegistration']
+    })
     this.CourseService.getLocations().then(d => {
       d.forEach(l => this.locations.push(l))
     })
@@ -92,6 +115,29 @@ export default class SessionEventCreationModalCtrl {
       }
     } else {
       this.sessionEventErrors['endDate'] = null
+    }
+
+    if (this.isSessionEventRegistrationDisabled) {
+      this.sessionEvent['registrationType'] = 0
+      this.sessionEvent['maxUsers'] = null
+    } else {
+      if (this.registrationType) {
+        this.sessionEvent['registrationType'] = this.registrationType['value']
+      } else {
+        this.sessionEvent['registrationType'] = 0
+      }
+
+      if (this.sessionEvent['registrationType'] === 0) {
+        this.sessionEvent['maxUsers'] = null
+      }
+
+      if (this.sessionEvent['maxUsers']) {
+        this.sessionEvent['maxUsers'] = parseInt(this.sessionEvent['maxUsers'])
+
+        if (this.sessionEvent['maxUsers'] < 0) {
+          this.sessionEventErrors['maxUsers'] = Translator.trans('form_number_superior_error', {value: 0}, 'cursus')
+        }
+      }
     }
 
     if (this.location) {
@@ -142,5 +188,9 @@ export default class SessionEventCreationModalCtrl {
     } else if (type === 'end') {
       this.dates['end']['open'] = true
     }
+  }
+
+  isAuto () {
+    return this.registrationType === this.registrationTypeChoices[0]
   }
 }

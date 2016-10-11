@@ -1,30 +1,30 @@
-activity: activity
-administrate: administrate
-all: all
-compose: compose
-copy: copy
-delete: delete
-directory: directory
-document: document
-download: download
-edit: edit
-edit-properties: edit-properties
-edit-rights: edit-rights
-empty: empty
-export: export
-file: file
-image: image
-insert: insert
-media: media
-more: more
-open: open
-open-tracking: open-tracking
-rename: rename
-resource_copy_warning: resource_copy_warning
-resource_name_form_name: resource_name_form_name
-resource_shortcut: resource_shortcut
-text: text
-update_file: update_file
-video: video
-workspace: workspace
-write: write
+activity: Activiteit
+administrate: Beheren
+all: Alles
+compose: Schrijven
+copy: Kopiëren
+delete: Verwijderen
+directory: Directory
+document: Document
+download: Download
+edit: Bewerken
+edit-properties: De eigenschappen bewerken
+edit-rights: De rechten bewerken
+empty: Leeg
+export: Uitvoeren
+file: Bestand
+image: Beeld
+insert: Invoegen
+media: Media
+more: Meer
+open: Openen
+open-tracking: De toezicht van het object zien
+rename: Hernoemen
+resource_copy_warning: Er is een fout opgetreden tijdens het kopiëren van de leermiddel <%resourceName%>.
+resource_name_form_name: Naam van de leermiddel
+resource_shortcut: Sneltoetsen
+text: Tekst
+update_file: Het bestand bewerken
+video: Video
+workspace: Werkruimte
+write: Schrijven

@@ -3,7 +3,6 @@
 namespace FormaLibre\OfficeConnectBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use FormaLibre\OfficeConnectBundle\Library\O365ResponseUser;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -50,6 +49,15 @@ class OfficeConnectController extends Controller
         $this->authHelper->GetAuthenticationHeaderFor3LeggedFlow($_GET['code']);
         $jsonResponse = $this->graphHelper->getMeEntry();
         $userResponse = new O365ResponseUser($jsonResponse);
+        $missingProperties = $userResponse->validate();
+
+        if (count($missingProperties) > 0) {
+            return $this->render(
+                'FormaLibreOfficeConnectBundle:Authentication:missingProperties.html.twig',
+                ['missingProperties' => $missingProperties]
+            );
+        }
+
         $userManager = $this->get('claroline.manager.user_manager');
         $email = $userResponse->getEmail();
         $user = $userManager->getUserByEmail($email);
@@ -61,8 +69,8 @@ class OfficeConnectController extends Controller
             $user->setUsername($userResponse->getUsername());
             $user->setPlainPassword($userResponse->getEmail());
             $user->setMail($userResponse->getEmail());
-            $roleName = PlatformRoles::USER;
-            $userManager->createUser($user, $roleName);
+            $user->setIsMailValidated(true);
+            $userManager->createUser($user, false);
         }
 
         $userRepo = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:User');
@@ -73,6 +81,6 @@ class OfficeConnectController extends Controller
         $securityContext->setToken($token);
         $userManager->logUser($user);
 
-        return new RedirectResponse($this->generateUrl('claro_desktop_open'));
+        return $this->get('claroline.authentication_handler')->onAuthenticationSuccess($this->get('request'), $token);
     }
 }

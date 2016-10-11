@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
+use Claroline\SurveyBundle\Entity\Answer\SimpleTextQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\SurveyAnswer;
 use Claroline\SurveyBundle\Entity\Choice;
 use Claroline\SurveyBundle\Entity\Question;
@@ -571,7 +572,9 @@ class SurveyController extends Controller
                         $this->surveyManager->createQuestionModel($question);
                     }
                     break;
-                case 'open-ended':
+                case 'open_ended':
+                case 'open_ended_bare':
+                case 'single_text':
                 default:
                     break;
             }
@@ -684,7 +687,9 @@ class SurveyController extends Controller
                         $this->surveyManager->createQuestionModel($question);
                     }
                     break;
-                case 'open-ended':
+                case 'open_ended':
+                case 'open_ended_bare':
+                case 'single_text':
                 default:
                     break;
             }
@@ -963,8 +968,14 @@ class SurveyController extends Controller
 
                 return $this->displayMultipleChoiceQuestion($question);
             case 'open_ended':
+            case 'open_ended_bare':
 
-                return $this->displayOpenEndedQuestion($question);
+                $isRich = $questionType === 'open_ended';
+
+                return $this->displayOpenEndedQuestion($question, null, false, $isRich);
+            case 'simple_text':
+
+                return $this->displaySimpleTextQuestion($question);
             default:
                 break;
         }
@@ -994,6 +1005,8 @@ class SurveyController extends Controller
 
                 return $this->multipleChoiceQuestionForm($survey);
             case 'open_ended':
+            case 'open_ended_bare':
+            case 'simple_text':
             default:
                 break;
         }
@@ -1025,6 +1038,8 @@ class SurveyController extends Controller
                     $question
                 );
             case 'open_ended':
+            case 'open_ended_bare':
+            case 'single_text':
             default:
                 break;
         }
@@ -1089,7 +1104,7 @@ class SurveyController extends Controller
                     $answersDatas[$questionId]['comment'] = $questionAnswer->getComment();
                 }
 
-                if ($question->getType() === 'open_ended') {
+                if ($question->getType() === 'open_ended' || $question->getType() === 'open_ended_bare') {
                     $openEndedAnswer = $this->surveyManager
                         ->getOpenEndedAnswerByUserAndSurveyAndQuestion(
                             $user,
@@ -1118,6 +1133,18 @@ class SurveyController extends Controller
                             $answersDatas[$questionId]['other'] =
                                 $choiceAnswer->getContent();
                         }
+                    }
+                } elseif ($question->getType() === 'simple_text') {
+                    $simpleTextAnswer = $this->surveyManager
+                        ->getSimpleTextAnswerByUserAndSurveyAndQuestion(
+                            $user,
+                            $survey,
+                            $question
+                        );
+
+                    if (!is_null($simpleTextAnswer)) {
+                        $answersDatas[$questionId]['answer'] =
+                            $simpleTextAnswer->getContent();
                     }
                 }
             }
@@ -1273,7 +1300,8 @@ class SurveyController extends Controller
                         }
                         $this->surveyManager->persistQuestionAnswer($questionAnswer);
 
-                        if ($questionType === 'open_ended' && isset($questionResponse['answer']) && !empty($questionResponse['answer'])) {
+                        if (($questionType === 'open_ended' || $questionType === 'open_ended_bare') &&
+                                isset($questionResponse['answer']) && !empty($questionResponse['answer'])) {
                             $openEndedAnswer = new OpenEndedQuestionAnswer();
                             $openEndedAnswer->setQuestionAnswer($questionAnswer);
                             $openEndedAnswer->setContent($questionResponse['answer']);
@@ -1311,6 +1339,14 @@ class SurveyController extends Controller
                                     $this->surveyManager->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                 }
                             }
+                        } elseif ($questionType === 'simple_text' &&
+                            isset($questionResponse['answer']) &&
+                            !empty($questionResponse['answer'])) {
+                            $simpleTextAnswer = new SimpleTextQuestionAnswer();
+                            $simpleTextAnswer->setQuestionAnswer($questionAnswer);
+                            $simpleTextAnswer->setContent($questionResponse['answer']);
+                            $this->surveyManager
+                                ->persistSimpleTextQuestionAnswer($simpleTextAnswer);
                         }
                     } elseif ($survey->getAllowAnswerEdition()) {
                         $questionAnswer = $this->surveyManager->getQuestionAnswerBySurveyAnswerAndQuestion(
@@ -1330,7 +1366,8 @@ class SurveyController extends Controller
                             $this->surveyManager->persistQuestionAnswer($questionAnswer);
                         }
 
-                        if ($questionType === 'open_ended' && isset($questionResponse['answer']) && !empty($questionResponse['answer'])) {
+                        if (($questionType === 'open_ended' || $questionType === 'open_ended_bare') &&
+                                isset($questionResponse['answer']) && !empty($questionResponse['answer'])) {
                             $openEndedAnswer = $this->surveyManager->getOpenEndedAnswerByQuestionAnswer($questionAnswer);
 
                             if (is_null($openEndedAnswer)) {
@@ -1375,6 +1412,14 @@ class SurveyController extends Controller
                                     $this->surveyManager->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                 }
                             }
+                        } elseif ($questionType === 'simple_text' &&
+                            isset($questionResponse['answer']) &&
+                            !empty($questionResponse['answer'])) {
+                            $simpleTextAnswer = new SimpleTextQuestionAnswer();
+                            $simpleTextAnswer->setQuestionAnswer($questionAnswer);
+                            $simpleTextAnswer->setContent($questionResponse['answer']);
+                            $this->surveyManager
+                                ->persistSimpleTextQuestionAnswer($simpleTextAnswer);
                         }
                     }
                 }
@@ -1734,6 +1779,7 @@ class SurveyController extends Controller
                 if (!is_null($position)) {
                     switch ($questionType) {
                         case 'open_ended':
+                        case 'open_ended_bare':
                             $openEndedQuestion = $this->surveyManager
                                 ->getOpenEndedAnswerByQuestionAnswer($answer);
                             $line[$position] = is_null($openEndedQuestion) ? '-' : $openEndedQuestion->getContent();
@@ -1753,6 +1799,11 @@ class SurveyController extends Controller
                             }
                             $choicesText = implode('[,]', $choicesArray);
                             $line[$position] = $choicesText;
+                            break;
+                        case 'simple_text':
+                            $simpleTextQuestion = $this->surveyManager
+                                ->getSimpleTextAnswerByQuestionAnswer($answer);
+                            $line[$position] = is_null($simpleTextQuestion) ? '-' : $simpleTextQuestion->getContent();
                             break;
                         default:
                             break;
@@ -1924,8 +1975,18 @@ class SurveyController extends Controller
                     $forExport
                 );
             case 'open_ended':
+            case 'open_ended_bare':
 
                 return $this->showOpenEndedQuestionResults(
+                    $survey,
+                    $question,
+                    $page,
+                    $max,
+                    $forExport
+                );
+            case 'simple_text':
+
+                return $this->showSimpleTextQuestionResults(
                     $survey,
                     $question,
                     $page,
@@ -2040,6 +2101,39 @@ class SurveyController extends Controller
         );
     }
 
+    private function showSimpleTextQuestionResults(
+        Survey $survey,
+        Question $question,
+        $page = 1,
+        $max = 20,
+        $forExport = false
+    ) {
+        $answers = $forExport ?
+            $this->surveyManager->getSimpleTextAnswersBySurveyAndQuestionWithoutPager(
+                $survey,
+                $question
+            ) :
+            $this->surveyManager->getSimpleTextAnswersBySurveyAndQuestion(
+                $survey,
+                $question,
+                $page,
+                $max
+            );
+
+        return new Response(
+            $this->templating->render(
+                'ClarolineSurveyBundle:Survey:showSimpleTextQuestionResults.html.twig',
+                [
+                    'survey' => $survey,
+                    'question' => $question,
+                    'answers' => $answers,
+                    'max' => $max,
+                    'forExport' => $forExport,
+                ]
+            )
+        );
+    }
+
     private function displayTypedQuestion(
         Survey $survey,
         Question $question,
@@ -2060,8 +2154,18 @@ class SurveyController extends Controller
                     $canEdit
                 );
             case 'open_ended':
+            case 'open_ended_bare':
+                $isRich = $questionType === 'open_ended';
 
                 return $this->displayOpenEndedQuestion(
+                    $question,
+                    $answers,
+                    $canEdit,
+                    $isRich
+                );
+            case 'simple_text':
+
+                return $this->displaySimpleTextQuestion(
                     $question,
                     $answers,
                     $canEdit
@@ -2132,7 +2236,8 @@ class SurveyController extends Controller
     private function displayOpenEndedQuestion(
         Question $question,
         array $answers = null,
-        $canEdit = true
+        $canEdit = true,
+        $isRich = true
     ) {
         $answersDatas = is_null($answers) ? [] : $answers;
 
@@ -2142,6 +2247,24 @@ class SurveyController extends Controller
                 [
                     'question' => $question,
                     'answers' => $answersDatas,
+                    'canEdit' => $canEdit,
+                    'isRich' => $isRich,
+                ]
+            )
+        );
+    }
+
+    private function displaySimpleTextQuestion(
+        Question $question,
+        array $answers = [],
+        $canEdit = true
+    ) {
+        return new Response(
+            $this->templating->render(
+                'ClarolineSurveyBundle:Survey:displaySimpleTextQuestion.html.twig',
+                [
+                    'question' => $question,
+                    'answers' => $answers,
                     'canEdit' => $canEdit,
                 ]
             )
@@ -2216,6 +2339,7 @@ class SurveyController extends Controller
                 switch ($type) {
 
                     case 'open_ended':
+                    case 'open_ended_bare':
 
                         if (!isset($datas[$questionId]) ||
                             !isset($datas[$questionId]['answer']) ||
@@ -2249,6 +2373,14 @@ class SurveyController extends Controller
                                 isset($datas[$questionId]['other'])
                             )
                         ) {
+                            $errors[$questionId] = $questionId;
+                        }
+                        break;
+                    case 'single_text':
+
+                        if (!isset($datas[$questionId]) ||
+                            !isset($datas[$questionId]['answer']) ||
+                            empty($datas[$questionId]['answer'])) {
                             $errors[$questionId] = $questionId;
                         }
                         break;

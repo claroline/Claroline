@@ -50,7 +50,7 @@ ClozeQuestionCtrl.prototype.isHoleValid = function isHoleValid(hole) {
       }
     }
   }
-    
+
   return found
 }
 

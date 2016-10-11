@@ -116,9 +116,32 @@ class SessionEvent
      */
     protected $tutors;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CursusBundle\Entity\SessionEventUser",
+     *     mappedBy="sessionEvent"
+     * )
+     */
+    protected $sessionEventUsers;
+
+    /**
+     * @ORM\Column(name="max_users", nullable=true, type="integer")
+     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @SerializedName("maxUsers")
+     */
+    protected $maxUsers;
+
+    /**
+     * @ORM\Column(name="registration_type", type="integer", nullable=false, options={"default" = 0})
+     * @Groups({"api_cursus", "api_user_min"})
+     * @SerializedName("registrationType")
+     */
+    protected $registrationType = CourseSession::REGISTRATION_AUTO;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->sessionEventUsers = new ArrayCollection();
         $this->tutors = new ArrayCollection();
     }
 
@@ -253,5 +276,30 @@ class SessionEvent
     public function emptyTutors()
     {
         $this->tutors->clear();
+    }
+
+    public function getSessionEventUsers()
+    {
+        return $this->sessionEventUsers->toArray();
+    }
+
+    public function getMaxUsers()
+    {
+        return $this->maxUsers;
+    }
+
+    public function setMaxUsers($maxUsers)
+    {
+        $this->maxUsers = $maxUsers;
+    }
+
+    public function getRegistrationType()
+    {
+        return $this->registrationType;
+    }
+
+    public function setRegistrationType($registrationType)
+    {
+        $this->registrationType = $registrationType;
     }
 }

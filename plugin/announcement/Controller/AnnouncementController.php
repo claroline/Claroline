@@ -24,17 +24,18 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use JMS\DiExtraBundle\Annotation as DI;
 
 class AnnouncementController extends Controller
 {
@@ -108,7 +109,7 @@ class AnnouncementController extends Controller
      */
     public function announcementsListAction(AnnouncementAggregate $aggregate, $page = 1)
     {
-        $collection = new ResourceCollection(array($aggregate->getResourceNode()));
+        $collection = new ResourceCollection([$aggregate->getResourceNode()]);
 
         try {
             $this->checkAccess('EDIT', $aggregate);
@@ -119,11 +120,12 @@ class AnnouncementController extends Controller
         }
         $pager = $this->pagerFactory->createPagerFromArray($announcements, $page, 5);
 
-        return array(
+        return [
             '_resource' => $aggregate,
             'announcements' => $pager,
             'resourceCollection' => $collection,
-        );
+            'workspace' => $aggregate->getResourceNode()->getWorkspace(),
+        ];
     }
 
     /**
@@ -151,11 +153,11 @@ class AnnouncementController extends Controller
         $announcement->setVisible(true);
         $form = $this->formFactory->create(new AnnouncementType(), $announcement);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'type' => 'create',
             '_resource' => $aggregate,
-        );
+        ];
     }
 
     /**
@@ -194,16 +196,16 @@ class AnnouncementController extends Controller
                     'danger',
                     $this->translator->trans(
                         'visible_from_until_condition',
-                        array(),
+                        [],
                         'announcement'
                     )
                 );
 
-                return array(
+                return [
                     'form' => $form->createView(),
                     'type' => 'create',
                     '_resource' => $aggregate,
-                );
+                ];
             }
 
             $announcement->setAggregate($aggregate);
@@ -231,16 +233,16 @@ class AnnouncementController extends Controller
             return $this->redirect(
                 $this->generateUrl(
                     'claro_announcements_list',
-                    array('aggregateId' => $aggregate->getId())
+                    ['aggregateId' => $aggregate->getId()]
                 )
             );
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'type' => 'create',
             '_resource' => $aggregate,
-        );
+        ];
     }
 
     /**
@@ -267,12 +269,12 @@ class AnnouncementController extends Controller
 
         $form = $this->formFactory->create(new AnnouncementType(), $announcement);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'type' => 'edit',
             'announcement' => $announcement,
             '_resource' => $resource,
-        );
+        ];
     }
 
     /**
@@ -307,15 +309,15 @@ class AnnouncementController extends Controller
             if (!is_null($visibleFrom) && !is_null($visibleUntil) && $visibleUntil <= $visibleFrom) {
                 $this->get('session')->getFlashBag()->add(
                     'danger',
-                    $this->translator->trans('visible_from_until_condition', array(), 'announcement')
+                    $this->translator->trans('visible_from_until_condition', [], 'announcement')
                 );
 
-                return array(
+                return [
                     'form' => $form->createView(),
                     'type' => 'edit',
                     'announcement' => $announcement,
                     '_resource' => $resource,
-                );
+                ];
             }
 
             if (!$announcement->isVisible()) {
@@ -344,17 +346,17 @@ class AnnouncementController extends Controller
             return $this->redirect(
                 $this->generateUrl(
                     'claro_announcements_list',
-                    array('aggregateId' => $resource->getId())
+                    ['aggregateId' => $resource->getId()]
                 )
             );
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'type' => 'edit',
             'announcement' => $announcement,
             '_resource' => $resource,
-        );
+        ];
     }
 
     /**
@@ -418,11 +420,11 @@ class AnnouncementController extends Controller
         $data = $this->announcementManager->getVisibleAnnouncementsByWorkspace($workspace, $roles);
         $pager = $this->pagerFactory->createPagerFromArray($data, $page, 5);
 
-        return array(
+        return [
             'datas' => $pager,
             'widgetType' => 'workspace',
             'workspaceId' => $workspace->getId(),
-        );
+        ];
     }
 
     /**
@@ -450,7 +452,36 @@ class AnnouncementController extends Controller
         $data = $this->announcementManager->getVisibleAnnouncementsByWorkspaces($workspaces, $roles);
         $pager = $this->pagerFactory->createPagerFromArray($data, $page, 5);
 
-        return array('datas' => $pager, 'widgetType' => 'desktop');
+        return ['datas' => $pager, 'widgetType' => 'desktop'];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/announcement/{announcement}/send/mail",
+     *     name="claro_announcement_send_mail",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "usersIds"}
+     * )
+     *
+     * Sends announcement by mail
+     *
+     * @return Response
+     */
+    public function announcementSendMailAction(Announcement $announcement, array $users)
+    {
+        $resource = $announcement->getAggregate();
+        $this->checkAccess('EDIT', $resource);
+
+        if (count($users) > 0) {
+            $this->announcementManager->sendMail($announcement, $users);
+        }
+
+        return new JsonResponse('success', 200);
     }
 
     /**
@@ -469,7 +500,7 @@ class AnnouncementController extends Controller
      */
     private function checkAccess($permission, AbstractResource $resource)
     {
-        $collection = new ResourceCollection(array($resource->getResourceNode()));
+        $collection = new ResourceCollection([$resource->getResourceNode()]);
 
         if (!$this->authorization->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());

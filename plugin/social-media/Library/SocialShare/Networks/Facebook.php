@@ -5,10 +5,8 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
  * Date: 4/23/15
  */
-
 namespace Icap\SocialmediaBundle\Library\SocialShare\Networks;
 
 class Facebook implements NetworkInterface
@@ -37,7 +35,7 @@ class Facebook implements NetworkInterface
      *
      * @return string
      */
-    public function getShareLink($url, array $options = array())
+    public function getShareLink($url, array $options = [])
     {
         return sprintf(self::SHARE_URL, urlencode($url));
     }
@@ -54,7 +52,7 @@ class Facebook implements NetworkInterface
         $api_url = sprintf(self::API_URL, urlencode($url));
         $data = null;
         try {
-            $data = json_decode(file_get_contents($api_url));
+            $data = json_decode(file_get_contents($api_url), true);
         } catch (\Exception $e) {
             $data = null;
         }

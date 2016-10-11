@@ -1,0 +1,7 @@
+{
+  "webpack": {
+    "entry": {
+      "checklist-model": "checklist-model"
+    }
+  }
+}

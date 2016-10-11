@@ -22,6 +22,7 @@ contact_phone: 'Contact phone'
 create_ticket: 'Create a ticket'
 create_ticket_for_issue: 'Create a ticket for this issue'
 created_on: 'Created on'
+description_placeholder_text: Explain how the issue has happened
 duration_in_minute: 'Duration (in minutes)'
 duration_is_required: 'Duration field is required'
 end_date_is_required: 'End date field is required'

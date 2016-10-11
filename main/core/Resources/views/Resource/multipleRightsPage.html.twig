@@ -17,7 +17,7 @@
                     </h3>
                 </div>
                 <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
-                    {% if hierarchy %}
+                    {% if hierarchy[tag.getId()] is defined %}
                         {% if hierarchy[tag.getId()]|length > 0 %}
                             {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, workspaceRoles, resource, wsManagerRoleName) }}
                         {% endif %}
@@ -35,14 +35,16 @@
                                     </a>
                                 </div>
                                 <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="list-group collapse">
-                                    {% for role in workspaceRoles[workspace.getCode()] %}
-                                        {% if role.getName() != wsManagerRoleName %}
-                                            <a class="workspace-role-item list-group-item"
-                                               href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                            </a>
-                                        {% endif %}
-                                    {% endfor %}
+                                    {% if workspaceRoles[workspace.getCode()] is defined %}
+                                        {% for role in workspaceRoles[workspace.getCode()] %}
+                                            {% if role.getName() != wsManagerRoleName %}
+                                                <a class="workspace-role-item list-group-item"
+                                                   href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                                </a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endfor %}
@@ -78,8 +80,8 @@
 {% endif %}
 
 <div{% if isModal %} class="modal-dialog"{% endif %}>
-    <div id="rights-list" 
-        data-rights="{% for decoder in resource.getResourceType().getMaskDecoders() %} {{ decoder.getName() }} {% if not loop.last %},{% endif %} {% endfor %}" 
+    <div id="rights-list"
+        data-rights="{% for decoder in resource.getResourceType().getMaskDecoders() %} {{ decoder.getName() }} {% if not loop.last %},{% endif %} {% endfor %}"
         data-is-dir="{{ isDir }}"
         data-node-id="{{ resource.getId() }}"
     >
@@ -291,7 +293,7 @@
                             </div>
                         </div>
                     </div>
-                    {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable, workspaceRoles, resource, wsManagerRoleName) }}
+                     {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable, workspaceRoles, resource, wsManagerRoleName) }}
                 </div>
                 <div id="form-rights-tag-wrapper"></div>
             </div>

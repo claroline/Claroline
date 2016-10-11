@@ -842,6 +842,24 @@ class ResourceManager
     }
 
     /**
+     * Sets the publication flag of a collection of nodes.
+     *
+     * @param ResourceNode[] $nodes
+     * @param bool           $arePublished
+     */
+    public function setPublishedStatus(array $nodes, $arePublished)
+    {
+        foreach ($nodes as $node) {
+            $node->setPublished($arePublished);
+            $eventName = "publication_change_{$node->getResourceType()->getName()}";
+            $resource = $this->getResourceFromNode($node);
+            $this->dispatcher->dispatch($eventName, 'PublicationChange', [$resource]);
+        }
+
+        $this->om->flush();
+    }
+
+    /**
      * Convert a resource into an array (mainly used to be serialized and sent to the manager.js as
      * a json response).
      *
@@ -1918,5 +1936,10 @@ class ResourceManager
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    public function getResourcesByIds(array $roles, $user, array $ids)
+    {
+        return count($ids) > 0 ? $this->resourceNodeRepo->findResourcesByIds($roles, $user, $ids) : [];
     }
 }

@@ -1,0 +1,90 @@
+add_a_comment: Een commentaar toevoegen
+add_a_support_status: Een statuut toevoegen
+add_a_support_type: Een type van support toevoegen
+add_an_intervention: Een interventie toevoegen
+add_comment: De commentaar toevoegen
+add_support_contacts: Contactpersonen voor de support toevoegen
+additional_infos: Aanvullende informatie
+archives: Archieven
+buy_support_credits: Supportkredieten kopen
+changing_ticket_type: Het type veranderen
+client_message: Bericht aan de klant
+closing_intervention: De interventie sluiten
+comment_deletion: De commentaar verwijderen
+comment_deletion_confirm_message: Bent u er zeker van dat u deze commentaar wenst te verwijderen ?
+comment_edition: De commentaar bewerken
+comments: Commentaren
+compute_time_from_duration: De einddatum berekenen in functie van de duur
+compute_time_from_end_date: De duur berekenen in functie van de einddatum
+compute_time_mode: Modus om de tijd te berekenen
+contact_email: Contact e-mail
+contact_phone: Contact telefoonnummer
+create_ticket: Een ticket maken
+create_ticket_for_issue: Een ticket maken voor deze fout
+created_on: Gemaakt op
+description_placeholder_text: Beschrijf hoe de fout is opgetreden
+duration_in_minute: Duur (in minuten)
+duration_is_required: Het veld "Duur" is vereist
+end_date_is_required: Het veld "Einddatum" is vereist
+functional: Functioneel
+functional_form_msg: Ik heb hulp nodig om het platform te gebruiken
+internal_message: Intern bericht
+intervenant: Interveniënt
+intervention_creation: Een interventie maken
+intervention_deletion: De interventie verwijderen
+intervention_deletion_confirm_message: Bent u er zeker van dat u deze interventie wenst te verwijderen ?
+intervention_edition: De interventie bewerken
+interventions: Interventies
+l1: L1
+l2: L2
+level: Niveau
+minute_short: Min
+my_tickets: Mijn ticketten
+nb_available_support_credits: Aantal beschikbare kredieten voor de support
+new: Nieuw
+new_comment: Nieuw commentaar
+new_ticket: Nieuw ticket
+no_comment: Geen commentaar
+no_credit_message: U hebt geen krediet voor de support.
+no_intervention: Geen interventie
+no_support_contact: Geen contactpersoon voor de support
+no_support_status: Geen statuut
+no_support_type: Geen supporttype
+no_ticket: Geen ticket
+remaining_credits: Resterende kredieten
+required_credits: Vereiste kredieten
+select_support_contacts: Kies contactpersonen voor de support
+start_intervention: Een interventie starten
+status: Statuut
+status_ac: Klantverwachting
+status_an: Analyse
+status_cc: Contact klant
+status_et: In behandeling
+status_fa: Facturatie
+status_pc: Behandeling
+status_pr: Antwoord in voorbereiding
+stop_intervention: De interventie stoppen
+support_contacts_management: De contactpersonen beheren voor de support
+support_plugin_configuration: De supportplugin instellen
+support_status_creation: Een statuut maken
+support_status_edition: Het statuut bewerken
+support_status_deletion: Het statuut verwijderen
+support_status_deletion_confirm_message: Bent u er zeker van dat u dit statuut wenst te verwijderen ?
+support_status_management: De statuten beheren
+support_type_creation: Een supporttype maken
+support_type_edition: Een supporttype bewerken
+support_type_deletion: Een supporttype verwijderen
+support_type_deletion_confirm_message: Bent u er zeker van dat u dit supporttype wenst te verwijderen ?
+support_type_management: De supporttypes beheren
+technical: Technisch
+technical_form_msg: Ik heb een technisch probleem (bug, installatie, update, enz.)
+ticket: Ticket
+ticket_creation: Een ticket maken
+ticket_deletion: Een ticket verwijderen
+ticket_deletion_confirm_message: Bent u er zeker van dat u dit ticket wenst te verwijderen ?
+ticket_edition: Het ticket bewerken
+time: Tijd
+total_time: Totale tijd
+type: Type
+view_ticket: Het ticket zien
+with_credits: Met de kredieten

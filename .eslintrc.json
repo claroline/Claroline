@@ -1,14 +1,18 @@
 {
   "env": {
     "browser": true,
-    "es6": true
+    "es6": true,
+    "mocha": true
   },
   "extends": "eslint:recommended",
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "rules": {
-    "indent": [2, 2],
+    "indent": [2, 2, { "SwitchCase": 1 }],
     "linebreak-style": [2, "unix"],
     "quotes": [2, "single"],
     "semi": [2, "never"]

@@ -23,6 +23,7 @@ use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Entity\SessionEvent;
 use Claroline\CursusBundle\Entity\SessionEventComment;
+use Claroline\CursusBundle\Entity\SessionEventUser;
 use Claroline\CursusBundle\Form\CoursesWidgetConfigurationType;
 use Claroline\CursusBundle\Form\CourseType;
 use Claroline\CursusBundle\Form\CursusType;
@@ -916,8 +917,15 @@ class CursusController extends Controller
     {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $defaultMode = $config->getDefaultMode();
+        $disableSessionEventRegistration = $this->platformConfigHandler->hasParameter('cursus_disable_session_event_registration') ?
+            $this->platformConfigHandler->getParameter('cursus_disable_session_event_registration') :
+            true;
 
-        return ['widgetInstance' => $widgetInstance, 'mode' => $defaultMode];
+        return [
+            'widgetInstance' => $widgetInstance,
+            'mode' => $defaultMode,
+            'disableSessionEventRegistration' => $disableSessionEventRegistration,
+        ];
     }
 
     /**
@@ -986,6 +994,7 @@ class CursusController extends Controller
         }
         $registeredSessions = [];
         $pendingSessions = [];
+        $sessionEventUsersStatus = [];
         $userSessions = $this->cursusManager->getSessionUsersBySessionsAndUsers($courseSessions, [$authenticatedUser], 0);
         $pendingRegistrations = $this->cursusManager->getSessionQueuesByUser($authenticatedUser);
 
@@ -1002,6 +1011,17 @@ class CursusController extends Controller
         foreach ($courseQueueRequests as $courseQueueRequest) {
             $courseQueues[$courseQueueRequest->getCourse()->getId()] = true;
         }
+        $disableSessionEventRegistration = $this->platformConfigHandler->hasParameter('cursus_disable_session_event_registration') ?
+            $this->platformConfigHandler->getParameter('cursus_disable_session_event_registration') :
+            true;
+        $sessionEventUsers = $this->cursusManager->getSessionEventUsersByUser($authenticatedUser);
+
+        foreach ($sessionEventUsers as $seu) {
+            $sessionEvent = $seu->getSessionEvent();
+            $seId = $sessionEvent->getId();
+            $status = $seu->getRegistrationStatus();
+            $sessionEventUsersStatus[$seId] = $status;
+        }
 
         return [
             'widgetInstance' => $widgetInstance,
@@ -1017,6 +1037,8 @@ class CursusController extends Controller
             'courseQueues' => $courseQueues,
             'collapseCourses' => $collapseCourses,
             'collapseSessions' => $collapseSessions,
+            'disableSessionEventRegistration' => $disableSessionEventRegistration,
+            'sessionEventUsersStatus' => $sessionEventUsersStatus,
         ];
     }
 
@@ -1061,6 +1083,7 @@ class CursusController extends Controller
         );
         $registeredSessions = [];
         $pendingSessions = [];
+        $sessionEventUsersStatus = [];
         $userSessions = $this->cursusManager->getSessionUsersBySessionsAndUsers($courseSessions, [$authenticatedUser], 0);
         $pendingRegistrations = $this->cursusManager->getSessionQueuesByUser($authenticatedUser);
 
@@ -1072,6 +1095,17 @@ class CursusController extends Controller
             $sessionId = $pendingRegistration->getSession()->getId();
             $pendingSessions[$sessionId] = $sessionId;
         }
+        $disableSessionEventRegistration = $this->platformConfigHandler->hasParameter('cursus_disable_session_event_registration') ?
+            $this->platformConfigHandler->getParameter('cursus_disable_session_event_registration') :
+            true;
+        $sessionEventUsers = $this->cursusManager->getSessionEventUsersByUser($authenticatedUser);
+
+        foreach ($sessionEventUsers as $seu) {
+            $sessionEvent = $seu->getSessionEvent();
+            $seId = $sessionEvent->getId();
+            $status = $seu->getRegistrationStatus();
+            $sessionEventUsersStatus[$seId] = $status;
+        }
 
         return [
             'widgetInstance' => $widgetInstance,
@@ -1079,6 +1113,8 @@ class CursusController extends Controller
             'registeredSessions' => $registeredSessions,
             'pendingSessions' => $pendingSessions,
             'courseSessions' => $serializedCourseSessions,
+            'disableSessionEventRegistration' => $disableSessionEventRegistration,
+            'sessionEventUsersStatus' => $sessionEventUsersStatus,
         ];
     }
 
@@ -1089,7 +1125,6 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Widget:coursesListForRegistrationWidget.html.twig")
      */
     public function courseSessionSelfRegisterAction(CourseSession $session, User $authenticatedUser)
     {
@@ -1101,6 +1136,28 @@ class CursusController extends Controller
             } else {
                 $results = $this->cursusManager->registerUsersToSession($session, [$authenticatedUser], 0);
             }
+        }
+
+        return new JsonResponse($results, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/session/event/{sessionEvent}/self/register",
+     *     name="claro_cursus_session_event_self_register",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     */
+    public function sessionEventSelfRegisterAction(User $user, SessionEvent $sessionEvent)
+    {
+        $results = null;
+        $disableRegistration = $this->platformConfigHandler->hasParameter('cursus_disable_session_event_registration') ?
+            $this->platformConfigHandler->getParameter('cursus_disable_session_event_registration') :
+            true;
+
+        if (!$disableRegistration && ($sessionEvent->getRegistrationType() === CourseSession::REGISTRATION_PUBLIC)) {
+            $results = $this->cursusManager->selfRegisterUserToSessionEvent($sessionEvent, $user);
         }
 
         return new JsonResponse($results, 200);
@@ -1372,6 +1429,7 @@ class CursusController extends Controller
         $workspacesList = [];
         $sessions = [];
         $editableSessions = [];
+        $sessionEventUsersStatus = [];
 
         foreach ($sessionUsers as $sessionUser) {
             $session = $sessionUser->getSession();
@@ -1395,6 +1453,14 @@ class CursusController extends Controller
             'json',
             SerializationContext::create()->setGroups(['api_user_min'])
         );
+        $sessionEventUsers = $this->cursusManager->getSessionEventUsersByUser($authenticatedUser);
+
+        foreach ($sessionEventUsers as $seu) {
+            $sessionEvent = $seu->getSessionEvent();
+            $seId = $sessionEvent->getId();
+            $status = $seu->getRegistrationStatus();
+            $sessionEventUsersStatus[$seId] = $status;
+        }
 
         return [
             'widgetInstance' => $widgetInstance,
@@ -1402,6 +1468,7 @@ class CursusController extends Controller
             'search' => $search,
             'workspacesList' => $workspacesList,
             'editableSessions' => $editableSessions,
+            'sessionEventUsersStatus' => $sessionEventUsersStatus,
         ];
     }
 
@@ -1420,6 +1487,7 @@ class CursusController extends Controller
         $openSessions = [];
         $closedSessions = [];
         $unstartedSessions = [];
+        $sessionEventUsersStatus = [];
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $configCursus = $config->getCursus();
         $extra = $config->getExtra();
@@ -1459,6 +1527,14 @@ class CursusController extends Controller
         foreach ($unstartedSessionUsers as $sessionUser) {
             $unstartedSessions[] = $sessionUser->getSession();
         }
+        $sessionEventUsers = $this->cursusManager->getSessionEventUsersByUser($user);
+
+        foreach ($sessionEventUsers as $seu) {
+            $sessionEvent = $seu->getSessionEvent();
+            $seId = $sessionEvent->getId();
+            $status = $seu->getRegistrationStatus();
+            $sessionEventUsersStatus[$seId] = $status;
+        }
 
         return [
             'widgetInstance' => $widgetInstance,
@@ -1473,6 +1549,7 @@ class CursusController extends Controller
             'displayUnstartedSessions' => $displayUnstartedSessions,
             'disableClosedSessionsWs' => $disableClosedSessionsWs,
             'disableUnstartedSessionsWs' => $disableUnstartedSessionsWs,
+            'sessionEventUsersStatus' => $sessionEventUsersStatus,
         ];
     }
 
@@ -1486,8 +1563,13 @@ class CursusController extends Controller
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:sessionInformationsModal.html.twig")
      */
-    public function coursesWidgetSessionInformationsAction(WidgetInstance $widgetInstance, CourseSession $session, $withWorkspace = 1, $withMail = 1)
-    {
+    public function coursesWidgetSessionInformationsAction(
+        User $user,
+        WidgetInstance $widgetInstance,
+        CourseSession $session,
+        $withWorkspace = 1,
+        $withMail = 1
+    ) {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $extra = $config->getExtra();
         $disableWs = intval($withWorkspace) === 0;
@@ -1502,6 +1584,15 @@ class CursusController extends Controller
         }
         $sessionEvents = $this->cursusManager->getEventsBySession($session);
         $tutors = $this->cursusManager->getUsersBySessionAndType($session, CourseSessionUser::TEACHER);
+        $sessionEventUsersStatus = [];
+        $sessionEventUsers = $this->cursusManager->getSessionEventUsersByUserAndSessionAndStatus($user, $session, SessionEventUser::REGISTERED);
+
+        foreach ($sessionEventUsers as $seu) {
+            $sessionEvent = $seu->getSessionEvent();
+            $seId = $sessionEvent->getId();
+            $status = $seu->getRegistrationStatus();
+            $sessionEventUsersStatus[$seId] = $status;
+        }
 
         return [
             'session' => $session,
@@ -1511,6 +1602,7 @@ class CursusController extends Controller
             'workspace' => $session->getWorkspace(),
             'disableWs' => $disableWs,
             'withMail' => intval($withMail) === 1,
+            'sessionEventUsersStatus' => $sessionEventUsersStatus,
         ];
     }
 

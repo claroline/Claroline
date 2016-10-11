@@ -12,7 +12,7 @@
 
 {% block claroline_danger %}
     {# same as leftbar #}
-    {% if is_date_access_valid(workspace) == false %}
+    {% if workspace is defined and is_date_access_valid(workspace) == false %}
         <h4 class="label label-danger">
             {{ 'workspace_access_date_invalid'|trans({}, 'platform') }}
         </h4>
@@ -120,7 +120,7 @@
 
             setInterval(function() {
                 var newHeight = getIframeWindowHeight();
-    
+
                 if (newHeight !== null && newHeight !== oldHeight) {
                     postHeight(newHeight);
                     oldHeight = newHeight;

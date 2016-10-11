@@ -45,7 +45,7 @@ class UserManager
 {
     use LoggableTrait;
 
-    const MAX_USER_BATCH_SIZE = 20;
+    const MAX_USER_BATCH_SIZE = 100;
     const MAX_EDIT_BATCH_SIZE = 100;
 
     private $container;
@@ -146,7 +146,9 @@ class UserManager
         $rolesToAdd = [],
         $model = null,
         $publicUrl = null,
-        $organizations = []
+        $organizations = [],
+        $forcePersonalWorkspace = null,
+        $forceRoleValidation = true
     ) {
         $additionnalRoles = [];
 
@@ -163,13 +165,11 @@ class UserManager
         $user->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $user->setEmailValidationHash($this->container->get('claroline.utilities.misc')->generateGuid());
         $user->setOrganizations($organizations);
-        $this->objectManager->persist($user);
         $publicUrl ? $user->setPublicUrl($publicUrl) : $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);
-        $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
-        $this->objectManager->persist($user);
-        $this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', [$user]);
+        $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
+        $user->addRole($roleUser);
         $this->roleManager->createUserRole($user);
 
         foreach ($additionnalRoles as $role) {
@@ -185,8 +185,6 @@ class UserManager
                 $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
                 $user->setResetPasswordHash($password);
                 $user->setIsEnabled(false);
-                $this->objectManager->persist($user);
-                $this->objectManager->flush();
                 $this->mailManager->sendEnableAccountMessage($user);
             } elseif ($mailValidation === PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL) {
                 //don't change anything
@@ -194,12 +192,19 @@ class UserManager
             }
         }
 
-        $this->strictEventDispatcher->dispatch('user_created_event', 'UserCreated', ['user' => $user]);
-
-        if ($this->personalWorkspaceAllowed($additionnalRoles)) {
-            $this->setPersonalWorkspace($user, $model);
+        if ($forcePersonalWorkspace !== null) {
+            if ($forcePersonalWorkspace) {
+                $this->setPersonalWorkspace($user, $model);
+            }
+        } else {
+            if ($this->personalWorkspaceAllowed($additionnalRoles)) {
+                $this->setPersonalWorkspace($user, $model);
+            }
         }
 
+        $this->objectManager->persist($user);
+        $this->strictEventDispatcher->dispatch('user_created_event', 'UserCreated', ['user' => $user]);
+        $this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', [$user]);
         $this->objectManager->endFlushSuite();
 
         return $user;
@@ -233,8 +238,11 @@ class UserManager
 
         foreach ($usernames as $username) {
             $user = $this->getUserByUsername($username);
-            $this->deleteUser($user);
-            ++$i;
+
+            if ($user) {
+                $this->deleteUser($user);
+                ++$i;
+            }
 
             if ($i % 50 === 0) {
                 $this->objectManager->forceFlush();
@@ -312,7 +320,7 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
-
+        $this->log('Removing '.$user->getUsername().'...');
         /* When the api will identify a user, please uncomment this
         if ($this->container->get('security.token_storage')->getToken()->getUser()->getId() === $user->getId()) {
             throw new \Exception('A user cannot delete himself');
@@ -371,8 +379,19 @@ class UserManager
      *
      * @return array
      */
-    public function importUsers(array $users, $sendMail = true, $logger = null, $additionalRoles = [], $enableEmailNotifaction = false)
-    {
+    public function importUsers(
+        array $users,
+        $sendMail = true,
+        $logger = null,
+        $additionalRoles = [],
+        $enableEmailNotifaction = false,
+        $options = []
+    ) {
+        //build options
+        if (!isset($options['ignore-update'])) {
+            $options['ignore-update'] = false;
+        }
+
         $returnValues = [];
         //keep these roles before the clear() will mess everything up. It's not what we want.
         $tmpRoles = $additionalRoles;
@@ -442,6 +461,10 @@ class UserManager
                 $organizationName = null;
             }
 
+            $hasPersonalWorkspace = isset($user[11]) ? (bool) $user[11] : false;
+            $isMailValidated = isset($user[12]) ? (bool) $user[12] : false;
+            $isMailNotified = isset($user[13]) ? (bool) $user[13] : $enableEmailNotifaction;
+
             if ($modelName) {
                 $model = $this->objectManager
                     ->getRepository('Claroline\CoreBundle\Entity\Model\WorkspaceModel')
@@ -472,6 +495,12 @@ class UserManager
             }
 
             $userEntity = $this->getUserByUsernameOrMail($username, $email);
+
+            if ($userEntity && $options['ignore-update']) {
+                $logger(" Skipping  {$userEntity->getUsername()}...");
+                continue;
+            }
+
             $isNew = false;
 
             if (!$userEntity) {
@@ -488,7 +517,8 @@ class UserManager
             $userEntity->setPhone($phone);
             $userEntity->setLocale($lg);
             $userEntity->setAuthentication($authentication);
-            $userEntity->setIsMailNotified($enableEmailNotifaction);
+            $userEntity->setIsMailNotified($isMailNotified);
+            $userEntity->setIsMailValidated($isMailValidated);
 
             if (!$isNew && $logger) {
                 $logger(" User $j ($username) being updated...");
@@ -499,7 +529,17 @@ class UserManager
                 if ($logger) {
                     $logger(" User $j ($username) being created...");
                 }
-                $this->createUser($userEntity, $sendMail, $additionalRoles, $model, $username.uniqid(), $organizations);
+
+                $this->createUser(
+                    $userEntity,
+                    $sendMail,
+                    $additionalRoles,
+                    $model,
+                    $username.uniqid(),
+                    $organizations,
+                    $hasPersonalWorkspace,
+                    false
+                );
             }
 
             $this->objectManager->persist($userEntity);
@@ -917,6 +957,19 @@ class UserManager
         return $this->pagerFactory->createPagerFromArray($users, $page, $max);
     }
 
+    /*
+     * I don't want to break the old pager wich is oddly written
+     */
+    public function getUsersByRolesWithGroups(array $roles)
+    {
+        return $this->userRepo->findUsersByRolesIncludingGroups($roles, true);
+    }
+
+    public function getUsersExcudingRoles(array $roles, $offet = null, $limit = null)
+    {
+        return $this->userRepo->findUsersExcludingRoles($roles, $offet, $limit);
+    }
+
     /**
      * @param Role[] $roles
      * @param string $search
@@ -1082,9 +1135,10 @@ class UserManager
     {
         $accountDuration = $this->platformConfigHandler->getParameter('account_duration');
         $expirationDate = new \DateTime();
+        $expirationYear = (strtotime('2100-01-01')) ? 2100 : 2038;
 
         ($accountDuration === null) ?
-            $expirationDate->setDate(2100, 1, 1) :
+            $expirationDate->setDate($expirationYear, 1, 1) :
             $expirationDate->add(new \DateInterval('P'.$accountDuration.'D'));
 
         $user->setExpirationDate($expirationDate);
@@ -1378,9 +1432,8 @@ class UserManager
     private function generateRoleRestrictions(User $user)
     {
         $restrictions = [];
-        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
 
-        if (is_null($adminRole)) {
+        if (!$user->hasRole('ROLE_ADMIN')) {
             $wsRoles = $this->roleManager->getWorkspaceRolesByUser($user);
 
             foreach ($wsRoles as $wsRole) {
@@ -1411,9 +1464,8 @@ class UserManager
     private function generateGroupRestrictions(User $user)
     {
         $restrictions = [];
-        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
 
-        if (is_null($adminRole)) {
+        if (!$user->hasRole('ROLE_ADMIN')) {
             $restrictions = $user->getGroups()->toArray();
         }
 
@@ -1423,9 +1475,8 @@ class UserManager
     private function generateWorkspaceRestrictions(User $user)
     {
         $restrictions = [];
-        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
 
-        if (is_null($adminRole)) {
+        if (!$user->hasRole('ROLE_ADMIN')) {
             $restrictions = $this->workspaceManager->getWorkspacesByUser($user);
         }
 

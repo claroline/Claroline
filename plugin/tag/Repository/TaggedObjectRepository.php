@@ -329,4 +329,28 @@ class TaggedObjectRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findTaggedResourceNodesByTagName($tagName)
+    {
+        $dql = "
+            SELECT DISTINCT r
+            FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
+            JOIN r.resourceType rt
+            WHERE rt.name != :directoryType
+            AND r.id IN (
+                SELECT to.objectId
+                FROM Claroline\TagBundle\Entity\TaggedObject to
+                JOIN to.tag t
+                WHERE to.objectClass = :resourceClass
+                AND t.name = :tagName
+            )
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('directoryType', 'directory');
+        $query->setParameter('resourceClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $query->setParameter('tagName', $tagName);
+
+        return $query->getResult();
+    }
 }

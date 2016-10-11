@@ -40,7 +40,7 @@ class Workspace
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_workspace", "api_workspace_min", "api_user_min"})
+     * @Groups({"api_workspace", "api_workspace_min", "api_user_min", "api_user"})
      * @SerializedName("id")
      */
     protected $id;
@@ -227,6 +227,15 @@ class Workspace
      * )
      */
     protected $events;
+
+    /**
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     mappedBy="personalWorkspace",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $personalUser;
 
     public function __construct()
     {
@@ -534,5 +543,10 @@ class Workspace
         }
 
         return;
+    }
+
+    public function getPersonalUser()
+    {
+        return $this->personalUser;
     }
 }

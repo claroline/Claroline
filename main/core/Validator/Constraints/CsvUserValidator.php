@@ -105,7 +105,7 @@ class CsvUserValidator extends ConstraintValidator
                 $lastName = $user[1];
                 $username = $user[2];
                 $pwd = $user[3];
-                $email = $user[4];
+                $email = trim($user[4]);
 
                 if (isset($user[5])) {
                     $code = trim($user[5]) === '' ? null : $user[5];

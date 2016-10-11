@@ -37,7 +37,9 @@
             'get-workspace-list': 'getWorkspaces',
             'get-tab-list': 'getVisibleTabsForWorkspace',
             'get-widget-list': 'getVisibleWidgetsForTabAndWorkspace',
-            'export': 'export'
+            'export': 'export',
+            'publish': 'publish',
+            'unpublish': 'unpublish'
         };
         _.each(this.outerEvents, function (method, event) {
             this.dispatcher.on(event, this[method], this);
@@ -287,5 +289,37 @@
         var route = Routing.generate('claro_resource_export', {});
         var ids = event.ids || [event.nodeId];
         window.location = route + '?' + $.param({ ids: ids });
+    };
+
+    server.prototype.publish = function (event) {
+        $.ajax({
+            url: Routing.generate('claro_resource_publish', {}),
+            data: {
+                ids: event.ids || [event.nodeId]
+            },
+            success: function () {
+                this.dispatcher.trigger('published-change-nodes-' + event.view, {
+                    ids: event.ids || [event.nodeId],
+                    published: true
+                });
+                this.dispatcher.trigger('close-confirm');
+            }
+        });
+    };
+
+    server.prototype.unpublish = function (event) {
+        $.ajax({
+            url: Routing.generate('claro_resource_unpublish', {}),
+            data: {
+                ids: event.ids || [event.nodeId]
+            },
+            success: function () {
+                this.dispatcher.trigger('published-change-nodes-' + event.view, {
+                    ids: event.ids || [event.nodeId],
+                    published: false
+                });
+                this.dispatcher.trigger('close-confirm');
+            }
+        });
     };
 })();

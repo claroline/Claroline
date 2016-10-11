@@ -75,7 +75,7 @@ angular
     PaperListCtrl
   ])
   .controller('PaperShowCtrl', [
-    'paperPromise',
+    'attempt',
     'PaperService',
     'UserPaperService',
     PaperShowCtrl

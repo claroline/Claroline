@@ -34,6 +34,10 @@ function MatchQuestionDirective(FeedbackService, $timeout, $window, MatchQuestio
               return controller.handleBeforeDrop(info)
             })
 
+            jsPlumb.bind('beforeStartDetach', function(){
+              return false
+            })
+
             // remove one connection
             jsPlumb.bind('click', function (connection) {
               controller.removeConnection(connection)
@@ -63,8 +67,10 @@ function MatchQuestionDirective(FeedbackService, $timeout, $window, MatchQuestio
 
         // On directive destroy, remove events
         scope.$on('$destroy', function handleDestroyEvent() {
-          jsPlumb.detachEveryConnection(element)
-          jsPlumb.deleteEveryEndpoint(element)
+          controller.reset()
+          jsPlumb.detachEveryConnection()
+          // use reset instead of deleteEveryEndpoint because reset also remove event listeners
+          jsPlumb.reset()
         })
       }
     }

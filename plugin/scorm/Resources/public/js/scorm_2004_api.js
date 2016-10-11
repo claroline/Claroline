@@ -802,6 +802,13 @@ function SetValue(argName, argValue)
             if (splitted[0] === 'cmi' && splitted[2].trim()) {
                 var cmiIndex = 'cmi.' + splitted[1];
                 var nIndex = splitted[2];
+
+                if (!scoData[cmiIndex]) {
+                    scoData[cmiIndex] = {};
+                }
+                if (!scoData[cmiIndex][nIndex]) {
+                    scoData[cmiIndex][nIndex] = {};
+                }
                 
                 switch (splitted[1]) {
                     case 'comments_from_learner' :
@@ -1303,6 +1310,8 @@ function Commit(arg)
     }
     apiLastError = '0';
     commitResult('persist');
+
+    return 'true';
 }
 function APIClass()
 {

@@ -1,25 +1,26 @@
 <?php
 
-/**
- * Description of O365ResponseUser.
- *
- * @author nbr
- */
-
 namespace FormaLibre\OfficeConnectBundle\Library;
 
 class O365ResponseUser
 {
     private $responseObj;
+    private $username;
+    private $nickname;
+    private $realname;
 
     public function __construct($jsonUser)
     {
         $this->responseObj = $jsonUser;
+        $this->username = $this->responseObj->{'userPrincipalName'};
+        $this->email = $this->responseObj->{'mail'};
+        $this->nickname = $this->responseObj->{'givenName'};
+        $this->realname = $this->responseObj->{'surname'};
     }
 
     public function getUsername()
     {
-        return $this->responseObj->{'userPrincipalName'};
+        return $this->username;
     }
 
     public function getResponse()
@@ -29,16 +30,39 @@ class O365ResponseUser
 
     public function getEmail()
     {
-        return $this->responseObj->{'mail'};
+        return $this->email;
     }
 
     public function getNickname()
     {
-        return $this->responseObj->{'givenName'};
+        return $this->nickname;
     }
 
     public function getRealName()
     {
-        return $this->responseObj->{'surname'};
+        return $this->realname;
+    }
+
+    public function validate()
+    {
+        $missingProperties = [];
+
+        if ($this->username === null) {
+            $missingProperties[] = $this->username;
+        }
+
+        if ($this->email === null) {
+            $missingProperties[] = $this->email;
+        }
+
+        if ($this->nickname === null) {
+            $missingProperties[] = $this->nickname;
+        }
+
+        if ($this->realname === null) {
+            $missingProperties[] = $this->realname;
+        }
+
+        return $missingProperties;
     }
 }

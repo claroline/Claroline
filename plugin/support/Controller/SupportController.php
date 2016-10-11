@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -34,6 +35,7 @@ class SupportController extends Controller
     private $router;
     private $supportManager;
     private $toolManager;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -43,7 +45,8 @@ class SupportController extends Controller
      *     "requestStack"    = @DI\Inject("request_stack"),
      *     "router"          = @DI\Inject("router"),
      *     "supportManager"  = @DI\Inject("formalibre.manager.support_manager"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager")
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
+     *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -53,7 +56,8 @@ class SupportController extends Controller
         RequestStack $requestStack,
         RouterInterface $router,
         SupportManager $supportManager,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        TranslatorInterface $translator
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
@@ -62,6 +66,7 @@ class SupportController extends Controller
         $this->router = $router;
         $this->supportManager = $supportManager;
         $this->toolManager = $toolManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -103,7 +108,7 @@ class SupportController extends Controller
             $nbCredits = 666;
         }
 
-        return array(
+        return [
             'tickets' => $tickets,
             'search' => $search,
             'page' => $page,
@@ -112,7 +117,7 @@ class SupportController extends Controller
             'order' => $order,
             'withCredits' => $withCredits,
             'nbCredits' => $nbCredits,
-        );
+        ];
     }
 
     /**
@@ -134,9 +139,9 @@ class SupportController extends Controller
         if (!is_null($phone)) {
             $ticket->setContactPhone($phone);
         }
-        $form = $this->formFactory->create(new TicketType(), $ticket);
+        $form = $this->formFactory->create(new TicketType($this->translator), $ticket);
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -152,7 +157,7 @@ class SupportController extends Controller
     {
         $ticket = new Ticket();
         $ticket->setUser($authenticatedUser);
-        $form = $this->formFactory->create(new TicketType(), $ticket);
+        $form = $this->formFactory->create(new TicketType($this->translator), $ticket);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -167,7 +172,7 @@ class SupportController extends Controller
                 $this->router->generate('formalibre_support_index')
             );
         } else {
-            return array('form' => $form->createView());
+            return ['form' => $form->createView()];
         }
     }
 
@@ -183,12 +188,12 @@ class SupportController extends Controller
     public function ticketEditFormAction(User $authenticatedUser, Ticket $ticket)
     {
         $this->checkTicketEditionAccess($authenticatedUser, $ticket);
-        $form = $this->formFactory->create(new TicketType(), $ticket);
+        $form = $this->formFactory->create(new TicketType($this->translator), $ticket);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'ticket' => $ticket,
-        );
+        ];
     }
 
     /**
@@ -203,7 +208,7 @@ class SupportController extends Controller
     public function ticketEditAction(User $authenticatedUser, Ticket $ticket)
     {
         $this->checkTicketEditionAccess($authenticatedUser, $ticket);
-        $form = $this->formFactory->create(new TicketType(), $ticket);
+        $form = $this->formFactory->create(new TicketType($this->translator), $ticket);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -214,10 +219,10 @@ class SupportController extends Controller
                 $this->router->generate('formalibre_support_index')
             );
         } else {
-            return array(
+            return [
                 'form' => $form->createView(),
                 'ticket' => $ticket,
-            );
+            ];
         }
     }
 
@@ -233,12 +238,12 @@ class SupportController extends Controller
     public function ticketEditModalFormAction(User $authenticatedUser, Ticket $ticket)
     {
         $this->checkTicketEditionAccess($authenticatedUser, $ticket);
-        $form = $this->formFactory->create(new TicketType(), $ticket);
+        $form = $this->formFactory->create(new TicketType($this->translator), $ticket);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'ticket' => $ticket,
-        );
+        ];
     }
 
     /**
@@ -253,7 +258,7 @@ class SupportController extends Controller
     public function ticketEditModalAction(User $authenticatedUser, Ticket $ticket)
     {
         $this->checkTicketEditionAccess($authenticatedUser, $ticket);
-        $form = $this->formFactory->create(new TicketType(), $ticket);
+        $form = $this->formFactory->create(new TicketType($this->translator), $ticket);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -262,10 +267,10 @@ class SupportController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-            return array(
+            return [
                 'form' => $form->createView(),
                 'ticket' => $ticket,
-            );
+            ];
         }
     }
 
@@ -311,11 +316,11 @@ class SupportController extends Controller
             }
         }
 
-        return array(
+        return [
             'ticket' => $ticket,
             'currentUser' => $authenticatedUser,
             'currentStatus' => $currentStatus,
-        );
+        ];
     }
 
     /**
@@ -332,7 +337,7 @@ class SupportController extends Controller
         $this->checkTicketAccess($authenticatedUser, $ticket);
         $form = $this->formFactory->create(new CommentType(), new Comment());
 
-        return array('form' => $form->createView(), 'ticket' => $ticket);
+        return ['form' => $form->createView(), 'ticket' => $ticket];
     }
 
     /**
@@ -366,7 +371,7 @@ class SupportController extends Controller
 
             return new JsonResponse('success', 201);
         } else {
-            return array('form' => $form->createView(), 'ticket' => $ticket);
+            return ['form' => $form->createView(), 'ticket' => $ticket];
         }
     }
 
@@ -383,7 +388,7 @@ class SupportController extends Controller
     {
         $this->checkTicketAccess($authenticatedUser, $ticket);
 
-        return array('ticket' => $ticket);
+        return ['ticket' => $ticket];
     }
 
     /**
@@ -417,9 +422,9 @@ class SupportController extends Controller
             $ticket->setContactPhone($phone);
         }
         $ticket->setTitle($message);
-        $form = $this->formFactory->create(new TicketType(1), $ticket);
+        $form = $this->formFactory->create(new TicketType($this->translator, 1), $ticket);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'user' => $user,
             'exceptionClass' => $exceptionClass,
@@ -428,7 +433,7 @@ class SupportController extends Controller
             'line' => $line,
             'url' => $url,
             'referer' => $referer,
-        );
+        ];
     }
 
     /**
@@ -454,7 +459,7 @@ class SupportController extends Controller
         $this->checkUser($authenticatedUser, $user);
         $ticket = new Ticket();
         $ticket->setUser($user);
-        $form = $this->formFactory->create(new TicketType(1), $ticket);
+        $form = $this->formFactory->create(new TicketType($this->translator, 1), $ticket);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -488,7 +493,7 @@ class SupportController extends Controller
 
             return new JsonResponse('success', 200);
         } else {
-            return array(
+            return [
                 'form' => $form->createView(),
                 'user' => $user,
                 'exceptionClass' => $exceptionClass,
@@ -497,7 +502,7 @@ class SupportController extends Controller
                 'line' => $line,
                 'url' => $url,
                 'referer' => $referer,
-            );
+            ];
         }
     }
 

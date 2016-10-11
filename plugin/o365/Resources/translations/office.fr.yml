@@ -2,3 +2,5 @@ office_client_id: Client id
 password: Mot de passe
 app_tenant_domain_name: Domain
 active: Actif
+user_creation_impossible: Création de l'utilisateur impossible
+missing_property: La propriété %property% n'existe pas

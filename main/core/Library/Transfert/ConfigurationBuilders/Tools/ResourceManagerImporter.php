@@ -762,6 +762,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 foreach ($this->getListImporters() as $importer) {
                     if ($importer->getName() === $item['item']['type']) {
                         $resourceImporter = $importer;
+                        $resourceImporter->setWorkspace($this->getWorkspace());
                     }
                 }
 

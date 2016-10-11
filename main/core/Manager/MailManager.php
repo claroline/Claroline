@@ -171,10 +171,11 @@ class MailManager
      * @param User   $from
      * @param array  $extra
      * @param bool   $force
+     * @param string $replyToMail
      *
      * @return bool
      */
-    public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false)
+    public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false, $replyToMail = null)
     {
         if (count($users) === 0) {
             //obviously, if we're not going to send anything to anyone, it's better to stop
@@ -225,6 +226,7 @@ class MailManager
             $message = \Swift_Message::newInstance()
                 ->setSubject($subject)
                 ->setFrom($fromEmail)
+                ->setReplyTo($replyToMail)
                 ->setBody($body, 'text/html');
 
             if ($from !== null && filter_var($from->getMail(), FILTER_VALIDATE_EMAIL)) {

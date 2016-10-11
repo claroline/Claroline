@@ -64,7 +64,9 @@
                 onPostRender: function () {
                     var _this = this;   // reference to the button itself
                     editor.on('NodeChange', function (e) {
-                        _this.active(e.element.className.indexOf('fm-editor-equation') > -1 && e.element.nodeName.toLowerCase() == "img");
+                        if (e.element.nodeType === Node.ELEMENT_NODE) {
+                            _this.active(e.element.className.indexOf('fm-editor-equation') > -1 && e.element.nodeName.toLowerCase() == "img");
+                        }
                     })
                 }
             });

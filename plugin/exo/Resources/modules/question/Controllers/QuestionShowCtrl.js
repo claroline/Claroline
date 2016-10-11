@@ -66,13 +66,7 @@ export default class QuestionShowCtrl {
    * @return {String}
    */
   getScore() {
-    let score = 0
-    if (this.questionPaper.score || 0 === this.questionPaper.score) {
-      score = this.questionPaper.score
-    } else {
-      score = this.QuestionService.calculateScore(this.question, this.questionPaper)
-    }
-
+    let score = this.QuestionService.calculateScore(this.question, this.questionPaper)
     return score + ''
   }
 

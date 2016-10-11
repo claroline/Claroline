@@ -41,6 +41,7 @@
 
     <div id="homeAsset" class="hide">{{ homeAsset }}</div>
     <div id="baseAsset" class="hide">{{ asset('') }}</div>
+    <div id="homeTheme" class="hide">{{ macros.getTheme(config)|trim }}</div>
     <div id="homeLocale" class="hide">{% spaceless %}
             {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
                 {{ app.request.locale }}

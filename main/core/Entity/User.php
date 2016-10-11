@@ -188,9 +188,12 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var Workspace\Workspace
      *
      * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
+     *     inversedBy="personalUser",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
+     * @Groups({"api_user"})
      */
     protected $personalWorkspace;
 
@@ -1040,7 +1043,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function getExpirationDate()
     {
-        return $this->expirationDate !== null ? $this->expirationDate : new \DateTime('2100-01-01');
+        $defaultExpirationDate = (strtotime('2100-01-01')) ? '2100-01-01' : '2038-01-01';
+
+        return ($this->expirationDate !== null && $this->expirationDate->getTimestamp()) ?
+            $this->expirationDate :
+            new \DateTime($defaultExpirationDate);
     }
 
     public function getFieldsFacetValue()

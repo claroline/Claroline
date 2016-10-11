@@ -105,7 +105,7 @@ angular
             controller: 'PaperShowCtrl',
             controllerAs: 'paperShowCtrl',
             resolve: {
-              paperPromise: [
+              attempt: [
                 '$route',
                 'PaperService',
                 function paperResolve($route, PaperService) {
@@ -129,7 +129,7 @@ angular
             controller  : 'ExercisePlayerCtrl',
             controllerAs: 'exercisePlayerCtrl',
             resolve: {
-              paper: [
+              attempt: [
                 'ExerciseService',
                 'UserPaperService',
                 function paperResolve(ExerciseService, UserPaperService) {
@@ -163,3 +163,9 @@ angular
           })
       }
     ])
+    .run(function($rootScope, $location, $anchorScroll) {
+      // Automatically scroll to the Step content
+      $rootScope.$on('$routeChangeSuccess', () => {
+        $anchorScroll('claroline-base-layout-body')
+      })
+    })

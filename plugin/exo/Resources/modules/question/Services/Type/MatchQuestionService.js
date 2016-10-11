@@ -139,8 +139,10 @@ MatchQuestionService.prototype.initDragMatchQuestion = function initDragMatchQue
 MatchQuestionService.prototype.getTotalScore = function (question) {
   let total = 0
 
-  for (let i = 0; i < question.solutions.length; i++) {
-    total += question.solutions[i].score
+  if (question.solutions) {
+    for (let i = 0; i < question.solutions.length; i++) {
+      total += question.solutions[i].score
+    }
   }
 
   return total
@@ -163,7 +165,7 @@ MatchQuestionService.prototype.getAnswerScore = function (question, answer) {
 
 MatchQuestionService.prototype.getFoundSolutions = function (question, answer) {
   const found = []
-  if (answer) {
+  if (answer && question.solutions) {
     for (var j = 0; j < question.solutions.length; j++) {
       for (var i = 0; i < answer.length; i++) {
         let parts = answer[i].split(',')

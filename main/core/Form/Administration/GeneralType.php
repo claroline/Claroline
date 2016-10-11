@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Form\Administration;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
+use Claroline\CoreBundle\Validator\Constraints\DomainName;
 use Claroline\CoreBundle\Validator\Constraints\FileSize;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
@@ -89,6 +90,8 @@ class GeneralType extends AbstractType
                 [
                     'label' => 'domain_name',
                     'disabled' => isset($this->lockedParams['domain_name']),
+                    'constraints' => new DomainName(),
+                    'required' => false,
                 ]
             )
             ->add(

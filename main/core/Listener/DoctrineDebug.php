@@ -2,12 +2,12 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
  * @DI\Service("claroline.doctrine.debug")

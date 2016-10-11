@@ -43,9 +43,14 @@ class ToolRightsManager
         $this->toolRightsRepo = $om->getRepository('ClarolineCoreBundle:Tool\ToolRights');
     }
 
-    public function createToolRights(OrderedTool $orderedTool, Role $role, $mask)
+    public function setToolRights(OrderedTool $orderedTool, Role $role, $mask)
     {
-        $toolRights = new ToolRights();
+        $toolRights = $this->toolRightsRepo->findOneBy(['role' => $role, 'orderedTool' => $orderedTool]);
+
+        if (!$toolRights) {
+            $toolRights = new ToolRights();
+        }
+
         $toolRights->setOrderedTool($orderedTool);
         $toolRights->setRole($role);
         $toolRights->setMask($mask);
@@ -68,7 +73,7 @@ class ToolRightsManager
                 ->findRightsByRoleAndOrderedTool($role, $orderedTool);
 
             if (is_null($rights)) {
-                $this->createToolRights($orderedTool, $role, $maskValue);
+                $this->setToolRights($orderedTool, $role, $maskValue);
             } else {
                 $rightsMask = $rights->getMask() ^ $maskValue;
                 $rights->setMask($rightsMask);
@@ -115,7 +120,7 @@ class ToolRightsManager
     public function getRightsByRoleIdAndOrderedToolId($roleId, $orderedToolId)
     {
         return $this->toolRightsRepo->findOneBy(
-            array('role' => $roleId, 'orderedTool' => $orderedToolId)
+            ['role' => $roleId, 'orderedTool' => $orderedToolId]
         );
     }
 }

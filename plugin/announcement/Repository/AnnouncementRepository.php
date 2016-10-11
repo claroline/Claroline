@@ -73,7 +73,8 @@ class AnnouncementRepository extends EntityRepository
                 a AS announcement,
                 w.id AS workspaceId,
                 w.name AS workspaceName,
-                w.code AS workspaceCode
+                w.code AS workspaceCode,
+                n.id AS resourceNodeId
             FROM Claroline\AnnouncementBundle\Entity\Announcement a
             JOIN a.aggregate aa
             JOIN aa.resourceNode n

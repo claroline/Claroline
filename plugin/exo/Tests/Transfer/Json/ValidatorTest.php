@@ -82,7 +82,7 @@ class ValidatorTest extends TransactionalTestCase
 
     public function testValidateExercise()
     {
-        $data = file_get_contents("{$this->formatDir}/quiz/examples/valid/one-question-step.json");
+        $data = file_get_contents("{$this->formatDir}/quiz/examples/valid/content-and-question-steps.json");
         $quiz = json_decode($data);
         $this->assertEquals(0, count($this->validator->validateExercise($quiz)));
 

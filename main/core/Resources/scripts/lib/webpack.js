@@ -14,33 +14,35 @@ const assetsPlugin = require('assets-webpack-plugin')
 function configure(rootDir, packages, isWatchMode) {
   const isProd = !isWatchMode
 
+  // see https://github.com/facebookincubator/create-react-app/blob/master/config/webpack.config.prod.js#L21
+  // (note: the whole config should probably be refactored to match that format)
+  if (isProd && process.env.NODE_ENV !== 'production') {
+    throw new Error('Production builds must have NODE_ENV=production.');
+  }
+
   // first we must parse the webpack configs of each bundle
   // and prefix/normalize them to avoid name collisions
   const webpackPackages = packages.filter(def => def.assets && def.assets.webpack)
   const packageNames = webpackPackages.map(def => def.name)
   const normalizedPackages = normalizeNames(webpackPackages)
   const entries = extractEntries(normalizedPackages)
-  const commons = extractCommons(normalizedPackages)
 
   // all entries are compiled in the web/dist directory
   const output = {
     path: path.resolve(rootDir, 'web/dist'),
     publicPath: 'http://localhost:8080/dist',
-    filename: '[name]-[hash].js'
+    filename: isProd ? '[name]-[hash].js' : '[name].js'
   }
 
   // third-party modules are taken from the web/packages directory,
   // instead of node_modules (which stores only dev dependencies)
   const root = path.resolve(rootDir, 'web', 'packages')
 
-  // in every environment, plugins are needed for things like bower
-  // modules support, bundle resolution, common chunks extraction, etc.
+  // plugins needed in every environment
   const plugins = [
     makeBundleResolverPlugin(rootDir),
     makeBowerPlugin(),
-    makeAssetsPlugin(),
-    makeBaseCommonsPlugin(),
-    ...makeBundleCommonsPlugins(commons)
+    makeAssetsPlugin()
   ]
 
   // prod build has additional constraints
@@ -54,14 +56,17 @@ function configure(rootDir, packages, isWatchMode) {
       makeDedupePlugin(),
       makeDefinePlugin(),
       makeNoErrorsPlugin(),
-      makeFailOnErrorPlugin()
+      makeFailOnErrorPlugin(),
+      makeCommonsPlugin()
     )
   }
 
   const loaders = [
     makeJsLoader(isProd),
     makeRawLoader(),
-    makeJqueryUiLoader()
+    makeJqueryUiLoader(),
+    makeCssLoader(),
+    makeUrlLoader()
   ]
 
   return {
@@ -73,13 +78,13 @@ function configure(rootDir, packages, isWatchMode) {
     },
     plugins: plugins,
     module: { loaders: loaders },
+    devtool: isProd ? false : 'cheap-module-eval-source-map',
     devServer: {
-      headers: { "Access-Control-Allow-Origin": "*" }
+      headers: { 'Access-Control-Allow-Origin': '*' }
     },
     _debug: {
       'Detected webpack configs': packageNames,
-      'Compiled entries': entries,
-      'Compiled common chunks': commons
+      'Compiled entries': entries
     }
   }
 }
@@ -123,16 +128,6 @@ function extractEntries(packages) {
 }
 
 /**
- * TODO: Implement this function
- *
- * Merges the "commons" sections of package configs.
- *
- */
-function extractCommons(packages) {
-  return []
-}
-
-/**
  * This plugin allows webpack to discover entry files of modules
  * stored in the bower web/packages directory by inspecting their
  * bower config (default is to look in package.json).
@@ -172,9 +167,9 @@ function makeBundleResolverPlugin(rootDir) {
 
 /**
  * This plugin builds a common file for the whole platform
- * (might not be necessary or require minChunks adjustments)
+ * (might require minChunks adjustments)
  */
-function makeBaseCommonsPlugin() {
+function makeCommonsPlugin() {
   return new webpack.optimize.CommonsChunkPlugin({
     name: 'commons',
     minChunks: 3
@@ -191,16 +186,6 @@ function makeAssetsPlugin() {
     fullPath: false,
     prettyPrint: true
   });
-}
-
-/**
- * These plugins build common files per bundle according to the
- * settings of webpack.commons coming from assets.json files.
- */
-function makeBundleCommonsPlugins(commons) {
-  return commons.map(config => {
-    return new webpack.optimize.CommonsChunkPlugin(config)
-  })
 }
 
 /**
@@ -248,12 +233,12 @@ function makeFailOnErrorPlugin() {
  */
 function makeJsLoader(isProd) {
   return {
-    test: /\.js$/,
+    test: /\.jsx?$/,
     exclude: /(node_modules|packages)/,
     loader: 'babel',
     query: {
       cacheDirectory: true,
-      presets: ['es2015'],
+      presets: ['es2015', 'react'],
       plugins: ['transform-runtime']
     }
   }
@@ -281,6 +266,23 @@ function makeJqueryUiLoader() {
   return {
     test: /jquery-ui/,
     loader: 'imports?define=>false'
+  }
+}
+
+/**
+ * This loader loads CSS files.
+ */
+function makeCssLoader() {
+  return {
+    test: /\.css$/,
+    loader: 'style!css'
+  }
+}
+
+function makeUrlLoader() {
+  return {
+    test: /\.(jpe?g|png|gif|svg)$/,
+    loader: 'url?limit=25000'
   }
 }
 

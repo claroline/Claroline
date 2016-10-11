@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Event\NotPopulatedEventException;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -386,7 +387,7 @@ class WorkspaceModelManager
         $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
 
         foreach ($orderedTools as $orderedTool) {
-            $workspaceOrderedTool = $this->toolManager->addWorkspaceTool(
+            $workspaceOrderedTool = $this->toolManager->setWorkspaceTool(
                 $orderedTool->getTool(),
                 $orderedTool->getOrder(),
                 $orderedTool->getName(),
@@ -399,7 +400,7 @@ class WorkspaceModelManager
                 $role = $right->getRole();
 
                 if ($role->getType() === 1) {
-                    $this->toolRightsManager->createToolRights(
+                    $this->toolRightsManager->setToolRights(
                         $workspaceOrderedTool,
                         $role,
                         $right->getMask()
@@ -408,7 +409,7 @@ class WorkspaceModelManager
                     $key = $role->getTranslationKey();
 
                     if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
-                        $this->toolRightsManager->createToolRights(
+                        $this->toolRightsManager->setToolRights(
                             $workspaceOrderedTool,
                             $workspaceRoles[$key],
                             $right->getMask()
@@ -526,6 +527,7 @@ class WorkspaceModelManager
             $newHomeTabConfig->setVisible($homeTabConfig->isVisible());
             $newHomeTabConfig->setLocked($homeTabConfig->isLocked());
             $newHomeTabConfig->setTabOrder($order);
+            $newHomeTabConfig->setDetails($homeTabConfig->getDetails());
             $this->om->persist($newHomeTabConfig);
             ++$order;
 
@@ -571,6 +573,9 @@ class WorkspaceModelManager
                     );
                     $newWidgetDisplayConfig->setHeight(
                         $widgetDisplayConfigs[$widgetInstanceId]->getHeight()
+                    );
+                    $newWidgetDisplayConfig->setDetails(
+                        $widgetDisplayConfigs[$widgetInstanceId]->getDetails()
                     );
                 } else {
                     $newWidgetDisplayConfig->setWidth($widget->getDefaultWidth());
@@ -756,12 +761,13 @@ class WorkspaceModelManager
         $this->om->flush();
     }
 
-    public function addDataFromModel(WorkspaceModel $model, Workspace $workspace, User $user, &$errors)
+    public function addDataFromModel(WorkspaceModel $model, Workspace $workspace, User $user, &$errors = [])
     {
         $modelWorkspace = $model->getWorkspace();
         $resourcesModels = $model->getResourcesModel();
         $homeTabs = $model->getHomeTabs();
         $resourcesInfos = ['copies' => []];
+        $this->duplicateWorkspaceOptions($modelWorkspace, $workspace);
         $this->duplicateWorkspaceRoles($modelWorkspace, $workspace, $user);
         $this->duplicateOrderedTools($modelWorkspace, $workspace);
         $rootDirectory = $this->duplicateRootDirectory($modelWorkspace, $workspace, $user);
@@ -775,6 +781,14 @@ class WorkspaceModelManager
         $this->om->forceFlush();
 
         $errors['widgetConfigErrors'] = $this->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray(), $resourcesInfos);
+    }
+
+    /**
+     * Currently only set the tools permissions.
+     */
+    public function updateDataFromModel(WorkspaceModel $model, Workspace $workspace)
+    {
+        $this->duplicateOrderedTools($model->getWorkspace(), $workspace);
     }
 
     public function setLogger(LoggerInterface $logger)
@@ -795,5 +809,26 @@ class WorkspaceModelManager
     public function getModelById($id)
     {
         return $this->modelRepository->findOneById($id);
+    }
+
+    private function duplicateWorkspaceOptions(Workspace $source, Workspace $workspace)
+    {
+        $sourceOptions = $source->getOptions();
+
+        if (!is_null($sourceOptions)) {
+            $options = new WorkspaceOptions();
+            $options->setWorkspace($workspace);
+            $details = $sourceOptions->getDetails();
+
+            if (!is_null($details)) {
+                $details['use_workspace_opening_resource'] = false;
+                $details['workspace_opening_resource'] = null;
+            }
+            $options->setDetails($details);
+            $workspace->setOptions($options);
+            $this->om->persist($options);
+            $this->om->persist($workspace);
+            $this->om->flush();
+        }
     }
 }

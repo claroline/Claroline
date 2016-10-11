@@ -147,38 +147,36 @@ class FileImporter extends Importer implements ConfigurationInterface, RichTextI
      */
     public function format($data)
     {
-        if (!$this->container->get('claroline.config.platform_config_handler')->getParameter('enable_rich_text_file_import')) {
-            return;
-        }
+        if ($this->container->get('claroline.config.platform_config_handler')->getParameter('enable_rich_text_file_import')) {
+            $em = $this->container->get('doctrine.orm.entity_manager');
 
-        $em = $this->container->get('doctrine.orm.entity_manager');
+            if (isset($data[0])) {
+                if (strpos('_'.$data[0]['file']['mime_type'], 'text') > 0) {
+                    $foundEntity = null;
+                    $filePath = null;
+                    $path = $data[0]['file']['path'];
+                    //very dirty check. Waiting uid for a better one.
+                    $content = file_get_contents(realpath($this->getRootPath()).DIRECTORY_SEPARATOR.$path);
+                    $entities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                        ->findByWorkspaceAndMimeType($this->getWorkspace(), 'text');
 
-        if (isset($data[0])) {
-            if (strpos('_'.$data[0]['file']['mime_type'], 'text') > 0) {
-                $foundEntity = null;
-                $filePath = null;
-                $path = $data[0]['file']['path'];
-                //very dirty check. Waiting uid for a better one.
-                $content = file_get_contents(realpath($this->getRootPath()).DIRECTORY_SEPARATOR.$path);
-                $entities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                    ->findByWorkspaceAndMimeType($this->getWorkspace(), 'text');
+                    //search the entity...
+                    foreach ($entities as $entity) {
+                        $hashName = $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($entity)
+                            ->getHashName();
+                        $path = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$hashName;
 
-                //search the entity...
-                foreach ($entities as $entity) {
-                    $hashName = $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($entity)
-                        ->getHashName();
-                    $path = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$hashName;
-
-                    if (file_get_contents($path) === $content) {
-                        $foundEntity = $entity;
-                        $filePath = $path;
+                        if (file_get_contents($path) === $content) {
+                            $foundEntity = $entity;
+                            $filePath = $path;
+                        }
                     }
-                }
 
-                //did we really find something ?
-                if ($foundEntity && $filePath && file_get_contents($filePath)) {
-                    $text = $this->container->get('claroline.importer.rich_text_formatter')->format(file_get_contents($filePath));
-                    file_put_contents($filePath, $text);
+                    //did we really find something ?
+                    if ($foundEntity && $filePath && file_get_contents($filePath)) {
+                        $text = $this->container->get('claroline.importer.rich_text_formatter')->format(file_get_contents($filePath));
+                        file_put_contents($filePath, $text);
+                    }
                 }
             }
         }
