@@ -1,0 +1,94 @@
+icap_website_type_name: Naam
+save_all_options: Alle opties opslaan
+'bg_color': Kleur van de achtergrond
+'bg_content_color': Kleur van de achtergrond van de inhoud
+'site_width': Breedte van de site
+'full_scr': Volledig scherm
+'fix_scr': Vast
+'bg_image': Beeld van de achtergrond
+'upload_image': Uploaden
+'no_image': Geen
+'paste_url': URL
+'apply': Toepassen
+'reset': Resetten
+'bg_repeat': Herhalen
+'bg_position': Plaatsen
+'none': Geen
+'horizontal': Horizontaal
+'vertical': Verticaal
+'width': Breedte
+'height': Hoogte
+'hover_color': Hoverkleur
+'border_color': Randkleur
+'section_color': Kleur van de secties
+'font_color': Kleur van de tekst
+'section_font_color': Kleur van de tekst in de secties
+'font_size': Tekengrootte
+'font_family': Lettertype
+'banner': Banner
+'footer': Voettekst
+'structure': Structuur
+'menu': Menu
+'general': Algemeen
+'default': Standaard
+'enable_copyright': De auteursrechten in de voettekst tonen.
+'enable_analytics': Koppelen met de externe werktuigen voor bezoeken.
+'css_code': CSS-code toepassen op de inhoud van de pagina's van de website.
+'analytics_info': 'Voorbeeld: "UA-XXXXX-Y" voor Google Analytics of "xxxxxxx" voor XiTi. Verklaar "http://mon_instance.univ-lyon1.fr/icap_website/id" als site in Google Analytics.'
+'rich_content': 'Rijke tekst toevoegen :'
+'rich_content_explain': Rijke inhoud toevoegen dankzij de tekstverwerker door die in de voorbeeldweergave te tonen.
+'horizontally': Hor.
+'vertically': Ver.
+'both': Beide
+'activate': Inschakelen
+'disable': Uitschakelen
+'save_options': De opties opslaan
+'editor_enable': De tekstverwerker tonen
+'editor_disable': De tekstverwerker verbergen
+'add_new_page': Een nieuwe pagina maken
+'title': Titel
+'description': Beschrijving
+'visible': Deze pagina zichtbaar maken op de site
+'section': Deze pagina is een sectie
+'section_info': Wordt met een verschillende stijl in het menu weergegeven.
+'type': Type
+'content': Inhoud
+'resource': Leermiddel
+'save': Opslaan
+'save_page': Opslaan om de pagina te maken.
+'save_changes': De wijzigingen opslaan.
+'url': URL
+'blank_page': Pagina met rijke tekst
+'url_page': Link naar externe URL
+'target': De pagina openen in
+'embedded': het lichaam van de site
+'new_window': een nieuw tabblad
+'resource_page': Link naar leermiddel op het plateform
+'confirm': Bevestigen
+'cancel': Annuleren
+'confirm_delete_message': Bent u er zeker van dat u "%title%" en al zijn kinderen wenst te verwijderen ?
+'add_resource': Een leermiddel toevoegen
+'change_resource': De leermiddel bewerken
+'error': Fout
+'error_500': Uw actie is niet uitgevoerd omwille van een interne fout aan de serverzijde. Als de storing voortduurt, gelieve contact op te nemen met de supportploeg of uw systeembeheerder.
+'error_511': Uw actie vereist een authenticatie. Als u eerder ingelogd was, is uw sessie waarschijnlijk verlopen. Gelieve u opnieuw in te loggen en uw actie opnieuw uit te voeren.
+'error_401': U hebt niet de voldoende rechten om deze actie uit te voeren.
+'error_417': Uw actie is niet uitgevoerd omwille van een ongeldige of ontbrekende instelling.
+'success': Succes
+'success_message': Uw actie is uitgevoerd.
+'loading': Even geduld...
+'title_limit_message': Minder dan 70 karakters, d.i. de door Google vastgestelde limiet voor het display van resultaten.
+'description_limit_message': Maximum 160 karakters. De eerste letter van een belangrijk woord of het gehele woord in hoofdletter schrijven.
+'chars': karakters
+'edit_page': De eigenschappen dan de pagina bewerken.
+'create_page': Een nieuwe pagina maken
+'create_sub_page': Een sub-pagina maken
+'page_list': Lijst van uw pagina's
+'empty_site_message': Uw website is leeg. U moet pagina's maken. De eerste gemaakte pagina zal de startpagina van uw site zijn. U mag deze optie op elk moment wijzigen door op de knop "Als startpagina definiëren" te klikken (in het bewerkingspaneel van de geselecteerde pagina).
+'set_as_homepage': Als startpagina definiëren
+'menu_orientation': Het menu tonen
+'display_banner': De banner tonen
+'display_footer': De voettekst tonen
+'change_bg_image_attention_text': Opgelet! Als u deze optie wijzigt, wordt het huidige beeld verwijderd.
+'view_website': Visualiseren
+'no_pages': Geen pagina gemaakt

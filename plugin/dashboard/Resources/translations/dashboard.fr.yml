@@ -30,7 +30,7 @@ share_view: Partager cette vue
 selection: Sélection
 
 # W
-workspace_name: Intitulé du workspace
-workspace_select: Selection des espaces d'activité
-workspaces_filter_attended: Mes espaces d'activité auxquels j'ai souscrit
-workspaces_filter_my: Mes espaces d'activité en tant que créateur
+workspace_name: Intitulé de l'espace d'activités
+workspace_select: Selection des espaces d'activités
+workspaces_filter_attended: Mes espaces d'activités auxquels j'ai souscrit
+workspaces_filter_my: Mes espaces d'activités en tant que créateur

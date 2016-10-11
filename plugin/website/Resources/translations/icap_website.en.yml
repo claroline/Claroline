@@ -34,7 +34,7 @@ default: 'Default'
 enable_copyright: 'Display copyright in footer'
 enable_analytics: 'Activate analytics (using external tools)'
 css_code: 'Apply CSS rules to website content'
-analytics_info: 'Example: "UA-XXXXX-Y" for Google Analytics or "xxxxxxx" for XiTi.'
+analytics_info: 'Example: "UA-XXXXX-Y" for Google Analytics or "xxxxxxx" for XiTi. Declare "http://mon_instance.univ-lyon1.fr/icap_website/id" as a site in Google Analytics.'
 rich_content: 'Add rich content :'
 rich_content_explain: 'Add rich content by showing the editor inside the object.'
 horizontally: 'Hor.'
@@ -69,14 +69,14 @@ cancel: 'Cancel'
 confirm_delete_message: 'Are you sure you want to permanently delete "%title%" and all its children?'
 add_resource: 'Add resource'
 change_resource: 'Change resource'
-error: 'Error'
-error_500: 'Your action has not been processed because of a server''s internal error. If the error persists, please contact our support team.'
-error_511: 'This action needs authentication. If you were authenticated before, your session has timed out. Please log in and try again.'
-error_401: 'You don''t have sufficient permissions to perform this action.'
-error_417: 'The action failed because a required parameter was missing or was invalid.'
-success: 'Success'
-success_message: 'Your request has been processed successfully'
-loading: 'loading...'
+error: Error
+error_500: Your action has not been processed because of a server's internal error. If the error persists, please contact our support team.
+error_511: This action needs authentication. If you were authenticated before, your session has timed out. Please log in and try again.
+error_401: You don't have sufficient permissions to perform this action.
+error_417: The action failed because a required parameter was missing or invalid.
+success: Success
+success_message: Your request has been processed successfully.
+loading: Loading...
 title_limit_message: 'Less than 70 characters, as this is the limit Google displays in search results.'
 description_limit_message: 'Maximum 160 characters. Capitalize the first letter of an important word or even the whole word.'
 chars: 'characters'
