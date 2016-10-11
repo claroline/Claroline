@@ -12,6 +12,9 @@
 %}
 {% endstylesheets %}
 
+{% if config.getParameter('theme_extending_default') %}
+    <link rel="stylesheet" href="{{ macros.getDefaultTheme()|trim }}" media="screen" />
+{% endif %}
 <link rel="stylesheet" href="{{ macros.getTheme(config)|trim }}" media="screen" />
 <link rel='stylesheet' type='text/css' href='{{ asset('packages/font-awesome/css/font-awesome.min.css') }}'/>
 <link rel='stylesheet' type='text/css' href='{{ asset('packages/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css')}}'>
