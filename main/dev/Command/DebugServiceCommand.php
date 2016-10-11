@@ -11,13 +11,13 @@
 
 namespace Claroline\DevBundle\Command;
 
+use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
+use Claroline\CoreBundle\Listener\DoctrineDebug;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
-use Claroline\CoreBundle\Listener\DoctrineDebug;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Debug a manager.
@@ -29,12 +29,12 @@ class DebugServiceCommand extends ContainerAwareCommand
         $this->setName('claroline:debug:service')
             ->setDescription('Get the logs of a service (mainly for debugging doctrine)');
         $this->setDefinition(
-            array(
+            [
                 new InputArgument('owner', InputArgument::REQUIRED, 'The user doing the action'),
                 new InputArgument('service_name', InputArgument::REQUIRED, 'The service name'),
                 new InputArgument('method_name', InputArgument::REQUIRED, 'The method name'),
                 new InputArgument('parameters', InputArgument::IS_ARRAY, 'The method parameters'),
-            )
+            ]
         );
         $this->addOption(
             'debug_doctrine_all',
@@ -46,11 +46,11 @@ class DebugServiceCommand extends ContainerAwareCommand
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $params = array(
+        $params = [
             'owner' => 'The user doing the action: ',
             'service_name' => 'The service name: ',
             'method_name' => 'The method name: ',
-        );
+        ];
 
         foreach ($params as $argument => $argumentName) {
             if (!$input->getArgument($argument)) {
@@ -97,16 +97,16 @@ class DebugServiceCommand extends ContainerAwareCommand
 
         $this->getContainer()->get('claroline.authenticator')->authenticate($input->getArgument('owner'), null, false);
         $variables = $input->getArgument('parameters');
-        $args = array();
+        $args = [];
         $class = get_class($manager);
 
         for ($i = 0; $i < count($variables); ++$i) {
-            $param = new \ReflectionParameter(array($class, $method), $i);
+            $param = new \ReflectionParameter([$class, $method], $i);
             $pclass = $param->getClass();
             $args[] = $pclass ?
                 $om->getRepository($pclass->name)->find($variables[$i]) : $variables[$i];
         }
 
-        call_user_func_array(array($manager, $method), $args);
+        call_user_func_array([$manager, $method], $args);
     }
 }

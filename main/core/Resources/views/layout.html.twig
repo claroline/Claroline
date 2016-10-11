@@ -25,6 +25,7 @@
 {% block layout %}
     <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
+
     {% if config.getParameter('ssl_enabled') or app.request.isSecure() %}
         {% set protocol = 'https' %}
     {% else %}

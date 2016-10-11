@@ -345,16 +345,6 @@ class RichTextFormatter
      */
     public function generateDisplayedUrlForTinyMce(ResourceNode $node)
     {
-        //ie: /path/to/web/app_dev.php
-        $host = $this->config->getParameter('domain_name');
-
-        //@see http://stackoverflow.com/questions/173851/what-is-the-canonical-way-to-determine-commandline-vs-http-execution-of-a-php-s
-        //we need to configure the router if we're doing the import by cli.
-        if ($host && php_sapi_name() === 'cli') {
-            $context = $this->router->getContext();
-            $context->setHost($host);
-        }
-
         if (strpos('_'.$node->getMimeType(), 'image') > 0) {
             $url = $this->router->generate(
                 'claro_file_get_media',
