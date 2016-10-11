@@ -37,7 +37,7 @@
         </a>
         {# <a class="btn btn-primary" href="{{ path('ujm_question_search_question', { 'exoID': exoID }) }}">
              <i class="fa fa-question"></i> {{ 'search_question' | trans({}, 'ujm_exo') }}
-         </a>#}      
+         </a>#}
         {% if QuestionsExo == 'false' %}
             {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'id': exoID, 'displayAll': 1 }) }} ">
@@ -49,8 +49,7 @@
                 </a>
             {% endif %}
         {% endif %}
-        <a class="btn btn-success" href="#" onclick="importQuestion('{{ path('ujm_exercise_validate_import') }}',
-           {{ exoID }}, {{ pageToGo }}, '{{ 'no_thing_import' | trans({}, 'ujm_exo') }}'); event.preventDefault();">
+        <a class="btn btn-success" href="#" onclick="importQuestion({{ exoID }}, {{ pageToGo }})">
             <i class="fa fa-arrow-circle-o-down"></i> {{ 'import' | trans({}, 'ujm_exo') }}
         </a>
 
