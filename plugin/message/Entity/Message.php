@@ -12,13 +12,20 @@
 namespace Claroline\MessageBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\MessageBundle\Repository\MessageRepository")
- * @ORM\Table(name="claro_message")
+ * @ORM\Table(
+ *     name="claro_message",
+ *     indexes={
+ *         @Index(name="level_idx", columns={"lvl"}),
+ *         @Index(name="root_idx", columns={"root"})
+ *     }
+ * )
  * @Gedmo\Tree(type="nested")
  */
 class Message
