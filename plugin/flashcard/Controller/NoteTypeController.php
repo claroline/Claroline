@@ -59,7 +59,7 @@ class NoteTypeController
 
     /**
      * @EXT\Route(
-     *     "/note_type/edit", 
+     *     "/note_type/edit",
      *     name="claroline_edit_note_type"
      * )
      * @EXT\Method("POST")
@@ -119,7 +119,7 @@ class NoteTypeController
 
     /**
      * @EXT\Route(
-     *     "/note_type/get/{noteTypeId}", 
+     *     "/note_type/get/{noteTypeId}",
      *     name="claroline_get_note_type"
      * )
      *

@@ -178,7 +178,7 @@ class NoteType
     /**
      * @param int $id
      *
-     * @return FieldLabel Null if the field is not found.
+     * @return FieldLabel Null if the field is not found
      */
     public function getFieldLabel($id)
     {
@@ -192,7 +192,7 @@ class NoteType
     /**
      * @param string $name
      *
-     * @return FieldLabel Null if the field is notfound.
+     * @return FieldLabel Null if the field is notfound
      */
     public function getFieldLabelFromName($name)
     {

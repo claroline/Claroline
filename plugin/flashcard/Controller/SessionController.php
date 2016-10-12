@@ -63,7 +63,7 @@ class SessionController
 
     /**
      * @EXT\Route(
-     *     "/session/create/deck/{deck}", 
+     *     "/session/create/deck/{deck}",
      *     name="claroline_create_session"
      * )
      *

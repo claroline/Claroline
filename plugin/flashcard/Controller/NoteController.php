@@ -63,7 +63,7 @@ class NoteController
 
     /**
      * @EXT\Route(
-     *     "/note/create/deck/{deck}/note_type/{noteType}", 
+     *     "/note/create/deck/{deck}/note_type/{noteType}",
      *     name="claroline_create_note"
      * )
      * @EXT\Method("POST")
@@ -126,7 +126,7 @@ class NoteController
 
     /**
      * @EXT\Route(
-     *     "/note/edit/{note}", 
+     *     "/note/edit/{note}",
      *     name="claroline_edit_note"
      * )
      * @EXT\Method("POST")
@@ -165,7 +165,7 @@ class NoteController
 
     /**
      * @EXT\Route(
-     *     "/note/get/{note}", 
+     *     "/note/get/{note}",
      *     name="claroline_get_note"
      * )
      *
@@ -188,7 +188,7 @@ class NoteController
 
     /**
      * @EXT\Route(
-     *     "/note/list/deck/{deck}/note_type/{noteType}", 
+     *     "/note/list/deck/{deck}/note_type/{noteType}",
      *     name="claroline_list_notes"
      * )
      *
@@ -214,7 +214,7 @@ class NoteController
 
     /**
      * @EXT\Route(
-     *     "/note/delete/{note}", 
+     *     "/note/delete/{note}",
      *     name="claroline_delete_note"
      * )
      *

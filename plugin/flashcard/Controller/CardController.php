@@ -87,7 +87,7 @@ class CardController
 
     /**
      * @EXT\Route(
-     *     "/card/new_card_to_learn/deck/{deck}", 
+     *     "/card/new_card_to_learn/deck/{deck}",
      *     name="claroline_new_card_to_learn"
      * )
      *
@@ -121,7 +121,7 @@ class CardController
 
     /**
      * @EXT\Route(
-     *     "/card/card_to_review/deck/{deck}", 
+     *     "/card/card_to_review/deck/{deck}",
      *     name="claroline_card_to_review"
      * )
      *

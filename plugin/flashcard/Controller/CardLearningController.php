@@ -67,7 +67,7 @@ class CardLearningController
 
     /**
      * @EXT\Route(
-     *     "/card_learning/all/deck/{deck}", 
+     *     "/card_learning/all/deck/{deck}",
      *     name="claroline_getall_card_learning"
      * )
      *

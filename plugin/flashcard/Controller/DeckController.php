@@ -82,7 +82,7 @@ class DeckController
 
     /**
      * @EXT\Route(
-     *     "/deck/edit/default_param/{deck}", 
+     *     "/deck/edit/default_param/{deck}",
      *     name="claroline_edit_default_param"
      * )
      * @EXT\Method("POST")
@@ -119,7 +119,7 @@ class DeckController
 
     /**
      * @EXT\Route(
-     *     "/deck/edit/user_param/{deck}", 
+     *     "/deck/edit/user_param/{deck}",
      *     name="claroline_edit_user_param"
      * )
      * @EXT\Method("POST")
@@ -161,7 +161,7 @@ class DeckController
 
     /**
      * @EXT\Route(
-     *     "/deck/{deck}/get_user_pref", 
+     *     "/deck/{deck}/get_user_pref",
      *     name="claroline_get_user_pref"
      * )
      *
