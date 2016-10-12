@@ -87,11 +87,11 @@ class NoteController
             $note->setNoteType($noteType);
 
             foreach ($fields as $field) {
-                if ($field['fieldValue']['type'] == 'text') {
+                if ($field['fieldValue']['type'] === 'text') {
                     $fieldValue = new FieldValueText();
                     $fieldValue->setValue($field['fieldValue']['value']);
                 }
-                if ($field['fieldValue']['type'] == 'image') {
+                if ($field['fieldValue']['type'] === 'image') {
                     $fieldValue = new FieldValueImage();
                     $fieldValue->setValue($field['fieldValue']['value']);
                     $fieldValue->setAlt($field['fieldValue']['alt']);

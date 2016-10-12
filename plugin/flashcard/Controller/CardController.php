@@ -166,7 +166,7 @@ class CardController
         $user = $this->tokenStorage->getToken()->getUser();
         $cardLearning = $this->cardLearningMgr->getCardLearning($card, $user);
 
-        $isNewCard = $cardLearning == null;
+        $isNewCard = $cardLearning === null;
 
         if ($isNewCard) {
             $cardLearning = new cardLearning();
