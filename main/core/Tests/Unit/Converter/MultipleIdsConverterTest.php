@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Converter;
 
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Mockery as m;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class MultipleIdsConverterTest extends MockeryTestCase
 {
@@ -30,19 +30,13 @@ class MultipleIdsConverterTest extends MockeryTestCase
         $this->converter = new MultipleIdsConverter($this->om);
     }
 
-    public function testSupportsAcceptsOnlyParamConverterConfiguration()
-    {
-        $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface');
-        $this->assertFalse($this->converter->supports($configuration));
-    }
-
     public function testSupportsAcceptsOnlyAnMultipleIdsParameterSetToTrue()
     {
         $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
         $configuration->shouldReceive('getOptions')->times(3)->andReturn(
-            array('some_other_option'),
-            array('multipleIds' => false),
-            array('multipleIds' => true)
+            ['some_other_option'],
+            ['multipleIds' => false],
+            ['multipleIds' => true]
         );
         $this->assertFalse($this->converter->supports($configuration));
         $this->assertFalse($this->converter->supports($configuration));
@@ -74,10 +68,10 @@ class MultipleIdsConverterTest extends MockeryTestCase
     {
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
-        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array('multipleIds' => true));
+        $this->configuration->shouldReceive('getOptions')->once()->andReturn(['multipleIds' => true]);
         $this->request->query = new ParameterBag();
         $this->request->attributes = m::mock('Symfony\Component\HttpFoundation\ParameterBag');
-        $this->request->attributes->shouldReceive('set')->once()->with('parameter', array());
+        $this->request->attributes->shouldReceive('set')->once()->with('parameter', []);
         $this->converter->apply($this->request, $this->configuration);
     }
 
@@ -88,7 +82,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
     {
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
-        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array('multipleIds' => true));
+        $this->configuration->shouldReceive('getOptions')->once()->andReturn(['multipleIds' => true]);
         $this->request->query = new ParameterBag();
         $this->request->query->set('ids', 'not_an_array');
         $this->converter->apply($this->request, $this->configuration);
@@ -101,9 +95,9 @@ class MultipleIdsConverterTest extends MockeryTestCase
     {
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
-        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array('multipleIds' => true));
+        $this->configuration->shouldReceive('getOptions')->once()->andReturn(['multipleIds' => true]);
         $this->request->query = new ParameterBag();
-        $this->request->query->set('ids', array(1, 2));
+        $this->request->query->set('ids', [1, 2]);
         $this->om->shouldReceive('findByIds')
             ->once()
             ->andThrow('Claroline\CoreBundle\Persistence\MissingObjectException');
@@ -112,16 +106,16 @@ class MultipleIdsConverterTest extends MockeryTestCase
 
     public function testApplySetsTheRetreivedEntitiesAsARequestAttribute()
     {
-        $entities = array('entity_1', 'entity_2');
+        $entities = ['entity_1', 'entity_2'];
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
-        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array('multipleIds' => true));
+        $this->configuration->shouldReceive('getOptions')->once()->andReturn(['multipleIds' => true]);
         $this->request->query = new ParameterBag();
         $this->request->attributes = new ParameterBag();
-        $this->request->query->set('ids', array(1, 2));
+        $this->request->query->set('ids', [1, 2]);
         $this->om->shouldReceive('findByIds')
             ->once()
-            ->with('Foo\Entity', array(1, 2))
+            ->with('Foo\Entity', [1, 2])
             ->andReturn($entities);
         $this->assertEquals(true, $this->converter->apply($this->request, $this->configuration));
         $this->assertEquals($entities, $this->request->attributes->get('parameter'));

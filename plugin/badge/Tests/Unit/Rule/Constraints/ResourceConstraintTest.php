@@ -9,12 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Rule\Constraints;
+namespace Icap\BadgeBundle\Rule\Constraints;
 
+use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
-use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Rule\Constraints\ResourceConstraint;
+use Icap\BadgeBundle\Entity\BadgeRule;
 
 class ResourceConstraintTest extends MockeryTestCase
 {
@@ -39,7 +40,7 @@ class ResourceConstraintTest extends MockeryTestCase
     public function testValidateNoLog()
     {
         $resourceConstraint = new ResourceConstraint();
-        $resourceConstraint->setAssociatedLogs(array());
+        $resourceConstraint->setAssociatedLogs([]);
 
         $this->assertFalse($resourceConstraint->validate());
     }
@@ -47,7 +48,7 @@ class ResourceConstraintTest extends MockeryTestCase
     public function testValidateOneLog()
     {
         $resourceConstraint = new ResourceConstraint();
-        $resourceConstraint->setAssociatedLogs(array(new Log()));
+        $resourceConstraint->setAssociatedLogs([new Log()]);
 
         $this->assertTrue($resourceConstraint->validate());
     }

@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Converter;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
-use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class AuthenticatedUserConverterTest extends MockeryTestCase
 {
@@ -35,18 +35,12 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
         $this->converter = new AuthenticatedUserConverter($this->securityContext, $this->translator);
     }
 
-    public function testSupportsAcceptsOnlyParamConverterConfiguration()
-    {
-        $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface');
-        $this->assertFalse($this->converter->supports($configuration));
-    }
-
     public function testSupportsAcceptsOnlyAnAuthenticatedUserParameter()
     {
         $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
         $configuration->shouldReceive('getOptions')->times(3)->andReturn(
-            array('some_other_option'),
-            array('authenticatedUser' => true)
+            ['some_other_option'],
+            ['authenticatedUser' => true]
         );
         $this->assertFalse($this->converter->supports($configuration));
         $this->assertTrue($this->converter->supports($configuration));
@@ -70,7 +64,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
         $this->configuration->shouldReceive('getName')->once()->andReturn('user');
         $this->configuration->shouldReceive('getOptions')
             ->once()
-            ->andReturn(array('authenticatedUser' => true));
+            ->andReturn(['authenticatedUser' => true]);
         $this->token->shouldReceive('getUser')->andReturn('anon.');
         $this->converter->apply($this->request, $this->configuration);
     }
@@ -82,7 +76,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
         $this->configuration->shouldReceive('getName')->once()->andReturn('user');
         $this->configuration->shouldReceive('getOptions')
             ->once()
-            ->andReturn(array('authenticatedUser' => true));
+            ->andReturn(['authenticatedUser' => true]);
         $this->token->shouldReceive('getUser')->andReturn($user);
         $this->assertTrue($this->converter->apply($this->request, $this->configuration));
         $this->assertEquals($user, $this->request->attributes->get('user'));

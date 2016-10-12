@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Converter;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Entity\User;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service()
@@ -80,7 +80,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
 
                     $request->getSession()->getFlashBag()->add(
                         $messageType,
-                        $this->translator->trans($messageTranslationKey, array(), $messageTranslationDomain)
+                        $this->translator->trans($messageTranslationKey, [], $messageTranslationDomain)
                     );
                 }
 
@@ -96,10 +96,6 @@ class AuthenticatedUserConverter implements ParamConverterInterface
      */
     public function supports(ParamConverter $configuration)
     {
-        if (!$configuration instanceof ParamConverter) {
-            return false;
-        }
-
         $options = $configuration->getOptions();
 
         if (isset($options['authenticatedUser']) && is_bool($options['authenticatedUser'])) {

@@ -9,12 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Rule\Constraints;
+namespace Icap\BadgeBundle\Rule\Constraints;
 
+use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
-use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Rule\Constraints\ActionConstraint;
+use Icap\BadgeBundle\Entity\BadgeRule;
 
 class ActionConstraintTest extends MockeryTestCase
 {
@@ -44,7 +45,7 @@ class ActionConstraintTest extends MockeryTestCase
     public function testValidateNoLog()
     {
         $actionConstraint = new ActionConstraint();
-        $actionConstraint->setAssociatedLogs(array());
+        $actionConstraint->setAssociatedLogs([]);
 
         $this->assertFalse($actionConstraint->validate());
     }
@@ -52,7 +53,7 @@ class ActionConstraintTest extends MockeryTestCase
     public function testValidateOneLog()
     {
         $actionConstraint = new ActionConstraint();
-        $actionConstraint->setAssociatedLogs(array(new Log()));
+        $actionConstraint->setAssociatedLogs([new Log()]);
 
         $this->assertTrue($actionConstraint->validate());
     }

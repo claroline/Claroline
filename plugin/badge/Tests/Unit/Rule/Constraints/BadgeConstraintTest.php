@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Rule\Constraints;
+namespace Icap\BadgeBundle\Rule\Constraints;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Icap\BadgeBundle\Entity\Badge;
+use Icap\BadgeBundle\Entity\BadgeRule;
 
 class BadgeConstraintTest extends MockeryTestCase
 {
@@ -39,7 +39,7 @@ class BadgeConstraintTest extends MockeryTestCase
     public function testValidateNoLog()
     {
         $badgeConstraint = new BadgeConstraint();
-        $badgeConstraint->setAssociatedLogs(array());
+        $badgeConstraint->setAssociatedLogs([]);
 
         $this->assertFalse($badgeConstraint->validate());
     }
@@ -53,15 +53,15 @@ class BadgeConstraintTest extends MockeryTestCase
         $rule->setBadge($badge);
 
         $log = new Log();
-        $log->setDetails(array(
-            'badge' => array(
+        $log->setDetails([
+            'badge' => [
                 'id' => $badge->getId(),
-            ),
-        ));
+            ],
+        ]);
         $badgeConstraint = new BadgeConstraint();
         $badgeConstraint
             ->setRule($rule)
-            ->setAssociatedLogs(array($log));
+            ->setAssociatedLogs([$log]);
 
         $this->assertTrue($badgeConstraint->validate());
     }
@@ -75,15 +75,15 @@ class BadgeConstraintTest extends MockeryTestCase
         $rule->setBadge($badge);
 
         $log = new Log();
-        $log->setDetails(array(
-            'badge' => array(
+        $log->setDetails([
+            'badge' => [
                 'id' => rand(0, PHP_INT_MAX / 2),
-            ),
-        ));
+            ],
+        ]);
         $badgeConstraint = new BadgeConstraint();
         $badgeConstraint
             ->setRule($rule)
-            ->setAssociatedLogs(array($log));
+            ->setAssociatedLogs([$log]);
 
         $this->assertFalse($badgeConstraint->validate());
     }

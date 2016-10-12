@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Converter;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Claroline\CoreBundle\Persistence\MissingObjectException;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @DI\Service()
@@ -75,7 +75,7 @@ class MultipleIdsConverter implements ParamConverterInterface
             throw new BadRequestHttpException();
         }
 
-        $request->attributes->set($parameter, array());
+        $request->attributes->set($parameter, []);
 
         return true;
     }
@@ -85,10 +85,6 @@ class MultipleIdsConverter implements ParamConverterInterface
      */
     public function supports(ParamConverter $configuration)
     {
-        if (!$configuration instanceof ParamConverter) {
-            return false;
-        }
-
         $options = $configuration->getOptions();
 
         if (isset($options['multipleIds']) && $options['multipleIds'] === true) {

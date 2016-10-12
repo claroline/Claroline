@@ -9,12 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Rule\Constraints;
+namespace Icap\BadgeBundle\Rule\Constraints;
 
+use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
-use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Rule\Constraints\ReceiverConstraint;
+use Icap\BadgeBundle\Entity\BadgeRule;
 
 class ReceiverConstraintTest extends MockeryTestCase
 {
@@ -38,7 +39,7 @@ class ReceiverConstraintTest extends MockeryTestCase
 
         $receiverConstraint = new ReceiverConstraint();
 
-        $isApplicableTo = $receiverConstraint->isApplicableTo($badgeRule);
+        $receiverConstraint->isApplicableTo($badgeRule);
     }
 
     public function testIsApplicableTo()
@@ -56,7 +57,7 @@ class ReceiverConstraintTest extends MockeryTestCase
     public function testValidateNoLog()
     {
         $receiverConstraint = new ReceiverConstraint();
-        $receiverConstraint->setAssociatedLogs(array());
+        $receiverConstraint->setAssociatedLogs([]);
 
         $this->assertFalse($receiverConstraint->validate());
     }
@@ -64,7 +65,7 @@ class ReceiverConstraintTest extends MockeryTestCase
     public function testValidateOneLog()
     {
         $receiverConstraint = new ReceiverConstraint();
-        $receiverConstraint->setAssociatedLogs(array(new Log()));
+        $receiverConstraint->setAssociatedLogs([new Log()]);
 
         $this->assertTrue($receiverConstraint->validate());
     }

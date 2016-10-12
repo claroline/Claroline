@@ -9,12 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Rule\Constraints;
+namespace Icap\BadgeBundle\Rule\Constraints;
 
+use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
-use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Rule\Constraints\DoerConstraint;
+use Icap\BadgeBundle\Entity\BadgeRule;
 
 class DoerConstraintTest extends MockeryTestCase
 {
@@ -38,7 +39,7 @@ class DoerConstraintTest extends MockeryTestCase
 
         $doerConstraint = new DoerConstraint();
 
-        $isApplicableTo = $doerConstraint->isApplicableTo($badgeRule);
+        $doerConstraint->isApplicableTo($badgeRule);
     }
 
     public function testIsApplicableTo()
@@ -56,7 +57,7 @@ class DoerConstraintTest extends MockeryTestCase
     public function testValidateNoLog()
     {
         $doerConstraint = new DoerConstraint();
-        $doerConstraint->setAssociatedLogs(array());
+        $doerConstraint->setAssociatedLogs([]);
 
         $this->assertFalse($doerConstraint->validate());
     }
@@ -64,7 +65,7 @@ class DoerConstraintTest extends MockeryTestCase
     public function testValidateOneLog()
     {
         $doerConstraint = new DoerConstraint();
-        $doerConstraint->setAssociatedLogs(array(new Log()));
+        $doerConstraint->setAssociatedLogs([new Log()]);
 
         $this->assertTrue($doerConstraint->validate());
     }

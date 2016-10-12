@@ -9,11 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Rule\Constraints;
+namespace Icap\BadgeBundle\Rule\Constraints;
 
-use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Rule\Constraints\OccurenceConstraint;
+use Claroline\CoreBundle\Rule\Constraints\ResultConstraint;
+use Icap\BadgeBundle\Entity\BadgeRule;
 
 class OccurenceConstraintTest extends MockeryTestCase
 {
@@ -39,7 +41,7 @@ class OccurenceConstraintTest extends MockeryTestCase
     {
         $badgeRule = new BadgeRule();
 
-        $associatedLogs = array();
+        $associatedLogs = [];
         $occurenceConstraint = new OccurenceConstraint();
         $occurenceConstraint
             ->setRule($badgeRule)
@@ -53,7 +55,7 @@ class OccurenceConstraintTest extends MockeryTestCase
         $badgeRule = new BadgeRule();
         $badgeRule->setOccurrence(rand(2, PHP_INT_MAX));
 
-        $associatedLogs = array(new Log());
+        $associatedLogs = [new Log()];
         $occurenceConstraint = new OccurenceConstraint();
         $occurenceConstraint
             ->setRule($badgeRule)
@@ -67,7 +69,7 @@ class OccurenceConstraintTest extends MockeryTestCase
         $badgeRule = new BadgeRule();
         $badgeRule->setOccurrence(2);
 
-        $associatedLogs = array(new Log(), new Log(), new Log());
+        $associatedLogs = [new Log(), new Log(), new Log()];
         $occurenceConstraint = new OccurenceConstraint();
         $occurenceConstraint
             ->setRule($badgeRule)

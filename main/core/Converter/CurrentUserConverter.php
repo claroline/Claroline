@@ -83,13 +83,10 @@ class CurrentUserConverter implements ParamConverterInterface
      */
     public function supports(ParamConverter $configuration)
     {
-        if (!$configuration instanceof ParamConverter) {
-            return false;
-        }
-
         $options = $configuration->getOptions();
-        if (isset($options['allowAnonymous']) && !is_bool($options['allowAnonymous'])) {
-            return false;
+
+        if (isset($options['allowAnonymous'])) {
+            return (is_bool($options['allowAnonymous'])) ? true : false;
         }
 
         return true;

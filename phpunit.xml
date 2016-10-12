@@ -51,18 +51,18 @@
             <directory>plugin/chat/Tests/</directory>
 
             <!-- Unit tests: uncomment when ready -->
-            <!-- <directory>main/core/Tests/Unit/Converter/</directory> -->
+            <directory>main/core/Tests/Unit/Converter/</directory>
             <directory>main/core/Tests/Unit/Event/</directory>
             <directory>main/core/Tests/Unit/Form/</directory>
-            <!-- <directory>main/core/Tests/Unit/Form/Library/Configuration/</directory> -->
+            <directory>main/core/Tests/Unit/Form/Library/Configuration/</directory>
             <directory>main/core/Tests/Unit/Form/Library/HttpFoundation/</directory>
-            <!-- <directory>main/core/Tests/Unit/Form/Library/Installation/</directory> -->
+            <directory>main/core/Tests/Unit/Form/Library/Installation/</directory>
             <!-- <directory>main/core/Tests/Unit/Form/Library/Security/</directory> -->
             <!-- <directory>main/core/Tests/Unit/Form/Library/Transfert/</directory> -->
             <directory>main/core/Tests/Unit/Form/Library/Utilities/</directory>
             <!-- <directory>main/core/Tests/Unit/Form/Manager/</directory> -->
-            <!-- <directory>main/core/Tests/Unit/Persistence/</directory> -->
-            <!-- <directory>main/core/Tests/Unit/Rule/</directory> -->
+            <directory>main/core/Tests/Unit/Persistence/</directory>
+            <directory>plugin/badge/Tests/Unit/Rule/Constraints</directory> 
         </testsuite>
     </testsuites>
 
