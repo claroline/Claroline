@@ -1942,4 +1942,11 @@ class ResourceManager
     {
         return count($ids) > 0 ? $this->resourceNodeRepo->findResourcesByIds($roles, $user, $ids) : [];
     }
+
+    public function getResourceFromShortcut(ResourceNode $node)
+    {
+        $target = $this->getRealTarget($node);
+
+        return $this->getResourceFromNode($target);
+    }
 }

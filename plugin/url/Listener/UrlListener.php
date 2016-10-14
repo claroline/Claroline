@@ -181,12 +181,15 @@ class UrlListener
      */
     public function onChangeAction(CustomActionResourceEvent $event)
     {
-        $form = $this->formFactory->create(new UrlChangeType(), $event->getResource());
+        $resource = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
+            $this->manager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
+            $event->getResource();
+        $form = $this->formFactory->create(new UrlChangeType(), $resource);
         $form->handleRequest($this->request);
 
         $content = $this->templating->render('HeVinciUrlBundle:Url:form.html.twig', [
             'form' => $form->createView(),
-            'node' => $event->getResource()->getResourceNode()->getId(),
+            'node' => $resource->getResourceNode()->getId(),
         ]);
 
         $event->setResponse(new Response($content));

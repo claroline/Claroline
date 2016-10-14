@@ -5,13 +5,12 @@
  * Date: 7/7/14
  * Time: 5:01 PM.
  */
-
 namespace Icap\WebsiteBundle\DependencyInjection;
 
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class IcapWebsiteExtension extends Extension
 {
@@ -29,7 +28,6 @@ class IcapWebsiteExtension extends Extension
     {
         $locator = new FileLocator(__DIR__.'/../Resources/config/services');
         $loader = new YamlFileLoader($container, $locator);
-        $loader->load('listeners.yml');
         $loader->load('services.yml');
     }
 }

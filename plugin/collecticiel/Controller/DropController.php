@@ -391,7 +391,7 @@ class DropController extends DropzoneBaseController
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
-    public function dropsAwaitingAction(Dropzone $dropzone, $page)
+    public function dropsAwaitingAction(Dropzone $dropzone, $page = 1)
     {
         $translator = $this->get('translator');
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
