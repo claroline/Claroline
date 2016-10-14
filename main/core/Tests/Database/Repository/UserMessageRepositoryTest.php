@@ -21,7 +21,7 @@ class UserMessageRepositoryTest extends RepositoryTestCase
     {
         parent::setUpBeforeClass();
 
-        self::$repo = self::getRepository('ClarolineCoreBundle:UserMessage');
+        self::$repo = self::getRepository('ClarolineMessageBundle:UserMessage');
 
         self::createUser('sender');
         self::createUser('receiver_1');
@@ -30,7 +30,7 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         self::createMessage(
             'message_1',
             self::get('sender'),
-            array(self::get('receiver_1')),
+            [self::get('receiver_1')],
             'message_1 object',
             'message_1 content'
         );
@@ -38,7 +38,7 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         self::createMessage(
             'message_2',
             self::get('sender'),
-            array(self::get('receiver_1'), self::get('receiver_2')),
+            [self::get('receiver_1'), self::get('receiver_2')],
             'message_2 object',
             'message_2 content',
             self::get('message_1')
@@ -47,7 +47,7 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         self::createMessage(
             'message_3',
             self::get('receiver_2'),
-            array(self::get('receiver_1')),
+            [self::get('receiver_1')],
             'message_3 object',
             'message_3 content',
             null,
@@ -63,8 +63,8 @@ class UserMessageRepositoryTest extends RepositoryTestCase
     {
         $userMessages = self::$repo->findSent(self::get('sender'));
         $this->assertEquals(2, count($userMessages));
-        $this->assertEquals(self::get('message_2/senderUsername'), $userMessages[0]);
-        $this->assertEquals(self::get('message_1/senderUsername'), $userMessages[1]);
+        $this->assertEquals(self::get('message_2/sender'), $userMessages[0]);
+        $this->assertEquals(self::get('message_1/sender'), $userMessages[1]);
     }
 
     /**
@@ -75,9 +75,9 @@ class UserMessageRepositoryTest extends RepositoryTestCase
     {
         $userMessages = self::$repo->findReceived(self::get('receiver_1'));
         $this->assertEquals(3, count($userMessages));
-        $this->assertEquals(self::get('message_3/receiver_1Username'), $userMessages[0]);
-        $this->assertEquals(self::get('message_2/receiver_1Username'), $userMessages[1]);
-        $this->assertEquals(self::get('message_1/receiver_1Username'), $userMessages[2]);
+        $this->assertEquals(self::get('message_3/receiver_1'), $userMessages[0]);
+        $this->assertEquals(self::get('message_2/receiver_1'), $userMessages[1]);
+        $this->assertEquals(self::get('message_1/receiver_1'), $userMessages[2]);
     }
 
     /**
@@ -88,7 +88,7 @@ class UserMessageRepositoryTest extends RepositoryTestCase
     {
         $userMessages = self::$repo->findRemoved(self::get('receiver_2'));
         $this->assertEquals(1, count($userMessages));
-        $this->assertEquals(self::get('message_3/receiver_2Username'), $userMessages[0]);
+        $this->assertEquals(self::get('message_3/receiver_2'), $userMessages[0]);
     }
 
     /**
@@ -99,7 +99,7 @@ class UserMessageRepositoryTest extends RepositoryTestCase
     {
         $userMessages = self::$repo->findReceivedByObjectOrSender(self::get('receiver_2'), 'ssage_2 OBJ');
         $this->assertEquals(1, count($userMessages));
-        $this->assertEquals(self::get('message_2/receiver_2Username'), $userMessages[0]);
+        $this->assertEquals(self::get('message_2/receiver_2'), $userMessages[0]);
     }
 
     /**
@@ -110,8 +110,8 @@ class UserMessageRepositoryTest extends RepositoryTestCase
     {
         $userMessages = self::$repo->findReceivedByObjectOrSender(self::get('receiver_1'), 'endeR');
         $this->assertEquals(2, count($userMessages));
-        $this->assertEquals(self::get('message_2/receiver_1Username'), $userMessages[0]);
-        $this->assertEquals(self::get('message_1/receiver_1Username'), $userMessages[1]);
+        $this->assertEquals(self::get('message_2/receiver_1'), $userMessages[0]);
+        $this->assertEquals(self::get('message_1/receiver_1'), $userMessages[1]);
     }
 
     /**
@@ -122,7 +122,7 @@ class UserMessageRepositoryTest extends RepositoryTestCase
     {
         $userMessages = self::$repo->findSentByObject(self::get('sender'), 'ssage_1 oB');
         $this->assertEquals(1, count($userMessages));
-        $this->assertEquals(self::get('message_1/senderUsername'), $userMessages[0]);
+        $this->assertEquals(self::get('message_1/sender'), $userMessages[0]);
     }
 
     /**
@@ -133,7 +133,7 @@ class UserMessageRepositoryTest extends RepositoryTestCase
     {
         $userMessages = self::$repo->findRemovedByObjectOrSender(self::get('receiver_2'), 'sag');
         $this->assertEquals(1, count($userMessages));
-        $this->assertEquals(self::get('message_3/receiver_2Username'), $userMessages[0]);
+        $this->assertEquals(self::get('message_3/receiver_2'), $userMessages[0]);
     }
 
     /**
@@ -144,7 +144,7 @@ class UserMessageRepositoryTest extends RepositoryTestCase
     {
         $userMessages = self::$repo->findRemovedByObjectOrSender(self::get('receiver_2'), 'eiVer_2');
         $this->assertEquals(1, count($userMessages));
-        $this->assertEquals(self::get('message_3/receiver_2Username'), $userMessages[0]);
+        $this->assertEquals(self::get('message_3/receiver_2'), $userMessages[0]);
     }
 
     /**
@@ -155,10 +155,10 @@ class UserMessageRepositoryTest extends RepositoryTestCase
     {
         $userMessages = self::$repo->findByMessages(
             self::get('receiver_1'),
-            array(self::get('message_1'), self::get('message_2'))
+            [self::get('message_1'), self::get('message_2')]
         );
         $this->assertEquals(2, count($userMessages));
-        $this->assertEquals(self::get('message_2/receiver_1Username'), $userMessages[0]);
-        $this->assertEquals(self::get('message_1/receiver_1Username'), $userMessages[1]);
+        $this->assertEquals(self::get('message_2/receiver_1'), $userMessages[0]);
+        $this->assertEquals(self::get('message_1/receiver_1'), $userMessages[1]);
     }
 }

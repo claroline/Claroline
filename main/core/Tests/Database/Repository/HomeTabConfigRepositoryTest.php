@@ -222,21 +222,21 @@ class HomeTabConfigRepositoryTest extends RepositoryTestCase
     public function testFindAdminDesktopHomeTabConfigs()
     {
         $homeTabConfigs = self::$repo->findAdminDesktopHomeTabConfigs();
-        $this->assertEquals(4, count($homeTabConfigs));
-        $this->assertEquals(self::get('adhtc_1'), $homeTabConfigs[0]);
-        $this->assertEquals(self::get('adhtc_2'), $homeTabConfigs[1]);
-        $this->assertEquals(self::get('adhtc_3'), $homeTabConfigs[2]);
-        $this->assertEquals(self::get('adhtc_4'), $homeTabConfigs[3]);
+        $this->assertEquals(5, count($homeTabConfigs));
+        $this->assertEquals(self::get('adhtc_1'), $homeTabConfigs[1]);
+        $this->assertEquals(self::get('adhtc_2'), $homeTabConfigs[2]);
+        $this->assertEquals(self::get('adhtc_3'), $homeTabConfigs[3]);
+        $this->assertEquals(self::get('adhtc_4'), $homeTabConfigs[4]);
     }
 
     public function testFindAdminWorkspaceHomeTabConfigs()
     {
         $homeTabConfigs = self::$repo->findAdminWorkspaceHomeTabConfigs();
-        $this->assertEquals(4, count($homeTabConfigs));
-        $this->assertEquals(self::get('awhtc_1'), $homeTabConfigs[0]);
-        $this->assertEquals(self::get('awhtc_2'), $homeTabConfigs[1]);
-        $this->assertEquals(self::get('awhtc_3'), $homeTabConfigs[2]);
-        $this->assertEquals(self::get('awhtc_4'), $homeTabConfigs[3]);
+        $this->assertEquals(5, count($homeTabConfigs));
+        $this->assertEquals(self::get('awhtc_1'), $homeTabConfigs[1]);
+        $this->assertEquals(self::get('awhtc_2'), $homeTabConfigs[2]);
+        $this->assertEquals(self::get('awhtc_3'), $homeTabConfigs[3]);
+        $this->assertEquals(self::get('awhtc_4'), $homeTabConfigs[4]);
     }
 
     public function testFindAdminDesktopHomeTabConfigByHomeTab()
@@ -267,17 +267,17 @@ class HomeTabConfigRepositoryTest extends RepositoryTestCase
     public function testFindVisibleAdminDesktopHomeTabConfigs()
     {
         $homeTabConfigs = self::$repo->findVisibleAdminDesktopHomeTabConfigs();
-        $this->assertEquals(2, count($homeTabConfigs));
-        $this->assertEquals(self::get('adhtc_1'), $homeTabConfigs[0]);
-        $this->assertEquals(self::get('adhtc_2'), $homeTabConfigs[1]);
+        $this->assertEquals(3, count($homeTabConfigs));
+        $this->assertEquals(self::get('adhtc_1'), $homeTabConfigs[1]);
+        $this->assertEquals(self::get('adhtc_2'), $homeTabConfigs[2]);
     }
 
     public function testFindVisibleAdminWorkspaceHomeTabConfigs()
     {
         $homeTabConfigs = self::$repo->findVisibleAdminWorkspaceHomeTabConfigs();
-        $this->assertEquals(2, count($homeTabConfigs));
-        $this->assertEquals(self::get('awhtc_1'), $homeTabConfigs[0]);
-        $this->assertEquals(self::get('awhtc_2'), $homeTabConfigs[1]);
+        $this->assertEquals(3, count($homeTabConfigs));
+        $this->assertEquals(self::get('awhtc_1'), $homeTabConfigs[1]);
+        $this->assertEquals(self::get('awhtc_2'), $homeTabConfigs[2]);
     }
 
     public function testFindVisibleDesktopHomeTabConfigsByUser()
