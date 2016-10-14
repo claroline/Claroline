@@ -55,7 +55,7 @@ of the platform at [packages.claroline.net/releases][releases]. This is the
 fastest way to get started:
 
     curl packages.claroline.net/releases/latest/claroline-16.05.tar.gz | tar xzv
-    cd claroline-6.x.x-dev
+    cd claroline-16.05
     php scripts/configure.php
     composer fast-install
 
