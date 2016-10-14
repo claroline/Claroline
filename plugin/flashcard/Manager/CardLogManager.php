@@ -11,16 +11,17 @@
 
 namespace Claroline\FlashCardBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\FlashCardBundle\Entity\Deck;
+use Claroline\FlashCardBundle\Entity\Card;
+use Claroline\FlashCardBundle\Entity\CardLog;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\Form\FormView;
 
 /**
- * @DI\Service("claroline.flashcard.deck_manager")
+ * @DI\Service("claroline.flashcard.card_log_manager")
  */
-class DeckManager
+class CardLogManager
 {
     private $om;
     private $templating;
@@ -41,49 +42,34 @@ class DeckManager
     }
 
     /**
-     * Creates a flashcard resource.
+     * @param CardLog $cardLog
      *
-     * @param Deck $deck
-     *
-     * @return Deck
+     * @return CardLog
      */
-    public function create(Deck $deck)
+    public function save(CardLog $cardLog)
     {
-        foreach ($deck->getUserPreferences() as $userPref) {
-            $this->om->persist($userPref);
-        }
-        $this->om->persist($deck);
+        $this->om->persist($cardLog);
         $this->om->flush();
 
-        return $deck;
+        return $cardLog;
     }
 
     /**
-     * Deletes a flashcard resource.
-     *
-     * @param Deck $deck
+     * @param CardLog $cardLog
      */
-    public function delete(Deck $deck)
+    public function delete(CardLog $cardLog)
     {
-        $this->om->remove($deck);
+        $this->om->remove($cardLog);
         $this->om->flush();
     }
 
     /**
-     * Returns the content of the result resource form.
-     *
-     * @param FormView $view
-     *
-     * @return string
-     **/
-    public function getDeckFormContent(FormView $view)
+     * @param Card $card
+     */
+    public function getLastLog(Card $card, User $user)
     {
-        return $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
-            [
-                'form' => $view,
-                'resourceType' => 'claroline_flashcard',
-            ]
-        );
+        $repo = $this->om->getRepository('ClarolineFlashCardBundle:CardLog');
+
+        return $repo->findOneByCardAndUserOrderByDate($card, $user);
     }
 }

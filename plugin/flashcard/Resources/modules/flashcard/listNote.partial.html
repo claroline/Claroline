@@ -7,7 +7,7 @@
       <thead>
         <tr>
           <th class="col-xs-{{ vm.colWidth[i][f] }}"
-              data-ng-repeat="(f, fieldValue) in notes[0].field_values">
+              data-ng-repeat="(f, fieldValue) in notes[0].field_values.sort(vm.compareFieldValuesById)">
             {{ fieldValue.field_label.name }}
           </th>
           <th class="col-xs-2 text-center">
@@ -20,9 +20,23 @@
       <table class="col-md-12 table table-condensed table-bordered">
         <tbody>
           <tr> 
-            <td class="col-xs-{{ vm.colWidth[i][f] }}"
-                data-ng-repeat="(f, fieldValue) in note.field_values">
-              {{ fieldValue.value }}
+            <td class="col-xs-{{ vm.colWidth[i][f] }} text-center"
+                style="vertical-align: middle"
+                data-ng-repeat="(f, fieldValue) in note.field_values.sort(vm.compareFieldValuesById)">
+              <!-- Generic value -->
+              <span data-ng-if="fieldValue.type == 'generic'">
+                {{ fieldValue.value }}
+              </span>
+              <!-- Text value -->
+              <span data-ng-if="fieldValue.type == 'text'">
+                {{ fieldValue.value }}
+              </span>
+              <!-- Image value -->
+              <img data-ng-if="fieldValue.type == 'image'"
+                   class="img-responsive img-thumbnail"
+                   style="width: 80%"
+                   src="{{ fieldValue.value }}"
+                   alt="{{ fieldValue.alt}}" />
             </td>
             <td class="col-xs-2 text-center">
               <a href="#/edit_note/{{ note.id }}?nexturl=/list_notes"
@@ -75,12 +89,38 @@
             <td colspan="{{ vm.maxColspan(note) / card.card_type.questions.length }}"
                 data-ng-repeat="
                 question in vm.getQuestionsFromCard(note, card)">
-              {{ question.value }}
+              <!-- Generic value -->
+              <span data-ng-if="question.type == 'generic'">
+                {{ question.value }}
+              </span>
+              <!-- Text value -->
+              <span data-ng-if="question.type == 'text'">
+                {{ question.value }}
+              </span>
+              <!-- Image value -->
+              <img data-ng-if="question.type == 'image'"
+                   class="img-responsive img-thumbnail"
+                   style="width: 80%"
+                   src="{{ question.value }}"
+                   alt="{{ question.alt}}" />
             </td>
             <td colspan="{{ vm.maxColspan(note) / card.card_type.answers.length }}"
                 data-ng-repeat="
                 answer in vm.getAnswersFromCard(note, card)">
-              {{ answer.value }}
+              <!-- Generic value -->
+              <span data-ng-if="answer.type == 'generic'">
+                {{ answer.value }}
+              </span>
+              <!-- Text value -->
+              <span data-ng-if="answer.type == 'text'">
+                {{ answer.value }}
+              </span>
+              <!-- Image value -->
+              <img data-ng-if="answer.type == 'image'"
+                   class="img-responsive img-thumbnail"
+                   style="width: 80%"
+                   src="{{ answer.value }}"
+                   alt="{{ answer.alt}}" />
             </td>
             <td class="col-xs-2 text-center"
                 data-ng-if="!vm.isNew(card)">

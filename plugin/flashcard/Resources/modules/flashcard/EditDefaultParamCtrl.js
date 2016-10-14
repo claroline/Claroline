@@ -8,12 +8,11 @@
  * file that was distributed with this source code.
  */
 
-export default class EditNoteCtrl {
+export default class EditDefaultParamCtrl {
   constructor (service, $routeParams, $location) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
-    this.note = null
     this.nexturl = $routeParams.nexturl
 
     this.errorMessage = null
@@ -21,19 +20,19 @@ export default class EditNoteCtrl {
     this._service = service
     this.$location = $location
     
-    service.findNote($routeParams.id).then(d => this.note = d.data)
+    //service.findNote($routeParams.id).then(d => this.note = d.data)
   }
 
-  editNote (form) {
+  editDefaultParam (form) {
     if (form.$valid) {
-      this._service.editNote(this.note, this.note.field_values).then(
+      this._service.editDefaultParam(this.deck, this.deck.new_card_day_default).then(
         d => {
-          this.note = d.data
+          this.deck = d.data
           this.$location.search('nexturl', null)
           this.$location.path(this.nexturl)
         },
         d => {
-          this.errorMessage = 'errors.note.edition_failure'
+          this.errorMessage = 'errors.deck.edition_failure'
           this.errors = d.data
         }
       )

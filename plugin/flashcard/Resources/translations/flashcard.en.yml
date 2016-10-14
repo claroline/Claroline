@@ -23,16 +23,24 @@ card_type:
 field:
   name: Name of the field
   names: Name of fields
+  type: Type of field
+  value: Value for the field
+  image:
+    src: Source of the image
+    alt: Alternate text for the image
   add: Add a new field
 study:
   begin: Study now
   stop: Stop studying
+  cancelLastStudy: Undo last review
 answer:
   show: Show answer
   again: Again
   hard: Hard
   good: Good
   easy: Easy
+param:
+  new_card_day: Number of new cards to study each day
 errors:
   line: line
   title: Error

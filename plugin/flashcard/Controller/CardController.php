@@ -12,20 +12,22 @@
 namespace Claroline\FlashCardBundle\Controller;
 
 use Claroline\CoreBundle\Form\Handler\FormHandler;
-use Claroline\FlashCardBundle\Entity\CardLearning;
-use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Entity\Card;
+use Claroline\FlashCardBundle\Entity\CardLearning;
+use Claroline\FlashCardBundle\Entity\CardLog;
+use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Entity\Session;
 use Claroline\FlashCardBundle\Manager\CardLearningManager;
+use Claroline\FlashCardBundle\Manager\CardLogManager;
 use Claroline\FlashCardBundle\Manager\CardManager;
 use Claroline\FlashCardBundle\Manager\SessionManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})
@@ -35,6 +37,7 @@ class CardController
 {
     private $cardMgr;
     private $cardLearningMgr;
+    private $cardLogMgr;
     private $sessionMgr;
     private $formHandler;
     private $checker;
@@ -45,6 +48,7 @@ class CardController
      * @DI\InjectParams({
      *     "cardMgr" = @DI\Inject("claroline.flashcard.card_manager"),
      *     "cardLearningMgr" = @DI\Inject("claroline.flashcard.card_learning_manager"),
+     *     "cardLogMgr" = @DI\Inject("claroline.flashcard.card_log_manager"),
      *     "sessionMgr" = @DI\Inject("claroline.flashcard.session_manager"),
      *     "handler" = @DI\Inject("claroline.form_handler"),
      *     "checker" = @DI\Inject("security.authorization_checker"),
@@ -54,6 +58,7 @@ class CardController
      *
      * @param CardManager                   $cardMgr
      * @param CardLearningManager           $cardLearningMgr
+     * @param CardLogManager                $cardLogMgr
      * @param SessionManager                $sessionMgr
      * @param FormHandler                   $handler
      * @param AuthorizationCheckerInterface $checker
@@ -63,6 +68,7 @@ class CardController
     public function __construct(
         CardManager $cardMgr,
         CardLearningManager $cardLearningMgr,
+        CardLogManager $cardLogMgr,
         SessionManager $sessionMgr,
         FormHandler $handler,
         AuthorizationCheckerInterface $checker,
@@ -71,6 +77,7 @@ class CardController
     ) {
         $this->cardMgr = $cardMgr;
         $this->cardLearningMgr = $cardLearningMgr;
+        $this->cardLogMgr = $cardLogMgr;
         $this->sessionMgr = $sessionMgr;
         $this->formHandler = $handler;
         $this->checker = $checker;
@@ -80,7 +87,7 @@ class CardController
 
     /**
      * @EXT\Route(
-     *     "/card/new_card_to_learn/deck/{deck}", 
+     *     "/card/new_card_to_learn/deck/{deck}",
      *     name="claroline_new_card_to_learn"
      * )
      *
@@ -114,7 +121,7 @@ class CardController
 
     /**
      * @EXT\Route(
-     *     "/card/card_to_review/deck/{deck}", 
+     *     "/card/card_to_review/deck/{deck}",
      *     name="claroline_card_to_review"
      * )
      *
@@ -159,17 +166,30 @@ class CardController
         $user = $this->tokenStorage->getToken()->getUser();
         $cardLearning = $this->cardLearningMgr->getCardLearning($card, $user);
 
-        $isNewCard = $cardLearning == null;
+        $isNewCard = $cardLearning === null;
 
         if ($isNewCard) {
             $cardLearning = new cardLearning();
             $cardLearning->setCard($card);
             $cardLearning->setUser($user);
+        } else {
+            $cardLog = new CardLog();
+            $cardLog->setFactor($cardLearning->getFactor());
+            $cardLog->setPainful($cardLearning->getPainful());
+            $cardLog->setNumberRepeated($cardLearning->getNumberRepeated());
+            $cardLog->setDueDate($cardLearning->getDueDate());
+            $cardLog->setDate(new \DateTime());
+            $cardLog->setCard($cardLearning->getCard());
+            $cardLog->setUser($cardLearning->getUser());
         }
 
         $cardLearning->study($result);
 
         $this->cardLearningMgr->save($cardLearning);
+        // Log the current state of the card if it's not a new card
+        if (!$isNewCard) {
+            $this->cardLogMgr->save($cardLog);
+        }
 
         // Save the session
         if ($sessionId > 0) {
@@ -189,6 +209,56 @@ class CardController
         $now = new \DateTime();
         $interval = $now->getTimestamp() - $session->getDate()->getTimestamp();
         $session->setDuration($session->getDuration() + $interval);
+
+        $session = $this->sessionMgr->save($session);
+
+        return new JsonResponse($session->getId());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/cancel_last_study/deck/{deck}/session/{sessionId}/card/{card}",
+     *     name="claroline_cancel_last_study"
+     * )
+     *
+     * @param Deck $deck
+     * @param int  $sessionId
+     * @param Card $card
+     *
+     * @return JsonResponse
+     */
+    public function cancelStudyCardAction(Deck $deck, $sessionId, Card $card)
+    {
+        $this->assertCanOpen($deck);
+
+        $user = $this->tokenStorage->getToken()->getUser();
+        $cardLearning = $this->cardLearningMgr->getCardLearning($card, $user);
+
+        $lastCardLog = $this->cardLogMgr->getLastLog($card, $user);
+
+        if ($lastCardLog) {
+            $cardLearning->setFactor($lastCardLog->getFactor());
+            $cardLearning->setPainful($lastCardLog->getPainful());
+            $cardLearning->setNumberRepeated($lastCardLog->getNumberRepeated());
+            $cardLearning->setDueDate($lastCardLog->getDueDate());
+            $this->cardLearningMgr->save($cardLearning);
+            $this->cardLogMgr->delete($lastCardLog);
+        } else {
+            $this->cardLearningMgr->delete($cardLearning);
+        }
+
+        // Save the session
+        if ($sessionId > 0) {
+            $session = $this->sessionMgr->get($sessionId);
+        } else {
+            $session = new Session();
+            $session->setDeck($deck);
+            $session->setUser($user);
+        }
+
+        $session->deleteCard($card);
+
+        // We dont upgrade the duration of the session
 
         $session = $this->sessionMgr->save($session);
 

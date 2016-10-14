@@ -12,17 +12,17 @@
 namespace Claroline\FlashCardBundle\Controller;
 
 use Claroline\CoreBundle\Form\Handler\FormHandler;
-use Claroline\FlashCardBundle\Entity\NoteType;
-use Claroline\FlashCardBundle\Entity\FieldLabel;
 use Claroline\FlashCardBundle\Entity\CardType;
+use Claroline\FlashCardBundle\Entity\FieldLabel;
+use Claroline\FlashCardBundle\Entity\NoteType;
 use Claroline\FlashCardBundle\Manager\NoteTypeManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})
@@ -59,7 +59,7 @@ class NoteTypeController
 
     /**
      * @EXT\Route(
-     *     "/note_type/edit", 
+     *     "/note_type/edit",
      *     name="claroline_edit_note_type"
      * )
      * @EXT\Method("POST")
@@ -119,7 +119,7 @@ class NoteTypeController
 
     /**
      * @EXT\Route(
-     *     "/note_type/get/{noteTypeId}", 
+     *     "/note_type/get/{noteTypeId}",
      *     name="claroline_get_note_type"
      * )
      *

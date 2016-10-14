@@ -9,7 +9,7 @@
  */
 
 export default class ListNoteCtrl {
-  constructor (service, ClarolineAPIService, $http) {
+  constructor (service, ClarolineAPIService) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
@@ -63,35 +63,45 @@ export default class ListNoteCtrl {
     return nbr
   }
 
+  compareFieldValuesById (first, second) {
+    if (first.field_label.id < second.field_label.id) {
+      return -1
+    }
+    if (first.field_label.id > second.field_label.id) {
+      return 1
+    }
+    return 0
+  }
+
   getQuestionsFromCard (note, card) {
     const question_labels = card.card_type.questions
     let questions = []
-    for(let i=0; i<question_labels.length; i++) {
-      for(let j=0; j<note.field_values.length; j++) {
+    for(let i=0; i<question_labels.length; i++) {
+      for(let j=0; j<note.field_values.length; j++) {
         if(note.field_values[j].field_label.id == question_labels[i].id) {
           questions.push(note.field_values[j])
         }
       }
     }
-    return questions;
+    return questions
   }
 
   getAnswersFromCard (note, card) {
     const answer_labels = card.card_type.answers
     let answers = []
-    for(let i=0; i<answer_labels.length; i++) {
-      for(let j=0; j<note.field_values.length; j++) {
+    for(let i=0; i<answer_labels.length; i++) {
+      for(let j=0; j<note.field_values.length; j++) {
         if(note.field_values[j].field_label.id == answer_labels[i].id) {
           answers.push(note.field_values[j])
         }
       }
     }
-    return answers;
+    return answers
   }
 
   resetCard (card) {
     this._service.resetCard(card).then(
-      d => {
+      function() {
         for (let i=0; i<this.cardLearnings.length; i++) {
           if (this.cardLearnings[i].card.id == card.id) {
             this.cardLearnings.splice(i, 1)
@@ -104,7 +114,7 @@ export default class ListNoteCtrl {
 
   suspendCard (card, suspend) {
     this._service.suspendCard(card, suspend).then(
-      d => {
+      function() {
         for (let i=0; i<this.cardLearnings.length; i++) {
           if (this.cardLearnings[i].card.id == card.id) {
             this.cardLearnings[i].painful = suspend
@@ -133,9 +143,9 @@ export default class ListNoteCtrl {
   }
 
   confirmDeleteNote (note) {
-    const url = Routing.generate('claroline_delete_note', {
+    const url = this.routing.generate('claroline_delete_note', {
       note: note.id
-    });
+    })
 
     let note_str = '<p>'
     let warning = ''
@@ -162,7 +172,7 @@ export default class ListNoteCtrl {
   }
 
   translate(key, data = {}) {
-    return window.Translator.trans(key, data, 'flashcard');
+    return window.Translator.trans(key, data, 'flashcard')
   }
 
   _deleteNote (data) {

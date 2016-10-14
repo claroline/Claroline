@@ -12,19 +12,21 @@
 namespace Claroline\FlashCardBundle\Controller;
 
 use Claroline\CoreBundle\Form\Handler\FormHandler;
-use Claroline\FlashCardBundle\Entity\Note;
-use Claroline\FlashCardBundle\Entity\NoteType;
+use Claroline\FlashCardBundle\Entity\Card;
 use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Entity\FieldValue;
-use Claroline\FlashCardBundle\Entity\Card;
+use Claroline\FlashCardBundle\Entity\FieldValueImage;
+use Claroline\FlashCardBundle\Entity\FieldValueText;
+use Claroline\FlashCardBundle\Entity\Note;
+use Claroline\FlashCardBundle\Entity\NoteType;
 use Claroline\FlashCardBundle\Manager\NoteManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})
@@ -61,7 +63,7 @@ class NoteController
 
     /**
      * @EXT\Route(
-     *     "/note/create/deck/{deck}/note_type/{noteType}", 
+     *     "/note/create/deck/{deck}/note_type/{noteType}",
      *     name="claroline_create_note"
      * )
      * @EXT\Method("POST")
@@ -85,9 +87,17 @@ class NoteController
             $note->setNoteType($noteType);
 
             foreach ($fields as $field) {
-                $fieldValue = new FieldValue();
+                if ($field['fieldValue']['type'] === 'text') {
+                    $fieldValue = new FieldValueText();
+                    $fieldValue->setValue($field['fieldValue']['value']);
+                }
+                if ($field['fieldValue']['type'] === 'image') {
+                    $fieldValue = new FieldValueImage();
+                    $fieldValue->setValue($field['fieldValue']['value']);
+                    $fieldValue->setAlt($field['fieldValue']['alt']);
+                }
+
                 $fieldValue->setFieldLabel($noteType->getFieldLabel($field['id']));
-                $fieldValue->setValue($field['value']);
                 $fieldValue->setNote($note);
                 $note->addFieldValue($fieldValue);
             }
@@ -116,7 +126,7 @@ class NoteController
 
     /**
      * @EXT\Route(
-     *     "/note/edit/{note}", 
+     *     "/note/edit/{note}",
      *     name="claroline_edit_note"
      * )
      * @EXT\Method("POST")
@@ -155,7 +165,7 @@ class NoteController
 
     /**
      * @EXT\Route(
-     *     "/note/get/{note}", 
+     *     "/note/get/{note}",
      *     name="claroline_get_note"
      * )
      *
@@ -178,7 +188,7 @@ class NoteController
 
     /**
      * @EXT\Route(
-     *     "/note/list/deck/{deck}/note_type/{noteType}", 
+     *     "/note/list/deck/{deck}/note_type/{noteType}",
      *     name="claroline_list_notes"
      * )
      *
@@ -204,7 +214,7 @@ class NoteController
 
     /**
      * @EXT\Route(
-     *     "/note/delete/{note}", 
+     *     "/note/delete/{note}",
      *     name="claroline_delete_note"
      * )
      *

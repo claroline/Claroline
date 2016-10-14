@@ -9,12 +9,14 @@
  */
 
 export default class StudyCtrl {
-  constructor (service, $http) {
+  constructor (service) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
     this.newCards = []
     this.learningCards = []
+    // Revised cards during this session
+    this.revisedCards = []
     this.sessionId = 0
     this.currentCard = false
     this.currentCardIsNew = 0
@@ -59,18 +61,18 @@ export default class StudyCtrl {
       if (rand == 0) {
         if (this.newCards.length > 0) {
           rand = Math.floor(Math.random() * this.newCards.length)
-            this.currentCard = this.newCards.splice(rand, 1)[0]
-            this.currentCardIsNew = 1
-            this.showQuestions()
+          this.currentCard = this.newCards.splice(rand, 1)[0]
+          this.currentCardIsNew = 1
+          this.showQuestions()
         } else {
           this.chooseCard()
         }
       } else {
         if (this.learningCards.length > 0) {
           rand = Math.floor(Math.random() * this.learningCards.length)
-            this.currentCard = this.learningCards.splice(rand, 1)[0]
-            this.currentCardIsNew = 0
-            this.showQuestions()
+          this.currentCard = this.learningCards.splice(rand, 1)[0]
+          this.currentCardIsNew = 0
+          this.showQuestions()
         } else {
           this.chooseCard()
         }
@@ -79,24 +81,26 @@ export default class StudyCtrl {
   }
 
   showQuestions () {
-    for (let i=0; i < this.currentCard.card_type.questions.length; i++) {
-        for (let j=0; j < this.currentCard.note.field_values.length; j++) {
-          if (this.currentCard.card_type.questions[i].id ==
-              this.currentCard.note.field_values[j].field_label.id) {
-            this.questions.push(this.currentCard.note.field_values[j])
-          }
+    this.questions = []
+    for (let i=0; i < this.currentCard.card_type.questions.length; i++) {
+      for (let j=0; j < this.currentCard.note.field_values.length; j++) {
+        if (this.currentCard.card_type.questions[i].id ==
+            this.currentCard.note.field_values[j].field_label.id) {
+          this.questions.push(this.currentCard.note.field_values[j])
         }
+      }
     }
   }
 
   showAnswers () {
-    for (let i=0; i < this.currentCard.card_type.answers.length; i++) {
-        for (let j=0; j < this.currentCard.note.field_values.length; j++) {
-          if (this.currentCard.card_type.answers[i].id ==
-              this.currentCard.note.field_values[j].field_label.id) {
-            this.answers.push(this.currentCard.note.field_values[j])
-          }
+    this.answers = []
+    for (let i=0; i < this.currentCard.card_type.answers.length; i++) {
+      for (let j=0; j < this.currentCard.note.field_values.length; j++) {
+        if (this.currentCard.card_type.answers[i].id ==
+            this.currentCard.note.field_values[j].field_label.id) {
+          this.answers.push(this.currentCard.note.field_values[j])
         }
+      }
     }
   }
 
@@ -104,10 +108,37 @@ export default class StudyCtrl {
     this.answerQuality = answerQuality
     // We need to treat the case where this request doesn't work
     this._service.studyCard(
-        this.deck, 
-        this.sessionId, 
-        this.currentCard, 
-        answerQuality).then(d => this.sessionId = d.data);
+      this.deck, 
+      this.sessionId, 
+      this.currentCard, 
+      answerQuality
+    ).then(
+      d => {
+        this.sessionId = d.data
+      }
+    )
+    this.revisedCards.push(this.currentCard)
     this.chooseCard()
+  }
+
+  cancelLastStudy () {
+    this._service.cancelLastStudy(
+      this.deck, 
+      this.sessionId, 
+      this.revisedCards[this.revisedCards.length - 1]
+    ).then(
+        d => {
+          this.sessionId = d.data
+        }
+    )
+    if (this.currentCardIsNew) {
+      this.newCards.push(this.currentCard)
+      this.currentCard = this.revisedCards.pop()
+      this.currentCardIsNew = 0
+    } else {
+      this.learningCards.push(this.currentCard)
+      this.currentCard = this.revisedCards.pop()
+    }
+    this.showQuestions()
   }
 }

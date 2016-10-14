@@ -30,8 +30,8 @@ class Note
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({
-     *     "api_flashcard", 
-     *     "api_flashcard_note", 
+     *     "api_flashcard",
+     *     "api_flashcard_note",
      *     "api_flashcard_card",
      *     "api_flashcard_deck"
      * })
@@ -42,8 +42,8 @@ class Note
      * @ORM\ManyToOne(targetEntity="NoteType", inversedBy="notes")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Groups({
-     *     "api_flashcard", 
-     *     "api_flashcard_note", 
+     *     "api_flashcard",
+     *     "api_flashcard_note",
      *     "api_flashcard_deck"
      * })
      */
@@ -58,8 +58,8 @@ class Note
     /**
      * @ORM\OneToMany(targetEntity="FieldValue", mappedBy="note")
      * @Groups({
-     *     "api_flashcard", 
-     *     "api_flashcard_note", 
+     *     "api_flashcard",
+     *     "api_flashcard_note",
      *     "api_flashcard_card",
      *     "api_flashcard_deck"
      * })
@@ -69,8 +69,8 @@ class Note
     /**
      * @ORM\OneToMany(targetEntity="Card", mappedBy="note")
      * @Groups({
-     *     "api_flashcard", 
-     *     "api_flashcard_note", 
+     *     "api_flashcard",
+     *     "api_flashcard_note",
      *     "api_flashcard_deck"
      * })
      */

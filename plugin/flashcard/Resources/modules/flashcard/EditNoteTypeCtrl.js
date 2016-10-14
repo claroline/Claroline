@@ -9,7 +9,7 @@
  */
 
 export default class EditNoteTypeCtrl {
-  constructor (service, $routeParams, $location, $http) {
+  constructor (service, $routeParams, $location) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
@@ -47,7 +47,7 @@ export default class EditNoteTypeCtrl {
 
   addFieldLabel () {
     this.noteType.field_labels.push({
-      name: ""
+      name: ''
     })
     for (let i=0; i<this.noteType.card_types.length; i++) {
       this.questionsChecked[i].push(false)
@@ -83,7 +83,7 @@ export default class EditNoteTypeCtrl {
 
   addCardType () {
     this.noteType.card_types.push({
-      name: "",
+      name: '',
       questions: [],
       answers: []
     })
@@ -93,7 +93,7 @@ export default class EditNoteTypeCtrl {
 
   addReverseCardType (pos) {
     this.noteType.card_types.push({
-      name: "",
+      name: '',
       questions: this.noteType.card_types[pos].answers,
       answers: this.noteType.card_types[pos].questions
     })
@@ -123,7 +123,6 @@ export default class EditNoteTypeCtrl {
     this.questionsForm[posCardType].$setValidity(
       'atLeastOne', 
       cardTypes[posCardType].questions.length > 0)
-    console.log(this.questionsForm)
   }
 
   clickAnswer (posCardType, posFieldLabel, fieldLabel) {

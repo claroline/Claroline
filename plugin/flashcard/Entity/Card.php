@@ -31,7 +31,7 @@ class Card
      * @Groups({
      *     "api_flashcard",
      *     "api_flashcard_card",
-     *     "api_flashcard_note", 
+     *     "api_flashcard_note",
      *     "api_flashcard_deck"
      * })
      */
@@ -43,7 +43,7 @@ class Card
      * @Groups({
      *     "api_flashcard",
      *     "api_flashcard_card",
-     *     "api_flashcard_note", 
+     *     "api_flashcard_note",
      *     "api_flashcard_deck"
      * })
      */
@@ -53,7 +53,7 @@ class Card
      * @ORM\ManyToOne(targetEntity="Note", inversedBy="cards")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Groups({
-     *     "api_flashcard", 
+     *     "api_flashcard",
      *     "api_flashcard_card"
      * })
      */
