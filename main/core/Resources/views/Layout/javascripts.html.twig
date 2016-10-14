@@ -68,7 +68,6 @@
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
-
 {% javascripts debug=false
     'bundles/bazingajstranslation/js/translator.min.js'
     'js/translations/resource/*.js'
@@ -151,6 +150,8 @@
 <script src="{{ asset('bundles/clarolinecore/js/tinymce/resource_picker_button.js') }}"></script>
 <script src="{{ asset('bundles/clarolinecore/js/tinymce/resource_picker.js') }}"></script>
 <script src="{{ asset('bundles/clarolinecore/js/tinymce/resource_upload_button.js') }}"></script>
+<script src="{{ hotAsset('dist/claroline-distribution-main-core-modernizr.js') }}"></script>
+
 <script>
     $('body').tooltip({
         selector: '[data-toggle=tooltip]'
