@@ -23,8 +23,8 @@ class GroupRepositoryTest extends RepositoryTestCase
         self::$repo = self::getRepository('ClarolineCoreBundle:Group');
         self::createWorkspace('ws_1');
         self::createRole('ROLE_1', self::get('ws_1'));
-        self::createGroup('group_1', array(), array(self::get('ROLE_1')));
-        self::createGroup('group_2', array(), array(self::get('ROLE_1')));
+        self::createGroup('group_1', [], [self::get('ROLE_1')]);
+        self::createGroup('group_2', [], [self::get('ROLE_1')]);
         self::createGroup('group_3');
         self::createGroup('group_4');
     }
@@ -81,28 +81,28 @@ class GroupRepositoryTest extends RepositoryTestCase
 
     public function testFindByRoles()
     {
-        $groups = self::$repo->findByRoles(array(self::get('ROLE_1')));
+        $groups = self::$repo->findByRoles([self::get('ROLE_1')]);
         $this->assertEquals('group_1', $groups[0]->getName());
         $this->assertEquals('group_2', $groups[1]->getName());
     }
 
     public function testFindOutsidersByWorkspaceRoles()
     {
-        $groups = self::$repo->findOutsidersByWorkspaceRoles(array(self::get('ROLE_1')), self::get('ws_1'));
+        $groups = self::$repo->findOutsidersByWorkspaceRoles([self::get('ROLE_1')], self::get('ws_1'));
         $this->assertEquals('group_3', $groups[0]->getName());
         $this->assertEquals('group_4', $groups[1]->getName());
     }
 
     public function testFindByRolesAndName()
     {
-        $groups = self::$repo->findByRolesAndName(array(self::get('ROLE_1')), 'group_1');
+        $groups = self::$repo->findByRolesAndName([self::get('ROLE_1')], 'group_1');
         $this->assertEquals(1, count($groups));
     }
 
     public function testFindOutsidersByRoleAndName()
     {
         $groups = self::$repo->findOutsidersByWorkspaceRolesAndName(
-            array(self::get('ROLE_1')),
+            [self::get('ROLE_1')],
             'group_3',
             self::get('ws_1')
         );
