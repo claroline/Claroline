@@ -38,6 +38,7 @@ all_qti:
 ujm_exercise:
     resource: "@UJMExoBundle/Controller/ExerciseController.php"
     type: annotation
+    options: { expose: true }
 
 ujm_api_exercise:
     resource: "@UJMExoBundle/Controller/Api/ExerciseController.php"

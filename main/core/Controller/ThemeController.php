@@ -14,13 +14,13 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Form\ThemeType;
 use Claroline\CoreBundle\Manager\ThemeManager;
-use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -101,7 +101,8 @@ class ThemeController
         if ($form->isValid()) {
             $this->manager->createCustomTheme(
                 $form['name']->getData(),
-                $form['stylesheet']->getData()
+                $form['stylesheet']->getData(),
+                $form['extendingDefault']->getData()
             );
 
             return new RedirectResponse($this->router->generate('claro_admin_theme_list'));

@@ -16,16 +16,17 @@ use Claroline\AgendaBundle\Entity\EventInvitation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\SendMessageEvent;
+use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use ICal\ICal;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Claroline\CoreBundle\Library\Security\Utilities;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.agenda_manager")
@@ -214,17 +215,16 @@ class AgendaManager
      */
     public function importEvents(UploadedFile $file, $workspace = null)
     {
-        $ical = new \ICal($file->getPathname());
+        $ical = new ICal($file->getPathname());
         $events = $ical->events();
-        //$this->om->startFlushSuite();
         $tabs = [];
 
-        foreach ($events as $i => $event) {
+        foreach ($events as $event) {
             $e = new Event();
-            $e->setTitle($event['SUMMARY']);
-            $e->setStart($ical->iCalDateToUnixTimestamp($event['DTSTART']));
-            $e->setEnd($ical->iCalDateToUnixTimestamp($event['DTEND']));
-            $e->setDescription($event['DESCRIPTION']);
+            $e->setTitle($event->summary);
+            $e->setStart($ical->iCalDateToUnixTimestamp($event->dtstart));
+            $e->setEnd($ical->iCalDateToUnixTimestamp($event->dtend));
+            $e->setDescription($event->description);
             if ($workspace) {
                 $e->setWorkspace($workspace);
             }
@@ -235,7 +235,6 @@ class AgendaManager
             $this->om->flush();
             $tabs[] = $e->jsonSerialize();
         }
-        //$this->om->endFlushSuite();
 
         return $tabs;
     }
@@ -272,7 +271,7 @@ class AgendaManager
 
     public function convertEventsToArray(array $events)
     {
-        $data = array();
+        $data = [];
 
         foreach ($events as $event) {
             $data[] = $event->jsonSerialize();
@@ -285,7 +284,7 @@ class AgendaManager
     {
         $data = [];
 
-        foreach ($invitations as $key => $invitation) {
+        foreach ($invitations as $invitation) {
             $data[] = $invitation->getEvent()->jsonSerialize($this->tokenStorage->getToken()->getUser());
         }
 
@@ -331,7 +330,7 @@ class AgendaManager
             function ($a, $b) {
                 $aStartTimestamp = $a->getStartInTimestamp();
                 $bStartTimestamp = $b->getStartInTimestamp();
-                if ($aStartTimestamp == $bStartTimestamp) {
+                if ($aStartTimestamp === $bStartTimestamp) {
                     return 0;
                 }
 
@@ -354,10 +353,10 @@ class AgendaManager
 
         return $this->container->get('templating')->render(
             'ClarolineAgendaBundle:Tool:exportIcsCalendar.ics.twig',
-            array(
+            [
                 'tzName' => $tz->getName(),
                 'events' => $events,
-            )
+            ]
         );
     }
 
@@ -370,7 +369,7 @@ class AgendaManager
 
     public function checkEditAccess(Workspace $workspace)
     {
-        if (!$this->authorization->isGranted(array('agenda_', 'edit'), $workspace)) {
+        if (!$this->authorization->isGranted(['agenda_', 'edit'], $workspace)) {
             throw new AccessDeniedException('You cannot edit the agenda');
         }
     }

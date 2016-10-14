@@ -11,15 +11,15 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Claroline\CoreBundle\Entity\User;
 
 class FacetRepository extends EntityRepository
 {
     public function findVisibleFacets(TokenInterface $token, $max = null)
     {
-        $roleNames = array();
+        $roleNames = [];
 
         foreach ($token->getRoles() as $role) {
             $roleNames[] = $role->getRole();
@@ -29,7 +29,7 @@ class FacetRepository extends EntityRepository
         if (in_array('ROLE_ADMIN', $roleNames)) {
             $dql = "
             SELECT facet FROM Claroline\CoreBundle\Entity\Facet\Facet facet
-            ORDER BY facet.position
+            ORDER BY facet.isMain, facet.position
         ";
             $query = $this->_em->createQuery($dql);
         } else {
@@ -37,13 +37,13 @@ class FacetRepository extends EntityRepository
             SELECT facet FROM Claroline\CoreBundle\Entity\Facet\Facet facet
             JOIN facet.roles role
             WHERE role.name IN (:rolenames)
-            ORDER BY facet.position
+            ORDER BY facet.isMain, facet.position
         ";
 
             $query = $this->_em->createQuery($dql);
             $query->setParameter('rolenames', $roleNames);
         }
-        if ($max != null) {
+        if ($max !== null) {
             $query->setMaxResults($max);
         }
 
@@ -68,5 +68,18 @@ class FacetRepository extends EntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function count($isMain = false)
+    {
+        $isMain = !is_bool($isMain) ? $isMain === 'true' : $isMain;
+        $dql = '
+            SELECT COUNT(facet) FROM Claroline\CoreBundle\Entity\Facet\Facet facet
+            WHERE facet.isMain = :isMain
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('isMain', $isMain);
+
+        return $query->getSingleScalarResult();
     }
 }

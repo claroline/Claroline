@@ -11,6 +11,7 @@ export default class ProfileController {
     this.user = []
     this.arLinks = []
     this.facets = []
+    this.forms = []
     this.userId = window['userId']
     this.canEdit = window['canEdit']
     this.disabled = true
@@ -26,13 +27,17 @@ export default class ProfileController {
       this.fieldForms = this.getFieldsDefinition(this.facets)
     })
     this.displayCourses = false
+    this.displayCourseWorkspace = false
     this.coursesLoaded = false
     this.sessions = []
     this.sessionsTableParams = new NgTableParams(
       {count: 20},
       {counts: [10, 20, 50, 100], dataset: this.sessions}
     )
-    $http.get(Routing.generate('api_get_courses_profile_tab_option')).then(d => this.displayCourses = d['data'])
+    $http.get(Routing.generate('api_get_courses_profile_tab_option')).then(d => {
+      this.displayCourses = d['data']['displayCourses']
+      this.displayCourseWorkspace = d['data']['displayWorkspace']
+    })
 
     this.fieldTypes = ['text', 'number', 'date', 'radio', 'select', 'checkboxes', 'country', 'email']
   }

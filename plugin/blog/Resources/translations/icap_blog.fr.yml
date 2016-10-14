@@ -43,13 +43,13 @@ icap_blog_comment_edit_success: 'Commentaire modifié avec succès'
 icap_blog_comment_edit_error: 'Erreur lors de la modification du commentaire'
 icap_blog_comment_access_denied: 'Vous n''êtes pas autorisé à modifier ce commentaire'
 icap_blog_post_need_validation_before_publishing: 'Votre article ne sera publié qu''après validation par un administrateur.'
-icap_blog_post_edit_need_validation_before_publishing: 'La modification de votre article ne sera publié qu''après validation par un administrateur.'
-icap_blog_post_comment_need_validation_before_publishing: 'Votre commentaire ne sera publié qu''après validation par un administrateur.'
-icap_blog_post_comment_need_authentication: '<a href="%connection_url%" title="Connexion">Connectez-vous</a> pour pouvoir commenter cet article.'
-icap_blog_post_need_publishing: 'Votre article sera publié après sa validation.'
-no_tags: 'Aucun tag'
-no_authors: 'Aucun rédacteur'
-no_archives: "Aucune archive"
+icap_blog_post_edit_need_validation_before_publishing: La modification de votre article ne sera publiée qu'après validation par un administrateur.
+icap_blog_post_comment_need_validation_before_publishing: Votre commentaire ne sera publié qu'après validation par un administrateur.
+icap_blog_post_comment_need_authentication: <a href="%connection_url%" title="Connexion">Connectez-vous</a> pour pouvoir commenter cet article.
+icap_blog_post_need_publishing: Votre article sera publié après sa validation.
+no_tags: Aucun tag
+no_authors: Aucun rédacteur
+no_archives: Aucune archive
 comments: 'commentaire|commentaires'
 see_comments: 'Voir les commentaires'
 publish: 'Rendre visible'
@@ -101,9 +101,9 @@ widget_list_no_blog: 'Aucun blog affiché'
 no_blog_selected: 'Aucun blog sélectionné'
 blog_widget_tag_list_blog_form_tag_cloud: 'Nuage de tags'
 icap_blog_options_form_Order_Widget_Right: 'Gestion de la barre latérale de widget'
-apply: 'Appliquer'
-limit_to: 'Limiter l''affichage aux'
-tags_in_the_cloud: 'tags les plus utilisés.'
-created_by: 'par'
-created_on: 'le'
-posts: 'Articles'
+apply: Appliquer
+limit_to: Limiter l'affichage aux
+tags_in_the_cloud: tags les plus utilisés.
+created_by: par
+created_on: le
+posts: Articles

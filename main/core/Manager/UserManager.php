@@ -494,7 +494,14 @@ class UserManager
                 $group = null;
             }
 
-            $userEntity = $this->getUserByUsernameOrMail($username, $email);
+            $userEntity = $this->userRepo->findOneByMail($email);
+
+            if (!$userEntity) {
+                $userEntity = $this->userRepo->findOneByUsername($username);
+                if (!$userEntity) {
+                    $userEntity = $this->userRepo->findOneByAdministrativeCode($code);
+                }
+            }
 
             if ($userEntity && $options['ignore-update']) {
                 $logger(" Skipping  {$userEntity->getUsername()}...");
@@ -506,10 +513,10 @@ class UserManager
             if (!$userEntity) {
                 $isNew = true;
                 $userEntity = new User();
-                $userEntity->setUsername($username);
-                $userEntity->setMail($email);
             }
 
+            $userEntity->setUsername($username);
+            $userEntity->setMail($email);
             $userEntity->setFirstName($firstName);
             $userEntity->setLastName($lastName);
             $userEntity->setPlainPassword($pwd);
@@ -1240,6 +1247,11 @@ class UserManager
             $mail,
             $executeQuery
         );
+    }
+
+    public function getUserByUsernameOrMailOrCode($username, $mail, $code)
+    {
+        return $this->userRepo->findUserByUsernameOrMailOrCode($username, $mail, $code);
     }
 
     public function getUserByUsernameAndMail($username, $mail, $executeQuery = true)

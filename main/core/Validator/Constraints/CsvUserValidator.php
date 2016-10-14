@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\NonUniqueResultException;
@@ -34,6 +35,7 @@ class CsvUserValidator extends ConstraintValidator
     private $userManager;
     private $validator;
     private $groupManager;
+    private $roleManager;
 
     /**
      * @DI\InjectParams({
@@ -43,7 +45,8 @@ class CsvUserValidator extends ConstraintValidator
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
      *     "groupManager"          = @DI\Inject("claroline.manager.group_manager"),
      *     "validator"             = @DI\Inject("validator"),
-     *     "ut"                    = @DI\Inject("claroline.utilities.misc")
+     *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
+     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct(
@@ -53,7 +56,8 @@ class CsvUserValidator extends ConstraintValidator
         UserManager $userManager,
         ValidatorInterface $validator,
         ClaroUtilities $ut,
-        GroupManager $groupManager
+        GroupManager $groupManager,
+        RoleManager $roleManager
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->om = $om;
@@ -62,6 +66,7 @@ class CsvUserValidator extends ConstraintValidator
         $this->validator = $validator;
         $this->ut = $ut;
         $this->groupManager = $groupManager;
+        $this->roleManager = $roleManager;
     }
 
     public function validate($value, Constraint $constraint)
@@ -70,6 +75,7 @@ class CsvUserValidator extends ConstraintValidator
         $data = $this->ut->formatCsvOutput(file_get_contents($value));
         $lines = str_getcsv($data, PHP_EOL);
         $authDrivers = $this->authenticationManager->getDrivers();
+        $newUserCount = 0;
 
         foreach ($lines as $line) {
             $linesTab = explode(';', $line);
@@ -148,9 +154,10 @@ class CsvUserValidator extends ConstraintValidator
 
                 if ($mode === 1) {
                     try {
-                        $existingUser = $this->userManager->getUserByUsernameOrMail(
+                        $existingUser = $this->userManager->getUserByUsernameOrMailOrCode(
                             $username,
-                            $email
+                            $email,
+                            $code
                         );
                     } catch (NonUniqueResultException $e) {
                         $msg = $this->translator->trans(
@@ -202,6 +209,7 @@ class CsvUserValidator extends ConstraintValidator
                     $existingUser->setUsername($username);
                     $existingUser->setMail($email);
                 } else {
+                    ++$newUserCount;
                     $newUser = new User();
                     $newUser->setFirstName($firstName);
                     $newUser->setLastName($lastName);
@@ -282,6 +290,20 @@ class CsvUserValidator extends ConstraintValidator
                 ).' ';
                 $this->context->addViolation($msg);
             }
+        }
+
+        $role = $this->roleManager->getRoleByName('ROLE_USER');
+
+        $totalUsers = $this->roleManager->countUsersByRoleIncludingGroup($role);
+        $maxUsers = $role->getMaxUsers();
+
+        if ($maxUsers < $totalUsers + $newUserCount) {
+            $msg = $this->translator->trans(
+                'user_limit_reached',
+                [],
+                'platform'
+            ).' ';
+            $this->context->addViolation($msg);
         }
     }
 

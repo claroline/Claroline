@@ -1,0 +1,22 @@
+announcement_creation: Nieuwe melding
+announcement_delete_confirm_message: Deze melding zal definitief verwijderd worden.
+announcement_delete_confirm_title: Bent u er zeker van dat u deze melding wenst te verwijderen ?
+announcement_edition: De melding bewerken
+announcement_form_announcer: Aankondiger
+announcement_form_content: Bericht
+announcement_form_title: Titel
+announcement_form_visible: Zichtbaar
+announcement_form_visible_from: Van
+announcement_form_visible_until: Tot
+announcement_sent: Melding gestuurd
+announcements_list: Lijst van de meldingen
+announcements_widget_configuration_info: De bron van de meldingen kan vermeld worden door een leermiddel te kiezen.
+at: aan
+by: door
+created_on: Gemaakt op
+create_new_announcement: Een melding toevoegen
+notification_option_info: De optie notificatie wordt uitgaschakeld wanneer een stratdatum gedefinieerd wordt.
+notify_user: Een notitie aan de gebruiker sturen
+published_on: Gepubliceerd op
+send_mail_user_picker_title: Gelieve de gebruikers te kiezen aan wie u de melding wenst te sturen.
+visible_from_until_condition: De einddatum moet na de startdatum gelegen komen.

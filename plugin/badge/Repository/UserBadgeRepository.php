@@ -2,11 +2,11 @@
 
 namespace Icap\BadgeBundle\Repository;
 
-use Doctrine\ORM\Query\ResultSetMapping;
-use Icap\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Icap\BadgeBundle\Entity\Badge;
 
 class UserBadgeRepository extends EntityRepository
 {
@@ -18,7 +18,7 @@ class UserBadgeRepository extends EntityRepository
      */
     public function findOneByBadgeAndUser(Badge $badge, User $user)
     {
-        return $this->findOneBy(array('badge' => $badge, 'user' => $user));
+        return $this->findOneBy(['badge' => $badge, 'user' => $user]);
     }
 
     /**
@@ -283,5 +283,26 @@ class UserBadgeRepository extends EntityRepository
                 ->setParameter(1, $badge->getId());
 
         return $qb1->getQuery()->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @param int  $limit
+     *
+     * @return Badge[]
+     */
+    public function findUserLastAwardedBadges(User $user, $limit = 10)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT ub, b
+                FROM IcapBadgeBundle:UserBadge ub
+                JOIN ub.badge b
+                WHERE ub.user = :userId
+                ORDER BY ub.issuedAt DESC'
+            )
+            ->setParameter('userId', $user->getId());
+
+        return $query->setMaxResults($limit)->getResult();
     }
 }

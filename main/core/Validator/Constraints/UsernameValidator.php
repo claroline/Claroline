@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Validator\Constraints;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -44,18 +45,21 @@ class UsernameValidator extends ConstraintValidator
         $this->translator = $translator;
     }
 
-    public function validate($value, Constraint $constraint)
+    public function validate($user, Constraint $constraint)
     {
         $regex = $this->ch->getParameter('username_regex');
+        $username = $user->getUsername();
 
-        if (!preg_match($regex, $value)) {
+        if (!preg_match($regex, $username)) {
             $this->context->addViolation($constraint->error);
         }
 
-        $user = $this->om->getRepository('ClarolineCoreBundle:User')->findOneByMail($value);
+        if ($username !== $user->getMail()) {
+            $user = $this->om->getRepository('ClarolineCoreBundle:User')->findOneByMail($username);
 
-        if ($user) {
-            $this->context->addViolation($this->translator->trans('username_already_used', ['%username%' => $value], 'platform'));
+            if ($user) {
+                $this->context->addViolation($this->translator->trans('username_already_used', ['%username%' => $username], 'platform'));
+            }
         }
     }
 }

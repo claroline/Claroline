@@ -45,6 +45,8 @@
     <div class="dropdown">
         <i class="fa fa-chevron-down pointer-hand" data-toggle="dropdown"></i>
         <ul class="dropdown-menu" role="menu">
+            <li role="presentation"><i role="menuitem" ng-click="fc.onFacetUp(facet)" class="fa fa-arrow-left"> {{ "left"|trans:{}:'platform' }}</i></li>
+            <li role="presentation"><i role="menuitem" ng-click="fc.onFacetDown(facet)" class="fa fa-arrow-right"> {{ "right"|trans:{}:'platform' }}</i></li>
             <li role="presentation"><i role="menuitem" ng-click="fc.onEditFacetFormRequest(facet)" class="fa fa-pencil"> {{ "edit"|trans:{}:'platform' }}</i></li>
             <li role="presentation"><i role="menuitem" ng-click="fc.onDeleteFacet(facet)" class="fa fa-trash-o"> {{ "delete"|trans:{}:'platform' }}</i></li>
             <li role="presentation"><i role="menuitem" ng-click="fc.onSetFacetRoles(facet)" class="fa fa-user"> {{ "roles"|trans:{}:'platform' }}</i></li>
@@ -60,7 +62,7 @@
                 {{ "general"|trans:{}:'platform' }}
             </a>
         </li>
-        <li ng-repeat="(key, facet) in fc.facets" id="tab-facet-{{ facet.id }}" ng-if="!facet.is_main">
+        <li ng-repeat="(key, facet) in fc.tabFacets" id="tab-facet-{{ facet.id }}">
             <a href="#facet-pane-{{ facet.id }}" data-toggle="tab">
                 {{ facet.name }}
                 <span ng-include="'facet_options.html'"></span>
@@ -103,12 +105,14 @@
                             <input type="submit" class="btn btn-primary" value="{{ 'edit'|trans:{}:'platform' }}"></input>
                         </form>
                         </br>
-                        <div class="facet-main" ng-repeat="(key, facet) in fc.facets" ng-if="facet.is_main">
+                        <div class="facet-main" ng-repeat="(key, facet) in fc.mainFacets">
                             <h4 align="center">
                                 <span>  {{ facet.name }}  </span>
                                 <span class="dropdown">
                                     <i class="fa fa-chevron-down pointer-hand" data-toggle="dropdown"></i>
                                     <ul class="dropdown-menu" role="menu">
+                                        <li role="presentation"><a class="pointer" ng-click="fc.onFacetUp(facet)"><i role="menuitem" class="fa fa-arrow-up"> {{ "up"|trans:{}:'platform' }}</i></a></li>
+                                        <li role="presentation"><a class="pointer" ng-click="fc.onFacetDown(facet)"> <i role="menuitem" class="fa fa-arrow-down"> {{ "down"|trans:{}:'platform' }}</i></a></li>
                                         <li role="presentation"><a class="pointer" ng-click="fc.onEditFacetFormRequest(facet)"><i role="menuitem" class="fa fa-pencil"> {{ "edit"|trans:{}:'platform' }}</i></a></li>
                                         <li role="presentation"><a class="pointer" ng-click="fc.onDeleteFacet(facet)" ><i role="menuitem" class="fa fa-trash-o"> {{ "delete"|trans:{}:'platform' }}</i></a></li>
                                         <li role="presentation"><a class="pointer" ng-click="fc.onSetFacetRoles(facet)" ><i role="menuitem" class="fa fa-user"> {{ "roles"|trans:{}:'platform' }}</i></a></li>

@@ -102,10 +102,15 @@ class ResultManager
      *
      * @return string
      */
-    public function getWidgetContent(Workspace $workspace, User $user)
+    public function getWidgetContent(Workspace $workspace = null, User $user = null)
     {
-        $results = $this->om->getRepository('ClarolineResultBundle:Result')
-            ->findByUserAndWorkspace($user, $workspace);
+        $results = [];
+
+        if (!is_null($user)) {
+            $results = is_null($workspace) ?
+                $this->om->getRepository('ClarolineResultBundle:Result')->findByUser($user) :
+                $this->om->getRepository('ClarolineResultBundle:Result')->findByUserAndWorkspace($user, $workspace);
+        }
 
         return $this->templating->render('ClarolineResultBundle:Result:widget.html.twig', [
             'results' => $results,

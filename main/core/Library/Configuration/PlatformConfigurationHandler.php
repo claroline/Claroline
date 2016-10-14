@@ -97,6 +97,7 @@ class PlatformConfigurationHandler
         'portal_enabled_resources' => null,
         'ssl_enabled' => false,
         'enable_rich_text_file_import' => false,
+        'login_target_route' => 'claro_security_login',
     ];
     private $lockedParameters;
 
@@ -223,6 +224,7 @@ class PlatformConfigurationHandler
         $config->setFormHoneypot($this->parameters['form_honeypot']);
         $config->setSslEnabled($this->parameters['ssl_enabled']);
         $config->setEnableRichTextFileImport($this->parameters['enable_rich_text_file_import']);
+        $config->setLoginTargetRoute($this->parameters['login_target_route']);
 
         return $config;
     }

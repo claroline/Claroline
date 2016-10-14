@@ -108,6 +108,7 @@ edit_location: Modifier la localisation
 edit_session: Modifier la session
 edit_session_event: Modifier la séance
 enable_courses_tab_in_profile: Activer l'onglet "Formations" dans le profil
+enable_workspace_in_courses_tab_in_profile: Afficher le lien vers l'espace d'activités dans l'onglet "Formations" du profil
 event_registration_automatic: Automatique
 event_registration_manual: Manuelle
 event_registration_public: Publique

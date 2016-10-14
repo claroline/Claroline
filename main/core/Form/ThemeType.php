@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ThemeType extends AbstractType
 {
@@ -33,7 +33,16 @@ class ThemeType extends AbstractType
                     new NotBlank(),
                     new File(['maxSize' => '300k']),
                 ],
-            ]);
+            ])
+            ->add(
+                'extendingDefault',
+                'checkbox',
+                [
+                    'label' => 'extend_default_theme',
+                    'translation_domain' => 'theme',
+                    'required' => false,
+                ]
+            );
     }
 
     public function getName()

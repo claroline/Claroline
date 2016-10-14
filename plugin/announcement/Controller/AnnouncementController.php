@@ -13,12 +13,15 @@ namespace Claroline\AnnouncementBundle\Controller;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
+use Claroline\AnnouncementBundle\Entity\AnnouncementsWidgetConfig;
 use Claroline\AnnouncementBundle\Event\Log\LogAnnouncementCreateEvent;
 use Claroline\AnnouncementBundle\Event\Log\LogAnnouncementDeleteEvent;
 use Claroline\AnnouncementBundle\Event\Log\LogAnnouncementEditEvent;
+use Claroline\AnnouncementBundle\Form\AnnouncementsWidgetConfigurationType;
 use Claroline\AnnouncementBundle\Form\AnnouncementType;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
@@ -27,6 +30,7 @@ use Claroline\CoreBundle\Pager\PagerFactory;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -45,6 +49,7 @@ class AnnouncementController extends Controller
     private $formFactory;
     private $pagerFactory;
     private $request;
+    private $templating;
     private $tokenStorage;
     private $translator;
     private $utils;
@@ -58,6 +63,7 @@ class AnnouncementController extends Controller
      *     "formFactory"         = @DI\Inject("form.factory"),
      *     "pagerFactory"        = @DI\Inject("claroline.pager.pager_factory"),
      *     "requestStack"        = @DI\Inject("request_stack"),
+     *     "templating"          = @DI\Inject("templating"),
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "translator"          = @DI\Inject("translator"),
      *     "utils"               = @DI\Inject("claroline.security.utilities"),
@@ -71,6 +77,7 @@ class AnnouncementController extends Controller
         FormFactoryInterface $formFactory,
         PagerFactory $pagerFactory,
         RequestStack $requestStack,
+        TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         Utilities $utils,
@@ -82,6 +89,7 @@ class AnnouncementController extends Controller
         $this->formFactory = $formFactory;
         $this->pagerFactory = $pagerFactory;
         $this->request = $requestStack->getCurrentRequest();
+        $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->utils = $utils;
@@ -392,67 +400,113 @@ class AnnouncementController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/announcements/workspace/{workspaceId}/page/{page}",
-     *     name="claro_workspace_announcements_pager",
-     *     defaults={"page"=1},
+     *     "/announcement/widget/{widgetInstance}",
+     *     name="claro_announcement_widget",
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
+     * @EXT\Template("ClarolineAnnouncementBundle::announcementsWidget.html.twig")
      *
-     * @EXT\Template("ClarolineAnnouncementBundle::announcementsWorkspaceWidgetPager.html.twig")
-     *
-     * Renders announcements in a pager.
-     *
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param $page
-     *
-     * @return Response
+     * Renders announcement widget.
      */
-    public function announcementsWorkspaceWidgetPagerAction(Workspace $workspace, $page)
+    public function announcementsWidgetAction(WidgetInstance $widgetInstance)
     {
-        $token = $this->tokenStorage->getToken();
-        $roles = $this->utils->getRoles($token);
-        $data = $this->announcementManager->getVisibleAnnouncementsByWorkspace($workspace, $roles);
-        $pager = $this->pagerFactory->createPagerFromArray($data, $page, 5);
-
-        return [
-            'datas' => $pager,
-            'widgetType' => 'workspace',
-            'workspaceId' => $workspace->getId(),
-        ];
+        return ['widgetInstance' => $widgetInstance];
     }
 
     /**
      * @EXT\Route(
-     *     "/announcements/page/{page}",
-     *     name="claro_desktop_announcements_pager",
+     *     "/announcement/widget/{widgetInstance}/page/{page}",
+     *     name="claro_announcement_widget_pager",
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
      *
-     * @EXT\Template("ClarolineAnnouncementBundle::announcementsDesktopWidgetPager.html.twig")
-     *
      * Renders announcements in a pager.
      *
-     * @param $page
+     * @param WidgetInstance $widgetInstance
+     * @param int            $page
      *
      * @return Response
      */
-    public function announcementsDesktopWidgetPagerAction($page)
+    public function announcementsWidgetPagerAction(WidgetInstance $widgetInstance, $page = 1)
     {
+        $workspace = $widgetInstance->getWorkspace();
+        $isDesktop = is_null($workspace);
+        $config = $this->announcementManager->getAnnouncementsWidgetConfig($widgetInstance);
+        $selectedResourcesIds = $config->getAnnouncements();
         $token = $this->tokenStorage->getToken();
         $roles = $this->utils->getRoles($token);
-        $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
-        $data = $this->announcementManager->getVisibleAnnouncementsByWorkspaces($workspaces, $roles);
-        $pager = $this->pagerFactory->createPagerFromArray($data, $page, 5);
+        $announcements = [];
 
-        return ['datas' => $pager, 'widgetType' => 'desktop'];
+        if ($isDesktop) {
+            $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
+            $data = $this->announcementManager->getVisibleAnnouncementsByWorkspaces($workspaces, $roles);
+            $template = 'ClarolineAnnouncementBundle::announcementsDesktopWidgetPager.html.twig';
+        } else {
+            $data = $this->announcementManager->getVisibleAnnouncementsByWorkspace($workspace, $roles);
+            $template = 'ClarolineAnnouncementBundle::announcementsWorkspaceWidgetPager.html.twig';
+        }
+        if (count($selectedResourcesIds) > 0) {
+            foreach ($data as $announcement) {
+                if (in_array($announcement['resourceNodeId'], $selectedResourcesIds)) {
+                    $announcements[] = $announcement;
+                }
+            }
+        } else {
+            $announcements = $data;
+        }
+        $pager = $this->pagerFactory->createPagerFromArray($announcements, $page, 5);
+
+        return new Response($this->templating->render($template, ['widgetInstance' => $widgetInstance, 'datas' => $pager]));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/announcements/widget/{widgetInstance}/configure/form",
+     *     name="claro_announcements_widget_configure_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\Template("ClarolineAnnouncementBundle::announcementsWidgetConfigureForm.html.twig")
+     */
+    public function announcementsWidgetConfigureFormAction(WidgetInstance $widgetInstance)
+    {
+        $config = $this->announcementManager->getAnnouncementsWidgetConfig($widgetInstance);
+        $announcements = $config->getAnnouncements();
+        $form = $this->formFactory->create(new AnnouncementsWidgetConfigurationType($announcements));
+
+        return ['form' => $form->createView(), 'config' => $config];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/announcements/widget/configure/config/{config}",
+     *     name="claro_announcements_widget_configure",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\Template("ClarolineAnnouncementBundle::announcementsWidgetConfigureForm.html.twig")
+     */
+    public function announcementsWidgetConfigureAction(AnnouncementsWidgetConfig $config)
+    {
+        $form = $this->formFactory->create(new AnnouncementsWidgetConfigurationType());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $resource = $form->get('resource')->getData();
+
+            if ($resource) {
+                $config->clearAnnouncements();
+                $config->addAnnouncement($resource->getId());
+            }
+            $this->announcementManager->persistAnnouncementsWidgetConfig($config);
+
+            return new JsonResponse('success', 204);
+        } else {
+            return ['form' => $form->createView(), 'config' => $config];
+        }
     }
 
     /**

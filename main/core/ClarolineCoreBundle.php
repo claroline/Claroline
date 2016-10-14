@@ -11,22 +11,26 @@
 
 namespace Claroline\CoreBundle;
 
+use Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\ImportersConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RichTextFormatterConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Compiler\RouterPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RuleConstraintsConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Factory\ApiFactory;
+use Claroline\CoreBundle\Library\Installation\AdditionalInstaller;
+use Claroline\InstallationBundle\Bundle\InstallableBundle;
+use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use FOS\OAuthServerBundle\FOSOAuthServerBundle;
 use IDCI\Bundle\ExporterBundle\IDCIExporterBundle;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
+use Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle;
+use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
-use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\InstallationBundle\Bundle\InstallableBundle;
-use Claroline\CoreBundle\Library\Installation\AdditionalInstaller;
 use Zenstruck\Bundle\FormBundle\ZenstruckFormBundle;
 
 class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableInterface, ConfigurationProviderInterface
@@ -40,6 +44,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
         $container->addCompilerPass(new RichTextFormatterConfigPass());
         $container->addCompilerPass(new DoctrineEntityListenerPass());
         $container->addCompilerPass(new RuleConstraintsConfigPass());
+        $container->addCompilerPass(new RouterPass());
 
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new ApiFactory());
@@ -47,7 +52,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
 
     public function supports($environment)
     {
-        return in_array($environment, array('prod', 'dev', 'test'));
+        return in_array($environment, ['prod', 'dev', 'test']);
     }
 
     public function getConfiguration($environment)
@@ -67,7 +72,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
         $config = new ConfigurationBuilder();
 
         // no special configuration, work in any environment
-        $emptyConfigs = array(
+        $emptyConfigs = [
             'Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle',
             'FOS\JsRoutingBundle\FOSJsRoutingBundle',
             'JMS\AopBundle\JMSAopBundle',
@@ -76,9 +81,9 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Claroline\MigrationBundle\ClarolineMigrationBundle',
             'Claroline\Bundle\FrontEndBundle\FrontEndBundle',
             'JMS\SerializerBundle\JMSSerializerBundle',
-        );
+        ];
         // simple container configuration, same for every environment
-        $simpleConfigs = array(
+        $simpleConfigs = [
             'Symfony\Bundle\TwigBundle\TwigBundle' => 'twig',
             'Symfony\Bundle\AsseticBundle\AsseticBundle' => 'assetic',
             'JMS\DiExtraBundle\JMSDiExtraBundle' => 'jms_di_extra',
@@ -90,25 +95,25 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'FOS\RestBundle\FOSRestBundle' => 'fos_rest',
             'Gregwar\CaptchaBundle\GregwarCaptchaBundle' => 'gregwar_captcha',
             'Knp\Bundle\MenuBundle\KnpMenuBundle' => 'knp_menu',
-        );
+        ];
         // one configuration file for every standard environment (prod, dev, test)
-        $envConfigs = array(
+        $envConfigs = [
             'Symfony\Bundle\FrameworkBundle\FrameworkBundle' => 'framework',
             'Symfony\Bundle\SecurityBundle\SecurityBundle' => 'security',
             'Symfony\Bundle\MonologBundle\MonologBundle' => 'monolog',
             'Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle' => 'swiftmailer',
             'Doctrine\Bundle\DoctrineBundle\DoctrineBundle' => 'doctrine',
-        );
+        ];
 
         if (in_array($bundleClass, $emptyConfigs)) {
             return $config;
         } elseif (isset($simpleConfigs[$bundleClass])) {
             return $config->addContainerResource($this->buildPath($simpleConfigs[$bundleClass]));
         } elseif (isset($envConfigs[$bundleClass])) {
-            if (in_array($environment, array('prod', 'dev', 'test'))) {
+            if (in_array($environment, ['prod', 'dev', 'test'])) {
                 return $config->addContainerResource($this->buildPath("{$envConfigs[$bundleClass]}_{$environment}"));
             }
-        } elseif ($bundle instanceof \Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle) {
+        } elseif ($bundle instanceof BazingaJsTranslationBundle) {
             return $config->addRoutingResource($this->buildPath('bazinga_routing'));
         } elseif ($bundle instanceof FOSOAuthServerBundle) {
             $config = new ConfigurationBuilder();
@@ -138,12 +143,12 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
                 ->addRoutingResource($this->buildPath('zenstruck_form_routing'));
 
             return $config;
-        } elseif (in_array($environment, array('dev', 'test'))) {
-            if ($bundle instanceof \Symfony\Bundle\WebProfilerBundle\WebProfilerBundle) {
+        } elseif (in_array($environment, ['dev', 'test'])) {
+            if ($bundle instanceof WebProfilerBundle) {
                 return $config
                     ->addContainerResource($this->buildPath('web_profiler'))
                     ->addRoutingResource($this->buildPath('web_profiler_routing'));
-            } elseif ($bundle instanceof \Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle) {
+            } elseif ($bundle instanceof SensioGeneratorBundle) {
                 return $config;
             }
         }

@@ -1629,6 +1629,9 @@ class AdminManagementController extends Controller
         $datas['enableCoursesProfileTab'] = $this->configHandler->hasParameter('cursus_enable_courses_profile_tab') ?
             $this->configHandler->getParameter('cursus_enable_courses_profile_tab') :
             false;
+        $datas['enableWsInCoursesProfileTab'] = $this->configHandler->hasParameter('cursus_enable_ws_in_courses_profile_tab') ?
+            $this->configHandler->getParameter('cursus_enable_ws_in_courses_profile_tab') :
+            false;
         $datas['sessionDefaultTotal'] = $this->configHandler->hasParameter('cursus_session_default_total') ?
             $this->configHandler->getParameter('cursus_session_default_total') :
             false;
@@ -1655,6 +1658,7 @@ class AdminManagementController extends Controller
         $this->configHandler->setParameter('cursus_disable_certificates', $parameters['disableCertificates']);
         $this->configHandler->setParameter('cursus_disable_session_event_registration', $parameters['disableSessionEventRegistration']);
         $this->configHandler->setParameter('cursus_enable_courses_profile_tab', $parameters['enableCoursesProfileTab']);
+        $this->configHandler->setParameter('cursus_enable_ws_in_courses_profile_tab', $parameters['enableWsInCoursesProfileTab']);
         $this->configHandler->setParameter('cursus_session_default_total', $parameters['sessionDefaultTotal']);
 
         return new JsonResponse($parameters, 200);

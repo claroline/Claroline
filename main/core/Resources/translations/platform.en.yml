@@ -215,7 +215,7 @@ csv_delete: Csv suppression
 csv_export: 'CSV export'
 csv_select: 'Select csv to upload:'
 csv_format_info: 'CSV file information'
-csv_format_user_list: 'Format: username list separated by a carriage return'
+csv_format_user_list: 'Format: username, administrative code or email list separated by a carriage return'
 csv_users_import_infos: 'CSV file information'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User information must be defined in one line and separated by semicolon'
@@ -298,6 +298,8 @@ display: Display
 display_at_registration: 'Display at registration'
 display_captcha: 'Display captcha for anonymous'
 display_options: 'Display options'
+displayable_in_desktop: Displayable in desktop
+displayable_in_workspace: Displayable in workspace
 displayable_in_workspace_list: Displayable
 distinguished_name: 'Distinguished Name (DN)'
 does_not_exist: 'doesn''t exist'
@@ -858,6 +860,7 @@ role_name_type_form_translationKey: Name
 roles: Roles
 roles_facet_form_explanation: 'This form allows you to set which roles can see the facet in the public profile.'
 roles_fields_form_explanation: 'This form allows you to set which roles can see and edit the field in the public profile.'
+roles_for_desktop_widget: Roles (Desktop)
 roles_management: 'Roles management'
 save: Save
 save_as_template: 'Export'
@@ -1330,3 +1333,4 @@ disable: Disable
 enable: Enable
 workspace_access_date_invalid: The workspace access dates are passed
 organization_invalid: The organization %organization% doesn't exist at line %line%
+user_limit_reached: User limit reached

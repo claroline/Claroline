@@ -155,3 +155,9 @@
         {{ themeCSS }}
     {% endspaceless %}
 {% endmacro %}
+
+{% macro getDefaultTheme() %}
+    {% spaceless %}
+        {{ getAssetPath() ~ '/themes/claroline/bootstrap.css' }}
+    {% endspaceless %}
+{% endmacro %}

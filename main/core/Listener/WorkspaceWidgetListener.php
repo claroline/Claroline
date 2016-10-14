@@ -19,7 +19,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Service()
@@ -66,29 +65,31 @@ class WorkspaceWidgetListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        if (!$this->authorization->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
+        $token = $this->tokenStorage->getToken();
+        $user = $token->getUser();
+        $isAnon = $user === 'anon.';
         $widgetInstance = $event->getInstance();
+        $mode = 0;
+        $workspaces = [];
         $instanceTemplate = $widgetInstance->getTemplate();
         $template = is_null($instanceTemplate) ?
             'ClarolineCoreBundle:Widget:desktopWidgetMyWorkspaces.html.twig' :
             $instanceTemplate;
-        $mode = 0;
-        $token = $this->tokenStorage->getToken();
-        $user = $token->getUser();
-        $workspaces = $this->workspaceManager->getFavouriteWorkspacesByUser($user);
 
-        if (count($workspaces) > 0) {
-            $mode = 1;
-        } else {
-            $roles = $this->utils->getRoles($token);
-            $datas = $this->workspaceTagManager->getDatasForWorkspaceListByUser($user, $roles);
-            $workspaces = $datas['workspaces'];
+        if (!$isAnon) {
+            $workspaces = $this->workspaceManager->getFavouriteWorkspacesByUser($user);
+
+            if (count($workspaces) > 0) {
+                $mode = 1;
+            } else {
+                $roles = $this->utils->getRoles($token);
+                $datas = $this->workspaceTagManager->getDatasForWorkspaceListByUser($user, $roles);
+                $workspaces = $datas['workspaces'];
+            }
         }
         $content = $this->templating->render(
             $template,
-            ['workspaces' => $workspaces, 'mode' => $mode, 'widgetInstance' => $widgetInstance]
+            ['workspaces' => $workspaces, 'mode' => $mode, 'widgetInstance' => $widgetInstance, 'isAnon' => $isAnon]
         );
         $event->setContent($content);
         $event->stopPropagation();

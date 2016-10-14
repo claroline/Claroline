@@ -251,7 +251,7 @@ class ResourceController
         //in order to remember for later. To keep links breadcrumb working we'll need to do something like this
         //if we don't want to change to much code
         $this->request->getSession()->set('current_resource_node', $node);
-
+        $isIframe = (bool) $this->request->query->get('iframe');
         //double check... first the resource, then the target
         $collection = new ResourceCollection([$node]);
         $this->checkAccess('OPEN', $collection);
@@ -264,7 +264,7 @@ class ResourceController
         $event = $this->dispatcher->dispatch(
             'open_'.$resourceType,
             'OpenResource',
-            [$this->resourceManager->getResourceFromNode($node)]
+            [$this->resourceManager->getResourceFromNode($node), $isIframe]
         );
         $this->dispatcher->dispatch('log', 'Log\LogResourceRead', [$node]);
 

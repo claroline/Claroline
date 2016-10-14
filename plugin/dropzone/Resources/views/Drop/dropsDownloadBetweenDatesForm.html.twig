@@ -19,17 +19,14 @@
             {{ form_widget(form.drop_period_end_date) }}
         </div>
     </div>
-
-    <div class="container ">
-        <div class="modal-footer">
-            <div class="btn-group ">
-                {#<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</button>#}
-                <button id="btn-dl-copies-by-date" type="submit" class="btn btn-default">
-                        <span
-                                class="fa fa-download"> </span> {{ 'Download copies in this period'|trans({}, 'icap_dropzone') }}
-                </button>
-            </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <button id="btn-dl-copies-by-date" type="submit" class="btn btn-default pull-right">
+                <i class="fa fa-download"></i>
+                {{ 'Download copies in this period'|trans({}, 'icap_dropzone') }}
+            </button>
         </div>
     </div>
     {{ form_end(form) }}
-
+</form>

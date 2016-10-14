@@ -10,6 +10,7 @@ announcement_form_visible_from: From
 announcement_form_visible_until: To
 announcement_sent: Announcement sent
 announcements_list: 'Announcements list'
+announcements_widget_configuration_info: You can choose the source of the announcements by selecting a specific resource.
 at: at
 by: by
 created_on: 'Created on'

@@ -79,11 +79,12 @@ class FacetManager
     public function createFacet($name, $forceCreationForm = false, $isMain = false)
     {
         $this->om->startFlushSuite();
+        $count = $this->facetRepo->count($isMain);
         $facet = new Facet();
         $facet->setName($name);
         $facet->setIsMain($isMain);
         $facet->setForceCreationForm($forceCreationForm);
-        $facet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\Facet'));
+        $facet->setPosition($count);
         $this->om->persist($facet);
         $this->om->endFlushSuite();
 
@@ -298,19 +299,19 @@ class FacetManager
     }
 
     /**
-     * Moves a facet up.
+     * Moves a facet down.
      *
      * @param Facet $facet
      */
-    public function moveFacetUp(Facet $facet)
+    public function moveFacetDown(Facet $facet)
     {
         $currentPosition = $facet->getPosition();
 
-        if ($currentPosition < $this->om->count('Claroline\CoreBundle\Entity\Facet\Facet') - 1) {
+        if ($currentPosition < $this->facetRepo->count($facet->isMain()) - 1) {
             $nextPosition = $currentPosition + 1;
             $nextFacet = $this->om
                 ->getRepository('ClarolineCoreBundle:Facet\Facet')
-                ->findOneBy(['position' => $nextPosition]);
+                ->findOneBy(['position' => $nextPosition, 'isMain' => $facet->isMain()]);
             $nextFacet->setPosition($currentPosition);
             $facet->setPosition($nextPosition);
             $this->om->persist($nextFacet);
@@ -320,11 +321,11 @@ class FacetManager
     }
 
     /**
-     * Moves a facet down.
+     * Moves a facet up.
      *
      * @param Facet $facet
      */
-    public function moveFacetDown(Facet $facet)
+    public function moveFacetUp(Facet $facet)
     {
         $currentPosition = $facet->getPosition();
 
@@ -332,7 +333,7 @@ class FacetManager
             $prevPosition = $currentPosition - 1;
             $prevFacet = $this->om
                 ->getRepository('ClarolineCoreBundle:Facet\Facet')
-                ->findOneBy(['position' => $prevPosition]);
+                ->findOneBy(['position' => $prevPosition, 'isMain' => $facet->isMain()]);
             $prevFacet->setPosition($currentPosition);
             $facet->setPosition($prevPosition);
             $this->om->persist($prevFacet);
@@ -626,5 +627,22 @@ class FacetManager
         }
 
         $this->om->flush();
+    }
+
+    public function resetFacetOrder()
+    {
+        $facets = $this->facetRepo->findAll();
+        $facetMain = 0;
+        $facetTab = 0;
+
+        foreach ($facets as $facet) {
+            if ($facet->isMain()) {
+                $facet->setPosition($facetMain);
+                ++$facetMain;
+            } else {
+                $facet->setPosition($facetTab);
+                ++$facetTab;
+            }
+        }
     }
 }

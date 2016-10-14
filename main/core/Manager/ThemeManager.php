@@ -149,10 +149,11 @@ class ThemeManager
      * @param string $name
      * @param File   $file
      */
-    public function createCustomTheme($name, File $file)
+    public function createCustomTheme($name, File $file, $extendDefault = false)
     {
         $theme = new Theme();
         $theme->setName($name);
+        $theme->setExtendingDefault($extendDefault);
         $themeDir = "{$this->themeDir}/{$theme->getNormalizedName()}";
 
         $fs = new Filesystem();
@@ -162,5 +163,21 @@ class ThemeManager
 
         $this->om->persist($theme);
         $this->om->flush();
+    }
+
+    public function getThemeByNormalizedName($name)
+    {
+        $themes = [];
+        $allThemes = $this->om->getRepository('Claroline\CoreBundle\Entity\Theme\Theme')->findAll();
+
+        foreach ($allThemes as $theme) {
+            $normalizedName = $theme->getNormalizedName();
+
+            if ($normalizedName === $name) {
+                $themes[] = $theme;
+            }
+        }
+
+        return count($themes) > 0 ? $themes[count($themes) - 1] : null;
     }
 }

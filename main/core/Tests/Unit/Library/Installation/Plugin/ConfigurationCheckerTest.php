@@ -24,10 +24,15 @@ class ConfigurationCheckerTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
+
         $resourceTypeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
-        $resourceTypeRepo->shouldReceive('findAll')->andReturn(array());
+        $resourceTypeRepo->shouldReceive('findAll')->andReturn([]);
         $toolRepo = $this->mock('Claroline\CoreBundle\Repository\ToolRepository');
-        $toolRepo->shouldReceive('findAll')->andReturn(array());
+        $toolRepo->shouldReceive('findAllWithPlugin')->andReturn([]);
+        $menuActionRepo = $this->mock('Doctrine\ORM\EntityRepository');
+        $menuActionRepo->shouldReceive('findBy')->with(['resourceType' => null, 'isCustom' => true])->andReturn([]);
+        $widgetRepo = $this->mock('Claroline\CoreBundle\Repository\WidgetRepository');
+        $widgetRepo->shouldReceive('findAllWithPlugin')->andReturn([]);
         $em = $this->mock('Doctrine\ORM\EntityManager');
         $em->shouldReceive('getRepository')
             ->with('ClarolineCoreBundle:Resource\ResourceType')
@@ -35,6 +40,12 @@ class ConfigurationCheckerTest extends MockeryTestCase
         $em->shouldReceive('getRepository')
             ->with('ClarolineCoreBundle:Tool\Tool')
             ->andReturn($toolRepo);
+        $em->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:Widget\Widget')
+            ->andReturn($widgetRepo);
+        $em->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:Resource\MenuAction')
+            ->andReturn($menuActionRepo);
         $this->checker = new ConfigurationChecker(new Parser(), $em);
     }
 

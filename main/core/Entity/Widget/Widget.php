@@ -161,12 +161,22 @@ class Widget
         $this->isDisplayableInWorkspace = $bool;
     }
 
+    public function setIsDisplayableInWorkspace($bool)
+    {
+        $this->isDisplayableInWorkspace = $bool;
+    }
+
     public function isDisplayableInDesktop()
     {
         return $this->isDisplayableInDesktop;
     }
 
     public function setDisplayableInDesktop($bool)
+    {
+        $this->isDisplayableInDesktop = $bool;
+    }
+
+    public function setIsDisplayableInDesktop($bool)
     {
         $this->isDisplayableInDesktop = $bool;
     }

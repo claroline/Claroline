@@ -1,0 +1,37 @@
+enable_notifications: Deze hulpmiddel volgen
+enable_notifications_info: Een notitie krijgen voor de nieuwigheden van deze leermiddel
+disable_notifications: Deze hulpmiddel niet volgen
+disable_notifications_info: Geen notitie krijgen voor de nieuwigheden van deze leermiddel
+now: Nu
+few_seconds_ago: Enkele seconden geleden
+yesterday: Gisteren
+seconds_ago: '{0} 0 seconde geleden|{1} 1 seconde geleden|]1,Inf] %count% seconden geleden'
+minutes_ago: '{0} minuut geleden|{1} Il y a 1 minute geleden|]1,Inf] Il y a %count% minutes geleden'
+hours_ago: '{0} 0 uur geleden|{1} 1 uur geleden|]1,Inf] %count% uur geleden'
+days_ago: '{0} 0 dag geleden|{1} 1 dag geleden|]1,Inf] %count% dagen geleden'
+date_format: d/m/Y \\om H:i
+day_format: %day% %month%
+hour_format:  \\om H:i
+months: Januari, Februari, Maart, April, Mei, Juni, Juli, Augustus, September, Oktober, November, December
+days: Maandag, Dinsdag, Woensdag, Donderdag, Vrijdag, Zaterdag, Zondag
+see_more: Meer zien
+zero_notifications: Geen notitie
+notifications_title: Lijst van de notities
+notification_user_configuration: Instellingen van de notities
+notification_configuration: Instellingen van de notities
+rss_visible: RSS-feed
+rss_url_regenerate: De RSS-feed regenereren
+dropdown_items: Elementen in de lijst
+max_per_page: Elementen per pagina
+purge_enabled: Automatisch wissen
+purge_after_days: Na (dagen) wissen
+purge_explain_text: '* Door deze optie te activeren wordt de notitiesgeschiedenis automatisch gewist in functie van onderstaande waarde.'
+mark_all_viewed: Markeer alles als gelezen
+filter_by_category: Per type filtreren
+badge: Badge
+wiki: Wiki
+blog: Blog
+lesson: Cursussen
+socialmedia: Sociale media
+website: Website
+forum: Forum

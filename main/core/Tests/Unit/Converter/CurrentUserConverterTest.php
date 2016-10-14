@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Converter;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
-use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class CurrentUserConverterTest extends MockeryTestCase
 {
@@ -45,16 +45,23 @@ class CurrentUserConverterTest extends MockeryTestCase
 
     public function testSupportsAcceptsOnlyAnonymousAllowedParameter()
     {
-        $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+        $confTrue = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
 
-        $configuration->shouldReceive('getName')->once()->andReturn('user');
-        $configuration->shouldReceive('getOptions')->times(2)->andReturn(
-            ['some_other_option'],
+        $confTrue->shouldReceive('getName')->once()->andReturn('user');
+        $confTrue->shouldReceive('getOptions')->times(1)->andReturn(
             ['allowAnonymous' => true]
         );
 
-        $this->assertFalse($this->converter->supports($configuration));
-        $this->assertTrue($this->converter->supports($configuration));
+        $this->assertTrue($this->converter->supports($confTrue));
+
+        $confFalse = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+
+        $confFalse->shouldReceive('getName')->once()->andReturn('user');
+        $confFalse->shouldReceive('getOptions')->times(1)->andReturn(
+            ['allowAnonymous' => 'notboolean']
+        );
+
+        $this->assertFalse($this->converter->supports($confFalse));
     }
 
     public function testSupportsAcceptsOnlyBooleanForAnonymousAllowedParameter()

@@ -1,6 +1,8 @@
 <div>
+    <label class="control-label col-sm-12"> {{ rc.label|trans:{}:rc.translationDomain }} </label>
     <div ng-repeat="(key, value) in rc.field[2].values">
-        <label class="control-label col-sm-3"> {{ value.label|trans:{}:rc.translationDomain }} </label>
-        <input ng-disabled="rc.field[2].disabled" type="radio" ng-model="rc.ngModel" value="{{ value.label }}">
+        <div class="col-sm-3"></div>
+        <input ng-disabled="rc.field[2].disabled" type="radio" ng-model="rc.ngModel" value="{{ value.label }}"></input>
+        <label> {{ value.label|trans:{}:rc.translationDomain }} </label>
     </div>
 </div>

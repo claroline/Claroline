@@ -214,7 +214,7 @@ creator: Créateur
 csv_export: Export csv
 csv_select: Sélectionnez un fichier csv:
 csv_format_info: Informations sur le format du fichier csv
-csv_format_user_list: Format: liste des noms d''utilisateur séparés par un retour à la ligne.
+csv_format_user_list: Format: liste de noms d''utilisateur, d''email ou de code administratifs séparés par un retour à la ligne.
 csv_users_import_infos: Informations sur le format du fichier csv
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: Les données d'un utilisateur doivent être définies sur une ligne et séparées par un point virgule.
@@ -298,6 +298,8 @@ display: Afficher
 display_at_registration: 'Afficher à la création du compte'
 display_captcha: 'Afficher les captchas pour les anonymes'
 display_options: 'Options d''affichage'
+displayable_in_desktop: Disponible dans le bureau
+displayable_in_workspace: Disponible dans l'espace d'activités
 displayable_in_workspace_list: 'Visible dans la liste des espaces'
 distinguished_name: 'Nom distinctif (DN)'
 does_not_exist: 'n''existe pas'
@@ -859,6 +861,7 @@ role_name_type_form_translationKey: Nom
 roles: Rôles
 roles_facet_form_explanation: 'Ce formulaire vous permet de spécifier quels rôles peuvent voir la facette dans le profil public de l''utilisateur.'
 roles_fields_form_explanation: 'Ce formulaire vous permet de spécifier quels rôles peuvent voir et éditer le champ dans le profil public de l''utilisateur.'
+roles_for_desktop_widget: Rôles (Bureau)
 roles_management: 'Gestion des rôles'
 save: Sauvegarder
 save_as_template: 'Exporter'
@@ -1336,3 +1339,4 @@ disable: Désactiver
 enable: Activer
 workspace_access_date_invalid: Les dates d'accès de l'espace d'activités sont dépassées
 organization_invalid: L'organisation %organization% n'existe pas à la ligne %line%
+user_limit_reached: Limite d'utilisateur atteinte

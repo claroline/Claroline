@@ -21,66 +21,66 @@ use Symfony\Component\Validator\Constraints\Range;
 
 class WidgetEditType extends AbstractType
 {
-    private $isDisplayableInDesktop;
-
-    public function __construct($isDisplayableInDesktop)
-    {
-        $this->isDisplayableInDesktop = $isDisplayableInDesktop;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
             'defaultWidth',
             'integer',
-            array(
+            [
                 'label' => 'width',
                 'required' => true,
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank(),
-                    new Range(array('min' => 1, 'max' => 12)),
-                ),
-                'attr' => array('min' => 1, 'max' => 12),
-            )
+                    new Range(['min' => 1, 'max' => 12]),
+                ],
+                'attr' => ['min' => 1, 'max' => 12],
+            ]
         );
         $builder->add(
             'defaultHeight',
             'integer',
-            array(
+            [
                 'label' => 'height',
                 'required' => true,
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank(),
-                    new Range(array('min' => 1)),
-                ),
-                'attr' => array('min' => 1),
-            )
+                    new Range(['min' => 1]),
+                ],
+                'attr' => ['min' => 1],
+            ]
         );
+        $builder->add(
+            'isDisplayableInDesktop',
+            'checkbox',
+            ['label' => 'displayable_in_desktop', 'required' => true]
+        );
+        $builder->add(
+            'isDisplayableInWorkspace',
+            'checkbox',
+            ['label' => 'displayable_in_workspace', 'required' => true]
+        );
+        $builder->add(
+            'roles',
+            'entity',
+            [
+                'label' => 'roles_for_desktop_widget',
+                'class' => 'ClarolineCoreBundle:Role',
+                'choice_translation_domain' => true,
+                'query_builder' => function (EntityRepository $er) {
+                    $queryBuilder = $er->createQueryBuilder('r')
+                        ->andWhere('r.type = :roleType')
+                        ->setParameter('roleType', Role::PLATFORM_ROLE);
+                    $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('r.name', '?1')))
+                        ->setParameter(1, 'ROLE_ANONYMOUS');
 
-        if ($this->isDisplayableInDesktop) {
-            $builder->add(
-                'roles',
-                'entity',
-                array(
-                    'label' => 'roles',
-                    'class' => 'ClarolineCoreBundle:Role',
-                    'choice_translation_domain' => true,
-                    'query_builder' => function (EntityRepository $er) {
-                        $queryBuilder = $er->createQueryBuilder('r')
-                            ->andWhere('r.type = :roleType')
-                            ->setParameter('roleType', Role::PLATFORM_ROLE);
-                        $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('r.name', '?1')))
-                            ->setParameter(1, 'ROLE_ANONYMOUS');
-
-                        return $queryBuilder;
-                    },
-                    'property' => 'translationKey',
-                    'expanded' => true,
-                    'multiple' => true,
-                    'required' => false,
-                )
-            );
-        }
+                    return $queryBuilder;
+                },
+                'property' => 'translationKey',
+                'expanded' => true,
+                'multiple' => true,
+                'required' => false,
+            ]
+        );
     }
 
     public function getName()
@@ -90,6 +90,6 @@ class WidgetEditType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(['translation_domain' => 'platform']);
     }
 }

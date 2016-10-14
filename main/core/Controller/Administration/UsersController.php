@@ -313,9 +313,11 @@ class UsersController extends Controller
                         $datas = str_getcsv($line, ';');
                         $username = $datas[2];
                         $email = $datas[4];
-                        $existingUser = $this->userManager->getUserByUsernameOrMail(
+                        $code = $datas[5];
+                        $existingUser = $this->userManager->getUserByUsernameOrMailOrCode(
                             $username,
-                            $email
+                            $email,
+                            $code
                         );
 
                         if (is_null($existingUser)) {

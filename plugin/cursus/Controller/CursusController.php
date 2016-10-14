@@ -43,6 +43,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -56,6 +57,7 @@ class CursusController extends Controller
     private $request;
     private $router;
     private $serializer;
+    private $tokenStorage;
     private $toolManager;
     private $translator;
 
@@ -68,6 +70,7 @@ class CursusController extends Controller
      *     "requestStack"          = @DI\Inject("request_stack"),
      *     "router"                = @DI\Inject("router"),
      *     "serializer"            = @DI\Inject("jms_serializer"),
+     *     "tokenStorage"          = @DI\Inject("security.token_storage"),
      *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"            = @DI\Inject("translator")
      * })
@@ -80,6 +83,7 @@ class CursusController extends Controller
         Serializer $serializer,
         RequestStack $requestStack,
         RouterInterface $router,
+        TokenStorageInterface $tokenStorage,
         ToolManager $toolManager,
         TranslatorInterface $translator
     ) {
@@ -90,6 +94,7 @@ class CursusController extends Controller
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
         $this->serializer = $serializer;
+        $this->tokenStorage = $tokenStorage;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
     }
@@ -1310,11 +1315,11 @@ class CursusController extends Controller
      *     name="claro_cursus_my_courses_widget",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesWidget.html.twig")
      */
-    public function myCoursesWidgetAction(User $user, WidgetInstance $widgetInstance)
+    public function myCoursesWidgetAction(WidgetInstance $widgetInstance)
     {
+        $user = $this->tokenStorage->getToken()->getUser();
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $defaultMode = $config->getDefaultMode();
 

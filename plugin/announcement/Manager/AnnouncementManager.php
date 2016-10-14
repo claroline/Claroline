@@ -13,8 +13,9 @@ namespace Claroline\AnnouncementBundle\Manager;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
-use Claroline\AnnouncementBundle\Repository\AnnouncementRepository;
+use Claroline\AnnouncementBundle\Entity\AnnouncementsWidgetConfig;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -26,13 +27,14 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class AnnouncementManager
 {
-    /** @var AnnouncementRepository */
-    private $announcementRepo;
-    private $roleRepo;
-    private $om;
-    private $userRepo;
-    private $mailManager;
     private $eventDispatcher;
+    private $mailManager;
+    private $om;
+
+    private $announcementRepo;
+    private $announcementsWidgetConfigRepo;
+    private $roleRepo;
+    private $userRepo;
 
     /**
      * Constructor.
@@ -43,17 +45,15 @@ class AnnouncementManager
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
-    public function __construct(
-        ObjectManager $om,
-        MailManager $mailManager,
-        StrictDispatcher $eventDispatcher
-    ) {
-        $this->announcementRepo = $om->getRepository('ClarolineAnnouncementBundle:Announcement');
-        $this->om = $om;
-        $this->mailManager = $mailManager;
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+    public function __construct(ObjectManager $om, MailManager $mailManager, StrictDispatcher $eventDispatcher)
+    {
         $this->eventDispatcher = $eventDispatcher;
+        $this->mailManager = $mailManager;
+        $this->om = $om;
+        $this->announcementRepo = $om->getRepository('ClarolineAnnouncementBundle:Announcement');
+        $this->announcementsWidgetConfigRepo = $om->getRepository('ClarolineAnnouncementBundle:AnnouncementsWidgetConfig');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
 
     public function insertAnnouncement(Announcement $announcement)
@@ -147,5 +147,25 @@ class AnnouncementManager
         //we must also add the ROLE_WS_MANAGER_{ws_guid}
 
         return $this->userRepo->findByRolesIncludingGroups($roles, false, 'id', 'ASC');
+    }
+
+    public function getAnnouncementsWidgetConfig(WidgetInstance $widgetInstance)
+    {
+        $config = $this->announcementsWidgetConfigRepo->findOneBy(['widgetInstance' => $widgetInstance]);
+
+        if (is_null($config)) {
+            $config = new AnnouncementsWidgetConfig();
+            $config->setWidgetInstance($widgetInstance);
+            $this->om->persist($config);
+            $this->om->flush();
+        }
+
+        return $config;
+    }
+
+    public function persistAnnouncementsWidgetConfig(AnnouncementsWidgetConfig $config)
+    {
+        $this->om->persist($config);
+        $this->om->flush();
     }
 }

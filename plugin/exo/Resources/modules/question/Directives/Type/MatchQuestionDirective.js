@@ -34,8 +34,11 @@ function MatchQuestionDirective(FeedbackService, $timeout, $window, MatchQuestio
               return controller.handleBeforeDrop(info)
             })
 
-            jsPlumb.bind('beforeStartDetach', function(){
-              return false
+            /**
+             * Ensure the deconnection is only done when clicking on an existing connection
+             */
+            jsPlumb.bind('beforeStartDetach', function(data){
+              return data.source.id && data.source.id.indexOf('draggable') !== -1
             })
 
             // remove one connection
