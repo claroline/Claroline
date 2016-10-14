@@ -71,10 +71,10 @@
         {% endif %}
     </div>
 
-    <div class="col-md-5">
+    <div class="col-md-5 hidden-xs">
         {{ 'created_by'|trans({'creator': node.creator_username, 'creationDate':  node.creation_date}, 'platform')}}
     </div>
-    <div class="col-md1-1">
+    <div class="col-md1-1 hidden-xs">
         {% if node.size %} {{ node.size }} {% endif %}
     </div>
 </div>
