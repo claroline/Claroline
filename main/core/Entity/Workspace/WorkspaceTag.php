@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
@@ -20,7 +21,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *      name="claro_workspace_tag",
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(name="tag_unique_name_and_user", columns={"user_id", "name"})
- *      }
+ *      },
+ *      indexes={@Index(name="name_idx", columns={"name"})}
  * )
  * @DoctrineAssert\UniqueEntity({"name", "user"})
  */

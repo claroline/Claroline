@@ -12,10 +12,10 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\PluginBundle;
-use Symfony\Component\Yaml\Parser;
-use Symfony\Component\Config\Definition\Processor;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Checker used to validate the configuration file of a plugin.
@@ -50,20 +50,20 @@ class ConfigurationChecker implements CheckerInterface
     {
         if (!is_file($plugin->getConfigFile())) {
             $error = new ValidationError('config.yml file missing');
-            $errors = array($error);
+            $errors = [$error];
 
             return $errors;
         }
 
         $config = $this->yamlParser->parse(file_get_contents($plugin->getConfigFile()));
-        $names = array();
+        $names = [];
         $listResource = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
         foreach ($listResource as $resource) {
             $names[] = $resource->getName();
         }
 
-        $tools = array();
+        $tools = [];
         /** @var \Claroline\CoreBundle\Entity\Tool\Tool[] $listTool */
         $listTool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')->findAllWithPlugin();
 
@@ -73,14 +73,14 @@ class ConfigurationChecker implements CheckerInterface
             $tools[] = sprintf('%s%s', ($toolPlugin ? $toolPlugin->getBundleFQCN().'-' : ''), $tool->getName());
         }
 
-        $resourceActions = array();
-        $listResourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')->findBy(array('resourceType' => null, 'isCustom' => true));
+        $resourceActions = [];
+        $listResourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')->findBy(['resourceType' => null, 'isCustom' => true]);
 
         foreach ($listResourceActions as $resourceAction) {
             $resourceActions[] = $resourceAction->getName();
         }
 
-        $widgets = array();
+        $widgets = [];
         /** @var \Claroline\CoreBundle\Entity\Widget\Widget[] $listWidget */
         $listWidget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')->findAllWithPlugin();
 
@@ -99,7 +99,7 @@ class ConfigurationChecker implements CheckerInterface
         } catch (\Exception $e) {
             $error = new ValidationError($e->getMessage());
 
-            return array($error);
+            return [$error];
         }
     }
 

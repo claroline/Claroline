@@ -29,7 +29,6 @@ class TagManager
 {
     private $om;
     private $pagerFactory;
-
     private $resWidgetConfigRepo;
     private $taggedObjectRepo;
     private $tagRepo;
@@ -44,7 +43,6 @@ class TagManager
     {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
-
         $this->resWidgetConfigRepo =
             $om->getRepository('ClarolineTagBundle:ResourcesTagsWidgetConfig');
         $this->taggedObjectRepo = $om->getRepository('ClarolineTagBundle:TaggedObject');
@@ -128,9 +126,7 @@ class TagManager
             $tagsList = [];
 
             foreach ($uniqueTags as $tagName) {
-                $tag = is_null($user) ?
-                    $this->getOrCreatePlatformTag($tagName) :
-                    $this->getOrCreateUserTag($user, $tagName);
+                $tag = is_null($user) ? $this->getOrCreatePlatformTag($tagName) : $this->getOrCreateUserTag($user, $tagName);
                 $tagsList[$tagName] = $tag;
             }
             $this->om->forceFlush();
@@ -161,29 +157,17 @@ class TagManager
         $objects = [];
 
         if (count($ids) > 0) {
-            $objects = $this->taggedObjectRepo
-                ->findObjectsByClassAndIds($class, $ids, $orderedBy, $order);
+            $objects = $this->taggedObjectRepo->findObjectsByClassAndIds($class, $ids, $orderedBy, $order);
         }
 
         return $objects;
     }
 
-    public function getTaggedWorkspacesByRoles(
-        User $user,
-        $tag,
-        $orderedBy = 'id',
-        $order = 'ASC'
-    ) {
+    public function getTaggedWorkspacesByRoles(User $user, $tag, $orderedBy = 'id', $order = 'ASC')
+    {
         $roles = $user->getEntityRoles();
 
-        return count($roles) > 0 ?
-            $this->taggedObjectRepo->findTaggedWorkspacesByRoles(
-                $tag,
-                $roles,
-                $orderedBy,
-                $order
-            ) :
-            [];
+        return count($roles) > 0 ? $this->taggedObjectRepo->findTaggedWorkspacesByRoles($tag, $roles, $orderedBy, $order) : [];
     }
 
     public function removeTaggedObjectsByResourceAndTag(ResourceNode $resourceNode, Tag $tag)
@@ -258,26 +242,8 @@ class TagManager
         $strictSearch = false
     ) {
         $tags = is_null($user) ?
-            $this->getPlatformTags(
-                $search,
-                $orderedBy,
-                $order,
-                $withPager,
-                $page,
-                $max,
-                $strictSearch
-            ) :
-            $this->getUserTags(
-                $user,
-                $search,
-                $withPlatform,
-                $orderedBy,
-                $order,
-                $withPager,
-                $page,
-                $max,
-                $strictSearch
-            );
+            $this->getPlatformTags($search, $orderedBy, $order, $withPager, $page, $max, $strictSearch) :
+            $this->getUserTags($user, $search, $withPlatform, $orderedBy, $order, $withPager, $page, $max, $strictSearch);
 
         return $tags;
     }
@@ -295,9 +261,7 @@ class TagManager
             $this->tagRepo->findAllPlatformTags($orderedBy, $order) :
             $this->tagRepo->findSearchedPlatformTags($search, $orderedBy, $order, $strictSearch);
 
-        return $withPager ?
-            $this->pagerFactory->createPagerFromArray($tags, $page, $max) :
-            $tags;
+        return $withPager ? $this->pagerFactory->createPagerFromArray($tags, $page, $max) : $tags;
     }
 
     public function getUserTags(
@@ -312,24 +276,10 @@ class TagManager
         $strictSearch = false
     ) {
         $tags = empty($search) ?
-            $this->tagRepo->findAllUserTags(
-                $user,
-                $withPlatform,
-                $orderedBy,
-                $order
-            ) :
-            $this->tagRepo->findSearchedUserTags(
-                $user,
-                $search,
-                $withPlatform,
-                $orderedBy,
-                $order,
-                $strictSearch
-            );
+            $this->tagRepo->findAllUserTags($user, $withPlatform, $orderedBy, $order) :
+            $this->tagRepo->findSearchedUserTags($user, $search, $withPlatform, $orderedBy, $order, $strictSearch);
 
-        return $withPager ?
-            $this->pagerFactory->createPagerFromArray($tags, $page, $max) :
-            $tags;
+        return $withPager ? $this->pagerFactory->createPagerFromArray($tags, $page, $max) : $tags;
     }
 
     public function getOnePlatformTagByName($name)
@@ -342,20 +292,9 @@ class TagManager
         return $this->tagRepo->findOneUserTagByName($user, $name);
     }
 
-    public function getTagsByObject(
-        $object,
-        User $user = null,
-        $withPlatform = false,
-        $orderedBy = 'name',
-        $order = 'ASC'
-    ) {
-        return $this->tagRepo->findTagsByObject(
-            $object,
-            $user,
-            $withPlatform,
-            $orderedBy,
-            $order
-        );
+    public function getTagsByObject($object, User $user = null, $withPlatform = false, $orderedBy = 'name', $order = 'ASC')
+    {
+        return $this->tagRepo->findTagsByObject($object, $user, $withPlatform, $orderedBy, $order);
     }
 
     /******************************************
@@ -392,59 +331,38 @@ class TagManager
                 $strictSearch
             );
 
-        return $withPager ?
-            $this->pagerFactory->createPagerFromArray($objects, $page, $max) :
-            $objects;
+        return $withPager ? $this->pagerFactory->createPagerFromArray($objects, $page, $max) : $objects;
     }
 
     public function getOneTaggedObjectByTagAndObject(Tag $tag, $objectId, $objectClass)
     {
-        return $this->taggedObjectRepo->findOneTaggedObjectByTagAndObject(
-            $tag,
-            $objectId,
-            $objectClass
-        );
+        return $this->taggedObjectRepo->findOneTaggedObjectByTagAndObject($tag, $objectId, $objectClass);
     }
 
     public function getOneTaggedObjectByTagNameAndObject($tagName, $objectId, $objectClass)
     {
-        return $this->taggedObjectRepo->findOneTaggedObjectByTagNameAndObject(
-            $tagName,
-            $objectId,
-            $objectClass
-        );
+        return $this->taggedObjectRepo->findOneTaggedObjectByTagNameAndObject($tagName, $objectId, $objectClass);
     }
 
-    public function getTaggedObjectsByTags(
-        array $tags,
-        $orderedBy = 'name',
-        $order = 'ASC',
-        $withPager = false,
-        $page = 1,
-        $max = 50
-    ) {
-        $objects = count($tags) > 0 ?
-            $this->taggedObjectRepo->findTaggedObjectsByTags(
-                $tags,
-                $orderedBy,
-                $order
-            ) :
-            [];
+    public function getTaggedObjectsByTags(array $tags, $orderedBy = 'name', $order = 'ASC', $withPager = false, $page = 1, $max = 50)
+    {
+        $objects = count($tags) > 0 ? $this->taggedObjectRepo->findTaggedObjectsByTags($tags, $orderedBy, $order) : [];
 
-        return $withPager ?
-            $this->pagerFactory->createPagerFromArray($objects, $page, $max) :
-            $objects;
+        return $withPager ? $this->pagerFactory->createPagerFromArray($objects, $page, $max) : $objects;
     }
 
-    public function getTaggedResourcesByWorkspace(
-        Workspace $workspace,
-        $user = 'anon.',
-        array $roleNames = ['ROLE_ANONYMOUS']
-    ) {
-        return $this->taggedObjectRepo->findTaggedResourcesByWorkspace(
-            $workspace,
-            $user,
-            $roleNames
-        );
+    public function getTaggedResourcesByWorkspace(Workspace $workspace, $user = 'anon.', array $roleNames = ['ROLE_ANONYMOUS'])
+    {
+        return $this->taggedObjectRepo->findTaggedResourcesByWorkspace($workspace, $user, $roleNames);
+    }
+
+    public function getTaggedResourcesByRoles($user = 'anon.', array $roleNames = ['ROLE_ANONYMOUS'])
+    {
+        return $this->taggedObjectRepo->findTaggedResourcesByRoles($user, $roleNames);
+    }
+
+    public function getTaggedResourceNodesByTagName($tagName)
+    {
+        return $this->taggedObjectRepo->findTaggedResourceNodesByTagName($tagName);
     }
 }

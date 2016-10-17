@@ -1,21 +1,25 @@
-<div class="container">
-    <div class="span12">
-        <div>
-            <video
-                class="video-js vjs-big-play-centered vjs-default-skin vjs-16-9"
-                data-setup='{}'
-                >
-                 <source src="{{ path('api_get_video_stream', {'video': video.getId() }) }}" type="{{ video.getResourceNode().getMimeType() }}" />
-                 {% for track in get_video_tracks(video) %}
-                      <track
-                          kind="{{ track.getKind() }}"
-                          src="{{ path('api_get_video_track_stream', {'track': track.getId() }) }}"
-                          srclang="{{ track.getLang() }}"
-                          label="{{ track.getLabel() }}"
-                          {% if (track.isDefault()) %} default {% endif %}
-                      >
-                 {% endfor %}
-            </video>
-        </div>
-    </div>
+
+<div style="display:none;">
+    {{ 'html_explain'|trans({}, 'videojs') }}
+</div>
+
+<div class="wrapper" style="height: 180px; width: 320px;">
+    <video
+        height="180"
+        width="320"
+        controls
+        class="video-js vjs-big-play-centered vjs-default-skin vjs-16-9"
+        data-setup='{}'
+        >
+         <source src="{{ path('api_get_video_stream', {'video': video.getId() }) }}" type="{{ video.getResourceNode().getMimeType() }}" />
+         {% for track in get_video_tracks(video) %}
+              <track
+                  kind="{{ track.getKind() }}"
+                  src="{{ path('api_get_video_track_stream', {'track': track.getId() }) }}"
+                  srclang="{{ track.getLang() }}"
+                  label="{{ track.getLabel() }}"
+                  {% if (track.isDefault()) %} default {% endif %}
+              >
+         {% endfor %}
+    </video>
 </div>

@@ -215,7 +215,7 @@ csv_delete: Csv suppression
 csv_export: 'CSV export'
 csv_select: 'Select csv to upload:'
 csv_format_info: 'CSV file information'
-csv_format_user_list: 'Format: username list separated by a carriage return'
+csv_format_user_list: 'Format: username, administrative code or email list separated by a carriage return'
 csv_users_import_infos: 'CSV file information'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User information must be defined in one line and separated by semicolon'
@@ -298,6 +298,8 @@ display: Display
 display_at_registration: 'Display at registration'
 display_captcha: 'Display captcha for anonymous'
 display_options: 'Display options'
+displayable_in_desktop: Displayable in desktop
+displayable_in_workspace: Displayable in workspace
 displayable_in_workspace_list: Displayable
 distinguished_name: 'Distinguished Name (DN)'
 does_not_exist: 'doesn''t exist'
@@ -629,6 +631,7 @@ no_home_tab: 'There is no Home tab'
 no_learning_outcomes: 'No learning outcomes'
 no_message: 'No message'
 no_model: 'No model'
+no_resource: No resource
 no_resources_in_workspace: 'There are currently no resources in this workspace.'
 no_role_selected_message: 'No role selected.'
 no_search_results: 'Your search hasn''t returned any result.'
@@ -826,14 +829,18 @@ resource_creation_wrong_type: 'You don''t have the permission to create a(n) %ty
 resource_delete: 'Are you sure you want to delete this resource ?'
 resource_limit_exceeded: 'The maximmum amount of resources (%max%) has been reached. You already have %current% resources.'
 resource_picker: 'Resource picker'
+resource_publish: 'Are you sure you want to publish this resource ?'
 resource_to_open: 'Resource to open'
 resource_type: 'Resource type'
+resource_unpublish: 'Are you sure you want to unpublish this resource ?'
 resources: Resources
 resources_delete: 'Are you sure you want to delete these resources?'
 resources_import: 'Resources import'
 resources_most_downloaded: 'Most downloaded resources'
+resources_publish: 'Are you sure you want to publish these resources?'
 resources_rights: 'Resources rights'
 resources_rights_management: 'Resources rights management'
+resources_unpublish: 'Are you sure you want to unpublish these resources?'
 resources_usage_list: 'Resources usage list'
 resources_usage_ratio: 'Resources usage ratio'
 restore: Restore
@@ -853,6 +860,7 @@ role_name_type_form_translationKey: Name
 roles: Roles
 roles_facet_form_explanation: 'This form allows you to set which roles can see the facet in the public profile.'
 roles_fields_form_explanation: 'This form allows you to set which roles can see and edit the field in the public profile.'
+roles_for_desktop_widget: Roles (Desktop)
 roles_management: 'Roles management'
 save: Save
 save_as_template: 'Export'
@@ -1122,6 +1130,7 @@ with_tutor: Tutored
 workspace: Workspace
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
+workspace_access_disabled: Your access to the workspace is disabled.
 workspace_activity_overview: 'Overview of recent activities in %workspaceName%'
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'
@@ -1171,17 +1180,17 @@ ws_most_viewed: 'Most viewed workspaces'
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_platform_id: 'Your platform login'
-your_profile_is_n_complete: 'Your profile is %n%% complete'
-your_username: 'Your username is '
-your_workspace_activity_overview: 'Overview of recent activities in your workspaces'
-404: 'Page Not found'
+your_profile_is_n_complete: Your profile is %n%% complete
+your_username: Your username is
+your_workspace_activity_overview: Overview of recent activities in your workspaces
+404: Page Not found
 initialize_your_password: Password initialization
 hide_client: Hide a client
 hide_client_message: Do you really want to hide this client ?
 filter_by: Filter by
-domain_name: 'Domain name'
-import_csv: 'Import csv'
-admin_profile_properties_explanations: 'Selected properties will be editable by users.'
+domain_name: Domain name
+import_csv: Import CSV
+admin_profile_properties_explanations: Selected properties will be editable by users.
 self_unregistration: Self unregistration
 is_visible: Is visible
 year: year
@@ -1324,3 +1333,6 @@ disable: Disable
 enable: Enable
 workspace_access_date_invalid: The workspace access dates are passed
 organization_invalid: The organization %organization% doesn't exist at line %line%
+user_limit_reached: User limit reached
+outdated_brower_message: It appears that you're using an unsupported web browser. To enjoy a pleasant and bug-free experience, please use a recent version of a major browser 
+ie_support_message: Internet Explorer is supported from version 11.

@@ -11,14 +11,15 @@
 
 namespace Claroline\CoreBundle\Entity\Calendar;
 
-use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Calendar\EventRepository")
- * @ORM\Table(name="claro__event")
+ * @ORM\Table(name="claro__event", indexes={@Index(name="name_idx", columns={"name"})})
  */
 class Event
 {
@@ -32,13 +33,13 @@ class Event
 
     /**
      * @ORM\Column()
-     * @Groups({"api"})    
+     * @Groups({"api"})
      */
     protected $type;
 
     /**
      * @ORM\Column()
-     * @Groups({"api"})    
+     * @Groups({"api"})
      */
     protected $name;
 

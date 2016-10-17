@@ -47,6 +47,7 @@ label_no_labels_associated: No associated label(s)
 label_manual_correction_needed: Manual correction needed!
 
 # m
+max_attempts_reached_continue: You've reached the maximum number of attempts. Go to the next step.
 max_attempts_reached_see_solution: You've reached the maximum number of attempts. Have a look at the answer and go to the next step.
 
 # n

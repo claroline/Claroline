@@ -1,0 +1,3 @@
+html_explain: |
+    Retirez la balise "style" si vous voulez que la vidéo s'adapte à la taille de la page.
+    Ajoutez la classe "container" si vous voulez la centrer

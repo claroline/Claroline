@@ -91,145 +91,149 @@
                             </div>
                             <div id="collapse-event" class="panel-collapse collapse" role="tabpanel">
                                 <div class="panel-body">
-                                    {% if events|length > 0 %}
+                                    {% if events|length > 0 and sessionEventUsersStatus|length > 0 %}
                                         <div class="table-responsive">
                                             <table class="table">
                                                 {% for event in events %}
-                                                    {% set location = event.getLocation() %}
-                                                    {% set locationExtra = event.getLocationExtra() %}
-                                                    {% set eventTutors = event.getTutors() %}
-                                                    <tr>
-                                                        <td>
-                                                            <h4>
-                                                                <div class="btn-group pull-right">
-                                                                    <button class="btn btn-default"
-                                                                            data-toggle="collapse"
-                                                                            data-target="#description-{{ event.getId() }}"
-                                                                    >
-                                                                        <i class="fa fa-file-text-o"></i>
-                                                                    </button>
-                                                                    <button class="btn btn-default"
-                                                                            data-toggle="collapse"
-                                                                            data-target="#location-{{ event.getId() }}"
-                                                                    >
-                                                                        <i class="fa fa-map-marker"></i>
-                                                                    </button>
-                                                                    <button class="btn btn-default"
-                                                                            data-toggle="collapse"
-                                                                            data-target="#tutors-{{ event.getId() }}"
-                                                                    >
-                                                                        <i class="fa fa-user"></i>
-                                                                    </button>
+                                                    {% set eventId = event.getId() %}
+
+                                                    {% if sessionEventUsersStatus[eventId] is defined and sessionEventUsersStatus[eventId] == 0 %}
+                                                        {% set location = event.getLocation() %}
+                                                        {% set locationExtra = event.getLocationExtra() %}
+                                                        {% set eventTutors = event.getTutors() %}
+                                                        <tr>
+                                                            <td>
+                                                                <h4>
+                                                                    <div class="btn-group pull-right">
+                                                                        <button class="btn btn-default"
+                                                                                data-toggle="collapse"
+                                                                                data-target="#description-{{ eventId }}"
+                                                                        >
+                                                                            <i class="fa fa-file-text-o"></i>
+                                                                        </button>
+                                                                        <button class="btn btn-default"
+                                                                                data-toggle="collapse"
+                                                                                data-target="#location-{{ eventId }}"
+                                                                        >
+                                                                            <i class="fa fa-map-marker"></i>
+                                                                        </button>
+                                                                        <button class="btn btn-default"
+                                                                                data-toggle="collapse"
+                                                                                data-target="#tutors-{{ eventId }}"
+                                                                        >
+                                                                            <i class="fa fa-user"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                    {{ event.getName() }}
+                                                                </h4>
+                                                                {{ event.getStartDate()|intl_date_format }}
+                                                                <i class="fa fa-long-arrow-right"></i>
+                                                                {{ event.getEndDate()|intl_date_format }}
+                                                                <br>
+                                                                <br>
+                                                                <div role="tabpanel" class="collapse" id="description-{{ eventId }}">
+                                                                    <div class="col-md-1">
+                                                                        <i class="fa fa-file-text-o"
+                                                                           data-toggle="tooltip"
+                                                                           data-placement="right"
+                                                                           title="{{ 'description'|trans({}, 'platform') }}"
+                                                                        >
+                                                                        </i>
+                                                                    </div>
+                                                                    <div class="col-md-11">
+                                                                        {% if event.getDescription() is not empty %}
+                                                                            {{ event.getDescription()|raw }}
+                                                                        {% else %}
+                                                                            <div class="alert alert-warning">
+                                                                                {{ 'no_description'|trans({}, 'cursus') }}
+                                                                            </div>
+                                                                        {% endif %}
+                                                                        <hr>
+                                                                    </div>
                                                                 </div>
-                                                                {{ event.getName() }}
-                                                            </h4>
-                                                            {{ event.getStartDate()|intl_date_format }}
-                                                            <i class="fa fa-long-arrow-right"></i>
-                                                            {{ event.getEndDate()|intl_date_format }}
-                                                            <br>
-                                                            <br>
-                                                            <div role="tabpanel" class="collapse" id="description-{{ event.getId() }}">
-                                                                <div class="col-md-1">
-                                                                    <i class="fa fa-file-text-o"
-                                                                       data-toggle="tooltip"
-                                                                       data-placement="right"
-                                                                       title="{{ 'description'|trans({}, 'platform') }}"
-                                                                    >
-                                                                    </i>
-                                                                </div>
-                                                                <div class="col-md-11">
-                                                                    {% if event.getDescription() is not empty %}
-                                                                        {{ event.getDescription()|raw }}
-                                                                    {% else %}
-                                                                        <div class="alert alert-warning">
-                                                                            {{ 'no_description'|trans({}, 'cursus') }}
-                                                                        </div>
-                                                                    {% endif %}
-                                                                    <hr>
-                                                                </div>
-                                                            </div>
-                                                            <div role="tabpanel" class="collapse" id="location-{{ event.getId() }}">
-                                                                <div class="col-md-1">
-                                                                    <i class="fa fa-map-marker"
-                                                                       data-toggle="tooltip"
-                                                                       data-placement="right"
-                                                                       title="{{ 'location'|trans({}, 'platform') }}"
-                                                                    >
-                                                                    </i>
-                                                                </div>
-                                                                <div class="col-md-11">
-                                                                    {% if location is not empty or locationExtra is not empty %}
-                                                                        {% if location is not empty %}
-                                                                            {{ location.getName() }}
-                                                                            <br>
-                                                                            {{ location.getStreet() }}, {{ location.getStreetNumber() }}
-                                                                            {% if location.getBoxNumber() is not empty %}
-                                                                                / {{ location.getBoxNumber() }}
-                                                                            {% endif %}
-                                                                            <br>
-                                                                            {{ location.getPc() }}
-                                                                            {{ location.getTown() }}
-                                                                            <br>
-                                                                            {{ location.getCountry() }}
-                                                                            {% if location.getPhone() is not empty %}
+                                                                <div role="tabpanel" class="collapse" id="location-{{ eventId }}">
+                                                                    <div class="col-md-1">
+                                                                        <i class="fa fa-map-marker"
+                                                                           data-toggle="tooltip"
+                                                                           data-placement="right"
+                                                                           title="{{ 'location'|trans({}, 'platform') }}"
+                                                                        >
+                                                                        </i>
+                                                                    </div>
+                                                                    <div class="col-md-11">
+                                                                        {% if location is not empty or locationExtra is not empty %}
+                                                                            {% if location is not empty %}
+                                                                                {{ location.getName() }}
                                                                                 <br>
-                                                                                {{ location.getPhone() }}
+                                                                                {{ location.getStreet() }}, {{ location.getStreetNumber() }}
+                                                                                {% if location.getBoxNumber() is not empty %}
+                                                                                    / {{ location.getBoxNumber() }}
+                                                                                {% endif %}
+                                                                                <br>
+                                                                                {{ location.getPc() }}
+                                                                                {{ location.getTown() }}
+                                                                                <br>
+                                                                                {{ location.getCountry() }}
+                                                                                {% if location.getPhone() is not empty %}
+                                                                                    <br>
+                                                                                    {{ location.getPhone() }}
+                                                                                {% endif %}
+                                                                                {% if locationExtra is not empty %}
+                                                                                    <hr>
+                                                                                {% endif %}
                                                                             {% endif %}
                                                                             {% if locationExtra is not empty %}
-                                                                                <hr>
+                                                                                {{ locationExtra|raw }}
                                                                             {% endif %}
+                                                                        {% else %}
+                                                                            <div class="alert alert-warning">
+                                                                                {{ 'no_location'|trans({}, 'cursus') }}
+                                                                            </div>
                                                                         {% endif %}
-                                                                        {% if locationExtra is not empty %}
-                                                                            {{ locationExtra|raw }}
-                                                                        {% endif %}
-                                                                    {% else %}
-                                                                        <div class="alert alert-warning">
-                                                                            {{ 'no_location'|trans({}, 'cursus') }}
-                                                                        </div>
-                                                                    {% endif %}
-                                                                    <hr>
+                                                                        <hr>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div role="tabpanel" class="collapse" id="tutors-{{ event.getId() }}">
-                                                                <div class="col-md-1">
-                                                                    <i class="fa fa-user"
-                                                                       data-toggle="tooltip"
-                                                                       data-placement="right"
-                                                                       title="{{ 'tutors'|trans({}, 'cursus') }}"
-                                                                    >
-                                                                    </i>
-                                                                </div>
-                                                                <div class="col-md-11">
-                                                                    {% if eventTutors|length > 0 %}
-                                                                        <div class="table-responsive">
-                                                                            <table class="table">
-                                                                                {% for tutor in eventTutors %}
-                                                                                    <tr>
-                                                                                        <td>
-                                                                                            {{ tutor.getFirstName() }}
-                                                                                            {{ tutor.getLastName() }}
-                                                                                        </td>
-                                                                                        {% if withMail %}
+                                                                <div role="tabpanel" class="collapse" id="tutors-{{ eventId }}">
+                                                                    <div class="col-md-1">
+                                                                        <i class="fa fa-user"
+                                                                           data-toggle="tooltip"
+                                                                           data-placement="right"
+                                                                           title="{{ 'tutors'|trans({}, 'cursus') }}"
+                                                                        >
+                                                                        </i>
+                                                                    </div>
+                                                                    <div class="col-md-11">
+                                                                        {% if eventTutors|length > 0 %}
+                                                                            <div class="table-responsive">
+                                                                                <table class="table">
+                                                                                    {% for tutor in eventTutors %}
+                                                                                        <tr>
                                                                                             <td>
-                                                                                                <a href="{{ path('claro_message_form_for_user', {'user': tutor.getId()}) }}">
-                                                                                                    <i class="fa fa-envelope"></i>
-                                                                                                </a>
+                                                                                                {{ tutor.getFirstName() }}
+                                                                                                {{ tutor.getLastName() }}
                                                                                             </td>
-                                                                                        {% endif %}
-                                                                                    </tr>
-                                                                                {% endfor %}
-                                                                            </table>
-                                                                        </div>
-                                                                    {% else %}
-                                                                        <div class="alert alert-warning">
-                                                                            {{ 'no_tutor'|trans({}, 'cursus') }}
-                                                                        </div>
-                                                                    {% endif %}
+                                                                                            {% if withMail %}
+                                                                                                <td>
+                                                                                                    <a href="{{ path('claro_message_form_for_user', {'user': tutor.getId()}) }}">
+                                                                                                        <i class="fa fa-envelope"></i>
+                                                                                                    </a>
+                                                                                                </td>
+                                                                                            {% endif %}
+                                                                                        </tr>
+                                                                                    {% endfor %}
+                                                                                </table>
+                                                                            </div>
+                                                                        {% else %}
+                                                                            <div class="alert alert-warning">
+                                                                                {{ 'no_tutor'|trans({}, 'cursus') }}
+                                                                            </div>
+                                                                        {% endif %}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                            </td>
+                                                        </tr>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </table>
                                         </div>

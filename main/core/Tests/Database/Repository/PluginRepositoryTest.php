@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 use Claroline\CoreBundle\Entity\Plugin;
+use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class PluginRepositoryTest extends RepositoryTestCase
 {

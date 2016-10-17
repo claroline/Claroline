@@ -18,11 +18,12 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
+use Claroline\SurveyBundle\Entity\Answer\SimpleTextQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\SurveyAnswer;
 use Claroline\SurveyBundle\Entity\Choice;
+use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
 use Claroline\SurveyBundle\Entity\Question;
 use Claroline\SurveyBundle\Entity\QuestionModel;
-use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
 use Claroline\SurveyBundle\Entity\Survey;
 use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
 use Claroline\SurveyBundle\Event\Log\LogSurveyAnswerDelete;
@@ -42,6 +43,7 @@ class SurveyManager
     private $multipleChoiceQuestionAnswerRepo;
     private $multipleChoiceQuestionRepo;
     private $openEndedQuestionAnswerRepo;
+    private $simpleTextQuestionAnswerRepo;
     private $surveyAnswerRepo;
     private $surveyQuestionRelationRepo;
     private $questionAnswerRepo;
@@ -65,6 +67,7 @@ class SurveyManager
         $this->multipleChoiceQuestionAnswerRepo = $om->getRepository('ClarolineSurveyBundle:Answer\MultipleChoiceQuestionAnswer');
         $this->multipleChoiceQuestionRepo = $om->getRepository('ClarolineSurveyBundle:MultipleChoiceQuestion');
         $this->openEndedQuestionAnswerRepo = $om->getRepository('ClarolineSurveyBundle:Answer\OpenEndedQuestionAnswer');
+        $this->simpleTextQuestionAnswerRepo = $om->getRepository('ClarolineSurveyBundle:Answer\SimpleTextQuestionAnswer');
         $this->surveyAnswerRepo = $om->getRepository('ClarolineSurveyBundle:Answer\SurveyAnswer');
         $this->surveyQuestionRelationRepo = $om->getRepository('ClarolineSurveyBundle:SurveyQuestionRelation');
         $this->questionAnswerRepo = $om->getRepository('ClarolineSurveyBundle:Answer\QuestionAnswer');
@@ -273,6 +276,13 @@ class SurveyManager
         $this->om->flush();
     }
 
+    public function persistSimpleTextQuestionAnswer(
+        SimpleTextQuestionAnswer $simpleTextAnswer
+    ) {
+        $this->om->persist($simpleTextAnswer);
+        $this->om->flush();
+    }
+
     public function persistMultipleChoiceQuestionAnswer(
         MultipleChoiceQuestionAnswer $choiceAnswer
     ) {
@@ -288,7 +298,7 @@ class SurveyManager
         $model->setTitle($question->getTitle());
         $model->setQuestionType($questionType);
         $model->setWorkspace($question->getWorkspace());
-        $details = array();
+        $details = [];
 
         switch ($questionType) {
 
@@ -310,13 +320,13 @@ class SurveyManager
                 $details['choiceDisplay'] = $horizontal ?
                     'horizontal' :
                     'vertical';
-                $details['choices'] = array();
+                $details['choices'] = [];
 
                 if (!is_null($choiceQuestion)) {
                     $choices = $this->getChoicesByQuestion($question);
 
                     foreach ($choices as $choice) {
-                        $choiceDetails = array();
+                        $choiceDetails = [];
                         $choiceDetails['other'] = $choice->isOther() ?
                             'other' :
                             'not-other';
@@ -325,7 +335,9 @@ class SurveyManager
                     }
                 }
                 break;
-            case 'open-ended':
+            case 'open_ended':
+            case 'open_ended_bare':
+            case 'simple_text':
             default:
                 break;
         }
@@ -587,7 +599,7 @@ class SurveyManager
     {
         return count($questions) > 0 ?
             $this->questionAnswerRepo->findQuestionAnswersByQuestions($questions, $executeQuery) :
-            array();
+            [];
     }
 
     /*******************************************************
@@ -642,6 +654,64 @@ class SurveyManager
         $executeQuery = true
     ) {
         return $this->openEndedQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
+            $survey,
+            $question,
+            $executeQuery
+        );
+    }
+
+    /*
+     * Access to SimpleTextQuestionAnswerRepository methods *
+     */
+
+    public function getSimpleTextAnswerByQuestionAnswer(
+        QuestionAnswer $questionAnswer,
+        $executeQuery = true
+    ) {
+        return $this->simpleTextQuestionAnswerRepo->findSimpleTextAnswerByQuestionAnswer(
+            $questionAnswer,
+            $executeQuery
+        );
+    }
+
+    public function getSimpleTextAnswerByUserAndSurveyAndQuestion(
+        User $user,
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    ) {
+        return $this->simpleTextQuestionAnswerRepo->findAnswerByUserAndSurveyAndQuestion(
+            $user,
+            $survey,
+            $question,
+            $executeQuery
+        );
+    }
+
+    public function getSimpleTextAnswersBySurveyAndQuestion(
+        Survey $survey,
+        Question $question,
+        $page = 1,
+        $max = 20,
+        $executeQuery = true
+    ) {
+        $answers = $this->simpleTextQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
+            $survey,
+            $question,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($answers, $page, $max) :
+            $this->pagerFactory->createPager($answers, $page, $max);
+    }
+
+    public function getSimpleTextAnswersBySurveyAndQuestionWithoutPager(
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    ) {
+        return $this->simpleTextQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
             $survey,
             $question,
             $executeQuery

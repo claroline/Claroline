@@ -1,8 +1,8 @@
-core_resource_logger: core_resource_logger
-simple_text: simple_text
-my_workspaces: my_workspaces
-my_profile: my_profile
+core_resource_logger: Overzicht van de recente activiteiten
+simple_text: Tekst
+my_workspaces: Mijn werkruimten
+my_profile: Mijn profiel
 type: Type
-widget_configuration_copy_warning: widget_configuration_copy_warning
-widget_instance_form_name: widget_instance_form_name
-widget_instance_form_widget: widget_instance_form_widget
+widget_configuration_copy_warning: Er is een fout opgetreden tijdens het kopiëren van de instellingen van de widget <%widgetInstanceName%>.
+widget_instance_form_name: Naam
+widget_instance_form_widget: Type

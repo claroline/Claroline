@@ -11,19 +11,19 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 
-use Claroline\CoreBundle\Library\Transfert\Importer;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\ToolRightsManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Definition\Processor;
 
 /**
  * @DI\Service("claroline.importer.tools_importer")
@@ -70,7 +70,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
     public function addToolsSection($rootNode)
     {
         $configuration = $this->getConfiguration();
-        $availableRoleName = array();
+        $availableRoleName = [];
 
         if (isset($configuration['roles'])) {
             foreach ($configuration['roles'] as $role) {
@@ -105,7 +105,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
                                                     function ($v) use ($availableRoleName) {
                                                         return call_user_func_array(
                                                             __CLASS__.'::roleNameExists',
-                                                            array($v, $availableRoleName)
+                                                            [$v, $availableRoleName]
                                                         );
                                                     }
                                                 )
@@ -158,13 +158,13 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 
             //check the tool already exists in the workspace~
             $orderedTool = $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\OrderedTool')
-                ->findBy(array('tool' => $toolEntity, 'workspace' => $workspace));
+                ->findBy(['tool' => $toolEntity, 'workspace' => $workspace]);
 
             $addRoleToOtr = count($orderedTool) > 0 ? false : true;
 
             if ($addRoleToOtr && $toolEntity) {
                 $otr = $this->toolManager
-                    ->addWorkspaceTool(
+                    ->setWorkspaceTool(
                         $toolEntity,
                         $position,
                         $tool['tool']['translation'],
@@ -176,8 +176,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 
             if (isset($tool['tool']['roles']) && $addRoleToOtr && $otr) {
                 foreach ($tool['tool']['roles'] as $role) {
-                    $roleEntity = $this->roleManager->getRoleByName($role['name'].'_'.$workspace->getGuid());
-                    $this->toolRightManager->createToolRights(
+                    $this->toolRightManager->setToolRights(
                         $otr,
                         $entityRoles[$role['name']],
                         ToolMaskDecoder::$defaultValues['open']
@@ -206,16 +205,16 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         $i = 0;
 
         foreach ($workspaceTools as $workspaceTool) {
-            $roles = array();
+            $roles = [];
             foreach ($workspaceTool->getRights() as $right) {
-                $roles[] = array('name' => $this->roleManager->getWorkspaceRoleBaseName($right->getRole()));
+                $roles[] = ['name' => $this->roleManager->getWorkspaceRoleBaseName($right->getRole())];
             }
 
-            $tool = array(
+            $tool = [
                 'type' => $workspaceTool->getTool()->getName(),
                 'translation' => $workspaceTool->getTool()->getDisplayName(),
                 'roles' => $roles,
-            );
+            ];
 
             $importer = $this->getImporterByName($workspaceTool->getTool()->getName());
 
@@ -223,7 +222,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
                 $tool['data'] = $importer->export($workspace, $files, null);
             }
 
-            $data[$i] = array('tool' => $tool);
+            $data[$i] = ['tool' => $tool];
             ++$i;
         }
 

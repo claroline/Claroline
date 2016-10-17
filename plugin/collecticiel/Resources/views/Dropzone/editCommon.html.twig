@@ -133,7 +133,6 @@
                     <h4>{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</h4>
                 </div>
             </div>
-          </div>
         </div>
         <!-- Evaluation types -->
         <div class="row">
@@ -205,7 +204,7 @@
             </button>
         </div>
         {{ form_rest(form) }}
- 
+
         {# Add hidden variable to add this data in Javascript #}
         <input type="hidden" value="{{dropzone.id}}" id="dropzone_id">
 
@@ -371,7 +370,7 @@
             $('#dropzone-message-part-notation').hide();
           }
         }
-        
+
         /**
          * When manual state has changed and involve that poeple will not be able to drop anymore, this will ask if
          * you want to close opened drop. ( same as autoClose when time is up ).

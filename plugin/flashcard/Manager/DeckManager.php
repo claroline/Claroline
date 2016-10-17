@@ -71,7 +71,7 @@ class DeckManager
 
     /**
      * Returns the content of the result resource form.
-     * 
+     *
      * @param FormView $view
      *
      * @return string

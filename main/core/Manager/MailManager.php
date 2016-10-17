@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Event\RefreshCacheEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -118,9 +117,7 @@ class MailManager
     public function sendValidateEmail($hash)
     {
         $users = $this->container->get('claroline.manager.user_manager')->getByEmailValidationHash($hash);
-        $url =
-            $this->container->get('request')->getSchemeAndHttpHost()
-            .$this->router->generate('claro_security_validate_email', ['hash' => $hash]);
+        $url = $this->router->generate('claro_security_validate_email', ['hash' => $hash], true);
         $body = $this->translator->trans('email_validation_url_display', ['%url%' => $url], 'platform');
         $subject = $this->translator->trans('email_validation', [], 'platform');
 
@@ -139,9 +136,7 @@ class MailManager
         $displayedLocale = isset($content[$locale]) ? $locale : $this->ch->getParameter('locale_language');
         $body = $content[$displayedLocale]['content'];
         $subject = $content[$displayedLocale]['title'];
-        $url =
-            $this->container->get('request')->getSchemeAndHttpHost()
-            .$this->router->generate('claro_security_validate_email', ['hash' => $user->getEmailValidationHash()]);
+        $url = $this->router->generate('claro_security_validate_email', ['hash' => $user->getEmailValidationHash()], true);
         $validationLink = $this->translator->trans('email_validation_url_display', ['%url%' => $url], 'platform');
 
         $body = str_replace('%first_name%', $user->getFirstName(), $body);
@@ -171,10 +166,11 @@ class MailManager
      * @param User   $from
      * @param array  $extra
      * @param bool   $force
+     * @param string $replyToMail
      *
      * @return bool
      */
-    public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false)
+    public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false, $replyToMail = null)
     {
         if (count($users) === 0) {
             //obviously, if we're not going to send anything to anyone, it's better to stop
@@ -182,8 +178,6 @@ class MailManager
         }
 
         if ($this->isMailerAvailable()) {
-            $body = $this->parseBodyUrl($body);
-
             $to = [];
 
             $layout = $this->contentManager->getTranslatedContent(['type' => 'claro_mail_layout']);
@@ -225,6 +219,7 @@ class MailManager
             $message = \Swift_Message::newInstance()
                 ->setSubject($subject)
                 ->setFrom($fromEmail)
+                ->setReplyTo($replyToMail)
                 ->setBody($body, 'text/html');
 
             if ($from !== null && filter_var($from->getMail(), FILTER_VALIDATE_EMAIL)) {
@@ -304,29 +299,5 @@ class MailManager
         }
 
         return $this->ch->getParameter('support_email');
-    }
-
-    private function parseBodyUrl($body)
-    {
-        try {
-            $request = $this->container->get('request');
-            //grep href content
-            $regex = "#href=(\"|')([^\"']+)#";
-
-            preg_match_all($regex, $body, $matches, PREG_SET_ORDER);
-
-            foreach ($matches as $match) {
-                $url = $match[2];
-
-                if (strpos($url, 'http:') === false && strpos($url, 'https:') === false) {
-                    $newUrl = $request->getSchemeAndHttpHost().$url;
-                    $body = str_replace($url, $newUrl, $body);
-                }
-            }
-        } catch (InactiveScopeException $e) {
-            //the scope is inactive so we can't do anything.
-        }
-
-        return $body;
     }
 }

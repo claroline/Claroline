@@ -13,6 +13,11 @@ portfolioApp
                     this.portfolioWidgets.push(newPortfolioWidget);
                 }, this);
             },
+            addWidgets: function(portfolioWidgets) {
+                for (var i = 0; i < portfolioWidgets.length; i++) {
+                    this.addWidget(portfolioWidgets[i]);
+                }
+            },
             addWidget: function(portfolioWidget) {
                 var widget = widgetFactory.getWidget(portfolioWidget.portfolio_id, portfolioWidget.widget_type, portfolioWidget.widget_id);
                 var newPortfolioWidget= new widget(portfolioWidget);

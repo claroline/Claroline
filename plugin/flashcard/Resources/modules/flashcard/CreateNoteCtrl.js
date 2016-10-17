@@ -17,17 +17,18 @@ export default class CreateNoteCtrl {
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
     this.noteTypes = []
+    this.idNoteTypeChoosen = 0
     this.noteTypeChoosen = null
     this.noteTypeField = [
-        'type',
-        'select',
-        {
-            values: [],
-            label: 'note_type',
-            choice_name: 'name',
-            validators: [new NotBlank()]
-        }
-
+      'type',
+      'select',
+      {
+        values: [],
+        label: 'note_type',
+        choice_name: 'name',
+        choice_value: 'id',
+        validators: [new NotBlank()]
+      }
     ]
     this.fieldValues = []
     this.newCards = []
@@ -51,8 +52,8 @@ export default class CreateNoteCtrl {
       for (let i = 0; i < this.fieldValues.length; i++) {
         fieldLabel = this.noteTypeChoosen.field_labels[i]
         fields[i] = {
-          "id": fieldLabel.id,
-          "fieldValue": this.fieldValues[i]
+          'id': fieldLabel.id,
+          'fieldValue': this.fieldValues[i]
         }
       }
 
@@ -68,6 +69,18 @@ export default class CreateNoteCtrl {
         }
       )
       this._resetForm(form)
+    }
+  }
+
+  updateNoteTypeChoosen () {
+    if (this.idNoteTypeChoosen != 0) {
+      this.noteTypes.forEach(
+        (element) => {
+          if (this.idNoteTypeChoosen == element.id) {
+            this.noteTypeChoosen = element
+          }
+        }
+      )
     }
   }
 

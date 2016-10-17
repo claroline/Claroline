@@ -20,7 +20,11 @@ class AnnouncementRepository extends EntityRepository
     public function findVisibleByWorkspace(Workspace $workspace)
     {
         $dql = '
-            SELECT a AS announcement
+            SELECT a AS announcement,
+                   w.id AS workspaceId,
+                   w.name AS workspaceName,
+                   w.code AS workspaceCode,
+                   n.id AS resourceNodeId
             FROM Claroline\AnnouncementBundle\Entity\Announcement a
             JOIN a.aggregate aa
             JOIN aa.resourceNode n
@@ -43,7 +47,11 @@ class AnnouncementRepository extends EntityRepository
     public function findVisibleByWorkspaceAndRoles(Workspace $workspace, array $roles)
     {
         $dql = '
-            SELECT a AS announcement
+            SELECT a AS announcement,
+                   w.id AS workspaceId,
+                   w.name AS workspaceName,
+                   w.code AS workspaceCode,
+                   n.id AS resourceNodeId
             FROM Claroline\AnnouncementBundle\Entity\Announcement a
             JOIN a.aggregate aa
             JOIN aa.resourceNode n
@@ -69,11 +77,11 @@ class AnnouncementRepository extends EntityRepository
     public function findVisibleByWorkspacesAndRoles(array $workspaces, array $managerWorkspaces, array $roles)
     {
         $dql = '
-            SELECT
-                a AS announcement,
-                w.id AS workspaceId,
-                w.name AS workspaceName,
-                w.code AS workspaceCode
+            SELECT a AS announcement,
+                   w.id AS workspaceId,
+                   w.name AS workspaceName,
+                   w.code AS workspaceCode,
+                   n.id AS resourceNodeId
             FROM Claroline\AnnouncementBundle\Entity\Announcement a
             JOIN a.aggregate aa
             JOIN aa.resourceNode n

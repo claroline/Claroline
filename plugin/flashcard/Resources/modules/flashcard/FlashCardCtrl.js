@@ -9,7 +9,7 @@
  */
 
 export default class FlashCardCtrl {
-  constructor (service, modal, $http) {
+  constructor (service) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit

@@ -1,0 +1,6 @@
+website_doesnt_exist %url%: De website %url% bestaat niet.
+server_error %errorCode%: Er is een fout gedetecteerd aan de serverzijde. Code fout:%errorCode%.
+client_error %errorCode%: Er is een fout gedetecteerd aan de klantzijde. Code fout:%errorCode%.
+method_not_allowed: Deze methode is niet toegestaan.
+res_not_found: Leermiddel niet gevonden
+access_denied: U bent niet toegelaten deze webpagina te openen.

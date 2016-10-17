@@ -16,6 +16,7 @@
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-intl": "*",
+        "ext-mbstring": "*",
         "ext-pdo_mysql": "*",
         "besimple/sso-auth-bundle": "*",
         "cocur/slugify": "~1.0",
@@ -41,8 +42,8 @@
         "jms/security-extra-bundle": "1.5.1",
         "jms/serializer-bundle": "~0.13",
         "jms/twig-js-bundle": "1.0.0",
-        "johngrogg/ics-parser": "dev-master",
-        "json-quiz/json-quiz": "dev-master",
+        "johngrogg/ics-parser": "2.0.0",
+        "json-quiz/json-quiz": "0.1.0",
         "knplabs/knp-menu-bundle": "2.0.0",
         "knplabs/knp-snappy-bundle": "1.3",
         "leafo/lessphp": "0.4.0",
@@ -69,16 +70,18 @@
         "symfony/twig-bundle": "~2.0",
         "symfony/yaml": "*",
         "twig/extensions": "1.2.0",
+        "twig/twig": "1.24.2",
         "werkint/jsmin": "1.0.0",
         "white-october/pagerfanta-bundle": "1.0.2",
         "willdurand/js-translation-bundle": "~2.1",
         "zendframework/zend-crypt": "~2.3",
+        "zendframework/zend-stdlib": "~2.7",
         "zenstruck/form-bundle": "1.5.1",
         "innova/angular-js-bundle": "~5.0",
         "innova/angular-ui-resource-picker-bundle": "~6.0",
         "innova/angular-ui-tinymce-bundle": "5.*",
         "claroline/front-end-bundle": "dev-7.x-test",
-        "fabiang/xmpp": "0.6.1"
+        "ocramius/proxy-manager": "1.0.2"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.6",
@@ -191,7 +194,8 @@
             "Icap\\LessonBundle\\": "plugin/lesson",
             "Claroline\\FlashCardBundle\\": "plugin/flashcard",
             "Innova\\MediaResourceBundle\\": "plugin/media-resource",
-            "FormaLibre\\OfficeConnectBundle\\": "plugin/o365"
+            "FormaLibre\\OfficeConnectBundle\\": "plugin/o365",
+            "Claroline\\DashboardBundle\\": "plugin/dashboard"
         }
     },
     "extra": {
@@ -245,7 +249,8 @@
             "UJM\\ExoBundle\\UJMExoBundle",
             "Icap\\LessonBundle\\IcapLessonBundle",
             "Claroline\\ChatBundle\\ClarolineChatBundle",
-            "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle"
+            "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle",
+            "Claroline\\DashboardBundle\\ClarolineDashboardBundle"
         ]
     }
 }

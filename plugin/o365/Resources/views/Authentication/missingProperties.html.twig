@@ -1,0 +1,13 @@
+{% extends 'ClarolineCoreBundle:Exception:layout.html.twig' %}
+
+{% set httpCode = 422 %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'bad_request' | trans({}, 'platform') }}{% endblock %}
+
+{% block message %}
+    <h3> {{ 'user_creation_impossible'|trans({}, 'office') }} </h3>
+
+    {% for missingProperty in missingProperties %}
+        <p> {{ 'missing_property'|trans({'%property%': missingProperty}, 'office') }} </p>
+    {% endfor %}
+{% endblock %}

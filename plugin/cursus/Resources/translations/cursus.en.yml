@@ -90,8 +90,10 @@ delete_session_event: Delete session event
 delete_session_event_confirm_message: Are you sure you want to delete this session event ?
 disable_certificates: Disable ceritficates
 disable_invitations: Disable invitations
+disable_session_event_registration: Disable registration for session event
 disable_workspace_link: Disable workspace link
 display_course_details: Display training details
+display_order: Display order
 display_session_events: Display session events
 display_sessions: Display sessions
 display_sessions_from: Display sessions from
@@ -106,6 +108,10 @@ edit_location: Edit location
 edit_session: Edit training session
 edit_session_event: Edit session event
 enable_courses_tab_in_profile: Enable trainings tab in profile
+enable_workspace_in_courses_tab_in_profile: Display workspace link in trainings tab of profile
+event_registration_automatic: Automatic
+event_registration_manual: Manual
+event_registration_public: Public
 every_day: Every day
 every_month: Every month
 every_week: Every week
@@ -139,6 +145,7 @@ locations_management: Locations management
 manager: Manager
 max_time_reservation: Maximum reservation time
 max_users: Maximum number of users
+required_places_msg: Only %remainingPlaces% remaining place(s). Needed : %requiredPlaces%.
 no: No
 no_closed_session: No closed session
 no_closed_session_event: No closed session event
@@ -151,6 +158,7 @@ no_location: No location
 no_ongoing_session: No ongoing session
 no_open_session: No open session
 no_open_session_event: No open session event
+no_participant: No participant
 no_pending_learner: No pending learner
 no_registered_group: No registered group
 no_registered_learner: No registered learner
@@ -167,6 +175,7 @@ open_session_events: Open session events
 ongoing_sessions: Ongoing sessions
 open_sessions: Open sessions
 organization_validation: Organization validation
+participants: Participants
 placeholder_course_code_message: This placeholder will be replaced by the code of the training
 placeholder_course_description_message: This placeholder will be replaced by the description of the training
 placeholder_course_title_message: This placeholder will be replaced by the title of the training
@@ -203,11 +212,15 @@ register: Register
 register_groups_to_cursus: Register groups to cursus
 register_groups_to_session: Register groups to training session
 register_learners_to_session: Register learners to training session
+register_participants: Register participants
+register_participants_to_session_event: Register participants to session event
 register_tutors_to_session: Register tutors to training session
 register_users_to_cursus: Register users to cursus
 registration_failed: Registration failed
 remove_course: Remove training
 remove_course_confirm_message: Are you sure you want to remove this training ?
+remove_participant: Remove participant
+remove_participant_confirm_message: Are you sure you want to remove this user from this session event ?
 repeat_session_event: Repeat session event
 repetition: Repetition
 send_confirmation_mail: Send a confirmation email
@@ -223,10 +236,28 @@ select_course_for_session_creation: Select training for which you want to create
 select_session: Select a training session
 selected_sessions: Selected training sessions
 self_register: Register
+self_register_to_session_event: Register to session event
 session: Training session
+session_and_event_registration_failed: |
+  Hello,<br><br>
+  Unfortunately you haven't been registered to session event "%event_name%" on %event_start_date% because there is no more available place in training session.
+session_and_event_registration_success_msg: |
+  Hello,<br><br>
+  You have been registered to session event "%event_name%" on %event_start_date%.
+  This session event is part of training session "%session_name%". Therefore you have also been registered to all mandatory training sessions.
+session_and_event_registration_pending_msg: |
+  Hello,<br><br>
+  You have been registered to training session %session_name% and all its mandatory session events.<br>
+  As there is no more available place in the chosen session event "%event_name%" on %event_start_date% you have been put in a queue.
+  You will be informed when there is availability.
+session_and_event_registration_success_pending_msg: |
+  Hello,<br><br>
+  We have reveiced your request for registration to session event "%event_name%" on %event_start_date%.<br>
+  However your registration has to be validated before.
 session_certificate: Session certificate
 session_closed: Closed
 session_creation: Create training session
+session_default_total: Default total for training session
 session_deletion: Delete training session
 session_description: Training session description
 session_details: Training session details
@@ -235,14 +266,29 @@ session_end_title: End of session "%sessionName%"
 session_event: Session event
 session_event_creation: Session event creation
 session_event_deletion: Session event deletion
+session_event_description: Session event description
 session_event_edition: Session event edition
 session_event_invitation: Session event invitation
 session_event_location: Location
+session_event_registration: Session event registration
+session_event_registration_pending_msg: |
+  Hello,<br><br>
+  There is no more available place in the chosen session event "%event_name%" on %event_start_date%.<br>
+  You have been put in a queue. You will be informed when there is availability.
+session_event_registration_pending_to_registered_msg: |
+  Hello,<br><br>
+  You were on a queue for session event "%event_name%" on %event_start_date%.<br>
+  As available place has been made you are now registered.
+session_event_registration_request: Request for registration to session event %event_name% on %event_start_date%
+session_event_registration_success_msg: |
+  Hello,<br><br>
+  You have been registered to session event "%event_name%" on %event_start_date%.
+session_event_self_registration_message: Are you sure you want to register to this session event ?
 session_event_title: Session event "%eventName%"
 session_events: Session events
 session_events_details: Session events details
 session_invitation: Session invitation
-session_not_enough_place_msg: Only %remainingPlaces% place(s) remaining in session "%sessionName%" of training "%courseTitle% [%courseCode%]"
+session_not_enough_place_msg: Only %remainingPlaces% remaining place(s) in session "%sessionName%" of training "%courseTitle% [%courseCode%]"
 session_not_started: Not started
 session_open: Ongoing
 session_registration: Training session registration

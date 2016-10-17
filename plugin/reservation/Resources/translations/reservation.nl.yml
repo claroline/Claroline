@@ -1,0 +1,143 @@
+add_new_resource_type: Een nieuw type van middel toevoegen
+add_resource: Een middel toevoegen
+agenda:
+  add_reservation: Een reservatie toevoegen
+  day_: Dag
+  day:
+    mon: Ma
+    monday: Maandag
+    tue: Din
+    tuesday: Dinsdag
+    wed: Woe
+    wednesday: Woensdag
+    thu: Din
+    thursday: Dinsdag
+    fri: Vri
+    friday: Vrijdag
+    sat: Zat
+    saturday: Zaterdag
+    sun: Zon
+    sunday: Zondag
+  form:
+    comment: Commentaar
+    description: Beschrijving
+    duration: Reservatieduur
+    end_date: Einddatum
+    localisation: Localisatie
+    max_time_reservation: Maximum reservatieduur
+    max_255_characters: Maximum 255 karakers
+    resource: Middel
+    resource_type: Type van middel
+    select_resource_pls: -- Gelieve een middel te kiezen --
+    start_date: Startdatum
+  modify_reservation: Een reservatie bewerken
+  month_: Maand
+  month:
+    jan: Jan
+    january: Januari
+    feb: Feb
+    february: Februari
+    mar: Maa
+    march: Maart
+    apr: Apr
+    april: April
+    may: Mei
+    jun: Jun
+    june: Juni
+    jul: Jul
+    july: Juli
+    aug: Aug
+    august: Augustus
+    sept: Sep
+    september: September
+    oct: Oct
+    october: October
+    nov: Nov
+    november: November
+    dec: Dec
+    december: December
+  popover:
+    author: Gemaakt door
+  resource:
+    admin: Admin
+    admin_info: Mag reservaties maken, bewerken en verwijderen.
+    book: Reserveren
+    book_info: Mag reservaties maken, bewerken en verwijderen.
+    cannot_see: Geen toegang
+    cannot_see_info: Mag de reservaties noch zien, noch bewerken.
+    rights_info: De toegangsrechten veriëren voor elke middel.
+    see: Zien
+    see_info: Mag alléén de reservaties zien.
+  today: Vandaag
+  week: Week
+  week_number_title: S
+confirm_reservation_deletion_content: Bent u er zeker van dat u deze reservatie wenst te verwijderen ?
+confirm_reservation_deletion_title: Een reservatie verwijderen
+confirm_resource_type_deletion_title: Een type van middel verwijderen
+confirm_resource_type_deletion_content: Bent u er zeker van dat u dit type van middelen wenst te verwijderen ? Deze actie zal al de reservaties verwijderen voor dit type van middelen en ook de lopende reservaties voor elke middel.
+confirm_resource_deletion_title: Een middel verwijderen
+confirm_resource_deletion_content: Bent u er zeker van dat u deze middel wenst te verwijderen ? Deze actie zal al de reservaties verwijderen die gekoppeld zijn met deze middel.
+delete_resource: De middel verwijderen
+delete_resource_type: Dit type van middel verwijderen
+error_: Fout
+error:
+  empty_input: Het veld mag niet leeg zijn.
+  resource_type_already_exists: Dit type van middel bestaat al.
+  number_reservations_exceeded: Aantal reservaties overschreden voor deze middel. Gelieve de datum te wijzigen.
+  max_time_reservation_exceeded: U hebt de maximum reservatieduur overschreden voor deze middel.
+export_resources: De middelen uitvoeren
+filter:
+  by_resource: Op de middelen filtreren
+  no_resource_found: Geen middel gevonden
+  no_resource_type_found: Geen type van middel gevonden
+form:
+  change_resource_type_name_title: De naam bewerken
+  change_resource_type_name: De naam bewerken
+  color: Kleur
+  description: Beschrijving
+  localisation: Localisatie
+  maxTime: Maximum reservatieduur
+  maxTimeOfReservation: Maximum duur per reservatie (optioneel)
+  name: Naam
+  quantity: Hoeveelheid
+  information_about_quantity_modification: Het bewerken van de hoeveelheid beschikbare middelen zal alléén de toekomstige reservaties beïnvloeden.
+import_: Invoeren
+import:
+  resources: Middelen invoeren
+  resources_submit: De middelen invoeren
+  resources_title: Middelen invoeren
+  resources_info: |
+    Gelieve een CSV-bestand te kiezen met een komma om de elementen te scheiden en aanhalingstekens rondom complexe tekstvelden. De eerste regel van het bestand moet 7 kolommen bevatten (Zie onderstaand voorbeeld):
+
+    - de naam van het type van middel (min 2 en max 50 tekens)
+    - de naam van de middel (min 2 en max 50 tekens)
+    - de maximum reservatieduur in het formaat hh:mm ou hh:mm:ss (optioneel)
+    - de beschrijving (optioneel)
+    - de localisatie ((optioneel)
+    - de hoeveelheid (minimum 1)
+    - de kleur van de middel (optioneel).
+
+    Indien het type van middel niet bestaat, wordt het automatisch gemaakt.
+  file: Middelenbestand
+  tv: Televisie
+  tv_localisation: Lerarenkamer
+modify_resource_type_name: De naam bewerken
+modify_resource: Een middel bewerken
+no_resources_type_yet: Er is nog geen middel voor de reservaties.
+no_resources_in_resource_type: Er zijn nog geen middelen in deze categorie.
+picker:
+  close: Sluiten
+  go_to_today: Vandaag
+  locale: nl
+  select_month: Kies een maand
+  prev_month: Voorafgaande maand
+  next_month: Volgende maand
+  select_year: Kies een jaar
+  prev_year: Voorafgaand jaar
+  next_year: Volgend jaar
+  select_decade: Een decennium kiezen
+  prev_decade: Voorafgaand decennium
+  next_decade: Volgen decennium
+  prev_century: Voorafgaande eeuw
+  next_century: Volgende eeuw
+reservation: Reservatie

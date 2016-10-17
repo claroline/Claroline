@@ -188,12 +188,8 @@ class TaggedObjectRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findTaggedObjectsByClassAndIds(
-        $class,
-        array $ids,
-        $orderedBy = 'id',
-        $order = 'ASC'
-    ) {
+    public function findTaggedObjectsByClassAndIds($class, array $ids, $orderedBy = 'id', $order = 'ASC')
+    {
         $dql = "
             SELECT to
             FROM Claroline\TagBundle\Entity\TaggedObject to
@@ -208,11 +204,8 @@ class TaggedObjectRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findTaggedResourcesByWorkspace(
-        Workspace $workspace,
-        $user = 'anon.',
-        array $roleNames = ['ROLE_ANONYMOUS']
-    ) {
+    public function findTaggedResourcesByWorkspace(Workspace $workspace, $user = 'anon.', array $roleNames = ['ROLE_ANONYMOUS'])
+    {
         $isManager = false;
 
         foreach ($roleNames as $roleName) {
@@ -267,16 +260,53 @@ class TaggedObjectRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findTaggedResourcesByRoles($user = 'anon.', array $roleNames = ['ROLE_ANONYMOUS'])
+    {
+        $dql = "
+            SELECT to
+            FROM Claroline\TagBundle\Entity\TaggedObject to
+            WHERE to.objectClass = :objectClass
+            AND to.objectId IN (
+                SELECT DISTINCT r.id
+                FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
+                JOIN r.creator c
+                LEFT JOIN r.workspace w
+                LEFT JOIN w.roles wr
+                LEFT JOIN r.rights rr
+                LEFT JOIN rr.role rrr
+                WHERE r.active = :active
+                AND (
+                    c.id = :userId
+                    OR (
+                        r.published = true
+                        AND (r.accessibleFrom IS NULL OR r.accessibleFrom <= :currentdate)
+                        AND (r.accessibleUntil IS NULL OR r.accessibleUntil >= :currentdate)
+                    )
+                )
+                AND (
+                    (CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roleNames))
+                    OR (rrr.name IN (:roleNames) AND BIT_AND(rr.mask, 1) = 1)
+                )
+            )
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('objectClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $query->setParameter('active', true);
+        $userId = ($user === 'anon.') ? -1 : $user->getId();
+        $query->setParameter('userId', $userId);
+        $query->setParameter('roleNames', $roleNames);
+        $currentDate = new \DateTime();
+        $query->setParameter('currentdate', $currentDate->format('Y-m-d H:i:s'));
+
+        return $query->getResult();
+    }
+
     /********************************
      * Return casted tagged objects *
      ********************************/
 
-    public function findObjectsByClassAndIds(
-        $class,
-        array $ids,
-        $orderedBy = 'id',
-        $order = 'ASC'
-    ) {
+    public function findObjectsByClassAndIds($class, array $ids, $orderedBy = 'id', $order = 'ASC')
+    {
         $dql = "
             SELECT o
             FROM $class o
@@ -289,13 +319,8 @@ class TaggedObjectRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findTaggedWorkspacesByRoles(
-        $tag,
-        array $roles,
-        $orderedBy = 'id',
-        $order = 'ASC',
-        $type = 0
-    ) {
+    public function findTaggedWorkspacesByRoles($tag, array $roles, $orderedBy = 'id', $order = 'ASC', $type = 0)
+    {
         $dql = "
             SELECT DISTINCT w
             FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
@@ -326,6 +351,30 @@ class TaggedObjectRepository extends EntityRepository
         $query->setParameter('tag', $tag);
         $query->setParameter('open', ToolMaskDecoder::$defaultValues['open']);
         $query->setParameter('type', $type);
+
+        return $query->getResult();
+    }
+
+    public function findTaggedResourceNodesByTagName($tagName)
+    {
+        $dql = "
+            SELECT DISTINCT r
+            FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
+            JOIN r.resourceType rt
+            WHERE rt.name != :directoryType
+            AND r.id IN (
+                SELECT to.objectId
+                FROM Claroline\TagBundle\Entity\TaggedObject to
+                JOIN to.tag t
+                WHERE to.objectClass = :resourceClass
+                AND t.name = :tagName
+            )
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('directoryType', 'directory');
+        $query->setParameter('resourceClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $query->setParameter('tagName', $tagName);
 
         return $query->getResult();
     }

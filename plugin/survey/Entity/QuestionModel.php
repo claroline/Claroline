@@ -52,6 +52,11 @@ class QuestionModel
      */
     protected $details;
 
+    /**
+     * @ORM\Column(name="rich_text", type="boolean")
+     */
+    protected $richText = true;
+
     public function getId()
     {
         return $this->id;
@@ -100,5 +105,15 @@ class QuestionModel
     public function setDetails($details)
     {
         $this->details = $details;
+    }
+
+    public function isRichText()
+    {
+        return $this->richText;
+    }
+
+    public function setRichText($richText)
+    {
+        $this->richText = $richText;
     }
 }

@@ -44,7 +44,6 @@ class CursusController extends FOSRestController
     private $facetManager;
     private $formFactory;
     private $platformConfigHandler;
-    private $profilePropertyManager;
     private $request;
 
     /**
@@ -584,15 +583,16 @@ class CursusController extends FOSRestController
     public function getCoursesProfileTabOptionAction()
     {
         $facetPreferences = $this->facetManager->getVisiblePublicPreference();
-        $enabled = $facetPreferences['baseData'] ?
+        $displayCourses = $facetPreferences['baseData'] ?
             $this->platformConfigHandler->getParameter('cursus_enable_courses_profile_tab') :
             false;
+        $displayWorkspace = $this->platformConfigHandler->getParameter('cursus_enable_ws_in_courses_profile_tab');
 
-        return $enabled ? true : false;
+        return ['displayCourses' => $displayCourses, 'displayWorkspace' => $displayWorkspace];
     }
 
     /**
-     * @View(serializerGroups={"api_cursus"})
+     * @View(serializerGroups={"api_workspace_min"})
      * @ApiDoc(
      *     description="Returns the finished sessions by user",
      *     views = {"cursus"}

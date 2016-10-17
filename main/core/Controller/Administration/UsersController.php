@@ -313,9 +313,11 @@ class UsersController extends Controller
                         $datas = str_getcsv($line, ';');
                         $username = $datas[2];
                         $email = $datas[4];
-                        $existingUser = $this->userManager->getUserByUsernameOrMail(
+                        $code = $datas[5];
+                        $existingUser = $this->userManager->getUserByUsernameOrMailOrCode(
                             $username,
-                            $email
+                            $email,
+                            $code
                         );
 
                         if (is_null($existingUser)) {
@@ -523,40 +525,6 @@ class UsersController extends Controller
     public function deactivatePersonalWorkspaceRightsAction(Role $role)
     {
         $this->rightsManager->deactivatePersonalWorkspaceRightsPerm($role);
-
-        return new JsonResponse([], 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/pws/create/{user}",
-     *     name="claro_admin_pws_create",
-     *     options={"expose"=true}
-     * )
-     */
-    public function createPersonalWorkspace(User $user)
-    {
-        if (!$user->getPersonalWorkspace()) {
-            $this->userManager->setPersonalWorkspace($user);
-        } else {
-            throw new \Exception('Workspace already exists');
-        }
-
-        return new JsonResponse([], 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/pws/delete/{user}",
-     *     name="claro_admin_pws_delete",
-     *     options={"expose"=true}
-     * )
-     */
-    public function deletePersonalWorkspace(User $user)
-    {
-        $personalWorkspace = $user->getPersonalWorkspace();
-        $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', [$personalWorkspace]);
-        $this->workspaceManager->deleteWorkspace($personalWorkspace);
 
         return new JsonResponse([], 200);
     }

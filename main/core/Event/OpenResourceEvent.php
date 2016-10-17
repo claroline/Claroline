@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Event dispatched by the resource controller when a resource is open.
@@ -22,10 +22,12 @@ class OpenResourceEvent extends Event implements MandatoryEventInterface, DataCo
     private $resource;
     private $response;
     private $isPopulated = false;
+    private $isIframe;
 
-    public function __construct(AbstractResource $resource)
+    public function __construct(AbstractResource $resource, $isIframe = false)
     {
         $this->resource = $resource;
+        $this->isIframe = $isIframe;
     }
 
     public function getResource()
@@ -52,5 +54,10 @@ class OpenResourceEvent extends Event implements MandatoryEventInterface, DataCo
     public function isPopulated()
     {
         return $this->isPopulated;
+    }
+
+    public function isIframe()
+    {
+        return $this->isIframe;
     }
 }

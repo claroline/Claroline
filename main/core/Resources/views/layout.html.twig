@@ -25,6 +25,7 @@
 {% block layout %}
     <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
+
     {% if config.getParameter('ssl_enabled') or app.request.isSecure() %}
         {% set protocol = 'https' %}
     {% else %}
@@ -41,6 +42,7 @@
 
     <div id="homeAsset" class="hide">{{ homeAsset }}</div>
     <div id="baseAsset" class="hide">{{ asset('') }}</div>
+    <div id="homeTheme" class="hide">{{ macros.getTheme(config)|trim }}</div>
     <div id="homeLocale" class="hide">{% spaceless %}
             {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
                 {{ app.request.locale }}

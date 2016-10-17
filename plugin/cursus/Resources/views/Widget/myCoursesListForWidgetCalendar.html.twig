@@ -60,5 +60,6 @@
         window['sessions_' + {{ widgetInstance.getId() }}] = {{ sessions|json_encode|raw }}
         window['editable-sessions_' + {{ widgetInstance.getId() }}] = {{ editableSessions|json_encode|raw }}
         window['workspaces_' + {{ widgetInstance.getId() }}] = {{ workspacesList|json_encode|raw }}
+        window['session-event-users-status_' + {{ widgetInstance.getId() }}] = {{ sessionEventUsersStatus|json_encode|raw }}
     </script>
 {% endblock %}

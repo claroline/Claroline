@@ -8,6 +8,7 @@
  */
 
 /*global Routing*/
+/*global Translator*/
 
 export default class GroupsRegistrationModalCtrl {
   constructor($http, $uibModalInstance, NgTableParams, sessionId, groupType, callback) {
@@ -21,6 +22,7 @@ export default class GroupsRegistrationModalCtrl {
       {count: 20},
       {counts: [10, 20, 50, 100], dataset: this.groups}
     )
+    this.errorMessages = []
     this.loadGroups()
   }
 
@@ -38,6 +40,7 @@ export default class GroupsRegistrationModalCtrl {
   }
 
   registerGroup (groupId) {
+    this.errorMessages = []
     const route = Routing.generate('api_post_session_group_registration', {session: this.sessionId, group: groupId, groupType: this.groupType})
     this.$http.post(route).then(d => {
       if (d['status'] === 200) {
@@ -51,6 +54,13 @@ export default class GroupsRegistrationModalCtrl {
             this.groups.splice(index, 1)
             this.tableParams.reload()
           }
+        } else if (datas['status'] === 'failed') {
+          const msg = Translator.trans(
+            'required_places_msg',
+            {remainingPlaces: datas['datas']['remainingPlaces'], requiredPlaces: datas['datas']['requiredPlaces']},
+            'cursus'
+          )
+          this.errorMessages.push(msg)
         }
       }
     })

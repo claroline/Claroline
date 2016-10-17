@@ -1,0 +1,39 @@
+# B
+back_to_list: Terug naar de lijst van de dashboards
+
+# C
+
+# The word "zicht" has to be confirmed everywhere as it's certainly not the best one !
+
+click_to_add_view: Klik on een zicht te maken
+connection_time: Connectieduur
+
+# D
+delete_view: Dit zicht verwijderen
+
+# E
+edit_view: Dit zicht bewerken
+edit_dashboard_title: Het zicht bewerken
+
+# M
+message_no_views: Geen zicht momenteel. Gebruik de + knop om er één te maken.
+
+# N
+new_dashboard_step_1: 1. Welke werkruimte betreft dit zicht ?
+new_dashboard_title: Een nieuw zicht maken
+new_dashboard_name_placeholder: Geef een naam voor het zicht
+no_result_for_query: Geen resultaat voor uw aanvraag
+
+# V
+view: Zicht
+view_name: Titel van het zicht
+
+# S
+share_view: Dit zicht delen
+selection: Selectie
+
+# W
+workspace_name: Titel van de werkruimte
+workspace_select: Selectie van de werkruimten
+workspaces_filter_attended: De werkruimten waaraan ik ingeschreven ben
+workspaces_filter_my: De werkruimten die ik gemaakt heb

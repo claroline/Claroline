@@ -224,7 +224,7 @@ maximum_tries: Nombre d'essais maximum
 meaning_measure_difficulty: Si l'indice est élevé, c'est que la question est facile. Inversement, si un indice est faible, la question est difficile.
 metadata_visible: Afficher les informations de l'exercice
 metadata_visible_help: Si coché, un tableau récapitulatif sera affiché sur la vue d'ensemble de l'exercice.
-minimal_correction: Vue minimale de la correction
+minimal_correction: Cacher les solutions
 model: Modèle
 more_info: Plus d'informations
 my_questions: Mes questions
@@ -383,6 +383,7 @@ step_score: Score de l'étape
 statistics: Afficher les statistiques
 step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
 step_item_add: Glisser/déposer ou cliquer sur le bouton "+" pour ajouter des questions
+step_need_manual_correction: Cette étape nécessite une correction manuelle
 stat_users: "[0, 1] %count% utilisateur|]1,Inf[ %count% utilisateurs"
 stat_have_responded: ont répondu
 
@@ -410,7 +411,7 @@ validate: Valider
 
 # W
 warning: Êtes-vous sûr de vouloir supprimer cette image ?
-warning_change_type_q: Attention: vous risquez de perdre vos données saisies. Continuer?
+warning_change_type_q: Attention: vous risquez de perdre vos données saisies. Continuer ?
 warning_one_word: Vous avez choisi une question à un mot. Attention, il y a des espaces dans votre réponse.
 weight_choice: Attribuer les points par réponse
 wrong: Fausse

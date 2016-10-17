@@ -1,0 +1,142 @@
+add_event: Een evenement toevoegen
+isTask: Taak
+all_day: de hele dag
+at: op
+cancel: Annuleren
+close: Sluiten
+confirm: Bent u er zeker van ?
+date_invalid: Er is een fout opgetreden. Kijk na of de startdatum voor de einddatum komt.
+day_: Dag
+day:
+  mon: Ma
+  monday: Maandag
+  tue: Din
+  tuesday: Dinsdag
+  wed: Woe
+  wednesday: Woensdag
+  thu: Don
+  thursday: Donderdag
+  fri: Vri
+  friday: Vrijdag
+  sat: Zat
+  saturday: Zaterdag
+  sun: Zon
+  sunday: Zondag
+date_agenda_display_format: DD-MM-YYYY
+date_agenda_display_format_for_form: dd-MM-yyyy
+end: Einde
+end_date: Einddatum
+export: De evenementen uitvoeren
+error: Er is een fout opgetreden. Gelieve opnieuw te proberen.
+event: Evenement
+filter_user: Op de gebruikers filtreren
+filter_ws: Op de werkruimten filtreren
+filter_tasks: De takan filtreren
+form:
+  all_day: De hele dag
+  description: Beschrijving
+  end: Einddatum
+  task: Taak
+  priority: Voorrang
+  priority_hight: Hoog
+  start: Startdatum
+  title: Titel
+  author: Gemaakt door
+  invitations: Uitnodigingen
+  status: Statuut
+high: Hoog
+hide_tasks: Alle taken verbergen
+import_agenda_file: Invoeren
+invitation_to_an_event: Uitnodiging tot een evenement
+invitation_not_found: De uitnodiging tot het evenement is niet gevonden. Het is misschien bewerkt of verwijderd.
+invitation_already_done: De aangevraagde actie is al op het evenement toegepast. Er is geen bewerking uitgeoefend.
+invitation_joined: De uitnodiging is aanvaard. Er is een nieuw evenement is op uw bureaublad gemaakt. U kan zien wie aan het evenement deelneemt. U mag de titel en de beschrijving wijzigen zonder die naar alle andere uitgenodigden te sturen.
+invitation_set_maybe: U hebt aangemeld dat u aan het evenement deelneemt. Dit evenement is op uw bureaublad gemaakt. Vous pouvez ainsi voir qui participe également à cet évènement. U mag de titel en de beschrijving wijzigen zonder die naar alle andere uitgenodigden te sturen.
+invitation_canceled: De uitnodiging is verwijderd. Er is geen evenement in uw agenda gemaakt. U kunt op elk moment uw keuze wijzigen door op de andere acties te klikken die beschikbaar zijn in het ontvangen pivé-bericht.
+invitation_back_to_calendar: Terug naar de agenda
+invitation_guests: Uitgenodigden
+invitation_ignore: Nog niet aanvaarde uitnodiging
+invitation_join: Uitnodiging aanvaard
+invitation_maybe: De gebruiker neemt er misschien deel aan
+invitation_resign: De gebruiker neemt er misschien deel aan
+invitation_join_label: Deelnemen
+invitation_maybe_label: Misschien
+in_x_days: Binnen %nbDays% dagen
+isAllDay: De hele dag
+length: Duur
+limit_date: Uiterste datum
+low: Laag
+medium: Normaal
+midnight: middernacht
+modify: Het evenement bewerken
+month_: Maand
+month:
+  jan: Jan
+  january: Januari
+  feb: Feb
+  february: Februari
+  mar: Maa
+  march: Maart
+  apr: Apr
+  april: April
+  may: Mei
+  jun: Jun
+  june: Juni
+  jul: Jul
+  july: Juli
+  aug: Aug
+  august: Augustus
+  sept: Sep
+  september: September
+  oct: Okt
+  october: Oktober
+  nov: Nov
+  november: November
+  dec: Dec
+  december: December
+next: '>'
+nextYear: '>>'
+no_event_found: Geen evenement
+no_description: Geen beschrijving
+no_task_found: Geen taak
+no_filter_tasks: Geen filter
+noon: middag
+now: Nu
+no_task_now: Geen taak te voltooien
+prev: '<'
+prevYear: '<<'
+picker:
+  close: Sluiten
+  go_to_today: Vandaag
+  locale: nl
+  select_month: Een maand kiezen
+  prev_month: Voorafgaande maand
+  next_month: Volgende maand
+  select_year: Kies een jaar
+  prev_year: Voorafgaand jaar
+  next_year: Volgend jaar
+  select_decade: Kies een decennium
+  prev_decade: Voorafgaand decennium
+  next_decade: Volgend decennium
+  prev_century: Voorafggande eeuw
+  next_century: Volgende eeuw
+  switch_mode: De modus wijzigen
+remove_event: Een evenement verwijderen
+remove_event_confirm: Bent u er zeker van dat u dit evenement wenst te verwijderen ?
+send_message_content: U hebt een uitnodiging gekregen om deel te nemen aan een evenement door %Sender%.<br> Dit evenement vindt plaats van %Start% tot %End% met de beschrijving: %Description%.<br><a href="%JoinAction%" class="btn btn-success">Neemt deel</a> <a href="%MaybeAction%" class="btn btn-primary">Misschien</a> <a href="%ResignAction%" class="btn btn-danger">Neemt niet deel</a>
+send_message_object: Uitnodiging tot een evenement: %EventName%
+start_date: Startdatum
+show_task_only: Alléén de taken tonen
+task: Taak
+task_done: Voltooide taak !
+task_not_done: Onvoltooide taak !
+tasks: Taken
+title: De titel is verplicht.
+today: Vandaag
+today_widget: Vandaag
+tomorrow: Morgen
+type: Type
+update: Bewerken
+update_event: Een evenement bewerken
+week: Week
+workspace: Werkruimten

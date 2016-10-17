@@ -12,9 +12,9 @@
 namespace Claroline\CoreBundle\Library\Testing;
 
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\BrowserKit\History;
 use Symfony\Component\BrowserKit\CookieJar;
+use Symfony\Component\BrowserKit\History;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @see http://alexandre-salome.fr/blog/Symfony2-Isolation-Of-Tests
@@ -26,7 +26,7 @@ class TransactionalTestClient extends Client
 
     public function __construct(
         HttpKernelInterface $kernel,
-        array $server = array(),
+        array $server = [],
         History $history = null,
         CookieJar $cookieJar = null
     ) {

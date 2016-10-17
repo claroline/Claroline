@@ -11,9 +11,10 @@
 
 namespace Claroline\CoreBundle\Validator\Constraints;
 
+use ICal\ICal;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Validator("ics_file_validator")
@@ -23,7 +24,7 @@ class IcsFileValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         if ($value !== null) {
-            $ical = new \ICal($value->getPathName());
+            $ical = new ICal($value->getPathName());
             $events = $ical->events();
 
             if ($events === null || count($events) === 0) {

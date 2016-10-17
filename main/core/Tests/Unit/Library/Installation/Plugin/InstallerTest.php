@@ -24,19 +24,29 @@ class InstallerTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
+
         $this->plugin = $this->mock('Claroline\CoreBundle\Library\PluginBundle');
         $this->validator = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\Validator');
         $this->recorder = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\Recorder');
         $this->baseInstaller = $this->mock('Claroline\InstallationBundle\Manager\InstallationManager');
+        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->pm = $this->mock('Claroline\CoreBundle\Manager\PluginManager');
+        $this->trans = $this->mock('Symfony\Component\Translation\TranslatorInterface');
+
         $this->installer = new Installer(
             $this->validator,
             $this->recorder,
-            $this->baseInstaller
+            $this->baseInstaller,
+            $this->om,
+            $this->pm,
+            $this->trans
         );
     }
 
     public function testInstallProperlyDelegatesToHelpers()
     {
+        $pluginEntity = 'ClarolineFooBundle';
+
         $this->recorder->shouldReceive('isRegistered')
             ->once()
             ->with($this->plugin)
@@ -44,14 +54,18 @@ class InstallerTest extends MockeryTestCase
         $this->validator->shouldReceive('validate')
             ->once()
             ->with($this->plugin)
-            ->andReturn(array());
+            ->andReturn([]);
         $this->validator->shouldReceive('getPluginConfiguration')
-            ->andReturn(array('foo' => 'bar'));
+            ->andReturn(['foo' => 'bar']);
         $this->baseInstaller->shouldReceive('install')
             ->once()
             ->with($this->plugin);
         $this->recorder->shouldReceive('register')
-            ->with($this->plugin, array('foo' => 'bar'));
+            ->with($this->plugin, ['foo' => 'bar'])
+            ->andReturn($pluginEntity);
+        $this->pm->shouldReceive('isReady')
+            ->with($pluginEntity)
+            ->andReturn(true);
 
         $this->installer->install($this->plugin);
     }
@@ -105,15 +119,15 @@ class InstallerTest extends MockeryTestCase
         $this->validator->shouldReceive('validate')
             ->once()
             ->with($this->plugin)
-            ->andReturn(array());
+            ->andReturn([]);
         $this->validator->shouldReceive('deactivateUpdateMode')->once();
         $this->validator->shouldReceive('getPluginConfiguration')
-            ->andReturn(array('foo' => 'bar'));
+            ->andReturn(['foo' => 'bar']);
         $this->baseInstaller->shouldReceive('update')
             ->once()
             ->with($this->plugin, '1.0', '2.0');
         $this->recorder->shouldReceive('update')
-            ->with($this->plugin, array('foo' => 'bar'));
+            ->with($this->plugin, ['foo' => 'bar']);
 
         $this->installer->update($this->plugin, '1.0', '2.0');
     }

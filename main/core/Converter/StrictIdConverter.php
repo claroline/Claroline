@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Converter;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
-use JMS\DiExtraBundle\Annotation as DI;
-use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @DI\Service()
@@ -84,10 +84,6 @@ class StrictIdConverter implements ParamConverterInterface
      */
     public function supports(ParamConverter $configuration)
     {
-        if (!$configuration instanceof ParamConverter) {
-            return false;
-        }
-
         $options = $configuration->getOptions();
 
         if (isset($options['strictId']) && $options['strictId'] === true) {

@@ -312,4 +312,21 @@ class CourseRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findIndependentCourses()
+    {
+        $dql = '
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Course c
+            WHERE NOT EXISTS (
+                SELECT cu
+                FROM Claroline\CursusBundle\Entity\Cursus cu
+                JOIN cu.course cuc
+                WHERE cuc = c
+            )
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

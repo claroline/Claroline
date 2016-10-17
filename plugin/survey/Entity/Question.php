@@ -63,6 +63,11 @@ class Question
      */
     protected $commentLabel;
 
+    /**
+     * @ORM\Column(name="rich_text", type="boolean")
+     */
+    protected $richText = true;
+
     public function setId($id)
     {
         $this->id = $id;
@@ -131,5 +136,15 @@ class Question
     public function setCommentLabel($commentLabel)
     {
         $this->commentLabel = $commentLabel;
+    }
+
+    public function isRichText()
+    {
+        return $this->richText;
+    }
+
+    public function setRichText($richText)
+    {
+        $this->richText = $richText;
     }
 }

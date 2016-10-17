@@ -94,7 +94,7 @@ display_all_list: Display the whole list
 display_all_on_this_page: Display all on this page
 display_pagination: Display with pagination
 docimology: Grading system
-pic_manage: Manage my documentsb
+pic_manage: Manage my documents
 document: Document
 drop_category: Drop this category
 duplicate: Duplicate
@@ -226,7 +226,7 @@ meaning_measure_difficulty: If the measure is high, the question is easy. If the
 metadata_visible: Display exercise information
 metadata_visible_help: If checked, a table with the information about the exercise will be displayed.
 metadata: Parameters
-minimal_correction: Show minimal correction
+minimal_correction: Hide solutions
 model: Model
 more_info: More information
 my_questions: My questions
@@ -390,6 +390,7 @@ step_score: Step score
 statistics: Display statistics
 step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
 step_item_add: Drag'n' drop or click the "+" button to add questions.
+step_need_manual_correction: This step needs manual correction
 stat_users: "[0, 1] %count% user|]1,Inf[ %count% users"
 stat_have_responded: have responded
 
@@ -417,7 +418,7 @@ validate: Validate
 
 # W
 warning: Are you sure you want to delete this picture ?
-warning_change_type_q: Warning: you may lose the data you've entered. Continue ?
+warning_change_type_q: Warning: you may lose the data you\'ve entered. Continue?
 warning_one_word: You have chosen a question word. Caution: You need spaces in your answer.
 weight_choice: Assign points by answer
 wrong: Wrong

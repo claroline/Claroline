@@ -1,30 +1,30 @@
-activity: 'Activité'
-administrate: 'Administrer'
-all: 'Tout'
-compose: 'Composer'
-copy: 'Copier'
-delete: 'Supprimer'
-directory: 'Répertoire'
-document: 'Document'
-download: 'Télécharger'
-edit: 'Éditer'
-edit-properties: 'Editer les propriétés'
-edit-rights: 'Editer les droits'
-empty: 'Vide'
-export: 'Exporter'
-file: 'Fichier'
-image: 'Image'
-insert: 'Insérer'
-media: 'Média'
-more: 'Plus'
-open: 'Ouvrir'
-open-tracking: 'Voir le suivi de l''objet'
-rename: 'Renommer'
-resource_copy_warning: 'Une erreur est survenue lors de la copie de la ressource <%resourceName%>'
-resource_name_form_name: 'Nom de la ressource'
-resource_shortcut: 'Raccourcis'
-text: 'Texte'
-update_file: 'Mettre le fichier à jour'
-video: 'Vidéo'
-workspace: 'Espace d''activités'
-write: 'Écrire'
+activity: Activité
+administrate: Administrer
+all: Tout
+compose: Composer
+copy: Copier
+delete: Supprimer
+directory: Répertoire
+document: Document
+download: Télécharger
+edit: Éditer
+edit-properties: Editer les propriétés
+edit-rights: Editer les droits
+empty: Vide
+export: Exporter
+file: Fichier
+image: Image
+insert: Insérer
+media: Média
+more: Plus
+open: Ouvrir
+open-tracking: Voir le suivi de l'objet
+rename: Renommer
+resource_copy_warning: Une erreur est survenue lors de la copie de la ressource <%resourceName%>.
+resource_name_form_name: Nom de la ressource
+resource_shortcut: Raccourcis
+text: Texte
+update_file: Mettre le fichier à jour
+video: Vidéo'
+workspace: Espace d'activités
+write: Écrire

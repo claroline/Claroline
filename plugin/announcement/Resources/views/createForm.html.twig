@@ -34,7 +34,25 @@
     id="announcement-form"
 >
     <div class="panel-body">
-    {{ form_widget(form) }}
+        {{ form_row(form.title) }}
+        {{ form_row(form.announcer) }}
+        {{ form_row(form.content) }}
+        {{ form_row(form.visible) }}
+        {{ form_row(form.visible_from) }}
+        {{ form_row(form.visible_until) }}
+        <div class="form-group row">
+            <label class="control-label col-md-3" for="announcement_form_notify_user">
+                {{ 'notify_user'|trans({}, 'announcement') }}
+                <i class="fa fa-info-circle pointer-hand"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="{{ 'notification_option_info'|trans({}, 'announcement') }}"
+                >
+                </i>
+            </label>
+            {{ form_widget(form.notify_user) }}
+        </div>
+        {{ form_rest(form) }}
     </div>
     <div class="form-actions panel-footer">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>

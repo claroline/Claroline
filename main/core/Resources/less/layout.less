@@ -525,7 +525,7 @@ ul.desktop-parameters-menu
     }
     > .nav.nav-pills{
         > li > a {
-            background-color: @component-active-bg;
+            background-color: @navbar-inverse-bg;
             color: #fff;
             &:hover {
                  background-color: darken(@body-bg, 30%);
@@ -752,10 +752,6 @@ ul.desktop-parameters-menu
     .node-zoom-rules(150, 18px, 20px);
     .node-zoom-rules(200, 20px, 28px);
 
-    .resource-li {
-        height: 50px;
-    }
-
     .node-thumbnail {
 
         &.ui-state-default {
@@ -771,12 +767,12 @@ ul.desktop-parameters-menu
             background-position: center center;
             background-size: auto 100% ;
             background-repeat: no-repeat;
-
             padding: 0px;
             margin: 5px 0 5px 15%;
             cursor: pointer;
             &.unpublished {
                 opacity: 0.5;
+                filter: grayscale(100%);
             }
         }
 
@@ -1828,4 +1824,16 @@ body.mce-fullscreen .modal.fullscreen {
 .unclickable {
     pointer-events: none;
     cursor: default;
+}
+
+/*************/
+/* MODERNIZR */
+/*************/
+
+.no-mutationobserver .outdated-browser-warning {
+  display: block;
+}
+
+.outdated-browser-warning {
+  display: none;
 }

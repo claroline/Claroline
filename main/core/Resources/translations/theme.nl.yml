@@ -1,5 +1,5 @@
-create_new_theme: Create a new theme
-delete_theme_confirm: Are you sure you want to delete this theme?
-new_theme: New theme
-theme_dir_not_writable: The directory "web/themes" is not writable. Custom themes cannot be created or deleted. Please change permissions on that directory to solve the issue.
-theme_management: Theme management
+create_new_theme: Een nieuw thema maken
+delete_theme_confirm: Bent u er zeker van dat u dit thema wenst te verwijderen ?
+new_theme: Nieuw thema
+theme_dir_not_writable: U hebt geen schrijfrechten op de directory "web/themes". U mag geen persoonlijk thema maken of verwijderen. Gelieve de rechten op deze directory te bewerken om het probleem op te lossen.
+theme_management: De thema's beheren

@@ -204,7 +204,7 @@ class TransferManager
         );
 
         //batch import with default template shouldn't be flushed
-        if (strpos($template->getPathname(), 'personal.zip') === false) {
+        if (strpos($template->getPathname(), 'default.zip') === false && strpos($template->getPathname(), 'personal.zip') === false) {
             $this->om->forceFlush();
         }
 
@@ -256,6 +256,7 @@ class TransferManager
 
         foreach ($data['tools'] as $tool) {
             $importer = $this->getImporterByName($tool['tool']['type']);
+            $importer->setWorkspace($workspace);
 
             if (isset($tool['tool']['data']) && $importer instanceof RichTextInterface) {
                 $data['data'] = $tool['tool']['data'];

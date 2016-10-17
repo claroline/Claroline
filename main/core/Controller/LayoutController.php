@@ -11,22 +11,23 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Manager\HomeManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Manager\HomeManager;
-use Claroline\CoreBundle\Event\StrictDispatcher;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Role\SwitchUserRole;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Actions of this controller are not routed. They're intended to be rendered
@@ -91,7 +92,7 @@ class LayoutController extends Controller
      */
     public function headerAction()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -112,14 +113,14 @@ class LayoutController extends Controller
         $selfRegistration = $this->configHandler->getParameter('allow_self_registration') &&
             $this->roleManager->validateRoleInsert(new User(), $roleUser);
 
-        return array(
+        return [
             'footerMessage' => $this->configHandler->getParameter('footer'),
             'footerLogin' => $this->configHandler->getParameter('footer_login'),
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
             'coreVersion' => $version,
             'selfRegistration' => $selfRegistration,
-        );
+        ];
     }
 
     /**
@@ -143,7 +144,7 @@ class LayoutController extends Controller
         if ($token = $this->tokenStorage->getToken()) {
             $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
         } else {
-            $tools = array();
+            $tools = [];
         }
 
         $canAdministrate = count($tools) > 0;
@@ -155,6 +156,7 @@ class LayoutController extends Controller
         $homeMenu = $this->configHandler->getParameter('home_menu');
         $showHelpButton = $this->configHandler->getParameter('show_help_button');
         $helpUrl = $this->configHandler->getParameter('help_url');
+        $loginTargetRoute = $this->configHandler->getParameter('login_target_route');
 
         if (is_numeric($homeMenu)) {
             $homeMenu = $this->homeManager->getContentByType('menu', $homeMenu);
@@ -164,14 +166,14 @@ class LayoutController extends Controller
             $user = $token->getUser();
             $roles = $this->utils->getRoles($token);
         } else {
-            $roles = array('ROLE_ANONYMOUS');
+            $roles = ['ROLE_ANONYMOUS'];
         }
-        $adminTools = array();
+        $adminTools = [];
 
         if ($token) {
             $secRoles = $this->tokenStorage->getToken()->getRoles();
         } else {
-            $secRoles = array();
+            $secRoles = [];
         }
 
         $adminTools = $this->toolManager->getAdminToolsByRoles($secRoles);
@@ -194,10 +196,14 @@ class LayoutController extends Controller
                 $registerTarget = $this->router->generate('claro_registration_user_registration_form');
             }
 
-            $loginTarget = $this->router->generate('claro_security_login');
+            if (!$loginTargetRoute) {
+                $loginTarget = $this->router->generate('claro_security_login');
+            } else {
+                $loginTarget = $this->routeExists($loginTargetRoute) ? $this->router->generate($loginTargetRoute) : $loginTargetRoute;
+            }
         }
 
-        return array(
+        return [
             'isLogged' => $isLogged,
             'register_target' => $registerTarget,
             'login_target' => $loginTarget,
@@ -212,7 +218,7 @@ class LayoutController extends Controller
             'adminTools' => $adminTools,
             'showHelpButton' => $showHelpButton,
             'helpUrl' => $helpUrl,
-        );
+        ];
     }
 
     /**
@@ -254,11 +260,11 @@ class LayoutController extends Controller
             }
         }
 
-        return array(
+        return [
             'isImpersonated' => $this->isImpersonated(),
             'workspace' => $workspaceName,
             'role' => $roleName,
-        );
+        ];
     }
 
     //not routed
@@ -273,7 +279,7 @@ class LayoutController extends Controller
     {
         if ($token = $this->tokenStorage->getToken()) {
             foreach ($token->getRoles() as $role) {
-                if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
+                if ($role instanceof SwitchUserRole) {
                     return true;
                 }
             }
@@ -288,7 +294,7 @@ class LayoutController extends Controller
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
         $wsLogs = $this->workspaceManager->getLatestWorkspacesByUser($user, $roles);
-        $workspaces = array();
+        $workspaces = [];
 
         if (!empty($wsLogs)) {
             foreach ($wsLogs as $wsLog) {
@@ -297,5 +303,13 @@ class LayoutController extends Controller
         }
 
         return $workspaces;
+    }
+
+    private function routeExists($name)
+    {
+        // I assume that you have a link to the container in your twig extension class
+        $router = $this->container->get('router');
+
+        return (null === $router->getRouteCollection()->get($name)) ? false : true;
     }
 }

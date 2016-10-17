@@ -1,4 +1,4 @@
-import 'angular/angular.min'
+import angular from 'angular/index'
 
 import 'angular-data-table/release/dataTable.helpers.min'
 import 'angular-bootstrap'
@@ -17,21 +17,27 @@ import '../services/module'
 import Routing from './routing.js'
 import '../fos-js-router/module'
 import '../form/module'
+import '#/main/core/fos-js-router/module'
 
 angular.module('UsersManager', [
-    'ClarolineSearch',
-    'ui.fos-js-router',
-    'data-table',
-    'ui.bootstrap.tpls',
-    'ClarolineAPI',
-    'ui.translation',
-    'ui.router',
-    'GroupsManager',
-    'FormBuilder',
-    'ncy-angular-breadcrumb'
+  'ClarolineSearch',
+  'ui.fos-js-router',
+  'data-table',
+  'ui.bootstrap.tpls',
+  'ClarolineAPI',
+  'ui.translation',
+  'ui.router',
+  'GroupsManager',
+  'FormBuilder',
+  'ncy-angular-breadcrumb'
 ]) .controller('UserController', ['$http', 'ClarolineSearchService', 'ClarolineAPIService', '$uibModal', UserController])
    .controller('RemoveByCsvModalController', RemoveByCsvModalController)
    .controller('UserInfoModalController', UserInfoModalController)
    .controller('ImportCsvFacetsController', ImportCsvFacetsController)
-   .service('UserAPIService', UserAPIService)
+   .service(
+     'UserAPIService', [
+       '$http',
+       'url',
+       UserAPIService
+     ])
    .config(Routing)

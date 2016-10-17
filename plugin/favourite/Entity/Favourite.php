@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="hevinci_favourite", uniqueConstraints={@ORM\uniqueConstraint(columns={"user_id", "resource_node_id"})})
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="HeVinci\FavouriteBundle\Repository\FavouriteRepository")
  */
 class Favourite
 {

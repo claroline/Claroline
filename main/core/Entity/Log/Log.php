@@ -19,11 +19,16 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Log\LogRepository")
- * @ORM\Table(name="claro_log")
+ * @ORM\Table(name="claro_log", indexes={
+ *     @Index(name="action_idx", columns={"action"}),
+ *     @Index(name="tool_idx", columns={"tool_name"}),
+ *     @Index(name="doer_type_idx", columns={"doer_type"})
+ * })
  */
 class Log
 {

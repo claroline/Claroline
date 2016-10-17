@@ -44,6 +44,11 @@ class Theme
     protected $plugin;
 
     /**
+     * @ORM\Column(name="extending_default", type="boolean", options={"default" = 0})
+     */
+    protected $extendingDefault = false;
+
+    /**
      * @return int
      */
     public function getId()
@@ -81,6 +86,22 @@ class Theme
     public function getPlugin()
     {
         return $this->plugin;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExtendingDefault()
+    {
+        return $this->extendingDefault;
+    }
+
+    /**
+     * @param bool $extendingDefault
+     */
+    public function setExtendingDefault($extendingDefault)
+    {
+        $this->extendingDefault = $extendingDefault;
     }
 
     /**

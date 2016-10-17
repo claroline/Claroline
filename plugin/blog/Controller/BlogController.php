@@ -6,19 +6,19 @@ use Claroline\CoreBundle\Entity\User;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
+use Icap\BlogBundle\Entity\Tag;
 use Icap\BlogBundle\Exception\TooMuchResultException;
 use Icap\BlogBundle\Form\BlogBannerType;
 use Icap\BlogBundle\Form\BlogInfosType;
 use Icap\BlogBundle\Form\BlogOptionsType;
-use Icap\BlogBundle\Entity\Tag;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +32,7 @@ class BlogController extends BaseController
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @Template()
      */
-    public function viewAction(Request $request, Blog $blog, $page, $filter = null)
+    public function viewAction(Request $request, Blog $blog, $page = 1, $filter = null)
     {
         $this->checkAccess('OPEN', $blog);
 
@@ -40,7 +40,7 @@ class BlogController extends BaseController
 
         $search = $request->get('search');
         if (null !== $search && '' !== $search) {
-            return $this->redirect($this->generateUrl('icap_blog_view_search', array('blogId' => $blog->getId(), 'search' => $search)));
+            return $this->redirect($this->generateUrl('icap_blog_view_search', ['blogId' => $blog->getId(), 'search' => $search]));
         }
 
         /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
@@ -65,7 +65,7 @@ class BlogController extends BaseController
         /** @var \Doctrine\ORM\QueryBuilder $query */
         $query = $postRepository
             ->createQueryBuilder('post')
-            ->select(array('post', 'author'))
+            ->select(['post', 'author'])
             ->join('post.author', 'author')
             ->andWhere('post.blog = :blogId')
         ;
@@ -74,12 +74,12 @@ class BlogController extends BaseController
             $query = $postRepository->filterByPublishPost($query);
         }
 
-        $criterias = array(
+        $criterias = [
             'tag' => $tag,
             'author' => $author,
             'date' => $date,
             'blogId' => $blog->getId(),
-        );
+        ];
 
         $query = $postRepository->createCriteriaQueryBuilder($criterias, $query);
 
@@ -94,7 +94,7 @@ class BlogController extends BaseController
             throw new NotFoundHttpException();
         }
 
-        return array(
+        return [
             '_resource' => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'user' => $user,
@@ -102,7 +102,7 @@ class BlogController extends BaseController
             'tag' => $tag,
             'author' => $author,
             'date' => $date,
-        );
+        ];
     }
 
     /**
@@ -141,20 +141,20 @@ class BlogController extends BaseController
         } catch (NotValidCurrentPageException $exception) {
             throw new NotFoundHttpException();
         } catch (TooMuchResultException $exception) {
-            $this->get('session')->getFlashBag()->add('error', $this->get('translator')->trans('icap_blog_post_search_too_much_result', array(), 'icap_blog'));
-            $adapter = new ArrayAdapter(array());
+            $this->get('session')->getFlashBag()->add('error', $this->get('translator')->trans('icap_blog_post_search_too_much_result', [], 'icap_blog'));
+            $adapter = new ArrayAdapter([]);
             $pager = new PagerFanta($adapter);
 
             $pager->setCurrentPage($page);
         }
 
-        return array(
+        return [
             '_resource' => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'user' => $user,
             'pager' => $pager,
             'search' => $search,
-        );
+        ];
     }
 
     /**
@@ -171,28 +171,28 @@ class BlogController extends BaseController
         $posts = $postRepository->findAllPublicByBlog($blog);
 
         $content = $this->renderView('IcapBlogBundle:Blog:view.pdf.twig',
-            array(
+            [
                 '_resource' => $blog,
                 'posts' => $posts,
-            )
+            ]
         );
 
         return new Response(
             $this->get('knp_snappy.pdf')->getOutputFromHtml(
                 $content,
-                array(
+                [
                     'outline' => true,
                     'footer-right' => '[page]/[toPage]',
                     'footer-spacing' => 3,
                     'footer-font-size' => 8,
-                ),
+                ],
                 true
             ),
             200,
-            array(
+            [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="'.$blog->getResourceNode()->getName(),
-            )
+            ]
         );
     }
 
@@ -227,21 +227,21 @@ class BlogController extends BaseController
 
                     $this->dispatchBlogConfigureEvent($blogOptions, $changeSet);
 
-                    $flashBag->add('success', $translator->trans('icap_blog_post_configure_success', array(), 'icap_blog'));
+                    $flashBag->add('success', $translator->trans('icap_blog_post_configure_success', [], 'icap_blog'));
                 } catch (\Exception $exception) {
-                    $flashBag->add('error', $translator->trans('icap_blog_post_configure_error', array(), 'icap_blog'));
+                    $flashBag->add('error', $translator->trans('icap_blog_post_configure_error', [], 'icap_blog'));
                 }
 
-                return $this->redirect($this->generateUrl('icap_blog_configure', array('blogId' => $blog->getId())));
+                return $this->redirect($this->generateUrl('icap_blog_configure', ['blogId' => $blog->getId()]));
             }
         }
 
-        return array(
+        return [
             '_resource' => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'form' => $form->createView(),
             'user' => $user,
-        );
+        ];
     }
 
     /**
@@ -278,13 +278,13 @@ class BlogController extends BaseController
 
                 $this->dispatchBlogConfigureBannerEvent($blogOptions, $changeSet);
 
-                $flashBag->add('success', $translator->trans('icap_blog_post_configure_banner_success', array(), 'icap_blog'));
+                $flashBag->add('success', $translator->trans('icap_blog_post_configure_banner_success', [], 'icap_blog'));
             } catch (\Exception $exception) {
-                $flashBag->add('error', $translator->trans('icap_blog_post_configure_banner_error', array(), 'icap_blog'));
+                $flashBag->add('error', $translator->trans('icap_blog_post_configure_banner_error', [], 'icap_blog'));
             }
         }
 
-        return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
+        return $this->redirect($this->generateUrl('icap_blog_view', ['blogId' => $blog->getId()]));
     }
 
     /**
@@ -316,21 +316,21 @@ class BlogController extends BaseController
 
                     $this->dispatchBlogUpdateEvent($blog, $changeSet);
 
-                    $flashBag->add('success', $translator->trans('icap_blog_edit_infos_success', array(), 'icap_blog'));
+                    $flashBag->add('success', $translator->trans('icap_blog_edit_infos_success', [], 'icap_blog'));
                 } catch (\Exception $exception) {
-                    $flashBag->add('error', $translator->trans('icap_blog_edit_infos_error', array(), 'icap_blog'));
+                    $flashBag->add('error', $translator->trans('icap_blog_edit_infos_error', [], 'icap_blog'));
                 }
 
-                return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
+                return $this->redirect($this->generateUrl('icap_blog_view', ['blogId' => $blog->getId()]));
             }
         }
 
-        return array(
+        return [
             '_resource' => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'form' => $form->createView(),
             'user' => $user,
-        );
+        ];
     }
 
     /**
@@ -341,35 +341,35 @@ class BlogController extends BaseController
     {
         $baseUrl = $this->get('request')->getSchemeAndHttpHost();
 
-        $feed = array(
+        $feed = [
             'title' => $blog->getResourceNode()->getName(),
             'description' => $blog->getInfos(),
-            'siteUrl' => $baseUrl.$this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())),
-            'feedUrl' => $baseUrl.$this->generateUrl('icap_blog_rss', array('blogId' => $blog->getId())),
+            'siteUrl' => $baseUrl.$this->generateUrl('icap_blog_view', ['blogId' => $blog->getId()]),
+            'feedUrl' => $baseUrl.$this->generateUrl('icap_blog_rss', ['blogId' => $blog->getId()]),
             'lang' => $this->get('claroline.config.platform_config_handler')->getParameter('locale_language'),
-        );
+        ];
 
         /** @var \Icap\BlogBundle\Entity\Post[] $posts */
         $posts = $this->getDoctrine()->getRepository('IcapBlogBundle:Post')->findRssDatas($blog);
 
-        $items = array();
+        $items = [];
         foreach ($posts as $post) {
-            $items[] = array(
+            $items[] = [
                 'title' => $post->getTitle(),
-                'url' => $baseUrl.$this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug())),
+                'url' => $baseUrl.$this->generateUrl('icap_blog_post_view', ['blogId' => $blog->getId(), 'postSlug' => $post->getSlug()]),
                 'date' => $post->getPublicationDate()->format('d/m/Y h:i:s'),
                 'intro' => $post->getContent(),
                 'author' => $post->getAuthor()->getFirstName() - $post->getAuthor()->getLastName(),
-            );
+            ];
         }
 
-        return new Response($this->renderView('IcapBlogBundle:Blog:rss.html.twig', array(
+        return new Response($this->renderView('IcapBlogBundle:Blog:rss.html.twig', [
                 'feed' => $feed,
                 'items' => $items,
-            )), 200, array(
+            ]), 200, [
                 'Content-Type' => 'application/rss+xml',
                 'charset' => 'utf-8',
-            ));
+            ]);
     }
 
     /**
@@ -381,8 +381,8 @@ class BlogController extends BaseController
         $requestParameters = $request->query->all();
         $startDate = $requestParameters['start'];
         $endDate = $requestParameters['end'];
-        $calendarDatas = array();
-        $calendarDatasTemp = array();
+        $calendarDatas = [];
+        $calendarDatasTemp = [];
 
         /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->getDoctrine()->getManager()->getRepository('IcapBlogBundle:Post');
@@ -394,15 +394,15 @@ class BlogController extends BaseController
             $publicationDateForSort = $post->getPublicationDate()->format('d-m-Y');
 
             if (!isset($calendarDatasTemp[$publicationDate])) {
-                $calendarDatasTemp[$publicationDate] = array(
+                $calendarDatasTemp[$publicationDate] = [
                     'id' => '12',
                     'start' => $publicationDate,
                     'title' => '1',
                     'url' => $this->generateUrl(
                         'icap_blog_view_filter',
-                        array('blogId' => $blog->getId(), 'filter' => $publicationDateForSort)
+                        ['blogId' => $blog->getId(), 'filter' => $publicationDateForSort]
                     ),
-                );
+                ];
             } else {
                 $title = intval($calendarDatasTemp[$publicationDate]['title']);
                 ++$title;

@@ -1,0 +1,109 @@
+icap_blog_form_name: Naam
+icap_blog_post_form_title: Titel
+icap_blog_post_form_content: Inhoud
+icap_blog_post_form_tags: Tags <span class="info">(gescheiden door ,)</span>
+icap_blog_infos_form_infos: Informatie
+icap_blog_post_form_publicationDate: Publicatiedatum
+new_post: Nieuw artikel
+no_post: Geen artikel
+add_new_post: Een artikel toevoegen
+edit_post: Het artikel "%postTitle%" bewerken
+back_to_blog: Terug naar de blog
+icap_blog_edit_banner: De banner bewerken
+icap_blog_options_form_authorize_comment: Commentaren over de artikelen toelaten
+icap_blog_options_form_authorize_anonymous_comment: Commentaren door onbekenden toelaten (Geen vereiste authenticatie)
+icap_blog_options_form_post_per_page: Artikelen per pagina
+icap_blog_options_form_auto_publish_post: Artikelen automatisch publiceren.
+icap_blog_options_form_auto_publish_comment: De commentaren automatisch publiceren (geen matiging).
+icap_blog_options_form_display_title: De titel van de blog tonen.
+icap_blog_banner_form_banner_background_color: Kleur van de achtergrond
+icap_blog_banner_form_banner_activate: De banner activeren ?
+icap_blog_banner_form_banner_background_image_position: Plaatsen
+icap_blog_banner_form_banner_background_image_repeat: Herhalen
+icap_blog_banner_form_banner_height: Hoogte
+icap_blog_banner_form_banner_background_image: Beeld van de achtergrond
+icap_blog_post_add_success: Artikel met succes toegevoegd.
+icap_blog_post_add_error: Fout tijdens het toevoegen van het artikel.
+icap_blog_post_delete_success: Artikel met succes verwijderd.
+icap_blog_post_delete_error: Fout tijdens het verwijderen van het artikel.
+icap_blog_post_edit_success: Artikel met succes bewerkt.
+icap_blog_post_edit_error: Fout tijdens het bewerken van het artikel.
+icap_blog_post_publish_success: Artikel met succes gepubliceerd.
+icap_blog_post_publish_error: Fout tijdens het publiceren van het artikel.
+icap_blog_post_unpublish_success: Artikel met succes ongepubliceerd.
+icap_blog_post_unpublish_error: Commentaar met succes toegevoegd.
+icap_blog_comment_add_error: Fout tijdens het toevoegen van de commentaar.
+icap_blog_comment_delete_success: Commentaar supprimé met succes verwijderd.
+icap_blog_comment_delete_error: Fout tijdens het verwijderen van de commentaar.
+icap_blog_comment_publish_success: Commentaar met succes gepubliceerd.
+icap_blog_comment_publish_error: Fout tijdens het publiceren van de commentaar.
+icap_blog_comment_unpublish_success: Commentaar met succes ongepubliceerd.
+icap_blog_comment_unpublish_error: Fout tijdens het onpubliceren van de commentaar.
+icap_blog_comment_edit_success: Commentaar met succes bewerkt.
+icap_blog_comment_edit_error: Fout tijdens het bewerken van de commentaar.
+icap_blog_comment_access_denied: U bent niet toegelaten deze commentaar te bewerken.
+icap_blog_post_need_validation_before_publishing: Uw artikel wordt na validatie door een beheerder gepubliceerd.
+icap_blog_post_edit_need_validation_before_publishing: Het bewerken van uw artikel wordt pas gepubliceerd na validatie door een beheerder.
+icap_blog_post_comment_need_validation_before_publishing: Uw commentaar wordt pas gepubliceerd na validatie door een beheerder.
+icap_blog_post_comment_need_authentication: <a href="%connection_url%" title="Connectie">Log u in</a> om op dit artikel te reageren.
+icap_blog_post_need_publishing: Uw artikel wordt na validatie gepubliceerd.
+no_tags: Geen tag
+no_authors: Geen opsteller
+no_archives: Geen archief
+comments: 'commentaar|commentaren'
+see_comments: De commentaren zien
+publish: Zichtbaar maken
+unpublish: Onzichtbaar maken
+Post: Artikel
+post_deletion_confirm_title: Een artikel verwijderen
+post_deletion_confirm_message: Bent u er zeker van dat u het artikel <strong>%postName%</strong> wenst te verwijderen ?
+comment_deletion_confirm_title: Een commentaar verwijderen
+comment_deletion_confirm_message: Bent u er zeker van dat u deze commentaar wenst te verwijderen ?
+configure_blog: Opties van de blog
+icap_blog_post_configure_success: Blog met succes ingesteld.
+icap_blog_post_configure_error: Fout bij het instellen van de blog.
+icap_blog_post_configure_banner_success: Banner van de blog met succes ingesteld.
+icap_blog_post_configure_banner_error: Fout tijdens het instellen van de banner van de blog.
+valid_banner_modification: De bewerkingen valideren
+delete_filter: De filter verwijderen
+post_filtered_by_tag: Lijst van de artikelen gefiltreerd op de tag <strong>%tagName%</strong>.
+post_filtered_by_author: Lijst van de artikelen gefiltreerd op de auteur <strong>%authorName%</strong>.
+post_filtered_by_search: Lijst van de artikelen gefiltreerd op het zoeken naar <strong>%searchTerms%</strong>.
+post_filtered_by_date: Lijst van de artikelen gefiltreerd op de datum <strong>%date%</strong>.
+edit_blog_infos: De informatie van de blog bewerken.
+icap_blog_edit_infos_success: De informatie van de blog met succes bewerkt.
+icap_blog_edit_infos_error: Er is een fout opgetreden tijdens het bewerken van de informatie van de blog.
+icap_blog_post_search_too_much_result: Uw onderzoekcriteria worden niet als relevant beschouwd. Probeer met andere sleutelwoorden.
+icap_blog_options_form_tag_cloud: Tagswolk
+add_comment: Een commentaar toevoegen
+be_the_first_to_comment: Wees de eerste die op dit artikel reageert.
+icap_blog_post_comment_form_message: Commentaar
+to_comment: Een commentaar achterlaten
+search: Zoeken
+search_in_title_and_content: In de titels, inhouden zoeken
+info_bar: Informatiebalk
+informations: Informatie
+tag_cloud: Tagswolk
+editor: Opstellers
+calendar: Kalender
+archives: Archieven
+blog_rss_feed: RSS-feed van de blog
+rss_feed: RSS-feed
+read_more: Meer zien
+modified_at: Bewerkt op
+classic: Klassiek
+3D: 3D-bol <span>(* Onverenigbaar met IE<9)</span>
+advanced: Klassiek met het aantal artikelen
+view: '%viewCounter% gezien | %viewCounter% gezien'
+icap_blog_options_form_display_post_view_counter: Het aantal views per artikel tonen.
+blog_widgt_list_form_blog: Toe te voegen blog
+widget_list_no_blog: Geen blog
+no_blog_selected: Geen geselecteerde blog
+blog_widget_tag_list_blog_form_tag_cloud: Tagswolk
+icap_blog_options_form_Order_Widget_Right: De zijbalk van de widget beheren
+apply: Toepassen
+limit_to: Het display beperken tot
+tags_in_the_cloud: de meest gebruikte tags.
+created_by: door
+created_on: op
+posts: Artikelen

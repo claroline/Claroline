@@ -14,25 +14,25 @@ namespace Claroline\CoreBundle\Controller\API\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
+use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Put;
-use JMS\SecurityExtraBundle\Annotation as SEC;
-use Symfony\Component\HttpFoundation\File\File;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
  * @NamePrefix("api_")
@@ -93,6 +93,22 @@ class WorkspaceController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Returns the list of workspace for the connected user",
+     *     views = {"workspace"}
+     * )
+     * @View(serializerGroups={"api_workspace"})
+     * @Get("/workspaces", name="get_connected_user_workspaces", options={ "method_prefix" = false })
+     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     */
+    public function getConnectedUserWorkspacesAction(User $user)
+    {
+        return array_map(function ($workspace) {
+            return $this->workspaceManager->exportWorkspace($workspace);
+        }, $this->workspaceManager->getWorkspacesByUser($user));
+    }
+
+    /**
      * @View(serializerGroups={"api_workspace"})
      * @ApiDoc(
      *     description="Returns the workspaces list",
@@ -128,7 +144,7 @@ class WorkspaceController extends FOSRestController
      */
     public function getWorkspaceAdditionalDatasAction(Workspace $workspace)
     {
-        $datas = array();
+        $datas = [];
         $nbUsers = $this->workspaceManager->countUsers($workspace, true);
         $usedStorage = $this->workspaceManager->getUsedStorage($workspace);
         $nbUsedStorage = $this->utilities->formatFileSize($usedStorage);
@@ -194,7 +210,7 @@ class WorkspaceController extends FOSRestController
     {
         $this->workspaceManager->deleteWorkspace($workspace);
 
-        return array('success');
+        return ['success'];
     }
 
     /**

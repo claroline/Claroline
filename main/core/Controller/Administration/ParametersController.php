@@ -302,7 +302,11 @@ class ParametersController extends Controller
                             'logo' => $this->request->get('selectlogo'),
                         ]
                     );
+                    $theme = $this->themeManager->getThemeByNormalizedName($form['theme']->getData());
 
+                    if (!is_null($theme)) {
+                        $this->configHandler->setParameter('theme_extending_default', $theme->isExtendingDefault());
+                    }
                     $logo = $this->request->files->get('logo');
 
                     if ($logo) {

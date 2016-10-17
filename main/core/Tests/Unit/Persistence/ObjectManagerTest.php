@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Persistence;
 
-use Doctrine\ORM\Query;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Doctrine\ORM\Query;
 
 class ObjectManagerTest extends MockeryTestCase
 {
@@ -118,31 +118,31 @@ class ObjectManagerTest extends MockeryTestCase
     public function testFindByIdsThrowsAnExceptionIfSomeEntitiesCannotBeRetreived()
     {
         $oom = $this->mock('Doctrine\ORM\EntityManager');
-        $query = $this->mock(new Query($oom)); // proxied partial mock (class is final)
+        $query = $this->getQuery();
         $oom->shouldReceive('createQuery')->once()->andReturn($query);
-        $query->shouldReceive('getResult')->once()->andReturn(array('object 1'));
+        $query->shouldReceive('getResult')->once()->andReturn(['object 1']);
         $om = new ObjectManager($oom);
-        $om->findByIds('Foo\Bar', array(1, 2));
+        $om->findByIds('Foo\Bar', [1, 2]);
     }
 
     public function testFindByIds()
     {
         $oom = $this->mock('Doctrine\ORM\EntityManager');
-        $query = $this->mock(new Query($oom));
+        $query = $this->getQuery();
         $oom->shouldReceive('createQuery')
             ->once()
             ->with('SELECT object FROM Foo\Bar object WHERE object.id IN (:ids)')
             ->andReturn($query);
-        $query->shouldReceive('setParameter')->with('ids', array(1, 2))->once();
-        $query->shouldReceive('getResult')->once()->andReturn(array('object 1', 'object 2'));
+        $query->shouldReceive('setParameter')->with('ids', [1, 2])->once();
+        $query->shouldReceive('getResult')->once()->andReturn(['object 1', 'object 2']);
         $om = new ObjectManager($oom);
-        $this->assertEquals(array('object 1', 'object 2'), $om->findByIds('Foo\Bar', array(1, 2)));
+        $this->assertEquals(['object 1', 'object 2'], $om->findByIds('Foo\Bar', [1, 2]));
     }
 
     public function testCount()
     {
         $oom = $this->mock('Doctrine\ORM\EntityManager');
-        $query = $this->mock(new Query($oom));
+        $query = $this->getQuery();
         $oom->shouldReceive('createQuery')
             ->once()
             ->with('SELECT COUNT(object) FROM Foo\Bar object')
@@ -154,31 +154,43 @@ class ObjectManagerTest extends MockeryTestCase
 
     public function hasSupportMethodProvider()
     {
-        return array(
-            array('Doctrine\Common\Persistence\ObjectManager', 'supportsTransactions', false),
-            array('Doctrine\Common\Persistence\ObjectManager', 'hasEventManager', false),
-            array('Doctrine\ORM\EntityManagerInterface', 'supportsTransactions', true),
-            array('Doctrine\ORM\EntityManagerInterface', 'hasEventManager', true),
-        );
+        return [
+            ['Doctrine\Common\Persistence\ObjectManager', 'supportsTransactions', false],
+            ['Doctrine\Common\Persistence\ObjectManager', 'hasEventManager', false],
+            ['Doctrine\ORM\EntityManagerInterface', 'supportsTransactions', true],
+            ['Doctrine\ORM\EntityManagerInterface', 'hasEventManager', true],
+        ];
     }
 
     public function wrappedManagerDependentMethodProvider()
     {
-        return array(
-            array('beginTransaction'),
-            array('commit'),
-            array('rollBack'),
-            array('getEventManager'),
-            array('getUnitOfWork'),
-        );
+        return [
+            ['beginTransaction'],
+            ['commit'],
+            ['rollBack'],
+            ['getEventManager'],
+            ['getUnitOfWork'],
+        ];
     }
 
     public function transactionMethodProvider()
     {
-        return array(
-            array('beginTransaction'),
-            array('commit'),
-            array('rollBack'),
-        );
+        return [
+            ['beginTransaction'],
+            ['commit'],
+            ['rollBack'],
+        ];
+    }
+
+    private function getQuery()
+    {
+        $oom = $this->mock('Doctrine\ORM\EntityManager');
+        $config = $this->mock('Doctrine\ORM\Configuration');
+        $config->shouldReceive('getDefaultQueryHints')->andReturn('[]');
+        $config->shouldReceive('isSecondLevelCacheEnabled')->andReturn(false);
+        $oom->shouldReceive('getConfiguration')->andReturn($config);
+        $query = $this->mock(new Query($oom));
+
+        return $query;
     }
 }

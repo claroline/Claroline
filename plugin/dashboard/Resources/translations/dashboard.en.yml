@@ -1,0 +1,36 @@
+# B
+back_to_list: Back to dahsboard list
+
+# C
+click_to_add_view: Click to create a view
+connection_time: Connection time
+
+# D
+delete_view: Delete this view
+
+# E
+edit_view: Edit this view
+edit_dashboard_title: Edit dashboard
+
+# M
+message_no_views: No view so far. Please use the + button to create a new one.
+
+# N
+new_dashboard_step_1: 1. On which workspace does the view apply ?
+new_dashboard_title: New view creation
+new_dashboard_name_placeholder: Enter a name for the new view
+no_result_for_query: No result for your query
+
+# V
+view: View
+view_name: View name
+
+# S
+share_view: Share this view
+selection: Selection
+
+# W
+workspace_name: Workspace name
+workspace_select: Workspace selection
+workspaces_filter_attended: My subscribed workspaces
+workspaces_filter_my: My workspaces as a manager

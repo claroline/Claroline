@@ -27,6 +27,7 @@ class CourseSessionUserRepository extends EntityRepository
             WHERE u.isRemoved = false
             AND csu.session = :session
             AND csu.userType = :userType
+            ORDER BY u.lastName ASC, u.firstName ASC
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('session', $session);
@@ -50,6 +51,23 @@ class CourseSessionUserRepository extends EntityRepository
         $query->setParameter('userType', $userType);
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    public function findOneSessionUserBySessionAndUserAndTypes(CourseSession $session, User $user, array $userTypes)
+    {
+        $dql = '
+            SELECT csu
+            FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+            WHERE csu.session = :session
+            AND csu.user = :user
+            AND csu.userType IN (:userTypes)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('session', $session);
+        $query->setParameter('user', $user);
+        $query->setParameter('userTypes', $userTypes);
+
+        return $query->getOneOrNullResult();
     }
 
     public function findSessionUsersByUser(User $user, $executeQuery = true)

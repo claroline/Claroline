@@ -2,23 +2,24 @@
 
 namespace Claroline\CoreBundle\Library\Testing;
 
-use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\Organization\Location;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
-use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Organization\Location;
+use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\ProfileProperty;
+use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\ProfileProperty;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
+use Symfony\Component\HttpFoundation\File\File as SfFile;
 
 /**
  * @service("claroline.library.testing.persister")
@@ -67,8 +68,10 @@ class Persister
         $user->setGuid(uniqid());
         $user->addRole($roleUser);
         $user->setPublicUrl($username);
+        $user->setCreationDate(new \DateTime());
         $this->container->get('claroline.manager.role_manager')->createUserRole($user);
         $this->om->persist($user);
+        $this->om->flush();
 
         return $user;
     }
@@ -84,7 +87,7 @@ class Persister
         $workspace->setName($name);
         $workspace->setCode($name);
         $workspace->setCreator($creator);
-        $template = new \Symfony\Component\HttpFoundation\File\File($this->container->getParameter('claroline.param.default_template'));
+        $template = new SfFile($this->container->getParameter('claroline.param.default_template'));
 
         //optimize this later
         $this->container->get('claroline.manager.workspace_manager')->create($workspace, $template);
@@ -202,7 +205,7 @@ class Persister
         return $this->container->get('claroline.manager.facet_manager')->addPanel($facet, $name, $collapse, $autoEditable);
     }
 
-    public function fieldFacet(PanelFacet $panelFacet, $name, $type, array $choices = array(), $isRequired = false)
+    public function fieldFacet(PanelFacet $panelFacet, $name, $type, array $choices = [], $isRequired = false)
     {
         $this->om->startFlushSuite();
         $field = $this->container->get('claroline.manager.facet_manager')->addField($panelFacet, $name, $isRequired, $type);

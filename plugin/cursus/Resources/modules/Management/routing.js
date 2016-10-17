@@ -6,6 +6,7 @@ import coursesManagementTemplate from './Partial/courses_management.html'
 import sessionsManagementTemplate from './Partial/sessions_management.html'
 import courseTemplate from './Partial/course_management.html'
 import sessionTemplate from './Partial/session_management.html'
+import sessionEventTemplate from './Partial/session_event_management.html'
 import configurationTemplate from './Partial/configuration.html'
 import parametersTemplate from './Partial/general_parameters.html'
 import locationsManagementTemplate from './Partial/locations_management.html'
@@ -69,6 +70,16 @@ export default function($stateProvider, $urlRouterProvider) {
       ncyBreadcrumb: {
         label: '{{ cmc.breadCrumbLabel }}',
         parent: 'sessions_management'
+      }
+    })
+    .state ('session_event', {
+      url: '/sessions/{sessionId}/event/{sessionEventId}',
+      template: sessionEventTemplate,
+      controller: 'SessionEventManagementCtrl',
+      controllerAs: 'cmc',
+      ncyBreadcrumb: {
+        label: '{{ cmc.breadCrumbLabelEvent }}',
+        parent: 'session({sessionId: cmc.sessionId})'
       }
     })
     .state ('configuration', {

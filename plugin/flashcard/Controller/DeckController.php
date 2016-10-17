@@ -17,10 +17,10 @@ use Claroline\FlashCardBundle\Manager\DeckManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})
@@ -85,7 +85,7 @@ class DeckController
 
     /**
      * @EXT\Route(
-     *     "/deck/edit/default_param/{deck}", 
+     *     "/deck/edit/default_param/{deck}",
      *     name="claroline_edit_default_param"
      * )
      * @EXT\Method("POST")
@@ -122,7 +122,7 @@ class DeckController
 
     /**
      * @EXT\Route(
-     *     "/deck/edit/user_param/{deck}", 
+     *     "/deck/edit/user_param/{deck}",
      *     name="claroline_edit_user_param"
      * )
      * @EXT\Method("POST")
@@ -164,7 +164,7 @@ class DeckController
 
     /**
      * @EXT\Route(
-     *     "/deck/{deck}/get_user_pref", 
+     *     "/deck/{deck}/get_user_pref",
      *     name="claroline_get_user_pref"
      * )
      *

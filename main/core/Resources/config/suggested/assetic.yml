@@ -2,7 +2,7 @@ assetic:
     debug:          %kernel.debug%
     use_controller: false
     variables:
-        locale: [en, fr, es]
+        locale: [en, fr, es, nl]
     node_paths: ['%kernel.root_dir%/../node_modules']
     filters:
         cssrewrite: ~

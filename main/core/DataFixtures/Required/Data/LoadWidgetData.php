@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
+use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
 /**
  * Platform widgets data fixture.
@@ -27,16 +27,16 @@ class LoadWidgetData implements RequiredFixture
      */
     public function load(ObjectManager $manager)
     {
-        $roles = $manager->getRepository('ClarolineCoreBundle:Role')
-            ->findAllPlatformRoles();
+        $roles = $manager->getRepository('ClarolineCoreBundle:Role')->findAllPlatformRoles();
 
         //name, isConfigurable, isDisplayableInDesktop, isDisplayableInWorkspace
-        $items = array(
-            array('core_resource_logger', true, true, true),
-            array('simple_text', true, true, true),
-            array('my_workspaces', false, true, false),
-            array('my_profile', false, true, false),
-        );
+        $items = [
+            ['core_resource_logger', true, true, true],
+            ['simple_text', true, true, true],
+            ['my_workspaces', false, true, false],
+            ['my_profile', false, true, false],
+            ['resources_widget', true, true, true],
+        ];
 
         foreach ($items as $item) {
             $widget = new Widget();
@@ -44,8 +44,8 @@ class LoadWidgetData implements RequiredFixture
             $widget->setConfigurable($item[1]);
             $widget->setPlugin(null);
             $widget->setExportable(false);
-            $widget->setDisplayableInDesktop($item[2]);
-            $widget->setDisplayableInWorkspace($item[3]);
+            $widget->setIsDisplayableInDesktop($item[2]);
+            $widget->setIsDisplayableInWorkspace($item[3]);
 
             foreach ($roles as $role) {
                 $widget->addRole($role);

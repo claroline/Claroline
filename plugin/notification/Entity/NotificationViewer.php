@@ -3,11 +3,15 @@
 namespace Icap\NotificationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass="Icap\NotificationBundle\Repository\NotificationViewerRepository")
- * @ORM\Table(name="icap__notification_viewer")
+ * @ORM\Table(
+ *     name="icap__notification_viewer",
+ *     indexes={@Index(name="viewer_idx", columns={"viewer_id"})}
+ * )
  */
 class NotificationViewer
 {

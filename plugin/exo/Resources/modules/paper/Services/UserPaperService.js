@@ -68,6 +68,28 @@ export default class UserPaperService {
   }
 
   /**
+   * Get Questions fot the current Paper.
+   *
+   * @returns {Object}
+   */
+  getQuestion() {
+    return this.questions
+  }
+
+  /**
+   * Set Questions.
+   *
+   * @param   {Array} questions
+   *
+   * @returns {UserPaperService}
+   */
+  setQuestions(questions) {
+    this.questions = questions
+
+    return this
+  }
+
+  /**
    * Get number of Papers.
    *
    * @returns {number}
@@ -163,7 +185,7 @@ export default class UserPaperService {
    * @returns {Array} The ordered list of Questions
    */
   orderStepQuestions(step) {
-    return this.PaperService.orderStepQuestions(this.paper, step)
+    return this.PaperService.orderStepQuestions(this.paper, step, this.questions)
   }
 
   /**
@@ -192,19 +214,28 @@ export default class UserPaperService {
         this.$http
           .post(this.UrlService('exercise_new_attempt', {id: exercise.id}))
           .success(response => {
-            this.paper = response
-            deferred.resolve(this.paper)
+            this.paper = response.paper
+            this.questions = response.questions
+            deferred.resolve(response)
           })
           .error(() => {
             deferred.reject({})
           })
       } else {
         this.paper = this.PaperGenerator.generate(exercise, 'anonymous', this.paper)
-        deferred.resolve(this.paper)
+        this.questions = this.PaperService.getPaperQuestions(this.paper)
+
+        deferred.resolve({
+          paper: this.paper,
+          questions: this.questions
+        })
       }
     } else {
       // Continue the current Paper
-      deferred.resolve(this.paper)
+      deferred.resolve({
+        paper: this.paper,
+        questions: this.questions
+      })
     }
 
     return deferred.promise
@@ -253,23 +284,15 @@ export default class UserPaperService {
           if (response) {
             for (let i = 0; i < response.length; i++) {
               if (response[i]) {
-                let item = null
+                let question = this.questions.find(question => response[i].question.id === question.id)
 
-                // Get item in Step
-                for (let j = 0; j < step.items.length; j++) {
-                  if (response[i].question.id === step.items[j].id) {
-                    item = step.items[j]
-                    break // Stop searching
-                  }
-                }
-
-                if (item) {
+                if (question) {
                   // Update question with solutions and feedback
-                  item.solutions = response[i].question.solutions ? response[i].question.solutions : []
-                  item.feedback = response[i].question.feedback ? response[i].question.feedback : null
+                  question.solutions = response[i].question.solutions ? response[i].question.solutions : []
+                  question.feedback = response[i].question.feedback ? response[i].question.feedback : null
 
                   // Update paper with Score
-                  const paper = this.getQuestionPaper(item)
+                  let paper = this.getQuestionPaper(question)
                   paper.score = response[i].answer.score
                   paper.nbTries = response[i].answer.nbTries
                 }
@@ -337,7 +360,7 @@ export default class UserPaperService {
       // Set paper for correction display
       this.PaperService.setCurrent({
         paper: this.paper,
-        questions: this.PaperService.getPaperQuestions(this.paper)
+        questions: this.questions
       })
 
       deferred.resolve(this.paper)
@@ -385,33 +408,33 @@ export default class UserPaperService {
       const exercise = this.ExerciseService.getExercise()
 
       switch (exercise.meta.correctionMode) {
-      case this.CorrectionMode.AFTER_END: {
-        available = null !== paper.end
-        break
-      }
-
-      case this.CorrectionMode.AFTER_LAST_ATTEMPT: {
-        available = (0 === exercise.meta.maxAttempts || this.nbPapers >= exercise.meta.maxAttempts)
-        break
-      }
-
-      case this.CorrectionMode.AFTER_DATE: {
-        const now = new Date()
-
-        let correctionDate = null
-        if (null !== exercise.meta.correctionDate) {
-          correctionDate = new Date(Date.parse(exercise.meta.correctionDate))
+        case this.CorrectionMode.AFTER_END: {
+          available = null !== paper.end
+          break
         }
 
-        available = (null === correctionDate || now >= correctionDate)
-        break
-      }
+        case this.CorrectionMode.AFTER_LAST_ATTEMPT: {
+          available = (0 === exercise.meta.maxAttempts || this.nbPapers >= exercise.meta.maxAttempts)
+          break
+        }
 
-      default:
-      case this.CorrectionMode.NEVER: {
-        available = false
-        break
-      }
+        case this.CorrectionMode.AFTER_DATE: {
+          const now = new Date()
+
+          let correctionDate = null
+          if (null !== exercise.meta.correctionDate) {
+            correctionDate = new Date(Date.parse(exercise.meta.correctionDate))
+          }
+
+          available = (null === correctionDate || now >= correctionDate)
+          break
+        }
+
+        default:
+        case this.CorrectionMode.NEVER: {
+          available = false
+          break
+        }
       }
     }
 
@@ -436,22 +459,22 @@ export default class UserPaperService {
       const exercise = this.ExerciseService.getExercise()
 
       switch (exercise.meta.markMode) {
-      case this.MarkMode.WITH_CORRECTION:
-        available = this.isCorrectionAvailable(paper)
-        break
+        case this.MarkMode.WITH_CORRECTION:
+          available = this.isCorrectionAvailable(paper)
+          break
 
-      case this.MarkMode.AFTER_END:
-        available = null !== paper.end
-        break
+        case this.MarkMode.AFTER_END:
+          available = null !== paper.end
+          break
 
-      case this.MarkMode.NEVER:
-        available = false
-        break
+        case this.MarkMode.NEVER:
+          available = false
+          break
 
         // Show score if nothing specified
-      default:
-        available = false
-        break
+        default:
+          available = false
+          break
       }
     }
 

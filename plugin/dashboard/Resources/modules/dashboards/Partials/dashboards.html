@@ -1,0 +1,47 @@
+<div class="panel-heading">
+    <h3 class="panel-title">{{'dashboards' | trans:{}:'tools'}}</h3>
+</div>
+<div class="panel-body">
+    <!-- create new view row -->
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-primary" href="#/new" title="{{'click_to_add_view' | trans:{}:'dashboard'}}">
+               <i class="fa fa-plus"></i> {{'view' | trans:{}:'dashboard'}}
+            </a>
+        </div>
+    </div>
+    <hr>
+    <!-- view list row -->
+    <div class="row" data-ng-if="dashboardsCtrl.dashboards.length > 0">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                    <th>{{'view_name' | trans:{}:'dashboard'}}</th>
+                    <th>{{'actions' | trans:{}:'platform'}}</th>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="dashboard in dashboardsCtrl.dashboards">
+                        <td>
+                            <a href="#/dashboards/{{dashboard.id}}">{{dashboard.name}}</a>
+                        </td>
+                        <td>
+                          <a href="#/dashboards/{{dashboard.id}}/edit" class="btn btn-default" title="{{'edit_view' | trans:{}:'dashboard'}}">
+                            <i class="fa fa-pencil"></i> {{'edit' | trans:{}:'platform'}}
+                          </a>
+                          <button class="btn btn-danger" title="{{'delete_view' | trans:{}:'dashboard'}}" data-ng-click="dashboardsCtrl.delete(dashboard.id)">
+                            <i class="fa fa-trash"></i> {{'delete' | trans:{}:'platform'}}
+                          </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- view no item in list row -->
+    <div class="row" data-ng-if="dashboardsCtrl.dashboards.length === 0">
+        <div class="col-md-12">
+            <h3>{{'message_no_views' | trans:{}:'dashboard'}}</h3>
+        </div>
+    </div>
+</div>

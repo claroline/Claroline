@@ -174,7 +174,9 @@
                                 </tr>
                                 <tr ng-repeat="event in cmc.events[session['id']]" ng-if="event['status'] !== 'closed'">
                                     <td ignore-cell="true">
-                                        {{ event['name'] }}
+                                        <a ui-sref="session_event({sessionId: session['id'], sessionEventId: event['id']})">
+                                            {{ event['name'] }}
+                                        </a>
                                     </td>
                                     <td class="text-center" ignore-cell="true">
                                         {{ event['startDate']|date:'dd/MM/yyyy HH:mm' }}

@@ -4,7 +4,7 @@
  *
  * @param {Object}           $location
  * @param {Object}           step
- * @param {Object}           paper
+ * @param {Object}           attempt
  * @param {ExerciseService}  ExerciseService
  * @param {FeedbackService}  FeedbackService
  * @param {UserPaperService} UserPaperService
@@ -14,7 +14,7 @@
 function ExercisePlayerCtrl(
         $location,
         step,
-        paper,
+        attempt,
         ExerciseService,
         FeedbackService,
         UserPaperService,
@@ -29,14 +29,18 @@ function ExercisePlayerCtrl(
 
   // Initialize some data
   this.exercise = this.ExerciseService.getExercise() // Current exercise
-  this.paper = paper    // Paper of the current User
+  this.paper = attempt.paper    // Paper of the current User
+  this.questions = attempt.questions
 
-  if (!step && paper.order.length > 0) {
+  if (!step && this.paper.order.length > 0) {
     // No step passed to the route => Get the first Step defined in the UserPaper
-    step = this.ExerciseService.getStep(paper.order[0].id)
+    step = this.ExerciseService.getStep(this.paper.order[0].id)
   }
 
   this.step = step
+  if (this.step) {
+    this.stepQuestions = this.orderStepQuestions()
+  }
 
   this.index = this.UserPaperService.getIndex(step)
   this.previous = this.UserPaperService.getPreviousStep(step)
@@ -62,9 +66,10 @@ function ExercisePlayerCtrl(
   this.areMaxAttemptsReached()
 
   // Initialize Timer if needed
-  if (0 !== this.exercise.meta.duration) {
-    this.timer = this.TimerService.new(this.exercise.id, this.exercise.meta.duration * 60, this.end.bind(this), true)
+  if (!isNaN(Number(this.exercise.meta.duration)) && 0 !== Number(this.exercise.meta.duration)) {
+    this.timer = this.TimerService.new(this.exercise.id, Number(this.exercise.meta.duration) * 60, this.end.bind(this), true)
   }
+
   if (this.step && this.step.items[0]) {
     const questionPaper = this.UserPaperService.getQuestionPaper(this.step.items[0])
     if (questionPaper.nbTries) {
@@ -104,6 +109,12 @@ ExercisePlayerCtrl.prototype.index = 0
 ExercisePlayerCtrl.prototype.step = null
 
 /**
+ * Questions for the current Step
+ * @type {array}
+ */
+ExercisePlayerCtrl.prototype.stepQuestions = []
+
+/**
  * Previous step
  * @type {Object}
  */
@@ -138,6 +149,10 @@ ExercisePlayerCtrl.prototype.currentStepTry = 1
  * @type {Object|null}
  */
 ExercisePlayerCtrl.prototype.timer = null
+
+ExercisePlayerCtrl.prototype.orderStepQuestions = function () {
+  return this.UserPaperService.orderStepQuestions(this.step)
+}
 
 /**
  * Submit answers for the current Step
@@ -181,18 +196,27 @@ ExercisePlayerCtrl.prototype.areMaxAttemptsReached = function areMaxAttemptsReac
  */
 ExercisePlayerCtrl.prototype.isButtonEnabled = function isButtonEnabled(button) {
   var buttonEnabled
+
+  var isFormative = this.feedback.enabled
+  var feedbackShown = this.feedback.visible
+  var allAnswersFound = this.allAnswersFound === 0
+  var maxStepReached = this.currentStepTry >= this.step.meta.maxAttempts
+  var minimalCorrection = this.exercise.meta.minimalCorrection
+
+  var navigateOneStep = isFormative && !allAnswersFound && (!feedbackShown || (feedbackShown && (!maxStepReached || (maxStepReached && !minimalCorrection && !this.solutionShown))))
+
   if (button === 'retry') {
-    buttonEnabled = this.feedback.enabled && this.feedback.visible && (this.currentStepTry < this.step.meta.maxAttempts || this.step.meta.maxAttempts === 0) && this.allAnswersFound !== 0
+    buttonEnabled = isFormative && feedbackShown && (this.currentStepTry < this.step.meta.maxAttempts || this.step.meta.maxAttempts === 0) && !allAnswersFound
   } else if (button === 'next') {
-    buttonEnabled = !this.next || (this.feedback.enabled && !this.feedback.visible && !(this.allAnswersFound === 0)) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0))
+    buttonEnabled = !this.next || navigateOneStep
   } else if (button === 'navigation') {
-    buttonEnabled = (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0))
+    buttonEnabled = (isFormative && !feedbackShown) || (isFormative && feedbackShown && !this.solutionShown && !allAnswersFound)
   } else if (button === 'end') {
-    buttonEnabled = (this.feedback.enabled && !this.feedback.visible) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0))
+    buttonEnabled = navigateOneStep
   } else if (button === 'validate') {
-    buttonEnabled = this.feedback.enabled && !this.feedback.visible && (this.currentStepTry <= this.step.meta.maxAttempts || this.step.meta.maxAttempts === 0) && this.allAnswersFound !== 0
+    buttonEnabled = isFormative && !feedbackShown && (this.currentStepTry <= this.step.meta.maxAttempts || this.step.meta.maxAttempts === 0) && !allAnswersFound
   } else if (button === 'previous') {
-    buttonEnabled = !this.previous || (this.feedback.enabled && !this.feedback.visible && !(this.allAnswersFound === 0)) || (this.feedback.enabled && this.feedback.visible && !this.solutionShown && !(this.allAnswersFound === 0))
+    buttonEnabled = !this.previous || navigateOneStep
   }
 
   return buttonEnabled

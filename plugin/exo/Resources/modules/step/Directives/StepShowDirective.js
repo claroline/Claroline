@@ -13,8 +13,9 @@ function StepShowDirective() {
     bindToController: true,
     template: show,
     scope: {
+      position        : '@',
       step            : '=',
-      stepIndex       : '@',
+      items           : '=',
       currentTry      : '=',
       solutionShown   : '=',
       allAnswersFound : '=?'

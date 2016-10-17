@@ -71,10 +71,10 @@ class UrlListener
             new UrlType(), new Url()
         );
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig', array(
+            'ClarolineCoreBundle:Resource:createForm.html.twig', [
                 'form' => $form->createView(),
                 'resourceType' => 'hevinci_url',
-            )
+            ]
         );
         $event->setResponseContent($content);
         $event->stopPropagation();
@@ -96,17 +96,17 @@ class UrlListener
             $url = $form->getData();
             $this->urlManager->setUrl($url);
 
-            $event->setResources(array($url));
+            $event->setResources([$url]);
             $event->stopPropagation();
 
             return;
         }
 
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig', array(
+            'ClarolineCoreBundle:Resource:createForm.html.twig', [
                 'form' => $form->createView(),
                 'resourceType' => $event->getResourceType(),
-            )
+            ]
         );
         $event->setErrorFormContent($content);
         $event->stopPropagation();
@@ -124,12 +124,26 @@ class UrlListener
         }
 
         $url = $event->getResource();
+        $isIframe = $event->isIframe();
 
         if ($url->getInternalUrl()) {
             $event->setResponse(new RedirectResponse($this->request->getSchemeAndHttpHost().$this->request->getScriptName().$url->getUrl()));
+
+            return;
         } else {
-            $event->setResponse(new RedirectResponse($url->getUrl()));
+            if ($isIframe) {
+                $headers = get_headers($url->getUrl(), 1);
+                if (isset($headers['X-Frame-Options']) && $headers['X-Frame-Options'] === 'SAMEORIGIN') {
+                    $href = "<a href='{$url->getUrl()}'>{$url->getUrl()}</a>";
+                    $response = new Response($href);
+                    $event->setResponse($response);
+
+                    return;
+                }
+            }
         }
+
+        $event->setResponse(new RedirectResponse($url->getUrl()));
     }
 
     /**
@@ -167,13 +181,16 @@ class UrlListener
      */
     public function onChangeAction(CustomActionResourceEvent $event)
     {
-        $form = $this->formFactory->create(new UrlChangeType(), $event->getResource());
+        $resource = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
+            $this->manager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
+            $event->getResource();
+        $form = $this->formFactory->create(new UrlChangeType(), $resource);
         $form->handleRequest($this->request);
 
-        $content = $this->templating->render('HeVinciUrlBundle:Url:form.html.twig', array(
+        $content = $this->templating->render('HeVinciUrlBundle:Url:form.html.twig', [
             'form' => $form->createView(),
-            'node' => $event->getResource()->getResourceNode()->getId(),
-        ));
+            'node' => $resource->getResourceNode()->getId(),
+        ]);
 
         $event->setResponse(new Response($content));
         $event->stopPropagation();

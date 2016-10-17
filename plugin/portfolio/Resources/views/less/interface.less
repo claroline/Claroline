@@ -74,11 +74,15 @@ body {
         background:  #302e2c;
         padding-top: 10px;
         color: #fff;
-
+        position:relative;
         .row {
             margin-right: 0;
         }
-
+        a#back-to-portfolio-btn {
+            position:absolute;
+            margin-top: 0px;
+            margin-left: 10px;
+        }
         #username {
             text-transform: uppercase;
             padding-bottom: 0;
@@ -279,18 +283,6 @@ body {
     }
     .portfolio_widget_selector:hover {
         text-decoration: underline;
-    }
-    input[type='radio'] {
-        position: absolute;
-        opacity: 0;
-        & + label:before {
-            font-family: Fontawesome;
-            font-size: 20px;
-            content: "\f10c"; /* Radio Button Unchecked */
-        }
-        &:checked + label:before {
-          content: "\f05d"; /* Radio Button Checked */
-        }
     }
 }
 

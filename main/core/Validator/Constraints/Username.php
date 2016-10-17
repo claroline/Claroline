@@ -24,4 +24,9 @@ class Username extends Constraint
     {
         return 'username_validator';
     }
+
+    public function getTargets()
+    {
+        return self::CLASS_CONSTRAINT;
+    }
 }

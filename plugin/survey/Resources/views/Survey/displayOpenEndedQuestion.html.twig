@@ -2,10 +2,10 @@
     <h4>{{ question.getQuestion()|raw }}</h4>
     <br>
     <div id="question-body" style="padding-left: 50px">
-        <textarea class="claroline-tiny-mce"
+        <textarea {% if isRich == true %}class="claroline-tiny-mce"{% else %}class="form-control"{% endif %}
                   name="{{ question.getId() }}[answer]"
         >{% if answers['answer'] is defined %}{{ answers['answer']|raw }}{% endif %}</textarea>
-        
+
         {% if question.isCommentAllowed() %}
             <br>
             <div>

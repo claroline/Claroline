@@ -1,1136 +1,1332 @@
-6_parameters_min_msg: 6_parameters_min_msg
-7_parameters_min_msg: 7_parameters_min_msg
-accept: accept
-accessible_from: accessible_from
-accessible_until: accessible_until
-account_created: account_created
-account_duration_label: account_duration_label
-account_general_statistics: account_general_statistics
-action: action
-action_list: action_list
-actions: actions
-actions_per_day: actions_per_day
-activate_account: activate_account
-activate_account_click: activate_account_click
-activate_maintenance_mode: activate_maintenance_mode
-activate_notifications: activate_notifications
-activate_pdf_export: activate_pdf_export
-activate_personal_workspace_creation: activate_personal_workspace_creation
-active_widgets: active_widgets
-activities: activities
-activity_already: activity_already
-activity_remove_primary_resource: activity_remove_primary_resource
-activity_resource_not_allowed: activity_resource_not_allowed
-activity_resource_remove: activity_resource_remove
-activity_rule_configuration_for_auto_evaluation: activity_rule_configuration_for_auto_evaluation
-activity_rule_form_action_explanation: activity_rule_form_action_explanation
-activity_rule_form_activeFrom: activity_rule_form_activeFrom
-activity_rule_form_activeFrom_explanation: activity_rule_form_activeFrom_explanation
-activity_rule_form_activeUntil: activity_rule_form_activeUntil
-activity_rule_form_activeUntil_explanation: activity_rule_form_activeUntil_explanation
-activity_rule_form_badge: activity_rule_form_badge
-activity_rule_form_badge_explanation: activity_rule_form_badge_explanation
-activity_rule_form_isResultVisible: activity_rule_form_isResultVisible
-activity_rule_form_isResultVisible_explanation: activity_rule_form_isResultVisible_explanation
-activity_rule_form_occurrence_explanation: activity_rule_form_occurrence_explanation
-activity_rule_form_result_explanation: activity_rule_form_result_explanation
-activity_where_classroom: activity_where_classroom
-activity_who_collaborative: activity_who_collaborative
-activity_who_individual: activity_who_individual
-actualize: actualize
-add: add
-add_a_logo: add_a_logo
-add_category: add_category
-add_contact_to_category: add_contact_to_category
-add_contacts: add_contacts
-add_field_to_facet: add_field_to_facet
-add_field_to_panel: add_field_to_panel
-add_filter: add_filter
-add_group: add_group
-add_group_s_confirm_message: add_group_s_confirm_message
-add_groups: add_groups
-add_panel_to_facet: add_panel_to_facet
-add_resource: add_resource
-add_role: add_role
-add_role_to_groups: add_role_to_groups
-add_role_to_users: add_role_to_users
-add_roles_confirm_message: add_roles_confirm_message
-add_subcategory: add_subcategory
-add_tab: add_tab
-add_tag: add_tag
-add_tag_to_workspace: add_tag_to_workspace
-add_user: add_user
-add_user_s_confirm_message: add_user_s_confirm_message
-add_users: add_users
-add_widget_to_home_tab: add_widget_to_home_tab
-add_workspace: add_workspace
-admin: admin
-admin_analytics: admin_analytics
-admin_analytics_no_data: admin_analytics_no_data
-admin_desktop_and_home_tabs_configuration: admin_desktop_and_home_tabs_configuration
-admin_home_tabs_configuration: admin_home_tabs_configuration
-admin_logs: admin_logs
-admin_third_party_application: admin_third_party_application
-admin_workspace_tag_form_name: admin_workspace_tag_form_name
-administration: administration
-administrative_code: administrative_code
-advanced: advanced
-advanced_parameters: advanced_parameters
-agreeing: agreeing
-all: all
-all_available_workspaces: all_available_workspaces
-all_my_contacts: all_my_contacts
-all_my_workspaces: all_my_workspaces
-all_public_personal_workspaces: all_public_personal_workspaces
-all_public_workspaces: all_public_workspaces
-all_roles: all_roles
-all_visible_users: all_visible_users
-all_workspaces: all_workspaces
-already_existing_user: already_existing_user
-already_exists: already_exists
-already_exists_in_workspace: already_exists_in_workspace
-an_error_occured_message: an_error_occured_message
-analytics_connections: analytics_connections
-analytics_home: analytics_home
-analytics_resources: analytics_resources
-analytics_top: analytics_top
-anonymous: anonymous
-answer: answer
-anywhere: anywhere
-appearance: appearance
-apply: apply
-apply_recursively_to_directories: apply_recursively_to_directories
-at_least_one_category_has_to_be_selected: at_least_one_category_has_to_be_selected
-attempt: attempt
-attempts: attempts
-auth_mode: auth_mode
-authentication: authentication
-authentication_invalid: authentication_invalid
-authentication_source: authentication_source
-author: author
-automatic: automatic
-available: available
-available_widgets: available_widgets
-available_workspaces: available_workspaces
-back: back
-back_to_activities_list: back_to_activities_list
-back_to_profile: back_to_profile
-backup_reminder: backup_reminder
-bad_request: bad_request
-base_informations: base_informations
-best_score: best_score
-by: by
-by_user: by_user
-by_workspace: by_workspace
-canCopy: canCopy
-canCreate: canCreate
-canDelete: canDelete
-canEdit: canEdit
-canExport: canExport
-canOpen: canOpen
-can_edit_permission: can_edit_permission
-cancel: cancel
-cannot_change_password: cannot_change_password
-cannot_delete_unique_manager: cannot_delete_unique_manager
-cannot_unsubscribe_from_workspace: cannot_unsubscribe_from_workspace
-captcha: captcha
-categories: categories
-categories_organization: categories_organization
-categorize: categorize
-category: category
-category_creation: category_creation
-category_edition: category_edition
-category_explanations_1: category_explanations_1
-category_explanations_2: category_explanations_2
-category_root: category_root
-category_structure: category_structure
-change_view: change_view
-choose_from_resource_manager: choose_from_resource_manager
-choose_logo: choose_logo
-choose_resource_form_type: choose_resource_form_type
-claroline_bundle_missing: claroline_bundle_missing
-classify_my_workspaces: classify_my_workspaces
-classify_workspaces: classify_workspaces
-classroom: classroom
-click_to_view_modify_profile: click_to_view_modify_profile
-client_ip: client_ip
-client_name: client_name
-close: close
-closed_account: closed_account
-code: code
-code_found_at: code_found_at
-collaborative: collaborative
-collaborator: collaborator
-collapse: collapse
-color: color
-comment: comment
-communication: communication
-completed: completed
-configuration: configuration
-configure: configure
-confirm_send_data: confirm_send_data
-connections: connections
-contact: contact
-contacts_per_page: contacts_per_page
-content: content
-cookie_lifetime: cookie_lifetime
-copiable: copiable
-copies: copies
-copy: copy
-count_resources: count_resources
-create: create
-create_and_update: create_and_update
-create_category: create_category
-create_facet: create_facet
-create_field: create_field
-create_group: create_group
-create_learning_outcomes: create_learning_outcomes
-create_model: create_model
-create_new_admin_tag: create_new_admin_tag
-create_new_home_tab: create_new_home_tab
-create_new_tag: create_new_tag
-create_new_user_account: create_new_user_account
-create_only: create_only
-create_pane: create_pane
-create_resource: create_resource
-create_role: create_role
-create_security_token: create_security_token
-create_subcategory: create_subcategory
-create_user: create_user
-create_users: create_users
-create_widget_instance: create_widget_instance
-create_workspace: create_workspace
-created_by: created_by
-creating: creating
-creation: creation
-creation_date: creation_date
-creator: creator
-csv_export: csv_export
-csv_group_import_infos: csv_group_import_infos
-csv_group_import_infos_format: csv_group_import_infos_format
-csv_users_import_infos: csv_users_import_infos
-csv_users_import_infos_format: csv_users_import_infos_format
-csv_users_import_infos_format_a: csv_users_import_infos_format_a
-csv_users_import_infos_format_b: csv_users_import_infos_format_b
-csv_users_import_infos_optional: csv_users_import_infos_optional
-csv_users_import_infos_required: csv_users_import_infos_required
-csv_users_import_infos_ws_role_a: csv_users_import_infos_ws_role_a
-csv_users_import_infos_ws_role_b: csv_users_import_infos_ws_role_b
-curl_facebook_application_validation_error: curl_facebook_application_validation_error
-current_category: current_category
-cut: cut
-dashboard: dashboard
-data_col: data_col
-database: database
-database_connection_failed: database_connection_failed
-date: date
-date_agenda_display_format_for_form: date_agenda_display_format_for_form
-date_form_datepicker_format: date_form_datepicker_format
-date_form_datepicker_php: date_form_datepicker_php
-date_form_format: date_form_format
-date_form_placeholder: date_form_placeholder
-date_format: date_format
-date_range.apply: date_range.apply
-date_range.clear: date_range.clear
-date_range.custom_range: date_range.custom_range
-date_range.day_names: date_range.day_names
-date_range.first_day: date_range.first_day
-date_range.format: date_range.format
-date_range.format.with_hours: date_range.format.with_hours
-date_range.from: date_range.from
-date_range.js_format: date_range.js_format
-date_range.last_month: date_range.last_month
-date_range.last_school_year: date_range.last_school_year
-date_range.last_seven_days: date_range.last_seven_days
-date_range.last_thirty_days: date_range.last_thirty_days
-date_range.last_week: date_range.last_week
-date_range.last_year: date_range.last_year
-date_range.month_names: date_range.month_names
-date_range.separator: date_range.separator
-date_range.this_month: date_range.this_month
-date_range.this_school_year: date_range.this_school_year
-date_range.this_week: date_range.this_week
-date_range.this_year: date_range.this_year
-date_range.to: date_range.to
-date_range.today: date_range.today
-date_range.week: date_range.week
-date_range.yesterday: date_range.yesterday
-db_table: db_table
-decline: decline
-default_language: default_language
-default_role: default_role
-deletable: deletable
-delete: delete
-delete_category: delete_category
-delete_category_confirm_message: delete_category_confirm_message
-delete_category_confirm_title: delete_category_confirm_title
-delete_contact: delete_contact
-delete_contact_confirm_message: delete_contact_confirm_message
-delete_home_tab: delete_home_tab
-delete_learning_outcomes: delete_learning_outcomes
-delete_learning_outcomes_confirm_message: delete_learning_outcomes_confirm_message
-description: description
-desktop: desktop
-desktop_and_home: desktop_and_home
-desktop_home_tab_creation: desktop_home_tab_creation
-desktop_home_tab_edition: desktop_home_tab_edition
-desktop_home_tabs: desktop_home_tabs
-desktop_parameters: desktop_parameters
-desktop_tools: desktop_tools
-destination: destination
-directory: directory
-display: display
-display_at_registration: display_at_registration
-display_captcha: display_captcha
-display_options: display_options
-displayable_in_workspace_list: displayable_in_workspace_list
-distinguished_name: distinguished_name
-does_not_exist: does_not_exist
-does_not_exist_in_workspace: does_not_exist_in_workspace
-done_on: done_on
-down: down
-download: download
-downloads: downloads
-drag_file_here: drag_file_here
-drop_file: drop_file
-dsn: dsn
-duration: duration
-edit: edit
-edit_facet: edit_facet
-edit_field: edit_field
-edit_password: edit_password
-edit_password_error: edit_password_error
-edit_password_error_current: edit_password_error_current
-edit_password_message: edit_password_message
-edit_password_success: edit_password_success
-edit_profile: edit_profile
-edit_profile_error: edit_profile_error
-edit_profile_error_right: edit_profile_error_right
-edit_profile_success: edit_profile_success
-edit_public_profile: edit_public_profile
-edit_public_profile_preferences_error: edit_public_profile_preferences_error
-edit_public_profile_preferences_success: edit_public_profile_preferences_success
-edit_rights_success: edit_rights_success
-edit_root_directory_icon: edit_root_directory_icon
-edit_security_token: edit_security_token
-edit_your_profile_error: edit_your_profile_error
-edit_your_profile_success: edit_your_profile_success
-editable: editable
-editable_facet_form_explanation: editable_facet_form_explanation
-email: email
-email_found_at: email_found_at
-empty_file: empty_file
-encryption: encryption
-end_date: end_date
-end_maintenance: end_maintenance
-enter_tag_name_message: enter_tag_name_message
-entries_per_day: entries_per_day
-error: error
-error_occured: error_occured
-evaluation: evaluation
-evaluation-automatic: evaluation-automatic
-evaluation-manual: evaluation-manual
-evaluation_edition: evaluation_edition
-evaluation_type: evaluation_type
-excel_export: excel_export
-expiration_date: expiration_date
-export: export
-exportable: exportable
-ext_php_missing: ext_php_missing
-external_pdo_database: external_pdo_database
-facebook: facebook
-facebook_application_validation_error: facebook_application_validation_error
-facet_management: facet_management
-facets: facets
-fail_add_user_group_message: fail_add_user_group_message
-failed: failed
-fast_answer: fast_answer
-fb_client_id: fb_client_id
-fb_client_secret: fb_client_secret
-file: file
-files: files
-filter: filter
-filter_actions: filter_actions
-filters: filters
-find_workspaces: find_workspaces
+6_parameters_min_msg: Het CSV-bestand moet tenminste 6 elementen per regel bevatten.
+7_parameters_min_msg: Het CSV-bestand moet tenminste 7 elementen per regel bevatten.
+accept: Aanvaarden
+accessible_from: Toegankelijk vanaf
+accessible_until: Toegankelijk tot
+account_created: De informatie van uw rekening is u per email gestuurd. (Kijk eventueel of die niet in uw spams zit).
+account_duration_label: Levensduur van de rekeningen (dagen)
+account_general_statistics: Algemene statistieken over de rekeningen
+action: Actie
+action_list: Lijst van de acties
+actions: Acties
+actions_per_day: Aantal acties per dag
+activate_account: Een rekening activeren
+activate_account_click: Klik hier om uw rekening te activeren
+activate_maintenance_mode: We adviseren dat u de onderhoudsmodus inschakelt om de gebruikers te laten weten dat een update wordt uitgevoerd.
+activate_notifications: De notities activeren
+activate_pdf_export: De PDF uitvoer activeren
+activate_personal_workspace_creation: Het maken van persoonlijke ruimten activeren
+active_widgets: Actieve widgets
+activities: Activiteiten
+activity_already: Deze leermiddel is al aanwezig in de activiteit
+activity_remove_primary_resource: De hoofdleermiddel verwijderen
+activity_resource_not_allowed: U mag geen llermiddel van deze type toevoegen.
+activity_resource_remove: Bent u er zeker van dat u    wenst te u deze leermiddel van deze activiteit wenst te verwijderen ?
+activity_rule_configuration_for_auto_evaluation: Configuratie van de regel voor de automatische evaluatie
+activity_rule_form_action_explanation: De automatische evaluatie baseert zich op de acties op de gekoppelde leermiddelen.
+activity_rule_form_activeFrom: UItgevoerd in de periode tussen
+activity_rule_form_activeFrom_explanation: Er wordt alleen rekening gehouden met de de acties die na deze datum worden uitgevoerd. Alle voormalige acties worden behandeld indien deze datum niet gedefinieerd is.
+activity_rule_form_activeUntil: en
+activity_rule_form_activeUntil_explanation: Er wordt alleen rekening gehouden met de de acties die voor deze datum worden uitgevoerd. Alle toekomstige acties worden behandeld indien deze datum niet gedefinieerd is.
+activity_rule_form_badge: De te behalen badge
+activity_rule_form_badge_explanation: De te behalen badge om te slagen
+activity_rule_form_isResultVisible: Het resultaat tonen
+activity_rule_form_isResultVisible_explanation: De gebruiker toelaten het te behalen resultaat te kennen.
+activity_rule_form_occurrence_explanation: Het aantal keren de actie moet uitgevoerd worden om te slagen.
+activity_rule_form_result_explanation: Het te behalen resultaat om te slagen
+activity_where_classroom: In klas
+activity_who_collaborative: Collaboratif
+activity_who_individual: Individuel
+actualize: Actualiser
+add: toevoegen
+add_a_logo: Een logo toevoegen
+add_category: Een categorie toevoegen
+add_contact_to_category: De contactpersoon aan een categorie toevoegen
+add_contacts: Contactpersonenen toevoegen
+add_field_to_facet: Een veld toevoegen aan een facet
+add_field_to_panel: Een veld toevoegen
+add_filter: Een filter toevoegen
+add_group: Een groep toevoegen
+add_group_s_confirm_message: toegevoegde groep(en)
+add_groups: Groepen toevoegen
+add_panel_to_facet: Een panel toevoegen
+add_resource: Een leermiddel toevoegen
+add_role:  Een rol toevoegen
+add_role_to_groups: Een rol toevoegen aan %count% groep(en)
+add_role_to_users: Een rol toevoegen aan %count% gebruiker(s)
+add_roles_confirm_message: Wenst u de volgende rollen toevoegen aan de %count% geselecteerde elementen ?
+add_subcategory: Een subcategorie toevoegen
+add_tab: Een Tab toevoegen
+add_tag: Een Tag toevoegen
+add_tag_to_workspace: Een Tag toevoegen aan de werkruimte
+add_user: Een gebruiker toevoegen
+add_user_s_confirm_message: toegevoegde gebruiker(s).
+add_users: Gebruikers toevoegen
+add_widget_to_home_tab:  Een widget aan de tab toevoegen
+add_workspace: Een werkruimte toevoegen
+admin: Administrateur
+admin_analytics: Statistieken van het platform
+admin_analytics_no_data: Geen data.
+admin_desktop_and_home_tabs_configuration: Configuratie van het bureaublad en van de tabs
+admin_home_tabs_configuration: Configuratie van de tabs voor de homepage
+admin_logs: Toezicht van het platform
+admin_third_party_application: Pakketten van derden
+admin_workspace_tag_form_name: Naam
+administration: Administratie
+administrative_code: Administratieve code
+administrativeCode: Administratieve code
+advanced: Geavanceerd
+advanced_parameters: Geavanceerde instellingen
+agreeing: Door het zenden van deze date te aanvaarden, geniet u van een betere dienst en levert u een bijdrage aan de verbetering van het Claroline Connect platform dat u installeert.
+all: Tous
+all_available_workspaces: Alle beschikbare werkruimten
+all_my_contacts: Al mijn contactpersonen
+all_my_workspaces: Al mijn werkruimten
+all_public_personal_workspaces: Alle openbare persoonlijke werkruimten
+all_public_workspaces: Alle openbare werkruimten
+all_roles: Alle rollen
+all_visible_users: Alle zichtbare gebruikers
+all_workspaces: Alle werkruimten
+already_existing_user: De gebruiker bestaat al.
+already_exists: bestaat al
+already_exists_in_workspace: bestaat al in de werkruimte
+an_error_occured_message: Er is een fout opgetreden. Gelieve contact op te nemen met de beheerder van het platform.
+analytics_connections: Bezoeken van gebruikers
+analytics_home: Overzicht
+analytics_resources: Inhoud van het platform
+analytics_top: Top van de activiteiten
+analytics_return_platform_content: Terug naar de globale statistieken van de inhoud van het platform
+anonymous: Anonyme
+answer: Répondre
+anywhere: Waar dan ook
+appearance: Apparence
+apply: Appliquer
+apply_recursively_to_directories: Toepassen op de inhoud van de directory en de subdirectories.
+at_least_one_category_has_to_be_selected: Er moet tenminste één categorie geselecteerd worden.
+attempt: Poging
+attempts: Pogingen
+auth_mode: Authenticatiemodus
+authentication: Authenticatie
+authentication_invalid: De authenticatiebron in regel %line% is niet geldig.
+authentication_source: Authenticatiebron
+author: Auteur
+automatic: Automatique
+available: Disponible
+available_widgets: Beschikbare widgets
+available_workspaces: Beschikbare werkruimten
+back: Terug
+back_to_activities_list: Terug naar de lijst van de activiteiten
+back_to_profile: Terug naar het profiel
+background_color: Achtergrondkleur
+backup_reminder: Denk eraan een back-up van het platform te maken vooraleer een update uit te voeren.
+bad_request: Het verzoek is onjuist. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l'administrateur de la platform.
+base_informations: Basisinformatie
+best_score: Beste score
+by: par
+by_user: Per gebruiker
+by_workspace: Per werkruimte
+canCopy: Recht om te kopiëren
+canCreate: %type% maken
+canDelete: Recht om te verwijderen
+canEdit: Recht om te bewerken
+canExport: Recht om uit te voeren
+canOpen: Recht om te openen
+can_edit_permission: Mag de toegangsrechten bewerken
+cancel: Annuler
+cannot_change_password: U mag uw wachtwoord niet wijzigen.
+cannot_delete_unique_manager: Het is onmogelijk de enige beheerder te verwijderen.
+cannot_unsubscribe_from_workspace: Het is onmogelijk u uit te schrijven van de werkruimte.
+captcha: Captcha
+categories: Catégories
+categories_organization: Organisatie van de categorieën
+categorize: Op categorie sorteren
+category: Categorie
+category_creation: Een categorie maken
+category_edition: De categorie bewerken
+category_explanations_1: Elke categorie moet een unieke naam hebben.
+category_explanations_2: Een categorie selecteren om haar sub-categorieën te beheren.
+category_root: Basiscategorieën
+category_structure: Structuur van de categorieën
+change_view: Wijzig de display
+choose_from_resource_manager: of kies een bestand 'dans le gestionnaire de ressources'
+choose_logo: Een logo kiezen
+choose_resource_form_type: Leermiddeltype
+claroline_bundle_missing: De bundle %bundle% is niet geïnstalleerd. Instaleer die alvorens verder te gaan.
+classify_my_workspaces: Mijn ruimten sorteren
+classify_workspaces: De ruimten sorteren
+classroom: In klas
+click_to_view_modify_profile: Uw profiel zien/bewerken
+client_ip: IP-adres van de klant
+client_name: Klantnaam
+close: Sluiten
+closed_account: Afgesloten rekening
+code: Code
+code_found_at: De code %code% is gevonden in regels %lines%.
+collaborative: Collaboratief
+collaborator: Medewerker
+collapse: Samenklappen
+color: Kleur
+comment: Commentaar
+communication: Communicatie
+completed: Voltooid
+configuration: Configuratie
+configure: Instellen
+confirm: OK
+confirm_send_data: We stellen u voor akkoord te gaan met het sturen van gegevens:
+connections: Aantal connecties
+contact: Contactpersoon
+contacts_per_page: Contactpersonen per pagina
+content: Inhoud
+cookie_lifetime: Levensduur van een cookie
+copiable: Kopieerbaar
+copies: Kopieën
+copy: Kopiëren
+count_resources: Aantal hulpmiddelen
+create: Maken
+create_account: De rekening maken
+create_and_update: Maken en updaten
+create_category: Een categorie maken
+create_client: Een klant maken
+create_facet: Een facet maken
+create_field: Een veld maken
+create_group: Een groep maken
+create_learning_outcomes: Een competentieframework maken
+create_model: Een model maken
+create_new_admin_tag: Een administrator-tag maken
+create_new_home_tab: Een tab maken
+create_new_tag: Een Tag maken
+create_new_user_account: Uw Claroline Connect rekening maken
+create_only: Alleen maken
+create_pane: Een panel maken
+create_resource: Een nieuwe hulpmiddel maken
+create_role: Een rol maken
+create_security_token: Een authenticatietoken maken
+create_subcategory: Een subcategorie maken
+create_user: Een gebruiker maken
+create_users: De gebruikers maken
+create_widget_instance: Een nieuwe widget maken
+create_workspace: Een werkruimte maken
+created_by: Door %creator% gemaakt op %creationDate%
+creating: Bezig met het maken
+creation: Maken
+creation_date: Aanmaakdatum
+creator: Maker
+csv_export: CSV uitvoer
+csv_select: Kies een CSV-bestand:
+csv_format_info: Informatie over het formaat van het CSV-bestand
+csv_format_user_list: Formaat: lijst van de gebruikersnamen gescheiden door een regeleinde
+csv_users_import_infos: Informatie over het formaat van het CSV-bestand
+csv_users_import_infos_format: Formaat
+csv_users_import_infos_format_a: De gegevens van een gebruiker moeten op een regel gedefinieerd worden en door een kommapunt gescheiden worden.
+csv_users_import_infos_format_b: Noteer dat u geen header hoeft toe te voegen aan het bestand.
+csv_users_import_infos_optional: Optioneel
+csv_users_import_infos_required: Vereist
+csv_users_import_infos_ws_role_a: De door het platform vooraf gedefinieerde rollen zijn "Medewerker" en "Beheerder" en de in het CSV-bestand te gebruiken waarden zijn respectievelijk "collaborator" en "manager".
+csv_users_import_infos_ws_role_b: Indien deze rollen gewijzigd worden, moet de nieuwe naam in het CSV-bestand gebruikt worden.
+csv_users_import_infos_format_a: De gegevens van een gebruiker moeten op een regel gedefinieerd worden en door een kommapunt gescheiden worden.
+csv_workspaces_import_infos_format_a: De gegevens van een werkruimte moeten op een regel gedefinieerd worden en door een kommapunt gescheiden worden.
+curl_facebook_application_validation_error: Uitbreiding php curl ontbreekt
+current_category: Huidige categorie
+cut: Knippen
+dashboard: Dashboard
+data_col: Kolom met de gegevens
+database: Gegevensbank
+database_connection_failed: De verbinding met de database is mislukt.
+date: Datum
+date_agenda_display_format_for_form: dd-MM-yyyy
+date_form_datepicker_format: dd/mm/yyyy
+date_form_datepicker_php: d-m-Y
+date_form_format: dd/MM/yyyy
+date_form_placeholder: jj/mm/aaaa
+date_format: d/m/Y
+date_range.apply: Toepassen
+date_range.clear: Uitwissen
+date_range.custom_range: Gepersonnaliseerde blok
+date_range.day_names: ["Zo","Ma","Di","Wo","Do","Vr","Za"]
+date_range.first_day: 1
+date_range.format: d/m/Y
+date_range.format.with_hours: d/m/Y H:i:s
+date_range.from: Van
+date_range.js_format: DD/MM/YYYY
+date_range.last_month: Voorafgaande maand
+date_range.last_school_year: Voorafgaand schooljaar
+date_range.last_seven_days: Laatste 7 dagen
+date_range.last_thirty_days: Laatste 30 dagen
+date_range.last_week: Voorafgaande week
+date_range.last_year: Voorafgaand jaar
+date_range.month_names: ["Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","October","November","December"]
+date_range.separator: -
+date_range.this_month: Lopende maand
+date_range.this_school_year: Lopend schooljaar
+date_range.this_week: Lopende week
+date_range.this_year: Lopend jaar
+date_range.to: Tot
+date_range.today: Vandaag
+date_range.week: w
+date_range.yesterday: Gisteren
+db_table: Tabel van de gegevensank
+decline: Weigeren
+default_language: Standaardtaal
+default_role: Standaardrol
+deletable: Verwijderbaar
+delete: Verwijderen
+delete_category: De categorie verwijderen
+delete_category_confirm_message: Bent u er zeker van dat u deze categorie wenst te verwijderen ?
+delete_category_confirm_title: Een categorie verwijderen
+delete_client: Een klant verwijderen
+delete_client_message: Bent u er zeker van dat u deze klant wenst te verwijderen ?
+delete_contact: De contactpersoon verwijderen
+delete_contact_confirm_message: Bent u er zeker van dat u deze contactpersoon wenst te verwijderen ?
+delete_friend_pending: Een vriendaanvraag verwijderen
+delete_friend_pending_message: Bent u er zeker van dat u deze vriendaanvraag wenst te verwijderen ?
+delete_home_tab: De tab verwijderen
+delete_learning_outcomes: Een competentieframework verwijderen
+delete_learning_outcomes_confirm_message: Bent u er zeker van dat u dit competentieframework wenst te verwijderen ?
+delete_platform_friend: Een vriendplatform verwijderen
+delete_platform_friend_message: Bent u er zeker van dat u dit vriendplatform wenst te verwijderen ?
+description: Beschrijving
+desktop: Bureaublad
+desktop_and_home: Bureaublad en startpagina
+desktop_home_tab_creation: Een tab voor het bureaublad maken
+desktop_home_tab_edition: De tab voor het bureaublad bewerken
+desktop_home_tabs: Tabs voor het bureaublad
+desktop_parameters: Instellingen bureaublad
+desktop_tools: Hulpmiddelen van het du bureaublad
+destination: Bestemming
+directory: Directory
+display: Tonen
+display_at_registration: Tonen bij het maken van de rekening
+display_captcha: De captchas tonen voor der onbekende personen
+display_options: Opties van het uiterlijk
+displayable_in_workspace_list: Zichtbaar in de lijst van de ruimten
+distinguished_name: Unieke naam (DN)
+does_not_exist: bestaat niet
+does_not_exist_in_workspace: bestaat niet in de werkruimte
+done_on: uitgevoerd op
+down: Naar beneden
+download: Downloaden
+downloads: Aantal downloads
+drag_file_here: Verplaats het bestand hier
+drop_file: Zet het bestand neer
+dsn: DSN
+duration: Duur
+edit: Bewerken
+edit_facet: Een facet bewerken
+edit_field: Een veld bewerken
+edit_maintenance_message: Het onderhoudsbericht bewerken
+edit_password: Het wachtwoord bewerken
+edit_password_error: Er is een fout opgetreden tijdens het bewerken van het wachtwoord.
+edit_password_error_current: Uw huidige wachtwoord is niet correct.
+edit_password_message: Bent u er zeker van dat u uw wachtwoord wenst te bewerken ?
+edit_password_success: Wachtwoord met succes bewerkt.
+edit_profile: Uw profiel bewerken
+edit_profile_error: Er is een fout opgetreden tijdens het bewerken van uw profiel.
+edit_profile_error_right: U bent niet toegelaten beelden up te loaden. Gelieve contact te nemen met de sitebeheerder.
+edit_profile_success: Profiel met succes bewerkt
+edit_public_profile: Het openbare profiel bewerken
+edit_public_profile_preferences_error: Er is een fout opgetreden tijdens het bewerken van de voorkeuren van uw openbaar profiel.
+edit_public_profile_preferences_success: Voorkeuren van uw openbaar profiel met succes bewerkt.
+edit_rights_success: Rechten met succes bewerkt
+edit_root_directory_icon: Het pictogram van de root directory bewerken
+edit_security_token: Het authenticatietoken bewerken
+edit_your_profile_error: Er is een fout opgetreden tijdens het bewerken van uw profiel.
+edit_your_profile_success: Uw profiel is met succes bewerkt
+editable: Bewerkbaar
+editable_facet_form_explanation: Met het veld "Bewerkbaar" kunt u aangeven of het element door de gebruiker mag bewerkt worden.
+email: E-mail
+email_found_at: De e-mail %email% is gevonden in regels %lines%.
+empty_file: Leeg bestand
+encryption: Versleuteling
+end_date: Einddatum
+end_maintenance: De onderhoudsmodus uitschakelen
+enter_tag_name_message: Gelieve een tagnaam in te voeren
+entries_per_day: Aantal items per dag
+error: Fout
+error_occured: Er is een fout opgetreden
+evaluation: Evaluatie
+evaluation-automatic: Automatisch
+evaluation-manual: Manueel
+evaluation_edition: Evaluatie
+evaluation_type: Evaluatietype
+excel_export: Naar Excel uitvoeren
+expiration_date: Vervaldatum
+export: Uitvoeren
+exportable: Uitvoerbaar
+ext_php_missing: De php uitbreiding %ext% ontbreekt.
+external_pdo_database: Externe gegevensbank (PDO)
+facebook: Facebook
+facebook_application_validation_error: De aangemled ID's zijn ongeldig.
+facet_management: De facetten beheren
+facets: Facetten
+fail_add_user_group_message: Deze gebruikers konden niet aan de groep toegevoegd worden. Controleer de gebruikerslimiet per rol.
+failed: Mislukt
+fast_answer: Snel antwoord
+fb_client_id: ID van het pakket
+fb_client_secret: Geheim van het pakket
+file: Bestand
+files: Bestanden
+filter: Filtreren
+filter_actions: De acties filtreren
+filters: Filters
+find_workspaces: Alle openbare werkruimten
 firstName: Voornaam
-first_name: voornaam
-footer: footer
-for_period: for_period
-forgot_password: forgot_password
-form_role: form_role
-from: from
-from_message: from_message
-fullscreen_text_editor: fullscreen_text_editor
-general: general
-general_parameters: general_parameters
-general_parameters_portfolio_url_help: general_parameters_portfolio_url_help
-general_parameters_updated_success: general_parameters_updated_success
-general_tab_form_explanation: general_tab_form_explanation
-generate_token: generate_token
-generate_url: generate_url
-generate_url_subscription: generate_url_subscription
-generate_url_subscription_anonyme: generate_url_subscription_anonyme
-generate_url_subscription_fail: generate_url_subscription_fail
-get_mail_notifications: get_mail_notifications
-google_tag_validation: google_tag_validation
-grant_access: grant_access
-graph_draw_area: graph_draw_area
-group: group
-group_configuration: group_configuration
-group_creation: group_creation
-group_parameter: group_parameter
-groups: groups
-groups_list: groups_list
-groups_per_page: groups_per_page
-groups_registration_in_workspace: groups_registration_in_workspace
-has_been_created: has_been_created
-has_been_created_in_workspace: has_been_created_in_workspace
-has_been_deleted: has_been_deleted
-has_been_deleted_in_workspace: has_been_deleted_in_workspace
-has_been_emptied: has_been_emptied
-has_been_put_in_category: has_been_put_in_category
-has_been_registered_in_workspace: has_been_registered_in_workspace
-has_been_registered_to_group: has_been_registered_to_group
-has_been_suscribed_with_role: has_been_suscribed_with_role
-has_been_suscribed_with_role_group: has_been_suscribed_with_role_group
-has_been_unregistered_from_group: has_been_unregistered_from_group
-has_been_unregistered_from_role: has_been_unregistered_from_role
-has_been_unregistered_from_workspace: has_been_unregistered_from_workspace
-has_been_updated: has_been_updated
-has_not_been_imported: has_not_been_imported
-has_not_been_imported_into_the_group: has_not_been_imported_into_the_group
-help_url: help_url
-hide: hide
-history: history
-home: home
-home_manager: home_manager
-home_parameters: home_parameters
-home_tab: home_tab
-home_tab_bookmark_confirm_message: home_tab_bookmark_confirm_message
-home_tab_bookmark_confirm_title: home_tab_bookmark_confirm_title
-home_tab_bookmark_delete_confirm_message: home_tab_bookmark_delete_confirm_message
-home_tab_bookmark_delete_confirm_title: home_tab_bookmark_delete_confirm_title
-home_tab_creation: home_tab_creation
-home_tab_delete_confirm_message: home_tab_delete_confirm_message
-home_tab_delete_confirm_title: home_tab_delete_confirm_title
-home_tab_edition: home_tab_edition
-home_tab_roles_explanation: home_tab_roles_explanation
-home_tab_widgets: home_tab_widgets
-home_tab_widgets_configuration: home_tab_widgets_configuration
-home_tabs: home_tabs
-home_tabs_configuration: home_tabs_configuration
-host: host
-icon: icon
-id: id
-id_col: id_col
-identical_group_name: identical_group_name
-identical_role_name: identical_role_name
-import: import
-import_profile_pics: import_profile_pics
-import_profile_pics_explanation: import_profile_pics_explanation
-import_roles: import_roles
-import_user_file_file: import_user_file_file
-import_users: import_users
-in_workspace: in_workspace
-incomplete: incomplete
-indexing: indexing
-individual: individual
-informations: informations
-infos_sending_acceptance: infos_sending_acceptance
-infos_sending_bar_msg: infos_sending_bar_msg
-infos_sending_has_not_been_accepted: infos_sending_has_not_been_accepted
-initialize: initialize
-inscription_mail: inscription_mail
-install: install
-install_update_cant_be_undone: install_update_cant_be_undone
-installed: installed
-instructions: instructions
-internal_error: internal_error
-internal_portfolio: internal_portfolio
-invalid_action: invalid_action
-invalid_auth_mode: invalid_auth_mode
-invalid_csv_file: invalid_csv_file
-invalid_driver: invalid_driver
-invalid_email: invalid_email
-invalid_encryption: invalid_encryption
-invalid_file: invalid_file
-invalid_form: invalid_form
-invalid_syntax: invalid_syntax
-invalid_transport: invalid_transport
-invalid_url: invalid_url
-ip_address: ip_address
-irreversible_action: irreversible_action
-is_already_in_category: is_already_in_category
-is_already_in_use: is_already_in_use
-is_mail_displayed: is_mail_displayed
-is_not_writable: is_not_writable
-is_not_writable_recursive: is_not_writable_recursive
-jqplot_date_output_format: jqplot_date_output_format
-keep_me_logged_in: keep_me_logged_in
-language: language
-language_select: language_select
+first_name: Voornaam
+footer: Footer
+for_period: in de periode van :
+forgot_password: Wachtwoord vergeten ?
+form_role: Rol
+friend_platform: Vriendplatformen
+from: Sinds
+from_message: De
+fullscreen_text_editor: U kunt het volledige scherm van de tekstverwerking kiezen om er HTML in te gebruiken.
+general: Algemeen
+general_parameters: Algemene instellingen
+general_parameters_portfolio_url_help: Begint met par http://
+general_parameters_updated_success: Algemene instellingen met succes bewerkt.
+general_tab_form_explanation: Met dit formulier kunt u de informatie aangeven die per rol gezien worden in het openbare profiel.
+generate_token: Een onvoorspelbaar token genereren
+generate_url: Openbare inscvhrijving
+generate_url_subscription: Inschrijving aan een werkruimte door een gebruiker
+generate_url_subscription_anonyme: Inschrijving aan een werkruimte door een onbekende
+generate_url_subscription_fail: U moet het keuzevakje "Openbare inschrijving" aanvinken alvorens de url te mogen gebruiken.
+get_mail_notifications: Een kopie van de berichten op het adres %adress% krijgen.
+google_tag_validation: HTML-tag van Google validatie
+grant_access: Toegang verlenen
+grant_type: Toegangsrechten
+graph_draw_area: Teken een zone op de grafiek om in te zoomen. Dubbelklik hier om te annuleren.
+group: Groep
+group_configuration: De groep instellen
+group_creation: Een groep maken
+group_parameter: Instellingen van de groep
+group_invalid: Regel %line%: De groep %group% is niet geldig.
+organization_invalid: Regel %line%: De organisatie %organization% is niet geldig.
+groups: Groepen
+groups_list: Lijst van de groepen'
+groups_per_page: Groepen per pagina
+groups_registration_in_workspace: Inschrijving van de groepen aan de werkruimte
+has_been_created: is gemaakt
+has_been_created_in_workspace: is in de werkruimte gemaakt
+has_been_deleted: is verwijderd
+has_been_deleted_in_workspace: is in de werkruimte verwijderd
+has_been_emptied: is geleegd
+has_been_put_in_category: is in de categorie geplaatst
+has_been_registered_in_workspace: in ingeschreven in de werkruimte
+has_been_registered_to_group: in ingeschreven in de groep
+has_been_suscribed_with_role: in ingeschreven met de rol
+has_been_suscribed_with_role_group: in ingeschreven met de rol
+has_been_unregistered_from_group: is van de groep uitgeschreven
+has_been_unregistered_from_role: is van de rol uitgeschreven
+has_been_unregistered_from_workspace: is uitgeschreven van de werkruimte
+has_been_updated: is bewerkt
+has_not_been_imported: is niet ingevoerd
+has_not_been_imported_into_the_group: is niet in de groep ingevoerd
+height: Hoogte
+help_url: URL van de hulp
+hide: Verbergen
+hide_breadcrumb: De draad van Ariande verbergen
+hide_tools_menu: Het hulpmiddelenmenu verbergen (behalve voor de beheerders).
+history: Geschiedenis
+home: Startpagina
+home_lock: Vergrendeling van het bureaublad
+home_manager: Beheerder van de startpagina
+home_parameters: Instellingen van de startpagina
+home_tab: Tab
+home_tab_bookmark_confirm_message: Deze tab zal op uw bureaublad beschikbaar zijn
+home_tab_bookmark_confirm_title: Deze tab op het bureaublad nagelen
+home_tab_bookmark_delete_confirm_message: Bent u er zeker van dat u deze tab van het bureaublad wenst te verwijderen
+home_tab_bookmark_delete_confirm_title: De tab intrekken
+home_tab_creation: Een tab maken
+home_tab_delete_confirm_message: Bent u er zeker van dat u deze tab wenst te verwijderen ?
+home_tab_delete_confirm_title: De tab verwijderen
+home_tab_edition: De tab bewerken
+home_tab_roles_explanation: Indien geen rol aangekruist wordt, zal de tab door alle gebruikers zichtbaar zijn.<br>Anders zal die zichtbaar zijn door gebruikers met één van de geselecteerde rollen.
+home_tab_widgets: Widgets van de tab
+home_tab_widgets_configuration: De widgets van de tab instellen
+home_tabs: Tabs van de startpagina
+home_tabs_configuration: De tabs van de startpagina instellen
+host: Host
+icon: Pictogram
+id: Id
+id_col: Kolom met de ID's
+identical_group_name: Identieke groepsnaam
+identical_role_name: Identieke rolnaam
+import: Invoeren
+import_profile_pics: Foto's van een gebruiker invoeren
+import_profile_pics_explanation: Gelieve een archief in het .zip-formaat te selecteren. Dit archief moet een lijst van beelden bevatten waarvan de namen als volgt gestructureerd worden: ID.uitbreiding .
+import_roles: Rollen invoeren
+import_user_file_file: Vanuit een CSV-bestand invoeren
+import_users: Gebruikers invoeren
+in_workspace: in de werkruimte
+incomplete: Onvoltooid
+indexing: Referenceren
+individual: Individueel
+informations: Informatie
+infos_sending_acceptance: Het sturen van informatie aanvaarden
+infos_sending_bar_msg: Klik op deze balk voor verdere informatie.
+infos_sending_has_not_been_accepted: Het sturen van informatie is niet aanvaard.
+initialize: Initialiseren
+inscription_mail: E-mail bij het inschrijven
+install: Installeren
+install_update_cant_be_undone: Het uivoeren van installatie en update mag niet geannuleerd worden.
+installed: Geinstalleerd
+instructions: Aanwijzigen
+internal_error: Interne systeemfout. Gelieven contact te nemen met de sitebeheerder.
+internal_portfolio: Interne portfolio interne van het platform
+invalid_action: Ongeldige actie
+invalid_auth_mode: Ongeldige coderingssleutel
+invalid_csv_file: Het CSV-bestand is niet geldig.
+invalid_driver: Deze driver is niet geldig.
+invalid_email: Deze e-mail is niet geldig.
+invalid_encryption: Ongeldige authenticatiemodus
+invalid_file: Ongeldig bestand
+invalid_form: Ongeldig formulier
+invalid_syntax: Ongeldige syntaxis
+invalid_transport: Ongeldig vervoer
+invalid_url: Ongeldige URL
+ip_address: IP-adres
+irreversible_action: Deze actie is onomkeerbaar
+is_already_in_category: is al aanwezig in de categorie
+is_already_in_use: is al gebruikt
+is_mail_displayed: De e-mail tonen ?
+is_not_writable: is niet toegangkelijk voor het schrijven
+is_not_writable_recursive: en zijn subdossiers zijn niet toegangkelijk voor het schrijven
+jqplot_date_output_format: %d-%m-%Y
+keep_me_logged_in: Gebruikersnaam onthouden
+language: Taal
+language_select: Kies een taal
 lastName: Naam
-last_30_days_activity: last_30_days_activity
-last_action: last_action
-last_attempt_date: last_attempt_date
-last_manager_error_message: last_manager_error_message
-last_name: last_name
-layout: layout
-learning_outcomes: learning_outcomes
-learning_outcomes_creation: learning_outcomes_creation
-learning_place: learning_place
-learning_profil: learning_profil
-leave_this_page: leave_this_page
-left: left
-license: license
-limit: limit
-line_number: line_number
-line_per_page: line_per_page
-link: link
-link_outdated: link_outdated
-link_workspace: link_workspace
-links: links
-list_groups: list_groups
-list_users: list_users
-list_view: list_view
-list_workspaces: list_workspaces
-lock: lock
-locked: locked
-login: login
-login_failure: login_failure
-logout: logout
-logs: logs
-logs_error_location: logs_error_location
-mail: mail
-mail_click: mail_click
-mail_config_problem: mail_config_problem
-mail_invalid: mail_invalid
-mail_layout: mail_layout
-mail_layout_message_override: mail_layout_message_override
-mail_login: mail_login
-mail_message: mail_message
-mail_not_available: mail_not_available
-mail_not_exist: mail_not_exist
-mail_sent: mail_sent
-maintenance: maintenance
-maintenance_mode_enabled: maintenance_mode_enabled
-maintenance_mode_message: maintenance_mode_message
-make_my_public_profil_visible: make_my_public_profil_visible
-make_public_profile_visible_to_everybody: make_public_profile_visible_to_everybody
-make_public_profile_visible_to_nobody: make_public_profile_visible_to_nobody
-make_public_profile_visible_to_platform_user: make_public_profile_visible_to_platform_user
-manage_public_profile_preferences: manage_public_profile_preferences
-manage_rights: manage_rights
-manage_tools: manage_tools
-manager: manager
-manual: manual
-manual_evaluation_explanation: manual_evaluation_explanation
-max_amount_resources: max_amount_resources
-max_attempts: max_attempts
-max_second_duration: max_second_duration
-max_size_is: max_size_is
-max_storage_size: max_storage_size
-media_most_viewed: media_most_viewed
-menu_bar: menu_bar
-menu_bar_configuration: menu_bar_configuration
-message: message
-message_form_content: message_form_content
-message_form_object: message_form_object
-message_form_to: message_form_to
-messages: messages
-messages_confirm_delete: messages_confirm_delete
-messages_confirm_permanent_delete: messages_confirm_permanent_delete
-messages_confirm_restore: messages_confirm_restore
-messages_received: messages_received
-messages_received_removed: messages_received_removed
-messages_removed: messages_removed
-messages_sent: messages_sent
-messages_sent_removed: messages_sent_removed
-meta_tag_paste: meta_tag_paste
-method_of_work: method_of_work
-misc: misc
-missing_%content%: missing_%content%
-missing_%password%: missing_%password%
-missing_%username%: missing_%username%
-mixed: mixed
-mode: mode
-model: model
-models: models
-month.April: month.April
-month.August: month.August
-month.December: month.December
-month.February: month.February
-month.January: month.January
-month.July: month.July
-month.June: month.June
-month.March: month.March
-month.May: month.May
-month.November: month.November
-month.October: month.October
-month.September: month.September
-move: move
-my_account: my_account
-my_agenda: my_agenda
-my_applications: my_applications
-my_contacts: my_contacts
-my_favourite_workspaces: my_favourite_workspaces
-my_notes: my_notes
-my_portfolio: my_portfolio
-my_profile: my_profile
-my_public_documents: my_public_documents
-my_resources: my_resources
-my_workspace: my_workspace
-my_workspaces: my_workspaces
-name: name
-name_required: name_required
-new: new
-new_folder_in_current_ws: new_folder_in_current_ws
-new_message: new_message
-new_message_alert: new_message_alert
-new_password: new_password
-new_role_message: new_role_message
-new_role_message_object: new_role_message_object
-'no': 'no'
-no_action_found: no_action_found
-no_activity_in_workspace: no_activity_in_workspace
-no_category: no_category
-no_contact: no_contact
-no_email: no_email
-no_filter: no_filter
-no_group: no_group
-no_home_tab: no_home_tab
-no_learning_outcomes: no_learning_outcomes
-no_message: no_message
-no_model: no_model
-no_resources_in_workspace: no_resources_in_workspace
-no_role_selected_message: no_role_selected_message
-no_search_results: no_search_results
-no_tag: no_tag
-no_user: no_user
-no_workspace: no_workspace
-non_personal_workspaces_only: non_personal_workspaces_only
-none: none
-not_allowed_message: not_allowed_message
-not_attempted: not_attempted
-not_blank_expected: not_blank_expected
-not_managed_by_claroline_repository: not_managed_by_claroline_repository
-note: note
-notification_activated: notification_activated
-notification_deactivated: notification_deactivated
-notifications: notifications
-number: number
-number_of_attempts: number_of_attempts
-number_of_attempts_explanation: number_of_attempts_explanation
-oauth: oauth
-object: object
-occurrence: occurrence
-ok: ok
-only_for_workspace_creation: only_for_workspace_creation
-open: open
-operation_done: operation_done
-options: options
-or: or
-order: order
-organize_admin_tags: organize_admin_tags
-organize_categories: organize_categories
-organize_private_tags: organize_private_tags
-others: others
-over_max_length: over_max_length
-owner: owner
-owner_s: owner_s
-parameters: parameters
-parameters_save_error: parameters_save_error
-parameters_save_success: parameters_save_success
-passed: passed
-passing_score: passing_score
-password: Password
-password_mismatch: password_mismatch
-password_ok: password_ok
-paste: paste
-path: path
-pdf_export: pdf_export
-pending: pending
-pending_users_list: pending_users_list
-permissions: permissions
-personal_data: personal_data
-personal_workspace: personal_workspace
-personal_workspace_management: personal_workspace_management
-personal_workspace_tools_management: personal_workspace_tools_management
-personal_workspaces_only: personal_workspaces_only
-phone: telefoon
-picture: picture
-picture_profile: picture_profile
-placeholder_first_name_message: placeholder_first_name_message
-placeholder_last_name_message: placeholder_last_name_message
-placeholder_mail_content_message: placeholder_mail_content_message
-placeholder_platform_mail_content_message: placeholder_platform_mail_content_message
-placeholder_platform_name_message: placeholder_platform_name_message
-platform_appearance: platform_appearance
-platform_expiration_date: platform_expiration_date
-platform_icon: platform_icon
-platform_init_date: platform_init_date
-platform_parameters: platform_parameters
-platform_plugins: platform_plugins
-platform_refresh: platform_refresh
-platform_refresh_confirm: platform_refresh_confirm
-platform_role: platform_role
-platform_widgets: platform_widgets
-please_validate_your_account: please_validate_your_account
-please_wait: please_wait
-port: port
-portal: portal
-portal_access_disabled: portal_access_disabled
-portal_configuration_updated_success: portal_configuration_updated_success
-portal_no_published_resources: portal_no_published_resources
-portal_resources_configuration: portal_resources_configuration
-portal_search: portal_search
-portal_search_total_results: portal_search_total_results
-portal_short: portal_short
-portfolio_url: portfolio_url
-position: position
-positive_number_expected: positive_number_expected
-powered_by: powered_by
-preferences: Instellingen
-preview: preview
-private: private
-profil_edition: profil_edition
-profile_management: profile_management
-profile_properties_management: profile_properties_management
-properties: properties
-property: property
-public: public
-public_profile: public_profile
-public_profile_preferences_allow_mail_sending: public_profile_preferences_allow_mail_sending
-public_profile_preferences_allow_message_sending: public_profile_preferences_allow_message_sending
-public_profile_undiscoverable: public_profile_undiscoverable
-public_profile_undiscoverable_anonymously: public_profile_undiscoverable_anonymously
-public_profile_undiscoverable_anonymously_text: public_profile_undiscoverable_anonymously_text
-public_profile_undiscoverable_text: public_profile_undiscoverable_text
-public_profile_url_tuning_only_once: public_profile_url_tuning_only_once
-public_registration: public_registration
-public_unregistration: public_unregistration
-public_url_help: public_url_help
-public_workspace_empty: public_workspace_empty
-public_workspaces: public_workspaces
-publish: publish
-publish_resource: publish_resource
-published: published
-published_to_portal: published_to_portal
-published_to_portal_message: published_to_portal_message
-put_back_permissions_after_update: put_back_permissions_after_update
-receiver: receiver
-recent_all_workspace_activities_overview: recent_all_workspace_activities_overview
-recursive_dir_action: recursive_dir_action
-redirect_after_login_option: redirect_after_login_option
-redirect_after_login_option_desktop: redirect_after_login_option_desktop
-redirect_after_login_option_last: redirect_after_login_option_last
-redirect_after_login_option_url: redirect_after_login_option_url
-redirect_after_login_option_workspace_tag: redirect_after_login_option_workspace_tag
-refresh: refresh
-refresh_explanation: refresh_explanation
-register: register
-register_to_a_public_workspace: register_to_a_public_workspace
-register_to_a_workspace: register_to_a_workspace
-registered: registered
-registered_groups: registered_groups
-registered_user_amount: registered_user_amount
-registered_users: registered_users
-registration: registration
-registration_mail_content_override: registration_mail_content_override
-registration_to_workspaces: registration_to_workspaces
-registration_validation: registration_validation
-remove: remove
-remove_contact_from_category: remove_contact_from_category
-remove_contact_from_category_confirm_message: remove_contact_from_category_confirm_message
-remove_facet: remove_facet
-remove_facet_confirm: remove_facet_confirm
-remove_field: remove_field
-remove_field_confirm: remove_field_confirm
-remove_group_confirm_message: remove_group_confirm_message
-remove_group_from_model: remove_group_from_model
-remove_group_from_model_confirm: remove_group_from_model_confirm
-remove_group_s_confirm_message: remove_group_s_confirm_message
-remove_message_confirm_message: remove_message_confirm_message
-remove_message_s_confirm_message: remove_message_s_confirm_message
-remove_model: remove_model
-remove_model_confirm: remove_model_confirm
-remove_resource_from_model: remove_resource_from_model
-remove_resource_from_model_comfirm: remove_resource_from_model_comfirm
-remove_role: remove_role
-remove_role_confirm: remove_role_confirm
-remove_subcategory: remove_subcategory
-remove_user_confirm_message: remove_user_confirm_message
-remove_user_from_model: remove_user_from_model
-remove_user_from_model_confirm: remove_user_from_model_confirm
-remove_user_s_confirm_message: remove_user_s_confirm_message
-remove_workspace_confirm: remove_workspace_confirm
-remove_workspace_from_category_confirm_message: remove_workspace_from_category_confirm_message
-remove_workspace_from_category_confirm_title: remove_workspace_from_category_confirm_title
-remove_workspace_from_selection: remove_workspace_from_selection
-remove_workspace_role_warning: remove_workspace_role_warning
-remove_workspaces_confirm: remove_workspaces_confirm
-rename: rename
-rename_category: rename_category
-rename_tool: rename_tool
-rename_widget_instance: rename_widget_instance
-repeat_password: repeat_password
-replace_first_name_display_message: replace_first_name_display_message
-'replace_last_name_display_message''': 'replace_last_name_display_message'''
-replace_password_display: replace_password_display
-replace_platform_name_display_message: replace_platform_name_display_message
-replace_username_display_message: replace_username_display_message
-requirement_failed_for_install: requirement_failed_for_install
-requirement_failed_for_update: requirement_failed_for_update
-reset: reset
-reset_password: reset_password
-reset_password_message: reset_password_message
-reset_password_txt: reset_password_txt
-reset_pwd_form_password: reset_pwd_form_password
-resetting_your_password: resetting_your_password
-resource: resource
-resource_action_denied_message: resource_action_denied_message
-resource_creation_denied: resource_creation_denied
-resource_creation_wrong_type: resource_creation_wrong_type
-resource_delete: resource_delete
-resource_limit_exceeded: resource_limit_exceeded
-resource_picker: resource_picker
-resource_type: resource_type
-resources: resources
-resources_delete: resources_delete
-resources_import: resources_import
-resources_most_downloaded: resources_most_downloaded
-resources_rights: resources_rights
-resources_rights_management: resources_rights_management
-resources_usage_list: resources_usage_list
-resources_usage_ratio: resources_usage_ratio
-restore: restore
-restore_messages_confirm_message: restore_messages_confirm_message
-results: results
-results_for_search_on: results_for_search_on
-right: right
-rights: rights
-rights_management: rights_management
-role: role
-role_creation: role_creation
-role_edition: role_edition
-role_limit_reached: role_limit_reached
-role_list: role_list
-role_name_changed_success: role_name_changed_success
-role_name_type_form_translationKey: role_name_type_form_translationKey
-roles: roles
-roles_facet_form_explanation: roles_facet_form_explanation
-roles_fields_form_explanation: roles_fields_form_explanation
-roles_management: roles_management
-save: save
-save_as_template: save_as_template
-save_workspace_as_template: save_workspace_as_template
-saved_changes: saved_changes
-score: score
-search: search
-search_group: search_group
-search_user: search_user
-search_workspace: search_workspace
-security_token: security_token
-security_token_delete_confirm_message: security_token_delete_confirm_message
-security_token_delete_confirm_title: security_token_delete_confirm_title
-security_token_list: security_token_list
-security_tokens_management: security_tokens_management
-see: see
-see_all: see_all
-see_more: see_more
-see_public_profile: see_public_profile
-select_a_filter_type: select_a_filter_type
-select_a_group: select_a_group
-select_a_role: select_a_role
-select_a_workspace: select_a_workspace
-select_all: select_all
-select_category: select_category
-select_contacts_title: select_contacts_title
-select_groups_for_registration_to_workspace: select_groups_for_registration_to_workspace
-select_roles_to_assign: select_roles_to_assign
-select_users_for_registration_to_workspace: select_users_for_registration_to_workspace
-select_users_to_add_to_your_contacts: select_users_to_add_to_your_contacts
-select_workspace_to_link: select_workspace_to_link
-select_workspaces_for_registration: select_workspaces_for_registration
-selected_users: selected_users
-selected_workspaces_for_registration: selected_workspaces_for_registration
-selected_workspaces_will_be_put_in_it: selected_workspaces_will_be_put_in_it
-self_registration: self_registration
-send: send
-send_mail: send_mail
-send_mail_at_workspace_registration: send_mail_at_workspace_registration
-send_message: send_message
-send_message_to_workspace: send_message_to_workspace
-send_message_to_workspace_info: send_message_to_workspace_info
-server: server
-session: session
-session_db_cannot_perform_operations: session_db_cannot_perform_operations
-session_db_id_col_must_be_pk: session_db_id_col_must_be_pk
-session_db_invalid_type_data_col: session_db_invalid_type_data_col
-session_db_invalid_type_id_col: session_db_invalid_type_id_col
-session_db_invalid_type_time_col: session_db_invalid_type_time_col
-session_db_no_data_col: session_db_no_data_col
-session_db_no_id_col: session_db_no_id_col
-session_db_no_table: session_db_no_table
-session_db_no_time_col: session_db_no_time_col
-session_id: session_id
-session_lifetime: session_lifetime
-settings: settings
-sharable: sharable
-share: share
-show: show
-show_actions: show_actions
-show_all_my_contacts: show_all_my_contacts
-show_all_visible_users: show_all_visible_users
-show_as: show_as
-show_as_admin: show_as_admin
-show_as_user: show_as_user
-show_help_button: show_help_button
-show_mail: show_mail
-show_name_in_top_bar: show_name_in_top_bar
-show_phone: show_phone
-show_picture: show_picture
-show_profile: show_profile
-show_profile_for_anonymous: show_profile_for_anonymous
-show_register_button_in_login_page: show_register_button_in_login_page
-show_username: show_username
-simple: simple
-size: size
-start_date: start_date
-start_maintenance: start_maintenance
-statistics: statistics
-statistics_data: statistics_data
-status: status
-steal_session: steal_session
-storage_limit_exceeded: storage_limit_exceeded
-storage_type: storage_type
-storage_used: storage_used
-subcategories: subcategories
-subscribe_groups: subscribe_groups
-subscribe_selected_groups: subscribe_selected_groups
-subscribe_selected_users: subscribe_selected_users
-subscribe_users: subscribe_users
-subscription: subscription
-success_rate: success_rate
-successfull_workspace_creation: successfull_workspace_creation
-support_email: support_email
-switch: switch
-tab: tab
-tabs: tabs
-tag: tag
-tag_children_list: tag_children_list
-tag_potential_children_list: tag_potential_children_list
-tags_add_remove_children_to: tags_add_remove_children_to
-tags_hierarchy: tags_hierarchy
-tags_list: tags_list
-tags_management: tags_management
-tags_organization: tags_organization
-teacher: teacher
-technical: technical
-technical_data: technical_data
-term_of_service: term_of_service
-term_of_service_activation_message: term_of_service_activation_message
-terms_enabled_but_empty: terms_enabled_but_empty
-terms_of_service_acceptance: terms_of_service_acceptance
-test_repository_activated: test_repository_activated
-text: text
-the_following_users_were_not_imported: the_following_users_were_not_imported
-the_workspace: the_workspace
-theme: theme
-this_page_requires_authentication: this_page_requires_authentication
-this_resource_is_not_published: this_resource_is_not_published
-time_col: time_col
-tinymce_all_buttons: tinymce_all_buttons
-tips: tips
-title: title
-to: to
-to_anonymous: to_anonymous
-to_everyone: to_everyone
-to_message: to_message
-to_platform_users: to_platform_users
-to_publish: to_publish
-to_workspace_members: to_workspace_members
-today: today
-token: token
-tool: tool
-tool_admin_disabled: tool_admin_disabled
-tool_can_be_edited: tool_can_be_edited
-tool_cannot_be_edited: tool_cannot_be_edited
-tool_is_not_visible_and_cannot_be_opened: tool_is_not_visible_and_cannot_be_opened
-tool_is_visible_and_can_be_opened: tool_is_visible_and_can_be_opened
-tool_parameters: tool_parameters
-tool_roles_create_directory: tool_roles_create_directory
-tools: tools
-tools_rights_configuration: tools_rights_configuration
-top: top
-top_extension: top_extension
-top_media_views: top_media_views
-top_resources_downloads: top_resources_downloads
-top_resources_views: top_resources_views
-top_users_connections: top_users_connections
-top_users_workspaces_enrolled: top_users_workspaces_enrolled
-top_users_workspaces_owners: top_users_workspaces_owners
-top_workspaces_connections: top_workspaces_connections
-top_workspaces_resources: top_workspaces_resources
-total: total
-total_time: total_time
-traffic: traffic
-transport: transport
-trash: trash
-tune: tune
-tune_public_url_error: tune_public_url_error
-tune_public_url_success: tune_public_url_success
-tune_your_public_profile: tune_your_public_profile
-tune_your_public_profile_url: tune_your_public_profile_url
-type: type
-type_s: type_s
-unable_to_start_gmail: unable_to_start_gmail
-unable_to_start_sendmail: unable_to_start_sendmail
-unable_to_start_smtp: unable_to_start_smtp
-unable_to_start_transport: unable_to_start_transport
-unauthorized: unauthorized
-unavailable_platform: unavailable_platform
-unavailable_role: unavailable_role
-uncompress_file: uncompress_file
-under_min_length: under_min_length
-unique_connections: unique_connections
-unknown: unknown
-unpublish: unpublish
-unpublished: unpublished
-unregister: unregister
-unregister_from_a_workspace: unregister_from_a_workspace
-unregister_group_confirm_message: unregister_group_confirm_message
-unregister_group_s_confirm_message: unregister_group_s_confirm_message
-unregister_user_confirm_message: unregister_user_confirm_message
-unregister_user_s_confirm_message: unregister_user_s_confirm_message
-unregistered: unregistered
-unregistered_groups: unregistered_groups
-unregistered_users: unregistered_users
-unwritable_file_exception: unwritable_file_exception
-up: up
-up_to_date: up_to_date
-update: update
-update_available: update_available
-update_impossible: update_impossible
-updated_by: updated_by
-upgrade: upgrade
-upload: upload
-upload_denied: upload_denied
-upload_fail: upload_fail
-upload_file: upload_file
-url_invalid: url_invalid
-use_stable_repo: use_stable_repo
-use_test_repo: use_test_repo
-user: user
-user_accounts: user_accounts
-user_creation: user_creation
-user_creation_success: user_creation_success
-user_info: user_info
-user_limit_reached: user_limit_reached
-user_limit_success_update: user_limit_success_update
-user_limit_too_low: user_limit_too_low
-user_menu: user_menu
-user_menu_configuration: user_menu_configuration
-user_options_form_desktopBackgroundColor: user_options_form_desktopBackgroundColor
-user_parameters: user_parameters
-user_picker: user_picker
-user_profile: user_profile
-user_public_profile_not_visible: user_public_profile_not_visible
-user_removed: user_removed
-user_selector: user_selector
-user_visit: user_visit
-username: Gebruikersnaam
-username_and_email_from_two_different_users: username_and_email_from_two_different_users
-username_found_at: username_found_at
-username_or_email: username_or_email
-users: users
-users_cannot_be_registered_to_group: users_cannot_be_registered_to_group
-users_connected_once: users_connected_once
-users_from_group_registration: users_from_group_registration
-users_import: users_import
-users_list: users_list
-users_management: users_management
-users_minimum_requirement_msg: users_minimum_requirement_msg
-users_per_page: users_per_page
-users_registration_in_workspace: users_registration_in_workspace
-users_visits: users_visits
-validate: validate
-validation: validation
-variable_available_message: variable_available_message
-verification: verification
-view: view
-view_category_hierarchy: view_category_hierarchy
-views: views
-visibility: visibility
-visible: visible
-visible_facet_form_explanation: visible_facet_form_explanation
-visitor: visitor
-warning_user_impersonation: warning_user_impersonation
-warning_workspace_impersonation: warning_workspace_impersonation
-warnings: warnings
-widget: widget
-widget_configuration: widget_configuration
-widget_home_tab_delete_confirm_message: widget_home_tab_delete_confirm_message
-widget_home_tab_delete_confirm_title: widget_home_tab_delete_confirm_title
-widget_settings: widget_settings
-widget_visible_actions: widget_visible_actions
-widget_workspace_pick: widget_workspace_pick
-widgets: widgets
-widgets_configuration: widgets_configuration
-with_role: with_role
-with_tutor: with_tutor
-workspace: workspace
-workspace.create: workspace.create
-workspace.name_not_blank: workspace.name_not_blank
-workspace_activity_overview: workspace_activity_overview
-workspace_administration: workspace_administration
-workspace_classification: workspace_classification
-workspace_code_invalid: workspace_code_invalid
-workspace_creator: workspace_creator
-workspace_delete: workspace_delete
-workspace_delete_confirm_message: workspace_delete_confirm_message
-workspace_delete_confirm_title: workspace_delete_confirm_title
-workspace_delete_success_message: workspace_delete_success_message
-workspace_home_tab_creation: workspace_home_tab_creation
-workspace_home_tab_edition: workspace_home_tab_edition
-workspace_home_tabs: workspace_home_tabs
-workspace_import: workspace_import
-workspace_list: workspace_list
-workspace_management: workspace_management
-workspace_management_date_null: workspace_management_date_null
-workspace_max_users: workspace_max_users
-workspace_model_invalid: workspace_model_invalid
-workspace_order_tool_edit_form_name: workspace_order_tool_edit_form_name
-workspace_queue_cancel_confirm_message: workspace_queue_cancel_confirm_message
-workspace_queue_cancel_confirm_title: workspace_queue_cancel_confirm_title
-workspace_registration_confirm_title: workspace_registration_confirm_title
-workspace_registration_message: workspace_registration_message
-workspace_registration_message_object: workspace_registration_message_object
-workspace_remove_from_category_confirm_message: workspace_remove_from_category_confirm_message
-workspace_remove_from_category_confirm_title: workspace_remove_from_category_confirm_title
-workspace_resource: workspace_resource
-workspace_role_type_form_requireDir: workspace_role_type_form_requireDir
-workspace_role_type_form_translationKey: workspace_role_type_form_translationKey
-workspace_tag_form_name: workspace_tag_form_name
-workspace_tag_remove_confirm_message: workspace_tag_remove_confirm_message
-workspace_tag_remove_confirm_title: workspace_tag_remove_confirm_title
-workspace_template_form_name: workspace_template_form_name
-workspace_tools: workspace_tools
-workspace_unregistration_confirm_title: workspace_unregistration_confirm_title
-workspace_user_invalid: workspace_user_invalid
-workspace_welcome: workspace_welcome
-workspaces: workspaces
-workspaces_included_in_category: workspaces_included_in_category
-workspaces_management: workspaces_management
-workspaces_per_page: workspaces_per_page
-wrong_captcha: wrong_captcha
-ws_creator: ws_creator
-ws_most_viewed: ws_most_viewed
-'yes': 'yes'
-yesterday_activity: yesterday_activity
-your_current_url: your_current_url
-your_profile_is_n_complete: your_profile_is_n_complete
-your_username: your_username
-your_workspace_activity_overview: your_workspace_activity_overview
-404: 404
+last_30_days_activity: Activiteiten van de laatste 30 dagen
+last_action: '{1} Laatste actie|[1,Inf] %logAmount% laatste acties'
+last_attempt_date: Datum van de laatste poging
+last_manager_error_message: U bent niet toegelaten alle beheerders in te trekken.
+last_modification: Dernière modification
+last_name: Naam
+layout: Uiterlijk
+learning_outcomes: Competentieframework
+learning_outcomes_creation: Een competentieframework maken
+learning_place: Leerplaats
+learning_profil: Leerprofiel
+leave_this_page: Als u deze pagina verlaat, loopt u het risico om uw veranderingen te verliezen.
+left: Links
+license: Licentie
+limit: Limite
+line_number: Regel %line%:
+line_per_page: Resultaten per pagina
+link: Lien
+link_outdated: De link is niet meer geldig.
+link_workspace: Een werkruimte koppelen
+links: Liens
+list_groups: Lijst van de groepen
+list_users: Lijst van de gebruikers
+list_view: Lijstweergave
+list_workspaces: Alle werkruimten
+lock: Vergrendelen
+locked: Vergrendeld
+login: Connectie
+login_failure: De verbinding is mislukt. Kijk na of uw gebruikersnaam en uw wachtwoord correct zijn.
+logout: Zich uitloggen
+logs: Toezicht
+logs_error_location: In geval van een fout, de logs bevinden zich in het dossier app/log/update-xxx.log.
+mail: E-mail
+mail_click: Klik op deze link om uw wachtwoord opnieuw in te stellen
+mail_config_problem: Gelieve contact op te nemen met de sitebeheerder om uw wachtwoord te resetten.
+mail_invalid: Het formaat van uw e-mail is niet geldig.
+mail_layout: Indeling van e-mails
+mail_layout_message_override: U kunt de indeling definiëren van de door het platform gestuurde e-mails.
+mail_login: Klik op de link
+mail_message: U hebt de reset van uw wachtwoord gevraagd. Als u niet aan de oorsprong van deze actie bent, gelieve dit bericht te negeren.
+mail_not_available: De functie om e-mails te sturen is niet beschikbaar.
+mail_not_exist: Deze e-mail bestaat niet.
+mail_sent: We hebben u pas een e-mail gezonden. Controleer uw "spams" indien deze niet zou verschijnen in uw mailbox.
+maintenance: Maintenance
+maintenance_message_edit_success: Le message de maintenance a bien été modifié
+maintenance_mode_enabled: De onderhoudsmodus is geactiveerd.
+maintenance_mode_message: De toegang tot het platform is gedeactivverd voor de gebruikers. U kunt die opnieuw activeren in de onderhoudssectie van de instelligen van de administratie.
+make_my_public_profil_visible: Mijn openbaar profiel zichtbaar maken
+make_public_profile_visible_to_everybody: aan <strong>iedereen</strong>
+make_public_profile_visible_to_nobody: aan <strong>niemand</strong>
+make_public_profile_visible_to_platform_user: aan <strong>de gebruikers van het platform</strong>
+manage_public_profile_preferences: De voorkeuren van het openbaar profiel beheren.
+manage_rights: De rechten beheren
+manage_tools: De hulpmiddelen beheren
+manager: Gestionnaire
+manual: Manuelle
+manual_evaluation_explanation: Manuele evaluatie door een beheerder van de werkruimte
+max_amount_resources: Maximum aantal leermiddelen
+max_attempts: Aantal toegelaten pogingen
+max_second_duration: Maximum toegekende tijd (in seconden)
+max_size_is: De maximumgrootte is %size%
+max_storage_size: Maximum opslagruimte
+media_most_viewed: De meest geraadpleegde media
+menu_bar: Menubalk
+menu_bar_configuration: De menubalk instellen
+message: Boodschap
+message_form_content: Inhoud
+message_form_object: Objet
+message_form_to: A
+messages: Boodschappen
+messages_confirm_delete: Bent u er zeker van dat u dit/deze bericht(en) wenst te verwijderen ?
+messages_confirm_permanent_delete: Bent u er zeker van dat u dit/deze bericht(en) definitief wenst te verwijderen ?
+messages_confirm_restore: Bent u er zeker van dat u dit/deze bericht(en) wenst te herstellen?
+messages_received: Ontvangen berichten
+messages_received_removed: Verwijderde ontvangen berichten
+messages_removed: Verwijderde berichten
+messages_sent: Gestuurde berichten
+messages_sent_removed: Verwijderde gestuurde berichten
+meta_tag_paste: Plak hier de door Google Webmaster geleverde meta-tag.
+method_of_work: Werkmethoden
+misc: Divers
+missing_%content%: De variabele %content% ontbreekt voor "%language%".
+missing_%password%: De variabele %password% ontbreekt voor "%language%".
+missing_%username%: De variabele %username% ontbreekt voor "%language%".
+mixed: Gemengd
+mode: Modus
+model: Model
+models: Modellen
+month.April: April
+month.August: Augustus
+month.December: December
+month.February: Februari
+month.January: Januari
+month.July: Juli
+month.June: Juni
+month.March: Maart
+month.May: Mei
+month.November: November
+month.October: October
+month.September: September
+move: Déplacer
+my_account: Mijn rekening
+my_agenda: Mijn agenda
+my_applications: Mijn pakketten
+my_contacts: Mijn contactpersonen
+my_favourite_workspaces: Mijn favoriete werkruimten
+my_notes: Mijn cijfers
+my_portfolio: Mijn portfolio
+my_profile: Mijn profiel
+my_public_documents: Mijn openbare documenten
+my_resources: Mijn ressources
+my_workspace: Persoonlijke ruimte
+my_workspaces: Mijn werkruimten
+name: Naam
+name_required: De naam is vereist
+new: Nieuw
+new_folder_in_current_ws: Nieuwe directory in de huidige werkruimte
+new_message: Nieuw bericht
+new_message_alert: U hebt %count% nieuwe berichten.
+new_password: Nieuw wachtwoord
+new_role_message: U bent pas de rol %name% toegewezen.
+new_role_message_object: Uw toegangsrechten op het platform zijn gewijzigd.
+next: Volgende
+'no': Nee
+no_action_found: Geen actie gevonden.
+no_activity_in_workspace: Deze werkruimte bevat geen activiteit.
+no_category: Er zijn geen categorieën.
+no_contact: Geen contactpersoon
+no_email: Deze e-mail komt niet overeen met een ingeschreven gebruiker.
+no_filter: Geen filter
+no_group: Geen groep
+no_home_tab: Er is geen tab.
+no_learning_outcomes: Geen competentieframework.
+no_message: Geen bericht.
+no_model: Geen model.
+no_resources_in_workspace: Deze ruimte bevat momenteel geen leermiddel.
+no_role_selected_message: Geen geselecteerde rol
+no_search_results: Uw zoekopdracht heeft geen resultaat gegeven.
+no_tag: Er is geen tag.
+no_user: Geen gebruiker.
+no_workspace: Er is geen werkruimte.
+non_personal_workspaces_only: Alleen de persoonlijke ruimten.
+none: Nul
+not_allowed_message: U bent niet toegelaten deze actie uit te voeren.
+not_attempted: Niet gepoogd
+not_blank_expected: Deze waarde mag niet leeg zijn.
+not_managed_by_claroline_repository: De staat is niet beschikbaar.
+note: Note
+notification_activated: De notities zijn geactiveerd.
+notification_deactivated: De notities zijn niet geactiveerd.
+notifications: Notities
+number: Aantal
+number_of_attempts: Aantal pogingen
+number_of_attempts_explanation: De mening van het aantal pogingen kan varieëren naar gelang van de activiteit. Het is niet noodzakelijk om het aantal keren dat de activiteit is uitgevoerd.
+oauth: Oauth
+oauth_client_list: Lijst van de Oauth-klanten
+object: Object
+occurrence: Aantal keren
+ok: Ok
+only_for_workspace_creation: Alleen voor het maken van een werkruimte
+open: Open
+open_resource_when_opening_ws: Een leermiddel openen bij het openen van de werkruimte.
+operation_done: De operatie is uitgevoerd.
+options: Options
+or: Ou
+order: Ordre
+organize_admin_tags: De tags van de sitebeheerder organiseren
+organize_categories: De categorieën organiseren
+organize_private_tags: De persoonlijke tags organiseren
+others: Andere
+over_max_length: Deze waarde is te lang.
+owner: Eigenaar
+owner_s: Eigenaar(s)
+parameters: Instellingen
+parameters_save_error: Er is een fout opgetreden tijdens het opslaan van de instellingen.
+parameters_save_success: Instellingen met succes opgeslagen.
+passed: Geslaagd
+passing_score: Score om te slagen
+password: Wachtwoord
+password_mismatch: De wachtwoorden komen niet overeen.
+password_ok: Uw wachtwoord is gewijzigd. U kunt zich nu inloggen.
+paste: Coller
+path: Emplacement
+pdf_export: PDF uitvoer
+pending: In wacht
+pending_friends: Vrienden in wacht
+pending_users_list: Lijst van de gebruikers in wacht
+permissions: Toelatingen
+personal_data: Geen persoonlijke gegevens worden gebruikt. De technische en statistische gegevens worden enkel gebruikt in verband met het Claroline Connect project en zullen niet op een andere manier verspreid worden.
+personal_workspace: Persoonlijke ruimte
+personal_workspace_management: De persoonlijke ruimte beheren
+personal_workspace_tools_management: De hulpmiddelen van de persoonlijke ruimte beheren
+personal_workspaces_only: Alleen de persoonlijke ruimten
+phone: Telefoon
+picture: Profielfoto
+picture_profile: Profielfoto
+placeholder_first_name_message: Deze fictieve instelling is optioneel en wordt vervangen door de voornaam van de auteur.
+placeholder_last_name_message: Deze fictieve instelling is optioneel en wordt vervangen door de naam van de auteur.
+placeholder_mail_content_message: Deze fictieve instelling is vereist en wordt vervangen door de inhoud van de e-mail.
+placeholder_platform_mail_content_message: Deze variabele is vereist en wordt vervangen door de inhoud van de e-mail.
+placeholder_platform_name_message: Deze fictieve instelling is optioneel en wordt vervangen door de naam van het platform
+platform_appearance: Uiterlijk van het platform
+platform_expiration_date: Vervaldatum van het platform
+platform_icon: Iconen van het platform
+platform_init_date: Activeringsdatum van het platform'
+platform_parameters: Instellingen van het platform
+platform_plugins: Plugins van het platform
+platform_refresh: De bestanden van het platform vernieuwen
+platform_refresh_confirm: Bent u er zeker van dat u de bestanden van het platform wenst te vernieuwen ?
+platform_role: Rollen voor het platform
+platform_widgets: Widgets van het platform
+please_validate_your_account: Een e-mail is naar u verzonden om uw rekening te activeren.
+please_wait: Even geduld...
+port: Port
+portal: Portail de ressources
+portal_access_disabled: L'accès au portail est bloqué car aucune des ses options est activée.
+portal_configuration_updated_success: La configuration du portail de ressources a été modifiée avec succès
+portal_no_published_resources: Il paraît qu'il n'y a pas de ressources publiées sur le portail
+portal_resources_configuration: Choisissez les ressources à faire apparaître dans le portail
+portal_search: Rechercher les ressources en libre accès
+portal_search_total_results: %totalItems% resultaten in %type%'' [gesorteerd op basis van relevantie]
+portal_short: Portail
+portfolio_url: Url voor de toegang tot de portfolio
+position: Position
+positive_number_expected: Deze waarde moet een positief getal zijn.
+powered_by: Ontwikkeld door
+preferences: Voorkeuren
+preview: Overzicht
+previous: Vorige
+private: Privé
+profil_edition: Het gebruikersprofiel bewerken
+profile_management: Het profiel beheren
+profile_properties_management: De profieleigenschappen beheren
+properties: Propriétés
+property: Propriété
+public: Public
+public_profile: Openbaar profiel
+public_profile_preferences_allow_mail_sending: Verzenden van een e-mail
+public_profile_preferences_allow_message_sending: Verzenden van een bericht
+public_profile_undiscoverable: Onvindbaar profiel
+public_profile_undiscoverable_anonymously: U moet ingelogd zijn om toegang te krijgen tot uw profiel.
+public_profile_undiscoverable_anonymously_text: U moet <a href="%loginUrl%" title="Connexion">ingelogd</a> zijn om toegang te krijgen tot uw profiel <strong>%publicUrl%</strong>.
+public_profile_undiscoverable_text: We hebben geen overeenkomstig profiel gevonden voor <strong>%publicUrl%</strong>.
+public_profile_url_tuning_only_once: U kunt de URL van uw openbaar profiel alléén één keer personaliseren.
+public_registration: Openbare inschrijving
+public_unregistration: Openbare uitschrijving
+public_url_help: Opmerking : Uw gepersonnaliseerde URL moet maximum 30 letters of cijfers bevatten. Gebruik geen spaties, tekens of speciale tekens.
+public_workspace_empty: Er is geen openbare werkruimte.
+public_workspaces: Openbare werkruimten
+publish: Gepubliceerd
+publish_resource: De leermiddel publiceren
+published: Gepubliceerd
+published_to_portal: Gepubliceerd op het portaal van de leermiddelen
+published_to_portal_message: Met deze optie krijgen alle onbekenden toegang tot de leermiddel. U zal de rechten voor de onbekenden moeten verwijderen om de toegang opnieuw te beperken.
+put_back_permissions_after_update: Vergeet niet de oorspronkelijke toegangsrechten na de update te herstellen.
+receiver: Geadresseerde(n)
+recent_all_workspace_activities_overview: Overzicht van al de recente activiteiten van %workspaceName%
+recursive_dir_action: Toepassen op de inhoud van de directory en de subdirectories
+redirect_after_login_option: Doorstuur na login
+redirect_after_login_option_desktop: Bureaublad
+redirect_after_login_option_last: Laatste actieve pagina
+redirect_after_login_option_url: URL
+redirect_after_login_option_workspace_tag: Naar de werkruimte met de tag :
+redirect_uri: Doorstuur URL
+refresh: Vernieuwen
+refresh_explanation: Sommige problemen kunnen voorkomen omwille van javascript- en css-bestanden die niet correct gegenereerd zijn.</br>\Klik op \"Vernieuwen\"nom het probleem proberen op te lossen.</br>\n Om meer kansen te hebben kunt u ook proberen het app/cache bestand van het platform manueel te legen alvorens de operatie te voeren.\n
+register: Inschrijven
+register_to_a_public_workspace: Inschrijving aan een openbare werkruimte
+register_to_a_workspace: Mij inschrijven aan een ruimte
+registered: Ingeschreven
+registered_groups: Ingescreven groepen
+registered_user_amount: Aantal ingeschreven personen
+registered_users: Ingeschreven gebruikers
+registration: Inschrijving
+registration_mail_content_override: U kunt hier de inhoud van de e-mail bij het inschrijven herdefiniëren.
+registration_to_workspaces: Inschrijving aan werkruimten
+registration_validation: Validatie van de inschrijving
+remove: Verwijderen
+remove_contact_from_category: De contactpersson van de categorie verwijderen
+remove_contact_from_category_confirm_message: Bent u er zeker van dat u deze contctpersson van deze categorie wenst te verwijderen ?
+remove_facet: Een facet verwijderen
+remove_facet_confirm: Bent u er zeker van dat u de facet %name% wenst te verwijderen ?
+remove_field: Een veld verwijderen
+remove_field_confirm: Bent u er zeker van dat u het veld  wenst te verwijderen ?
+remove_group_confirm_message: Bent u er zeker van dat u d%name%eze groep wenst te verwijderen ?
+remove_group_from_model: Een groep verwijderen
+remove_group_from_model_confirm: Bent u er zeker van dat u de groep %groupe% wenst te verwijderen ?
+remove_group_s_confirm_message: Bent u er zeker van dat u %count% groepen wenst te verwijderen ?
+remove_message_confirm_message: Bent u er zeker van dat u dit bericht wenst te verwijderen ?
+remove_message_s_confirm_message: Bent u er zeker van dat u deze %count% berichten wenst te verwijderen ?
+remove_model: Een model verwijderen
+remove_model_confirm: Bent u er zeker van dat u het model %name% wenst te verwijderen ?
+remove_resource_from_model: Een leermiddel van het model verwijderen
+remove_resource_from_model_comfirm: Bent u er zeker van dat u deze leermiddel wenst te verwijderen ?
+remove_role: Een rol verwijderen
+remove_role_confirm: Bent u er zeker van dat u de rol %name% wenst te verwijderen ?
+remove_subcategory: De sub-categorie verwijderen
+remove_user_confirm_message: Bent u er zeker van dat u deze gebruiker wenst te verwijderen ?
+remove_user_from_model: Een gebruiker verwijderen
+remove_user_from_model_confirm: Bent u er zeker van dat u de gebruiker %name% wenst te verwijderen ?
+remove_user_s_confirm_message: Bent u er zeker van dat u deze %count% gebruikers wenst te verwijderen ?
+remove_workspace_confirm: Bent u er zeker van dat u deze werkruimte wenst te verwijderen ?
+remove_workspace_from_category_confirm_message: Bent u er zeker van dat u deze werkruimte van deze categorie wenst te verwijderen ?
+remove_workspace_from_category_confirm_title: Een werkruimte van een categorie verwijderen
+remove_workspace_from_selection: Een werkruimte van de selectie verwijderen
+remove_workspace_role_warning: Bent u er zeker van dat u deze rol wenst te verwijderen ? Indien deze rol gekoppeld is met gebruikers, zullen deze hun toegangsrechten voor deze rol verliezen.
+remove_workspaces_confirm: Bent u er zeker van dat u deze %count% werkruimten wenst te verwijderen ?
+rename: Hernoemen
+rename_category: De categorie hernoemen
+rename_tool: Een hulpmiddel hernoemen
+rename_widget_instance: Een widget hernoemen
+repeat_password: Herhaal het wachtwoord
+replace_first_name_display_message: die de voornaam van de gebruiker zal tonen
+'replace_last_name_display_message''': die de naam van de gebruiker zal tonen
+replace_password_display: die het wachtwoord van de gebruiker zal tonen
+replace_platform_name_display_message: die vervangen zal worden door de naam van het uw platform
+replace_username_display_message: die de naam van de gebruiker zal tonen
+requirement_failed_for_install: Prérequis non remplis pour l'installation
+requirement_failed_for_update: Prérequis non remplis pour la mise à jour
+reset: resetten
+reset_password: Het wachtwoord resetten
+reset_password_message: Bent u er zeker van dat u het wachtwoord wenst te resetten ?
+reset_password_txt: U hebt de reset van uw wachtwoord gevraagd. Als u niet aan de oorsprong van deze actie bent, gelieve dit bericht te negeren.
+reset_pwd_form_password: Uw huidig wachtwoord
+resetting_your_password: Reset van uw wachtwoord
+resource: Hulpmiddel
+resource_action_denied_message: De actie %action% kon niet uitgevoerd worden voor de leermiddel ''%path%'': toegang geweigerd.
+resource_creation_denied: U bent niet toegelaten een leermiddel in de directory ''%path%'' te maken: toegang geweigerd.
+resource_creation_wrong_type: U bent niet toegelaten een %type% in de directory ''%path%'' te maken: toegang geweigerd.
+resource_delete: Bent u er zeker van dat u deze leermiddel wenst te verwijderen ?
+resource_limit_exceeded: De limiet (%max%) voor de leermiddelen is overschreden. U hebt %current% leermiddelen gemaakt.
+resource_picker: Leermiddelen kiezen
+resource_to_open: Leermiddel te openen
+resource_type: Type van leermiddel
+resources: Hulpmiddelen
+resources_delete: Bent u er zeker van dat u deze leermiddelen wenst te verwijderen ?
+resources_import: Leermiddelen invoeren
+resources_most_downloaded: De meest gedownloade leermiddelen
+resources_rights: Rechten op de leermiddelen
+resources_rights_management: De rechten van de leermiddelen beheren
+resources_usage_list: Lijst van de besteding van de leermiddelen
+resources_usage_ratio: Bestedingspercentage van de leermiddelen
+restore: Herstellen
+restore_messages_confirm_message: hersteld(e) bericht(en)
+results: Resultaten
+results_for_search_on: Resultaten van de zoekopdracht op
+right: Recht
+rights: Rechten
+rights_management: De rechten beheren
+role: Rol
+role_creation: Een rol maken
+role_edition: Een rol bewerken
+role_limit_reached: De limiet voor de gebruiker van het type %translationKey% is bereikt.
+role_list: Lijst van de rollen
+role_name_changed_success: De naam van de rol is met succes bewerkt.
+role_name_type_form_translationKey: Naam
+roles: Rollen
+roles_facet_form_explanation: Met dit formulier kunt u aangeven welke rollen de facet in het openbaar profiel van de gebruiker mogen zien.
+roles_fields_form_explanation: Met dit formulier kunt u aangeven welke rollen het veld in het openbaar profiel van de gebruiker mogen zien en bewerken.
+roles_management: De rollen beheren
+save: Opslaan
+save_as_template: Uitvoeren
+save_workspace_as_template: De werkruimte als model opslaan.
+saved_changes: Uw wijzigingen zij opgeslagen
+score: Score
+search: Zoeken
+search_group: Een groep zoeken
+search_user: Een gebruiker zoeken
+search_workspace: Een werkruimte zoeken
+security_token: Authenticatietoken
+security_token_delete_confirm_message: Bent u er zeker van dat u dit authenticatietoken wenst te verwijderen ?
+security_token_delete_confirm_title: Het authenticatietoken verwijderen
+security_token_list: Lijst van de authenticatietokens
+security_tokens_management: De authenticatietokens behren
+see: Voir
+see_all: Allen zien
+see_more: Meer zien
+see_public_profile: Zie mijn openbaar profiel
+select_a_filter_type: Kies een filtertype
+select_a_group: Kies een groep
+select_a_role: Kies een  rol
+select_a_template: Kies een  model
+select_a_workspace: Kies een  werkruimte
+select_all: Alles kiezen
+select_category: Een categorie liezen
+select_contacts_title: De geadesseerden kiezen
+select_groups_for_registration_to_workspace: Kies de in te schrijven groepen
+select_roles_to_assign: kies de toe te wijzen rollen
+select_users_for_registration_to_workspace: Kies de in te schrijven gebruikers
+select_users_to_add_to_your_contacts: Kies de gebruikers aan uw contactpersonen toe te voegen.
+select_workspace_to_link: Kies een te koppelen werkruimte.
+select_workspaces_for_registration: Kies de werkruimten voor de inschrijving.
+selected_users: Gekozen gebruikers
+selected_workspaces_for_registration: Werkruimten geselecteerd voor de inschrijving
+selected_workspaces_will_be_put_in_it: De geselecteerde werkruimten zullen er beschikbaar zijn.
+self_registration: Zelfinschrijving
+send: Sturen
+send_mail: Een e-mail sturen
+send_mail_at_workspace_registration: Een e-mail sturen bij het inschrijven van een gebruiker aan een werkruimte.
+send_message: Een bericht sturen
+send_message_to_workspace: Een bericht sturen
+send_message_to_workspace_info: Deze lijst hervat de werkruimten die u beheert.
+server: Server
+session: Sessie
+session_db_cannot_perform_operations: Het schrijven en/of het lezen van gegevens in de aangemelde tabel renseignée is onmogelijk. Gelieve na te kijken of de gebruiker over voldoende rechten beschikt en dat geen bijzondere beperking is toegewezen aan deze tabel.
+session_db_id_col_must_be_pk: De kolom met de ID's (en alleen deze kolom) moet de primaire sleutel van deze tabel zijn.
+session_db_invalid_type_data_col: De kolom met de gegevens moet van het type "text" zijn (bv. "LONGTEXT").
+session_db_invalid_type_id_col: De kolom met de ID's moet van het type "string" zijn (bv. "VARCHAR").
+session_db_invalid_type_time_col: De kolom met de duren moet van het type "integer" zijn (bv. "INT").
+session_db_no_data_col: De kolom met de ID's bestaat niet.
+session_db_no_id_col: La colonne des identifiants n'existe pas.
+session_db_no_table: De aangemelde tabel bestaat niet.
+session_db_no_time_col: De kolom met de duren bestaat niet.
+session_id: Sessie ID
+session_lifetime: Duur van de sessie
+settings: Instellingen
+sharable: Deelbaar
+share: Delen
+show: Tonen
+show_actions: De acties tonen
+show_all_my_contacts: Al mijn contactpersonen tonen
+show_all_visible_users: Alle zichtbare gebruikers tonen
+show_as: Zich inloggen als
+show_as_admin: Zich inloggen als admin
+show_as_user: Zich inloggen als gebruiker
+show_help_button: De hulpknop tonen
+show_mail: De e-mail tonen
+show_name_in_top_bar: De naam van het platform in de bovenbalk tonen
+show_phone: Het telefoonnummer tonen
+show_picture: De foto tonen
+show_profile: Het profiel zien
+show_profile_for_anonymous: Openbaar profiel zichtbaar door onbekenden
+show_register_button_in_login_page: De inschrijvingsknop op de connectiepagina tonen.
+show_username: De gebruikersnaam tonen
+simple: Simpel
+size: Grootte
+start_date: Begindatum
+start_maintenance: De onderhoudsmodus activeren
+statistics: Statistieken
+statistics_data: aantal ruimten, aantal gebruikers
+status: Statut
+steal_session: De sessie stelen
+storage_limit_exceeded: U hebt een onvoldoende opslagruimte (%storageLeft%) in uw werkruimte. De grootte van uw bestand is de volgende: %fileSize%.
+storage_type: Opslagtype
+storage_used: Gebruikte opslagruimte
+subcategories: Subcategorieën
+subscribe_groups: Groepen inschrijven
+subscribe_selected_groups: De geselecteerde groepen inschrijven
+subscribe_selected_users: De geselecteerde gebruikers inschrijven
+subscribe_users: Gebruikers inschrijven
+subscription: Inschrijving
+success_rate: Slagingspercentage
+successfull_workspace_creation: De werkruimte %name% is met succes gemaakt.
+support_email: Support e-mail
+switch: Echanger
+tab: Onglet
+tabs: Onglets
+tag: Tag
+tag_children_list: Lijst van de kinderen
+tag_potential_children_list: Lijst van de potentiële kinderen
+tags_add_remove_children_to: Kinderen van de tag toevoegen/intrekken
+tags_hierarchy: Hiërarchie van de tags
+tags_list: Lijst van de tags
+tags_management: De tags beheren
+tags_organization: De tags organiseren
+teacher: Leraar
+technical: Techniques
+technical_data: URL, versie, hoofdtaal, IP en support e-mail
+term_of_service: Gebruiksvoorwaarden
+term_of_service_activation_message: Activeer de gebruiksvoorwaarden op het platform.
+terms_enabled_but_empty: De gebruiksvoorwaarden kunnen alleen geactiveerd worden als de tekst ervan tenminste in één taal gegeven wordt.
+terms_of_service_acceptance: Ik aanvaard de gebruiksvoorwaarden.
+test_repository_activated: De testpakketten zijn geactiveerd
+text: Tekst
+text_title_color: Kleur van de tekst in de titel
+the_following_users_were_not_imported: De volgende gebruikers kunnen niet ingevoerd worden :
+the_workspace: De werkruimte
+theme: Thema
+this_page_requires_authentication: Deze pagina vereist een authenticatie. U moet zich identificeren.
+this_resource_is_not_published: Deze leermiddel is niet gepubliceerd
+time_col: Kolom van de duren
+tinymce_all_buttons: Alle hulpmiddelen
+tips: Tips
+title: Titel
+to: Tot
+to_anonymous: aan de onbekende gebruikers
+to_everyone: aan iedereen
+to_message: Aan
+to_platform_users: aan de leden van het platformgit
+to_publish: Publiceren
+to_workspace_members: aan de leden van deze werkruimte
+today: Vandaag
+token: Token
+tool: Hulpmidden
+tool_admin_disabled: De sitebeheerder van het platform heeft de hulpmiddel gedeactiveerd.
+tool_can_be_edited: De hulpmiddel mag bewerkt worden.
+tool_cannot_be_edited: De hulpmiddel mag niet bewerkt worden.
+tool_is_not_visible_and_cannot_be_opened: De hulpmiddel is niet zichtbaar en mag niet geopend worden.
+tool_is_visible_and_can_be_opened: De hulpmiddel is zichtbaar en mag geopend worden.
+tool_parameters: Instellingen hulpmiddelen
+tool_roles_create_directory: Met de optie "Een directory maken" kunt u automatisch een directory maken die gewijd is aan de gebruikers van deze groep.
+tools: Werktuigen
+tools_rights_configuration: De rechten instellen op de hulpmiddelen
+top: Top
+top_extension: Top van de uitbreidingen (media), per aantal bestanden.
+top_media_views: Top van de meest geraadpleegde media.
+top_resources_downloads: Top van de meest gedownloade leermiddelen.
+top_resources_views: Top van de meest geraadpleegde leermiddelen.
+top_users_connections: Top van de gebruikers die zich het meest ingelogd zijn.
+top_users_workspaces_enrolled: Top van de gebruikers die in het grootste aantal modulen ingeschreven zijn.
+top_users_workspaces_owners: Top van de gebruikers die het grrotste aantal modulen hebben gemaakt.
+top_workspaces_connections:  Top van de meest geraadpleegde werkruimten.
+top_workspaces_resources: Top van de werkruimten die het grootste aantal leermiddelen bevatten.
+total: Totaal
+total_time: Totale duur
+traffic: Verkeer op de site
+transport: Vervoer
+trash: Prullenbak
+tune: Personnaliseren
+tune_public_url_error: Er is een fout opgetreden tijdens het personnaliseren van de URL van uw openbaar profiel'
+tune_public_url_success: Het personnaliseren van de URL van uw openbaar profiel is met succes uitgevoerd.
+tune_your_public_profile: Personnaliseer uw openbaar profiel
+tune_your_public_profile_url: Personnaliseer de URL van uw openbaar profiel
+type: Type
+type_s: Type(s)
+unable_to_start_gmail: De verbinding met de SMTP-server van Gmail kan niet tot stand gebracht worden. Gelieve na te kijken of de gebruikersnaam en het wachtwoord correct zijn.
+unable_to_start_sendmail: De verbinding me Sendmail of Postfix kan niet tot stand gebracht worden. Gelieve na te kijken of één van deze paketten coorrect geinstalleerd en ingesteld is.
+unable_to_start_smtp: De verbinding met de SMTP-server kan niet tot stand gebracht worden. Gelieve na te kijken of  of de instellingen die u aanmeldt, correct zijn.
+unable_to_start_transport: De verbinding met de server van e-mails kan niet tot stand gebracht worden. Gelieve na te kijken of de instellingen die u aanmeldt, correct zijn.
+unauthorized: U bent niet toegelaten deze pagina te raadplegen.
+unavailable_platform: Het platform is niet beschikbaar.
+unavailable_role: De rol %translationKey% kan niet gebruikt worden.
+uncompress_file: Het bestand comprimeren indien mogelijk
+under_min_length: Deze waarde is te kort
+unique_connections: Aantal unieke connecties
+unknown: Onbekend
+unpublish: Niet meer publiceren
+unpublished: Niet gepubliceerd
+unregister: Uitschrijving
+unregister_from_a_workspace: Mij uitschrijven van een werkruimte
+unregister_group_confirm_message: Bent u er zeker van dat u deze groep wenst uit te schrijven ?
+unregister_group_s_confirm_message: Bent u er zeker van dat u deze %count% groepen wenst uit te schrijven ?
+unregister_user_confirm_message: Bent u er zeker van dat u deze gebruiker wenst uit te schrijven ?
+unregister_user_s_confirm_message: Bent u er zeker van dat u deze %count% gebruikers wenst uit te schrijven ?
+unregistered: Niet ingeschreven
+unregistered_groups: Niet ingeschreven groepen
+unregistered_users: Niet ingeschreven gebruikers
+unwritable_file_exception: U bent niet toegelaten in het bestand %path% te schrijven.
+up: Naar boven
+up_to_date: Up to date
+update: Update naar %version%
+update_available: Update beschikbaar
+update_impossible: Update onmogelijk
+updated_by: Laatste update : %modificationDate%
+upgrade: Upgrade
+upload: Upload
+upload_denied: U bent niet toegelaten leermiddelen hier te maken.
+upload_fail: Downloaden is mislukt
+upload_file: Een bestand downloaden
+url_invalid: De code is niet correct, probeer niet het adres te veranderen.
+use_stable_repo: Gebruik de stabiele pakketten
+use_test_repo: Gebruik de testpakketten
+user: Gebruiker
+user_accounts: Rekeningen van de gebruikers
+user_enable_mail_notification_label: De notities per e-mail activeren
+user_creation: Een gebruiker maken
+user_creation_success: De gebruikersrekening is met succes gemaakt.
+user_info: Gebruikersinformatie
+user_limit_reached: De limiet om gebruikers te maken is bereikt.
+user_limit_success_update: De limiet van gebruikers per rol is met succes bijgewerkt.
+user_limit_too_low: Er zijn al %total% %role%l(en). De limiet %newMax% is te laag.
+user_menu: Gebruikersmenu
+user_menu_configuration: Het gebruikersmenu instellen
+user_options_form_desktopBackgroundColor: Achtergrondkleur
+user_parameters: Instellingen van de gebruiker
+user_picker: Om gebruikers te kiezen
+user_profile: Gebruikersprofiel
+user_public_profile_not_visible: Uw openbaar profiel is onzichtbaar.<br> U mag uw profiel zichtbaar maken voor de <span class="shared_policy_link shared_policy_link_platform_users">platformgebruikers</span>, of voor <span class="shared_policy_link shared_policy_link_everybody">iedereen</span>.
+user_selector: Om gebruikers te kiezen
+user_visit: Bezoeken van de gebruikers
+username: ID
+username_already_used: De ID %username% wordt al gebruikt.
+username_and_email_from_two_different_users: De gebruikersnaam %username% en de e-mail %email% worden bieden gebruikt en behoren niet tot dezelfde gebruiker.
+username_found_at: Regels %lines%: De gebruikersnaam %username% is gevonden.
+username_or_email: Gebruikersnaam of e-mail
+users: Gebruikers
+users_cannot_be_registered_to_group: De gebruikers kunnen niet bij die groep ingeschreven worden.
+users_connected_once: Gebruikers tenminste 1 keer ingelogd op het platform
+users_from_group_registration: Inschriving gebruikers van de groep
+users_import: Gebruikers invoeren
+users_list: Lijst van de gebruikers
+users_management: De gebruikers beheersen
+users_minimum_requirement_msg: De gebruikers moeten voldoen aan deze voorwaarden: een login van 3 tekens, een wachtwoord van 4 tekens en een geldige e-mail.
+users_per_page: Gebruikers per pagina
+users_registration_in_workspace: Inschrijving van gebruikers in de werkruimte'
+users_visits: Bezoeken van de gebruikers'
+validate: Valideren
+validation: Validatie
+variable_available_message: U kunt de volgende variabelen in uw formulier gebruiken
+verification: Controle
+verify_your_password: Voer opnieuw uw wachtwoord in
+view: Voir
+view_category_hierarchy: De structuur van de categorieën visualiseren
+views: Aantal keer bekeken
+visibility: Zichtbaarheid
+visible: Zichtbaar
+visitor: Bezoeker
+warning_user_impersonation: U bent ingelogd als %user%.
+warning_workspace_impersonation: U bent ingelogd als %role% van in werkruimte %workspace%.'
+warnings: Let op
+widget: Widget
+widget_configuration: Instellingen van de widget
+widget_creation_roles: Rollen die een widget op het bureaublad mogen maken
+widget_home_tab_delete_confirm_message: Bent u er zeker van dat uw deze widget van die tab wenst te verwijderen ?'
+widget_home_tab_delete_confirm_title: De widget van de tab verwijderen
+widget_settings: Instellingen van de widgets
+widget_visible_actions: Kies de  acties die zichtbaar zijn in de widget
+widget_workspace_pick: Kies de door de widget getoonde werkruimten.
+widgets: Widgets
+widgets_configuration: De widgets instellen
+width: Breedte
+with_role: met de rol
+with_tutor: Begeleid
+workspace: Werkruimte
+workspace.create: Een nieuwe werkruimte maken
+workspace.name_not_blank: Geef een naam aan deze werkruimte.
+workspace_activity_overview: Overzicht van de laatste activiteiten in %workspaceName%
+workspace_administration: Administratie
+workspace_classification: Classificatie van de werkruimten
+workspace_code_invalid: Regel %line%: De code %code% is al in gebruik.
+workspace_creator: Maker van de ruimte
+workspace_delete: De werkruimte verwijderen
+workspace_delete_confirm_message: Bent u er zeker van dat u deze werkruimte wenst te verwijderen ?
+workspace_delete_confirm_title: Bevestiging van verwijderen
+workspace_delete_success_message: De werkruimte "%workspaceName%" is verweiderd.
+workspace_display: Affichage
+workspace_home_tab_creation: Een tab voor de werkruimten maken
+workspace_home_tab_edition: De tab voor de werkruimten bewerken
+workspace_home_tabs: Tabs voor de werkruimten
+workspace_import: Een werkruimte invoeren
+workspace_list: Lijst van de werkruimten
+workspace_management: De werkruimte is op %creationDate%  gemaakt door %creator%. Er zijn %count% ingeschreven gebruiker(s).
+workspace_management_date_null: Er zijn %count% ingeschreven gebruiker(s). De aanmaakdatum en de maker zijn onbekend.
+workspace_max_users: Maximumaantal gebruikers per werkruimte
+workspace_model_invalid: Regel %line%: Het model bestaat niet.
+workspace_order_tool_edit_form_name: Naam
+workspace_queue_cancel_confirm_message: Bent u er zeker van dat u uw inschrijving bij deze werkruimte wenst te annuleren ?
+workspace_queue_cancel_confirm_title: De inschrijvingsaanvraag annuleren
+workspace_registration_confirm_title: Wenst u zich in te schrijven bij deze werkruimte ?
+workspace_registration_message: U bent ingeschreven bij de werkruimte %workspace_name%.
+workspace_registration_message_object: Inschrijving aan een werkruimte
+workspace_remove_from_category_confirm_message: Bent u er zeker van dat u deze werkruimte van deze categorie wenst te verwijderen ?
+workspace_remove_from_category_confirm_title: Een werkruimte van een categorie intrekken
+workspace_resource: Leermiddelen
+workspace_role_type_form_requireDir: Een directory maken
+workspace_role_type_form_translationKey: Naam
+workspace_tag_form_name: Naam
+workspace_tag_remove_confirm_message: Bent u er zeker van dat u deze categorie wenst te verwijderen ?
+workspace_tag_remove_confirm_title: Een categorie verwijderen
+workspace_template_form_name: Naam
+workspace_tools: Hulpmiddelen
+workspace_unregistration_confirm_title: Wilt u zich uitschrijven van deze werkruimte ?'
+workspace_user_invalid: Regel %line%: De grbruiker %username% bestaat niet.
+workspace_welcome: Accueil
+workspaces: Werkruimten
+workspaces_included_in_category: De in deze categorie opgeslagen werkruimten
+workspaces_management: De werkruimten beheren
+workspaces_per_page: Werkruimten per pagina
+wrong_captcha: De ingevoerde code komt niet overeen met het opgegeven beeld.
+ws_creator: Maker van ruimten
+ws_most_viewed: De meest geraadpleegde werkruimten
+'yes': Oui
+yesterday_activity: Activiteit van gisteren
+your_current_url: Uw huidige URL
+your_platform_id: Uw klant-ID op het platform
+your_profile_is_n_complete: Uw profiel is %n%% voltooid.
+your_username: Uw gebruikersnaam is
+your_workspace_activity_overview: Overzicht van de recente activiteiten van uw werkruimten
+404: De pagina die u zoekt bestaat niet.
+initialize_your_password: Initialisation du mot de passe
+hide_client: Cacher un client
+hide_client_message: Bent u er zeker van dat u deze klant wenst te vouloir verbergen ?
+filter_by: Filtreren op
+domain_name: Domeinnaam
+import_csv: Een CSV-bestand invoeren
+admin_profile_properties_explanations: De gemarkeerde eigenschappen kunnen gewijzigd worden door de gebruikers van de vereiste rol.
+self_unregistration: Zelfuitschrijving
+is_visible: Zichtbaar door de gebruikers
+year: jaar
+month: maand
+week: week
+day: dag
+hour: uur
+minute: minuut
+second: second
+years: jaar
+months: maanden
+weeks: weken
+days: dagen
+hours: uur
+minutes: minuten
+seconds: seconden
+time_ago: %count% %unit% geleden
+mail_options: opties van de e-mail
+mailer_from: Veld "van" van de e-mail
+desktop_root_directory_upload_error: Vous ne pouvez pas ajouter de ressources à la racine du bureau.
+pick_a_resource: Kies een leermiddel
+invalid_host: Ongeldig host (toegang tot %url% geweigerd).
+request_friend: Vrienaanvraag
+activated: Geactiveerd
+not_activated: Gedeactiveerd
+add_pending: Een vrienplatform toevoegen
+add_friend_confirm_message: Bent u er zeker van dat u dit vriendplatform wenst toe te voegen ?
+edit_client: De klant bewerken
+0_or_1: 0 of 1
+import_resources_explanation: Het invoeren van leermiddelen vergt een door Claroline gegenereerd ZIP-bestand dat het bestand manifest.yml bevat. indien u een ander ZIP-bestand wenst in te voeren, gelieve een leermiddel te maken van het type "Bestand" en selecteer "Decomprimeren".
+root_rights_change_explanation: Op deze pagina kunt u de rechten op de rootleermiddel van een werkruimte bewerken. Indien u al de leermiddlen wenst te bewerken, selecteer "Toepasseen op de inhoud van de directory en de subdirectories".
+registration_mail_validation: Validation de l'inscription gebruikers
+send_mail_info: Een bevestiging per e-mail sturen (platform toegankelijk zonder bevestiging van het ophalen van de e-mail)
+force_mail_validation: Dwingen tot de bevestiging van de e-mail (Gebruiker geblokkeerd zolang de ontvangst van e-mail is niet bevestigd)
+replace_validation_email_message: die de validatielink van de e-mail zal tonen.
+email_not_activated_part_1: Uw e-mail (%email%) is niet gevalideerd. Klik
+email_not_activated_part_2: hier
+email_not_activated_part_3: om die te activeren.
+email_confirmation_message: Het platform kan u uw e-mails niet sturen zolang uw adres niet bevestigd is.
+email_sent: Validatie e-mail gestuurd naar %email%. Gelieve uw spams te raadplegen indien u niets ontvangen hebt.
+email_validation: Validatie van de e-mail
+email_validation_url_display: Gelieve naar de volgende URL te gaan om uw e-mail te bevestigen:  %url%.
+email_validated: E-mail gevalideerd
+oauth_application_request: Het pakket "%name%" wenst aansluiting tot het %platform%.
+oauth_required_data: De volgende informatie zal gestuurd worden :
+client_list: Lijst van de klanten
+allow_authentication: De authenticatie toelaten.
+user_subscription_notification_for_admin: heeft zich ingeschreven in de werkruimte %workspace%.
+filter_by: Filtreren op
+user_list: Lijst van de gebruikers
+list: Een lijst maken
+group_list: Lijst van de groepen
+loading: Inladen
+register_to_workspace_account_exists: Hebt u al een rekening ? Log u in %link% om u in te schrijven.
+here: hier
+group_list: Lijst van de groepen
+box_number : Postbus
+street_number: Straatnummer
+street: Straat
+postal_code: Postcode
+town: Stad
+country: Land
+create_location: Een locatie maken
+locations: Plaatsen
+location: Plaats
+add: Toevoegen
+administrators: Beheerders
+edit_organization: Een organisatie bewerken
+coordinates: Contactgegevens
+address: Adres
+add_users_to_group: Gebruikers aan een groep toevoegen
+add_users_to_group_confirm: Bent u er zeker van dat u deze gebruiker(s) [ %user_list% ] wenst toe te voegen aan groep %group% ?
+user_added: Gebruiker %user% toegevoegd.
+user_removed: Gebruiker %user% verweiderd.
+remove_users_from_group: Gebruikers van een groep verwijderen
+remove_users_from_group_confirm: Bent u er zeker van dat u deze gebruiker(s) [ %user_list% ] wenst te verwijderen van de groep %group% ?
+delete_groups: Groepen verwijderen
+delete_groups_confirm: Bent u er zeker van dat u deze groep(en) [ %group_list% ] wenst te verwijderen ?
+group_removed: Groep %group% verweiderd.
+group_created: Groep %group% gemaakt.
+edit_group: Een groep bewerken
+manage_group: De groepen beheren
+init_password: Het wachtwoord herstellen
+init_password_confirm: Bent u er zeker van dat u de wachtwoorden voor deze gebruiker(s) [ %user_list% ] wenst te herstellen ?
+password_initialized: Wachtwoord hersteld voor %user%.
+delete_users: Gebruikers verwijderen
+delete_users_confirm: Bent u er zeker van dat u deze gebruiker(s) [ %user_list% ] wenst te verwijderen ?
+organizations: Organisatie
+group_name: Naam van de groep
+profile_edition: Het profiel bewerken
+claro_admin_personal_workspace_resource_rights: De leermiddelen van de persoonlijke werkruimte beheren
+organization_name: Naam van de organisatie
+plugins: Plugins
+activate: Activeren
+version: Versie
+origin: Oorsprong
+cache_management: De cache beheren
+cache_management_explanation: Uw app/cache bestand moet manueel worden geleegd om de wijzigingen te voltooien.
+required_by: Vereist door :
+require: Vereist :
+requirement_warning: Let op eisen
+roles_updated: Rollen bewerkt
+role_update: De rollen bewerken
+role_update_confirm:  Bent u er zeker van dat u de volgende rollen [ %role_list ] wenst toe te voegen aan deze gebruikers [ %user_list% ] ?
+add_roles: Rollen toevoegen
+csv_delete: Verwijderen met CSV-bestand
+import_facets: Facetten invoeren
+csv: CSV
+csv_format_facets: Formaat van het CSV-bestand :
+csv_format_facets_line_1: Première ligne: liste des facettes par nom séparées par des point-virgules (facette1;facette2;facette3;...)
+csv_format_facets_line_end: Lignes suivantes: username;valeur facette 1; valeur facette2; valeur facette3;...
+create_panel: Créer un panel
+edit_panel: Modifier un panel
+is_main_facet_label: Mettre dans l'tab General
+delete_panel: Een panel verwijderen
+delete_panel_confirm: Bent u er zeker van dat u dit panel wenst te verwijderen ?
+edit_mode: Bewerkmodus
+display_mode: Weergavemodus
+roles_panels_form_explanation: Definieer de toegankelijkheid tot het panel door rol.
+delete_field: Een veld verwijderen
+delete_field_confirm: Bent u er zeker van dat u dit veld wenst te verwijderen ?
+facet_imported: Ingevoerde facetten
+radio: Radioknop
+select: Keuzelijst
+checkboxes: Selectievakjes
+facet_edited: Facet met succes bewerkt.
+facet_created: Facet met succes gemaakt.
+facet_removed: Facet met succes verwijderd.
+facet_roles_edited: Rôles de la facette met succes bewerkt.
+panel_created: Panel met succes gemaakt.
+panel_edited: Panel met succes bewerkt.
+panel_removed: Panel met succes verwijderd.
+field_created: Veld met succes gemaakt.
+field_edited: Veld met succes bewerkt.
+field_removed: Veld met succes verwijderd.
+panel_roles_edited: Rollen van het panel met succes bewerkt.
+profile_preference_edited: Voorkeuren van het profiel met succes bewerkt.
+organization: Organisatie
+workspace_not_exists: Regel %line%: De werkruimte bestaat niet.
+tab_not_exists: Regel %line%: De tab bestaat niet.
+file_not_exists: Regel %line%: Het bestand bestaat niet.
+use_honeypot: Activeer de honeypot voor de naamlozen (anti-spam).
+mandatory: Verplicht
+leave_empty: Laat dit veld leeg om te bewijzen dat u geen robot bent.
+field_not_empty: Gelieve dit veld leeg te laten.
+disable: Desactiveren
+enable: Activeren
+workspace_access_date_invalid: De data voor de toegang tot de werkruimten zijn overschreden.
+organization_invalid: Regel %line% : De organizatie bestaat niet.

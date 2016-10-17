@@ -17,7 +17,7 @@ export default class ResourcesPrimaryShowCtrl extends ResourcesPrimaryBaseCtrl {
         resource.url = this.UrlGenerator('claro_resource_open', {
           node         : this.resources[0].id,
           resourceType : this.resources[0].type
-        })
+        }) + '?iframe=1' 
       }
     }
   }

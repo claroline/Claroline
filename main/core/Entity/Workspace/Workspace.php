@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -22,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
- * @ORM\Table(name="claro_workspace")
+ * @ORM\Table(name="claro_workspace", indexes={@Index(name="name_idx", columns={"name"})})
  * @DoctrineAssert\UniqueEntity("code")
  */
 class Workspace
@@ -40,7 +41,7 @@ class Workspace
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_workspace", "api_workspace_min", "api_user_min"})
+     * @Groups({"api_workspace", "api_workspace_min", "api_user_min", "api_user"})
      * @SerializedName("id")
      */
     protected $id;
@@ -227,6 +228,15 @@ class Workspace
      * )
      */
     protected $events;
+
+    /**
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     mappedBy="personalWorkspace",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $personalUser;
 
     public function __construct()
     {
@@ -534,5 +544,10 @@ class Workspace
         }
 
         return;
+    }
+
+    public function getPersonalUser()
+    {
+        return $this->personalUser;
     }
 }

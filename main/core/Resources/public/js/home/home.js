@@ -325,18 +325,6 @@
         });
     };
 
-    home.canGenerateContent = function (url, action)
-    {
-        $.post(home.path + 'cangeneratecontent', {
-            'url': url
-        })
-        .success(function (data) {
-            if (data.trim() !== 'false') {
-                action(data);
-            }
-        });
-    };
-
     $('body').on('click', '.content-translatable .content-menu .dropdown-menu a', function () {
         var translatable = $(this).parents('.content-translatable').first();
         var lang = $(this).text();

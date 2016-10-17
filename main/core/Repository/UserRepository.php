@@ -37,6 +37,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE u.username LIKE :username
             OR u.mail LIKE :username
             OR u.administrativeCode LIKE :username
+            AND u.isEnabled = true
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('username', $username);
@@ -240,7 +241,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 ->leftJoin('r.workspace', 'w')
                 ->andWhere('r.workspace = :workspace')
                 ->setParameter('workspace', $workspace);
-        };
+        }
 
         return $executeQuery ? $userQueryBuilder->getQuery()->getResult() : $userQueryBuilder->getQuery();
     }
@@ -589,6 +590,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
+        $query->setParameter('search', "%{$search}%");
 
         return ($getQuery) ? $query : $query->getResult();
     }
@@ -1138,6 +1140,24 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
+    public function findUserByUsernameOrMailOrCode($username, $mail, $code)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.username = :username
+            OR u.mail = :mail
+            OR u.administrativeCode = :code
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('username', $username);
+        $query->setParameter('mail', $mail);
+        $query->setParameter('code', $code);
+
+        return $query->getOneOrNullResult();
+    }
+
     public function findUserByUsernameAndMail($username, $mail, $executeQuery = true)
     {
         $dql = '
@@ -1547,6 +1567,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $query->getResult();
     }
+
     /**
      * @param Workspace $workspace
      *
@@ -1571,5 +1592,27 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $res = $query->getResult();
 
         return $res;
+    }
+
+    public function findUsersExcludingRoles(array $roles, $offset, $limit)
+    {
+        $dql = '
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isRemoved = false AND u NOT IN (
+                SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
+                LEFT JOIN u2.roles ur
+                LEFT JOIN u2.groups g
+                LEFT JOIN g.roles gr
+                WHERE (gr IN (:roles) OR ur IN (:roles))
+
+            )
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+        $query->setFirstResult($offset);
+        $query->setMaxResults($limit);
+
+        return $query->getResult();
     }
 }

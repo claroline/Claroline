@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class DatabaseWriterTest extends MockeryTestCase
@@ -31,6 +33,8 @@ class DatabaseWriterTest extends MockeryTestCase
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->im = $this->mock('Claroline\CoreBundle\Manager\IconManager');
         $this->mm = $this->mock('Claroline\CoreBundle\Manager\MaskManager');
+        $this->tm = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
+        $this->tmd = $this->mock('Claroline\CoreBundle\Manager\ToolMaskDecoderManager');
         $this->fileSystem = $this->mock('Symfony\Component\Filesystem\Filesystem');
         $this->kernel = $this->mock('Symfony\Component\HttpKernel\KernelInterface');
         $this->templateDir = 'path/to/templateDir';
@@ -43,21 +47,21 @@ class DatabaseWriterTest extends MockeryTestCase
             $this->fileSystem,
             $this->kernel,
             $this->mm,
-            $this->templateDir
+            $this->tm,
+            $this->tmd
         );
     }
 
     public function testPersistCustomActionIfDecodersAreFound()
     {
         $this->markTestSkipped('Database writer should be refactored and properly tested');
-        $resourceType = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
-        $actions = array(array('name' => 'open', 'menu_name' => 'open'));
-        $decoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
+        $resourceType = new ResourceType();
+        $decoder = new MaskDecoder();
         $decoderRepo = $this->mock('Doctrine\ORM\EntityRepository');
-        $decoderRepo->shouldReceive('findBy')->with(array('resourceType' => $resourceType))
-            ->andReturn(array($decoder));
+        $decoderRepo->shouldReceive('findBy')->with(['resourceType' => $resourceType])
+            ->andReturn([$decoder]);
         $decoderRepo->shouldReceive('findOneBy')
-            ->with(array('name' => 'open', 'resourceType' => $resourceType))
+            ->with(['name' => 'open', 'resourceType' => $resourceType])
             ->andReturn($decoder);
         $this->em->shouldReceive('persist')->once();
     }

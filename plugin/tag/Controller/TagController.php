@@ -18,9 +18,9 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\TagBundle\Entity\ResourcesTagsWidgetConfig;
+use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Form\ResourcesTagsWidgetConfigurationType;
 use Claroline\TagBundle\Form\TagType;
-use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -80,12 +80,12 @@ class TagController extends Controller
         $tags = $this->tagManager->getPlatformTags();
         $resourceTags = $this->tagManager->getTagsByObject($resourceNode);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'resourceNode' => $resourceNode,
             'tags' => $tags,
             'resourceTags' => $resourceTags,
-        );
+        ];
     }
 
     /**
@@ -99,7 +99,7 @@ class TagController extends Controller
      */
     public function resourceTagAction(ResourceNode $resourceNode)
     {
-        if (!$this->container->get('security.authorization_checker')->isGranted('EDIT', new ResourceCollection(array($resourceNode)))) {
+        if (!$this->container->get('security.authorization_checker')->isGranted('EDIT', new ResourceCollection([$resourceNode]))) {
             throw new AccessDeniedException();
         }
 
@@ -115,12 +115,12 @@ class TagController extends Controller
             $tags = $this->tagManager->getPlatformTags();
             $resourceTags = $this->tagManager->getTagsByObject($resourceNode);
 
-            return array(
+            return [
                 'form' => $form->createView(),
                 'resourceNode' => $resourceNode,
                 'tags' => $tags,
                 'resourceTags' => $resourceTags,
-            );
+            ];
         }
     }
 
@@ -139,12 +139,12 @@ class TagController extends Controller
         $tags = $this->tagManager->getPlatformTags();
         $groupTags = $this->tagManager->getTagsByObject($group);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'group' => $group,
             'tags' => $tags,
             'groupTags' => $groupTags,
-        );
+        ];
     }
 
     /**
@@ -171,12 +171,12 @@ class TagController extends Controller
             $tags = $this->tagManager->getPlatformTags();
             $groupTags = $this->tagManager->getTagsByObject($group);
 
-            return array(
+            return [
                 'form' => $form->createView(),
                 'group' => $group,
                 'tags' => $tags,
                 'groupTags' => $groupTags,
-            );
+            ];
         }
     }
 
@@ -195,12 +195,12 @@ class TagController extends Controller
         $tags = $this->tagManager->getPlatformTags();
         $userTags = $this->tagManager->getTagsByObject($user);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'user' => $user,
             'tags' => $tags,
             'userTags' => $userTags,
-        );
+        ];
     }
 
     /**
@@ -227,12 +227,12 @@ class TagController extends Controller
             $tags = $this->tagManager->getPlatformTags();
             $userTags = $this->tagManager->getTagsByObject($user);
 
-            return array(
+            return [
                 'form' => $form->createView(),
                 'user' => $user,
                 'tags' => $tags,
                 'userTags' => $userTags,
-            );
+            ];
         }
     }
 
@@ -251,12 +251,12 @@ class TagController extends Controller
         $tags = $this->tagManager->getPlatformTags();
         $workspaceTags = $this->tagManager->getTagsByObject($workspace);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'workspace' => $workspace,
             'tags' => $tags,
             'workspaceTags' => $workspaceTags,
-        );
+        ];
     }
 
     /**
@@ -283,12 +283,12 @@ class TagController extends Controller
             $tags = $this->tagManager->getPlatformTags();
             $workspaceTags = $this->tagManager->getTagsByObject($workspace);
 
-            return array(
+            return [
                 'form' => $form->createView(),
                 'workspace' => $workspace,
                 'tags' => $tags,
                 'workspaceTags' => $workspaceTags,
-            );
+            ];
         }
     }
 
@@ -302,53 +302,53 @@ class TagController extends Controller
      *     name="claro_tag_resources_widget",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineTagBundle:Widget:resourcesTagsWidget.html.twig")
      */
     public function resourcesTagsWidgetAction(WidgetInstance $widgetInstance)
     {
         $workspace = $widgetInstance->getWorkspace();
-        $user = $this->tokenStorage->getToken()->getUser();
-        $roles = $this->tokenStorage->getToken()->getRoles();
-        $roleNames = array();
+        $token = $this->tokenStorage->getToken();
+        $user = $token->getUser();
+        $roles = $token->getRoles();
+        $roleNames = [];
+        $datas = [];
 
         foreach ($roles as $role) {
             $roleNames[] = $role->getRole();
         }
-
         $config = $this->tagManager->getResourcesTagsWidgetConfig($widgetInstance);
         $details = $config->getDetails();
         $nbTags = !empty($details) && isset($details['nb_tags']) ? $details['nb_tags'] : 10;
-        $taggedObjects = $this->tagManager->getTaggedResourcesByWorkspace(
-            $workspace,
-            $user,
-            $roleNames
-        );
-        $tags = array();
-        $sorted = array();
-        $datas = array();
+
+        if (is_null($workspace)) {
+            $taggedObjects = $this->tagManager->getTaggedResourcesByRoles($user, $roleNames);
+        } else {
+            $taggedObjects = $this->tagManager->getTaggedResourcesByWorkspace($workspace, $user, $roleNames);
+        }
+        $tags = [];
+        $sorted = [];
         // Sort all tagged objects by tag
         foreach ($taggedObjects as $taggedObject) {
             $tag = $taggedObject->getTag();
             $tagId = $tag->getId();
 
             if (!isset($tags[$tagId])) {
-                $tags[$tagId] = array();
+                $tags[$tagId] = [];
                 $tags[$tagId]['tag'] = $tag->getName();
                 $tags[$tagId]['tag_id'] = $tag->getId();
-                $tags[$tagId]['objects'] = array();
+                $tags[$tagId]['objects'] = [];
             }
-            $tags[$tagId]['objects'][] = array(
+            $tags[$tagId]['objects'][] = [
                 'id' => $taggedObject->getObjectId(),
                 'name' => $taggedObject->getObjectName(),
-            );
+            ];
         }
         // Sort all tags by number of tagged objects
         foreach ($tags as $tag) {
             $nbObjects = count($tag['objects']);
 
             if (!isset($sorted[$nbObjects])) {
-                $sorted[$nbObjects] = array();
+                $sorted[$nbObjects] = [];
             }
             $sorted[$nbObjects][] = $tag;
         }
@@ -371,11 +371,11 @@ class TagController extends Controller
             }
         }
 
-        return array(
+        return [
             'widgetInstance' => $widgetInstance,
             'nbTags' => $nbTags,
             'datas' => $datas,
-        );
+        ];
     }
 
     /**
@@ -396,7 +396,7 @@ class TagController extends Controller
             $config
         );
 
-        return array('form' => $form->createView(), 'config' => $config);
+        return ['form' => $form->createView(), 'config' => $config];
     }
 
     /**
@@ -442,10 +442,10 @@ class TagController extends Controller
         if ($resourceType->getName() === 'directory') {
             $route = $this->router->generate(
                 'claro_workspace_open_tool',
-                array(
+                [
                     'toolName' => 'resource_manager',
                     'workspaceId' => $resourceNode->getWorkspace()->getId(),
-                )
+                ]
             );
             $route .= '?#resources/'.$resourceNode->getId();
 
@@ -453,7 +453,7 @@ class TagController extends Controller
         } else {
             $route = $this->router->generate(
                 'claro_resource_open_short',
-                array('node' => $resourceNode->getId())
+                ['node' => $resourceNode->getId()]
             );
 
             return new RedirectResponse($route);
@@ -470,7 +470,7 @@ class TagController extends Controller
      */
     public function tagDeleteFromResourceAction(ResourceNode $resourceNode, Tag $tag)
     {
-        if (!$this->container->get('security.authorization_checker')->isGranted('EDIT', new ResourceCollection(array($resourceNode)))) {
+        if (!$this->container->get('security.authorization_checker')->isGranted('EDIT', new ResourceCollection([$resourceNode]))) {
             throw new AccessDeniedException();
         }
         $this->tagManager->removeTaggedObjectsByResourceAndTag($resourceNode, $tag);

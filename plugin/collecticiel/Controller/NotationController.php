@@ -31,6 +31,7 @@ class NotationController extends DropzoneBaseController
         $documentId = $this->get('request')->query->get('documentId');
         $dropzoneId = $this->get('request')->query->get('dropzoneId');
         $note = (int) $this->get('request')->query->get('note');
+        $note = empty($note) ? 0 : $note;
         $appreciation = $this->get('request')->query->get('appreciation');
         $recordOrTransmit = (int) $this->get('request')->query->get('recordOrTransmit');
         $evaluationType = $this->get('request')->query->get('evaluationType');
@@ -83,12 +84,27 @@ class NotationController extends DropzoneBaseController
                 $em->persist($notation);
             }
         } else {
-            $notation[0]->setNote($note);
-            $notation[0]->setRecordOrTransmit(true);
-            $notation[0]->setappreciation($appreciation);
-            // Mise à jour de la base de données
-            $em->persist($notation[0]);
-            $notationId = $notation[0]->getId();
+            if (empty($notation)) {
+                $notation = new Notation();
+                $notation->setUser($user);
+                $notation->setDocument($document);
+                $notation->setDropzone($dropzone);
+                $notation->setNote($note);
+                $notation->setCommentText('');
+                $notation->setQualityText('');
+                $notation->setRecordOrTransmit($recordOrTransmit);
+                $notation->setappreciation($appreciation);
+
+                // Insertion en base
+                $em->persist($notation);
+            } else {
+                $notation[0]->setNote($note);
+                $notation[0]->setRecordOrTransmit(true);
+                $notation[0]->setappreciation($appreciation);
+                // Mise à jour de la base de données
+                $em->persist($notation[0]);
+                $notationId = $notation[0]->getId();
+            }
         }
 
         $em->flush();

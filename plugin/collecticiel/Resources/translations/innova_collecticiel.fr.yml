@@ -81,7 +81,7 @@ Comments add: Ajouter un commentaire
 Comments list: Commentaire - Évaluation
 Comments on: Commentaire - Évaluation sur
 Common information: Informations générales
-common_explication: Cet outil met à disposition des utilisateurs un espace dans lequel ils peuvent déposer des documents de différents types : fichier (à téléverser), texte libre (à rédiger en ligne)	 ressources (à sélectionner depuis lespace des ressoures) et lien Internet.<br/>Lutilisateur peut demander une évaluation ou un simple commentaire pour lun ou lautre des documents déposés dans son espace. Ces deux types de demandes (simple commentaire ou évaluation) ont été regroupés sous le terme "demande de commentaire".<br/>Dans cette version 1 du collecticiel seuls les enseignants reçoivent des "demandes de commentaires".
+common_explication: Cet outil met à la disposition des utilisateurs un espace dans lequel ils peuvent déposer des documents de différents types : fichier (à téléverser), texte libre (à rédiger en ligne), ressources (à sélectionner depuis l'espace des ressoures) et lien Internet.<br/>L'utilisateur peut demander une évaluation ou un simple commentaire pour l'un ou l'autre des documents déposés dans son espace. Ces deux types de demandes (simple commentaire ou évaluation) ont été regroupés sous le terme "demande de commentaire".<br/>Dans cette version 1 du collecticiel, seuls les enseignants reçoivent des "demandes de commentaires".
 Common: Général
 Complete Corrections: Corrections terminées
 Complete evaluation: Compléter le collecticiel
@@ -199,7 +199,7 @@ Evaluation type : Type d'évaluation
 Evaluation: Évaluation
 Examiner: Correcteur
 Examiners : Correcteurs
-Examiners Instructions: Instructions aux correcteurs
+Examiners Instructions: Consignes aux correcteurs
 Expected total correction: Nombre de corrections attendues par document
 expected_total_correction: Trois conditions sont nécessaires pour qu'un étudiant valide son évaluation :<br/>- Il doit avoir rendu sa copie.<br/>- Il doit avoir corrigé N autre(s) copie(s).<br/>- Sa copie doit avoir reçu N correction(s).<br/><br/>Le tirage d''une copie lors d'une correction est fait de manière aléatoire et anonyme.
 
@@ -242,10 +242,10 @@ Info ratingScale : Informations / critères accompagnant l'appréciation
 innova_collecticiel_common_form_instruction: Instruction
 innova_collecticiel_criterion_form_instruction: Instruction
 innova_collecticiel_form_name: Titre du collecticiel
-Instruction Innova: Instructions
+Instruction Innova: Consignes
 Instruction_: Instruction :
 Instruction: Consignes (et fichiers mis à disposition dans les différents espaces)
-Instructions for examiners: Instructions spécifiques aux correcteurs
+Instructions for examiners: Consignes spécifiques aux correcteurs
 Insufficient : Insuffisant
 Invalidate all corrections: Invalider toutes les corrections
 Invalidate this correction: Invalider la correction
@@ -298,7 +298,7 @@ Need to be the author: Vous devez être l'auteur de la correction pour effectuer
 Next: Suivant
 Nickname: Identifiant
 No action allowed : Aucune action possible
-No copy waiting for correction: Aucune copie en attente de correction
+No copy waiting for correction: À ce jour, aucune demande ne vous a été adressée.
 No copy was made: Aucun document n'a été rendue
 No correction: Aucune correction.
 no document added yet: Aucun document ajouté pour l'instant
@@ -359,7 +359,7 @@ People that have a copy in this dropzone: Personnes ayant déposé un document d
 People will not be able to drop anymore: Fermeture du collecticiel
 Picture: Image de profil
 Planification instruction: L'ouverture du collecticiel peut se réaliser de manière manuelle ou en fonction des dates	de début (ouverture du collecticiel) et de fin (fermeture).
-Planification peer review instruction: Elle se divise en plusieurs étapes : l'ouverture de l'évaluation en autorisant le dépôt, début de l'évaluation par les pairs qui clôture le dépôt et la fin de l'évaluation.
+Planification peer review instruction: Elle se divise en plusieurs étapes: l'ouverture de l'évaluation en autorisant le dépôt, début de l'évaluation par les pairs qui clôture le dépôt et la fin de l'évaluation.
 Planning: Ouverture
 Please comment: Merci de laisser un commentaire
 Please complete text : Veuillez renseigner le champ "Texte"
@@ -381,7 +381,7 @@ Reason of reporting: Raison du signalement
 Recalculate all grade: Recalculer toutes les notes
 Recalculate the score: Recalculer la note
 recalculate_helper: Utile si vous avez supprimé des critères de correction alors que des gens avaient déjà commencé à corriger. Cela adaptera la note. Si vous avez ajouté de nouveaux critères, la note pour ce critère sera de 0 par défaut.
-Recall instructions: Rappel des instructions
+Recall instructions: Rappel des consignes
 Relevant documents: Documents concernés
 Remove report: Retirer le signalement
 Report comment: Expliquez la raison de votre signalement

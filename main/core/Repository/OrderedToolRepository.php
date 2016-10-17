@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -43,7 +43,7 @@ class OrderedToolRepository extends EntityRepository implements ContainerAwareIn
         $type = 0
     ) {
         if (count($roles) === 0) {
-            return array();
+            return [];
         } else {
             $dql = '
                 SELECT ot

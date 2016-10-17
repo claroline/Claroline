@@ -12,15 +12,15 @@
 namespace Claroline\FlashCardBundle\Controller;
 
 use Claroline\CoreBundle\Form\Handler\FormHandler;
-use Claroline\FlashCardBundle\Entity\Session;
 use Claroline\FlashCardBundle\Entity\Deck;
+use Claroline\FlashCardBundle\Entity\Session;
 use Claroline\FlashCardBundle\Manager\SessionManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})
@@ -63,7 +63,7 @@ class SessionController
 
     /**
      * @EXT\Route(
-     *     "/session/create/deck/{deck}", 
+     *     "/session/create/deck/{deck}",
      *     name="claroline_create_session"
      * )
      *
@@ -76,7 +76,6 @@ class SessionController
         $this->assertCanOpen($deck);
 
         $user = $this->tokenStorage->getToken()->getUser();
-        $response = new JsonResponse();
 
         $session = new Session();
         $session->setDeck($deck);

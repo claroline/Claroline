@@ -35,9 +35,8 @@
     <div class="panel-body" data-ng-show="!questionShowCtrl.collapsed">
         <div class="question-info">
             <!-- Description of the Question -->
-            <h5 data-ng-if="questionShowCtrl.question.description">{{ 'question_functional_instruction'|trans:{}:'ujm_sequence' }}</h5>
             <div data-ng-bind-html="questionShowCtrl.question.description | unsafe"></div>
-            
+
             <!-- Invite of the Question -->
             <h5 data-ng-bind-html="questionShowCtrl.question.invite | unsafe"></h5>
         </div>

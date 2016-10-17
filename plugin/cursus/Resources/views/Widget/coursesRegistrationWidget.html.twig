@@ -43,12 +43,15 @@
         const sessionsIdx = 'sessions_' + widgetInstanceId
         const registeredSessionsIdx = 'registered-sessions_' + widgetInstanceId
         const pendingSessionsIdx = 'pending-sessions_' + widgetInstanceId
+        const sessionEventUsersStatusIdx = 'session-event-users-status_' + widgetInstanceId
         let sessions = []
         let events = []
         let registeredSessions = []
         let pendingSessions = []
+        let sessionEventUsersStatus = []
         const widgetElement = $(`#courses-registration-widget-${widgetInstanceId}`)
         const listElement = $(`#courses-list-${widgetInstanceId}`)
+        const disableSessionEventRegistration = {% if disableSessionEventRegistration %}true{% else %}false{% endif %}
 
         function refreshCoursesList () {
           const route = mode === 'list' ?
@@ -122,7 +125,6 @@
 
         widgetElement.on('click', '.session-register-btn', function () {
           const sessionId = $(this).data('session-id')
-
           window.Claroline.Modal.confirmRequest(
             Routing.generate('claro_cursus_course_session_self_register', {'session': sessionId}),
             removeRegistrationBtn,
@@ -134,7 +136,6 @@
 
         widgetElement.on('click', '.course-queue-request-btn', function () {
           const courseId = $(this).data('course-id')
-
           window.Claroline.Modal.confirmRequest(
             Routing.generate('claro_cursus_course_queue_register', {'course': courseId}),
             updateCourseQueueRequetBtn,
@@ -156,12 +157,22 @@
           )
         })
 
+        widgetElement.on('click', '.register-to-session-event-btn', function () {
+          const sessionEventId = $(this).data('session-event-id')
+          window.Claroline.Modal.confirmRequest(
+            Routing.generate('claro_cursus_session_event_self_register', {sessionEvent: sessionEventId}),
+            removeSessionEventRegistrationBtn,
+            sessionEventId,
+            Translator.trans('session_event_self_registration_message', {}, 'cursus'),
+            Translator.trans('session_event_registration', {}, 'cursus')
+          )
+        })
+
         widgetElement.on('click', '#calendar-view-button', function () {
           const route = Routing.generate(
             'claro_cursus_courses_list_for_registration_widget_calendar',
             {'widgetInstance': widgetInstanceId, 'search': currentSearch}
           )
-
           $.ajax({
             url: route,
             type: 'GET',
@@ -178,7 +189,6 @@
             'claro_cursus_courses_list_for_registration_widget',
             {'widgetInstance': widgetInstanceId, 'search': currentSearch, 'max': currentMax, 'orderedBy': currentOrderedBy, 'order': currentOrder}
           )
-
           $.ajax({
             url: route,
             type: 'GET',
@@ -218,6 +228,22 @@
           courseQueueBtn.html(element)
         }
 
+        const removeSessionEventRegistrationBtn = function (event, sessionEventId) {
+          $('#session-event-registration-btn-' + sessionEventId).empty()
+          const element = '<span class="label label-success"><i class="fa fa-check"></i></span>'
+          $('#session-event-registration-btn-' + sessionEventId).html(element)
+        }
+
+        const removeSessionEventRegistrationBtnCalendar = function (event, datas) {
+          sessionEventUsersStatus[datas['sessionEventId']] = 1
+          datas['context'].empty()
+          datas['context'].removeClass(`register-to-session-event-btn-${widgetInstanceId}`)
+          datas['context'].removeClass('btn')
+          datas['context'].removeClass('btn-default')
+          const content = '<span class="label label-success"><i class="fa fa-check"></i></span>'
+          datas['context'].html(content)
+        }
+
         function t (key) {
           if (typeof key === 'object') {
             let transWords = []
@@ -253,6 +279,8 @@
           sessions = (typeof window[sessionsIdx] === 'undefined') ? [] : JSON.parse(window[sessionsIdx])
           registeredSessions = (typeof window[registeredSessionsIdx] === 'undefined') ? [] : window[registeredSessionsIdx]
           pendingSessions = (typeof window[pendingSessionsIdx] === 'undefined') ? [] : window[pendingSessionsIdx]
+          sessionEventUsersStatus = (typeof window[sessionEventUsersStatusIdx] === 'undefined') ? [] : window[sessionEventUsersStatusIdx]
+
           initializeEvents()
           $('#courses-widget-calendar-' + widgetInstanceId).fullCalendar({
             header: {
@@ -295,7 +323,6 @@
         }
 
         function onEventClick (event, jsEvent) {
-            console.log(event)
           jsEvent.stopPropagation()
           jsEvent.preventDefault()
           let registerBtn = ''
@@ -316,6 +343,27 @@
             eventsElement += `
               <li>
                   <b>${e['name']}</b>
+            `
+            if (!disableSessionEventRegistration) {
+              if (sessionEventUsersStatus[e['id']] === 0) {
+                eventsElement += `
+                  <span class="label label-success pull-right">${Translator.trans('registered', {}, 'platform')}</span>
+                `
+              } else if (sessionEventUsersStatus[e['id']] === 1) {
+                eventsElement += `
+                  <span class="label label-info pull-right">${Translator.trans('pending', {}, 'platform')}</span>
+                `
+              } else if (e['registrationType'] === 2 && (event['publicRegistration'] || registeredSessions[event['id']])) {
+                eventsElement += `
+                  <span id="session-event-registration-btn-${event['id']}">
+                      <span class="btn btn-default btn-sm pull-right register-to-session-event-btn-${widgetInstanceId}" data-session-event-id="${e['id']}">
+                          ${Translator.trans('self_register_to_session_event', {}, 'cursus')}
+                      </span>
+                  </span>
+                `
+              }
+            }
+            eventsElement += `
                   <br>
                   [${moment(e['startDate']).format('DD/MM/YYYY HH:mm')}
                   <i class="fa fa-long-arrow-right"></i>
@@ -409,6 +457,17 @@
             {sessionId: sessionId, context: $(this)},
             Translator.trans('session_self_registration_message', {}, 'platform'),
             Translator.trans('session_registration', {}, 'platform')
+          )
+        })
+
+        $('body').on('click', `.register-to-session-event-btn-${widgetInstanceId}`, function () {
+          const sessionEventId = $(this).data('session-event-id')
+          window.Claroline.Modal.confirmRequest(
+            Routing.generate('claro_cursus_session_event_self_register', {sessionEvent: sessionEventId}),
+            removeSessionEventRegistrationBtnCalendar,
+            {sessionEventId: sessionEventId, context: $(this)},
+            Translator.trans('session_event_self_registration_message', {}, 'cursus'),
+            Translator.trans('session_event_registration', {}, 'cursus')
           )
         })
 

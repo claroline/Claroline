@@ -1,0 +1,8 @@
+agenda_: Volgende evenementen #To be replaced by the newly created key "next_events"#
+agenda_task: Onvoltooide taken
+x_days_ago: %nbDays% dagen geleden
+yesterday: Gisteren
+mark_task_as_done: Markeer deze taak als voltooid
+mark_task_as_not_done: Markeer deze taak als onvoltooid
+cant_modify_task: U mag deze taak niet bewerken.
+next_events: Volgende evenementen

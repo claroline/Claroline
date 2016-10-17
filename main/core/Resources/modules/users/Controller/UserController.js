@@ -1,6 +1,12 @@
-import RemoveByCsvModalController from './RemoveByCsvModalController'
+import './RemoveByCsvModalController'
 import UserInfoModalController from './UserInfoModalController'
 import UserInfoHtml from '../Partial/user_info.html'
+import angular from 'angular/index'
+import removeTpl from '../Partial/csv_remove.html'
+import importTpl from '../Partial/csv_facet.html'
+
+/* global Routing */
+/* global Translator */
 
 export default class UserController {
   constructor ($http, ClarolineSearchService, ClarolineAPIService, $uibModal) {
@@ -61,10 +67,14 @@ export default class UserController {
             <button class='btn btn-default' ng-click='uc.userInfo($row)'><i class='fa fa-info'></i></button>
           `
 
-          let switchTitle = scope.$row['is_enabled'] ? Translator.trans('disable', {}, 'platform'): Translator.trans('enable', {}, 'platform');
-          
+          let switchTitle = scope.$row['is_enabled'] ? Translator.trans('disable', {}, 'platform') : Translator.trans('enable', {}, 'platform')
+
           content += `
             <button title='${switchTitle}' class='btn btn-default' ng-click='uc.switchUserState($row)'><i ng-class="$row.is_enabled ? 'fa fa-ban': 'fa fa-check'"></i></button>
+          `
+
+          content += `
+            <button title='${switchTitle}' class='btn btn-default' ng-click='uc.switchPersonalWorkspace($row)'><i ng-class="$row.personal_workspace ? 'fa fa-ban': 'fa fa-book'"></i></button>
           `
 
           return `<div>${content}</div>`
@@ -126,7 +136,7 @@ export default class UserController {
     let qs = ''
 
     for (let i = 0; i < this.selected.length; i++) {
-      qs += 'roleIds[]=' + this.roles[i].id + '&'
+      qs += 'roleIds[]=' + this.selectedRoles[i].id + '&'
     }
 
     return qs
@@ -165,7 +175,7 @@ export default class UserController {
   }
 
   userInfo (user) {
-    const modalInstance = this.$uibModal.open({
+    this.$uibModal.open({
       template: UserInfoHtml,
       controller: UserInfoModalController,
       controllerAs: 'uimc',
@@ -201,12 +211,12 @@ export default class UserController {
 
   csvRemove () {
     const modalInstance = this.$uibModal.open({
-      template: require('../Partial/csv_remove.html'),
+      template: removeTpl,
       controller: 'RemoveByCsvModalController',
       controllerAs: 'rbcmc'
     })
 
-    modalInstance.result.then(result => {
+    modalInstance.result.then(() => {
       this.paging(0, this.dataTableOptions.paging.size)
     })
   }
@@ -215,7 +225,8 @@ export default class UserController {
     const url = Routing.generate('api_put_users_roles') + '?' + this.generateQsForSelectedRoles() + this.generateQsForSelectedUsers()
 
     const users = this.selected.map(s => s.username).join(', ')
-    const roles = this.roles.map(r => this.translate(r.translation_key)).join(', ')
+    const roles = this.selectedRoles.map(r => this.translate(r.translation_key)).join(', ')
+
 
     this.ClarolineAPIService.confirm(
       {url, method: 'PUT'},
@@ -227,12 +238,12 @@ export default class UserController {
 
   importFacetsForm () {
     const modalInstance = this.$uibModal.open({
-      template: require('../Partial/csv_facet.html'),
+      template: importTpl,
       controller: 'ImportCsvFacetsController',
       controllerAs: 'icfc'
     })
 
-    modalInstance.result.then(result => {
+    modalInstance.result.then(() => {
       this.alerts.push({
         type: 'success',
         msg: this.translate('facet_imported')
@@ -251,7 +262,7 @@ export default class UserController {
     )
   }
 
-  _initPwdCallback (data) {
+  _initPwdCallback () {
     for (let i = 0; i < this.selected.length; i++) {
       this.alerts.push({
         type: 'success',
@@ -261,7 +272,7 @@ export default class UserController {
     this.selected.splice(0, this.selected.length)
   }
 
-  _deleteCallback (data) {
+  _deleteCallback () {
     this.selected.forEach(el => {
       this.alerts.push({
         type: 'success',
@@ -269,7 +280,7 @@ export default class UserController {
       })
     })
 
-    const userList = this.ClarolineAPIService.removeElements(this.selected, this.users)
+    this.ClarolineAPIService.removeElements(this.selected, this.users)
     this.selected.splice(0, this.selected.length)
     this.dataTableOptions.paging.count -= this.selected.length
   }
@@ -285,10 +296,17 @@ export default class UserController {
   }
 
   switchUserState (user) {
-      user.is_enabled = !user.is_enabled
-      const route = user.is_enabled ? 'api_enable_user': 'api_disable_user'
+    user.is_enabled = !user.is_enabled
+    const route = user.is_enabled ? 'api_enable_user' : 'api_disable_user'
 
-      this.$http.post(Routing.generate(route, {'user': user.id}))
+    this.$http.post(Routing.generate(route, {'user': user.id}))
+  }
 
+  switchPersonalWorkspace (user) {
+    const route = user.personal_workspace ? 'api_delete_personal_workspace' : 'api_create_personal_workspace'
+
+    this.$http.post(Routing.generate(route, {'user': user.id})).then(() => {
+      user.personal_workspace ? delete user.personal_workspace : user.personal_workspace = true
+    })
   }
 }

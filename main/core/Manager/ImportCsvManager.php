@@ -12,11 +12,11 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
  * @DI\Service("claroline.manager.import_csv_manager")
@@ -64,10 +64,10 @@ class ImportCsvManager
 
     public function parseCSVLines(array $lines)
     {
-        $datas = array();
+        $datas = [];
         $invalidSyntaxMsg = $this->translator->trans(
             'invalid_syntax',
-            array(),
+            [],
             'platform'
         );
 
@@ -77,9 +77,9 @@ class ImportCsvManager
             $action = trim($lineDatas[count($lineDatas) - 1]);
 
             if (!isset($datas[$action])) {
-                $datas[$action] = array();
+                $datas[$action] = [];
             }
-            $infos = array();
+            $infos = [];
             $nbLineDatas = count($lineDatas);
 
             switch ($action) {
@@ -105,7 +105,7 @@ class ImportCsvManager
                     }
                     break;
 
-                case 'claro_edit_user' :
+                case 'claro_edit_user':
                     break;
 
                 case 'claro_create_workspace':
@@ -127,10 +127,10 @@ class ImportCsvManager
                     }
                     break;
 
-                case 'claro_delete_user' :
-                case 'claro_create_group' :
-                case 'claro_delete_group' :
-                case 'claro_empty_group' :
+                case 'claro_delete_user':
+                case 'claro_create_group':
+                case 'claro_delete_group':
+                case 'claro_empty_group':
 
                     if ($nbLineDatas === 2) {
                         $infos['name'] = trim($lineDatas[0]);
@@ -139,8 +139,8 @@ class ImportCsvManager
                     }
                     break;
 
-                case 'claro_register_to_group' :
-                case 'claro_unregister_from_group' :
+                case 'claro_register_to_group':
+                case 'claro_unregister_from_group':
 
                     if ($nbLineDatas === 3) {
                         $infos['username'] = trim($lineDatas[0]);
@@ -150,8 +150,8 @@ class ImportCsvManager
                     }
                     break;
 
-                case 'claro_create_workspace_role' :
-                case 'claro_delete_workspace_role' :
+                case 'claro_create_workspace_role':
+                case 'claro_delete_workspace_role':
 
                     if ($nbLineDatas === 3) {
                         $infos['ws_code'] = trim($lineDatas[0]);
@@ -161,10 +161,10 @@ class ImportCsvManager
                     }
                     break;
 
-                case 'claro_register_user_to_workspace' :
-                case 'claro_unregister_user_from_workspace' :
-                case 'claro_register_group_to_workspace' :
-                case 'claro_unregister_group_from_workspace' :
+                case 'claro_register_user_to_workspace':
+                case 'claro_unregister_user_from_workspace':
+                case 'claro_register_group_to_workspace':
+                case 'claro_unregister_group_from_workspace':
 
                     if ($nbLineDatas === 4) {
                         $infos['name'] = trim($lineDatas[0]);
@@ -175,10 +175,10 @@ class ImportCsvManager
                     }
                     break;
 
-                default :
+                default:
                     $infos['error'] = $this->translator->trans(
                         'invalid_action',
-                        array(),
+                        [],
                         'platform'
                     );
                     break;
@@ -191,16 +191,16 @@ class ImportCsvManager
 
     public function manageUserDeletion(array $datas)
     {
-        $logs = array();
-        $userTxt = $this->translator->trans('user', array(), 'platform');
+        $logs = [];
+        $userTxt = $this->translator->trans('user', [], 'platform');
         $deletedTxt = $this->translator->trans(
             'has_been_deleted',
-            array(),
+            [],
             'platform'
         );
         $nonExistentTxt = $this->translator->trans(
             'does_not_exist',
-            array(),
+            [],
             'platform'
         );
 
@@ -229,21 +229,21 @@ class ImportCsvManager
 
     public function manageGroupCreation(array $datas)
     {
-        $logs = array();
+        $logs = [];
         $identicalGroupTxt = $this->translator->trans(
             'identical_group_name',
-            array(),
+            [],
             'platform'
         );
-        $groupTxt = $this->translator->trans('group', array(), 'platform');
+        $groupTxt = $this->translator->trans('group', [], 'platform');
         $createdTxt = $this->translator->trans(
             'has_been_created',
-            array(),
+            [],
             'platform'
         );
         $existedTxt = $this->translator->trans(
             'already_exists',
-            array(),
+            [],
             'platform'
         );
 
@@ -293,16 +293,16 @@ class ImportCsvManager
 
     public function manageGroupEmptying(array $datas)
     {
-        $logs = array();
-        $groupTxt = $this->translator->trans('group', array(), 'platform');
+        $logs = [];
+        $groupTxt = $this->translator->trans('group', [], 'platform');
         $nonExistentTxt = $this->translator->trans(
             'does_not_exist',
-            array(),
+            [],
             'platform'
         );
         $emptiedTxt = $this->translator->trans(
             'has_been_emptied',
-            array(),
+            [],
             'platform'
         );
 
@@ -330,16 +330,16 @@ class ImportCsvManager
 
     public function manageGroupDeletion(array $datas)
     {
-        $logs = array();
-        $groupTxt = $this->translator->trans('group', array(), 'platform');
+        $logs = [];
+        $groupTxt = $this->translator->trans('group', [], 'platform');
         $nonExistentTxt = $this->translator->trans(
             'does_not_exist',
-            array(),
+            [],
             'platform'
         );
         $deletedTxt = $this->translator->trans(
             'has_been_deleted',
-            array(),
+            [],
             'platform'
         );
 
@@ -367,17 +367,17 @@ class ImportCsvManager
 
     public function manageGroupUnregistration(array $datas)
     {
-        $logs = array();
-        $userTxt = $this->translator->trans('user', array(), 'platform');
-        $groupTxt = $this->translator->trans('group', array(), 'platform');
+        $logs = [];
+        $userTxt = $this->translator->trans('user', [], 'platform');
+        $groupTxt = $this->translator->trans('group', [], 'platform');
         $nonExistentTxt = $this->translator->trans(
             'does_not_exist',
-            array(),
+            [],
             'platform'
         );
         $unregisteredTxt = $this->translator->trans(
             'has_been_unregistered_from_group',
-            array(),
+            [],
             'platform'
         );
 
@@ -403,7 +403,7 @@ class ImportCsvManager
                 } else {
                     $username = $user->getUsername();
                     $groupName = $group->getName();
-                    $this->groupManager->removeUsersFromGroup($group, array($user));
+                    $this->groupManager->removeUsersFromGroup($group, [$user]);
                     $logs[] = "$userTxt [$username] $unregisteredTxt [$groupName]";
                 }
             }
@@ -415,23 +415,23 @@ class ImportCsvManager
 
     public function manageGroupRegistration(array $datas)
     {
-        $logs = array();
-        $toRegister = array();
-        $userTxt = $this->translator->trans('user', array(), 'platform');
-        $groupTxt = $this->translator->trans('group', array(), 'platform');
+        $logs = [];
+        $toRegister = [];
+        $userTxt = $this->translator->trans('user', [], 'platform');
+        $groupTxt = $this->translator->trans('group', [], 'platform');
         $nonExistentTxt = $this->translator->trans(
             'does_not_exist',
-            array(),
+            [],
             'platform'
         );
         $registeredTxt = $this->translator->trans(
             'has_been_registered_to_group',
-            array(),
+            [],
             'platform'
         );
         $cannotRegisteredTxt = $this->translator->trans(
             'users_cannot_be_registered_to_group',
-            array(),
+            [],
             'platform'
         );
 
@@ -458,9 +458,9 @@ class ImportCsvManager
                     $groupName = $group->getName();
 
                     if (!isset($toRegister[$groupName])) {
-                        $toRegister[$groupName] = array();
+                        $toRegister[$groupName] = [];
                         $toRegister[$groupName]['group'] = $group;
-                        $toRegister[$groupName]['users'] = array();
+                        $toRegister[$groupName]['users'] = [];
                     }
                     $toRegister[$groupName]['users'][] = $user;
                 }
@@ -489,27 +489,27 @@ class ImportCsvManager
 
     public function manageWorkspaceRoleCreation(array $datas)
     {
-        $logs = array();
+        $logs = [];
         $identicalRoleTxt = $this->translator->trans(
             'identical_role_name',
-            array(),
+            [],
             'platform'
         );
-        $workspaceTxt = $this->translator->trans('workspace', array(), 'platform');
-        $roleTxt = $this->translator->trans('role', array(), 'platform');
+        $workspaceTxt = $this->translator->trans('workspace', [], 'platform');
+        $roleTxt = $this->translator->trans('role', [], 'platform');
         $nonExistentTxt = $this->translator->trans(
             'does_not_exist',
-            array(),
+            [],
             'platform'
         );
         $createdTxt = $this->translator->trans(
             'has_been_created_in_workspace',
-            array(),
+            [],
             'platform'
         );
         $existedTxt = $this->translator->trans(
             'already_exists_in_workspace',
-            array(),
+            [],
             'platform'
         );
 
@@ -574,22 +574,22 @@ class ImportCsvManager
 
     public function manageWorkspaceRoleDeletion(array $datas)
     {
-        $logs = array();
-        $workspaceTxt = $this->translator->trans('workspace', array(), 'platform');
-        $roleTxt = $this->translator->trans('role', array(), 'platform');
+        $logs = [];
+        $workspaceTxt = $this->translator->trans('workspace', [], 'platform');
+        $roleTxt = $this->translator->trans('role', [], 'platform');
         $nonExistentTxt = $this->translator->trans(
             'does_not_exist',
-            array(),
+            [],
             'platform'
         );
         $nonExistentInWsTxt = $this->translator->trans(
             'does_not_exist_in_workspace',
-            array(),
+            [],
             'platform'
         );
         $deletedTxt = $this->translator->trans(
             'has_been_deleted_in_workspace',
-            array(),
+            [],
             'platform'
         );
 
@@ -630,28 +630,28 @@ class ImportCsvManager
 
     public function manageWorkspaceRegistration(array $datas)
     {
-        $logs = array();
-        $userTxt = $this->translator->trans('user', array(), 'platform');
-        $workspaceTxt = $this->translator->trans('workspace', array(), 'platform');
-        $roleTxt = $this->translator->trans('role', array(), 'platform');
+        $logs = [];
+        $userTxt = $this->translator->trans('user', [], 'platform');
+        $workspaceTxt = $this->translator->trans('workspace', [], 'platform');
+        $roleTxt = $this->translator->trans('role', [], 'platform');
         $nonExistentTxt = $this->translator->trans(
             'does_not_exist',
-            array(),
+            [],
             'platform'
         );
         $nonExistentInWsTxt = $this->translator->trans(
             'does_not_exist_in_workspace',
-            array(),
+            [],
             'platform'
         );
         $registeredTxt = $this->translator->trans(
             'has_been_registered_in_workspace',
-            array(),
+            [],
             'platform'
         );
         $withRoleTxt = $this->translator->trans(
             'with_role',
-            array(),
+            [],
             'platform'
         );
 
@@ -700,28 +700,28 @@ class ImportCsvManager
 
     public function manageWorkspaceUnregistration(array $datas)
     {
-        $logs = array();
-        $userTxt = $this->translator->trans('user', array(), 'platform');
-        $workspaceTxt = $this->translator->trans('workspace', array(), 'platform');
-        $roleTxt = $this->translator->trans('role', array(), 'platform');
+        $logs = [];
+        $userTxt = $this->translator->trans('user', [], 'platform');
+        $workspaceTxt = $this->translator->trans('workspace', [], 'platform');
+        $roleTxt = $this->translator->trans('role', [], 'platform');
         $nonExistentTxt = $this->translator->trans(
             'does_not_exist',
-            array(),
+            [],
             'platform'
         );
         $nonExistentInWsTxt = $this->translator->trans(
             'does_not_exist_in_workspace',
-            array(),
+            [],
             'platform'
         );
         $unregisteredTxt = $this->translator->trans(
             'has_been_unregistered_from_role',
-            array(),
+            [],
             'platform'
         );
         $inWorkspaceTxt = $this->translator->trans(
             'in_workspace',
-            array(),
+            [],
             'platform'
         );
 
@@ -770,28 +770,28 @@ class ImportCsvManager
 
     public function manageWorkspaceGroupRegistration(array $datas)
     {
-        $logs = array();
-        $groupTxt = $this->translator->trans('group', array(), 'platform');
-        $workspaceTxt = $this->translator->trans('workspace', array(), 'platform');
-        $roleTxt = $this->translator->trans('role', array(), 'platform');
+        $logs = [];
+        $groupTxt = $this->translator->trans('group', [], 'platform');
+        $workspaceTxt = $this->translator->trans('workspace', [], 'platform');
+        $roleTxt = $this->translator->trans('role', [], 'platform');
         $nonExistentTxt = $this->translator->trans(
             'does_not_exist',
-            array(),
+            [],
             'platform'
         );
         $nonExistentInWsTxt = $this->translator->trans(
             'does_not_exist_in_workspace',
-            array(),
+            [],
             'platform'
         );
         $registeredTxt = $this->translator->trans(
             'has_been_registered_in_workspace',
-            array(),
+            [],
             'platform'
         );
         $withRoleTxt = $this->translator->trans(
             'with_role',
-            array(),
+            [],
             'platform'
         );
 
@@ -841,28 +841,28 @@ class ImportCsvManager
 
     public function manageWorkspaceGroupUnregistration(array $datas)
     {
-        $logs = array();
-        $groupTxt = $this->translator->trans('group', array(), 'platform');
-        $workspaceTxt = $this->translator->trans('workspace', array(), 'platform');
-        $roleTxt = $this->translator->trans('role', array(), 'platform');
+        $logs = [];
+        $groupTxt = $this->translator->trans('group', [], 'platform');
+        $workspaceTxt = $this->translator->trans('workspace', [], 'platform');
+        $roleTxt = $this->translator->trans('role', [], 'platform');
         $nonExistentTxt = $this->translator->trans(
             'does_not_exist',
-            array(),
+            [],
             'platform'
         );
         $nonExistentInWsTxt = $this->translator->trans(
             'does_not_exist_in_workspace',
-            array(),
+            [],
             'platform'
         );
         $unregisteredTxt = $this->translator->trans(
             'has_been_unregistered_from_role',
-            array(),
+            [],
             'platform'
         );
         $inWorkspaceTxt = $this->translator->trans(
             'in_workspace',
-            array(),
+            [],
             'platform'
         );
 
@@ -912,21 +912,21 @@ class ImportCsvManager
 
     public function manageWorkspaceCreation(array $datas)
     {
-        $logs = array();
-        $workspaces = array();
+        $logs = [];
+        $workspaces = [];
         $workspaceTxt = $this->translator->trans(
             'workspace',
-            array(),
+            [],
             'platform'
         );
         $existedTxt = $this->translator->trans(
             'already_exists',
-            array(),
+            [],
             'platform'
         );
         $creatingTxt = $this->translator->trans(
             'creating',
-            array(),
+            [],
             'platform'
         );
 
@@ -955,19 +955,19 @@ class ImportCsvManager
 
     public function manageUserCreation(array $datas)
     {
-        $logs = array();
-        $users = array();
-        $userTxt = $this->translator->trans('user', array(), 'platform');
-        $usernameTxt = $this->translator->trans('username', array(), 'platform');
-        $mailTxt = $this->translator->trans('mail', array(), 'platform');
+        $logs = [];
+        $users = [];
+        $userTxt = $this->translator->trans('user', [], 'platform');
+        $usernameTxt = $this->translator->trans('username', [], 'platform');
+        $mailTxt = $this->translator->trans('mail', [], 'platform');
         $usedTxt = $this->translator->trans(
             'is_already_in_use',
-            array(),
+            [],
             'platform'
         );
         $creatingTxt = $this->translator->trans(
             'creating',
-            array(),
+            [],
             'platform'
         );
 
@@ -977,8 +977,9 @@ class ImportCsvManager
             } else {
                 $username = $lineDatas[2];
                 $mail = $lineDatas[4];
+                $code = $lineDatas[5];
                 $user = $this->userManager
-                    ->getUserByUsernameOrMail($username, $mail);
+                    ->getUserByUsernameOrMailOrCode($username, $mail, $code);
 
                 if (is_null($user)) {
                     $users[] = $lineDatas;

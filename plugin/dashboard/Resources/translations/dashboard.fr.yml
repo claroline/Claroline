@@ -1,0 +1,36 @@
+# B
+back_to_list: Retour à la liste des tableaux de bords
+
+# C
+click_to_add_view: Cliquez pour créer une vue
+connection_time: Durée de connection
+
+# D
+delete_view: Supprimer cette vue
+
+# E
+edit_view: Éditer cette vue
+edit_dashboard_title: Édition de la vue
+
+# M
+message_no_views: Aucune vue pour le moment. Utilisez le bouton + pour en créer une.
+
+# N
+new_dashboard_step_1: 1. Sur quel espace d'activités porte la vue ?
+new_dashboard_title: Création d'une nouvelle vue
+new_dashboard_name_placeholder: Entrer un nom pour la vue
+no_result_for_query: Aucun résultat pour votre requête
+
+# V
+view: Vue
+view_name: Intitulé de la vue
+
+# S
+share_view: Partager cette vue
+selection: Sélection
+
+# W
+workspace_name: Intitulé de l'espace d'activités
+workspace_select: Selection des espaces d'activités
+workspaces_filter_attended: Mes espaces d'activités auxquels j'ai souscrit
+workspaces_filter_my: Mes espaces d'activités en tant que créateur

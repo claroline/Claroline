@@ -25,7 +25,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
@@ -127,9 +126,7 @@ class ScormController extends Controller
         }
 
         if ($mode === 0 && $nbActiveScos === 1) {
-            return new RedirectResponse(
-                $this->router->generate('claro_render_scorm_12_sco', ['scoId' => $lastActiveSco->getId()])
-            );
+            return $this->forward('ClarolineScormBundle:Scorm:renderScorm12Sco', ['scoId' => $lastActiveSco->getId()]);
         } else {
             return [
                 'resource' => $scorm,
@@ -429,9 +426,7 @@ class ScormController extends Controller
         }
 
         if ($mode === 0 && $nbActiveScos === 1) {
-            return new RedirectResponse(
-                $this->router->generate('claro_render_scorm_2004_sco', ['scoId' => $lastActiveSco->getId()])
-            );
+            return $this->forward('ClarolineScormBundle:Scorm:renderScorm2004Sco', ['scoId' => $lastActiveSco->getId()]);
         } else {
             return [
                 'resource' => $scorm,

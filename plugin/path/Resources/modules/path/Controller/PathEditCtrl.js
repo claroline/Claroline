@@ -41,9 +41,7 @@ export default class PathEditCtrl extends PathBaseCtrl {
 
       if (!empty && updated) {
         // Initialization is already done, so mark path as unsaved for each modification
-        if (this.published !== true) {
-          this.unsaved = true
-        }
+        this.unsaved = true
       }
     }, true)
   }
@@ -97,6 +95,8 @@ export default class PathEditCtrl extends PathBaseCtrl {
           this.modified  = false
           this.published = true
           this.unsaved   = false
+
+          this.historyService.clear()
 
           if (this.path.steps[0] !== 'undefined') {
             this.pathService.goTo(this.path.steps[0])
@@ -152,6 +152,6 @@ export default class PathEditCtrl extends PathBaseCtrl {
   }
 
   unlockManager() {
-    this.window.location.href = this.UrlGenerator('innova_path_manage_results', {id: this.id})
+    this.window.location.href = this.UrlGenerator('innova_path_manage_results', {id: this.path.id})
   }
 }

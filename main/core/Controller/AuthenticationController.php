@@ -11,30 +11,30 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Component\Security\Core\SecurityContext;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Claroline\CoreBundle\Manager\UserManager;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Translation\TranslatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\Form\FormFactory;
-use Claroline\CoreBundle\Library\Security\Authenticator;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Manager\MailManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\ResetPasswordType;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\EmailType;
+use Claroline\CoreBundle\Form\ResetPasswordType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
+use Claroline\CoreBundle\Library\Security\Authenticator;
+use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Authentication/login controller.
@@ -116,12 +116,12 @@ class AuthenticationController
         $showRegisterButton = $this->ch->getParameter('register_button_at_login');
 
         if ($user && !$user->isAccountNonExpired()) {
-            return array(
+            return [
                 'last_username' => $lastUsername,
                 'error' => false,
                 'is_expired' => true,
                 'selfRegistrationAllowed' => $selfRegistrationAllowed,
-            );
+            ];
         }
 
         if ($this->request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
@@ -130,15 +130,13 @@ class AuthenticationController
             $error = $this->request->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
         }
 
-        $session = $this->request->getSession();
-
-        return array(
+        return [
             'last_username' => $lastUsername,
             'error' => $error,
             'is_expired' => false,
             'selfRegistrationAllowed' => $selfRegistrationAllowed,
             'showRegisterButton' => $showRegisterButton,
-        );
+        ];
     }
 
     /**
@@ -154,14 +152,14 @@ class AuthenticationController
         if ($this->mailManager->isMailerAvailable()) {
             $form = $this->formFactory->create(new EmailType());
 
-            return array('form' => $form->createView());
+            return ['form' => $form->createView()];
         }
 
-        return array(
-            'error' => $this->translator->trans('mail_not_available', array(), 'platform')
+        return [
+            'error' => $this->translator->trans('mail_not_available', [], 'platform')
                 .' '
-                .$this->translator->trans('mail_config_problem', array(), 'platform'),
-        );
+                .$this->translator->trans('mail_config_problem', [], 'platform'),
+        ];
     }
 
     /**
@@ -190,28 +188,28 @@ class AuthenticationController
                 $this->om->flush();
 
                 if ($this->mailManager->sendForgotPassword($user)) {
-                    return array(
+                    return [
                         'user' => $user,
                         'form' => $form->createView(),
-                    );
+                    ];
                 }
 
-                return array(
-                    'error' => $this->translator->trans('mail_config_problem', array(), 'platform'),
+                return [
+                    'error' => $this->translator->trans('mail_config_problem', [], 'platform'),
                     'form' => $form->createView(),
-                );
+                ];
             }
 
-            return array(
-                'error' => $this->translator->trans('mail_not_exist', array(), 'platform'),
+            return [
+                'error' => $this->translator->trans('mail_not_exist', [], 'platform'),
                 'form' => $form->createView(),
-            );
+            ];
         }
 
-        return array(
-            'error' => $this->translator->trans('wrong_captcha', array(), 'platform'),
+        return [
+            'error' => $this->translator->trans('wrong_captcha', [], 'platform'),
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -228,9 +226,9 @@ class AuthenticationController
         $user = $this->userManager->getByResetPasswordHash($hash);
 
         if (empty($user)) {
-            return array(
-                'error' => $this->translator->trans('url_invalid', array(), 'platform'),
-            );
+            return [
+                'error' => $this->translator->trans('url_invalid', [], 'platform'),
+            ];
         }
 
         $form = $this->formFactory->create(new ResetPasswordType(), $user);
@@ -238,13 +236,13 @@ class AuthenticationController
 
         // the link is valid for 24h
         if ($currentTime - (3600 * 24) < $user->getHashTime()) {
-            return array(
+            return [
                 'hash' => $hash,
                 'form' => $form->createView(),
-            );
+            ];
         }
 
-        return array('error' => $this->translator->trans('link_outdated', array(), 'platform'));
+        return ['error' => $this->translator->trans('link_outdated', [], 'platform')];
     }
 
     /**
@@ -272,15 +270,15 @@ class AuthenticationController
             $this->om->flush();
             $this->request->getSession()
                 ->getFlashBag()
-                ->add('warning', $this->translator->trans('password_ok', array(), 'platform'));
+                ->add('warning', $this->translator->trans('password_ok', [], 'platform'));
 
             return new RedirectResponse($this->router->generate('claro_security_login'));
         }
 
-        return array(
+        return [
             'hash' => $hash,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -299,7 +297,7 @@ class AuthenticationController
 
         $this->request->getSession()
             ->getFlashBag()
-            ->add('success', $this->translator->trans('email_validated', array(), 'platform'));
+            ->add('success', $this->translator->trans('email_validated', [], 'platform'));
 
         return new RedirectResponse($this->router->generate('claro_desktop_open'));
     }
@@ -318,7 +316,7 @@ class AuthenticationController
         $user = $users[0];
         $this->request->getSession()
             ->getFlashBag()
-            ->add('success', $this->translator->trans('email_sent', array('%email%' => $user->getMail()), 'platform'));
+            ->add('success', $this->translator->trans('email_sent', ['%email%' => $user->getMail()], 'platform'));
 
         return new RedirectResponse($this->router->generate('claro_desktop_open'));
     }
@@ -344,7 +342,7 @@ class AuthenticationController
      */
     public function postAuthenticationAction($format)
     {
-        $formats = array('json', 'xml');
+        $formats = ['json', 'xml'];
 
         if (!in_array($format, $formats)) {
             return new Response(
@@ -358,8 +356,8 @@ class AuthenticationController
         $password = $request->request->get('password');
         $status = $this->authenticator->authenticate($username, $password) ? 200 : 403;
         $content = ($status === 403) ?
-            array('message' => $this->translator->trans('login_failure', array(), 'platform')) :
-            array();
+            ['message' => $this->translator->trans('login_failure', [], 'platform')] :
+            [];
 
         return $format === 'json' ?
             new JsonResponse($content, $status) :

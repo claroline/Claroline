@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
@@ -30,12 +31,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @ORM\Table(name="claro_user")
+ * @ORM\Table(
+ *     name="claro_user",
+ *     indexes={
+ *         @Index(name="code_idx", columns={"administrative_code"}),
+ *         @Index(name="enabled_idx", columns={"is_enabled"})
+ * }
+ *
+ * )
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("mail")
  * @Assert\Callback(methods={"isPublicUrlValid"})
+ * @ClaroAssert\Username()
  */
 class User extends AbstractRoleSubject implements Serializable, AdvancedUserInterface, EquatableInterface, OrderableInterface
 {
@@ -75,7 +84,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      * @Assert\Length(min="3")
-     * @ClaroAssert\Username()
      * @Groups({"api_user", "api_organization_tree", "api_organization_list", "api_user_min"})
      * @SerializedName("username")
      */
@@ -188,9 +196,12 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var Workspace\Workspace
      *
      * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
+     *     inversedBy="personalUser",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
+     * @Groups({"api_user"})
      */
     protected $personalWorkspace;
 
@@ -1040,7 +1051,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function getExpirationDate()
     {
-        return $this->expirationDate !== null ? $this->expirationDate : new \DateTime('2100-01-01');
+        $defaultExpirationDate = (strtotime('2100-01-01')) ? '2100-01-01' : '2038-01-01';
+
+        return ($this->expirationDate !== null && $this->expirationDate->getTimestamp()) ?
+            $this->expirationDate :
+            new \DateTime($defaultExpirationDate);
     }
 
     public function getFieldsFacetValue()

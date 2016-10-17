@@ -6,13 +6,14 @@
  * For the full copyright and license information, please view
  * the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 import angular from 'angular/index'
 import {} from 'angular-bootstrap'
 import {} from 'angular-route'
-import ClarolineAPI from '#/main/core/services/module'
-import FormBuilder from '#/main/core/form/module'
+import '#/main/core/services/module'
+import '#/main/core/form/module'
 import mainTemplate from './main.partial.html'
 import studyTemplate from './study.partial.html'
 import createNoteTemplate from './createNote.partial.html'
@@ -91,9 +92,9 @@ angular
     EditUserParamCtrl
   ])
   .filter('trans', () => (string, domain = 'platform') =>
-    Translator.trans(string, domain)
+    window.Translator.trans(string, domain)
   )
-  .config(["$routeProvider",
+  .config(['$routeProvider',
     $routeProvider => {
       $routeProvider
         .when('/', {
@@ -145,7 +146,7 @@ angular
           controllerAs: 'vm'
         })
         .otherwise({
-          redirectTo: "/"
+          redirectTo: '/'
         })
     }
-  ]);
+  ])

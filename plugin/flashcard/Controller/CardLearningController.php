@@ -15,12 +15,12 @@ use Claroline\CoreBundle\Form\Handler\FormHandler;
 use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Manager\CardLearningManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use JMS\Serializer\SerializationContext;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})
@@ -67,7 +67,7 @@ class CardLearningController
 
     /**
      * @EXT\Route(
-     *     "/card_learning/all/deck/{deck}", 
+     *     "/card_learning/all/deck/{deck}",
      *     name="claroline_getall_card_learning"
      * )
      *

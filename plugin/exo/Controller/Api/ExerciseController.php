@@ -136,7 +136,12 @@ class ExerciseController
             }
         }
 
-        return new JsonResponse($this->paperManager->openPaper($exercise, $user));
+        $paper = $this->paperManager->openPaper($exercise, $user);
+
+        return new JsonResponse([
+            'paper' => $this->paperManager->exportPaper($paper, $this->isAdmin($paper->getExercise())),
+            'questions' => $this->paperManager->exportPaperQuestions($paper, $this->isAdmin($paper->getExercise())),
+        ]);
     }
 
     /**

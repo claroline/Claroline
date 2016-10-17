@@ -13,13 +13,13 @@ function addQuestionInOrder(idQ) {
     }
 }
 
-function importQuestion(pathImport, exoID, pageToGo, nothingToImport) {
+function importQuestion(exoID, pageToGo) {
     if (pos == 0) {
-        alert(nothingToImport);
+        alert(Translator.trans('no_thing_import', {}, 'ujm_exo'))
     } else {
         $.ajax({
             type: 'POST',
-            url: pathImport,
+            url: Routing.generate('ujm_exercise_validate_import'),
             data: {
                 exoID : exoID,
                 pageGoNow : pageToGo,

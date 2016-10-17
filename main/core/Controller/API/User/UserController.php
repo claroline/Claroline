@@ -20,12 +20,14 @@ use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Library\Security\Collection\UserCollection;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
+use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
@@ -55,10 +57,12 @@ class UserController extends FOSRestController
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
      *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
+     *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
      *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager"),
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
-     *     "apiManager"             = @DI\Inject("claroline.manager.api_manager")
+     *     "apiManager"             = @DI\Inject("claroline.manager.api_manager"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
@@ -70,10 +74,12 @@ class UserController extends FOSRestController
         UserManager $userManager,
         GroupManager $groupManager,
         RoleManager $roleManager,
+        FacetManager $facetManager,
         ObjectManager $om,
         ProfilePropertyManager $profilePropertyManager,
         MailManager $mailManager,
-        ApiManager $apiManager
+        ApiManager $apiManager,
+        WorkspaceManager $workspaceManager
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->eventDispatcher = $eventDispatcher;
@@ -83,6 +89,7 @@ class UserController extends FOSRestController
         $this->userManager = $userManager;
         $this->groupManager = $groupManager;
         $this->roleManager = $roleManager;
+        $this->workspaceManager = $workspaceManager;
         $this->om = $om;
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
@@ -90,6 +97,7 @@ class UserController extends FOSRestController
         $this->profilePropertyManager = $profilePropertyManager;
         $this->mailManager = $mailManager;
         $this->apiManager = $apiManager;
+        $this->facetManager = $facetManager;
     }
 
     /**
@@ -172,7 +180,6 @@ class UserController extends FOSRestController
 
         $form = $this->formFactory->create($profileType);
         $form->submit($this->request);
-        //$form->handleRequest($this->request);
 
         if ($form->isValid()) {
             //can we create the user in the current organization ?
@@ -217,7 +224,6 @@ class UserController extends FOSRestController
         $userRole = $this->roleManager->getUserRoleByUser($user);
         $form = $this->formFactory->create($formType, $user);
         $form->submit($this->request);
-        //$form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $user = $form->getData();
@@ -263,35 +269,32 @@ class UserController extends FOSRestController
      */
     public function getPublicUserAction(User $user)
     {
-        $settingsProfile = $this->profilePropertyManager->getAccessesForCurrentUser();
+        $settingsProfile = $this->facetManager->getVisiblePublicPreference();
         $publicUser = [];
 
-        foreach ($settingsProfile as $property => $isEditable) {
-            if ($isEditable || $user === $this->container->get('security.token_storage')->getToken()->getUser()) {
+        foreach ($settingsProfile as $property => $isViewable) {
+            if ($isViewable || $user === $this->container->get('security.token_storage')->getToken()->getUser()) {
                 switch ($property) {
-                    case 'administrativeCode':
-                        $publicUser['administrativeCode'] = $user->getAdministrativeCode();
-                        break;
-                    case 'description':
+                    case 'baseData':
+                        $publicUser['lastName'] = $user->getLastName();
+                        $publicUser['firstName'] = $user->getFirstName();
+                        $publicUser['username'] = $user->getUsername();
+                        $publicUser['picture'] = $user->getPicture();
                         $publicUser['description'] = $user->getAdministrativeCode();
                         break;
                     case 'email':
-                        $publicUser['email'] = $user->getMail();
-                        break;
-                    case 'firstName':
-                        $publicUser['firstName'] = $user->getFirstName();
-                        break;
-                    case 'lastName':
-                        $publicUser['lastName'] = $user->getLastName();
+                        $publicUser['mail'] = $user->getMail();
                         break;
                     case 'phone':
                         $publicUser['phone'] = $user->getPhone();
                         break;
-                    case 'picture':
-                        $publicUser['picture'] = $user->getPicture();
+                    case 'sendMail':
+                        $publicUser['mail'] = $user->getMail();
+                        $publicUser['allowSendMail'] = true;
                         break;
-                    case 'username':
-                        $publicUser['username'] = $user->getUsername();
+                    case 'sendMessage':
+                        $publicUser['allowSendMessage'] = true;
+                        $publicUser['id'] = $user->getId();
                         break;
                 }
             }
@@ -546,6 +549,34 @@ class UserController extends FOSRestController
     private function isUserGranted($action, $object)
     {
         return $this->container->get('security.authorization_checker')->isGranted($action, $object);
+    }
+
+    /**
+     * @View(serializerGroups={"api_user"})
+     * @Post("/pws/create/{user}")
+     */
+    public function createPersonalWorkspaceAction(User $user)
+    {
+        if (!$user->getPersonalWorkspace()) {
+            $this->userManager->setPersonalWorkspace($user);
+        } else {
+            throw new \Exception('Workspace already exists');
+        }
+
+        return $user;
+    }
+
+    /**
+     * @View(serializerGroups={"api_user"})
+     * @Post("/pws/delete/{user}")
+     */
+    public function deletePersonalWorkspaceAction(User $user)
+    {
+        $personalWorkspace = $user->getPersonalWorkspace();
+        $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', [$personalWorkspace]);
+        $this->workspaceManager->deleteWorkspace($personalWorkspace);
+
+        return $user;
     }
 
     private function throwExceptionIfNotGranted($action, $users)

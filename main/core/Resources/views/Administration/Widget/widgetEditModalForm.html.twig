@@ -18,8 +18,15 @@
                   action="{{ path('claro_widget_edit', {'widget': widget.getId()}) }}"
                   method="POST"
                   {{ form_enctype(form) }}
-            > 
-                {{ form_widget(form) }}
+            >
+                {{ form_row(form.defaultWidth) }}
+                {{ form_row(form.defaultHeight) }}
+                {{ form_row(form.isDisplayableInDesktop) }}
+                {{ form_row(form.isDisplayableInWorkspace) }}
+                <div id="roles-form-field" class="hidden">
+                    {{ form_row(form.roles) }}
+                </div>
+                {{ form_rest(form) }}
             </form>
         </div>
         <div class="modal-footer">
@@ -32,3 +39,29 @@
         </div>
     </div>
 </div>
+
+{% block javascripts %}
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            function checkDesktop ()
+            {
+                var value = $('#widget_form_isDisplayableInDesktop').prop('checked');
+
+                if (value) {
+                    $('#roles-form-field').removeClass('hidden');
+                    $('#roles-form-field').show('slow');
+                } else {
+                    $('#roles-form-field').hide('slow');
+                }
+            }
+
+            $('#widget-edit-form').on('change', '#widget_form_isDisplayableInDesktop', function () {
+                checkDesktop();
+            });
+
+            checkDesktop();
+        })();
+    </script>
+{% endblock %}

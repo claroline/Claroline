@@ -3,8 +3,8 @@
 namespace Claroline\CoreBubdle\Tests\API\User;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Library\Testing\Persister;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 
 class GroupControllerTest extends TransactionalTestCase
 {
@@ -18,9 +18,9 @@ class GroupControllerTest extends TransactionalTestCase
     private $adminOrga;
     /** @var User */
     private $userOrga;
-    /** @var Role*/
+    /** @var Role */
     private $teacherRole;
-    /** @var Role*/
+    /** @var Role */
     private $baseRole;
 
     protected function setUp()
@@ -289,9 +289,9 @@ class GroupControllerTest extends TransactionalTestCase
     {
         //initialization
         $organization = $this->persister->organization('organization');
-        $groupOrga = $this->createGroupOrga($organization);
+        $this->createGroupOrga($organization);
         $adminOrga = $this->createAdminOrga($organization);
-        $groupBase = $this->persister->group('groupBase');
+        $this->persister->group('groupBase');
         $john = $this->persister->user('john');
         $admin = $this->createAdmin();
 
@@ -338,7 +338,7 @@ class GroupControllerTest extends TransactionalTestCase
     //@url: /api/group/searchable/fields.{_format}
     public function testGetGroupSearchableFieldsAction()
     {
-        $admin = $this->createAdmin();
+        $this->createAdmin();
         $this->persister->flush();
         $this->client->request('GET', '/api/group/searchable/fields.json');
         $data = $this->client->getResponse()->getContent();
