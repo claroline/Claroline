@@ -54,15 +54,38 @@
             <directory>main/core/Tests/Unit/Converter/</directory>
             <directory>main/core/Tests/Unit/Event/</directory>
             <directory>main/core/Tests/Unit/Form/</directory>
-            <directory>main/core/Tests/Unit/Form/Library/Configuration/</directory>
-            <directory>main/core/Tests/Unit/Form/Library/HttpFoundation/</directory>
-            <directory>main/core/Tests/Unit/Form/Library/Installation/</directory>
+            <directory>main/core/Tests/Unit/Library/Configuration/</directory>
+            <directory>main/core/Tests/Unit/Library/HttpFoundation/</directory>
+            <directory>main/core/Tests/Unit/Library/Installation/</directory>
             <!-- <directory>main/core/Tests/Unit/Form/Library/Security/</directory> -->
             <!-- <directory>main/core/Tests/Unit/Form/Library/Transfert/</directory> -->
-            <directory>main/core/Tests/Unit/Form/Library/Utilities/</directory>
+            <directory>main/core/Tests/Unit/Library/Utilities/</directory>
             <!-- <directory>main/core/Tests/Unit/Form/Manager/</directory> -->
             <directory>main/core/Tests/Unit/Persistence/</directory>
-            <directory>plugin/badge/Tests/Unit/Rule/Constraints</directory> 
+            <directory>plugin/badge/Tests/Unit/Rule/Constraints</directory>
+
+            <!-- Database tests: uncomment when ready -->
+            <!-- uncomment this when everything is working and remove the rest -->
+            <!-- <directory>main/core/Tests/Database/</directory> -->
+
+            <file>main/core/Tests/Database/Repository/GroupRepositoryTest.php</file>
+            <file>main/core/Tests/Database/Repository/HomeTabConfigRepositoryTest.php</file>
+            <file>main/core/Tests/Database/Repository/MessageRepositoryTest.php</file>
+            <!-- <file>main/core/Tests/Database/Repository/OrderedToolRepositoryTest.php</file> -->
+            <!-- <file>main/core/Tests/Database/Repository/PluginRepositoryTest.php</file> -->
+             <file>main/core/Tests/Database/Repository/RelWorkspaceTagRepositoryTest.php</file>
+            <!-- <file>main/core/Tests/Database/Repository/ResourceNodeRepositoryTest.php</file> -->
+            <!-- <file>main/core/Tests/Database/Repository/ResourceQueryBuilderTest.php</file> -->
+            <!-- <file>main/core/Tests/Database/Repository/ResourceRightsRepositoryTest.php</file> -->
+            <!-- <file>main/core/Tests/Database/Repository/ResourceTypeRepositoryTest.php</file> -->
+            <!-- <file>main/core/Tests/Database/Repository/RevisionRepositoryTest.php</file> -->
+            <file>main/core/Tests/Database/Repository/RoleRepositoryTest.php</file>
+            <!-- <file>main/core/Tests/Database/Repository/ToolRepositoryTest.php</file> -->
+            <file>main/core/Tests/Database/Repository/UserMessageRepositoryTest.php</file>
+            <file>main/core/Tests/Database/Repository/UserRepositoryTest.php</file>
+            <!-- <file>main/core/Tests/Database/Repository/WorkspaceRepositoryTest.php</file> -->
+            <file>main/core/Tests/Database/Repository/WorkspaceTagHierarchyRepositoryTest.php</file>
+            <file>main/core/Tests/Database/Repository/WorkspaceTagRepositoryTest.php</file>
         </testsuite>
     </testsuites>
 

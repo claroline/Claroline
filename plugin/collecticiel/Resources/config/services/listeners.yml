@@ -1,21 +1,4 @@
 services:
-    innova.listener.dropzone_listener:
-        class: Innova\CollecticielBundle\Listener\DropzoneListener
-        calls:
-          - [setContainer, ["@service_container"]]
-        tags:
-          - { name: kernel.event_listener, event: create_form_innova_collecticiel, method: onCreateForm }
-          - { name: kernel.event_listener, event: create_innova_collecticiel, method: onCreate }
-          - { name: kernel.event_listener, event: delete_innova_collecticiel, method: onDelete }
-          #- { name: kernel.event_listener, event: export_innova_dropzone, method: onExport }
-          - { name: kernel.event_listener, event: copy_innova_collecticiel, method: onCopy }
-          - { name: kernel.event_listener, event: open_innova_collecticiel, method: onOpen }
-          - { name: kernel.event_listener, event: create_log_list_item_innova_collecticiel, method: onCreateLogListItem }
-          - { name: kernel.event_listener, event: create_log_details_innova_collecticiel, method: onCreateLogDetails }
-          - { name: kernel.event_listener, event: plugin_options_innovacollecticiel, method: onAdministrate }
-          - { name: kernel.event_listener, event: edit_dropzone_innova_collecticiel, method: onEdit }
-          - { name: kernel.event_listener, event: open_dropzone_innova_collecticiel, method: onOpenCustom }
-
     innova.listener.document_listener:
         class: Innova\CollecticielBundle\Listener\DeleteListener
         calls:

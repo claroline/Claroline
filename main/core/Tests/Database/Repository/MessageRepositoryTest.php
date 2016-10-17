@@ -21,7 +21,7 @@ class MessageRepositoryTest extends RepositoryTestCase
     {
         parent::setUpBeforeClass();
 
-        self::$repo = self::getRepository('ClarolineCoreBundle:Message');
+        self::$repo = self::getRepository('ClarolineMessageBundle:Message');
 
         self::createUser('sender');
         self::createUser('receiver');
@@ -29,14 +29,14 @@ class MessageRepositoryTest extends RepositoryTestCase
         self::createMessage(
             'message_1',
             self::get('sender'),
-            array(self::get('receiver')),
+            [self::get('receiver')],
             'message_1 content',
             'message_1 object'
         );
         self::createMessage(
             'message_2',
             self::get('sender'),
-            array(self::get('receiver')),
+            [self::get('receiver')],
             'message_2 content',
             'message_2 object',
             self::get('message_1')
@@ -58,7 +58,7 @@ class MessageRepositoryTest extends RepositoryTestCase
      */
     public function testFindAncestors()
     {
-        $messages = self::$repo->findAncestors(self::get('message_2'));
+        $messages = self::$repo->findAncestors(self::get('message_2'), self::get('receiver'));
         $this->assertEquals(2, count($messages));
         $this->assertEquals(self::get('message_1'), $messages[0]);
         $this->assertEquals(self::get('message_2'), $messages[1]);

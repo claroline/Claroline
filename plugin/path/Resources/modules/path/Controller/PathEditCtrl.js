@@ -95,6 +95,8 @@ export default class PathEditCtrl extends PathBaseCtrl {
           this.modified  = false
           this.published = true
           this.unsaved   = false
+          //TODO : poor solution to fix the $scope.$watch problem
+          this.historyService.clear()
 
           if (this.path.steps[0] !== 'undefined') {
             this.pathService.goTo(this.path.steps[0])

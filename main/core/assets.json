@@ -10,7 +10,8 @@
       "tinymce": "tinymce/tinymce",
       "desktop-home": "desktopHome/desktopHome",
       "admin-home-tabs-config": "adminHomeTabsConfig/adminHomeTabsConfig",
-      "workspace-home": "workspace/tools/home/workspaceHome"
+      "workspace-home": "workspace/tools/home/workspaceHome",
+      "modernizr": "modernizr/modernizr"
     }
   }
 }

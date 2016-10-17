@@ -31,9 +31,9 @@ class RoleRepositoryTest extends RepositoryTestCase
         self::createRole('ROLE_WS_CUSTOM_1', self::get('ws_1'));
         self::createRole('ROLE_WS_CUSTOM_2', self::get('ws_1'));
         self::createRole('ROLE_PLATFORM_CUSTOM');
-        self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), array(self::get('ROLE_WS_CUSTOM_1')), 1);
-        self::createUser('john', array(self::get('ROLE_WS_CUSTOM_1'), self::get('ROLE_PLATFORM_CUSTOM')));
-        self::createGroup('group_1', array(), array(self::get('ROLE_WS_CUSTOM_2')));
+        self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), [self::get('ROLE_WS_CUSTOM_1')], 1);
+        self::createUser('john', [self::get('ROLE_WS_CUSTOM_1'), self::get('ROLE_PLATFORM_CUSTOM')]);
+        self::createGroup('group_1', [], [self::get('ROLE_WS_CUSTOM_2')]);
     }
 
     public function testFindByWorkspace()
@@ -63,17 +63,8 @@ class RoleRepositoryTest extends RepositoryTestCase
     public function testFindPlatformRoles()
     {
         $roles = self::$repo->findPlatformRoles(self::get('john'));
-        $this->assertEquals(1, count($roles));
-        $this->assertEquals('ROLE_PLATFORM_CUSTOM', $roles[0]->getName());
-    }
-
-    public function testFindByWorkspaceAndTool()
-    {
-        $roles = self::$repo->findByWorkspaceAndTool(
-            self::get('ws_1'),
-            self::get('tool_1')
-        );
-        $this->assertEquals(1, count($roles));
+        $this->assertEquals(2, count($roles));
+        $this->assertEquals('ROLE_PLATFORM_CUSTOM', $roles[1]->getName());
     }
 
     public function testFindByWorkspaceCodeTag()

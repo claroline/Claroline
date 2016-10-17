@@ -4,27 +4,26 @@
  * Date: 22/08/13
  * Time: 09:30.
  */
-
 namespace Icap\DropzoneBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropReportEvent;
+use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Form\CorrectionReportType;
-use Icap\DropzoneBundle\Form\DropType;
 use Icap\DropzoneBundle\Form\DocumentType;
+use Icap\DropzoneBundle\Form\DropType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -54,23 +53,23 @@ class DropController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');
 
-        if ($dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true)) !== null) {
+        if ($dropRepo->findOneBy(['dropzone' => $dropzone, 'user' => $user, 'finished' => true]) !== null) {
             $request->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('You ve already made your copy for this review', array(), 'icap_dropzone')
+                $this->get('translator')->trans('You ve already made your copy for this review', [], 'icap_dropzone')
             );
 
             return $this->redirect(
                 $this->generateUrl(
                     'icap_dropzone_open',
-                    array(
+                    [
                         'resourceId' => $dropzone->getId(),
-                    )
+                    ]
                 )
             );
         }
 
-        $notFinishedDrop = $dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => false));
+        $notFinishedDrop = $dropRepo->findOneBy(['dropzone' => $dropzone, 'user' => $user, 'finished' => false]);
         if ($notFinishedDrop === null) {
             $notFinishedDrop = new Drop();
             $number = ($dropRepo->getLastNumber($dropzone) + 1);
@@ -89,23 +88,23 @@ class DropController extends DropzoneBaseController
         }
 
         $form = $this->createForm(new DropType(), $notFinishedDrop);
-        $form_url = $this->createForm(new DocumentType(), null, array('documentType' => 'url'));
-        $form_file = $this->createForm(new DocumentType(), null, array('documentType' => 'file'));
-        $form_resource = $this->createForm(new DocumentType(), null, array('documentType' => 'resource'));
-        $form_text = $this->createForm(new DocumentType(), null, array('documentType' => 'text'));
+        $form_url = $this->createForm(new DocumentType(), null, ['documentType' => 'url']);
+        $form_file = $this->createForm(new DocumentType(), null, ['documentType' => 'file']);
+        $form_resource = $this->createForm(new DocumentType(), null, ['documentType' => 'resource']);
+        $form_text = $this->createForm(new DocumentType(), null, ['documentType' => 'text']);
         $drop = $notFinishedDrop;
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
-            if (count($notFinishedDrop->getDocuments()) == 0) {
+            if (count($notFinishedDrop->getDocuments()) === 0) {
                 $form->addError(new FormError('Add at least one document'));
             }
 
             if ($form->isValid()) {
                 // change the folder name to take the datetime of the drop event
                 $dropDate = new \DateTime();
-                $date_format = $this->get('translator')->trans('date_form_datepicker_php', array(), 'platform');
+                $date_format = $this->get('translator')->trans('date_form_datepicker_php', [], 'platform');
                 $rm = $this->get('claroline.manager.resource_manager');
                 $node = $rm->getById($notFinishedDrop->getHiddenDirectory()->getId());
                 // set the date time of the drop.
@@ -127,21 +126,21 @@ class DropController extends DropzoneBaseController
 
                 $request->getSession()->getFlashBag()->add(
                     'success',
-                    $this->get('translator')->trans('Your copy has been saved', array(), 'icap_dropzone')
+                    $this->get('translator')->trans('Your copy has been saved', [], 'icap_dropzone')
                 );
 
                 return $this->redirect(
                     $this->generateUrl(
                         'icap_dropzone_open',
-                        array(
+                        [
                             'resourceId' => $dropzone->getId(),
-                        )
+                        ]
                     )
                 );
             }
         }
 
-        $allowedTypes = array();
+        $allowedTypes = [];
         if ($dropzone->getAllowWorkspaceResource()) {
             $allowedTypes[] = 'resource';
         }
@@ -160,7 +159,7 @@ class DropController extends DropzoneBaseController
         $dropzoneManager = $this->get('icap.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
-        return array(
+        return [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
@@ -173,7 +172,7 @@ class DropController extends DropzoneBaseController
             'allowedTypes' => $allowedTypes,
             'resourceTypes' => $resourceTypes,
             'dropzoneProgress' => $dropzoneProgress,
-        );
+        ];
     }
 
     private function addDropsStats($dropzone, $array)
@@ -220,10 +219,10 @@ class DropController extends DropzoneBaseController
                 return $this->redirect(
                     $this->generateUrl(
                         'icap_dropzone_drops_by_user_paginated',
-                        array(
+                        [
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages(),
-                        )
+                        ]
                     )
                 );
             } else {
@@ -231,13 +230,13 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        return $this->addDropsStats($dropzone, array(
+        return $this->addDropsStats($dropzone, [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'unterminated_drops' => $countUnterminatedDrops,
             'dropzone' => $dropzone,
             'pager' => $pager,
-        ));
+        ]);
     }
 
     /**
@@ -262,7 +261,7 @@ class DropController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $drop = $dropRepo->getDropByUser($dropzone->getId(), $userId);
-        if ($drop != null) {
+        if ($drop !== null) {
             $drop->setUnlockedUser(true);
         }
         $em = $this->getDoctrine()->getManager();
@@ -272,9 +271,9 @@ class DropController extends DropzoneBaseController
         return $this->redirect(
             $this->generateUrl(
                 'icap_dropzone_examiners',
-                array(
+                [
                     'resourceId' => $dropzone->getId(),
-                )
+                ]
             )
         );
     }
@@ -333,7 +332,7 @@ class DropController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
-        $drops = $dropRepo->findBy(array('dropzone' => $dropzone->getId(), 'unlockedUser' => !$unlock));
+        $drops = $dropRepo->findBy(['dropzone' => $dropzone->getId(), 'unlockedUser' => !$unlock]);
 
         foreach ($drops as $drop) {
             $drop->setUnlockedUser($unlock);
@@ -344,9 +343,9 @@ class DropController extends DropzoneBaseController
         return $this->redirect(
             $this->generateUrl(
                 'icap_dropzone_examiners',
-                array(
+                [
                     'resourceId' => $dropzone->getId(),
-                )
+                ]
             )
         );
     }
@@ -374,7 +373,7 @@ class DropController extends DropzoneBaseController
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      **/
-    public function dropsByDefaultAction($dropzone, $page)
+    public function dropsByDefaultAction($dropzone, $page = 1)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -393,10 +392,10 @@ class DropController extends DropzoneBaseController
                 return $this->redirect(
                     $this->generateUrl(
                         'icap_dropzone_drops_by_user_paginated',
-                        array(
+                        [
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages(),
-                        )
+                        ]
                     )
                 );
             } else {
@@ -404,13 +403,13 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        return $this->addDropsStats($dropzone, array(
+        return $this->addDropsStats($dropzone, [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'pager' => $pager,
             'unterminated_drops' => $countUnterminatedDrops,
-        ));
+        ]);
     }
 
     /**
@@ -450,10 +449,10 @@ class DropController extends DropzoneBaseController
                 return $this->redirect(
                     $this->generateUrl(
                         'icap_dropzone_drops_by_user_paginated',
-                        array(
+                        [
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages(),
-                        )
+                        ]
                     )
                 );
             } else {
@@ -461,13 +460,13 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        return $this->addDropsStats($dropzone, array(
+        return $this->addDropsStats($dropzone, [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'pager' => $pager,
             'unterminated_drops' => $countUnterminatedDrops,
-        ));
+        ]);
     }
 
     /**
@@ -505,10 +504,10 @@ class DropController extends DropzoneBaseController
                 return $this->redirect(
                     $this->generateUrl(
                         'icap_dropzone_drops_by_date_paginated',
-                        array(
+                        [
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages(),
-                        )
+                        ]
                     )
                 );
             } else {
@@ -516,13 +515,13 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        return $this->addDropsStats($dropzone, array(
+        return $this->addDropsStats($dropzone, [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'pager' => $pager,
             'unterminated_drops' => $countUnterminatedDrops,
-        ));
+        ]);
     }
 
     /**
@@ -561,10 +560,10 @@ class DropController extends DropzoneBaseController
                 return $this->redirect(
                     $this->generateUrl(
                         'icap_dropzone_drops_awaiting_paginated',
-                        array(
+                        [
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages(),
-                        )
+                        ]
                     )
                 );
             } else {
@@ -572,13 +571,13 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        return $this->addDropsStats($dropzone, array(
+        return $this->addDropsStats($dropzone, [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'unterminated_drops' => $countUnterminatedDrops,
             'pager' => $pager,
-        ));
+        ]);
     }
 
     /**
@@ -600,9 +599,9 @@ class DropController extends DropzoneBaseController
         $form = $this->createForm(new DropType(), $drop);
 
         $previousPath = 'icap_dropzone_drops_by_user_paginated';
-        if ($tab == 1) {
+        if ($tab === 1) {
             $previousPath = 'icap_dropzone_drops_by_date_paginated';
-        } elseif ($tab == 2) {
+        } elseif ($tab === 2) {
             $previousPath = 'icap_dropzone_drops_awaiting_paginated';
         }
 
@@ -618,10 +617,10 @@ class DropController extends DropzoneBaseController
             return $this->redirect(
                     $this->generateUrl(
                         $previousPath,
-                        array(
+                        [
                             'resourceId' => $dropzone->getId(),
                             'page' => $page,
-                        )
+                        ]
                     )
 
                 );
@@ -633,7 +632,7 @@ class DropController extends DropzoneBaseController
             $view = 'IcapDropzoneBundle:Drop:dropsDeleteModal.html.twig';
         }
 
-        return $this->render($view, array(
+        return $this->render($view, [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
@@ -642,7 +641,7 @@ class DropController extends DropzoneBaseController
             'previousPath' => $previousPath,
             'tab' => $tab,
             'page' => $page,
-        ));
+        ]);
     }
 
     /**
@@ -668,20 +667,20 @@ class DropController extends DropzoneBaseController
         $return = $this->redirect(
             $this->generateUrl(
                 'icap_dropzone_drops_awaiting',
-                array(
+                [
                     'resourceId' => $dropzone->getId(),
-                )
+                ]
             ));
 
         if (count($dropResult) > 0) {
             $drop = $dropResult[0];
-            $return = array(
+            $return = [
                 'workspace' => $dropzone->getResourceNode()->getWorkspace(),
                 '_resource' => $dropzone,
                 'dropzone' => $dropzone,
                 'drop' => $drop,
                 'isAllowedToEdit' => true,
-            );
+            ];
         }
 
         return $return;
@@ -703,7 +702,7 @@ class DropController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         // getting the userId to check if the current drop owner match with the loggued user.
         $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
-        $collection = new ResourceCollection(array($dropzone->getResourceNode()));
+        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
         $isAllowedToEdit = $this->get('security.authorization_checker')->isGranted('EDIT', $collection);
 
         // getting the data
@@ -712,8 +711,8 @@ class DropController extends DropzoneBaseController
             ->getDropAndValidEndedCorrectionsAndDocumentsByUser($dropzone, $drop->getId(), $userId);
 
         // if there is no result ( user is not the owner, or the drop has not ended Corrections , show 404)
-        if (count($dropSecure) == 0) {
-            if ($drop->getUser()->getId() != $userId) {
+        if (count($dropSecure) === 0) {
+            if ($drop->getUser()->getId() !== $userId) {
                 throw new AccessDeniedException();
             }
         } else {
@@ -735,14 +734,14 @@ class DropController extends DropzoneBaseController
             $showCorrections = true;
         }
 
-        return array(
+        return [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'drop' => $drop,
             'isAllowedToEdit' => $isAllowedToEdit,
             'showCorrections' => $showCorrections,
-        );
+        ];
     }
 
     /**
@@ -773,7 +772,7 @@ class DropController extends DropzoneBaseController
         $request
             ->getSession()
             ->getFlashBag()
-            ->add('success', $this->get('translator')->trans('Drop have been unlocked', array(), 'icap_dropzone')
+            ->add('success', $this->get('translator')->trans('Drop have been unlocked', [], 'icap_dropzone')
             );
 
         $dropzoneId = $drop->getDropzone()->getId();
@@ -781,9 +780,9 @@ class DropController extends DropzoneBaseController
         return $this->redirect(
             $this->generateUrl(
                 'icap_dropzone_drops_awaiting',
-                array(
+                [
                     'resourceId' => $dropzoneId,
-                )
+                ]
             )
         );
     }
@@ -816,7 +815,7 @@ class DropController extends DropzoneBaseController
             throw new AccessDeniedException();
         }
 
-        if ($curent_user_correction == null || $curent_user_correction->getId() != $correction->getId()) {
+        if ($curent_user_correction === null || $curent_user_correction->getId() !== $correction->getId()) {
             throw new AccessDeniedException();
         }
         $form = $this->createForm(new CorrectionReportType(), $correction);
@@ -839,14 +838,14 @@ class DropController extends DropzoneBaseController
                     ->getRequest()
                     ->getSession()
                     ->getFlashBag()
-                    ->add('success', $this->get('translator')->trans('Your report has been saved', array(), 'icap_dropzone'));
+                    ->add('success', $this->get('translator')->trans('Your report has been saved', [], 'icap_dropzone'));
 
                 return $this->redirect(
                     $this->generateUrl(
                         'icap_dropzone_open',
-                        array(
+                        [
                             'resourceId' => $dropzone->getId(),
-                        )
+                        ]
                     )
                 );
             }
@@ -857,14 +856,14 @@ class DropController extends DropzoneBaseController
             $view = 'IcapDropzoneBundle:Drop:reportDropModal.html.twig';
         }
 
-        return $this->render($view, array(
+        return $this->render($view, [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'drop' => $drop,
             'correction' => $correction,
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     protected function dispatchDropReportEvent(Dropzone $dropzone, Drop $drop, Correction $correction)
@@ -893,7 +892,7 @@ class DropController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $correction->setReporter(false);
 
-        if ($invalidate == 1) {
+        if ($invalidate === 1) {
             $correction->setValid(false);
         }
 
@@ -901,7 +900,7 @@ class DropController extends DropzoneBaseController
         $em->flush();
 
         $correctionRepo = $this->getDoctrine()->getRepository('IcapDropzoneBundle:Correction');
-        if ($correctionRepo->countReporter($dropzone, $drop) == 0) {
+        if ($correctionRepo->countReporter($dropzone, $drop) === 0) {
             $drop->setReported(false);
             $em->persist($drop);
             $em->flush();
@@ -913,10 +912,10 @@ class DropController extends DropzoneBaseController
         return $this->redirect(
             $this->generateUrl(
                 'icap_dropzone_drops_detail',
-                array(
+                [
                     'resourceId' => $dropzone->getId(),
                     'dropId' => $drop->getId(),
-                )
+                ]
             )
         );
     }
@@ -940,11 +939,11 @@ class DropController extends DropzoneBaseController
             $view = 'IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDropModal.html.twig';
         }
 
-        return $this->render($view, array(
+        return $this->render($view, [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
-        ));
+        ]);
     }
 
     /**
@@ -966,9 +965,9 @@ class DropController extends DropzoneBaseController
         return $this->redirect(
             $this->generateUrl(
                 'icap_dropzone_drops_awaiting',
-                array(
+                [
                     'resourceId' => $dropzone->getId(),
-                )
+                ]
             )
         );
     }
