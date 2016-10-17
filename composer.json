@@ -51,6 +51,14 @@
             "npm run themes",
             "npm run webpack"
         ],
+        "make": [
+            "php app/consle claroline:update -vvv",
+            "php app/consle assets:install",
+            "npm install",
+            "npm run bower",
+            "composer build",
+            "composer disable-maintenance"
+        ]
         "disable-maintenance": [
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
         ],
