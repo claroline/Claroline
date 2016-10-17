@@ -19,7 +19,9 @@
          data-ng-class="{ 'has-error':
          (createNoteForm.$submitted || createNoteForm.user.$dirty) &&
          !createNoteForm.user.$valid }">
-      <form-field field="vm.noteTypeField" ng-model="vm.noteTypeChoosen"></form-field>
+      <form-field field="vm.noteTypeField" 
+        ng-model="vm.idNoteTypeChoosen"
+        ng-click="vm.updateNoteTypeChoosen()"></form-field>
       <p class="help-block"
          data-ng-if="(createNoteForm.$submitted || createNoteForm.user.$dirty) &&
          createNoteForm.user.$error.required">
