@@ -498,7 +498,8 @@ class UserManager
 
             if (!$userEntity) {
                 $userEntity = $this->userRepo->findOneByUsername($username);
-                if (!$userEntity) {
+                if (!$userEntity && $code !== null) {
+                    //the code isn't required afaik
                     $userEntity = $this->userRepo->findOneByAdministrativeCode($code);
                 }
             }
