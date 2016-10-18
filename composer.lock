@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "516d29991746d9d4726f6670daecc509d31654aa"
+                "reference": "21bbb9d4f28686d8c7f39ce8aa025992c9c582c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/516d29991746d9d4726f6670daecc509d31654aa",
-                "reference": "516d29991746d9d4726f6670daecc509d31654aa",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/21bbb9d4f28686d8c7f39ce8aa025992c9c582c0",
+                "reference": "21bbb9d4f28686d8c7f39ce8aa025992c9c582c0",
                 "shasum": ""
             },
             "require": {
@@ -389,7 +389,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-10-14 12:09:47"
+            "time": "2016-10-17 15:35:07"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3460,12 +3460,12 @@
             "version": "2.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/johngrogg/ics-parser.git",
+                "url": "https://github.com/u01jmg3/ics-parser.git",
                 "reference": "27939236fc7c2cfe6dd9440feb309225f82ab879"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/27939236fc7c2cfe6dd9440feb309225f82ab879",
+                "url": "https://api.github.com/repos/u01jmg3/ics-parser/zipball/27939236fc7c2cfe6dd9440feb309225f82ab879",
                 "reference": "27939236fc7c2cfe6dd9440feb309225f82ab879",
                 "shasum": ""
             },
