@@ -10,8 +10,7 @@
                 </span>
                 <span class="option-text">
                     <i class="fa fa-lock" ng-if="tab['locked']"></i>
-                    <span ng-class="tab['visible'] ? '' : 'strike'">
-                        {{ tab['tabName'] }}
+                    <span ng-class="tab['visible'] ? '' : 'strike'" ng-bind-html="tab['tabName']">
                     </span>
                     &nbsp;
                     <i class="fa fa-pencil pointer-hand text-muted" ng-click="ahtcc.editAdminHomeTab($event, tab['configId'])"></i>

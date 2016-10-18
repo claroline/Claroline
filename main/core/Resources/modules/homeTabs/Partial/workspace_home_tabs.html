@@ -10,8 +10,7 @@
                 </span>
                 <span class="option-text">
                     <i class="fa fa-lock" ng-if="tab['locked'] &&  whc.homeTabsOptions['canEdit']"></i>
-                    <span ng-class="!tab['visible'] && whc.homeTabsOptions['canEdit'] ? 'strike' : ''">
-                        {{ tab['tabName'] }}
+                    <span ng-class="!tab['visible'] && whc.homeTabsOptions['canEdit'] ? 'strike' : ''" ng-bind-html="tab['tabName']">
                     </span>
                     <span ng-if="tab['tabId'] === whc.homeTabsOptions['selectedTabId']">
                         &nbsp;

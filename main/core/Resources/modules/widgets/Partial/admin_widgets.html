@@ -23,8 +23,7 @@
                         <span ng-if="widget['locked']">
                             <i class="fa fa-lock"></i>
                         </span>
-                        <span ng-class="widget['visible'] ? '' : 'strike'">
-                            {{ widget['instanceName'] }}
+                        <span ng-class="widget['visible'] ? '' : 'strike'" ng-bind-html="widget['instanceName']">
                         </span>
                     </span>
                 </h3>

@@ -19,10 +19,9 @@
                     <span class="widget-header-content"
                           title="{{ widget['instanceName'] }}"
                           style="color: {{ widget['textTitleColor'] }}"
+                          ng-class="whc.widgetsOptions['canEdit'] && !widget['visible'] ? 'strike' : ''"
+                          ng-bind-html="widget['instanceName']"
                     >
-                        <span ng-class="whc.widgetsOptions['canEdit'] && !widget['visible'] ? 'strike' : ''">
-                            {{ widget['instanceName'] }}
-                        </span>
                     </span>
                 </h3>
             </div>
