@@ -74,13 +74,25 @@ class DeckController
 
         $canEdit = $this->checker->isGranted('EDIT', $deck);
 
-        $theme = "theme-std";
+        $theme = $deck->getTheme();
 
         return [
             '_resource' => $deck,
             '_canEdit' => $canEdit,
             '_theme' => $theme,
         ];
+    }
+
+    /**
+     * @EXT\Route("/deck/get_all_themes", name="claroline_get_all_themes")
+     * @EXT\Method("GET")
+     *
+     * @return array
+     */
+    public function getAllThemesAction()
+    {
+        $response = new JsonResponse();
+        return $response->setData(Deck::getAllThemes());
     }
 
     /**
@@ -98,12 +110,14 @@ class DeckController
     public function editDefaultParamAction(Request $request, Deck $deck)
     {
         $newCardDay = $request->request->get('newCardDay', false);
+        $theme = $request->request->get('theme', false);
         $response = new JsonResponse();
 
         $this->assertCanEdit($deck);
 
-        if ($newCardDay && $newCardDay > 0) {
+        if ($newCardDay && $newCardDay > 0 && $theme) {
             $deck->setNewCardDayDefault($newCardDay);
+            $deck->setTheme($theme);
 
             $deck = $this->manager->create($deck);
 
@@ -113,7 +127,7 @@ class DeckController
                 $this->serializer->serialize($deck, 'json', $context)
             ));
         } else {
-            $response->setData('Field "newCardDay" is missing');
+            $response->setData('Field "newCardDay" or field "theme" is missing');
             $response->setStatusCode(422);
         }
 

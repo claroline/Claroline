@@ -23,6 +23,15 @@ use JMS\Serializer\Annotation\Groups;
  */
 class Deck extends AbstractResource
 {
+    const THEME_DEFAULT = [
+        "name" => "Standard",
+        "value" => "theme-std"
+    ];
+    const THEME_GREEN = [
+        "name" => "Green",
+        "value" => "theme-green"
+    ];
+
     /**
      * @var int
      *
@@ -59,6 +68,14 @@ class Deck extends AbstractResource
      * @Groups({"api_flashcard", "api_flashcard_deck"})
      */
     protected $sessionDurationDefault;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="theme", type="string")
+     * @Groups({"api_flashcard", "api_flashcard_deck"})
+     */
+    protected $theme;
 
     /**
      * @ORM\OneToMany(targetEntity="UserPreference", mappedBy="deck")
@@ -182,6 +199,30 @@ class Deck extends AbstractResource
     }
 
     /**
+     * @param string $theme
+     *
+     * @return Deck
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTheme()
+    {
+        if (!empty($this->theme)) {
+            return $this->theme;
+        } else {
+            return self::THEME_DEFAULT["value"];
+        }
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getUserPreferences()
@@ -235,5 +276,16 @@ class Deck extends AbstractResource
         $this->userPreferences->add($newUserPref);
 
         return $this;
+    }
+
+    /**
+     * Return the list of available theme.
+     * @return Array
+     */
+    public static function getAllThemes() {
+        return [
+            self::THEME_DEFAULT,
+            self::THEME_GREEN
+        ];
     }
 }
