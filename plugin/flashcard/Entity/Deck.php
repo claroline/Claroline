@@ -249,6 +249,7 @@ class Deck extends AbstractResource
         $userPref = new UserPreference();
         $userPref->setNewCardDay($this->newCardDayDefault);
         $userPref->setSessionDuration($this->sessionDurationDefault);
+        $userPref->setTheme($this->getTheme());
         $userPref->setUser($user);
         $userPref->setDeck($this);
 

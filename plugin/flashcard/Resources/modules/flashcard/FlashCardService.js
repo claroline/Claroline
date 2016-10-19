@@ -160,12 +160,16 @@ export default class FlashCardService {
       })
   }
 
-  editUserParam (deck, newCardDay) {
+  editUserParam (deck, newCardDay, theme) {
     const url = this.routing.generate('claroline_edit_user_param', {
       deck: deck.id
     })
 
-    return this.$http.post(url, { newCardDay: newCardDay })
+    return this.$http.post(url,
+      { 
+        newCardDay: newCardDay,
+        theme: theme
+      })
   }
 
   getUserPreference (deck) {

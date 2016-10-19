@@ -43,6 +43,14 @@ class UserPreference
     private $sessionDuration;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="theme", type="string")
+     * @Groups({"api_flashcard", "api_flashcard_user_pref"})
+     */
+    protected $theme;
+
+    /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="deck", inversedBy="userPreferences")
      * @ORM\JoinColumn(name="deck", onDelete="CASCADE")
@@ -94,6 +102,30 @@ class UserPreference
     public function getSessionDuration()
     {
         return $this->sessionDuration;
+    }
+
+    /**
+     * @param string $theme
+     *
+     * @return Deck
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTheme()
+    {
+        if (!empty($this->theme)) {
+            return $this->theme;
+        } else {
+            return Deck::THEME_DEFAULT['value'];
+        }
     }
 
     /**

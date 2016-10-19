@@ -74,7 +74,9 @@ class DeckController
 
         $canEdit = $this->checker->isGranted('EDIT', $deck);
 
-        $theme = $deck->getTheme();
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $theme = $deck->getUserPreference($user)->getTheme();
 
         return [
             '_resource' => $deck,
@@ -150,15 +152,17 @@ class DeckController
     public function editUserParamAction(Request $request, Deck $deck)
     {
         $newCardDay = $request->request->get('newCardDay', false);
+        $theme = $request->request->get('theme', false);
         $response = new JsonResponse();
 
         $this->assertCanOpen($deck);
 
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($newCardDay && $newCardDay > 0) {
+        if ($newCardDay && $newCardDay > 0 && $theme) {
             $userPref = $deck->getUserPreference($user);
             $userPref->setNewCardDay($newCardDay);
+            $userPref->setTheme($theme);
 
             $deck->setUserPreference($userPref);
 
@@ -170,7 +174,7 @@ class DeckController
                 $this->serializer->serialize($deck, 'json', $context)
             ));
         } else {
-            $response->setData('Field "newCardDay" is missing');
+            $response->setData('Field "newCardDay" or field "theme" is missing');
             $response->setStatusCode(422);
         }
 
