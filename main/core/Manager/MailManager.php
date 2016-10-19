@@ -204,7 +204,9 @@ class MailManager
                 $mail = $user->getMail();
 
                 if ($user->isMailValidated() || $force) {
-                    $to[] = $mail;
+                    if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                        $to[] = $mail;
+                    }
                 }
             }
 
