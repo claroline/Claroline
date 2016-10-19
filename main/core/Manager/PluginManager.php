@@ -30,7 +30,6 @@ class PluginManager
     private $kernel;
     private $bundleManager;
     private $loadedBundles;
-    private $installedBundles;
 
     /**
      * @DI\InjectParams({
