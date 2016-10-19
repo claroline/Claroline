@@ -154,10 +154,10 @@ export default class FlashCardService {
     })
 
     return this.$http.post(url, 
-        {
-          newCardDay: newCardDay,
-          theme: theme
-        })
+      {
+        newCardDay: newCardDay,
+        theme: theme
+      })
   }
 
   editUserParam (deck, newCardDay) {

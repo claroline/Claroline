@@ -92,6 +92,7 @@ class DeckController
     public function getAllThemesAction()
     {
         $response = new JsonResponse();
+
         return $response->setData(Deck::getAllThemes());
     }
 

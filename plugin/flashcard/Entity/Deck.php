@@ -24,12 +24,12 @@ use JMS\Serializer\Annotation\Groups;
 class Deck extends AbstractResource
 {
     const THEME_DEFAULT = [
-        "name" => "Standard",
-        "value" => "theme-std"
+        'name' => 'Standard',
+        'value' => 'theme-std',
     ];
     const THEME_GREEN = [
-        "name" => "Green",
-        "value" => "theme-green"
+        'name' => 'Green',
+        'value' => 'theme-green',
     ];
 
     /**
@@ -218,7 +218,7 @@ class Deck extends AbstractResource
         if (!empty($this->theme)) {
             return $this->theme;
         } else {
-            return self::THEME_DEFAULT["value"];
+            return self::THEME_DEFAULT['value'];
         }
     }
 
@@ -280,12 +280,14 @@ class Deck extends AbstractResource
 
     /**
      * Return the list of available theme.
-     * @return Array
+     *
+     * @return array
      */
-    public static function getAllThemes() {
+    public static function getAllThemes()
+    {
         return [
             self::THEME_DEFAULT,
-            self::THEME_GREEN
+            self::THEME_GREEN,
         ];
     }
 }
