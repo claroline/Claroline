@@ -18,8 +18,8 @@
         <div id="image-player" class="carousel slide" style="width:100%">
             <div class="carousel-inner">
                 {% for img in images %}
-                    <div class="item{% if img.getResourceNode().getId() ==  _resource.getResourceNode().getId() %} active{% endif %}" data-name="{{ img.getResourceNode().getName() }}"  data-id="{{ img.getResourceNode().getId() }}">
-                        <img src="{{ path ("claro_image", {"node": img.getResourceNode.getId()}) }}" width="100%">
+                    <div align="center" class="item{% if img.getResourceNode().getId() ==  _resource.getResourceNode().getId() %} active{% endif %}" data-name="{{ img.getResourceNode().getName() }}"  data-id="{{ img.getResourceNode().getId() }}">
+                        <img src="{{ path ("claro_image", {"node": img.getResourceNode.getId()}) }}">
                     </div>
                 {% endfor %}
             </div>
@@ -77,6 +77,10 @@
             }
         }
     </script>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineimageplayer/css/images.css') }}'/>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
