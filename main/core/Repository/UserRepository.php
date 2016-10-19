@@ -406,7 +406,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return int
      */
-    public function countUsersByRole($role, $restrictionRoleNames)
+    public function countUsersByRole(Role $role, $restrictionRoleNames = null)
     {
         $qb = $this->createQueryBuilder('user')
             ->select('COUNT(DISTINCT user.id)')

@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityRepository;
 
 class GroupRepository extends EntityRepository
 {
@@ -293,14 +293,14 @@ class GroupRepository extends EntityRepository
      */
     public function findByNameForAjax($search)
     {
-        $resultArray = array();
+        $resultArray = [];
         $groups = $this->findByName($search);
 
         foreach ($groups as $group) {
-            $resultArray[] = array(
+            $resultArray[] = [
                 'id' => $group->getId(),
                 'text' => $group->getName(),
-            );
+            ];
         }
 
         return $resultArray;
@@ -323,7 +323,7 @@ class GroupRepository extends EntityRepository
                 ->getResult();
         }
 
-        return array();
+        return [];
     }
 
     public function findByRoles(array $roles, $getQuery = false, $orderedBy = 'id', $order = null)
@@ -540,5 +540,17 @@ class GroupRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function countGroupsByRole(Role $role)
+    {
+        $qb = $this->createQueryBuilder('grp')
+            ->select('COUNT(DISTINCT grp.id)')
+            ->leftJoin('grp.roles', 'roles')
+            ->andWhere('roles.id = :roleId')
+            ->setParameter('roleId', $role->getId());
+        $query = $qb->getQuery();
+
+        return $query->getSingleScalarResult();
     }
 }
