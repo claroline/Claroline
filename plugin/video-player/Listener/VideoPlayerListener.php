@@ -14,6 +14,7 @@ namespace Claroline\VideoPlayerBundle\Listener;
 use Claroline\CoreBundle\Event\InjectJavascriptEvent;
 use Claroline\CoreBundle\Event\PlayFileEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -50,6 +51,9 @@ class VideoPlayerListener extends ContainerAware
      */
     public function onOpenVideo(PlayFileEvent $event)
     {
+        $authorization = $this->container->get('security.authorization_checker');
+        $collection = new ResourceCollection([$event->getResource()->getResourceNode()]);
+        $canExport = $authorization->isGranted('EXPORT', $collection);
         $path = $this->fileDir.DIRECTORY_SEPARATOR.$event->getResource()->getHashName();
         $content = $this->templating->render(
             'ClarolineVideoPlayerBundle::video.html.twig',
@@ -59,6 +63,7 @@ class VideoPlayerListener extends ContainerAware
                 'video' => $event->getResource(),
                 '_resource' => $event->getResource(),
                 'tracks' => $this->container->get('claroline.manager.video_player_manager')->getTracksByVideo($event->getResource()),
+                'canExport' => $canExport,
             ]
         );
         $response = new Response($content);
