@@ -23,13 +23,21 @@ use JMS\Serializer\Annotation\Groups;
  */
 class Deck extends AbstractResource
 {
-    const THEME_DEFAULT = [
-        'name' => 'Standard',
-        'value' => 'theme-std',
-    ];
-    const THEME_GREEN = [
-        'name' => 'Green',
-        'value' => 'theme-green',
+    /**
+     * List of the available themes.
+     *
+     * 'name' contains the name of the theme.
+     * 'value' contains the name of the css file.
+     */
+    public static $themes = [
+        [
+            'name' => 'Standard',
+            'value' => 'theme-std',
+        ],
+        [
+            'name' => 'Green',
+            'value' => 'theme-green',
+        ],
     ];
 
     /**
@@ -218,7 +226,7 @@ class Deck extends AbstractResource
         if (!empty($this->theme)) {
             return $this->theme;
         } else {
-            return self::THEME_DEFAULT['value'];
+            return self::$themes[0]['value'];
         }
     }
 
@@ -286,9 +294,6 @@ class Deck extends AbstractResource
      */
     public static function getAllThemes()
     {
-        return [
-            self::THEME_DEFAULT,
-            self::THEME_GREEN,
-        ];
+        return self::$themes;
     }
 }
