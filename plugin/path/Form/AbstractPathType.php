@@ -18,6 +18,7 @@ abstract class AbstractPathType extends AbstractType
         $builder->add('breadcrumbs',                'checkbox', ['required' => false]);
         $builder->add('summaryDisplayed',           'checkbox', ['required' => false]);
         $builder->add('completeBlockingCondition',  'checkbox', ['required' => false]);
+        $builder->add('manualProgressionAllowed',   'checkbox', ['required' => false]);
         $builder->add('structure',                  'hidden',   ['required' => true]);
     }
 

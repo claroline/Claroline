@@ -89,6 +89,15 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     protected $completeBlockingCondition;
 
     /**
+     * Is it possible for the user to manualy set the progression.
+     *
+     * @var bool
+     *
+     * @ORM\Column(name="manual_progression_allowed", type="boolean")
+     */
+    protected $manualProgressionAllowed;
+
+    /**
      * Class constructor.
      */
     public function __construct()
@@ -96,6 +105,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         $this->steps = new ArrayCollection();
         $this->modified = false;
         $this->completeBlockingCondition = true;
+        $this->manualProgressionAllowed = true;
     }
 
     /**
@@ -316,6 +326,30 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
+     * Get manualProgressionAllowed.
+     *
+     * @return bool
+     */
+    public function isManualProgressionAllowed()
+    {
+        return $this->manualProgressionAllowed;
+    }
+
+    /**
+     * Set manualProgressionAllowed.
+     *
+     * @param bool manualProgressionAllowed
+     *
+     * @return \Innova\PathBundle\Entity\Path\Path
+     */
+    public function setManualProgressionAllowed($manualProgressionAllowed)
+    {
+        $this->manualProgressionAllowed = $manualProgressionAllowed;
+
+        return $this;
+    }
+
+    /**
      * Get root step of the path.
      *
      * @throws \Exception
@@ -353,6 +387,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
             'breadcrumbs' => $this->breadcrumbs,
             'summaryDisplayed' => $this->summaryDisplayed,
             'completeBlockingCondition' => $this->completeBlockingCondition,
+            'manualProgressionAllowed' => $this->manualProgressionAllowed,
             'steps' => [],
         ];
 
@@ -407,6 +442,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
             'breadcrumbs' => $this->breadcrumbs,
             'summaryDisplayed' => $this->summaryDisplayed,
             'completeBlockingCondition' => $this->completeBlockingCondition,
+            'manualProgressionAllowed' => $this->manualProgressionAllowed,
             'steps' => $steps,
         ];
     }

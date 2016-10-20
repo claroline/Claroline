@@ -88,6 +88,7 @@ path_empty_user_read_only: This path is empty and has not been configured by its
 path_init_structure: Create a new empty structure
 path_init_structure_template: Create structure from a template
 path_complete_blocking_condition: Blocking conditions for all children steps ?
+path_manual_progression_allowed: Allow user to manualy set his/her progression ?
 path_name: Name
 path_no_structure: There is no structure for this path.
 path_status: Status
