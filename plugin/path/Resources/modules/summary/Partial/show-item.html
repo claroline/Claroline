@@ -29,7 +29,7 @@
                 <span data-ng-switch-when="to_review" class="text-info fa fa-fw fa-retweet" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_to_review'|trans:{}:'path_wizards' }}"></span>
             </a>
 
-            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="step-progression-{{ summaryItemShowCtrl.step.id }}">
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="step-progression-{{ summaryItemShowCtrl.step.id }}" data-ng-if="summaryItemShowCtrl.path.manualProgressionAllowed">
                 <li>
                     <a href="" class="link-progression link-progression-to_do" data-ng-click="summaryItemShowCtrl.updateProgression('to_do')">
                         <span class="fa fa-fw fa-square-o"></span>

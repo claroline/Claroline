@@ -12,8 +12,9 @@
 import angular from 'angular/index'
 
 export default class HomeTabService {
-  constructor($http, $uibModal, ClarolineAPIService, WidgetService) {
+  constructor($http, $sce, $uibModal, ClarolineAPIService, WidgetService) {
     this.$http = $http
+    this.$sce = $sce
     this.$uibModal = $uibModal
     this.ClarolineAPIService = ClarolineAPIService
     this.WidgetService = WidgetService
@@ -167,7 +168,7 @@ export default class HomeTabService {
   formatHTCDatas (datas) {
     let jsonDatas = JSON.parse(datas)
     jsonDatas['tabId'] = jsonDatas['hometab']['id']
-    jsonDatas['tabName'] = jsonDatas['hometab']['name']
+    jsonDatas['tabName'] = this.$sce.trustAsHtml(jsonDatas['hometab']['name'])
     jsonDatas['tabType'] = jsonDatas['hometab']['type']
     jsonDatas['tabIcon'] = jsonDatas['hometab']['icon']
 
@@ -181,7 +182,7 @@ export default class HomeTabService {
   generateHomeTabsInfos (homeTabs) {
     homeTabs.forEach(h => {
       h['tabId'] = h['hometab']['id']
-      h['tabName'] = h['hometab']['name']
+      h['tabName'] = this.$sce.trustAsHtml(h['hometab']['name'])
       h['tabType'] = h['hometab']['type']
       h['tabIcon'] = h['hometab']['icon']
 

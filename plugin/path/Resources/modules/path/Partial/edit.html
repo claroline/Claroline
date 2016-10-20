@@ -128,6 +128,16 @@
                             </div>
                         </div>
 
+                        <!-- Is it possible for the user to set manualy the progression when following this path  -->
+                        <div class="row form-group">
+                            <label class="control-label col-md-3" for="innova_path_manualProgressionAllowed">{{ 'path_manual_progression_allowed'|trans:{}:'path_wizards' }}</label>
+                            <div class="col-md-9">
+                                <div class="checkbox">
+                                    <input type="checkbox" id="innova_path_manualProgressionAllowed" name="innova_path[manualProgressionAllowed]" data-ng-model="pathEditCtrl.path.manualProgressionAllowed" />
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row form-group form-last">
                             <label class="control-label col-md-3">{{ 'path_status'|trans:{}:'path_wizards' }}</label>
                             <div class="col-md-9">

@@ -49,20 +49,20 @@ class OfficeConnectController extends Controller
         $this->authHelper->GetAuthenticationHeaderFor3LeggedFlow($_GET['code']);
         $jsonResponse = $this->graphHelper->getMeEntry();
         $userResponse = new O365ResponseUser($jsonResponse);
-        $missingProperties = $userResponse->validate();
-
-        if (count($missingProperties) > 0) {
-            return $this->render(
-                'FormaLibreOfficeConnectBundle:Authentication:missingProperties.html.twig',
-                ['missingProperties' => $missingProperties]
-            );
-        }
-
         $userManager = $this->get('claroline.manager.user_manager');
         $email = $userResponse->getEmail();
         $user = $userManager->getUserByEmail($email);
 
         if ($user === null) {
+            $missingProperties = $userResponse->validate();
+
+            if (count($missingProperties) > 0) {
+                return $this->render(
+                    'FormaLibreOfficeConnectBundle:Authentication:missingProperties.html.twig',
+                    ['missingProperties' => $missingProperties]
+                );
+            }
+
             $user = new User();
             $user->setFirstName($userResponse->getNickname());
             $user->setLastName($userResponse->getRealName());

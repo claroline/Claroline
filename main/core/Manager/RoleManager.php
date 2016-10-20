@@ -39,6 +39,9 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class RoleManager
 {
+    const EMPTY_USERS = 1;
+    const EMPTY_GROUPS = 2;
+
     use LoggableTrait;
 
     /** @var RoleRepository */
@@ -1117,5 +1120,28 @@ class RoleManager
     public function getUserRole(User $user)
     {
         return $this->roleRepo->findUserRoleByUser($user);
+    }
+
+    public function emptyRole(Role $role, $mode)
+    {
+        if ($mode === self::EMPTY_USERS) {
+            $users = $role->getUsers();
+
+            foreach ($users as $user) {
+                $user->removeRole($role);
+                $this->om->persist($user);
+            }
+        }
+        if ($mode === self::EMPTY_GROUPS) {
+            $groups = $role->getGroups();
+
+            foreach ($groups as $group) {
+                $group->removeRole($role);
+                $this->om->persist($group);
+            }
+        }
+
+        $this->om->persist($role);
+        $this->om->flush();
     }
 }

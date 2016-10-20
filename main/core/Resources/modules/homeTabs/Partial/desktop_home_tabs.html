@@ -8,7 +8,8 @@
                 <span class="icon-bg" style="background-color: {{  tab['color']}}">
                 </span>
                 <span class="option-text">
-                    {{ tab['tabName'] }}
+                    <span ng-bind-html="tab['tabName']">
+                    </span>
                     <span ng-if="dhmc.homeTabsOptions['canEdit']">
                         &nbsp;
                         <i class="fa fa-lock" ng-if="tab['locked']"></i>
@@ -30,7 +31,8 @@
                 <span class="icon-bg" style="background-color: {{  tab['color']}}">
                 </span>
                 <span class="option-text">
-                    {{ tab['tabName'] }}
+                    <span ng-bind-html="tab['tabName']">
+                    </span>
                     <span ng-if="dhmc.homeTabsOptions['canEdit']">
                         &nbsp;
                         <i class="fa fa-pencil pointer-hand text-muted"
@@ -54,7 +56,8 @@
                 <span class="icon-bg" style="background-color: {{  tab['color']}}">
                 </span>
                 <span class="option-text">
-                    {{ tab['tabName'] }}
+                    <span ng-bind-html="tab['tabName']">
+                    </span>
                     &nbsp;
                     <i class="fa fa-thumb-tack pointer-hand text-muted"
                        ng-click="dhmc.deletePinnedWorkspaceHomeTab($event, tab['configId'])"

@@ -28,6 +28,12 @@ export default class StepBaseCtrl {
      * @type {object}
      */
     this.next = this.pathService.getNext(step)
+
+    /**
+     * Path
+     * @type {object}
+     */
+    this.path = this.pathService.getPath()
   }
 
   /**

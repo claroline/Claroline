@@ -67,19 +67,19 @@
 
                     <div class="col-md-8 col-md-offset-1 col-sm-8 col-xs-8 text-center" data-ng-if="stepShowCtrl.authorization.granted">
                         <!-- To do -->
-                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('to_do')" data-ng-class="{'active btn-warning': 'to_do' == stepShowCtrl.progression.status}">
+                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('to_do')" data-ng-class="{'active btn-warning': 'to_do' == stepShowCtrl.progression.status}" data-ng-if="stepShowCtrl.path.manualProgressionAllowed">
                             <span class="fa fa-fw fa-square-o"></span>
                             {{ 'user_progression_step_to_do_label'|trans:{}:'path_wizards' }}
                         </button>
 
                         <!-- Done -->
-                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('done')" data-ng-class="{'active btn-success': 'done' == stepShowCtrl.progression.status}">
+                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('done')" data-ng-class="{'active btn-success': 'done' == stepShowCtrl.progression.status}" data-ng-if="stepShowCtrl.path.manualProgressionAllowed">
                             <span class="fa fa-fw fa-check-square-o"></span>
                             {{ 'user_progression_step_done_label'|trans:{}:'path_wizards' }}
                         </button>
 
                         <!-- Redo -->
-                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('to_review')" data-ng-class="{'active btn-info': 'to_review' == stepShowCtrl.progression.status}">
+                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('to_review')" data-ng-class="{'active btn-info': 'to_review' == stepShowCtrl.progression.status}" data-ng-if="stepShowCtrl.path.manualProgressionAllowed">
                             <span class="fa fa-fw fa-retweet"></span>
                             {{ 'user_progression_step_to_review_label'|trans:{}:'path_wizards' }}
                         </button>

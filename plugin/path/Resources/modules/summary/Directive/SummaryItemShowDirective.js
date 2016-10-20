@@ -20,6 +20,8 @@ export default class SummaryItemShowDirective {
 
         this.collapsed = false
 
+        this.path = PathService.getPath()
+
         this.userProgression = UserProgressionService.getForStep(this.step)
         
         this.goTo = function() {

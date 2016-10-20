@@ -280,6 +280,11 @@ class Role implements RoleInterface
         }
     }
 
+    public function initUsers()
+    {
+        $this->users = new ArrayCollection();
+    }
+
     public function getGroups()
     {
         return $this->groups;

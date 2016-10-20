@@ -12,6 +12,7 @@
 namespace Claroline\ImagePlayerBundle\Listener;
 
 use Claroline\CoreBundle\Event\PlayFileEvent;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +21,9 @@ class ImagePlayerListener extends ContainerAware
 {
     public function onOpenImage(PlayFileEvent $event)
     {
+        $authorization = $this->container->get('security.authorization_checker');
+        $collection = new ResourceCollection([$event->getResource()->getResourceNode()]);
+        $canExport = $authorization->isGranted('EXPORT', $collection);
         $images = $this->container->get('claroline.manager.resource_manager')->getByMimeTypeAndParent(
             'image',
             $event->getResource()->getResourceNode()->getParent(),
@@ -36,6 +40,7 @@ class ImagePlayerListener extends ContainerAware
                 'image' => $event->getResource(),
                 '_resource' => $event->getResource(),
                 'images' => $images,
+                'canExport' => $canExport,
             ]
         );
 

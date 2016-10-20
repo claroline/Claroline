@@ -124,6 +124,7 @@ export default class PathService {
         breadcrumbs:      this.path.breadcrumbs,
         summaryDisplayed: this.path.summaryDisplayed,
         completeBlockingCondition: this.path.completeBlockingCondition,
+        manualProgressionAllowed : this.path.manualProgressionAllowed,
         structure:        angular.toJson(this.path)
       }
     }

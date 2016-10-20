@@ -2,11 +2,11 @@
 
 namespace FormaLibre\OfficeConnectBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use FormaLibre\OfficeConnectBundle\Form\OfficeConnectType;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
-use FormaLibre\OfficeConnectBundle\Form\OfficeConnectType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -37,7 +37,7 @@ class AuthenticationController extends Controller
         $config = $this->settings->getConfiguration();
         $form = $this->formFactory->create(new OfficeConnectType(), $config);
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -56,18 +56,18 @@ class AuthenticationController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $data = array(
+            $data = [
                 'o365_client_id' => $form['office_client_id']->getData(),
                 'o365_pw' => $form['office_password']->getData(),
                 'o365_domain' => $form['office_app_tenant_domain_name']->getData(),
                 'o365_active' => $form['office_client_active']->getData(),
-            );
+            ];
 
             $this->configHandler->setParameters($data);
 
             return new RedirectResponse($this->router->generate('claro_admin_parameters_oauth_index'));
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 }
