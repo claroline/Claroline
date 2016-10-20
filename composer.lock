@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "1f208de57a5c6de43bf63d8060827da8a459bb17"
+                "reference": "c8bcf42a2af157fb1ad9b1713c27b91445f9f568"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/1f208de57a5c6de43bf63d8060827da8a459bb17",
-                "reference": "1f208de57a5c6de43bf63d8060827da8a459bb17",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/c8bcf42a2af157fb1ad9b1713c27b91445f9f568",
+                "reference": "c8bcf42a2af157fb1ad9b1713c27b91445f9f568",
                 "shasum": ""
             },
             "require": {
@@ -163,7 +163,6 @@
                 "jms/security-extra-bundle": "1.5.1",
                 "jms/serializer-bundle": "~0.13",
                 "jms/twig-js-bundle": "1.0.0",
-                "johngrogg/ics-parser": "2.0.0",
                 "json-quiz/json-quiz": "0.1.0",
                 "knplabs/knp-menu-bundle": "2.0.0",
                 "knplabs/knp-snappy-bundle": "1.3",
@@ -194,6 +193,7 @@
                 "symfony/yaml": "*",
                 "twig/extensions": "1.2.0",
                 "twig/twig": "1.24.2",
+                "u01jmg3/ics-parser": "2.0.0",
                 "werkint/jsmin": "1.0.0",
                 "white-october/pagerfanta-bundle": "1.0.2",
                 "willdurand/js-translation-bundle": "~2.1",
@@ -389,7 +389,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-10-18 12:47:30"
+            "time": "2016-10-19 15:31:22"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3456,60 +3456,6 @@
             "time": "2014-08-22 10:31:22"
         },
         {
-            "name": "johngrogg/ics-parser",
-            "version": "2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/u01jmg3/ics-parser.git",
-                "reference": "27939236fc7c2cfe6dd9440feb309225f82ab879"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/u01jmg3/ics-parser/zipball/27939236fc7c2cfe6dd9440feb309225f82ab879",
-                "reference": "27939236fc7c2cfe6dd9440feb309225f82ab879",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "squizlabs/php_codesniffer": "^2.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "ICal": "src/",
-                    "ICal\\Tests": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Martin Thoma",
-                    "email": "info@martin-thoma.de",
-                    "role": "Original Developer"
-                },
-                {
-                    "name": "John Grogg",
-                    "email": "john.grogg@gmail.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Jonathan Goode",
-                    "role": "Maintainer/Developer"
-                }
-            ],
-            "description": "ICS file parser",
-            "keywords": [
-                "ical",
-                "ics"
-            ],
-            "time": "2016-08-20 21:27:46"
-        },
-        {
             "name": "json-quiz/json-quiz",
             "version": "0.1.0",
             "source": {
@@ -5512,6 +5458,60 @@
                 "templating"
             ],
             "time": "2016-09-01 17:50:53"
+        },
+        {
+            "name": "u01jmg3/ics-parser",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/u01jmg3/ics-parser.git",
+                "reference": "27939236fc7c2cfe6dd9440feb309225f82ab879"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/u01jmg3/ics-parser/zipball/27939236fc7c2cfe6dd9440feb309225f82ab879",
+                "reference": "27939236fc7c2cfe6dd9440feb309225f82ab879",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "^2.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ICal": "src/",
+                    "ICal\\Tests": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Thoma",
+                    "email": "info@martin-thoma.de",
+                    "role": "Original Developer"
+                },
+                {
+                    "name": "John Grogg",
+                    "email": "john.grogg@gmail.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Jonathan Goode",
+                    "role": "Maintainer/Developer"
+                }
+            ],
+            "description": "ICS file parser",
+            "keywords": [
+                "ical",
+                "ics"
+            ],
+            "time": "2016-08-20 21:27:46"
         },
         {
             "name": "werkint/jsmin",
