@@ -55,7 +55,7 @@ class CardLearning
     /**
      * @var bool
      *
-     * @ORM\Column(name="painfull", type="boolean")
+     * @ORM\Column(name="painful", type="boolean")
      * @Groups({
      *     "api_flashcard",
      *     "api_flashcard_card"
