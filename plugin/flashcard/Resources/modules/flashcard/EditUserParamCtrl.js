@@ -17,7 +17,6 @@ export default class EditUserParamCtrl {
     this.canEdit = service._canEdit
     this.nexturl = $routeParams.nexturl
     this.userPref = {}
-    this.theme = null
     this.themeField = [
       'type',
       'select',
@@ -37,7 +36,6 @@ export default class EditUserParamCtrl {
     
     service.getUserPreference(this.deck).then(d => this.userPref = d.data)
     service.getAllThemes().then(d => this.themeField[2].values = d.data)
-    service.getAllThemes().then(d => this.theme = d.data)
   }
 
   editUserParam (form) {
