@@ -4,6 +4,7 @@ namespace Icap\BlogBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Icap\BlogBundle\Entity\Blog;
@@ -24,16 +25,20 @@ class BlogManager
      */
     protected $objectManager;
 
+    protected $ch;
+
     /**
      * @DI\InjectParams({
      *      "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
-     *      "uploadDir" = @DI\Inject("%icap.blog.banner_directory%")
+     *      "uploadDir" = @DI\Inject("%icap.blog.banner_directory%"),
+     *      "ch" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
-    public function __construct(ObjectManager $objectManager, $uploadDir)
+    public function __construct(ObjectManager $objectManager, $uploadDir, PlatformConfigurationHandler $ch)
     {
         $this->objectManager = $objectManager;
         $this->uploadDir = $uploadDir;
+        $this->ch = $ch;
     }
 
     /**
@@ -68,7 +73,7 @@ class BlogManager
 
         foreach ($object->getPosts() as $post) {
             $postUid = uniqid().'.txt';
-            $postTemporaryPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$postUid;
+            $postTemporaryPath = $this->ch->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$postUid;
             file_put_contents($postTemporaryPath, $post->getContent());
             $files[$postUid] = $postTemporaryPath;
 
@@ -84,7 +89,7 @@ class BlogManager
 
             foreach ($post->getComments() as $comment) {
                 $commentUid = uniqid().'.txt';
-                $commentTemporaryPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$commentUid;
+                $commentTemporaryPath = $this->ch->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$commentUid;
                 file_put_contents($commentTemporaryPath, $comment->getMessage());
                 $files[$commentUid] = $commentTemporaryPath;
 
@@ -312,7 +317,7 @@ class BlogManager
 
     public function getPanelInfos()
     {
-        return array(
+        return [
             'search',
             'infobar',
             'rss',
@@ -320,6 +325,6 @@ class BlogManager
             'redactor',
             'calendar',
             'archives',
-        );
+        ];
     }
 }

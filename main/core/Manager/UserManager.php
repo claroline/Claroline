@@ -1280,7 +1280,7 @@ class UserManager
     {
         $archive = new \ZipArchive();
         $archive->open($filepath);
-        $tmpDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid();
+        $tmpDir = $this->platformConfigHandler->getParameter('tmp_dir').DIRECTORY_SEPARATOR.uniqid();
         //add the tmp dir to the "trash list files"
         $tmpList = $this->container->getParameter('claroline.param.platform_generated_archive_path');
         file_put_contents($tmpList, $tmpDir."\n", FILE_APPEND);

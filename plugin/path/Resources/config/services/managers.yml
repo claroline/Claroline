@@ -9,6 +9,7 @@ services:
             resourceManager: @claroline.manager.resource_manager
             utils:           @claroline.security.utilities
             stepManager:     @innova_path.manager.step
+            ch:              @claroline.config.platform_config_handler
 
     # Publishing manager
     innova_path.manager.publishing:
@@ -23,11 +24,11 @@ services:
         class: Innova\PathBundle\Manager\PathTemplateManager
         arguments:
             objectManager: @doctrine.orm.entity_manager
-        
+
     # Step manager
-    innova_path.manager.step: 
+    innova_path.manager.step:
         class: Innova\PathBundle\Manager\StepManager
-        arguments: 
+        arguments:
             om:                   @doctrine.orm.entity_manager
             session:              @session
             translator:           @translator

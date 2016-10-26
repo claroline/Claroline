@@ -333,8 +333,8 @@ class FileListener implements ContainerAwareInterface
 
     private function unzip($archivePath, ResourceNode $root, $published = true)
     {
-        $extractPath = sys_get_temp_dir().
-            DIRECTORY_SEPARATOR.
+        $extractPath = $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir')
+            .DIRECTORY_SEPARATOR.
             $this->container->get('claroline.utilities.misc')->generateGuid();
 
         $archive = new ZipArchive();

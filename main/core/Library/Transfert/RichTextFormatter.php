@@ -137,7 +137,7 @@ class RichTextFormatter
 
             if ($ext === 'txt') {
                 $text = $this->setPlaceHolder($file, $_data, $formattedFiles);
-                $newFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid().'txt';
+                $newFile = $this->config->getParameter('tmp_dir').DIRECTORY_SEPARATOR.uniqid().'txt';
                 file_put_contents($newFile, $text);
             }
 

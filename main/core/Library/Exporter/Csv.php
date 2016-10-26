@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Exporter;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -19,20 +20,23 @@ use JMS\DiExtraBundle\Annotation as DI;
 class Csv implements ExporterInterface
 {
     private $tmpLogPath;
+    private $ch;
 
     /**
      * @DI\InjectParams({
      *     "tmp" = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
+     *     "ch"  = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
-    public function __construct($tmp)
+    public function __construct($tmp, PlatformConfigurationHandler $ch)
     {
         $this->tmpLogPath = $tmp;
+        $this->ch = $ch;
     }
 
     public function export(array $titles, array $data)
     {
-        $tmpFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid().'.csv';
+        $tmpFile = $this->ch->getParameter('tmp_dir').DIRECTORY_SEPARATOR.uniqid().'.csv';
         file_put_contents($this->tmpLogPath, $tmpFile."\n", FILE_APPEND);
         $fp = fopen($tmpFile, 'w');
 

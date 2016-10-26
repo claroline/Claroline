@@ -2221,7 +2221,7 @@ class CursusManager
     public function zipDatas(array $datas, $type)
     {
         $archive = new \ZipArchive();
-        $pathArch = sys_get_temp_dir().DIRECTORY_SEPARATOR.$this->ut->generateGuid().'.zip';
+        $pathArch = $this->platformConfigHandler->getParamter('tmp_dir').DIRECTORY_SEPARATOR.$this->ut->generateGuid().'.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
 
         if ($type === 'cursus') {

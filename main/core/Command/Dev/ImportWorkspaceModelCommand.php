@@ -119,8 +119,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
                 $this->getContainer()->get('security.context')->setToken($token);
                 $workspace = new Workspace();
                 $workspace->setCreator($user);
-                $newpath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.uniqid();
-                $file = new File($newpath);
+                $file = new File($pathinfo->getPathname());
                 $workspaceManager->create($workspace, $file);
                 $output->writeln("<comment> Workspace {$i}/{$total} created. </comment>");
             }

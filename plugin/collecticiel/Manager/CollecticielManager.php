@@ -3,6 +3,7 @@
 namespace Innova\CollecticielBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -11,6 +12,16 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class CollecticielManager
 {
+    /**
+     * @DI\InjectParams({
+     *     "ch"  = @DI\Inject("claroline.config.platform_config_handler")
+     * })
+     */
+    public function __construct(PlatformConfigurationHandler $ch)
+    {
+        $this->ch = $ch;
+    }
+
     /**
      * Import a Collecticiel into the platform.
      *
@@ -57,10 +68,10 @@ class CollecticielManager
      */
     public function export(Workspace $workspace, array &$files, Dropzone $dropzone)
     {
-        $data = array();
+        $data = [];
 
         $uid = uniqid().'.txt';
-        $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$uid;
+        $tmpPath = $this->ch->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$uid;
         file_put_contents($tmpPath, $dropzone->getInstruction());
         $files[$uid] = $tmpPath;
 
