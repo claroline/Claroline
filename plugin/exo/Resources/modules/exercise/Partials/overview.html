@@ -19,7 +19,7 @@
             <div class="col-md-8 col-md-offset-2">
                 <!-- Description of the exercise -->
                 <div class="exercise-description panel panel-default" data-ng-if="exerciseOverviewCtrl.exercise.meta.description">
-                    <div class="panel-body" data-ng-bind-html="exerciseOverviewCtrl.exercise.meta.description"></div>
+                    <div class="panel-body" data-ng-bind-html="exerciseOverviewCtrl.exercise.meta.description | unsafe"></div>
                 </div>
 
                 <!-- Information of the Exercise -->

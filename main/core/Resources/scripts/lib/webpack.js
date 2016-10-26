@@ -73,10 +73,13 @@ function configure (rootDir, packages, isWatchMode) {
   return {
     entry: entries,
     output: output,
+    externals: {
+      // require("jquery") is external and available on the global var jQuery
+      'jquery': 'jQuery'
+    },
     resolve: {
       root: root,
       alias: {
-          jquery: __dirname + '/../../modules/jquery',
           modernizr$: __dirname + '/../config/.modernizrrc'
       }
     },

@@ -63,6 +63,7 @@ badge_valid_for_period: "Valable %validityPeriod%"
 badge_form_advance_options: 'Options avancées'
 badge_form_automatic_award: 'Attribution automatique si les règles sont respectées'
 badge_form_awarding_on_result_action: 'Lorsque le résultat de l''action est'
+badge_form_awarding_on_result_action_info: Valable seulement pour les actions donnant un résultat comme l'attributin d'une note dans un questionnaire ou dans une évaluation
 badge_form_awarding_on_result_action_to: à
 badge_form_badge: 'Lorsque l''action est l''attribution d''un badge'
 badge_form_badge_help: 'Si compatible avec l''action'

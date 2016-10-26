@@ -671,31 +671,6 @@ class ToolManager
     }
 
     /**
-     * Extract the files from a the template configuration array.
-     *
-     * @param string $archpath
-     * @param array  $confTools
-     *
-     * @return array
-     */
-    public function extractFiles($archpath, $confTools)
-    {
-        $extractPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('claro_ws_tmp_', true);
-        $archive = $this->om->factory('ZipArchive');
-        $archive->open($archpath);
-        $archive->extractTo($extractPath);
-        $realPaths = [];
-
-        if (isset($confTools['files'])) {
-            foreach ($confTools['files'] as $path) {
-                $realPaths[] = $extractPath.DIRECTORY_SEPARATOR.$path;
-            }
-        }
-
-        return $realPaths;
-    }
-
-    /**
      * @param string[]                                         $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *

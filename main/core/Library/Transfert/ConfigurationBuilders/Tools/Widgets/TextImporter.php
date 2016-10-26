@@ -11,16 +11,16 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets;
 
+use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\Processor;
-use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
 
 /**
  * @DI\Service("claroline.widget.text_importer")
@@ -53,7 +53,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function supports($type)
     {
-        return $type == 'yml' ? true : false;
+        return $type === 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -96,12 +96,12 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
     public function export(Workspace $workspace, array &$files, $object)
     {
         $txtConfig = $this->container->get('claroline.manager.simple_text_manager')->getTextConfig($object);
-        $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid().'.txt';
+        $tmpPath = $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir').DIRECTORY_SEPARATOR.uniqid().'.txt';
         $content = $txtConfig ? $txtConfig->getContent() : '';
         file_put_contents($tmpPath, $content);
         $archPath = 'widgets/text/'.uniqid().'.txt';
         //create file
-        $data = array(array('locale' => 'fr', 'content' => $archPath));
+        $data = [['locale' => 'fr', 'content' => $archPath]];
         $files[$archPath] = $tmpPath;
 
         return $data;

@@ -48,6 +48,7 @@ badge_valid_for_period: "Valida %validityPeriod%"
 badge_form_advance_options: 'Opciones avanzadas'
 badge_form_automatic_award: 'Atribución automática, si las reglas son respetadas'
 badge_form_awarding_on_result_action: 'Cuando el resultado de la acción es'
+badge_form_awarding_on_result_action_info: badge_form_awarding_on_result_action_info
 badge_form_awarding_on_result_action_to: 'a'
 badge_form_badge: 'Cuando la acción es la atribución de una insignia'
 badge_form_badge_help: 'Si es compatible con la acción'

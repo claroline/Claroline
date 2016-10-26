@@ -87,6 +87,7 @@ class PlatformConfiguration
     private $sslEnabled;
     private $enableRichTextFileImport;
     private $loginTargetRoute;
+    private $tmpDir;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -788,5 +789,15 @@ class PlatformConfiguration
     public function getLoginTargetRoute()
     {
         return $this->loginTargetRoute;
+    }
+
+    public function setTmpDir($tmpDir)
+    {
+        $this->tmpDir = $tmpDir;
+    }
+
+    public function getTmpDir()
+    {
+        return $this->tmpDir;
     }
 }

@@ -137,7 +137,7 @@ class RichTextFormatter
 
             if ($ext === 'txt') {
                 $text = $this->setPlaceHolder($file, $_data, $formattedFiles);
-                $newFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid().'txt';
+                $newFile = $this->config->getParameter('tmp_dir').DIRECTORY_SEPARATOR.uniqid().'txt';
                 file_put_contents($newFile, $text);
             }
 
@@ -201,7 +201,11 @@ class RichTextFormatter
             }
         }
 
-        $event = $this->eventDispatcher->dispatch('rich_text_format_event_export', 'RichTextFormat', [$text, $_data, $_files]);
+        $event = $this->eventDispatcher->dispatch(
+            'rich_text_format_event_export',
+            'RichTextFormat',
+            [$text, &$_data, &$_files]
+        );
         $text = $event->getText();
 
         return $text;

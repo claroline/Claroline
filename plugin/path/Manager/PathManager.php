@@ -5,6 +5,7 @@ namespace Innova\PathBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -58,6 +59,11 @@ class PathManager
     protected $stepManager;
 
     /**
+     * @var PlatformConfigurationHandler
+     */
+    protected $ch;
+
+    /**
      * Class constructor - Inject required services.
      *
      * @param \Doctrine\Common\Persistence\ObjectManager                                          $objectManager
@@ -66,6 +72,7 @@ class PathManager
      * @param \Claroline\CoreBundle\Manager\ResourceManager                                       $resourceManager
      * @param \Claroline\CoreBundle\Library\Security\Utilities                                    $utils
      * @param \Innova\PathBundle\Manager\StepManager                                              $stepManager
+     * @param PlatformConfigurationHandler                                                        $ch
      */
     public function __construct(
         ObjectManager                 $objectManager,
@@ -73,7 +80,8 @@ class PathManager
         TokenStorageInterface         $securityToken,
         ResourceManager               $resourceManager,
         Utilities                     $utils,
-        StepManager                   $stepManager
+        StepManager                   $stepManager,
+        PlatformConfigurationHandler  $ch
     ) {
         $this->om = $objectManager;
         $this->securityAuth = $securityAuth;
@@ -81,6 +89,7 @@ class PathManager
         $this->resourceManager = $resourceManager;
         $this->utils = $utils;
         $this->stepManager = $stepManager;
+        $this->ch = $ch;
     }
 
     /**
@@ -289,7 +298,7 @@ class PathManager
 
         // Get path structure into a file (to replace resources ID with placeholders)
         $uid = uniqid().'.txt';
-        $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$uid;
+        $tmpPath = $this->ch->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$uid;
         $structure = $path->getStructure();
         file_put_contents($tmpPath, $structure);
         $files[$uid] = $tmpPath;

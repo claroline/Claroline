@@ -63,6 +63,7 @@ badge_valid_for_period: "Valid %validityPeriod%"
 badge_form_advance_options: 'Advanced options'
 badge_form_automatic_award: 'Automatic awarding if rules are respected'
 badge_form_awarding_on_result_action: 'When action''s result is'
+badge_form_awarding_on_result_action_info: Only applicable to actions giving a result such as Quiz mark attribution or Peer evaluation result
 badge_form_awarding_on_result_action_to: to
 badge_form_badge: 'When the action is a badge awarding'
 badge_form_badge_help: 'If compatible with the action'

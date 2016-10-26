@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\View\Serializer;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -19,15 +20,18 @@ use JMS\DiExtraBundle\Annotation as DI;
 class Excel
 {
     private $tmpLogPath;
+    private $ch;
 
     /**
      * @DI\InjectParams({
      *     "tmp" = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
+     *     "ch"  = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
-    public function __construct($tmp)
+    public function __construct($tmp, PlatformConfigurationHandler $ch)
     {
         $this->tmpLogPath = $tmp;
+        $this->ch = $ch;
     }
 
     /**
@@ -40,17 +44,17 @@ class Excel
 
         foreach ($data as $row) {
             array_walk($row, function (&$str) {
-                 $str = preg_replace("/\t/", '\\t', $str);
-                 $str = preg_replace("/\r?\n/", '\\n', $str);
-                 if (strstr($str, '"')) {
-                     $str = '"'.str_replace('"', '""', $str).'"';
-                 }
+                $str = preg_replace("/\t/", '\\t', $str);
+                $str = preg_replace("/\r?\n/", '\\n', $str);
+                if (strstr($str, '"')) {
+                    $str = '"'.str_replace('"', '""', $str).'"';
+                }
             });
 
             $excel .= implode("\t", $row)."\r\n";
         }
 
-        $tmpFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid().'.xls';
+        $tmpFile = $this->ch->getParameter('tmp_dir').DIRECTORY_SEPARATOR.uniqid().'.xls';
         file_put_contents($this->tmpLogPath, $tmpFile."\n", FILE_APPEND);
         file_put_contents($tmpFile, $excel);
 

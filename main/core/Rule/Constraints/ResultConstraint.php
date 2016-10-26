@@ -26,7 +26,6 @@ class ResultConstraint extends AbstractConstraint
      */
     public function validate()
     {
-        $isValid = true;
         $resultComparisonTypes = Rule::getResultComparisonTypes();
         $nbOccurence = $this->getRule()->getOccurrence();
         $nbValidatedLogs = 0;
@@ -38,7 +37,10 @@ class ResultConstraint extends AbstractConstraint
 
             $logResult = isset($associatedLogDetails['result']) ?
                 $associatedLogDetails['result'] :
-                null;
+                (isset($associatedLogDetails['dropGrade']) ?
+                    $associatedLogDetails['dropGrade'] :
+                    null)
+            ;
             $logResultMax = isset($associatedLogDetails['resultMax']) ?
                 $associatedLogDetails['resultMax'] :
                 null;
@@ -87,7 +89,7 @@ class ResultConstraint extends AbstractConstraint
         $score,
         $scoreMax
     ) {
-        $realResults = array('rule' => null, 'log' => null);
+        $realResults = ['rule' => null, 'log' => null];
 
         if (!is_null($ruleScore) && !is_null($score)) {
             if (empty($ruleScoreMax) || empty($scoreMax)) {

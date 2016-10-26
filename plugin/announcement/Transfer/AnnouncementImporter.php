@@ -165,7 +165,8 @@ class AnnouncementImporter extends Importer implements ConfigurationInterface, R
         foreach ($announcements as $announcement) {
             $content = $announcement->getContent();
             $uid = uniqid().'.txt';
-            $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$uid;
+            $tmpPath = $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir')
+                .DIRECTORY_SEPARATOR.$uid;
             file_put_contents($tmpPath, $content);
             $files[$uid] = $tmpPath;
             $data[] = [

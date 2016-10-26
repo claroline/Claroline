@@ -309,6 +309,14 @@ class GeneralType extends AbstractType
                     'required' => false,
                     'disabled' => isset($this->lockedParams['is_pdf_export_active']),
                 ]
+            )
+            ->add(
+                'tmpDir',
+                'text',
+                [
+                    'label' => 'temporary_directory',
+                    'disabled' => isset($this->lockedParams['tmp_dir']),
+                ]
             );
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
