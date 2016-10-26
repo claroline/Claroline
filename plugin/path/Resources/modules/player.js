@@ -7,6 +7,7 @@ import 'angular-route'
 import 'angular-sanitize'
 import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
+import 'angular-loading-bar'
 
 import './authorization/module'
 import './path/module'
@@ -15,11 +16,10 @@ import './navigation/module'
 import './step/module'
 import './user-progression/module'
 import './condition/module'
+import './appModuleBase'
 
 import PathApp from './app'
 import stepTemplate from './step/Partial/show.html'
-
-const pathApp = new PathApp()
 
 angular
   // Path Player application
@@ -28,7 +28,7 @@ angular
     'ngRoute',
     'ui.bootstrap',
     'ui.translation',
-
+    'PathModuleBase',
     'Authorization',
     'Path',
     'Summary',
@@ -99,7 +99,7 @@ angular
                 return AuthorizationCheckerService.isAuthorized(PathService.getStep($route.current.params.stepId))
               }
             ]
-          }, pathApp.resolveFunctions)
+          }, PathApp.resolveFunctions)
         })
         .otherwise({
           redirectTo: '/:stepId?'
@@ -112,5 +112,5 @@ angular
     '$rootScope',
     '$location',
     '$anchorScroll',
-    pathApp.run
+    PathApp.run
   ])
