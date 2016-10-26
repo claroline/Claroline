@@ -201,7 +201,11 @@ class RichTextFormatter
             }
         }
 
-        $event = $this->eventDispatcher->dispatch('rich_text_format_event_export', 'RichTextFormat', [$text, $_data, $_files]);
+        $event = $this->eventDispatcher->dispatch(
+            'rich_text_format_event_export',
+            'RichTextFormat',
+            [$text, &$_data, &$_files]
+        );
         $text = $event->getText();
 
         return $text;
