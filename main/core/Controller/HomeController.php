@@ -639,6 +639,30 @@ class HomeController
     }
 
     /**
+     * Check if a string is a valid URL.
+     *
+     * @Route("/cangeneratecontent", name="claroline_can_generate_content")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function canGenerateContentAction()
+    {
+        if ($this->manager->isValidUrl($this->request->get('url'))) {
+            $graph = $this->manager->getGraph($this->request->get('url'));
+
+            if (isset($graph['type'])) {
+                return $this->render(
+                    'ClarolineCoreBundle:Home/graph:'.$graph['type'].'.html.twig',
+                    ['content' => $graph],
+                    true
+                );
+            }
+        }
+
+        return new Response('false'); //in case is not valid URL
+    }
+
+    /**
      * menu_settings.
      *
      * @Route("/content/menu/settings/{content}", name="claroline_content_menu_settings")

@@ -302,6 +302,15 @@ class GeneralType extends AbstractType
                 ]
             )
             ->add(
+                'enableOpengraph',
+                'checkbox',
+                [
+                    'label' => 'enable_opengraph',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['default_workspace_tag']),
+                ]
+            )
+            ->add(
                 'isPdfExportActive',
                 'checkbox',
                 [
