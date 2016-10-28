@@ -1,0 +1,42 @@
+# a
+audio_recorder_configuration_max_try: Maximum aantal pogingen
+audio_recorder_configuration_max_recording_time: Maximum opname tijd (Seconden, 0 = oneindig)
+
+# c
+creating_resource: Leermiddel aan het maken...
+config_update_error: Probleem tijdens de update van de instelligen van de audio-opnemer
+config_update_success: Update van de instelligen van de audio-opnemer met succes gemaakt.
+
+# d
+download_audio: Het audio-bestand downloaden.
+db_meter: Niveau van de micro
+
+# e
+end_recording_message: De opname is voltooid.<br/>Ze is in uw tijdelijke lijst geplaatst.
+end_recording_message_maxtime_reached: De opname heeft de maximale tijd bereikt.<br/>Ze is onderbroken en in uw tijdelijke lijst geplaatst.
+
+# i
+innova_audio_recorder_config: Instellen van de audio-opnemer
+
+# m
+my_recordings: Mijn (tijdelijke) opnamen
+max_try_threshold_reached: De tijdelijke lijst is vol.<br/>Verwijder bestanden om u opnieuw op te nemen.
+max_recording_time: Maximum opname tijd :
+
+# n
+nb_try_label: Poging nr
+
+
+# o
+ok: Valideren
+
+# r
+resource_name: Naam :
+resource_name_placeholder: De naamvan de leermiddel is verplicht.
+resource_creation_error: Er is een fout opgetreden tijdens het maken van de leermiddel.
+resource_creation_error_download: Gebruik de downloadknop om uw bestand locaal op te slaan.
+
+# s
+start_recording: Starten
+stop_recording: Stop
+submit_config_label: De instelling opslaan
