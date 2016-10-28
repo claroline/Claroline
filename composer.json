@@ -3,7 +3,7 @@
     "description": "Claroline Connect",
     "license": "GPL-3.0+",
     "require": {
-        "php": ">=5.5",
+        "php": ">=5.6",
         "claroline/distribution": "dev-master"
     },
     "require-dev": {
