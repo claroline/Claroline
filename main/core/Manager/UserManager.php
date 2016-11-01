@@ -507,7 +507,9 @@ class UserManager
             }
 
             if ($userEntity && $options['ignore-update']) {
-                $logger(" Skipping  {$userEntity->getUsername()}...");
+                if ($logger) {
+                    $logger(" Skipping  {$userEntity->getUsername()}...");
+                }
                 continue;
             }
 
@@ -594,8 +596,10 @@ class UserManager
         }
 
         $this->objectManager->endFlushSuite();
-        $logger($countCreated.' users created.');
-        $logger($countUpdated.' users updated.');
+        if ($logger) {
+            $logger($countCreated.' users created.');
+            $logger($countUpdated.' users updated.');
+        }
 
         return $returnValues;
     }
