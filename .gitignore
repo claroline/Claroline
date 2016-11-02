@@ -29,6 +29,7 @@ npm-debug.log
 templates/*
 vendor/*
 webpack-assets.json
+webpack-dlls.json
 webpack-stats.json
 web/bundles/*
 web/css/*
