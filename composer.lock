@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9ba13ffc4e59f2bcfd024c4737a83a1f",
-    "content-hash": "4a8548cbd386e3a041ae036c612ba79d",
+    "hash": "9e42347aeab2b607a1543cd9460053f0",
+    "content-hash": "d27a0c38634e937f26616275cee068f6",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -116,7 +116,7 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "dev-master",
+            "version": "8.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
@@ -3589,7 +3589,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "Knplabs",
+                    "name": "KnpLabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
@@ -7632,14 +7632,13 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "claroline/distribution": 20,
         "phpmd/phpmd": 0,
         "stefk/md": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.6"
+        "php": ">=5.5"
     },
     "platform-dev": []
 }
