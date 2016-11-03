@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "0e0c9b1b3574bcb27cc0b0e3a9921e9bbb55937a"
+                "reference": "e1b7b29a3c0a2e9238c0651503d25644c0dfca7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/0e0c9b1b3574bcb27cc0b0e3a9921e9bbb55937a",
-                "reference": "0e0c9b1b3574bcb27cc0b0e3a9921e9bbb55937a",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/e1b7b29a3c0a2e9238c0651503d25644c0dfca7d",
+                "reference": "e1b7b29a3c0a2e9238c0651503d25644c0dfca7d",
                 "shasum": ""
             },
             "require": {
@@ -139,6 +139,7 @@
                 "doctrine/doctrine-bundle": "~1.3",
                 "doctrine/migrations": "~1.3",
                 "doctrine/orm": "~2.4",
+                "egulias/email-validator": "1.2.13",
                 "ext-curl": "*",
                 "ext-fileinfo": "*",
                 "ext-gd": "*",
@@ -389,7 +390,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-11-01 16:53:38"
+            "time": "2016-11-03 08:34:41"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -486,16 +487,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.0.4",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "ec21a59414b99501e723b63fd664aa8ead9c5680"
+                "reference": "a795611394b3c05164fd0eb291b492b39339cba4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/ec21a59414b99501e723b63fd664aa8ead9c5680",
-                "reference": "ec21a59414b99501e723b63fd664aa8ead9c5680",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/a795611394b3c05164fd0eb291b492b39339cba4",
+                "reference": "a795611394b3c05164fd0eb291b492b39339cba4",
                 "shasum": ""
             },
             "require": {
@@ -540,7 +541,7 @@
                 "ssl",
                 "tls"
             ],
-            "time": "2016-09-04 19:00:06"
+            "time": "2016-11-02 18:11:27"
         },
         {
             "name": "composer/composer",
@@ -1738,6 +1739,58 @@
                 "orm"
             ],
             "time": "2016-09-10 18:51:13"
+        },
+        {
+            "name": "egulias/email-validator",
+            "version": "1.2.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/egulias/EmailValidator.git",
+                "reference": "b8bb147f46cc9790326ce2440a13be06cc5a63bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/b8bb147f46cc9790326ce2440a13be06cc5a63bb",
+                "reference": "b8bb147f46cc9790326ce2440a13be06cc5a63bb",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/lexer": "^1.0.1",
+                "php": ">= 5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.24"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Egulias\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eduardo Gulias Davis"
+                }
+            ],
+            "description": "A library for validating emails",
+            "homepage": "https://github.com/egulias/EmailValidator",
+            "keywords": [
+                "email",
+                "emailvalidation",
+                "emailvalidator",
+                "validation",
+                "validator"
+            ],
+            "time": "2016-07-03 21:52:18"
         },
         {
             "name": "fabiang/xmpp",
