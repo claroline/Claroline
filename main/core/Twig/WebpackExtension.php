@@ -71,15 +71,15 @@ class WebpackExtension extends \Twig_Extension
         $assets = $this->getWebpackAssets();
         $assetName = pathinfo($path, PATHINFO_FILENAME);
 
-        if (!property_exists($assets, $assetName)) {
-            $assetNames = implode("\n", array_keys((array) $assets));
+        if (!isset($assets[$assetName])) {
+            $assetNames = implode("\n", array_keys($assets));
 
             throw new \Exception(
                 "Cannot find asset '{$assetName}' in webpack stats. Found:\n{$assetNames})"
             );
         }
 
-        $asset = 'dist/'.$assets->{$assetName}->js;
+        $asset = 'dist/'.$assets[$assetName]['js'];
 
         if ($this->environment === 'dev' && !$assetUrl) {
             return "http://localhost:8080/{$asset}";
@@ -91,16 +91,19 @@ class WebpackExtension extends \Twig_Extension
     private function getWebpackAssets()
     {
         if (!$this->assetCache) {
-            $assetFile = realpath("{$this->rootDir}/../webpack-assets.json");
+            $assetFile = "{$this->rootDir}/../webpack-assets.json";
+            $dllFile = "{$this->rootDir}/../webpack-dlls.json";
 
-            if (!file_exists($assetFile)) {
+            if (!file_exists($assetFile) || !file_exists($dllFile)) {
                 throw new \Exception(sprintf(
-                    'Cannot find webpack assets file (looked for %s). Make sure assets-webpack-plugin is enabled',
-                    $assetFile
+                    'Cannot find webpack generated assets file(s). Make sure you '
+                    .'have ran webpack with assets-webpack-plugin enabled'
                 ));
             }
 
-            $this->assetCache = json_decode(file_get_contents($assetFile));
+            $dlls = json_decode(file_get_contents($dllFile), true);
+            $assets = json_decode(file_get_contents($assetFile), true);
+            $this->assetCache = array_merge_recursive($dlls, $assets);
         }
 
         return $this->assetCache;

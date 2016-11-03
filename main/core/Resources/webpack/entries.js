@@ -1,5 +1,19 @@
-const assert = require('assert')
 const fs = require('fs')
+const paths = require('./paths')
+
+/**
+ * Creates an "entry" map containing all the entries declared in claroline
+ * packages "assets.json" manifests. Entries are automatically prefixed to
+ * avoid name collisions across bundles.
+ */
+function collectEntries() {
+  const packages = collectPackages(paths.root())
+  const webpackPackages = packages.filter(def => def.assets && def.assets.webpack)
+  const packageNames = webpackPackages.map(def => def.name)
+  const normalizedPackages = normalizeNames(webpackPackages)
+
+  return extractEntries(normalizedPackages)
+}
 
 /**
  * Collects information about currently installed
@@ -11,8 +25,6 @@ const fs = require('fs')
  *  - assets:    package assets config declared its assets.json file, if any
  */
 function collectPackages(rootDir) {
-  assert.equal(typeof rootDir, 'string', 'Expected string')
-
   const stats = fs.statSync(rootDir);
 
   if (!stats.isDirectory()) {
@@ -20,6 +32,45 @@ function collectPackages(rootDir) {
   }
 
   return getPackageDefinitions(rootDir)
+}
+
+/**
+ * Merges "entry" sections of package configs into one object,
+ * prefixing entry names and paths with package names/paths.
+ */
+function extractEntries(packages) {
+  return packages
+    .filter(def => def.assets.webpack && def.assets.webpack.entry)
+    .reduce((entries, def) => {
+      Object.keys(def.assets.webpack.entry).forEach(entry => {
+        def.meta ?
+          entries[`${def.name}-${def.assets.webpack.entry[entry].dir}-${entry}`] =
+            `${def.assets.webpack.entry[entry].prefix}/Resources/modules/${def.assets.webpack.entry[entry].name}` :
+          entries[`${def.name}-${entry}`] = `${def.path}/Resources/modules/${def.assets.webpack.entry[entry]}`
+      })
+
+      return entries
+    }, {})
+}
+
+/**
+ * Removes the "bundle" portion of package names and replaces
+ * slashes by hyphens. Example:
+ *
+ * "foo/bar-bundle" -> "foo-bar"
+ */
+function normalizeNames (packages) {
+  return packages.map(def => {
+    var parts = def.name.split(/\/|\-/)
+
+    if (parts[parts.length - 1] === 'bundle') {
+      parts.pop()
+    }
+
+    def.name = parts.join('-')
+
+    return def
+  })
 }
 
 function getPackageDefinitions(rootDir) {
@@ -104,4 +155,4 @@ function isMetaPackage(rootDir) {
   return fs.existsSync(rootDir + '/main')
 }
 
-module.exports = collectPackages
+module.exports = collectEntries
