@@ -12,7 +12,7 @@
       "admin-home-tabs-config": "adminHomeTabsConfig/adminHomeTabsConfig",
       "workspace-home": "workspace/tools/home/workspaceHome",
       "modernizr": "modernizr/modernizr",
-      "es6-shim": "es6-shim"
+      "karma": "karma"
     }
   }
 }

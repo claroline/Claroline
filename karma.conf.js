@@ -6,19 +6,19 @@ module.exports = config => {
     frameworks: ['mocha'],
     files: [
       {
-        pattern: 'main/core/Resources/modules/es6-shim/index.js',
+        pattern: 'main/core/Resources/modules/karma/index.js',
         watched: false
       },
       '*/*/Resources/**/*test.js'
     ],
     preprocessors: {
-      'main/core/Resources/modules/es6-shim/index.js': ['webpack'],
+      'main/core/Resources/modules/karma/index.js': ['webpack'],
       './*/*/Resources/**/*test.js': ['webpack']
     },
     reporters: ['progress'],
     port: 9876,
     colors: true,
-    logLevel: config.LOG_DEBUG,
+    logLevel: config.LOG_WARN,
     client: {
       captureConsole: true,
       mocha: {
