@@ -1,11 +1,18 @@
 const webpackConfig = require('./webpack.test')
 
 module.exports = config => {
-  config.set({
+  const base = {
     basePath: '',
     frameworks: ['mocha'],
-    files: ['*/*/Resources/**/*test.js'],
+    files: [
+      {
+        pattern: 'main/core/Resources/modules/es6-shim/index.js',
+        watched: false
+      },
+      '*/*/Resources/**/*test.js'
+    ],
     preprocessors: {
+      'main/core/Resources/modules/es6-shim/index.js': ['webpack'],
       './*/*/Resources/**/*test.js': ['webpack']
     },
     reporters: ['progress'],
@@ -18,6 +25,12 @@ module.exports = config => {
         bail: true
       }
     },
+    customLaunchers: {
+      ChromeTravis: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    },
     autoWatch: true,
     browsers: ['Chrome'],
     singleRun: false,
@@ -27,5 +40,12 @@ module.exports = config => {
     webpackServer: {
       quiet: true
     }
-  })
+  }
+
+  // see https://swizec.com/blog/how-to-run-javascript-tests-in-chrome-on-travis/swizec/6647
+  if (process.env.TRAVIS) {
+    base.browsers = ['ChromeTravis'];
+  }
+
+  config.set(base)
 }
