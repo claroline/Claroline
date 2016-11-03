@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "e1b7b29a3c0a2e9238c0651503d25644c0dfca7d"
+                "reference": "499514c7c93b487d347eebc5f44f9657573243a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/e1b7b29a3c0a2e9238c0651503d25644c0dfca7d",
-                "reference": "e1b7b29a3c0a2e9238c0651503d25644c0dfca7d",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/499514c7c93b487d347eebc5f44f9657573243a3",
+                "reference": "499514c7c93b487d347eebc5f44f9657573243a3",
                 "shasum": ""
             },
             "require": {
@@ -253,12 +253,6 @@
                 "innova/path-bundle": "*",
                 "innova/video-recorder-bundle": "*",
                 "ujm/exo-bundle": "*"
-            },
-            "require-dev": {
-                "fabpot/php-cs-fixer": "^1.10",
-                "mikey179/vfsstream": "~1.5",
-                "mockery/mockery": "^0.9.4",
-                "phpunit/phpunit": "~4.6"
             },
             "type": "claroline-core",
             "extra": {
@@ -390,7 +384,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-11-03 08:34:41"
+            "time": "2016-11-03 11:18:04"
         },
         {
             "name": "claroline/front-end-bundle",
