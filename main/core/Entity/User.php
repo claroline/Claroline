@@ -134,7 +134,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
-     * @Assert\Email(checkMX = false)
+     * @Assert\Email(strict = true)
      * @Groups({"api_user", "api_user_min"})
      * @SerializedName("mail")
      */

@@ -31,6 +31,7 @@
         "friendsofsymfony/jsrouting-bundle": "~1.5",
         "friendsofsymfony/oauth-server-bundle": "~1.4",
         "friendsofsymfony/rest-bundle": "1.7.9",
+        "egulias/email-validator": "1.2.13",
         "gedmo/doctrine-extensions": "~2.3",
         "gregwar/captcha-bundle": "1.0.12",
         "guzzle/http": "~3.1",

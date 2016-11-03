@@ -393,6 +393,7 @@ class UserManager
         }
 
         $returnValues = [];
+        $skipped = [];
         //keep these roles before the clear() will mess everything up. It's not what we want.
         $tmpRoles = $additionalRoles;
         $additionalRoles = [];
@@ -535,6 +536,19 @@ class UserManager
             $userEntity->setIsMailNotified($isMailNotified);
             $userEntity->setIsMailValidated($isMailValidated);
 
+            if ($options['single-validate']) {
+                $errors = $this->validator->validate($userEntity);
+                if (count($errors) > 0) {
+                    $skipped[$i] = $userEntity;
+                    if ($isNew) {
+                        --$countCreated;
+                    } else {
+                        --$countUpdated;
+                    }
+                    continue;
+                }
+            }
+
             if (!$isNew && $logger) {
                 $logger(" User $j ($username) being updated...");
                 $this->roleManager->associateRoles($userEntity, $additionalRoles);
@@ -596,9 +610,14 @@ class UserManager
         }
 
         $this->objectManager->endFlushSuite();
+
         if ($logger) {
             $logger($countCreated.' users created.');
             $logger($countUpdated.' users updated.');
+        }
+
+        foreach ($skipped as $key => $user) {
+            $logger('The user '.$user.' was skipped at line '.$key.' because it failed the validation pass.');
         }
 
         return $returnValues;
