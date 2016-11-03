@@ -35,7 +35,7 @@
               <img data-ng-if="fieldValue.type == 'image'"
                    class="img-responsive img-thumbnail"
                    style="width: 80%"
-                   src="{{ fieldValue.value }}"
+                   ng-src="{{ fieldValue.value }}"
                    alt="{{ fieldValue.alt}}" />
             </td>
             <td class="col-xs-2 text-center">
@@ -101,7 +101,7 @@
               <img data-ng-if="question.type == 'image'"
                    class="img-responsive img-thumbnail"
                    style="width: 80%"
-                   src="{{ question.value }}"
+                   ng-src="{{ question.value }}"
                    alt="{{ question.alt}}" />
             </td>
             <td colspan="{{ vm.maxColspan(note) / card.card_type.answers.length }}"
@@ -119,7 +119,7 @@
               <img data-ng-if="answer.type == 'image'"
                    class="img-responsive img-thumbnail"
                    style="width: 80%"
-                   src="{{ answer.value }}"
+                   ng-src="{{ answer.value }}"
                    alt="{{ answer.alt}}" />
             </td>
             <td class="col-xs-2 text-center"
