@@ -226,7 +226,7 @@ class AdminManagementController extends Controller
         $cursus->setTitle($cursusDatas['title']);
         $cursus->setCode($cursusDatas['code']);
         $cursus->setDescription($cursusDatas['description']);
-        $cursus->setBlocking($cursusDatas['blocking']);
+        $cursus->setBlocking((bool) $cursusDatas['blocking']);
         $color = $cursusDatas['color'];
         $details = ['color' => $color];
         $cursus->setDetails($details);
@@ -489,9 +489,9 @@ class AdminManagementController extends Controller
         $course->setCode($courseDatas['code']);
         $description = $courseDatas['description'] ? $courseDatas['description'] : null;
         $course->setDescription($description);
-        $course->setPublicRegistration($courseDatas['publicRegistration']);
-        $course->setPublicUnregistration($courseDatas['publicUnregistration']);
-        $course->setRegistrationValidation($courseDatas['registrationValidation']);
+        $course->setPublicRegistration((bool) $courseDatas['publicRegistration']);
+        $course->setPublicUnregistration((bool) $courseDatas['publicUnregistration']);
+        $course->setRegistrationValidation((bool) $courseDatas['registrationValidation']);
         $tutorRoleName = $courseDatas['tutorRoleName'] ? $courseDatas['tutorRoleName'] : null;
         $course->setTutorRoleName($tutorRoleName);
         $learnerRoleName = $courseDatas['learnerRoleName'] ? $courseDatas['learnerRoleName'] : null;
@@ -513,12 +513,12 @@ class AdminManagementController extends Controller
             $icon = $this->cursusManager->saveIcon($this->request->files->get('courseDatas')['icon']);
             $course->setIcon($icon);
         }
-        $course->setUserValidation($courseDatas['userValidation']);
-        $course->setOrganizationValidation($courseDatas['organizationValidation']);
+        $course->setUserValidation((bool) $courseDatas['userValidation']);
+        $course->setOrganizationValidation((bool) $courseDatas['organizationValidation']);
         $maxUsers = $courseDatas['maxUsers'] ? $courseDatas['maxUsers'] : null;
         $course->setMaxUsers($maxUsers);
         $course->setDefaultSessionDuration($courseDatas['defaultSessionDuration']);
-        $course->setWithSessionEvent($courseDatas['withSessionEvent']);
+        $course->setWithSessionEvent((bool) $courseDatas['withSessionEvent']);
         $course->setDisplayOrder($courseDatas['displayOrder']);
         $course->emptyValidators();
         $validators = isset($courseDatas['validators']) && count($courseDatas['validators']) > 0 ?
@@ -783,13 +783,13 @@ class AdminManagementController extends Controller
         $session->setStartDate($startDate);
         $session->setEndDate($endDate);
         $session->setDescription($sessionDatas['description']);
-        $session->setDefaultSession($sessionDatas['defaultSession']);
-        $session->setPublicRegistration($sessionDatas['publicRegistration']);
-        $session->setPublicUnregistration($sessionDatas['publicUnregistration']);
-        $session->setUserValidation($sessionDatas['userValidation']);
+        $session->setDefaultSession((bool) $sessionDatas['defaultSession']);
+        $session->setPublicRegistration((bool) $sessionDatas['publicRegistration']);
+        $session->setPublicUnregistration((bool) $sessionDatas['publicUnregistration']);
+        $session->setUserValidation((bool) $sessionDatas['userValidation']);
         $session->setMaxUsers($sessionDatas['maxUsers']);
-        $session->setOrganizationValidation($sessionDatas['organizationValidation']);
-        $session->setRegistrationValidation($sessionDatas['registrationValidation']);
+        $session->setOrganizationValidation((bool) $sessionDatas['organizationValidation']);
+        $session->setRegistrationValidation((bool) $sessionDatas['registrationValidation']);
         $session->setEventRegistrationType($sessionDatas['eventRegistrationType']);
         $session->setDisplayOrder($sessionDatas['displayOrder']);
         $details = $session->getDetails();

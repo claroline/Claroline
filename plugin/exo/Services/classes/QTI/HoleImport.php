@@ -66,49 +66,67 @@ class HoleImport extends QtiImport
      */
     protected function getHtml()
     {
-        $this->textHtml = $this->qtiTextWithHoles;
+        $this->textHtml = '<my-wrapper>'.$this->qtiTextWithHoles.'</my-wrapper>';
         $newId = 1;
-        $regex = '(<textEntryInteraction.*?>|<inlineChoiceInteraction.*?</inlineChoiceInteraction>)';
-        preg_match_all($regex, $this->qtiTextWithHoles, $matches);
-        foreach ($matches[0] as $matche) {
-            $tabMatche = explode('"', $matche);
-            $responseIdentifier = $tabMatche[1];
+        $dom = new \DOMDocument();
+        $dom->loadXML($this->textHtml);
+        $xpath = new \DOMXPath($dom);
+        $interactions = $xpath->query('//textEntryInteraction | //inlineChoiceInteraction');
+
+        foreach ($interactions as $interaction) {
+            $responseIdentifier = $interaction->attributes->getNamedItem('responseIdentifier')->nodeValue;
             $correctResponse = $this->getCorrectResponse($responseIdentifier);
-            if (substr($matche, 1, 20) === 'textEntryInteraction') {
-                $expectedLength = $tabMatche[5];
-                $text = str_replace('textEntryInteraction', 'input', $matche);
-                /*For old questions with holes */
-                $text = preg_replace('(name=".*?")', '', $text);
-                if (isset($expectedLength)) {
-                    $text = str_replace('size="'.$expectedLength.'"', 'size="'.$expectedLength.'" type="text" value="'.$correctResponse.'"', $text);
-                }
-                /******************************/
-                $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="'.$newId.'" class="blank" autocomplete="off" name="blank_'.$newId.'"', $text);
-                $text = str_replace('expectedLength="'.$expectedLength.'"', 'size="'.$expectedLength.'" type="text" value="'.$correctResponse.'"', $text);
+            $originalText = $dom->saveXML($interaction);
+            $text = $dom->saveXML($interaction);
+
+            if ($interaction->tagName === 'textEntryInteraction') {
+                $expectedLength = $interaction->attributes->getNamedItem('expectedLength')->nodeValue;
+                $text = str_replace('textEntryInteraction', 'input ', $text);
+                $text = str_replace(
+                    'responseIdentifier="'.$responseIdentifier.'"',
+                    'id="'.$newId.'" class="blank" autocomplete="off" name="blank_'.$newId.'"',
+                    $text
+                );
+                $text = str_replace(
+                    'expectedLength="'.$expectedLength.'"',
+                    'size="'.$expectedLength.'" type="text" value="'.$correctResponse.'"',
+                    $text
+                );
                 $this->createHole($expectedLength, $responseIdentifier, false, $newId);
-            } else {
-                $text = str_replace('inlineChoiceInteraction', 'select', $matche);
-                $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="'.$newId.'" class="blank" name="blank_'.$newId.'"', $text);
-                $text = str_replace('inlineChoice', 'option', $text);
-                $regexOpt = '(<option identifier=.*?>)';
-                preg_match_all($regexOpt, $text, $matchesOpt);
-                foreach ($matchesOpt[0] as $matcheOpt) {
-                    $tabMatcheOpt = explode('"', $matcheOpt);
-                    $holeID = $tabMatcheOpt[1];
-                    if ($correctResponse === $holeID) {
-                        $opt = preg_replace('(\s*identifier="'.$holeID.'")', ' holeCorrectResponse="1"', $matcheOpt);
+                $this->textHtml = str_replace($originalText, $text, $this->textHtml);
+                ++$newId;
+            } elseif ($interaction->tagName === 'inlineChoiceInteraction') {
+                $text = str_replace(
+                    'responseIdentifier="'.$responseIdentifier.'"',
+                    'id="'.$newId.'" class="blank" name="blank_'.$newId.'"',
+                    $text
+                );
+                $text = str_replace('inlineChoiceInteraction', 'select', $text);
+
+                $choices = $interaction->childNodes;
+
+                foreach ($choices as $choice) {
+                    $originalChoiceText = $dom->saveXML($choice);
+                    $choiceText = $dom->saveXML($choice);
+                    $holeId = $choice->attributes->getNamedItem('identifier')->nodeValue;
+
+                    if ($correctResponse === $holeId) {
+                        $choiceText = preg_replace('(\s*identifier="'.$holeId.'")', ' holeCorrectResponse="1"', $choiceText);
                     } else {
-                        $opt = preg_replace('(\s*identifier="'.$holeID.'")', ' holeCorrectResponse="0"', $matcheOpt);
+                        $choiceText = preg_replace('(\s*identifier="'.$holeId.'")', ' holeCorrectResponse="0"', $choiceText);
                     }
-                    $text = str_replace($matcheOpt, $opt, $text);
+                    $text = str_replace($originalChoiceText, $choiceText, $text);
                 }
+                $text = str_replace('inlineChoice', 'option', $text);
                 $this->createHole(15, $responseIdentifier, true, $newId);
+                $this->textHtml = str_replace($originalText, $text, $this->textHtml);
+                ++$newId;
             }
-            ++$newId;
-            $this->textHtml = str_replace($matche, $text, $this->textHtml);
-            $textHtmlClean = preg_replace('(<option holeCorrectResponse="0".*?</option>)', '', $this->textHtml);
-            $textHtmlClean = str_replace(' holeCorrectResponse="1"', '', $textHtmlClean);
         }
+        $textHtmlClean = preg_replace('(<option holeCorrectResponse="0".*?</option>)', '', $this->textHtml);
+        $textHtmlClean = str_replace(' holeCorrectResponse="1"', '', $textHtmlClean);
+        $textHtmlClean = str_replace('<my-wrapper>', '', $textHtmlClean);
+        $textHtmlClean = str_replace('</my-wrapper>', '', $textHtmlClean);
         $this->interactionHole->setHtml($textHtmlClean);
     }
 

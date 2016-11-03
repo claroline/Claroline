@@ -36,9 +36,9 @@ class RouterExtension extends \Twig_Extension
 
     public function getFunctions()
     {
-        return array(
+        return [
             'get_host' => new \Twig_Function_Method($this, 'getHost'),
-        );
+        ];
     }
 
     public function getName()

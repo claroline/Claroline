@@ -1,22 +1,40 @@
 $("a").remove(".form-collection-add");
 
-// div which contain the choices array
-var tableHoles = $('#tableHoles'); // div which contain the choices array
-
-// Div which contain the dataprototype
-var container = $('div#ujm_exobundle_interactionholetype_holes');
-
-//To find the prototype of wordReponse which is integrated in the prototye of hole
-//tableHoles.append('<div id="prototypes" style="display:none"></div>');
-var containerWR = container.attr('data-prototype').valueOf();
-$('#prototypes').append(containerWR);
-containerWR = $('#ujm_exobundle_interactionholetype_holes___name___wordResponses');
-
+var tableHoles;
+var container
+var containerWR
 var langKeyWord;
 var langPoint;
 var langDel;
 var langComment;
 var langEdition;
+
+$(document).ready(function() {
+    // div which contain the choices array
+    tableHoles = $('#tableHoles'); // div which contain the choices array
+
+    // Div which contain the dataprototype
+    container = $('div#ujm_exobundle_interactionholetype_holes');
+
+    if (container && container.attr('data-prototype')) {
+        //To find the prototype of wordReponse which is integrated in the prototye of hole
+        //tableHoles.append('<div id="prototypes" style="display:none"></div>');
+        containerWR = container.attr('data-prototype').valueOf();
+        $('#prototypes').append(containerWR);
+        containerWR = $('#ujm_exobundle_interactionholetype_holes___name___wordResponses');
+    }
+
+    $('#holeEditor').bind("DOMSubtreeModified",function(e) {
+        if ( (tinyMCE.activeEditor.selection) && (tinyMCE.activeEditor.selection.getContent() == '') ) {
+            $('#newTable').find(('.trHole')).each(function () {
+                index = $(this).find('td:first').find('input:first').val();
+                if ( (index) && (!tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + index)[0]) ) {
+                    $(this).remove();
+                }
+            });
+        }
+    });
+});
 
 function addFormHole( response, size, orthography, del, selector, wlangKeyWord, wlangPoint,comment,edition) {
     langKeyWord = wlangKeyWord;
@@ -448,20 +466,6 @@ function changeSize (idSize, indexBlank) {
         return false;
     });
 }
-
-$(document).ready(function() {
-    $('#holeEditor').bind("DOMSubtreeModified",function(e) {
-
-        if ( (tinyMCE.activeEditor.selection) && (tinyMCE.activeEditor.selection.getContent() == '') ) {
-            $('#newTable').find(('.trHole')).each(function () {
-                index = $(this).find('td:first').find('input:first').val();
-                if ( (index) && (!tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + index)[0]) ) {
-                    $(this).remove();
-                }
-            });
-        }
-    });
-});
 
 //not yet implemented
 function disableNotYetReady() {

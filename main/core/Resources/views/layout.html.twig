@@ -40,6 +40,12 @@
 
     {% set homeAsset = protocol ~ '://' ~ host ~ app.request.getBasePath() ~ '/' %}
 
+    <div
+        id="platform-configuration"
+        class="hide"
+        data-enable-opengraph="{{ config.getParameter('enable_opengraph') }}"
+    >
+    </div>
     <div id="homeAsset" class="hide">{{ homeAsset }}</div>
     <div id="baseAsset" class="hide">{{ asset('') }}</div>
     <div id="homeTheme" class="hide">{{ macros.getTheme(config)|trim }}</div>

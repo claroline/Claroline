@@ -1,7 +1,0 @@
-{
-  "webpack": {
-    "entry": {
-      "fooScript": "js/foo.js"
-    }
-  }
-}

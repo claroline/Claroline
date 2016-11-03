@@ -87,7 +87,7 @@ class CreateUserFromCsvCommand extends ContainerAwareCommand
         }
 
         $options['ignore-update'] = $input->getOption('ignore-update');
-
+        $options['single-validate'] = !$input->getOption('validate');
         $userManager = $this->getContainer()->get('claroline.manager.user_manager');
         $userManager->importUsers(
             $users,

@@ -6,7 +6,7 @@ import angular from 'angular/index'
 
 export default class PathApp {
   // Resolve functions (it's the same between Editor and Player as we navigate in the same way in the 2 apps)
-  get resolveFunctions() {
+  static get resolveFunctions() {
     return {
       /**
        * Get the current Step from route params
@@ -56,7 +56,7 @@ export default class PathApp {
   }
 
   // Get the Root step and its resources
-  get resolveRootFunctions() {
+  static get resolveRootFunctions() {
     return {
       /**
        * Get the Root step of the Path
@@ -95,7 +95,7 @@ export default class PathApp {
    * @param $location
    * @param $anchorScroll
    */
-  run($rootScope, $location, $anchorScroll) {
+  static run($rootScope, $location, $anchorScroll) {
     // Redirect to root step if the requested step is not found
     $rootScope.$on('$routeChangeError', (evt, current, previous, rejection) => {
       // If step not found, redirect user to rhe Root step

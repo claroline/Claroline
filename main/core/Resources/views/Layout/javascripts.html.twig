@@ -1,3 +1,4 @@
+<script src="{{ hotAsset('dist/claroline-distribution-main-core-es6-shim.js') }}"></script>
 <script>
     if (window.sessionStorage.getItem('hide_brower_warning')) {
         $('.outdated-browser-warning').hide();
@@ -150,6 +151,8 @@
 {% if app.environment == 'prod' %}
     <script src="{{ hotAsset('dist/commons.js') }}"></script>
 {% endif %}
+
+<script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
 
 <script src="{{ hotAsset('dist/claroline-distribution-main-core-tinymce.js') }}"></script>
 <script src="{{ asset('bundles/clarolinecore/js/tinymce/resource_picker_button.js') }}"></script>

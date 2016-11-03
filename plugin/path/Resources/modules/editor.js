@@ -14,11 +14,10 @@ import './navigation/module'
 import './step/module'
 import './user-progression/module'
 import './condition/module'
+import './appModuleBase'
 
 import PathApp from './app'
 import stepTemplate from './step/Partial/edit.html'
-
-const pathApp = new PathApp()
 
 angular
   .module('PathEditorApp', [
@@ -26,7 +25,7 @@ angular
     'ngRoute',
     'ui.bootstrap',
     'ui.translation',
-
+    'PathModuleBase',
     'Path',
     'Summary',
     'Navigation',
@@ -43,13 +42,13 @@ angular
           template: stepTemplate,
           controller: 'StepEditCtrl',
           controllerAs: 'stepEditCtrl',
-          resolve: pathApp.resolveRootFunctions
+          resolve: PathApp.resolveRootFunctions
         })
         .when('/:stepId?', {
           template: stepTemplate,
           controller: 'StepEditCtrl',
           controllerAs: 'stepEditCtrl',
-          resolve: pathApp.resolveFunctions
+          resolve: PathApp.resolveFunctions
         })
         .otherwise({
           redirectTo: '/:stepId?'
@@ -62,5 +61,5 @@ angular
     '$rootScope',
     '$location',
     '$anchorScroll',
-    pathApp.run
+    PathApp.run
   ])

@@ -1,0 +1,14 @@
+# c
+config_update_error: Probleem tijdens de update van de instelligen van de audio-opnemer
+config_update_success: Update van de instelligen van de audio-opnemer met succes gemaakt.
+
+
+# i
+innova_audio_recorder_tool: Instellen van de audio-opnemer (voor het plateform)
+
+# m
+audio_recorder_configuration_max_try: Maximum aantal pogingen
+audio_recorder_configuration_max_recording_time: Maximum opname tijd (Seconden, 0 = oneindig)
+
+# s
+submit_config_label: De instellingen opslaan

@@ -20,7 +20,7 @@
     </h4>
 
     <div class="step-description panel panel-default" data-ng-if="stepShowCtrl.step.meta.description && 0 !== stepShowCtrl.step.meta.description.length">
-        <div class="panel-body" data-ng-bind-html="stepShowCtrl.step.meta.description"></div>
+        <div class="panel-body" data-ng-bind-html="stepShowCtrl.step.meta.description | unsafe"></div>
     </div>
 
     <!-- Display items of the step -->

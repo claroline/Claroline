@@ -1,23 +1,18 @@
-const collectPackages = require('./main/core/Resources/scripts/lib/collect-packages')
-const buildConfig = require('./main/core/Resources/scripts/lib/webpack')
-
-const rootDir = __dirname + '/../../..'
-const webpack = buildConfig(rootDir, collectPackages(rootDir), true)
+const webpackConfig = require('./webpack.test')
 
 module.exports = config => {
-  config.set({
+  const base = {
     basePath: '',
     frameworks: ['mocha'],
     files: [
+      {
+        pattern: 'main/core/Resources/modules/es6-shim/index.js',
+        watched: false
+      },
       '*/*/Resources/**/*test.js'
     ],
-    exclude: [
-      // tmp excludes (legacy/node tests)
-      'main/core/Resources/scripts/test/**/*',
-      'main/core/Resources/public/js/tests/**/*',
-      'plugin/result/**/*'
-    ],
     preprocessors: {
+      'main/core/Resources/modules/es6-shim/index.js': ['webpack'],
       './*/*/Resources/**/*test.js': ['webpack']
     },
     reporters: ['progress'],
@@ -30,14 +25,27 @@ module.exports = config => {
         bail: true
       }
     },
+    customLaunchers: {
+      ChromeTravis: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    },
     autoWatch: true,
     browsers: ['Chrome'],
     singleRun: false,
     failOnEmptyTestSuite: false,
     concurrency: Infinity,
-    webpack,
+    webpack: webpackConfig,
     webpackServer: {
       quiet: true
     }
-  })
+  }
+
+  // see https://swizec.com/blog/how-to-run-javascript-tests-in-chrome-on-travis/swizec/6647
+  if (process.env.TRAVIS) {
+    base.browsers = ['ChromeTravis'];
+  }
+
+  config.set(base)
 }

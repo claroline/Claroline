@@ -26,6 +26,7 @@ use JMS\DiExtraBundle\Annotation\Service;
  */
 class HomeManager
 {
+    private $graph;
     private $manager;
     private $homeService;
     private $type;
@@ -39,6 +40,7 @@ class HomeManager
 
     /**
      * @InjectParams({
+     *     "graph"          = @Inject("claroline.common.graph_service"),
      *     "homeService"    = @Inject("claroline.common.home_service"),
      *     "contentManager" = @Inject("claroline.manager.content_manager"),
      *     "manager"        = @Inject("doctrine"),
@@ -48,6 +50,7 @@ class HomeManager
      * })
      */
     public function __construct(
+        $graph,
         $homeService,
         $manager,
         $contentManager,
@@ -55,6 +58,7 @@ class HomeManager
         $formFactory,
         $configHandler
     ) {
+        $this->graph = $graph;
         $this->manager = $persistence;
         $this->contentManager = $contentManager;
         $this->homeService = $homeService;
@@ -227,6 +231,18 @@ class HomeManager
     public function getTypes()
     {
         return $this->type->findAll();
+    }
+
+    /**
+     * Get the open graph contents of a web page by his URL.
+     *
+     * @param string $url
+     *
+     * @return array
+     */
+    public function getGraph($url)
+    {
+        return $this->graph->get($url);
     }
 
     /**
