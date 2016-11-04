@@ -15,9 +15,13 @@ export default class FlashCardCtrl {
     this.canEdit = service._canEdit
     this.newCards = []
     this.learingCards = []
+    this.nbrTotalCards = 0
+    this.nbrRevisedCards = 0
 
     this._service = service
 
+    service.countCards(this.deck).then(d => this.nbrTotalCards = d.data)
+    service.countCardLearning(this.deck).then(d => this.nbrRevisedCards = d.data)
     service.findNewCardToLearn(this.deck).then(d => this.newCards = d.data)
     service.findCardToLearn(this.deck).then(d => this.learningCards = d.data)
   }

@@ -1,3 +1,15 @@
-body {
-    /* To be completed */
+.learning-progress {
+    margin-bottom: 0;
+}
+
+.today > table {
+    margin: auto;
+}
+
+.today > table td {
+    padding-right: 1em;
+}
+
+.panel-footer .btn {
+    margin-bottom: 10px;
 }

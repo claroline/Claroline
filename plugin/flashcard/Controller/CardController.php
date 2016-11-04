@@ -87,6 +87,23 @@ class CardController
 
     /**
      * @EXT\Route(
+     *     "/card/count/deck/{deck}",
+     *     name="claroline_count_cards"
+     * )
+     *
+     * @param Deck $deck
+     *
+     * @return JsonResponse
+     */
+    public function countCardsAction(Deck $deck)
+    {
+        $this->assertCanOpen($deck);
+        $nbrCards = $this->cardMgr->countCards($deck);
+        return new JsonResponse($nbrCards);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/card/new_card_to_learn/deck/{deck}",
      *     name="claroline_new_card_to_learn"
      * )

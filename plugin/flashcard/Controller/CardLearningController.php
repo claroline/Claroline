@@ -91,6 +91,27 @@ class CardLearningController
         ));
     }
 
+    /**
+     * @EXT\Route(
+     *     "/card_learning/count/deck/{deck}",
+     *     name="claroline_count_card_learning"
+     * )
+     *
+     * @param Deck $deck
+     *
+     * @return JsonResponse
+     */
+    public function countCardLearningAction(Deck $deck)
+    {
+        $this->assertCanOpen($deck);
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $cardLearnings = $this->manager->allCardLearning($deck, $user);
+
+        return new JsonResponse(count($cardLearnings));
+    }
+
     private function assertCanOpen($obj)
     {
         if (!$this->checker->isGranted('IS_AUTHENTICATED_FULLY')) {

@@ -34,6 +34,13 @@ export default class FlashCardService {
     return this.$http.get(url)
   }
 
+  countCards (deck) {
+    const url = this.routing.generate('claroline_count_cards', {
+      deck: deck.id
+    })
+    return this.$http.get(url)
+  }
+
   findNewCardToLearn (deck) {
     const url = this.routing.generate('claroline_new_card_to_learn', {
       deck: deck.id
@@ -50,6 +57,13 @@ export default class FlashCardService {
 
   findAllCardLearning (deck) {
     const url = this.routing.generate('claroline_getall_card_learning', {
+      deck: deck.id
+    })
+    return this.$http.get(url)
+  }
+
+  countCardLearning (deck) {
+    const url = this.routing.generate('claroline_count_card_learning', {
       deck: deck.id
     })
     return this.$http.get(url)
