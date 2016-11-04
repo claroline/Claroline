@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3355df2f6d2f14e586a3f3d9220eb312",
+    "hash": "9ba13ffc4e59f2bcfd024c4737a83a1f",
     "content-hash": "4a8548cbd386e3a041ae036c612ba79d",
     "packages": [
         {
@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "0db3822f7c7ac4c885d1d087e26e68c41eb364a3"
+                "reference": "499514c7c93b487d347eebc5f44f9657573243a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/0db3822f7c7ac4c885d1d087e26e68c41eb364a3",
-                "reference": "0db3822f7c7ac4c885d1d087e26e68c41eb364a3",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/499514c7c93b487d347eebc5f44f9657573243a3",
+                "reference": "499514c7c93b487d347eebc5f44f9657573243a3",
                 "shasum": ""
             },
             "require": {
@@ -139,6 +139,7 @@
                 "doctrine/doctrine-bundle": "~1.3",
                 "doctrine/migrations": "~1.3",
                 "doctrine/orm": "~2.4",
+                "egulias/email-validator": "1.2.13",
                 "ext-curl": "*",
                 "ext-fileinfo": "*",
                 "ext-gd": "*",
@@ -171,7 +172,7 @@
                 "natxet/cssmin": "3.0.2",
                 "nelmio/api-doc-bundle": "dev-master",
                 "ocramius/proxy-manager": "1.0.2",
-                "php": ">=5.5",
+                "php": ">=5.6",
                 "psr/log": "~1.0",
                 "sensio/distribution-bundle": "~2.3.4",
                 "sensio/framework-extra-bundle": "3.0.12",
@@ -252,12 +253,6 @@
                 "innova/path-bundle": "*",
                 "innova/video-recorder-bundle": "*",
                 "ujm/exo-bundle": "*"
-            },
-            "require-dev": {
-                "fabpot/php-cs-fixer": "^1.10",
-                "mikey179/vfsstream": "~1.5",
-                "mockery/mockery": "^0.9.4",
-                "phpunit/phpunit": "~4.6"
             },
             "type": "claroline-core",
             "extra": {
@@ -389,7 +384,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-10-28 09:19:07"
+            "time": "2016-11-03 11:18:04"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -486,16 +481,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.0.4",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "ec21a59414b99501e723b63fd664aa8ead9c5680"
+                "reference": "a795611394b3c05164fd0eb291b492b39339cba4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/ec21a59414b99501e723b63fd664aa8ead9c5680",
-                "reference": "ec21a59414b99501e723b63fd664aa8ead9c5680",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/a795611394b3c05164fd0eb291b492b39339cba4",
+                "reference": "a795611394b3c05164fd0eb291b492b39339cba4",
                 "shasum": ""
             },
             "require": {
@@ -540,7 +535,7 @@
                 "ssl",
                 "tls"
             ],
-            "time": "2016-09-04 19:00:06"
+            "time": "2016-11-02 18:11:27"
         },
         {
             "name": "composer/composer",
@@ -911,16 +906,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.6.0",
+            "version": "v1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "f8af318d14bdb0eff0336795b428b547bd39ccb6"
+                "reference": "b6f544a20f4807e81f7044d31e679ccbb1866dc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/f8af318d14bdb0eff0336795b428b547bd39ccb6",
-                "reference": "f8af318d14bdb0eff0336795b428b547bd39ccb6",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/b6f544a20f4807e81f7044d31e679ccbb1866dc3",
+                "reference": "b6f544a20f4807e81f7044d31e679ccbb1866dc3",
                 "shasum": ""
             },
             "require": {
@@ -977,7 +972,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-12-31 16:37:02"
+            "time": "2016-10-29 11:16:17"
         },
         {
             "name": "doctrine/collections",
@@ -1738,6 +1733,58 @@
                 "orm"
             ],
             "time": "2016-09-10 18:51:13"
+        },
+        {
+            "name": "egulias/email-validator",
+            "version": "1.2.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/egulias/EmailValidator.git",
+                "reference": "b8bb147f46cc9790326ce2440a13be06cc5a63bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/b8bb147f46cc9790326ce2440a13be06cc5a63bb",
+                "reference": "b8bb147f46cc9790326ce2440a13be06cc5a63bb",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/lexer": "^1.0.1",
+                "php": ">= 5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.24"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Egulias\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eduardo Gulias Davis"
+                }
+            ],
+            "description": "A library for validating emails",
+            "homepage": "https://github.com/egulias/EmailValidator",
+            "keywords": [
+                "email",
+                "emailvalidation",
+                "emailvalidator",
+                "validation",
+                "validator"
+            ],
+            "time": "2016-07-03 21:52:18"
         },
         {
             "name": "fabiang/xmpp",
@@ -3949,16 +3996,16 @@
         },
         {
             "name": "michelf/php-markdown",
-            "version": "1.6.0",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/michelf/php-markdown.git",
-                "reference": "156e56ee036505ec637d761ee62dc425d807183c"
+                "reference": "1f51cc520948f66cd2af8cbc45a5ee175e774220"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/156e56ee036505ec637d761ee62dc425d807183c",
-                "reference": "156e56ee036505ec637d761ee62dc425d807183c",
+                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/1f51cc520948f66cd2af8cbc45a5ee175e774220",
+                "reference": "1f51cc520948f66cd2af8cbc45a5ee175e774220",
                 "shasum": ""
             },
             "require": {
@@ -3996,7 +4043,7 @@
             "keywords": [
                 "markdown"
             ],
-            "time": "2015-12-24 01:37:31"
+            "time": "2016-10-29 18:58:20"
         },
         {
             "name": "monolog/monolog",
@@ -5570,6 +5617,7 @@
                 }
             ],
             "description": "Library for minifying JavaScript files",
+            "abandoned": true,
             "time": "2013-11-10 11:34:43"
         },
         {
@@ -6159,16 +6207,16 @@
     "packages-dev": [
         {
             "name": "fabpot/php-cs-fixer",
-            "version": "v1.12.2",
+            "version": "v1.12.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "baa7112bef3b86c65fcfaae9a7a50436e3902b41"
+                "reference": "78a820c16d13f593303511461eefa939502fb2de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/baa7112bef3b86c65fcfaae9a7a50436e3902b41",
-                "reference": "baa7112bef3b86c65fcfaae9a7a50436e3902b41",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/78a820c16d13f593303511461eefa939502fb2de",
+                "reference": "78a820c16d13f593303511461eefa939502fb2de",
                 "shasum": ""
             },
             "require": {
@@ -6214,7 +6262,7 @@
             ],
             "description": "A tool to automatically fix PHP code style",
             "abandoned": "friendsofphp/php-cs-fixer",
-            "time": "2016-09-27 07:57:59"
+            "time": "2016-10-30 12:07:10"
         },
         {
             "name": "hamcrest/hamcrest-php",
