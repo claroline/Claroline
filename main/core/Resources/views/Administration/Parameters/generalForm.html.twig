@@ -52,18 +52,26 @@
             <div class="form-group row portfolio_url_row">
                 {{ form_label(form_settings.portfolio_url) }}
                 <div class="col-md-9">
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions1" value="0" {% if value is empty %} checked="checked"{% endif %}>
-                            {{ 'internal_portfolio'|trans({}, 'platform') }}
-                        </label>
-                    </div>
-                    <div class="radio portfolio_url">
-                        <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions2" value="1" {% if value is not empty %} checked="checked"{% endif %}>
-                        <div class="col-md-6 portfolio_url_field">
-                            {{ form_widget(form_settings.portfolio_url) }}
+                    <div class="portfolio-url">
+                        <div class="radio portfolio_url">
+                            <label class="col-md-12">
+                                <div class="pull-left">
+                                    <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions1" value="0" {% if value is empty %} checked="checked"{% endif %}>
+                                    <span>{{ 'internal_portfolio'|trans({}, 'platform') }}</span>
+                                </div>
+                            </label>
                         </div>
-                        <p class="portfolio_url_help"><small>{{ 'general_parameters_portfolio_url_help'|trans({}, 'platform') }}</small></p>
+                        <div class="radio radio-with-input">
+                            <label class="col-md-12">
+                                <div class="pull-left">
+                                    <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions2" value="1" {% if value is not empty %} checked="checked"{% endif %}>
+                                    <span>{{ 'general_parameters_portfolio_url_help'|trans({}, 'platform') }}</span>
+                                </div>
+                                <div class="col-md-6 portfolio_url_field">
+                                    {{ form_widget(form_settings.portfolio_url) }}
+                                </div>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
