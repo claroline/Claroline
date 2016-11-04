@@ -5,7 +5,7 @@
   "scripts": {
     "bower": "node_modules/bower/bin/bower update --allow-root",
     "themes": "node vendor/claroline/distribution/main/core/Resources/scripts/build-themes",
-    "old-themes": "node --use_strict vendor/claroline/distribution/main/core/Resources/scripts/build-old-themes",
+    "old-themes": "node vendor/claroline/distribution/main/core/Resources/scripts/build-old-themes",
     "uglify": "for f in web/dist/*.js; do echo \"Uglifying ${f}...\" && ./node_modules/.bin/uglifyjs $f -o $f; done",
     "dll": "node_modules/webpack/bin/webpack.js --config=vendor/claroline/distribution/webpack.dll.js --progress --colors --display-error-details",
     "webpack": "export NODE_ENV=production && rm -rf web/dist/* && npm run dll && node_modules/webpack/bin/webpack.js  --json --config=vendor/claroline/distribution/webpack.prod.js --progress --colors --display-error-details > webpack-stats.json && npm run uglify",
