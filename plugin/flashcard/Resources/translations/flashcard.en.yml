@@ -41,6 +41,9 @@ answer:
   easy: Easy
 param:
   new_card_day: Number of new cards to study each day
+info:
+  deck_empty: No cards in this deck.
+  no_cards_today: No card to learn today.
 errors:
   line: line
   title: Error
