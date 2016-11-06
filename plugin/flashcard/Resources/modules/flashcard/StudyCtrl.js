@@ -24,6 +24,10 @@ export default class StudyCtrl {
     this.answers = []
     this.answerQuality = -1
 
+    this.fullscreenClass = ""
+    this.fullscreenClassButton = ""
+    this.fullscreenClassFooter = ""
+
     this._service = service
 
     service.findNewCardToLearn(this.deck).then(
@@ -140,5 +144,17 @@ export default class StudyCtrl {
       this.currentCard = this.revisedCards.pop()
     }
     this.showQuestions()
+  }
+
+  toggleFullscreen () {
+    if (this.fullscreenClass) {
+      this.fullscreenClass = ""
+      this.fullscreenClassButton = "fa-window-maximize"
+      this.fullscreenClassFooter = ""
+    } else {
+      this.fullscreenClass = "fullscreen"
+      this.fullscreenClassButton = "fa-window-close"
+      this.fullscreenClassFooter = "footer-fullscreen"
+    }
   }
 }
