@@ -25,7 +25,7 @@ export default class StudyCtrl {
     this.answerQuality = -1
 
     this.fullscreenClass = ""
-    this.fullscreenClassButton = ""
+    this.fullscreenClassButton = "fa-expand"
     this.fullscreenClassFooter = ""
 
     this._service = service
@@ -149,11 +149,11 @@ export default class StudyCtrl {
   toggleFullscreen () {
     if (this.fullscreenClass) {
       this.fullscreenClass = ""
-      this.fullscreenClassButton = "fa-window-maximize"
+      this.fullscreenClassButton = "fa-expand"
       this.fullscreenClassFooter = ""
     } else {
       this.fullscreenClass = "fullscreen"
-      this.fullscreenClassButton = "fa-window-close"
+      this.fullscreenClassButton = "fa-compress"
       this.fullscreenClassFooter = "footer-fullscreen"
     }
   }
