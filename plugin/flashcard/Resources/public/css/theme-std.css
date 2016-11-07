@@ -11,6 +11,10 @@
     padding-right: 1em;
 }
 
+.panel-footer {
+    padding-bottom: 0;
+}
+
 .panel-footer .btn {
     margin-bottom: 10px;
 }
