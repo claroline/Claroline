@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "b52703f2cab96c832d74445eed6fbe6a51f3a6e2"
+                "reference": "1ca9df3507cccd53f964c73952316e7e22926ee6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/b52703f2cab96c832d74445eed6fbe6a51f3a6e2",
-                "reference": "b52703f2cab96c832d74445eed6fbe6a51f3a6e2",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/1ca9df3507cccd53f964c73952316e7e22926ee6",
+                "reference": "1ca9df3507cccd53f964c73952316e7e22926ee6",
                 "shasum": ""
             },
             "require": {
@@ -384,7 +384,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-11-04 17:09:34"
+            "time": "2016-11-07 08:47:13"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -5154,16 +5154,16 @@
         },
         {
             "name": "symfony/monolog-bundle",
-            "version": "2.11.1",
+            "version": "2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/monolog-bundle.git",
-                "reference": "e7caf4936c7be82bc6d68df87f1d23a0d5bf6e00"
+                "reference": "6acef3bd201c4f35e42e52dedf1fe088f30e07e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/e7caf4936c7be82bc6d68df87f1d23a0d5bf6e00",
-                "reference": "e7caf4936c7be82bc6d68df87f1d23a0d5bf6e00",
+                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/6acef3bd201c4f35e42e52dedf1fe088f30e07e8",
+                "reference": "6acef3bd201c4f35e42e52dedf1fe088f30e07e8",
                 "shasum": ""
             },
             "require": {
@@ -5210,7 +5210,7 @@
                 "log",
                 "logging"
             ],
-            "time": "2016-04-13 16:21:01"
+            "time": "2016-11-06 18:54:50"
         },
         {
             "name": "symfony/swiftmailer-bundle",
