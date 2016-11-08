@@ -100,12 +100,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript"
-            src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"
-    >
-    </script>
-    <script src='{{ asset('bundles/clarolinecursus/js/groupSessionsRegistrationManagement.js') }}'
-            type="text/javascript"
-    >
-    </script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"></script>
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-group-registration-management.js') }}"></script>
 {% endblock %}

@@ -9,6 +9,7 @@ application_date: Application date
 blocking: Blocking
 calendar_view: Calendar view
 calendar_view_options: Calendar view options
+certificate: Certificate
 chronologic_view: Chronologic view
 chronological_view_options: Chronological view options
 click_on_link_below_to_confirm_request: Please click on the link below to confirm your request
@@ -116,14 +117,19 @@ every_day: Every day
 every_month: Every month
 every_week: Every week
 export_all_courses: Export all trainings
+export_users: Export users
 form_not_blank_error: This value may not be blank.
 form_not_unique_error: This value is already used.
 form_not_valid_error: This value is not valid.
 form_number_inferior_error: This value must be %value% or less.
 form_number_superior_error: This value must be %value% or more.
-full_session_msg: Training session users limit has been reached
+full_session_event_msg: The users limit of the session event has been reached
+full_session_msg: The users limit of the training session has been reached
 general_parameters: General parameters
+generate_certificate: Generate certificate
 generate_certificates: Generate certificates
+generate_event_certificate: Generate event certificate
+generate_event_certificates: Generate event certificates
 go_to_workspace: Go to workspace
 icon: Icon
 import_courses: Import trainings
@@ -133,6 +139,8 @@ internal_locations: Internal locations
 invalid_file: Invalid file
 invite_learners_to_session: Invite learners to session
 invite_learners_to_session_event: Invite learners to session event
+invite_to_session: Invite to session
+invite_to_session_event: Invite to session event
 learner: Learner
 learner_role_name: Learner role
 learners: Learners
@@ -145,7 +153,20 @@ locations_management: Locations management
 manager: Manager
 max_time_reservation: Maximum reservation time
 max_users: Maximum number of users
-required_places_msg: Only %remainingPlaces% remaining place(s). Needed : %requiredPlaces%.
+new_certificate_email: |
+  Hello,</br>
+  You will find below a link to download your certificate to the training session : %session_name%</br>
+  Regards,</br>
+  The training team
+new_certificate_email_title: Training certificate
+new_certificates: New certificates
+new_certificates_email_title: New certificates
+new_event_certificate_email: |
+  Hello,</br>
+  You will find below a link to download your certificate to the session event : %event_name%</br>
+  Regards,</br>
+  The training team
+new_event_certificate_email_title: Session event certificate
 no: No
 no_closed_session: No closed session
 no_closed_session_event: No closed session event
@@ -155,6 +176,7 @@ no_description: No description
 no_document_model: No invitation/certificate model
 no_information: No information
 no_location: No location
+no_more_place: No more place
 no_ongoing_session: No ongoing session
 no_open_session: No open session
 no_open_session_event: No open session event
@@ -223,6 +245,7 @@ remove_participant: Remove participant
 remove_participant_confirm_message: Are you sure you want to remove this user from this session event ?
 repeat_session_event: Repeat session event
 repetition: Repetition
+required_places_msg: Only %remainingPlaces% remaining place(s). Needed : %requiredPlaces%.
 send_confirmation_mail: Send a confirmation email
 send_confirmation_mail_to_session: Send a confirmation email to all learners of the training session
 send_confirmation_mail_to_session_message: Are you sure you want to send a confirmation email to all learners of the training session ?
@@ -264,6 +287,7 @@ session_details: Training session details
 session_edition: Edit training session
 session_end_title: End of session "%sessionName%"
 session_event: Session event
+session_event_certificate: Session event certificate
 session_event_creation: Session event creation
 session_event_deletion: Session event deletion
 session_event_description: Session event description
@@ -279,7 +303,7 @@ session_event_registration_pending_to_registered_msg: |
   Hello,<br><br>
   You were on a queue for session event "%event_name%" on %event_start_date%.<br>
   As available place has been made you are now registered.
-session_event_registration_request: Request for registration to session event %event_name% on %event_start_date%
+session_event_registration_request: Request for registration to session event %event_name% on %event_start_date% [%status%]
 session_event_registration_success_msg: |
   Hello,<br><br>
   You have been registered to session event "%event_name%" on %event_start_date%.
@@ -292,7 +316,17 @@ session_not_enough_place_msg: Only %remainingPlaces% remaining place(s) in sessi
 session_not_started: Not started
 session_open: Ongoing
 session_registration: Training session registration
+session_registration_object: Registration to session "%session_name%" from %start_date% to %end_date% [%status%]
+session_registration_pending_msg: |
+  Hello,<br><br>
+  Your registration to session "%session_name%" from %start_date% to %end_date% is pending for validation.
+session_registration_registered_msg: |
+  Hello,<br><br>
+  You have been registered to session "%session_name%" from %start_date% to %end_date%.
 session_registration_request_confirmation: Training session registration request confirmation
+session_registration_validated_msg: |
+  Hello,<br><br>
+  Your registration to session "%session_name%" from %start_date% to %end_date% has been validated.
 session_request_confirm_msg: You have requested to register to session "%sessionName%" of training "%courseTitle% [%courseCode%]"
 session_request_confirmation_success: Registration request to session "%sessionName%" of training "%courseTitle%" confirmed.
 session_self_registration_message: Are you sure you want to register to this training session ?
@@ -308,6 +342,8 @@ sessions_registration_as_tutor: Training sessions registration as tutor
 show_hide_closed_sessions: Show/hide closed training sessions
 the_displayed_word_for: The displayed word for
 to_define: To define
+trainer: Trainer
+trainers: Trainers
 tutor: Tutor
 tutor_role_name: Tutor role
 tutors: Tutors
@@ -325,11 +361,14 @@ unregister_tutor_from_session: Unregister tutor from training session
 unregister_tutor_from_session_confirm_message: Are you sure you want to unregister this tutor from this training session ?
 unregister_user_from_cursus_confirm_message: Are you sure you want to unregister this user from this cursus ?
 unregister_user_from_session: Unregister user from training session
+unregister_user_from_session_event: Unregister user from session event
+unregister_user_from_session_event_message: Are you sure you want to unregister this user from this session event ?
 unregister_user_from_session_message: Are you sure you want to unregister this user from this training session ?
 unstarted_sessions: Unstarted sessions
 until: Until
 user_sessions_management: Training sessions management
 user_validation: User validation
+validated: Validated
 validator: Validator
 validators: Validators
 validators_selection: Validators selection

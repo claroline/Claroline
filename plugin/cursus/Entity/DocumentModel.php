@@ -16,6 +16,7 @@ class DocumentModel
     const SESSION_INVITATION = 0;
     const SESSION_EVENT_INVITATION = 1;
     const SESSION_CERTIFICATE = 2;
+    const SESSION_EVENT_CERTIFICATE = 3;
 
     /**
      * @ORM\Id

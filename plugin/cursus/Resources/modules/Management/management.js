@@ -62,7 +62,7 @@ angular.module('CursusManagementModule', [
 .controller('CourseManagementCtrl', ['$stateParams', 'NgTableParams', 'CourseService', 'SessionService', 'DocumentModelService', CourseManagementCtrl])
 .controller('SessionsManagementCtrl', ['$uibModal', 'NgTableParams', 'SessionService', 'SessionEventService', SessionsManagementCtrl])
 .controller('SessionManagementCtrl', ['$stateParams', 'NgTableParams', 'CourseService', 'SessionService', 'SessionEventService', 'DocumentModelService', SessionManagementCtrl])
-.controller('SessionEventManagementCtrl', ['$stateParams', 'NgTableParams', 'CourseService', 'SessionService', 'SessionEventService', SessionEventManagementCtrl])
+.controller('SessionEventManagementCtrl', ['$stateParams', 'NgTableParams', 'CourseService', 'SessionService', 'SessionEventService', 'DocumentModelService', SessionEventManagementCtrl])
 .controller('GeneralParametersCtrl', ['$state', 'CourseService', GeneralParametersCtrl])
 .controller('LocationsManagementCtrl', ['$http', '$uibModal', 'NgTableParams', 'ClarolineAPIService', LocationsManagementCtrl])
 .controller('DocumentModelsManagementCtrl', ['NgTableParams', 'CourseService', 'DocumentModelService', DocumentModelsManagementCtrl])

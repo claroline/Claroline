@@ -123,4 +123,8 @@ export default class SessionsManagementCtrl {
   sendMessageToSessionLearners (session) {
     this.SessionService.sendMessageToSession(session)
   }
+
+  manageEventComments (sessionEvent) {
+    this.SessionEventService.manageComments(sessionEvent)
+  }
 }

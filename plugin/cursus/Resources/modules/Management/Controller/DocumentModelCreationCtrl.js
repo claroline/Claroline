@@ -28,7 +28,8 @@ export default class DocumentModelCreationCtrl {
     this.documentTypes = [
       {name: Translator.trans('session_invitation', {}, 'cursus'), value: 0},
       {name: Translator.trans('session_event_invitation', {}, 'cursus'), value: 1},
-      {name: Translator.trans('session_certificate', {}, 'cursus'), value: 2}
+      {name: Translator.trans('session_certificate', {}, 'cursus'), value: 2},
+      {name: Translator.trans('session_event_certificate', {}, 'cursus'), value: 3}
     ]
     this.documentType = null
     this.tinymceOptions = CourseService.getTinymceConfiguration()
@@ -80,7 +81,7 @@ export default class DocumentModelCreationCtrl {
   }
 
   isSessionEvent () {
-    return this.documentType && this.documentType['value'] === 1
+    return this.documentType && (this.documentType['value'] === 1 || this.documentType['value'] === 3)
   }
 
   isSession () {

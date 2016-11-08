@@ -61,6 +61,24 @@ class SessionEventUserRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findSessionEventUsersByUserAndSession(User $user, CourseSession $session)
+    {
+        $dql = '
+            SELECT seu
+            FROM Claroline\CursusBundle\Entity\SessionEventUser seu
+            JOIN seu.sessionEvent se
+            JOIN se.session s
+            JOIN seu.user u
+            WHERE s = :session
+            AND u = :user
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('session', $session);
+        $query->setParameter('user', $user);
+
+        return $query->getResult();
+    }
+
     public function findSessionEventUsersByUserAndSessionAndStatus(User $user, CourseSession $session, $status)
     {
         $dql = '

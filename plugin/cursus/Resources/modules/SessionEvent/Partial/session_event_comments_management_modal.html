@@ -18,7 +18,9 @@
                         <i class="fa fa-long-arrow-right"></i>
                         {{ cmc.sessionEvent['endDate']|date:'dd/MM/yyyy HH:mm' }}
                     </div>
-                    <div ng-bind-html="cmc.sessionEvent['location']|trust_html">
+                    <div ng-bind-html="cmc.sessionEvent['address']|trust_html">
+                    </div>
+                    <div ng-bind-html="cmc.sessionEvent['locationExtra']|trust_html">
                     </div>
                     <hr ng-if="cmc.sessionEvent['description']">
                     <div ng-bind-html="cmc.sessionEvent['description']|trust_html">

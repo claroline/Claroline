@@ -23,8 +23,8 @@ use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionGroup;
 use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
-use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
+use Claroline\CursusBundle\Entity\SessionEventUser;
 use Claroline\CursusBundle\Form\CourseQueuedUserTransferType;
 use Claroline\CursusBundle\Form\CourseSessionEditType;
 use Claroline\CursusBundle\Form\CourseSessionType;
@@ -688,17 +688,17 @@ class CourseController extends Controller
 
     /**
      * @EXT\Route(
-     *     "cursus/course/session/unregister/user/{sessionUser}",
-     *     name="claro_cursus_course_session_unregister_user",
+     *     "cursus/session/evnet/unregister/user/{sessionEventUser}",
+     *     name="claro_cursus_session_event_unregister_user",
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
-     * @param CourseSessionUser $sessionUser
+     * @param SessionEventUser $sessionEventUser
      */
-    public function courseSessionUserUnregisterAction(CourseSessionUser $sessionUser)
+    public function sessionEventUserUnregisterAction(SessionEventUser $sessionEventUser)
     {
-        $this->cursusManager->unregisterUsersFromSession([$sessionUser]);
+        $this->cursusManager->unregisterUsersFromSessionEvent([$sessionEventUser]);
 
         return new JsonResponse('success', 200);
     }
@@ -856,10 +856,8 @@ class CourseController extends Controller
      *
      * @param User $user
      */
-    public function courseSessionUserConfirmationMailSendAction(
-        CourseSession $session,
-        User $user
-    ) {
+    public function courseSessionUserConfirmationMailSendAction(CourseSession $session, User $user)
+    {
         $confirmationEmail = $this->cursusManager->getConfirmationEmail();
 
         if (!is_null($confirmationEmail)) {

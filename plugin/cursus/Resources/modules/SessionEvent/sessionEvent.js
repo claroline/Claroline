@@ -18,6 +18,7 @@ import SessionEventEditionModalCtrl from './Controller/SessionEventEditionModalC
 import SessionEventRepeatModalCtrl from './Controller/SessionEventRepeatModalCtrl'
 import SessionEventCommentsManagementModalCtrl from './Controller/SessionEventCommentsManagementModalCtrl'
 import SessionEventUsersRegistrationModalCtrl from './Controller/SessionEventUsersRegistrationModalCtrl'
+import SessionEventUsersExportModalCtrl from './Controller/SessionEventUsersExportModalCtrl'
 
 angular.module('SessionEventModule', [
   'ui.bootstrap',
@@ -30,3 +31,4 @@ angular.module('SessionEventModule', [
 .controller('SessionEventRepeatModalCtrl', SessionEventRepeatModalCtrl)
 .controller('SessionEventCommentsManagementModalCtrl', SessionEventCommentsManagementModalCtrl)
 .controller('SessionEventUsersRegistrationModalCtrl', SessionEventUsersRegistrationModalCtrl)
+.controller('SessionEventUsersExportModalCtrl', SessionEventUsersExportModalCtrl)

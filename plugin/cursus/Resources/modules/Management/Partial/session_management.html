@@ -82,6 +82,15 @@
         >
             <i class="fa fa-graduation-cap"></i>
         </button>
+        <button class="btn btn-primary"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="{{ 'export_users'|trans:{}:'cursus' }}"
+                ng-click="cmc.exportUsers()"
+        >
+            <i class="fa fa-users"></i>
+            <i class="fa fa-sign-out"></i>
+        </button>
     </div>
     <br>
     <br>
@@ -149,7 +158,7 @@
                                             data-toggle="tooltip"
                                             data-placement="top"
                                             title="{{ 'send_confirmation_mail_to_user'|trans:{}:'cursus' }}"
-                                            ng-click="cmc.sendConfirmationMail(learner['id'])"
+                                            ng-click="cmc.sendConfirmationMail(learner['userId'])"
                                     >
                                         <i class="fa fa-envelope-o"></i>
                                     </button>
@@ -311,6 +320,15 @@
                                     ng-click="cmc.inviteLearnersToEvent(event)"
                             >
                                 <i class="fa fa-plus-square"></i>
+                            </button>
+                            <button class="btn btn-primary btn-sm"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="{{ 'generate_event_certificates'|trans:{}:'cursus' }}"
+                                    ng-click="cmc.generateEventCertificates(event)"
+                                    ng-if="!cmc.isCertificatesDisabled"
+                            >
+                                <i class="fa fa-graduation-cap"></i>
                             </button>
                             <button class="btn btn-default btn-sm"
                                     data-toggle="tooltip"

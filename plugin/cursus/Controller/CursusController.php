@@ -1771,17 +1771,16 @@ class CursusController extends Controller
 
         if (is_null($sessionTutor)) {
             $this->checkToolAccess();
-        } else {
-            $comment = $this->request->request->get('comment', false);
-            $sessionEventComment = $this->cursusManager->createSessionEventComment($user, $sessionEvent, $comment);
-            $serializedSessionEventComment = $this->serializer->serialize(
-                $sessionEventComment,
-                'json',
-                SerializationContext::create()->setGroups(['api_user_min'])
-            );
-
-            return new JsonResponse($serializedSessionEventComment, 200);
         }
+        $comment = $this->request->request->get('comment', false);
+        $sessionEventComment = $this->cursusManager->createSessionEventComment($user, $sessionEvent, $comment);
+        $serializedSessionEventComment = $this->serializer->serialize(
+            $sessionEventComment,
+            'json',
+            SerializationContext::create()->setGroups(['api_user_min'])
+        );
+
+        return new JsonResponse($serializedSessionEventComment, 200);
     }
 
     /**
