@@ -135,6 +135,9 @@ class WorkspaceParametersController extends Controller
         $expDate = is_null($workspace->getEndDate()) ? null : $this->utilities->intlDateFormat(
             $workspace->getEndDate()
         );
+        $startDate = is_null($workspace->getEndDate()) ? null : $this->utilities->intlDateFormat(
+            $workspace->getEndDate()
+        );
         $count = $this->workspaceManager->countUsers($workspace, true);
         $storageUsed = $this->workspaceManager->getUsedStorage($workspace);
         $storageUsed = $this->utilities->formatFileSize($storageUsed);
@@ -149,7 +152,8 @@ class WorkspaceParametersController extends Controller
             $storageUsed,
             $countResources,
             $isAdmin,
-            $expDate
+            $expDate,
+            $startDate
         );
 
         $form = $this->formFactory->create($workspaceType, $workspace);
