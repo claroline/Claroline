@@ -17,7 +17,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
 
 class UpdateRichTextCommand extends ContainerAwareCommand
 {
@@ -115,7 +114,7 @@ class UpdateRichTextCommand extends ContainerAwareCommand
 
         foreach ($entities as $entity) {
             $continue = false;
-            $func = 'get'.ucFirst($parsable[get_class($entity)]);
+            $func = 'get'.ucfirst($parsable[get_class($entity)]);
             $text = $entity->$func();
 
             if ($input->getOption('force')) {
@@ -136,7 +135,7 @@ class UpdateRichTextCommand extends ContainerAwareCommand
 
             if ($continue) {
                 $text = str_replace($toMatch, $toReplace, $text);
-                $func = 'set'.ucFirst($parsable[get_class($entity)]);
+                $func = 'set'.ucfirst($parsable[get_class($entity)]);
                 $entity->$func($text);
                 $em->persist($entity);
                 ++$i;
