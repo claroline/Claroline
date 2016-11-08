@@ -106,14 +106,17 @@ class DashboardManager
 
         // for each user (ie user ids) -> get first 'workspace-enter' event for the given workspace
         foreach ($ids as $uid) {
-            $userSqlSelect = 'SELECT first_name, last_name FROM claro_user WHERE id = '.$uid;
+            $userSqlSelect = 'SELECT first_name, last_name FROM claro_user WHERE id = :uid';
             $userSqlSelectStmt = $this->em->getConnection()->prepare($userSqlSelect);
+            $userSqlSelectStmt->bindValue('uid', $uid);
             $userSqlSelectStmt->execute();
             $userData = $userSqlSelectStmt->fetch();
 
             // select first "workspace-enter" actions for the given user and workspace
-            $selectEnterEventOnThisWorkspace = 'SELECT DISTINCT date_log FROM claro_log WHERE workspace_id = '.$workspace->getId().' AND action = "workspace-enter" AND doer_id ='.$uid.' ORDER BY date_log ASC LIMIT 1';
+            $selectEnterEventOnThisWorkspace = "SELECT DISTINCT date_log FROM claro_log WHERE workspace_id = :wid AND action = 'workspace-enter' AND doer_id = :uid ORDER BY date_log ASC LIMIT 1";
             $selectEnterEventOnThisWorkspaceStmt = $this->em->getConnection()->prepare($selectEnterEventOnThisWorkspace);
+            $selectEnterEventOnThisWorkspaceStmt->bindValue('uid', $uid);
+            $selectEnterEventOnThisWorkspaceStmt->bindValue('wid', $workspace->getId());
             $selectEnterEventOnThisWorkspaceStmt->execute();
             $enterOnThisWorksapceDateResult = $selectEnterEventOnThisWorkspaceStmt->fetch();
             $refDate = $enterOnThisWorksapceDateResult['date_log'];
@@ -142,8 +145,9 @@ class DashboardManager
     private function getWorkspaceUsersIds(Workspace $workspace)
     {
         // Select all user(s) belonging to the target workspace (manager and collaborators)...
-        $selectUsersIds = 'SELECT DISTINCT cur.user_id FROM claro_user_role cur JOIN claro_role cr ON cr.id = cur.role_id  WHERE cr.workspace_id = '.$workspace->getId();
+        $selectUsersIds = 'SELECT DISTINCT cur.user_id FROM claro_user_role cur JOIN claro_role cr ON cr.id = cur.role_id  WHERE cr.workspace_id = :wid';
         $idStmt = $this->em->getConnection()->prepare($selectUsersIds);
+        $idStmt->bindValue('wid', $workspace->getId());
         $idStmt->execute();
         $idResults = $idStmt->fetchAll();
         foreach ($idResults as $result) {
@@ -159,8 +163,10 @@ class DashboardManager
     private function computeTimeForUserAndWorkspace($startDate, $userId, $workspaceId, $time)
     {
         // select first "out of this workspace event" (ie "workspace enter" on another workspace)
-        $sql = 'SELECT date_log FROM claro_log WHERE action LIKE "workspace-enter" AND doer_id = '.$userId.' AND date_log > "'.$startDate.'" ORDER BY date_log ASC LIMIT 1';
+        $sql = "SELECT date_log FROM claro_log WHERE action LIKE 'workspace-enter' AND doer_id = :uid  AND date_log > :dateLog ORDER BY date_log ASC LIMIT 1";
         $stmt = $this->em->getConnection()->prepare($sql);
+        $stmt->bindValue('uid', $userId);
+        $stmt->bindValue('dateLog', $startDate);
         $stmt->execute();
         $action = $stmt->fetch();
 
@@ -175,8 +181,11 @@ class DashboardManager
                 $time += $seconds;
             }
             // get next "enter the requested workspace enter event"
-            $sql = 'SELECT date_log FROM claro_log WHERE action LIKE "workspace-enter" AND doer_id = '.$userId.' AND date_log > "'.$action['date_log'].'" AND workspace_id = '.$workspaceId.' ORDER BY date_log ASC LIMIT 1';
+            $sql = "SELECT date_log FROM claro_log WHERE action LIKE 'workspace-enter' AND doer_id = :uid AND date_log > :dateLog AND workspace_id = :wid ORDER BY date_log ASC LIMIT 1";
             $stmt = $this->em->getConnection()->prepare($sql);
+            $stmt->bindValue('uid', $userId);
+            $stmt->bindValue('dateLog', $action['date_log']);
+            $stmt->bindValue('wid', $workspaceId);
             $stmt->execute();
             $nextEnterEvent = $stmt->fetch();
             // if there is an "enter-workspace" action after the current one recall the method
