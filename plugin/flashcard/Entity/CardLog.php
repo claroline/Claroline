@@ -48,7 +48,7 @@ class CardLog
     /**
      * @var bool
      *
-     * @ORM\Column(name="painfull", type="boolean")
+     * @ORM\Column(name="painful", type="boolean")
      */
     private $painful;
 

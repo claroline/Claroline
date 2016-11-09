@@ -19,6 +19,7 @@ use JMS\Serializer\SerializationContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -74,10 +75,28 @@ class DeckController
 
         $canEdit = $this->checker->isGranted('EDIT', $deck);
 
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $theme = $deck->getUserPreference($user)->getTheme();
+
         return [
             '_resource' => $deck,
             '_canEdit' => $canEdit,
+            '_theme' => $theme,
         ];
+    }
+
+    /**
+     * @EXT\Route("/deck/get_all_themes", name="claroline_get_all_themes")
+     * @EXT\Method("GET")
+     *
+     * @return array
+     */
+    public function getAllThemesAction()
+    {
+        $response = new JsonResponse();
+
+        return $response->setData(Deck::getAllThemes());
     }
 
     /**
@@ -95,12 +114,14 @@ class DeckController
     public function editDefaultParamAction(Request $request, Deck $deck)
     {
         $newCardDay = $request->request->get('newCardDay', false);
+        $theme = $request->request->get('theme', false);
         $response = new JsonResponse();
 
         $this->assertCanEdit($deck);
 
-        if ($newCardDay && $newCardDay > 0) {
+        if ($newCardDay && $newCardDay > 0 && $theme) {
             $deck->setNewCardDayDefault($newCardDay);
+            $deck->setTheme($theme);
 
             $deck = $this->manager->create($deck);
 
@@ -110,7 +131,7 @@ class DeckController
                 $this->serializer->serialize($deck, 'json', $context)
             ));
         } else {
-            $response->setData('Field "newCardDay" is missing');
+            $response->setData('Field "newCardDay" or field "theme" is missing');
             $response->setStatusCode(422);
         }
 
@@ -132,15 +153,17 @@ class DeckController
     public function editUserParamAction(Request $request, Deck $deck)
     {
         $newCardDay = $request->request->get('newCardDay', false);
+        $theme = $request->request->get('theme', false);
         $response = new JsonResponse();
 
         $this->assertCanOpen($deck);
 
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($newCardDay && $newCardDay > 0) {
+        if ($newCardDay && $newCardDay > 0 && $theme) {
             $userPref = $deck->getUserPreference($user);
             $userPref->setNewCardDay($newCardDay);
+            $userPref->setTheme($theme);
 
             $deck->setUserPreference($userPref);
 
@@ -152,7 +175,7 @@ class DeckController
                 $this->serializer->serialize($deck, 'json', $context)
             ));
         } else {
-            $response->setData('Field "newCardDay" is missing');
+            $response->setData('Field "newCardDay" or field "theme" is missing');
             $response->setStatusCode(422);
         }
 

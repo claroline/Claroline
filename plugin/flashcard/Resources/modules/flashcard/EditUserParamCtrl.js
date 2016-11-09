@@ -8,6 +8,8 @@
  * file that was distributed with this source code.
  */
 
+import NotBlank from '#/main/core/form/Validator/NotBlank'
+
 export default class EditUserParamCtrl {
   constructor (service, $routeParams, $location) {
     this.deck = service.getDeck()
@@ -15,6 +17,17 @@ export default class EditUserParamCtrl {
     this.canEdit = service._canEdit
     this.nexturl = $routeParams.nexturl
     this.userPref = {}
+    this.themeField = [
+      'type',
+      'select',
+      {
+        values: [],
+        label: 'theme',
+        choice_name: 'name',
+        choice_value: 'value',
+        validators: [new NotBlank()]
+      }
+    ]
 
     this.errorMessage = null
     this.errors = []
@@ -22,11 +35,16 @@ export default class EditUserParamCtrl {
     this.$location = $location
     
     service.getUserPreference(this.deck).then(d => this.userPref = d.data)
+    service.getAllThemes().then(d => this.themeField[2].values = d.data)
   }
 
   editUserParam (form) {
     if (form.$valid) {
-      this._service.editUserParam(this.deck, this.userPref.new_card_day).then(
+      this._service.editUserParam(
+          this.deck, 
+          this.userPref.new_card_day,
+          this.userPref.theme
+        ).then(
         d => {
           this.deck = d.data
           this.$location.search('nexturl', null)
