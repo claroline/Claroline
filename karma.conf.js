@@ -6,13 +6,13 @@ module.exports = config => {
     frameworks: ['mocha'],
     files: [
       {
-        pattern: 'main/core/Resources/modules/karma/index.js',
+        pattern: 'main/core/Resources/modules/core-js/index.js',
         watched: false
       },
       '*/*/Resources/**/*test.js'
     ],
     preprocessors: {
-      'main/core/Resources/modules/karma/index.js': ['webpack'],
+      'main/core/Resources/modules/core-js/index.js': ['webpack'],
       './*/*/Resources/**/*test.js': ['webpack']
     },
     reporters: ['progress'],
@@ -44,7 +44,7 @@ module.exports = config => {
 
   // see https://swizec.com/blog/how-to-run-javascript-tests-in-chrome-on-travis/swizec/6647
   if (process.env.TRAVIS) {
-    base.browsers = ['ChromeTravis'];
+    base.browsers = ['ChromeTravis']
   }
 
   config.set(base)
