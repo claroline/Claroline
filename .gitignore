@@ -23,6 +23,7 @@ app/logs/*
 app/SymfonyRequirements.php
 bin/*
 claroline.sql
+coverage
 files/*
 node_modules
 npm-debug.log
