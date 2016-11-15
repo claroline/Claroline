@@ -1560,9 +1560,9 @@ class CursusController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/courses/widget/{widgetInstance}/session/{session}/informations/workspace/{withWorkspace}/mail/{withMail}",
+     *     "/courses/widget/{widgetInstance}/session/{session}/informations/workspace/{withWorkspace}/mail/{withMail}/type/{type}",
      *     name="claro_courses_widget_session_informations",
-     *     defaults={"withWorkspace"=1, "withMail"=1},
+     *     defaults={"withWorkspace"=1, "withMail"=1, "type"=0},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
@@ -1573,11 +1573,13 @@ class CursusController extends Controller
         WidgetInstance $widgetInstance,
         CourseSession $session,
         $withWorkspace = 1,
-        $withMail = 1
+        $withMail = 1,
+        $type = 0
     ) {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $extra = $config->getExtra();
         $disableWs = intval($withWorkspace) === 0;
+        $allInfos = intval($type) === 0;
 
         if (intval($withWorkspace) === 1) {
             $disableClosedSessionsWs = isset($extra['disableClosedSessionsWs']) ? $extra['disableClosedSessionsWs'] : false;
@@ -1608,6 +1610,7 @@ class CursusController extends Controller
             'disableWs' => $disableWs,
             'withMail' => intval($withMail) === 1,
             'sessionEventUsersStatus' => $sessionEventUsersStatus,
+            'allInfos' => $allInfos,
         ];
     }
 
