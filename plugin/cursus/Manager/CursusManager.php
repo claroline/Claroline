@@ -3783,7 +3783,7 @@ class CursusManager
             }
 
             if ($queue->getStatus() === 0) {
-                $results = $this->registerUsersToSession($session, [$user], 0);
+                $results = $this->registerUsersToSession($session, [$user], 0, true);
 
                 if ($results['status'] === 'success') {
                     $this->deleteSessionQueue($queue);
