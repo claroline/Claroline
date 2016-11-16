@@ -1,7 +1,7 @@
 const path = require('path')
 
 // distribution package directory
-const distribution = () => path.resolve(__dirname, '..', '..',  '..', '..')
+const distribution = () => path.resolve(__dirname, '..', '..',  '..', '..', '..')
 
 // platform root directory
 const root = () => path.resolve(distribution(), '..', '..', '..')

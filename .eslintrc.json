@@ -15,6 +15,7 @@
     "indent": [2, 2, { "SwitchCase": 1 }],
     "linebreak-style": [2, "unix"],
     "quotes": [2, "single"],
-    "semi": [2, "never"]
+    "semi": [2, "never"],
+    "space-before-function-paren": ["error", "never"]
   }
 }

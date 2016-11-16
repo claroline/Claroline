@@ -6,7 +6,7 @@ const paths = require('./paths')
  * packages "assets.json" manifests. Entries are automatically prefixed to
  * avoid name collisions across bundles.
  */
-function collectEntries() {
+function collectEntries () {
   const packages = collectPackages(paths.root())
   const webpackPackages = packages.filter(def => def.assets && def.assets.webpack)
   const packageNames = webpackPackages.map(def => def.name)
@@ -24,8 +24,8 @@ function collectEntries() {
  *  - path:      path of the package source directory
  *  - assets:    package assets config declared its assets.json file, if any
  */
-function collectPackages(rootDir) {
-  const stats = fs.statSync(rootDir);
+function collectPackages (rootDir) {
+  const stats = fs.statSync(rootDir)
 
   if (!stats.isDirectory()) {
     throw new Error(`${rootDir} is not a directory`)
@@ -38,7 +38,7 @@ function collectPackages(rootDir) {
  * Merges "entry" sections of package configs into one object,
  * prefixing entry names and paths with package names/paths.
  */
-function extractEntries(packages) {
+function extractEntries (packages) {
   return packages
     .filter(def => def.assets.webpack && def.assets.webpack.entry)
     .reduce((entries, def) => {
@@ -61,19 +61,24 @@ function extractEntries(packages) {
  */
 function normalizeNames (packages) {
   return packages.map(def => {
-    var parts = def.name.split(/\/|\-/)
-
-    if (parts[parts.length - 1] === 'bundle') {
-      parts.pop()
-    }
-
-    def.name = parts.join('-')
-
+    def.name = normalizeName(def.name)
     return def
   })
 }
 
-function getPackageDefinitions(rootDir) {
+function normalizeName (name) {
+  var parts = name.split(/\/|\-/)
+
+  if (parts[parts.length - 1] === 'bundle') {
+    parts.pop()
+  }
+
+  name = parts.join('-')
+
+  return name
+}
+
+function getPackageDefinitions (rootDir) {
   const file = `${rootDir}/vendor/composer/installed.json`
   var data
 
@@ -89,14 +94,13 @@ function getPackageDefinitions(rootDir) {
     throw new Error('Cannot find packages in composer/installed.json')
   }
 
-  const filteredPackages = packages.filter(def =>
-    def.type === 'claroline-core' || def.type === 'claroline-plugin'
+  const filteredPackages = packages.filter(def => def.type === 'claroline-core' || def.type === 'claroline-plugin'
   )
 
   return filteredPackages.map(extractPackageInfo(rootDir))
 }
 
-function extractPackageInfo(rootDir) {
+function extractPackageInfo (rootDir) {
   return def => {
     const targetDir = def['target-dir'] ? `/${def['target-dir']}` : ''
     const path = `${rootDir}/vendor/${def.name}${targetDir}`
@@ -107,7 +111,6 @@ function extractPackageInfo(rootDir) {
       meta: false
     }
     var data
-
     if (isMetaPackage(path)) {
       assets = getMetaEntries(path)
       newDef.assets = assets
@@ -123,36 +126,51 @@ function extractPackageInfo(rootDir) {
   }
 }
 
-function getMetaEntries(targetDir) {
+function getMetaEntries (targetDir) {
   var data
   var metadata = { webpack: { entry: {} } }
-  const src = ['main', 'plugin']
 
-  src.filter(dir => fs.existsSync(targetDir + '/' + dir)).forEach(function(el) {
-    var dir = targetDir + '/' + el
-    var bundles = fs.readdirSync(dir)
-    bundles.forEach(function(bundle) {
-      try {
-        data = JSON.parse(fs.readFileSync(`${dir}/${bundle}/assets.json`, 'utf8'))
-        Object.keys(data.webpack.entry).forEach(entry => {
-          var parts = dir.split("/");
-          var lastDir = parts[parts.length - 1];
-          metadata.webpack.entry[`${bundle}-${entry}`]  = {
-            name: data.webpack.entry[entry],
-            prefix: `${dir}/${bundle}`,
-            dir: lastDir,
-            bundle: bundle
-          }
-        })
-      } catch(err) {}
-    })
+  getMetaBundles(targetDir).forEach(bundle => {
+    try {
+      data = JSON.parse(fs.readFileSync(`${bundle}/assets.json`, 'utf8'))
+      Object.keys(data.webpack.entry).forEach(entry => {
+        var parts = bundle.split('/')
+        var bundleName = parts.pop()
+        var lastDir = parts[parts.length - 1]
+        metadata.webpack.entry[`${bundleName}-${entry}`] = {
+          name: data.webpack.entry[entry],
+          prefix: bundle,
+          dir: lastDir,
+          bundle: bundleName
+        }
+      })
+    } catch(err) {}
   })
 
   return metadata
 }
 
-function isMetaPackage(rootDir) {
+function getMetaBundles (targetDir) {
+  var bundles = []
+  const src = ['main', 'plugin']
+
+  src.filter(dir => fs.existsSync(targetDir + '/' + dir)).forEach(el => {
+    var dir = targetDir + '/' + el
+    bundles = bundles.concat(fs.readdirSync(dir).map(el => {
+      return dir + '/' + el}))
+  })
+
+  return bundles
+}
+
+function isMetaPackage (rootDir) {
   return fs.existsSync(rootDir + '/main')
 }
 
-module.exports = collectEntries
+module.exports = {
+  collectEntries,
+  collectPackages,
+  isMetaPackage,
+  getMetaBundles,
+  normalizeName
+}

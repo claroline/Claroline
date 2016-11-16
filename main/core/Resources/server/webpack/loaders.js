@@ -69,6 +69,7 @@ const modernizr = () => {
     test: /\.modernizrrc$/,
     loader: 'modernizr'
   }
+
 }
 
 module.exports = {

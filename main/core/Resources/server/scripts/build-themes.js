@@ -1,8 +1,8 @@
 const path = require('path')
 const shell = require('shelljs')
 
-const lessDir = path.resolve(__dirname, '../less/themes')
-const cssDir = path.resolve(__dirname, '../../../../../../../web/themes')
+const lessDir = path.resolve(__dirname, '../../less/themes')
+const cssDir = path.resolve(__dirname, '../../../../../../../../web/themes')
 
 shell.ls(lessDir).forEach(file => {
   const lessFile = path.join(lessDir, file)

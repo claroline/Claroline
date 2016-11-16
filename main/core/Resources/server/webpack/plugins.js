@@ -2,6 +2,7 @@ const webpack = require('webpack')
 const AssetsPlugin = require('assets-webpack-plugin')
 const FailPlugin = require('webpack-fail-plugin')
 const paths = require('./paths')
+const ConfigurationPlugin = require('./build/configuration/plugin')
 
 /**
  * Allows webpack to discover entry files of modules stored in the bower
@@ -39,6 +40,20 @@ const distributionShortcut = () => {
     request.request = [paths.root(), 'vendor/claroline/distribution', ...resolved].join('/')
   })
 }
+
+/**
+ * Adds a custom resolver that will resolve the configuration file path
+ *
+ * Example:
+ *
+ * import from 'clarolineconfig'
+ */
+const configShortcut = () => {
+  return new webpack.NormalModuleReplacementPlugin(/^bundle-configs$/, request => {
+    request.request = paths.root() + '/web/dist/plugins-config.js'
+  })
+}
+
 
 /**
  * Builds a independent bundle for frequently requested modules (might require
@@ -117,12 +132,14 @@ const dlls = () => {
  * Includes references to generated DLLs
  */
 const dllReferences = manifests => {
-  return manifests.map(manifest =>
-    new webpack.DllReferencePlugin({
-      context: '.',
-      manifest
-    })
-  )
+  return manifests.map(manifest => new webpack.DllReferencePlugin({
+    context: '.',
+    manifest
+  }))
+}
+
+const clarolineConfiguration = () => {
+  return new ConfigurationPlugin()
 }
 
 module.exports = {
@@ -135,5 +152,7 @@ module.exports = {
   rejectBuildErrors,
   exitWithErrorCode,
   dllReferences,
-  dlls
+  dlls,
+  configShortcut,
+  clarolineConfiguration
 }

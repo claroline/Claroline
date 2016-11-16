@@ -3,8 +3,8 @@ const path = require('path')
 const fs = require('fs')
 const shell = require('shelljs')
 
-const lessDir = path.resolve(__dirname, '../less/themes')
-const themesDir = path.resolve(__dirname, '../../../../../../../web/themes')
+const lessDir = path.resolve(__dirname, '../../less/themes')
+const themesDir = path.resolve(__dirname, '../../../../../../../../web/themes')
 const oldThemesDir = path.resolve(themesDir, 'less')
 
 const newThemes = []
@@ -99,4 +99,3 @@ function assertSuccess(pgm, file, code) {
     process.exit(1)
   }
 }
-
