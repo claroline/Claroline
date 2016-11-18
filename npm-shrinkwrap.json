@@ -1706,6 +1706,11 @@
       "from": "heap@>=0.2.0",
       "resolved": "https://registry.npmjs.org/heap/-/heap-0.2.6.tgz"
     },
+    "history": {
+      "version": "3.2.1",
+      "from": "history@>=3.0.0 <4.0.0",
+      "resolved": "https://registry.npmjs.org/history/-/history-3.2.1.tgz"
+    },
     "hoist-non-react-statics": {
       "version": "1.2.0",
       "from": "hoist-non-react-statics@>=1.0.3 <2.0.0",
@@ -3274,6 +3279,11 @@
       "version": "4.4.5",
       "from": "react-redux@>=4.4.5 <5.0.0",
       "resolved": "https://registry.npmjs.org/react-redux/-/react-redux-4.4.5.tgz"
+    },
+    "react-router": {
+      "version": "3.0.0",
+      "from": "react-router@latest",
+      "resolved": "https://registry.npmjs.org/react-router/-/react-router-3.0.0.tgz"
     },
     "read-file-stdin": {
       "version": "0.2.1",
