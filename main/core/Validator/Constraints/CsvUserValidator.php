@@ -199,7 +199,10 @@ class CsvUserValidator extends ConstraintValidator
 
                     $existingUser->setFirstName($firstName);
                     $existingUser->setLastName($lastName);
-                    $existingUser->setPlainPassword($pwd);
+
+                    if (!empty($pwd)) {
+                        $existingUser->setPlainPassword($pwd);
+                    }
                     $existingUser->setAdministrativeCode($code);
                     $existingUser->setPhone($phone);
                     $errors = $this->validator->validate(
