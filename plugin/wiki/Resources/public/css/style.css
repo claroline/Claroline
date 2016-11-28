@@ -15,6 +15,7 @@ div.panel-wiki {
 
 .wiki-page-header h1.wiki-title-header {
 	margin-bottom: 0px;
+    display: inline-block;
 }
 
 .wiki-description {
@@ -22,7 +23,7 @@ div.panel-wiki {
 }
 
 .wiki-new-section-container, .wiki-edit-section-container {
-	display: none;
+	/*display: none;*/
 }
 
 .wiki-header-buttons {
@@ -30,17 +31,56 @@ div.panel-wiki {
 }
 /*Wiki contents*/
 div.wiki-contents-inner { float:left; min-width: 20%; }
-div.wiki-contents ul { list-style-type: none; padding-left: 10px; }
-div.wiki-contents ul#wiki-contents-list{padding-left: 0px; }
+div.wiki-contents ul, div.wiki-contents ol { list-style-type: none; padding-left: 10px; }
+div.wiki-contents ul#wiki-contents-list, div.wiki-contents ol#wiki-contents-list {padding-left: 0px; }
 div.wiki-contents-title { text-align: center; margin-bottom:5px; }
 
-ul.sortable-list.sortable-enable li, ul.sortable-list.sortable-enable li a { cursor: move !important; }
-ul.sortable-list.sortable-enable li {border: 1px dashed #357EBD; padding-left: 2px; border-left: 4px solid #357EBD;}
-ul#wiki-contents-list li.invisible-wiki-content a { color:#999; }
+ul.sortable-list.sortable-enable li, ul.sortable-list.sortable-enable li a, ol.sortable-list.sortable-enable li, ol.sortable-list.sortable-enable li a { cursor: move !important; }
+ul.sortable-list li, ol.sortable-list li {border: 1px dashed transparent; padding-left: 2px; border-left: 4px solid transparent;}
+ul.sortable-list.sortable-enable li, ol.sortable-list.sortable-enable li {border-color: #357EBD;}
+ul.sortable-list.sortable-enable li{ padding: 5px 5px 5px 15px; font-size: 0.9em; }
+ul.sortable-list.sortable-enable li::before{
+    content: "..\A ..\A ..\A ..\A ";
+    display: inline-block;
+    line-height: 5px;
+    margin-left: -11px;
+    margin-top: -5px;
+    position: absolute;
+    width: 5px;
+}
+.angular-ui-tree-placeholder {
+    border: 2px dashed activecaption;
+    border-radius: 3px;
+}
+.angular-ui-tree-placeholder:before {
+    display: inline-block;
+    position: relative;
+    left: -7px;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    content: '\f0da';
+    color: red;
+}
+.angular-ui-tree-drag {
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+    opacity: .8;
+    top: -450px;
+}
+.angular-ui-tree-drag li {
+    list-style-type: none;
+}
+ul#wiki-contents-list li.invisible-wiki-content a,
+ol#wiki-contents-list li.invisible-wiki-content a { color:#999; }
+ol#wiki-contents-list, ol#wiki-contents-list ol { list-style-type:none; counter-reset: item; }
+ol#wiki-contents-list li { counter-increment: item; }
+ol#wiki-contents-list li a:before { content: counters(item, "."); }
 
 
 /*Wiki sections*/
-/*div.wiki-sections ul { list-style-type: none; padding-left: 0; }*/
 #wiki-sections-list { padding-left: 0; }
 div.subsection-header h3, div.subsection-header h4 { margin-bottom: 5px; padding-bottom: 3px;}
 div.subsection-header h3 {margin-top: 15px; border-bottom: 1px dashed #eeeeee;}
@@ -49,18 +89,20 @@ div.wiki-sections div.page-header {padding-bottom: 0px; margin:25px 0 10px 0;}
 div.wiki-sections div.page-header h2 {margin-bottom:2px; font-weight: bold !important;}
 div.wiki-sections li.invisible-wiki-section { color: #aaa; }
 div.wiki-sections div.wiki-section-text { overflow: auto;}
-div.wiki-sections .section-title { list-style-type: none; padding-left: 0px;}
+div.wiki-sections ul li { list-style-type: none; padding-left: 0px;}
+div.wiki-sections .section-title { display: inline; }
 
 
 div.wiki-sections li.invisible-wiki-section div.wiki-section-text,  
 div.wiki-sections li.invisible-wiki-section div.wiki-section-text *
 { color: #aaa!important; }
 
+div.wiki-sections li.invisible-wiki-section form { color: #333; }
+
 span.invisible-section-text {font-style: italic;}
 
 /*Delete section form*/
 .icap-wiki-delete-section-message {margin: 10px 0 20px 0; font-size: 16px;}
-
 
 /*Move section form*/
 .move-wiki-section-header {margin: 20px 0 20px; font-size: 20px;}
@@ -98,18 +140,59 @@ span.invisible-section-text {font-style: italic;}
     text-align: right;
 }
 
-.wiki-contents-inner.well ul.sortable-list.sortable-enable li{
-    padding: 5px 5px 5px 15px;
-    font-size: 0.9em;
+/* Diff */
+.match{ color: gray; }
+.ins{ color: black; background: #bbffbb; }
+.del{ color: black; background: #ffbbbb; }
+
+/* Loading bar */
+#loading-bar .bar {
+    background-color: #3278B4;
+    height: 3px;
 }
 
-/* Grip */
-.wiki-contents-inner.well ul.sortable-list.sortable-enable li::before{
-    content: "..\A ..\A ..\A ..\A ";
-    display: inline-block;
-    line-height: 5px;
-    margin-left: -11px;
-    margin-top: -5px;
-    position: absolute;
-    width: 5px;
+#loading-bar-spinner .spinner-icon {
+    border-top-color: #3278B4;
+    border-left-color: #F89406;
+    width: 25px;
+    height: 25px;
+}
+
+.link-style {
+    border: none;
+    background: none;
+    color: #337ab7;
+    font-size: 10px;
+    padding: 0;
+    outline: none;
+}
+.link-style:hover {
+    text-decoration: underline;
+}
+.link-style[disabled='disabled'] {
+    color: grey;
+}
+.link-style[disabled='disabled']:hover {
+    text-decoration: none;
+}
+
+/* Add standard cursor on angularized clickable elements without href attribute */
+[ng-click], [data-ng-click], [x-ng-click] {cursor: pointer;}
+
+/* Fixed alert messages */
+.alert-messages {
+    position: fixed;
+    z-index: 50;
+    left: 0px;
+    width: 100%;
+}
+.alert-messages .alert {
+    margin-left: 15px;
+    margin-right: 15px;
+    box-shadow: 2px 2px 3px rgba(0,0,0,.15);
+}
+@media (min-width: 768px) {
+    .alert-messages .alert {
+        margin-left: 55px;
+    }
 }

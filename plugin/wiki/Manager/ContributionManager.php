@@ -2,11 +2,11 @@
 
 namespace Icap\WikiBundle\Manager;
 
+use Icap\HtmlDiff\HtmlDiff;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Repository\ContributionRepository;
 use JMS\DiExtraBundle\Annotation as DI;
-use Icap\HtmlDiff\HtmlDiff;
 
 /**
  * @DI\Service("icap.wiki.contribution_manager")
@@ -53,5 +53,15 @@ class ContributionManager
         $contributions[1] = $contribution;
 
         return $contributions;
+    }
+
+    public function getContributions(Section $section)
+    {
+        return $this->contributionRepository->findAllForSection($section);
+    }
+
+    public function getContribution(Contribution $contribution)
+    {
+        return $this->contributionRepository->findById($contribution->getId());
     }
 }
