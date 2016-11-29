@@ -157,7 +157,7 @@ class UserManager
         }
 
         if (count($organizations) === 0 && count($user->getOrganizations()) === 0) {
-            $organizations = [$this->organizationManager->getDefault()];
+            $organizations = [$this->organizationManager->getDefault(true)];
             $user->setOrganizations($organizations);
         }
 
