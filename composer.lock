@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "a629087c7154718ce6c0bf9c9f2c3526a271ff31"
+                "reference": "d9c73f34ac725f57c6fa1a35373d3cba28a27c9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/a629087c7154718ce6c0bf9c9f2c3526a271ff31",
-                "reference": "a629087c7154718ce6c0bf9c9f2c3526a271ff31",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/d9c73f34ac725f57c6fa1a35373d3cba28a27c9e",
+                "reference": "d9c73f34ac725f57c6fa1a35373d3cba28a27c9e",
                 "shasum": ""
             },
             "require": {
@@ -384,7 +384,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-11-28 15:01:23"
+            "time": "2016-11-29 09:49:45"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -6207,16 +6207,16 @@
     "packages-dev": [
         {
             "name": "fabpot/php-cs-fixer",
-            "version": "v1.12.4",
+            "version": "v1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "c5a9d66dd27f02a3ffba4ec451ce27702604cdc8"
+                "reference": "ac04a510bed5407e91664f8a37b9d58072d96768"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/c5a9d66dd27f02a3ffba4ec451ce27702604cdc8",
-                "reference": "c5a9d66dd27f02a3ffba4ec451ce27702604cdc8",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/ac04a510bed5407e91664f8a37b9d58072d96768",
+                "reference": "ac04a510bed5407e91664f8a37b9d58072d96768",
                 "shasum": ""
             },
             "require": {
@@ -6262,7 +6262,7 @@
             ],
             "description": "A tool to automatically fix PHP code style",
             "abandoned": "friendsofphp/php-cs-fixer",
-            "time": "2016-11-15 09:10:47"
+            "time": "2016-11-29 09:21:33"
         },
         {
             "name": "hamcrest/hamcrest-php",
