@@ -361,12 +361,12 @@ class ApiController extends FOSRestController
      * )
      * @RequestParam(
      *     name="title",
-     *     requirements=".+",
+     *     nullable=true,
      *     description="Title of the new contribution"
      * )
      * @RequestParam(
      *     name="text",
-     *     requirements=".+",
+     *     nullable=true,
      *     description="Content of the new contribution"
      * )
      * @RequestParam(
