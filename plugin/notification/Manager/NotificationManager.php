@@ -413,7 +413,7 @@ class NotificationManager
      */
     public function getUserNotificationsList($userId, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $category = null)
     {
-        $query = $this->getUserNotifications($userId, $page, $maxResult, $isRss, $notificationParameters, false);
+        $query = $this->getUserNotifications($userId, $page, $maxResult, $isRss, $notificationParameters, false, $category);
         $adapter = new DoctrineORMAdapter($query, false);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($maxResult);
@@ -432,7 +432,7 @@ class NotificationManager
         ];
     }
 
-    public function getUserNotifications($userId, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $executeQuery = true)
+    public function getUserNotifications($userId, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $executeQuery = true, $category = null)
     {
         if (is_null($notificationParameters)) {
             $notificationParameters = $this
@@ -448,7 +448,7 @@ class NotificationManager
 
         $query = $this
             ->getNotificationViewerRepository()
-            ->findUserNotificationsQuery($userId, $visibleTypes);
+            ->findUserNotificationsQuery($userId, $visibleTypes, $category);
 
         return $executeQuery ? $query->getResult() : $query;
     }
