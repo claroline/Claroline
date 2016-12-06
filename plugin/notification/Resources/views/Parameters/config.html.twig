@@ -3,7 +3,7 @@
 {% set title = 'notification_user_configuration' %}
 
 {% block title %}
-    {{ parent() ~ ' - ' ~ title | trans({}, "platform") | striptags | raw }}
+    {{ parent() ~ ' - ' ~ title | trans({}, 'notification') | striptags | raw }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -21,62 +21,68 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ title|trans({}, 'notification') }}</h3>
-    </div>
-    <div class="panel-body">
-        <form id="notification-user-parameters-form" action="{{ path('icap_notification_save_user_parameters') }}" method="post">
-            <div class="table-responsive">
-                <table id="notification-parameters-types-table" class="table table-striped table-bordered table-condensed">
-                    <thead>
-                        <tr>
-                            <th>{{ 'type'|trans({}, 'platform') }}</th>
-                            <th>{{ 'visible'|trans({}, 'platform') }}</th>
-                            <th><a class="text-primary" href="{{ path("icap_notification_rss", {"rssId" : rssId}) }}" target="_blank">{{ 'rss_visible'|trans({}, 'notification') }} <i class="fa fa-rss"></i></a></th>
-                        </tr>
-                    </thead>
-                    <tbody class="types-table-body">
-                        {% for type in types %}
-                            <tr>
-                                <td>
-                                    {{ type.name|trans({}, 'notification')|trans({}, 'resource') }}
-                                </td>
-                                <td>
-                                    <input
-                                        type="checkbox"
-                                        class="chk-type-visible"
-                                        value="visible"
-                                        name="{{ type.name }}[]"
-                                        {% if type.visible %} checked {% endif %}
-                                    />
-                                </td>
-                                <td>
-                                    <input
-                                        type="checkbox"
-                                        class="chk-type-visible"
-                                        value="rss"
-                                        name="{{ type.name }}[]"
-                                        {% if type.rssVisible %} checked {% endif %}
-                                    />
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+{% block section_panel %}
+    <form id="notification-user-parameters-form" action="{{ path('icap_notification_save_user_parameters') }}" method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ title|trans({}, 'notification') }}</h3>
             </div>
-            <button type="submit" id="edit-tools-btn" href="{{ path('claro_desktop_parameters_menu') }}" class="btn btn-primary">
-                {{ 'edit'|trans({}, 'platform') }}
-            </button>
-            <a class="btn btn-success" href="{{ path('icap_notification_regenerate_rss_url') }}">
-                {{ 'rss_url_regenerate'|trans({}, 'notification') }}
-            </a>
-            <a class="btn btn-default" href="{{ path('claro_desktop_parameters_menu') }}">
-                {{ 'cancel'|trans({}, 'platform') }}
-            </a>
-        </form>
-    </div>
 
+            <table id="notification-parameters-types-table" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{{ 'type'|trans({}, 'platform') }}</th>
+                    <th>{{ 'visible'|trans({}, 'platform') }}</th>
+                    <th>
+                        <a class="text-primary" href="{{ path("icap_notification_rss", {"rssId" : rssId}) }}">
+                            <i class="fa fa-fw fa-rss"></i>
+                            {{ 'rss_visible'|trans({}, 'notification') }}
+                        </a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="types-table-body">
+                {% for type in types %}
+                    <tr>
+                        <td>
+                            {{ type.name|trans({}, 'notification')|trans({}, 'resource') }}
+                        </td>
+                        <td>
+                            <input
+                                    type="checkbox"
+                                    class="chk-type-visible"
+                                    value="visible"
+                                    name="{{ type.name }}[]"
+                                    {% if type.visible %} checked {% endif %}
+                            />
+                        </td>
+                        <td>
+                            <input
+                                    type="checkbox"
+                                    class="chk-type-visible"
+                                    value="rss"
+                                    name="{{ type.name }}[]"
+                                    {% if type.rssVisible %} checked {% endif %}
+                            />
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="panel-footer">
+                <button type="submit" id="edit-tools-btn" class="btn btn-primary">
+                    {{ 'edit'|trans({}, 'platform') }}
+                </button>
+                <a class="btn btn-default" href="{{ path('icap_notification_regenerate_rss_url') }}">
+                    {{ 'rss_url_regenerate'|trans({}, 'notification') }}
+                </a>
+                <a class="btn btn-default" href="{{ path('claro_desktop_parameters_menu') }}">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </a>
+            </div>
+        </div>
+    </form>
 {% endblock %}
 
 {% block stylesheets %}
