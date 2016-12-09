@@ -1,13 +1,13 @@
-all_other_teams: Toutes les autres équipes
-automatic_fill: Remplir automatiquement
-create_a_team: Créer une équipe
-create_teams: Créer des équipes
-default_parameters: Paramètres par défaut
-default_resource: Ressource par défaut
-delete_selected_teams: Supprimer l'/les équipe(s) sélectionnée(s)
-delete_selected_teams_confirm_message: Êtes-vous sûr de vouloir supprimer l'/les équipe(s) sélectionnée(s) ?
-delete_team: Supprimer l'équipe
-delete_team_confirm_message: Êtes-vous sûr de vouloir supprimer cette équipe ?
+all_other_teams: Alle andere ploegen
+automatic_fill: Automatisch invullen
+create_a_team: Een ploeg maken
+create_teams: Ploegen maken
+default_parameters: Standaardinstellingen
+default_resource: Standaardhulpmiddelen
+delete_selected_teams: De gekozen ploeg(en) verwijderen
+delete_selected_teams_confirm_message: Bent u er zeker van dat u de gekozen ploeg(en) wenst te verwijderen ?
+delete_team: De ploeg verwijderen
+delete_team_confirm_message: Bent u er zeker van dat u deze ploeg wenst te verwijderen ?
 delete_team_directory: Supprimer le répertoire de l'équipe
 delete_teams: Supprimer des équipes
 edit_team: Modifier l'équipe
@@ -22,42 +22,42 @@ hide_advanced_parameters: Cacher les paramètres avancés
 max_teams_limit_reached: Nombre maximum déquipes atteint
 maximum: Maximum
 maximum_informations: Le nombre d'utilisateurs qui peuvent être inscrits dans l'équipe
-my_teams: Mes équipes
-no_description: Aucune description
-no_team: Aucune équipe
+my_teams: Mijn ploegen
+no_description: Geen beschrijving
+no_team: Geen ploeg
 private: Privé
-public: Public
-public_registration: Inscription publique
-public_unregistration: Désinscription publique
-register: Inscrire
+public: Openbaar
+public_registration: Openbare inschrijving
+public_unregistration: Openbare afschrijving
+register: Inschrijven
 register_to_team: S'inscrire à léquipe
 register_to_team_confirm_message: Êtes-vous sûr de vouloir vous inscrire à cette équipe ?
 register_unregister_users_to_team: Inscrire/Désinscrire des utilisateurs à l'équipe
 register_users_to_team: Inscrire des utilisateurs à l'équipe
 remove_team_manager: Retirer le gestionnaire de l'équipe
 remove_team_manager_confirm_message: Êtes-vous sûr de vouloir retirer le gestionnaire de l'équipe ?
-select: Sélectionner
+select: Kiezen
 select_team_manager: Sélectionner le gestionnaire de l'équipe
-self_register: S'inscrire
-self_unregister: Se désinscrire
+self_register: Zich inschrijven
+self_unregister: Zich afschrijven
 show_advanced_parameters: Afficher les paramètres avancés
-team: Equipe
-team_creation: Création d'une équipe
+team: Ploeg
+team_creation: Een ploeg maken
 team_directory: Répertoire de l'équipe
 team_directory_link:  Lien vers le répertoire de l'équipe
-team_edition: Modification de l'équipe
-team_form_description: Description
+team_edition: De ploeg bewerken
+team_form_description: Beschrijving
 team_form_isPublic: Accès au répertoire de l'équipe
 team_form_maxTeams: Nombre d'équipes autorisées par utilisateur
 team_form_maxUsers: Nombre maximum d'utilisateurs
-team_form_name: Nom
-team_form_nbTeams: Nombre déquipes
-team_form_selfRegistration: Permettre aux utilisateurs de s'inscrire
-team_form_selfUnregistration: Permettre aux utilisateurs de se désinscrire
-team_manager: Gestionnaire de l'équipe
+team_form_name: Naam
+team_form_nbTeams: Aantal ploegen
+team_form_selfRegistration: De gebruikers toelaten zich in te schrijven
+team_form_selfUnregistration: De gebruikers toelaten zich af te schrijven
+team_manager: Ploegbeheerder
 team_manager_selection: Sélection du gestionnaire de l'équipe
-teams_creation: Création d'équipes
-unregister: Désinscrire
+teams_creation: Ploegen maken
+unregister: Afschrijven
 unregister_all_users_from_selected_teams: Désinscrire tous les utilisateurs des équipes sélectionnées
 unregister_from_team: Se désinscrire de l'équipe
 unregister_from_team_confirm_message: Êtes-vous sûr de vouloir vous désinscrire de cette équipe ?
