@@ -3,10 +3,15 @@ best_status: Best status
 browsed: Browsed
 completed: Completed
 completion_status: Completion status
+desktop: Desktop
 details: Details
 display_details: Display details
+display_menu: Display menu
 display_results: Display results
+exit_destination: Exit destination
 failed: Failed
+full_screen: Full screen
+hide_top_bar: Hide top bar
 incomplete: Incomplete
 last_status: Last status
 last_score: Last score
@@ -19,3 +24,4 @@ session_time: Last session time
 scorm_results: SCORM results
 success_status: Success status
 unknown: Unknown
+workspace_opening: Workspace opening

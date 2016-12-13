@@ -13,4 +13,6 @@ namespace Claroline\ScormBundle\Entity;
 
 interface ScormResource
 {
+    const WORKSPACE_OPEN = 0;
+    const DESKTOP_OPEN = 1;
 }
