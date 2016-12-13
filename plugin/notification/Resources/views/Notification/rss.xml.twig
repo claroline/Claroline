@@ -10,7 +10,7 @@
                 {% set notification = notificationViewer.notification %}
                 <item>
                 {% if notificationViews[notificationViewer.id] is defined %}
-                    <title>{{ notificationViews[notificationViewer.id]|striptags("<strong><span>")|rssMessage }}</title>
+                    <title>{{ notificationViews[notificationViewer.id]|striptags("<span>")|rssMessage }}</title>
                 {% else %}
                     {% set user = null %}
                     {% set resource = null %}
@@ -34,5 +34,3 @@
 
     </channel>
 </rss>
-
-
