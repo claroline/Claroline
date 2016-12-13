@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "325fe82b028095ff32be32a52075119ff33d8a11"
+                "reference": "ea5e7048da21d47b63e11bcf02af3c00d529d041"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/325fe82b028095ff32be32a52075119ff33d8a11",
-                "reference": "325fe82b028095ff32be32a52075119ff33d8a11",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/ea5e7048da21d47b63e11bcf02af3c00d529d041",
+                "reference": "ea5e7048da21d47b63e11bcf02af3c00d529d041",
                 "shasum": ""
             },
             "require": {
@@ -384,7 +384,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-12-09 14:30:37"
+            "time": "2016-12-12 14:55:51"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -1664,12 +1664,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "5e9014fd99046440ad330814665692f9a7f6df6a"
+                "reference": "20cb50451daeab020d404a64e2aef2cab1a1f189"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/5e9014fd99046440ad330814665692f9a7f6df6a",
-                "reference": "5e9014fd99046440ad330814665692f9a7f6df6a",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/20cb50451daeab020d404a64e2aef2cab1a1f189",
+                "reference": "20cb50451daeab020d404a64e2aef2cab1a1f189",
                 "shasum": ""
             },
             "require": {
@@ -1732,7 +1732,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2016-12-04 05:53:07"
+            "time": "2016-12-12 07:34:27"
         },
         {
             "name": "egulias/email-validator",
