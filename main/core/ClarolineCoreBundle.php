@@ -27,7 +27,6 @@ use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use FOS\OAuthServerBundle\FOSOAuthServerBundle;
 use IDCI\Bundle\ExporterBundle\IDCIExporterBundle;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
-use Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -148,8 +147,6 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
                 return $config
                     ->addContainerResource($this->buildPath('web_profiler'))
                     ->addRoutingResource($this->buildPath('web_profiler_routing'));
-            } elseif ($bundle instanceof SensioGeneratorBundle) {
-                return $config;
             }
         }
 

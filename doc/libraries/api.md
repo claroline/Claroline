@@ -43,7 +43,6 @@
 
 
 ## TO REMOVE WITH REFACTORING
-- leafo/lessphp : remplacé par le compilateur NodeJS
 - mrclay/minify : minification des JS / remplacé par Webpack
 - werkint/jsmin
 - natxet/CssMin : minification des CSS / sera remplacé par un gestionnaire de tâche JS (Gulp, Grunt)
