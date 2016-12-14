@@ -318,13 +318,12 @@ class WorkspaceParametersController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription_anonymous.html.twig")
      *
+     * @param Request   $request
      * @param Workspace $workspace
-     *
-     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      *
      * @return Response
      */
-    public function anonymousSubscriptionAction(Workspace $workspace)
+    public function anonymousSubscriptionAction(Request $request, Workspace $workspace)
     {
         if (!$workspace->getSelfRegistration()) {
             throw new AccessDeniedHttpException();
@@ -337,7 +336,14 @@ class WorkspaceParametersController extends Controller
         if ($form->isValid()) {
             $user = $form->getData();
             $this->userManager->createUser($user);
-            $this->workspaceManager->addUserAction($workspace, $user);
+            if ($workspace->getRegistrationValidation()) {
+                $this->workspaceManager->addUserQueue($workspace, $user);
+                $flashBag = $request->getSession()->getFlashBag();
+                $translator = $this->get('translator');
+                $flashBag->set('warning', $translator->trans('account_created_awaiting_validation', [], 'platform'));
+            } else {
+                $this->workspaceManager->addUserAction($workspace, $user);
+            }
 
             return $this->redirect(
                 $this->generateUrl(

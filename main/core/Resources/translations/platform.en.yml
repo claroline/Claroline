@@ -4,6 +4,7 @@ accept: Accept
 accessible_from: 'Accessible from'
 accessible_until: 'Accessible until'
 account_created: 'Account created.'
+account_created_awaiting_validation: 'Your account has been successfully created. However you will not be able to access the workspace unless an administrator validates your account.'
 account_duration_label: 'Account lifetime (days)'
 account_general_statistics: 'Account general statistics'
 action: Action

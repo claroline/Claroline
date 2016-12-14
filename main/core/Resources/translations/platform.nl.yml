@@ -4,6 +4,7 @@ accept: Aanvaarden
 accessible_from: Toegankelijk vanaf
 accessible_until: Toegankelijk tot
 account_created: De informatie van uw rekening is u per email gestuurd. (Kijk eventueel of die niet in uw spams zit).
+account_created_awaiting_validation: 'Votre compte a été crée avec succès. Toutefois, il ne sera possible, d''acceder à l''espace de travail qu''après la validation par un administrateur.'
 account_duration_label: Levensduur van de rekeningen (dagen)
 account_general_statistics: Algemene statistieken over de rekeningen
 action: Actie
