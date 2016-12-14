@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "ea5e7048da21d47b63e11bcf02af3c00d529d041"
+                "reference": "e491d8dbefcd868c6a0c9d14a01ead8d86578d57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/ea5e7048da21d47b63e11bcf02af3c00d529d041",
-                "reference": "ea5e7048da21d47b63e11bcf02af3c00d529d041",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/e491d8dbefcd868c6a0c9d14a01ead8d86578d57",
+                "reference": "e491d8dbefcd868c6a0c9d14a01ead8d86578d57",
                 "shasum": ""
             },
             "require": {
@@ -384,7 +384,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-12-12 14:55:51"
+            "time": "2016-12-13 10:43:52"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -7572,16 +7572,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.2.0",
+            "version": "v3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "a56acfdb96be7c82f4bcf16b7c77f1960690b0e2"
+                "reference": "65e64a4f99cbaeae718573c3347fbe800f3f6661"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/a56acfdb96be7c82f4bcf16b7c77f1960690b0e2",
-                "reference": "a56acfdb96be7c82f4bcf16b7c77f1960690b0e2",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/65e64a4f99cbaeae718573c3347fbe800f3f6661",
+                "reference": "65e64a4f99cbaeae718573c3347fbe800f3f6661",
                 "shasum": ""
             },
             "require": {
@@ -7626,7 +7626,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2016-11-25 22:54:21"
+            "time": "2016-12-12 13:31:08"
         },
         {
             "name": "webmozart/assert",
