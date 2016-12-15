@@ -66,6 +66,12 @@ class WebResourceListener
         'web/index.htm',
         'index.html',
         'index.htm',
+        'web/SCO_0001/Default.html',
+        'web/SCO_0001/Default.htm',
+        'web/Index.html',
+        'web/Index.htm',
+        'Index.html',
+        'Index.htm',
     ];
 
     /**
