@@ -30,7 +30,7 @@ public: Public
 public_registration: Inscription publique
 public_unregistration: Désinscription publique
 register: Inscrire
-register_to_team: S'inscrire à léquipe
+register_to_team: S'inscrire à l'équipe
 register_to_team_confirm_message: Êtes-vous sûr de vouloir vous inscrire à cette équipe ?
 register_unregister_users_to_team: Inscrire/Désinscrire des utilisateurs à l'équipe
 register_users_to_team: Inscrire des utilisateurs à l'équipe

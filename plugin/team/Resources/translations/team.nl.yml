@@ -9,16 +9,16 @@ delete_selected_teams_confirm_message: Bent u er zeker van dat u de gekozen ploe
 delete_team: De ploeg verwijderen
 delete_team_confirm_message: Bent u er zeker van dat u deze ploeg wenst te verwijderen ?
 delete_team_directory: Supprimer le répertoire de l'équipe
-delete_teams: Supprimer des équipes
+delete_teams: Ploegen verwijderen
 edit_team: Modifier l'équipe
-empty_action: Vider
+empty_action: Leegmaken
 empty_selected_teams_confirm_message: Êtes-vous sûr de vouloir vider l'/les équipe(s) sélectionnée(s) ?
 empty_teams: Vider des équipes
 fill_selected_teams_confirm_message: Êtes-vous sûr de vouloir remplir l'/les équipe(s) sélectionnée(s) ?
 fill_selected_teams_with_unregistered_users: Remplir automatiquement l'/les équipe(s) sélectionnée(s) avec les utilisateurs inscrits à aucune équipe
 fill_teams: Remplir des équipes
 go_to_team_directory: Accéder au répertoire de l'équipe
-hide_advanced_parameters: Cacher les paramètres avancés
+hide_advanced_parameters: De gevorderde instellingen verbergen
 max_teams_limit_reached: Nombre maximum déquipes atteint
 maximum: Maximum
 maximum_informations: Le nombre d'utilisateurs qui peuvent être inscrits dans l'équipe
@@ -30,7 +30,7 @@ public: Openbaar
 public_registration: Openbare inschrijving
 public_unregistration: Openbare afschrijving
 register: Inschrijven
-register_to_team: S'inscrire à léquipe
+register_to_team: Zich inschrijven bij de ploeg
 register_to_team_confirm_message: Êtes-vous sûr de vouloir vous inscrire à cette équipe ?
 register_unregister_users_to_team: Inscrire/Désinscrire des utilisateurs à l'équipe
 register_users_to_team: Inscrire des utilisateurs à l'équipe
@@ -40,7 +40,7 @@ select: Kiezen
 select_team_manager: Sélectionner le gestionnaire de l'équipe
 self_register: Zich inschrijven
 self_unregister: Zich afschrijven
-show_advanced_parameters: Afficher les paramètres avancés
+show_advanced_parameters: De gevorderde instellingen tonen
 team: Ploeg
 team_creation: Een ploeg maken
 team_directory: Répertoire de l'équipe
@@ -59,6 +59,6 @@ team_manager_selection: Sélection du gestionnaire de l'équipe
 teams_creation: Ploegen maken
 unregister: Afschrijven
 unregister_all_users_from_selected_teams: Désinscrire tous les utilisateurs des équipes sélectionnées
-unregister_from_team: Se désinscrire de l'équipe
+unregister_from_team: Zich afschrijven van de ploeg
 unregister_from_team_confirm_message: Êtes-vous sûr de vouloir vous désinscrire de cette équipe ?
 unregister_user_from_team_confirm_message: Êtes-vous sûr de vouloir désinscrire cet utilisateur de cette équipe ?

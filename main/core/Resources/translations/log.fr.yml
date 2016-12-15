@@ -1,6 +1,6 @@
-'Show actions for': Afficher les actions suivantes :
+'Show actions for': 'Afficher les actions suivantes:'
 all: Tous
-'for user': Filtrer sur l''utilisateur :
+'for user': 'Filtrer sur l''utilisateur:'
 group: Groupe
 log_add_user: Ajout d'un utilisateur
 log_change_right: Changement de droits

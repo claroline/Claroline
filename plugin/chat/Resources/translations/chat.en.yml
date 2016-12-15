@@ -56,7 +56,7 @@ text_only: Text only
 type: Type
 uninitialized: Not initialized
 visitor: Visitor
-invalid_host: 'An error happened during the connection (%error%). Please use a valid host.'
-invalid_bosh: 'Bosh server connection failed. Tested %url%'
-invalid_authentication: 'An error happened during the connection. Please check the "admin" and "password" parameters'
+invalid_host: An error happened during the connection (%error%). Please use a valid host.
+invalid_bosh: Bosh server connection failed. Tested %url%
+invalid_authentication: An error happened during the connection. Please check the "admin" and "password" parameters.
 ssl: SSL
