@@ -89,7 +89,16 @@ class TeamController extends Controller
         $isWorkspaceManager = $this->isWorkspaceManager($workspace, $user);
         $params = [];
 
-        if ($isWorkspaceManager) {
+        //display the correct view when impersonnating
+        $impersonating = $this->authorization->isGranted('ROLE_USURPATE_WORKSPACE_ROLE');
+        $impersonatingCollaborator = false;
+        foreach ($this->get('security.token_storage')->getToken()->getRoles() as $role) {
+            if ($role->getRole() === 'ROLE_WS_COLLABORATOR_'.$workspace->getGuid()) {
+                $impersonatingCollaborator = true;
+            }
+        }
+
+        if ($isWorkspaceManager && !($impersonating && $impersonatingCollaborator)) {
             $params['_controller'] = 'ClarolineTeamBundle:Team:managerMenu';
             $params['workspace'] = $workspace->getId();
         } else {

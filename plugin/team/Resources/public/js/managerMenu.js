@@ -65,32 +65,35 @@
         var userId = $(this).data('user-id');
         var teamId = $(this).data('team-id');
 
-        $.ajax({
-            url: Routing.generate(
-                'claro_team_manager_register_user',
-                {
-                    'team': teamId,
-                    'user': userId
-                }
-            ),
-            type: 'POST',
-            success: function () {
-                registerBtn.removeClass('btn-success');
-                registerBtn.removeClass('register-btn');
-                registerBtn.addClass('btn-danger');
-                registerBtn.addClass('unregister-btn');
-                registerBtn.html(Translator.trans('unregister', {}, 'team'));
+        //to avoid registering through a disabled button
+        if (!$(this).hasClass('disabled')) {
+            $.ajax({
+                url: Routing.generate(
+                    'claro_team_manager_register_user',
+                    {
+                        'team': teamId,
+                        'user': userId
+                    }
+                ),
+                type: 'POST',
+                success: function () {
+                    registerBtn.removeClass('btn-success');
+                    registerBtn.removeClass('register-btn');
+                    registerBtn.addClass('btn-danger');
+                    registerBtn.addClass('unregister-btn');
+                    registerBtn.html(Translator.trans('unregister', {}, 'team'));
 
-                var maxUsers = $('#registration-users-list-datas').data('max-users');
-                var nbUsers = parseInt($('#nb-users-' + teamId).text());
-                nbUsers++;
-                $('#nb-users-' + teamId).html(nbUsers);
+                    var maxUsers = $('#registration-users-list-datas').data('max-users');
+                    var nbUsers = parseInt($('#nb-users-' + teamId).text());
+                    nbUsers++;
+                    $('#nb-users-' + teamId).html(nbUsers);
 
-                if (maxUsers !== '' && nbUsers >= parseInt(maxUsers)) {
-                    $('.register-btn').addClass('disabled');
+                    if (maxUsers !== '' && nbUsers >= parseInt(maxUsers)) {
+                        $('.register-btn').addClass('disabled');
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 
     $('#view-registration-users-box').on('click', '.unregister-btn', function () {

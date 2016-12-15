@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Library\Security\Voter;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * This voter grants access to admin users, whenever the attribute or the
@@ -28,7 +28,9 @@ class AdministratorVoter implements VoterInterface
 {
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        return $this->isAdmin($token) ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_ABSTAIN;
+        $isImpersonating = $this->isUsurpatingWorkspaceRole($token);
+
+        return $this->isAdmin($token) ? (VoterInterface::ACCESS_GRANTED && !$isImpersonating) : VoterInterface::ACCESS_ABSTAIN;
     }
 
     protected function isAdmin(TokenInterface $token)
@@ -50,5 +52,16 @@ class AdministratorVoter implements VoterInterface
     public function supportsClass($class)
     {
         return true;
+    }
+
+    private function isUsurpatingWorkspaceRole(TokenInterface $token)
+    {
+        foreach ($token->getRoles() as $role) {
+            if ($role->getRole() === 'ROLE_USURPATE_WORKSPACE_ROLE') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
