@@ -5,24 +5,22 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id="desktop-home-panel" ng-app="DesktopHomeModule">
-        <div class="panel-body" ui-view>
+    <div id="desktop-home-panel" data-ng-app="DesktopHomeModule">
+        <div class="panel-body" data-ui-view="">
         </div>
     </div>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets
-        debug=false
-        filter='less, cssmin'
-        output='css/clarolinecore/hometabs.css'
+    {% stylesheets debug=false filter='less, cssmin' output='css/clarolinecore/hometabs.css'
         "@ClarolineCoreBundle/Resources/less/home-tabs.less"
     %}
-        <link rel="stylesheet" href="{{ asset_url }}" screen="media"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
     {% endstylesheets %}
-    <link rel='stylesheet' type='text/css' href='{{ asset('packages/angular-bootstrap-colorpicker/css/colorpicker.min.css')}}'>
-    <link rel='stylesheet' type='text/css' href='{{ asset('packages/angular-gridster/dist/angular-gridster.min.css')}}'>
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('packages/angular-bootstrap-colorpicker/css/colorpicker.min.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('packages/angular-gridster/dist/angular-gridster.min.css')}}" />
 {% endblock %}
 
 {% block javascripts %}
