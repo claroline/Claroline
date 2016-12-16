@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Accessor;
@@ -31,8 +32,9 @@ class FieldFacet
     const CHECKBOXES_TYPE = 6;
     const COUNTRY_TYPE = 7;
     const EMAIL_TYPE = 8;
+    const RICH_TEXT_TYPE = 9;
 
-    private static $types = [
+    protected static $types = [
         self::STRING_TYPE,
         self::FLOAT_TYPE,
         self::DATE_TYPE,
@@ -41,26 +43,27 @@ class FieldFacet
         self::CHECKBOXES_TYPE,
         self::COUNTRY_TYPE,
         self::EMAIL_TYPE,
+        self::RICH_TEXT_TYPE,
     ];
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_facet_admin", "api_profile"})
+     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column
      * @Assert\NotBlank()
-     * @Groups({"api_facet_admin", "api_profile"})
+     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
      */
     protected $name;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"api_facet_admin", "api_profile"})
+     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
      */
     protected $type;
 
@@ -69,7 +72,7 @@ class FieldFacet
      *      targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacet",
      *      inversedBy="fieldsFacet"
      * )
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     protected $panelFacet;
 
@@ -83,13 +86,13 @@ class FieldFacet
     protected $fieldsFacetValue;
 
     /**
-     * @ORM\Column(type="integer", name="position")
+     * @ORM\Column(type="integer", name="position", nullable=true)
      * @Groups({"api_facet_admin", "api_profile"})
      */
     protected $position;
 
     /**
-     * @Groups({"api_facet_admin", "api_profile"})
+     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
      * @Accessor(getter="getInputType")
      */
     protected $translationKey;
@@ -121,6 +124,15 @@ class FieldFacet
      * @Groups({"api_profile", "api_facet_admin"})
      */
     protected $isRequired = false;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
+     *     inversedBy="fields"
+     * )
+     * @ORM\JoinColumn(name="resource_node", onDelete="CASCADE", nullable=true)
+     */
+    protected $resourceNode;
 
     public function __construct()
     {
@@ -188,7 +200,16 @@ class FieldFacet
 
     public function addFieldChoice(FieldFacetChoice $choice)
     {
-        $this->fieldFacetChoices->add($choice);
+        if (!$this->fieldFacetChoices->contains($choice)) {
+            $this->fieldFacetChoices->add($choice);
+        }
+    }
+
+    public function removeFieldChoice(FieldFacetChoice $choice)
+    {
+        if ($this->fieldFacetChoices->contains($choice)) {
+            $this->fieldFacetChoices->removeElement($choice);
+        }
     }
 
     public function setPosition($position)
@@ -212,6 +233,7 @@ class FieldFacet
             case self::CHECKBOXES_TYPE: return 'checkbox';
             case self::COUNTRY_TYPE: return 'country';
             case self::EMAIL_TYPE: return 'email';
+            case self::RICH_TEXT_TYPE: return 'rich_text';
             default: return 'error';
         }
     }
@@ -224,9 +246,10 @@ class FieldFacet
             case self::STRING_TYPE: return 'text';
             case self::RADIO_TYPE: return 'radio';
             case self::SELECT_TYPE: return 'select';
-            case self::CHECKBOXES_TYPE: return 'checkbox';
+            case self::CHECKBOXES_TYPE: return 'checkboxes';
             case self::COUNTRY_TYPE: return 'country';
             case self::EMAIL_TYPE: return 'email';
+            case self::RICH_TEXT_TYPE: return 'rich_text';
             default: return 'error';
         }
     }
@@ -234,6 +257,11 @@ class FieldFacet
     public function getFieldFacetChoices()
     {
         return $this->fieldFacetChoices;
+    }
+
+    public function getFieldFacetChoicesArray()
+    {
+        return $this->fieldFacetChoices->toArray();
     }
 
     /**
@@ -285,5 +313,15 @@ class FieldFacet
         $string = preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
 
         return strtolower($string);
+    }
+
+    public function getResourceNode()
+    {
+        return $this->resourceNode;
+    }
+
+    public function setResourceNode(ResourceNode $resourceNode = null)
+    {
+        $this->resourceNode = $resourceNode;
     }
 }

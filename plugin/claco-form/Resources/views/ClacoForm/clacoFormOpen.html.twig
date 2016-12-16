@@ -1,0 +1,54 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% extends layout %}
+
+{% set _resource = clacoForm %}
+
+{% block chat_content %}
+    {% block section_panel %}
+        <div id="claco-form-app" ng-cloak="" ng-app="ClacoFormModule">
+            <div ui-view></div>
+        </div>
+    {% endblock %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('packages/angular-loading-bar/build/loading-bar.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('packages/ng-table/dist/ng-table.css') }}" />
+    <link rel='stylesheet' href='{{ asset('packages/angular-bootstrap-colorpicker/css/colorpicker.min.css')}}'>
+    <link rel="stylesheet" href="{{ asset('bundles/clarolineclacoform/css/clacoform.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts debug=false 'js/translations/clacoform/*.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        window.resourceId = {{ clacoForm.getId() }}
+        window.resourceDetails = {{ clacoForm.getDetails()|json_encode|raw }}
+        window.resourceNodeId = {{ clacoForm.getResourceNode().getId() }}
+        window.resourceNodeName = "{{ clacoForm.getResourceNode().getName() }}"
+        window.workspaceId = "{{ clacoForm.getResourceNode().getWorkspace().getId() }}"
+        window.isAnon = {{ isAnon ? 'true' : 'false' }}
+        window.isCategoryManager = {{ isCategoryManager ? 'true' : 'false' }}
+        window.userId = {{ userId }}
+        window.canEdit = {{ canEdit ? 'true' : 'false' }}
+        window.fields = {{ fields|raw }}
+        window.keywords = {{ keywords|raw }}
+        window.categories = {{ categories|raw }}
+        window.myEntries = {{ myEntries|raw }}
+        window.managerEntries = {{ managerEntries|raw }}
+        window.template = `{{ clacoForm.getTemplate()|raw }}`
+        window.nbEntries = {{ nbEntries }}
+        window.nbPublishedEntries = {{ nbPublishedEntries }}
+    </script>
+    <script type='text/javascript' src="{{ asset('packages/angular/angular.min.js') }}"></script>
+    <script type='text/javascript' src="{{ asset('packages/ng-table/dist/ng-table.js') }}"></script>
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-claco-form-resource.js') }}"></script>
+{% endblock %}

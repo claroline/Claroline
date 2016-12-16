@@ -11,13 +11,14 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Base entity for all resources.
@@ -267,11 +268,20 @@ class ResourceNode
      */
     protected $guid;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacet",
+     *     mappedBy="resourceNode"
+     * )
+     */
+    protected $fields;
+
     public function __construct()
     {
         $this->rights = new ArrayCollection();
         $this->children = new ArrayCollection();
         $this->logs = new ArrayCollection();
+        $this->fields = new ArrayCollection();
     }
 
     /**
@@ -507,7 +517,7 @@ class ResourceNode
      *
      * @param string $name
      *
-     * @throws \InvalidArgumentException if the name contains the path separator ('/').
+     * @throws \InvalidArgumentException if the name contains the path separator ('/')
      */
     public function setName($name)
     {
@@ -811,5 +821,28 @@ class ResourceNode
     public function getGuid()
     {
         return $this->guid;
+    }
+
+    public function getFields()
+    {
+        return $this->fields->toArray();
+    }
+
+    public function addField(FieldFacet $field)
+    {
+        if (!$this->fields->contains($field)) {
+            $this->fileds->add($field);
+        }
+
+        return $this;
+    }
+
+    public function removeField(FieldFacet $field)
+    {
+        if ($this->fields->contains($field)) {
+            $this->fields->removeElement($field);
+        }
+
+        return $this;
     }
 }

@@ -848,6 +848,7 @@ restore: Restore
 restore_messages_confirm_message: 'restored message(s)'
 results: Results
 results_for_search_on: 'Results for search on'
+rich_text: Rich text
 right: Right
 rights: Rights
 rights_management: 'Rights Management'

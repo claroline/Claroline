@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacetRole;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
@@ -148,6 +149,19 @@ class FacetManager
         $this->om->flush();
     }
 
+    public function createField($name, $isRequired, $type, ResourceNode $resourceNode = null)
+    {
+        $fieldFacet = new FieldFacet();
+        $fieldFacet->setName($name);
+        $fieldFacet->setType($type);
+        $fieldFacet->setIsRequired($isRequired);
+        $fieldFacet->setResourceNode($resourceNode);
+        $this->om->persist($fieldFacet);
+        $this->om->flush();
+
+        return $fieldFacet;
+    }
+
     /**
      * Creates a new field for a facet.
      *
@@ -158,12 +172,10 @@ class FacetManager
     public function addField(PanelFacet $panelFacet, $name, $isRequired, $type)
     {
         $this->om->startFlushSuite();
-        $fieldFacet = new FieldFacet();
+        $position = $this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacet');
+        $fieldFacet = $this->createField($name, $isRequired, $type);
         $fieldFacet->setPanelFacet($panelFacet);
-        $fieldFacet->setName($name);
-        $fieldFacet->setType($type);
-        $fieldFacet->setIsRequired($isRequired);
-        $fieldFacet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacet'));
+        $fieldFacet->setPosition($position);
         $this->om->persist($fieldFacet);
         $this->om->endFlushSuite();
 
@@ -644,5 +656,19 @@ class FacetManager
                 ++$facetTab;
             }
         }
+    }
+
+    public function isTypeWithChoices($type)
+    {
+        $withChoices = false;
+
+        switch ($type) {
+            case FieldFacet::CHECKBOXES_TYPE:
+            case FieldFacet::RADIO_TYPE:
+            case FieldFacet::SELECT_TYPE:
+                $withChoices = true;
+        }
+
+        return $withChoices;
     }
 }

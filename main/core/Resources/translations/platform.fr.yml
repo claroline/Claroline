@@ -849,6 +849,7 @@ restore: Restaurer
 restore_messages_confirm_message: 'message(s) restauré(s)'
 results: Résultats
 results_for_search_on: 'Résultats de la recherche sur'
+rich_text: Texte riche
 right: Droit
 rights: Droits
 rights_management: 'Gestion des droits'

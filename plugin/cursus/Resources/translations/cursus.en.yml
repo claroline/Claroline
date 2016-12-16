@@ -370,7 +370,7 @@ user_sessions_management: Training sessions management
 user_validation: User validation
 validated: Validated
 validator: Validator
-validators: Validators
+validators: Validatorsui.tinymce
 validators_selection: Validators selection
 variable_available_message: You can use the following variables in the "Content" section of the form
 view_structure: View structure
