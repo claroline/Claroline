@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "ac1828e8b1068cdf3cc0c2dfc808dd2491edd0e2"
+                "reference": "e82964bb1e489dbca79c897dd71228fa0eeffb34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/ac1828e8b1068cdf3cc0c2dfc808dd2491edd0e2",
-                "reference": "ac1828e8b1068cdf3cc0c2dfc808dd2491edd0e2",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/e82964bb1e489dbca79c897dd71228fa0eeffb34",
+                "reference": "e82964bb1e489dbca79c897dd71228fa0eeffb34",
                 "shasum": ""
             },
             "require": {
@@ -297,7 +297,8 @@
                     "Icap\\LessonBundle\\IcapLessonBundle",
                     "Claroline\\ChatBundle\\ClarolineChatBundle",
                     "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle",
-                    "Claroline\\DashboardBundle\\ClarolineDashboardBundle"
+                    "Claroline\\DashboardBundle\\ClarolineDashboardBundle",
+                    "Claroline\\ClacoFormBundle\\ClarolineClacoFormBundle"
                 ]
             },
             "autoload": {
@@ -354,7 +355,8 @@
                     "Claroline\\FlashCardBundle\\": "plugin/flashcard",
                     "Innova\\MediaResourceBundle\\": "plugin/media-resource",
                     "FormaLibre\\OfficeConnectBundle\\": "plugin/o365",
-                    "Claroline\\DashboardBundle\\": "plugin/dashboard"
+                    "Claroline\\DashboardBundle\\": "plugin/dashboard",
+                    "Claroline\\ClacoFormBundle\\": "plugin/claco-form"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -374,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-12-15 15:29:51"
+            "time": "2016-12-16 12:44:48"
         },
         {
             "name": "claroline/front-end-bundle",
