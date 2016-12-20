@@ -543,7 +543,7 @@ class ClacoFormManager
         $entries = [];
 
         if ($canEdit) {
-            $entries = $this->entryRepo->findAll();
+            $entries = $this->entryRepo->findBy(['clacoForm' => $clacoForm]);
         } elseif ($searchEnabled) {
             $entries = is_null($user) ? $this->getPublishedEntries($clacoForm) : $this->getPublishedAndManageableEntries($clacoForm, $user);
         }
