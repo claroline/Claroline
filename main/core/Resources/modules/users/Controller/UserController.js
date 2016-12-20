@@ -76,7 +76,7 @@ export default class UserController {
           `
 
           content += `
-            <button title='${switchTitle}' class='btn btn-default' ng-click='uc.switchPersonalWorkspace($row)'><i ng-class="$row.personal_workspace ? 'fa fa-ban': 'fa fa-book'"></i></button>
+            <button title='${switchTitle}' class='btn btn-default' ng-click='uc.switchPersonalWorkspace($row)'><i ng-class="$row.personal_workspace ? 'fa fa-trash-o': 'fa fa-street-view'"></i></button>
           `
 
           this.buttons.forEach(button => {
