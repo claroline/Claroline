@@ -1,30 +1,27 @@
 OAuthBundle
 ============
 
-Provides a plugin for Claroline Connect platform that ennables users to connect through social login (facebook, twitter, google, linkedin, windows live)
+Provides a plugin for Claroline Connect platform that ennables users to connect through social login (facebook, twitter, google, linkedin, windows live, office 365)
 
-Installation
--------------
+Plugin Activation
+-------------------
 
-Via Composer:
-    ```
-        composer install icap/oauth-bundle
-    ```
-
-Then run the `php app/console claroline:update` command to install plugin to Claroline platform
+Make sure the Oauth plugin is activated. 
+In `Administration -> Parameters -> Plugins` make sure the **IcapOAuthBundle** plugin is checked.
 
 Configuration
 --------------
 
-In order to enable 3rd party connection (social login) using the OAuth service you will need to generate a pair of **App key** + **App Secret** for every provider available (for the moment _facebook_, _twitter_, _google_ and _linkedin_)
+In order to enable 3rd party connection (social login) using the OAuth service you will need to generate a pair of **App key** + **App Secret** for every provider available (for the moment _facebook_, _twitter_, _google_, _linkedin_, _windows live_, _office 365_)
 
 Click on the following links to learn how to configure your App for every provider and eventually retrieve your App key & secret
 
-- [Facebook](Resources/doc/facebookAppConfig.md)
-- [Twitter](Resources/doc/twitterAppConfig.md)
-- [Google](Resources/doc/googleAppConfig.md)
-- [LinkedIn](Resources/doc/linkedinAppConfig.md)
-- [Windows Live](Resources/doc/windowsAppConfig.md)
+- [Facebook](doc/facebookAppConfig.md)
+- [Twitter](doc/twitterAppConfig.md)
+- [Google](doc/googleAppConfig.md)
+- [LinkedIn](doc/linkedinAppConfig.md)
+- [Windows Live](doc/windowsAppConfig.md)
+- [Office 365](doc/office365AppConfig.md)
 
 Once you've created your App and got your keys, it's time to enable login to your Claroline platform.
 
@@ -34,6 +31,8 @@ To enable your social login, let's say _facebook login_ for example:
 2. Click on **Oauth** option
 3. Choose the provider you wish to enable/configure (e.g. _facebook_)
 4. Fill in the form with your _application id (App key)_ and your _secret (App secret)_, check _activate_ and then save
+
+**NB: If available you can check the `force re-authentication` option to ask from users to verify their identity every time they connect through this provider**  
 
 Your social login is now enabled. You can test it on your login page.
 

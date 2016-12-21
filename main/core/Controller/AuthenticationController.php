@@ -370,8 +370,11 @@ class AuthenticationController
         $event = $this->dispatcher->dispatch('render_external_authentication_button', 'RenderAuthenticationButton');
 
         $eventContent = $event->getContent();
-        if (!empty($eventContent)) {
-            $eventContent = '<div class="external_authentication"><hr>'.$eventContent.'</div>';
+        $strippedContent = trim(strip_tags(preg_replace('/(<(script|style)\b[^>]*>).*?(<\/\2>)/is', '', $eventContent)));
+        if (!empty($strippedContent)) {
+            $eventContent = '<div class="external_authentication">'.$eventContent.'</div>';
+        } else {
+            $eventContent = '';
         }
 
         return new Response($eventContent);

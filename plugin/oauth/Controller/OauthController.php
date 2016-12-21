@@ -2,12 +2,12 @@
 
 namespace Icap\OAuthBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use JMS\DiExtraBundle\Annotation as DI;
 use Icap\OAuthBundle\Form\ConfigurationType;
-use Symfony\Component\Form\FormError;
+use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -20,8 +20,6 @@ class OauthController extends Controller
     private $configHandler;
     /** @DI\Inject("form.factory") */
     private $formFactory;
-    /** @DI\Inject("request") */
-    private $request;
     /** @DI\Inject("claroline.manager.cache_manager") */
     private $cacheManager;
     /** @DI\Inject("icap.oauth.manager") */
@@ -30,7 +28,7 @@ class OauthController extends Controller
     private $translator;
 
     /**
-     * @EXT\Route("/oauth/{service}", name="claro_admin_oauth_form")
+     * @EXT\Route("/admin/parameters/oauth/{service}", name="claro_admin_oauth_form")
      * @EXT\Template("IcapOAuthBundle::admin_form.html.twig")
      *
      * @param $service
@@ -40,13 +38,13 @@ class OauthController extends Controller
     public function formAction($service)
     {
         $config = $this->oauthManager->getConfiguration($service);
-        $form = $this->formFactory->create(new ConfigurationType(), $config);
+        $form = $this->formFactory->create(new ConfigurationType(), $config, ['resource_owner' => $service]);
 
-        return array('form' => $form->createView(), 'service' => $service);
+        return ['form' => $form->createView(), 'service' => $service];
     }
 
     /**
-     * @EXT\Route("/oauth/{service}/submit", name="claro_admin_oauth_form_submit")
+     * @EXT\Route("/admin/parameters/oauth/{service}/submit", name="claro_admin_oauth_form_submit")
      * @EXT\Method("POST")
      * @EXT\Template("IcapOAuthBundle::admin_form.html.twig")
      *
@@ -60,15 +58,24 @@ class OauthController extends Controller
     public function submitFormAction(Request $request, $service)
     {
         $config = $this->oauthManager->getConfiguration($service);
-        $form = $this->formFactory->create(new ConfigurationType(), $config);
+        $form = $this->formFactory->create(new ConfigurationType(), $config, ['resource_owner' => $service]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $data = array(
+            $data = [
                 $service.'_client_id' => $form['client_id']->getData(),
                 $service.'_client_secret' => $form['client_secret']->getData(),
                 $service.'_client_active' => $form['client_active']->getData(),
-            );
+            ];
+
+            if ($service !== 'linkedin') {
+                $data[$service.'_client_force_reauthenticate'] = $form['client_force_reauthenticate']->getData();
+            }
+
+            if ($service === 'office_365') {
+                $clientTenandDomain = $form['client_tenant_domain']->getData();
+                $data[$service.'_client_domain'] = $clientTenandDomain === null ? '' : $clientTenandDomain;
+            }
 
             $errors = $this->oauthManager->validateService(
                 $service,
@@ -83,12 +90,12 @@ class OauthController extends Controller
                 return $this->redirectToRoute('claro_admin_parameters_oauth_index');
             } else {
                 foreach ($errors as $error) {
-                    $trans = $this->translator->trans($error, array(), 'platform');
+                    $trans = $this->translator->trans($error, [], 'platform');
                     $form->addError(new FormError($trans));
                 }
             }
         }
 
-        return array('form' => $form->createView(), 'service' => $service);
+        return ['form' => $form->createView(), 'service' => $service];
     }
 }

@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 7/6/15
  */
 
@@ -16,32 +16,37 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @DI\Service("icap.oauth.security_handler")
+ * @DI\Service("icap.oauth.failure_handler")
  */
-class SecurityHandler  implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
+class FailureHandler implements AuthenticationFailureHandlerInterface
 {
     /**
      * @var Router
      */
     private $router;
-
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+    /**
+     * FailureHandler constructor.
+     *
      * @DI\InjectParams({
-     *   "router"      = @DI\Inject("router")
+     *     "router"     = @DI\Inject("router"),
+     *     "translator" = @DI\Inject("translator")
      * })
      */
-    public function __construct(Router $router)
+    public function __construct(Router $router, TranslatorInterface $translator)
     {
         $this->router = $router;
+        $this->translator = $translator;
     }
-
     /**
      * This is called when an interactive authentication attempt fails. This is
      * called by authentication listeners inheriting from
@@ -55,32 +60,19 @@ class SecurityHandler  implements AuthenticationSuccessHandlerInterface, Authent
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         if (!$exception instanceof UsernameNotFoundException) {
-            // Edit it to meet your requeriments
-            $request->getSession()->set('login_error', 'error_connecting_with_oauth');
+            $msg = $this->translator->trans(
+                'error_connecting_with_oauth',
+                ['%msg%' => $exception->getMessage()],
+                'icap_oauth'
+            );
+            $request
+                ->getSession()
+                ->getFlashBag()
+                ->add('error', $msg);
 
             return new RedirectResponse($this->router->generate('claro_security_login'));
         } else {
             return new RedirectResponse($this->router->generate('icap_oauth_check_connexion'));
-        }
-    }
-
-    /**
-     * This is called when an interactive authentication attempt succeeds. This
-     * is called by authentication listeners inheriting from
-     * AbstractAuthenticationListener.
-     *
-     * @param Request        $request
-     * @param TokenInterface $token
-     *
-     * @return Response never null
-     */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token)
-    {
-        $referer = $request->headers->get('referer');
-        if (empty($referer)) {
-            return new RedirectResponse($this->router->generate('claro_desktop_open_tool', array('toolName' => 'home')));
-        } else {
-            return new RedirectResponse($referer);
         }
     }
 }

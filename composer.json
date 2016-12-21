@@ -35,7 +35,7 @@
         "gedmo/doctrine-extensions": "2.3.12",
         "gregwar/captcha-bundle": "1.0.12",
         "guzzle/http": "3.9.2",
-        "hwi/oauth-bundle": "0.4.3",
+        "hwi/oauth-bundle": "0.5.2",
         "icap/html-diff": "1.1.0",
         "idci/exporter-bundle": "1.0.0",
         "jdorn/sql-formatter": "1.2.17",
@@ -123,8 +123,7 @@
         "innova/audio-recorder-bundle": "*",
         "innova/media-resource-bundle": "*",
         "ujm/exo-bundle": "*",
-        "icap/lesson-bundle": "*",
-        "formalibre/office-connect-bundle": "*"
+        "icap/lesson-bundle": "*"
     },
     "autoload": {
         "psr-4": {
@@ -179,7 +178,6 @@
             "Icap\\LessonBundle\\": "plugin/lesson",
             "Claroline\\FlashCardBundle\\": "plugin/flashcard",
             "Innova\\MediaResourceBundle\\": "plugin/media-resource",
-            "FormaLibre\\OfficeConnectBundle\\": "plugin/o365",
             "Claroline\\DashboardBundle\\": "plugin/dashboard",
             "Claroline\\ClacoFormBundle\\": "plugin/claco-form"
         }
@@ -235,7 +233,6 @@
             "UJM\\ExoBundle\\UJMExoBundle",
             "Icap\\LessonBundle\\IcapLessonBundle",
             "Claroline\\ChatBundle\\ClarolineChatBundle",
-            "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle",
             "Claroline\\DashboardBundle\\ClarolineDashboardBundle",
             "Claroline\\ClacoFormBundle\\ClarolineClacoFormBundle"
         ]

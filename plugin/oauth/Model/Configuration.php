@@ -16,12 +16,18 @@ class Configuration
     private $clientId;
     private $clientSecret;
     private $clientActive;
+    private $clientTenantDomain = null;
+    private $clientVersion = null;
+    private $clientForceReauthenticate = false;
 
-    public function __construct($id, $secret, $active)
+    public function __construct($id, $secret, $active, $forceReauthenticate = false, $domain = null, $version = null)
     {
         $this->clientId = $id;
         $this->clientSecret = $secret;
         $this->clientActive = $active;
+        $this->clientTenantDomain = $domain;
+        $this->clientVersion = $version;
+        $this->clientForceReauthenticate = $forceReauthenticate === true;
     }
 
     /**
@@ -72,9 +78,66 @@ class Configuration
         return $this->clientActive;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getClientTenantDomain()
+    {
+        return $this->clientTenantDomain;
+    }
+
+    /**
+     * @param mixed $clientTenantDomain
+     *
+     * @return $this
+     */
+    public function setClientTenantDomain($clientTenantDomain)
+    {
+        $this->clientTenantDomain = $clientTenantDomain;
+
+        return $this;
+    }
+
+    public function getClientVersion()
+    {
+        return $this->clientVersion;
+    }
+
+    /**
+     * @param null $clientVersion
+     *
+     * @return $this
+     */
+    public function setClientVersion($clientVersion)
+    {
+        $this->clientVersion = $clientVersion;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isClientForceReauthenticate()
+    {
+        return $this->clientForceReauthenticate === true;
+    }
+
+    /**
+     * @param bool $clientForceReauthenticate
+     *
+     * @return $this
+     */
+    public function setClientForceReauthenticate($clientForceReauthenticate)
+    {
+        $this->clientForceReauthenticate = $clientForceReauthenticate;
+
+        return $this;
+    }
+
     public static function resourceOwners()
     {
-        $resourceOwners = ['Facebook', 'Twitter', 'Google', 'Linkedin', 'Windows Live'];
+        $resourceOwners = ['Facebook', 'Twitter', 'Google', 'Linkedin', 'Windows Live', 'Office 365'];
 
         return $resourceOwners;
     }
