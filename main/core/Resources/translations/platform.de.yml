@@ -370,7 +370,7 @@ for_period: 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 friend_platform: friend_platform
-from: Depuis
+from: Seit
 from_message: De
 fullscreen_text_editor: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
 general: Général
@@ -842,7 +842,7 @@ save_as_template: 'Sauvegarder comme modèle'
 save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
 saved_changes: 'Vos changements ont été sauvegardés'
 score: Score
-search: Rechercher
+search: Suchen
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
 search_workspace: 'Rechercher un espace d''activités'
@@ -959,7 +959,7 @@ time_col: 'Colonne des durées'
 tinymce_all_buttons: 'Tous les outils'
 tips: Astuces
 title: Titel
-to: Jusque
+to: Bis
 to_anonymous: 'aux utilisateurs anonymes'
 to_everyone: 'à tout le monde'
 to_message: À
