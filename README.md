@@ -172,7 +172,7 @@ For complete list : http://caniuse.com/#feat=mutationobserver
 Documentation
 -------------
 
-For user documentation, see : [doc.claroline.com][doc.claroline.com].
+For user documentation, see : http://doc.claroline.com.
 
 For development documentation, see
 [Claroline/CoreBundle/Resources/doc/index.md][dist-doc].
