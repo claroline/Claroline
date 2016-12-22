@@ -12,20 +12,6 @@ If you want to contribute or directly browse the sources of the project,
 check the [claroline/Distribution][distribution] repository, which gathers
 the standard modules and plugins of the platform.
 
-Browser support
-------------
-
-We recommend to use Claroline Connect with the latest version of Mozila Firefox or Chromium.
-
-We support :
-- Mozilla Firefox (latest version)
-- Chromium (latest version) and Google Chrome (latest version)
-- Microsoft Edge (latest version)
-- Microsoft Internet Explorer 11
-- Safari (latest version)
-
-For complete list : http://caniuse.com/#feat=mutationobserver
-
 Requirements
 ------------
 
@@ -169,8 +155,24 @@ comes with a fixed set of plugins. If you deviate from that set, you'll have
 to maintain your own composer files and perform `composer update` and
 `php app/console claroline:update` accordingly.
 
+Browser support
+------------
+
+We recommend to use Claroline Connect with the latest version of Mozila Firefox or Chromium.
+
+We support :
+- Mozilla Firefox (latest version)
+- Chromium (latest version) and Google Chrome (latest version)
+- Microsoft Edge (latest version)
+- Microsoft Internet Explorer 11
+- Safari (latest version)
+
+For complete list : http://caniuse.com/#feat=mutationobserver
+
 Documentation
 -------------
+
+For user documentation, see : [doc.claroline.com][doc.claroline.com].
 
 For development documentation, see
 [Claroline/CoreBundle/Resources/doc/index.md][dist-doc].
