@@ -191,41 +191,14 @@ class ParametersController extends Controller
             $form->handleRequest($request);
             if ($form->isValid()) {
                 try {
-                    $portfolioUrlOptions = $request->get('portfolioUrlOptions', 0);
-                    $this->configHandler->setParameters(
-                        [
-                            'allow_self_registration' => $form['selfRegistration']->getData(),
-                            'locale_language' => $form['localeLanguage']->getData(),
-                            'name' => $form['name']->getData(),
-                            'support_email' => $form['support_email']->getData(),
-                            'default_role' => $form['defaultRole']->getData()->getName(),
-                            'redirect_after_login_option' => $form['redirect_after_login_option']->getData(),
-                            'redirect_after_login_url' => $form['redirect_after_login_url']->getData(),
-                            'form_captcha' => $form['formCaptcha']->getData(),
-                            'form_honeypot' => $form['formHoneypot']->getData(),
-                            'platform_init_date' => $form['platform_init_date']->getData(),
-                            'platform_limit_date' => $form['platform_limit_date']->getData(),
-                            'account_duration' => $form['account_duration']->getData(),
-                            'anonymous_public_profile' => $form['anonymous_public_profile']->getData(),
-                            'portfolio_url' => $portfolioUrlOptions ? $form['portfolio_url']->getData() : null,
-                            'is_notification_active' => $form['isNotificationActive']->getData(),
-                            'max_storage_size' => $form['maxStorageSize']->getData(),
-                            'max_upload_resources' => $form['maxUploadResources']->getData(),
-                            'max_workspace_users' => $form['workspaceMaxUsers']->getData(),
-                            'show_help_button' => $form['showHelpButton']->getData(),
-                            'help_url' => $form['helpUrl']->getData(),
-                            'register_button_at_login' => $form['registerButtonAtLogin']->getData(),
-                            'send_mail_at_workspace_registration' => $form['sendMailAtWorkspaceRegistration']->getData(),
-                            'domain_name' => $form['domainName']->getData(),
-                            'default_workspace_tag' => $form['defaultWorkspaceTag']->getData(),
-                            'registration_mail_validation' => $form['registrationMailValidation']->getData(),
-                            'is_pdf_export_active' => $form['isPdfExportActive']->getData(),
-                            'ssl_enabled' => $form['sslEnabled']->getData(),
-                            'enable_opengraph' => $form['enableOpengraph']->getData(),
-                            'tmp_dir' => $form['tmpDir']->getData(),
-                        ]
-                    );
+                    $platformConfig = $form->getData();
+                    $portfolioOptions = $request->get('portfolioUrlOptions', 0);
 
+                    if ($portfolioOptions === 0 || $portfolioOptions === '0') {
+                        $platformConfig->setPortfolioUrl(null);
+                    }
+
+                    $this->configHandler->setPlatformConfig($platformConfig);
                     $content = $request->get('platform_parameters_form');
 
                     if (isset($content['description'])) {

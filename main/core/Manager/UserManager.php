@@ -20,8 +20,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\UserOptions;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
@@ -181,12 +181,12 @@ class UserManager
         if ($this->mailManager->isMailerAvailable() && $sendMail) {
             //send a validation by hash
             $mailValidation = $this->platformConfigHandler->getParameter('registration_mail_validation');
-            if ($mailValidation === PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_FULL) {
+            if ($mailValidation === PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL) {
                 $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
                 $user->setResetPasswordHash($password);
                 $user->setIsEnabled(false);
                 $this->mailManager->sendEnableAccountMessage($user);
-            } elseif ($mailValidation === PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL) {
+            } elseif ($mailValidation === PlatformDefaults::REGISTRATION_MAIL_VALIDATION_PARTIAL) {
                 //don't change anything
                 $this->mailManager->sendCreationMessage($user);
             }

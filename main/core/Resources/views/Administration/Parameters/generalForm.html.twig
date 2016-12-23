@@ -35,22 +35,22 @@
 
             {{ form_row(form_settings.name) }}
             {{ form_row(form_settings.description) }}
-            {{ form_row(form_settings.support_email) }}
-            {{ form_row(form_settings.selfRegistration) }}
+            {{ form_row(form_settings.supportEmail) }}
+            {{ form_row(form_settings.allowSelfRegistration) }}
             {{ form_row(form_settings.registerButtonAtLogin) }}
             {{ form_row(form_settings.defaultRole) }}
             {{ form_row(form_settings.localeLanguage) }}
             {{ form_row(form_settings.formCaptcha) }}
             {{ form_row(form_settings.formHoneypot) }}
-            {{ form_row(form_settings.redirect_after_login_option) }}
-            {{ form_row(form_settings.account_duration) }}
-            {{ form_row(form_settings.platform_init_date) }}
-            {{ form_row(form_settings.platform_limit_date) }}
-            {{ form_row(form_settings.anonymous_public_profile) }}
+            {{ form_row(form_settings.redirectAfterLoginOption) }}
+            {{ form_row(form_settings.accountDuration) }}
+            {{ form_row(form_settings.platformInitDate) }}
+            {{ form_row(form_settings.platformLimitDate) }}
+            {{ form_row(form_settings.anonymousPublicProfile) }}
 
             {% set value = form_settings.vars.value.portfolioUrl %}
             <div class="form-group row portfolio_url_row">
-                {{ form_label(form_settings.portfolio_url) }}
+                {{ form_label(form_settings.portfolioUrl) }}
                 <div class="col-md-9">
                     <div class="portfolio-url">
                         <div class="radio portfolio_url">
@@ -68,7 +68,7 @@
                                     <span>{{ 'general_parameters_portfolio_url_help'|trans({}, 'platform') }}</span>
                                 </div>
                                 <div class="col-md-6 portfolio_url_field">
-                                    {{ form_widget(form_settings.portfolio_url) }}
+                                    {{ form_widget(form_settings.portfolioUrl) }}
                                 </div>
                             </label>
                         </div>
