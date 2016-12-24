@@ -20,13 +20,16 @@ export default class StudyCtrl {
     this.sessionId = 0
     this.currentCard = false
     this.currentCardIsNew = 0
+    this.fieldValues = []
     this.questions = []
     this.answers = []
+    this.answersShown = false
     this.answerQuality = -1
 
     this.fullscreenClass = ""
     this.fullscreenClassButton = "fa-expand"
     this.fullscreenClassFooter = ""
+    this.flippedClass = ""
 
     this._service = service
 
@@ -68,6 +71,7 @@ export default class StudyCtrl {
           this.currentCard = this.newCards.splice(rand, 1)[0]
           this.currentCardIsNew = 1
           this.showQuestions()
+          this.showAnswers()
         } else {
           this.chooseCard()
         }
@@ -77,6 +81,7 @@ export default class StudyCtrl {
           this.currentCard = this.learningCards.splice(rand, 1)[0]
           this.currentCardIsNew = 0
           this.showQuestions()
+          this.showAnswers()
         } else {
           this.chooseCard()
         }
@@ -122,6 +127,7 @@ export default class StudyCtrl {
       }
     )
     this.revisedCards.push(this.currentCard)
+    this.answersShown = false
     this.chooseCard()
   }
 
@@ -156,5 +162,14 @@ export default class StudyCtrl {
       this.fullscreenClassButton = "fa-compress"
       this.fullscreenClassFooter = "footer-fullscreen"
     }
+  }
+
+  flipCard () {
+    if (this.answersShown) {
+      this.flippedClass = ""
+    } else {
+      this.flippedClass = "flipped"
+    }
+    this.answersShown = !this.answersShown
   }
 }
