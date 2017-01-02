@@ -83,5 +83,11 @@
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
         "symfony-assets-install": "symlink"
-    }
+    },
+    "repositories": [
+	    {
+             "type": "vcs",
+             "url": "https://github.com/jstuhli/twig.js"
+        }
+    ]
 }
