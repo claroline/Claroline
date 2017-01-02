@@ -11,9 +11,9 @@
 
 namespace Claroline\FlashCardBundle\DataFixtures;
 
-use Claroline\FlashCardBundle\Entity\NoteType;
 use Claroline\FlashCardBundle\Entity\CardType;
 use Claroline\FlashCardBundle\Entity\FieldLabel;
+use Claroline\FlashCardBundle\Entity\NoteType;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;

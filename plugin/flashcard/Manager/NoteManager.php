@@ -12,9 +12,9 @@
 namespace Claroline\FlashCardBundle\Manager;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Entity\Note;
 use Claroline\FlashCardBundle\Entity\NoteType;
-use Claroline\FlashCardBundle\Entity\Deck;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 

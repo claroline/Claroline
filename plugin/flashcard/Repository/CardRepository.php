@@ -18,6 +18,29 @@ use Doctrine\ORM\EntityRepository;
 class CardRepository extends EntityRepository
 {
     /**
+     * Return the number of cards in a deck.
+     *
+     * @param Deck $deck
+     *
+     * @return int
+     */
+    public function countCards(Deck $deck)
+    {
+        $dql = '
+            SELECT COUNT(c)
+            FROM Claroline\FlashCardBundle\Entity\Card c
+            JOIN c.note n
+            WHERE n.deck = :deck
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters([
+            'deck' => $deck,
+        ]);
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
      * Return the cards that the given user has never studied before.
      *
      * @param Deck $deck

@@ -1,4 +1,11 @@
-<div class="panel-body" >
+<div class="panel-body"
+     ng-class="vm.fullscreenClass">
+  <button class="btn btn-default btn-fullscreen"
+          data-ng-click="vm.toggleFullscreen()">
+    <i class="fa"
+       ng-class="vm.fullscreenClassButton"></i>
+  </button>
+
 
   <div class="text-center"
        data-ng-if="vm.currentCard">
@@ -20,7 +27,7 @@
         <span class="h2">{{ question.field_label.name }} : </span>
         <img class="img-responsive img-thumbnail"
              style="width: 80%"
-             src="{{ question.value }}"
+             ng-src="{{ question.value }}"
              alt="{{ question.alt}}" />
         </div>
       </div>
@@ -44,7 +51,7 @@
         <span class="h2">{{ answer.field_label.name }} : </span>
         <img class="img-responsive img-thumbnail"
              style="width: 80%"
-             src="{{ answer.value }}"
+             ng-src="{{ answer.value }}"
              alt="{{ answer.alt}}" />
         </div>
       </div>
@@ -54,12 +61,13 @@
   <div class="alert alert-info"
        data-ng-show="!vm.currentCard">
     <i class="fa fa-info-circle"></i>
-    {{ 'deck.empty'|trans:'flashcard' }}
+    {{ 'info.no_cards_today'|trans:'flashcard' }}
   </div>
 
 </div>
 
-<div class="panel-footer text-center">
+<div class="panel-footer text-center"
+     ng-class="vm.fullscreenClassFooter">
 
   <a class="btn btn-default"
      href="#/">

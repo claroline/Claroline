@@ -41,6 +41,9 @@ answer:
   easy: Facile
 param:
   new_card_day: Nombre de nouvelles cartes à réviser par jour
+info:
+  deck_empty: Il n'y a pas de carte dans ce paquet.
+  no_cards_today: Il n'y a pas ou plus de cartes à réviser aujourd'hui.
 errors:
   line: ligne
   title: Erreur

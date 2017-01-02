@@ -15,9 +15,9 @@ class Version20161103101521 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE claro_fcbundle_field_value 
-            ADD mimetype VARCHAR(255) NOT NULL, 
-            ADD type_discr VARCHAR(255) NOT NULL, 
+            ALTER TABLE claro_fcbundle_field_value
+            ADD mimetype VARCHAR(255) NOT NULL,
+            ADD type_discr VARCHAR(255) NOT NULL,
             ADD alt LONGTEXT DEFAULT NULL
         ');
     }
@@ -25,9 +25,9 @@ class Version20161103101521 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE claro_fcbundle_field_value 
-            DROP mimetype, 
-            DROP type_discr, 
+            ALTER TABLE claro_fcbundle_field_value
+            DROP mimetype,
+            DROP type_discr,
             DROP alt
         ');
     }

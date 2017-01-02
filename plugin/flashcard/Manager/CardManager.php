@@ -52,6 +52,18 @@ class CardManager
 
     /**
      * @param Deck $deck
+     *
+     * @return int
+     */
+    public function countCards(Deck $deck)
+    {
+        $repoCard = $this->om->getRepository('ClarolineFlashCardBundle:Card');
+
+        return $repoCard->countCards($deck);
+    }
+
+    /**
+     * @param Deck $deck
      * @param User $user
      *
      * @return array

@@ -13,9 +13,9 @@ namespace Claroline\FlashCardBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\FlashCardBundle\Entity\Card;
 use Claroline\FlashCardBundle\Entity\CardLearning;
 use Claroline\FlashCardBundle\Entity\Deck;
-use Claroline\FlashCardBundle\Entity\Card;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 

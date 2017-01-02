@@ -1,3 +1,44 @@
-body {
-    /* To be completed */
+/* Main */
+.learning-progress {
+    margin-bottom: 0;
+}
+
+.today > table {
+    margin: auto;
+}
+
+.today > table td {
+    padding-right: 1em;
+}
+
+.panel-footer {
+    padding-bottom: 0;
+}
+
+.panel-footer .btn {
+    margin-bottom: 10px;
+}
+
+/* Study */
+.fullscreen {
+    background: white;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1100;
+    padding-bottom: 5em;
+}
+
+.footer-fullscreen {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 1101;
+}
+
+.btn-fullscreen {
+    float: right;
 }

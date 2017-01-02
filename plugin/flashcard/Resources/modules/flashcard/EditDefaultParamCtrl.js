@@ -1,6 +1,6 @@
 /*
  * This file is part of the Claroline Connect package.
- * 
+ *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * For the full copyright and license information, please view
@@ -11,7 +11,7 @@
 import NotBlank from '#/main/core/form/Validator/NotBlank'
 
 export default class EditDefaultParamCtrl {
-  constructor (service, $routeParams, $location) {
+  constructor(service, $routeParams, $location) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
@@ -32,14 +32,14 @@ export default class EditDefaultParamCtrl {
     this.errors = []
     this._service = service
     this.$location = $location
-    
+
     service.getAllThemes().then(d => this.themeField[2].values = d.data)
   }
 
-  editDefaultParam (form) {
+  editDefaultParam(form) {
     if (form.$valid) {
       this._service.editDefaultParam(
-          this.deck, 
+          this.deck,
           this.deck.new_card_day_default,
           this.deck.theme).then(
         d => {

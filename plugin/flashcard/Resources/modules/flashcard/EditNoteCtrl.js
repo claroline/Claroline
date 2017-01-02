@@ -1,6 +1,6 @@
 /*
  * This file is part of the Claroline Connect package.
- * 
+ *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * For the full copyright and license information, please view
@@ -9,7 +9,7 @@
  */
 
 export default class EditNoteCtrl {
-  constructor (service, $routeParams, $location) {
+  constructor(service, $routeParams, $location) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
@@ -20,11 +20,11 @@ export default class EditNoteCtrl {
     this.errors = []
     this._service = service
     this.$location = $location
-    
+
     service.findNote($routeParams.id).then(d => this.note = d.data)
   }
 
-  editNote (form) {
+  editNote(form) {
     if (form.$valid) {
       this._service.editNote(this.note, this.note.field_values).then(
         d => {

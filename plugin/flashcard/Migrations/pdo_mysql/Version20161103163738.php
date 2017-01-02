@@ -15,11 +15,11 @@ class Version20161103163738 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE claro_fcbundle_user_preference 
+            ALTER TABLE claro_fcbundle_user_preference
             ADD theme VARCHAR(255) NOT NULL
         ');
         $this->addSql('
-            ALTER TABLE claro_fcbundle_deck 
+            ALTER TABLE claro_fcbundle_deck
             ADD theme VARCHAR(255) NOT NULL
         ');
     }
@@ -27,11 +27,11 @@ class Version20161103163738 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE claro_fcbundle_deck 
+            ALTER TABLE claro_fcbundle_deck
             DROP theme
         ');
         $this->addSql('
-            ALTER TABLE claro_fcbundle_user_preference 
+            ALTER TABLE claro_fcbundle_user_preference
             DROP theme
         ');
     }
