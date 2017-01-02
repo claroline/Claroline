@@ -25,22 +25,30 @@ class ToolRightsManager
     private $maskManager;
     private $om;
     private $toolRightsRepo;
+    private $resourceManager;
+    private $rightsManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
-     *     "maskManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "maskManager"     = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
      * })
      */
     public function __construct(
         ObjectManager $om,
-        ToolMaskDecoderManager $maskManager
+        ToolMaskDecoderManager $maskManager,
+        ResourceManager $resourceManager,
+        RightsManager $rightsManager
     ) {
         $this->maskManager = $maskManager;
         $this->om = $om;
+        $this->resourceManager = $resourceManager;
         $this->toolRightsRepo = $om->getRepository('ClarolineCoreBundle:Tool\ToolRights');
+        $this->rightsManager = $rightsManager;
     }
 
     public function setToolRights(OrderedTool $orderedTool, Role $role, $mask)
@@ -81,6 +89,24 @@ class ToolRightsManager
                 $this->om->flush();
             }
         }
+
+        /*
+         * the resource manager is a special case. If we grant/remove access, we might aswell
+         * grant/remove access to the root directory
+         */
+         if ($tool->getName() === 'resource_manager') {
+             $workspace = $orderedTool->getWorkspace();
+             //obviously we need a workspace
+             if ($workspace) {
+                 $root = $this->resourceManager->getWorkspaceRoot($workspace);
+                 //and also a root otherwise it won't work
+                 if (!$root) {
+                     return;
+                 }
+                 $perms = $this->maskManager->decodeMask($rightsMask, $orderedTool->getTool());
+                 $this->rightsManager->editPerms(['open' => $perms['open']], $role, $root, false);
+             }
+         }
     }
 
     /***** ToolRightsRepository access methods *****/
