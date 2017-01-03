@@ -28,14 +28,14 @@ class ToolRepositoryTest extends RepositoryTestCase
         self::createTool('tool_2');
         self::createRole('ROLE_1', self::get('ws_1'));
         self::createRole('ROLE_2', self::get('ws_1'));
-        self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), array(self::get('ROLE_1')), 1);
-        self::createWorkspaceTool(self::get('tool_2'), self::get('ws_1'), array(self::get('ROLE_2')), 1);
+        self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), [self::get('ROLE_1')], 1);
+        self::createWorkspaceTool(self::get('tool_2'), self::get('ws_1'), [self::get('ROLE_2')], 1);
         self::createDesktopTool(self::get('tool_2'), self::get('john'), 1);
     }
 
     public function testFindDisplayedByRolesAndWorkspace()
     {
-        $result = self::$repo->findDisplayedByRolesAndWorkspace(array('ROLE_1'), self::get('ws_1'));
+        $result = self::$repo->findDisplayedByRolesAndWorkspace(['ROLE_1'], self::get('ws_1'));
         $this->assertEquals(1, count($result));
     }
 
@@ -49,21 +49,21 @@ class ToolRepositoryTest extends RepositoryTestCase
     public function testFindDesktopUndisplayedToolsByUser()
     {
         $result = self::$repo->findDesktopUndisplayedToolsByUser(self::get('john'));
-        $this->assertEquals(1, count($result));
+        $this->assertEquals(16, count($result));
         $this->assertEquals(self::get('tool_1'), $result[0]);
     }
 
     public function testFindUndisplayedToolsByWorkspace()
     {
         $result = self::$repo->findUndisplayedToolsByWorkspace(self::get('ws_1'));
-        $this->assertEquals(0, count($result));
+        $this->assertEquals(11, count($result));
     }
 
     public function testFindDisplayedToolsByWorkspace()
     {
         $result = self::$repo->findDisplayedToolsByWorkspace(self::get('ws_1'));
         $this->assertEquals(2, count($result));
-        $toolNames = array($result[0]->getName(), $result[1]->getName());
+        $toolNames = [$result[0]->getName(), $result[1]->getName()];
         $this->assertContains('tool_1', $toolNames);
         $this->assertContains('tool_2', $toolNames);
     }
