@@ -80,10 +80,10 @@ class Deck extends AbstractResource
     /**
      * @var string
      *
-     * @ORM\Column(name="theme", type="string")
+     * @ORM\Column(name="theme", type="string", )
      * @Groups({"api_flashcard", "api_flashcard_deck"})
      */
-    protected $theme;
+    protected $theme = 'theme-std';
 
     /**
      * @ORM\OneToMany(targetEntity="UserPreference", mappedBy="deck")
