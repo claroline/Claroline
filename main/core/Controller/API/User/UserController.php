@@ -36,7 +36,6 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,10 +101,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="Returns the users list",
-     *     views = {"user"}
-     * )
      * @Get("/users", name="users", options={ "method_prefix" = false })
      */
     public function getUsersAction()
@@ -117,10 +112,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="Returns the users list",
-     *     views = {"user"}
-     * )
      * @Get("/users/page/{page}/limit/{limit}/search", name="get_search_users", options={ "method_prefix" = false })
      */
     public function getSearchUsersAction($page, $limit)
@@ -146,10 +137,6 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @ApiDoc(
-     *     description="Returns the searchable user fields",
-     *     views = {"user"}
-     * )
      * @Get("/users/fields", name="get_user_fields", options={ "method_prefix" = false })
      */
     public function getUserFieldsAction()
@@ -159,11 +146,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="Creates a user",
-     *     views = {"user"},
-     *     input="Claroline\CoreBundle\Form\ProfileCreationType"
-     * )
      */
     public function postUserAction()
     {
@@ -198,11 +180,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="Update a user",
-     *     views = {"user"},
-     *     input="Claroline\CoreBundle\Form\ProfileType"
-     * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function putUserAction(User $user)
@@ -246,10 +223,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="Returns a user",
-     *     views = {"user"}
-     * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      * @Get("/user/{user}", name="get_user", options={ "method_prefix" = false })
      */
@@ -261,10 +234,6 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @ApiDoc(
-     *     description="Returns a user",
-     *     views = {"user"}
-     * )
      * @Get("/user/{user}/public", name="get_public_user", options={ "method_prefix" = false })
      */
     public function getPublicUserAction(User $user)
@@ -305,11 +274,6 @@ class UserController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Removes a user",
-     *     section="user",
-     *     views = {"api_user"}
-     * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function deleteUserAction(User $user)
@@ -322,10 +286,6 @@ class UserController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Removes a list of users",
-     *     views = {"group"},
-     * )
      */
     public function deleteUsersAction()
     {
@@ -344,10 +304,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="Add a role to a user",
-     *     views = {"user"}
-     * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserRoleAction(User $user, Role $role)
@@ -376,10 +332,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="remove a role from a user",
-     *     views = {"user"}
-     * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function removeUserRoleAction(User $user, Role $role)
@@ -392,10 +344,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="Add a user in a group",
-     *     views = {"user"}
-     * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserGroupAction(User $user, Group $group)
@@ -408,10 +356,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="Remove a user from a group",
-     *     views = {"user"}
-     * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function removeUserGroupAction(User $user, Group $group)
@@ -424,10 +368,6 @@ class UserController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Returns the list of actions an admin can do on a user",
-     *     views = {"user"}
-     * )
      * @Get("/user/admin/action", name="get_user_admin_actions", options={ "method_prefix" = false })
      */
     public function getUserAdminActionsAction()
@@ -437,10 +377,6 @@ class UserController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Send the password initialization message for a user.",
-     *     views = {"user"}
-     * )
      */
     public function usersPasswordInitializeAction()
     {
@@ -456,10 +392,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="Add a list of users to a group",
-     *     views = {"group"},
-     * )
      */
     public function addUsersToGroupAction(Group $group)
     {
@@ -472,10 +404,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="Removes a list of users from a group",
-     *     views = {"group"},
-     * )
      */
     public function removeUsersFromGroupAction(Group $group)
     {
@@ -488,10 +416,6 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ApiDoc(
-     *     description="Removes user by csv",
-     *     views = {"user"}
-     * )
      * @Post("/users/csv/remove")
      */
     public function csvRemoveUserAction()

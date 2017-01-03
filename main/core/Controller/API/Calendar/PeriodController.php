@@ -11,17 +11,16 @@
 
 namespace Claroline\CoreBundle\Controller\API\Calendar;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\View;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use Claroline\CoreBundle\Manager\Calendar\PeriodManager;
-use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Form\Calendar\PeriodType;
-use Symfony\Component\Form\FormFactory;
+use Claroline\CoreBundle\Manager\ApiManager;
+use Claroline\CoreBundle\Manager\Calendar\PeriodManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @NamePrefix("api_")
@@ -53,10 +52,6 @@ class PeriodController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * @ApiDoc(
-     *     description="Returns the period creation form",
-     *     views = {"period"}
-     * )
      */
     public function getCreatePeriodFormAction()
     {
@@ -72,10 +67,6 @@ class PeriodController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * @ApiDoc(
-     *     description="Returns the period list",
-     *     views = {"period"}
-     * )
      */
     public function getPeriodsAction()
     {

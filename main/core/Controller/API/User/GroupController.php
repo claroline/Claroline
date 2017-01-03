@@ -11,24 +11,23 @@
 
 namespace Claroline\CoreBundle\Controller\API\User;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use FOS\RestBundle\Controller\FOSRestController;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\GroupManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Form\User\GroupSettingsType;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
+use Claroline\CoreBundle\Manager\ApiManager;
+use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @NamePrefix("api_")
@@ -64,10 +63,6 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_group"})
-     * @ApiDoc(
-     *     description="Returns the groups list",
-     *     views = {"group"}
-     * )
      */
     public function getGroupsAction()
     {
@@ -78,10 +73,6 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_group"})
-     * @ApiDoc(
-     *     description="Returns a group",
-     *     views = {"group"}
-     * )
      */
     public function getGroupAction(Group $group)
     {
@@ -92,11 +83,6 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_group"})
-     * @ApiDoc(
-     *     description="Create a group",
-     *     views = {"group"},
-     *     input="Claroline\CoreBundle\Form\GroupType"
-     * )
      */
     public function postGroupAction()
     {
@@ -118,11 +104,11 @@ class GroupController extends FOSRestController
             $httpCode = 200;
         }
 
-        $options = array(
+        $options = [
             'http_code' => $httpCode,
             'extra_parameters' => $group,
             'serializer_group' => 'api_group',
-        );
+        ];
 
         return $this->apiManager->handleFormView(
             'ClarolineCoreBundle:API:User\createGroupForm.html.twig',
@@ -133,11 +119,6 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_group"})
-     * @ApiDoc(
-     *     description="Update a group",
-     *     views = {"group"},
-     *     input="Claroline\CoreBundle\Form\GroupType"
-     * )
      */
     public function putGroupAction(Group $group)
     {
@@ -158,12 +139,12 @@ class GroupController extends FOSRestController
             $httpCode = 200;
         }
 
-        $options = array(
+        $options = [
             'http_code' => $httpCode,
             'extra_parameters' => $group,
-            'form_view' => array('group' => $group),
+            'form_view' => ['group' => $group],
             'serializer_group' => 'api_group',
-        );
+        ];
 
         return $this->apiManager->handleFormView(
             'ClarolineCoreBundle:API:User\editGroupForm.html.twig',
@@ -174,25 +155,17 @@ class GroupController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Removes a group",
-     *     views = {"group"},
-     * )
      */
     public function deleteGroupAction(Group $group)
     {
         $this->throwExceptionIfNotGranted('delete', $group);
         $this->groupManager->deleteGroup($group);
 
-        return array('success');
+        return ['success'];
     }
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Removes a list of group",
-     *     views = {"group"},
-     * )
      */
     public function deleteGroupsAction()
     {
@@ -207,15 +180,11 @@ class GroupController extends FOSRestController
 
         $this->container->get('claroline.persistence.object_manager')->endFlushSuite();
 
-        return array('success');
+        return ['success'];
     }
 
     /**
      * @View(serializerGroups={"api_group"})
-     * @ApiDoc(
-     *     description="Add a role to a group",
-     *     views = {"group"}
-     * )
      */
     public function addGroupRoleAction(Group $group, Role $role)
     {
@@ -227,10 +196,6 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_group"})
-     * @ApiDoc(
-     *     description="Remove a role from a group",
-     *     views = {"group"}
-     * )
      */
     public function removeGroupRoleAction(Group $group, Role $role)
     {
@@ -242,10 +207,6 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_group"})
-     * @ApiDoc(
-     *     description="Returns the users list",
-     *     views = {"user"}
-     * )
      * @Get("/groups/page/{page}/limit/{limit}/search", name="get_search_groups", options={ "method_prefix" = false })
      */
     public function getSearchGroupsAction($page, $limit)
@@ -254,15 +215,9 @@ class GroupController extends FOSRestController
         $groups = $this->groupManager->searchPartialList($data, $page, $limit);
         $count = $this->groupManager->searchPartialList($data, $page, $limit, true);
 
-        return array('groups' => $groups, 'total' => $count);
+        return ['groups' => $groups, 'total' => $count];
     }
 
-    /**
-     * @ApiDoc(
-     *     description="Returns the searchable user fields",
-     *     views = {"user"}
-     * )
-     */
     public function getGroupSearchableFieldsAction()
     {
         $baseFields = Group::getSearchableFields();
@@ -272,10 +227,6 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_group"})
-     * @ApiDoc(
-     *     description="Returns the group creation form",
-     *     views = {"location"}
-     * )
      */
     public function getGroupCreateFormAction()
     {
@@ -288,10 +239,6 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_group"})
-     * @ApiDoc(
-     *     description="Returns the group edition form",
-     *     views = {"location"}
-     * )
      * @Get("/group/{group}/edit/form", options={ "method_prefix" = false })
      */
     public function getGroupEditFormAction(Group $group)
@@ -300,7 +247,7 @@ class GroupController extends FOSRestController
         $formType = new GroupSettingsType($group->getPlatformRole(), true, 'egfm');
         $formType->enableApi();
         $form = $this->createForm($formType, $group);
-        $options = array('form_view' => array('group' => $group), 'serializer_group' => 'api_group');
+        $options = ['form_view' => ['group' => $group], 'serializer_group' => 'api_group'];
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\editGroupForm.html.twig', $form, $options);
     }
@@ -339,7 +286,7 @@ class GroupController extends FOSRestController
 
     private function throwExceptionIfNotGranted($action, $groups)
     {
-        $collection = is_array($groups) ? new GroupCollection($groups) : new GroupCollection(array($groups));
+        $collection = is_array($groups) ? new GroupCollection($groups) : new GroupCollection([$groups]);
         $isGranted = $this->isGroupGranted($action, $collection);
 
         if (!$isGranted) {
@@ -354,10 +301,6 @@ class GroupController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Returns the list of actions an admin can do on a group",
-     *     views = {"groups"}
-     * )
      */
     public function getGroupAdminActionsAction()
     {
