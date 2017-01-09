@@ -58,23 +58,34 @@
         </h3>
     </div>
     <div class="panel-body" ng-if="cfc.isAllowed()">
-        <div template="cfc.template" ng-if="cfc.template">
+        <div class="alert alert-danger" ng-if="cfc.fields.length === 0">
+            {{ 'not_configured_yet'|trans:{}:'clacoform' }}
+            <div ng-if="cfc.canEdit()">
+                {{ 'no_field_alert_msg'|trans:{}:'clacoform' }}
+                <a ui-sref="fields_management">
+                    {{ 'fields_management'|trans:{}:'clacoform' }}
+                </a>
+            </div>
         </div>
-        <div ng-if="!cfc.template">
-            <form-field field="[cfc.entryTitle['label'], 'text', {error: cfc.entryErrors['entry_title']}]" ng-model="cfc.entryTitle['value']">
-            </form-field>
-            <div ng-repeat="field in cfc.fields">
-                <form-field field="[field['name'],
-                                   field['fieldFacet']['translation_key'],
-                                   {
-                                       values: field['fieldFacet']['field_facet_choices'],
-                                       choice_value: 'value',
-                                       error: cfc.entryErrors[field['id']],
-                                       noLabel: false
-                                   }]"
-                            ng-model="cfc.entry[field['id']]"
-                >
+        <div ng-if="cfc.fields.length > 0">
+            <div template="cfc.template" ng-if="cfc.template">
+            </div>
+            <div ng-if="!cfc.template">
+                <form-field field="[cfc.entryTitle['label'], 'text', {error: cfc.entryErrors['entry_title']}]" ng-model="cfc.entryTitle['value']">
                 </form-field>
+                <div ng-repeat="field in cfc.fields">
+                    <form-field field="[field['name'],
+                                       field['fieldFacet']['translation_key'],
+                                       {
+                                           values: field['fieldFacet']['field_facet_choices'],
+                                           choice_value: 'value',
+                                           error: cfc.entryErrors[field['id']],
+                                           noLabel: false
+                                       }]"
+                                ng-model="cfc.entry[field['id']]"
+                    >
+                    </form-field>
+                </div>
             </div>
         </div>
     </div>
@@ -166,7 +177,7 @@
         </div>
     </div>
 
-    <div class="panel-footer" ng-if="cfc.isAllowed()">
+    <div class="panel-footer" ng-if="cfc.isAllowed() && cfc.fields.length > 0">
         <button class="btn btn-primary" ng-click="cfc.submit()">
             {{ 'ok'|trans:{}:'platform' }}
         </button>

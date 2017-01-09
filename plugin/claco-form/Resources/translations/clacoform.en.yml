@@ -106,9 +106,11 @@ no_category: No category
 no_comment: No comment
 no_entry: No entry
 no_field: No field
+no_field_alert_msg: No field has been configured. You can do it here :
 no_keyword: No keyword
 no_manager_entry: You are the manager of no entry
 no_own_entry: You haven't create an entry yet
+not_configured_yet: The form is not configured yet.
 optional: Optional
 publication_date: Publication date
 random_entries: Random entries

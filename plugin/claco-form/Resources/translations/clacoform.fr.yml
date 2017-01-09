@@ -106,9 +106,11 @@ no_category: Aucune catégorie
 no_comment: Aucun commentaire
 no_entry: Aucune fiche
 no_field: Aucun champ
+no_field_alert_msg: Aucun champ n'a été configuré. Vous pouvez le faire ici :
 no_keyword: Aucun mot-clé
 no_manager_entry: Vous n'êtes gestionnaire d'aucune fiche
 no_own_entry: Vous n'avez pas encore créé de fiche
+not_configured_yet: Le formulaire n'est pas encore configuré.
 optional: Optionel
 publication_date: Date de publication
 random_entries: Fiches aléatoires
