@@ -10,8 +10,9 @@
 /*global Translator*/
 
 export default class EntryViewCtrl {
-  constructor($state, $stateParams, NgTableParams, ClacoFormService, EntryService, FieldService, CategoryService, KeywordService, CommentService) {
+  constructor($state, $stateParams, $filter, NgTableParams, ClacoFormService, EntryService, FieldService, CategoryService, KeywordService, CommentService) {
     this.$state = $state
+    this.$filter = $filter
     this.ClacoFormService = ClacoFormService
     this.EntryService = EntryService
     this.FieldService = FieldService
@@ -107,6 +108,9 @@ export default class EntryViewCtrl {
 
         if (this.metadataAllowed || !f['isMetadata']) {
           switch (f['type']) {
+            case 3 :
+              replacedField = this.$filter('date')(this.entry[id], 'dd/MM/yyyy')
+              break
             case 6 :
               replacedField = this.entry[id].join(', ')
               break

@@ -138,6 +138,9 @@
                             </label>
                             <div class="col-md-9">
                                 <span ng-switch="field['type']">
+                                    <span ng-switch-when="3">
+                                        {{ cfc.entry[field['id']]|date:'dd/MM/yyyy' }}
+                                    </span>
                                     <span ng-switch-when="6">
                                         {{ cfc.entry[field['id']].join(', ') }}
                                     </span>

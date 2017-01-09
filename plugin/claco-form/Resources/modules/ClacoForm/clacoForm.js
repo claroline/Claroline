@@ -65,7 +65,7 @@ angular.module('ClacoFormModule', [
 .controller('EntriesListCtrl', ['NgTableParams', 'ClacoFormService', 'EntryService', 'FieldService', 'CategoryService', EntriesListCtrl])
 .controller('EntryCreationCtrl', ['$state', 'ClacoFormService', 'EntryService', 'FieldService', 'KeywordService', EntryCreationCtrl])
 .controller('EntryEditionCtrl', ['$state', '$stateParams', 'ClacoFormService', 'EntryService', 'FieldService', 'CategoryService', 'KeywordService', EntryEditionCtrl])
-.controller('EntryViewCtrl', ['$state', '$stateParams', 'NgTableParams', 'ClacoFormService', 'EntryService', 'FieldService', 'CategoryService', 'KeywordService', 'CommentService', EntryViewCtrl])
+.controller('EntryViewCtrl', ['$state', '$stateParams', '$filter', 'NgTableParams', 'ClacoFormService', 'EntryService', 'FieldService', 'CategoryService', 'KeywordService', 'CommentService', EntryViewCtrl])
 .controller('EntryRandomCtrl', ['$state', 'ClacoFormService', EntryRandomCtrl])
 .directive('template', function($compile) {
   return {
