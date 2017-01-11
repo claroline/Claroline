@@ -5,16 +5,34 @@
 // Base & utilities
 @box-shadow-base:         0 0 2px rgba(0, 0, 0, 0.10);
 @component-margin-bottom: @line-height-computed;
-@link-weight:             bold;
-@link-hover-weight:       bold;
+
+/*@link-weight:             bold;
+@link-hover-weight:       bold;*/
 
 // Header
-@claroline-topbar-border: #f89406;
-@navbar-default-brand-color: #fff;
-@navbar-inverse-bg: @component-active-bg;
-@navbar-inverse-link-color: lighten(@navbar-inverse-bg, 40%);
-@navbar-inverse-toggle-hover-bg: darken(@navbar-inverse-bg, 20%);
-@navbar-inverse-toggle-border-color: darken(@navbar-inverse-bg, 18%);
+@top-bar-height:            @navbar-height + 3px; // 3px is the size of the bottom border
+@top-bar-color:             lighten(@top-bar-bg, 30%);
+@top-bar-bg:                @component-active-bg;
+@top-bar-border-bottom:     3px solid #f89406;
+@top-bar-box-shadow:        @box-shadow-base;
+
+@top-bar-brand-font-size:   22px;
+@top-bar-brand-color:       #fff;
+@top-bar-brand-hover-color: #fff;
+@top-bar-brand-hover-bg:    transparent;
+
+@top-bar-link-color:          lighten(@top-bar-bg, 40%);
+@top-bar-link-hover-color:    lighten(@top-bar-bg, 50%);
+@top-bar-link-hover-bg:       darken(@top-bar-bg, 5%);
+@top-bar-link-active-color:   lighten(@top-bar-bg, 60%);
+@top-bar-link-active-bg:      darken(@top-bar-bg, 6.5%);
+@top-bar-link-disabled-color: lighten(@top-bar-bg, 20%);
+@top-bar-link-disabled-bg:    transparent;
+@top-bar-inner-border-color:  darken(@top-bar-bg, 5%);
+
+@top-bar-toggle-border-color: @top-bar-inner-border-color;
+@top-bar-toggle-hover-bg:     @top-bar-link-hover-bg;
+@top-bar-toggle-icon-bar-bg:  @top-bar-link-color;
 
 @state-warning-text: #c09853;
 @state-warning-bg: lighten(#FFEE00, 35%);

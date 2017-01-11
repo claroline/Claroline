@@ -1,4 +1,141 @@
-#top_bar, .top-bar {
+#top_bar,
+.top-bar {
+    min-height: @top-bar-height;
+    background: @top-bar-bg;
+    border-radius: 0;
+    border: none;
+    border-bottom: @top-bar-border-bottom;
+    margin-bottom: 0;
+    .box-shadow(@top-bar-box-shadow);
+
+    .navbar-header {
+        max-height: @navbar-height;
+        overflow: hidden !important;
+        position: relative;
+    }
+
+    .navbar-brand {
+        font-size: @top-bar-brand-font-size;
+        color: @top-bar-brand-color;
+        &:hover,
+        &:focus {
+            color: @top-bar-brand-hover-color;
+            background: @top-bar-brand-hover-bg;
+        }
+
+        // Platform logo
+        &.logo {
+            padding-top: 0;
+            padding-bottom: 0;
+
+            // vertical align the logo img using flex box
+            display: flex;
+            align-items: center;
+
+            // Let some space between logo img and platform name
+            img ~ span {
+                margin-left: 5px;
+            }
+        }
+    }
+
+    .navbar-text {
+        color: @top-bar-color;
+    }
+
+    .navbar-toggle {
+        border-color: @top-bar-toggle-border-color;
+        &:hover,
+        &:focus {
+            background: @top-bar-toggle-hover-bg;
+        }
+        .icon-bar {
+            background-color: @top-bar-toggle-icon-bar-bg;
+        }
+    }
+
+    .navbar-collapse,
+    .navbar-form {
+        border-color: @top-bar-inner-border-color;
+    }
+
+    .navbar-nav {
+        > li > a {
+            color: @top-bar-link-color;
+
+            &:hover,
+            &:focus {
+                color: @top-bar-link-hover-color;
+                background: @top-bar-link-hover-bg;
+            }
+        }
+        > .active > a {
+            &,
+            &:hover,
+            &:focus {
+                color: @top-bar-link-active-color;
+                background-color: @top-bar-link-active-bg;
+            }
+        }
+        > .disabled > a {
+            &,
+            &:hover,
+            &:focus {
+                color: @top-bar-link-disabled-color;
+                background-color: @top-bar-link-disabled-bg;
+            }
+        }
+    }
+
+    // Dropdown menu items
+    .navbar-nav {
+        // Remove background color from open dropdown
+        > .open > a {
+            &,
+            &:hover,
+            &:focus {
+                background-color: @top-bar-link-active-bg;
+                color: @top-bar-color;
+            }
+        }
+
+        @media (max-width: @grid-float-breakpoint-max) {
+            // Dropdowns get custom display when collapsed
+            .open .dropdown-menu {
+                > .dropdown-header {
+                    color: @top-bar-link-active-color;
+                    border-color: @top-bar-inner-border-color;
+                }
+                .divider {
+                    background-color: @top-bar-inner-border-color;
+                }
+                > li > a {
+                    color: @top-bar-link-color;
+                    &:hover,
+                    &:focus {
+                        color: @top-bar-link-hover-color;
+                        background-color: @top-bar-link-hover-bg;
+                    }
+                }
+                > .active > a {
+                    &,
+                    &:hover,
+                    &:focus {
+                        color: @top-bar-link-active-color;
+                        background-color: @top-bar-link-active-bg;
+                    }
+                }
+                > .disabled > a {
+                    &,
+                    &:hover,
+                    &:focus {
+                        color: @top-bar-link-disabled-color;
+                        background-color: @top-bar-link-disabled-bg;
+                    }
+                }
+            }
+        }
+    }
 
     .badge {
         color: @navbar-inverse-bg;
@@ -13,51 +150,9 @@
         }
     }
 
-    .dropdown-fix {
-        position: relative;
-        width: 100%;
-        border: none;
-        .box-shadow(none);
-        background: @navbar-inverse-bg;
-        li a {
-            padding-left: 15px;
-            margin: 5px;
-            color: @navbar-inverse-link-color;
-            &:hover {
-                color: @navbar-inverse-link-hover-color;
-            }
-        }
-        .divider{
-            display: none;
-        }
-
-        .dropdown-header {
-            color: lighten(@navbar-inverse-bg, 20%);
-            padding-left: 20px;
-        }
-    }
-
-    &.navbar.navbar-inverse.navbar-fixed-top {
-        .navbar-brand {
-            font-size:22px;
-            color: #fff;
-        }
-    }
-
-    .navbar-brand.logo {
-        padding-top: 7px;
-        padding-bottom: 0;
-    }
-
-    .navbar-collapse {
+    /*.navbar-collapse {
         margin-left: -15px;
-    }
-
-    .navbar-header {
-        max-height: @navbar-height;
-        overflow: hidden !important;
-        position: relative;
-    }
+    }*/
 
     .break-hide {
         display: none;
@@ -76,7 +171,7 @@
         font-weight: bold;
     }
 
-    @media(max-width: (@screen-md - 1)) {
+    /*@media(max-width: (@screen-md - 1)) {
         .dropdown-menu {
             .dropdown-fix;
         }
@@ -92,7 +187,7 @@
         li:not(:last-child) > a {
             border-right:1px solid darken(@navbar-inverse-bg, 5%) !important;
         }
-    }
+    }*/
 
     @media(min-width: @screen-md) {
         max-height: (@navbar-height + 3);
@@ -128,17 +223,17 @@
                         width: 100%;
                     }
 
-                    li a {
+                    /*li a {
                         padding-left: 10px;
                         padding-right: 10px;
-                    }
+                    }*/
 
-                    &.navbar-right {
+                    /*&.navbar-right {
                         margin-right: 0;
-                    }
+                    }*/
 
                     .dropdown-menu {
-                        .dropdown-fix;
+                        /*.dropdown-fix;*/
                     }
                 }
             }
