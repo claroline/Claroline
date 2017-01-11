@@ -27,6 +27,8 @@ export default class WidgetService {
     this.gridsterOptions = {
       columns: 12,
       floating: true,
+      margins: [15, 15], // same as bootstrap grid. this should not be hardcoded
+      outerMargin: false,
       resizable: {
         enabled: false,
         handles: ['ne', 'se', 'sw', 'nw'],

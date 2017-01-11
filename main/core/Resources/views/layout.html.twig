@@ -4,7 +4,8 @@
 
 {% block meta %}
     {{ parent() }}
-    {% if config.getParameter('google_meta_tag') != '' %}
+
+    {% if config.getParameter('google_meta_tag') is not empty %}
         {{ config.getParameter('google_meta_tag') | raw }}
     {% endif %}
 {% endblock %}
@@ -15,7 +16,7 @@
     {% if hideTopBar is defined and hideTopBar and not (has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated()) %}
         <style type="text/css">
             body, #left-bar {
-                padding-top: 0px !important;
+                padding-top: 0 !important;
             }
         </style>
     {% endif %}
@@ -23,117 +24,52 @@
 
 {% block javascripts_header %}
     {{ parent() }}
-    <script type="text/javascript" src='{{ asset('packages/jquery/dist/jquery.min.js') }}'></script>
+
+    <script src='{{ asset('packages/jquery/dist/jquery.min.js') }}'></script>
 {% endblock %}
 
 {% block layout %}
-    <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
-    <div id="homePath" class="hide">{{ path("claro_index") }}</div>
+    {# Claroline default loader #}
+    <div class="please-wait">{{ 'please_wait'|trans({}, 'platform') }}</div>
 
-    {% if config.getParameter('ssl_enabled') or app.request.isSecure() %}
-        {% set protocol = 'https' %}
-    {% else %}
-        {% set protocol = 'http' %}
-    {% endif %}
+    {# Dumps some server vars in the DOM to make it available in JS #}
+    {% include "ClarolineCoreBundle::variables.html.twig" %}
 
-    {% if config.getParameter('domain_name') %}
-        {% set host = config.getParameter('domain_name') %}
-    {% else %}
-        {% set host = app.request.headers.get('host') %}
-    {% endif %}
+    {# Alerts #}
+    {% include "ClarolineCoreBundle::alerts.html.twig" %}
 
-    {% set homeAsset = protocol ~ '://' ~ host ~ app.request.getBasePath() ~ '/' %}
-
-    <div
-        id="platform-configuration"
-        class="hide"
-        data-enable-opengraph="{{ config.getParameter('enable_opengraph') }}"
-    >
-    </div>
-    <div id="homeAsset" class="hide">{{ homeAsset }}</div>
-    <div id="baseAsset" class="hide">{{ asset('') }}</div>
-    <div id="homeTheme" class="hide">{{ macros.getTheme(config)|trim }}</div>
-    <div id="homeLocale" class="hide">{% spaceless %}
-        {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
-            {{ app.request.locale }}
-        {% elseif asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ "_" ~ app.request.locale | upper ~ ".js") %}
-            {{ app.request.locale ~ '_' ~ app.request.locale | upper }}
-        {% else %}
-            en
-        {% endif %}
-    {% endspaceless %}</div>
-
-    <div id="wrap">
-        <div class="please-wait">
-            <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
-        </div>
-        {% if is_maintenance_enabled() %}
-            <div class="alert-claroline-danger">
-                <h4 class="label label-danger">
-                    {{ 'maintenance_mode_enabled'|trans({}, 'platform') }}
-                    <i
-                        class="fa fa-question-circle pointer-hand maintenance-popover"
-                        data-container=".alert-claroline-danger"
-                        data-toggle="popover"
-                        data-placement="bottom"
-                        data-content="{{ 'maintenance_mode_message'|trans({}, 'platform') }}"
-                    >
-                    </i>
-                </h4>
-            </div>
-        {% endif %}
-        <!-- class name is wrong but it does the right thing -->
-        <div class="alert-claroline-danger">
-            {% block claroline_danger %}{% endblock %}
-        </div>
-        {% if app.user != null and app.user.isMailValidated == false and app.user.hideMailWarning == false and is_mailer_available() %}
-            <div class="alert-email-confirm">
-                <h4 class="label label-warning">
-                    {{ 'email_not_activated_part_1'|trans({'%email%': app.user.mail}, 'platform') }}
-                    <a href="{{ path('claro_security_validate_email_send', {'hash': app.user.emailValidationHash}) }}" class="confirm-email"> {{ 'email_not_activated_part_2'|trans({}, 'platform') }}</a>
-                    {{ 'email_not_activated_part_3'|trans({}, 'platform') }}
-                    <i
-                        class="fa fa-question-circle pointer-hand maintenance-popover"
-                        data-container=".alert-email-confirm"
-                        data-toggle="popover"
-                        data-placement="bottom"
-                        data-content="{{ 'email_confirmation_message'|trans({}, 'platform') }}"
-                    >
-                    </i>
-                    &nbsp&nbsp&nbsp&nbsp&nbsp
-                    <i class="fa fa-close pointer-hand" id="hide-email-confirmation"></i>
-                </h4>
-            </div>
-        {% endif %}
-        <div class="hidden-xs">
-            <div class="hide">
-                <div id="left-bar" class="sidebar">
-                    {% block leftbar %}{% endblock %}
-                </div>
-            </div>
-            <div class="hide">
-                <div id="right-bar" class="sidebar">
-                    {% block rightbar %}{% endblock %}
-                </div>
-            </div>
-        </div>
-
-        {% if (hideTopBar is not defined or not hideTopBar) and not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
-            {% block topBarRender %}
-                {% if workspace is defined %}
-                    {% render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id})) %}
-                {% else %}
-                    {% render(controller('ClarolineCoreBundle:Layout:topBar')) %}
-                {% endif %}
-            {% endblock %}
-        {% endif %}
-
-        {% block impersonation %}
-            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated() %}
-                {% render(controller('ClarolineCoreBundle:Layout:renderWarningImpersonation')) %}
+    {# Topbars #}
+    {% if (hideTopBar is not defined or not hideTopBar) and not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
+        {% block topBarRender %}
+            {% if workspace is defined %}
+                {% render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id})) %}
+            {% else %}
+                {% render(controller('ClarolineCoreBundle:Layout:topBar')) %}
             {% endif %}
         {% endblock %}
+    {% endif %}
 
+    {% block impersonation %}
+        {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated() %}
+            {% render(controller('ClarolineCoreBundle:Layout:renderWarningImpersonation')) %}
+        {% endif %}
+    {% endblock %}
+
+    {# Sidebars #}
+    <div class="hidden-xs">
+        <div class="hide">
+            <div id="left-bar" class="sidebar">
+                {% block leftbar %}{% endblock %}
+            </div>
+        </div>
+        <div class="hide">
+            <div id="right-bar" class="sidebar">
+                {% block rightbar %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <div id="wrap">
         {% block content_container %}
             <div class="container-fluid">
                 {% if workspace is defined and
@@ -160,5 +96,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
+
     {% include 'ClarolineCoreBundle:Layout:javascripts.html.twig' %}
 {% endblock %}

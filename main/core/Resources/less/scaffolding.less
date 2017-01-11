@@ -5,7 +5,7 @@ body.app-container {
     height: 100%;
 }
 
-// Moves the app scroll bar to begin after the fixed header
+// Moves the app scroll bar after the fixed header
 html.app-main {
     overflow-y: hidden;
     padding-top: @top-bar-height;
@@ -13,20 +13,22 @@ html.app-main {
 
 body.app-container {
     position: relative;
-    padding-top: floor(@grid-gutter-width / 2); // Height of the header has been moved to the html tag, only keep @grid-gutter-width / 2
-    padding-bottom: 0; // No need to have a padding here
+    padding-top: floor(@grid-gutter-width / 2);
     overflow-y: auto; // Get the scroll bar
 }
 
+/* CHROME HACK FOR OUTLINED BUTTON WHEN FOCUSED */
+.btn:focus {
+    outline: none;
+}
 
-// allow to change the font-weight of links through vars
-// this propagates to everything (navs, list-groups, etc.)
-// find a way to limit it
-/*a {
-    font-weight: @link-weight;
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    /* Negative indent footer by it's height : this do not work */
+    margin: 0 auto;
+}
 
-    &:hover,
-    &:focus {
-        font-weight: @link-hover-weight;
-    }
-}*/
+#push {
+    height: 100%;
+}

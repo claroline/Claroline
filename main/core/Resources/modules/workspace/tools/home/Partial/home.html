@@ -1,12 +1,9 @@
 <workspace-home-tabs></workspace-home-tabs>
-<br>
 <workspace-widgets></workspace-widgets>
 
-<div ng-if="whc.homeTabsOptions['canEdit'] && whc.homeTabsOptions['selectedTabId']">
-    <hr>
-    <span class="btn btn-primary" ng-click="whc.createWorkspaceWidget(whc.homeTabsOptions['selectedTabId'])">
-        <i class="fa fa-plus-circle">
-        </i>
+<div class="text-center" data-ng-if="whc.homeTabsOptions['canEdit'] && whc.homeTabsOptions['selectedTabId']">
+    <button type="button" role="button" class="btn btn-primary" data-ng-click="whc.createWorkspaceWidget(whc.homeTabsOptions['selectedTabId'])">
+        <span class="fa fa-fw fa-plus"></span>
         {{ 'add_widget_to_home_tab'|trans:{}:'platform' }}
-    </span>
+    </button>
 </div>

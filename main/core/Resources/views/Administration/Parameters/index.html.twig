@@ -3,28 +3,29 @@
 {% block title %}{{ parent() ~ ' - ' ~ 'parameters' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
-{{
-    macros.breadcrumbs([
-        {
-            'icon': 'fa fa-cog',
-            'name': 'administration'|trans({}, 'platform'),
-            'href': path('claro_admin_parameters_index')
-        },
-        {
-            'name': 'parameters'|trans({}, 'platform'),
-            'href': ''
-        }
-    ])
-}}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
 {% endblock %}
 
-{% block section_content %}
-
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'parameters'|trans({}, 'platform') }}</h3>
+{% block section_panel %}
+    <div class="page-header">
+        <h1>{{ 'parameters'|trans({}, 'platform') }}</h1>
     </div>
+
+    {{ macros.flashBox() }}
+
     <div class="list-group">
-        {{ macros.flashBox() }}
         <a class="list-group-item" href="{{ path('claro_admin_parameters_general') }}">
             {{ 'general'|trans({}, 'platform') }}
         </a>

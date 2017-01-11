@@ -1,6 +1,10 @@
 .panel {
-    margin-bottom: @panel-margin-bottom;
+    margin-bottom: @panel-margin-bottom; // change the bootstrap @line-height-computed var
     .box-shadow(@panel-box-shadow); // just override bootstrap to use a var.
+}
+
+.panel-heading {
+    position: relative; // used to create an absolute button bar in the right corner
 }
 
 .panel {

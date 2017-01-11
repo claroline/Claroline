@@ -26,30 +26,23 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            {{ title }}
-        </h3>
+{% block section_panel %}
+    <div class="page-header">
+        <h1 class="panel-title">{{ title }}</h1>
     </div>
 
-    <div id="admin-home-content"  class="panel-body">
-        <div ng-app="AdminHomeTabsConfigModule">
-            <div ui-view>
-            </div>
-        </div>
+    <div id="admin-home-content" data-ng-app="AdminHomeTabsConfigModule">
+        <div data-ui-view=""></div>
     </div>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets
-        debug=false
-        filter='less, cssmin'
-        output='css/clarolinecore/hometabs.css'
+
+    {% stylesheets debug=false filter='less, cssmin' output='css/clarolinecore/hometabs.css'
         "@ClarolineCoreBundle/Resources/less/home-tabs.less"
     %}
-        <link rel="stylesheet" href="{{ asset_url }}" screen="media"/>
+        <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
     <link rel='stylesheet' type='text/css' href='{{ asset('packages/angular-bootstrap-colorpicker/css/colorpicker.min.css')}}'>
     <link rel='stylesheet' type='text/css' href='{{ asset('packages/angular-gridster/dist/angular-gridster.min.css')}}'>
@@ -57,6 +50,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+
     <script src="{{ hotAsset('dist/claroline-distribution-main-core-admin-home-tabs-config.js') }}"></script>
     <script src="{{ asset('packages/angular-gridster/dist/angular-gridster.min.js') }}"></script>
 {% endblock %}

@@ -5,7 +5,7 @@
         {% set description = getContent('platformDescription') %}
         {% block meta %}
             {% if not description is empty %}
-                <meta name="Description" content="{{ description.content | striptags }}" />
+                <meta name="description" content="{{ description.content | striptags }}" />
             {% endif %}
             <meta charset="utf-8" />
             {#
@@ -18,7 +18,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {% endblock %}
 
-        {% if config.getParameter('name') != "" %}
+        {% if config.getParameter('name') is not empty %}
             {% set pagetitle = config.getParameter('name') %}
         {% else %}
             {% set pagetitle = 'Claroline Connect' %}
@@ -37,25 +37,15 @@
 
         {% block favicon %}
             <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
-            <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png')}}"/>
+            <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png')}}" />
         {% endblock %}
 
         {% block javascripts_header %}{% endblock %}
     </head>
 
     <body class="app-container">
-        {% if not app.session.get('hide_browser_warning') %}
-        <div class="alert alert-danger outdated-browser-warning" style="text-align: center;">
-            <a id="close-browser-warning" class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
-            <div align="center"> <i class="fa fa-warning"></i>
-                {{ 'outdated_brower_message'|trans({}, 'platform') }}
-                (<a href="http://browsehappy.com" target="_blank">http://browsehappy.com</a>).
-                {{ 'ie_support_message'|trans({}, 'platform')}}
-            </div>
-        </div>
-        {% endif %}
-
         {% block layout %}{% endblock %}
+
         {% block javascripts %}{% endblock %}
     </body>
 </html>

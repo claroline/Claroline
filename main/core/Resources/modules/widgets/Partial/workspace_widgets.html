@@ -1,34 +1,40 @@
 <div gridster="whc.gridsterOptions">
     <ul>
         <li gridster-item="widget"
-            class="panel panel-default gridster-item-content"
+            class="widget gridster-item-content"
             ng-repeat="widget in whc.widgets"
-            style="border-color: {{ widget['color'] }}"
+            ng-style="{'border-color': '{{ widget['color'] }}', 'background-color': '{{ widget['color'] }}'}"
         >
-            <div class="panel-heading widget-header" style="background-color: {{ widget['color'] }}">
-                <h3 class="panel-title">
-                    <span class="pull-right widget-header-control-box" ng-if="whc.widgetsOptions['canEdit']">
-                        <i class="fa fa-times close" ng-click="whc.deleteWorkspaceWidget($event, widget['configId'])">
-                        </i>
-                        <span class="close">&nbsp;</span>
-                        <i class="fa fa-pencil close"
-                           ng-click="whc.editWorkspaceWidget($event, widget['instanceId'], widget['configId'], widget['displayId'], widget['configurable'])"
-                        >
-                        </i>
-                    </span>
-                    <span class="widget-header-content"
-                          title="{{ widget['instanceName'] }}"
-                          style="color: {{ widget['textTitleColor'] }}"
-                          ng-class="whc.widgetsOptions['canEdit'] && !widget['visible'] ? 'strike' : ''"
-                          ng-bind-html="widget['instanceName']"
-                    >
-                    </span>
+            <div class="widget-header">
+                <h3
+                    class="widget-title"
+                    data-ng-class="whc.widgetsOptions['canEdit'] && !widget['visible'] ? 'strike' : ''"
+                    data-ng-bind-html="widget['instanceName']"
+                    style="color: {{ widget['textTitleColor'] }}"
+                >
                 </h3>
-            </div>
-            <div class="panel-body home-widget-content">
-                <div ng-bind-html="widget['content']">
+                <div class="widget-header-buttons" data-ng-if="whc.widgetsOptions['canEdit']">
+                    <!-- Edit widget button -->
+                    <button
+                        type="button"
+                        class="btn btn-link"
+                        data-ng-click="whc.editWorkspaceWidget($event, widget['instanceId'], widget['configId'], widget['displayId'], widget['configurable'])"
+                    >
+                        <span class="fa fa-fw fa-pencil"></span>
+                    </button>
+
+                    <!-- Remove widget button -->
+                    <button
+                        type="button"
+                        class="btn btn-link"
+                        data-ng-click="whc.deleteWorkspaceWidget($event, widget['configId'])"
+                    >
+                        <span class="fa fa-fw fa-times"></span>
+                    </button>
                 </div>
             </div>
+
+            <div class="widget-content" ng-bind-html="widget['content']"></div>
         </li>
     </ul>
 </div>
