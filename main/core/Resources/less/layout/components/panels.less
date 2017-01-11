@@ -1,0 +1,38 @@
+.panel {
+    margin-bottom: @panel-margin-bottom;
+    .box-shadow(@panel-box-shadow); // just override bootstrap to use a var.
+}
+
+.panel {
+    > table thead tr td,
+    > table tbody tr td,
+    > table thead tr th,
+    > table tbody tr th,
+    > table tr td,
+    > table tr th,
+    .workspace-list-pager > table tr td,
+    .workspace-list-pager > table tr th {
+        padding-right: 14px !important;
+        padding-left: 14px !important;
+    }
+
+    form > .list-group {
+        margin-bottom: 0;
+        > .list-group-item {
+            border-left: none;
+            border-right: none;
+            border-bottom: none;
+            .border-top-radius(0);
+            .border-bottom-radius(0);
+        }
+    }
+
+    .panel-body img {
+        max-width: 100%;
+    }
+
+    .panel,
+    .breadcrumb {
+        .box-shadow(none);
+    }
+}

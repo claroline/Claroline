@@ -1,0 +1,21 @@
+form .global-error {
+    .alert;
+    .alert-danger;
+}
+
+.two_level_select {
+    select {
+        .form-control;
+        .input-sm;
+        width:   auto;
+        display: inline-block;
+        &+ select {
+            margin-left: 5px;
+        }
+    }
+    &.has-error {
+        select {
+            border-color : #b94a48;
+        }
+    }
+}

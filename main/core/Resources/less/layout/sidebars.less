@@ -1,0 +1,99 @@
+#left-bar, #right-bar {
+    position: fixed;
+    top: 0;
+    width: 40px;
+    overflow: hidden;
+    height: 100%;
+    z-index: (@zindex-navbar-fixed - 1);
+    padding-top: (@navbar-height + 5);
+
+    &, & .list-group,
+    & .list-group .list-group-item,
+    & .list-group .list-group-item.disabled,
+    & .list-group .list-group-item.disabled:hover {
+        background: @navbar-default-bg;
+        color: @navbar-default-link-color;
+        font-size: 16px;
+    }
+
+    .list-group {
+        .box-shadow(none);
+        width: 400px;
+        position: relative;
+        top: 0;
+        .list-group-item {
+            border: none;
+            padding-left: 12px;
+
+            i {
+                padding-right: 12px;
+                display: inline-block;
+                width: 28px;
+            }
+
+            &:hover {
+                background: @component-active-bg;
+                color: @navbar-inverse-link-active-color;
+            }
+
+            &.active {
+                background: @navbar-default-link-active-bg;
+                color: @navbar-default-link-active-color;
+            }
+
+            &.disabled{
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                //height: (@navbar-height + 4);
+                border-bottom: 4px solid @gray-light !important;
+                //padding: 15px 0 0  40px !important;
+                font-weight: bold;
+                color: darken(@navbar-default-link-color, 10%);
+            }
+
+            &:first-child, &:last-child {
+                .border-top-radius(0);
+                .border-bottom-radius(0);
+            }
+        }
+    }
+
+    .scroll-up, .scroll-down {
+        background: @navbar-default-bg;
+        position: absolute;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        cursor: pointer;
+        z-index: 3;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        &:hover {
+            background: @navbar-default-link-active-bg;
+            color: @navbar-default-link-active-color
+        }
+    }
+
+    .scroll-up {
+        top: 50px;
+        border-bottom: 2px solid  @navbar-default-border;
+    }
+
+    .scroll-down {
+        bottom: 0;
+        border-top: 2px solid  @navbar-default-border;
+    }
+}
+
+#left-bar {
+    left: 0;
+}
+
+#right-bar {
+    right: 0;
+}

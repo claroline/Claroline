@@ -1,0 +1,26 @@
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    margin-bottom: floor(@grid-gutter-width / 2);
+    margin-top: 0;
+    padding: @page-header-padding;
+
+    h1 {
+        font-size: @page-header-font-size;
+        font-weight: @page-header-weight;
+        margin: 0;
+        padding: 0;
+    }
+
+    .btn-link {
+        color: @page-header-link-color;
+
+        &:hover,
+        &:focus {
+            color: @page-header-link-hover-color;
+        }
+    }
+}

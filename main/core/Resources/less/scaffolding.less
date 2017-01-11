@@ -1,0 +1,31 @@
+// We use classes for `html` and `body` tags
+// to avoid adding unwanted styles in iframe or tinyMCE
+html.app-main,
+body.app-container {
+    height: 100%;
+}
+
+// Moves the app scroll bar to begin after the fixed header
+html.app-main {
+    overflow-y: hidden;
+    padding-top: @top-bar-height;
+}
+
+body.app-container {
+    padding-top: floor(@grid-gutter-width / 2); // Height of the header has been moved to the html tag, only keep @grid-gutter-width / 2
+    padding-bottom: 0; // No need to have a padding here
+    overflow-y: auto; // Get the scroll bar
+}
+
+
+// allow to change the font-weight of links through vars
+// this propagates to everything (navs, list-groups, etc.)
+// find a way to limit it
+/*a {
+    font-weight: @link-weight;
+
+    &:hover,
+    &:focus {
+        font-weight: @link-hover-weight;
+    }
+}*/

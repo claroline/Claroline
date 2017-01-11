@@ -1,0 +1,23 @@
+html.iframe, body.iframe {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto;
+}
+
+body.iframe {
+    .carousel-control, #top_bar, #left-bar, #footer, > #wrap > .container-fluid > .row:first-child, #wrap .visible-xs > .list-group.menu {
+        display: none;
+    }
+
+    &, > .container, > #wrap > .container {
+        padding-top: 0;
+        margin: 0;
+        max-width: 100%;
+        background-color: transparent;
+    }
+
+    > #wrap > .container > .row > div{
+        padding: 0;
+        margin: 0;
+    }
+}

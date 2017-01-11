@@ -1,0 +1,52 @@
+// Bootstrap variables
+@import "../../../../../../../web/packages/bootstrap/less/variables.less";
+
+// @box-shadow-base: 0 0 2px rgba(0, 0, 0, 0.10);
+
+// Moves the app scroll bar to begin after the fixed header
+html {
+    // overflow-y: hidden;
+    // padding-top: 50px; // Height of the top bar, needs bootstrap var
+}
+
+// Clearer bg color
+body {
+    //padding-top: 15px; // Height of the header has been moved to the html tag, only keep @grid-gutter-width / 2
+    //padding-bottom: 0; // No need to have a padding here
+    //overflow-y: auto; // Get the scroll bar
+}
+
+// Max width of content for large screens
+#wrap {
+    max-width: 1250px;
+}
+
+#footer {
+    //background-color: #F3F3F3; /* because the new background color is the old footer color */
+}
+
+h3, .h3 {
+    font-size: 22px;
+}
+
+// Simplifies default style of breadcrumbs to gain space
+.breadcrumb {
+    /*padding: 0;
+    background: none;*/
+    /*box-shadow: none;*/
+    //border-radius: 0;
+    //margin-bottom: 5px;
+    //font-size: 12px; /* slightly smaller than the regular text */
+}
+
+// Gray btn-link for aesthetic purpose
+/*.btn-link {
+    color: #777;
+    font-weight: 600;
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        color: #333;
+    }
+}*/
