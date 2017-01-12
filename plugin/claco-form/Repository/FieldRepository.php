@@ -12,6 +12,7 @@
 namespace Claroline\ClacoFormBundle\Repository;
 
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\EntityRepository;
 
 class FieldRepository extends EntityRepository
@@ -33,5 +34,21 @@ class FieldRepository extends EntityRepository
         $query->setParameter('id', $id);
 
         return $query->getOneOrNullResult();
+    }
+
+    public function findNonConfidentialFieldsByResourceNode(ResourceNode $resourceNode)
+    {
+        $dql = '
+            SELECT f
+            FROM Claroline\ClacoFormBundle\Entity\Field f
+            JOIN f.clacoForm c
+            JOIN c.resourceNode r
+            WHERE r = :resourceNode
+            AND f.isMetadata = false
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('resourceNode', $resourceNode);
+
+        return $query->getResult();
     }
 }

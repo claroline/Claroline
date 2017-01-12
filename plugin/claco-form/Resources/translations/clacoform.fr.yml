@@ -58,6 +58,7 @@ entry_removal_from_category_msg: La fiche [%title%] a été retirée de la caté
 entry_title: Titre de la fiche
 entry_title_info: Texte qui sera utilisé comme titre pour la fiche.
 fields_management: Gestion des champs
+fields_to_display: Champs à afficher
 find_entry: Trouver une fiche
 form_not_blank_error: Cette valeur ne doit pas être vide.
 form_not_unique_error: Cette valeur est déjà utilisée.
@@ -101,9 +102,11 @@ mandatory: Obligatoire
 menu: Menu
 metadata: Données confidentielles
 my_entries: Mes fiches
+nb_entries: Nombre de fiches
 no_available_random_entry: Aucune fiche aléatoire disponible
 no_category: Aucune catégorie
 no_comment: Aucun commentaire
+no_data: Aucune donnée
 no_entry: Aucune fiche
 no_field: Aucun champ
 no_field_alert_msg: Aucun champ n'a été configuré. Vous pouvez le faire ici :
@@ -119,6 +122,7 @@ random_mode: Mode aléatoire
 remove_category: Retirer la catégorie
 rich_text_field_info: Par souci de lisibilité, les champs de type "Texte riche" ne sont pas visibles dans le tableau de recherche de fiches.
 search_mode: Mode liste/recherche
+show_field_label: Afficher l'intitulé des champs
 template_duplicated_variables_message: Certains champs sont utilisés plus d'une fois.
 template_management: Gestion du template
 template_mandatory_variables_message: Les champs obligatoires doivent impérativement être présent dans le template.
@@ -126,5 +130,6 @@ template_missing_mandatory_variables_message: Certains champs obligatoires ne so
 template_success_message: Le template a été modifié avec succès.
 template_variables_message: Vous pouvez utiliser les variables suivantes. Elles seront remplacées par les champs correspondants.
 validate: Valider
+view_entry: Voir la fiche
 votes: Votes
 votes_management: Gestion des votes

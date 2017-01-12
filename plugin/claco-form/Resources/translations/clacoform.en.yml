@@ -58,6 +58,7 @@ entry_removal_from_category_msg: Entry [%title%] has been removed from category 
 entry_title: Entry title
 entry_title_info: Text that will be used as title for the entry.
 fields_management: Fields management
+fields_to_display: Fields to display
 find_entry: Find an entry
 form_not_blank_error: This value may not be blank.
 form_not_unique_error: This value is already used.
@@ -101,15 +102,17 @@ mandatory: Mandatory
 menu: Menu
 metadata: Confidential data
 my_entries: My entries
+nb_entries: Number of entries
 no_available_random_entry: No available random entry
 no_category: No category
 no_comment: No comment
+no_data: No data
 no_entry: No entry
 no_field: No field
 no_field_alert_msg: No field has been configured. You can do it here :
 no_keyword: No keyword
 no_manager_entry: You are the manager of no entry
-no_own_entry: You haven't create an entry yet
+no_own_entry: You haven't created an entry yet
 not_configured_yet: The form is not configured yet.
 optional: Optional
 publication_date: Publication date
@@ -119,11 +122,13 @@ random_mode: Random mode
 remove_category: Remove category
 rich_text_field_info: For the sake of readability, "Rich text" fields are not visible in the table of entries.
 search_mode: List/Search mode
+show_field_label: Show field label
 template_duplicated_variables_message: Some fields are used more than once.
 template_management: Template management
 template_mandatory_variables_message: Mandatory fields must be used in the template.
 template_missing_mandatory_variables_message: Some mandatory fields are missing.
 template_success_message: The template has been successfully edited.
 template_variables_message: You can use the following variables. They will be replaced by the corresponding field.
+view_entry: View entry
 votes: Votes
 votes_management: Votes management

@@ -28,7 +28,7 @@ export default class AdminWidgetInstanceEditionModalCtrl {
     this.initializeContentConfigForm()
   }
 
-  initializeContentConfigForm () {
+  initializeContentConfigForm() {
     if (this.contentConfig === null) {
       const route = Routing.generate('api_get_widget_instance_content_configuration_form', {widgetInstance: this.widgetInstanceId})
       this.$http.get(route).then(d => {
@@ -39,7 +39,7 @@ export default class AdminWidgetInstanceEditionModalCtrl {
     }
   }
 
-  secureHtml (html) {
+  secureHtml(html) {
     return typeof html === 'string' ? this.$sce.trustAsHtml(html) : html
   }
 
@@ -57,7 +57,7 @@ export default class AdminWidgetInstanceEditionModalCtrl {
     }
   }
 
-  submitMainForm (widgetContentConfigResult = null) {
+  submitMainForm(widgetContentConfigResult = null) {
     let data = this.ClarolineAPIService.formSerialize(
       'widget_instance_config_form',
       this.widgetInstance
@@ -99,20 +99,27 @@ export default class AdminWidgetInstanceEditionModalCtrl {
     )
   }
 
-  submitContentConfiguration () {
+  submitContentConfiguration() {
     const forms = angular.element('.widget-content-config-form')
 
     if (forms.length > 0) {
       const action = forms[0].action
-      const formDatas = angular.element(forms[0]).serializeArray()
-      let datas = {}
-      formDatas.forEach(d => {
-        datas[d['name']] = d['value']
+      const formData = angular.element(forms[0]).serializeArray()
+      let data = {}
+      formData.forEach(d => {
+        if (d['name'].endsWith('[]')) {
+          if (data[d['name']] === undefined) {
+            data[d['name']] = []
+          }
+          data[d['name']].push(d['value'])
+        } else {
+          data[d['name']] = d['value']
+        }
       })
 
       return this.$http.post(
         action,
-        this.$httpParamSerializer(datas),
+        this.$httpParamSerializer(data),
         {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
       ).then(d => {
         if (d['status'] === 204) {

@@ -13,6 +13,7 @@ namespace Claroline\ClacoFormBundle\Manager;
 
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
+use Claroline\ClacoFormBundle\Entity\ClacoFormWidgetConfig;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
@@ -41,7 +42,9 @@ use Claroline\ClacoFormBundle\Event\Log\LogKeywordEditEvent;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -107,6 +110,8 @@ class ClacoFormManager
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->categoryRepo = $om->getRepository('ClarolineClacoFormBundle:Category');
+        $this->clacoFormRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoForm');
+        $this->clacoFormWidgetConfigRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoFormWidgetConfig');
         $this->commentRepo = $om->getRepository('ClarolineClacoFormBundle:Comment');
         $this->entryRepo = $om->getRepository('ClarolineClacoFormBundle:Entry');
         $this->fieldChoiceCategoryRepo = $om->getRepository('ClarolineClacoFormBundle:FieldChoiceCategory');
@@ -1074,6 +1079,70 @@ class ClacoFormManager
         $this->eventDispatcher->dispatch('log', $event);
     }
 
+    public function persistClacoFormWidgetConfiguration(ClacoFormWidgetConfig $config)
+    {
+        $this->om->persist($config);
+        $this->om->flush();
+    }
+
+    public function createClacoFormWidgetConfiguration(WidgetInstance $widgetInstance)
+    {
+        $config = new ClacoFormWidgetConfig();
+        $config->setWidgetInstance($widgetInstance);
+        $config->setNbEntries(1);
+        $config->setShowFieldLabel(false);
+        $this->persistClacoFormWidgetConfiguration($config);
+
+        return $config;
+    }
+
+    public function getClacoFormWidgetConfiguration(WidgetInstance $widgetInstance)
+    {
+        $config = $this->clacoFormWidgetConfigRepo->findOneBy(['widgetInstance' => $widgetInstance->getId()]);
+
+        if (is_null($config)) {
+            $config = $this->createClacoFormWidgetConfiguration($widgetInstance);
+        }
+
+        return $config;
+    }
+
+    public function getNRandomEntries(ClacoForm $clacoForm, $nbEntries)
+    {
+        $randomEntries = $this->getRandomEntries($clacoForm);
+        $count = count($randomEntries);
+
+        if ($count > $nbEntries) {
+            $entries = [];
+            $indexes = [];
+
+            for ($i = 0; $i < $nbEntries; ++$i) {
+                $rand = rand(0, $count - 1);
+
+                while (in_array($rand, $indexes)) {
+                    $rand = ++$rand % $count;
+                }
+                $indexes[] = $rand;
+            }
+            foreach ($indexes as $index) {
+                $entries[] = $randomEntries[$index];
+            }
+        } else {
+            $entries = $randomEntries;
+        }
+
+        return $entries;
+    }
+
+    /*****************************************
+     * Access to ClacoFormRepository methods *
+     *****************************************/
+
+    public function getClacoFormByResourceNode(ResourceNode $resourceNode)
+    {
+        return $this->clacoFormRepo->findOneBy(['resourceNode' => $resourceNode]);
+    }
+
     /****************************************
      * Access to CategoryRepository methods *
      ****************************************/
@@ -1105,6 +1174,11 @@ class ClacoFormManager
     public function getFieldByClacoFormAndId(ClacoForm $clacoForm, $id)
     {
         return $this->fieldRepo->findOneBy(['clacoForm' => $clacoForm, 'id' => $id]);
+    }
+
+    public function getNonConfidentialFieldsByResourceNode(ResourceNode $resourceNode)
+    {
+        return $this->fieldRepo->findNonConfidentialFieldsByResourceNode($resourceNode);
     }
 
     /******************************************

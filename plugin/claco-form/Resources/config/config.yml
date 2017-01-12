@@ -5,3 +5,11 @@ plugin:
     - class: Claroline\ClacoFormBundle\Entity\ClacoForm
       name: claroline_claco_form
       icon: claco_form_icon.png
+
+  widgets:
+    - name: claroline_claco_form_widget
+      is_configurable: true
+      is_displayable_in_workspace: true
+      is_displayable_in_desktop: true
+      default_width: 12
+      default_height: 4
