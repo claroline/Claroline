@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "fb64abfdaf091e469ea221cd8ab2ba20284cd975"
+                "reference": "24fb408c20c7fb03b1b2bf68121b8123133ec151"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/fb64abfdaf091e469ea221cd8ab2ba20284cd975",
-                "reference": "fb64abfdaf091e469ea221cd8ab2ba20284cd975",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/24fb408c20c7fb03b1b2bf68121b8123133ec151",
+                "reference": "24fb408c20c7fb03b1b2bf68121b8123133ec151",
                 "shasum": ""
             },
             "require": {
@@ -373,7 +373,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-01-09 11:03:19"
+            "time": "2017-01-12 15:46:48"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -6413,16 +6413,16 @@
         },
         {
             "name": "pdepend/pdepend",
-            "version": "2.3.2",
+            "version": "2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pdepend/pdepend.git",
-                "reference": "8d7ab8fe8c1f9de5056bb7ea2c0852f4ddd44f90"
+                "reference": "3acfa4fcadbb8b65b8b2ec077408c5ef0e112e68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pdepend/pdepend/zipball/8d7ab8fe8c1f9de5056bb7ea2c0852f4ddd44f90",
-                "reference": "8d7ab8fe8c1f9de5056bb7ea2c0852f4ddd44f90",
+                "url": "https://api.github.com/repos/pdepend/pdepend/zipball/3acfa4fcadbb8b65b8b2ec077408c5ef0e112e68",
+                "reference": "3acfa4fcadbb8b65b8b2ec077408c5ef0e112e68",
                 "shasum": ""
             },
             "require": {
@@ -6449,7 +6449,7 @@
                 "BSD-3-Clause"
             ],
             "description": "Official version of pdepend to be handled with Composer",
-            "time": "2016-11-23 20:25:02"
+            "time": "2017-01-11 16:15:35"
         },
         {
             "name": "phpdocumentor/reflection-common",
