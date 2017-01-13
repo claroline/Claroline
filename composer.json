@@ -179,7 +179,8 @@
             "Claroline\\FlashCardBundle\\": "plugin/flashcard",
             "Innova\\MediaResourceBundle\\": "plugin/media-resource",
             "Claroline\\DashboardBundle\\": "plugin/dashboard",
-            "Claroline\\ClacoFormBundle\\": "plugin/claco-form"
+            "Claroline\\ClacoFormBundle\\": "plugin/claco-form",
+            "Claroline\\RemoteUserSynchronizationBundle\\": "plugin/remote-user-synchronization"
         }
     },
     "extra": {
@@ -234,7 +235,8 @@
             "Icap\\LessonBundle\\IcapLessonBundle",
             "Claroline\\ChatBundle\\ClarolineChatBundle",
             "Claroline\\DashboardBundle\\ClarolineDashboardBundle",
-            "Claroline\\ClacoFormBundle\\ClarolineClacoFormBundle"
+            "Claroline\\ClacoFormBundle\\ClarolineClacoFormBundle",
+            "Claroline\\RemoteUserSynchronizationBundle\\ClarolineRemoteUserSynchronizationBundle"
         ]
     }
 }

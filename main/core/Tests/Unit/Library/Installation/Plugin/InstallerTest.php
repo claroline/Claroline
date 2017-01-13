@@ -66,12 +66,15 @@ class InstallerTest extends MockeryTestCase
         $this->pm->shouldReceive('isReady')
             ->with($pluginEntity)
             ->andReturn(true);
+        $this->pm->shouldReceive('isActivatedByDefault')
+            ->with($pluginEntity)
+            ->andReturn(true);
 
         $this->installer->install($this->plugin);
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testInstallThrowsAnExceptionIfPluginIsAlreadyRegistered()
     {
@@ -98,7 +101,7 @@ class InstallerTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testUninstallThrowsAnExceptionIfPluginIsNotRegistered()
     {

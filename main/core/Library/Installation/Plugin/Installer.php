@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
+use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
-use Claroline\CoreBundle\Manager\PluginManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -92,7 +92,7 @@ class Installer
         $pluginEntity = $this->recorder->register($plugin, $this->validator->getPluginConfiguration());
         $this->baseInstaller->install($plugin);
 
-        if (!$this->pluginManager->isReady($pluginEntity)) {
+        if (!$this->pluginManager->isReady($pluginEntity) || !$this->pluginManager->isActivatedByDefault($pluginEntity)) {
             $errors = $this->pluginManager->getMissingRequirements($pluginEntity);
 
             foreach ($errors['extensions'] as $extension) {
@@ -104,7 +104,7 @@ class Installer
             }
 
             foreach ($errors['extras'] as $extra) {
-                $this->log(sprintf('<fg=red>The plugin %s has extra requirements ! %s.</fg=red>', $plugin->getName(), $this->translator->trans($extra, array(), 'error')));
+                $this->log(sprintf('<fg=red>The plugin %s has extra requirements ! %s.</fg=red>', $plugin->getName(), $this->translator->trans($extra, [], 'error')));
             }
 
             $this->log(sprintf('<fg=red>Disabling %s...</fg=red>', $plugin->getName()));

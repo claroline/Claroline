@@ -28,4 +28,5 @@ interface PluginBundleInterface extends BundleInterface, AutoConfigurableInterfa
     public function getRequiredExtensions();
     public function getRequiredPlugins();
     public function getExtraRequirements();
+    public function isActiveByDefault();
 }
