@@ -185,7 +185,7 @@ class CourseSessionRepository extends EntityRepository
             SELECT cs
             FROM Claroline\CursusBundle\Entity\CourseSession cs
             JOIN cs.course c
-            WHERE cs.endDate < :now
+            WHERE cs.endDate > :now
             ORDER BY c.title ASC
         ';
         $query = $this->_em->createQuery($dql);
@@ -201,7 +201,7 @@ class CourseSessionRepository extends EntityRepository
             SELECT cs
             FROM Claroline\CursusBundle\Entity\CourseSession cs
             JOIN cs.course c
-            WHERE cs.endDate < :now
+            WHERE cs.endDate > :now
             AND (
                 UPPER(cs.name) LIKE :search
                 OR UPPER(c.title) LIKE :search
