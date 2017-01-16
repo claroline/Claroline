@@ -19,3 +19,9 @@ plugin:
        is_displayable_in_desktop: true
        is_displayable_in_workspace: true
        is_exportable: false
+
+     - name: innova_path_slideshow
+       is_configurable: true
+       is_displayable_in_desktop: true
+       is_displayable_in_workspace: true
+       is_exportable: false

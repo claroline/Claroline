@@ -7,17 +7,13 @@
     {# Path Editor styles #}
     {% stylesheets debug=false filter='less, cssmin' output='vendor/innovapath/wizards.css'
         'packages/angular-ui-tree/dist/angular-ui-tree.min.css'
-        '@InnovaPathBundle/Resources/less/wizards.less'
+        '@InnovaPathBundle/Resources/styles/wizards.less'
     %}
     <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
 
-{% block content %}
-    <div class="visible-xs">
-        {{ block("leftbar") }}
-    </div>
-
+{% block section_panel %}
     {% block path_wizard %}{% endblock %}
 {% endblock %}
 
@@ -26,5 +22,5 @@
     {{ parent() }}
 
     {# Translations #}
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'path_wizards' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'path_wizards' }) }}"></script>
 {% endblock %}
