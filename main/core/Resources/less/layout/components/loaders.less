@@ -1,10 +1,22 @@
 .please-wait {
-    width: 100%;
-    position: fixed;
+    position: absolute;
+    top: 5px;
+    left: 0;
+    right: 0;
+    margin: auto;
     z-index: @zindex-modal;
     top: 5px;
     display: none;
     text-align: center;
+    background-color: @loader-bg;
+    color: @loader-color;
+    font-size: @loader-font-size;
+    padding: @loader-padding;
+    border-radius: @loader-border-radius;
+    border: 1px solid @loader-border;
+    max-width: 200px;
+
+    .box-shadow(@loader-box-shadow);
 }
 
 .loading-row {
