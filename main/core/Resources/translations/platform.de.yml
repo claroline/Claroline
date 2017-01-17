@@ -130,7 +130,7 @@ canEdit: 'Droit de modifier'
 canExport: 'Droit d''exporter'
 canOpen: 'Droit d''ouvrir'
 can_edit_permission: 'Peut éditer les permissions'
-cancel: Annuler
+cancel: Absagen
 cannot_change_password: 'Vous ne pouvez pas changer votre mot de passe'
 cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
 cannot_unsubscribe_from_workspace: 'Impossible de vous désinscrire de l''espace d''activités'
@@ -480,14 +480,14 @@ is_not_writable: 'n''est pas accessible en écriture'
 is_not_writable_recursive: 'et ses sous dossiers ne sont pas accessibles en écriture'
 jqplot_date_output_format: '%d-%m-%Y'
 keep_me_logged_in: 'Se souvenir de moi'
-language: Langue
-language_select: 'Sélectionnez une langue'
-lastName: Nom
+language: Sprache
+language_select: Wählen Sie eine Sprache
+lastName: Name
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 last_attempt_date: 'Date de la dernière tentative'
 last_manager_error_message: 'Vous ne pouvez pas retirer tous les gestionnaires.'
-last_name: Nom
+last_name: Name
 layout: Layout
 learning_outcomes: 'Référentiel de compétences'
 learning_outcomes_creation: 'Création d''un référentiel de compétences'
@@ -509,12 +509,12 @@ list_view: 'Vue en liste'
 list_workspaces: 'Tous les espaces d''activités'
 lock: Verrouiller
 locked: Verrouillé
-login: Connexion
+login: Verbindung
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
-logout: Déconnexion
+logout: Trennung
 logs: suivi
 logs_error_location: 'En cas d''erreur, les logs se trouvent dans le dossier app/log/update-xxx.log.'
-mail: Mail
+mail: E-Mail
 mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
 mail_config_problem: 'Veuillez contacter l''administrateur pour réinitialiser votre mot de passe.'
 mail_invalid: 'Le format de votre email n''est pas valide'
@@ -594,7 +594,7 @@ my_public_documents: 'Mes documents publics'
 my_resources: 'Mes ressources'
 my_workspace: 'Espace personnel'
 my_workspaces: 'Mes espaces d''activités'
-name: 'Name'
+name: Name
 name_required: 'Nom requis'
 new: Nouveau
 new_folder_in_current_ws: 'Nouveau répertoire dans l''espace d''activité courant'
@@ -603,7 +603,7 @@ new_message_alert: 'Vous avez %count% nouveaux message(s)'
 new_password: 'Nouveau mot de passe'
 new_role_message: 'Vous venez de recevoir le role %name%'
 new_role_message_object: 'Vos permissions sur la plateforme ont changé'
-'no': Non
+'no': Nein
 no_action_found: 'Aucune action trouvée.'
 no_activity_in_workspace: 'Cet espace ne contient actuellement aucune activité.'
 no_category: 'Il n''y a aucune catégorie'
@@ -1037,7 +1037,7 @@ upload_file: 'Télécharger un fichier'
 url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
 use_stable_repo: 'Utiliser les dépôts stables'
 use_test_repo: 'Utiliser les dépôts de test'
-user: Utilisateur
+user: Benutzer
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
 user_creation_success: 'Le compte utilisateur a été créé avec succès.'
@@ -1059,7 +1059,7 @@ username: 'Gebrauchername'
 username_and_email_from_two_different_users: 'Le nom d''utilisateur %username% et l''adresse mail %email% sont tous deux utilisés et n''appartiennent pas au même utilisateur.'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
 username_or_email: 'Nom d''utilisateur ou email'
-users: Utilisateurs
+users: Benutzer
 users_cannot_be_registered_to_group: 'Les utilisateurs ne peuvent pas être inscrits dans le groupe'
 users_connected_once: 'utilisateurs connectés au moins 1 fois sur la plateforme'
 users_from_group_registration: 'Inscription des utilisateurs du groupe'
@@ -1143,7 +1143,7 @@ workspaces_per_page: 'Espaces par page'
 wrong_captcha: 'Le code ne correspond pas avec l''image indiquée'
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
-'yes': Oui
+'yes': Ja
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_platform_id: your_platform_id
