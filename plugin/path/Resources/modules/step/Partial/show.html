@@ -1,98 +1,103 @@
-<div class="row" id="scroll-to-onload">
+<nav class="current-step" id="scroll-to-onload">
     <!-- No selected step alert -->
-    <div data-ng-if="null == stepShowCtrl.step" class="col-md-12">
-        <div class="alert alert-info text-center">
-            {{ 'no_step_selected'|trans:{}:'path_wizards' }}
-        </div>
+    <div class="alert alert-info text-center" data-ng-if="null == stepShowCtrl.step">
+        {{ 'no_step_selected'|trans:{}:'path_wizards' }}
     </div>
 
+    <!-- User is not authorized to access this step -->
+    <authorization-block
+        data-ng-if="!stepShowCtrl.authorization.granted"
+        data-step="stepShowCtrl.step"
+        data-authorization="stepShowCtrl.authorization"
+    ></authorization-block>
+
+    <!-- Next & previous navs -->
+    <nav>
+        <button type="button" class="btn btn-lg btn-previous btn-link"
+            data-ng-click="stepShowCtrl.goTo(stepShowCtrl.previous)"
+            data-ng-disabled="null == stepShowCtrl.previous"
+            data-toggle="tooltip"
+            data-placement="right"
+            data-original-title="{{ stepShowCtrl.previous.name }}"
+        >
+            <span class="fa fa-chevron-left"></span>
+            <span class="hidden-xs">{{ 'previous_step'|trans:{}:'path_wizards' }}</span>
+        </button>
+
+        <button type="button" class="btn btn-lg btn-next btn-link"
+            data-ng-click="stepShowCtrl.goTo(stepShowCtrl.next)"
+            data-ng-disabled="null == stepShowCtrl.next"
+            data-toggle="tooltip"
+            data-placement="left"
+            data-original-title="{{ stepShowCtrl.next.name }}"
+        >
+            <span class="hidden-xs">{{ 'next_step'|trans:{}:'path_wizards' }}</span>
+            <span class="fa fa-chevron-right"></span>
+        </button>
+    </nav>
+
     <!-- Current step -->
-    <div data-ng-if="null != stepShowCtrl.step" class="panel-step col-md-12">
-        <resources-secondary-show data-ng-if="stepShowCtrl.authorization.granted" data-resources="stepShowCtrl.step.resources" data-inherited="stepShowCtrl.inheritedResources" data-excluded="stepShowCtrl.step.excludedResources"></resources-secondary-show>
+    <div class="current-step-content" data-ng-if="null != stepShowCtrl.step && stepShowCtrl.authorization.granted">
+        <resources-secondary-show
+            data-resources="stepShowCtrl.step.resources"
+            data-inherited="stepShowCtrl.inheritedResources"
+            data-excluded="stepShowCtrl.step.excludedResources">
+        </resources-secondary-show>
 
         <div class="panel panel-default">
-            <div class="lvl-indicator lvl lvl-{{ stepShowCtrl.step.lvl }} lvl-bg">&nbsp;</div>
-
             <div class="panel-body">
-                <div class="panel-step-heading row">
-                    <!-- Previous step button -->
-                    <div class="col-md-1 col-sm-2 col-xs-2 text-left">
-                        <button type="button" data-ng-click="stepShowCtrl.goTo(stepShowCtrl.previous)" class="btn btn-block btn-default" data-ng-disabled="null == stepShowCtrl.previous" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ stepShowCtrl.previous.name }}">
-                            <span class="fa fa-arrow-left"></span>
-                            <span class="sr-only">{{ 'previous_step'|trans:{}:'path_wizards' }}</span>
-                        </button>
-                    </div>
+                <div class="panel-step-heading lvl lvl-{{ stepShowCtrl.step.lvl }} lvl-border">
+                    <h2>{{ stepShowCtrl.step.name }}</h2>
 
-                    <!-- Step title -->
-                    <div class="col-md-10 col-sm-8 col-xs-8 text-center">
-                        <h4 class="panel-step-title">{{ stepShowCtrl.step.name }}</h4>
-                    </div>
+                    <div class="dropdown" data-ng-if="stepShowCtrl.path.manualProgressionAllowed">
+                        <span class="dropdown-toggle" role="button" id="pathProgression" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{ 'user_progression'|trans:{}:'path_wizards' }} :
+                            <b
+                                data-ng-class="{
+                                    'text-muted': 'seen' === stepShowCtrl.progression.status,
+                                    'text-danger': 'to_do' === stepShowCtrl.progression.status,
+                                    'text-warning': 'to_review' === stepShowCtrl.progression.status,
+                                    'text-success': 'done' === stepShowCtrl.progression.status,
+                                }"
+                            >
+                                {{ 'user_progression_step_' + (stepShowCtrl.progression.status || seen) + '_label'|trans:{}:'path_wizards' }}
 
-                    <!-- Next step button -->
-                    <div class="col-md-1 col-sm-2 col-xs-2 text-right">
-                        <button type="button" data-ng-click="stepShowCtrl.goTo(stepShowCtrl.next)" class="btn btn-block btn-default" data-ng-disabled="null == stepShowCtrl.next" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ stepShowCtrl.next.name }}">
-                            <span class="sr-only">{{ 'next_step'|trans:{}:'path_wizards' }}</span>
-                            <span class="fa fa-arrow-right"></span>
-                        </button>
+                                <span class="caret"></span>
+                            </b>
+                        </span>
+
+                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="pathProgression">
+                            <li data-ng-class="{active: 'to_do' === stepShowCtrl.progression.status}">
+                                <a href="" role="button" data-ng-click="stepShowCtrl.updateProgression('to_do')">
+                                    <span class="fa fa-fw fa-square-o"></span>
+                                    {{ 'user_progression_step_to_do_label'|trans:{}:'path_wizards' }}
+                                </a>
+                            </li>
+                            <li data-ng-class="{active: 'done' === stepShowCtrl.progression.status}">
+                                <a href="" role="button" data-ng-click="stepShowCtrl.updateProgression('done')">
+                                    <span class="fa fa-fw fa-check-square-o"></span>
+                                    {{ 'user_progression_step_done_label'|trans:{}:'path_wizards' }}
+                                </a>
+                            </li>
+                            <li data-ng-class="{active: 'to_review' === stepShowCtrl.progression.status}">
+                                <a href="" role="button" data-ng-click="stepShowCtrl.updateProgression('to_review')">
+                                    <span class="fa fa-fw fa-retweet"></span>
+                                    {{ 'user_progression_step_to_review_label'|trans:{}:'path_wizards' }}
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
-                <!-- User is not authorized to access this step -->
-                <authorization-block
-                        class="col-md-6 col-md-offset-3"
-                        data-ng-if="!stepShowCtrl.authorization.granted"
-                        data-step="stepShowCtrl.step"
-                        data-authorization="stepShowCtrl.authorization"></authorization-block>
-
                 <!-- Description of the Step -->
-                <div class="step-description" data-ng-if="stepShowCtrl.authorization.granted && stepShowCtrl.step.description" data-ng-bind-html="stepShowCtrl.step.description"></div>
+                <div class="step-description" data-ng-if="stepShowCtrl.step.description" data-ng-bind-html="stepShowCtrl.step.description"></div>
 
                 <!-- Primary resources of the Step -->
                 <resources-primary-show
-                        data-ng-if="stepShowCtrl.authorization.granted && stepShowCtrl.step.primaryResource && 0 !== stepShowCtrl.step.primaryResource.length"
-                        data-resources="stepShowCtrl.step.primaryResource"
-                        data-height="stepShowCtrl.step.activityHeight">
+                    data-ng-if="stepShowCtrl.step.primaryResource && 0 !== stepShowCtrl.step.primaryResource.length"
+                    data-resources="stepShowCtrl.step.primaryResource"
+                    data-height="stepShowCtrl.step.activityHeight">
                 </resources-primary-show>
-            </div>
-
-            <div class="panel-footer">
-                <div class="row">
-                    <!-- Previous step button -->
-                    <div class="col-md-1 col-sm-2 col-xs-2 text-left">
-                        <button type="button" data-ng-click="stepShowCtrl.goTo(stepShowCtrl.previous)" class="btn btn-block btn-default" data-ng-disabled="null == stepShowCtrl.previous" data-placement="top" data-toggle="tooltip" data-original-title="{{ stepShowCtrl.previous.name }}">
-                            <span class="fa fa-arrow-left"></span>
-                            <span class="sr-only">{{ 'previous_step'|trans:{}:'path_wizards' }}</span>
-                        </button>
-                    </div>
-
-                    <div class="col-md-8 col-md-offset-1 col-sm-8 col-xs-8 text-center" data-ng-if="stepShowCtrl.authorization.granted">
-                        <!-- To do -->
-                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('to_do')" data-ng-class="{'active btn-warning': 'to_do' == stepShowCtrl.progression.status}" data-ng-if="stepShowCtrl.path.manualProgressionAllowed">
-                            <span class="fa fa-fw fa-square-o"></span>
-                            {{ 'user_progression_step_to_do_label'|trans:{}:'path_wizards' }}
-                        </button>
-
-                        <!-- Done -->
-                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('done')" data-ng-class="{'active btn-success': 'done' == stepShowCtrl.progression.status}" data-ng-if="stepShowCtrl.path.manualProgressionAllowed">
-                            <span class="fa fa-fw fa-check-square-o"></span>
-                            {{ 'user_progression_step_done_label'|trans:{}:'path_wizards' }}
-                        </button>
-
-                        <!-- Redo -->
-                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('to_review')" data-ng-class="{'active btn-info': 'to_review' == stepShowCtrl.progression.status}" data-ng-if="stepShowCtrl.path.manualProgressionAllowed">
-                            <span class="fa fa-fw fa-retweet"></span>
-                            {{ 'user_progression_step_to_review_label'|trans:{}:'path_wizards' }}
-                        </button>
-                    </div>
-
-                    <!-- Next step button -->
-                    <div class="col-md-1 col-sm-2 col-xs-2 text-right" data-ng-class="{'col-md-offset-1': stepShowCtrl.authorization.granted, 'col-md-offset-10 col-sm-offset-8 col-xs-offset-8': !stepShowCtrl.authorization.granted}">
-                        <button type="button" data-ng-click="stepShowCtrl.goTo(stepShowCtrl.next)" class="btn btn-block btn-default" data-ng-disabled="null == stepShowCtrl.next" data-placement="top" data-toggle="tooltip" data-original-title="{{ stepShowCtrl.next.name }}">
-                            <span class="sr-only">{{ 'next_step'|trans:{}:'path_wizards' }}</span>
-                            <span class="fa fa-arrow-right"></span>
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

@@ -1,31 +1,46 @@
-<div id="paths-slideshow" class="carousel slide" data-ride="carousel">
+<div id="paths-slideshow" class="path-slideshow carousel slide" data-ride="carousel" data-interval="false">
+    {% set perPage = 3 %}
+    {% set carouselPages = ((paths|length / perPage)|round(0, 'ceil')) - 1 %}
+
     <!-- Indicators -->
     <ul class="carousel-indicators">
-        {% for path in paths %}
+        {% for page in 0..carouselPages %}
         <li {% if loop.first %}class="active"{% endif %} data-target="#paths-slideshow" data-slide-to="{{ loop.index0 }}"></li>
         {% endfor %}
     </ul>
 
     <!-- Wrapper for slides -->
-    <div class="carousel-inner">
-        {% for path in paths %}
+    <div class="carousel-inner" role="listbox">
+        {% for page in 0..carouselPages %}
         <div class="item{% if loop.first %} active{% endif %}">
-            <div class="carousel-img">
-                Path poster
-            </div>
-            <div class="carousel-caption text-center">
-                {{ path.entity.resourceNode.name }}
-            </div>
-            <div class="carousel-buttons btn-group btn-group-justified" role="group">
-                <a class="btn btn-link" href="{{ path('innova_path_player_wizard', { id: path.entity.id }) }}">
-                    REALISER
-                </a>
-                {% if path.canEdit %}
-                <a class="btn btn-link" href="{{ path('innova_path_editor_wizard', { id: path.entity.id }) }}" style="text-transform: uppercase;">
-                    {{ 'edit'|trans({}, 'innova_tools') }}
-                </a>
+            {% for i in 0..(perPage - 1) %}
+                {% set current = i + (page * perPage) %}
+                {% if paths[current] is defined %}
+                    {% set path = paths[current] %}
+                    <div class="path-card carousel-card">
+                        <img src="{{ asset('bundles/innovapath/images/path-cover.png') }}" />
+
+                        <div class="carousel-card-content">
+                            {{ path.entity.resourceNode.name }}
+                        </div>
+
+                        <div class="carousel-card-btns btn-group btn-group-justified" role="group">
+                            <a class="btn btn-link" href="{{ path('innova_path_player_wizard', { id: path.entity.id }) }}">
+                                REALISER
+                            </a>
+
+                            {% if path.canEdit %}
+                            <a class="btn btn-link" href="{{ path('innova_path_editor_wizard', { id: path.entity.id }) }}" style="text-transform: uppercase;">
+                                {{ 'edit'|trans({}, 'innova_tools') }}
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                {# This permits to keep the card width even if the page is not filled #}
+                <div class="carousel-card-empty" role="presentation"></div>
                 {% endif %}
-            </div>
+            {% endfor %}
         </div>
         {% endfor %}
     </div>
@@ -41,3 +56,9 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
+
+{#{% stylesheets debug=false filter='less, cssmin' output='vendor/innovapath/slideshow-widget.css'
+    '@InnovaPathBundle/Resources/styles/widgets/path-slideshow.less'
+%}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}#}

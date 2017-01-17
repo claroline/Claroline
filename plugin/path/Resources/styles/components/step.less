@@ -1,26 +1,55 @@
-.panel-step {
-    > .panel {
+.current-step {
+    display: flex;
+    flex-direction: column;
+    > nav {
+        order: 2;
+        display: flex;
+        .btn {
+            width: 50%;
+        }
+        .btn-previous,
+        .btn-next {
+            border-radius: @panel-border-radius;
+            background-color: @panel-bg;
+
+            &[disabled],
+            &.disabled {
+                background-color: #fafafa;
+            }
+        }
+        .btn-previous {
+            text-align: left;
+        }
+        .btn-next {
+            text-align: right;
+        }
+    }
+
+    .current-step-content {
+        order: 1;
+    }
+
+    .current-step-content > .panel {
+        margin-bottom: 0;
         position: relative;
 
-        // Step level colors
-        .lvl-indicator {
-            display: block;
-            width: 100%;
-            top:   0;
-            left:  0;
-            right: 0;
-            height: 4px;
-            border-radius: @border-radius-base @border-radius-base 0 0;
+        > .panel-body {
+            padding: 50px 15%;
         }
 
         .panel-step-heading {
-            margin-bottom: 15px;
-        }
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-left: 15px;
+            border-left: 4px solid transparent;
 
-        .panel-step-title {
-            border-bottom: 1px solid #ccc;
-            margin: 0;
-            padding-bottom: 15px;
+            // removes default h* margin & padding
+            h2 {
+                margin: 0;
+                padding: 0;
+            }
         }
 
         .panel {

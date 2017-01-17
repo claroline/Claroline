@@ -1,0 +1,60 @@
+@import "../variables";
+
+.path-slideshow {
+    .carousel-inner {
+        height: 100%; // fill the widget content
+        width: 100% - (@carousel-control-width * 2); // avoid having the controls hover the cards
+        margin: 0 auto;
+    }
+
+    .item {
+        &.prev,
+        &.next,
+        &.active {
+            display: flex;
+            height: 100%;
+            flex-direction: row;
+
+            // add padding to make space for the carousel-indicators
+            // 40px because indicators are hard-coded to bottom: 20px in bootstrap
+            // we let the same space on top of it
+            padding-bottom: 40px + @carousel-indicator-active-size;
+        }
+    }
+
+    .carousel-control {
+        background: none;
+        width: @path-sideshow-control-width;
+    }
+
+    .carousel-card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: @path-card-bg;
+        border: 1px solid @path-card-border;
+        box-shadow: @path-card-box-shadow;
+        border-radius: @path-card-border-radius;
+        margin: @path-card-margin;
+
+        > img {
+            display: block;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+    }
+
+    .carousel-card-empty {
+        flex: 1;
+        margin: @path-card-margin;
+    }
+
+    .carousel-card-content {
+        font-size: @path-card-content-font-size;
+        padding: @path-card-content-padding;
+    }
+
+    .carousel-card-btns {
+        margin-top: auto; // this makes the btns to always appear at the bottom of the card
+    }
+}

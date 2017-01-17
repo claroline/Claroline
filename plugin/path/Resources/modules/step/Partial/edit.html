@@ -1,13 +1,13 @@
-<div class="row" id="scroll-to-onload">
+<div class="current-step" id="scroll-to-onload">
     <!-- No selected step alert -->
-    <div data-ng-if="!stepEditCtrl.step" class="col-md-12">
+    <div data-ng-if="!stepEditCtrl.step">
         <div class="alert alert-info text-center">
             {{ 'no_step_selected'|trans:{}:'path_wizards' }}
         </div>
     </div>
 
     <!-- Step form -->
-    <div data-ng-if="stepEditCtrl.step" class="col-md-12 panel-step">
+    <div class="current-step-content" data-ng-if="stepEditCtrl.step">
         <!-- Secondary resources of the Step -->
         <resources-secondary-edit data-resources="stepEditCtrl.step.resources" data-inherited="stepEditCtrl.inheritedResources" data-excluded="stepEditCtrl.step.excludedResources"></resources-secondary-edit>
 
