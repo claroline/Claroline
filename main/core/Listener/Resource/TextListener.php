@@ -147,7 +147,7 @@ class TextListener implements ContainerAwareInterface
     }
 
     /**
-     * @DI\Observe("play_file_text_plain")
+     * @DI\Observe("open_text")
      *
      * @param OpenResourceEvent $event
      */
