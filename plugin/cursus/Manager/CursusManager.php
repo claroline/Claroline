@@ -266,7 +266,7 @@ class CursusManager
         $cursus->setParent($parent);
         $cursus->setCourse($course);
         $cursus->setDescription($description);
-        $cursus->setBlocking((bool) $blocking);
+        $cursus->setBlocking($blocking);
         $cursus->setIcon($icon);
         $cursus->setWorkspace($workspace);
         $cursus->setDetails(['color' => $color]);
@@ -351,16 +351,16 @@ class CursusManager
         $course = new Course();
         $course->setTitle($title);
         $course->setCode($code);
-        $course->setPublicRegistration((bool) $publicRegistration);
-        $course->setPublicUnregistration((bool) $publicUnregistration);
-        $course->setRegistrationValidation((bool) $registrationValidation);
+        $course->setPublicRegistration($publicRegistration);
+        $course->setPublicUnregistration($publicUnregistration);
+        $course->setRegistrationValidation($registrationValidation);
         $course->setWorkspaceModel($workspaceModel);
         $course->setWorkspace($workspace);
         $course->setIcon($icon);
-        $course->setUserValidation((bool) $userValidation);
-        $course->setOrganizationValidation((bool) $organizationValidation);
+        $course->setUserValidation($userValidation);
+        $course->setOrganizationValidation($organizationValidation);
         $course->setDefaultSessionDuration($defaultSessionDuration);
-        $course->setWithSessionEvent((bool) $withSessionEvent);
+        $course->setWithSessionEvent($withSessionEvent);
         $course->setDisplayOrder($displayOrder);
 
         if ($description) {
@@ -1494,12 +1494,12 @@ class CursusManager
         }
         $session->setDescription($description);
         $session->setCreationDate($creationDate);
-        $session->setDefaultSession((bool) $defaultSession);
-        $session->setPublicRegistration((bool) $publicRegistration);
-        $session->setPublicUnregistration((bool) $publicUnregistration);
-        $session->setRegistrationValidation((bool) $registrationValidation);
-        $session->setUserValidation((bool) $userValidation);
-        $session->setOrganizationValidation((bool) $organizationValidation);
+        $session->setDefaultSession($defaultSession);
+        $session->setPublicRegistration($publicRegistration);
+        $session->setPublicUnregistration($publicUnregistration);
+        $session->setRegistrationValidation($registrationValidation);
+        $session->setUserValidation($userValidation);
+        $session->setOrganizationValidation($organizationValidation);
         $session->setMaxUsers($maxUsers);
         $session->setType($type);
         $session->setEventRegistrationType($eventRegistrationType);
@@ -2236,7 +2236,7 @@ class CursusManager
     public function zipDatas(array $datas, $type)
     {
         $archive = new \ZipArchive();
-        $pathArch = $this->platformConfigHandler->getParamter('tmp_dir').DIRECTORY_SEPARATOR.$this->ut->generateGuid().'.zip';
+        $pathArch = $this->platformConfigHandler->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$this->ut->generateGuid().'.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
 
         if ($type === 'cursus') {

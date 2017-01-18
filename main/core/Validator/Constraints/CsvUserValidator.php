@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Validator\Constraints;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -36,17 +37,19 @@ class CsvUserValidator extends ConstraintValidator
     private $validator;
     private $groupManager;
     private $roleManager;
+    private $platformConfigHandler;
 
     /**
      * @DI\InjectParams({
-     *     "authenticationManager" = @DI\Inject("claroline.common.authentication_manager"),
-     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
-     *     "trans"                 = @DI\Inject("translator"),
-     *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
-     *     "groupManager"          = @DI\Inject("claroline.manager.group_manager"),
-     *     "validator"             = @DI\Inject("validator"),
-     *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
-     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager")
+     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "trans"                  = @DI\Inject("translator"),
+     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
+     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
+     *     "validator"              = @DI\Inject("validator"),
+     *     "ut"                     = @DI\Inject("claroline.utilities.misc"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "platformConfigHandler"  = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
@@ -57,7 +60,8 @@ class CsvUserValidator extends ConstraintValidator
         ValidatorInterface $validator,
         ClaroUtilities $ut,
         GroupManager $groupManager,
-        RoleManager $roleManager
+        RoleManager $roleManager,
+        PlatformConfigurationHandler $platformConfigHandler
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->om = $om;
@@ -67,6 +71,7 @@ class CsvUserValidator extends ConstraintValidator
         $this->ut = $ut;
         $this->groupManager = $groupManager;
         $this->roleManager = $roleManager;
+        $this->platformConfigHandler = $platformConfigHandler;
     }
 
     public function validate($value, Constraint $constraint)
@@ -76,6 +81,7 @@ class CsvUserValidator extends ConstraintValidator
         $lines = str_getcsv($data, PHP_EOL);
         $authDrivers = $this->authenticationManager->getDrivers();
         $newUserCount = 0;
+        $isUserAdminCodeUnique = $this->platformConfigHandler->getParameter('is_user_admin_code_unique');
 
         foreach ($lines as $line) {
             $linesTab = explode(';', $line);
@@ -92,6 +98,7 @@ class CsvUserValidator extends ConstraintValidator
 
         $usernames = [];
         $mails = [];
+        $codes = [];
 
         if ($mode === 1) {
             $currentDate = new \DateTime();
@@ -149,6 +156,11 @@ class CsvUserValidator extends ConstraintValidator
                 (!array_key_exists($username, $usernames)) ?
                     $usernames[$username] = [$i + 1] :
                     $usernames[$username][] = $i + 1;
+                if (!empty($code) && $isUserAdminCodeUnique) {
+                    (!array_key_exists($code, $codes)) ?
+                        $codes[$code] = [$i + 1] :
+                        $codes[$code][] = $i + 1;
+                }
 
                 $existingUser = null;
 
@@ -292,6 +304,19 @@ class CsvUserValidator extends ConstraintValidator
                     'platform'
                 ).' ';
                 $this->context->addViolation($msg);
+            }
+        }
+
+        if ($isUserAdminCodeUnique) {
+            foreach ($codes as $code => $lines) {
+                if (count($lines) > 1) {
+                    $msg = $this->translator->trans(
+                            'code_found_at',
+                            ['%code%' => $code, '%lines%' => $this->getLines($lines)],
+                            'platform'
+                        ).' ';
+                    $this->context->addViolation($msg);
+                }
             }
         }
 

@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Form\Profile;
 
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Claroline\CoreBundle\Entity\Facet\PanelFacet;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -31,9 +31,9 @@ class ProfilePanelFieldsType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $dateAttr = array();
+        $dateAttr = [];
         $dateAttr['class'] = 'datepicker input-small';
-        $dateAttr['data-date-format'] = $this->translator->trans('date_form_datepicker_format', array(), 'platform');
+        $dateAttr['data-date-format'] = $this->translator->trans('date_form_datepicker_format', [], 'platform');
         $dateAttr['autocomplete'] = 'off';
 
         foreach ($this->panel->getFieldsFacet() as $field) {
@@ -44,69 +44,69 @@ class ProfilePanelFieldsType extends AbstractType
                     $builder->add(
                         $field->getPrettyName(),
                         'text',
-                        array(
-                            'label' => $this->translator->trans($field->getName(), array(), 'platform'),
+                        [
+                            'label' => $this->translator->trans($field->getName(), [], 'platform'),
                             'mapped' => false,
                             'required' => false,
-                            'attr' => array('facet' => $this->panel->getFacet()->getName()),
+                            'attr' => ['facet' => $this->panel->getFacet()->getName()],
                             'constraints' => $constraints,
-                        )
+                        ]
                     );
                     break;
                 case FieldFacet::EMAIL_TYPE:
                     $builder->add(
                         $field->getPrettyName(),
                         'email',
-                        array(
-                            'label' => $this->translator->trans($field->getName(), array(), 'platform'),
+                        [
+                            'label' => $this->translator->trans($field->getName(), [], 'platform'),
                             'mapped' => false,
                             'required' => false,
-                            'attr' => array('facet' => $this->panel->getFacet()->getName()),
+                            'attr' => ['facet' => $this->panel->getFacet()->getName()],
                             'constraints' => $constraints,
-                        )
+                        ]
                     );
                     break;
                 case FieldFacet::DATE_TYPE:
                     $builder->add(
                         $field->getPrettyName(),
                         'datepicker',
-                        array(
-                            'label' => $this->translator->trans($field->getName(), array(), 'platform'),
+                        [
+                            'label' => $this->translator->trans($field->getName(), [], 'platform'),
                             'required' => false,
                             'widget' => 'single_text',
-                            'format' => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
+                            'format' => $this->translator->trans('date_form_datepicker_format', [], 'platform'),
                             'attr' => $dateAttr,
                             'autoclose' => true,
                             'mapped' => false,
-                            'attr' => array('facet' => $this->panel->getFacet()->getName()),
+                            'attr' => ['facet' => $this->panel->getFacet()->getName()],
                             'constraints' => $constraints,
-                        )
+                        ]
                     );
                     break;
                 case FieldFacet::FLOAT_TYPE:
                     $builder->add(
                         $field->getPrettyName(),
                         'number',
-                        array(
-                            'label' => $this->translator->trans($field->getName(), array(), 'platform'),
+                        [
+                            'label' => $this->translator->trans($field->getName(), [], 'platform'),
                             'mapped' => false,
                             'required' => false,
-                            'attr' => array('facet' => $this->panel->getFacet()->getName()),
+                            'attr' => ['facet' => $this->panel->getFacet()->getName()],
                             'constraints' => $constraints,
-                        )
+                        ]
                     );
                     break;
                 case FieldFacet::COUNTRY_TYPE:
                         $builder->add(
                             $field->getPrettyName(),
                             'country',
-                            array(
-                                'label' => $this->translator->trans($field->getName(), array(), 'platform'),
+                            [
+                                'label' => $this->translator->trans($field->getName(), [], 'platform'),
                                 'mapped' => false,
                                 'required' => false,
-                                'attr' => array('facet' => $this->panel->getFacet()->getName()),
+                                'attr' => ['facet' => $this->panel->getFacet()->getName()],
                                 'constraints' => $constraints,
-                            )
+                            ]
                         );
                         break;
                 default:
@@ -135,17 +135,17 @@ class ProfilePanelFieldsType extends AbstractType
                     $builder->add(
                         $field->getPrettyName(),
                         'choice',
-                        array(
+                        [
                             'choices' => $attrs,
-                            'label' => $this->translator->trans($field->getName(), array(), 'platform'),
+                            'label' => $this->translator->trans($field->getName(), [], 'platform'),
                             'mapped' => false,
                             'required' => false,
-                            'attr' => array('facet' => $this->panel->getFacet()->getName()),
+                            'attr' => ['facet' => $this->panel->getFacet()->getName()],
                             'choices_as_values' => true,
                             'expanded' => $expanded,
                             'multiple' => $multiple,
                             'constraints' => $constraints,
-                        )
+                        ]
                     );
                 }
         }
@@ -160,10 +160,10 @@ class ProfilePanelFieldsType extends AbstractType
     {
         $resolver
         ->setDefaults(
-            array(
+            [
                 'translation_domain' => 'platform',
-                'validation_groups' => array('registration', 'Default'),
-            )
+                'validation_groups' => ['registration', 'Default'],
+            ]
         );
     }
 }

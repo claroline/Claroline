@@ -17,28 +17,56 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * Class UserRepository.
+ */
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
+    /**
+     * @var PlatformConfigurationHandler
+     */
+    private $platformConfigHandler;
+
+    /**
+     * @param PlatformConfigurationHandler $platformConfigHandler
+     *
+     * @DI\InjectParams({
+     *      "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
+     * })
+     */
+    public function setPlatformConfigurationHandler(PlatformConfigurationHandler $platformConfigHandler)
+    {
+        $this->platformConfigHandler = $platformConfigHandler;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function loadUserByUsername($username)
     {
+        $isUserAdminCodeUnique = $this->platformConfigHandler->getParameter('is_user_admin_code_unique');
+
         $dql = '
             SELECT u FROM Claroline\CoreBundle\Entity\User u
             WHERE u.username LIKE :username
-            OR u.mail LIKE :username
-            OR u.administrativeCode LIKE :username
-            AND u.isEnabled = true
-        ';
+            OR u.mail LIKE :username';
+
+        if ($isUserAdminCodeUnique) {
+            $dql .= '
+                OR u.administrativeCode LIKE :username';
+        }
+        $dql .= '
+            AND u.isEnabled = true';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('username', $username);
 

@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
-class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterface
+class LogResourcePublishEvent extends LogGenericEvent implements NotifiableInterface
 {
-    const ACTION = 'resource-create';
+    const ACTION = 'resource-publish';
 
     /**
      * Constructor.

@@ -415,6 +415,7 @@ has_been_emptied: 'a été vidé'
 has_been_put_in_category: 'a été placé dans la catégorie'
 has_been_registered_in_workspace: 'a été inscrit(e) dans l''espace d''activités'
 has_been_registered_to_group: 'a été inscrit(e) dans le groupe'
+has_been_skipped: 'n''a pas été créé'
 has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
 has_been_suscribed_with_role_group: 'a été inscrit(e) avec le rôle'
 has_been_unregistered_from_group: 'a été désincrit(e) du groupe'
@@ -1068,6 +1069,7 @@ url_invalid: Le code n'est pas correct, n'essayez pas de changer l'adresse.
 use_stable_repo: 'Utiliser les dépôts stables'
 use_test_repo: 'Utiliser les dépôts de test'
 user: Utilisateur
+user_admin_code_already_used: 'Le code administratif %code% est déjà utilisé'
 user_accounts: Comptes utilisateur
 user_enable_mail_notification_label: 'Activer les notifications par courriel'
 user_creation: 'Création d''un utilisateur'

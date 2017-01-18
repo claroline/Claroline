@@ -283,17 +283,24 @@ class UsersController extends Controller
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration/Users:importForm.html.twig")
      *
+     * @param Request $request
+     *
      * @return Response
+     *
+     * @throws \Claroline\CoreBundle\Manager\Exception\AddRoleException
      */
-    public function importAction()
+    public function importAction(Request $request)
     {
         $form = $this->formFactory->create(new ImportUserType(true));
-        $form->handleRequest($this->request);
+        $form->handleRequest($request);
         $mode = $form->get('mode')->getData();
+        $options = ['ignore-update' => true];
 
         if ($mode === 'update') {
             $form = $this->formFactory->create(new ImportUserType(true, 1));
             $form->handleRequest($this->request);
+            $options['ignore-update'] = false;
+        } else {
         }
 
         if ($form->isValid()) {
@@ -304,31 +311,10 @@ class UsersController extends Controller
             $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
             $lines = str_getcsv($data, PHP_EOL);
             $users = [];
-            $toUpdate = [];
             $sessionFlashBag = $this->session->getFlashBag();
 
             foreach ($lines as $line) {
-                if (trim($line) !== '') {
-                    if ($mode === 'update') {
-                        $datas = str_getcsv($line, ';');
-                        $username = $datas[2];
-                        $email = $datas[4];
-                        $code = $datas[5];
-                        $existingUser = $this->userManager->getUserByUsernameOrMailOrCode(
-                            $username,
-                            $email,
-                            $code
-                        );
-
-                        if (is_null($existingUser)) {
-                            $users[] = $datas;
-                        } else {
-                            $toUpdate[] = $datas;
-                        }
-                    } else {
-                        $users[] = str_getcsv($line, ';');
-                    }
-                }
+                $users[] = str_getcsv($line, ';');
             }
 
             $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
@@ -353,42 +339,29 @@ class UsersController extends Controller
                 }
             }
 
-            if (count($toUpdate) > 0) {
-                $updatedNames = $this->userManager->importUsers(
-                    $toUpdate,
-                    $sendMail,
-                    null,
-                    $additionalRoles,
-                    $enableEmailNotification
-                );
-
-                foreach ($updatedNames as $name) {
-                    $msg = '<'.$name.'> ';
-                    $msg .= $this->translator->trans(
-                        'has_been_updated',
-                        [],
-                        'platform'
-                    );
-                    $sessionFlashBag->add('success', $msg);
-                }
-            }
-
-            $createdNames = $this->userManager->importUsers(
+            $logs = $this->userManager->importUsers(
                 $users,
                 $sendMail,
                 null,
                 $additionalRoles,
-                $enableEmailNotification
+                $enableEmailNotification,
+                $options
             );
 
-            foreach ($createdNames as $name) {
-                $msg = '<'.$name.'> ';
-                $msg .= $this->translator->trans(
-                    'has_been_created',
-                    [],
-                    'platform'
-                );
-                $sessionFlashBag->add('success', $msg);
+            foreach ($logs as $key => $names) {
+                $msgClass = 'success';
+                if ($key === 'skipped') {
+                    $msgClass = 'error';
+                }
+                foreach ($names as $name) {
+                    $msg = '<'.$name.'> ';
+                    $msg .= $this->translator->trans(
+                        'has_been_'.$key,
+                        [],
+                        'platform'
+                    );
+                    $sessionFlashBag->add($msgClass, $msg);
+                }
             }
 
             return new RedirectResponse($this->router->generate('claro_admin_users_index'));

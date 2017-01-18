@@ -364,7 +364,7 @@ filter_actions: 'Filtrer les actions'
 filters: Filtres
 find_workspaces: 'Tous les espaces d''activités publics'
 firstName: Vorname
-first_name: vorname
+first_name: Vorname
 footer: 'Pied de page'
 for_period: 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
@@ -404,6 +404,7 @@ has_been_emptied: 'a été vidé'
 has_been_put_in_category: 'a été placé dans la catégorie'
 has_been_registered_in_workspace: 'a été inscrit dans l''espace d''activités'
 has_been_registered_to_group: 'a été inscrit dans le groupe'
+has_been_skipped: 'n''a pas été créé'
 has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
 has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
 has_been_unregistered_from_group: 'a été désincrit du groupe'
@@ -657,7 +658,7 @@ parameters_save_error: 'Une erreur est survenue pendant la sauvegarde des param�
 parameters_save_success: 'Paramètres sauvegardés avec succès.'
 passed: Réussi
 passing_score: 'Score pour réussir'
-password: 'Passwort'
+password: Passwort
 password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
 paste: Coller

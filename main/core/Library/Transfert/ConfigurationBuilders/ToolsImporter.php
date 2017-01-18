@@ -133,7 +133,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         $processor = new Processor();
         $processor->processConfiguration($this, $data);
 
-        foreach ($data['tools'] as $tool) {
+        foreach ($data['tools'] as &$tool) {
             $importer = $this->getImporterByName($tool['tool']['type']);
 
             if (!$importer && isset($tool['tool']['data'])) {
@@ -142,9 +142,11 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 
             if (isset($tool['tool']['data'])) {
                 $array['data'] = $tool['tool']['data'];
-                $importer->validate($array);
+                $tool['tool']['data'] = $importer->validate($array);
             }
         }
+
+        return $data;
     }
 
     public function import(array $tools, Workspace $workspace, array $entityRoles, Directory $root)

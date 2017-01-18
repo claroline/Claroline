@@ -413,6 +413,7 @@ has_been_emptied: is geleegd
 has_been_put_in_category: is in de categorie geplaatst
 has_been_registered_in_workspace: in ingeschreven in de werkruimte
 has_been_registered_to_group: in ingeschreven in de groep
+has_been_skipped: is niet gemaakt
 has_been_suscribed_with_role: in ingeschreven met de rol
 has_been_suscribed_with_role_group: in ingeschreven met de rol
 has_been_unregistered_from_group: is van de groep uitgeschreven
@@ -1059,6 +1060,7 @@ url_invalid: De code is niet correct, probeer niet het adres te veranderen.
 use_stable_repo: Gebruik de stabiele pakketten
 use_test_repo: Gebruik de testpakketten
 user: Gebruiker
+user_admin_code_already_used: De administratieve code %code% wordt al gebruikt.
 user_accounts: Rekeningen van de gebruikers
 user_enable_mail_notification_label: De notities per e-mail activeren
 user_creation: Een gebruiker maken

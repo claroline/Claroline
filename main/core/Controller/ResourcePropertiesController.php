@@ -217,6 +217,12 @@ class ResourcePropertiesController extends Controller
                 $this->dispatcher->dispatch($eventName, 'PublicationChange', [$resource]);
             }
 
+            $usersToNotify = $node->getWorkspace() ?
+                $this->container->get('claroline.manager.user_manager')->getUsersByWorkspaces([$node->getWorkspace()], null, null, false) :
+                [];
+
+            $this->dispatcher->dispatch('log', 'Log\LogResourcePublish', [$node, $usersToNotify]);
+
             if (
                 $this->hasAccess('ADMINISTRATE', $collection) &&
                 $node->isPublishedToPortal() &&

@@ -59,6 +59,10 @@ log_resource-create_filter: 'Création d''une ressource'
 log_resource-create_sentence: 'a créé %resource%'
 log_resource-create_shortname: Création
 log_resource-create_title: 'Création d''une ressource'
+log_resource-publish_filter: 'Création d''une ressource'
+log_resource-publish_sentence: 'a créé %resource%'
+log_resource-publish_shortname: Création
+log_resource-publish_title: 'Création d''une ressource'
 log_resource-custom_action_filter: 'Action spéciale sur une ressource'
 log_resource-delete_filter: 'Suppression d''une ressource'
 log_resource-delete_sentence: 'a supprimé %resource%'

@@ -108,6 +108,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 }
             }
         }
+
+        return $data['data'];
     }
 
     public function import(array $data, $workspace, $entityRoles, Directory $root, $fullImport = true)
