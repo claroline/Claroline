@@ -45,7 +45,7 @@ moved_up_section: section %section% has been moved up
 moved_down_section: section %section% has been moved down
 moved_from_section_to_section: %section% has been moved from "%oldParent%" section to "%newParent%" section
 moved_from_section_to_wiki: %section% has been moved from "%oldParent%" section to wiki"s root
-moved_from_wiki_to_section: %section% has been moved from wiki"s root to "%newParent%" section
+moved_from_wiki_to_section: '%section% has been moved from wiki''s root to "%newParent%" section'
 log.wiki.move_section: has moved section %section% of wiki %wiki%
 log.wiki.update_section: has updated section %section% in wiki %wiki%
 log.wiki.create_section: has created section %section% in wiki %wiki%

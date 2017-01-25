@@ -1,7 +1,7 @@
 active_contribution: Current revision
 add_new_subsection: Add section here
 added: Added
-angular_date_format: MM/dd/yyyy 'at' h:mma
+angular_date_format: 'MM/dd/yyyy ''at'' h:mma'
 back_to_history: Back to history
 back_to_wiki: Back to wiki
 back: Back
@@ -32,7 +32,7 @@ icap_wiki_edit_section_type_activeContribution_title: Title
 icap_wiki_edit_section_type_brother: Do you want this section to be at the same level as the one selected?
 icap_wiki_edit_section_type_position: Position
 icap_wiki_edit_section_type_visible: Visible
-icap_wiki_options_save_error: Error during updated of wiki options
+icap_wiki_options_save_error: 'Error while updating wiki options'
 icap_wiki_options_save_success: Wiki options were updated successfully
 icap_wiki_options_type_mode: Wiki mode
 icap_wiki_section_add_error: Error while creating section
@@ -51,7 +51,7 @@ icap_wiki_section_update_error: Error while updating section
 icap_wiki_section_update_success: Section was updated successfully
 icap_wiki_set_active_contribution_error: Error while publishing revision.
 icap_wiki_type_name: Name
-items_per_page: Items per page:
+items_per_page: 'Items per page:'
 moderate_message: Every one can contribute. However, only the administrator and the moderator are allowed to publish.
 moderate_mode_warning: <div><strong>The wiki runs in moderate mode.</strong></div> <div>The changes will only be available after administrator's approval. A complete history of a section's revisions can be found in the "history" page.</div>
 moderate: Moderate
