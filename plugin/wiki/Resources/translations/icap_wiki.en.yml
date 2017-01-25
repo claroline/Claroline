@@ -13,8 +13,8 @@ contribution: Contribution
 create_new_section: Create new section
 create_section: Create section
 create: Create
-date_format: m/d/Y 'at' H:i
-delete_confirmation: Do you really want to delete "%sectionTitle%" section?
+date_format: 'm/d/Y ''at'' H:i'
+delete_confirmation: 'Do you really want to delete "%sectionTitle%" section?'
 delete_section: Delete section
 delete: Delete
 deleted_sections: Removed sections
@@ -23,7 +23,7 @@ edit_section: Edit section
 edit_description: Edit description
 edit: Edit
 error_401: You are not authorized to perform this operation.
-error_404: This section doesn't exist.
+error_404: 'This section doesn''t exist.'
 error_500: The server encoutered an error. Please try again in a moment.
 history: History
 icap_wiki_delete_section_type_children: Also remove its subsections
@@ -64,7 +64,7 @@ note_well: <strong>Remark</strong>: Note that in a normal and moderate functioni
 options: Options
 read_only_message: Only the administrator and the moderator are allowed to contribute to the wiki.
 read_only: Read only
-remove_confirmation: Do you really want to permanently remove "%sectionTitle%" section?
+remove_confirmation: 'Do you really want to permanently remove "%sectionTitle%" section?'
 remove_section: Remove section
 restore_section: Restore section
 revision_comparison: Revision comparison
