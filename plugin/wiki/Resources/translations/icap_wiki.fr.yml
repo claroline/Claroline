@@ -13,8 +13,8 @@ contribution: Contribution
 create_new_section: Créer une section
 create_section: Création de section
 create: Créer
-date_format: d/m/Y à H:i
-delete_confirmation: Êtes-vous sûr de vouloir supprimer la section "%sectionTitle%" ?
+date_format: 'd/m/Y à H:i'
+delete_confirmation: 'Êtes-vous sûr de vouloir supprimer la section "%sectionTitle%" ?'
 delete_section: Supprimer la section
 delete: Supprimer
 deleted_sections: Sections supprimées
@@ -22,8 +22,8 @@ deleted: Supprimé
 edit_section: Modifier la section
 edit_description: Modifier la description
 edit: Modifier
-error_401: Vous n'avez pas les droits nécessaires pour mener à bien l'opération demandée.
-error_404: La section demandée n'existe pas.
+error_401: 'Vous n''avez pas les droits nécessaires pour mener à bien l''opération demandée.'
+error_404: 'La section demandée n''existe pas.'
 error_500: Le serveur a rencontré une erreur. Veuillez réessayer dans un moment.
 history: Historique
 icap_wiki_delete_section_type_children: Supprimer également les sous-sections
@@ -64,7 +64,7 @@ note_well: <strong>NB</strong>: Notez que dans un fonctionnement normal et modé
 options: Options
 read_only_message: Le wiki est verrouillé: les utilisateurs ne peuvent plus créer de contributions (à part l'administrateur). Cela vous permet de figer votre wiki afin de le transformer en Foire Aux Questions -FAQ-.
 read_only: Consultation
-remove_confirmation: Êtes-vous sûr de vouloir supprimer définitivement la section "%sectionTitle%" ?
+remove_confirmation: 'Êtes-vous sûr de vouloir supprimer définitivement la section "%sectionTitle%" ?'
 remove_section: Supprimer définitivement
 restore_section: Restaurer la section
 revision_comparison: Comparaison des versions
