@@ -84,7 +84,7 @@ label_keywords_enabled: Utiliser les mots-clés
 label_max_entries: Nombre de depôts autorisés par utilisateur (0 = illimité)
 label_menu_position: Position du menu
 label_moderate_comments: Modérer les commentaires
-label_moderated: Modération des fiches
+label_moderated: Validation par un gestionnaire
 label_new_keywords_enabled: Autoriser les nouveaux mots-clés
 label_open_panel_by_default: Ouvrir l'affichage par défaut
 label_random_categories: Proposer les fiches des catégories suivantes
