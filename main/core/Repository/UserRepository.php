@@ -1597,11 +1597,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
+     * Returns the users who are members of one of the given workspaces. Users's groups ARE
+     * taken into account.
+     *
      * @param Workspace $workspace
+     * @param bool      $executeQuery
      *
      * @return array
      */
-    public function findByWorkspaceWithUsersFromGroup(Workspace $workspace)
+    public function findByWorkspaceWithUsersFromGroup(Workspace $workspace, $executeQuery = true)
     {
         $dql = '
             SELECT u
@@ -1617,9 +1621,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
          ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('wsId', $workspace->getId());
-        $res = $query->getResult();
 
-        return $res;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findUsersExcludingRoles(array $roles, $offset, $limit)
