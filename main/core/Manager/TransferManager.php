@@ -455,7 +455,7 @@ class TransferManager
         $data = $this->reorderData($data);
         $workspace = $directory->getWorkspace();
         $this->om->startFlushSuite();
-        $this->setImporters($template, $workspace->getCreator());
+        $this->setImporters($template, $workspace->getCreator(), $data);
 
         $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
 
