@@ -28,7 +28,7 @@
 
 {% from _self import renderPager %}
 {% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
-    
+
 {% if search != '' %}
     <div class="alert alert-info">
         {{ 'results_for_search_on'|trans({}, 'platform') }} :
@@ -122,7 +122,7 @@
                                         </td>
                                         {% if not disableClosedSessionsWs and workspace is not empty %}
                                             <td>
-                                                <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                                                <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
                                                    class="standard-link"
                                                 >
                                                     <i class="fa fa-book"></i>
@@ -180,11 +180,13 @@
                                             <small>[{{ course.getCode() }}]</small>
                                         </td>
                                         <td>
-                                            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
-                                               class="standard-link"
-                                            >
-                                                <i class="fa fa-book"></i>
-                                            </a>
+                                            {% if workspace is not empty %}
+                                                <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                                                   class="standard-link"
+                                                >
+                                                    <i class="fa fa-book"></i>
+                                                </a>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}

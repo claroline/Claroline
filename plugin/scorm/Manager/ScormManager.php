@@ -14,7 +14,6 @@ namespace Claroline\ScormBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
@@ -72,13 +71,24 @@ class ScormManager
         $this->logRepo = $om->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
-    public function createScorm($tmpFile, $name, $version, Workspace $workspace = null)
+    public function persistScorm12(Scorm12Resource $scorm)
+    {
+        $this->om->persist($scorm);
+        $this->om->flush();
+    }
+
+    public function persistScorm2004(Scorm2004Resource $scorm)
+    {
+        $this->om->persist($scorm);
+        $this->om->flush();
+    }
+
+    public function createScorm($tmpFile, $name, $version)
     {
         //use the workspace as a prefix tor the uploadpath later
-        $scormResource = ($version === '1.2') ?  new Scorm12Resource() : new Scorm2004Resource();
+        $scormResource = ($version === '1.2') ? new Scorm12Resource() : new Scorm2004Resource();
         $scormResource->setName($name);
-        $hashName = $this->container->get('claroline.utilities.misc')
-                ->generateGuid().'.zip';
+        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid().'.zip';
         $scormResource->setHashName($hashName);
         $scos = $this->generateScosFromScormArchive($tmpFile, $version);
 

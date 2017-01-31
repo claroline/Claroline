@@ -58,6 +58,10 @@ log_resource-create_filter: 'Resource creation'
 log_resource-create_sentence: 'has created %resource%'
 log_resource-create_shortname: Creation
 log_resource-create_title: 'Resource creation'
+log_resource-publish_filter: 'Resource publication'
+log_resource-publish_sentence: 'published %resource%'
+log_resource-publish_shortname: Publication
+log_resource-publish_title: 'Resource publication'
 log_resource-custom_action_filter: 'Resource custom action'
 log_resource-delete_filter: 'Resource deletion'
 log_resource-delete_sentence: 'has deleted %resource%'

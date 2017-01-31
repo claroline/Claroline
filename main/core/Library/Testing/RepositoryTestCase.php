@@ -28,6 +28,7 @@ use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
@@ -54,6 +55,7 @@ abstract class RepositoryTestCase extends WebTestCase
     private static $references;
     private static $time;
     private static $persister;
+    private static $nodeIdx = 1;
 
     public static function setUpBeforeClass()
     {
@@ -335,6 +337,14 @@ abstract class RepositoryTestCase extends WebTestCase
         $orderedTool->setWorkspace($workspace);
         $orderedTool->setOrder($position);
 
+        foreach ($roles as $role) {
+            $rights = new ToolRights();
+            $rights->setMask(63);
+            $rights->setRole($role);
+            $rights->setOrderedTool($orderedTool);
+            self::$om->persist($rights);
+        }
+
         self::create("orderedTool/{$workspace->getName()}-{$tool->getName()}", $orderedTool);
     }
 
@@ -358,7 +368,6 @@ abstract class RepositoryTestCase extends WebTestCase
         $plugin->setVendorName($vendor);
         $plugin->setBundleName($bundle);
         $plugin->setHasOptions(false);
-        $plugin->setIcon('default');
         self::create($vendor.$bundle, $plugin);
     }
 
@@ -668,11 +677,14 @@ abstract class RepositoryTestCase extends WebTestCase
         $node->setClass('resourceClass');
         $node->setName($name);
         $node->setMimeType($mimeType);
+        $node->setGuid(uniqid());
+        $node->setIndex(self::$nodeIdx);
 
         if ($parent) {
             $node->setParent($parent);
         }
 
+        ++self::$nodeIdx;
         self::$om->persist($node);
         $resource->setResourceNode($node);
 

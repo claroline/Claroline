@@ -1,0 +1,134 @@
+activate: Activate
+add_choice: Add a choice
+add_comment: Add a comment
+add_entry: Add an entry
+all_entries: All entries
+associate_category: Associate a category
+block: Block
+categories_management: Categories management
+category_notify_addition: Notify (addition)
+category_notify_edition: Notify (edition)
+category_notify_removal: Notify (removal)
+choice_anonymous_comments_only: Anonymous comments only
+choice_entry_all: All
+choice_entry_published: Published
+choice_manager_only: Only for managers
+choice_menu_position_both: Both
+choice_menu_position_down: Down
+choice_menu_position_up: Up
+choices: Choices
+comment_blocked_info: This comment has been blocked. It is not visible anymore.
+comment_pending_info: This comment has to be validated by a manager before being visible.
+comments: Comments
+config_success_message: The configuration has been successfully saved.
+create_a_category: Create a category
+create_a_field: Create a field
+create_a_keyword: Create a keyword
+delete_category: Delete category
+delete_category_confirm_message: Are you sure you want to delete this category [%name%] ?
+delete_comment: Delete comment
+delete_comment_confirm_message: Are you sure you want to delete this comment ?
+delete_entry: Delete entry
+delete_entry_confirm_message: Are you sure you want to delete this entry [%title%] ?
+delete_field: Delete field
+delete_field_confirm_message: Are you sure you want to remove this field [%name%] ?
+delete_keyword: Delete keyword
+delete_keyword_confirm_message: Are you sure you want to remove this keyword [%name%] ?
+display: Display
+edit_category: Edit category
+edit_field: Edit field
+edit_keyword: Edit keyword
+edition_date: Edition date
+entries: Entries
+entries_list: List of entries
+entries_list_search: List of entries (Search)
+entry_addition: Addition of an entry
+entry_addition_in_category: Addition of an entry in category [%name%]
+entry_addition_in_category_msg: |
+  Entry [%title%] has been added in category [%category%].<br><br>
+  The entry is available <a href="%url%">here</a>.
+entry_addition_success_message: The entry has been successfully created.
+entry_edition: Edition of an entry
+entry_edition_in_category: Edition of an entry of category [%name%]
+entry_edition_in_category_msg: |
+  Entry [%title%] from category [%category%] has been edited.<br><br>
+  The entry is available <a href="%url%">here</a>.
+entry_removal_from_category: Removal of an entry from category [%name%]
+entry_removal_from_category_msg: Entry [%title%] has been removed from category [%category%].
+entry_title: Entry title
+entry_title_info: Text that will be used as title for the entry.
+fields_management: Fields management
+fields_to_display: Fields to display
+find_entry: Find an entry
+form_not_blank_error: This value may not be blank.
+form_not_unique_error: This value is already used.
+form_number_superior_error: This value must be %value% or more.
+form_reserved_error: This value is reserved.
+general_configuration: General configuration
+keywords: Keywords
+keywords_management: Keywords management
+label_anonymous_comments_enabled: Allow anonymous comments
+label_comments_enabled: Allow comments
+label_creation_enabled: Allow addition
+label_default_home: Home by default
+label_display_categories: Display categories to users
+label_display_comment_author: Display comment author
+label_display_comment_date: Display comment date
+label_display_comments: Display commments
+label_display_keywords: Display keywords to users
+label_display_metadata: Display confidential data
+label_display_nb_entries: Display the number of entries
+label_display_votes: Display votes
+label_edition_enabled: Allow edition
+label_keywords_enabled: Use keywords
+label_max_entries: Number of allowed addition by user (0 = unlimited)
+label_menu_position: Menu position
+label_moderate_comments: Moderate comments
+label_moderated: Moderate addition
+label_new_keywords_enabled: Allow new keywords
+label_open_panel_by_default: Open panel by default
+label_random_categories: Pick entries from the following categories
+label_random_date: Pick entries between these two dates
+label_random_enabled: Allow viewing of random entries
+label_search_column_enabled: Allow to choose the displayed columns
+label_search_enabled: Allow listing/search
+label_votes_date: Allow votes between these two dates
+label_votes_enabled: Allow votes
+main_menu: Main menu
+manager_entries: Entries that I am manager
+managers: Managers
+managers_selection: Managers selection
+mandatory: Mandatory
+menu: Menu
+metadata: Confidential data
+my_entries: My entries
+nb_entries: Number of entries
+no_available_random_entry: No available random entry
+no_category: No category
+no_comment: No comment
+no_data: No data
+no_entry: No entry
+no_field: No field
+no_field_alert_msg: No field has been configured. You can do it here :
+no_keyword: No keyword
+no_manager_entry: You are the manager of no entry
+no_own_entry: You haven't created an entry yet
+not_configured_yet: The form is not configured yet.
+optional: Optional
+publication_date: Publication date
+random_entries: Random entries
+random_entry: Random entry
+random_mode: Random mode
+remove_category: Remove category
+rich_text_field_info: For the sake of readability, "Rich text" fields are not visible in the table of entries.
+search_mode: List/Search mode
+show_field_label: Show field label
+template_duplicated_variables_message: Some fields are used more than once.
+template_management: Template management
+template_mandatory_variables_message: Mandatory fields must be used in the template.
+template_missing_mandatory_variables_message: Some mandatory fields are missing.
+template_success_message: The template has been successfully edited.
+template_variables_message: You can use the following variables. They will be replaced by the corresponding field.
+view_entry: View entry
+votes: Votes
+votes_management: Votes management

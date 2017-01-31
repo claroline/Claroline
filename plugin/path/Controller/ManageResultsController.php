@@ -2,8 +2,6 @@
 
 namespace Innova\PathBundle\Controller;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Manager\PathManager;
@@ -12,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * Class ManageResultsController.

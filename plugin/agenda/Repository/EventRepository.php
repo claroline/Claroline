@@ -11,8 +11,8 @@
 
 namespace Claroline\AgendaBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\ORM\EntityRepository;
 
 class EventRepository extends EntityRepository
 {
@@ -295,26 +295,35 @@ class EventRepository extends EntityRepository
     public function getFutureWorkspaceEvents($user)
     {
         $dql = "
+            SELECT w.id
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            JOIN w.roles r
+            LEFT JOIN r.users u
+            LEFT JOIN r.groups gr
+            LEFT JOIN gr.users gru
+            WHERE u.id = :userId
+            OR gru = :userId
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+        $wids = $query->getResult();
+        $wids = array_map('current', $wids);
+
+        $dql = "
             SELECT e
             FROM Claroline\AgendaBundle\Entity\Event e
             JOIN e.workspace ws
-            WITH ws in (
-                SELECT w
-                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                LEFT JOIN w.roles r
-                LEFT JOIN r.users u
-                LEFT JOIN r.groups gr
-                LEFT JOIN gr.users gru
-                WHERE (u.id = :userId OR gru = :userId)
-            )
+            WITH ws in (:wids)
             WHERE e.isTask = false
             AND e.isTaskDone = false
             AND e.end > :endDate
             ORDER BY e.start ASC
         ";
+
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('userId', $user->getId());
         $query->setParameter('endDate', time());
+        $query->setParameter('wids', $wids);
 
         return $query->getResult();
     }

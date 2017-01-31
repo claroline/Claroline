@@ -1,0 +1,64 @@
+{% if data|length > 0 %}
+    {% for d in data %}
+        {% if loop.index0 is divisible by(3) %}
+            <div class="row">
+        {% endif %}
+
+        <div class="col-md-{% if data|length == 1 %}12{% elseif data|length == 2 %}6{% else %}4{% endif %} text-center">
+            <div class="table-responsive">
+                <table class="table">
+                    {% for v in d['values'] %}
+                        {% if showFieldLabel %}
+                            <tr>
+                                <th class="table-cell-borderless text-center">{{ v['label'] }}</th>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td class="table-cell-borderless">
+                            {% if v['value'] is empty %}
+                                <div class="label label-default">
+                                    {{ 'no_data'|trans({}, 'clacoform') }}
+                                </div>
+                            {% else %}
+                                {% if v['type'] == 9 %}
+                                    {{ v['value']|raw }}
+                                {% else %}
+                                    {{ v['value'] }}
+                                {% endif %}
+                            {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td class="table-cell-borderless">
+                            <a class="btn btn-default"
+                               href="{{ path('claro_claco_form_open', {'clacoForm': clacoForm.getId()}) ~ '#/entries/' ~ d['entry'].getId() ~ '/view' }}"
+                            >
+                                {{ 'view_entry'|trans({}, 'clacoform') }}
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        {% if loop.index is divisible by(3) or loop.last %}
+            </div>
+            {% if not loop.last %}
+                <hr>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="alert alert-warning">
+        {{ 'no_entry'|trans({}, 'clacoform') }}
+    </div>
+{% endif %}
+
+{% block stylesheets %}
+    <style>
+        .table-cell-borderless {
+            border: none !important;
+        }
+    </style>
+{% endblock %}

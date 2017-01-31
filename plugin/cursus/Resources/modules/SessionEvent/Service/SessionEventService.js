@@ -13,6 +13,7 @@ import sessionEventFormTemplate from '../Partial/session_event_form_modal.html'
 import sessionEventRepeatModalTemplate from '../Partial/session_event_repeat_form_modal.html'
 import sessionEventCommentsManagementTemplate from '../Partial/session_event_comments_management_modal.html'
 import participantsRegistrationTemplate from '../Partial/participants_registration_modal.html'
+import sessionEventUsersExportTemplate from '../Partial/session_event_users_export_modal.html'
 
 export default class SessionEventService {
   constructor ($http, $uibModal, ClarolineAPIService, CourseService) {
@@ -399,5 +400,21 @@ export default class SessionEventService {
       Translator.trans('remove_participant', {}, 'cursus'),
       Translator.trans('remove_participant_confirm_message', {}, 'cursus')
     )
+  }
+
+  exportUsersForm (sessionEventId) {
+    this.$uibModal.open({
+      template: sessionEventUsersExportTemplate,
+      controller: 'SessionEventUsersExportModalCtrl',
+      controllerAs: 'cmc',
+      resolve: {
+        sessionEventId: () => { return sessionEventId }
+      }
+    })
+  }
+
+  exportUsers (sessionEventId, type) {
+    const url = Routing.generate('api_get_session_event_users_csv_export', {sessionEvent: sessionEventId, type: type})
+    window.location.href = url
   }
 }

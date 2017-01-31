@@ -23,17 +23,17 @@ class SecurityTokenType extends AbstractType
         $builder->add(
             'clientName',
             'text',
-            array('label' => 'client_name')
+            ['label' => 'client_name']
         );
         $builder->add(
             'clientIp',
             'text',
-            array('label' => 'client_text')
+            ['label' => 'client_ip']
         );
         $builder->add(
             'token',
             'text',
-            array('label' => 'token')
+            ['label' => 'token']
         );
     }
 
@@ -45,7 +45,7 @@ class SecurityTokenType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array('translation_domain' => 'platform')
+            ['translation_domain' => 'platform']
         );
     }
 }

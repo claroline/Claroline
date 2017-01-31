@@ -4,6 +4,7 @@ accept: Accept
 accessible_from: 'Accessible from'
 accessible_until: 'Accessible until'
 account_created: 'Account created.'
+account_created_awaiting_validation: 'Your account has been successfully created. However you will not be able to access the workspace unless an administrator validates your account.'
 account_duration_label: 'Account lifetime (days)'
 account_general_statistics: 'Account general statistics'
 action: Action
@@ -413,6 +414,7 @@ has_been_emptied: 'has been emptied'
 has_been_put_in_category: 'has been put in category'
 has_been_registered_in_workspace: 'has been registered in workspace'
 has_been_registered_to_group: 'has been registered to group'
+has_been_skipped: 'has not been created'
 has_been_suscribed_with_role: 'has been suscribed with role'
 has_been_suscribed_with_role_group: 'has been suscribed with role'
 has_been_unregistered_from_group: 'has been unregistered from group'
@@ -847,6 +849,7 @@ restore: Restore
 restore_messages_confirm_message: 'restored message(s)'
 results: Results
 results_for_search_on: 'Results for search on'
+rich_text: Rich text
 right: Right
 rights: Rights
 rights_management: 'Rights Management'
@@ -1066,6 +1069,7 @@ use_stable_repo: 'Use the stable repository'
 use_test_repo: 'Use the testing repository'
 user: User
 user_accounts: 'User accounts'
+user_admin_code_already_used: 'Administrative code %code% is already used'
 user_enable_mail_notification_label: 'Enable email notifications'
 user_creation: 'User creation'
 user_creation_success: 'The user account has been successfully created.'
@@ -1338,3 +1342,4 @@ outdated_brower_message: It appears that you're using an unsupported web browser
 ie_support_message: Internet Explorer is supported from version 11.
 enable_opengraph: Enable opengraph
 temporary_directory: Temporary directory
+opening_date: Opening date

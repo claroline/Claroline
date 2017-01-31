@@ -1014,19 +1014,6 @@ class ResourceManager
                     }
                 }
 
-                //what is it ?
-                $this->dispatcher->dispatch(
-                    'claroline_resources_delete',
-                    'GenericDatas',
-                    [[$node]]
-                );
-
-                $this->dispatcher->dispatch(
-                    'log',
-                    'Log\LogResourceDelete',
-                    [$node]
-                );
-
                 // Delete all associated shortcuts
                 $this->deleteAssociatedShortcuts($node);
 
@@ -1034,6 +1021,13 @@ class ResourceManager
                     $node->setActive(false);
                     $this->om->persist($node);
                 } else {
+                    //what is it ?
+                    $this->dispatcher->dispatch(
+                        'claroline_resources_delete',
+                        'GenericDatas',
+                        [[$node]]
+                    );
+
                     if ($node->getIcon() && $workspace) {
                         $this->iconManager->delete($node->getIcon(), $workspace);
                     }
@@ -1045,10 +1039,15 @@ class ResourceManager
                      * not work for directory containing children.
                      */
                     $this->om->remove($resource);
+                    $this->om->remove($node);
                 }
-            }
 
-            $this->om->remove($node);
+                $this->dispatcher->dispatch(
+                    'log',
+                    'Log\LogResourceDelete',
+                    [$node]
+                );
+            }
         }
 
         $this->om->endFlushSuite();

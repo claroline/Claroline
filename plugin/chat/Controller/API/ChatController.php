@@ -21,7 +21,6 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -64,10 +63,6 @@ class ChatController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_chat"})
-     * @ApiDoc(
-     *     description="Returns Xmpp options",
-     *     views = {"chat"}
-     * )
      */
     public function getXmppOptionsAction()
     {
@@ -99,10 +94,6 @@ class ChatController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_chat"})
-     * @ApiDoc(
-     *     description="Returns user informations in Chat room",
-     *     views = {"chat"}
-     * )
      */
     public function getChatRoomUserAction(ChatRoom $chatRoom)
     {
@@ -133,10 +124,6 @@ class ChatController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_chat"})
-     * @ApiDoc(
-     *     description="Register Chat room user presence status",
-     *     views = {"chat"}
-     * )
      */
     public function postChatRoomPresenceRegisterAction(ChatRoom $chatRoom, $username, $fullName, $status)
     {
@@ -146,10 +133,6 @@ class ChatController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_chat"})
-     * @ApiDoc(
-     *     description="Register Chat room user message",
-     *     views = {"chat"}
-     * )
      */
     public function postChatRoomMessageRegisterAction(Request $request, ChatRoom $chatRoom, $username, $fullName)
     {
@@ -164,10 +147,6 @@ class ChatController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_chat"})
-     * @ApiDoc(
-     *     description="Get users infos by usernames",
-     *     views = {"chat"}
-     * )
      */
     public function postChatUsersInfosAction(Request $request, ChatRoom $chatRoom)
     {
@@ -194,10 +173,6 @@ class ChatController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_chat"})
-     * @ApiDoc(
-     *     description="Get registered messages",
-     *     views = {"chat"}
-     * )
      */
     public function getRegisteredMessagesAction(ChatRoom $chatRoom)
     {

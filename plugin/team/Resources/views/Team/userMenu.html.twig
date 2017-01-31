@@ -217,8 +217,17 @@
                                 {% endif %}
                             </td>
                             <td class="text-center">
-
-                                {% if team.getSelfRegistration() %}
+                                {# no user limit #}
+                                {% if team.getMaxUsers() is empty
+                                    or (team.getMaxUsers() is not empty
+                                        and (
+                                            (nbUsers[team.getId()] is defined and (team.getMaxUsers() > nbUsers[team.getId()]))
+                                            or (nbUsers[team.getId()] is not defined and team.getMaxUsers() > 0)
+                                        )
+                                    ) %}
+                                    {% set registerable = true %}
+                                {% endif %}
+                                {% if team.getSelfRegistration() and registerable is defined %}
                                     <span class="btn btn-success btn-sm register-btn"
                                           data-team-id="{{ team.getId() }}"
                                           data-team-name="{{ team.getName() }}"

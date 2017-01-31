@@ -26,7 +26,6 @@ use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\File\File;
@@ -93,10 +92,6 @@ class WorkspaceController extends FOSRestController
     }
 
     /**
-     * @ApiDoc(
-     *     description="Returns the list of workspace for the connected user",
-     *     views = {"workspace"}
-     * )
      * @View(serializerGroups={"api_workspace"})
      * @Get("/workspaces", name="get_connected_user_workspaces", options={ "method_prefix" = false })
      * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -110,10 +105,6 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_workspace"})
-     * @ApiDoc(
-     *     description="Returns the workspaces list",
-     *     views = {"workspace"}
-     * )
      * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function getWorkspacesAction()
@@ -123,10 +114,6 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_workspace"})
-     * @ApiDoc(
-     *     description="Returns a workspace",
-     *     views = {"workspace"}
-     * )
      * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function getWorkspaceAction(Workspace $workspace)
@@ -136,10 +123,6 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_workspace"})
-     * @ApiDoc(
-     *     description="Returns a workspace with additional datas",
-     *     views = {"workspace"}
-     * )
      * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function getWorkspaceAdditionalDatasAction(Workspace $workspace)
@@ -158,10 +141,6 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * @ApiDoc(
-     *     description="Returns the non-personal workspaces list",
-     *     views = {"workspace"}
-     * )
      * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function getNonPersonalWorkspacesAction()
@@ -171,11 +150,6 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_workspace"})
-     * @ApiDoc(
-     *     description="Create a workspace",
-     *     views = {"workspace"},
-     *     input="Claroline\CoreBundle\Form\WorkspaceType"
-     * )
      * @Post("workspace/user/{user}", name="post_workspace", options={ "method_prefix" = false })
      * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
@@ -200,10 +174,6 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Removes a workspace",
-     *     views = {"workspace"}
-     * )
      * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function deleteWorkspaceAction(Workspace $workspace)
@@ -215,11 +185,6 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_workspace"})
-     * @ApiDoc(
-     *     description="Update a workspace",
-     *     views = {"workspace"},
-     *     input="Claroline\CoreBundle\Form\WorkspaceType"
-     * )
      * @Put("workspace/{workspace}", name="put_workspace", options={ "method_prefix" = false })
      * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
@@ -241,10 +206,6 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_workspace"})
-     * @ApiDoc(
-     *     description="Update a workspace owner",
-     *     views = {"workspace"}
-     * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */

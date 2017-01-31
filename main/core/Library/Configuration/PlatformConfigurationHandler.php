@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Configuration;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
 use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
@@ -25,81 +24,6 @@ class PlatformConfigurationHandler
 {
     private $configFile;
     private $parameters;
-
-    public static $defaultParameters = [
-        'name' => 'claroline',
-        'nameActive' => true,
-        'support_email' => null,
-        'footer' => null,
-        'logo' => 'clarolineconnect.png',
-        'allow_self_registration' => true,
-        'locale_language' => 'fr',
-        'theme' => 'claroline',
-        'default_role' => 'ROLE_USER',
-        'cookie_lifetime' => 3600,
-        'mailer_transport' => 'smtp',
-        'mailer_host' => null,
-        'mailer_port' => null,
-        'mailer_encryption' => null,
-        'mailer_username' => null,
-        'mailer_password' => null,
-        'mailer_auth_mode' => null,
-        'terms_of_service' => true,
-        'google_meta_tag' => null,
-        'redirect_after_login_option' => PlatformConfiguration::DEFAULT_REDIRECT_OPTION,
-        'redirect_after_login_url' => null,
-        'session_storage_type' => 'native',
-        'session_db_table' => null,
-        'session_db_id_col' => null,
-        'session_db_data_col' => null,
-        'session_db_time_col' => null,
-        'session_db_dsn' => null,
-        'session_db_user' => null,
-        'session_db_password' => null,
-        'form_captcha' => true,
-        'form_honeypot' => false,
-        'platform_limit_date' => 1559350861, //1 june 2019
-        'platform_init_date' => 1388534461, //1 june 2014
-        'account_duration' => null,
-        'username_regex' => '/^[a-zA-Z0-9@\-_\.]*$/',
-        'anonymous_public_profile' => false,
-        'home_menu' => null,
-        'footer_login' => false,
-        'footer_workspaces' => false,
-        'header_locale' => false,
-        'portfolio_url' => null,
-        'is_notification_active' => true,
-        'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
-        'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,
-        'max_workspace_users' => Workspace::DEFAULT_MAX_USERS,
-        'confirm_send_datas' => null,
-        'token' => null,
-        'country' => '-',
-        'datas_sending_url' => 'http://stats.claroline.net/insert.php',
-        'repository_api' => 'http://packages.claroline.net/api.php',
-        'use_repository_test' => false,
-        'auto_logging_after_registration' => false,
-        'registration_mail_validation' => PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL,
-        'resource_soft_delete' => false,
-        'show_help_button' => false,
-        'help_url' => 'http://claroline.net/workspaces/125/open/tool/home',
-        'register_button_at_login' => false,
-        'send_mail_at_workspace_registration' => true,
-        'locales' => ['fr', 'en', 'es'],
-        'domain_name' => null,
-        'platform_url' => null,
-        'mailer_from' => null,
-        'default_workspace_tag' => null,
-        'is_pdf_export_active' => false,
-        'google_geocoding_client_id' => null,
-        'google_geocoding_signature' => null,
-        'google_geocoding_key' => null,
-        'portal_enabled_resources' => null,
-        'ssl_enabled' => false,
-        'enable_rich_text_file_import' => false,
-        'login_target_route' => 'claro_security_login',
-        'enable_opengraph' => true,
-    ];
     private $lockedParameters;
 
     /**
@@ -110,7 +34,8 @@ class PlatformConfigurationHandler
      */
     public function __construct($configFile, $lockedConfigFile)
     {
-        self::$defaultParameters['tmp_dir'] = sys_get_temp_dir();
+        $this->parameters = [];
+        $this->defaultConfigs = [];
         $this->configFile = $configFile;
         $this->parameters = $this->mergeParameters();
         $this->lockedParameters = $this->generateLockedParameters($lockedConfigFile);
@@ -163,74 +88,34 @@ class PlatformConfigurationHandler
         return $this->parameters['redirect_after_login_option'] === $option;
     }
 
+    public function addDefaultParameters(ParameterProviderInterface $config)
+    {
+        $newDefault = $config->getDefaultParameters();
+        $newDefaultClass = get_class($config);
+
+        //check if the parameter already exists to avoid overiding stuff by mistake
+        foreach ($this->defaultConfigs as $defaultConfig) {
+            $duplicates = array_intersect_key($defaultConfig, $newDefault);
+
+            if (count($duplicates) > 0) {
+                throw new \RuntimeException(
+                    "The following duplicate key(s) were found in the {$newDefaultClass} configuration file: ".implode(', ', array_keys($duplicates))
+                );
+            }
+        }
+
+        $this->defaultConfigs[$newDefaultClass] = $newDefault;
+        $this->parameters = array_merge($newDefault, $this->parameters);
+    }
+
     public function getPlatformConfig()
     {
-        $config = new PlatformConfiguration();
-        $config->setName($this->parameters['name']);
-        $config->setNameActive($this->parameters['nameActive']);
-        $config->setSupportEmail($this->parameters['support_email']);
-        $config->setFooter($this->parameters['footer']);
-        $config->setSelfRegistration($this->parameters['allow_self_registration']);
-        $config->setLocaleLanguage($this->parameters['locale_language']);
-        $config->setTheme($this->parameters['theme']);
-        $config->setDefaultRole($this->parameters['default_role']);
-        $config->setTermsOfService($this->parameters['terms_of_service']);
-        $config->setCookieLifetime($this->parameters['cookie_lifetime']);
-        $config->setMailerTransport($this->parameters['mailer_transport']);
-        $config->setMailerHost($this->parameters['mailer_host']);
-        $config->setMailerEncryption($this->parameters['mailer_encryption']);
-        $config->setMailerUsername($this->parameters['mailer_username']);
-        $config->setMailerPassword($this->parameters['mailer_password']);
-        $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
-        $config->setMailerPort($this->parameters['mailer_port']);
-        $config->setGoogleMetaTag($this->parameters['google_meta_tag']);
-        $config->setRedirectAfterLoginOption($this->parameters['redirect_after_login_option']);
-        $config->setRedirectAfterLoginUrl($this->parameters['redirect_after_login_url']);
-        $config->setSessionStorageType($this->parameters['session_storage_type']);
-        $config->setSessionDbTable($this->parameters['session_db_table']);
-        $config->setSessionDbIdCol($this->parameters['session_db_id_col']);
-        $config->setSessionDbDataCol($this->parameters['session_db_data_col']);
-        $config->setSessionDbTimeCol($this->parameters['session_db_time_col']);
-        $config->setSessionDbDsn($this->parameters['session_db_dsn']);
-        $config->setSessionDbUser($this->parameters['session_db_user']);
-        $config->setSessionDbPassword($this->parameters['session_db_password']);
-        $config->setFormCaptcha($this->parameters['form_captcha']);
-        $config->setAccountDuration($this->parameters['account_duration']); //days
-        $config->setPlatformLimitDate($this->parameters['platform_limit_date']);
-        $config->setPlatformInitDate($this->parameters['platform_init_date']);
-        $config->setUsernameRegex($this->parameters['username_regex']);
-        $config->setAnonymousPublicProfile($this->parameters['anonymous_public_profile']);
-        $config->setHomeMenu($this->parameters['home_menu']);
-        $config->setFooterLogin($this->parameters['footer_login']);
-        $config->setFooterWorkspaces($this->parameters['footer_workspaces']);
-        $config->setHeaderLocale($this->parameters['header_locale']);
-        $config->setPortfolioUrl($this->parameters['portfolio_url']);
-        $config->setIsNotificationActive($this->parameters['is_notification_active']);
-        $config->setMaxUploadResources($this->parameters['max_upload_resources']);
-        $config->setMaxStorageSize($this->parameters['max_storage_size']);
-        $config->setRepositoryApi($this->parameters['repository_api']);
-        $config->setWorkspaceMaxUsers($this->parameters['max_workspace_users']);
-        $config->setAutoLogginAfterRegistration($this->parameters['auto_logging_after_registration']);
-        $config->setRegistrationMailValidation($this->parameters['registration_mail_validation']);
-        $config->setShowHelpButton($this->parameters['show_help_button']);
-        $config->setHelpUrl($this->parameters['help_url']);
-        $config->setRegisterButtonAtLogin($this->parameters['register_button_at_login']);
-        $config->setSendMailAtWorkspaceRegistration($this->parameters['send_mail_at_workspace_registration']);
-        $config->setLocales($this->parameters['locales']);
-        $config->setDomainName($this->parameters['domain_name']);
-        $config->setDefaultWorkspaceTag($this->parameters['default_workspace_tag']);
-        $config->setIsPdfExportActive($this->parameters['is_pdf_export_active']);
-        $config->setGoogleGeocodingClientId($this->parameters['google_geocoding_client_id']);
-        $config->setGoogleGeocodingSignature($this->parameters['google_geocoding_signature']);
-        $config->setGoogleGeocodingKey($this->parameters['google_geocoding_key']);
-        $config->setFormHoneypot($this->parameters['form_honeypot']);
-        $config->setSslEnabled($this->parameters['ssl_enabled']);
-        $config->setEnableRichTextFileImport($this->parameters['enable_rich_text_file_import']);
-        $config->setLoginTargetRoute($this->parameters['login_target_route']);
-        $config->setEnableOpengraph($this->parameters['enable_opengraph']);
-        $config->setTmpDir($this->parameters['tmp_dir']);
+        return new PlatformConfiguration($this->parameters);
+    }
 
-        return $config;
+    public function setPlatformConfig(PlatformConfiguration $config)
+    {
+        $this->setParameters($config->getParameters());
     }
 
     protected function mergeParameters()
@@ -242,18 +127,19 @@ class PlatformConfigurationHandler
         }
 
         $configParameters = Yaml::parse(file_get_contents($this->configFile)) ?: [];
-        $parameters = self::$defaultParameters;
 
         foreach ($configParameters as $parameter => $value) {
-            $parameters[$parameter] = $value;
+            $this->parameters[$parameter] = $value;
         }
 
-        return $parameters;
+        return $this->parameters;
     }
 
     protected function saveParameters()
     {
-        file_put_contents($this->configFile, Yaml::dump($this->parameters));
+        ksort($this->parameters);
+        $parameters = Yaml::dump($this->parameters);
+        file_put_contents($this->configFile, $parameters);
     }
 
     protected function checkParameter($parameter)
@@ -265,14 +151,14 @@ class PlatformConfigurationHandler
         }
     }
 
-    public function getDefaultParameters()
-    {
-        return self::$defaultParameters;
-    }
-
     public function getLockedParamaters()
     {
         return $this->lockedParameters;
+    }
+
+    public function getDefaultParameters()
+    {
+        return $this->parameters;
     }
 
     protected function generateLockedParameters($lockedConfigFile)

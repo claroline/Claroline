@@ -745,7 +745,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @todo Security context verification.
+     * @todo Security context verification
      * @EXT\Route(
      *     "/{workspace}/add/user/{user}",
      *     name="claro_workspace_add_user",
@@ -768,7 +768,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @todo Security context verification.
+     * @todo Security context verification
      * @EXT\Route(
      *     "/{workspace}/add/user/{user}/queue",
      *     name="claro_workspace_add_user_queue",
@@ -982,7 +982,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @todo Security context verification.
+     * @todo Security context verification
      * @EXT\Route(
      *     "/{workspaceId}/remove/user/{userId}",
      *     name="claro_workspace_delete_user",

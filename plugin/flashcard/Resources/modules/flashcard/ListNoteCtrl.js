@@ -1,6 +1,6 @@
 /*
  * This file is part of the Claroline Connect package.
- * 
+ *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * For the full copyright and license information, please view
@@ -9,7 +9,7 @@
  */
 
 export default class ListNoteCtrl {
-  constructor (service, ClarolineAPIService) {
+  constructor(service, ClarolineAPIService) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
@@ -44,7 +44,7 @@ export default class ListNoteCtrl {
     )
   }
 
-  setColWidth (noteType) {
+  setColWidth(noteType) {
     const nbrField = noteType.field_labels.length
     const width = Math.floor(10 / nbrField)
     let cols = []
@@ -55,7 +55,7 @@ export default class ListNoteCtrl {
     this.colWidth.push(cols)
   }
 
-  maxColspan (note) {
+  maxColspan(note) {
     let nbr = 1
     for (let i=2; i<=note.field_values.length; i++) {
       nbr *= i
@@ -63,7 +63,7 @@ export default class ListNoteCtrl {
     return nbr
   }
 
-  compareFieldValuesById (first, second) {
+  compareFieldValuesById(first, second) {
     if (first.field_label.id < second.field_label.id) {
       return -1
     }
@@ -73,7 +73,7 @@ export default class ListNoteCtrl {
     return 0
   }
 
-  getQuestionsFromCard (note, card) {
+  getQuestionsFromCard(note, card) {
     const question_labels = card.card_type.questions
     let questions = []
     for(let i=0; i<question_labels.length; i++) {
@@ -86,7 +86,7 @@ export default class ListNoteCtrl {
     return questions
   }
 
-  getAnswersFromCard (note, card) {
+  getAnswersFromCard(note, card) {
     const answer_labels = card.card_type.answers
     let answers = []
     for(let i=0; i<answer_labels.length; i++) {
@@ -99,7 +99,7 @@ export default class ListNoteCtrl {
     return answers
   }
 
-  resetCard (card) {
+  resetCard(card) {
     this._service.resetCard(card).then(
       function() {
         for (let i=0; i<this.cardLearnings.length; i++) {
@@ -112,7 +112,7 @@ export default class ListNoteCtrl {
 
   }
 
-  suspendCard (card, suspend) {
+  suspendCard(card, suspend) {
     this._service.suspendCard(card, suspend).then(
       function() {
         for (let i=0; i<this.cardLearnings.length; i++) {
@@ -124,7 +124,7 @@ export default class ListNoteCtrl {
     )
   }
 
-  isSuspend (card) {
+  isSuspend(card) {
     for (let i=0; i<this.cardLearnings.length; i++) {
       if (this.cardLearnings[i].card.id == card.id) {
         return this.cardLearnings[i].painful
@@ -133,7 +133,7 @@ export default class ListNoteCtrl {
     return false
   }
 
-  isNew (card) {
+  isNew(card) {
     for (let i=0; i<this.cardLearnings.length; i++) {
       if (this.cardLearnings[i].card.id == card.id) {
         return false
@@ -142,7 +142,7 @@ export default class ListNoteCtrl {
     return true
   }
 
-  confirmDeleteNote (note) {
+  confirmDeleteNote(note) {
     const url = this.routing.generate('claroline_delete_note', {
       note: note.id
     })
@@ -175,7 +175,7 @@ export default class ListNoteCtrl {
     return window.Translator.trans(key, data, 'flashcard')
   }
 
-  _deleteNote (data) {
+  _deleteNote(data) {
     const noteId = data
     for (let i=0; i<this.sortedNotes.length; i++) {
       for (let j=0; j<this.sortedNotes[i].length; j++) {

@@ -24,10 +24,10 @@
 
 {% from _self import renderMenu %}
 
-{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
-
 {% if isDesktop() %}
     {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% else %}
+    {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 {% endif %}
 
 {% extends layout %}
@@ -86,35 +86,78 @@
                 $('#content-box').addClass('col-md-12');
             }
         });
+
+        $('#configuration-btn').on('click', function () {
+            var resourceId = $(this).data('resource-id');
+            window.Claroline.Modal.displayForm(
+                Routing.generate('claro_scorm_12_configuration_edit_form', {'scorm': resourceId}),
+                refreshPage,
+                function() {}
+            );
+        });
+
+        var refreshPage = function () {
+            window.location.reload();
+        };
     </script>
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading clearfix">
-        <h3 class="panel-title">
-            {{ currentSco.getTitle() }}
-            {% if canEdit %}
-                <a class="btn btn-default btn-sm pull-right"
-                   href="{{ path('claro_scorm_results', {'resourceNode': resource.getResourceNode().getId()}) }}"
-                   data-toggle="tooltip"
-                   data-placement="top"
-                   title="{{ 'display_results'|trans({}, 'scorm') }}"
-                >
-                    <i class="fa fa-list"></i>
-                </a>
-            {% endif %}
-        </h3>
-    </div>
-    <div class="panel-body">
+{% block section_panel %}
+    <div class="page-header">
+        <h1>{{ currentSco.getTitle() }}</h1>
 
-        <i id="menu-display-btn" class="btn btn-default fa fa-list pull-left"></i>
-        <div class="text-right">
-            <a class="btn btn-primary pointer-hand" onClick="javascript:enterFullScreen()">
+        <div class="page-actions">
+            {% if canEdit %}
+                <button id="configuration-btn"
+                        class="btn btn-default btn-sm"
+                        data-resource-id="{{ resource.getId() }}"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="{{ 'configure'|trans({}, 'platform') }}"
+                >
+                    <i class="fa fa-cog"></i>
+                </button>
+            {% endif %}
+            <button id="menu-display-btn"
+                    class="btn btn-default btn-sm"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="{{ 'display_menu'|trans({}, 'scorm') }}"
+            >
+                <i class="fa fa-list"></i>
+            </button>
+            <a class="btn btn-primary btn-sm"
+               data-toggle="tooltip"
+               data-placement="bottom"
+               title="{{ 'full_screen'|trans({}, 'scorm') }}"
+               onClick="javascript:enterFullScreen()">
                 <i class="fa fa-expand"></i>
             </a>
+            {% if canEdit %}
+                <a class="btn btn-default btn-sm"
+                   href="{{ path('claro_scorm_results', {'resourceNode': resource.getResourceNode().getId()}) }}"
+                   data-toggle="tooltip"
+                   data-placement="bottom"
+                   title="{{ 'display_results'|trans({}, 'scorm') }}"
+                >
+                    <i class="fa fa-check"></i>
+                </a>
+            {% endif %}
+            <a class="btn btn-default btn-sm"
+               {% if resource.getExitMode() == constant('Claroline\\ScormBundle\\Entity\\ScormResource::WORKSPACE_OPEN') %}
+                   href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
+               {% elseif resource.getExitMode() == constant('Claroline\\ScormBundle\\Entity\\ScormResource::DESKTOP_OPEN') %}
+                   href="{{ path('claro_desktop_open') }}"
+               {% endif %}
+               data-toggle="tooltip"
+               data-placement="bottom"
+               title="{{ 'quit'|trans({}, 'resource') }}"
+            >
+                <i class="fa fa-times"></i>
+            </a>
         </div>
-
-        <br>
+    </div>
+    <div>
         <div class="row">
             <div id="menu-box" class="col-md-3 menu-style hidden">
                 <div id="scorm-menu">

@@ -25,24 +25,45 @@ class ConfigurationType extends AbstractType
             ->add(
                 'client_id',
                 'text',
-                array(
-                    'constraints' => array(
+                [
+                    'constraints' => [
                         new NotBlank(),
-                        new GreaterThanOrEqual(array('value' => 0)),
-                    ),
-                    'attr' => array('min' => 0),
+                        new GreaterThanOrEqual(['value' => 0]),
+                    ],
+                    'attr' => ['min' => 0],
                     'label' => 'client_id',
-                )
+                ]
             )
             ->add(
                 'client_secret',
                 'text',
-                array(
+                [
                     'constraints' => new NotBlank(),
                     'label' => 'client_secret',
-                )
-            )
-            ->add('client_active', 'checkbox', array('label' => 'client_active', 'required' => false));
+                ]
+            );
+        if ($options['resource_owner'] !== 'linkedin') {
+            $builder->add(
+                'client_force_reauthenticate',
+                'checkbox',
+                [
+                    'label' => 'client_force_reauthenticate',
+                    'required' => false,
+                ]
+            );
+        }
+        if ($options['resource_owner'] === 'office_365') {
+            $builder->add(
+                'client_tenant_domain',
+                'text',
+                [
+                    'required' => false,
+                    'label' => 'client_tenant_domain',
+                    'empty_data' => '',
+                ]
+            );
+        }
+        $builder->add('client_active', 'checkbox', ['label' => 'client_active', 'required' => false]);
     }
 
     public function getName()
@@ -52,10 +73,11 @@ class ConfigurationType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'icap_oauth',
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
-        ));
+            'resource_owner' => '',
+        ]);
     }
 }

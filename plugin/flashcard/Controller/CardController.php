@@ -99,6 +99,7 @@ class CardController
     {
         $this->assertCanOpen($deck);
         $nbrCards = $this->cardMgr->countCards($deck);
+
         return new JsonResponse($nbrCards);
     }
 

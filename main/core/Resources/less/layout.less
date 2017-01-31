@@ -7,14 +7,15 @@
 //                                                                       //
 ///////////////////////////////////////////////////////////////////////////
 
-@import "../../../../../../../vendor/claroline/front-end-bundle/Resources/public/bootstrap/less/bootstrap";
+@import "./../../../../../../../vendor/claroline/front-end-bundle/Resources/public/bootstrap/less/bootstrap";
+@import "./layout/page.less";
 
 html, body {
     height: 100%;
 }
 
 body {
-    padding: (@navbar-height + 20px) 0 (@navbar-height + 10px) 0;
+    padding: (@navbar-height + (floor(@grid-gutter-width / 2))) 0;
 }
 
 table th {
@@ -1138,24 +1139,7 @@ form .global-error {
 }
 
 .general_parameters_form {
-    .portfolio_url_row {
-        .portfolio_url {
-            .portfolio_url_field {
-                margin-left: 20px;
-            }
-            input[type=radio] {
-                margin-top: 10px;
-                margin-left: 0px;
-            }
-            .portfolio_url_field {
-                padding-left: 0;
-            }
-            .portfolio_url_help {
-                margin-top: 5px;
-            }
-        }
-    }
-    .redirect-after-login {
+    .redirect-after-login, .portfolio-url {
         .radio-with-input{
             line-height: 34px;
             min-height: 40px;
@@ -1837,3 +1821,40 @@ body.mce-fullscreen .modal.fullscreen {
 .no-mutationobserver .outdated-browser-warning {
   display: block;
 }
+
+/*****************/
+/* LOGIN COLUMNS */
+/*****************/
+div.login_form_container {
+    div.external-authentication-column {
+        padding-top: 10px;
+        border-top: 1px solid #ccc;
+    }
+    div.login-flexbox {
+        margin-bottom: 2em;
+    }
+    @media (min-width: @screen-sm-min) {
+        div.login-flexbox {
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            overflow: hidden;
+
+            div.external-authentication-column {
+                padding-top: 0;
+                border-left: 1px solid #ccc;
+                border-top:none;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                overflow: hidden;
+                -ms-flex-align: center;
+                -webkit-align-items: center;
+                -webkit-box-align: center;
+                align-items: center;
+            }
+        }
+    }
+}
+
+

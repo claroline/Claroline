@@ -15,6 +15,7 @@ use Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\ImportersConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Compiler\PlatformConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RichTextFormatterConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RouterPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RuleConstraintsConfigPass;
@@ -27,7 +28,6 @@ use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use FOS\OAuthServerBundle\FOSOAuthServerBundle;
 use IDCI\Bundle\ExporterBundle\IDCIExporterBundle;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
-use Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -39,6 +39,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
     {
         parent::build($container);
 
+        $container->addCompilerPass(new PlatformConfigPass());
         $container->addCompilerPass(new DynamicConfigPass());
         $container->addCompilerPass(new ImportersConfigPass());
         $container->addCompilerPass(new RichTextFormatterConfigPass());
@@ -148,8 +149,6 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
                 return $config
                     ->addContainerResource($this->buildPath('web_profiler'))
                     ->addRoutingResource($this->buildPath('web_profiler_routing'));
-            } elseif ($bundle instanceof SensioGeneratorBundle) {
-                return $config;
             }
         }
 

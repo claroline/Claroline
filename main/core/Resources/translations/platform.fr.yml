@@ -4,6 +4,7 @@ accept: Accepter
 accessible_from: 'Accessible à partir du'
 accessible_until: 'Accessible jusqu''au'
 account_created: 'Les informations de votre compte vous ont été envoyées par courriel. (Il est possible qu''elles arrivent dans votre dossier dédié aux pourriels).'
+account_created_awaiting_validation: 'Votre compte a été crée avec succès. Toutefois, il ne sera possible, d''acceder à l''espace de travail qu''après la validation par un administrateur.'
 account_duration_label: 'Durée de vie des comptes (jours)'
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
@@ -414,6 +415,7 @@ has_been_emptied: 'a été vidé'
 has_been_put_in_category: 'a été placé dans la catégorie'
 has_been_registered_in_workspace: 'a été inscrit(e) dans l''espace d''activités'
 has_been_registered_to_group: 'a été inscrit(e) dans le groupe'
+has_been_skipped: 'n''a pas été créé'
 has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
 has_been_suscribed_with_role_group: 'a été inscrit(e) avec le rôle'
 has_been_unregistered_from_group: 'a été désincrit(e) du groupe'
@@ -687,7 +689,7 @@ pending_friends: Amis en attente
 pending_users_list: Liste des utilisateurs en attente
 permissions: Permissions
 personal_data: 'Aucune donnée personnelle ne sera récupérée. Les données techniques et statistiques récupérées seront exclusivement utilisées en relation avec le projet Claroline Connect et ne seront pas diffusées autrement.'
-personal_workspace: Espace personne
+personal_workspace: Espace personnel
 personal_workspace_management: Gestion de l'espace personnel
 personal_workspace_tools_management: Gestion des outils de l'espace personnel
 personal_workspaces_only: Les espaces personnels seulement
@@ -848,6 +850,7 @@ restore: Restaurer
 restore_messages_confirm_message: 'message(s) restauré(s)'
 results: Résultats
 results_for_search_on: 'Résultats de la recherche sur'
+rich_text: Texte riche
 right: Droit
 rights: Droits
 rights_management: 'Gestion des droits'
@@ -1066,6 +1069,7 @@ url_invalid: Le code n'est pas correct, n'essayez pas de changer l'adresse.
 use_stable_repo: 'Utiliser les dépôts stables'
 use_test_repo: 'Utiliser les dépôts de test'
 user: Utilisateur
+user_admin_code_already_used: 'Le code administratif %code% est déjà utilisé'
 user_accounts: Comptes utilisateur
 user_enable_mail_notification_label: 'Activer les notifications par courriel'
 user_creation: 'Création d''un utilisateur'
@@ -1344,3 +1348,4 @@ outdated_brower_message: Vous utilisez un navigateur non pris en charge. Pour é
 ie_support_message: Internet Explorer est supporté à partir de la version 11.
 enable_opengraph: Activer opengraph
 temporary_directory: Dossier temporaire
+opening_date: Date d'ouverture

@@ -10,7 +10,11 @@ icap_oauth_connexion_controller:
 
 hwi_oauth_login:
     resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
-    prefix: /login/hwi
+    prefix: /login
+
+hwi_oauth_connect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
+    prefix:   /connect
 
 hwi_oauth_redirect:
     resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
@@ -30,3 +34,6 @@ linkedin_login:
 
 windows_live_login:
     path: /login/check-windows
+
+office_365_login:
+    path: /login/check-o365

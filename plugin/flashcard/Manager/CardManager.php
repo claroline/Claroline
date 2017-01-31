@@ -58,6 +58,7 @@ class CardManager
     public function countCards(Deck $deck)
     {
         $repoCard = $this->om->getRepository('ClarolineFlashCardBundle:Card');
+
         return $repoCard->countCards($deck);
     }
 

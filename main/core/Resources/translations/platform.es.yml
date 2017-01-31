@@ -4,6 +4,7 @@ accept: Aceptar
 accessible_from: 'Accesible desde'
 accessible_until: accessible_until
 account_created: 'Cuenta creada.'
+account_created_awaiting_validation: 'Su cuenta ha sido creada con éxito. Sin embargo, sería posible tener acceso al área de trabajo después de la validación por un administrador.'
 account_duration_label: 'Duración de la vida de una cuentas (días)'
 account_general_statistics: 'Estadísticas generales de la cuenta'
 action: Acción
@@ -405,6 +406,7 @@ has_been_emptied: has_been_emptied
 has_been_put_in_category: 'ha sido agregado en una categoría'
 has_been_registered_in_workspace: has_been_registered_in_workspace
 has_been_registered_to_group: has_been_registered_to_group
+has_been_skipped: 'no ha sido creado'
 has_been_suscribed_with_role: 'ha sido inscrito en un rol'
 has_been_suscribed_with_role_group: 'ha sido inscrito con un rol'
 has_been_unregistered_from_group: has_been_unregistered_from_group

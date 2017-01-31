@@ -3,10 +3,15 @@ best_status: Meilleur statut
 browsed: Parcouru
 completed: Terminé
 completion_status: Progression
+desktop: Bureau
 details: Détails
 display_details: Afficher les détails
+display_menu: Afficher le menu
 display_results: Afficher les résultats
+exit_destination: Destination de sortie
 failed: Echoué
+full_screen: Plein écran
+hide_top_bar: Cacher la barre de menu
 incomplete: Incomplet
 last_score: Dernier score
 last_status: Dernier statut
@@ -19,3 +24,4 @@ session_time: Durée de la dernière session
 scorm_results: Résultats SCORM
 success_status: Statut
 unknown: Inconnu
+workspace_opening: Ouverture de l'espace d'activités

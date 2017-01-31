@@ -2,15 +2,15 @@
 
 namespace Icap\OAuthBundle\Security;
 
-use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Claroline\CoreBundle\Entity\User;
+use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
+use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * @DI\Service("icap.oauth.user_provider")
@@ -56,7 +56,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
     public function loadUserByServiceAndId($service, $id)
     {
         $oauthUser = $this->em->getRepository('IcapOAuthBundle:OauthUser')->findOneBy(
-            array('service' => $service, 'oauthId' => $id)
+            ['service' => $service, 'oauthId' => $id]
         );
 
         if ($oauthUser === null) {
@@ -71,10 +71,10 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        $content = $response->getResponse();
         $resourceOwner = $response->getResourceOwner();
         try {
-            $user = $this->loadUserByServiceAndId($resourceOwner->getName(), $content['id']);
+            $user = $this->loadUserByServiceAndId($resourceOwner->getName(), $response->getUsername());
+            $this->saveResourceOwnerToken($resourceOwner, $response->getAccessToken());
 
             return $user;
         } catch (\Exception $e) {
@@ -90,18 +90,29 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
                     $lastName = ucfirst(strtolower($nameArray[1]));
                 }
             }
-            $user = array();
+
+            $user = [];
             $user['firstName'] = $firstName;
             $user['lastName'] = $lastName;
             $user['username'] = $this->createUsername($response->getNickname());
             $user['mail'] = $response->getEmail();
+            // Check if an account with the same mail already exists
+            try {
+                $this->loadUserByUsername($user['mail']);
+                $user['platformMail'] = $user['mail'];
+            } catch (UsernameNotFoundException $e) {
+                $user['platformMail'] = null;
+            }
 
             $this->session->set('icap.oauth.user', $user);
-            $resourceOwnerArray = array(
+
+            $resourceOwnerArray = [
                 'name' => $resourceOwner->getName(),
-                'id' => $content['id'],
-            );
+                'id' => $response->getUsername(),
+            ];
             $this->session->set('icap.oauth.resource_owner', $resourceOwnerArray);
+            $this->session->set('icap.oauth.resource_owner_token', $resourceOwner);
+            $this->saveResourceOwnerToken($resourceOwner, $response->getAccessToken());
 
             throw $e;
         }
@@ -137,5 +148,15 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
         } else {
             return $username.count($user);
         }
+    }
+
+    private function saveResourceOwnerToken($resourceOwner, $token)
+    {
+        $tokenInfo = [
+            'resourceOwnerName' => $resourceOwner->getName(),
+            'token' => $token,
+        ];
+
+        $this->session->set('icap.oauth.resource_owner_token', $tokenInfo);
     }
 }

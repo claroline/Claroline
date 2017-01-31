@@ -236,7 +236,6 @@ class ProfileController extends Controller
             throw new AccessDeniedException();
         }
 
-        $userRole = $this->roleManager->getUserRoleByUser($user);
         $roles = $this->roleManager->getPlatformRoles($user);
         $accesses = $this->profilePropertyManager->getAccessesForCurrentUser();
 
@@ -278,7 +277,6 @@ class ProfileController extends Controller
 
             $user = $form->getData();
             $this->userManager->rename($user, $user->getUsername());
-            $this->roleManager->renameUserRole($userRole, $user->getUsername());
 
             $successMessage = $translator->trans('edit_profile_success', [], 'platform');
             $errorMessage = $translator->trans('edit_profile_error', [], 'platform');

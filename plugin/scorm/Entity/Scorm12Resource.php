@@ -33,6 +33,16 @@ class Scorm12Resource extends AbstractResource implements ScormResource
      */
     protected $scos;
 
+    /**
+     * @ORM\Column(name="hide_top_bar", type="boolean", options={"default" = 0})
+     */
+    protected $hideTopBar = false;
+
+    /**
+     * @ORM\Column(name="exit_mode", type="integer")
+     */
+    protected $exitMode = self::WORKSPACE_OPEN;
+
     public function getHashName()
     {
         return $this->hashName;
@@ -46,5 +56,25 @@ class Scorm12Resource extends AbstractResource implements ScormResource
     public function getScos()
     {
         return $this->scos;
+    }
+
+    public function getHideTopBar()
+    {
+        return $this->hideTopBar;
+    }
+
+    public function setHideTopBar($hideTopBar)
+    {
+        $this->hideTopBar = $hideTopBar;
+    }
+
+    public function getExitMode()
+    {
+        return $this->exitMode;
+    }
+
+    public function setExitMode($exitMode)
+    {
+        $this->exitMode = $exitMode;
     }
 }

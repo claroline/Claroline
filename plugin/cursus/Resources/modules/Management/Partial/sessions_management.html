@@ -171,6 +171,7 @@
                                     <th>{{ 'end_date'|trans:{}:'platform' }}</th>
                                     <th>{{ 'session_event_location'|trans:{}:'cursus' }}</th>
                                     <th>{{ 'location_extra'|trans:{}:'cursus' }}</th>
+                                    <th></th>
                                 </tr>
                                 <tr ng-repeat="event in cmc.events[session['id']]" ng-if="event['status'] !== 'closed'">
                                     <td ignore-cell="true">
@@ -189,6 +190,16 @@
                                     </td>
                                     <td class="text-center" ignore-cell="true">
                                         <div ng-bind-html="event['locationExtra']|trust_html"></div>
+                                    </td>
+                                    <td class="text-center" ignore-cell="true">
+                                        <button class="btn btn-default btn-sm"
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="{{ 'informations_management'|trans:{}:'cursus' }}"
+                                                ng-click="cmc.manageEventComments(event)"
+                                        >
+                                            <i class="fa fa-info"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             </table>

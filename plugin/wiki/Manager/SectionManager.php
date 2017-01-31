@@ -3,6 +3,7 @@
 namespace Icap\WikiBundle\Manager;
 
 use Icap\WikiBundle\Entity\Section;
+use Icap\WikiBundle\Repository\ContributionRepository;
 use Icap\WikiBundle\Repository\SectionRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -14,14 +15,18 @@ class SectionManager
     /** @var \Icap\WikiBundle\Repository\SectionRepository */
     protected $sectionRepository;
 
+    protected $contributionRepository;
+
     /**
      * @DI\InjectParams({
-     *     "sectionRepository" = @DI\Inject("icap.wiki.section_repository")
+     *     "sectionRepository" = @DI\Inject("icap.wiki.section_repository"),
+     *     "contributionRepository" = @DI\Inject("icap.wiki.contribution_repository")
      * })
      */
-    public function __construct(SectionRepository $sectionRepository)
+    public function __construct(SectionRepository $sectionRepository, ContributionRepository $contributionRepository)
     {
         $this->sectionRepository = $sectionRepository;
+        $this->contributionRepository = $contributionRepository;
     }
 
     /**
@@ -32,15 +37,12 @@ class SectionManager
         return $this->sectionRepository;
     }
 
-    /**
-     *
-     */
     public function getArchivedSectionsForPosition(Section $section)
     {
         $sections = $this->getSectionRepository()->findSectionsForPosition($section);
-        $archivedSections = array();
-        $prefixesArray = array();
-        $childrens = array();
+        $archivedSections = [];
+        $prefixesArray = [];
+        $childrens = [];
         foreach ($sections as $simpleSection) {
             if (isset($childrens[$simpleSection['parentId']])) {
                 $childrens[$simpleSection['parentId']] += 1;

@@ -1,0 +1,4 @@
+claro_remote_user_synchronization_bundle:
+    resource: "@ClarolineRemoteUserSynchronizationBundle/Controller/"
+    type:     annotation
+    prefix:   /

@@ -8,11 +8,12 @@
  */
 
 export default class SessionEventManagementCtrl {
-  constructor($stateParams, NgTableParams, CourseService, SessionService, SessionEventService) {
+  constructor($stateParams, NgTableParams, CourseService, SessionService, SessionEventService, DocumentModelService) {
     this.NgTableParams = NgTableParams
     this.CourseService = CourseService
     this.SessionService = SessionService
     this.SessionEventService = SessionEventService
+    this.DocumentModelService = DocumentModelService
     this.sessionId = $stateParams.sessionId
     this.sessionEventId = $stateParams.sessionEventId
     this.sessionEvent = SessionEventService.getSessionEvent()
@@ -28,6 +29,8 @@ export default class SessionEventManagementCtrl {
       {counts: [10, 20, 50, 100], dataset: this.users}
     )
     this.isSessionEventRegistrationDisabled = true
+    this.isCertificatesDisabled = true
+    this.isInvitationsDisabled = true
     this._updateSessionEventCallback = this._updateSessionEventCallback.bind(this)
     this._addUsersCallback = this._addUsersCallback.bind(this)
     this._removeUserCallback = this._removeUserCallback.bind(this)
@@ -73,6 +76,8 @@ export default class SessionEventManagementCtrl {
     }
     this.CourseService.getGeneralParameters().then(d => {
       this.isSessionEventRegistrationDisabled = d['disableSessionEventRegistration']
+      this.isCertificatesDisabled = d['disableCertificates']
+      this.isInvitationsDisabled = d['disableInvitations']
     })
     this.SessionEventService.loadEventsBySession(this.sessionId)
     this.SessionService.loadUsersBySession(this.sessionId)
@@ -89,5 +94,21 @@ export default class SessionEventManagementCtrl {
 
   deleteParticipant (sessionEventUserId) {
     this.SessionEventService.deleteParticipant(sessionEventUserId, this._removeUserCallback)
+  }
+
+  manageEventComments () {
+    this.SessionEventService.manageComments(this.sessionEvent)
+  }
+
+  inviteLearnersToEvent () {
+    this.DocumentModelService.displayDocumentSelection(this.sessionEvent, 1)
+  }
+
+  generateEventCertificates () {
+    this.DocumentModelService.displayDocumentSelection(this.sessionEvent, 3)
+  }
+
+  exportUsers () {
+    this.SessionEventService.exportUsersForm(this.sessionEventId)
   }
 }

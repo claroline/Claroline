@@ -24,15 +24,15 @@ export default class DocumentModelSelectionModalCtrl {
   }
 
   initialize () {
-    this.DocumentModelService.getDocumentModelsByType(this.documentType).then(d => {
+    this.DocumentModelService.getPopulatedDocumentModelsByType(this.documentType, this.datas['id']).then(d => {
       d.forEach(dc => this.documentModels.push(dc))
     })
   }
 
   submit () {
     if (this.documentModel) {
-      const url = Routing.generate('api_post_cursus_document_send', {documentModel: this.documentModel['id']})
-      this.$http.post(url, {sourceId: this.datas['id']}).then(d => {
+      const url = Routing.generate('api_post_cursus_document_send', {documentModel: this.documentModel['id'], sourceId: this.datas['id']})
+      this.$http.post(url).then(d => {
         if (d['status'] === 200) {
           if (this.callback) {
             this.callback(d['data'])

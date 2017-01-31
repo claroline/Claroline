@@ -12,19 +12,19 @@
 namespace Icap\OAuthBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\RefreshCacheEvent;
 use Claroline\CoreBundle\Form\BaseProfileType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Authenticator;
+use Claroline\CoreBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\ORM\EntityManager;
 use Icap\OAuthBundle\Entity\OauthUser;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Event\RefreshCacheEvent;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\CacheManager;
 use Icap\OAuthBundle\Model\Configuration;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -153,7 +153,7 @@ class OauthManager
             );
             $event->addCacheParameter(
                 "is_{$service}_available",
-                (count($errors) === 0 and $this->platformConfigHandler->getParameter($service.'_client_active'))
+                (count($errors) === 0 && $this->platformConfigHandler->getParameter($service.'_client_active'))
             );
         }
     }
@@ -166,7 +166,7 @@ class OauthManager
     public function validateService($service, $appId, $secret)
     {
         if (!$appId || !$secret) {
-            return array('error' => $service.'_application_validation_error');
+            return ['error' => $service.'_application_validation_error'];
         }
 
         switch ($service) {
@@ -177,27 +177,52 @@ class OauthManager
             case 'google':
             case 'linkedin':
             case 'windows_live':
+            case 'office_365':
                 return [];
         }
     }
 
     public function getConfiguration($service)
     {
+        $clientId = $this->platformConfigHandler->getParameter($service.'_client_id');
+        $clientSecret = $this->platformConfigHandler->getParameter($service.'_client_secret');
+        $clientTenantDomain = $this->platformConfigHandler->getParameter($service.'_client_domain');
+        // Compatibility with tool FormaLibreOfficeConnect
+        if ($service === 'office_365') {
+            if ($clientId === null) {
+                $clientId = $this->platformConfigHandler->getParameter('o365_client_id');
+            }
+            if ($clientSecret === null) {
+                $clientSecret = $this->platformConfigHandler->getParameter('o365_pw');
+            }
+            if ($clientTenantDomain === null) {
+                $clientTenantDomain = $this->platformConfigHandler->getParameter('o365_domain');
+            }
+        }
+
         return new Configuration(
-            $this->platformConfigHandler->getParameter($service.'_client_id'),
-            $this->platformConfigHandler->getParameter($service.'_client_secret'),
-            $this->platformConfigHandler->getParameter($service.'_client_active')
+            $clientId,
+            $clientSecret,
+            $this->isActive($service),
+            $this->platformConfigHandler->getParameter($service.'_client_force_reauthenticate'),
+            $clientTenantDomain
         );
     }
 
     public function isActive($service)
     {
-        return $this->platformConfigHandler->getParameter($service.'_client_active');
+        $isActive = $this->platformConfigHandler->getParameter($service.'_client_active');
+        // Compatibility with tool FormaLibreOfficeConnect
+        if ($service === 'office_365' && $isActive === null) {
+            $isActive = $this->platformConfigHandler->getParameter('o365_active');
+        }
+
+        return $isActive;
     }
 
     public function getActiveServices()
     {
-        $services = array();
+        $services = [];
         foreach (Configuration::resourceOwners() as $resourceOwner) {
             $service = str_replace(' ', '_', strtolower($resourceOwner));
             if ($this->isActive($service)) {
@@ -248,25 +273,30 @@ class OauthManager
                 }
             }
 
-            $msg = $translator->trans('account_created', array(), 'platform');
+            $msg = $translator->trans('account_created', [], 'platform');
             $session->getFlashBag()->add('success', $msg);
 
             if ($this->platformConfigHandler->getParameter('registration_mail_validation')) {
-                $msg = $translator->trans('please_validate_your_account', array(), 'platform');
+                $msg = $translator->trans('please_validate_your_account', [], 'platform');
                 $session->getFlashBag()->add('success', $msg);
             }
 
             return $this->loginUser($user, $request);
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
-    public function linkAccount(Request $request, $service)
+    public function linkAccount(Request $request, $service, $username = null)
     {
-        $username = $request->get('_username');
-        $password = $request->get('_password');
-        $isAuthenticated = $this->authenticator->authenticate($username, $password);
+        $verifyPassword = false;
+        $password = null;
+        if ($username === null) {
+            $verifyPassword = true;
+            $username = $request->get('_username');
+            $password = $request->get('_password');
+        }
+        $isAuthenticated = $this->authenticator->authenticate($username, $password, $verifyPassword);
         if ($isAuthenticated) {
             $user = $this->userManager->getUserByUsername($username);
             $oauthUser = new OauthUser($service['name'], $service['id'], $user);
@@ -276,7 +306,7 @@ class OauthManager
 
             return $this->loginUser($user, $request);
         } else {
-            return array('error' => 'login_error');
+            return ['error' => 'login_error'];
         }
     }
 
@@ -298,7 +328,7 @@ class OauthManager
     private function validateFacebook($appId, $secret)
     {
         if (!function_exists('curl_version')) {
-            return array('error' => 'curl_facebook_application_validation_error');
+            return ['error' => 'curl_facebook_application_validation_error'];
         }
 
         $secretUrl = "https://graph.facebook.com/{$appId}?fields=roles&access_token={$appId}|{$secret}";
@@ -312,16 +342,16 @@ class OauthManager
         $data = json_decode($json);
 
         if (!$json || array_key_exists('error', $data)) {
-            return array('error' => 'facebook_application_validation_error');
+            return ['error' => 'facebook_application_validation_error'];
         }
 
-        return array();
+        return [];
     }
 
     private function validateTwitter($appId, $secret)
     {
         if (!function_exists('curl_version')) {
-            return array('error' => 'curl_twitter_application_validation_error');
+            return ['error' => 'curl_twitter_application_validation_error'];
         }
 
         $encoded_consumer_key = urlencode($appId);
@@ -332,13 +362,13 @@ class OauthManager
         $base64_encoded_bearer_token = base64_encode($bearer_token);
         // step 2
         $secretUrl = 'https://api.twitter.com/oauth2/token'; // url to send data to for authentication
-        $headers = array(
+        $headers = [
             'POST /oauth2/token HTTP/1.1',
             'Host: api.twitter.com',
             'User-Agent: ClarolineConnect Twitter Application-only OAuth App v.1',
             'Authorization: Basic '.$base64_encoded_bearer_token,
             'Content-Type: application/x-www-form-urlencoded;charset=UTF-8',
-        );
+        ];
         $curlHandle = curl_init();
         curl_setopt($curlHandle, CURLOPT_URL, $secretUrl);
         curl_setopt($curlHandle, CURLOPT_HTTPHEADER, $headers); // set custom headers
@@ -346,13 +376,13 @@ class OauthManager
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true); // return output
         curl_setopt($curlHandle, CURLOPT_POSTFIELDS, 'grant_type=client_credentials');
         curl_setopt($curlHandle, CURLOPT_HEADER, 1); // send custom headers
-        $retrievedhtml = curl_exec($curlHandle); // execute the curl
+        curl_exec($curlHandle); // execute the curl
         $respInfo = curl_getinfo($curlHandle);
         curl_close($curlHandle);
         if ($respInfo['http_code'] !== 200) {
-            return array('error' => 'twitter_application_validation_error');
+            return ['error' => 'twitter_application_validation_error'];
         }
 
-        return array();
+        return [];
     }
 }

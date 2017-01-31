@@ -2,27 +2,27 @@
 
 namespace Icap\BadgeBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Rule\Validator;
+use Doctrine\ORM\EntityManager;
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Entity\BadgeClaim;
 use Icap\BadgeBundle\Entity\BadgeTranslation;
-use Claroline\CoreBundle\Entity\User;
+use Icap\BadgeBundle\Manager\BadgeManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Rule\Validator;
-use Doctrine\ORM\EntityManager;
-use Icap\BadgeBundle\Manager\BadgeManager;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Controller of the badges.
@@ -70,27 +70,27 @@ class AdministrationController extends Controller
     {
         $this->checkOpen();
 
-        $parameters = array(
+        $parameters = [
             'badgePage' => $badgePage,
             'claimPage' => $claimPage,
             'userPage' => $userPage,
             'add_link' => 'icap_badge_admin_badges_add',
-            'edit_link' => array(
+            'edit_link' => [
                 'url' => 'icap_badge_admin_badges_edit',
                 'suffix' => '#!edit',
-            ),
+            ],
             'delete_link' => 'icap_badge_admin_badges_delete',
             'view_link' => 'icap_badge_admin_badges_edit',
             'current_link' => 'icap_badge_admin_badges',
             'claim_link' => 'icap_badge_admin_manage_claim',
             'statistics_link' => 'icap_badge_admin_badges_statistics',
             'csv_link' => 'icap_badge_export_csv',
-            'route_parameters' => array(),
-        );
+            'route_parameters' => [],
+        ];
 
-        return array(
+        return [
             'parameters' => $parameters,
-        );
+        ];
     }
 
     /**
@@ -118,20 +118,20 @@ class AdministrationController extends Controller
 
         try {
             if ($this->get('icap_badge.form_handler.badge')->handleAdd($badge)) {
-                $sessionFlashBag->add('success', $translator->trans('badge_add_success_message', array(), 'icap_badge'));
+                $sessionFlashBag->add('success', $translator->trans('badge_add_success_message', [], 'icap_badge'));
 
                 return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
             }
         } catch (\Exception $exception) {
-            $sessionFlashBag->add('error', $translator->trans('badge_add_error_message', array(), 'icap_badge'));
+            $sessionFlashBag->add('error', $translator->trans('badge_add_error_message', [], 'icap_badge'));
 
             return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
         }
 
-        return array(
+        return [
             'form' => $this->get('icap_badge.form.badge')->createView(),
             'badge' => $badge,
-        );
+        ];
     }
 
     /**
@@ -163,21 +163,21 @@ class AdministrationController extends Controller
             $unawardBadge = $request->query->get('unawardBadge') === 'true';
 
             if ($this->get('icap_badge.form_handler.badge')->handleEdit($badge, $this->badgeManager, $unawardBadge)) {
-                $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', array(), 'icap_badge'));
+                $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', [], 'icap_badge'));
 
                 return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
             }
         } catch (\Exception $exception) {
-            $sessionFlashBag->add('error', $translator->trans('badge_edit_error_message', array(), 'icap_badge'));
+            $sessionFlashBag->add('error', $translator->trans('badge_edit_error_message', [], 'icap_badge'));
 
             return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
         }
 
-        return array(
+        return [
             'form' => $this->get('icap_badge.form.badge')->createView(),
             'badge' => $badge,
             'pager' => $pager,
-        );
+        ];
     }
 
     /**
@@ -202,11 +202,11 @@ class AdministrationController extends Controller
 
             $this->get('session')
                 ->getFlashBag()
-                ->add('success', $translator->trans('badge_delete_success_message', array(), 'icap_badge'));
+                ->add('success', $translator->trans('badge_delete_success_message', [], 'icap_badge'));
         } catch (\Exception $exception) {
             $this->get('session')
                 ->getFlashBag()
-                ->add('error', $translator->trans('badge_delete_error_message', array(), 'icap_badge'));
+                ->add('error', $translator->trans('badge_delete_error_message', [], 'icap_badge'));
         }
 
         return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
@@ -242,7 +242,7 @@ class AdministrationController extends Controller
                     $comment = $form->get('comment')->getData();
 
                     /** @var \Claroline\CoreBundle\Entity\User[] $users */
-                    $users = array();
+                    $users = [];
 
                     if (null !== $group) {
                         $users = $doctrine->getRepository('ClarolineCoreBundle:User')->findByGroup($group);
@@ -263,7 +263,7 @@ class AdministrationController extends Controller
                     $message = $translator->transChoice(
                         'badge_awarded_count_message',
                         $awardedBadge,
-                        array('%awaredBadge%' => $awardedBadge),
+                        ['%awaredBadge%' => $awardedBadge],
                         'icap_badge'
                     );
                     $this->get('session')->getFlashBag()->add($flashMessageType, $message);
@@ -271,24 +271,24 @@ class AdministrationController extends Controller
                     if (!$request->isXmlHttpRequest()) {
                         $this->get('session')
                             ->getFlashBag()
-                            ->add('error', $translator->trans('badge_award_error_message', array(), 'icap_badge'));
+                            ->add('error', $translator->trans('badge_award_error_message', [], 'icap_badge'));
                     } else {
                         return new Response($exception->getMessage(), 500);
                     }
                 }
 
                 if ($request->isXmlHttpRequest()) {
-                    return new JsonResponse(array('error' => false));
+                    return new JsonResponse(['error' => false]);
                 }
 
-                return $this->redirect($this->generateUrl('icap_badge_admin_badges_edit', array('slug' => $badge->getSlug())));
+                return $this->redirect($this->generateUrl('icap_badge_admin_badges_edit', ['slug' => $badge->getSlug()]));
             }
         }
 
-        return array(
+        return [
             'badge' => $badge,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -321,22 +321,22 @@ class AdministrationController extends Controller
 
             $this->get('session')
                 ->getFlashBag()
-                ->add('success', $translator->trans('badge_unaward_success_message', array(), 'icap_badge'));
+                ->add('success', $translator->trans('badge_unaward_success_message', [], 'icap_badge'));
         } catch (\Exception $exception) {
             if (!$request->isXmlHttpRequest()) {
                 $this->get('session')
                     ->getFlashBag()
-                    ->add('error', $translator->trans('badge_unaward_error_message', array(), 'icap_badge'));
+                    ->add('error', $translator->trans('badge_unaward_error_message', [], 'icap_badge'));
             } else {
                 return new Response($exception->getMessage(), 500);
             }
         }
 
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse(array('error' => false));
+            return new JsonResponse(['error' => false]);
         }
 
-        return $this->redirect($this->generateUrl('icap_badge_admin_badges_edit', array('slug' => $badge->getSlug())));
+        return $this->redirect($this->generateUrl('icap_badge_admin_badges_edit', ['slug' => $badge->getSlug()]));
     }
 
     /**
@@ -354,20 +354,20 @@ class AdministrationController extends Controller
 
         /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->get('translator');
-        $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'icap_badge');
-        $errorMessage = $translator->trans('badge_reject_award_error_message', array(), 'icap_badge');
+        $successMessage = $translator->trans('badge_reject_award_success_message', [], 'icap_badge');
+        $errorMessage = $translator->trans('badge_reject_award_error_message', [], 'icap_badge');
 
         try {
             if ($validate) {
-                $successMessage = $translator->trans('badge_validate_award_success_message', array(), 'icap_badge');
-                $errorMessage = $translator->trans('badge_validate_award_error_message', array(), 'icap_badge');
+                $successMessage = $translator->trans('badge_validate_award_success_message', [], 'icap_badge');
+                $errorMessage = $translator->trans('badge_validate_award_error_message', [], 'icap_badge');
 
                 /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
                 $badgeManager = $this->get('icap_badge.manager.badge');
                 $awardedBadge = $badgeManager->addBadgeToUser($badgeClaim->getBadge(), $badgeClaim->getUser());
 
                 if (!$awardedBadge) {
-                    $successMessage = $translator->trans('badge_already_award_info_message', array(), 'icap_badge');
+                    $successMessage = $translator->trans('badge_already_award_info_message', [], 'icap_badge');
                 }
             }
 
@@ -392,7 +392,7 @@ class AdministrationController extends Controller
     {
         $this->checkOpen();
 
-        return array();
+        return [];
     }
 
     /**
@@ -427,7 +427,7 @@ class AdministrationController extends Controller
         $this->getDoctrine()->getManager()->flush();
 
         $translator = $this->get('translator');
-        $successMessage = $translator->trans('recalculate_success', array(), 'icap_badge');
+        $successMessage = $translator->trans('recalculate_success', [], 'icap_badge');
         $this->get('session')->getFlashBag()->add('success', $successMessage);
 
         return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
@@ -448,27 +448,27 @@ class AdministrationController extends Controller
         $translator = $this->get('translator');
         $userBadgeRepo = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
 
-        $users = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findBy(array(), array('lastName' => 'ASC', 'firstName' => 'ASC'));
+        $users = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findBy([], ['lastName' => 'ASC', 'firstName' => 'ASC']);
         $badges = $this->badgeManager->getPlatformBadgesOrderedbyName($locale);
 
         $response = new StreamedResponse(function () use ($users, $badges, $locale, $translator, $userBadgeRepo) {
             $handle = fopen('php://output', 'w+');
 
             $userTrans = count($users) > 1 ?
-                $translator->trans('users', array(), 'platform') :
-                $translator->trans('user', array(), 'platform');
+                $translator->trans('users', [], 'platform') :
+                $translator->trans('user', [], 'platform');
             $badgeTrans = count($badges) > 1 ?
-                $translator->trans('badges', array(), 'icap_badge') :
-                $translator->trans('badge', array(), 'icap_badge');
+                $translator->trans('badges', [], 'icap_badge') :
+                $translator->trans('badge', [], 'icap_badge');
 
-            fputcsv($handle, array(count($users).' '.strtolower($userTrans).', '.count($badges).' '.strtolower($badgeTrans)));
+            fputcsv($handle, [count($users).' '.strtolower($userTrans).', '.count($badges).' '.strtolower($badgeTrans)]);
 
             // Headers
-            $headers = array(
-                $translator->trans('username', array(), 'platform'),
-                $translator->trans('first_name', array(), 'platform'),
-                $translator->trans('last_name', array(), 'platform'),
-            );
+            $headers = [
+                $translator->trans('username', [], 'platform'),
+                $translator->trans('first_name', [], 'platform'),
+                $translator->trans('last_name', [], 'platform'),
+            ];
             foreach ($badges as $badge) {
                 array_push($headers, $badge->getTranslationForLocale($locale)->getName());
             }
@@ -476,11 +476,11 @@ class AdministrationController extends Controller
 
             // Data
             foreach ($users as $user) {
-                $line = array(
+                $line = [
                     $user->getUsername(),
                     $user->getFirstname(),
                     $user->getlastName(),
-                );
+                ];
                 foreach ($badges as $badge) { // foreach iterates always in the same order
                     $check = $userBadgeRepo->findOneByBadgeAndUser($badge, $user) ?
                         'x' : '';
@@ -490,13 +490,12 @@ class AdministrationController extends Controller
             }
 
             fclose($handle);
-
         });
 
         $dateStr = date('Y-m-d');
         $response->headers->set('Content-Type', 'application/force-download');
 
-        $filename = $translator->trans('csv_filename', array(), 'icap_badge');
+        $filename = $translator->trans('csv_filename', [], 'icap_badge');
         $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'_'.$dateStr.'.csv"');
 
         return $response;

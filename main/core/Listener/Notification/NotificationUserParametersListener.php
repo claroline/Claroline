@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/13/15
  */
 
@@ -29,13 +29,14 @@ class NotificationUserParametersListener
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
         $event->addTypes(
-            array(
+            [
                 'resource-create',
+                'resource-publish',
                 'role-change_right',
                 'role-subscribe',
                 'badge-award',
                 'resource-text',
-            )
+            ]
         );
     }
 }

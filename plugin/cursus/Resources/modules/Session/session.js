@@ -21,6 +21,7 @@ import SessionDeletionModalCtrl from './Controller/SessionDeletionModalCtrl'
 import UsersRegistrationModalCtrl from './Controller/UsersRegistrationModalCtrl'
 import GroupsRegistrationModalCtrl from './Controller/GroupsRegistrationModalCtrl'
 import SessionMessageModalCtrl from './Controller/SessionMessageModalCtrl'
+import SessionUsersExportModalCtrl from './Controller/SessionUsersExportModalCtrl'
 
 angular.module('SessionModule', [
   'ui.bootstrap',
@@ -36,6 +37,7 @@ angular.module('SessionModule', [
 .controller('UsersRegistrationModalCtrl', UsersRegistrationModalCtrl)
 .controller('GroupsRegistrationModalCtrl', GroupsRegistrationModalCtrl)
 .controller('SessionMessageModalCtrl', SessionMessageModalCtrl)
+.controller('SessionUsersExportModalCtrl', SessionUsersExportModalCtrl)
 .directive('datetimepickerNeutralTimezone', function() {
   return {
     restrict: 'A',

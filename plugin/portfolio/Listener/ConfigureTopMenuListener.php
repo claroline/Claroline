@@ -65,11 +65,12 @@ class ConfigureTopMenuListener
 
         $menu
             ->addChild(
-                $this->translator->trans('my_portfolios', array(), 'icap_portfolio'),
+                $this->translator->trans('my_portfolios', [], 'icap_portfolio'),
                 $menuItemConfig
             )
             ->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
+            ->setExtra('title', $this->translator->trans('my_portfolios', [], 'icap_portfolio'))
             ->setExtra('icon', 'fa fa-list-alt');
     }
 }

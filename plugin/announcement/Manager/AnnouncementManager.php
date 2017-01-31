@@ -111,12 +111,14 @@ class AnnouncementManager
     public function sendMessage(Announcement $announcement)
     {
         $targets = $this->getUsersByResource($announcement->getAggregate()->getResourceNode(), 1);
+        $workspace = $announcement->getAggregate()->getResourceNode()->getWorkspace();
+        $content = $announcement->getContent().'<br>['.$workspace->getCode().'] '.$workspace->getName();
         $this->eventDispatcher->dispatch(
             'claroline_message_sending_to_users',
             'SendMessage',
             [
                 $announcement->getCreator(),
-                $announcement->getContent(),
+                $content,
                 $announcement->getTitle(),
                 null,
                 $targets,

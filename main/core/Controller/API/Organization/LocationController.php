@@ -11,21 +11,20 @@
 
 namespace Claroline\CoreBundle\Controller\API\Organization;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use FOS\RestBundle\Controller\FOSRestController;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\Organization\LocationManager;
-use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Entity\Organization\Location;
+use Claroline\CoreBundle\Form\Organization\LocationType;
+use Claroline\CoreBundle\Manager\ApiManager;
+use Claroline\CoreBundle\Manager\Organization\LocationManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\View;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Form\Organization\LocationType;
-use JMS\SecurityExtraBundle\Annotation as SEC;
-use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
  * @NamePrefix("api_")
@@ -59,10 +58,6 @@ class LocationController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_location"})
-     * @ApiDoc(
-     *     description="Returns the location list",
-     *     views = {"location"}
-     * )
      */
     public function getLocationsAction()
     {
@@ -71,10 +66,6 @@ class LocationController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_location"})
-     * @ApiDoc(
-     *     description="Returns the location creation form",
-     *     views = {"location"}
-     * )
      */
     public function getLocationCreateFormAction()
     {
@@ -87,10 +78,6 @@ class LocationController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_location"})
-     * @ApiDoc(
-     *     description="Returns the location edition form",
-     *     views = {"location"}
-     * )
      * @Get("/location/{location}/edit/form")
      */
     public function getLocationEditFormAction(Location $location)
@@ -104,11 +91,6 @@ class LocationController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_location"})
-     * @ApiDoc(
-     *     description="Creates a location",
-     *     views = {"location"},
-     *     input="Claroline\CoreBundle\Form\LocationType"
-     * )
      */
     public function postLocationAction()
     {
@@ -125,22 +107,17 @@ class LocationController extends FOSRestController
             $httpCode = 400;
         }
 
-        $options = array(
+        $options = [
             'http_code' => $httpCode,
             'extra_parameters' => $location,
             'serializer_group' => 'api_location',
-        );
+        ];
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\createLocationForm.html.twig', $form, $options);
     }
 
     /**
      * @View(serializerGroups={"api_location"})
-     * @ApiDoc(
-     *     description="Update a location",
-     *     views = {"location"},
-     *     input="Claroline\CoreBundle\Form\LocationType"
-     * )
      */
     public function putLocationAction(Location $location)
     {
@@ -156,28 +133,23 @@ class LocationController extends FOSRestController
             $httpCode = 200;
         }
 
-        $options = array(
+        $options = [
             'http_code' => $httpCode,
             'extra_parameters' => $location,
             'serializer_group' => 'api_location',
-        );
+        ];
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editLocationForm.html.twig', $form, $options);
     }
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Removes a location",
-     *     section="location",
-     *     views = {"api_location"}
-     * )
      * @EXT\ParamConverter("location", class="ClarolineCoreBundle:Organization\Location",)
      */
     public function deleteLocationAction(Location $location)
     {
         $this->locationManager->delete($location);
 
-        return array('success');
+        return ['success'];
     }
 }

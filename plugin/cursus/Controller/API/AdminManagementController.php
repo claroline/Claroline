@@ -46,7 +46,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -62,6 +64,7 @@ class AdminManagementController extends Controller
     private $request;
     private $serializer;
     private $tagManager;
+    private $translator;
     private $userManager;
     private $workspaceManager;
     private $workspaceModelManager;
@@ -76,6 +79,7 @@ class AdminManagementController extends Controller
      *     "request"               = @DI\Inject("request"),
      *     "serializer"            = @DI\Inject("jms_serializer"),
      *     "tagManager"            = @DI\Inject("claroline.manager.tag_manager"),
+     *     "translator"            = @DI\Inject("translator"),
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager"      = @DI\Inject("claroline.manager.workspace_manager"),
      *     "workspaceModelManager" = @DI\Inject("claroline.manager.workspace_model_manager")
@@ -90,6 +94,7 @@ class AdminManagementController extends Controller
         Request $request,
         Serializer $serializer,
         TagManager $tagManager,
+        TranslatorInterface $translator,
         UserManager $userManager,
         WorkspaceManager $workspaceManager,
         WorkspaceModelManager $workspaceModelManager
@@ -102,6 +107,7 @@ class AdminManagementController extends Controller
         $this->request = $request;
         $this->serializer = $serializer;
         $this->tagManager = $tagManager;
+        $this->translator = $translator;
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
         $this->workspaceModelManager = $workspaceModelManager;
@@ -144,13 +150,14 @@ class AdminManagementController extends Controller
         if ($this->request->files->get('cursusDatas')['icon']) {
             $icon = $this->cursusManager->saveIcon($this->request->files->get('cursusDatas')['icon']);
         }
+        $blocking = is_bool($cursusDatas['blocking']) ? $cursusDatas['blocking'] : $cursusDatas['blocking'] === 'true';
         $createdCursus = $this->cursusManager->createCursus(
             $cursusDatas['title'],
             $cursusDatas['code'],
             null,
             null,
             $cursusDatas['description'],
-            $cursusDatas['blocking'],
+            $blocking,
             $icon,
             $cursusDatas['color'],
             $worskpace
@@ -188,13 +195,14 @@ class AdminManagementController extends Controller
         if ($this->request->files->get('cursusDatas')['icon']) {
             $icon = $this->cursusManager->saveIcon($this->request->files->get('cursusDatas')['icon']);
         }
+        $blocking = is_bool($cursusDatas['blocking']) ? $cursusDatas['blocking'] : $cursusDatas['blocking'] === 'true';
         $createdCursus = $this->cursusManager->createCursus(
             $cursusDatas['title'],
             $cursusDatas['code'],
             $parent,
             null,
             $cursusDatas['description'],
-            $cursusDatas['blocking'],
+            $blocking,
             $icon,
             $cursusDatas['color'],
             $worskpace
@@ -226,7 +234,8 @@ class AdminManagementController extends Controller
         $cursus->setTitle($cursusDatas['title']);
         $cursus->setCode($cursusDatas['code']);
         $cursus->setDescription($cursusDatas['description']);
-        $cursus->setBlocking((bool) $cursusDatas['blocking']);
+        $blocking = is_bool($cursusDatas['blocking']) ? $cursusDatas['blocking'] : $cursusDatas['blocking'] === 'true';
+        $cursus->setBlocking($blocking);
         $color = $cursusDatas['color'];
         $details = ['color' => $color];
         $cursus->setDetails($details);
@@ -351,7 +360,24 @@ class AdminManagementController extends Controller
         $worskpace = null;
         $worskpaceModel = null;
         $icon = null;
-
+        $publicRegistration = is_bool($courseDatas['publicRegistration']) ?
+            $courseDatas['publicRegistration'] :
+            $courseDatas['publicRegistration'] === 'true';
+        $publicUnregistration = is_bool($courseDatas['publicUnregistration']) ?
+            $courseDatas['publicUnregistration'] :
+            $courseDatas['publicUnregistration'] === 'true';
+        $registrationValidation = is_bool($courseDatas['registrationValidation']) ?
+            $courseDatas['registrationValidation'] :
+            $courseDatas['registrationValidation'] === 'true';
+        $userValidation = is_bool($courseDatas['userValidation']) ?
+            $courseDatas['userValidation'] :
+            $courseDatas['userValidation'] === 'true';
+        $organizationValidation = is_bool($courseDatas['organizationValidation']) ?
+            $courseDatas['organizationValidation'] :
+            $courseDatas['organizationValidation'] === 'true';
+        $withSessionEvent = is_bool($courseDatas['withSessionEvent']) ?
+            $courseDatas['withSessionEvent'] :
+            $courseDatas['withSessionEvent'] === 'true';
         if ($courseDatas['workspace']) {
             $worskpace = $this->workspaceManager->getWorkspaceById($courseDatas['workspace']);
         }
@@ -368,19 +394,19 @@ class AdminManagementController extends Controller
             $courseDatas['title'],
             $courseDatas['code'],
             $courseDatas['description'],
-            $courseDatas['publicRegistration'],
-            $courseDatas['publicUnregistration'],
-            $courseDatas['registrationValidation'],
+            $publicRegistration,
+            $publicUnregistration,
+            $registrationValidation,
             $courseDatas['tutorRoleName'],
             $courseDatas['learnerRoleName'],
             $worskpaceModel,
             $worskpace,
             $icon,
-            $courseDatas['userValidation'],
-            $courseDatas['organizationValidation'],
+            $userValidation,
+            $organizationValidation,
             $courseDatas['maxUsers'],
             $courseDatas['defaultSessionDuration'],
-            $courseDatas['withSessionEvent'],
+            $withSessionEvent,
             $validators,
             $courseDatas['displayOrder']
         );
@@ -408,6 +434,24 @@ class AdminManagementController extends Controller
         $worskpace = null;
         $worskpaceModel = null;
         $icon = null;
+        $publicRegistration = is_bool($courseDatas['publicRegistration']) ?
+            $courseDatas['publicRegistration'] :
+            $courseDatas['publicRegistration'] === 'true';
+        $publicUnregistration = is_bool($courseDatas['publicUnregistration']) ?
+            $courseDatas['publicUnregistration'] :
+            $courseDatas['publicUnregistration'] === 'true';
+        $registrationValidation = is_bool($courseDatas['registrationValidation']) ?
+            $courseDatas['registrationValidation'] :
+            $courseDatas['registrationValidation'] === 'true';
+        $userValidation = is_bool($courseDatas['userValidation']) ?
+            $courseDatas['userValidation'] :
+            $courseDatas['userValidation'] === 'true';
+        $organizationValidation = is_bool($courseDatas['organizationValidation']) ?
+            $courseDatas['organizationValidation'] :
+            $courseDatas['organizationValidation'] === 'true';
+        $withSessionEvent = is_bool($courseDatas['withSessionEvent']) ?
+            $courseDatas['withSessionEvent'] :
+            $courseDatas['withSessionEvent'] === 'true';
 
         if ($courseDatas['workspace']) {
             $worskpace = $this->workspaceManager->getWorkspaceById($courseDatas['workspace']);
@@ -425,19 +469,19 @@ class AdminManagementController extends Controller
             $courseDatas['title'],
             $courseDatas['code'],
             $courseDatas['description'],
-            $courseDatas['publicRegistration'],
-            $courseDatas['publicUnregistration'],
-            $courseDatas['registrationValidation'],
+            $publicRegistration,
+            $publicUnregistration,
+            $registrationValidation,
             $courseDatas['tutorRoleName'],
             $courseDatas['learnerRoleName'],
             $worskpaceModel,
             $worskpace,
             $icon,
-            $courseDatas['userValidation'],
-            $courseDatas['organizationValidation'],
+            $userValidation,
+            $organizationValidation,
             $courseDatas['maxUsers'],
             $courseDatas['defaultSessionDuration'],
-            $courseDatas['withSessionEvent'],
+            $withSessionEvent,
             $validators,
             $courseDatas['displayOrder']
         );
@@ -489,9 +533,27 @@ class AdminManagementController extends Controller
         $course->setCode($courseDatas['code']);
         $description = $courseDatas['description'] ? $courseDatas['description'] : null;
         $course->setDescription($description);
-        $course->setPublicRegistration((bool) $courseDatas['publicRegistration']);
-        $course->setPublicUnregistration((bool) $courseDatas['publicUnregistration']);
-        $course->setRegistrationValidation((bool) $courseDatas['registrationValidation']);
+        $publicRegistration = is_bool($courseDatas['publicRegistration']) ?
+            $courseDatas['publicRegistration'] :
+            $courseDatas['publicRegistration'] === 'true';
+        $publicUnregistration = is_bool($courseDatas['publicUnregistration']) ?
+            $courseDatas['publicUnregistration'] :
+            $courseDatas['publicUnregistration'] === 'true';
+        $registrationValidation = is_bool($courseDatas['registrationValidation']) ?
+            $courseDatas['registrationValidation'] :
+            $courseDatas['registrationValidation'] === 'true';
+        $userValidation = is_bool($courseDatas['userValidation']) ?
+            $courseDatas['userValidation'] :
+            $courseDatas['userValidation'] === 'true';
+        $organizationValidation = is_bool($courseDatas['organizationValidation']) ?
+            $courseDatas['organizationValidation'] :
+            $courseDatas['organizationValidation'] === 'true';
+        $withSessionEvent = is_bool($courseDatas['withSessionEvent']) ?
+            $courseDatas['withSessionEvent'] :
+            $courseDatas['withSessionEvent'] === 'true';
+        $course->setPublicRegistration($publicRegistration);
+        $course->setPublicUnregistration($publicUnregistration);
+        $course->setRegistrationValidation($registrationValidation);
         $tutorRoleName = $courseDatas['tutorRoleName'] ? $courseDatas['tutorRoleName'] : null;
         $course->setTutorRoleName($tutorRoleName);
         $learnerRoleName = $courseDatas['learnerRoleName'] ? $courseDatas['learnerRoleName'] : null;
@@ -513,12 +575,12 @@ class AdminManagementController extends Controller
             $icon = $this->cursusManager->saveIcon($this->request->files->get('courseDatas')['icon']);
             $course->setIcon($icon);
         }
-        $course->setUserValidation((bool) $courseDatas['userValidation']);
-        $course->setOrganizationValidation((bool) $courseDatas['organizationValidation']);
+        $course->setUserValidation($userValidation);
+        $course->setOrganizationValidation($organizationValidation);
         $maxUsers = $courseDatas['maxUsers'] ? $courseDatas['maxUsers'] : null;
         $course->setMaxUsers($maxUsers);
         $course->setDefaultSessionDuration($courseDatas['defaultSessionDuration']);
-        $course->setWithSessionEvent((bool) $courseDatas['withSessionEvent']);
+        $course->setWithSessionEvent($withSessionEvent);
         $course->setDisplayOrder($courseDatas['displayOrder']);
         $course->emptyValidators();
         $validators = isset($courseDatas['validators']) && count($courseDatas['validators']) > 0 ?
@@ -722,6 +784,24 @@ class AdminManagementController extends Controller
     public function postSessionCreateAction(Course $course)
     {
         $sessionDatas = $this->request->request->get('sessionDatas', false);
+        $defaultSession = is_bool($sessionDatas['defaultSession']) ?
+            $sessionDatas['defaultSession'] :
+            $sessionDatas['defaultSession'] === 'true';
+        $publicRegistration = is_bool($sessionDatas['publicRegistration']) ?
+            $sessionDatas['publicRegistration'] :
+            $sessionDatas['publicRegistration'] === 'true';
+        $publicUnregistration = is_bool($sessionDatas['publicUnregistration']) ?
+            $sessionDatas['publicUnregistration'] :
+            $sessionDatas['publicUnregistration'] === 'true';
+        $registrationValidation = is_bool($sessionDatas['registrationValidation']) ?
+            $sessionDatas['registrationValidation'] :
+            $sessionDatas['registrationValidation'] === 'true';
+        $userValidation = is_bool($sessionDatas['userValidation']) ?
+            $sessionDatas['userValidation'] :
+            $sessionDatas['userValidation'] === 'true';
+        $organizationValidation = is_bool($sessionDatas['organizationValidation']) ?
+            $sessionDatas['organizationValidation'] :
+            $sessionDatas['organizationValidation'] === 'true';
         $trimmedStartDate = trim($sessionDatas['startDate'], 'Zz');
         $trimmedEndDate = trim($sessionDatas['endDate'], 'Zz');
         $startDate = new \DateTime($trimmedStartDate);
@@ -738,12 +818,12 @@ class AdminManagementController extends Controller
             null,
             $startDate,
             $endDate,
-            $sessionDatas['defaultSession'],
-            $sessionDatas['publicRegistration'],
-            $sessionDatas['publicUnregistration'],
-            $sessionDatas['registrationValidation'],
-            $sessionDatas['userValidation'],
-            $sessionDatas['organizationValidation'],
+            $defaultSession,
+            $publicRegistration,
+            $publicUnregistration,
+            $registrationValidation,
+            $userValidation,
+            $organizationValidation,
             $sessionDatas['maxUsers'],
             0,
             $validators,
@@ -775,6 +855,24 @@ class AdminManagementController extends Controller
     public function putSessionEditionAction(CourseSession $session)
     {
         $sessionDatas = $this->request->request->get('sessionDatas', false);
+        $defaultSession = is_bool($sessionDatas['defaultSession']) ?
+            $sessionDatas['defaultSession'] :
+            $sessionDatas['defaultSession'] === 'true';
+        $publicRegistration = is_bool($sessionDatas['publicRegistration']) ?
+            $sessionDatas['publicRegistration'] :
+            $sessionDatas['publicRegistration'] === 'true';
+        $publicUnregistration = is_bool($sessionDatas['publicUnregistration']) ?
+            $sessionDatas['publicUnregistration'] :
+            $sessionDatas['publicUnregistration'] === 'true';
+        $registrationValidation = is_bool($sessionDatas['registrationValidation']) ?
+            $sessionDatas['registrationValidation'] :
+            $sessionDatas['registrationValidation'] === 'true';
+        $userValidation = is_bool($sessionDatas['userValidation']) ?
+            $sessionDatas['userValidation'] :
+            $sessionDatas['userValidation'] === 'true';
+        $organizationValidation = is_bool($sessionDatas['organizationValidation']) ?
+            $sessionDatas['organizationValidation'] :
+            $sessionDatas['organizationValidation'] === 'true';
         $trimmedStartDate = trim($sessionDatas['startDate'], 'Zz');
         $trimmedEndDate = trim($sessionDatas['endDate'], 'Zz');
         $startDate = new \DateTime($trimmedStartDate);
@@ -783,13 +881,13 @@ class AdminManagementController extends Controller
         $session->setStartDate($startDate);
         $session->setEndDate($endDate);
         $session->setDescription($sessionDatas['description']);
-        $session->setDefaultSession((bool) $sessionDatas['defaultSession']);
-        $session->setPublicRegistration((bool) $sessionDatas['publicRegistration']);
-        $session->setPublicUnregistration((bool) $sessionDatas['publicUnregistration']);
-        $session->setUserValidation((bool) $sessionDatas['userValidation']);
+        $session->setDefaultSession($defaultSession);
+        $session->setPublicRegistration($publicRegistration);
+        $session->setPublicUnregistration($publicUnregistration);
+        $session->setUserValidation($userValidation);
         $session->setMaxUsers($sessionDatas['maxUsers']);
-        $session->setOrganizationValidation((bool) $sessionDatas['organizationValidation']);
-        $session->setRegistrationValidation((bool) $sessionDatas['registrationValidation']);
+        $session->setOrganizationValidation($organizationValidation);
+        $session->setRegistrationValidation($registrationValidation);
         $session->setEventRegistrationType($sessionDatas['eventRegistrationType']);
         $session->setDisplayOrder($sessionDatas['displayOrder']);
         $details = $session->getDetails();
@@ -1200,6 +1298,7 @@ class AdminManagementController extends Controller
             );
             $results['queue'] = $serializedQueue;
             $this->cursusManager->deleteSessionQueue($queue);
+            $this->cursusManager->sendSessionRegistrationConfirmationMessage($user, $session, 'validated');
         }
 
         return new JsonResponse($results, 200);
@@ -1810,6 +1909,44 @@ class AdminManagementController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/api/cursus/populated/document/models/type/{type}/source/{sourceId}/retrieve",
+     *     name="api_get_cursus_populated_document_models_by_type",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * Returns the populated document models by type
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getPopulatedDocumentModelsByTypeAction($type, $sourceId)
+    {
+        $documentModels = $this->cursusManager->getPopulatedDocumentModelsByType($type, $sourceId);
+
+        return new JsonResponse($documentModels, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/cursus/populated/document/models/type/{type}/source/{sourceId}/for/user/{user}/retrieve",
+     *     name="api_get_cursus_populated_document_models_by_type_for_user",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", converter="current_user")
+     *
+     * Returns the populated document models by type for an user
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getPopulatedDocumentModelsByTypeForUserAction(User $user, $type, $sourceId)
+    {
+        $documentModels = $this->cursusManager->getPopulatedDocumentModelsByType($type, $sourceId, $user);
+
+        return new JsonResponse($documentModels, 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/api/session/event/{sessionEvent}/repeat",
      *     name="api_post_session_event_repeat",
      *     options = {"expose"=true}
@@ -1959,17 +2096,152 @@ class AdminManagementController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/api/cursus/document/model/{documentModel}/send",
+     *     "/api/cursus/document/model/{documentModel}/source/{sourceId}/send",
      *     name="api_post_cursus_document_send",
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
      */
-    public function postDocumentSendAction(DocumentModel $documentModel)
+    public function postDocumentSendAction(DocumentModel $documentModel, $sourceId)
     {
-        $sourceId = $this->request->request->get('sourceId', false);
         $this->cursusManager->generateDocumentFromModel($documentModel, $sourceId);
 
         return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/cursus/document/model/{documentModel}/source/{sourceId}/for/user/{user}/send",
+     *     name="api_post_cursus_document_for_user_send",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", converter="current_user")
+     */
+    public function postDocumentForUserSendAction(DocumentModel $documentModel, User $user, $sourceId)
+    {
+        $this->cursusManager->generateDocumentFromModelForUser($documentModel, $user, $sourceId);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/session/{session}/users/type/{type}/csv/export",
+     *     name="api_get_session_users_csv_export",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     */
+    public function exportCsvSessionUsersAction(CourseSession $session, $type)
+    {
+        $exportType = intval($type);
+        $users = [];
+
+        if ($exportType === 1 || $exportType === 3) {
+            $users['learners'] = $this->cursusManager->getUsersBySessionAndType($session, CourseSessionUser::LEARNER);
+        }
+        if ($exportType === 2 || $exportType === 3) {
+            $users['trainers'] = $this->cursusManager->getUsersBySessionAndType($session, CourseSessionUser::TEACHER);
+        }
+        $response = new StreamedResponse();
+        $response->setCallBack(
+            function () use ($users) {
+                $handle = fopen('php://output', 'r+');
+
+                if (count($users) === 2) {
+                    fwrite($handle, $this->translator->trans('trainers', [], 'cursus').PHP_EOL);
+                }
+                if (isset($users['trainers'])) {
+                    foreach ($users['trainers'] as $user) {
+                        fwrite($handle, implode(';', [$user->getFirstName(), $user->getLastName()]).PHP_EOL);
+                    }
+                }
+                if (count($users) === 2) {
+                    fwrite($handle, PHP_EOL);
+                    fwrite($handle, $this->translator->trans('learners', [], 'cursus').PHP_EOL);
+                }
+                if (isset($users['learners'])) {
+                    foreach ($users['learners'] as $user) {
+                        fwrite($handle, implode(';', [$user->getFirstName(), $user->getLastName()]).PHP_EOL);
+                    }
+                }
+                fclose($handle);
+            }
+        );
+        $fileName = $session->getName();
+
+        if ($exportType === 1) {
+            $fileName .= '['.$this->translator->trans('learners', [], 'cursus').']';
+        } elseif ($exportType === 2) {
+            $fileName .= '['.$this->translator->trans('trainers', [], 'cursus').']';
+        }
+
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$fileName.'.csv');
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Connection', 'close');
+
+        return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/session/event/{sessionEvent}/users/type/{type}/csv/export",
+     *     name="api_get_session_event_users_csv_export",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     */
+    public function exportCsvSessionEventUsersAction(SessionEvent $sessionEvent, $type)
+    {
+        $exportType = intval($type);
+        $users = [];
+
+        if ($exportType === 1 || $exportType === 3) {
+            $users['participants'] = $this->cursusManager->getUsersBySessionEventAndStatus($sessionEvent, SessionEventUser::REGISTERED);
+        }
+        if ($exportType === 2 || $exportType === 3) {
+            $users['trainers'] = $sessionEvent->getTutors();
+        }
+        $response = new StreamedResponse();
+        $response->setCallBack(
+            function () use ($users) {
+                $handle = fopen('php://output', 'r+');
+
+                if (count($users) === 2) {
+                    fwrite($handle, $this->translator->trans('trainers', [], 'cursus').PHP_EOL);
+                }
+                if (isset($users['trainers'])) {
+                    foreach ($users['trainers'] as $user) {
+                        fwrite($handle, implode(';', [$user->getFirstName(), $user->getLastName()]).PHP_EOL);
+                    }
+                }
+                if (count($users) === 2) {
+                    fwrite($handle, PHP_EOL);
+                    fwrite($handle, $this->translator->trans('participants', [], 'cursus').PHP_EOL);
+                }
+                if (isset($users['participants'])) {
+                    foreach ($users['participants'] as $user) {
+                        fwrite($handle, implode(';', [$user->getFirstName(), $user->getLastName()]).PHP_EOL);
+                    }
+                }
+                fclose($handle);
+            }
+        );
+        $fileName = $sessionEvent->getName();
+
+        if ($exportType === 1) {
+            $fileName .= '['.$this->translator->trans('participants', [], 'cursus').']';
+        } elseif ($exportType === 2) {
+            $fileName .= '['.$this->translator->trans('trainers', [], 'cursus').']';
+        }
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$fileName.'.csv');
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Connection', 'close');
+
+        return $response;
     }
 }

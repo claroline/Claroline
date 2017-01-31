@@ -59,6 +59,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
                         ->booleanNode('breadcrumbs')->end()
                         ->booleanNode('summaryDisplayed')->end()
                         ->booleanNode('completeBlockingCondition')->end()
+                        ->booleanNode('manualProgressionAllowed')->end()
                         ->booleanNode('modified')->end()
                         ->booleanNode('published')->end()
                     ->end()
@@ -122,14 +123,6 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
                     $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
 
                     // Decode JSON to be able to replace IDs in structure
-
-                    // TODO update IDs in step structure
-                    /*$json = json_decode($text);
-                    if (!empty($json) && !empty($json->steps)) {
-                        foreach ($json->steps as $step) {
-                            $this->formatStep($step);
-                        }
-                    }*/
 
                     $entity->setStructure($text);
                     $this->container->get('doctrine.orm.entity_manager')->persist($entity);

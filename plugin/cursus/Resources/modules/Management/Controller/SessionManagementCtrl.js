@@ -255,11 +255,19 @@ export default class SessionManagementCtrl {
     this.DocumentModelService.displayDocumentSelection(this.session, 2)
   }
 
+  generateEventCertificates (sessionEvent) {
+    this.DocumentModelService.displayDocumentSelection(sessionEvent, 3)
+  }
+
   inviteLearnersToEvent (sessionEvent) {
     this.DocumentModelService.displayDocumentSelection(sessionEvent, 1)
   }
 
   sendMessageToSessionLearners () {
     this.SessionService.sendMessageToSession(this.session)
+  }
+
+  exportUsers () {
+    this.SessionService.exportUsersForm(this.sessionId)
   }
 }

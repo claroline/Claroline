@@ -33,7 +33,7 @@ class TextPlayerListener
     }
 
     /**
-     * @DI\Observe("play_file_text")
+     * @DI\Observe("play_file_text_plain")
      *
      * @param PlayFileEvent $event
      */

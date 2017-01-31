@@ -1,7 +1,7 @@
 language: php
 
 php:
-  - "5.6"
+  - "7.0"
 
 addons:
   apt:
@@ -42,7 +42,7 @@ before_install:
   # leave build/repo dir
   - cd ../..
   # increase php memory size (required for composer)
-  - echo "memory_limit=4096M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo "memory_limit=6144M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   # disable xdebug
   - phpenv config-rm xdebug.ini
   # get node >=5.6 (manual upgrade of nvm is currently required, pre-installed version is buggy)
@@ -53,11 +53,12 @@ before_install:
 before_script:
   # get and configure claroline platform
   - curl -L https://github.com/claroline/Claroline/archive/${TRAVIS_BRANCH}.tar.gz | tar xzv
-  - cd Claroline-master
+  - cd Claroline-${TRAVIS_BRANCH}
   - php scripts/configure.php --default
   # override platform composer.json with build/repo local reference
   - rm -rf ../$TRAVIS_REPO_SLUG/.git
-  - php ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/pre-composer.php claroline/distribution ../$TRAVIS_REPO_SLUG dev-$TRAVIS_BRANCH
+  - if [[ $TRAVIS_BRANCH =~ ^[0-9]\.x$ ]]; then export COMPOSER_REF=$TRAVIS_BRANCH; else export COMPOSER_REF="dev-$TRAVIS_BRANCH"; fi
+  - php ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/pre-composer.php claroline/distribution ../$TRAVIS_REPO_SLUG $COMPOSER_REF
   # fetch dependencies and build (currently this is done in prod mode)
   - export TRAVIS_REPO_SLUG REMOTE_HOST REMOTE_USER REMOTE_PASS CACHE_PATH
   - bash ../$TRAVIS_REPO_SLUG/main/dev/Resources/travis/fetch-deps.bash

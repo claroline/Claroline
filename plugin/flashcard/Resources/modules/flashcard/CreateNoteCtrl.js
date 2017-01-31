@@ -11,7 +11,7 @@
 import NotBlank from '#/main/core/form/Validator/NotBlank'
 
 export default class CreateNoteCtrl {
-  constructor (service, $location) {
+  constructor(service, $location) {
     this.deck = service.getDeck()
     this.$location = $location
     this.deckNode = service.getDeckNode()
@@ -33,7 +33,7 @@ export default class CreateNoteCtrl {
     this.fieldValues = []
     this.newCards = []
     this.fieldTypes = ['text', 'image']
-    
+
     this.errorMessage = null
     this.errors = []
     this._service = service
@@ -44,7 +44,7 @@ export default class CreateNoteCtrl {
     })
   }
 
-  createNote (form) {
+  createNote(form) {
     if (form.$valid) {
       const fields = []
       let fieldLabel = null
@@ -72,7 +72,7 @@ export default class CreateNoteCtrl {
     }
   }
 
-  updateNoteTypeChoosen () {
+  updateNoteTypeChoosen() {
     if (this.idNoteTypeChoosen != 0) {
       this.noteTypes.forEach(
         (element) => {
@@ -84,7 +84,7 @@ export default class CreateNoteCtrl {
     }
   }
 
-  _resetForm (form) {
+  _resetForm(form) {
     this.errorMessage = null
     this.errors = []
     this.fieldValues = []

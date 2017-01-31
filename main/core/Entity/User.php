@@ -45,6 +45,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @DoctrineAssert\UniqueEntity("mail")
  * @Assert\Callback(methods={"isPublicUrlValid"})
  * @ClaroAssert\Username()
+ * @ClaroAssert\UserAdministrativeCode()
  */
 class User extends AbstractRoleSubject implements Serializable, AdvancedUserInterface, EquatableInterface, OrderableInterface
 {
@@ -1189,10 +1190,12 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         }
     }
 
-    //sometimes it's passed as an array and I don't understand why.
+    // todo: remove this method
     public function setOrganizations($organizations)
     {
-        $this->organizations = $organizations;
+        $this->organizations = $organizations instanceof ArrayCollection ?
+            $organizations :
+            new ArrayCollection($organizations);
     }
 
     public static function getUserSearchableFields()

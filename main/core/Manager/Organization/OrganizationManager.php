@@ -81,14 +81,19 @@ class OrganizationManager
         return $this->repo->findBy(['parent' => null]);
     }
 
-    public function getDefault()
+    public function getDefault($createIfEmpty = false)
     {
-        return $this->repo->findOneByDefault(true);
+        $defaultOrganization = $this->repo->findOneByDefault(true);
+        if ($createIfEmpty && $defaultOrganization === null) {
+            $defaultOrganization = $this->createDefault(true);
+        }
+
+        return $defaultOrganization;
     }
 
-    public function createDefault()
+    public function createDefault($force = false)
     {
-        if (count($this->getDefault()) > 0) {
+        if (!$force && count($this->getDefault()) > 0) {
             return;
         }
         $this->log('Adding default organization...');
@@ -99,6 +104,8 @@ class OrganizationManager
         $orga->setParent(null);
         $this->om->persist($orga);
         $this->om->flush();
+
+        return $orga;
     }
 
     public function setLogger(LoggerInterface $logger)

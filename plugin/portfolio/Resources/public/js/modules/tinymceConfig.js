@@ -30,7 +30,6 @@
 
     tinyMceConfig.plugins = plugins;
     tinyMceConfig.toolbar1 = toolbar1;
-    tinyMceConfig.format = 'text';
 
     appDirectives.value('tinyMceConfig', tinyMceConfig);
 })();

@@ -36,6 +36,7 @@ class CardRepository extends EntityRepository
         $query->setParameters([
             'deck' => $deck,
         ]);
+
         return $query->getSingleScalarResult();
     }
 

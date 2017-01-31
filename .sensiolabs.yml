@@ -1,10 +1,12 @@
+commit_failure_conditions:
+  - "project.severity.critical > 0"
+
 global_exclude_dirs:
-    - dev/Resources/travis
+  - dev/Resources/travis
 
 exclude_patterns:
-    - merge.php
-    - import.php
-    - main/*/Migrations
-    - main/*/Tests
-    - plugin/*/Migrations
-    - plugin/*/Tests
+  - .travis.yml
+  - main/*/Migrations
+  - main/*/Tests
+  - plugin/*/Migrations
+  - plugin/*/Tests

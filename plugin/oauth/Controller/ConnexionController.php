@@ -5,14 +5,14 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 7/6/15
  */
 
 namespace Icap\OAuthBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class ConnexionController extends Controller
@@ -31,9 +31,16 @@ class ConnexionController extends Controller
         $service = $session->get('icap.oauth.resource_owner');
         $user = $session->get('icap.oauth.user');
         if ($service !== null && $user !== null) {
+            $selfRegistration = $this
+                ->get('claroline.config.platform_config_handler')
+                ->getParameter('allow_self_registration');
             $this->get('translator')->setLocale($request->getLocale());
 
-            return array('service' => $service['name']);
+            return [
+                'service' => $service['name'],
+                'oauthUser' => $user,
+                'selfRegistration' => $selfRegistration,
+            ];
         } else {
             $session->remove('icap.oauth.resource_owner');
             $session->remove('icap.oauth.user');
@@ -52,19 +59,21 @@ class ConnexionController extends Controller
      */
     public function registerAction(Request $request)
     {
+        $selfRegistration = $this
+            ->get('claroline.config.platform_config_handler')
+            ->getParameter('allow_self_registration');
         $session = $request->getSession();
         $service = $session->get('icap.oauth.resource_owner');
         $user = $session->get('icap.oauth.user');
-        if ($service !== null && $user !== null) {
+        if ($service !== null && $user !== null && $selfRegistration === true) {
             $translator = $this->get('translator');
             $translator->setLocale($request->getLocale());
             $form = $this->get('icap.oauth.manager')->getRegistrationForm($user, $translator);
-            //$session->remove('icap.oauth.user');
 
-            return array('form' => $form->createView());
-        } else {
-            return $this->redirectToRoute('claro_security_login');
+            return ['form' => $form->createView()];
         }
+
+        return $this->redirectToRoute('claro_security_login');
     }
 
     /**
@@ -78,12 +87,19 @@ class ConnexionController extends Controller
      */
     public function createAccountAction(Request $request)
     {
-        $session = $request->getSession();
-        $service = $session->get('icap.oauth.resource_owner');
-        $translator = $this->get('translator');
-        $translator->setLocale($request->getLocale());
+        $selfRegistration = $this
+            ->get('claroline.config.platform_config_handler')
+            ->getParameter('allow_self_registration');
+        if ($selfRegistration) {
+            $session = $request->getSession();
+            $service = $session->get('icap.oauth.resource_owner');
+            $translator = $this->get('translator');
+            $translator->setLocale($request->getLocale());
 
-        return $this->get('icap.oauth.manager')->createNewAccount($request, $translator, $service);
+            return $this->get('icap.oauth.manager')->createNewAccount($request, $translator, $service);
+        }
+
+        return $this->redirectToRoute('icap_oauth_check_connexion');
     }
 
     /**
@@ -101,9 +117,8 @@ class ConnexionController extends Controller
         $user = $session->get('icap.oauth.user');
         if ($service !== null && $user !== null) {
             $this->get('translator')->setLocale($request->getLocale());
-            //$session->remove('icap.oauth.user');
 
-            return array();
+            return [];
         } else {
             return $this->redirectToRoute('claro_security_login');
         }
@@ -125,5 +140,24 @@ class ConnexionController extends Controller
         $this->get('translator')->setLocale($request->getLocale());
 
         return $this->get('icap.oauth.manager')->linkAccount($request, $service);
+    }
+
+    /**
+     * @EXT\Route("/icap_oauth/link_account_mail", name="icap_oauth_link_account_mail")
+     * @EXT\Method("GET")
+     * @EXT\Template("IcapOAuthBundle:Connect:link_account.html.twig")
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function linkAccountByMailAction(Request $request)
+    {
+        $session = $request->getSession();
+        $service = $session->get('icap.oauth.resource_owner');
+        $username = $session->get('icap.oauth.user')['mail'];
+        $this->get('translator')->setLocale($request->getLocale());
+
+        return $this->get('icap.oauth.manager')->linkAccount($request, $service, $username);
     }
 }

@@ -371,7 +371,7 @@ class WorkspaceManager
      */
     public function getNbWorkspaces()
     {
-        return $this->workspaceRepo->count();
+        return $this->workspaceRepo->countWorkspaces();
     }
 
     /**
@@ -882,10 +882,9 @@ class WorkspaceManager
     {
         $i = 0;
         $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
-
+        $this->om->startFlushSuite();
         foreach ($workspaces as $workspace) {
             ++$i;
-            $this->om->startFlushSuite();
             $endDate = null;
             $model = null;
             $name = $workspace[0];
@@ -959,7 +958,10 @@ class WorkspaceManager
             }
 
             $this->om->persist($workspace);
-            $logger('UOW: '.$this->om->getUnitOfWork()->size());
+
+            if ($logger) {
+                $logger('UOW: '.$this->om->getUnitOfWork()->size());
+            }
 
             if ($i % 100 === 0) {
                 $this->om->forceFlush();
@@ -969,7 +971,10 @@ class WorkspaceManager
             }
         }
 
-        $logger('Final flush...');
+        if ($logger) {
+            $logger('Final flush...');
+        }
+
         $this->om->endFlushSuite();
     }
 

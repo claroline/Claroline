@@ -71,13 +71,13 @@
             <file>main/core/Tests/Database/Repository/GroupRepositoryTest.php</file>
             <file>main/core/Tests/Database/Repository/HomeTabConfigRepositoryTest.php</file>
             <file>main/core/Tests/Database/Repository/MessageRepositoryTest.php</file>
-            <!-- <file>main/core/Tests/Database/Repository/OrderedToolRepositoryTest.php</file> -->
-            <!-- <file>main/core/Tests/Database/Repository/PluginRepositoryTest.php</file> -->
-             <file>main/core/Tests/Database/Repository/RelWorkspaceTagRepositoryTest.php</file>
-            <!-- <file>main/core/Tests/Database/Repository/ResourceNodeRepositoryTest.php</file> -->
+            <file>main/core/Tests/Database/Repository/OrderedToolRepositoryTest.php</file>
+            <file>main/core/Tests/Database/Repository/PluginRepositoryTest.php</file>
+            <file>main/core/Tests/Database/Repository/RelWorkspaceTagRepositoryTest.php</file>
+            <file>main/core/Tests/Database/Repository/ResourceNodeRepositoryTest.php</file>
             <!-- <file>main/core/Tests/Database/Repository/ResourceQueryBuilderTest.php</file> -->
             <!-- <file>main/core/Tests/Database/Repository/ResourceRightsRepositoryTest.php</file> -->
-            <!-- <file>main/core/Tests/Database/Repository/ResourceTypeRepositoryTest.php</file> -->
+            <file>main/core/Tests/Database/Repository/ResourceTypeRepositoryTest.php</file>
             <!-- <file>main/core/Tests/Database/Repository/RevisionRepositoryTest.php</file> -->
             <file>main/core/Tests/Database/Repository/RoleRepositoryTest.php</file>
             <!-- <file>main/core/Tests/Database/Repository/ToolRepositoryTest.php</file> -->

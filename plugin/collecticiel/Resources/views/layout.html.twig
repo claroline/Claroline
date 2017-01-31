@@ -52,7 +52,7 @@ Point 5 du document, vu avec Axel
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='lessphp' output='css/innovacollecticiel/style.css'
+    {% stylesheets debug=false filter='less, cssmin' output='css/innovacollecticiel/style.css'
       "@InnovaCollecticielBundle/Resources/views/less/style.less"
     %}
     <link rel="stylesheet" href="{{ asset_url }}" screen="media" />

@@ -16,7 +16,7 @@ class LoadOptionsData extends AbstractFixture
     {
         $this->manager = $manager;
 
-        $valTqcm = array();
+        $valTqcm = [];
 
         $valTqcm[1] = 'Multiple response';
         $valTqcm[2] = 'Unique response';
@@ -25,7 +25,7 @@ class LoadOptionsData extends AbstractFixture
             $this->newTQCM($val, $code);
         }
 
-        $valTopen = array();
+        $valTopen = [];
         $valTopen[1] = 'numerical';
         $valTopen[2] = 'long';
         $valTopen[3] = 'short';
@@ -35,7 +35,7 @@ class LoadOptionsData extends AbstractFixture
             $this->newTOPEN($val, $code);
         }
 
-        $valTmatching = array();
+        $valTmatching = [];
         $valTmatching[1] = 'To bind';
         $valTmatching[2] = 'To drag';
         $valTmatching[3] = 'To pair';

@@ -59,6 +59,10 @@ log_resource-create_filter: 'Création d''une ressource'
 log_resource-create_sentence: 'a créé %resource%'
 log_resource-create_shortname: Création
 log_resource-create_title: 'Création d''une ressource'
+log_resource-publish_filter: 'Création d''une ressource'
+log_resource-publish_sentence: 'a créé %resource%'
+log_resource-publish_shortname: Création
+log_resource-publish_title: 'Création d''une ressource'
 log_resource-custom_action_filter: 'Action spéciale sur une ressource'
 log_resource-delete_filter: 'Suppression d''une ressource'
 log_resource-delete_sentence: 'a supprimé %resource%'
@@ -109,7 +113,7 @@ log_user-delete_shortname: Suppression
 log_user-delete_title: 'Suppression d''un utilisateur'
 log_user-login_filter: 'Connexion d''un utilisateur'
 log_user-login_sentence: 's''est connecté'
-log_user-login_shortname: Connexion
+log_user-login_shortname: Verbindung
 log_user-login_title: 'Connexion d''un utilisateur'
 log_user-update_filter: 'Mise à jour d''un utilisateur'
 log_user-update_sentence: 'a modifié le compte %receiver_user%'

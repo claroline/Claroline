@@ -29,7 +29,6 @@ use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -75,10 +74,6 @@ class CursusController extends FOSRestController
      *     name="api_get_all_root_cursus"
      * )
      * @View(serializerGroups={"api_workspace_min"})
-     * @ApiDoc(
-     *     description="Returns root cursus list",
-     *     views = {"cursus"}
-     * )
      */
     public function getAllRootCursusAction()
     {
@@ -91,10 +86,6 @@ class CursusController extends FOSRestController
      *     name="api_get_root_cursus"
      * )
      * @View(serializerGroups={"api_user_min"})
-     * @ApiDoc(
-     *     description="Returns root cursus list without children",
-     *     views = {"cursus"}
-     * )
      */
     public function getRootCursusAction()
     {
@@ -107,10 +98,6 @@ class CursusController extends FOSRestController
      *     name="api_get_one_cursus"
      * )
      * @View(serializerGroups={"api_workspace_min"})
-     * @ApiDoc(
-     *     description="Returns a cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function getOneCursusAction(Cursus $cursus)
     {
@@ -119,10 +106,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns datas for cursus registration",
-     *     views = {"cursus"}
-     * )
      */
     public function getDatasForCursusRegistrationAction(Cursus $cursus)
     {
@@ -137,10 +120,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns cursus users for cursus registration",
-     *     views = {"cursus"}
-     * )
      */
     public function getCursusUsersForCursusRegistrationAction(Cursus $cursus)
     {
@@ -151,10 +130,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns datas for searched cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function getDatasForSearchedCursusRegistrationAction($search)
     {
@@ -165,10 +140,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns hierarchy datas for cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function getDatasForCursusHierarchyAction(Cursus $cursus)
     {
@@ -179,10 +150,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Unregister group from cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function deleteCursusGroupAction(CursusGroup $cursusGroup)
     {
@@ -196,10 +163,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Unregister groups from cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function deleteCursusGroupsAction($cursusGroupsIdsTxt)
     {
@@ -212,10 +175,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Unregister user from cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function deleteCursusUserAction(CursusUser $cursusUser)
     {
@@ -229,10 +188,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Unregister users from cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function deleteCursusUsersAction(Cursus $cursus, $usersIdsTxt)
     {
@@ -244,10 +199,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_group"})
-     * @ApiDoc(
-     *     description="Retrieve groups that are not registered to cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function getUnregisteredCursusGroupsAction(Cursus $cursus)
     {
@@ -262,10 +213,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Retrieve searched groups that are not registered to cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function getSearchedUnregisteredCursusGroupsAction(Cursus $cursus, $search)
     {
@@ -280,10 +227,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Retrieve users who are not registered to cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function getUnregisteredCursusUsersAction(Cursus $cursus)
     {
@@ -298,10 +241,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Retrieve searched users who are not registered to cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function getSearchedUnregisteredCursusUsersAction(Cursus $cursus, $search = '')
     {
@@ -316,10 +255,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Retrieve sessions infos from a list of cursus",
-     *     views = {"cursus"}
-     * )
      */
     public function getSessionsForCursusListAction($cursusIdsTxt)
     {
@@ -331,10 +266,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Register group to cursus and sessions",
-     *     views = {"cursus"}
-     * )
      */
     public function postGroupRegisterToMultipleCursusAction(Group $group, $cursusIdsTxt, $sessionsIdsTxt)
     {
@@ -347,10 +278,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Register array of users to cursus and sessions",
-     *     views = {"cursus"}
-     * )
      */
     public function postUsersRegisterToMultipleCursusAction($usersIdsTxt, $cursusIdsTxt, $sessionsIdsTxt)
     {
@@ -364,10 +291,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns datas for registration queues",
-     *     views = {"cursus"}
-     * )
      */
     public function getRegistrationQueuesDatasAction()
     {
@@ -378,10 +301,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns datas for registration queues",
-     *     views = {"cursus"}
-     * )
      */
     public function getRegistrationQueuesDatasBySearchAction($search)
     {
@@ -392,10 +311,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Validate session queue",
-     *     views = {"cursus"}
-     * )
      */
     public function putCourseQueueValidateAction(CourseRegistrationQueue $queue)
     {
@@ -406,10 +321,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Validate session queue",
-     *     views = {"cursus"}
-     * )
      */
     public function putSessionQueueValidateAction(CourseSessionRegistrationQueue $queue)
     {
@@ -420,10 +331,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Delete session queue",
-     *     views = {"cursus"}
-     * )
      */
     public function deleteCourseQueueAction(CourseRegistrationQueue $queue)
     {
@@ -439,10 +346,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Delete session queue",
-     *     views = {"cursus"}
-     * )
      */
     public function deleteSessionQueueAction(CourseSessionRegistrationQueue $queue)
     {
@@ -458,10 +361,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Get all unclosed sessions of a course",
-     *     views = {"cursus"}
-     * )
      */
     public function getAvailableSessionsByCourseAction(Course $course)
     {
@@ -480,10 +379,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Registers user from course queue to a session",
-     *     views = {"cursus"}
-     * )
      */
     public function postCourseQueuedUserTransferAction(CourseRegistrationQueue $queue, CourseSession $session)
     {
@@ -494,10 +389,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user_min"})
-     * @ApiDoc(
-     *     description="Returns the courses list",
-     *     views = {"cursus"}
-     * )
      * @Get("/all/courses")
      */
     public function getAllCoursesAction()
@@ -507,10 +398,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns the unmapped courses list",
-     *     views = {"cursus"}
-     * )
      * @Get("/cursus/{cursus}/all/unmapped/courses")
      */
     public function getAllUnmappedCoursesAction(Cursus $cursus)
@@ -520,10 +407,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user_min"})
-     * @ApiDoc(
-     *     description="Returns the sessions list",
-     *     views = {"cursus"}
-     * )
      * @Get("/sessions/all")
      */
     public function getSessionsAction()
@@ -533,10 +416,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user_min"})
-     * @ApiDoc(
-     *     description="Returns the sessions list by course",
-     *     views = {"cursus"}
-     * )
      * @Get("/course/{course}/sessions")
      */
     public function getSessionsByCourseAction(Course $course)
@@ -546,10 +425,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns workspace id of session",
-     *     views = {"cursus"}
-     * )
      * @Get("/session/{session}/workspace/id")
      */
     public function getWorkspaceIdFromSessionAction(CourseSession $session)
@@ -561,10 +436,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user_min"})
-     * @ApiDoc(
-     *     description="Returns the events list by session",
-     *     views = {"cursus"}
-     * )
      * @Get("/session/{session}/events")
      */
     public function getSessionEventsBySessionAction(CourseSession $session)
@@ -574,10 +445,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns courses profile tab option",
-     *     views = {"cursus"}
-     * )
      * @Get("/courses/profile/tab/option")
      */
     public function getCoursesProfileTabOptionAction()
@@ -593,10 +460,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_workspace_min"})
-     * @ApiDoc(
-     *     description="Returns the finished sessions by user",
-     *     views = {"cursus"}
-     * )
      * @Get("/user/{user}/closed/sessions")
      */
     public function getClosedSessionsByLeanerAction(User $user)
@@ -615,10 +478,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns all the cursus list",
-     *     views = {"cursus"}
-     * )
      */
     public function getAllCursusAction()
     {
@@ -627,10 +486,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns all the cursus list order by parent",
-     *     views = {"cursus"}
-     * )
      */
     public function getAllCursusHierarchyAction()
     {
@@ -660,10 +515,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns the cursus list",
-     *     views = {"cursus"}
-     * )
      */
     public function getCursusAction(Cursus $cursus)
     {
@@ -672,10 +523,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_cursus"})
-     * @ApiDoc(
-     *     description="Returns the courses list",
-     *     views = {"cursus"}
-     * )
      */
     public function getCourseAction()
     {
@@ -684,10 +531,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Register an user to a cursus",
-     *     views = {"cursus"}
-     * )
      * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserToCursusAction(User $user, Cursus $cursus)
@@ -699,10 +542,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Unregister an user from a cursus",
-     *     views = {"cursus"}
-     * )
      * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function removeUserFromCursusAction(User $user, Cursus $cursus)
@@ -714,10 +553,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Register an user to a course session",
-     *     views = {"cursus"}
-     * )
      * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserToSessionAction(User $user, CourseSession $session, $type = 0)
@@ -729,10 +564,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Unregister an user from a course session",
-     *     views = {"cursus"}
-     * )
      */
     public function removeUserFromSessionAction(CourseSessionUser $sessionUser)
     {
@@ -743,10 +574,6 @@ class CursusController extends FOSRestController
 
     /**
      * @View()
-     * @ApiDoc(
-     *     description="Register an user to a cursus hierarchy",
-     *     views = {"cursus"}
-     * )
      * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserToCursusHierarchyAction(User $user, Cursus $cursus)

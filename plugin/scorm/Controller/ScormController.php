@@ -20,11 +20,14 @@ use Claroline\ScormBundle\Entity\Scorm2004Resource;
 use Claroline\ScormBundle\Entity\Scorm2004Sco;
 use Claroline\ScormBundle\Event\Log\LogScorm12ResultEvent;
 use Claroline\ScormBundle\Event\Log\LogScorm2004ResultEvent;
+use Claroline\ScormBundle\Form\ScormConfigType;
 use Claroline\ScormBundle\Manager\ScormManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
@@ -35,6 +38,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ScormController extends Controller
 {
     private $eventDispatcher;
+    private $formFactory;
     private $om;
     private $request;
     private $router;
@@ -45,6 +49,7 @@ class ScormController extends Controller
     /**
      * @DI\InjectParams({
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "formFactory"     = @DI\Inject("form.factory"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"    = @DI\Inject("request_stack"),
      *     "router"          = @DI\Inject("router"),
@@ -55,6 +60,7 @@ class ScormController extends Controller
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
+        FormFactory $formFactory,
         ObjectManager $om,
         RequestStack $requestStack,
         RouterInterface $router,
@@ -63,8 +69,9 @@ class ScormController extends Controller
         AuthorizationCheckerInterface $authorization
     ) {
         $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
         $this->om = $om;
-        $this->request = $requestStack;
+        $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
         $this->scormManager = $scormManager;
         $this->tokenStorage = $tokenStorage;
@@ -136,6 +143,7 @@ class ScormController extends Controller
                 'trackings' => $trackings,
                 'isAnon' => $isAnon,
                 'canEdit' => $canEdit,
+                'hideTopBar' => $scorm->getHideTopBar(),
             ];
         }
     }
@@ -204,6 +212,7 @@ class ScormController extends Controller
             'workspace' => $scorm->getResourceNode()->getWorkspace(),
             'isAnon' => $isAnon,
             'canEdit' => $canEdit,
+            'hideTopBar' => $scorm->getHideTopBar(),
         ];
     }
 
@@ -436,6 +445,7 @@ class ScormController extends Controller
                 'trackings' => $trackings,
                 'isAnon' => $isAnon,
                 'canEdit' => $canEdit,
+                'hideTopBar' => $scorm->getHideTopBar(),
             ];
         }
     }
@@ -524,6 +534,7 @@ class ScormController extends Controller
             'workspace' => $scorm->getResourceNode()->getWorkspace(),
             'isAnon' => $isAnon,
             'canEdit' => $canEdit,
+            'hideTopBar' => $scorm->getHideTopBar(),
         ];
     }
 
@@ -554,7 +565,7 @@ class ScormController extends Controller
         if ($user === 'anon.') {
             return new Response('', '204');
         }
-        $datas = $this->request->getCurrentRequest()->request->all();
+        $datas = $this->request->request->all();
         $learnerId = isset($datas['cmi.learner_id']) ? (int) $datas['cmi.learner_id'] : -1;
 
         if ($user->getId() !== $learnerId) {
@@ -629,6 +640,92 @@ class ScormController extends Controller
         $this->scormManager->updateScorm2004ScoTracking($scoTracking);
 
         return new Response('', '204');
+    }
+
+    /**
+     * @EXT\Route(
+     *     "scorm/12/{scorm}/configuration/edit/form",
+     *     name="claro_scorm_12_configuration_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineScormBundle::scorm12ConfigurationModalForm.html.twig")
+     *
+     * @param Scorm12Resource $scorm
+     */
+    public function scorm12ConfigurationEditFormAction(Scorm12Resource $scorm)
+    {
+        $this->checkAccess('EDIT', $scorm);
+        $form = $this->formFactory->create(new ScormConfigType(), $scorm);
+
+        return ['form' => $form->createView(), 'scorm' => $scorm];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "scorm/12/{scorm}/configuration/edit",
+     *     name="claro_scorm_12_configuration_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineScormBundle::scorm12ConfigurationModalForm.html.twig")
+     *
+     * @param Scorm12Resource $scorm
+     */
+    public function scorm12ConfigurationEditAction(Scorm12Resource $scorm)
+    {
+        $this->checkAccess('EDIT', $scorm);
+        $form = $this->formFactory->create(new ScormConfigType(), $scorm);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->scormManager->persistScorm12($scorm);
+
+            return new JsonResponse('success', 200);
+        } else {
+            return ['form' => $form->createView(), 'scorm' => $scorm];
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "scorm/2004/{scorm}/configuration/edit/form",
+     *     name="claro_scorm_2004_configuration_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineScormBundle::scorm2004ConfigurationModalForm.html.twig")
+     *
+     * @param Scorm12Resource $scorm
+     */
+    public function scorm2004ConfigurationEditFormAction(Scorm2004Resource $scorm)
+    {
+        $this->checkScorm2004ResourceAccess('EDIT', $scorm);
+        $form = $this->formFactory->create(new ScormConfigType(), $scorm);
+
+        return ['form' => $form->createView(), 'scorm' => $scorm];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "scorm/2004/{scorm}/configuration/edit",
+     *     name="claro_scorm_2004_configuration_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineScormBundle::scorm2004ConfigurationModalForm.html.twig")
+     *
+     * @param Scorm12Resource $scorm
+     */
+    public function scorm2004ConfigurationEditAction(Scorm2004Resource $scorm)
+    {
+        $this->checkScorm2004ResourceAccess('EDIT', $scorm);
+        $form = $this->formFactory->create(new ScormConfigType(), $scorm);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->scormManager->persistScorm2004($scorm);
+
+            return new JsonResponse('success', 200);
+        } else {
+            return ['form' => $form->createView(), 'scorm' => $scorm];
+        }
     }
 
     /**

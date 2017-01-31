@@ -8,7 +8,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
@@ -340,7 +339,7 @@ class PaperManager
 
             $paperQuestions = new \stdClass();
             $paperQuestions->paperId = $paper->getId();
-            $paperQuestions->questions = $this->exportPaperQuestions($paper, $isAdmin);
+            $paperQuestions->questions = $this->exportPaperQuestions($paper, $isAdmin, true);
 
             $exportQuestions[] = $paperQuestions;
         }
@@ -438,17 +437,18 @@ class PaperManager
      *
      * @param Paper $paper
      * @param bool  $withSolution
+     * @param bool  $forPaperList
      *
      * @return array
      */
-    public function exportPaperQuestions(Paper $paper, $withSolution = false)
+    public function exportPaperQuestions(Paper $paper, $withSolution = false, $forPaperList = false)
     {
         $solutionAvailable = $withSolution || $this->isSolutionAvailable($paper->getExercise(), $paper);
 
         $export = [];
         $questions = $this->getPaperQuestions($paper);
         foreach ($questions as $question) {
-            $exportedQuestion = $this->questionManager->exportQuestion($question, $solutionAvailable, true);
+            $exportedQuestion = $this->questionManager->exportQuestion($question, $solutionAvailable, $forPaperList);
 
             $exportedQuestion->stats = null;
             if ($paper->getExercise()->hasStatistics()) {

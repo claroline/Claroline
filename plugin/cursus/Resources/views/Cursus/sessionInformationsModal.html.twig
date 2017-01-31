@@ -91,13 +91,13 @@
                             </div>
                             <div id="collapse-event" class="panel-collapse collapse" role="tabpanel">
                                 <div class="panel-body">
-                                    {% if events|length > 0 and sessionEventUsersStatus|length > 0 %}
+                                    {% if events|length > 0 and (sessionEventUsersStatus|length > 0 or allInfos) %}
                                         <div class="table-responsive">
                                             <table class="table">
                                                 {% for event in events %}
                                                     {% set eventId = event.getId() %}
 
-                                                    {% if sessionEventUsersStatus[eventId] is defined and sessionEventUsersStatus[eventId] == 0 %}
+                                                    {% if (sessionEventUsersStatus[eventId] is defined and sessionEventUsersStatus[eventId] == 0) or allInfos %}
                                                         {% set location = event.getLocation() %}
                                                         {% set locationExtra = event.getLocationExtra() %}
                                                         {% set eventTutors = event.getTutors() %}

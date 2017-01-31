@@ -132,10 +132,11 @@ class HomeTabType extends AngularType
                     'class' => 'ClarolineCoreBundle:Role',
                     'choice_translation_domain' => true,
                     'query_builder' => function (EntityRepository $er) use ($workspace) {
-
                         return $er->createQueryBuilder('r')
                             ->where('r.workspace = :workspace')
+                            ->orWhere('r.name = :userRoleName')
                             ->setParameter('workspace', $workspace)
+                            ->setParameter('userRoleName', 'ROLE_USER')
                             ->orderBy('r.translationKey', 'ASC');
                     },
                     'property' => 'translationKey',

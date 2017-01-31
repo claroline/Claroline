@@ -57,6 +57,40 @@
         >
             <i class="fa fa-user-plus"></i>
         </button>
+        <button class="btn btn-primary"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="{{ 'invite_learners_to_session_event'|trans:{}:'cursus' }}"
+                ng-click="cmc.inviteLearnersToEvent()"
+        >
+            <i class="fa fa-plus-square"></i>
+        </button>
+        <button class="btn btn-primary"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="{{ 'generate_event_certificates'|trans:{}:'cursus' }}"
+                ng-click="cmc.generateEventCertificates()"
+                ng-if="!cmc.isCertificatesDisabled"
+        >
+            <i class="fa fa-graduation-cap"></i>
+        </button>
+        <button class="btn btn-primary"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="{{ 'informations_management'|trans:{}:'cursus' }}"
+                ng-click="cmc.manageEventComments()"
+        >
+            <i class="fa fa-info"></i>
+        </button>
+        <button class="btn btn-primary"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="{{ 'export_users'|trans:{}:'cursus' }}"
+                ng-click="cmc.exportUsers()"
+        >
+            <i class="fa fa-users"></i>
+            <i class="fa fa-sign-out"></i>
+        </button>
     </div>
     <br>
     <br>

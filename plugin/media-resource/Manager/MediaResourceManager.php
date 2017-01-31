@@ -10,7 +10,6 @@ use Innova\MediaResourceBundle\Entity\Options;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -249,7 +248,7 @@ class MediaResourceManager
         $pathToArchive = $tempDir.DIRECTORY_SEPARATOR.$zipName;
         $archive->open($pathToArchive, \ZipArchive::CREATE);
         foreach ($files as $f) {
-            $archive->addFromString(basename($f),  file_get_contents($f));
+            $archive->addFromString(basename($f), file_get_contents($f));
         }
         $archive->close();
 
@@ -262,7 +261,7 @@ class MediaResourceManager
     {
         $stringSec = (string) $seconds;
         $fullMilli = explode('.', $stringSec);
-        $milli = array_key_exists(1, $fullMilli) ?  substr($fullMilli[1], 0, 3) : '000';
+        $milli = array_key_exists(1, $fullMilli) ? substr($fullMilli[1], 0, 3) : '000';
         $ms = \gmdate('i:s', $seconds);
         // time limit is 00:59:59,999 (less than one hour)
         return '00:'.$ms.'.'.$milli;

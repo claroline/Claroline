@@ -8,7 +8,7 @@ delete_selected_teams: Supprimer l'/les équipe(s) sélectionnée(s)
 delete_selected_teams_confirm_message: Êtes-vous sûr de vouloir supprimer l'/les équipe(s) sélectionnée(s) ?
 delete_team: Supprimer l'équipe
 delete_team_confirm_message: Êtes-vous sûr de vouloir supprimer cette équipe ?
-delete_team_directory: Supprimer le répertoire de léquipe
+delete_team_directory: Supprimer le répertoire de l'équipe
 delete_teams: Supprimer des équipes
 edit_team: Modifier l'équipe
 empty_action: Vider
@@ -30,7 +30,7 @@ public: Public
 public_registration: Inscription publique
 public_unregistration: Désinscription publique
 register: Inscrire
-register_to_team: S'inscrire à léquipe
+register_to_team: S'inscrire à l'équipe
 register_to_team_confirm_message: Êtes-vous sûr de vouloir vous inscrire à cette équipe ?
 register_unregister_users_to_team: Inscrire/Désinscrire des utilisateurs à l'équipe
 register_users_to_team: Inscrire des utilisateurs à l'équipe

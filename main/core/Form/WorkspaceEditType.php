@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Validator\Constraints\FileSize;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Validator\Constraints\FileSize;
 
 class WorkspaceEditType extends AbstractType
 {
@@ -25,6 +25,7 @@ class WorkspaceEditType extends AbstractType
     private $countResources;
     private $isAdmin;
     private $expirationDate;
+    private $startDate;
 
     /**
      * Constructor.
@@ -38,7 +39,8 @@ class WorkspaceEditType extends AbstractType
         $storageSpaceUsed = null,
         $countResources = null,
         $isAdmin = false,
-        $expirationDate = null
+        $expirationDate = null,
+        $startDate = null
     ) {
         $this->username = $username;
         $this->creationDate = $creationDate;
@@ -51,82 +53,90 @@ class WorkspaceEditType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $attr = array();
+        $attr = [];
         $attr['class'] = 'datepicker input-small';
         $attr['data-date-format'] = 'dd-mm-yyyy';
         $attr['autocomplete'] = 'off';
-        $builder->add('name', 'text', array('required' => true, 'label' => 'name'));
-        $builder->add('code', 'text', array('required' => true, 'label' => 'code'));
+        $builder->add('name', 'text', ['required' => true, 'label' => 'name']);
+        $builder->add('code', 'text', ['required' => true, 'label' => 'code']);
         $builder->add(
                 'creationDate',
                 'text',
-                array(
+                [
                     'disabled' => 'disabled',
                     'data' => $this->creationDate,
                     'label' => 'creation_date',
-                )
-            );
-        if ($this->expirationDate) {
-            $params = array(
-                'label' => 'expiration_date',
-                'format' => 'dd-MM-yyyy',
-                'widget' => 'single_text',
-                'input' => 'datetime',
-                'attr' => array(
-                    'class' => 'datepicker input-small',
-                    'data-date-format' => 'dd-mm-yyyy',
-                    'autocomplete' => 'off',
-                ),
+                ]
             );
 
-            if (!$this->isAdmin) {
-                $params['disabled'] = 'disabled';
-            }
+        $params = [
+            'label' => 'expiration_date',
+            'format' => 'dd-MM-yyyy',
+            'required' => false,
+            'widget' => 'single_text',
+            'input' => 'datetime',
+            'attr' => [
+                'class' => 'datepicker input-small',
+                'data-date-format' => 'dd-mm-yyyy',
+                'autocomplete' => 'off',
+            ],
+        ];
 
-            $builder->add(
-                'endDate',
-                'datepicker',
-                $params
-            );
+        if (!$this->isAdmin) {
+            $params['disabled'] = 'disabled';
         }
-        $builder->add('creator', 'text', array('disabled' => 'disabled', 'data' => $this->username, 'label' => 'creator'));
+
+        $params['label'] = 'opening_date';
+        $builder->add(
+            'startDate',
+            'datepicker',
+            $params
+        );
+        $params['label'] = 'expiration_date';
+        $builder->add(
+            'endDate',
+            'datepicker',
+            $params
+        );
+
+        $builder->add('creator', 'text', ['disabled' => 'disabled', 'data' => $this->username, 'label' => 'creator']);
         if (isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce']) {
             $builder->add(
                 'description',
                 'textarea',
-                array('required' => false, 'label' => 'description')
+                ['required' => false, 'label' => 'description']
             );
         } else {
-            $builder->add('description', 'tinymce', array('required' => false, 'label' => 'description'));
+            $builder->add('description', 'tinymce', ['required' => false, 'label' => 'description']);
         }
-        $builder->add('displayable', 'checkbox', array('required' => false, 'label' => 'displayable_in_workspace_list'));
-        $builder->add('selfRegistration', 'checkbox', array('required' => false, 'label' => 'public_registration'));
-        $builder->add('registrationValidation', 'checkbox', array('required' => false, 'label' => 'registration_validation'));
-        $builder->add('selfUnregistration', 'checkbox', array('required' => false, 'label' => 'public_unregistration'));
+        $builder->add('displayable', 'checkbox', ['required' => false, 'label' => 'displayable_in_workspace_list']);
+        $builder->add('selfRegistration', 'checkbox', ['required' => false, 'label' => 'public_registration']);
+        $builder->add('registrationValidation', 'checkbox', ['required' => false, 'label' => 'registration_validation']);
+        $builder->add('selfUnregistration', 'checkbox', ['required' => false, 'label' => 'public_unregistration']);
 
         if (!$this->isAdmin) {
-            $builder->add('maxStorageSize', 'text', array('disabled' => 'disabled', 'label' => 'max_storage_size'));
+            $builder->add('maxStorageSize', 'text', ['disabled' => 'disabled', 'label' => 'max_storage_size']);
         } else {
-            $builder->add('maxStorageSize', 'text', array('label' => 'max_storage_size', 'constraints' => array(new FileSize())));
+            $builder->add('maxStorageSize', 'text', ['label' => 'max_storage_size', 'constraints' => [new FileSize()]]);
         }
 
-        $builder->add('storageUsed', 'text', array('mapped' => false, 'disabled' => 'disabled', 'label' => 'storage_used', 'data' => $this->storageSpaceUsed));
+        $builder->add('storageUsed', 'text', ['mapped' => false, 'disabled' => 'disabled', 'label' => 'storage_used', 'data' => $this->storageSpaceUsed]);
 
         if (!$this->isAdmin) {
-            $builder->add('maxUploadResources', 'text', array('disabled' => 'disabled', 'label' => 'max_amount_resources'));
+            $builder->add('maxUploadResources', 'text', ['disabled' => 'disabled', 'label' => 'max_amount_resources']);
         } else {
-            $builder->add('maxUploadResources', 'text', array('label' => 'max_amount_resources'));
+            $builder->add('maxUploadResources', 'text', ['label' => 'max_amount_resources']);
         }
 
-        $builder->add('countResources', 'text', array('mapped' => false, 'disabled' => 'disabled', 'label' => 'count_resources', 'data' => $this->countResources));
+        $builder->add('countResources', 'text', ['mapped' => false, 'disabled' => 'disabled', 'label' => 'count_resources', 'data' => $this->countResources]);
 
         if (!$this->isAdmin) {
-            $builder->add('maxUsers', 'text', array('disabled' => 'disabled', 'label' => 'workspace_max_users'));
+            $builder->add('maxUsers', 'text', ['disabled' => 'disabled', 'label' => 'workspace_max_users']);
         } else {
-            $builder->add('maxUsers', 'text', array('label' => 'workspace_max_users'));
+            $builder->add('maxUsers', 'text', ['label' => 'workspace_max_users']);
         }
 
-        $builder->add('number', 'text', array('disabled' => 'disabled', 'data' => $this->number, 'mapped' => false, 'label' => 'registered_user_amount'));
+        $builder->add('number', 'text', ['disabled' => 'disabled', 'data' => $this->number, 'mapped' => false, 'label' => 'registered_user_amount']);
     }
 
     public function getName()
@@ -138,9 +148,9 @@ class WorkspaceEditType extends AbstractType
     {
         $resolver
         ->setDefaults(
-            array(
+            [
                 'translation_domain' => 'platform',
-                )
+                ]
         );
     }
 }

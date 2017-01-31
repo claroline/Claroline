@@ -48,21 +48,34 @@ export default class DocumentModelService {
     })
   }
 
+  getPopulatedDocumentModelsByType (type, sourceId) {
+    const url = Routing.generate('api_get_cursus_populated_document_models_by_type', {type: type, sourceId: sourceId})
+
+    return this.$http.get(url).then(d => {
+      if (d['status'] === 200) {
+        return d['data']
+      }
+    })
+  }
+
   getDocumentTypeName (documentType) {
     let name = ''
 
     switch (documentType) {
-    case 0 :
-      name = Translator.trans('session_invitation', {}, 'cursus')
-      break
-    case 1 :
-      name = Translator.trans('session_event_invitation', {}, 'cursus')
-      break
-    case 2 :
-      name = Translator.trans('session_certificate', {}, 'cursus')
-      break
-    default :
-      break
+      case 0 :
+        name = Translator.trans('session_invitation', {}, 'cursus')
+        break
+      case 1 :
+        name = Translator.trans('session_event_invitation', {}, 'cursus')
+        break
+      case 2 :
+        name = Translator.trans('session_certificate', {}, 'cursus')
+        break
+      case 3 :
+        name = Translator.trans('session_event_certificate', {}, 'cursus')
+        break
+      default :
+        break
     }
 
     return name

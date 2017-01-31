@@ -9,6 +9,7 @@ application_date: Date de soumission
 blocking: Bloquant
 calendar_view: Vue calendrier
 calendar_view_options: Options de la vue calendrier
+certificate: Certificat
 chronologic_view: Vue chronologique
 chronological_view_options: Options de la vue chronologique
 click_on_link_below_to_confirm_request: Veuillez cliquer sur le lien ci-dessous pour confirmer la demande
@@ -116,14 +117,19 @@ every_day: Tous les jours
 every_month: Tous les mois
 every_week: Toutes les semaines
 export_all_courses: Exporter toutes les formations
+export_users: Exporter les utilisateurs
 form_not_blank_error: Cette valeur ne doit pas être vide.
 form_not_unique_error: Cette valeur est déjà utilisée.
 form_not_valid_error: Cette valeur n'est pas valide.
 form_number_inferior_error: Cette valeur doit être inférieure ou égale à %value%.
 form_number_superior_error: Cette valeur doit être supérieure ou égale à %value%.
+full_session_event_msg: La limite de participants pour la séance est atteinte
 full_session_msg: La limite d'utilisateurs pour la session de formation est atteinte
 general_parameters: Paramètres généraux
 generate_certificates: Générer les certificats
+generate_certificate: Générer le certificat
+generate_event_certificate: Générer le certificat pour la séance
+generate_event_certificates: Générer les certificats pour la séance
 go_to_workspace: Accéder à l'espace d'activités
 icon: Icône
 import_courses: Importer des formations
@@ -133,6 +139,8 @@ internal_locations: Localisations internes
 invalid_file: Fichier non valide
 invite_learners_to_session: Inviter les apprenants à la session
 invite_learners_to_session_event: Inviter les apprenants à la séance
+invite_to_session: Inviter à la session
+invite_to_session_event: Inviter à la séance
 learner: Apprenant
 learner_role_name: Rôle des apprenants
 learners: Apprenants
@@ -145,7 +153,20 @@ locations_management: Gestion des localisations
 manager: Gestionnaire
 max_time_reservation: Temps maximum de réservation
 max_users: Nombre maximum d'utilisateurs
-required_places_msg: Seulement %remainingPlaces% place(s) restante(s). Nécessaire : %requiredPlaces%.
+new_certificate_email: |
+  Madame, Monsieur,</br>
+  Veuillez trouver ci-dessous un lien permettant de télécharger votre attestation de participation à la formation: %session_name%</br>
+  Cordialement,</br>
+  L'équipe de formation
+new_certificate_email_title: Attestation de formation
+new_certificates: Nouveaux certificats
+new_certificates_email_title: Nouveaux certificats
+new_event_certificate_email: |
+  Madame, Monsieur,</br>
+  Veuillez trouver ci-dessous un lien permettant de télécharger votre attestation de participation à la séance: %event_name%</br>
+  Cordialement,</br>
+  L'équipe de formation
+new_event_certificate_email_title: Attestation de participation à une séance
 no: Non
 no_closed_session: Aucune session terminée
 no_closed_session_event: Aucune séance terminée
@@ -155,6 +176,7 @@ no_description: Aucune description
 no_document_model: Aucun modèle d'invitation/certificat
 no_information: Aucune information
 no_location: Aucune localisation
+no_more_place: Plus de place
 no_ongoing_session: Aucune session en cours
 no_open_session: Aucune session ouverte
 no_open_session_event: Aucune séance ouverte
@@ -224,6 +246,7 @@ remove_participant: Supprimer le participant
 remove_participant_confirm_message: Êtes-vous sûr de vouloir supprimer cet utilisateur de cette séance ?
 repeat_session_event: Répéter la séance
 repetition: Répétition
+required_places_msg: Seulement %remainingPlaces% place(s) restante(s). Nécessaire : %requiredPlaces%.
 send_confirmation_mail: Envoyer un courriel de confirmation
 send_confirmation_mail_to_session: Envoyer un courriel de confirmation à tous les apprenants de la session de formation.
 send_confirmation_mail_to_session_message: Êtes-vous sûr de vouloir envoyer un courriel de confirmation à tous les apprenants de la session de formation ?
@@ -265,6 +288,7 @@ session_details: Détails de la session de formation
 session_edition: Modification de la session de formation
 session_end_title: Fin de la session "%sessionName%"
 session_event: Séance
+session_event_certificate: Certificat pour une séance
 session_event_creation: Création d'une séance
 session_event_deletion: Suppression de la séance
 session_event_description: Description de la séance
@@ -293,7 +317,17 @@ session_not_enough_place_msg: Seulement %remainingPlaces% place(s) restante(s) d
 session_not_started: Non commencé
 session_open: En cours
 session_registration: Inscription à une session de formation
+session_registration_object: Inscription à la session "%session_name%" du %start_date% au %end_date% [%status%]
+session_registration_pending_msg: |
+  Bonjour,<br><br>
+  Votre demande d'inscription à la session "%session_name%" du %start_date% au %end_date% a bien été enregistrée et est en cours de validation.
+session_registration_registered_msg: |
+  Bonjour,<br><br>
+  Vous êtes bien inscrit à la session "%session_name%" du %start_date% au %end_date%.
 session_registration_request_confirmation: Confirmation de demande d'inscription à une session de formation
+session_registration_validated_msg: |
+  Bonjour,<br><br>
+  Votre demande d'inscription à la session "%session_name%" du %start_date% au %end_date% a bien été validée.
 session_request_confirm_msg: Vous avez demandé d'être inscrit à la session "%sessionName%" de la formation "%courseTitle% [%courseCode%]"
 session_request_confirmation_success: Demande d'inscription à la session "%sessionName%" de la formation "%courseTitle%" confirmée.
 session_self_registration_message: Êtes-vous sûr de vouloir vous inscrire à cette session de formation ?
@@ -309,6 +343,8 @@ sessions_registration_as_tutor: Inscription à des sessions de formation en tant
 show_hide_closed_sessions: Afficher/Cacher les sessions de formation cloturées
 the_displayed_word_for: Le mot affiché pour
 to_define: A définir
+trainer: Formateur
+trainers: Formateurs
 tutor: Formateur
 tutor_role_name: Rôle des formateurs
 tutors: Formateurs
@@ -326,11 +362,14 @@ unregister_tutor_from_session: Désinscrire le formateur de la session de format
 unregister_tutor_from_session_confirm_message: Êtes-vous sûr de vouloir désinscrire ce formateur de cette session de formation ?
 unregister_user_from_cursus_confirm_message: Êtes-vous sûr de vouloir désinscrire cet utilisateur de ce cursus ?
 unregister_user_from_session: Désinscrire l'utilisateur de la session de formation
+unregister_user_from_session_event: Désinscrire l'utilisateur de la séance
+unregister_user_from_session_event_message: Êtes-vous sûr de vouloir désinscrire cet utilisateur de cette séance ?
 unregister_user_from_session_message: Êtes-vous sûr de vouloir désinscrire cet utilisateur de cette session de formation ?
 unstarted_sessions: Sessions à venir
 until: Jusqu'au
 user_sessions_management: Gestion des sessions de formation
 user_validation: Validation de l'utilisateur
+validated: Validée
 validator: Validateur
 validators: Validateurs
 validators_selection: Sélection des responsables de validation
@@ -349,12 +388,3 @@ with_session_event: Créer une séance par défaut
 word: Mot
 workspace_model: Modèle d'espace d'activités
 yes: Oui
-new_certificate_email: |
-  Madame, Monsieur,</br>
-  Veuillez trouver ci-dessous un lien permettant de télécharger votre attestation de participation à la formation: %session_name%</br>
-  Cordialement,</br>
-  L'équipe de formation
-new_certificate_email_title: Attestation de formation
-certificate: Certificat
-new_certificates_email_title: Nouveaux certificats
-new_certificates: Nouveaux certificats

@@ -1,6 +1,6 @@
 /*
  * This file is part of the Claroline Connect package.
- * 
+ *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * For the full copyright and license information, please view
@@ -9,7 +9,7 @@
  */
 
 export default class EditNoteTypeCtrl {
-  constructor (service, $routeParams, $location) {
+  constructor(service, $routeParams, $location) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
@@ -25,7 +25,7 @@ export default class EditNoteTypeCtrl {
     this.errors = []
     this._service = service
     this.$location = $location
-    
+
     service.findNoteType($routeParams.id).then(
       d => {
         this.noteType = d.data
@@ -45,7 +45,7 @@ export default class EditNoteTypeCtrl {
     )
   }
 
-  addFieldLabel () {
+  addFieldLabel() {
     this.noteType.field_labels.push({
       name: ''
     })
@@ -55,7 +55,7 @@ export default class EditNoteTypeCtrl {
     }
   }
 
-  removeFieldLabel (pos) {
+  removeFieldLabel(pos) {
     this.removeFieldLabelFromCardType(this.noteType.field_labels[pos])
     for (let i=0; i<this.noteType.card_types.length; i++) {
       this.questionsChecked[i].splice(pos, 1)
@@ -64,7 +64,7 @@ export default class EditNoteTypeCtrl {
     this.noteType.field_labels.splice(pos, 1)
   }
 
-  removeFieldLabelFromCardType (fieldLabel) {
+  removeFieldLabelFromCardType(fieldLabel) {
     for(let i=0; i<this.noteType.card_types.length; i++) {
       for (let j=0; j<this.noteType.card_types[i].questions.length; j++) {
         if (this.noteType.card_types[i].questions[j].name == fieldLabel.name) {
@@ -81,7 +81,7 @@ export default class EditNoteTypeCtrl {
     }
   }
 
-  addCardType () {
+  addCardType() {
     this.noteType.card_types.push({
       name: '',
       questions: [],
@@ -91,7 +91,7 @@ export default class EditNoteTypeCtrl {
     this.answersChecked.push([])
   }
 
-  addReverseCardType (pos) {
+  addReverseCardType(pos) {
     this.noteType.card_types.push({
       name: '',
       questions: this.noteType.card_types[pos].answers,
@@ -101,13 +101,13 @@ export default class EditNoteTypeCtrl {
     this.answersChecked.push(this.questionsChecked[pos])
   }
 
-  removeCardType (pos) {
+  removeCardType(pos) {
     this.noteType.card_types.splice(pos, 1)
     this.questionsChecked.splice(pos, 1)
     this.answersChecked.splice(pos, 1)
   }
 
-  clickQuestion (posCardType, posFieldLabel, fieldLabel) {
+  clickQuestion(posCardType, posFieldLabel, fieldLabel) {
     const cardTypes = this.noteType.card_types
     if (this.questionsChecked[posCardType][posFieldLabel]) {
       for (let i=0; i<cardTypes[posCardType].questions.length; i++) {
@@ -121,11 +121,11 @@ export default class EditNoteTypeCtrl {
       this.questionsChecked[posCardType][posFieldLabel] = true
     }
     this.questionsForm[posCardType].$setValidity(
-      'atLeastOne', 
+      'atLeastOne',
       cardTypes[posCardType].questions.length > 0)
   }
 
-  clickAnswer (posCardType, posFieldLabel, fieldLabel) {
+  clickAnswer(posCardType, posFieldLabel, fieldLabel) {
     const cardTypes = this.noteType.card_types
     if (this.answersChecked[posCardType][posFieldLabel]) {
       for (let i=0; i<cardTypes[posCardType].answers.length; i++) {
@@ -139,11 +139,11 @@ export default class EditNoteTypeCtrl {
       this.answersChecked[posCardType][posFieldLabel] = true
     }
     this.questionsForm[posCardType].$setValidity(
-      'atLeastOne', 
+      'atLeastOne',
       cardTypes[posCardType].answers.length > 0)
   }
 
-  verifyUniqueFieldName () {
+  verifyUniqueFieldName() {
     let fieldLabels, isNotUnique
     fieldLabels = this.noteType.field_labels
     isNotUnique = new Array(fieldLabels.length)
@@ -161,7 +161,7 @@ export default class EditNoteTypeCtrl {
     }
   }
 
-  editNoteType (form) {
+  editNoteType(form) {
     if (form.$valid) {
       this._service.editNoteType(this.noteType).then(
         d => {
@@ -177,7 +177,7 @@ export default class EditNoteTypeCtrl {
     }
   }
 
-  _isFieldLabelInArray (field_label, array) {
+  _isFieldLabelInArray(field_label, array) {
     let result = false
     for (let i=0; i<array.length && !result; i++) {
       result = (array[i].name == field_label.name)

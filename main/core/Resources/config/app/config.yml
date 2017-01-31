@@ -2,6 +2,7 @@
 
 parameters:
     security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
+    security.exception_listener.class: Claroline\CoreBundle\Library\Security\Firewall\ExceptionListener
     security.logout.handler.session.class: Claroline\CoreBundle\Library\Security\LogoutHandler
     templating.locator.class: Claroline\CoreBundle\Library\Templating\Loader\TemplateLocator
     twig.controller.exception.class : Claroline\CoreBundle\Controller\CustomExceptionController

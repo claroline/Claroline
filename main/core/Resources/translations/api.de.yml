@@ -1,5 +1,5 @@
 actions: Actions
-app_want_access_to_your_account: 'L''application ''%clientName%'' souhaite avoir accès à votre compte.'
+app_want_access_to_your_account: L'application %clientName% souhaite avoir accès à votre compte.
 application_revoked_error_message: 'Erreur lors de la révocation de l''accès pour l''application ''%application%''.'
 application_revoked_success_message: 'Accès pour l''application ''%application%'' révoqué avec succès.'
 authorization_code_grant_type: 'Code d''autorisation'

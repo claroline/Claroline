@@ -26,12 +26,12 @@ class FieldFacetValue
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_user", "api_profile"})
+     * @Groups({"api_user", "api_profile", "api_user_min"})
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $stringValue;
 
@@ -56,7 +56,7 @@ class FieldFacetValue
      *     inversedBy="fieldsFacetValue",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     protected $user;
 
@@ -67,11 +67,12 @@ class FieldFacetValue
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
+     * @Groups({"api_user_min"})
      */
     protected $fieldFacet;
 
     /**
-     * @Groups({"api_user", "api_profile"})
+     * @Groups({"api_user", "api_profile", "api_user_min"})
      * @Accessor(getter="getValue")
      */
     protected $value;
@@ -140,7 +141,7 @@ class FieldFacetValue
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
     }

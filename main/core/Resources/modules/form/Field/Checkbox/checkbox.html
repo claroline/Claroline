@@ -8,5 +8,5 @@
         name="{{ cc.name }}"
         value="{{ cc.name }}">
     </input>
-    <label class="control-label" > {{ cc.label|trans:{}:cc.translationDomain }} </label>
+    <label class="control-label" ng-if="!cc.field[2].noLabel">{{ cc.label|trans:{}:cc.translationDomain }}</label>
 </div>

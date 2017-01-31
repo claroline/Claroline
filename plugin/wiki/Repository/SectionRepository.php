@@ -2,6 +2,7 @@
 
 namespace Icap\WikiBundle\Repository;
 
+use Claroline\CoreBundle\Entity\User;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
@@ -11,10 +12,11 @@ class SectionRepository extends NestedTreeRepository
     /**
      * @param Wiki $wiki
      * @param bool $isAdmin
+     * @param User $user
      *
      * @return Tree $tree
      */
-    public function buildSectionTree(Wiki $wiki, $isAdmin)
+    public function buildSectionTree(Wiki $wiki, $isAdmin, User $user = null)
     {
         $queryBuilder = $this->createQueryBuilder('section')
             ->join('section.activeContribution', 'contribution')
@@ -30,10 +32,14 @@ class SectionRepository extends NestedTreeRepository
         )->setParameter('deleted', false);
         if ($isAdmin === false) {
             $queryBuilder
-                ->andWhere('section.visible = :visible')
-                ->setParameter('visible', true);
+                ->andWhere(
+                    $queryBuilder->expr()->orX(
+                        'section.visible = :visible',
+                        'section.author = :userId'
+                    )
+                )->setParameter('visible', true)->setParameter('userId', $user->getId());
         }
-        $options = array('decorate' => false);
+        $options = ['decorate' => false];
         $tree = $this->buildTree($queryBuilder->getQuery()->getArrayResult(), $options);
 
         return $tree;
@@ -208,5 +214,10 @@ class SectionRepository extends NestedTreeRepository
             ->andWhere('section.id = :sectionId')
             ->setParameter('sectionId', $parent->getId());
         $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
+    public function findDeletedSections(Wiki $wiki)
+    {
+        return $this->findDeletedSectionsQuery($wiki)->getArrayResult();
     }
 }

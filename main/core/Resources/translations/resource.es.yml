@@ -1,6 +1,6 @@
 activity: Actividad
 administrate: Administrar
-all: all
+all: 'all'
 compose: Componer
 copy: Copiar
 delete: Suprimir
@@ -8,8 +8,8 @@ directory: Carpeta
 document: document
 download: Descargar
 edit: Editar
-edit-properties: 'Editar las propiedades'
-edit-rights: 'Editar los derechos de acceso'
+edit-properties: Editar las propiedades
+edit-rights: Editar los derechos de acceso
 empty: Vacío
 export: Exportar
 file: Archivo
@@ -18,13 +18,13 @@ insert: Insertar
 media: Medios
 more: Más
 open: Abrir
-open-tracking: 'Vista de seguimiento'
+open-tracking: Vista de seguimiento
 rename: Renombrar
 resource_copy_warning: resource_copy_warning
 resource_name_form_name: resource_name_form_name
-resource_shortcut: 'Acceso directo'
+resource_shortcut: Acceso directo
 text: Texto
-update_file: 'Actualizar el documento'
+update_file: Actualizar el documento
 video: video
-workspace: 'Espacio de trabajo'
+workspace: Espacio de trabajo
 write: Escribir

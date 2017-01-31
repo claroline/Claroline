@@ -11,19 +11,18 @@
 
 namespace Claroline\CoreBundle\Controller\API\Calendar;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\View;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use Claroline\CoreBundle\Manager\Calendar\YearManager;
-use Claroline\CoreBundle\Manager\ApiManager;
-use Claroline\CoreBundle\Form\Calendar\YearType;
 use Claroline\CoreBundle\Entity\Calendar\Year;
-use Symfony\Component\Form\FormFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Form\Calendar\YearType;
+use Claroline\CoreBundle\Manager\ApiManager;
+use Claroline\CoreBundle\Manager\Calendar\YearManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @NamePrefix("api_")
@@ -55,10 +54,6 @@ class YearController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * @ApiDoc(
-     *     description="Returns the year creation form",
-     *     views = {"year"}
-     * )
      */
     public function getCreateYearFormAction()
     {
@@ -74,10 +69,6 @@ class YearController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * @ApiDoc(
-     *     description="Returns the year list",
-     *     views = {"year"}
-     * )
      */
     public function getYearsAction()
     {
@@ -86,11 +77,6 @@ class YearController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * @ApiDoc(
-     *     description="Creates a year",
-     *     views = {"event"},
-     *     input="Claroline\CoreBundle\Form\Calendar\YearType"
-     * )
      */
     public function postYearAction(Organization $organization)
     {
@@ -108,10 +94,10 @@ class YearController extends FOSRestController
             $httpCode = 400;
         }
 
-        $options = array(
+        $options = [
             'http_code' => $httpCode,
             'extra_parameters' => $location,
-        );
+        ];
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Calendar\createYearForm.html.twig', $form, $options);
     }

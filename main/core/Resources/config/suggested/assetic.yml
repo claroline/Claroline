@@ -7,8 +7,6 @@ assetic:
     filters:
         cssrewrite: ~
         less: ~
-        lessphp:
-            file: '%kernel.root_dir%/../vendor/leafo/lessphp/lessc.inc.php'
         cssmin:
             file: '%kernel.root_dir%/../vendor/natxet/CssMin/src/CssMin.php'
             apply_to: '\.css$|\.less$'
