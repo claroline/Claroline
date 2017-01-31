@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "f4cad65ab3df9f99cadfe536fbda30ca587325e6"
+                "reference": "61dd4ec90e75a10d69208b75d2f130420dc4fd08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/f4cad65ab3df9f99cadfe536fbda30ca587325e6",
-                "reference": "f4cad65ab3df9f99cadfe536fbda30ca587325e6",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/61dd4ec90e75a10d69208b75d2f130420dc4fd08",
+                "reference": "61dd4ec90e75a10d69208b75d2f130420dc4fd08",
                 "shasum": ""
             },
             "require": {
@@ -375,7 +375,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-01-27 16:17:22"
+            "time": "2017-01-30 21:49:39"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -7102,16 +7102,16 @@
         },
         {
             "name": "sebastian/comparator",
-            "version": "1.2.2",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "6a1ed12e8b2409076ab22e3897126211ff8b1f7f"
+                "reference": "2b7424b55f5047b47ac6e5ccb20b2aea4011d9be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/6a1ed12e8b2409076ab22e3897126211ff8b1f7f",
-                "reference": "6a1ed12e8b2409076ab22e3897126211ff8b1f7f",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/2b7424b55f5047b47ac6e5ccb20b2aea4011d9be",
+                "reference": "2b7424b55f5047b47ac6e5ccb20b2aea4011d9be",
                 "shasum": ""
             },
             "require": {
@@ -7162,7 +7162,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2016-11-19 09:18:40"
+            "time": "2017-01-29 09:50:25"
         },
         {
             "name": "sebastian/diff",
