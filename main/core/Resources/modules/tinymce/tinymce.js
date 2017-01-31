@@ -10,6 +10,8 @@ var translator = window.Translator
 var routing = window.Routing
 
 tinymce.DOM.loadCSS(home.asset + 'packages/claroline-tinymce-mention/css/autocomplete.css')
+//tinymce.DOM.loadCSS(home.asset + 'packages/font-awesome/css/font-awesome.min.css')
+
 var codemirrorPath = home.asset + 'packages/tinymce-codemirror/plugins/codemirror/codemirror-4.8'
 
 /**
@@ -229,11 +231,12 @@ tinymce.claroline.configuration = {
   'autoresize_max_height': 500,
   'content_css': [
     themeCSS,
-    home.asset + 'bundles/clarolinecore/css/common/tinymce.css'
+    home.asset + 'bundles/clarolinecore/css/common/tinymce.css',
+    home.asset + 'packages/font-awesome/css/font-awesome.min.css'
   ],
   'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
     'media link charmap | print preview code',
-  'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
+  'extended_valid_elements': 'user[id], a[data-toggle|data-parent], span[*]',
   'paste_preprocess': tinymce.claroline.paste,
   'setup': tinymce.claroline.setup,
   'mentions': {

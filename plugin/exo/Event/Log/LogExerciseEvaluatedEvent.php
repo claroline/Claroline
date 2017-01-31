@@ -24,6 +24,6 @@ class LogExerciseEvaluatedEvent extends AbstractLogResourceEvent
      */
     public static function getRestriction()
     {
-        return array(LogGenericEvent::DISPLAYED_WORKSPACE);
+        return [LogGenericEvent::DISPLAYED_WORKSPACE];
     }
 }

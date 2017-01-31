@@ -5,6 +5,7 @@
  * Date: 7/7/14
  * Time: 5:01 PM.
  */
+
 namespace Icap\WebsiteBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;

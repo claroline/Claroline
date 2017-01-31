@@ -1,0 +1,53 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block stylesheets %}
+    {# Claroline CSS #}
+    {{ parent() }}
+
+    {# Exercise styles #}
+    {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/bank.css'
+        '@UJMExoBundle/Resources/less/main.less'
+        '@UJMExoBundle/Resources/less/bank/main.less'
+    %}
+    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{# Title of the Page #}
+{% block title %}
+    {{ 'bank_of_questions' | trans({}, 'ujm_exo') }}
+{% endblock %}
+
+{# Override breadcrumbs #}
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([{
+            'icon': 'fa fa-briefcase',
+            'name': 'desktop'|trans({}, 'platform'),
+            'href': path('claro_desktop_open')
+        }, {
+            'name': 'bank_of_questions'|trans({}, 'ujm_exo'),
+            'href': ''
+        }])
+    }}
+{% endblock %}
+
+{# Content of the Page #}
+{% block section_panel %}
+    <div
+        id="questions-bank"
+        data-initial="{{ initialSearch | json_encode | raw | escape }}"
+        data-user="{{ currentUser | json_encode | raw | escape }}"
+    ></div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Claroline JS #}
+    {{ parent() }}
+
+    {# Translations #}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'question_types' }) }}"></script>
+
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-exo-bank.js') }}"></script>
+{% endblock %}

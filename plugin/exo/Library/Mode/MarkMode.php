@@ -4,6 +4,8 @@ namespace UJM\ExoBundle\Library\Mode;
 
 /**
  * Defines when the marks of an Exercise become available.
+ *
+ * @deprecated use Options\ShowScoreAt instead
  */
 final class MarkMode
 {

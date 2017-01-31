@@ -1646,4 +1646,24 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $query->getResult();
     }
+
+    /**
+     * Finds users with a list of IDs.
+     *
+     * @param array $ids
+     *
+     * @return User[]
+     */
+    public function findByIds(array $ids)
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT u FROM Claroline\CoreBundle\Entity\User u
+                WHERE u IN (:ids)
+                  AND u.isRemoved = false
+                  AND u.isEnabled = true
+            ')
+            ->setParameter('ids', $ids)
+            ->getResult();
+    }
 }

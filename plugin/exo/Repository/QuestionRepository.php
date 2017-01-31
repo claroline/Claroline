@@ -4,35 +4,94 @@ namespace UJM\ExoBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Question;
-use UJM\ExoBundle\Entity\Step;
+use UJM\ExoBundle\Entity\Question\Question;
 
+/**
+ * QuestionRepository.
+ */
 class QuestionRepository extends EntityRepository
 {
     /**
-     * Returns all the questions created by a given user. Allows to
-     * select only questions defined as models (defaults to false).
+     * Search questions.
      *
-     * @param User $user
-     * @param bool $limitToModels
+     * @todo add date filters
+     * @todo add user filters
+     * @todo order query
+     *
+     * @param User      $user
+     * @param \stdClass $filters
+     * @param array     $orderBy
+     * @param int       $number  - the number of results to get
+     * @param int       $page    - the page to start (db offset is found with $number * $page)
      *
      * @return array
      */
-    public function findByUser(User $user, $limitToModels = false)
+    public function search(User $user, \stdClass $filters = null, array $orderBy = [], $number = -1, $page = 0)
     {
-        $qb = $this->createQueryBuilder('q')
-            ->join('q.user', 'u')
-            ->join('q.category', 'c')
-            ->where('q.user = :user');
+        $qb = $this->createQueryBuilder('q');
 
-        if ($limitToModels) {
+        if (empty($filters) || empty($filters->self_only)) {
+            // Includes shared questions
+            if (!empty($filters) && !empty($filters->creators)) {
+                // Search by creators
+            } else {
+                // Get all questions of the current user
+                $qb->leftJoin('UJM\ExoBundle\Entity\Question\Shared', 's', Join::WITH, 'q = s.question');
+                $qb->where('(q.creator = :user OR s.user = :user)');
+                $qb->setParameter('user', $user);
+            }
+        } else {
+            // Only Get questions created by the User
+            $qb->where('q.creator = :user');
+            $qb->setParameter('user', $user);
+        }
+
+        // Type
+        if (!empty($filters) && !empty($filters->types)) {
+            $qb
+                ->andWhere('q.mimeType IN (:types)')
+                ->setParameter('types', $filters->types);
+        }
+
+        // Title / Content
+        if (!empty($filters) && !empty($filters->title)) {
+            $qb
+                ->andWhere('(q.content LIKE :text OR q.title LIKE :text)')
+                ->setParameter('text', '%'.addcslashes($filters->title, '%_').'%');
+        }
+
+        // Categories
+        if (!empty($filters) && !empty($filters->categories)) {
+            $qb->andWhere('q.category IN (:categories)');
+            $qb->setParameter('categories', $filters->categories);
+        }
+
+        // Exercises
+        if (!empty($filters) && !empty($filters->exercises)) {
+            $qb
+                ->join('q.stepQuestions', 'sq')
+                ->join('sq.step', 's')
+                ->join('s.exercise', 'e')
+                ->andWhere('e.uuid IN (:exercises)');
+
+            $qb->setParameter('exercises', $filters->exercises);
+        }
+
+        // Model
+        if (!empty($filters) && !empty($filters->model_only)) {
             $qb->andWhere('q.model = true');
         }
 
+        if (-1 !== $number) {
+            // We don't want to load the full list
+            $qb
+                ->setFirstResult($page * $number)
+                ->setMaxResults($number);
+        }
+
         return $qb
-            ->orderBy('c.value, q.title', 'ASC')
-            ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
     }
@@ -40,225 +99,37 @@ class QuestionRepository extends EntityRepository
     /**
      * Returns all the questions linked to a given exercise.
      *
+     * @deprecated this is not used
+     *
      * @param Exercise $exercise
      *
      * @return Question[]
      */
     public function findByExercise(Exercise $exercise)
     {
-        return $this->createQueryBuilder('q')
-            ->join('q.stepQuestions', 'sq')
-            ->join('sq.step', 's')
-            ->where('s.exercise = :exercise')
-            ->orderBy('s.order, sq.ordre')
-            ->setParameter(':exercise', $exercise)
-            ->getQuery()
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT q
+                FROM UJM\ExoBundle\Entity\Question\Question AS q
+                JOIN UJM\ExoBundle\Entity\StepQuestion AS sq WITH sq.question = q 
+                JOIN UJM\ExoBundle\Entity\Step AS s WITH sq.step = s AND s.exercise = :exercise
+            ')
+            ->setParameter('exercise', $exercise)
             ->getResult();
     }
 
     /**
-     * Returns all the questions linked to a given step.
+     * Returns the questions corresponding to an array of UUIDs.
      *
-     * @deprecated this methods is only used in incorrect way. It will be deleted when there will be no more use
-     *
-     * @param Step $step
+     * @param array $uuids
      *
      * @return Question[]
      */
-    public function findByStep(Step $step)
+    public function findByUuids(array $uuids)
     {
         return $this->createQueryBuilder('q')
-            ->join('q.stepQuestions', 'sq')
-            ->join('sq.step', 's')
-            ->where('sq.step = :step')
-            ->orderBy('sq.ordre')
-            ->setParameter(':step', $step)
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Returns the questions corresponding to an array of ids.
-     *
-     * @param array $ids
-     *
-     * @return Question[]
-     */
-    public function findByIds(array $ids)
-    {
-        return $this->createQueryBuilder('q')
-            ->where('q IN (:ids)')
-            ->setParameter('ids', $ids)
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Returns the questions created by a user which are not
-     * associated with a given exercise. Allows to select only
-     * questions defined as models (defaults to false).
-     *
-     * @param User     $user
-     * @param Exercise $exercise
-     * @param bool     $limitToModels
-     *
-     * @return array
-     */
-    public function findByUserNotInExercise(User $user, Exercise $exercise, $limitToModels = false)
-    {
-        $stepQuestionsQuery = $this->createQueryBuilder('q1')
-            ->join('q1.stepQuestions', 'sq')
-            ->join('sq.step', 's')
-            ->where('s.exercise = :exercise');
-
-        $qb = $this->createQueryBuilder('q')
-            ->leftJoin('q.category', 'c')
-            ->where('q.user = :user');
-
-        if ($limitToModels) {
-            $qb->andWhere('q.model = true');
-        }
-
-        return $qb
-            ->andWhere($qb->expr()->notIn('q', $stepQuestionsQuery->getDQL()))
-            ->orderBy('c.value, q.title', 'ASC')
-            ->setParameters([
-                'user' => $user,
-                'exercise' => $exercise,
-            ])
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Returns the questions created by a user whose category
-     * name matches a given search string.
-     *
-     * @param User   $user
-     * @param string $categoryName
-     *
-     * @return array
-     */
-    public function findByUserAndCategoryName(User $user, $categoryName)
-    {
-        return $this->createQueryBuilder('q')
-            ->join('q.category', 'c')
-            ->where('q.user = :user')
-            ->andWhere('c.value LIKE :search')
-            ->setParameters([
-                'user' => $user,
-                'search' => "%{$categoryName}%",
-            ])
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Returns the questions created by a user whose type
-     * matches a given search string.
-     *
-     * @param User   $user
-     * @param string $type
-     *
-     * @return array
-     */
-    public function findByUserAndType(User $user, $type)
-    {
-        return $this->createQueryBuilder('q')
-            ->where('q.user = :user')
-            ->andWhere('q.type LIKE :search')
-            ->setParameters([
-                'user' => $user,
-                'search' => "%{$type}%",
-            ])
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Returns the questions created by a user whose title
-     * matches a given search string.
-     *
-     * @param User   $user
-     * @param string $title
-     *
-     * @return array
-     */
-    public function findByUserAndTitle(User $user, $title)
-    {
-        return $this->createQueryBuilder('q')
-            ->where('q.user = :user')
-            ->andWhere('q.title LIKE :search')
-            ->setParameters([
-                'user' => $user,
-                'search' => "%{$title}%",
-            ])
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Returns the questions created by a user whose invite
-     * matches a given search string.
-     *
-     * @param User   $user
-     * @param string $invite
-     *
-     * @return array
-     */
-    public function findByUserAndInvite(User $user, $invite)
-    {
-        return $this->createQueryBuilder('q')
-            ->where('q.user = :user')
-            ->andWhere('q.invite LIKE :search')
-            ->setParameters([
-                'user' => $user,
-                'search' => "%{$invite}%",
-            ])
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Returns the questions created by a user whose category name,
-     * type, title or invite matches a given search string.
-     * Allows to select only questions which are not associated with
-     * a particular exercise.
-     *
-     * @param User     $user
-     * @param string   $content
-     * @param Exercise $excluded
-     *
-     * @return array
-     */
-    public function findByUserAndContent(User $user, $content, Exercise $excluded = null)
-    {
-        $qb = $this->createQueryBuilder('q')
-            ->leftJoin('q.category', 'c')
-            ->Where('c.value LIKE :search')
-            ->orWhere('q.type LIKE :search')
-            ->orWhere('q.title LIKE :search')
-            ->orWhere('q.invite LIKE :search')
-            ->andWhere('q.user = :user');
-
-        $parameters = [
-            'user' => $user,
-            'search' => "%{$content}%",
-        ];
-
-        if ($excluded) {
-            $stepQuestionsQuery = $this->createQueryBuilder('q1')
-                ->join('q1.stepQuestions', 'sq')
-                ->join('sq.step', 's')
-                ->where('s.exercise = :exercise');
-            $qb->andWhere(
-                $qb->expr()->notIn('q', $stepQuestionsQuery->getDQL())
-            );
-            $parameters['exercise'] = $excluded;
-        }
-
-        return $qb->orderBy('c.value, q.title', 'ASC')
-            ->setParameters($parameters)
+            ->where('q.uuid IN (:uuids)')
+            ->setParameter('uuids', $uuids)
             ->getQuery()
             ->getResult();
     }

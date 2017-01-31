@@ -1,0 +1,39 @@
+.text-editor {
+    position: relative;
+    margin-bottom: 12px;
+
+    [role=textbox].form-control {
+        height: auto;
+    }
+
+    [role=textbox].form-control p:last-of-type {
+        margin-bottom: 0;
+    }
+
+    .toolbar-toggle {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        z-index: 1;
+        background-color: white;
+        border-radius: 50%;
+        color: #777;
+        font-size: 18px;
+    }
+
+    .mce-toolbar-grp {
+        max-height: 500px;
+        transition: max-height 0.6s ease-in;
+    }
+
+    &.minimal {
+        .mce-toolbar-grp {
+            max-height: 0;
+            transition: none;
+        }
+
+        .mce-edit-area {
+            border: none;
+        }
+    }
+}

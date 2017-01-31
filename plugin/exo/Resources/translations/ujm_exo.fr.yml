@@ -1,25 +1,31 @@
 # A
 actions: Actions
+active_filters: "{0} Il n'y a aucun filtre actif|{1} Il y a 1 filtre actif|]1,Inf[ Il y a %count% filtres actifs"
 add: Ajouter
 add_choice: Ajouter un choix
+add_hint: Ajouter un indice
 add_label: Ajouter un label
 add_new_picture: Ajouter une nouvelle image
 add_proposal: Ajouter une proposition
-add_question: Ajouter une question
+add_question: Créer
+add_question_from_existing: Importer une/des question(s)
+add_question_from_new: Créer une nouvelle question
 add_step: Ajouter une étape
 add_zone_answer: Ajouter une zone de réponse
+additional_info: Informations complémentaires
 advanced_edition: Edition avancée
-after_the_last_attempt: Après le dernier essai
-alert_ending: Êtes-vous sur de vouloir terminer ? (Vous ne pourrez plus modifier vos réponses.)
+after_the_last_attempt: Après le dernier essai de l'étape
+alert_ending: Êtes-vous sûr(e) de vouloir terminer ? (Vous ne pourrez plus modifier vos réponses.)
 all: Tout
+all_types: Tous les types
 allow_to_edit: Autoriser l'édition
-allow_test_exit: Permettre d'interrompre l'exercice
+allow_test_exit: Permettre d'interrompre le questionnaire
 all_question: Toutes les questions
 all_step: Toutes les étapes
 already: Cette question est déjà partagée avec cet utilisateur
-already_answered: Vous avez déjà répondu à cet exercice
+already_answered: Vous avez déjà répondu à ce questionnaire
 already_exist: Ce nom existe déjà.
-anonymous : Anonyme
+anonymous: Rendre les résultats des utilisateurs anonymes
 answer_coched: Aucune réponse attendue n'est cochée
 answer_zone: Zone de réponse
 answer_of: réponse de
@@ -30,6 +36,8 @@ attempt_info3: Essai n°
 attempt_info4: Il vous reste
 attempt_info5: afin d'améliorer votre score.
 attempt_info6: Il ne vous reste plus aucun essai.
+at_first_attempt: Au premier essai
+at_each_attempt: À chaque essai
 at_the_end_of_assessment: A la fin du test
 at_the_same_time_that_the_correction: En même temps que la correction
 availability_of_correction: Disponibilité de la correction
@@ -44,8 +52,10 @@ application/x.short+json: Ouverte
 badge_obtained: Félicitations ! Vous avez obtenu le badge de connaissances.
 badge_no_obtained: Vous n'avez pas encore obtenu le badge de connaissance.
 back: Retour
-back_to_overview: Retourner à la vue d'ensemble de l'exercice
+back_to_overview: Retourner à la vue d'ensemble du questionnaire
 back_to_the_list: Retour à la liste
+back_to_the_questions_list: Retour à la liste des questions
+back_to_the_quiz: Retour au questionnaire
 bank_of_questions: Banque de questions
 brief_search: Recherche rapide
 
@@ -59,9 +69,20 @@ change: Changer
 change_name: Changer le nom du document
 change_order: Pour changer l'ordre des questions, déplacez-les en utilisant le glisser/déposer.
 choice: Choix
+choice_empty_data_error: Le texte des réponses ne peut pas être vide
+choice_feedback_info: Commentaire si la réponse est selectionnée
 choose_image : Choisir une image
 choose_category : Choisir une catégorie
 choose_type: Choisir un type
+cloze_empty_word_error: Le mot ne peut pas être vide
+cloze_empty_score_error: Le score ne peut pas être vide
+cloze_multiple_answers_required: Plusieurs réponses sont requises
+cloze_empty_size_error: La taille ne peut pas être vide
+cloze_empty_text_error: Veuillez remplir le texte
+cloze_must_contains_clozes_error: Le texte doit contenir des trous
+cloze_holes_errors: Certains trous contiennent toujours des erreurs
+cloze_duplicate_answers: Les réponses ne peuvent pas être dédoublées
+cloze_solutions_requires_positive_answer: Au moins une réponse doit avoir un score positif
 color: Couleur
 comment: Feedback
 compose: Répondre
@@ -70,10 +91,13 @@ contain_search: Dont la question contient
 correct: Correcte
 correction: Correction
 correction_date: Date de la correction
+correction_invalid_no_save: Correction non valide
+correction_invalid_no_save_desc: La correction a échouée.
 correspondence: correspondance
 correspondence_empty: Vous n'avez réalisé aucune correspondance !
 correspondence_error: Vous ne pouvez pas associer une même proposition avec plusieurs labels !
 create: Créer
+create_cloze: Créer un trou
 create_a_new_category: Créer une nouvelle catégorie
 create_a_new_entry: Créer une nouvelle question
 creation_date: Date de création
@@ -83,10 +107,10 @@ create_hole : Créer un trou
 date: Date
 default : Défaut
 delete: Supprimer
-delete_of_my_bank: Supprimer de ma banque
-delete_of_my_exercise: Supprimer de mon exercice
 delete_papers: Supprimer les copies
-delete_question: Supprimer l'étape
+delete_item: Supprimer la question
+delete_items: "{1} Supprimer la question|[2,Inf[ Supprimer %count% questions"
+delete_step: Supprimer l'étape
 description: Description
 display_all_list: Afficher la liste complète
 display_all_on_this_page: Tout afficher sur cette page
@@ -98,28 +122,33 @@ drop_category: Supprimer cette catégorie
 duplicate: Dupliquer
 duplicate_this_question: <input type ="text" name='nbq' value='0' size='2' /> fois cette question (10 maximum autorisé)
 duration: Durée (en minutes)
+duration_help: Entrez 0 pour une durée illimitée
 
 # E
 edit: Éditer
 edit_category: Éditer cette catégorie
 edit_question: Éditer une question
 edit_step: Éditer les informations
+editor_invalid_no_save: Questionnaire non valide
+editor_invalid_no_save_desc: Le questionnaire ne peut être sauvegardé car certaines informations sont manquantes ou non valides. Veuillez corriger les problèmes indiqués avant d'effectuer la sauvegarde.
+editor_validating_desc: Des erreurs ou des informations manquantes empêchent la sauvegarde des données.
+editor_not_validating_desc: "Travail en cours : certaines données sont manquantes ou nécessitent une correction."
+editor_penalty_label: Pénalité pour toute mauvaise réponse non définie.
 end_date: Date de fin
 entry: Entrer
 error_no_step_found: Une erreur est survenue lors de la récupération de l'étape courrante.
-exercise: Exercice
+evaluative: Certificatif
+exercise: Questionnaire
 exercise_alert_break: Interuption non autorisée. Votre copie sera considérée comme terminée !
 exercise_definition: Vue d'ensemble
-exercise_edit: Modification de l'exercice
 exercise_finished_attempts: "[0, 1] %count% réalisée à ce stade|]1,Inf[ %count% réalisées à ce stade."
-exercice_linked_question: Questions liées à l'exercice
-exercise_restart: Recommencer l'exercice
-exercise_start: Commencer l'exercice
+exercise_restart: Recommencer le questionnaire
+exercise_start: Commencer le questionnaire
 exercise_tries: "[0, 1] Vous avez droit à %count% essai|]1,Inf[ Vous avez droit à %count% essais"
-exercise_try: Tester l'exercice
+exercise_try: Tester
 exit: Quitter
-exo_empty_user_can_edit: Cet exercice est vide. Editez et publiez-le afin de le remplir.
-exo_empty_user_read_only: Cet exercice est vide et n'a pas encore été configuré par son concepteur. Veuillez revenir plus tard.
+exo_empty_user_can_edit: Ce questionnaire est vide. Editez et publiez-le afin de le remplir.
+exo_empty_user_read_only: Ce questionnaire est vide et n'a pas encore été configuré par son concepteur. Veuillez revenir plus tard.
 expected_answer: Réponse attendue
 explain_coeff_dis0: Les copies doivent comporter les mêmes questions pour pouvoir calculer le coéfficient de discrimination.
 explain_coeff_dis1: Analyse de la pertinence des questions, ce coéfficient de corrélation varie de -1 à + 1.
@@ -127,36 +156,53 @@ explain_coeff_dis2: Les questions dont le coéfficient de discrimination se situ
 explain_coeff_dis3: Les questions ayant un indice négatif signalent une incohérence: les meilleurs candidats échouent à ces questions tandis que les plus faibles réussissent.
 explain_measure_difficulty: L'indice de difficulté équivaut à un pourcentage de réussite à la question.
 export_csv_results: Export CSV des résultats
-export_qti_exercise : Exporter les questions de l'exercice au format QTI
+export_qti_exercise : Exporter les questions du questionnaire au format QTI
 
 # F
 false_response: Points pour la mauvaise réponse
 feedback: Commentaire
 feedback_answer_check: Commentaire si la réponse est selectionnée (facultatif)
-find_by: Trouver par
-find_in: Trouver dans
-find_question_advance: Recherche avancée
-find_what: Ce que vous cherchez
+feedback_association_created: Commentaire si cette association est créée
+filter_by_title: Titre ou contenu
+filter_by_model_only: Uniquement les modèles
+filter_by_type: Type
+filter_by_self_only: Uniquement mes questions
+filter_by_creator: Créateur
+filters_less: Afficher moins de filtres
+filters_more: Afficher plus de filtres
+filters_reset: Supprimer tous les filtres
 final_mark: Note finale
 finish: Terminer
+fixed_failure_above_success_error: Cette valeur doit être inférieure à celle du résultat en cas de succès.
+fixed_success_under_failure_error: Cette valeur doit être supérieure ou égale à celle du résultat en cas d'échec.
+fixed_score: Score global
+fixed_score_choice_at_least_one_correct_answer_error: Au moins une réponse correcte doit être cochée.
+fixed_score_choice_no_correct_answer_error: La réponse correcte doit être cochée.
+fixed_score_on_success: Points en cas de succès
+fixed_score_on_failure: Points en cas d'échec
 for_type_of: pour une question de type
 frequency: Fréquence
 from: A partir du
 formative : Formatif
 
 # G
-graphic: Graphique
-graphic_area_shape_rect: Rectangle
-graphic_area_shape_circle: Cercle
-graphic_area_shape_poly: Polygone
-graphic_creation: Création d'une question graphique
-graphic_edition: Edition d'une question graphique
-graphic_help: Glisser les réticules sur l'image pour masquer votre réponse
-group: Groupe
+graphic_drop_or_pick: Faites glisser une image ici ou utiliser le bouton ci-dessus.
+graphic_error_image_too_large: Cette image est trop volumineuse.
+graphic_error_no_image: Vous devez sélectionner une image.
+graphic_error_no_positive_solution: Au moins une zone de réponse doit avoir un score positif.
+graphic_error_no_solution: Vous devez créer au moins une zone de réponse.
+graphic_error_not_an_image: Le fichier sélectionné n'est pas une image.
+graphic_feedback_info: Commentaire si l'utilisateur clique dans cette zone
+graphic_pick_image: Choisir une image
+graphic_mode_rect: Zone de réponse rectangulaire
+graphic_mode_circle: Zone de réponse circulaire
+graphic_mode_select: Sélectionner une réponse
+graphic_pointers_left: 'Nombre de pointeurs disponibles : '
 
 # H
 hide_instructions: Masquer les consignes
 hint: Indice
+hint_show: Voir l'indice
 hints: Indices
 histo_discrimination: Coéfficient de discrimination
 histo_marks: Histogramme des notes
@@ -166,16 +212,18 @@ hole: Texte à trous
 hole_creation: Création d'une question à trous
 hole_edition: Edition d'une question à trous
 hole_selector: Proposer une liste
-home_exercise: Accueil de l'exercice
 hide_additional_info: Masquer les informations supplémentaires
-hint_points: "[0,1] - %count% point|]1,Inf[ - %count% points"
+hide_interact_fields: Cacher les indices et le commentaire final
+hide_metadata_fields: Cacher le titre et les autres champs
+hint_penalty: "[0,1] -%count% point|]1,Inf[ -%count% points"
 
 # I
 infiny: Infini
 info_duplicate_question: Pour dupliquer une question, vous devez insérer un nombre entier entre 0 et 10.
-info_exercise_never_published: Cet exercice n'est pas encore publié. Les gestionnaires pourront ajouter des questions, tester l'exercice et supprimer les copies. Après publication, les apprenants pourront passer l'exercice et les copies ne pourront plus être supprimées.
+info_exercise_never_published: Ce questionnaire n'est pas encore publié. Les gestionnaires pourront ajouter des questions, tester le questionnaire et supprimer les copies. Après publication, les apprenants pourront passer le questionnaire et les copies ne pourront plus être supprimées.
 info_mark: Les éventuelles pénalités sont à prendre en compte dans votre notation
 info_measure_difficulty: Cet indice ne prend pas en compte les étudiants n'ayant pas vu la question.
+instruction: Consigne pédagogique
 inter_matching_shuffle: Ordre des propositions et des labels aléatoire.
 interaction_feedback: Commentaire à afficher avec la correction (facultatif)
 interupt: Interrompre
@@ -191,6 +239,7 @@ instruction_add_hole : Pour créer un trou, sélectionnez le texte à trouer dan
 instruction_matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
 in_valid_mark: Note invalide
 item_points: "[0,1] %count% point|]1,Inf[ %count% points"
+item_empty_data_error: Un élément doit avoir des données.
 
 # K
 keep_same_step: Conserver les mêmes étapes pour un même utilisateur
@@ -206,15 +255,29 @@ less_information: Moins d'informations
 list: Liste
 list_question: Liste des questions
 lock_attempt: Verrouiller le test
-lock_exercise: Verrouiller l'exercice
+lock_exercise: Verrouiller le questionnaire
 long: Longue
 
 # M
 manage_img: Gérer mes documents
+manual_correction: Correction manuelle
+manual_correction_of_open_questions: Correction manuelle des questions ouvertes
 mark: Note
 mark_question: Noter cette question
 mark_bigest: Le score doit être inférieur ou égal au score maximum
 mark_bigest_other: Le score est supérieur au score maximun
+match_add_item: Ajouter un item
+match_editor_click_link_help: Cliquez sur le lien pour pouvoir éditer les paramètres de l'association.
+match_player_click_link_help: Cliquez sur le lien pour avoir plus d'informations.
+match_penalty_label: Pénalité pour toute mauvaise association
+match_shuffle_labels_and_proposals: Ordre des propositions et des labels aléatoire
+match_edit_connection: Éditer l'association
+match_item_empty_data_error: Les données d'un élément ne peuvent être vides.
+match_no_valid_solution: Au moins une solution doit avoir un score supérieur à 0.
+match_no_solution: Il doit y avoir au moins une solution.
+match_score_not_valid: Chaque score doit être un chiffre valide.
+match_penalty_not_valid: La pénalité doit être un chiffre supérieur ou égal à 0.
+match_warning_penalty_and_negative_scores: L'utilisation conjointe de scores négatifs et d'une pénalité peuvent engendrer des résultats incohérents.
 matching: Association
 matching_creation: Création d'une question associative
 matching_edition: Edition d'une question associative
@@ -222,11 +285,15 @@ matching_value: Type de question associative
 maximum_attempts: Nombre de tentatives maximum
 maximum_tries: Nombre d'essais maximum
 meaning_measure_difficulty: Si l'indice est élevé, c'est que la question est facile. Inversement, si un indice est faible, la question est difficile.
-metadata_visible: Afficher les informations de l'exercice
-metadata_visible_help: Si coché, un tableau récapitulatif sera affiché sur la vue d'ensemble de l'exercice.
-minimal_correction: Cacher les solutions
+metadata_visible: Afficher les informations
+metadata_visible_help: Si coché, un tableau récapitulatif sera affiché sur la vue d'ensemble du questionnaire.
+maximal_correction: Afficher la réponse attendue dans la correction
+minimal_correction: Cacher la réponse attendue dans la correction
+minimize: Réduire
 model: Modèle
 more_info: Plus d'informations
+move_item: Déplacer la question
+move_step: Déplacer l'étape
 my_questions: Mes questions
 my_models: Mes modèles
 
@@ -241,7 +308,8 @@ never: Jamais
 new_name: Nouveau nom du document
 next: Suivant
 no: Non
-no_answer: Pas de réponse
+no_answer: Pas de réponse.
+no_answer_to_correct: Il n'y a aucune réponse à cette question à corriger actuellement.
 no_answer_zone: Vous n'avez mis aucune zone de réponse
 no_pic_found: Pas de document trouvé
 no_finish: Non terminé
@@ -252,21 +320,24 @@ none: Aucune
 no_paper_found: Aucune copie
 no_question: Vous ne posez aucune question
 no_question_found: Pas de question trouvée
+no_question_to_correct: Il n'y a aucune question ouverte à corriger actuellement.
 no_rights: Vous n'êtes pas propriétaire de cette question et elle n'est pas partagée avec vous
 not_allowed_modify_paper: Vous ne pouvez plus modifier vos réponses !
 no_thing_import: Aucune question à importer n'est cochée
 not_image_messsage: Le document doit être une image
 not_enought_papers: Pour afficher la docimologie, il doit y avoir au moins 12 copies.
 not_yet_mark: Pas encore noté
+no_hint_info: Aucun indice n'est associé à cette question.
 no_user_found: Pas d'utilisateur trouvé
 n_question: Question n°
-number_max_attempts_help: Tapez 0 pour un nombre d'essais illimité
+number_max_attempts_help: Entrez 0 pour un nombre d'essais illimité
 number_proposal: Numéro de la proposition
 number_of_papers: Nombre de copies
+number_of_papers_to_correct: Nombre de copies à corriger
 number_questions_draw: Nombre de questions à tirer
-number_questions_draw_help: Tapez 0 pour tirer toutes les questions
+number_questions_draw_help: Entrez 0 pour tirer toutes les questions
 number_steps_draw: Nombre d'étapes à tirer
-number_steps_draw_help: Tapez 0 pour tirer toutes les étapes
+number_steps_draw_help: Entrez 0 pour tirer toutes les étapes
 numerical: Numérique
 numerical_response: Réponse numérique
 num_paper: Numéro de la copie
@@ -275,21 +346,55 @@ num_paper: Numéro de la copie
 only_once: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
 only_owner_graphic: Seul le propriétaire peut changer l'image
 open: Ouverte
+open_maximum_length: Longueur maximum de la réponse (nombre de caractères)
+open_maximum_length_help: Laissez cette valeur à 0 si il n'y a pas de longueur maximum pour la réponse
 open_creation: Création d'une question ouverte
 open_edition: Edition d'une question ouverte
 orders: Consignes
 orthography: Autoriser les fautes d'orthographe
 overview: Vue d'ensemble
+odd_score_not_valid: Le score d'un intrus doit être négatif.
 
 # P
+pair_is_ordered: La paire est ordonnée.
+pair_pin_this_item: Épingler cet élément
+pair_pair: Paire
+pair_random_needs_pin_item: Au moins un élément doit être épinglé pour pouvoir utiliser la propriété random.
+pair_shuffle_pairs: Ordre des paires aléatoire.
+pair_allow_pin_function: Activer / désactiver la fonctionnalité épingler un item.
+pair_solution_at_least_two_items: Une paire doit avoir deux éléments.
+pair_add_pair: Ajouter une paire
 paper: Passage
 paper_finished: Terminé
 paper_need_manual_correction: Cette copie nécessite une correction manuelle
 paper_list: Liste des copies
+paper_list_no_paper: Aucune copie trouvée.
+paper_search: Rechercher une copie
+paper_list_manual_correction_needed: Correction manuelle nécessaire
+paper_list_table_user: Utilisateur
+paper_list_table_paper_number: '#'
+paper_list_table_start_date: Date de début
+paper_list_table_end_date: Date de fin
+paper_list_table_action: Correction
+paper_list_table_action_not_available: Indisponible actuellement
+paper_list_table_score: Score
+paper_list_table_first_page_label: Première
+paper_list_table_last_page_label: Dernière
+paper_list_table_toggle_pagination: Paginer / Dépaginer les resultats
+paper_details_table_choice: Choix
+paper_details_table_expected_answer: Réponse attendue
+paper_details_table_your_answer: Votre réponse
+paper_details_table_comment: Commentaire
+paper_details_paper_score: Score global
+paper_details_question_score: Score de la question
+paper_details_correction_label: Correction
+paper_details_your_answers: Vos réponses
+paper_details_right_answers: Bonnes réponses
 paper_count: "{0} aucune copie|{1} %count% copie|]1,Inf[ %count% copies"
 metadata: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité
+penalty_not_valid: La champ pénalité doit être un chiffre.
 percentage: Pourcentage
 picture_name: Nom de l'image
 points: Points
@@ -302,42 +407,64 @@ print_paper: Imprimer la copie
 proposal: Proposition
 position_force: Forcer cette position
 publish: Publier
-
+please_choose: Veuillez choisir...
 # Q
 qcm: QCM
 qcm_creation: Création d'une question QCM
 qcm_edition: Edition d'une question QCM
+qcm_multiple_answers: Réponses multiples
 qcm_shuffle: Ordre des choix aléatoire
+qcm_single_answer: Réponse unique
 qti_format_warning: Vous devez importer une archiver .zip contenant un fichier compatible IMS_QTI
 qti_import_title: Pas d'attribut "title" pour l'élément "assessmentItem"
-qti_no_questions: Attention, pour pouvoir exporter l'exercice, il faut qu'il y ait au moins une question dans votre exercice.
+qti_no_questions: Attention, pour pouvoir exporter le questionnaire, il faut qu'il y ait au moins une question.
 qti_unsupported_format: Format non compatible QTI ou non supporté
 qti_xml_not_found: Schéma XML non trouvé
 question: Question
 questions: Questions
-question_creation: Création d'une question
-question_description: Description de la question (facultatif)
-question_model: Définir comme modèle
-question_title: Titre de la question (facultatif)
-question_shared_with: Cette question est partagée avec les utilisateurs suivants
+questions_bank: Banque de questions
+
+question_edit: Modifier
+question_delete: Supprimer
+question_duplicate: Dupliquer
+question_export: Exporter
+question_share: Partager
+question_show_quizzes: Voir dans les questionnaires
+
+questions_delete: Supprimer les questions sélectionnées
+questions_duplicate: Dupliquer les questions sélectionnées
+questions_export: Exporter les questions sélectionnées
+questions_share: Partager les questions sélectionnées
+
 question_need_manual_correction: Cette question nécessite une correction manuelle
 question_open_keywords_info: Votre réponse doit contenir les mots clés suivant pour obtenir les points
 question_graphic_set_pointers: Cliquez sur l'image pour placer un pointeur
 question_graphic_nb_pointers: "{0} Il ne reste plus aucun pointeur à placer sur l'image.|{1} Il reste %count% pointeur à placer sur l'image.|]1,Inf[ Il reste %count% pointeurs à placer sur l'image."
 
 # R
+random_order: Ordre aléatoire
 random_picking: Tirage aléatoire
 random_questions: Ordre des questions aléatoire
+random_step_picking: Tirage aléatoire des étapes
 random_steps: Ordre des étapes aléatoire
 random_steps_order: Ordre aléatoire des étapes
 raz: => Pour remettre tous les pointeurs à leurs position initiale, appuyez sur "c".
+rich_text_tools: Outils de texte riche
 square: Carré
 remove_advanced_edition: Édition simple
 remove_question_confirm_message:  Êtes-vous sûr de vouloir supprimer cette question ?
+remove_step_confirm_message:  Êtes-vous sûr de vouloir supprimer cette étape ?
+request_error: Échec de la requête
+request_error_auth_blocked: Vous devez être connecté(e) pour effectuer cette action mais votre navigateur bloque l'affichage de la fenêtre pop-up permettant de vous authentifier. Veuillez désactiver cette fonctionnalité pour ce site et essayer à nouveau.
+request_error_desc_401: Vous devez être connecté(e) pour effectuer cette action.
+request_error_desc_403: Vous n'êtes pas autorisé(e) à effectuer cette action.
+request_error_desc_422: Les données soumises ont été rejetées par le serveur. Veuillez signaler cette erreur à l'administrateur de votre plateforme.
+request_error_desc_default: Une erreur est survenue pendant l'exécution de la requête. Veuillez le signaler à l'administrateur de votre plateforme.
 reset: Réinitialiser
 resize_zone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites-la glisser
 response: Réponse
 result: Résultats
+results: Résultats
 results_list: Liste des résultats
 result_show: Voir les résultats
 right_response: Points pour la bonne réponse
@@ -351,60 +478,88 @@ score_displaying: Affichage du score
 score_list_question: Note et liste des questions
 score_error: Attention, le score doit être un chiffre !
 score_max : Score maximum possible
+score_max_help: Laissez cette valeur à 0 si la notation est manuelle
 score_false_label: Résultat incorrect
 score_right_label: Résultat correct
 score_right_label_matching: Score de l'association
-search: Rechercher un document
+search: Rechercher
 search_question: Chercher des questions
 search_user_paper: Rechercher les copies de l'utilisateur
+search_by_title_or_content: Rechercher sur le titre / contenu de la question
 see_shared_with: Question partagée avec des utilisateurs
 select: Sélectionner
-select_type: selectionner le type de l'exercice
+select_type: selectionner le type de questionnaire
 selection: => Pour répondre, utilisez la technique du glisser/déposer.
 self: Vous ne pouvez pas partager une question avec vous-même.
 shape: Forme
 share: Partager
-shared_by: Partagée par
-shared_questions: Questions qui ont été partagées avec moi
-shared_user: Partage de question
-shared_with: Partager avec
-short: Courte
+share_admin_rights: Partager les droits d'édition et de suppression
+share_with: Avec
+share_items: "{1} Partager la question|[2,Inf[ Partager %count% questions"
+shared_with: Partagée avec
 show: Afficher
+show_feedback: Afficher les feedbacks en fin d'étape
 show_instructions: Montrer les consignes
+show_additional_info: Afficher les informations supplémentaires
+show_interact_fields: Indices et commentaire final
+show_metadata_fields: Titre et autres champs
 signing: Passation
 size: Taille
 start_again: Recommencer
 start_date: Date de début
+solution_score: "{-1, 0, 1} %score% point|[2,+Inf[ %score% points|]-Inf, -2] %score% points"
+solution_score_not_valid: Le score d'une solution doit être un chiffre valide.
 sort: Trier les documents
 summative : Sommatif
-show_additional_info: Afficher les informations supplémentaires
-step: Etape
+step: Étape
 step_score: Score de l'étape
 statistics: Afficher les statistiques
 step_items_count: "[0, 1] %count% question|]1,Inf[ %count% questions"
 step_item_add: Glisser/déposer ou cliquer sur le bouton "+" pour ajouter des questions
 step_need_manual_correction: Cette étape nécessite une correction manuelle
+step_picking: Tirage des étapes
 stat_users: "[0, 1] %count% utilisateur|]1,Inf[ %count% utilisateurs"
 stat_have_responded: ont répondu
+submit_a_list: Soumettre une liste
+sum_score_choice_at_least_one_correct_answer_error: Au moins une réponse doit avoir un score positif.
+sum_score_choice_no_correct_answer_error: La réponse correcte doit avoir un score positif.
+should_be_greater_or_equal_to_zero: Cette valeur devrait être supérieur ou égal à 0.
+set_shuffle_labels_and_proposals: Ordre des items aléatoire.
+set_add_item: Ajouter un item
+set_add_odd: Ajouter un intrus
+set_add_set: Ajouter un ensemble
+set_penalty_not_valid: La pénalité doit être un chiffre supérieur ou égal à 0.
+set_item_empty_data_error: Les données d'un élément ne peuvent être vides.
+set_at_least_one_item: Il doit y avoir au moins un item.
+set_at_least_one_set: Il doit y avoir au moins un ensemble.
+set_set_empty_data_error: Les données d'un ensemble ne peuvent être vides.
+set_no_solution: Il doit y avoir au moins une solution.
+set_no_orphean_items: Chaque item doit être utilisé dans au moins un ensemble.
+set_score_not_valid: Un score doit être un chiffre valide.
+set_no_valid_solution: Il doit y avoir au moins une solution avec un score supérieur à 0.
+set_odd_score_not_valid: Le score d'un intrus doit être inférieur ou égal à 0.
+set_odd_empty_data_error: Les données d'un intrus ne peuvent être vides.
+set_drop_item: Déposez un item ici
 
 # T
 temporary_mark: Note temporaire
 test_exit: Sortie du test
 timer: Temps restant :
 title: Titre
+to_correct: Corriger
 type: Type
-type_exo : Type de l'exercice
+type_exo : Type du questionnaire
 type_qcm: Type du QCM
 type_question: Type de la question
 
 # U
+undo: Annuler
 unpublish: Dépublier
+unsaved_changes_warning: Certaines modifications du questionnaire n'ont pas été enregistrées. Si vous quittez cette page maintenant, ces modifications seront perdues.
 upload: Télécharger
 uploading: Chargement en cours
 user: Utilisateur
 users: Utilisateurs
-ujm_exo_exercise_name: Titre
-ujm_exo_exercise_published: Publier la ressource
 
 # V
 validate: Valider
@@ -417,10 +572,16 @@ weight_choice: Attribuer les points par réponse
 wrong: Fausse
 wrong_name: Le nom saisi est incorrect
 wrong_point: La valeur saisie est incorrecte
-
+words_empty_text_error: Un mot clé ne peut pas être vide.
+words_no_valid_solution: Au moins un mot clé doit avoir un score supérieur à 0.
+words_add_word: Ajouter un mot clé
+words_show_case_sensitive_option: Activer/désactiver la fonctionnalité "respect de la casse".
+words_feedback_info: Feedback si le mot clé est dans la réponse
+words_case_sensitive: La réponse doit respecter la casse du mot clé pour être valide
 # Y
 yes: Oui
 your_answer: Votre réponse
+your_answers: Vos réponses
 
 # Data in the DB
 InteractionGraphic: Graphique
@@ -428,9 +589,13 @@ InteractionHole: Texte à trous
 InteractionMatching: Association
 InteractionOpen: Ouverte
 InteractionQCM: QCM
-Multiple response: Réponse multiples
+Multiple responses: Réponses multiples
 oneWord: Un mot
 To drag: Panier
 To bind: A lier
 To pair: Appariement
 Unique response: Réponse unique
+
+last_modified: Dernière modification
+creator: Auteurs
+questions_selected: "{1} <b>1</b> question sélectionnée|[2,Inf[ <b>%count%</b> questions sélectionnées"

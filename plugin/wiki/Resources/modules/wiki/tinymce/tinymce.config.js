@@ -48,8 +48,8 @@ export default class tinyMceConfig {
     // Since v4, tinyMce's textcolor plugin doesn't fire an ExecCommand anymore when changing text color
     // The ExecCommand is fired manually in order to be catchable by angular-ui-tinymce and
     // ensure the model is updated right after color change
-    this.setup = function(ed) {
-      ed.on('init', function() {
+    this.setup = function (ed) {
+      ed.on('init', function () {
         let oldApply = ed.formatter.apply
         ed.formatter.apply = function apply(name, vars, node) {
           oldApply(name, vars, node)

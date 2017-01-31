@@ -34,11 +34,13 @@ function getConfigurations() {
 }
 
 function getMetaEntries(targetDir) {
-  var str = ''
   var requirements = []
 
   entries.getMetaBundles(targetDir).forEach(bundle => {
     var configFile = `${bundle}/Resources/config/config.js`
+    // Fixes path in windows (back slashes are not escaped)
+    configFile = configFile.replace(/\\/g, '/')
+
     if (fs.existsSync(configFile)) {
       var plugin = require(configFile)
       validator.validate(plugin)

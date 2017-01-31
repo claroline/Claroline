@@ -18,4 +18,5 @@ rm -rf app/cache/* app/logs/* web/bundles
 tar --exclude=".git" -czf $PREVIEW *
 
 export SSHPASS=$REMOTE_PASS
+
 sshpass -e scp -q -o stricthostkeychecking=no $PREVIEW $REMOTE_USER@$REMOTE_HOST:$PREVIEW_PATH/$PREVIEW

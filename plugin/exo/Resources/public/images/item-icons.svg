@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <symbol id="icon-choice" viewBox="0 0 16 16">
+            <g transform="translate(0 -16)" fill="none">
+                <path d="M16 19H6M16 24H6M16 29H6" stroke-width="2"/>
+                <path d="M1.738 18.292l1.175 1.175 2.35-2.35" stroke-width="1.174"/>
+                <ellipse cy="23.901" cx="3" ry="1.599" rx="1.611" stroke-width=".785"/><ellipse cy="28.901" cx="3" ry="1.599" rx="1.611" stroke-width=".785"/>
+            </g>
+        </symbol>
+
+        <symbol id="icon-open" viewBox="0 0 16 16">
+            <g fill="none" stroke-width="2">
+                <path d="M0 3h10M0 8h8M0 13h6"/>
+            </g>
+            <path d="M12.066 4.604l-3.163 7.772.176 2.39 1.757-1.494L14 5.5z" fill-rule="evenodd" stroke-width="1.159"/>
+            <path d="M12.866 2.695l.288-.707 1.905.883-.29.708z" stroke-linecap="square" stroke-width="1.241"/>
+        </symbol>
+
+        <symbol id="icon-cloze" viewBox="0 0 16 16">
+            <g transform="translate(0,-16)">
+                <g fill="none">
+                    <path d="m0 19h16" stroke-width="2"/>
+                    <path d="m0 24h16" stroke-width="2"/>
+                    <path d="m0 29h16" stroke-width="2"/>
+                </g>
+                <rect rx=".17419" ry=".055548" height="3" width="7" y="17.5" x="2" fill="#fff"/>
+                <rect rx=".17419" ry=".055548" height="3" width="7" y="27.5" x="6" fill="#fff"/>
+            </g>
+        </symbol>
+
+        <symbol id="icon-graphic" viewBox="0 0 32 32">
+            <g transform="translate(-16 -16) scale(1.0012)" stroke-linecap="square" fill="none">
+                <circle stroke-width="1.924" cy="24.038" cx="24" r="7.038"/>
+                <rect rx=".095" ry=".049" height=".723" width="6.698" y="23.639" x="20.651" stroke-width="1.302"/>
+                <rect rx=".159" ry=".012" height="6.891" width=".891" y="20.554" x="23.554" stroke-width="1.109"/>
+            </g>
+            <path d="M1.04 31.502L10 23l4 4 9-10 8.507 6.72v7.78z" fill-rule="evenodd" stroke-width=".994"/>
+        </symbol>
+
+        <symbol id="icon-match" viewBox="0 0 32 32">
+            <g fill="none">
+                <circle cx="4" cy="4" r="3.214" stroke-width="1.573"/>
+                <ellipse rx="3.207" ry="3.207" cy="4" cx="28" stroke-width="1.586"/>
+                <path d="M7 4h18" stroke-width="3.976"/>
+                <g fill-opacity="0">
+                    <ellipse rx="3.17" ry="3.22" cy="28" cx="4.05" stroke-width="1.561"/>
+                    <ellipse rx="3.214" ry="3.214" cy="16" cx="28" stroke-width="1.573"/>
+                    <ellipse rx="3.258" ry="3.209" cy="16" cx="4" stroke-width="1.583"/>
+                    <ellipse rx="3.175" ry="3.218" cy="28" cx="27.957" stroke-width="1.564"/>
+                </g>
+                <path d="M6.813 26.294L25.22 17.63" stroke-width="3.789"/>
+            </g>
+        </symbol>
+
+        <symbol id="icon-pair" viewBox="0 0 16 16">
+            <defs>
+                <marker id="a" orient="auto" overflow="visible">
+                    <path d="M1.154 0l-1.73 1v-2l1.73 1z" fill-rule="evenodd" stroke="#000" stroke-width=".4pt"/>
+                </marker>
+            </defs>
+            <g transform="translate(0 -16)" fill="none" stroke-width="1">
+                <rect stroke-dasharray="1,1" stroke-dashoffset=".5" rx="3" ry="0" height="8" width="6" y="22.5" x=".5"/>
+                <rect stroke-dashoffset=".5" rx="0" ry="3" height="8" width="6" y="22.5" x="9.5"/>
+                <path marker-end="url(#a)" d="M2.16 19.55s5.5-3.5 11 0" stroke-linecap="round"/>
+            </g>
+        </symbol>
+
+        <symbol id="icon-set" viewBox="0 0 16 16">
+            <defs>
+                <marker id="b" orient="auto" overflow="visible">
+                    <path d="M1.154 0l-1.73 1v-2l1.73 1z" fill-rule="evenodd" stroke="#000" stroke-width=".4pt"/>
+                </marker>
+            </defs>
+            <g stroke-width="1">
+                <path fill="none" d="M8.5 6.5h4v5h-4z"/>
+                <path fill="#fff" d="M10.5 9.5h4v5h-4z"/>
+                <path stroke-dashoffset=".5" stroke-dasharray="1, 1" fill="none" d="M1.5 1.5h4v6h-4z"/>
+                <path marker-end="url(#b)" d="M7.473 17.317s3.888-.472 4.08 3.182" stroke-linecap="round" stroke-width=".537" fill="none" transform="translate(0 -16)"/>
+            </g>
+        </symbol>
+
+        <symbol id="icon-words" viewBox="0 0 16 16">
+            <g fill="none" stroke-width="2">
+                <path d="M0 3h10M0 8h8M0 13h6"/>
+            </g>
+            <path stroke-width="0" d="M12.098 3.803a3.25 3.25 0 0 0-3.25 3.25A3.25 3.25 0 0 0 9.5 9l-2.316 3.576.332 1.406 1.43-.19-.37-.995 1.094-.004-.4-.998 1.058-.012.957-1.586a3.25 3.25 0 0 0 .813.106 3.25 3.25 0 0 0 3.25-3.25 3.25 3.25 0 0 0-3.25-3.25zm.75 1a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1z"/>
+        </symbol>
+    </defs>
+</svg>

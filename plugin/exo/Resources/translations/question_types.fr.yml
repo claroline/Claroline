@@ -1,0 +1,23 @@
+choice: Choix multiple
+choice_desc: Choisir une ou plusieurs réponses (texte, image, son, vidéo, etc.) dans une liste de choix prédéfinis.
+
+cloze: Texte à trous
+cloze_desc: Combler des lacunes avec des éléments pertinents dans le contexte. Il est possible de les compléter soit en rédigeant une zone de texte soit en choisissant l'élément dans une liste prédéfinie.
+
+graphic: Graphique
+graphic_desc: Pointer une ou plusieurs zones sur une image.
+
+match: Association
+match_desc: Lier un élément (texte, image, son, vidéo, etc.) à un ou plusieurs autres éléments (texte, image, son, vidéo, etc.).
+
+open: Ouverte
+open_desc: Répondre à une question par un texte libre pouvant contenir des ressources (texte, image, son, vidéo, etc.). La question ouverte nécessite une correction manuelle.
+
+pair: Appariement
+pair_desc: Mettre des objets (texte, image, son, vidéo, etc.) par paires.
+
+words: Mots clés
+words_desc: Rédiger une réponse avec un ou plusieurs mots clés attendus.
+
+set: Classement
+set_desc: Déplacer des éléments (texte, image, son, vidéo, etc.) dans des ensembles.

@@ -1,0 +1,51 @@
+/* QUESTIONS LIST ROOT CONTAINER */
+.questions-list {
+  max-width: @quiz-container-width;
+  margin: 0 auto;
+  padding: @panel-body-padding;
+  .table {
+    margin-bottom: 0;
+  }
+}
+
+/* ANSWERS LIST ROOT CONTAINER */
+.answers-list {
+  margin: 0 auto;
+  padding: @panel-body-padding;
+
+  .answer-row {
+    display: flex;
+
+    .answer-panel {
+      width: 100%;
+    }
+
+    .score-controls {
+      display: flex;
+      align-self: flex-end;
+      align-items: flex-start;
+      padding-bottom: 6px;
+
+      .score-input {
+        width: 110px;
+        margin-right: 8px;
+        margin-left: 8px;
+      }
+
+      .tooltiped-button {
+        &.btn {
+          border: 0 none;
+          background: none;
+          padding: 5px;
+          outline: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+  .row {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

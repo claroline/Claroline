@@ -1,61 +1,61 @@
-admin_category:
-    resource: "routing/admin/category.yml"
-    prefix:   /admin/category
-
-admin_interaction_graphic:
-    resource: "routing/admin/interactionGraphic.yml"
-    prefix:   /admin/interactiongraphic
-
-admin_interaction_hole:
-    resource: "routing/admin/interactionHole.yml"
-    prefix:   /admin/interactionhole
-
-admin_interaction_open:
-    resource: "routing/admin/interactionOpen.yml"
-    prefix:   /admin/interactionopen
-
-admin_interaction_qcm:
-    resource: "routing/admin/interactionQCM.yml"
-    prefix:   /admin/interactionqcm
-
-admin_interaction_matching:
-    resource: "routing/admin/interactionMatching.yml"
-    prefix:   /admin/interactionmatching
-
-admin_question:
-    resource: "@UJMExoBundle/Controller/QuestionController.php"
+# Tool
+ujm_question_bank:
+    resource: "@UJMExoBundle/Controller/Tool/QuestionBankController.php"
     type: annotation
-    prefix:   /admin/question
 
-all_hint:
-    resource: "routing/all/hint.yml"
-    prefix:   /all/hint
-
-all_qti:
-    resource: "routing/all/qti.yml"
-    prefix:   /all/qti
-
+# Resource
 ujm_exercise:
-    resource: "@UJMExoBundle/Controller/ExerciseController.php"
+    resource: "@UJMExoBundle/Controller/Resource/ExerciseController.php"
     type: annotation
-    options: { expose: true }
 
+# JSON API
+
+# Exposes CRUD actions for exercises
+# Also permits to publish / unpublish the exercise
 ujm_api_exercise:
     resource: "@UJMExoBundle/Controller/Api/ExerciseController.php"
     type: annotation
     prefix: /api
 
+# Exposes CRUD actions for papers
+# Also permits to export papers in CSV format
 ujm_api_paper:
     resource: "@UJMExoBundle/Controller/Api/PaperController.php"
     type: annotation
     prefix: /api
 
-ujm_api_hint:
-    resource: "@UJMExoBundle/Controller/Api/HintController.php"
+# Exposes CRUD actions for questions
+ujm_api_question:
+    resource: "@UJMExoBundle/Controller/Api/Question/QuestionController.php"
     type: annotation
     prefix: /api
 
-ujm_api_step:
-    resource: "@UJMExoBundle/Controller/Api/StepController.php"
+# Exposes CRUD actions for categories
+ujm_api_category:
+    resource: "@UJMExoBundle/Controller/Api/Question/CategoryController.php"
+    type: annotation
+    prefix: /api
+
+# Exposes actions to play and submit answers to an exercise
+ujm_api_attempt:
+    resource: "@UJMExoBundle/Controller/Api/AttemptController.php"
+    type: annotation
+    prefix: /api
+
+# Exposes actions for manual correction of questions
+ujm_api_correction:
+    resource: "@UJMExoBundle/Controller/Api/CorrectionController.php"
+    type: annotation
+    prefix: /api
+
+# Exposes actions to share and manage shared questions
+ujm_api_share:
+    resource: "@UJMExoBundle/Controller/Api/Question/ShareController.php"
+    type: annotation
+    prefix: /api
+
+# Exposes actions to import/export exercises and questions in QTI format
+ujm_api_qti:
+    resource: "@UJMExoBundle/Controller/Api/QTIController.php"
     type: annotation
     prefix: /api

@@ -4,9 +4,14 @@ namespace UJM\ExoBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
+use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
+use UJM\ExoBundle\Library\Model\OrderTrait;
 
 /**
- * UJM\ExoBundle\Entity\Step.
+ * A step represents a group of items (questions or content) inside an exercise.
+ * It also have its specific attempt parameters.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\StepRepository")
  * @ORM\Table(name="ujm_step")
@@ -23,58 +28,29 @@ class Step
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column("uuid", type="string", length=36, unique=true)
+     */
+    private $uuid;
+
+    use OrderTrait;
+
+    use AttemptParametersTrait;
+
+    /**
      * @var int
      *
-     * @ORM\Column(name="title", type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
-    private $title = '';
+    private $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $text = '';
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="nbQuestion", type="integer")
-     */
-    private $nbQuestion = 0;
-
-    /**
-     * @ORM\Column(name="keepSameQuestion", type="boolean", nullable=true)
-     */
-    private $keepSameQuestion;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="shuffle", type="boolean", nullable=true)
-     */
-    private $shuffle = false;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="duration", type="integer")
-     */
-    private $duration = 0;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="max_attempts", type="integer")
-     */
-    private $maxAttempts = 5;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="ordre", type="integer")
-     */
-    private $order;
+    private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity="Exercise", inversedBy="steps")
@@ -85,13 +61,17 @@ class Step
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="StepQuestion", mappedBy="step", cascade={"all"})
-     * @ORM\OrderBy({"ordre" = "ASC"})
+     * @ORM\OneToMany(targetEntity="StepQuestion", mappedBy="step", cascade={"all"}, orphanRemoval=true)
+     * @ORM\OrderBy({"order" = "ASC"})
      */
     private $stepQuestions;
 
+    /**
+     * Step constructor.
+     */
     public function __construct()
     {
+        $this->uuid = Uuid::uuid4()->toString();
         $this->stepQuestions = new ArrayCollection();
     }
 
@@ -101,6 +81,26 @@ class Step
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Gets UUID.
+     *
+     * @return string
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * Sets UUID.
+     *
+     * @param $uuid
+     */
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
     }
 
     /**
@@ -124,139 +124,23 @@ class Step
     }
 
     /**
-     * Set text.
+     * Set description.
      *
-     * @param string $text
+     * @param string $description
      */
-    public function setText($text)
+    public function setDescription($description)
     {
-        $this->text = $text;
+        $this->description = $description;
     }
 
     /**
-     * Get text.
+     * Get description.
      *
      * @return string
      */
-    public function getText()
+    public function getDescription()
     {
-        return $this->text;
-    }
-
-    /**
-     * Set nbQuestion.
-     *
-     * @param int $nbQuestion
-     */
-    public function setNbQuestion($nbQuestion)
-    {
-        $this->nbQuestion = $nbQuestion;
-    }
-
-    /**
-     * Get nbQuestion.
-     *
-     * @return int
-     */
-    public function getNbQuestion()
-    {
-        return $this->nbQuestion;
-    }
-
-    /**
-     * Set keepSameQuestion.
-     *
-     * @param bool $keepSameQuestion
-     */
-    public function setKeepSameQuestion($keepSameQuestion)
-    {
-        $this->keepSameQuestion = $keepSameQuestion;
-    }
-
-    /**
-     * Get keepSameQuestion.
-     */
-    public function getKeepSameQuestion()
-    {
-        return $this->keepSameQuestion;
-    }
-
-    /**
-     * Set shuffle.
-     *
-     * @param bool $shuffle
-     */
-    public function setShuffle($shuffle)
-    {
-        $this->shuffle = $shuffle;
-    }
-
-    /**
-     * Get shuffle.
-     */
-    public function getShuffle()
-    {
-        return $this->shuffle;
-    }
-
-    /**
-     * Set duration.
-     *
-     * @param int $duration
-     */
-    public function setDuration($duration)
-    {
-        $this->duration = $duration;
-    }
-
-    /**
-     * Get duration.
-     *
-     * @return int
-     */
-    public function getDuration()
-    {
-        return $this->duration;
-    }
-
-    /**
-     * Set maxAttempts.
-     *
-     * @param int $maxAttempts
-     */
-    public function setMaxAttempts($maxAttempts)
-    {
-        $this->maxAttempts = $maxAttempts;
-    }
-
-    /**
-     * Get maxAttempts.
-     *
-     * @return int
-     */
-    public function getMaxAttempts()
-    {
-        return $this->maxAttempts;
-    }
-
-    /**
-     * Set order.
-     *
-     * @param int $order
-     */
-    public function setOrder($order)
-    {
-        $this->order = $order;
-    }
-
-    /**
-     * Get order.
-     *
-     * @return int
-     */
-    public function getOrder()
-    {
-        return $this->order;
+        return $this->description;
     }
 
     /**
@@ -301,5 +185,60 @@ class Step
         if ($this->stepQuestions->contains($stepQuestion)) {
             $this->stepQuestions->removeElement($stepQuestion);
         }
+    }
+
+    /**
+     * Gets a question by its uuid.
+     *
+     * @param string $uuid
+     *
+     * @return Question|null
+     */
+    public function getQuestion($uuid)
+    {
+        $found = null;
+        foreach ($this->stepQuestions as $stepQuestion) {
+            if ($stepQuestion->getQuestion()->getUuid() === $uuid) {
+                $found = $stepQuestion->getQuestion();
+                break;
+            }
+        }
+
+        return $found;
+    }
+
+    /**
+     * Shortcut to get the list of questions of the step.
+     *
+     * @return Question[]
+     */
+    public function getQuestions()
+    {
+        return array_map(function (StepQuestion $stepQuestion) {
+            return $stepQuestion->getQuestion();
+        }, $this->stepQuestions->toArray());
+    }
+
+    /**
+     * Shortcut to add Questions to Step.
+     * Avoids the need to manually initialize a StepQuestion object to hold the relation.
+     *
+     * @param Question $question - the question to add to the step
+     */
+    public function addQuestion(Question $question)
+    {
+        $stepQuestions = $this->stepQuestions->toArray();
+        foreach ($stepQuestions as $stepQuestion) {
+            /** @var StepQuestion $stepQuestion */
+            if ($stepQuestion->getQuestion() === $question) {
+                return; // The question is already linked to the Step
+            }
+        }
+
+        // Create a new StepQuestion to attach the question to the step
+        $stepQuestion = new StepQuestion();
+        $stepQuestion->setOrder($this->stepQuestions->count());
+        $stepQuestion->setStep($this);
+        $stepQuestion->setQuestion($question);
     }
 }

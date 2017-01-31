@@ -1,0 +1,34 @@
+/* PAPERS LIST ROOT CONTAINER */
+.papers-list {
+  max-width: @quiz-container-width;
+  margin: 0 auto;
+  padding: @panel-body-padding;
+  .table {
+    margin-bottom: 0;
+  }
+}
+
+/* PAPER DETAILS ROOT CONTAINER */
+.paper {
+  max-width: @quiz-container-width;
+  margin: 0 auto;
+  padding: @panel-body-padding;
+
+  .nav-tabs {
+    margin-bottom: @panel-body-padding;
+  }
+
+  .paper-title {
+    font-size: @font-size-h3;
+    // same margins as a regular bootstrap H
+    margin-top: (@line-height-computed / 2);
+    margin-bottom: (@line-height-computed / 2);
+    padding: 0 0 5px;
+    border-bottom: 1px solid @panel-default-border;
+  }
+
+  .no-answer {
+    font-style: italic;
+    color: @text-muted;
+  }
+}

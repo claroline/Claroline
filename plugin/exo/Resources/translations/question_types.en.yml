@@ -1,0 +1,23 @@
+choice: Multiple choices
+choice_desc: Choose one or many answers (eg. text, image, audio, video) dans une liste de choix prédéfinis.
+
+cloze: Cloze
+cloze_desc: Fill gaps with relevant items in the constext. It's possible to fill it either by writing in a text box or  by choosing the item in a predefined list.
+
+graphic: Graphic
+graphic_desc: Point one or many areas on an image.
+
+match: Association
+match_desc: Link an item (eg. text, image, audio, video) with one or many others (eg. text, image, audio, video).
+
+open: Open
+open_desc: Répondre à une question par un texte libre pouvant contenir des ressources (eg. text, image, audio, video). The open question requires a manual correction.
+
+pair: Pairing
+pair_desc: Put items (eg. text, image, audio, video) in pairs.
+
+words: Keywords
+words_desc: Write an answer with one or many expected keywords.
+
+set: Classifying
+set_desc: Move items (eg. text, image, audio, video) inside sets.

@@ -1,7 +1,9 @@
 {
   "webpack": {
     "entry": {
-      "app": "app"
+      "quiz": "quiz",
+      "bank": "bank/index",
+      "docimology": "docimology/index"
     }
   }
 }

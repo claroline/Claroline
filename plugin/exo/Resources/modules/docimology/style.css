@@ -1,0 +1,67 @@
+.chart {
+    display: block;
+    position: relative;
+}
+
+.chart line,
+.chart rect {
+    shape-rendering: crispEdges;
+}
+
+.general-panel .panel-body {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.general-panel .panel-body > div {
+    padding: 0 15px;
+    border-right: 1px solid #ddd; /* Same as panel-default border */
+}
+
+.general-stats .h3 {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.count-card {
+    position: relative;
+}
+
+.count-card .icon {
+    position: absolute;
+    opacity: 0.1;
+    font-size: 48px;
+    top: 15px;
+    left: 15px;
+}
+
+.note-gauges {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px; /* Same as panel */
+    padding-top: 25px; /* It misses the border size of the adjacent panel (2px) */
+    padding-bottom: 25px; /* It misses the border size of the adjacent panel (2px) */
+}
+
+.current-selector {
+    margin-bottom: 20px; /* Same as panel */
+}
+
+.current-selector .dropdown {
+    width: 100%;
+}
+
+.current-selector .dropdown-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.current-selector .step-menu-item > a {
+    padding-left: 22px; /* original padding + 10px */
+}
+
+.current-selector .question-menu-item > a {
+    padding-left: 32px; /* original padding + 20px */
+}

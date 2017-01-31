@@ -1,13 +1,29 @@
 // Bootstrap variables
-@import "../../../../../../../web/packages/bootstrap/less/variables.less";
+@import "./../../../../../../../web/packages/bootstrap/less/mixins.less";
+@import "./../../../../../../../web/packages/bootstrap/less/variables.less";
 
-// Loading bar
-@import "loading-bar.less";
-@import "datepicker.less";
+// Bundle variables
+@import "./variables.less";
 
-@import "exercise.less";
-@import "step.less";
-@import "question/question.less";
-@import "paper.less";
+// Theme
+@import "override";
 
-@import "correction.less";
+@import "components/api-loader";
+@import "components/dropdown";
+@import "components/page";
+@import "components/table";
+@import "components/text-editor";
+@import "components/color-picker";
+
+// Exo styles
+@import "quiz/index";
+@import "items/common";
+@import "items/icons";
+@import "items/choice";
+@import "items/words";
+@import "items/match";
+@import "items/cloze";
+@import "items/graphic";
+@import "items/set";
+@import "items/open";
+@import "items/pair";
