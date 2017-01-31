@@ -144,6 +144,9 @@
                                     <span ng-switch-when="6">
                                         {{ cfc.entry[field['id']].join(', ') }}
                                     </span>
+                                    <span ng-switch-when="7">
+                                        {{ cfc.getCountryName(cfc.entry[field['id']]) }}
+                                    </span>
                                     <span ng-switch-when="9" ng-bind-html="cfc.entry[field['id']]|trust_html">
                                     </span>
                                     <span ng-switch-default>

@@ -62,7 +62,7 @@ export default class TemplateManagementCtrl {
         this.duplicatedErrors.push({name: 'clacoform_entry_title'})
       }
       this.mandatory.forEach(f => {
-        const regex = new RegExp(`%${f['name']}%`, 'g')
+        const regex = new RegExp(`%${this.removeAccent(f['name'])}%`, 'g')
         const matches = this.template.match(regex)
 
         if (matches === null) {

@@ -271,4 +271,8 @@ export default class EntryViewCtrl {
     this.EntryService.setKeywordFilter(keyword)
     this.$state.go('entries_list')
   }
+
+  getCountryName(code) {
+    return this.FieldService.getCountryNameFromCode(code)
+  }
 }
