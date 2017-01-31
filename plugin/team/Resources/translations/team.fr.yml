@@ -19,7 +19,7 @@ fill_selected_teams_with_unregistered_users: Remplir automatiquement l'/les équ
 fill_teams: Remplir des équipes
 go_to_team_directory: Accéder au répertoire de l'équipe
 hide_advanced_parameters: Cacher les paramètres avancés
-max_teams_limit_reached: Nombre maximum déquipes atteint
+max_teams_limit_reached: 'Nombre maximum d''équipes atteint'
 maximum: Maximum
 maximum_informations: Le nombre d'utilisateurs qui peuvent être inscrits dans l'équipe
 my_teams: Mes équipes
