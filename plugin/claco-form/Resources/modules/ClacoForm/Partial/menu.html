@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
         <h3 class="panel-title">
-            {{ cfc.getResourceNodeName() }}
+            <span ng-bind-html="cfc.getResourceNodeName()|trust_html"></span>
             <span class="badge" ng-if="cfc.showNbEntries">
                 {{ 'entries'|trans:{}:'clacoform' }} :
                 <span ng-if="cfc.config['display_nb_entries'] === 'all'">

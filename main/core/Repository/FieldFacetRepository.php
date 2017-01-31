@@ -33,4 +33,17 @@ class FieldFacetRepository extends EntityRepository
 
         return $res;
     }
+
+    public function findPlatformFieldFacets()
+    {
+        $dql = '
+            SELECT ff
+            FROM Claroline\CoreBundle\Entity\Facet\FieldFacet ff
+            WHERE ff.resourceNode IS NULL
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }
