@@ -3,6 +3,7 @@ add_new_subsection: Add section here
 added: Added
 angular_date_format: 'MM/dd/yyyy ''at'' h:mma'
 back_to_history: Back to history
+back_to_top : Back to top
 back_to_wiki: Back to wiki
 back: Back
 cancel: Cancel
@@ -19,6 +20,8 @@ delete_section: Delete section
 delete: Delete
 deleted_sections: Removed sections
 deleted: Removed
+display_section_numbers: Display section numbers
+display_section_numbers_message: Automatic section numbers are displayed through the body of the wiki, before each section title.
 edit_section: Edit section
 edit_description: Edit description
 edit: Edit
@@ -34,6 +37,7 @@ icap_wiki_edit_section_type_position: Position
 icap_wiki_edit_section_type_visible: Visible
 icap_wiki_options_save_error: 'Error while updating wiki options'
 icap_wiki_options_save_success: Wiki options were updated successfully
+icap_wiki_options_type_display: Wiki display
 icap_wiki_options_type_mode: Wiki mode
 icap_wiki_section_add_error: Error while creating section
 icap_wiki_section_add_success: Section was created successfully

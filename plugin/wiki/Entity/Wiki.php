@@ -28,6 +28,12 @@ class Wiki extends AbstractResource
      */
     protected $mode;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     * Display or hide the section numbers in the wiki body
+     */
+    protected $displaySectionNumbers = false;
+
     //Temporary variable used only by onCopy method of WikiListener
     private $wikiCreator;
 
@@ -63,17 +69,33 @@ class Wiki extends AbstractResource
         return $this->mode = $mode;
     }
 
+    /**
+     * @return bool
+     */
+    public function getDisplaySectionNumbers()
+    {
+        return $this->displaySectionNumbers;
+    }
+
+    /**
+     * @param bool $displaySectionNumbers
+     */
+    public function setDisplaySectionNumbers($displaySectionNumbers)
+    {
+        return $this->displaySectionNumbers = $displaySectionNumbers;
+    }
+
     public function getPathArray()
     {
         $path = $this->getResourceNode()->getPath();
         $pathItems = explode('`', $path);
-        $pathArray = array();
+        $pathArray = [];
         foreach ($pathItems as $item) {
             preg_match('/-([0-9]+)$/', $item, $matches);
             if (count($matches) > 0) {
                 $id = substr($matches[0], 1);
                 $name = preg_replace('/-([0-9]+)$/', '', $item);
-                $pathArray[] = array('id' => $id, 'name' => $name);
+                $pathArray[] = ['id' => $id, 'name' => $name];
             }
         }
 
@@ -95,10 +117,10 @@ class Wiki extends AbstractResource
      */
     public function createRoot(LifecycleEventArgs $event)
     {
-        if ($this->getRoot() == null) {
+        if ($this->getRoot() === null) {
             $em = $event->getEntityManager();
             $rootSection = $this->getRoot();
-            if ($rootSection == null) {
+            if ($rootSection === null) {
                 $rootSection = new Section();
                 $rootSection->setWiki($this);
                 if ($this->getResourceNode() !== null) {

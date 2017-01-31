@@ -5,9 +5,11 @@
 {% block title %}{{ _resource.resourceNode.name }}{% endblock %}
 
 {% block breadcrumb %}
-<div data-wiki-breadcrumbs>
-    {{ parent() }}
-</div>
+    <a name="top"></a>
+
+    <div data-wiki-breadcrumbs>
+        {{ parent() }}
+    </div>
 {% endblock %}
 
 {% block resourceBreadcrumb %}
@@ -34,6 +36,7 @@
             id: {{ _resource.id }},
             title: "{{ _resource.resourceNode.name }}",
             mode: {{ _resource.mode }},
+            displaySectionNumbers: {{ _resource.displaySectionNumbers ? 'true' : 'false' }},
             isLoggedIn: {{ user is not empty ? 'true' : 'false' }},
             isAdmin: {{ isAdmin ? 'true' : 'false' }},
             isPDFExportActive: {{ config.getParameter('is_pdf_export_active') == true ? 'true' : 'false' }},
