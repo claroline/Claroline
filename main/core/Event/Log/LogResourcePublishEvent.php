@@ -140,8 +140,6 @@ class LogResourcePublishEvent extends LogGenericEvent implements NotifiableInter
      */
     public function isAllowedToNotify()
     {
-        if ($this->node->isPublished()) {
-            return true;
-        }
+        return $this->node->isPublished();
     }
 }

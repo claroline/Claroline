@@ -8,7 +8,7 @@ import entriesListTemplate from './Partial/entries_list.html'
 import entryFormTemplate from './Partial/entry_form.html'
 import entryViewTemplate from './Partial/entry_view.html'
 
-export default function($stateProvider, $urlRouterProvider) {
+export default function ($stateProvider, $urlRouterProvider) {
   const config = window['resourceDetails']
 
   $stateProvider

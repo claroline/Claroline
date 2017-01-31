@@ -30,10 +30,9 @@ tinymce.claroline.plugins = tinymce.claroline.plugins || {}
  * this is usefull when change manually something in the editor.
  *
  * @param editor A TinyMCE editor object.
- *
  */
-tinymce.claroline.editorChange = function(editor) {
-  setTimeout(function() {
+tinymce.claroline.editorChange = function (editor) {
+  setTimeout(function () {
     var container = $(editor.getContainer()).find('iframe').first()
     var height = container.contents().height()
     var max = 'autoresize_max_height'
@@ -60,11 +59,11 @@ tinymce.claroline.editorChange = function(editor) {
  *  @param args TinyMCE paste plugin arguments.
  *
  */
-tinymce.claroline.paste = function(plugin, args) {
+tinymce.claroline.paste = function (plugin, args) {
   if ($('#platform-configuration').attr('data-enable-opengraph') === '1') {
     var link = $('<div>' + args.content + '</div>').text().trim() // inside div because a bug of jquery
 
-    home.canGenerateContent(link, function(data) {
+    home.canGenerateContent(link, function (data) {
       tinymce.activeEditor.insertContent('<div>' + data + '</div>')
       tinymce.claroline.editorChange(tinymce.activeEditor)
     })
@@ -77,7 +76,7 @@ tinymce.claroline.paste = function(plugin, args) {
  * @return boolean.
  *
  */
-tinymce.claroline.checkBeforeUnload = function() {
+tinymce.claroline.checkBeforeUnload = function () {
   if (!tinymce.claroline.disableBeforeUnload) {
     for (var id in tinymce.editors) {
       if (tinymce.editors.hasOwnProperty(id) &&
@@ -99,7 +98,7 @@ tinymce.claroline.checkBeforeUnload = function() {
  * @param editor A TinyMCE editor object.
  *
  */
-tinymce.claroline.setBeforeUnloadActive = function(editor) {
+tinymce.claroline.setBeforeUnloadActive = function (editor) {
   if ($(editor.getElement()).data('before-unload') !== 'off') {
     editor.isBeforeUnloadActive = true
   } else {
@@ -113,7 +112,7 @@ tinymce.claroline.setBeforeUnloadActive = function(editor) {
  * @param editor A TinyMCE editor object.
  *
  */
-tinymce.claroline.toggleFullscreen = function(element) {
+tinymce.claroline.toggleFullscreen = function (element) {
   $(element).parents('.modal').first().toggleClass('fullscreen')
 }
 
@@ -123,8 +122,8 @@ tinymce.claroline.toggleFullscreen = function(element) {
  * @param editor A TinyMCE editor object.
  *
  */
-tinymce.claroline.setup = function(editor) {
-  editor.on('change', function() {
+tinymce.claroline.setup = function (editor) {
+  editor.on('change', function () {
     if (editor.getElement()) {
       editor.getElement().value = editor.getContent()
       if (editor.isBeforeUnloadActive) {
@@ -132,12 +131,12 @@ tinymce.claroline.setup = function(editor) {
         tinymce.claroline.disableBeforeUnload = false
       }
     }
-  }).on('LoadContent', function() {
+  }).on('LoadContent', function () {
     tinymce.claroline.editorChange(editor)
     tinymce.claroline.customInit(editor)
   })
 
-  editor.on('BeforeRenderUI', function() {
+  editor.on('BeforeRenderUI', function () {
     editor.theme.panel.find('toolbar').slice(1).hide()
   })
 
@@ -146,7 +145,7 @@ tinymce.claroline.setup = function(editor) {
     'icon': 'none fa fa-chevron-down',
     'classes': 'widget btn',
     'tooltip': translator.trans('tinymce_all_buttons', {}, 'platform'),
-    onclick: function() {
+    onclick: function () {
       if (!this.active()) {
         this.active(true)
         editor.theme.panel.find('toolbar').slice(1).show()
@@ -159,8 +158,8 @@ tinymce.claroline.setup = function(editor) {
 
   tinymce.claroline.setBeforeUnloadActive(editor)
 
-  $('body').bind('ajaxComplete', function() {
-    setTimeout(function() {
+  $('body').bind('ajaxComplete', function () {
+    setTimeout(function () {
       if (editor.getElement() && editor.getElement().value === '') {
         editor.setContent('')
       }
@@ -171,12 +170,12 @@ tinymce.claroline.setup = function(editor) {
 /**
  * @todo documentation
  */
-tinymce.claroline.mentionsSource = function(query, process, delimiter) {
+tinymce.claroline.mentionsSource = function (query, process, delimiter) {
   if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
     if (delimiter === '@' && query.length > 0) {
       var searchUserInWorkspaceUrl = routing.generate('claro_user_search_in_workspace') + '/'
 
-      $.getJSON(searchUserInWorkspaceUrl + window.Workspace.id + '/' + query, function(data) {
+      $.getJSON(searchUserInWorkspaceUrl + window.Workspace.id + '/' + query, function (data) {
         if (!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users)) {
           process(data.users)
         }
@@ -188,7 +187,7 @@ tinymce.claroline.mentionsSource = function(query, process, delimiter) {
 /**
  * @todo documentation
  */
-tinymce.claroline.mentionsItem = function(item) {
+tinymce.claroline.mentionsItem = function (item) {
   var avatar = '<i class="fa fa-user"></i>'
   if (item.avatar !== null) {
     avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '" alt="' + item.name +
@@ -205,7 +204,7 @@ tinymce.claroline.mentionsItem = function(item) {
 /**
  * @todo documentation
  */
-tinymce.claroline.mentionsInsert = function(item) {
+tinymce.claroline.mentionsInsert = function (item) {
   var publicProfileUrl = routing.generate('claro_public_profile_view') + '/'
 
   return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name + '</a></user>'
@@ -251,8 +250,8 @@ tinymce.claroline.configuration = {
   }
 }
 
-tinymce.claroline.customInit = function(editor) {
-  $.each(tinymce.claroline.init, function(key, func) {
+tinymce.claroline.customInit = function (editor) {
+  $.each(tinymce.claroline.init, function (key, func) {
     func(editor)
   })
 }
@@ -260,8 +259,8 @@ tinymce.claroline.customInit = function(editor) {
 /**
  * Initialization function for TinyMCE editors.
  */
-tinymce.claroline.initialization = function() {
-  $('textarea.claroline-tiny-mce:not(.tiny-mce-done)').each(function() {
+tinymce.claroline.initialization = function () {
+  $('textarea.claroline-tiny-mce:not(.tiny-mce-done)').each(function () {
     var element = $(this)
     var config = null
 
@@ -274,7 +273,7 @@ tinymce.claroline.initialization = function() {
 
     var toolbar1 = 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | fullscreen displayAllButtons'
 
-    $.each(tinymce.claroline.plugins, function(key, value) {
+    $.each(tinymce.claroline.plugins, function (key, value) {
       if (value === true) {
         plugins.push(key)
         toolbar1 += ' ' + key
@@ -292,7 +291,7 @@ tinymce.claroline.initialization = function() {
     }
 
     element.tinymce(config)
-      .on('remove', function() {
+      .on('remove', function () {
         var editor = tinymce.get(element.attr('id'))
         if (editor) {
           editor.destroy()
@@ -304,27 +303,27 @@ tinymce.claroline.initialization = function() {
 
 /** Events **/
 
-$('body').bind('ajaxComplete', function() {
+$('body').bind('ajaxComplete', function () {
   tinymce.claroline.initialization()
 })
-  .on('click', '.mce-widget.mce-btn[aria-label="Fullscreen"]', function() {
+  .on('click', '.mce-widget.mce-btn[aria-label="Fullscreen"]', function () {
     tinymce.claroline.toggleFullscreen(this)
     $(window).scrollTop($(this).parents('.mce-tinymce.mce-container.mce-panel').first().offset().top)
     window.dispatchEvent(new window.Event('resize'))
   })
-  .bind('DOMSubtreeModified', function() {
+  .bind('DOMSubtreeModified', function () {
     clearTimeout(tinymce.claroline.domChange)
     tinymce.claroline.domChange = setTimeout(tinymce.claroline.initialization, 10)
   })
-  .on('click', 'form *[type=submit]', function() {
+  .on('click', 'form *[type=submit]', function () {
     tinymce.claroline.disableBeforeUnload = true
   })
 
-$(document).ready(function() {
+$(document).ready(function () {
   tinymce.claroline.initialization()
 })
 
-$(window).on('beforeunload', function() {
+$(window).on('beforeunload', function () {
   if (tinymce.claroline.checkBeforeUnload()) {
     return translator.trans('leave_this_page', {}, 'platform')
   }
