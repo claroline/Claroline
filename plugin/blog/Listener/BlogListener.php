@@ -8,50 +8,16 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Form\BlogType;
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-/**
- * @DI\Service()
- */
-class BlogListener
+class BlogListener extends ContainerAware
 {
-    private $container;
-    private $httpKernel;
-    private $request;
-    private $resourceManager;
-
     /**
-     * @DI\InjectParams({
-     *     "container"       = @DI\Inject("service_container"),
-     *     "httpKernel"      = @DI\Inject("http_kernel"),
-     *     "requestStack"    = @DI\Inject("request_stack"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager")
-     * })
-     */
-    public function __construct(
-        ContainerInterface $container,
-        HttpKernelInterface $httpKernel,
-        RequestStack $requestStack,
-        ResourceManager $resourceManager
-    ) {
-        $this->container = $container;
-        $this->httpKernel = $httpKernel;
-        $this->request = $requestStack->getCurrentRequest();
-        $this->resourceManager = $resourceManager;
-    }
-
-    /**
-     * @DI\Observe("create_form_icap_blog")
-     *
      * @param CreateFormResourceEvent $event
      */
     public function onCreateForm(CreateFormResourceEvent $event)
@@ -69,14 +35,13 @@ class BlogListener
     }
 
     /**
-     * @DI\Observe("create_icap_blog")
-     *
      * @param CreateResourceEvent $event
      */
     public function onCreate(CreateResourceEvent $event)
     {
+        $request = $this->container->get('request');
         $form = $this->container->get('form.factory')->create(new BlogType(), new Blog());
-        $form->bind($this->request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $event->setResources([$form->getData()]);
@@ -97,25 +62,21 @@ class BlogListener
     }
 
     /**
-     * @DI\Observe("open_icap_blog")
-     *
      * @param OpenResourceEvent $event
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'IcapBlogBundle:Blog:view';
-        $params['blogId'] = $event->getResource()->getId();
-        $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel
-            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
+        $route = $this->container
+            ->get('router')
+            ->generate(
+                'icap_blog_view',
+                ['blogId' => $event->getResource()->getId()]
+            );
+        $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 
     /**
-     * @DI\Observe("delete_icap_blog")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
@@ -126,17 +87,14 @@ class BlogListener
         $event->stopPropagation();
     }
 
-    /**
-     * @DI\Observe("copy_icap_blog")
-     *
-     * @param CopyResourceEvent $event
-     */
     public function onCopy(CopyResourceEvent $event)
     {
         $entityManager = $this->container->get('claroline.persistence.object_manager');
         /** @var \Icap\BlogBundle\Entity\Blog $blog */
         $blog = $event->getResource();
+
         $newBlog = new Blog();
+
         $entityManager->persist($newBlog);
         $entityManager->flush($newBlog);
 
@@ -177,20 +135,15 @@ class BlogListener
     }
 
     /**
-     * @DI\Observe("configure_blog_icap_blog")
-     *
      * @param CustomActionResourceEvent $event
      */
     public function onConfigure(CustomActionResourceEvent $event)
     {
-        $resource = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
-            $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
-            $event->getResource();
         $route = $this->container
             ->get('router')
             ->generate(
                 'icap_blog_configure',
-                ['blogId' => $resource->getId()]
+                ['blogId' => $event->getResource()->getId()]
             );
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();

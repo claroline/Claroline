@@ -3,39 +3,51 @@
 namespace Icap\BlogBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Icap\BlogBundle\Utils\StringUtils;
 use Icap\NotificationBundle\Entity\UserPickerContent;
+use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * @ORM\Table(name="icap__blog_post")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\PostRepository")
  * @ORM\EntityListeners({"Icap\BlogBundle\Listener\PostListener"})
  * @ORM\HasLifecycleCallbacks()
+ * @Serializer\XmlRoot("user")
+ * @ExclusionPolicy("all")
  */
 class Post extends Statusable
 {
     /**
      * @var int
-     *
+     * @Expose
+     * @Groups({"blog_list"})
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
+     * @Groups({"blog_list"})
      */
     protected $id;
 
     /**
      * @var string
-     *
+     * @Expose
+     * @Groups({"blog_list"})
      * @ORM\Column(type="string", length=255)
      */
     protected $title;
 
     /**
      * @var string
-     *
+     * @Expose
+     * @Groups({"blog_list"})
      * @ORM\Column(type="text")
      */
     protected $content;
@@ -43,6 +55,8 @@ class Post extends Statusable
     /**
      * @Gedmo\Slug(fields={"title"}, unique=true, updatable=false)
      * @ORM\Column(length=128, unique=true)
+     * @Expose
+     * @Groups({"blog_list"})
      */
     protected $slug;
 
@@ -64,7 +78,8 @@ class Post extends Statusable
 
     /**
      * @var \Datetime
-     *
+     * @Expose
+     * @Groups({"blog_list"})
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="status", value="1")
      */
@@ -72,21 +87,24 @@ class Post extends Statusable
 
     /**
      * @var int
-     *
+     * @Expose
+     * @Groups({"blog_list"})
      * @ORM\Column(type="integer", options={"default": "0"})
      */
     protected $viewCounter = 0;
 
     /**
-     * @var Comment
-     *
+     * @var Comment[]|ArrayCollection
+     * @Expose
+     * @Groups({"blog_list"})
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"all"})
      */
     protected $comments;
 
     /**
      * @var User
-     *
+     * @Expose
+     * @Groups({"blog_list"})
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
@@ -102,7 +120,8 @@ class Post extends Statusable
 
     /**
      * @var Tag[]|ArrayCollection
-     *
+     * @Expose
+     * @Groups({"blog_list"})
      * @ORM\ManyToMany(targetEntity="Icap\BlogBundle\Entity\Tag", inversedBy="posts", cascade={"persist"})
      * @ORM\JoinTable(name="icap__blog_post_tag")
      */
@@ -436,6 +455,9 @@ class Post extends Statusable
      * @param bool $countUnpublished
      *
      * @return int
+     *
+     * @VirtualProperty
+     * @Groups({"blog_list"})
      */
     public function countComments($countUnpublished = false)
     {
@@ -456,7 +478,20 @@ class Post extends Statusable
     }
 
     /**
+     * @return int
+     *
+     * @VirtualProperty
+     * @Groups({"blog_list_edit"})
+     */
+    public function countUnpublishedComments()
+    {
+        return $this->countComments(true) - $this->countComments(false);
+    }
+
+    /**
      * @return bool
+     * @Groups({"blog_list"})
+     * @VirtualProperty
      */
     public function isPublished()
     {

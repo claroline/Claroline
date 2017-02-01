@@ -4,7 +4,6 @@ namespace Icap\BlogBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Icap\BlogBundle\Entity\Blog;
@@ -25,20 +24,16 @@ class BlogManager
      */
     protected $objectManager;
 
-    protected $ch;
-
     /**
      * @DI\InjectParams({
      *      "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
-     *      "uploadDir" = @DI\Inject("%icap.blog.banner_directory%"),
-     *      "ch" = @DI\Inject("claroline.config.platform_config_handler")
+     *      "uploadDir" = @DI\Inject("%icap.blog.banner_directory%")
      * })
      */
-    public function __construct(ObjectManager $objectManager, $uploadDir, PlatformConfigurationHandler $ch)
+    public function __construct(ObjectManager $objectManager, $uploadDir)
     {
         $this->objectManager = $objectManager;
         $this->uploadDir = $uploadDir;
-        $this->ch = $ch;
     }
 
     /**
@@ -73,7 +68,7 @@ class BlogManager
 
         foreach ($object->getPosts() as $post) {
             $postUid = uniqid().'.txt';
-            $postTemporaryPath = $this->ch->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$postUid;
+            $postTemporaryPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$postUid;
             file_put_contents($postTemporaryPath, $post->getContent());
             $files[$postUid] = $postTemporaryPath;
 
@@ -89,7 +84,7 @@ class BlogManager
 
             foreach ($post->getComments() as $comment) {
                 $commentUid = uniqid().'.txt';
-                $commentTemporaryPath = $this->ch->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$commentUid;
+                $commentTemporaryPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$commentUid;
                 file_put_contents($commentTemporaryPath, $comment->getMessage());
                 $files[$commentUid] = $commentTemporaryPath;
 
@@ -326,5 +321,21 @@ class BlogManager
             'calendar',
             'archives',
         ];
+    }
+
+    public function updateOptions(Blog $blog, BlogOptions $options)
+    {
+        // Remove old options and flush before adding the new ones
+        $oldOptions = $blog->getOptions();
+        $this->objectManager->remove($oldOptions);
+        $this->objectManager->flush();
+
+        // Define the new options
+        $blog->setOptions($options);
+        $this->objectManager->persist($options);
+        $this->objectManager->persist($blog);
+        $this->objectManager->flush();
+
+        return $this->objectManager->getUnitOfWork();
     }
 }

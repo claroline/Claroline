@@ -339,9 +339,16 @@ ul.tag-cloud {
 }
 
 #icap_blog_options_form_tag_cloud {
-  label{font-weight: normal;}
+  label{
+      font-weight: normal;
 
-  label span {color:#777;}
+      &>span {
+        &>span {
+            color:#777;
+        }
+
+      }
+  }
 }
 
 form#icap_blog_post_form {
@@ -358,4 +365,80 @@ form#icap_blog_post_form {
             cursor:move;
         }
     } 
+}
+
+/* Loading bar */
+#loading-bar .bar {
+    background-color: #3278B4;
+    height: 3px;
+}
+
+#loading-bar-spinner .spinner-icon {
+    border-top-color: #3278B4;
+    border-left-color: #F89406;
+    width: 25px;
+    height: 25px;
+}
+
+/* Angular links without href */
+a:hover {
+    cursor:pointer;
+}
+
+/* Item dragged in ui-tree */
+.angular-ui-tree-drag {
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+    opacity: .8;
+    top: -450px;
+
+    li {
+        list-style-type: none;
+    }
+}
+
+/* Invalid form outlines */
+form {
+    div.error, input.error {
+        border: 1px solid red !important;
+        box-shadow: 0 0 10px #CC0000 !important;
+        border-radius: 3px;
+    }
+
+    div.error {
+        input.form-control:focus {
+            border-color: inherit !important;
+        }
+    }
+}
+
+.tooltip.errorTooltip .tooltip-inner {
+    color: #880000;
+    background-color: white;
+    box-shadow: 0 0 10px #CC0000;
+    border: 1px solid red;
+}
+
+.tooltip.errorTooltip .tooltip-arrow {
+    border-top-color: red;
+}
+
+/* Fixed alert messages */
+.fixed-alert-messages {
+    position: fixed;
+    z-index: 50;
+    left: 0px;
+    width: 100%;
+    top: 65px;
+}
+.fixed-alert-messages .alert {
+    margin-left: 15px;
+    margin-right: 15px;
+    box-shadow: 2px 2px 3px rgba(0,0,0,.15);
+}
+@media (min-width: 768px) {
+    .fixed-alert-messages .alert {
+        margin-left: 55px;
+    }
 }
