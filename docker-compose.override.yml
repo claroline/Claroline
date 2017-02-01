@@ -6,7 +6,7 @@ services:
     environment:
       APP_URL: claroline.loc
       DB_HOST: db
-      DB_NAME: name
+      DB_NAME: claroline
       DB_USER: user
       DB_PASSWORD: pass
       SECRET: secret
@@ -19,5 +19,5 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: db
+      MYSQL_PASSWORD: pass
+      MYSQL_DATABASE: claroline
