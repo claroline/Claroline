@@ -1,0 +1,23 @@
+version: '2'
+services:
+  web:
+    ports:
+      - 80:80
+    environment:
+      APP_URL: claroline.loc
+      DB_HOST: db
+      DB_NAME: name
+      DB_USER: user
+      DB_PASSWORD: pass
+      SECRET: secret
+
+      # These will be the default platform options, they are only used once during the Claroline Connect install
+      PLATFORM_NAME: ClarolineConnect
+      PLATFORM_SUPPORT_EMAIL: support@claroline.com
+
+  db:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: db
