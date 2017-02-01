@@ -2,6 +2,10 @@
 
 set -e
 
+while ! mysqladmin ping -h"$DB_HOST" --silent; do
+    sleep 1
+done
+
 chmod -R 777 app/cache app/config app/logs app/sessions files web/uploads
 php scripts/configure.php
 composer fast-install
