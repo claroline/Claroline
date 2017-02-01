@@ -2,13 +2,22 @@
 
 set -e
 
+# Wait for MySQL to respond, depends on mysql-client
 while ! mysqladmin ping -h"$DB_HOST" --silent; do
+    echo "MySQL is down"
     sleep 1
 done
 
+echo "MySQL is up"
+
+echo "Setting correct file permissions"
 chmod -R 777 app/cache app/config app/logs app/sessions files web/uploads
+
+echo "Executing configuration script"
 php scripts/configure.php
-composer fast-install
+
+echo "Composer install"
+composer sync-dev
 
 if [[ -v PLATFORM_NAME ]]; then
   echo "Changing platform name to $PLATFORM_NAME";
