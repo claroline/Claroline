@@ -3,8 +3,6 @@ services:
   web:
     restart: always
     build: web/
-    ports:
-      - 80:80
     volumes:
       - .:/var/www/html/claroline # This is where the symfony files are stored
     environment:
