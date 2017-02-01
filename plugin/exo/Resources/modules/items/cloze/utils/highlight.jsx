@@ -18,17 +18,19 @@ function getSolutionScore(score) {
 }
 
 function getFeedback(feedback) {
-  if (!feedback) return ''
+  if (!feedback) return ' '
+
   return `
-  <i
-    role="button"
-    class="feedback-btn fa fa-comments-o"
-    data-content="${feedback}"
-    data-toggle="popover"
-    data-trigger="click"
-    data-html="true"
-  >
-  </i>`
+    <i
+      role="button"
+      class="feedback-btn fa fa-comments-o"
+      data-content="${feedback}"
+      data-toggle="popover"
+      data-trigger="click"
+      data-html="true"
+    >
+    </i>
+  `
 }
 
 function getSelectClasses(displayTrueAnswer, isSolutionValid) {
@@ -109,7 +111,7 @@ export class Highlight extends Component {
     const tmp = utils.getSolutionForAnswer(solution, selectedAnswer)
     const isSolutionValid = tmp && tmp.score > 0
     const classes = getSelectClasses(displayTrueAnswer, isSolutionValid)
-
+    
     return `
       <select
         id='select-${holeId}-${displayTrueAnswer}'
@@ -119,8 +121,12 @@ export class Highlight extends Component {
         }
       >
 
-      ${diffUserAnswer && !displayTrueAnswer &&
+      ${(diffUserAnswer && !displayTrueAnswer && showScore) &&
         `<option selected> ${selectedAnswer.text} </option>`
+      }
+
+      ${!showScore &&
+        `<option selected> ${answer.answerText} </option>`
       }
 
       ${showScore &&
@@ -132,11 +138,11 @@ export class Highlight extends Component {
       ${getWarningIcon(solution, selectedAnswer.text)}
 
       ${(showScore || isSolutionValid) &&
-        getFeedback(selectedAnswer.feedback)
+        getFeedback(selectedAnswer.feedback) || ''
       }
 
       ${showScore &&
-        getSolutionScore(selectedAnswer.score)
+        getSolutionScore(selectedAnswer.score) || ''
       }
     </span>
     `
