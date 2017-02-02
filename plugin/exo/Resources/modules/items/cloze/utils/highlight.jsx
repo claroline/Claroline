@@ -63,7 +63,7 @@ export class Highlight extends Component {
   }
 
   getTextInput(answer, showScore, displayTrueAnswer, solution) {
-    if (!answer) return ''
+    if (!answer) answer = {}
     if (!answer.answerText) answer.answerText = ''
     const isSolutionValid = utils.getSolutionForAnswer(solution, answer) ? true: false
     const classes = getSelectClasses(displayTrueAnswer, isSolutionValid)
@@ -90,7 +90,7 @@ export class Highlight extends Component {
   }
 
   getSelectInput(answer, showScore, displayTrueAnswer, solution, holeId) {
-    if (!answer) return ''
+    if (!answer) answer = {}
     if (!answer.answerText) answer.answerText = ''
     let selectedAnswer = utils.getSolutionForAnswer(solution, answer)
     let diffUserAnswer = false
@@ -111,7 +111,7 @@ export class Highlight extends Component {
     const tmp = utils.getSolutionForAnswer(solution, selectedAnswer)
     const isSolutionValid = tmp && tmp.score > 0
     const classes = getSelectClasses(displayTrueAnswer, isSolutionValid)
-    
+
     return `
       <select
         id='select-${holeId}-${displayTrueAnswer}'

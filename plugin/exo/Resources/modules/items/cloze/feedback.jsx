@@ -19,3 +19,7 @@ ClozeFeedback.propTypes = {
   }).isRequired,
   answer: T.array.isRequired
 }
+
+ClozeFeedback.defaultProps = {
+  answer: []
+}
