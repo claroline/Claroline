@@ -7,6 +7,7 @@ services:
     volumes:
       - composer_cache:/root/.composer
       - npm_cache:/root/.npm
+      - bower_cache:/root/.cache/bower
     depends_on:
       - db
     environment:
@@ -42,3 +43,4 @@ volumes:
   mysql_data: # This is where the mysql data lives
   composer_cache: # This is where the composer cache data lives
   npm_cache: # This is where the npm cache data lives
+  bower_cache: # This is where the bower cache data lives
