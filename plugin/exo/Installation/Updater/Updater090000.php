@@ -287,7 +287,7 @@ class Updater090000
         $found = null;
         foreach ($parts as $part) {
             if ($part['id'] === $id) {
-                $found = $part['uuid'];
+                $found = $part;
                 break;
             }
         }
