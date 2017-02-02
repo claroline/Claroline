@@ -3,6 +3,7 @@ services:
   web:
     ports:
       - 80:80
+    restart: always
     environment:
       APP_URL: claroline.loc
       DB_HOST: db
@@ -16,6 +17,7 @@ services:
       PLATFORM_SUPPORT_EMAIL: support@claroline.com
 
   db:
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: user

@@ -1,33 +1,17 @@
 version: '2'
 services:
   web:
-    restart: always
     build: .docker/web/
     volumes:
       - .:/var/www/html/claroline # This is where the symfony files are stored
-    environment:
-      APP_URL: ${APP_URL}
-      DB_HOST: db
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      SECRET: ${SECRET}
-
-      # These will be the default platform options, they are only used once during the Claroline Connect install
-      PLATFORM_NAME: ${PLATFORM_NAME}
-      PLATFORM_SUPPORT_EMAIL: ${PLATFORM_SUPPORT_EMAIL}
+      - composer_cache:/root/.composer
 
   db:
-    restart: always
     image: mysql
     volumes:
       - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-      - mysql:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
+      - mysql_data:/var/lib/mysql
 
 volumes:
-  mysql: # This is where the mysql data lives
+  mysql_data: # This is where the mysql data lives
+  composer_cache:
