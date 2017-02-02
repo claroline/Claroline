@@ -1,0 +1,6 @@
+version: '2'
+services:
+  web:
+    build: .docker/web/
+    volumes:
+      - .:/var/www/html/claroline # This is where the symfony files are stored
