@@ -28,10 +28,10 @@ services:
   db:
     restart: always
     environment:
-    MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-    MYSQL_USER: ${DB_USER}
-    MYSQL_PASSWORD: ${DB_PASSWORD}
-    MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
     image: mysql
     volumes:
       - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
