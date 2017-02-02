@@ -147,7 +147,6 @@ class PairPlayer extends Component {
       items: this.randomize(utils.pairItemsWithDisplayOption(props.item.items), props.item.random),
       answerItems: utils.generateAnswerPairItems(props.item.items, props.item.rows)
     }
-    this.updateAnswer()
   }
 
   randomize(items, random) {
@@ -207,6 +206,10 @@ PairPlayer.propTypes = {
   }).isRequired,
   answer: T.arrayOf(T.array),
   onChange: T.func.isRequired
+}
+
+PairPlayer.defaultProps = {
+  answer: []
 }
 
 export {PairPlayer}

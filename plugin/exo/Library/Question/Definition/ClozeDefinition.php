@@ -119,17 +119,25 @@ class ClozeDefinition extends AbstractDefinition
     {
         $corrected = new CorrectedAnswer();
 
-        foreach ($answer as $holeAnswer) {
-            $hole = $question->getHole($holeAnswer->holeId);
-            $keyword = $hole->getKeyword($holeAnswer->answerText);
-            if (!empty($keyword)) {
-                if (0 < $keyword->getScore()) {
-                    $corrected->addExpected($keyword);
+        if (!is_null($answer)) {
+            foreach ($answer as $holeAnswer) {
+                $hole = $question->getHole($holeAnswer->holeId);
+                $keyword = $hole->getKeyword($holeAnswer->answerText);
+                if (!empty($keyword)) {
+                    if (0 < $keyword->getScore()) {
+                        $corrected->addExpected($keyword);
+                    } else {
+                        $corrected->addUnexpected($keyword);
+                    }
                 } else {
-                    $corrected->addUnexpected($keyword);
+                    // Retrieve the best answer for the hole
+                    $corrected->addMissing($this->findHoleExpectedAnswer($hole));
                 }
-            } else {
-                // Retrieve the best answer for the hole
+            }
+        } else {
+            $holes = $question->getHoles();
+
+            foreach ($holes as $hole) {
                 $corrected->addMissing($this->findHoleExpectedAnswer($hole));
             }
         }
