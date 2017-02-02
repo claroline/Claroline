@@ -3,7 +3,6 @@ services:
   web:
     ports:
       - 80:80
-    restart: always
     volumes:
       - composer_cache:/root/.composer
       - npm_cache:/root/.npm
@@ -28,7 +27,6 @@ services:
       PLATFORM_SUPPORT_EMAIL: ${PLATFORM_SUPPORT_EMAIL}
 
   db:
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_USER: ${DB_USER}
