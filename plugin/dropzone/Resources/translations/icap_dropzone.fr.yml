@@ -97,6 +97,7 @@ Copies being evaluated: Copies en cours d'évaluation
 Sort by user: Tri par utilisateur
 Established on: Copie rendue le :
 Last correction: Dernière correction le :
+last update: Dernière modification le :
 Documents: Documents :
 Grade: Note :
 Sort by date: Tri par date
@@ -300,8 +301,9 @@ Allow student to see his copy whereas the copy didnt received the expected numbe
 Drop have been unlocked: La copie a été débloquée
 This copy has been unlocked by admin.(it did not received the expected number of correction):  Cette copie a été débloquée par un administrateur. (Elle n'a pas reçu le nombre de corrections attendues).
 No copy waiting for correction: Aucune copie en attente de correction
-Notify on drop: Nofifier les administrateurs de l'évaluation quand quelqu'un dépose une copie.
+Notify on drop: Notifier les administrateurs de l'évaluation quand quelqu'un dépose une copie.
 Notifications: Notifications
+unfinished copies: Copies non terminées
 unterminated drops: copie(s) non terminée(s)
 Notify on drop: Notifier les administrateurs lorsqu'une copie est déposée.
 drop_info: Chaque document ajouté est sauvegardé automatiquement. Cependant, pensez à cliquer sur "Terminer" en bas à droite une fois que vous avez fini. Si vous ne le faites pas, votre copie sera considérée comme non-rendue.
@@ -351,3 +353,13 @@ Select Period: Sélectionnez une plage de dates
 Download copies in this period: Télécharger les copies déposées dans cette periode.
 No drops to download in this period: Aucune copie téléchargeable durant cette période.
 file_not_found: Le fichier n'a pas été trouvé.
+close copy: Clôturer la copie
+send reminder: Envoyer un rappel
+no unfinished copies: Aucune copie non terminée.
+closing text: Cette copie n'est pas terminée, vous pouvez la clôturer manuellement.
+close copy confirmation text: Êtes-vous sûr de vouloir clôturer la copie ?
+reminder sent: Le rappel a été envoyé.
+reminder message: Vous avez déposé une copie pour l'évaluation "%dropzonename%" le %dropdate%. Vous devez encore valider ce dépôt sur la <a href="%confirmation_url%">page de confirmation</a> pour que votre copie puisse être évaluée.
+reminder object: Copie non terminée
+copy closed: La copie a été cloturée.
+date_format_php: d/m/Y à H:i

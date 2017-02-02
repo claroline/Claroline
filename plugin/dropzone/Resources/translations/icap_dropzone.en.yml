@@ -99,6 +99,7 @@ Copies being evaluated: Copies being evaluated
 Sort by user: Sort by user
 Established on: Copy rendered on :
 Last correction: Last correction on :
+last update: Last update on:
 Documents: Documents :
 Grade: Score :
 Sort by date: Sort by date
@@ -306,6 +307,7 @@ This copy has been unlocked by admin.(it did not received the expected number of
 No copy waiting for correction: No copy waiting for correction.
 Notify on drop: Nofify the evaluation managers when someone drops a copy.
 Notifications: Notifications
+unfinished copies: Unfinished copies
 unterminated drops: unfinished copie(s)
 Notify on drop: Nofify the managers when someone drops a copy.
 drop_info: Every added document is automatically saved. Anyway, think of clicking on "Finish" at the bottom right once you have finished. If you don't do so, your copy will be considered as not rendered.
@@ -355,3 +357,13 @@ Select Period: Select the period
 Download copies in this period: Download copies dropped during this period
 No drops to download in this period: No drops to download in this period
 file_not_found: The file has not been found
+close copy: Close copy
+send reminder: Send reminder
+no unfinished copies: No unfinished copies.
+closing text: This copy is unfinished, you can close it manually.
+close copy confirmation text: Do you really want to finish this copy?
+reminder sent: Reminder has been sent.
+reminder message: Your dropped a copy for the evaluation "%dropzonename%". on the %dropdate%. Your drop needs your final validation on the <a href="%confirmation_url%">confirmation page</a> before it can be evaluated.
+reminder object: Unfinished copy
+copy closed: Copy has been finished.
+date_format_php: m/d/Y at h:ia

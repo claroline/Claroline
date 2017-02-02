@@ -61,6 +61,12 @@
                             class="badge">{{ nbDrop - nbDropCorrected }}</span>
                 </a>
             </li>
+            <li class="hometab-element {% block drops_unfinished_active %}{% endblock %}">
+                <a href="{% block drops_unfinished_link %}{{ path('icap_dropzone_drops_unfinished', {'resourceId': dropzone.id}) }} {% endblock %}">
+                    {{ 'unfinished copies'|trans({}, 'icap_dropzone') }} <span
+                            class="badge">{{ unterminated_drops }}</span>
+                </a>
+            </li>
             <li class="hometab-element {% block drops_examiners_active %}{% endblock %}">
                 <a href="{% block drops_examiners_link %}{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }} {% endblock %}">
                     {{ 'Examiners'|trans({}, 'icap_dropzone') }}
