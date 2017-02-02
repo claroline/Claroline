@@ -1,0 +1,18 @@
+{
+  "title": "Claroline UI components",
+  "root": "htdocs/claroline/styleguide/",
+  "files": [
+    "web/themes/claroline/bootstrap.css"
+  ],
+  "babelConfig": {
+    "presets": [
+      "es2015",
+      "react"
+    ],
+    "plugins": [
+      "add-module-exports",
+      "transform-class-properties",
+      "react-docgen"
+    ]
+  }
+}
