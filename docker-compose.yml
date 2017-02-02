@@ -4,14 +4,3 @@ services:
     build: .docker/web/
     volumes:
       - .:/var/www/html/claroline # This is where the symfony files are stored
-      - composer_cache:/root/.composer
-
-  db:
-    image: mysql
-    volumes:
-      - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-      - mysql_data:/var/lib/mysql
-
-volumes:
-  mysql_data: # This is where the mysql data lives
-  composer_cache:

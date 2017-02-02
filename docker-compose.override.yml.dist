@@ -4,6 +4,8 @@ services:
     ports:
       - 80:80
     restart: always
+    volumes:
+      - composer_cache:/root/.composer
     environment:
       APP_URL: ${APP_URL}
       DB_HOST: db
@@ -24,7 +26,15 @@ services:
   db:
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
+    MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    MYSQL_USER: ${DB_USER}
+    MYSQL_PASSWORD: ${DB_PASSWORD}
+    MYSQL_DATABASE: ${DB_NAME}
+    image: mysql
+    volumes:
+      - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data: # This is where the mysql data lives
+  composer_cache: # This is where the composer cache data lives
