@@ -6,6 +6,7 @@ services:
     restart: always
     volumes:
       - composer_cache:/root/.composer
+      - npm_cache:/root/.npm
     depends_on:
       - db
     environment:
@@ -40,3 +41,4 @@ services:
 volumes:
   mysql_data: # This is where the mysql data lives
   composer_cache: # This is where the composer cache data lives
+  npm_cache: # This is where the npm cache data lives
