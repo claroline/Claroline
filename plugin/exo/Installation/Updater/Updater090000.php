@@ -477,15 +477,26 @@ class Updater090000
         $sth->execute();
         $questions = $sth->fetchAll();
         foreach ($questions as $question) {
+            $holeSth = $this->connection->prepare('
+                SELECT * FROM ujm_hole WHERE interaction_hole_id = :id
+            ');
+
+            $holeSth->execute([
+                'id' => $question['id'],
+            ]);
+            $holes = $holeSth->fetchAll();
+
             // Replace selects
             $text = $this->replaceHoles(
                 $question['htmlWithoutValue'],
-                '/<select\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+.*[^<\/\s*select\s*>]*<\/select>/'
+                '/<select\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+.*[^<\/\s*select\s*>]*<\/select>/',
+                $holes
             );
             // Replace inputs
             $text = $this->replaceHoles(
                 $text,
-                '/<input\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+\s*[^\/+>]*\/>/'
+                '/<input\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+\s*[^\/+>]*\/>/',
+                $holes
             );
 
             $sth = $this->connection->prepare('
@@ -494,19 +505,19 @@ class Updater090000
                 WHERE question_id = :id
             ');
             $sth->execute([
-                'id' => $question['question_id'],
+                'id' => $question['id'],
                 'text' => $text,
                 'originalText' => $question['htmlWithoutValue'],
             ]);
         }
     }
 
-    private function replaceHoles($text, $searchExpr)
+    private function replaceHoles($text, $searchExpr, array $holes)
     {
         $matches = [];
         if (preg_match_all($searchExpr, $text, $matches)) {
             foreach ($matches[0] as $inputIndex => $inputMatch) {
-                $text = str_replace($inputMatch, '[['.$matches[1][$inputIndex].']]', $text);
+                $text = str_replace($inputMatch, '[['.$holes[$inputIndex]['uuid'].']]', $text);
             }
         }
 
