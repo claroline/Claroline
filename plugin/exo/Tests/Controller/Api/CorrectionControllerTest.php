@@ -181,6 +181,7 @@ class CorrectionControllerTest extends TransactionalTestCase
             'questionId' => $question->getUuid(),
             'score' => 5,
             'feedback' => 'this is a feedback',
+            'type' => 'application/x.open+json',
         ]];
 
         $this->request(

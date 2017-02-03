@@ -113,6 +113,7 @@ class CorrectionManagerTest extends JsonDataTestCase
         $toCorrect->questionId = $this->answers[0]->getQuestionId();
         $toCorrect->score = 5;
         $toCorrect->feedback = 'this is a feedback';
+        $toCorrect->type = 'application/x.open+json';
 
         // Paper score have never been calculated for now
         // We just take obtained score in test data (we can do it because their is no penalty)
@@ -149,6 +150,7 @@ class CorrectionManagerTest extends JsonDataTestCase
         $toCorrect->questionId = $this->answers[0]->getQuestionId();
         $toCorrect->score = 5;
         $toCorrect->feedback = 'this is a feedback';
+        $toCorrect->type = 'application/x.open+json';
 
         $this->manager->save([$toCorrect]);
 
