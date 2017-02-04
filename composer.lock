@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "78e8f5dae563934c0ad85cc98e37b7d0d930449e"
+                "reference": "5a530015f9310e2d50e4b75a07978130bb343405"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/78e8f5dae563934c0ad85cc98e37b7d0d930449e",
-                "reference": "78e8f5dae563934c0ad85cc98e37b7d0d930449e",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/5a530015f9310e2d50e4b75a07978130bb343405",
+                "reference": "5a530015f9310e2d50e4b75a07978130bb343405",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-02-01 21:05:52"
+            "time": "2017-02-03 15:12:08"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3512,17 +3512,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "988b79a867c101267f344cc42cde42ca8f49ecd3"
+                "reference": "71a2480931aebf2d4d6f38432f04f31306b278a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/988b79a867c101267f344cc42cde42ca8f49ecd3",
-                "reference": "988b79a867c101267f344cc42cde42ca8f49ecd3",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/71a2480931aebf2d4d6f38432f04f31306b278a7",
+                "reference": "71a2480931aebf2d4d6f38432f04f31306b278a7",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-01-30 16:17:42"
+            "time": "2017-02-02 16:38:44"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -3813,7 +3813,7 @@
             ],
             "authors": [
                 {
-                    "name": "KNPLabs Team",
+                    "name": "KnpLabs Team",
                     "homepage": "http://knplabs.com"
                 },
                 {
