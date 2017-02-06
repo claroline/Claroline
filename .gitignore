@@ -45,3 +45,4 @@ web/vendors/*
 web/maintenance.html
 .env
 docker-compose.override.yml
+installed
