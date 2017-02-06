@@ -10,9 +10,6 @@ done
 
 echo "MySQL is up"
 
-echo "Setting correct file permissions"
-chmod -R 777 app/cache app/config app/logs app/sessions files web/uploads
-
 if [ -f installed ]; then
    echo "ClarolineConnect is allready installed"
 else
@@ -20,7 +17,11 @@ else
   php scripts/configure.php
 
   echo "Composer install"
-  composer sync-dev
+  if [[ "$ENV" == "dev" ]]; then
+    composer sync-dev
+  else
+    composer sync
+  fi
 
   if [[ -v PLATFORM_NAME ]]; then
     echo "Changing platform name to $PLATFORM_NAME";
@@ -46,5 +47,8 @@ else
 
   touch installed
 fi
+
+echo "Setting correct file permissions"
+chmod -R 777 app/cache app/config app/logs app/sessions files web/uploads
 
 exec "$@"
