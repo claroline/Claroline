@@ -73,8 +73,8 @@ class Updater090000
         $this->updateExerciseTypes();
         $this->updateAnswerData();
         $this->cleanOldPairQuestions();
-        $this->updatePapers();
         $this->updateClozeQuestions();
+        $this->updatePapers();
     }
 
     private function updateExerciseTypes()
