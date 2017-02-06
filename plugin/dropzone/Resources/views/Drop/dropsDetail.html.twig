@@ -69,6 +69,21 @@
         {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
         {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 6, "condensed", documentListText) }}
 
+        {% if isAllowedToEdit and not drop.finished %}
+            <div class="row">
+                <div class="text-muted col-md-4">{{ 'closing text'|trans({}, 'icap_dropzone') }}</div>
+                <div class="col-md-8">
+                    <a class="btn btn-danger launch-modal" href="{{ path("icap_dropzone_close_drop",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
+                        {{ "close copy"|trans({},'icap_dropzone') }}
+                    </a>
+                </div>
+
+
+
+            </div>
+            <br />
+        {% endif %}
+
         <div class="row">
             <div class="text-muted col-md-4">{{ 'Learner'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-8">{{ drop.user.firstName }} {{ drop.user.lastName }}</div>
@@ -114,7 +129,6 @@
                         {{ 'Recalculate the score'|trans({}, 'icap_dropzone') }}</a>
                 {% endif %}
             {% endif %}
-
 
             <hr/>
 

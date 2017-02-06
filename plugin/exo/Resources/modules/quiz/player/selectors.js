@@ -51,7 +51,9 @@ const currentStepAnswers = createSelector(
   answers,
   (currentStepItems, answers) => {
     return currentStepItems.reduce((answerAcc, item) => {
-      answerAcc[item.id] = Object.assign({}, answers[item.id])
+      answerAcc[item.id] = Object.assign({}, answers[item.id], {
+        type: item.type
+      })
 
       return answerAcc
     }, {})

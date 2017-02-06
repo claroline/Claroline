@@ -5,7 +5,7 @@ group: Groep
 log_add_user: Gebruiker toevoegen
 log_change_right: Verandering van rechten
 log_change_set: Lijst van de bewerkte eigenschappen
-log_context: Context :
+log_context: 'Contekst :'
 log_copy: Kopie
 log_copy_source: Bron van de kopie
 log_create: Maken

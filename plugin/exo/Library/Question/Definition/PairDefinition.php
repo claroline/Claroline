@@ -118,33 +118,35 @@ class PairDefinition extends AbstractDefinition
     public function correctAnswer(AbstractQuestion $question, $answer)
     {
         $corrected = new CorrectedAnswer();
-
         $rows = $question->getRows()->toArray();
-        foreach ($answer as $answerRow) {
-            $hasOdd = false;
-            // Search for odd items
-            foreach ($answerRow as $answerItem) {
-                $odd = $question->getOddItem($answerItem);
-                if (!empty($odd)) {
-                    $corrected->addUnexpected($odd);
-                    $hasOdd = true;
-                }
-            }
 
-            if (!$hasOdd) {
-                // Search for a defined row for the user answer
-                $row = $this->findRowByAnswer($answerRow, $rows);
-                if (!empty($row)) {
-                    // Row found
-                    if (0 < $row->getScore()) {
-                        $corrected->addExpected($row);
-                    } else {
-                        $corrected->addUnexpected($row);
+        if (!is_null($answer)) {
+            foreach ($answer as $answerRow) {
+                $hasOdd = false;
+                // Search for odd items
+                foreach ($answerRow as $answerItem) {
+                    $odd = $question->getOddItem($answerItem);
+                    if (!empty($odd)) {
+                        $corrected->addUnexpected($odd);
+                        $hasOdd = true;
                     }
-                } else {
-                    // user answer is not a defined one, apply default penalty if exist
-                    if ($question->getPenalty()) {
-                        $corrected->addPenalty(new GenericPenalty($question->getPenalty()));
+                }
+
+                if (!$hasOdd) {
+                    // Search for a defined row for the user answer
+                    $row = $this->findRowByAnswer($answerRow, $rows);
+                    if (!empty($row)) {
+                        // Row found
+                        if (0 < $row->getScore()) {
+                            $corrected->addExpected($row);
+                        } else {
+                            $corrected->addUnexpected($row);
+                        }
+                    } else {
+                        // user answer is not a defined one, apply default penalty if exist
+                        if ($question->getPenalty()) {
+                            $corrected->addPenalty(new GenericPenalty($question->getPenalty()));
+                        }
                     }
                 }
             }

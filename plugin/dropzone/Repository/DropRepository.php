@@ -300,6 +300,20 @@ class DropRepository extends EntityRepository
         return $qb->getQuery();
     }
 
+    public function getUnfinishedDropsQuery($dropzone)
+    {
+        $qb = $this
+            ->createQueryBuilder('drop')
+            ->select('drop, user')
+            ->andWhere('drop.dropzone = :dropzone')
+            ->andWhere('drop.finished = false')
+            ->join('drop.user', 'user')
+            ->orderBy('drop.reported desc, user.lastName, user.firstName')
+            ->setParameter('dropzone', $dropzone);
+
+        return $qb->getQuery();
+    }
+
     public function getDropIdsByUser($dropzoneId, $userId)
     {
         $qb = $this->createQueryBuilder('drop')

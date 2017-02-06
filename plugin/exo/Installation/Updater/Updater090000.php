@@ -73,8 +73,8 @@ class Updater090000
         $this->updateExerciseTypes();
         $this->updateAnswerData();
         $this->cleanOldPairQuestions();
-        $this->updatePapers();
         $this->updateClozeQuestions();
+        $this->updatePapers();
     }
 
     private function updateExerciseTypes()
@@ -130,7 +130,12 @@ class Updater090000
         $proposalSth->execute();
         $proposals = $proposalSth->fetchAll();
 
-        $holeSth = $this->connection->prepare('SELECT id, uuid, selector FROM ujm_hole');
+        $holeSth = $this->connection->prepare('
+            SELECT h.id, h.uuid, h.`position`, h.selector, q.uuid AS question_id
+            FROM ujm_hole AS h
+            JOIN ujm_interaction_hole AS i ON (h.interaction_hole_id = i.id)
+            JOIN ujm_question AS q ON (i.question_id = q.id)
+        ');
         $holeSth->execute();
         $holes = $holeSth->fetchAll();
 
@@ -140,7 +145,7 @@ class Updater090000
 
         // Load answers
         $sth = $this->connection->prepare('
-            SELECT q.mime_type, a.id AS answerId, a.response AS data
+            SELECT q.mime_type, a.id AS answerId, a.response AS data, a.question_id
             FROM ujm_response AS a
             LEFT JOIN ujm_question AS q ON (a.question_id = q.uuid)
             WHERE a.response IS NOT NULL 
@@ -224,21 +229,48 @@ class Updater090000
                     $answerData = json_decode($answer['data'], true);
 
                     $newData = [];
-                    foreach ($answerData as $holeId => $answerText) {
+                    foreach ($answerData as $position => $answerText) {
                         if (!empty($answerText)) {
-                            $answeredHole = $this->getAnswerPart($holeId, $holes);
-                            $hole = new \stdClass();
-                            $hole->holeId = $answeredHole['uuid'];
+                            $answeredHole = null;
+                            $oldAnswer = null;
+                            if (is_array($answerText)) {
+                                // Format = [{"holeId":"61","answerText":""},{"holeId":"62","answerText":""}]
 
-                            if (!$answeredHole['selector']) {
-                                $hole->answerText = $answerText;
+                                // Retrieve answered hole
+                                $answeredHole = $this->getAnswerPart($answerText['holeId'], $holes);
+
+                                // Get answer
+                                $oldAnswer = $answerText['answerText'];
                             } else {
-                                // replace keyword id by its value
-                                $keyword = $this->getAnswerPart($answerText, $keywords);
-                                $hole->answerText = $keyword['response'];
+                                // Format = {"1":"travail","2":"salaire"}
+
+                                // Retrieve answered hole
+                                foreach ($holes as $hole) {
+                                    if ((int) $hole['position'] === (int) $position
+                                        && $hole['question_id'] === $answer['question_id']) {
+                                        $answeredHole = $hole;
+                                        break;
+                                    }
+                                }
+
+                                // Get answer
+                                $oldAnswer = $answerText;
                             }
 
-                            $newData[] = $hole;
+                            if (!empty($answeredHole) && !empty($oldAnswer)) {
+                                $hole = new \stdClass();
+                                $hole->holeId = $answeredHole['uuid'];
+
+                                if (!$answeredHole['selector']) {
+                                    $hole->answerText = $oldAnswer;
+                                } else {
+                                    // replace keyword id by its value
+                                    $keyword = $this->getAnswerPart($oldAnswer, $keywords);
+                                    $hole->answerText = $keyword['response'];
+                                }
+
+                                $newData[] = $hole;
+                            }
                         }
                     }
 
@@ -268,15 +300,13 @@ class Updater090000
             }
 
             // Update answer data
-            if (!empty($newData)) {
-                $sth = $this->connection->prepare('
-                    UPDATE ujm_response SET `response` = :data WHERE id = :id 
-                ');
-                $sth->execute([
-                    'id' => $answer['answerId'],
-                    'data' => json_encode($newData),
-                ]);
-            }
+            $sth = $this->connection->prepare('
+                UPDATE ujm_response SET `response` = :data WHERE id = :id 
+            ');
+            $sth->execute([
+                'id' => $answer['answerId'],
+                'data' => !empty($newData) ? json_encode($newData) : null,
+            ]);
         }
 
         $this->log('done !');
@@ -287,7 +317,7 @@ class Updater090000
         $found = null;
         foreach ($parts as $part) {
             if ($part['id'] === $id) {
-                $found = $part['uuid'];
+                $found = $part;
                 break;
             }
         }
@@ -477,16 +507,28 @@ class Updater090000
         $sth->execute();
         $questions = $sth->fetchAll();
         foreach ($questions as $question) {
-            // Replace selects
+            $holeSth = $this->connection->prepare('
+                SELECT * FROM ujm_hole WHERE interaction_hole_id = :id
+            ');
+
+            $holeSth->execute([
+                'id' => $question['id'],
+            ]);
+            $holes = $holeSth->fetchAll();
+
             $text = $this->replaceHoles(
                 $question['htmlWithoutValue'],
-                '/<select\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+.*[^<\/\s*select\s*>]*<\/select>/'
+                '/<select\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+.*[^<\/\s*select\s*>]*<\/select>/',
+                $holes
             );
             // Replace inputs
             $text = $this->replaceHoles(
                 $text,
-                '/<input\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+\s*[^\/+>]*\/>/'
+                '/<input\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+\s*[^\/+>]*\/>/',
+                $holes
             );
+
+            // Replace selects
 
             $sth = $this->connection->prepare('
                 UPDATE ujm_interaction_hole 
@@ -501,12 +543,18 @@ class Updater090000
         }
     }
 
-    private function replaceHoles($text, $searchExpr)
+    private function replaceHoles($text, $searchExpr, array $holes)
     {
         $matches = [];
         if (preg_match_all($searchExpr, $text, $matches)) {
             foreach ($matches[0] as $inputIndex => $inputMatch) {
-                $text = str_replace($inputMatch, '[['.$matches[1][$inputIndex].']]', $text);
+                $position = $matches[1][$inputIndex];
+                foreach ($holes as $hole) {
+                    if ((int) $hole['position'] === (int) $position) {
+                        $text = str_replace($inputMatch, '[['.$hole['uuid'].']]', $text);
+                        break;
+                    }
+                }
             }
         }
 
@@ -527,7 +575,7 @@ class Updater090000
     {
         if (empty($decodedQuestions[$questionId])) {
             foreach ($questions as $index => $question) {
-                if ($question->getId() === (int) $questionId) {
+                if ($question->getId() === (int) $questionId && !empty($question->getMimeType())) {
                     $decodedQuestions[$questionId] = $this->questionSerializer->serialize($question, [Transfer::INCLUDE_SOLUTIONS]);
                     unset($questions[$index]);
                     break;

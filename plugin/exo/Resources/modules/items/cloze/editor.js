@@ -101,7 +101,6 @@ function reduce(item = {}, action) {
       const newItem = cloneDeep(item)
       const hole = getHoleFromId(newItem, action.holeId)
       hole._multiple = hole.choices ? true: false
-
       newItem._popover = true
       newItem._holeId = action.holeId
 
