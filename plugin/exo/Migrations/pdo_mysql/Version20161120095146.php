@@ -41,7 +41,6 @@ class Version20161120095146 extends AbstractMigration
         // Holes
         $this->addSql('
             ALTER TABLE ujm_hole 
-            DROP position,
             CHANGE selector selector TINYINT(1) NOT NULL
         ');
 
@@ -112,7 +111,6 @@ class Version20161120095146 extends AbstractMigration
         // Holes
         $this->addSql('
             ALTER TABLE ujm_hole 
-            ADD position INT DEFAULT NULL,
             CHANGE selector selector TINYINT(1) DEFAULT NULL
         ');
 
