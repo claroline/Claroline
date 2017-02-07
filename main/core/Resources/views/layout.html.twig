@@ -69,25 +69,22 @@
         </div>
     </div>
 
-    <div id="wrap">
-        {% block content_container %}
-            <div class="container-fluid">
-                {% if workspace is defined and
-                    workspace.getOptions() is not empty and
-                    workspace.getOptions().getDetails() is not empty and
-                    workspace.getOptions().getDetails()['hide_breadcrumb'] is defined and
-                    workspace.getOptions().getDetails()['hide_breadcrumb']
-                %}
-                {% else %}
-                    {% block breadcrumb %}{% endblock %}
-                {% endif %}
+    <div id="wrap" class="container-fluid">
+        {% if workspace is defined and
+            workspace.getOptions() is not empty and
+            workspace.getOptions().getDetails() is not empty and
+            workspace.getOptions().getDetails()['hide_breadcrumb'] is defined and
+            workspace.getOptions().getDetails()['hide_breadcrumb']
+        %}
+        {% else %}
+            {% block breadcrumb %}{% endblock %}
+        {% endif %}
 
-                <div class="content">
-                    {% block content %}{% endblock %}
-                </div>
-            </div>
-            <div id="push"></div>
-        {% endblock %}
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+
+        <div id="push"></div>
     </div>
 
     {% block footer %}
