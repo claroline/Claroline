@@ -40,3 +40,6 @@ resource_creation_error_download: Utilisez le bouton de téléchargement pour sa
 start_recording: Démarrer
 stop_recording: Stop
 submit_config_label: Sauvegarder la configuration
+
+#v
+validate: Valider

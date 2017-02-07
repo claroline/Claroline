@@ -32,6 +32,7 @@ start: 'Start'
 stop: 'Stop'
 
 # v
+validate: Validate
 video_recorder_configuration_max_recording_time: Maximum recording time (Secondes, 0 = infinite)
 
 # w

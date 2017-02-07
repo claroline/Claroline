@@ -39,3 +39,6 @@ resource_creation_error_download: Please use the download button to save your au
 start_recording: Start
 stop_recording: Stop
 submit_config_label: Save configuration
+
+#
+validate: Validate

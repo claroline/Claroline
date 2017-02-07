@@ -31,5 +31,8 @@ start: 'Démarrer'
 stop_recording: 'Arrêter l''enregistrement'
 stop: 'Stop'
 
+# v
+validate: Valider
+
 # w
 warning_message_record_end: 'L''enregistrement est terminé.<br/>Cliquez sur "Valider" s''il convient ou sur "Recommencer".<br/>(Recommencer effacera l''enregistrement actuel.)'
