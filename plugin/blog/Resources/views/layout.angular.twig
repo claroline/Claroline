@@ -127,7 +127,7 @@
             options: {{ options | raw }},
             panels: {{ orderPanels | json_encode() | raw }},
             archives: {{ archiveData | json_encode() | raw }},
-            info: '{{ _resource.infos | raw }}',
+            info: '{{ _resource.infos | escape }}',
             authors: {{ blog_authors(_resource) | json_encode() | raw }},
             tags: {{ blog_tags(blog) | json_encode() | raw }},
             isGrantedAdmin: {{ is_granted('ADMINISTRATE', _resource) ? 'true':'false' }},
