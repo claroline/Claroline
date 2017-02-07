@@ -277,15 +277,15 @@ Made by: "Rendue par"
 Make my copy: Collecticiel - Vue Apprenant
 manualPlanning: Manuellement
 Maximum notation : Maximum (note sur) :
-Minimum score to pass: Note minimum pour réussir lévaluation (sur 20)
+Minimum score to pass: Note minimum pour réussir l'évaluation (sur 20)
 Modify add or delete criteria will affect this corrections if you recalculate the note on it.: Modifier, ajouter ou supprimer des critères n'affectera que les nouvelles corrections.  Pour mettre à jour les anciennes corrections, vous devrez recalculer les notes de celles ci.
 Must be after end allow drop: Doit être postérieur à la fin du dépôt
 Must be after start allow drop: Doit être postérieur au début du dépôt
-Must be after start peer review: Doit être postérieur au début de lévaluation par les pairs
+Must be after start peer review: Doit être postérieur au début de l'évaluation par les pairs
 Must be an integer: Doit être un entier
 Must be before end allow drop: Doit être antérieur à la date de fin du dépôt
-Must be before end peer review: Doit être antérieur à la fin de lévaluation par les pairs
-Must be before start peer review: Doit être antérieur au début de lévaluation par les pairs
+Must be before end peer review: Doit être antérieur à la fin de l'évaluation par les pairs
+Must be before start peer review: Doit être antérieur au début de l'évaluation par les pairs
 My collecticiel : Mon espace collecticiel
 
 # N
@@ -318,15 +318,15 @@ Not finished: Pas terminé
 Not Transmitted review : Evaluation non transmise
 NotAllowToAddAnyDocument: Ce collecticiel est fermé
 notation : Notation
-Notation Max : (sur 
+Notation Max : (sur
 Notation validation: Transmettre
 Note assigned depends on the following criteria: La note attribuée dépend des critères suivants :
 Note that you will assign depends on the following criteria: La note que vous allez attribuer dépend des critères suivants :
 Notifications: Notifications
 Notifications: Notifications
 Notify on drop: Notifier les administrateurs lorsqu'un document est déposé
-Notify on drop: Nofifier les administrateurs de lévaluation quand quelqu'un dépose un document.
-Notify on drop: Prévenez les administrateurs de lévaluation quand quelqu'un a fait un drop.
+Notify on drop: Nofifier les administrateurs de l'évaluation quand quelqu'un dépose un document.
+Notify on drop: Prévenez les administrateurs de l'évaluation quand quelqu'un a fait un drop.
 notStarted:  non démarrée
 notStartedManualState: Fermé
 number of Report: Nombre de signalements
@@ -409,7 +409,7 @@ Return: Retour
 revalidate: Revalider
 Review : Evaluation
 Review on : Évaluation apportée sur
-Review state : Etat de lévaluation
+Review state : Etat de l'évaluation
 
 # S
 
@@ -449,7 +449,7 @@ Started Corrections: Corrections commencées
 Started: Commencé le :
 Study: Etudiant
 Submissions: Documents déposés
-successMessage: Message en cas de réussite 
+successMessage: Message en cas de réussite
 Sure to ask comment for document: Voulez-vous transmettre une demande de commentaire pour ce document ?
 Sure to ask evaluation for document: Voulez-vous transmettre l'évaluation ? Cette action est irréversible et vous ne pourrez plus modifier l''évaluation.
 Sure to transmit evaluation for document: Voulez-vous transmettre l''évaluation pour ce document ?

@@ -48,9 +48,9 @@ Choose at least one type of document: Choisissez au moins un type de document
 Choose at least one type of ranking: Choisissez au moins un type de notation
 Must be before end allow drop: Doit être antérieur à la date de fin du dépôt
 Must be after start allow drop: Doit être postérieur au début du dépôt
-Must be before end peer review: Doit être antérieur à la fin de lévaluation par les pairs
-Must be after start peer review: Doit être postérieur au début de lévaluation par les pairs
-Must be before start peer review: Doit être antérieur au début de lévaluation par les pairs
+Must be before end peer review: Doit être antérieur à la fin de l'évaluation par les pairs
+Must be after start peer review: Doit être postérieur au début de l'évaluation par les pairs
+Must be before start peer review: Doit être antérieur au début de l'évaluation par les pairs
 Must be after end allow drop: Doit être postérieur à la fin du dépôt
 Choose a date: Choisissez une date
 Evaluation not started: l'évaluation na pas démarré
@@ -136,7 +136,7 @@ Your report has been saved: Votre sigalement a été enregistré
 This correction has reported abuse: Cette correction a signalé un abus
 Remove report: Retirer le signalement
 Reason of reporting: Raison du signalement
-Edit evaluation: Modifier lévaluation
+Edit evaluation: Modifier l'évaluation
 Start review: Début de l'évaluation par les pairs
 Planification instruction: L'ouverture de l'évaluation peut se faire de manière manuelle ou automatique par dates.
 Planification peer review instruction: Elle se divise en plusieurs étapes : l'ouverture de l'évaluation en autorisant le dépôt, début de l'évaluation par les pairs qui clôture le dépôt et la fin de l'évaluation.
@@ -243,7 +243,7 @@ This copy contain a denied correction: Cette copie contient une correction refus
 notStarted:  non démarrée
 allowDrop:   dépôts autorisés
 allowDropAndPeerReview: dépôts autorisés et corrections par les pairs
-peerReview:  correction par les pairs 
+peerReview:  correction par les pairs
 finished :   Evaluation terminée
 user :  Utilisateur
 tools:  Outils
@@ -260,9 +260,9 @@ Documents added  the copy: Documents ajoutés à la copie
 no document added yet: Aucun document ajouté pour l'instant.
 Instructions for examiners: Instructions spécifiques aux correcteurs
 Examiners Instructions: Instructions aux correcteurs
-successMessage: Message en cas de réussite 
+successMessage: Message en cas de réussite
 failMessage: Message en cas d'échec
-Evaluation not started: L'évaluation na pas encore commencé. 
+Evaluation not started: L'évaluation na pas encore commencé.
 awaiting for drop: Evaluation commencée, en attente du dépôt.
 drop provided: Copie déposée
 correction n°%nb_correction%/%expected_correction%: correction n° %nb_correction%/%expected_correction% effectuée
