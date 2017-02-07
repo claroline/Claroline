@@ -39,6 +39,7 @@ export default class BlogController {
     this.blog.optionsCopy = angular.copy(this.blog.options)
     this.blog.panelsCopy = angular.copy(this.blog.panels)
 
+    this.blog.getInfo()
     this.loadPosts(this.currentPage)
   }
 
