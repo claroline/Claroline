@@ -13,8 +13,6 @@ export default class SummaryShowCtrl extends SummaryBaseCtrl {
     this.userProgressionService = UserProgressionService
     this.progression = this.userProgressionService.get()
 
-    this.totalSteps = this.pathService.getTotalSteps()
-
     // Check if summary is displayed by default or not
     const path = this.pathService.getPath()
     if (angular.isObject(path)) {
@@ -26,13 +24,5 @@ export default class SummaryShowCtrl extends SummaryBaseCtrl {
         this.SummaryService.setPinned(true)
       }
     }
-  }
-
-  getTotalProgression() {
-    return this.userProgressionService.getTotalProgression()
-  }
-
-  getTotalProgressionPercentage() {
-    return Math.round(this.getTotalProgression() * 100 / this.totalSteps) + '%'
   }
 }

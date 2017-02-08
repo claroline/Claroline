@@ -1,61 +1,66 @@
 <div class="current-step" id="scroll-to-onload">
     <!-- No selected step alert -->
-    <div data-ng-if="!stepEditCtrl.step">
-        <div class="alert alert-info text-center">
-            {{ 'no_step_selected'|trans:{}:'path_wizards' }}
-        </div>
+    <div class="alert alert-info text-center" data-ng-if="!stepEditCtrl.step">
+        {{ 'no_step_selected'|trans:{}:'path_wizards' }}
     </div>
 
-    <!-- Step form -->
+    <!-- Next & previous navs -->
+    <nav>
+        <button type="button" class="btn btn-lg btn-previous btn-link"
+                data-ng-click="stepEditCtrl.goTo(stepEditCtrl.previous)"
+                data-ng-disabled="!stepEditCtrl.previous"
+                data-toggle="tooltip"
+                data-placement="right"
+                data-original-title="{{ stepEditCtrl.previous.name }}"
+        >
+            <span class="fa fa-fw fa-angle-double-left"></span>
+            <span class="hidden-xs">{{ 'previous_step'|trans:{}:'path_wizards' }}</span>
+        </button>
+
+        <button type="button" class="btn btn-lg btn-next btn-link"
+                data-ng-click="stepEditCtrl.goTo(stepEditCtrl.next)"
+                data-ng-disabled="!stepEditCtrl.next"
+                data-toggle="tooltip"
+                data-placement="left"
+                data-original-title="{{ stepShowCtrl.next.name }}"
+        >
+            <span class="hidden-xs">{{ 'next_step'|trans:{}:'path_wizards' }}</span>
+            <span class="fa fa-fw fa-angle-double-right"></span>
+        </button>
+    </nav>
+
+    <!-- Current step form -->
     <div class="current-step-content" data-ng-if="stepEditCtrl.step">
-        <!-- Secondary resources of the Step -->
-        <resources-secondary-edit data-resources="stepEditCtrl.step.resources" data-inherited="stepEditCtrl.inheritedResources" data-excluded="stepEditCtrl.step.excludedResources"></resources-secondary-edit>
+        <resources-secondary-edit
+            data-resources="stepEditCtrl.step.resources"
+            data-inherited="stepEditCtrl.inheritedResources"
+            data-excluded="stepEditCtrl.step.excludedResources">
+        </resources-secondary-edit>
 
         <!-- Form of the Step -->
         <div class="panel panel-default">
-            <!-- Step level -->
-            <div class="lvl-indicator lvl lvl-{{ stepEditCtrl.step.lvl }} lvl-bg"></div>
-
             <div class="panel-body">
-                <div class="panel-step-heading row">
-                    <!-- Previous step -->
-                    <div class="col-md-1 col-sm-2 col-xs-2 text-left">
-                        <button type="button" data-ng-click="stepEditCtrl.goTo(stepEditCtrl.previous)" class="btn btn-block btn-default" data-ng-disabled="null == stepEditCtrl.previous" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ stepEditCtrl.previous.name }}">
-                            <span class="fa fa-arrow-left"></span>
-                            <span class="sr-only">previous</span>
-                        </button>
-                    </div>
+                <div class="panel-step-heading lvl lvl-{{ stepEditCtrl.step.lvl }} lvl-border">
+                    <label class="control-label sr-only" for="step-name">Step name</label>
+                    <!-- Edit step name -->
+                    <div class="input-group">
+                        <input type="text" class="form-control text-center" name="step-name" id="step-name" data-ng-model="stepEditCtrl.step.name" />
+                        <div class="input-group-btn">
+                            <button data-ng-click="stepEditCtrl.showActivity()" class="btn btn-default" type="button" data-ng-if="stepEditCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans:{}:'path_wizards' }}">
+                                <span class="fa fa-sign-out"></span>
+                                <span class="sr-only">{{ 'see_activity'|trans:{}:'path_wizards' }}</span>
+                            </button>
 
-                    <div class="col-md-10 col-sm-8 col-xs-8">
-                        <label class="control-label sr-only" for="step-name">Step name</label>
-                        <!-- Edit step name -->
-                        <div class="input-group col-md-12">
-                            <input type="text" class="form-control text-center" name="step-name" id="step-name" data-ng-model="stepEditCtrl.step.name" />
-                            <div class="input-group-btn">
-                                <button data-ng-click="stepEditCtrl.showActivity()" class="btn btn-default" type="button" data-ng-if="stepEditCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans:{}:'path_wizards' }}">
-                                    <span class="fa fa-sign-out"></span>
-                                    <span class="sr-only">{{ 'see_activity'|trans:{}:'path_wizards' }}</span>
-                                </button>
+                            <btn-resource-picker class="btn btn-default" data-parameters="stepEditCtrl.resourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_wizards' }}">
+                                <span class="fa fa-folder-open"></span>
+                                <span class="sr-only">{{ 'select_activity'|trans:{}:'path_wizards' }}</span>
+                            </btn-resource-picker>
 
-                                <btn-resource-picker class="btn btn-default" data-parameters="stepEditCtrl.resourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_wizards' }}">
-                                    <span class="fa fa-folder-open"></span>
-                                    <span class="sr-only">{{ 'select_activity'|trans:{}:'path_wizards' }}</span>
-                                </btn-resource-picker>
-
-                                <button data-ng-click="stepEditCtrl.deleteActivity()" class="btn btn-danger" type="button" data-ng-if="stepEditCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans:{}:'path_wizards' }}">
-                                    <span class="fa fa-trash-o"></span>
-                                    <span class="sr-only">{{ 'delete_activity'|trans:{}:'path_wizards' }}</span>
-                                </button>
-                            </div>
+                            <button data-ng-click="stepEditCtrl.deleteActivity()" class="btn btn-danger" type="button" data-ng-if="stepEditCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans:{}:'path_wizards' }}">
+                                <span class="fa fa-trash-o"></span>
+                                <span class="sr-only">{{ 'delete_activity'|trans:{}:'path_wizards' }}</span>
+                            </button>
                         </div>
-                    </div>
-
-                    <!-- Next step button -->
-                    <div class="col-md-1 col-sm-2 col-xs-2 text-right">
-                        <button type="button" data-ng-click="stepEditCtrl.goTo(stepEditCtrl.next)" class="btn btn-block btn-default" data-ng-disabled="null == stepEditCtrl.next" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ stepEditCtrl.next.name }}">
-                            <span class="sr-only">next</span>
-                            <span class="fa fa-arrow-right"></span>
-                        </button>
                     </div>
                 </div>
 
@@ -156,8 +161,8 @@
                 </div>
             </div>
         </div>
-
-        <!-- Conditions for the Next step -->
-        <condition-edit data-ng-if="stepEditCtrl.next" data-step="stepEditCtrl.step" data-next="stepEditCtrl.next"></condition-edit>
     </div>
+
+    <!-- Conditions for the Next step -->
+    <condition-edit data-ng-if="stepEditCtrl.next" data-step="stepEditCtrl.step" data-next="stepEditCtrl.next"></condition-edit>
 </div>

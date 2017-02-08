@@ -1,4 +1,4 @@
-<div class="path-container path-form">
+<div class="page path-editor">
     <div class="page-header">
         <h1>
             {{ pathEditCtrl.path.name }}
@@ -26,7 +26,7 @@
                 data-original-title="{{ 'undo'|trans:{}:'path_wizards' }}"
             >
                 <span class="fa fa-fw fa-reply"></span>
-                <span class="sr-only"> {{ 'undo'|trans:{}:'path_wizards' }}</span>
+                <span class="sr-only">{{ 'undo'|trans:{}:'path_wizards' }}</span>
             </button>
 
             <!-- Redo from history button -->
@@ -84,69 +84,70 @@
         </div>
     </div>
 
-    <!-- Summary of the Path-->
-    <path-summary-edit data-title="pathEditCtrl.path.name"></path-summary-edit>
+    <div class="page-content path-container">
+        <path-summary-edit></path-summary-edit>
 
-    <!-- Form of the Path -->
-    <form action="#" role="form" method="post" name="pathform">
-        <div class="panel panel-default" data-ng-if="!hidePath">
-            <div class="panel-body">
-                <!-- Name of the path -->
-                <div class="form-group">
-                    <label class="control-label required" for="innova_path_name">{{ 'path_name'|trans:{}:'path_wizards' }}</label>
-                    <input type="text" class="form-control" id="innova_path_name" name="innova_path[name]" placeholder="{{ 'name_help'|trans:{}:'path_wizards' }}" data-ng-model="pathEditCtrl.path.name" />
-                </div>
+        <!-- Form of the Path -->
+        <form class="content-container" action="#" role="form" method="post" name="pathform">
+            <div class="panel panel-default" data-ng-if="!hidePath">
+                <div class="panel-body">
+                    <!-- Name of the path -->
+                    <div class="form-group">
+                        <label class="control-label required" for="innova_path_name">{{ 'path_name'|trans:{}:'path_wizards' }}</label>
+                        <input type="text" class="form-control" id="innova_path_name" name="innova_path[name]" placeholder="{{ 'name_help'|trans:{}:'path_wizards' }}" data-ng-model="pathEditCtrl.path.name" />
+                    </div>
 
-                <!-- Description of the path -->
-                <div class="form-group">
-                    <label class="control-label" for="innova_path_description">{{ 'path_description'|trans:{}:'path_wizards' }}</label>
-                    <textarea data-ui-tinymce="pathEditCtrl.tinymceOptions" class="form-control" id="innova_path_description" name="innova_path[description]" placeholder="{{ 'description_help'|trans:{}:'path_wizards' }}" data-ng-model="pathEditCtrl.path.description"></textarea>
-                </div>
+                    <!-- Description of the path -->
+                    <div class="form-group">
+                        <label class="control-label" for="innova_path_description">{{ 'path_description'|trans:{}:'path_wizards' }}</label>
+                        <textarea data-ui-tinymce="pathEditCtrl.tinymceOptions" class="form-control" id="innova_path_description" name="innova_path[description]" placeholder="{{ 'description_help'|trans:{}:'path_wizards' }}" data-ng-model="pathEditCtrl.path.description"></textarea>
+                    </div>
 
-                <!-- Does the path have a breadcrumbs ?-->
-                <div class="checkbox">
-                    <label for="innova_path_breadcrumbs">
-                        <input type="checkbox" id="innova_path_breadcrumbs" name="innova_path[breadcrumbs]" data-ng-model="pathEditCtrl.path.breadcrumbs" />
-                        {{ 'path_breadcrumbs'|trans:{}:'path_wizards' }}
-                    </label>
-                </div>
+                    <!-- Does the path have a breadcrumbs ?-->
+                    <div class="checkbox">
+                        <label for="innova_path_breadcrumbs">
+                            <input type="checkbox" id="innova_path_breadcrumbs" name="innova_path[breadcrumbs]" data-ng-model="pathEditCtrl.path.breadcrumbs" />
+                            {{ 'path_breadcrumbs'|trans:{}:'path_wizards' }}
+                        </label>
+                    </div>
 
-                <!-- Is Summary opened by default ? -->
-                <div class="checkbox">
-                    <label for="innova_path_summaryDisplayed">
-                        <input type="checkbox" id="innova_path_summaryDisplayed" name="innova_path[summaryDisplayed]" data-ng-model="pathEditCtrl.path.summaryDisplayed" />
-                        {{ 'path_summary_displayed'|trans:{}:'path_wizards' }}
-                    </label>
-                </div>
+                    <!-- Is Summary opened by default ? -->
+                    <div class="checkbox">
+                        <label for="innova_path_summaryDisplayed">
+                            <input type="checkbox" id="innova_path_summaryDisplayed" name="innova_path[summaryDisplayed]" data-ng-model="pathEditCtrl.path.summaryDisplayed" />
+                            {{ 'path_summary_displayed'|trans:{}:'path_wizards' }}
+                        </label>
+                    </div>
 
-                <!-- Is a condition blocking all the following steps or just the next ? -->
-                <div class="checkbox">
-                    <label for="innova_path_completeBlockingCondition">
-                        <input type="checkbox" id="innova_path_completeBlockingCondition" name="innova_path[completeBlockingCondition]" data-ng-model="pathEditCtrl.path.completeBlockingCondition" />
-                        {{ 'path_complete_blocking_condition'|trans:{}:'path_wizards' }}
-                    </label>
-                </div>
+                    <!-- Is a condition blocking all the following steps or just the next ? -->
+                    <div class="checkbox">
+                        <label for="innova_path_completeBlockingCondition">
+                            <input type="checkbox" id="innova_path_completeBlockingCondition" name="innova_path[completeBlockingCondition]" data-ng-model="pathEditCtrl.path.completeBlockingCondition" />
+                            {{ 'path_complete_blocking_condition'|trans:{}:'path_wizards' }}
+                        </label>
+                    </div>
 
-                <!-- Is it possible for the user to set manualy the progression when following this path  -->
-                <div class="checkbox">
-                    <label for="innova_path_manualProgressionAllowed">
-                        <input type="checkbox" id="innova_path_manualProgressionAllowed" name="innova_path[manualProgressionAllowed]" data-ng-model="pathEditCtrl.path.manualProgressionAllowed" />
-                        {{ 'path_manual_progression_allowed'|trans:{}:'path_wizards' }}
-                    </label>
+                    <!-- Is it possible for the user to set manualy the progression when following this path  -->
+                    <div class="checkbox">
+                        <label for="innova_path_manualProgressionAllowed">
+                            <input type="checkbox" id="innova_path_manualProgressionAllowed" name="innova_path[manualProgressionAllowed]" data-ng-model="pathEditCtrl.path.manualProgressionAllowed" />
+                            {{ 'path_manual_progression_allowed'|trans:{}:'path_wizards' }}
+                        </label>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <a href="" role="button" data-ng-click="hidePath = !hidePath" style="display: inline-block; margin-bottom: 20px;">
-            <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': hidePath, 'fa-caret-up': !hidePath }"></span>
-            <span data-ng-if="!hidePath">{{ 'hide_path_info'|trans:{}:'path_wizards' }}</span>
-            <span data-ng-if="hidePath">{{ 'show_path_info'|trans:{}:'path_wizards' }}</span>
-        </a>
+            <a href="" role="button" data-ng-click="hidePath = !hidePath" style="display: inline-block; margin-bottom: 20px;">
+                <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': hidePath, 'fa-caret-up': !hidePath }"></span>
+                <span data-ng-if="!hidePath">{{ 'hide_path_info'|trans:{}:'path_wizards' }}</span>
+                <span data-ng-if="hidePath">{{ 'show_path_info'|trans:{}:'path_wizards' }}</span>
+            </a>
 
-        <!-- Breadcrumbs -->
-        <path-navigation class="hidden-xs" data-ng-if="pathEditCtrl.path.breadcrumbs"></path-navigation>
+            <!-- Breadcrumbs -->
+            <path-navigation class="hidden-xs" data-ng-if="pathEditCtrl.path.breadcrumbs"></path-navigation>
 
-        <!-- Display current step -->
-        <div data-ng-view=""></div>
-    </form>
+            <!-- Display current step -->
+            <div data-ng-view=""></div>
+        </form>
+    </div>
 </div>

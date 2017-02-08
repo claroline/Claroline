@@ -50,10 +50,43 @@
 // -
 // Summary
 // ---
-@path-summary-width:    400px;
-@path-summary-width-xs: 280px;
-@path-summary-font:     @font-size-base;
+@path-summary-width:                40%; // do not affect sm screens : in this case, summary is full screen
+@path-summary-collapsed-width:      50px;
+
+/*@path-summary-max-width:            400px;
+@path-summary-min-width:            360px - @grid-gutter-width;*/
+@path-summary-font:                 @font-size-base;
+@path-summary-lvl-indent:           15px;
+@path-summary-padding:              15px;
+@path-summary-bg:                   #262626;
+@path-summary-color:                white;
+@path-summary-box-shadow:           2px 0 4px 0 rgba(0, 0, 0, 0.4);
+
+@path-summary-control-bg:           transparent;
+@path-summary-control-color:        #ccc;
+@path-summary-control-hover-bg:     transparent;
+@path-summary-control-hover-color:  white;
+@path-summary-control-active-bg:    transparent;
+@path-summary-control-active-color: white;
+
+@path-summary-link-bg:              transparent;
+@path-summary-link-color:           #ccc;
+@path-summary-link-hover-bg:        transparent;
+@path-summary-link-hover-color:     white;
+@path-summary-link-active-bg:       transparent;
+@path-summary-link-active-color:    white;
 
 // -
 // Step
 // ---
+@step-status-size:            10px;
+@step-status-unseen-color:    @text-muted;
+@step-status-seen-color:      @path-progression-color;
+@step-status-to_do-color:     @brand-warning;
+@step-status-done-color:      @brand-success;
+@step-status-to_review-color: @brand-danger;
+
+// -
+// Progression
+// ---
+@path-progression-color: #F15E22;

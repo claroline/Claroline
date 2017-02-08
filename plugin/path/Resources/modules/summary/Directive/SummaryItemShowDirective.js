@@ -28,12 +28,33 @@ export default class SummaryItemShowDirective {
           PathService.goTo(this.step)
         }
 
-        this.updateProgression = function(status) {
-          if (!angular.isObject(this.userProgression)) {
-            UserProgressionService.create(this.step, status)
-          } else {
-            UserProgressionService.update(this.step, status)
+        this.getProgresstionText = function() {
+          let text = ''
+
+          switch (this.userProgression.status) {
+            case 'seen':
+              text = 'user_progression_step_seen'
+              break
+
+            case 'to_do':
+              text = 'user_progression_step_to_do'
+              break
+
+            case 'to_review':
+              text = 'user_progression_step_to_review'
+              break
+
+            case 'done':
+              text = 'user_progression_step_done'
+              break
+
+            case 'unseen':
+            default:
+              text = 'user_progression_step_unseen'
+              break
           }
+
+          return text
         }
       }
     ]

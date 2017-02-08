@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block path_wizard %}
-    <div data-ng-cloak="" data-ng-app="PathEditorApp" class="path-editor">
+    <div data-ng-cloak="" data-ng-app="PathEditorApp" class="page-container">
         {# Path Form (we not directly alter the entity, but work with a JSON structure which stores info before publishing) #}
         <path-edit
             data-path="{{ _resource.structure | raw | escape }}"

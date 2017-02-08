@@ -5,7 +5,6 @@
 import angular from 'angular/index'
 import 'angular-bootstrap'
 import 'angular-ui-tree/dist/angular-ui-tree.min'
-import 'angular-ui-pageslide'
 
 import '#/main/core/translation/module'
 import '../utils/module'
@@ -25,7 +24,6 @@ angular
   .module('Summary', [
     'ui.bootstrap',
     'ui.tree',
-    'pageslide-directive',
     'translation',
     'Utils',
     'Clipboard',

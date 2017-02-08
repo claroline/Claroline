@@ -1,23 +1,24 @@
-/*
-.path-container {
-    .path-header {
-        h1 {
-            margin: 0;
-            display: inline-block;
-            padding: 0;
-            margin-bottom: @padding-base-vertical;
-            line-height: @headings-line-height;
-        }
-
-        .path-summary-toggle {
-            z-index: 10;
-            position: relative;
-            margin-bottom: -1px;
-            &.opened {
-                border-bottom-color: @btn-default-bg;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-        }
+.path-player {
+    .page-header h1 {
+        display: flex;
+        align-items: center;
     }
-}*/
+}
+
+.path-container {
+    position: relative; // to fix summary and content z-indexes
+
+    .summary-container {
+        z-index: 2; // Make the summary overlaps the content
+    }
+
+    .content-container {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+.path-progression {
+    color: @path-progression-color;
+    margin-right: floor(@grid-gutter-width / 2);
+}

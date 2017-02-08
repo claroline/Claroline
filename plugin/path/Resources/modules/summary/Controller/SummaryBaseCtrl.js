@@ -29,22 +29,11 @@ export default class SummaryBaseCtrl {
     }
   }
 
-  /**
-   * Close Summary
-   */
-  close() {
-    this.SummaryService.setOpened(false)
-  }
-
   toggleOpened() {
     this.SummaryService.toggleOpened()
   }
 
   togglePinned() {
     this.SummaryService.togglePinned()
-  }
-
-  getPsPushClass() {
-    return this.state.pinned ? 'path-summary-opened' : ''
   }
 }

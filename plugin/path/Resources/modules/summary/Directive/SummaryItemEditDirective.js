@@ -33,6 +33,10 @@ export default class SummaryItemEditDirective {
          */
         this.clipboardDisabled = ClipboardService.getDisabled()
 
+        this.areActionsShown = function (show) {
+          return show || this.current.stepId == this.step.id || (!this.current.stepId && 0 == this.step.lvl);
+        }
+
         /**
          * Go to a specific Step
          * @param step

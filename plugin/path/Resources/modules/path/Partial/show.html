@@ -1,6 +1,16 @@
-<div class="path-container path-show">
+<div class="page path-player">
     <div class="page-header">
-        <h1>{{ pathShowCtrl.path.name }}</h1>
+        <h1>
+            <div class="c100 p{{ pathShowCtrl.getTotalProgression() }} path-progression" data-ng-if="pathShowCtrl.userProgression">
+                <span>{{ pathShowCtrl.getTotalProgression() }}%</span>
+                <div class="slice">
+                    <div class="bar"></div>
+                    <div class="fill"></div>
+                </div>
+            </div>
+
+            {{ pathShowCtrl.path.name }}
+        </h1>
 
         <div class="page-actions" data-ng-if="pathShowCtrl.path.steps.length !== 0 && pathShowCtrl.editEnabled">
             <button type="button" role="button" class="btn btn-link" data-ng-click="pathShowCtrl.edit()">
@@ -12,17 +22,21 @@
         <div data-ng-if="pathShowCtrl.path.description" data-ng-bind-html="pathShowCtrl.path.description | trustAsHtml"></div>
     </div>
 
-    <!-- Summary of the Path-->
-    <path-summary-show data-title="pathShowCtrl.path.name" data-ng-if="pathShowCtrl.path.steps.length !== 0"></path-summary-show>
+    <div class="page-content path-container" data-ng-if="pathShowCtrl.path.steps.length !== 0">
+        <!-- Summary of the Path-->
+        <path-summary-show></path-summary-show>
 
-    <!-- Breadcrumbs -->
-    <path-navigation class="hidden-xs" data-ng-if="pathShowCtrl.path.breadcrumbs && pathShowCtrl.path.steps.length !== 0"></path-navigation>
+        <div class="content-container">
+            <!-- Internal breadcrumbs -->
+            <path-navigation class="hidden-xs" data-ng-if="pathShowCtrl.path.breadcrumbs"></path-navigation>
 
-    <!-- User messages -->
-    <alert-box></alert-box>
+            <!-- User messages -->
+            <alert-box></alert-box>
 
-    <!-- Current step -->
-    <div data-ng-view="" data-ng-if="pathShowCtrl.path.steps.length !== 0"></div>
+            <!-- Current step -->
+            <div data-ng-view=""></div>
+        </div>
+    </div>
 
     <!-- Empty path alert -->
     <div class="row" data-ng-if="pathShowCtrl.path.steps.length === 0">
