@@ -26,7 +26,6 @@
 /* Study */
 .study-body {
     text-align: center;
-    height: 60vh;
 }
 
 .fullscreen {
@@ -56,8 +55,8 @@
 
 .card-container {
     position: relative;
+    height: 60vh;
     width: 100%;
-    height: 100%;
 }
 
 .card {

@@ -69,6 +69,18 @@
     {{ 'info.no_cards_today'|trans:'flashcard' }}
   </div>
 
+  <div class="progress learning-progress small"
+       data-ng-if="vm.newCards.length > 0 || vm.learningCards.length > 0">
+    <div class="progress-bar"
+         role="progessbar"
+         aria-valuenow="{{ vm.revisedCards.length }}"
+         aria-valuemax="{{ vm.revisedCards.length + vm.newCards.length + vm.learningCards.length }}"
+         style="width: {{ vm.revisedCards.length / (vm.revisedCards.length + vm.newCards.length + vm.learningCards.length) * 100 }}%">
+      {{ vm.revisedCards.length }}
+    </div>
+    {{ vm.revisedCards.length + vm.newCards.length + vm.learningCards.length }}
+  </div>
+
 </div>
 
 <div class="panel-footer text-center"
@@ -111,13 +123,3 @@
   </button>
 
 </div>
-
-<script>
-$(function() {
-  $('.field-value div').css('font-size', '1em');
-
-  while( $('.field-value div').height() > $('.field-value').height() ) {
-    $('.field-value div').css('font-size', (parseInt($('.field-value div').css('font-size')) - 1) + "px" );
-  }
-});
-</script>
