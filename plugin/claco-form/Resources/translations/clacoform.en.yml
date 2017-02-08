@@ -109,7 +109,7 @@ no_comment: No comment
 no_data: No data
 no_entry: No entry
 no_field: No field
-no_field_alert_msg: No field has been configured. You can do it here :
+no_field_alert_msg: 'No field has been configured. You can do it here :'
 no_keyword: No keyword
 no_manager_entry: You are the manager of no entry
 no_own_entry: You haven't created an entry yet
@@ -131,4 +131,4 @@ template_success_message: The template has been successfully edited.
 template_variables_message: You can use the following variables. They will be replaced by the corresponding field.
 view_entry: View entry
 votes: Votes
-votes_management: Votes management
+votes_management: 'Manage votes'

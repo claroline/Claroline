@@ -123,13 +123,13 @@ picker:
   switch_mode: Changer de mode
 remove_event: Supprimer un évènement
 remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet évènement ?
-send_message_content: Vous avez reçu une invitation à rejoindre un évènement de la part de %Sender%. Cet évènement se déroule du %Start% au %End% avec comme description: %Description%.<br><a href="%JoinAction%" class="btn btn-success">Participer</a> <a href="%MaybeAction%" class="btn btn-primary">Peut-être</a> <a href="%ResignAction%" class="btn btn-danger">Ne participe pas</a>
+send_message_content: 'Vous avez reçu une invitation à rejoindre un évènement de la part de %Sender%. Cet évènement se déroule du %Start% au %End% avec comme description: %Description%.<br><a href="%JoinAction%" class="btn btn-success">Participer</a> <a href="%MaybeAction%" class="btn btn-primary">Peut-être</a> <a href="%ResignAction%" class="btn btn-danger">Ne participe pas</a>'
 send_message_object: Invitation à un évènement: %EventName%
 start_date: Date de début
 show_task_only: Ne montrer que les tâches
 task: Tâche
-task_done: Tâche réalisée !
-task_not_done: Tâche non finie !
+task_done: 'Tâche réalisée !'
+task_not_done: 'Tâche non finie !'
 tasks: Tâches
 title: Le titre est obligatoire.
 today: Aujourd'hui
