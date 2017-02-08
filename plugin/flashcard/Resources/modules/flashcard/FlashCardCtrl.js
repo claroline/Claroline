@@ -14,7 +14,7 @@ export default class FlashCardCtrl {
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
     this.newCards = []
-    this.learingCards = []
+    this.learningCards = []
     this.nbrTotalCards = 0
     this.nbrRevisedCards = 0
 
