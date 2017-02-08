@@ -1,19 +1,18 @@
 // We use classes for `html` and `body` tags
 // to avoid adding unwanted styles in iframe or tinyMCE
-html.app-main,
-body.app-container {
+html.claroline-app,
+body.claroline-app-container {
     height: 100%;
 }
 
 // Moves the app scroll bar after the fixed header
-html.app-main {
+html.claroline-app {
     overflow-y: hidden;
     padding-top: @top-bar-height;
 }
 
-body.app-container {
+body.claroline-app-container {
     position: relative;
-    padding-top: floor(@grid-gutter-width / 2);
     overflow-y: auto; // Get the scroll bar
 }
 
@@ -24,11 +23,22 @@ body.app-container {
 
 #wrap {
     min-height: 100%;
-    height: auto !important;
-    /* Negative indent footer by it's height : this do not work */
     margin: 0 auto;
+    padding: floor(@grid-gutter-width / 2);
+
+    // Hack to force the display of footer at the bottom of the page if no scroll
+    padding-bottom: @navbar-height + floor(@grid-gutter-width / 2);
+
+    display: flex;
+    flex-direction: column;
+
+    .page-container {
+        flex: 1; // only specifying flex property here make the item fill the remaining space in its parent
+    }
 }
 
-#push {
-    height: 100%;
-}
+/*.content-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 floor(@grid-gutter-width / 2);
+}*/

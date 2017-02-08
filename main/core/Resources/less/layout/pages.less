@@ -1,3 +1,14 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%; // fill parent
+
+    .page-content {
+        position: relative;
+        flex: 1; // only specifying flex property here make the item fill the remaining space in its parent
+    }
+}
+
 .page-header {
     display: flex;
     align-items: center;
@@ -30,7 +41,7 @@
         content: " ";
         display: inline-block;
         width: 1px;
-        background: #ccc; // use a var
+        background: @page-header-divider-color;
         height: 20px; // use a var
         vertical-align: middle;
     }

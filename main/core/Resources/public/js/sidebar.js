@@ -32,7 +32,7 @@
         var sidebar = $('#' + side + '-bar');
         if (sidebar.html().replace(/^\s+/g, '').replace(/\s+$/g, '') !== '') {
 
-            sidebar.parent().removeClass('hide');
+            sidebar.removeClass('hide');
 
             var hasIcon = false;
             $('.list-group-item.disabled', sidebar).children().each(function () {

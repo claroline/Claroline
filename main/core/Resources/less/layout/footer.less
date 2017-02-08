@@ -2,14 +2,17 @@
 .footer-preview {
     width: 100%;
     position: relative;
-    margin-top: floor(@grid-gutter-width / 2);
+
+    // Hack to force display footer at the bottom of the page if no scroll
+    margin-top: -@navbar-height;
+
     min-height: @navbar-height;
     background: @footer-bg;
     color: @footer-color;
 
     .container-fluid {
         p, h1, h2, h3, h4, h5, h6 {
-            margin: 15px;
+            margin: floor(@grid-gutter-width / 2);
             max-height: 100%;
 
             a {

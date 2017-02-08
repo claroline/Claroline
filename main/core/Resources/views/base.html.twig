@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="{{ app.request.locale|default('fr') }}" class="app-main">
+<html lang="{{ app.request.locale|default('fr') }}" class="claroline-app">
     <head>
         {% set description = getContent('platformDescription') %}
         {% block meta %}
@@ -16,6 +16,10 @@
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+            {% if config.getParameter('google_meta_tag') is not empty %}
+                {{ config.getParameter('google_meta_tag') | raw }}
+            {% endif %}
         {% endblock %}
 
         {% if config.getParameter('name') is not empty %}
@@ -43,7 +47,7 @@
         {% block javascripts_header %}{% endblock %}
     </head>
 
-    <body class="app-container">
+    <body class="claroline-app-container">
         {% block layout %}{% endblock %}
 
         {% block javascripts %}{% endblock %}

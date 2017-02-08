@@ -11,11 +11,12 @@
 {% endif %}
 
 {% block claroline_danger %}
-    {# same as leftbar #}
+    {{ parent() }}
+
     {% if workspace is defined and is_date_access_valid(workspace) == false %}
-        <h4 class="label label-danger">
+        <div class="label label-danger">
             {{ 'workspace_access_date_invalid'|trans({}, 'platform') }}
-        </h4>
+        </div>
     {% endif %}
 {% endblock %}
 
@@ -35,32 +36,46 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    <div id="resource-breadcrumb">
-        {% if _resource is defined %}
-            <div id="twig-resource-attributes"
-                 data-resource-id="{{ _resource.getId() }}"
-                 data-resource-name="{{ _resource.getName() }}"
-            >
-            </div>
-            <ul class="breadcrumb">
-                {% if not has_role('ROLE_ANONYMOUS') and workspace is defined and workspace != null %}
-                    <li>
-                        {# we're finding wich is the workspace we want to display here #}
-                        <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
-                            {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
-                        </a>
-                    </li>
-                    {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-                        {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
-                    %}
-                {% endif %}
+    {# FIXME : this may have broken the hide_breadcrumb feature for WS tool or any template overriding the block #}
+    {% if
+        (workspace is not defined or
+        workspace.getOptions() is empty or
+        workspace.getOptions().getDetails() is empty or
+        workspace.getOptions().getDetails()['hide_breadcrumb'] is not defined or
+        workspace.getOptions().getDetails()['hide_breadcrumb']) and
+        _resource is defined
+    %}
+    <ul class="breadcrumb">
+        {% if not has_role('ROLE_ANONYMOUS') and workspace is defined and workspace != null %}
+            <li>
+                {# we're finding wich is the workspace we want to display here #}
+                <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
+                    {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
+                </a>
+            </li>
 
-                {% block resourceBreadcrumb %}
-                    <li class="active">{{ _resource.getResourceNode().getName() }}</li>
-                {% endblock %}
-            </ul>
+            {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs", {
+                'node': _resource.getResourceNode(),
+                '_breadcrumbs': app.request.query.get('_breadcrumbs', {})
+            })) %}
         {% endif %}
-    </div>
+
+        {% block resourceBreadcrumb %}
+            <li class="active">{{ _resource.getResourceNode().getName() }}</li>
+        {% endblock %}
+    </ul>
+    {% endif %}
+{% endblock %}
+
+{# I don't know if it's still used. Can not find any reference to the anchor in the project... #}
+{% block server_vars %}
+    {% if _resource is defined %}
+        <div id="twig-resource-attributes"
+             data-resource-id="{{ _resource.getId() }}"
+             data-resource-name="{{ _resource.getName() }}"
+        >
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block leftbar %}
@@ -72,19 +87,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="visible-xs">
-        {{ block("leftbar") }}
-    </div>
-    {{ block("section_panel") }}
-{% endblock %}
-
-{% block section_panel %}
-    <div class="section-content">
+    {% block section_panel %}
         <div class="panel panel-default">
             {% block section_content %}{% endblock %}
         </div>
-        {% block section_after_content %}{% endblock %}
-    </div>
+    {% endblock %}
 {% endblock %}
 
 {% block javascripts %}
@@ -138,6 +145,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+
     <style type="text/css">
         {% if workspace is defined and workspace.backgroundColor is not null %}
             body {

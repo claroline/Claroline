@@ -5,18 +5,24 @@ html.iframe, body.iframe {
 }
 
 body.iframe {
-    .carousel-control, #top_bar, #left-bar, #footer, > #wrap > .container-fluid > .row:first-child, #wrap .visible-xs > .list-group.menu {
-        display: none;
+    margin: 0;
+    max-width: 100%;
+    background-color: transparent;
+
+    // Hide some UI parts when rendered in an iframe (mostly for Path and Activities)
+    // This should not be done here
+    .carousel-control, // but why ?
+    #top_bar,
+    #left-bar,
+    #footer,
+    .breadcrumb,
+    .menu-xs {
+        display: none !important;
     }
 
-    &, > .container, > #wrap > .container {
-        padding-top: 0;
-        margin: 0;
-        max-width: 100%;
-        background-color: transparent;
-    }
-
-    > #wrap > .container > .row > div{
+    // Remove content padding and margin
+    // (also remove it from the grid container)
+    #wrap {
         padding: 0;
         margin: 0;
     }
