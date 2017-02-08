@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Menu;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Knp\Menu\Renderer\ListRenderer;
 use Knp\Menu\ItemInterface;
+use Knp\Menu\Renderer\ListRenderer;
 
 /**
  * @DI\Service("claroline.menu.top_bar_left_renderer")
@@ -46,7 +46,7 @@ class TopBarLeftRenderer extends ListRenderer
             $item->getExtra('title'),
             $item->getExtra('icon'),
             $this->renderLabel($item, $options),
-            !empty($item->getExtra('badge')) ? sprintf('<span class="badge">%s</span>', $item->getExtra('badge')): '',
+            !empty($item->getExtra('badge')) ? sprintf('<span class="badge">%s</span>', $item->getExtra('badge')) : '',
             !empty($item->getExtra('close')) ? sprintf('<div>%s</div>', $item->getExtra('close')) : ''
         );
     }

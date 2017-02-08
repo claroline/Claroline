@@ -12,7 +12,7 @@
 import angular from 'angular/index'
 
 export default class WidgetService {
-  constructor ($http, $sce, $uibModal, ClarolineAPIService) {
+  constructor($http, $sce, $uibModal, ClarolineAPIService) {
     this.$http = $http
     this.$sce = $sce
     this.$uibModal = $uibModal
@@ -63,7 +63,7 @@ export default class WidgetService {
     this._removeWidgetCallback = this._removeWidgetCallback.bind(this)
   }
 
-  _addWidgetCallback (d) {
+  _addWidgetCallback(d) {
     const data = this.parseWidgetDatas(d)
     this.widgetsDisplayOptions[data['displayId']] = {
       id: data['displayId'],
@@ -77,7 +77,7 @@ export default class WidgetService {
     this._updateWidgetsDisplay()
   }
 
-  _updateWidgetsDisplay () {
+  _updateWidgetsDisplay() {
     if (this.type === 'desktop') {
       this.checkDesktopWidgetsDisplayOptions()
     } else if (this.type === 'admin') {
@@ -87,7 +87,7 @@ export default class WidgetService {
     }
   }
 
-  _removeWidgetCallback (d) {
+  _removeWidgetCallback(d) {
     const data = JSON.parse(d)
     if (data['id']) {
       const index = this.widgets.findIndex(w => data['id'] === w['instanceId'])
@@ -99,27 +99,27 @@ export default class WidgetService {
     }
   }
 
-  getWidgets () {
+  getWidgets() {
     return this.widgets
   }
 
-  getWidgetsDisplayOptions () {
+  getWidgetsDisplayOptions() {
     return this.widgetsDisplayOptions
   }
 
-  getOptions () {
+  getOptions() {
     return this.options
   }
 
-  getGridsterOptions () {
+  getGridsterOptions() {
     return this.gridsterOptions
   }
 
-  setType (type) {
+  setType(type) {
     this.type = type
   }
 
-  parseWidgetDatas (datas) {
+  parseWidgetDatas(datas) {
     let widgetDatas = {}
     const config = datas['config'] ? JSON.parse(datas['config']) : null
     const display = datas['display'] ? JSON.parse(datas['display']) : null
@@ -153,7 +153,7 @@ export default class WidgetService {
   }
 
 
-  generateWidgetsDatas (datas) {
+  generateWidgetsDatas(datas) {
     let widgetsDatas = []
     datas.forEach(d => {
       let widgetDatas = {}
@@ -188,7 +188,7 @@ export default class WidgetService {
     return widgetsDatas
   }
 
-  loadDesktopWidgets (tabId, isEditionEnabled) {
+  loadDesktopWidgets(tabId, isEditionEnabled) {
     this.options['canEdit'] = false
 
     if (tabId === 0) {
@@ -209,7 +209,7 @@ export default class WidgetService {
     }
   }
 
-  loadAdminWidgets (tabId) {
+  loadAdminWidgets(tabId) {
     if (tabId === 0) {
       this.widgets.splice(0, this.widgets.length)
     } else {
@@ -227,7 +227,7 @@ export default class WidgetService {
     }
   }
 
-  loadWorkspaceWidgets (tabId) {
+  loadWorkspaceWidgets(tabId) {
     if (tabId === 0) {
       this.widgets.splice(0, this.widgets.length)
     } else {
@@ -245,7 +245,7 @@ export default class WidgetService {
     }
   }
 
-  updateWidget (d) {
+  updateWidget(d) {
     const data = this.parseWidgetDatas(d)
     const index = this.widgets.findIndex(w => w['instanceId'] === data['instanceId'])
 
@@ -264,18 +264,18 @@ export default class WidgetService {
     }
   }
 
-  secureWidgetsContents () {
+  secureWidgetsContents() {
     this.widgets.forEach(w => {
       w['instanceName'] = this.$sce.trustAsHtml(w['instanceName'])
       w['content'] = this.$sce.trustAsHtml(w['content'])
     })
   }
 
-  secureDatas (datas) {
+  secureDatas(datas) {
     return this.$sce.trustAsHtml(datas)
   }
 
-  loadWidgetContent (widgetInstanceId) {
+  loadWidgetContent(widgetInstanceId) {
     const index = this.widgets.findIndex(w => w['instanceId'] === widgetInstanceId)
 
     if (index > -1) {
@@ -288,7 +288,7 @@ export default class WidgetService {
     }
   }
 
-  generateWidgetsDisplayOptions () {
+  generateWidgetsDisplayOptions() {
     this.widgets.forEach(w => {
       const displayId = w['displayId']
       this.widgetsDisplayOptions[displayId] = {
@@ -301,7 +301,7 @@ export default class WidgetService {
     })
   }
 
-  checkDesktopWidgetsDisplayOptions () {
+  checkDesktopWidgetsDisplayOptions() {
     let modifiedWidgets = []
 
     this.widgets.forEach(w => {
@@ -344,7 +344,7 @@ export default class WidgetService {
     }
   }
 
-  checkAdminWidgetsDisplayOptions () {
+  checkAdminWidgetsDisplayOptions() {
     let modifiedWidgets = []
 
     this.widgets.forEach(w => {
@@ -387,7 +387,7 @@ export default class WidgetService {
     }
   }
 
-  checkWorkspaceWidgetsDisplayOptions () {
+  checkWorkspaceWidgetsDisplayOptions() {
     let modifiedWidgets = []
 
     this.widgets.forEach(w => {
@@ -430,18 +430,18 @@ export default class WidgetService {
     }
   }
 
-  updateGristerEdition () {
+  updateGristerEdition() {
     const editable = this.options['canEdit']
     this.gridsterOptions['resizable']['enabled'] = editable
     this.gridsterOptions['draggable']['enabled'] = editable
   }
 
-  switchGridsterEdition (editable) {
+  switchGridsterEdition(editable) {
     this.gridsterOptions['resizable']['enabled'] = editable
     this.gridsterOptions['draggable']['enabled'] = editable
   }
 
-  createUserWidget (tabConfigId) {
+  createUserWidget(tabConfigId) {
     if (!this.isHomeTabLocked) {
       const modal = this.$uibModal.open({
         templateUrl: Routing.generate(
@@ -466,7 +466,7 @@ export default class WidgetService {
     }
   }
 
-  editUserWidget (widgetInstanceId, widgetDisplayId, configurable) {
+  editUserWidget(widgetInstanceId, widgetDisplayId, configurable) {
     if (!this.isHomeTabLocked) {
       this.$uibModal.open({
         templateUrl: Routing.generate(
@@ -485,7 +485,7 @@ export default class WidgetService {
     }
   }
 
-  deleteUserWidget (widgetHTCId) {
+  deleteUserWidget(widgetHTCId) {
     if (!this.isHomeTabLocked) {
       const url = Routing.generate(
         'api_delete_desktop_widget_home_tab_config',
@@ -501,7 +501,7 @@ export default class WidgetService {
     }
   }
 
-  hideAdminWidget (widgetHTCId) {
+  hideAdminWidget(widgetHTCId) {
     if (!this.isHomeTabLocked) {
       const url = Routing.generate(
         'api_put_desktop_widget_home_tab_config_visibility_change',
@@ -517,7 +517,7 @@ export default class WidgetService {
     }
   }
 
-  createAdminWidget (tabId) {
+  createAdminWidget(tabId) {
     const modal = this.$uibModal.open({
       templateUrl: Routing.generate('api_get_admin_widget_instance_creation_form'),
       controller: 'AdminWidgetInstanceCreationModalCtrl',
@@ -537,7 +537,7 @@ export default class WidgetService {
     })
   }
 
-  editAdminWidget (widgetInstanceId, widgetHomeTabConfigId, widgetDisplayId, configurable) {
+  editAdminWidget(widgetInstanceId, widgetHomeTabConfigId, widgetDisplayId, configurable) {
     this.$uibModal.open({
       templateUrl: Routing.generate(
         'api_get_admin_widget_instance_edition_form',
@@ -555,7 +555,7 @@ export default class WidgetService {
     })
   }
 
-  deleteAdminWidget (widgetHTCId) {
+  deleteAdminWidget(widgetHTCId) {
     const url = Routing.generate(
       'api_delete_admin_widget_home_tab_config',
       {widgetHomeTabConfig: widgetHTCId}
@@ -569,7 +569,7 @@ export default class WidgetService {
     )
   }
 
-  createWorkspaceWidget (tabId) {
+  createWorkspaceWidget(tabId) {
     const modal = this.$uibModal.open({
       templateUrl: Routing.generate('api_get_workspace_widget_instance_creation_form', {homeTab: tabId}),
       controller: 'WorkspaceWidgetInstanceCreationModalCtrl',
@@ -589,7 +589,7 @@ export default class WidgetService {
     })
   }
 
-  editWorkspaceWidget (widgetInstanceId, widgetHomeTabConfigId, widgetDisplayId, configurable) {
+  editWorkspaceWidget(widgetInstanceId, widgetHomeTabConfigId, widgetDisplayId, configurable) {
     this.$uibModal.open({
       templateUrl: Routing.generate(
         'api_get_workspace_widget_instance_edition_form',
@@ -607,7 +607,7 @@ export default class WidgetService {
     })
   }
 
-  deleteWorkspaceWidget (widgetHTCId) {
+  deleteWorkspaceWidget(widgetHTCId) {
     const url = Routing.generate(
       'api_delete_workspace_widget_home_tab_config',
       {widgetHomeTabConfig: widgetHTCId}

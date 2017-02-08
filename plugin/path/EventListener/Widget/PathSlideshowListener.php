@@ -4,7 +4,6 @@ namespace Innova\PathBundle\EventListener\Widget;
 
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\TagBundle\Manager\TagManager;
 use Innova\PathBundle\Manager\PathManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -53,7 +52,6 @@ class PathSlideshowListener
         $this->twig = $twig;
         $this->formFactory = $formFactory;
         $this->pathManager = $pathManager;
-
     }
 
     /**
