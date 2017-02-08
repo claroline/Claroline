@@ -116,16 +116,16 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "9.0.0",
+            "version": "9.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "84b1b96eddab17b5f400d4ea28b3352b8f2ccbfe"
+                "reference": "993e3dd92b107800ad5ad0d368aefaa196579393"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/84b1b96eddab17b5f400d4ea28b3352b8f2ccbfe",
-                "reference": "84b1b96eddab17b5f400d4ea28b3352b8f2ccbfe",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/993e3dd92b107800ad5ad0d368aefaa196579393",
+                "reference": "993e3dd92b107800ad5ad0d368aefaa196579393",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-02-06 13:24:09"
+            "time": "2017-02-08 16:03:38"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3512,17 +3512,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "71a2480931aebf2d4d6f38432f04f31306b278a7"
+                "reference": "eb10fe3926e719880c52a9784c151b11a2b569cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/71a2480931aebf2d4d6f38432f04f31306b278a7",
-                "reference": "71a2480931aebf2d4d6f38432f04f31306b278a7",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/eb10fe3926e719880c52a9784c151b11a2b569cc",
+                "reference": "eb10fe3926e719880c52a9784c151b11a2b569cc",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-02-02 16:38:44"
+            "time": "2017-02-07 12:51:14"
         },
         {
             "name": "justinrainbow/json-schema",
