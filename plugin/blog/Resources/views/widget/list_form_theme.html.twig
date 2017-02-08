@@ -1,0 +1,39 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block collection_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': block('collection_prototype') }) %}
+        {% endif %}
+        {% if allow_add %}
+            <button type="button" class="btn btn-success form-collection-add"><span class="fa fa-plus"></span> {{ 'addblog'|trans({}, 'widget') }}</button>
+        {% endif %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_errors(form) }}
+            <div class="form-collection{{ form|length ? '' : ' hide' }}">
+                {% for rows in form %}
+                    {{ _self.collection_field(rows, allow_delete) }}
+                {% endfor %}
+            </div>
+            {{ form_rest(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock collection_widget %}
+
+{% block collection_prototype %}
+    {{ _self.collection_field(prototype, allow_delete) }}
+{% endblock collection_prototype %}
+
+{% macro collection_field(rows, allow_delete) %}
+    {% spaceless %}
+        <div class="form-collection-element">
+            <div class="input-group col-md-3">
+                {{ form_errors(rows.resourceNode) }}
+                {{ form_widget(rows.resourceNode) }}
+                <span class="input-group-btn">
+                    <a class="btn btn-danger remove" href="#"><span class="fa fa-trash"></span></a>
+                </span>
+            </div>
+        </div>
+    {% endspaceless %}
+{% endmacro %}

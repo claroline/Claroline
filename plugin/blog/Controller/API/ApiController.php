@@ -37,7 +37,9 @@ class ApiController extends BaseController
      */
     public function getBlogAction(Blog $blog)
     {
-        return ['info' => $blog->getInfos()];
+        $info = $blog->getInfos() === null ? '' : $blog->getInfos();
+
+        return ['info' => $info];
     }
 
     /**

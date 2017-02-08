@@ -44,7 +44,7 @@ export default class BlogService {
   set options(options) { _blogData.get(this).options = options }
   get tags() { return _blogData.get(this).tags }
   set tags(tags) { return _blogData.get(this).tags = tags }
-  get eventsPath() { return _blogData.get(this).eventsPath }
+  get eventSources() { return _blogData.get(this).eventSources }
   get img_dir() { return _blogData.get(this).img_dir  }
   get banner_dir() { return _blogData.get(this).banner_dir  }
   get user() { return _blogData.get(this).user }
