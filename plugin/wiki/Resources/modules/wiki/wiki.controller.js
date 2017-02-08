@@ -243,12 +243,13 @@ export default class WikiController {
 
   _saveSectionWithNewContribution(section, newContrib, updatedSection) {
     this.wiki.editSection(section, newContrib, updatedSection).then(
-      () => {
+      success => {
         if (newContrib.id === 0) {
           this._setMessage('success', 'icap_wiki_section_add_success')
         } else {
           this._setMessage('success', 'icap_wiki_section_update_success')
         }
+        _$location.get(this).hash(`sect-${success.section.id}`)
       },
       () => {
         if (newContrib.id === 0) {
@@ -256,6 +257,7 @@ export default class WikiController {
         } else {
           this._setMessage('danger', 'icap_wiki_section_update_error')
         }
+        _$location.get(this).hash('top')
       }
     ).finally(
       () => {
@@ -263,6 +265,8 @@ export default class WikiController {
         this.currentSections = []
         this.disableFormButtons = false
         this.isFormOpen = false
+
+        _$anchorScroll.get(this)()
       }
     )
   }
@@ -280,6 +284,9 @@ export default class WikiController {
     ).finally(() => {
       this.disableFormButtons = false
       this.isFormOpen = false
+
+      _$location.get(this).hash(`sect-${section.id}`)
+      _$anchorScroll.get(this)()
     })
   }
 

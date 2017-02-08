@@ -77,7 +77,7 @@ ul#wiki-contents-list li.invisible-wiki-content a,
 ol#wiki-contents-list li.invisible-wiki-content a { color:#999; }
 ol#wiki-contents-list, ol#wiki-contents-list ol { list-style-type:none; counter-reset: item; }
 ol#wiki-contents-list li { counter-increment: item; }
-ol#wiki-contents-list li a:before { content: counters(item, "."); }
+ol#wiki-contents-list li a:before { content: counters(item, ".") " - "; }
 
 
 /*Wiki sections*/
@@ -112,7 +112,7 @@ div.wiki-sections ol#wiki-sections-list ol.wiki-sections-list-elem>li.with-numbe
 div.wiki-sections ol#wiki-sections-list ol.wiki-sections-list-elem>li.with-numbers h4::before,
 div.wiki-sections ol#wiki-sections-list ol.wiki-sections-list-elem>li.with-numbers h5::before,
 div.wiki-sections ol#wiki-sections-list ol.wiki-sections-list-elem>li.with-numbers h6::before
-{ content: counters(section, "."); }
+{ content: counters(section, ".") " - "; }
 
 /*Delete section form*/
 .icap-wiki-delete-section-message {margin: 10px 0 20px 0; font-size: 16px;}
