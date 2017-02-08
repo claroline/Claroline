@@ -13,32 +13,26 @@
          data-ng-if="vm.currentCard">
       <div class="card-front">
         <div class="card-content">
-          <div ng-repeat="question in vm.questions">
+          <div ng-repeat="question in vm.questions"
+               class="fullheight">
             <div class="field-label">
               {{ question.field_label.name }}
             </div>
             <!-- Display Generic value -->
-            <div ng-if="question.type == 'generic'">
-              <div class="field-value">
-                {{ question.value }}
-              </div>
+            <div ng-if="question.type == 'generic'"
+                 class="field-value">
+              {{ question.value }}
             </div>
             <!-- Display Text value -->
-            <div ng-if="question.type == 'text'">
-              <div class="field-value">
-                {{ question.value }}
-              </div>
+            <div ng-if="question.type == 'text'"
+                 class="field-value">
+              {{ question.value }}
             </div>
             <!-- Display Image value -->
-            <div ng-if="question.type == 'image'"
-                 class="row">
-              <div class="col-xs-offset-4 col-xs-4">
-              <img class="img-responsive img-thumbnail"
-                   style="width: 80%"
-                   ng-src="{{ question.value }}"
-                   alt="{{ question.alt}}" />
-              </div>
-            </div>
+            <img class="field-value-img img-responsive img-thumbnail"
+                 ng-if="question.type == 'image'"
+                 ng-src="{{ question.value }}"
+                 alt="{{ question.alt}}" />
           </div>
         </div>
       </div>
@@ -49,27 +43,20 @@
               {{ answer.field_label.name }}
             </div>
             <!-- Display Generic value -->
-            <div ng-if="answer.type == 'generic'">
-              <div class="field-value">
-                {{ answer.value }}
-              </div>
+            <div ng-if="answer.type == 'generic'"
+                 class="field-value">
+              {{ answer.value }}
             </div>
             <!-- Display Text value -->
-            <div ng-if="answer.type == 'text'">
-              <div class="field-value">
-                {{ answer.value }}
-              </div>
+            <div ng-if="answer.type == 'text'"
+                 class="field-value">
+              {{ answer.value }}
             </div>
             <!-- Display Image value -->
-            <div ng-if="answer.type == 'image'"
-                 class="row">
-              <div class="col-xs-offset-4 col-xs-4">
-              <img class="img-responsive img-thumbnail"
-                   style="width: 80%"
-                   ng-src="{{ answer.value }}"
-                   alt="{{ answer.alt}}" />
-              </div>
-            </div>
+            <img class="field-value-img img-responsive img-thumbnail"
+                 ng-if="answer.type == 'image'"
+                 ng-src="{{ answer.value }}"
+                 alt="{{ answer.alt}}" />
           </div>
         </div>
       </div>
@@ -124,3 +111,13 @@
   </button>
 
 </div>
+
+<script>
+$(function() {
+  $('.field-value div').css('font-size', '1em');
+
+  while( $('.field-value div').height() > $('.field-value').height() ) {
+    $('.field-value div').css('font-size', (parseInt($('.field-value div').css('font-size')) - 1) + "px" );
+  }
+});
+</script>
