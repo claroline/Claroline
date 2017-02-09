@@ -10,5 +10,6 @@
     "end_date": "Einddatum",
     "add_choice": "",
     "comments": "Commentaren",
-    "publication_date": ""
+    "publication_date": "",
+    "description": "Beschrijving"
 }
