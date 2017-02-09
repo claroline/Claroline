@@ -3,5 +3,8 @@
     "path": "Plaats",
     "resources": "Leermiddelen",
     "status": "Statuut",
-    "select": "Kiezen"
+    "select": "Kiezen",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "close": "Sluiten"
 }
