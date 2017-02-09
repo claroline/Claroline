@@ -3,5 +3,10 @@
     "revoke_access": "De toegang intrekken",
     "rename": "Hernoemen",
     "portfolio": "Portfolio",
-    "configuration": "Configuratie"
+    "configuration": "Configuratie",
+    "title": "Titel",
+    "import": "Invoeren",
+    "owner": "Eigenaar",
+    "statistics": "Statistieken",
+    "visibility": "Zichtbaarheid"
 }
