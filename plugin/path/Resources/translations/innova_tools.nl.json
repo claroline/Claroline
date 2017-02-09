@@ -6,5 +6,6 @@
     "select": "Kiezen",
     "delete": "Verwijderen",
     "edit": "Bewerken",
-    "close": "Sluiten"
+    "close": "Sluiten",
+    "description": "Beschrijving"
 }
