@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Tests\Validator\JsonSchema;
 
 use UJM\ExoBundle\Library\Testing\Json\JsonSchemaTestCase;
 use UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator;
-use UJM\ExoBundle\Validator\JsonSchema\Question\QuestionValidator;
+use UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator;
 use UJM\ExoBundle\Validator\JsonSchema\StepValidator;
 
 class StepValidatorTest extends JsonSchemaTestCase
@@ -15,9 +15,9 @@ class StepValidatorTest extends JsonSchemaTestCase
     private $validator;
 
     /**
-     * @var QuestionValidator|\PHPUnit_Framework_MockObject_MockObject
+     * @var ItemValidator|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $questionValidator;
+    private $itemValidator;
 
     /**
      * @var ContentValidator|\PHPUnit_Framework_MockObject_MockObject
@@ -28,8 +28,8 @@ class StepValidatorTest extends JsonSchemaTestCase
     {
         parent::setUp();
 
-        $this->questionValidator = $this->getMock('UJM\ExoBundle\Validator\JsonSchema\Question\QuestionValidator', [], [], '', false);
-        $this->questionValidator->expects($this->any())
+        $this->itemValidator = $this->getMock('UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator', [], [], '', false);
+        $this->itemValidator->expects($this->any())
             ->method('validateAfterSchema')
             ->willReturn([]);
 
@@ -39,7 +39,7 @@ class StepValidatorTest extends JsonSchemaTestCase
             ->willReturn([]);
 
         $this->validator = $this->injectJsonSchemaMock(
-            new StepValidator($this->questionValidator, $this->contentValidator)
+            new StepValidator($this->itemValidator, $this->contentValidator)
         );
     }
 
@@ -95,14 +95,14 @@ class StepValidatorTest extends JsonSchemaTestCase
     }
 
     /**
-     * The validator MUST execute custom validation for question items by calling the QuestionValidator.
+     * The validator MUST execute custom validation for question items by calling the ItemValidator.
      */
     public function testQuestionsAreValidatedToo()
     {
         $stepData = $this->loadExampleData('step/examples/valid/one-question.json');
 
-        // Checks that question items are forwarded to the QuestionValidator
-        $this->questionValidator->expects($this->exactly(count($stepData->items)))
+        // Checks that question items are forwarded to the ItemValidator
+        $this->itemValidator->expects($this->exactly(count($stepData->items)))
             ->method('validateAfterSchema');
 
         $this->validator->validate($stepData);

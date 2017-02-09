@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Testing\Persister;
 use UJM\ExoBundle\Repository\ExerciseRepository;
 
@@ -18,7 +18,7 @@ class ExerciseRepositoryTest extends TransactionalTestCase
     private $persist;
     /** @var ExerciseRepository */
     private $repo;
-    /** @var Question[] */
+    /** @var Item[] */
     private $questions;
     /** @var Exercise[] */
     private $exercises = [];

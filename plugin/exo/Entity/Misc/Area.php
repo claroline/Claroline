@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Entity\Misc;
 
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use UJM\ExoBundle\Entity\QuestionType\GraphicQuestion;
+use UJM\ExoBundle\Entity\ItemType\GraphicQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
 use UJM\ExoBundle\Library\Model\ScoreTrait;
@@ -64,7 +64,7 @@ class Area implements AnswerPartInterface
     /**
      * @deprecated this needs to be deleted to keep things separated
      *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\QuestionType\GraphicQuestion", inversedBy="areas")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\GraphicQuestion", inversedBy="areas")
      * @ORM\JoinColumn(name="interaction_graphic_id", referencedColumnName="id")
      */
     private $interactionGraphic;

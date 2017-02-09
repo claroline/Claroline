@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Tests\Validator\JsonSchema\Attempt\AnswerData;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Testing\Json\JsonSchemaTestCase;
 use UJM\ExoBundle\Library\Testing\Persister;
@@ -22,7 +22,7 @@ class MatchAnswerValidatorTest extends JsonSchemaTestCase
     private $validator = null;
 
     /**
-     * @var Question
+     * @var Item
      */
     private $question;
 

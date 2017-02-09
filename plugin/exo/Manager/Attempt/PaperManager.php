@@ -13,7 +13,7 @@ use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Library\Mode\MarkMode;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Validator\ValidationException;
-use UJM\ExoBundle\Manager\Question\QuestionManager;
+use UJM\ExoBundle\Manager\Item\ItemManager;
 use UJM\ExoBundle\Repository\PaperRepository;
 use UJM\ExoBundle\Serializer\Attempt\PaperSerializer;
 
@@ -46,28 +46,28 @@ class PaperManager
      * PaperManager constructor.
      *
      * @DI\InjectParams({
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
-     *     "serializer"         = @DI\Inject("ujm_exo.serializer.paper"),
-     *     "questionManager"    = @DI\Inject("ujm_exo.manager.question")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "serializer"      = @DI\Inject("ujm_exo.serializer.paper"),
+     *     "itemManager"     = @DI\Inject("ujm_exo.manager.item")
      * })
      *
      * @param ObjectManager            $om
      * @param EventDispatcherInterface $eventDispatcher
      * @param PaperSerializer          $serializer
-     * @param QuestionManager          $questionManager
+     * @param ItemManager              $itemManager
      */
     public function __construct(
         ObjectManager $om,
         EventDispatcherInterface $eventDispatcher,
         PaperSerializer $serializer,
-        QuestionManager $questionManager)
+        ItemManager $itemManager)
     {
         $this->om = $om;
         $this->repository = $om->getRepository('UJMExoBundle:Attempt\Paper');
         $this->eventDispatcher = $eventDispatcher;
         $this->serializer = $serializer;
-        $this->questionManager = $questionManager;
+        $this->itemManager = $itemManager;
     }
 
     /**
@@ -146,7 +146,7 @@ class PaperManager
         $structure = json_decode($paper->getStructure());
         foreach ($structure->steps as $step) {
             foreach ($step->items as $item) {
-                $total += $this->questionManager->calculateTotal($item);
+                $total += $this->itemManager->calculateTotal($item);
             }
         }
 

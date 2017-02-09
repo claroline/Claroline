@@ -4,11 +4,11 @@ namespace UJM\ExoBundle\Serializer;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Step;
-use UJM\ExoBundle\Entity\StepQuestion;
+use UJM\ExoBundle\Entity\StepItem;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Serializer\SerializerInterface;
-use UJM\ExoBundle\Serializer\Question\QuestionSerializer;
+use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 
 /**
  * Serializer for step data.
@@ -18,22 +18,22 @@ use UJM\ExoBundle\Serializer\Question\QuestionSerializer;
 class StepSerializer implements SerializerInterface
 {
     /**
-     * @var QuestionSerializer
+     * @var ItemSerializer
      */
-    private $questionSerializer;
+    private $itemSerializer;
 
     /**
      * StepSerializer constructor.
      *
-     * @param QuestionSerializer $questionSerializer
+     * @param ItemSerializer $itemSerializer
      *
      * @DI\InjectParams({
-     *     "questionSerializer" = @DI\Inject("ujm_exo.serializer.question")
+     *     "itemSerializer" = @DI\Inject("ujm_exo.serializer.item")
      * })
      */
-    public function __construct(QuestionSerializer $questionSerializer)
+    public function __construct(ItemSerializer $itemSerializer)
     {
-        $this->questionSerializer = $questionSerializer;
+        $this->itemSerializer = $itemSerializer;
     }
 
     /**
@@ -155,7 +155,7 @@ class StepSerializer implements SerializerInterface
 
     /**
      * Serializes Step items.
-     * Forwards the item serialization to QuestionSerializer.
+     * Forwards the item serialization to ItemSerializer.
      *
      * @param Step  $step
      * @param array $options
@@ -166,14 +166,14 @@ class StepSerializer implements SerializerInterface
     {
         $stepQuestions = $step->getStepQuestions()->toArray();
 
-        return array_map(function (StepQuestion $stepQuestion) use ($options) {
-            return $this->questionSerializer->serialize($stepQuestion->getQuestion(), $options);
+        return array_map(function (StepItem $stepQuestion) use ($options) {
+            return $this->itemSerializer->serialize($stepQuestion->getQuestion(), $options);
         }, $stepQuestions);
     }
 
     /**
      * Deserializes Step items.
-     * Forwards the item deserialization to QuestionSerializer.
+     * Forwards the item deserialization to ItemSerializer.
      *
      * @param Step  $step
      * @param array $items
@@ -187,9 +187,9 @@ class StepSerializer implements SerializerInterface
             $item = null;
             $stepQuestion = null;
 
-            // Searches for an existing question entity.
+            // Searches for an existing item entity.
             foreach ($stepQuestions as $entityIndex => $entityStepQuestion) {
-                /** @var StepQuestion $entityStepQuestion */
+                /** @var StepItem $entityStepQuestion */
                 if ($entityStepQuestion->getQuestion()->getUuid() === $itemData->id) {
                     $stepQuestion = $entityStepQuestion;
                     $item = $stepQuestion->getQuestion();
@@ -198,18 +198,18 @@ class StepSerializer implements SerializerInterface
                 }
             }
 
-            $entity = $this->questionSerializer->deserialize($itemData, $item, $options);
+            $entity = $this->itemSerializer->deserialize($itemData, $item, $options);
 
             if (empty($stepQuestion)) {
                 // Creation of a new item (we need to link it to the Step)
                 $step->addQuestion($entity);
             } else {
-                // Update order of the Question in the Step
+                // Update order of the Item in the Step
                 $stepQuestion->setOrder($index);
             }
         }
 
-        // Remaining questions are no longer in the Step
+        // Remaining items are no longer in the Step
         if (0 < count($stepQuestions)) {
             foreach ($stepQuestions as $stepQuestionToRemove) {
                 $step->removeStepQuestion($stepQuestionToRemove);

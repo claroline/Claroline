@@ -4,8 +4,8 @@ namespace UJM\ExoBundle\Validator\JsonSchema\Attempt;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Validation;
-use UJM\ExoBundle\Library\Question\QuestionDefinitionsCollection;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 
 /**
@@ -21,25 +21,25 @@ class AnswerValidator extends JsonSchemaValidator
     /**
      * @var AnswerValidator
      */
-    private $questionDefinitions;
+    private $itemDefinitions;
 
     /**
-     * QuestionValidator constructor.
+     * AnswerValidator constructor.
      *
-     * @param ObjectManager                 $om
-     * @param QuestionDefinitionsCollection $questionDefinitions
+     * @param ObjectManager             $om
+     * @param ItemDefinitionsCollection $itemDefinitions
      *
      * @DI\InjectParams({
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "questionDefinitions" = @DI\Inject("ujm_exo.collection.question_definitions")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "itemDefinitions" = @DI\Inject("ujm_exo.collection.item_definitions")
      * })
      */
     public function __construct(
         ObjectManager $om,
-        QuestionDefinitionsCollection $questionDefinitions)
+        ItemDefinitionsCollection $itemDefinitions)
     {
         $this->om = $om;
-        $this->questionDefinitions = $questionDefinitions;
+        $this->itemDefinitions = $itemDefinitions;
     }
 
     public function getJsonSchemaUri()
@@ -59,8 +59,8 @@ class AnswerValidator extends JsonSchemaValidator
     {
         $errors = [];
 
-        // Checks the question exists
-        $question = $this->om->getRepository('UJMExoBundle:Question\Question')->findOneBy([
+        // Checks the item exists
+        $question = $this->om->getRepository('UJMExoBundle:Item\Item')->findOneBy([
             'uuid' => $answer->questionId,
         ]);
         if (empty($question)) {
@@ -69,8 +69,8 @@ class AnswerValidator extends JsonSchemaValidator
                 'message' => 'question does not exist',
             ];
         } elseif (!empty($answer->data)) {
-            // Forward to question type validator
-            $definition = $this->questionDefinitions->get($question->getMimeType());
+            // Forward to item type validator
+            $definition = $this->itemDefinitions->get($question->getMimeType());
 
             $errors = array_merge(
                 $errors,
