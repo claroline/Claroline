@@ -11,5 +11,15 @@
     "add_choice": "",
     "comments": "Commentaren",
     "publication_date": "",
-    "description": "Beschrijving"
+    "description": "Beschrijving",
+    "closed": "Gesloten",
+    "horizontal": "Horizontaal",
+    "title": "Titel",
+    "vertical": "Verticaal",
+    "model": "Model",
+    "parameters": "Instellingen",
+    "publish": "Gepubliceerd",
+    "published": "Gepubliceerd",
+    "results": "Resultaten",
+    "unpublished": "Niet gepubliceerd"
 }
