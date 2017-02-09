@@ -1,1 +1,7 @@
-{}
+{
+    "type": "Type",
+    "actions": "Acties",
+    "answer": "Antwoorden",
+    "no_model": "Geen model",
+    "status": "Statuut"
+}

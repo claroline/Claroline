@@ -4,7 +4,7 @@
     "my_workspaces": "Mi espacio de trabajo",
     "simple_text": "Texto",
     "type": "Tipo",
-    "widget_configuration_copy_warning": "widget_configuration_copy_warning",
-    "widget_instance_form_name": "Nombre",
+    "widget_configuration_copy_warning": "",
+    "widget_instance_form_name": "",
     "widget_instance_form_widget": "Tipo"
 }

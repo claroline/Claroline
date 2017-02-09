@@ -1,1 +1,10 @@
-{}
+{
+    "type": "Type",
+    "actions": "Acties",
+    "add": "Toevoegen",
+    "all": "Allen",
+    "none": "Geen",
+    "open": "Openen",
+    "reset": "Resetten",
+    "yes": "Ja"
+}
