@@ -7,7 +7,7 @@
     "days_ago": "{0} Il y a 0 jours|{1} Il y a 1 jour|]1,Inf] Il y a %count% jours",
     "disable_notifications": "Ne pas suivre cette ressource",
     "disable_notifications_info": "Ne pas être notifié des nouveautés de cette ressource",
-    "document": "Document pour évaluation",
+    "document": "Document",
     "dropdown_items": "Éléments dans la liste",
     "dropzone": "Evaluation",
     "enable_notifications": "Suivre cette ressource",
