@@ -7,5 +7,8 @@
     "delete": "Verwijderen",
     "edit": "Bewerken",
     "close": "Sluiten",
-    "description": "Beschrijving"
+    "description": "Beschrijving",
+    "duration": "Duur",
+    "next": "Volgende",
+    "publish": "Gepubliceerd"
 }
