@@ -1,7 +1,7 @@
 {
     "audio_recorder_configuration_max_recording_time": "Maximum opname tijd (Seconden, 0 = oneindig)",
     "audio_recorder_configuration_max_try": "Maximum aantal pogingen",
-    "config_update_error": "Probleem tijdens de update van de instelligen van de audio-opnemer",
+    "config_update_error": "Probleem tijdens de update van de instelligen van de audio-opnemer.",
     "config_update_success": "Update van de instelligen van de audio-opnemer met succes gemaakt.",
     "creating_resource": "Leermiddel aan het maken...",
     "db_meter": "Niveau van de micro",
@@ -20,5 +20,5 @@
     "resource_name_placeholder": "De naamvan de leermiddel is verplicht.",
     "start_recording": "Starten",
     "stop_recording": "Stop",
-    "submit_config_label": "De instelling opslaan"
+    "submit_config_label": "De instellingen opslaan"
 }
