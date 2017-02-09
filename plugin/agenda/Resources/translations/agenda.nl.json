@@ -1,7 +1,7 @@
 {
     "add_event": "Een evenement toevoegen",
     "all_day": "de hele dag",
-    "at": "op",
+    "at": "aan",
     "cancel": "Annuleren",
     "close": "Sluiten",
     "confirm": "Bent u er zeker van ?",
@@ -94,7 +94,7 @@
     "month_": "Maand",
     "next": ">",
     "nextYear": ">>",
-    "no_description": "Geen beschrijving",
+    "no_description": "Geen beschrijving.",
     "no_event_found": "Geen evenement",
     "no_filter_tasks": "Geen filter",
     "no_task_found": "Geen taak",
@@ -136,5 +136,5 @@
     "update": "Bewerken",
     "update_event": "Een evenement bewerken",
     "week": "Week",
-    "workspace": "Werkruimten"
+    "workspace": "Werkruimte"
 }

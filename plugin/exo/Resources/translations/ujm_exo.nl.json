@@ -9,5 +9,12 @@
     "yes": "Ja",
     "comment": "Commentaar",
     "select": "Kiezen",
-    "share": "Delen"
+    "share": "Delen",
+    "users": "Gebruikers",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "user": "Gebruiker",
+    "category": "Categorie",
+    "start_date": "Startdatum",
+    "end_date": "Einddatum"
 }
