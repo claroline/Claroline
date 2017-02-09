@@ -23,7 +23,6 @@ export default class BlogService {
     this.fixedTitle = null
     this.currentPost = null
     this.newPost = null
-    this.currentPostDate = null
     this.tempInfo = this.info
   }
 
@@ -291,7 +290,7 @@ export default class BlogService {
     })
 
     let Archives = _$resource.get(this)(url)
-    Archives.query(
+    Archives.get(
       success => {
         this.archives = success
       }
@@ -339,7 +338,7 @@ export default class BlogService {
 
   setCurrentPost(post) {
     this.currentPost = post
-    this.currentPostDate = new Date(post.publication_date)
+    this.currentPost.publication_date = post.publication_date ? new Date(post.publication_date) : null
     this.fixedTitle = post.title
   }
 
@@ -411,7 +410,7 @@ export default class BlogService {
     let post = new Post({
       'title': this.currentPost.title,
       'content': this.currentPost.content,
-      'publication_date': this.currentPostDate,
+      'publication_date': this.currentPost.publication_date,
       'tags': this.currentPost.tags
     })
 

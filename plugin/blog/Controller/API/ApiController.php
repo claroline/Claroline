@@ -150,7 +150,7 @@ class ApiController extends BaseController
      *
      * @Route(requirements={ "blog" = "\d+", "postId" = ".+" })
      *
-     * @View(serializerGroups={ "blog_list", "api_user_min" })
+     * @View(serializerGroups={ "blog_post", "api_user_min" })
      */
     public function getBlogPostAction(Request $request, Blog $blog, $postId)
     {
@@ -307,7 +307,7 @@ class ApiController extends BaseController
      *
      * @RequestParam(name="title", allowBlank=false)
      * @RequestParam(name="content", allowBlank=false)
-     * @RequestParam(name="publication_date", allowBlank=false)
+     * @RequestParam(name="publication_date", nullable=true)
      * @RequestParam(name="tags", allowBlank=false, array=true)
      *
      * @View(serializerGroups={ "blog_list", "api_user_min" })
@@ -323,10 +323,13 @@ class ApiController extends BaseController
             ->setBlog($blog)
             // User has already been checked and is logged in
             ->setAuthor($this->get('security.token_storage')->getToken()->getUser())
-            ->setPublicationDate(new \DateTime($paramFetcher->get('publication_date')))
             ->setStatus($blog->isAutoPublishPost() ? Post::STATUS_PUBLISHED : Post::STATUS_UNPUBLISHED)
             ->setTitle($paramFetcher->get('title'))
             ->setContent($paramFetcher->get('content'));
+
+        if ($paramFetcher->get('publication_date') !== null) {
+            $post->setPublicationDate(new \DateTime($paramFetcher->get('publication_date')));
+        }
 
         // Tags
         $newTags = $paramFetcher->get('tags');
@@ -353,7 +356,7 @@ class ApiController extends BaseController
      *
      * @RequestParam(name="title", allowBlank=false)
      * @RequestParam(name="content", allowBlank=false)
-     * @RequestParam(name="publication_date", allowBlank=false)
+     * @RequestParam(name="publication_date", nullable=true)
      * @RequestParam(name="tags", allowBlank=false, array=true)
      *
      * @View(serializerGroups={ "blog_list", "api_user_min" })
@@ -375,8 +378,13 @@ class ApiController extends BaseController
 
         $myPost
             ->setTitle($paramFetcher->get('title'))
-            ->setContent($paramFetcher->get('content'))
-            ->setPublicationDate(new \DateTime($paramFetcher->get('publication_date')));
+            ->setContent($paramFetcher->get('content'));
+
+        if ($paramFetcher->get('publication_date') !== null) {
+            $myPost->setPublicationDate(new \DateTime($paramFetcher->get('publication_date')));
+        } else {
+            $myPost->setPublicationDate(null);
+        }
 
         // Tags
         $oldTags = $myPost->getTags();

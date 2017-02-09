@@ -24,7 +24,7 @@ class Tag
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Expose
-     * @Groups({"blog_list"})
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $id;
 
@@ -34,7 +34,7 @@ class Tag
      * @ORM\Column(type="string", unique=true)
      *
      * @Expose
-     * @Groups({"blog_list"})
+     * @Groups({"blog_list", "blog_post"})
      * @SerializedName("text")
      */
     protected $name;
@@ -43,7 +43,7 @@ class Tag
      * @Gedmo\Slug(fields={"name"}, unique=true)
      * @ORM\Column(length=128, unique=true, nullable=true)
      * @Expose
-     * @Groups({"blog_list"})
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $slug;
 
