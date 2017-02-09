@@ -5,7 +5,7 @@ const path = require('path')
 const fs = require('fs')
 
 const packageDir = `${__dirname}/../../../..`
-const languages = ['fr', 'nl', 'de', 'es']
+const languages = ['fr', 'nl', 'de', 'es', 'it']
 
 glob(`${packageDir}/*/*/Resources/translations/*.en.json`, (er, files) => {
   files.forEach(file => {
