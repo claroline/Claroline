@@ -13,5 +13,7 @@
     "workspace-registration-decline": "heeft uw inschrijvingsaanvraag geweigerd in de werkruimte",
     "workspace-role-change_right": "heeft u toegang gegeven tot %resource% in %workspace%",
     "workspace-role-subscribe_group": "heeft u de rol \"%role%\" toegewezen in %workspace%",
-    "workspace-role-subscribe_user": "heeft u de rol \"%role%\" toegewezen in %workspace%"
+    "workspace-role-subscribe_user": "heeft u de rol \"%role%\" toegewezen in %workspace%",
+    "resource-publish": "Leermiddel publiceren",
+    "resource_publication_notification_message": "heeft de leermiddel %resource% in de wrkruimte %workspace% gepubliceerd"
 }
