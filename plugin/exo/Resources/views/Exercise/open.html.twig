@@ -12,13 +12,10 @@
     {% endstylesheets %}
 {% endblock %}
 
-{# Title of the Page #}
-{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
-
 {# Content of the Page #}
 {% block section_panel %}
     <div
-      class="quiz-container"
+      class="page-container quiz-container"
       data-quiz="{{ exercise | json_encode | raw | escape }}"
     >
     </div>
