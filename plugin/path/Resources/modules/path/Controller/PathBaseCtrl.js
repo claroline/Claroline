@@ -18,4 +18,8 @@ export default class PathBaseCtrl {
     // Force reload of the route (as ng-view is deeper in the directive tree, route resolution is deferred and it causes issues)
     $route.reload()
   }
+
+  unlockManager() {
+    this.window.location.href = this.UrlGenerator('innova_path_manage_results', {id: this.path.id})
+  }
 }

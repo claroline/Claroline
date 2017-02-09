@@ -13,10 +13,27 @@
         </h1>
 
         <div class="page-actions" data-ng-if="pathShowCtrl.path.steps.length !== 0 && pathShowCtrl.editEnabled">
-            <button type="button" role="button" class="btn btn-link" data-ng-click="pathShowCtrl.edit()">
+            <button type="button" class="btn btn-link" data-ng-click="pathShowCtrl.edit()">
                 <span class="fa fa-fw fa-pencil"></span>
                 {{ 'edit'|trans:{}:'path_wizards' }}
             </button>
+
+            <span class="divider" role="separator"></span>
+
+            <div class="btn-group">
+                <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="fa fa-fw fa-ellipsis-v"></span>
+                    <span class="sr-only">{{ 'more_actions'|trans:{}:'path_wizards' }}</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li class="dropdown-header">{{ 'more_actions'|trans:{}:'path_wizards' }}</li>
+                    <li>
+                        <a href="" data-ng-click="pathShowCtrl.unlockManager()">
+                            <span class="fa fa-fw fa-lock"></span> {{ 'path_dashboard'|trans:{}:'path_wizards' }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <div data-ng-if="pathShowCtrl.path.description" data-ng-bind-html="pathShowCtrl.path.description | trustAsHtml"></div>
@@ -34,7 +51,7 @@
             <alert-box></alert-box>
 
             <!-- Current step -->
-            <div data-ng-view=""></div>
+            <div class="current-step-container" data-ng-view=""></div>
         </div>
     </div>
 
