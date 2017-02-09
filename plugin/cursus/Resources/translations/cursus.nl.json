@@ -3,5 +3,7 @@
     "public_unregistration": "Openbare afschrijving",
     "register": "Inschrijving",
     "unregister": "Afschrijven",
-    "yes": "Ja"
+    "yes": "Ja",
+    "invalid_file": "Ongeldig bestand",
+    "no_description": "Geen beschrijving."
 }
