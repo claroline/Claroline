@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 
 /**
  * QTIManager.
@@ -35,7 +35,7 @@ class QTIManager
     /**
      * Exports questions into an assessment item.
      *
-     * @param Question[] $questions
+     * @param Item[] $questions
      *
      * @return \ZipArchive
      */

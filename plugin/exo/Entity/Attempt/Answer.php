@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Entity\Attempt;
 
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Model\UuidTrait;
 
 /**
@@ -87,7 +87,7 @@ class Answer
     /**
      * The id of the question that is answered.
      *
-     * @var Question
+     * @var Item
      *
      * @ORM\Column(name="question_id", type="string", length=36)
      */

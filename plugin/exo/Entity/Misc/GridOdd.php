@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Entity\Misc;
 
 use Doctrine\ORM\Mapping as ORM;
-use UJM\ExoBundle\Entity\QuestionType\PairQuestion;
+use UJM\ExoBundle\Entity\ItemType\PairQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
 use UJM\ExoBundle\Library\Model\ScoreTrait;
@@ -44,7 +44,7 @@ class GridOdd implements AnswerPartInterface
     /**
      * The parent question.
      *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\QuestionType\PairQuestion", inversedBy="oddItems")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\PairQuestion", inversedBy="oddItems")
      * @ORM\JoinColumn(name="pair_question_id", referencedColumnName="id")
      *
      * @var PairQuestion

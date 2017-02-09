@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity\Misc;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use UJM\ExoBundle\Entity\QuestionType\ClozeQuestion;
+use UJM\ExoBundle\Entity\ItemType\ClozeQuestion;
 use UJM\ExoBundle\Library\Model\UuidTrait;
 
 /**
@@ -55,7 +55,7 @@ class Hole
     private $placeholder;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\QuestionType\ClozeQuestion", inversedBy="holes")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\ClozeQuestion", inversedBy="holes")
      * @ORM\JoinColumn(name="interaction_hole_id", referencedColumnName="id")
      */
     private $interactionHole;

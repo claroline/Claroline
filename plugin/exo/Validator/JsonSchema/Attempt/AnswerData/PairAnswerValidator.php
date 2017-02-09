@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use UJM\ExoBundle\Entity\QuestionType\PairQuestion;
+use UJM\ExoBundle\Entity\ItemType\PairQuestion;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 

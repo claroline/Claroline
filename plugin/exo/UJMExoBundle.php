@@ -5,7 +5,7 @@ namespace UJM\ExoBundle;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use UJM\ExoBundle\DependencyInjection\Compiler\QuestionDefinitionsPass;
+use UJM\ExoBundle\DependencyInjection\Compiler\ItemDefinitionsPass;
 use UJM\ExoBundle\Installation\AdditionalInstaller;
 
 class UJMExoBundle extends PluginBundle
@@ -25,6 +25,6 @@ class UJMExoBundle extends PluginBundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
-        $container->addCompilerPass(new QuestionDefinitionsPass());
+        $container->addCompilerPass(new ItemDefinitionsPass());
     }
 }

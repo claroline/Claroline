@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Entity\Misc;
 
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use UJM\ExoBundle\Entity\QuestionType\ChoiceQuestion;
+use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\ContentTrait;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
@@ -49,7 +49,7 @@ class Choice implements AnswerPartInterface
     private $expected = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\QuestionType\ChoiceQuestion", inversedBy="choices")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\ChoiceQuestion", inversedBy="choices")
      * @ORM\JoinColumn(name="interaction_qcm_id", referencedColumnName="id")
      */
     private $interactionQCM;

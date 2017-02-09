@@ -48,27 +48,27 @@ class QuestionProprietaryUpdateCommand extends ContainerAwareCommand
         $helper = $this->getHelper('question');
         $om = $container->get('claroline.persistence.object_manager');
         $newOwner = $om->getRepository('ClarolineCoreBundle:User')->loadUserByUsername($username);
-        $question = $om->getRepository('UJMExoBundle:Question\Question')->find($id);
+        $item = $om->getRepository('UJMExoBundle:Item\Item')->find($id);
         $all = $input->getOption('all');
 
-        $questions = $all ?
-           $om->getRepository('UJMExoBundle:Question\Question')->findBy([
-               'creator' => $question->getCreator(),
+        $items = $all ?
+           $om->getRepository('UJMExoBundle:Item\Item')->findBy([
+               'creator' => $item->getCreator(),
            ]) :
-           [$question];
+           [$item];
 
         $output->writeln('Questions found:');
 
-        foreach ($questions as $question) {
-            $output->writeln("{$question->getTitle()} - {$question->getDescription()} - {$question->getUser()}");
+        foreach ($items as $item) {
+            $output->writeln("{$item->getTitle()} - {$item->getDescription()} - {$item->getUser()}");
         }
 
-        $question = new ConfirmationQuestion('Do you want to update these questions ? y/n [y] ', true);
+        $item = new ConfirmationQuestion('Do you want to update these questions ? y/n [y] ', true);
 
-        if ($helper->ask($input, $output, $question)) {
-            foreach ($questions as $question) {
-                $question->setUser($newOwner);
-                $om->persist($question);
+        if ($helper->ask($input, $output, $item)) {
+            foreach ($items as $item) {
+                $item->setUser($newOwner);
+                $om->persist($item);
             }
         }
 

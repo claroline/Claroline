@@ -2,9 +2,9 @@
 
 namespace UJM\ExoBundle\Tests\Entity;
 
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\Step;
-use UJM\ExoBundle\Entity\StepQuestion;
+use UJM\ExoBundle\Entity\StepItem;
 
 class StepTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,7 +15,7 @@ class StepTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * The `getQuestions` method is just a shortcut to access the questions without passing by StepQuestion entities
+     * The `getQuestions` method is just a shortcut to access the questions without passing by StepItem entities
      * so it MUST return the same number of elements than `getStepQuestions`.
      */
     public function testGetQuestions()
@@ -23,8 +23,8 @@ class StepTest extends \PHPUnit_Framework_TestCase
         $step = new Step();
 
         // Adds a new question in the step
-        $stepQuestion = new StepQuestion();
-        $stepQuestion->setQuestion(new Question());
+        $stepQuestion = new StepItem();
+        $stepQuestion->setQuestion(new Item());
         $step->addStepQuestion($stepQuestion);
 
         $this->assertCount($step->getStepQuestions()->count(), $step->getQuestions());
@@ -33,8 +33,8 @@ class StepTest extends \PHPUnit_Framework_TestCase
     public function testAddQuestion()
     {
         $step = new Step();
-        $step->addQuestion(new Question());
-        $step->addQuestion(new Question());
+        $step->addQuestion(new Item());
+        $step->addQuestion(new Item());
 
         $this->assertCount(2, $step->getQuestions());
         $this->assertCount(2, $step->getStepQuestions());
@@ -45,13 +45,13 @@ class StepTest extends \PHPUnit_Framework_TestCase
         $step = new Step();
 
         // Add a first question
-        $question1 = new Question();
+        $question1 = new Item();
         $step->addQuestion($question1);
         $stepQuestion1 = $this->getStepQuestion($step, $question1);
         $this->assertEquals(0, $stepQuestion1->getOrder());
 
         // Add the second one which MUST have an order of 1 (the first as a 0 order)
-        $question2 = new Question();
+        $question2 = new Item();
         $step->addQuestion($question2);
         $stepQuestion2 = $this->getStepQuestion($step, $question2);
         $this->assertEquals(1, $stepQuestion2->getOrder());
@@ -60,7 +60,7 @@ class StepTest extends \PHPUnit_Framework_TestCase
     public function testAddQuestionNoDuplicate()
     {
         $step = new Step();
-        $question = new Question();
+        $question = new Item();
 
         // Add the same question 2 times
         $step->addQuestion($question);
@@ -74,8 +74,8 @@ class StepTest extends \PHPUnit_Framework_TestCase
     {
         // Initialize some data
         $step = new Step();
-        $question1 = new Question(); // We create one more question to check it is the correct one which is deleted
-        $questionToDelete = new Question();
+        $question1 = new Item(); // We create one more question to check it is the correct one which is deleted
+        $questionToDelete = new Item();
 
         $step->addQuestion($question1);
         $step->addQuestion($questionToDelete);
@@ -91,7 +91,7 @@ class StepTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(in_array($questionToDelete, $step->getQuestions()));
     }
 
-    private function getStepQuestion(Step $step, Question $question)
+    private function getStepQuestion(Step $step, Item $question)
     {
         $found = null;
 

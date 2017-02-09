@@ -7,13 +7,13 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Library\Options\ExerciseType;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Serializer\ExerciseSerializer;
-use UJM\ExoBundle\Serializer\Question\QuestionSerializer;
+use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 use UJM\ExoBundle\Serializer\StepSerializer;
 
 class Updater090000
@@ -41,9 +41,9 @@ class Updater090000
     private $stepSerializer;
 
     /**
-     * @var QuestionSerializer
+     * @var ItemSerializer
      */
-    private $questionSerializer;
+    private $itemSerializer;
 
     /**
      * Updater080000 constructor.
@@ -52,20 +52,20 @@ class Updater090000
      * @param ObjectManager      $om
      * @param ExerciseSerializer $exerciseSerializer
      * @param StepSerializer     $stepSerializer
-     * @param QuestionSerializer $questionSerializer
+     * @param ItemSerializer     $itemSerializer
      */
     public function __construct(
         Connection $connection,
         ObjectManager $om,
         ExerciseSerializer $exerciseSerializer,
         StepSerializer $stepSerializer,
-        QuestionSerializer $questionSerializer)
+        ItemSerializer $itemSerializer)
     {
         $this->connection = $connection;
         $this->om = $om;
         $this->exerciseSerializer = $exerciseSerializer;
         $this->stepSerializer = $stepSerializer;
-        $this->questionSerializer = $questionSerializer;
+        $this->itemSerializer = $itemSerializer;
     }
 
     public function postUpdate()
@@ -404,7 +404,7 @@ class Updater090000
 
         $oldHints = $this->fetchHints();
 
-        $questions = $this->om->getRepository('UJMExoBundle:Question\Question')->findAll();
+        $questions = $this->om->getRepository('UJMExoBundle:Item\Item')->findAll();
         $decodedQuestions = [];
 
         $papers = $this->om->getRepository('UJMExoBundle:Attempt\Paper')->findAll();
@@ -477,7 +477,7 @@ class Updater090000
             $stepForOrphans = $this->stepSerializer->serialize(new Step(), [Transfer::INCLUDE_SOLUTIONS]);
 
             foreach ($questionIds as $questionId) {
-                /** @var Question $question */
+                /** @var Item $question */
                 $question = $this->pullQuestion($questionId, $questions, $decodedQuestions);
                 if ($question) {
                     $stepForOrphans->items[] = $question;
@@ -576,7 +576,7 @@ class Updater090000
         if (empty($decodedQuestions[$questionId])) {
             foreach ($questions as $index => $question) {
                 if ($question->getId() === (int) $questionId && !empty($question->getMimeType())) {
-                    $decodedQuestions[$questionId] = $this->questionSerializer->serialize($question, [Transfer::INCLUDE_SOLUTIONS]);
+                    $decodedQuestions[$questionId] = $this->itemSerializer->serialize($question, [Transfer::INCLUDE_SOLUTIONS]);
                     unset($questions[$index]);
                     break;
                 }

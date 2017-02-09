@@ -5,9 +5,9 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Paper;
-use UJM\ExoBundle\Entity\Question\Hint;
+use UJM\ExoBundle\Entity\Item\Hint;
 use UJM\ExoBundle\Repository\PaperRepository;
-use UJM\ExoBundle\Serializer\Question\HintSerializer;
+use UJM\ExoBundle\Serializer\Item\HintSerializer;
 
 /**
  * @DI\Service("ujm_exo.manager.hint")

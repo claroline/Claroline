@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Entity\Misc;
 
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use UJM\ExoBundle\Entity\QuestionType\MatchQuestion;
+use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Library\Model\ContentTrait;
 use UJM\ExoBundle\Library\Model\OrderTrait;
 
@@ -37,7 +37,7 @@ class Proposal
     use ContentTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\QuestionType\MatchQuestion", inversedBy="proposals")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\MatchQuestion", inversedBy="proposals")
      * @ORM\JoinColumn(name="interaction_matching_id", referencedColumnName="id")
      */
     private $interactionMatching;

@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Question\Hint;
+use UJM\ExoBundle\Entity\Item\Hint;
 
 /**
  * PaperRepository.

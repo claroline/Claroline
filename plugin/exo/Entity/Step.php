@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
 use UJM\ExoBundle\Library\Model\OrderTrait;
 
@@ -61,7 +61,7 @@ class Step
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="StepQuestion", mappedBy="step", cascade={"all"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="StepItem", mappedBy="step", cascade={"all"}, orphanRemoval=true)
      * @ORM\OrderBy({"order" = "ASC"})
      */
     private $stepQuestions;
@@ -168,9 +168,9 @@ class Step
     }
 
     /**
-     * @param StepQuestion $stepQuestion
+     * @param StepItem $stepQuestion
      */
-    public function addStepQuestion(StepQuestion $stepQuestion)
+    public function addStepQuestion(StepItem $stepQuestion)
     {
         if (!$this->stepQuestions->contains($stepQuestion)) {
             $this->stepQuestions->add($stepQuestion);
@@ -178,9 +178,9 @@ class Step
     }
 
     /**
-     * @param StepQuestion $stepQuestion
+     * @param StepItem $stepQuestion
      */
-    public function removeStepQuestion(StepQuestion $stepQuestion)
+    public function removeStepQuestion(StepItem $stepQuestion)
     {
         if ($this->stepQuestions->contains($stepQuestion)) {
             $this->stepQuestions->removeElement($stepQuestion);
@@ -192,7 +192,7 @@ class Step
      *
      * @param string $uuid
      *
-     * @return Question|null
+     * @return Item|null
      */
     public function getQuestion($uuid)
     {
@@ -210,33 +210,33 @@ class Step
     /**
      * Shortcut to get the list of questions of the step.
      *
-     * @return Question[]
+     * @return Item[]
      */
     public function getQuestions()
     {
-        return array_map(function (StepQuestion $stepQuestion) {
+        return array_map(function (StepItem $stepQuestion) {
             return $stepQuestion->getQuestion();
         }, $this->stepQuestions->toArray());
     }
 
     /**
-     * Shortcut to add Questions to Step.
-     * Avoids the need to manually initialize a StepQuestion object to hold the relation.
+     * Shortcut to add Items to Step.
+     * Avoids the need to manually initialize a StepItem object to hold the relation.
      *
-     * @param Question $question - the question to add to the step
+     * @param Item $question - the question to add to the step
      */
-    public function addQuestion(Question $question)
+    public function addQuestion(Item $question)
     {
         $stepQuestions = $this->stepQuestions->toArray();
         foreach ($stepQuestions as $stepQuestion) {
-            /** @var StepQuestion $stepQuestion */
+            /** @var StepItem $stepQuestion */
             if ($stepQuestion->getQuestion() === $question) {
                 return; // The question is already linked to the Step
             }
         }
 
-        // Create a new StepQuestion to attach the question to the step
-        $stepQuestion = new StepQuestion();
+        // Create a new StepItem to attach the question to the step
+        $stepQuestion = new StepItem();
         $stepQuestion->setOrder($this->stepQuestions->count());
         $stepQuestion->setStep($this);
         $stepQuestion->setQuestion($question);

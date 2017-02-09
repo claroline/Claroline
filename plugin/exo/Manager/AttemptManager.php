@@ -12,7 +12,7 @@ use UJM\ExoBundle\Library\Attempt\PaperGenerator;
 use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\Attempt\AnswerManager;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
-use UJM\ExoBundle\Manager\Question\QuestionManager;
+use UJM\ExoBundle\Manager\Item\ItemManager;
 use UJM\ExoBundle\Repository\PaperRepository;
 
 /**
@@ -48,40 +48,40 @@ class AttemptManager
     private $answerManager;
 
     /**
-     * @var QuestionManager
+     * @var ItemManager
      */
-    private $questionManager;
+    private $itemManager;
 
     /**
      * AttemptManager constructor.
      *
      * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "paperGenerator"  = @DI\Inject("ujm_exo.generator.paper"),
-     *     "paperManager"    = @DI\Inject("ujm_exo.manager.paper"),
-     *     "answerManager"   = @DI\Inject("ujm_exo.manager.answer"),
-     *     "questionManager" = @DI\Inject("ujm_exo.manager.question")
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "paperGenerator" = @DI\Inject("ujm_exo.generator.paper"),
+     *     "paperManager"   = @DI\Inject("ujm_exo.manager.paper"),
+     *     "answerManager"  = @DI\Inject("ujm_exo.manager.answer"),
+     *     "itemManager"    = @DI\Inject("ujm_exo.manager.item")
      * })
      *
-     * @param ObjectManager   $om
-     * @param PaperGenerator  $paperGenerator
-     * @param PaperManager    $paperManager
-     * @param AnswerManager   $answerManager
-     * @param QuestionManager $questionManager
+     * @param ObjectManager  $om
+     * @param PaperGenerator $paperGenerator
+     * @param PaperManager   $paperManager
+     * @param AnswerManager  $answerManager
+     * @param ItemManager    $itemManager
      */
     public function __construct(
         ObjectManager $om,
         PaperGenerator $paperGenerator,
         PaperManager $paperManager,
         AnswerManager $answerManager,
-        QuestionManager $questionManager)
+        ItemManager $itemManager)
     {
         $this->om = $om;
         $this->paperGenerator = $paperGenerator;
         $this->paperManager = $paperManager;
         $this->paperRepository = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
         $this->answerManager = $answerManager;
-        $this->questionManager = $questionManager;
+        $this->itemManager = $itemManager;
     }
 
     /**
@@ -212,7 +212,7 @@ class AttemptManager
             $answer->setTries($answer->getTries() + 1);
 
             // Calculate new answer score
-            $score = $this->questionManager->calculateScore($question, $answer);
+            $score = $this->itemManager->calculateScore($question, $answer);
             $answer->setScore($score);
 
             $paper->addAnswer($answer);
@@ -292,7 +292,7 @@ class AttemptManager
         $answer->addUsedHint($hintId);
 
         // Calculate new answer score
-        $score = $this->questionManager->calculateScore($question, $answer);
+        $score = $this->itemManager->calculateScore($question, $answer);
         $answer->setScore($score);
 
         $this->om->persist($answer);

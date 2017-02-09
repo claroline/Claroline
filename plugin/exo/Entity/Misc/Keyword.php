@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Entity\Misc;
 
 use Doctrine\ORM\Mapping as ORM;
-use UJM\ExoBundle\Entity\QuestionType\OpenQuestion;
+use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
 use UJM\ExoBundle\Library\Model\ScoreTrait;
@@ -48,7 +48,7 @@ class Keyword implements AnswerPartInterface
      *
      * @var OpenQuestion
      *
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\QuestionType\OpenQuestion", inversedBy="keywords")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\OpenQuestion", inversedBy="keywords")
      * @ORM\JoinColumn(name="interaction_open_id", referencedColumnName="id")
      */
     private $interactionopen;

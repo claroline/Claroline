@@ -10,17 +10,17 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Item\Category;
+use UJM\ExoBundle\Entity\Item\Hint;
+use UJM\ExoBundle\Entity\Item\Item;
+use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
+use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
+use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
 use UJM\ExoBundle\Entity\Misc\Choice;
 use UJM\ExoBundle\Entity\Misc\Label;
 use UJM\ExoBundle\Entity\Misc\Proposal;
-use UJM\ExoBundle\Entity\Question\Category;
-use UJM\ExoBundle\Entity\Question\Hint;
-use UJM\ExoBundle\Entity\Question\Question;
-use UJM\ExoBundle\Entity\QuestionType\ChoiceQuestion;
-use UJM\ExoBundle\Entity\QuestionType\MatchQuestion;
-use UJM\ExoBundle\Entity\QuestionType\OpenQuestion;
 use UJM\ExoBundle\Entity\Step;
-use UJM\ExoBundle\Library\Question\QuestionType;
+use UJM\ExoBundle\Library\Item\ItemType;
 
 /**
  * Simple testing utility allowing to create and persist
@@ -77,13 +77,13 @@ class Persister
      * @param Choice[] $choices
      * @param string   $description
      *
-     * @return Question
+     * @return Item
      */
     public function choiceQuestion($title, array $choices = [], $description = '')
     {
-        $question = new Question();
+        $question = new Item();
         $question->setUuid(uniqid('', true));
-        $question->setMimeType(QuestionType::CHOICE);
+        $question->setMimeType(ItemType::CHOICE);
         $question->setTitle($title);
         $question->setContent('Invite...');
         $question->setDescription($description);
@@ -107,14 +107,14 @@ class Persister
     /**
      * @param string $title
      *
-     * @return Question
+     * @return Item
      */
     public function openQuestion($title)
     {
-        $question = new Question();
+        $question = new Item();
         $question->setScoreRule(json_encode(['type' => 'manual', 'max' => 10]));
         $question->setUuid(uniqid('', true));
-        $question->setMimeType(QuestionType::OPEN);
+        $question->setMimeType(ItemType::OPEN);
         $question->setTitle($title);
         $question->setContent('Invite...');
         $question->setScoreRule('{"type": "manual", "max": 10}');
@@ -161,13 +161,13 @@ class Persister
      * @param array  $labels
      * @param array  $proposals
      *
-     * @return Question
+     * @return Item
      */
     public function matchQuestion($title, $labels = [], $proposals = [])
     {
-        $question = new Question();
+        $question = new Item();
         $question->setUuid(uniqid('', true));
-        $question->setMimeType(QuestionType::MATCH);
+        $question->setMimeType(ItemType::MATCH);
         $question->setScoreRule('{"type": "sum"}');
         $question->setTitle($title);
         $question->setContent('Invite...');
@@ -335,7 +335,7 @@ class Persister
         return $decoder;
     }
 
-    public function hint(Question $question, $text, $penalty = 1)
+    public function hint(Item $question, $text, $penalty = 1)
     {
         $hint = new Hint();
         $hint->setData($text);
