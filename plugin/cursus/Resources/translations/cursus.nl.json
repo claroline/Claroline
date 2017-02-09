@@ -7,5 +7,8 @@
     "invalid_file": "Ongeldig bestand",
     "no_description": "Geen beschrijving.",
     "collaborator": "Medewerker",
-    "course": "Opleiding"
+    "course": "Opleiding",
+    "form_not_blank_error": "Deze waarde mag niet leeg zijn.",
+    "form_not_unique_error": "Deze waarde wordt al gebruikt.",
+    "form_number_superior_error": ""
 }
