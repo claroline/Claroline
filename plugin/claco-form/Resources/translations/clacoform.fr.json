@@ -35,7 +35,7 @@
     "delete_field_confirm_message": "Êtes-vous sûr de vouloir retirer ce champ [%name%] ?",
     "delete_keyword": "Supprimer le mot-clé",
     "delete_keyword_confirm_message": "Êtes-vous sûr de vouloir retirer ce mot-clé [%name%] ?",
-    "display": "Affichage",
+    "display": "Afficher",
     "edit_category": "Modifier la catégorie",
     "edit_field": "Modifier le champ",
     "edit_keyword": "Modifier le mot-clé",
