@@ -1086,7 +1086,7 @@
     "start_maintenance": "Lancer le mode maintenance",
     "statistics": "Statistiques",
     "statistics_data": "nombre d'espaces, nombre d'utilisateurs",
-    "status": "Statut",
+    "status": "État",
     "steal_session": "Voler la session",
     "storage_limit_exceeded": "Il ne vous reste pas assez d'espace de stockage (%storageLeft%) dans votre espace d'activités. La taille de votre fichier est de %fileSize%.",
     "storage_type": "Type de stockage",
