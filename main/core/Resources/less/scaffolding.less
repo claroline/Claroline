@@ -16,29 +16,19 @@ body.claroline-app-container {
     overflow-y: auto; // Get the scroll bar
 }
 
-/* CHROME HACK FOR OUTLINED BUTTON WHEN FOCUSED */
-.btn:focus {
-    outline: none;
-}
-
-#wrap {
+.app-content {
+    display: flex;
+    flex-direction: column;
     min-height: 100%;
+    max-width: @app-max-width;
     margin: 0 auto;
     padding: floor(@grid-gutter-width / 2);
 
     // Hack to force the display of footer at the bottom of the page if no scroll
+    // todo : find a better way to do it to expose content padding as a var
     padding-bottom: @navbar-height + floor(@grid-gutter-width / 2);
-
-    display: flex;
-    flex-direction: column;
 
     .page-container {
         flex: 1; // only specifying flex property here make the item fill the remaining space in its parent
     }
 }
-
-/*.content-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 floor(@grid-gutter-width / 2);
-}*/

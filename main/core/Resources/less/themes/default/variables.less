@@ -12,8 +12,14 @@
 @component-margin-bottom: @line-height-computed;
 
 // -
+// Application
+// ---
+@app-max-width:           1200px; // max width for the app content
+
+// -
 // Header
 // ---
+@top-bar-max-width:           @app-max-width; // max width for the top bar content (do not affect top bar container)
 @top-bar-height:              @navbar-height + @top-bar-border-bottom-size;
 @top-bar-color:               lighten(@top-bar-bg, 30%);
 @top-bar-bg:                  @component-active-bg;
@@ -38,10 +44,6 @@
 @top-bar-toggle-border-color: @top-bar-inner-border-color;
 @top-bar-toggle-hover-bg:     @top-bar-link-hover-bg;
 @top-bar-toggle-icon-bar-bg:  @top-bar-link-color;
-
-// -
-// Footer
-// ---
 
 // -
 // Loader
@@ -79,8 +81,9 @@
 // -
 // Footer
 // ---
-@footer-bg:    #F3F3F3;
-@footer-color: @gray-light;
+@footer-max-width: @app-max-width; // max width for the footer content (do not affect top bar container)
+@footer-bg:        #F3F3F3;
+@footer-color:     @gray-light;
 
 // -
 // Forms

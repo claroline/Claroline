@@ -1,14 +1,13 @@
-html.iframe, body.iframe {
+html.iframe,
+body.iframe {
     margin: 0 !important;
     padding: 0 !important;
     height: auto;
+    max-width: 100%;
+    background-color: transparent;
 }
 
 body.iframe {
-    margin: 0;
-    max-width: 100%;
-    background-color: transparent;
-
     // Hide some UI parts when rendered in an iframe (mostly for Path and Activities)
     // This should not be done here
     .carousel-control, // but why ?
@@ -16,7 +15,8 @@ body.iframe {
     #left-bar,
     #footer,
     .breadcrumb,
-    .menu-xs {
+    .menu-xs,
+    .page-header {
         display: none !important;
     }
 

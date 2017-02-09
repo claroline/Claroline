@@ -15,8 +15,8 @@
     justify-content: space-between;
     flex-wrap: wrap;
 
-    margin-bottom: floor(@grid-gutter-width / 2);
     margin-top: 0;
+    margin-bottom: floor(@grid-gutter-width / 2);
     padding: @page-header-padding;
 
     h1 {
@@ -25,7 +25,9 @@
         margin: 0;
         padding: 0;
     }
+}
 
+.page-actions {
     .btn-link {
         color: @page-header-link-color;
 
@@ -34,9 +36,7 @@
             color: @page-header-link-hover-color;
         }
     }
-}
 
-.page-actions {
     .divider {
         content: " ";
         display: inline-block;
@@ -44,6 +44,11 @@
         background: @page-header-divider-color;
         height: 20px; // use a var
         vertical-align: middle;
+    }
+
+    .label {
+        font-size: 10px;
+        padding: .2em .4em;
     }
 }
 
