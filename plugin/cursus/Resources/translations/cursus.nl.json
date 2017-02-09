@@ -1,1 +1,7 @@
-{}
+{
+    "manager": "Beheerder",
+    "public_unregistration": "Openbare afschrijving",
+    "register": "Inschrijving",
+    "unregister": "Afschrijven",
+    "yes": "Ja"
+}
