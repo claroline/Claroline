@@ -520,7 +520,7 @@
     "home_tab_widgets_configuration": "De widgets van de tab instellen",
     "home_tabs": "Tabs van de startpagina",
     "home_tabs_configuration": "De tabs van de startpagina instellen",
-    "host": "Host",
+    "host": "",
     "hour": "uur",
     "hours": "uur",
     "icon": "Pictogram",
@@ -823,7 +823,7 @@
     "please_validate_your_account": "Een e-mail is naar u verzonden om uw rekening te activeren.",
     "please_wait": "Even geduld...",
     "plugins": "Plugins",
-    "port": "Port",
+    "port": "",
     "portal": "Portail de ressources",
     "portal_access_disabled": "L'accès au portail est bloqué car aucune des ses options est activée.",
     "portal_configuration_updated_success": "La configuration du portail de ressources a été modifiée avec succès",
@@ -1328,5 +1328,9 @@
     "your_platform_id": "Uw klant-ID op het platform",
     "your_profile_is_n_complete": "Uw profiel is %n%% voltooid.",
     "your_username": "Uw gebruikersnaam is",
-    "your_workspace_activity_overview": "Overzicht van de recente activiteiten van uw werkruimten"
+    "your_workspace_activity_overview": "Overzicht van de recente activiteiten van uw werkruimten",
+    "displayable_in_desktop": "",
+    "displayable_in_workspace": "",
+    "enable_opengraph": "",
+    "no_resource": "Geen leermiddelen"
 }
